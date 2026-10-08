@@ -1,0 +1,64 @@
+{
+  "countsUnchanged": true,
+  "allPolicySemanticsUnchangedFromPreFixCycle3": true,
+  "intentionalSourceHashChanges": [
+    {
+      "file": "convex-dev/runtimeAuth.ts",
+      "before": "f502f28c1c2c60ce7d7564090d480047cf0b61d0129ad636525d8616c49c3fd7",
+      "after": "f2985d405d13e8094b6b8729d72979819ad22897cc614c1fdf44addb37bb4e9f"
+    }
+  ],
+  "otherBackendSourceHashesUnchanged": 21,
+  "expectedRegistrationLocationShifts": [
+    {
+      "path": "runtimeAuth:authorize",
+      "file": "convex-dev/runtimeAuth.ts",
+      "beforeLine": 224,
+      "afterLine": 252
+    },
+    {
+      "path": "runtimeAuth:recheck",
+      "file": "convex-dev/runtimeAuth.ts",
+      "beforeLine": 228,
+      "afterLine": 256
+    },
+    {
+      "path": "runtimeAuth:provision",
+      "file": "convex-dev/runtimeAuth.ts",
+      "beforeLine": 252,
+      "afterLine": 280
+    },
+    {
+      "path": "runtimeAuth:revokeGrant",
+      "file": "convex-dev/runtimeAuth.ts",
+      "beforeLine": 319,
+      "afterLine": 347
+    },
+    {
+      "path": "runtimeAuth:revokeMembership",
+      "file": "convex-dev/runtimeAuth.ts",
+      "beforeLine": 326,
+      "afterLine": 354
+    },
+    {
+      "path": "runtimeAuth:deletePrincipal",
+      "file": "convex-dev/runtimeAuth.ts",
+      "beforeLine": 334,
+      "afterLine": 362
+    },
+    {
+      "path": "runtimeAuth:deleteScope",
+      "file": "convex-dev/runtimeAuth.ts",
+      "beforeLine": 342,
+      "afterLine": 370
+    },
+    {
+      "path": "runtimeAuth:tombstoneResource",
+      "file": "convex-dev/runtimeAuth.ts",
+      "beforeLine": 354,
+      "afterLine": 382
+    }
+  ],
+  "priorInventoryPolicyChanges": "21 intentional non-auth policy changes are preserved in history/cycle3-pre-grant-invariant/historical-qualification.json; this helper fix changes none of those policy semantics.",
+  "supersedes": "Original55 helper outcomes no longer certify the changed helper; all current authority and portable policy suites were rerun."
+}

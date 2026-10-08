@@ -170,23 +170,34 @@ export class CortexMemoryProvider {
       prompt: augmentedPrompt,
     });
 
-    // Step 5: Store conversation (async, don't block)
+    const responseText = typeof result.text === "string"
+      ? result.text
+      : Array.isArray(result.content)
+        ? result.content
+            .filter((part: { type?: string; text?: unknown }) =>
+              part.type === "text" && typeof part.text === "string",
+            )
+            .map((part: { text: string }) => part.text)
+            .join("")
+        : "";
+
+    // Step 5: Store the generated text, excluding reasoning and tool content.
     if (this.config.enableMemoryStorage !== false) {
       const lastUserMessage = getLastUserMessage(options.prompt);
-      if (lastUserMessage && result.text) {
+      if (lastUserMessage && responseText) {
         // Use phase-aware observer if configured, otherwise fall back to layerObserver
         const rememberObserver =
           this.config.rememberObserver || this.config.layerObserver;
 
         // Use remember() for non-streaming responses
         // The core SDK now handles orchestration events via the observer parameter
-        this.cortex.memory
+        await this.cortex.memory
           .remember(
             {
               memorySpaceId: this.config.memorySpaceId,
               conversationId,
               userMessage: lastUserMessage,
-              agentResponse: result.text,
+              agentResponse: responseText,
               userId,
               userName: this.config.userName || "User",
               agentId: this.agentId, // Required for user-agent conversations (SDK v0.17.0+)

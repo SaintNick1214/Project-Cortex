@@ -1,0 +1,2 @@
+import base from './jest.config.mjs';
+export default {...base,rootDir:'.',setupFiles:[],setupFilesAfterEnv:[],reporters:['default'],cacheDirectory:'../jest-cache',testMatch:['<rootDir>/tests/unit/**/*.test.ts']};

@@ -45,7 +45,7 @@ export function createGraphRebuildTransport(options:{url:string;deploymentKey:st
     if(args.version!==2||!Object.values(GRAPH_TABLES).includes(args.kind)||args.tenantId!==undefined&&(typeof args.tenantId!=="string"||!args.tenantId)||
       args.memorySpaceId!==undefined&&(typeof args.memorySpaceId!=="string"||!args.memorySpaceId))throw new GraphDatabaseError("Graph rebuild requires fixed kind and exact known scope.","GRAPH_SCOPE_MISMATCH");
     inFlight=true;current=request;
-    try{return await client.query(makeFunctionReference(`graphSync:${name}`),args as unknown as Record<string,unknown>);}
+    try{return await client.query(makeFunctionReference(`cliOperator/graphSync:${name}`),args as unknown as Record<string,unknown>);}
     catch(error){if(error instanceof ConvexError||error instanceof GraphDatabaseError)throw error;throw new GraphDatabaseError("Fixed native graph rebuild request failed; confirmed counts remain partial.",request?.signal?.aborted?"GRAPH_REBUILD_CANCELLED":"GRAPH_REBUILD_TRANSPORT_FAILED");}
     finally{inFlight=false;current=undefined;}
   };

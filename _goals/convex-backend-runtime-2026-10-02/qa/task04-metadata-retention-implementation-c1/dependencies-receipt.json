@@ -1,0 +1,11 @@
+{
+  "argv": [
+    "python3",
+    "-c",
+    "from pathlib import Path;b=Path(\"_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2\");print((b/\"fixture/convex/lifecycle.ts\").read_text()[:1300]);print(\"capture\", \"\\n\".join(s for s in (b/\"fixture/convex/guard.ts\").read_text().splitlines() if \"capture\" in s or \"observeTranscript\" in s)); print(\"dirs\",[p.name for p in b.iterdir() if p.is_dir()]);print(\"vm\",[str(p) for p in (b/\"fixture-vm\").rglob(\"*\") if p.is_file()]); print(\"sourcechecks\",[str(p) for p in (b/\"checks\").glob(\"*\")])"
+  ],
+  "cwd": "/workspace/Project-Cortex",
+  "startUtc": "2026-10-04T14:20:30.290648+00:00",
+  "endUtc": "2026-10-04T14:20:30.314682+00:00",
+  "exit": 0
+}

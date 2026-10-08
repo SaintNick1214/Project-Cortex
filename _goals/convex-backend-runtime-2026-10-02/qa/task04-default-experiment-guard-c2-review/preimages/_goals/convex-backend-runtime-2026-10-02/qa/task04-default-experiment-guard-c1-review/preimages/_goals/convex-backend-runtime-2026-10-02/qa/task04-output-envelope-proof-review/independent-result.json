@@ -1,0 +1,61 @@
+{
+  "completeVocabulary": {
+    "rows": 199998,
+    "maximum": 128,
+    "witnesses": [
+      {
+        "rank": 72056,
+        "bytes": 128,
+        "hex": "2020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020"
+      }
+    ]
+  },
+  "completeNonASCIIScalars": {
+    "scalarCount": 1111936,
+    "scalarMax": 4
+  },
+  "adversarialDecoder": {
+    "checks": 1419600,
+    "strictReductions": 331145,
+    "prefixRepresentatives": 2547,
+    "counterexamplesToEquality": [
+      {
+        "left": "e2",
+        "right": "82ac",
+        "separate": 9,
+        "joint": 3
+      },
+      {
+        "left": "f09f98",
+        "right": "80",
+        "separate": 6,
+        "joint": 4
+      }
+    ],
+    "noCounterexampleFound": true,
+    "role": "falsification support only; general theorem rests on reviewed analytical boundary-state proof",
+    "BOM": "ignoreBOM=true preserves U+FEFF as Python replacement decoding; no provider assertion"
+  },
+  "canonicalSerializer": {
+    "source": "src/domain/model-policy.ts actual function compiled without modification",
+    "negativeZeroNonfiniteSparseAccessorNonplainRejected": true,
+    "profileBytes": 215,
+    "textOverhead": 11,
+    "vectorBytes": 40177,
+    "fileBytes": 40178
+  },
+  "binary64Samples": {
+    "finiteNumbers": 78628,
+    "numberMax": 25,
+    "role": "adversarial falsification only; general 25-byte bound rests on midpoint and notation proof"
+  },
+  "theoremReview": {
+    "boundaryStates": "no pending prefix or one proper valid scalar prefix; invalid next byte reprocessed identically",
+    "completion": "joint L<=4, independent 3+3k>=6",
+    "interruption": "joint3<=3+3k",
+    "induction": "extends to any finite sequence of fragments",
+    "shortestDecimal": "17-significant-digit candidate error < minimum relative binary64 midpoint distance 2^-54; shortest k<=17",
+    "notation": "all n=-323..309 and k=1..17 grammars yield <=25; real 25-byte witness attains it"
+  },
+  "scope": "conditional output proof only; serving decoder/tokenizer/cap/native result correspondence NOT_RUN"
+}

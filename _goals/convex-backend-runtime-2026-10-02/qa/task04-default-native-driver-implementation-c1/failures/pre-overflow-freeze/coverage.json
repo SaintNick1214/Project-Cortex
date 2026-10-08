@@ -1,0 +1,112 @@
+{
+  "scope": "ISOLATED_OFFLINE_IMPLEMENTATION_REVIEW_PENDING",
+  "normativeContracts": 6,
+  "acceptedSupplementalClarifications": 2,
+  "mappings": [
+    {
+      "contract": "receipt-state.md",
+      "clauses": "Required exact ReceiptV2/Binding/Counts; H/ID/N/Epoch/Time/null-v-zero/categories; own graph/canonical/UTF8/version/scope; cross-field method/model/finish/usage/lifetime/serving/money/result/reason matrix; parser order1\u20133",
+      "implementation": "canonical.ts; contracts.ts; validate.ts receipt/binding/result/vector",
+      "executedChecks": "final-suite-02 schema-adverse21; canonical adverse; observer predicates",
+      "wiring": "capture\u2192receipt\u2192observeTranscript\u2192rebuilt receipt; account recursively parses",
+      "limits": "Native/provider/platform evidence NOT_RUN; offline handler/synthetic controls only"
+    },
+    {
+      "contract": "receipt-state.md",
+      "clauses": "Exact Account/Attempt/Facts; sums/order/active own slot/K/format2; immutable fact union/null facts/refinementraw digests/stopReason; max2 independent upgrades; privateclosed/trigger relation; no reset/downgrade/overflow/secondledger",
+      "implementation": "validate.ts account/factsFold; guard.ts reserve/enter/capture/attach/control/stop",
+      "executedChecks": "final-suite-02 controls9/late2/runner6; original refinement4/fresh5 separate v1",
+      "wiring": "same account-row native OCC transaction; historical hashes/prefix validator",
+      "limits": "Native/provider/platform evidence NOT_RUN; offline handler/synthetic controls only"
+    },
+    {
+      "contract": "receipt-state.md",
+      "clauses": "MalformedSTOP1/closedrepeat0; collision0+separateSTOP; EMPTY source revalidation/downgrade; historical replay before live result fence; fulluncapped known vs unknown fullK/lifetime independently",
+      "implementation": "guard.ts capture; proofs.ts; lifecycle.ts history",
+      "executedChecks": "schema-adverse21; unknown/fullK; two independent postpurge upgrades; uncapped40000; identitycollision/response loss",
+      "wiring": "internal ROOT capture backing reruns observer; immutable dispatch before mutation",
+      "limits": "Native/provider/platform evidence NOT_RUN; offline handler/synthetic controls only"
+    },
+    {
+      "contract": "observer-proofs.md",
+      "clauses": "Finite observer inputs/native own detach; raw limits180000/4096/depth16/512/raw8/finish1/private bound; generate raw ID/model/choice/content/nativeusage/finish correspondence; ordered streams/rawIDmodel/conflicts/finish/textend/flush/local endings; embedding minimal raw ID/model/vector/profile/output-null semantics",
+      "implementation": "observer.ts selected result/nativeEvent/makeEvent/observeTranscript",
+      "executedChecks": "final-suite-02 observer7; adapter14; synthetic genuine-terminal/error/drift; bounds",
+      "wiring": "official native result\u2192bounded own-data transcript\u2192capture resolver revalidation",
+      "limits": "Native/provider/platform evidence NOT_RUN; offline handler/synthetic controls only"
+    },
+    {
+      "contract": "observer-proofs.md",
+      "clauses": "Exact ProofCommon/Lifetime/Serving/Money keys/pins/versions/source/currentness/review/installation/method/model/category/wholeinvocation/drift rules; registry EMPTY/no callerinstall; nomination predicates; exact outward conversion e796; conditional source snapshot entry vs actual proof; retained/transient backing",
+      "implementation": "proofs.ts validateProof/createResolver/EMPTY; installed.ts SOURCE_SNAPSHOT; store.ts sourceCurrent; guard.ts capture",
+      "executedChecks": "final-suite-02 proofs3/controls arithmetic/source drift/missingdriver/EMPTY; external56prepost",
+      "wiring": "compiled server-code resolver only; ROOT-owned private evidence42 max3 perdispatch; transient afterpurge no resurrection",
+      "limits": "Actual complete categories/currency/whole money/serving/revision/decoder/lifetime proofs remain absent; no observed cost alone is known"
+    },
+    {
+      "contract": "managed-fixture.md",
+      "clauses": "Complete fixture-owned table/schema/index1536/profile/scope/grant/source/chunk/vector IDs; exact semantic codecs/current flags/window/epochs/hash/tombstone; vector/native correspondence; bounded unique ownership/writeKey/idempotency/collision; E11write/E12E13nowrite",
+      "implementation": "schema.ts; managed.ts checkFence/writeE11; repository-codec.ts; store.ts resources",
+      "executedChecks": "final-suite-02 managed5; vector/native hash difference; oldprofile/EMPTY/stale writes",
+      "wiring": "runner only after qualified capture+attach\u2192getFence\u2192E11write; no production schema/root import",
+      "limits": "Native/provider/platform evidence NOT_RUN; offline handler/synthetic controls only"
+    },
+    {
+      "contract": "managed-fixture.md + accepted composite C2",
+      "clauses": "Preflight exact snapshot; composite exact6keys UTF8 C hash/serverderive/retain4+5thfilter; singleeq/limit1/noOR/fallback/rescan; four-field/current-source atomic hydration/finalauthority; allowlisted Match; every vector/lifecycle load composite recomputation",
+      "implementation": "managed.ts preflight/queryAuthorization/searchE14/hydrate/readOwned; repository-codec.ts; lifecycle.ts ownedRows",
+      "executedChecks": "final-suite-02 managed positive;4 indexed+4 forged hydration excludes; composite replay corruption/tuple; source/revision/hash/grant/chunk/profile async races",
+      "wiring": "official ctx.vectorSearch supported signature only; separate query transactions/current checks",
+      "limits": "Real vector index/OCC/service/read/write/search NOT_RUN; root later official codegen/native profiles mandatory"
+    },
+    {
+      "contract": "staging-trigger.md + replay-cleanup.md",
+      "clauses": "First eligible persisted private nonempty part; C09revoke/C10cancel durable once atomic; complete binding/sequence/rawPartDigest/StageIdentity; closed attachment; lostresponse hash recovery/noeligible/newlate/pending outcomes/no publicpartial",
+      "implementation": "runner.ts onEvents; lifecycle.ts stageAndTrigger/inspectTrigger; retained account T",
+      "executedChecks": "final-suite-02 lifecycle4/runner6 prefixed stage; changedsame-text seq/digest0writes; exact loss replay; noeligible; native deadline",
+      "wiring": "single native reader; synchronous awaited internal stage before localcancel; owned callback deadlines; no public stage hydration",
+      "limits": "Native/provider/platform evidence NOT_RUN; offline handler/synthetic controls only"
+    },
+    {
+      "contract": "replay-cleanup.md",
+      "clauses": "Historical exact stage replay before fresh live fences; collision0; ROOTclosed operation-specific owned delete/revoke/recover/purge vs LIVE inference; normalized Owned/intent APIs/results/epochs/scope/target/ownership/stale/idempotency/no renewal; unknown liability preserved",
+      "implementation": "lifecycle.ts cleanupHandler/typedIntent/ownedInput/loadRecovery/recoverOwnedEvidence; guard/store",
+      "executedChecks": "final-suite-02 lifecycle4/late2; delete after unknown STOP/selfrevoke/repeat/wrongowner/scope/target",
+      "wiring": "all ROOT destroy/recovery registeredinternal; fresh live inference remains current-only",
+      "limits": "Native/provider/platform evidence NOT_RUN; offline handler/synthetic controls only"
+    },
+    {
+      "contract": "hash-recovery.md",
+      "clauses": "Exact versioned domains/preimage keys/order/hash T/L/S/E/R/intents; full canonical retained T postpurge; every row redundancies/canonical/hash/effects; immutable old receipt prefix vs mutable late L; corrupted trigger deny0/no summary; purged stageclosed; already no-write exact current-derived R; applied replay stable; max42/2/1 purge",
+      "implementation": "lifecycle.ts projections/shapeL/S/E/validateLifecycle/history/makeLifecycle/loadRecovery; validate.ts trigger/account",
+      "executedChecks": "final-suite-02 lifecycle hash/canonical/row corruptions; postpurge fullcharge and two upgrades/no resurrection; read-only replay",
+      "wiring": "private rows validated before effects; rollback errors rethrow after writing; original account/tombstones/lifecycle+T retained",
+      "limits": "Native/provider/platform evidence NOT_RUN; offline handler/synthetic controls only"
+    },
+    {
+      "contract": "accepted optional stream-start C1",
+      "clauses": "Exact optional leading seq0 originaltwo-key emptywarnings; enum/backing parser/selection/reducer; retain full original canonical/eventhash/order; no authority/eligibility; no-prefix unchanged; malformed/repeated/late/descriptor/limit/correspondence adversaries",
+      "implementation": "observer.ts Event/nativeEvent/makeEvent/observeTranscript; runner.ts supported reader",
+      "executedChecks": "final-suite-02 observer7 + runner C09/C10 actualseq3 and rawpart digest; adapter14 exact prefixed supported types",
+      "wiring": "new start never skipped or relabeled; complete T uses actual text sequence; all old limits preserved",
+      "limits": "Native/provider/platform evidence NOT_RUN; offline handler/synthetic controls only"
+    },
+    {
+      "contract": "proposal/check-plan/fixed14",
+      "clauses": "Exact14/13native+wirehashes/order/U/M/conditionalK314310/default1536/o200k/128*M+11/source closure; onepermit/active/no15th/unknown/replay/no reset; officialfactory/modelId/token boundaries/native v4 calls/no highlevelretry/fetchhack; absolute1000/15000/1000/1000ownership/localtimeout unknown/lateoriginal persistenceonly; missingdriver",
+      "implementation": "cases.ts; requests.ts (private synthetic); installed.ts; runner.ts; guard.ts",
+      "executedChecks": "final-suite-02 controls9/runner6/adapter14; original23+6+4+5; final-types-02/final-lint-02; protected56post",
+      "wiring": "published run disabled/missingdriver before reserve; ROOT reviews new actual capsule/codegen/load/source/native profiles before enabling",
+      "limits": "Official factory not executed offline; SDK supported fakefetch only proves adaptertransform. No native IDs/signers/env/private actual inputs/services"
+    },
+    {
+      "contract": "original acceptance/gates",
+      "clauses": "Preserve complete C1/C2/C3/C4 failure/review lineage/nested manifests; source frozen c827/e796/v1; all13operations/all17/Task08/09/14/UI/native/fullcore incomplete; initial14/28/$10 voluntarybounds/nocap/numericcyclesonlywaived; ROOTonly provision/stage/deploy/paid/cleanup; bootstrap split productionactualrootEMPTY",
+      "implementation": "lineage/; regression/v1-c2; report.md; source-pre/post; check-history/preimage-index",
+      "executedChecks": "baseline23/hostile6/refinement4/fresh5; source56 unchanged; own recursive manifest",
+      "wiring": "fresh independent implementation review\u2192ROOT source/operator/load/target/security/codegen/OCC/currentness/3native changedsource profile acceptance\u2192paid\u2192actual review\u2192separate fixture governed qualification\u2192retirement",
+      "limits": "NOT_RUN all actual/native/service/paid/production/UI acceptance; no scope exclusion or claim from mocks"
+    }
+  ],
+  "evidenceGap": "Earliest two exploration startUTC/fullraw receipts and some missing-path probe receipts NOT_CAPTURED; exact recorded fixture byte-preimages all resolved; see report/check-history"
+}

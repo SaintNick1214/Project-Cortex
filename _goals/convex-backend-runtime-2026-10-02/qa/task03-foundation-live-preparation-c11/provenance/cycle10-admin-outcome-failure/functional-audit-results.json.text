@@ -1,0 +1,48 @@
+{
+  "scope": "OFFLINE_NATIVE_HANDLERS_ONLY",
+  "services": 0,
+  "signatures": 0,
+  "descriptorAssertionsUnchanged": true,
+  "results": [
+    {
+      "probe": "native-descriptor-admin-receipt",
+      "receipt": {
+        "deleted": true
+      },
+      "rowAbsent": true
+    },
+    {
+      "probe": "original-descriptor",
+      "id": "mwd-graph-stored-reference",
+      "status": "FAIL",
+      "failure": {
+        "name": "AssertionError",
+        "code": "ERR_ASSERTION",
+        "line": [
+          "    at Object.graph [as run] (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c10/cases/metadata-worker-domain.mjs:186:10)"
+        ]
+      }
+    },
+    {
+      "probe": "original-descriptor",
+      "id": "mwd-domain-owned-current-reference",
+      "status": "PASS"
+    },
+    {
+      "probe": "original-descriptor",
+      "id": "mwd-domain-policy-intermediate",
+      "status": "PASS"
+    },
+    {
+      "probe": "strict-native-admin-receipt-and-effects",
+      "status": "PASS",
+      "checks": [
+        "exact-object-not-boolean",
+        "policy-and-linked-log-absent",
+        "unrelated-log-preserved",
+        "missing-row-false-receipt",
+        "unsupported-source-table-no-effect"
+      ]
+    }
+  ]
+}

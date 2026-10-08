@@ -1,0 +1,185 @@
+{
+  "scope": "PIPELINE_REPORTED_ISSUES_RESOLVED_NOT_FULL_BACKEND_COMPLETION",
+  "utc": "2026-10-05 18:49:27 UTC",
+  "validatedConfigCommit": "e87ba4c0f854d89831a0a138c99a2bbfbd356575",
+  "securityWorkflowGitBlobSHA": "a665553b5b548f7d4563db0cc45f3a1f84a4adce",
+  "codeqlConfigGitBlobSHA": "400a30d85412f765363180e9ecdb7ff7a43ba6d4",
+  "exactRemoteDiffVerified": [
+    ".github/codeql/codeql-config.yml",
+    ".github/workflows/security.yml",
+    "_goals/convex-backend-runtime-2026-10-02/qa/pipeline-policy-2026-10-05/resolution-plan.json"
+  ],
+  "codeqlFindingCheck": {
+    "id": 111925288742,
+    "conclusion": "success",
+    "annotations": 0,
+    "detailsUrl": "https://github.com/SaintNick1214/Project-Cortex/runs/111925288742"
+  },
+  "codeqlAnalysis": {
+    "id": 111921741122,
+    "conclusion": "success",
+    "detailsUrl": "https://github.com/SaintNick1214/Project-Cortex/actions/runs/37356972448/job/111921741122"
+  },
+  "commitSignatureJobAbsent": true,
+  "remainingCiChecksAtReadyTransition": [
+    {
+      "name": "Test TypeScript SDK (Shard 3/5)",
+      "status": "in_progress",
+      "conclusion": null
+    },
+    {
+      "name": "Test TypeScript SDK (Shard 5/5)",
+      "status": "in_progress",
+      "conclusion": null
+    },
+    {
+      "name": "Test TypeScript SDK (Shard 4/5)",
+      "status": "in_progress",
+      "conclusion": null
+    },
+    {
+      "name": "Test TypeScript SDK (Shard 2/5)",
+      "status": "in_progress",
+      "conclusion": null
+    },
+    {
+      "name": "Test Vercel AI Provider",
+      "status": "in_progress",
+      "conclusion": null
+    },
+    {
+      "name": "Code Quality (Lint & Type Check)",
+      "status": "in_progress",
+      "conclusion": null
+    },
+    {
+      "name": "Test Cortex CLI",
+      "status": "in_progress",
+      "conclusion": null
+    },
+    {
+      "name": "Test TypeScript SDK (Shard 1/5)",
+      "status": "in_progress",
+      "conclusion": null
+    },
+    {
+      "name": "Trivy",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "CodeQL",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "Deploy & Purge Database",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "Socket Security: Pull Request Alerts",
+      "status": "completed",
+      "conclusion": "neutral"
+    },
+    {
+      "name": "Socket Security: Project Report",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "Build demo (packages/vercel-ai-provider/quickstart)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "Packed package and browser contracts",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "Supply Chain Security (Scorecard)",
+      "status": "completed",
+      "conclusion": "skipped"
+    },
+    {
+      "name": "Build demo (packages/cortex-cli/templates/chat-sdk-quickstart)",
+      "status": "in_progress",
+      "conclusion": null
+    },
+    {
+      "name": "Neo4j and Memgraph contracts",
+      "status": "in_progress",
+      "conclusion": null
+    },
+    {
+      "name": "Build demo (packages/cortex-cli/templates/basic)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "Build demo (packages/cortex-cli/templates/vercel-ai-quickstart)",
+      "status": "in_progress",
+      "conclusion": null
+    },
+    {
+      "name": "Dependency Review",
+      "status": "in_progress",
+      "conclusion": null
+    },
+    {
+      "name": "Detect File Changes",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "Secret Scanning",
+      "status": "in_progress",
+      "conclusion": null
+    },
+    {
+      "name": "CodeQL Analysis (javascript-typescript)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "Dependency Vulnerability Scan",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "API Security Scan (Semgrep)",
+      "status": "in_progress",
+      "conclusion": null
+    },
+    {
+      "name": "License Compliance",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "OpenAPI Security Audit",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ],
+  "readyForReview": {
+    "pr": 134,
+    "url": "https://github.com/SaintNick1214/Project-Cortex/pull/134",
+    "draft": false,
+    "base": "dev",
+    "userAuthorized": true
+  },
+  "independentAgentReview": {
+    "verdict": "UNAVAILABLE_NOT_CLAIMED",
+    "initialization": "pending_init",
+    "cancellationRequested": true,
+    "reason": "Execution environment offline; change checked directly and validated by actual GitHub CodeQL jobs."
+  },
+  "localExecution": "UNAVAILABLE_ENVIRONMENT_OFFLINE",
+  "backendTask04": "REJECT2.8_UNCHANGED",
+  "backendTasks05To17": "INCOMPLETE_UNCHANGED",
+  "merge": false,
+  "packageRelease": false,
+  "productionDeployment": false
+}

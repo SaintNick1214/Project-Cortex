@@ -1,0 +1,26 @@
+import assert from 'node:assert/strict';
+import {fixture} from '/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/tests/unit/runtimeMetadataAuth/fixture.ts';
+import * as immutable from '/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/convex-dev/immutable.ts';
+import * as mutable from '/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/convex-dev/mutable.ts';
+import * as sessions from '/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/convex-dev/sessions.ts';
+const outputs=[];
+for(const [name,registration] of [['touch',sessions.touch],['message-counter',sessions.incrementMessageCount],['memory-counter',sessions.incrementMemoryCount]]){
+ const f=fixture(); const originalNow=Date.now; const now=10000; let current=now;Date.now=()=>current;f.seedSession({expiresAt:now+100,status:'idle'});
+ const originalGet=f.db.get.bind(f.db);let grantGets=0;let armed=false; const originalQuery=f.db.query.bind(f.db);
+ f.db.query=(table)=>{const q=originalQuery(table);const take=q.take.bind(q);q.take=async(limit)=>{const value=await take(limit);if(table==='sessions'){assert.equal(limit,2);armed=true;}return value};return q};
+ f.db.get=async(table,id)=>{const row=await originalGet(table,id);if(armed&&table==='runtimeAuthGrants'&&++grantGets===(name==='touch'?3:6))current=now+101;return row};
+ try{let result,accepted,error;try{result=await f.run(registration,{sessionId:'one',...(name==='touch'?{}:{reference:f.reference})});accepted=true}catch(e){accepted=false;error=String(e)}assert.equal(armed,true);assert.equal(current,now+101);outputs.push({name:'expiry-late-'+name,accepted,result,error,grantGets,current,writes:f.db.writes,row:f.db.table('sessions')[0]})}finally{Date.now=originalNow}
+}
+for(const [name,registration,args] of [
+ ['counter',sessions.incrementMessageCount,{sessionId:'one'}],['expire',sessions.expireIdle,{idleTimeout:0}]
+]){
+ const f=fixture({access:'space',space:'space-a'});f.seedSession({ownerPrincipalId:'runtimeAuthPrincipals:bob',userId:'bob'});
+ try{const result=await f.run(registration,{...args,reference:f.reference});outputs.push({name:'malformed-owner-reference-'+name,accepted:true,result,row:f.db.table('sessions')[0]})}catch(e){outputs.push({name:'malformed-owner-reference-'+name,accepted:false,error:String(e)})}
+}
+for(const [name,registration,args] of [
+ ['immutable-filtered-foreign-key-duplicate',immutable.purgeMany,{type:'note'}],['mutable-filtered-foreign-key-duplicate',mutable.purgeMany,{namespace:'counter'}],['sessions-filtered-foreign-key-duplicate',sessions.endAll,{userId:'alice'}]
+]){
+ const f=fixture();const seed=name.startsWith('immutable')?'seedImmutable':name.startsWith('mutable')?'seedMutable':'seedSession';f[seed]();f[seed]({ownerPrincipalId:'runtimeAuthPrincipals:foreign'});
+ try{const result=await f.run(registration,args);outputs.push({name,accepted:true,result,writes:f.db.writes})}catch(e){outputs.push({name,accepted:false,error:String(e),writes:f.db.writes})}
+}
+console.log(JSON.stringify(outputs,null,2));

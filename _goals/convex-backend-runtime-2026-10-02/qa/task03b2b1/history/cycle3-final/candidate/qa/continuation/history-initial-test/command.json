@@ -1,0 +1,30 @@
+{
+  "command": [
+    "npx",
+    "--offline",
+    "--cache",
+    "/workspace/Project-Cortex/work/backend-runtime/npm12-cache",
+    "--yes",
+    "--package=npm@12.2.0",
+    "--",
+    "npm",
+    "exec",
+    "--",
+    "node",
+    "--experimental-vm-modules",
+    "node_modules/jest/bin/jest.js",
+    "--config",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task03b2b1/jest.scoped.cjs",
+    "--runInBand",
+    "--runTestsByPath",
+    "tests/unit/runtimeRegistryAuth/admissionBoundary.test.ts",
+    "--json",
+    "--outputFile=/workspace/Project-Cortex/work/backend-runtime/task03b2b1-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03b2b1/cycle3/continuation/history-initial-test/tests.json"
+  ],
+  "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2b1-checkout",
+  "utcStart": "2026-10-03T13:14:41.110917+00:00",
+  "utcEnd": "2026-10-03T13:14:45.598558+00:00",
+  "exitCode": 1,
+  "testSourceSha256": "cc103c817c7186358cb0a946b3e7e08e37ae9032bf7f15d0be5bc334e3cd1301",
+  "classification": "New positive-control assertion compares lazy fixture empty-table bookkeeping; records and scope outputs otherwise correct. Failure preserved before assertion correction."
+}

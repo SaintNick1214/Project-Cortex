@@ -1,0 +1,11 @@
+{
+  "argv": [
+    "python3",
+    "-c",
+    "from pathlib import Path\np=Path('_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c1/fixture/checks/metadata-purge.mjs');s=p.read_text();needle='const recovered=await h.query';addition=\"assert.equal((await h.mutation(lifecycle.revokeOwned,{intentCanonical:canonical({domain:'cortex.experiment.revoke-intent.v1',version:1,owned,intentKey:'c'.repeat(64),expectedGrantEpoch:grant.epoch})})).kind,'revoked');\\n\";assert needle in s;s=s.replace(needle,addition+needle);p.write_text(s)"
+  ],
+  "cwd": "/workspace/Project-Cortex",
+  "startUtc": "2026-10-04T14:30:49.867258+00:00",
+  "endUtc": "2026-10-04T14:30:49.889920+00:00",
+  "exit": 0
+}

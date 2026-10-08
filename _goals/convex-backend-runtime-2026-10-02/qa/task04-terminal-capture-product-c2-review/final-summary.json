@@ -1,0 +1,93 @@
+{
+  "UTC": "2026-10-04T07:13:01.027934+00:00",
+  "verdict": "PASS_OFFLINE_PRODUCT_ONLY",
+  "average": 4.2,
+  "scores": {
+    "requirements": 5,
+    "codeQuality": 4,
+    "testQuality": 4,
+    "patternAdherence": 4,
+    "completeness": 4
+  },
+  "results": {
+    "product": {
+      "numTotalTests": 133,
+      "numPassedTests": 133,
+      "numFailedTests": 0,
+      "numPendingTests": 0,
+      "numTodoTests": 0,
+      "numTotalTestSuites": 1,
+      "skips": []
+    },
+    "hostile": {
+      "numTotalTests": 65,
+      "numPassedTests": 64,
+      "numFailedTests": 1,
+      "numPendingTests": 0,
+      "numTodoTests": 0,
+      "numTotalTestSuites": 1,
+      "skips": []
+    },
+    "hostile-fixed": {
+      "numTotalTests": 65,
+      "numPassedTests": 65,
+      "numFailedTests": 0,
+      "numPendingTests": 0,
+      "numTodoTests": 0,
+      "numTotalTestSuites": 1,
+      "skips": []
+    },
+    "hostile-final": {
+      "numTotalTests": 65,
+      "numPassedTests": 65,
+      "numFailedTests": 0,
+      "numPendingTests": 0,
+      "numTodoTests": 0,
+      "numTotalTestSuites": 1,
+      "skips": []
+    },
+    "old-requirement": {
+      "numTotalTests": 11,
+      "numPassedTests": 11,
+      "numFailedTests": 0,
+      "numPendingTests": 0,
+      "numTodoTests": 0,
+      "numTotalTestSuites": 1,
+      "skips": []
+    },
+    "fresh-witness": {
+      "numTotalTests": 1,
+      "numPassedTests": 1,
+      "numFailedTests": 0,
+      "numPendingTests": 0,
+      "numTodoTests": 0,
+      "numTotalTestSuites": 1,
+      "skips": []
+    }
+  },
+  "allCommandBindingsStable": true,
+  "commands": {
+    "hostile-config.command.json": 0,
+    "old-requirement.command.json": 0,
+    "fresh-witness-discovery.command.json": 0,
+    "hostile-discovery.command.json": 0,
+    "lint.command.json": 0,
+    "hostile-fixed-config.command.json": 0,
+    "hostile-final-config.command.json": 0,
+    "product.command.json": 0,
+    "old-requirement-discovery.command.json": 0,
+    "product-config.command.json": 0,
+    "fresh-witness.command.json": 0,
+    "product-discovery.command.json": 0,
+    "hostile-final.command.json": 0,
+    "hostile.command.json": 1,
+    "types.command.json": 0,
+    "hostile-final-discovery.command.json": 0,
+    "hostile-fixed-discovery.command.json": 0,
+    "npm-version.command.json": 0,
+    "hostile-fixed.command.json": 0,
+    "node-version.command.json": 0
+  },
+  "protectedQAMismatches": [],
+  "oldObservationExcluded": "Original C1 final QA writer/assert-old-bug observation preserved, deliberately absent from new11-case scratch definition; not executed."
+}

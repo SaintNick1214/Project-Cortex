@@ -30,7 +30,7 @@ async function tree(dir:string):Promise<Record<string,string>> {
 describe("current canonical catalog prospective integration",()=>{
   it("validates the selected actual SDK source without extraction or module execution",async()=>{
     const view=await readTemplateBackendCandidate(inputs().sdkPackage);
-    expect(validateSdkPackage(inputs().sdkPackage,view).version).toBe("0.37.0");
+    expect(validateSdkPackage(inputs().sdkPackage,view).version).toBe("0.38.0");
     expect(Object.keys(view.files)).toContain("schema.ts");
     if (view.artifact) expect(view.artifact.path).toBe(inputs().sdkPackage);
     else expect(view.files["schema.ts"]).toEqual(await fs.readFile(path.join(inputs().sdkPackage,"convex-dev/schema.ts")));
@@ -40,7 +40,7 @@ describe("current canonical catalog prospective integration",()=>{
     const parent=await root(),target=path.join(parent,"prospective"),before=await tree(parent);
     const prepared=await prepareTemplateInit(target,id,inputs());
     const integration=await prepareTemplateIntegration(prepared,{dryRun:true,graph:"none"});
-    expect(integration?.summary).toMatchObject({sdkVersion:"0.37.0",packageManager:id==="chat-sdk"?"pnpm":"npm"});
+    expect(integration?.summary).toMatchObject({sdkVersion:"0.38.0",packageManager:id==="chat-sdk"?"pnpm":"npm"});
     expect(integration?.summary?.conflicts).toEqual([]);
     expect((await applyPreparedTemplateInit(prepared,{dryRun:true})).status).toBe("dry-run");
     expect(await tree(parent)).toEqual(before);
@@ -55,7 +55,7 @@ describe("current canonical catalog prospective integration",()=>{
     expect(outputs.map(o=>o.identity)).toEqual([outputs[0].identity,outputs[0].identity]);
     expect(await tree(first)).toEqual(await tree(second));
     expect(services.install).not.toHaveBeenCalled();
-    expect((await readTemplateBaseline(first,"basic"))?.identity.version).toBe("1.1.0");
+    expect((await readTemplateBaseline(first,"basic"))?.identity.version).toBe("1.2.0");
   });
   it("failed integration remains partial on rerun; file recovery never repeats integration or dependencies",async()=>{
     const target=path.join(await root(),"failed");

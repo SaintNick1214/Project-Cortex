@@ -8,8 +8,11 @@ import { graphOffResult } from "../graph/erasure";
  * Registration provides discovery, analytics, and convenient cascade deletion.
  */
 
+import { isRegistryStatisticsUnavailable } from "./statistics";
+import type { AuthContext } from "../auth/types";
+import { resolveTenantId } from "../auth/tenant";
 import type { ConvexClient } from "convex/browser";
-import { api } from "../../convex-dev/_generated/api";
+import { api } from "../common/backendApi";
 import type {
   AgentRegistration,
   RegisteredAgent,
@@ -40,6 +43,8 @@ import {
 
 // Type for Convex agent query results
 interface ConvexAgentRecord {
+  tenantId?: string;
+  memorySpaceId?: string;
   agentId: string;
   name: string;
   description?: string;
@@ -67,6 +72,54 @@ import {
   createDeletionContext,
   ORPHAN_RULES,
 } from "../graph/sync/orphanDetection";
+
+export interface AgentRegistryScope {
+  tenantId?: string;
+  memorySpaceId?: string;
+}
+
+/** Legacy client cascades cannot prove complete authorized child cleanup. */
+export class AgentRegistryCapabilityError extends Error {
+  readonly code = "TRUSTED_BACKEND_CASCADE_REQUIRED";
+  readonly requiredCapability = "trusted-backend-cascade";
+  constructor() {
+    super("Agent cascade cleanup requires trusted backend execution with authorized child-resource coverage.");
+    this.name = "AgentRegistryCapabilityError";
+  }
+}
+
+/** The deletion committed but the server did not disclose its result IDs. */
+export class AgentRegistryCommittedResultError extends Error {
+  readonly code = "AGENT_REGISTRY_COMMITTED_RESULT_UNAVAILABLE";
+  readonly retryable = false;
+  readonly outcome = "committed";
+  constructor(public readonly deleted: number) {
+    super("The agent registry deletion committed, but result IDs are unavailable. Do not retry the deletion.");
+    this.name = "AgentRegistryCommittedResultError";
+  }
+}
+
+/** A server-confirmed write whose registry row cannot be disclosed. */
+export interface AgentRegistryWriteReceipt {
+  accepted: true;
+  resourceType: "agents";
+  resourceId: string;
+}
+
+/** The registry write committed; retrying it may duplicate an effect. */
+export class AgentRegistryWriteReceiptError extends Error {
+  readonly code = "AGENT_REGISTRY_WRITE_COMMITTED_READ_UNAVAILABLE";
+  readonly retryable = false;
+  readonly outcome = "committed";
+  readonly requiredCapability = "read";
+  readonly receipt: Readonly<AgentRegistryWriteReceipt>;
+
+  constructor(receipt: AgentRegistryWriteReceipt) {
+    super("The agent registry write committed, but its row is unavailable without read capability. Do not retry the committed write.");
+    this.name = "AgentRegistryWriteReceiptError";
+    this.receipt = Object.freeze({ accepted: true, resourceType: "agents", resourceId: receipt.resourceId });
+  }
+}
 
 /**
  * Custom error for cascade deletion failures
@@ -99,6 +152,7 @@ export class AgentsAPI {
     private readonly client: ConvexClient,
     private readonly graphAdapter?: GraphAdapter,
     private readonly resilience?: ResilienceLayer,
+    private readonly authContext?: AuthContext,
   ) {}
 
   /**
@@ -166,6 +220,8 @@ export class AgentsAPI {
         () =>
           this.client.mutation(api.agents.register, {
             agentId: agent.id,
+            tenantId: resolveTenantId(this.authContext?.tenantId, agent.tenantId),
+            memorySpaceId: agent.memorySpaceId,
             name: agent.name,
             description: agent.description,
             metadata: agent.metadata,
@@ -179,6 +235,10 @@ export class AgentsAPI {
 
     if (!result) {
       throw new Error(`Failed to register agent ${agent.id}`);
+    }
+
+    if ("accepted" in result) {
+      throw new AgentRegistryWriteReceiptError({ ...result, resourceType: "agents" });
     }
 
     // Sync to graph if configured
@@ -202,11 +262,10 @@ export class AgentsAPI {
       }
     }
 
-    // Compute stats
-    const stats = await this.getAgentStats(agent.id);
-
     return {
       id: result.agentId,
+      tenantId: result.tenantId,
+      memorySpaceId: result.memorySpaceId,
       name: result.name,
       description: result.description,
       metadata: (result.metadata as Record<string, unknown> | undefined) ?? {},
@@ -215,7 +274,6 @@ export class AgentsAPI {
       registeredAt: result.registeredAt,
       updatedAt: result.updatedAt,
       lastActive: result.lastActive,
-      stats,
     };
   }
 
@@ -230,12 +288,12 @@ export class AgentsAPI {
    * }
    * ```
    */
-  async get(agentId: string): Promise<RegisteredAgent | null> {
+  async get(agentId: string, scope?: AgentRegistryScope): Promise<RegisteredAgent | null> {
     // Validate agentId
     validateAgentId(agentId, "agentId");
 
     const result = await this.executeWithResilience(
-      () => this.client.query(api.agents.get, { agentId }),
+      () => this.client.query(api.agents.get, { tenantId: resolveTenantId(this.authContext?.tenantId, scope?.tenantId), memorySpaceId: scope?.memorySpaceId, agentId }),
       "agents:get",
     );
 
@@ -243,11 +301,10 @@ export class AgentsAPI {
       return null;
     }
 
-    // Compute stats
-    const stats = await this.getAgentStats(agentId);
-
     return {
       id: result.agentId,
+      tenantId: result.tenantId,
+      memorySpaceId: result.memorySpaceId,
       name: result.name,
       description: result.description,
       metadata: (result.metadata as Record<string, unknown> | undefined) ?? {},
@@ -256,7 +313,6 @@ export class AgentsAPI {
       registeredAt: result.registeredAt,
       updatedAt: result.updatedAt,
       lastActive: result.lastActive,
-      stats,
     };
   }
 
@@ -319,7 +375,8 @@ export class AgentsAPI {
 
     const results = await this.executeWithResilience(
       () =>
-        this.client.query(api.agents.list, {
+        this.client.query(api.agents.list, { tenantId: resolveTenantId(this.authContext?.tenantId, filters?.tenantId),
+          memorySpaceId: filters?.memorySpaceId,
           status: filters?.status,
           limit: filters?.limit,
           offset: filters?.offset,
@@ -375,9 +432,11 @@ export class AgentsAPI {
       );
     }
 
-    // Map to RegisteredAgent format (stats computed on-demand in get())
+    // Map readable registry rows; statistics require an explicit export request.
     return filtered.map((r: ConvexAgentRecord) => ({
       id: r.agentId,
+      tenantId: r.tenantId,
+      memorySpaceId: r.memorySpaceId,
       name: r.name,
       description: r.description,
       metadata: r.metadata ?? {},
@@ -420,7 +479,8 @@ export class AgentsAPI {
 
     return await this.executeWithResilience(
       () =>
-        this.client.query(api.agents.count, {
+        this.client.query(api.agents.count, { tenantId: resolveTenantId(this.authContext?.tenantId, filters?.tenantId),
+          memorySpaceId: filters?.memorySpaceId,
           status: filters?.status,
         }),
       "agents:count",
@@ -448,6 +508,8 @@ export class AgentsAPI {
       () =>
         this.client.mutation(api.agents.update, {
           agentId,
+          tenantId: resolveTenantId(this.authContext?.tenantId, updates.tenantId),
+          memorySpaceId: updates.memorySpaceId,
           name: updates.name,
           description: updates.description,
           metadata: updates.metadata,
@@ -458,15 +520,14 @@ export class AgentsAPI {
       "agents:update",
     );
 
-    if (!result) {
-      throw new Error(`Failed to update agent ${agentId}`);
+    if ("accepted" in result) {
+      throw new AgentRegistryWriteReceiptError({ ...result, resourceType: "agents" });
     }
-
-    // Compute stats
-    const stats = await this.getAgentStats(agentId);
 
     return {
       id: result.agentId,
+      tenantId: result.tenantId,
+      memorySpaceId: result.memorySpaceId,
       name: result.name,
       description: result.description,
       metadata: (result.metadata as Record<string, unknown> | undefined) ?? {},
@@ -475,7 +536,6 @@ export class AgentsAPI {
       registeredAt: result.registeredAt,
       updatedAt: result.updatedAt,
       lastActive: result.lastActive,
-      stats,
     };
   }
 
@@ -492,6 +552,7 @@ export class AgentsAPI {
   async configure(
     agentId: string,
     config: Record<string, unknown>,
+    scope?: AgentRegistryScope,
   ): Promise<void> {
     // Validate agentId and config
     validateAgentId(agentId, "agentId");
@@ -506,7 +567,7 @@ export class AgentsAPI {
 
     await this.executeWithResilience(
       () =>
-        this.client.mutation(api.agents.update, {
+        this.client.mutation(api.agents.update, { tenantId: resolveTenantId(this.authContext?.tenantId, scope?.tenantId), memorySpaceId: scope?.memorySpaceId,
           agentId,
           config,
         }),
@@ -524,12 +585,12 @@ export class AgentsAPI {
    * }
    * ```
    */
-  async exists(agentId: string): Promise<boolean> {
+  async exists(agentId: string, scope?: AgentRegistryScope): Promise<boolean> {
     // Validate agentId
     validateAgentId(agentId, "agentId");
 
     return await this.executeWithResilience(
-      () => this.client.query(api.agents.exists, { agentId }),
+      () => this.client.query(api.agents.exists, { tenantId: resolveTenantId(this.authContext?.tenantId, scope?.tenantId), memorySpaceId: scope?.memorySpaceId, agentId }),
       "agents:exists",
     );
   }
@@ -557,13 +618,15 @@ export class AgentsAPI {
    */
   async unregister(
     agentId: string,
-    options?: UnregisterAgentOptions,
+    options?: UnregisterAgentOptions & AgentRegistryScope,
   ): Promise<UnregisterAgentResult> {
     // Validate agentId and options
     validateAgentId(agentId, "agentId");
     if (options) {
       validateUnregisterOptions(options);
     }
+
+    if (options?.cascade) throw new AgentRegistryCapabilityError();
 
     const cascade = options?.cascade ?? false;
     const verify = options?.verify ?? true;
@@ -573,7 +636,7 @@ export class AgentsAPI {
       // Simple unregister: just remove registration
       if (!dryRun) {
         await this.executeWithResilience(
-          () => this.client.mutation(api.agents.unregister, { agentId }),
+          () => this.client.mutation(api.agents.unregister, { tenantId: resolveTenantId(this.authContext?.tenantId, options?.tenantId), memorySpaceId: options?.memorySpaceId, agentId }),
           "agents:unregister",
         );
       }
@@ -682,6 +745,8 @@ export class AgentsAPI {
       validateUnregisterOptions(options);
     }
 
+    if (options?.cascade) throw new AgentRegistryCapabilityError();
+
     // Get all matching agents
     const agents = await this.list(filters);
 
@@ -720,11 +785,14 @@ export class AgentsAPI {
       const agentIds = agents.map((a) => a.id);
       const result = await this.executeWithResilience(
         () =>
-          this.client.mutation(api.agents.unregisterMany, {
+          this.client.mutation(api.agents.unregisterMany, { tenantId: resolveTenantId(this.authContext?.tenantId, filters.tenantId),
+          memorySpaceId: filters.memorySpaceId,
             agentIds,
           }),
         "agents:unregisterMany",
       );
+
+      if (!result.agentIds) throw new AgentRegistryCommittedResultError(result.deleted);
 
       return {
         deleted: result.deleted,
@@ -800,7 +868,8 @@ export class AgentsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.mutation(api.agents.updateMany, {
+        this.client.mutation(api.agents.updateMany, { tenantId: resolveTenantId(this.authContext?.tenantId, filters.tenantId),
+          memorySpaceId: filters.memorySpaceId,
           agentIds,
           name: updates.name,
           description: updates.description,
@@ -856,7 +925,7 @@ export class AgentsAPI {
     if (includeStats) {
       exportData = await Promise.all(
         agents.map(async (agent) => {
-          const stats = await this.getAgentStats(agent.id);
+          const stats = await this.getAgentStats(agent.id, { tenantId: agent.tenantId, memorySpaceId: agent.memorySpaceId });
           return { ...agent, stats } as Record<string, unknown>;
         }),
       );
@@ -952,12 +1021,27 @@ export class AgentsAPI {
   /**
    * Get agent statistics
    */
-  private async getAgentStats(agentId: string): Promise<AgentStats> {
-    const stats = await this.executeWithResilience(
-      () => this.client.query(api.agents.computeStats, { agentId }),
+  private async getAgentStats(agentId: string, scope: AgentRegistryScope): Promise<AgentStats> {
+    const result = await this.executeWithResilience(
+      async () => {
+        try {
+          return { stats: await this.client.query(api.agents.computeStats, {
+            agentId,
+            tenantId: resolveTenantId(this.authContext?.tenantId, scope.tenantId),
+            memorySpaceId: scope.memorySpaceId,
+          }) };
+        } catch (error) {
+          if (isRegistryStatisticsUnavailable(error)) {
+            return { unavailable: error };
+          }
+          throw error;
+        }
+      },
       "agents:computeStats",
     );
-    return stats as AgentStats;
+    // Preserve the typed capability error outside resilience's generic error conversion.
+    if (result.unavailable) throw result.unavailable;
+    return result.stats as AgentStats;
   }
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -1275,7 +1359,7 @@ export class AgentsAPI {
     // 5. Delete agent registration (last)
     if (plan.agentRegistration) {
       try {
-        await this.client.mutation(api.agents.unregister, { agentId });
+        await this.client.mutation(api.agents.unregister, { tenantId: this.authContext?.tenantId, agentId });
         result.deletedLayers.push("agent-registration");
       } catch (error) {
         throw new Error(`Failed to unregister agent ${agentId}: ${error}`);
@@ -1306,7 +1390,7 @@ export class AgentsAPI {
 
     if (backups.agentRegistration) {
       try {
-        await this.client.mutation(api.agents.register, {
+        await this.client.mutation(api.agents.register, { tenantId: this.authContext?.tenantId,
           agentId: backups.agentRegistration.id,
           name: backups.agentRegistration.name,
           description: backups.agentRegistration.description,

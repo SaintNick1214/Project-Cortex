@@ -8,7 +8,7 @@ import type { GraphSyncPolicy } from "../graph/types";
  */
 
 import type { ConvexClient } from "convex/browser";
-import { api } from "../../convex-dev/_generated/api";
+import { api } from "../common/backendApi";
 import type {
   CountImmutableFilter,
   ImmutableEntry,

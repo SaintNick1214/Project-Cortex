@@ -1,0 +1,36 @@
+"""Scoped offline check receipts; never builds, deploys, installs project packages or mutates ordinary catalog tests."""
+import datetime
+import hashlib
+import json
+import pathlib
+import subprocess
+import time
+ROOT = pathlib.Path(__file__).resolve().parents[5]
+QA = ROOT / '_goals/convex-backend-runtime-2026-10-02/qa/task03b2b1'
+CACHE = '/workspace/Project-Cortex/work/backend-runtime/npm12-cache'
+PREFIX = ['npx', '--cache', CACHE, '--yes', '--package=npm@12.2.0', '--', 'npm']
+SCOPED = '_goals/convex-backend-runtime-2026-10-02/qa/task03b2b1'
+TEST = ['exec', '--', 'node', '--experimental-vm-modules', 'node_modules/jest/bin/jest.js', '--config', SCOPED + '/jest.scoped.cjs', '--runInBand']
+commands = [
+ ('node-version', ['node', '--version']),
+ ('npm-version', PREFIX + ['--version']),
+ ('backend-types', PREFIX + ['exec', '--', 'tsc', '--project', 'convex-dev/tsconfig.json', '--noEmit']),
+ ('scoped-types', PREFIX + ['exec', '--', 'tsc', '--project', SCOPED + '/tsconfig.scoped.json', '--noEmit']),
+ ('scoped-lint', PREFIX + ['exec', '--', 'eslint', 'convex-dev/agents.ts', 'convex-dev/memorySpaces.ts', 'convex-dev/contexts.ts', 'convex-dev/runtimeRegistryAuth.ts', 'convex-dev/schema.ts', 'tests/unit/runtimeRegistryAuth', SCOPED + '/inventory.mjs', SCOPED + '/jest.scoped.cjs', '--max-warnings=0']),
+ ('discovery', PREFIX + TEST + ['--listTests']),
+ ('tests', PREFIX + TEST + ['--json', '--outputFile=' + SCOPED + '/checks/tests-final.json']),
+ ('catalog', PREFIX + ['exec', '--', 'node', SCOPED + '/inventory.mjs', SCOPED + '/catalog']),
+ ('root-types-diagnostic', PREFIX + ['exec', '--', 'tsc', '--noEmit']),
+ ('root-lint-types-diagnostic', PREFIX + ['exec', '--', 'tsc', '--project', 'tsconfig.lint.json', '--noEmit']),
+ ('diff-check', ['git', 'diff', '--check']),
+]
+receipts = []
+for name, command in commands:
+ started = datetime.datetime.now(datetime.timezone.utc).isoformat(); begin = time.monotonic()
+ result = subprocess.run(command, cwd=ROOT, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+ ended = datetime.datetime.now(datetime.timezone.utc).isoformat()
+ (QA / 'checks' / (name + '.stdout.txt')).write_text(result.stdout)
+ (QA / 'checks' / (name + '.stderr.txt')).write_text(result.stderr)
+ receipt = {'name': name, 'command': command, 'cwd': str(ROOT), 'utcStart': started, 'utcEnd': ended, 'seconds': round(time.monotonic()-begin, 3), 'exitCode': result.returncode, 'stdout': name + '.stdout.txt', 'stderr': name + '.stderr.txt'}
+ receipts.append(receipt); (QA / 'checks/commands.json').write_text(json.dumps(receipts, indent=2)+'\n')
+ print(json.dumps({'name': name, 'exitCode': result.returncode}), flush=True)

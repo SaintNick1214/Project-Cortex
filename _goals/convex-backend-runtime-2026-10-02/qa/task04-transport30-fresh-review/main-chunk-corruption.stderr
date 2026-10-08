@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "/workspace/Project-Cortex/work/resume/task04-transport30-fresh-review/main-negative2/main-chunk-corruption/materialize.py", line 116, in <module>
+    if __name__=='__main__':main()
+                            ^^^^^^
+  File "/workspace/Project-Cortex/work/resume/task04-transport30-fresh-review/main-negative2/main-chunk-corruption/materialize.py", line 103, in main
+    require(0<c['bytes']<=LIMIT,'oversize chunk');b=read_at(base,c['path']);require(len(b)==c['bytes'] and digest(b)==c['sha256'],'chunk mismatch');archivehash.update(b);archivebytes+=len(b)
+                                                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/Project-Cortex/work/resume/task04-transport30-fresh-review/main-negative2/main-chunk-corruption/materialize.py", line 10, in require
+    if not ok:raise ValueError(message)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: chunk mismatch

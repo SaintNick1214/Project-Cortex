@@ -1,0 +1,19 @@
+{
+  "extends": "/tmp/task03c2-a-review1-4cCdIR/candidate/tsconfig.json",
+  "compilerOptions": {
+    "allowJs": true,
+    "noEmit": true,
+    "rootDir": "/tmp/task03c2-a-review1-4cCdIR/candidate",
+    "lib": [
+      "ES2022",
+      "DOM"
+    ]
+  },
+  "include": [
+    "/tmp/task03c2-a-review1-4cCdIR/candidate/src/users/index.ts",
+    "/tmp/task03c2-a-review1-4cCdIR/candidate/src/sessions/index.ts",
+    "/tmp/task03c2-a-review1-4cCdIR/candidate/tests/unit/runtimeWorkerClient/metadata-consumers.test.ts",
+    "/tmp/task03c2-a-review1-4cCdIR/candidate/tests/unit/runtimeWorkerClient/sessions-maintenance.test.ts"
+  ],
+  "exclude": []
+}

@@ -1,0 +1,141 @@
+[
+  {
+    "name": "inventory-retained",
+    "command": "node",
+    "args": [
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-03T08:57:57.497Z",
+    "finishedAt": "2026-10-03T08:57:57.904Z",
+    "exitCode": 0,
+    "signal": null,
+    "stdout": "_goals/convex-backend-runtime-2026-10-02/qa/task03a/checks/cycle3-grant-generation-fix/inventory-retained.stdout.log",
+    "stderr": "_goals/convex-backend-runtime-2026-10-02/qa/task03a/checks/cycle3-grant-generation-fix/inventory-retained.stderr.log"
+  },
+  {
+    "name": "inventory-reproduction",
+    "command": "node",
+    "args": [
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-03T08:57:57.905Z",
+    "finishedAt": "2026-10-03T08:57:58.289Z",
+    "exitCode": 0,
+    "signal": null,
+    "stdout": "_goals/convex-backend-runtime-2026-10-02/qa/task03a/checks/cycle3-grant-generation-fix/inventory-reproduction.stdout.log",
+    "stderr": "_goals/convex-backend-runtime-2026-10-02/qa/task03a/checks/cycle3-grant-generation-fix/inventory-reproduction.stderr.log"
+  },
+  {
+    "name": "backend-strict",
+    "command": "npm",
+    "args": [
+      "exec",
+      "--offline",
+      "--package=npm@12.2.0",
+      "--",
+      "npm",
+      "exec",
+      "--offline",
+      "--",
+      "tsc",
+      "--project",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03a/tsconfig.authority-backend.json",
+      "--noEmit"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-03T08:57:58.289Z",
+    "finishedAt": "2026-10-03T08:58:01.056Z",
+    "exitCode": 0,
+    "signal": null,
+    "stdout": "_goals/convex-backend-runtime-2026-10-02/qa/task03a/checks/cycle3-grant-generation-fix/backend-strict.stdout.log",
+    "stderr": "_goals/convex-backend-runtime-2026-10-02/qa/task03a/checks/cycle3-grant-generation-fix/backend-strict.stderr.log"
+  },
+  {
+    "name": "root-strict",
+    "command": "npm",
+    "args": [
+      "exec",
+      "--offline",
+      "--package=npm@12.2.0",
+      "--",
+      "npm",
+      "exec",
+      "--offline",
+      "--",
+      "tsc",
+      "--project",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03a/tsconfig.authority-root.json",
+      "--noEmit"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-03T08:58:01.056Z",
+    "finishedAt": "2026-10-03T08:58:03.926Z",
+    "exitCode": 0,
+    "signal": null,
+    "stdout": "_goals/convex-backend-runtime-2026-10-02/qa/task03a/checks/cycle3-grant-generation-fix/root-strict.stdout.log",
+    "stderr": "_goals/convex-backend-runtime-2026-10-02/qa/task03a/checks/cycle3-grant-generation-fix/root-strict.stderr.log"
+  },
+  {
+    "name": "affected-eslint",
+    "command": "npm",
+    "args": [
+      "exec",
+      "--offline",
+      "--package=npm@12.2.0",
+      "--",
+      "npm",
+      "exec",
+      "--offline",
+      "--",
+      "eslint",
+      "convex-dev/runtimeAuth.ts",
+      "convex-dev/runtimeAuthSchema.ts",
+      "convex-dev/schema.ts",
+      "src/auth/verified.ts",
+      "tests/unit/runtimeAuth",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs",
+      "--report-unused-disable-directives"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-03T08:58:03.926Z",
+    "finishedAt": "2026-10-03T08:58:10.319Z",
+    "exitCode": 0,
+    "signal": null,
+    "stdout": "_goals/convex-backend-runtime-2026-10-02/qa/task03a/checks/cycle3-grant-generation-fix/affected-eslint.stdout.log",
+    "stderr": "_goals/convex-backend-runtime-2026-10-02/qa/task03a/checks/cycle3-grant-generation-fix/affected-eslint.stderr.log"
+  },
+  {
+    "name": "all-authority-and-portable-policy-unit",
+    "command": "npm",
+    "args": [
+      "exec",
+      "--offline",
+      "--package=npm@12.2.0",
+      "--",
+      "npm",
+      "exec",
+      "--offline",
+      "--",
+      "node",
+      "--experimental-vm-modules",
+      "node_modules/jest/bin/jest.js",
+      "--testPathPatterns=tests/unit/runtimeAuth",
+      "--runInBand",
+      "--forceExit"
+    ],
+    "environment": {
+      "CONVEX_URL": "http://127.0.0.1:1",
+      "CONVEX_TEST_MODE": "local"
+    },
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-03T08:58:10.319Z",
+    "finishedAt": "2026-10-03T08:58:17.315Z",
+    "exitCode": 0,
+    "signal": null,
+    "stdout": "_goals/convex-backend-runtime-2026-10-02/qa/task03a/checks/cycle3-grant-generation-fix/all-authority-and-portable-policy-unit.stdout.log",
+    "stderr": "_goals/convex-backend-runtime-2026-10-02/qa/task03a/checks/cycle3-grant-generation-fix/all-authority-and-portable-policy-unit.stderr.log"
+  }
+]

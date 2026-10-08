@@ -1,0 +1,203 @@
+from pathlib import Path
+import collections, datetime, difflib, hashlib, json, re, subprocess
+
+r = Path.cwd()
+baseqa = r / '_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors'
+q = baseqa / 'followup-cycle2'
+first = baseqa / 'followup'
+digest = lambda p: hashlib.sha256(p.read_bytes()).hexdigest()
+read = lambda p: json.loads(p.read_text())
+write = lambda name, value: (q / name).write_text(json.dumps(value, indent=2) + '\n')
+source = ['convex-dev/runtimeAuth.ts', 'convex-dev/runtimeMetadataAuth.ts',
+          'tests/unit/runtimeAuth/provisioning.test.ts', 'tests/unit/runtimeMetadataAuth/handlers.test.ts',
+          'tests/unit/runtimeMetadataAuth/native-errors.test.ts', 'tests/unit/runtimeMetadataAuth/scope-ambiguity.test.ts']
+changed2 = {source[0], source[2], source[4]}
+first_freeze = read(first / 'freeze.json')
+assert digest(first / 'freeze.json') == '5e6573ab586f867589835f9f7f3f4ffa32ed0294ccdcbffaee5c7102e0ef756e'
+for row in first_freeze['qaRecords']:
+    assert digest(r / row['file']) == row['sha256'], row['file']
+for row in first_freeze['sourceRecords']:
+    assert digest(q / 'cycle1-source' / (row['file'] + '.text')) == row['sha256']
+history = baseqa / 'history/followup-cycle1-final/preservation-manifest.json'
+assert digest(history) == '06c8c4e8b77b059ae3a12a05f5be9bc7a7ac23cbc259f0b4f28438362bbdbd5d'
+history_records = read(history)['records']
+assert len(history_records) == 490
+for row in history_records:
+    assert digest(r / row['file']) == row['sha256'] and (r / row['file']).stat().st_size == row['bytes'], row['file']
+private_omissions = read(history)['privateReproducibleOmissions']
+assert len(private_omissions) == 18
+for row in private_omissions:
+    p = Path(row['original'])
+    assert digest(p) == row['sha256'] and p.stat().st_size == row['bytes'], str(p)
+before = read(q / 'before-cycle2.json')
+protected, modified = [], []
+for row in before['records']:
+    actual = digest(r / row['file'])
+    item = {**row, 'actualSha256': actual, 'unchanged': actual == row['sha256']}
+    if row['file'] in changed2:
+        assert not item['unchanged']; modified.append(item)
+    else:
+        assert item['unchanged'], row['file']; protected.append(item)
+assert len(modified) == 3
+original = read(first / 'baseline-hashes.json')
+original_allowed = {source[0], source[1], source[2], source[3]}
+original_protected = []
+for row in original['records']:
+    if row['file'] not in original_allowed:
+        assert digest(r / row['file']) == row['sha256'], row['file']
+        original_protected.append(row)
+assert len(original_protected) == 3453
+archives = []
+for name, expected in [('cycle1-final', 69), ('cycle2-final', 101)]:
+    archive = r / '_goals/convex-backend-runtime-2026-10-02/qa/task03b2a/history' / name
+    manifest = read(archive / 'preservation.json')
+    assert len(manifest['records']) == expected
+    for row in manifest['records']:
+        p = archive / row['kind'] / (row.get('path') or row['file'])
+        if row['kind'] == 'source': p = Path(str(p) + '.text')
+        assert digest(p) == row['sha256'], str(p)
+    archives.append({'archive': name, 'records': expected, 'unchanged': True, 'manifestSha256': digest(archive / 'preservation.json')})
+
+old_auth = (q / 'cycle1-source' / (source[0] + '.text')).read_text()
+new_auth = (r / source[0]).read_text()
+branch = 'if (rows.length > 1) throw new ConvexError({ version: 1, code: "AUTHORITY_LOOKUP_AMBIGUOUS",\n    message: "Authority lookup is ambiguous", retryable: false, outcome: "not_dispatched" });'
+assert old_auth.count('if (rows.length > 1) deny();') == 1
+assert new_auth == old_auth.replace('if (rows.length > 1) deny();', branch)
+for unchanged in [source[1], source[3]]:
+    assert (r / unchanged).read_bytes() == (q / 'cycle1-source' / (unchanged + '.text')).read_bytes()
+old_prov = (q / 'cycle1-source' / (source[2] + '.text')).read_text()
+assert old_prov.count('version: 1, code: "FORBIDDEN", message: "Access denied", retryable: false, outcome: "not_dispatched",') == 1
+assert (r / source[2]).read_text() == old_prov.replace('version: 1, code: "FORBIDDEN", message: "Access denied", retryable: false, outcome: "not_dispatched",', 'version: 1, code: "AUTHORITY_LOOKUP_AMBIGUOUS", message: "Authority lookup is ambiguous", retryable: false, outcome: "not_dispatched",')
+old_native = (q / 'cycle1-source' / (source[4] + '.text')).read_text()
+new_native = old_native.replace('function opaque(error: unknown, privateFields: string[]) {', 'function opaque(error: unknown, privateFields: string[], controlAmbiguity = false) {')
+new_native = new_native.replace('  expect((error as ConvexError<Value>).data).toMatchObject({ code: "FORBIDDEN", message: "Access denied" });', '  if (controlAmbiguity) expect(error).toHaveProperty("data", { version: 1, code: "AUTHORITY_LOOKUP_AMBIGUOUS",\n    message: "Authority lookup is ambiguous", retryable: false, outcome: "not_dispatched" });\n  else expect((error as ConvexError<Value>).data).toMatchObject({ code: "FORBIDDEN", message: "Access denied" });')
+new_native = new_native.replace('[first._id, privateTwo, privateValue]);', '[first._id, privateTwo, privateValue], true);')
+assert (r / source[4]).read_text() == new_native
+accepted_auth = subprocess.check_output(['git', 'show', 'HEAD:convex-dev/runtimeAuth.ts']).decode()
+assert accepted_auth.split('export function createAuthorityReader')[0] == new_auth.split('/** Avoid native unique()')[0]
+assert accepted_auth.split('export async function requireAuthority')[1] == new_auth.split('export async function requireAuthority')[1]
+accepted_md = subprocess.check_output(['git', 'show', 'HEAD:convex-dev/runtimeMetadataAuth.ts']).decode()
+old_piece = 'const row = await selected.filter((q) => auth.resourceAccess === "own"\n    ? q.eq(q.field("ownerPrincipalId"), auth.principalId) : q.neq(q.field("ownerPrincipalId"), undefined)).unique();'
+new_piece = 'const rows = await selected.filter((q) => auth.resourceAccess === "own"\n    ? q.eq(q.field("ownerPrincipalId"), auth.principalId) : q.neq(q.field("ownerPrincipalId"), undefined)).take(2);\n  if (rows.length > 1) denied();\n  const row = rows[0] ?? null;'
+assert accepted_md.count(old_piece) == 3
+assert (r / source[1]).read_text() == accepted_md.replace(old_piece, new_piece)
+
+flat = lambda d: [{'name': a['fullName'], 'status': a['status'], 'file': str(Path(t['name']).relative_to(r))} for t in d['testResults'] for a in t['assertionResults']]
+signature = lambda rows: collections.Counter((x['file'], x['name']) for x in rows)
+selected, auth = read(q / 'final-selected-outcomes.json'), read(q / 'credentials-outcomes.json')
+for d, count, suites in [(selected, 867, 14), (auth, 98, 3)]:
+    assert (d['numTotalTests'], d['numPassedTests'], d['numFailedTests'], d['numPendingTests'], d['numTodoTests'], d['numTotalTestSuites']) == (count, count, 0, 0, 0, suites)
+    assert d['numPendingTestSuites'] == d['numRuntimeErrorTestSuites'] == 0
+    assert all(row['status'] == 'passed' for row in flat(d))
+outcomes = flat(selected)
+assert signature(flat(read(first / 'final-selected-outcomes.json'))) == signature([x for x in outcomes if x['file'] != source[5]])
+assert signature(flat(read(first / 'credentials-outcomes.json'))) == signature(flat(auth))
+assert len([x for x in outcomes if x['file'] == source[5]]) == 80
+initial_names = []
+for initial in ['literal-original-metadata', 'literal-original-auth']:
+    old = read(first / (initial + '.json')); old_rows = flat(old); files = {x['file'] for x in old_rows}
+    assert signature(old_rows) == signature([x for x in outcomes if x['file'] in files])
+    initial_names.append({'initialReceipt': initial, 'originalNamesAndMultiplicitiesRetained': True, 'count': len(old_rows), 'initialFailed': old['numFailedTests']})
+discovery = json.loads((q / 'checks/discovery.log').read_text().splitlines()[0])
+ran = {t['name'] for t in selected['testResults']} | {t['name'] for t in auth['testResults']}
+assert set(discovery) == ran and len(ran) == 16
+catalog = read(q / 'catalog/public-path-inventory.json')
+assert catalog['endpoints'] == read(first / 'catalog/public-path-inventory.json')['endpoints']
+assert catalog['completeness']['unresolved'] == []
+assert catalog['completeness']['counts']['registered'] == 41
+assert catalog['completeness']['counts']['public'] == 36
+assert catalog['completeness']['counts']['internal'] == 5
+native = read(q / 'framework-registration.json')
+assert native == read(first / 'framework-registration.json')
+assert len(native) == 41 and sum(x['visibility'] == 'public' for x in native) == 36
+for filename, count in [('boundary-probes.json', 118), ('extra-probes.json', 33)]:
+    rows = read(q / filename); assert len(rows) == count and all(x['pass'] for x in rows)
+for filename, count in [('timestamp-equivalence.json', 72), ('cleanup-controls.json', 6)]:
+    rows = read(q / filename)['outcomes']; assert len(rows) == count and all(x['pass'] for x in rows)
+historical19 = json.loads((q / 'checks/historical19-check.log').read_text())
+assert historical19['observations'] == 19 and historical19['verified']
+assert not list((r / 'work/native-errors-cycle2/tmp').glob('cortex-metadata-inventory-*'))
+assert not list((r / 'node_modules').glob('.cortex-contract-*'))
+
+prior18 = read(q / 'cycle1-pre-repair-ambiguity-pruning-outcomes.json')['results']
+current18 = read(q / 'current-required18-outcomes.json')['results']
+assert len(prior18) == len(current18) == 18
+assert sum(x['accepted'] for x in prior18[:6]) == 4
+assert read(q / 'cycle1-pre-repair-regression-required-denial.json')['failed'] == 4
+assert all(not x['accepted'] and x['attempts'] == x['writes'] == 0 for x in current18)
+assert [(x['kind'], x['capability'], x['defect']) for x in prior18] == [(x['kind'], x['capability'], x['defect']) for x in current18]
+assert read(q / 'current-required-denial.json')['failed'] == 0
+shape = {'version': 1, 'code': 'AUTHORITY_LOOKUP_AMBIGUOUS', 'message': 'Authority lookup is ambiguous', 'retryable': False, 'outcome': 'not_dispatched'}
+for row in current18[:6]:
+    if row['defect'] != 'none': assert row['duplicateLookupReached'] == 1 and row['errorData'] == shape
+assert read(q / 'checks/old-exact-finding-collector-after-repair.receipt.json')['exitCode'] == 1
+native_parent = []
+for filename, key in [('metadata-native-error-confirmation-current-baseline.json', 'leaksStoredInternalIds'), ('metadata-control-native-error-confirmation-current-baseline.json', 'leaksStoredControlIds')]:
+    doc = read(q / filename); assert len(doc['outcomes']) == 6
+    assert doc['serviceCalls'] == doc['sourceOrQaWrites'] == 0
+    assert all(x[key] and x['attemptedWrites'] == x['committedWrites'] == 0 for x in doc['outcomes'])
+    native_parent.append({'file': filename, 'outcomes': 6, 'actualNativeBaselineDiagnostic': True, 'zeroEffects': True})
+for row in read(q / 'native-parent-proof-provenance.json')[:5]:
+    raw = subprocess.check_output(['git', 'show', 'HEAD:' + row['source']])
+    assert hashlib.sha256(raw).hexdigest() == row['rawSha256']
+native_path = r / 'node_modules/convex/dist/esm/server/impl/query_impl.js'
+assert digest(native_path) == 'cb338c5d58d0ffbbdd311954e24456d7fa501f901b205784ce93d67e63206857'
+
+write('preservation.json', {'observedAt': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'acceptedHead': before['head'],
+    'cycle1FreezeSha256': digest(first / 'freeze.json'), 'cycle1OriginalSourceRecordsPreserved': 5, 'cycle1QaRecordsPreserved': 114,
+    'cycle1CandidateAndJudgeHistoryRecordsPreserved': 490, 'cycle1HistoryManifestSha256': digest(history),
+    'unchangedPrivateJudgeReproducibleOmissions': 18,
+    'protectedBeforeCycle2Records': len(protected), 'protectedRecords': protected, 'allowedModifiedRecords': modified,
+    'protectedOriginalTrackedRecords': len(original_protected),
+    'protectedOriginalQaRecords': sum(x['file'].startswith('_goals/convex-backend-runtime-2026-10-02/qa/') for x in original_protected),
+    'metadataArchives': archives, 'originalTestNamePreservation': initial_names, 'first845NamesAndMultiplicitiesRetained': True,
+    'onlyProductionCycle2Change': 'boundedSingle static nonpermission ambiguity envelope',
+    'allThreeReaderLookupBodiesPolicyResolverPruningProvisioningAndCanonicalMetadataUnchangedFromCycle1': True,
+    'schemaConfigES2021SdkGeneratedBindingsLockfileLiveHarnessUnchanged': True, 'nativeProtocolSha256': digest(native_path),
+    'catalog41ExactEndpointAndNativeValidatorRecordsUnchanged': True, 'noInventoryOrPackedTemporaryDirectoryRetained': True})
+groups = collections.Counter(x['file'] for x in outcomes)
+write('test-summary.json', {'selected': {'tests': 867, 'suites': 14, 'failures': 0, 'skips': 0, 'groups': dict(groups)},
+    'separateAuth': {'tests': 98, 'suites': 3, 'credentialOverlap': 40, 'additionalContextValidators': 58, 'failures': 0, 'skips': 0},
+    'uniqueTestcaseOutcomeCount': 925, 'originalTestcaseOutcomesRetained': 845, 'newScopeAmbiguityOutcomes': 80,
+    'meaning': 'Testcase outcome counts preserve duplicate display names and multiplicities; repeated credential suite counted once',
+    'discoveredSuites': 16, 'allDiscoveredSuitesExecuted': True, 'outcomes': outcomes + flat(auth),
+    'currentHistorical151': 151, 'currentTimestampComparison72': 72, 'currentHistorical19': 19, 'currentCleanup6': 6,
+    'old18FindingCollectorAfterRepairExit': 1, 'required18Comparison': 18, 'requiredDenial6Failed': 0, 'nativeParentBaselineProofs': native_parent})
+requirements = []
+for row in catalog['endpoints']:
+    tests = [x for x in outcomes if re.search(re.escape(row['path']) + r'(?:\s|$)', x['name'])]
+    requirements.append({**row, 'currentOriginalOutcomeTests': tests,
+        'nativeRegistrationEvidence': 'framework-registration.json exact path/visibility/validators; original registrations.test.ts all41 assertion',
+        'sharedRequirementsEvidence': ['original metadata189 and historical151/72/19', 'native-errors106 canonical/control/privacy/infrastructure', 'scope-ambiguity80 corruption/ordinary-pruning/final/pinned/rollback'],
+        'liveTransportEvidence': 'UNEXECUTED; parent-owned accepted fixture refresh/live41 gate pending'})
+write('original41-requirement-mapping.json', requirements)
+write('affected03A-requirement-mapping.json', {'contract': '_goals/convex-backend-runtime-2026-10-02/qa/task03a/contracts.md',
+    'original133OutcomeNamesRetained': [x for x in outcomes if x['file'].startswith('tests/unit/runtimeAuth/')],
+    'requirements': [
+        {'requirement': 'verified issuer/subject, normalized provisioned identity, trusted operator and grant eligibility', 'evidence': 'authority54/provisioning15 unchanged outcome names; new static duplicate principal error; native-errors42'},
+        {'requirement': 'exact scope derivation and ordinary revoked/expired/missing/deleted/single-tombstone grant pruning', 'evidence': 'authority54 original policy; scope-ambiguity24 positives plus4 healthy two-scope denials'},
+        {'requirement': 'corrupt principal/scope/tombstone cannot be pruned into another permitted scope', 'evidence': 'native-errors42 plus scope-ambiguity16 omitted/8 explicit denies; current original18 comparison'},
+        {'requirement': 'pinned references, final epochs/grants/fences/lifetime cannot fallback or return failed receipt', 'evidence': 'original metadata189/151 and worker185; scope-ambiguity12 final/pinned rollback; native infrastructure15 plus scope infrastructure8'},
+        {'requirement': 'no accidental public registration; validators/41 metadata catalog and64 original inventory assertions preserved', 'evidence': 'inventory64, original metadata registrations2, current exact41 native and AST byte equality'},
+        {'requirement': 'unknown infrastructure exceptions propagate as identical objects without policy/success conversion', 'evidence': 'native-errors15 and scope-ambiguity8 identity/reached/zero effects; all resolver/pruning bytes unchanged'}]})
+patch = subprocess.check_output(['git', 'diff', '--', *source]).decode()
+for filename in source[4:]:
+    patch += ''.join(difflib.unified_diff([], (r / filename).read_text().splitlines(True), fromfile='/dev/null', tofile='b/' + filename))
+(q / 'changed-paths.patch').write_text(patch)
+patch2 = ''
+for filename in source[:5]:
+    patch2 += ''.join(difflib.unified_diff((q / 'cycle1-source' / (filename + '.text')).read_text().splitlines(True),
+        (r / filename).read_text().splitlines(True), fromfile='cycle1/' + filename, tofile='cycle2/' + filename))
+patch2 += ''.join(difflib.unified_diff([], (r / source[5]).read_text().splitlines(True), fromfile='/dev/null', tofile='cycle2/' + source[5]))
+(q / 'cycle2-only.patch').write_text(patch2)
+write('final-source.json', {'acceptedHead': before['head'], 'records': [{'file': f, 'bytes': (r / f).stat().st_size, 'sha256': digest(r / f)} for f in source],
+    'nativeProtocol': {'file': str(native_path.relative_to(r)), 'sha256': digest(native_path)}, 'dependencyInstallation': 'none; installed exact accepted dependencies reused'})
+receipts = [read(p) for p in sorted((q / 'checks').glob('*.receipt.json'))]
+expected_nonzero = {'cycle1-exact18-before-repair': 1, 'cycle1-required-denial-before-repair': 1,
+                    'cycle1-required-denial-pre-repair-final': 1, 'old-exact-finding-collector-after-repair': 1}
+for receipt in receipts:
+    assert receipt['exitCode'] == expected_nonzero.get(receipt['name'], 0), receipt['name']
+write('commands.json', sorted(receipts, key=lambda x: x['startedAt']))
+print(json.dumps({'protectedBeforeCycle2': len(protected), 'protectedOriginalTracked': len(original_protected), 'protectedOriginalQa': 2340,
+    'historyPreserved': 490, 'firstQaPreserved': 114, 'selected': 867, 'auth': 98, 'uniqueTestcaseOutcomes': 925, 'originalOutcomesRetained': 845,
+    'newOutcomes': 80, 'allDiscoveredSuites': 16, 'registered': 41, 'historical': [151, 72, 19, 6], 'requiredDenialFailed': 0}))

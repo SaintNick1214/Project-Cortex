@@ -1,0 +1,15 @@
+node:fs:1976
+  binding.link(
+          ^
+
+Error: EEXIST: file already exists, link '/workspace/Project-Cortex/work/resume/task04-terminal-capture-native-profiles-c3-review/hostiles/extension/hardlink-file/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c7-review/DUMMY-VM-source-preimages.json' -> '/workspace/Project-Cortex/work/resume/task04-terminal-capture-native-profiles-c3-review/hostiles/extension/hardlink-file/profile/hardlinked'
+    at linkSync (node:fs:1976:11)
+    at file:///workspace/Project-Cortex/work/resume/task04-terminal-capture-native-profiles-c3-review/hostiles.mjs:21:30 {
+  errno: -17,
+  code: 'EEXIST',
+  syscall: 'link',
+  path: '/workspace/Project-Cortex/work/resume/task04-terminal-capture-native-profiles-c3-review/hostiles/extension/hardlink-file/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c7-review/DUMMY-VM-source-preimages.json',
+  dest: '/workspace/Project-Cortex/work/resume/task04-terminal-capture-native-profiles-c3-review/hostiles/extension/hardlink-file/profile/hardlinked'
+}
+
+Node.js v24.19.0

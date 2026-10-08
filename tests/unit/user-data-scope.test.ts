@@ -5,6 +5,7 @@ import {
   directExportDisposition as rule,
   exportDomains,
   operationalExportExclusions,
+  runtimeExportUnsupported,
   exportEdges,
   exportEdgesForUser,
   exportFingerprint,
@@ -17,7 +18,7 @@ const disposition = (
 ) => rule(table, { ...base, ...row }, "target", scope).disposition;
 it("assigns all independently parsed schema tables and excludes unattributed operational registries", () => {
   expect(
-    [...exportDomains, ...Object.keys(operationalExportExclusions)].sort(),
+    [...exportDomains, ...Object.keys(operationalExportExclusions), ...runtimeExportUnsupported].sort(),
   ).toEqual(Object.keys(schema.tables).sort());
   expect(Object.keys(operationalExportExclusions).sort()).toEqual([
     "cortexErasureReceipts",

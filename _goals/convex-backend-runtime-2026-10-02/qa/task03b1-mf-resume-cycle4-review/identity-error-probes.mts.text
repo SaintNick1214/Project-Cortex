@@ -1,0 +1,22 @@
+import assert from 'node:assert/strict';
+import {isDeepStrictEqual} from 'node:util';
+import {harness,identity} from '/workspace/Project-Cortex/work/resume/mf/candidate/tests/unit/runtimeEndpointAuth/sharedfixtures.ts';
+import * as memories from '/workspace/Project-Cortex/work/resume/mf/candidate/convex-dev/memories.ts';
+import * as facts from '/workspace/Project-Cortex/work/resume/mf/candidate/convex-dev/facts.ts';
+const results:any[]=[];
+for(const kind of ['memories','facts'])for(const mode of ['none','missing','forged-subject','foreign-tenant','foreign-owner','source-tombstone']){
+ const h=harness();const a=await h.provisionScope();const b=await h.provisionScope({tenantId:'tenant-b',memorySpaceId:'space-b',subject:'bob'});
+ await h.seedData(kind as any,b,'shared');await h.seedData(kind as any,a,'shared');
+ if(mode==='missing')h.setIdentity(null);
+ if(mode==='forged-subject')h.setIdentity({...identity,subject:'unprovisioned'});
+ if(mode==='foreign-owner'){const own=h.db.rows.get(kind)!.find(r=>r.tenantId===a.tenantId)!;await h.db.patch(own._id,{ownerPrincipalId:b.principalId});}
+ if(mode==='source-tombstone'){const source=h.db.rows.get('runtimeMemorySources')!.find(r=>r.tenantId===a.tenantId)!;await h.db.insert('runtimeAuthTombstones',{tenantId:a.tenantId,memorySpaceId:a.memorySpaceId,resourceType:'source',resourceId:(source.lineage as any).sourceId,deletedAt:Date.now()});}
+ const before=structuredClone(h.db.rows);let actual:any;try{actual={success:true,result:await h.invoke(kind==='memories'?memories.get:facts.get,{memorySpaceId:mode==='foreign-tenant'?'space-b':'space-a',...(kind==='memories'?{memoryId:'shared'}:{factId:'shared'})})};}catch(e:any){actual={success:false,data:e.data};}
+ const serialized=JSON.stringify(actual);const privacy=!serialized.includes('tenant-b private')&&!serialized.includes('metadata-bob')&&!serialized.includes(b.principalId);
+ let matched=privacy&&isDeepStrictEqual(before,h.db.rows);
+ if(mode==='none')matched&&=actual.success&&actual.result?.tenantId==='tenant-a';
+ else if(mode==='foreign-owner')matched&&=actual.success&&actual.result===null;
+ else matched&&=!actual.success&&['FORBIDDEN','UNAUTHENTICATED','STALE_SOURCE'].includes(actual.data?.code);
+ results.push({kind,mode,matched,privacy,...actual});
+}
+console.log(JSON.stringify({summary:{total:results.length,matched:results.filter(x=>x.matched).length},results},null,2));assert.equal(results.filter(x=>!x.matched).length,0);

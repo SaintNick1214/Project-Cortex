@@ -1,0 +1,12 @@
+{
+  "inherited": "C1-subject/exploration-gap.json and complete lineage retain all prior missing UTC/pre-invocation gaps; not reconstructed",
+  "bootstrap": "Exact start/end and full byte/link verification retained in lineage.json; argv/cwd are evident from script/tool invocation, no separate subprocess receipt was captured. Initial read-only probes have tool transcripts, not independently captured UTC.",
+  "newFailures": [
+    "positive-01 missing inspectAncestors import",
+    "adverse-30-01 absent --import tsx loader",
+    "original-454-01 absent --experimental-vm-modules",
+    "containment-03 concurrent final-positive allocation invalidated global residue assertion; serial containment-04 PASS24"
+  ],
+  "newFailureReceipts": "ALL four subprocess failures have exact argv/cwd/UTC/raw/before/post protected bytes and own preimages; none relabeled PASS",
+  "missingHistory": "No missing old or bootstrap receipt invented"
+}

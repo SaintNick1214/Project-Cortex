@@ -1,0 +1,1 @@
+export * as synthetic from "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c7/fixture/convex/runtimeModelPolicyBootstrap.ts";export * as production from "/workspace/Project-Cortex/convex-dev/runtimeModelPolicyBootstrap.ts";export { DEFAULT_EMBEDDING_PROFILE as profile } from "/workspace/Project-Cortex/src/domain/profile.ts";

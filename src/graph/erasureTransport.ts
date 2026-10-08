@@ -46,7 +46,7 @@ export function createGraphErasureTransport(options:{url:string;deploymentKey:st
   const call=async(item:GraphErasureItem,mode:Record<string,unknown>,request?:GraphRebuildRequestOptions)=>{
     if(closed||inFlight)throw new GraphDatabaseError("Graph erasure transport closed or already active.","GRAPH_ERASURE_TRANSPORT_BUSY");
     const args={tenantId:item.identity.tenantId??undefined,disposal:{...selection(item),...mode}};inFlight=true;current=request;
-    try{return await client.mutation(makeFunctionReference("graphSync:clearSyncedItems"),args,{skipQueue:true});}
+    try{return await client.mutation(makeFunctionReference("cliOperator/graphSync:clearSyncedItems"),args,{skipQueue:true});}
     catch(error){if(error instanceof ConvexError||error instanceof GraphDatabaseError)throw error;throw new GraphDatabaseError("Original graph disposal response is unresolved; read status before continuing.",request?.signal?.aborted?"GRAPH_ERASURE_CANCELLED":"GRAPH_ERASURE_RESPONSE_UNKNOWN");}
     finally{inFlight=false;current=undefined;}
   };

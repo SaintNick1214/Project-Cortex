@@ -1,7 +1,7 @@
 import { memoryVectorScopeKey, hasMemoryVectorScope } from '../../convex-dev/lib/memoryVectorScope';
 import { matchesConversation, matchesMemory, domainFingerprint, checkFingerprint } from '../../convex-dev/lib/domainPaging';
 import { canonical, digest } from '../../convex-dev/lib/factHistoryProvenance';
-import { search, vectorReadiness } from '../../convex-dev/memories';
+import { search, vectorReadiness } from '../../convex-dev/cliOperator/memories';
 import { WRITER_MANIFEST_HASH } from '../../convex-dev/lib/referenceLifecycle';
 const invoke=(fn:any,ctx:any,args:any)=>fn._handler(ctx,args);
 it('canonical tagged scope tuple separates tenantless, punctuation, Unicode and ambiguous delimiter strings',()=>{const keys=[memoryVectorScopeKey(undefined,'A:space'),memoryVectorScopeKey('A','space'),memoryVectorScopeKey('Unicode雪','space')];expect(new Set(keys).size).toBe(3);expect(()=>memoryVectorScopeKey('','space')).toThrow('INVALID_TENANT_ID');});

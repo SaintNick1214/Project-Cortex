@@ -1,0 +1,59 @@
+(node:74746) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtime/model-policy-admission.test.ts (6.36 s)
+  native private policy ledger — offline logic only
+    ✓ production root is empty, and arbitrary operator manifest selectors cannot attest prices (21 ms)
+    ✓ installs the exact compiled root idempotently and refuses mutated same-version evidence (15 ms)
+    ✓ rejects an invalid root classification before accounts/dispatch (1 ms)
+    ✓ rejects an invalid root acceptance before accounts/dispatch (1 ms)
+    ✓ rejects an invalid root expiry before accounts/dispatch (1 ms)
+    ✓ rejects an invalid root model before accounts/dispatch (1 ms)
+    ✓ rejects an invalid root proof before accounts/dispatch (1 ms)
+    ✓ binds one backend account per exact trusted request and rejects changed request/owner (7 ms)
+    ✓ forced account-key hash collisions compare the complete trusted binding tuple (6 ms)
+    ✓ derives actual normalized input and full trusted ceiling, overriding untrusted estimates (13 ms)
+    ✓ same child canonical replay does not reserve again; changed text/hash collision rejects (32 ms)
+    ✓ one checkpoint winner returns a permit and subsequent attempts cannot dispatch (22 ms)
+    ✓ changed final native request/proof and expired qualifications deny checkpoint (15 ms)
+    ✓ last operation/concurrency capacity applies across distinct children without partial rejection writes (16 ms)
+    ✓ different backend request accounts share one tenant quota and concurrency (20 ms)
+    ✓ known cost settles exactly once and eligible result replay needs no new reservation (30 ms)
+    ✓ invalid private results are withheld without erasing a known complete charge (22 ms)
+    ✓ overrun accounts full spend and blocks further admission without rollback of charge (20 ms)
+    ✓ malformed/missing cost remains unknown liability; qualified terminal proof releases slot only (29 ms)
+    ✓ postcheckpoint crash recovery cannot claim no dispatch or zero cost (21 ms)
+    ✓ proved precheckpoint refusal releases balances and slots exactly once (18 ms)
+    ✓ unknown liability blocks rollover; late receipt charges original immutable window (20 ms)
+    ✓ revoked originating grant requires current admin liability-only recovery (15 ms)
+    ✓ monotone visibility flags and cancellation prevent later dispatch and safe fallback (20 ms)
+    ✓ space admin cannot change global/root policy or install own tenant-wide constraints (2 ms)
+    ✓ healthy tenant admin may narrow own rules but cannot forge prices or broaden caps (8 ms)
+    ✓ trusted own tenant override is backend-versioned and never broadens deployment hard bounds (9 ms)
+    ✓ a current source tombstone blocks replay/delivery but retains already incurred charge (17 ms)
+    ✓ source revision changes before checkpoint cannot dispatch or recreate source (8 ms)
+    ✓ child operation inherits exact parent account and cancellation/current authority fences (15 ms)
+    ✓ trusted compiled versioned agent specialization is consumed only by its matching tenant/version (7 ms)
+    ✓ native bound rejects malformed Unicode, tool/schema shapes and part arrays without calling a provider (2 ms)
+    ✓ embedding bound treats per-value and aggregate caps separately and counts normalized UTF8 (2 ms)
+    ✓ invalid terminal cost overflow remains unknown without refund or invented zero (14 ms)
+    ✓ post-admission source/account corruption fails closed before checkpoint (7 ms)
+    ✓ explicit compatible safe fallback reserves once with pinned candidate and no lost prior spend (42 ms)
+    ✓ visible output, unknown outcome and unqualified candidates deny fallback reservation (19 ms)
+    ✓ all registrations are internal and their native argument schemas have no arbitrary payload escape (3 ms)
+    ✓ all five additive native tables have unique index field configurations (2 ms)
+    ✓ rounds authoritative 0 USD upward to 0 microUSD
+    ✓ rounds authoritative 0.0000001 USD upward to 1 microUSD (1 ms)
+    ✓ rounds authoritative 0.000001 USD upward to 1 microUSD
+    ✓ rounds authoritative 1.23456789 USD upward to 1234568 microUSD
+    ✓ rejects invalid or overflowing money NaN (1 ms)
+    ✓ rejects invalid or overflowing money Infinity (1 ms)
+    ✓ rejects invalid or overflowing money -1
+    ✓ rejects invalid or overflowing money 1e4 (1 ms)
+    ✓ rejects invalid or overflowing money 9007199254740992 (1 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       48 passed, 48 total
+Snapshots:   0 total
+Time:        6.586 s, estimated 7 s
+Ran all test suites.
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c1/final-unit08/jest-result.json

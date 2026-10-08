@@ -1,0 +1,11 @@
+file:///workspace/Project-Cortex/work/backend-runtime/c1-package-gate/snapshot/_goals/convex-backend-runtime-2026-10-02/qa/task03c1/public-host-contract.mjs:15
+  const extract = spawnSync('tar', ['-xzf', join(temporary, packed.filename), '--strip-components=1', '-C', destination]);
+                                                                   ^
+
+TypeError: Cannot read properties of undefined (reading 'filename')
+    at file:///workspace/Project-Cortex/work/backend-runtime/c1-package-gate/snapshot/_goals/convex-backend-runtime-2026-10-02/qa/task03c1/public-host-contract.mjs:15:68
+    at ModuleJob.run (node:internal/modules/esm/module_job:439:25)
+    at async node:internal/modules/esm/loader:643:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.19.0

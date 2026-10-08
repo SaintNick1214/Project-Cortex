@@ -1,0 +1,17 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Missing expected rejection.
+    at async file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-experiment-guard-c2-review/copy-c2/scripts/independent.mjs:45:128
+    at async test (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-experiment-guard-c2-review/copy-c2/scripts/independent.mjs:27:36)
+    at async file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-experiment-guard-c2-review/copy-c2/scripts/independent.mjs:40:1 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: undefined,
+  expected: /COLLISION/,
+  operator: 'rejects',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

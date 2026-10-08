@@ -1,0 +1,20 @@
+--- C10
++++ C11
+@@ -155,7 +155,7 @@
+   // Admin-only authenticated principal may configure its own policy, never read private data.
+   await unchanged(ctx,()=>rejects(()=>ctx.call('admin','runtimeMemory:recall',{...scope(ctx),text:'private context',requestId:named(ctx,'admin-recall')})));
+   await unchanged(ctx,()=>rejects(()=>ctx.operator('governance:enforce',{policyId:result.policyId})));
+-  const cleanupResult=await ctx.operator('admin:deleteRecord',{table:'governancePolicies',id:override.policyId});assert.equal(cleanupResult,true);assert.equal(await record(ctx,'governancePolicies',override.policyId),null);
++  const cleanupResult=await ctx.operator('admin:deleteRecord',{table:'governancePolicies',id:override.policyId});assert.deepEqual(cleanupResult,{deleted:true});assert.equal(await record(ctx,'governancePolicies',override.policyId),null);
+ }
+ async function sourceFact(ctx, tag, principalId) {
+   const content=`Owned source ${named(ctx,tag)}`;const lineage={sourceId:named(ctx,`${tag}-source`),sourceEventId:named(ctx,`${tag}-event`),sourceRevision:1,role:'user',trust:'user_assertion'};const now=Date.now()-1000;
+@@ -183,7 +183,7 @@
+   await unchanged(ctx,()=>rejects(()=>ctx.operator('graphSync:queueForSync',enqueue)));
+   assert.equal(await record(ctx,'runtimeMemorySources',corpus.refs[0].id),null);
+   await ctx.operator('runtimeAuth:revokeGrant',{grantId:a.grantId});await unchanged(ctx,()=>rejects(()=>ctx.operator('graphSync:getSyncStats',{authority:a})));
+-  assert.equal(await ctx.operator('admin:deleteRecord',{table:'graphSyncQueue',id:third}),true);
++  assert.deepEqual(await ctx.operator('admin:deleteRecord',{table:'graphSyncQueue',id:third}),{deleted:true});assert.equal(await record(ctx,'graphSyncQueue',third),null);
+ }
+ const profile={profileId:'cortex-text-small-1536-v1',modelId:'openai/text-embedding-3-small',dimensions:1536,normalization:'text-nfc-lf-v1',chunking:'codepoint-1600-overlap-200-v1',indexName:'by_default_embedding_v1'};
+ async function domain(ctx) {

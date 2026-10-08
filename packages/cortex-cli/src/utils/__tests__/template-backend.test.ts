@@ -149,10 +149,10 @@ describe("closed recognized template composition", () => {
         fs.readFileSync(path.join(sdk, "convex-dev/schema.ts")),
       );
       expect(plan.files["facts.ts"].toString()).toContain(
-        'type QueryCtx,\n} from "./sdk.registration"',
+        'import { action, internalMutation, internalQuery, mutation, query } from "./sdk.registration"',
       );
-      expect(plan.files["factHistory.ts"].toString()).toContain(
-        'import type { MutationCtx, QueryCtx } from "./_generated/server"',
+      expect(plan.files["cliOperator/factHistory.ts"].toString()).toContain(
+        'import type { MutationCtx, QueryCtx } from "../_generated/server"',
       );
       applyBackendPlan(plan);
       const ownership = readManifest(project);
@@ -180,7 +180,7 @@ describe("closed recognized template composition", () => {
       expect(again.conflicts).toEqual([]);
       applyBackendPlan(again);
       expect(tree(project)).toEqual(installed);
-      expect(expectedSdkRegistrations()).toHaveLength(279);
+      expect(expectedSdkRegistrations()).toHaveLength(488);
       expect(
         expectedSdkRegistrations().every((op) => op.visibility === "internal"),
       ).toBe(true);
@@ -189,7 +189,7 @@ describe("closed recognized template composition", () => {
           .filter((op) => op.type === "action")
           .map((op) => `${op.module}:${op.name}`)
           .sort(),
-      ).toEqual(["facts:semanticSearch", "memories:search"]);
+      ).toEqual(["cliOperator/facts:semanticSearch", "cliOperator/memories:search", "facts:semanticSearch", "memories:search", "runtimeMemory:recall", "runtimeMemory:remember"]);
       expect(REGISTRATION_SHIM).toContain("export type { QueryCtx, MutationCtx }");
     },
   );
@@ -280,7 +280,7 @@ describe("closed recognized template composition", () => {
       transformCanonicalSdk({
         ...raw,
         "facts.ts": Buffer.from(
-          raw["facts.ts"].toString().replace("query,", "query as read,"),
+          raw["facts.ts"].toString().replace("mutation, query", "mutation, query as read"),
         ),
       }),
     ).toThrow("Unreviewed SDK source");
@@ -296,7 +296,7 @@ describe("closed recognized template composition", () => {
       }
       fs.writeFileSync(
         path.join(source, "package.json"),
-        JSON.stringify({ name: "@cortexmemory/sdk", version: "0.37.0" }),
+        JSON.stringify({ name: "@cortexmemory/sdk", version: "0.38.0" }),
       );
       const helper = path.join(source, "convex-dev/lib/domainScope.ts");
       if (change === "modified")
@@ -333,7 +333,7 @@ describe("closed recognized template composition", () => {
       }
       fs.writeFileSync(
         path.join(source, "package.json"),
-        JSON.stringify({ name: "@cortexmemory/sdk", version: "0.37.0" }),
+        JSON.stringify({ name: "@cortexmemory/sdk", version: "0.38.0" }),
       );
       const target = path.join(source, "convex-dev", name);
       if (change === "modified")
@@ -353,7 +353,7 @@ describe("closed recognized template composition", () => {
       expect(tree(source)).toEqual(sourceBefore);
     },
   );
-  it("adds exactly the eight internal maintenance registrations and retains the Basic raw layout", () => {
+  it("retains internal maintenance and operator registrations with the Basic raw layout", () => {
     const maintenance = expectedSdkRegistrations().filter(
       (operation) => operation.module === "referenceMaintenance",
     );
@@ -378,11 +378,15 @@ describe("closed recognized template composition", () => {
         visibility: "internal",
       })),
     ]);
-    expect(
-      expectedSdkRegistrations().filter(
-        (operation) => operation.module !== "referenceMaintenance",
-      ),
-    ).toHaveLength(271);
+    expect(expectedSdkRegistrations()).toEqual(expect.arrayContaining([
+      { module: "cliOperator/memories", name: "domainPage", type: "query", visibility: "internal" },
+      { module: "cliOperator/conversations", name: "domainPage", type: "query", visibility: "internal" },
+      { module: "cliOperator/facts", name: "candidatePage", type: "query", visibility: "internal" },
+      { module: "cliOperator/immutable", name: "get", type: "query", visibility: "internal" },
+      { module: "cliOperator/memorySpaces", name: "list", type: "query", visibility: "internal" },
+      { module: "cliOperator/factHistory", name: "getOperationReceipt", type: "query", visibility: "internal" },
+      { module: "cliOperator/graphSync", name: "getGraphJob", type: "query", visibility: "internal" },
+    ]));
     const project = temp(),
       raw = discoverBackendFiles(sdk);
     const plan = planBackendSync(project, sdk);
@@ -433,19 +437,19 @@ describe("closed recognized template composition", () => {
       }
       fs.writeFileSync(
         path.join(source, "package.json"),
-        JSON.stringify({ name: "@cortexmemory/sdk", version: "0.37.0" }),
+        JSON.stringify({ name: "@cortexmemory/sdk", version: "0.38.0" }),
       );
       const target = path.join(source, "convex-dev/admin.ts");
       let text = fs.readFileSync(target, "utf8");
       if (change === "alias")
         text = text.replace(
-          "{ markDeletedRow }",
-          "{ markDeletedRow as remove }",
+          "deleteMaintenanceRecord, maintenanceTable",
+          "deleteMaintenanceRecord as remove, maintenanceTable",
         );
       else if (change === "helper")
-        text = text.replace("{ markDeletedRow }", "{ invalidateLifecycle }");
+        text = text.replace("deleteMaintenanceRecord, maintenanceTable", "unreviewedDeletion, maintenanceTable");
       else if (change === "origin")
-        text = text.replace("./lib/referenceLifecycle", "./lib/unreviewed");
+        text = text.replace("./runtimeWorkerAuth", "./lib/unreviewed");
       else text += "\n// different writer body\n";
       fs.writeFileSync(target, text);
       const project = fixture(),
@@ -814,7 +818,7 @@ describe("closed recognized template composition", () => {
     }
     fs.writeFileSync(
       path.join(source, "package.json"),
-      JSON.stringify({ name: "@cortexmemory/sdk", version: "0.37.0" }),
+      JSON.stringify({ name: "@cortexmemory/sdk", version: "0.38.0" }),
     );
     const project = fixture(),
       plan = planTemplateBackend(project, source, "chat-sdk");

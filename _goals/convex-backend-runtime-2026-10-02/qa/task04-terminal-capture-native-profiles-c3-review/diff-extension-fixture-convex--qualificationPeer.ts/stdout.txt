@@ -1,0 +1,11 @@
+--- /workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c2/fixture/convex/qualificationPeer.ts	2026-10-04 07:23:57.327559818 +0000
++++ /workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c3/fixture/convex/qualificationPeer.ts	2026-10-04 07:43:27.961654819 +0000
+@@ -2,7 +2,7 @@
+ import { internalMutation, internalQuery, httpAction } from "./_generated/server";
+ import { v } from "convex/values";
+ import { makeFunctionReference } from "convex/server";
+-const fixedRun="admission-969cac44e6164e70a409e309ddd5fbce";
++const fixedRun="admission-29147d663f2c402681aa661193585216";
+ const fields = { run: v.string(), dispatchDigest: v.string() };
+ function valid(run: string, digest: string) {
+   if (run!==fixedRun || !/^admission-[a-f0-9]{32}$/.test(run) || !/^[a-f0-9]{64}$/.test(digest)) throw new Error("QA_PEER_INVALID");

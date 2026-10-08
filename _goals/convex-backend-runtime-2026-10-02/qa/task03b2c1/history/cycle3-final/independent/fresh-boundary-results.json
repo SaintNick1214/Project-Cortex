@@ -1,0 +1,660 @@
+[
+  {
+    "name": "create independent initial READ identity plain",
+    "matched": true,
+    "identityCalls": 2,
+    "injections": 1,
+    "error": {
+      "version": 1,
+      "code": "BACKEND_OPERATION_FAILED",
+      "message": "Artifact operation failed.",
+      "retryable": false,
+      "outcome": "not_committed"
+    },
+    "attempts": 0,
+    "committed": 0,
+    "artifacts": []
+  },
+  {
+    "name": "create independent initial READ identity code-private",
+    "matched": false,
+    "identityCalls": 2,
+    "injections": 1,
+    "output": {
+      "success": true,
+      "artifactId": "fresh"
+    },
+    "attempts": 1,
+    "committed": 1,
+    "artifacts": [
+      {
+        "artifactId": "fresh",
+        "content": "review update"
+      }
+    ]
+  },
+  {
+    "name": "create independent initial READ identity auth-extra",
+    "matched": false,
+    "identityCalls": 2,
+    "injections": 1,
+    "output": {
+      "success": true,
+      "artifactId": "fresh"
+    },
+    "attempts": 1,
+    "committed": 1,
+    "artifacts": [
+      {
+        "artifactId": "fresh",
+        "content": "review update"
+      }
+    ]
+  },
+  {
+    "name": "create independent initial READ identity getter",
+    "matched": true,
+    "identityCalls": 2,
+    "injections": 1,
+    "error": {
+      "version": 1,
+      "code": "BACKEND_OPERATION_FAILED",
+      "message": "Artifact operation failed.",
+      "retryable": false,
+      "outcome": "not_committed"
+    },
+    "attempts": 0,
+    "committed": 0,
+    "artifacts": []
+  },
+  {
+    "name": "create independent initial READ identity ordinary-denial",
+    "matched": true,
+    "identityCalls": 2,
+    "injections": 1,
+    "output": {
+      "success": true,
+      "artifactId": "fresh"
+    },
+    "attempts": 1,
+    "committed": 1,
+    "artifacts": [
+      {
+        "artifactId": "fresh",
+        "content": "review update"
+      }
+    ]
+  },
+  {
+    "name": "create independent initial READ identity none",
+    "matched": true,
+    "identityCalls": 2,
+    "injections": 0,
+    "output": {
+      "_id": "artifacts:6",
+      "_creationTime": 1,
+      "artifactId": "fresh",
+      "tenantId": "tenant-a",
+      "memorySpaceId": "space-a",
+      "ownerPrincipalId": "runtimeAuthPrincipals:1",
+      "lastActorPrincipalId": "runtimeAuthPrincipals:1",
+      "userId": "trusted-user",
+      "kind": "text",
+      "streamingState": "draft",
+      "title": "Untitled",
+      "content": "review update",
+      "version": 1,
+      "versionPointer": 1,
+      "versionHistory": [
+        {
+          "version": 1,
+          "content": "review update",
+          "title": "Untitled",
+          "timestamp": 1791031179945,
+          "changedBy": "runtimeAuthPrincipals:1",
+          "changeType": "create",
+          "changeSummary": "Initial creation"
+        }
+      ],
+      "tags": [],
+      "createdAt": 1791031179945,
+      "updatedAt": 1791031179945
+    },
+    "attempts": 1,
+    "committed": 1,
+    "artifacts": [
+      {
+        "artifactId": "fresh",
+        "content": "review update"
+      }
+    ]
+  },
+  {
+    "name": "update independent initial READ identity plain",
+    "matched": true,
+    "identityCalls": 2,
+    "injections": 1,
+    "error": {
+      "version": 1,
+      "code": "BACKEND_OPERATION_FAILED",
+      "message": "Artifact operation failed.",
+      "retryable": false,
+      "outcome": "not_committed"
+    },
+    "attempts": 0,
+    "committed": 0,
+    "artifacts": [
+      {
+        "artifactId": "artifact-a",
+        "content": "first"
+      }
+    ]
+  },
+  {
+    "name": "update independent initial READ identity code-private",
+    "matched": false,
+    "identityCalls": 2,
+    "injections": 1,
+    "output": {
+      "success": true,
+      "artifactId": "artifact-a"
+    },
+    "attempts": 1,
+    "committed": 1,
+    "artifacts": [
+      {
+        "artifactId": "artifact-a",
+        "content": "review update"
+      }
+    ]
+  },
+  {
+    "name": "update independent initial READ identity auth-extra",
+    "matched": false,
+    "identityCalls": 2,
+    "injections": 1,
+    "output": {
+      "success": true,
+      "artifactId": "artifact-a"
+    },
+    "attempts": 1,
+    "committed": 1,
+    "artifacts": [
+      {
+        "artifactId": "artifact-a",
+        "content": "review update"
+      }
+    ]
+  },
+  {
+    "name": "update independent initial READ identity getter",
+    "matched": true,
+    "identityCalls": 2,
+    "injections": 1,
+    "error": {
+      "version": 1,
+      "code": "BACKEND_OPERATION_FAILED",
+      "message": "Artifact operation failed.",
+      "retryable": false,
+      "outcome": "not_committed"
+    },
+    "attempts": 0,
+    "committed": 0,
+    "artifacts": [
+      {
+        "artifactId": "artifact-a",
+        "content": "first"
+      }
+    ]
+  },
+  {
+    "name": "update independent initial READ identity ordinary-denial",
+    "matched": true,
+    "identityCalls": 2,
+    "injections": 1,
+    "output": {
+      "success": true,
+      "artifactId": "artifact-a"
+    },
+    "attempts": 1,
+    "committed": 1,
+    "artifacts": [
+      {
+        "artifactId": "artifact-a",
+        "content": "review update"
+      }
+    ]
+  },
+  {
+    "name": "update independent initial READ identity none",
+    "matched": true,
+    "identityCalls": 2,
+    "injections": 0,
+    "output": {
+      "_id": "artifacts:6",
+      "_creationTime": 1,
+      "artifactId": "artifact-a",
+      "tenantId": "tenant-a",
+      "memorySpaceId": "space-a",
+      "ownerPrincipalId": "runtimeAuthPrincipals:1",
+      "userId": "trusted-user",
+      "kind": "text",
+      "title": "Document",
+      "content": "review update",
+      "tags": [],
+      "version": 3,
+      "versionPointer": 3,
+      "versionHistory": [
+        {
+          "version": 1,
+          "content": "first",
+          "title": "First",
+          "timestamp": 1,
+          "changeType": "create"
+        },
+        {
+          "version": 2,
+          "content": "second",
+          "title": "Second",
+          "timestamp": 2,
+          "changeType": "update"
+        },
+        {
+          "version": 3,
+          "content": "review update",
+          "title": "Document",
+          "timestamp": 1791031179954,
+          "changeType": "update",
+          "changedBy": "runtimeAuthPrincipals:1"
+        }
+      ],
+      "streamingState": "draft",
+      "createdAt": 1,
+      "updatedAt": 1791031179954,
+      "lastActorPrincipalId": "runtimeAuthPrincipals:1"
+    },
+    "attempts": 1,
+    "committed": 1,
+    "artifacts": [
+      {
+        "artifactId": "artifact-a",
+        "content": "review update"
+      }
+    ]
+  },
+  {
+    "name": "get initial authority scope reader 1 plain",
+    "matched": true,
+    "scopeCalls": 1,
+    "injections": 1,
+    "error": {
+      "version": 1,
+      "code": "BACKEND_OPERATION_FAILED",
+      "message": "Artifact operation failed.",
+      "retryable": false,
+      "outcome": "not_committed"
+    },
+    "attempts": 0,
+    "committed": 0
+  },
+  {
+    "name": "get initial authority scope reader 1 code-private",
+    "matched": false,
+    "scopeCalls": 1,
+    "injections": 1,
+    "error": {
+      "version": 1,
+      "code": "FORBIDDEN",
+      "message": "Access denied",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "attempts": 0,
+    "committed": 0
+  },
+  {
+    "name": "get initial authority scope reader 1 auth-extra",
+    "matched": false,
+    "scopeCalls": 1,
+    "injections": 1,
+    "error": {
+      "version": 1,
+      "code": "FORBIDDEN",
+      "message": "Access denied",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "attempts": 0,
+    "committed": 0
+  },
+  {
+    "name": "get initial authority scope reader 3 plain",
+    "matched": true,
+    "scopeCalls": 3,
+    "injections": 1,
+    "error": {
+      "version": 1,
+      "code": "BACKEND_OPERATION_FAILED",
+      "message": "Artifact operation failed.",
+      "retryable": false,
+      "outcome": "not_committed"
+    },
+    "attempts": 0,
+    "committed": 0
+  },
+  {
+    "name": "get initial authority scope reader 3 code-private",
+    "matched": true,
+    "scopeCalls": 3,
+    "injections": 1,
+    "error": {
+      "version": 1,
+      "code": "BACKEND_OPERATION_FAILED",
+      "message": "Artifact operation failed.",
+      "retryable": false,
+      "outcome": "not_committed"
+    },
+    "attempts": 0,
+    "committed": 0
+  },
+  {
+    "name": "get initial authority scope reader 3 auth-extra",
+    "matched": true,
+    "scopeCalls": 3,
+    "injections": 1,
+    "error": {
+      "version": 1,
+      "code": "BACKEND_OPERATION_FAILED",
+      "message": "Artifact operation failed.",
+      "retryable": false,
+      "outcome": "not_committed"
+    },
+    "attempts": 0,
+    "committed": 0
+  },
+  {
+    "name": "create initial authority scope reader 1 plain",
+    "matched": true,
+    "scopeCalls": 1,
+    "injections": 1,
+    "error": {
+      "version": 1,
+      "code": "BACKEND_OPERATION_FAILED",
+      "message": "Artifact operation failed.",
+      "retryable": false,
+      "outcome": "not_committed"
+    },
+    "attempts": 0,
+    "committed": 0
+  },
+  {
+    "name": "create initial authority scope reader 1 code-private",
+    "matched": false,
+    "scopeCalls": 1,
+    "injections": 1,
+    "error": {
+      "version": 1,
+      "code": "FORBIDDEN",
+      "message": "Access denied",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "attempts": 0,
+    "committed": 0
+  },
+  {
+    "name": "create initial authority scope reader 1 auth-extra",
+    "matched": false,
+    "scopeCalls": 1,
+    "injections": 1,
+    "error": {
+      "version": 1,
+      "code": "FORBIDDEN",
+      "message": "Access denied",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "attempts": 0,
+    "committed": 0
+  },
+  {
+    "name": "create initial authority scope reader 3 plain",
+    "matched": true,
+    "scopeCalls": 3,
+    "injections": 1,
+    "error": {
+      "version": 1,
+      "code": "BACKEND_OPERATION_FAILED",
+      "message": "Artifact operation failed.",
+      "retryable": false,
+      "outcome": "not_committed"
+    },
+    "attempts": 0,
+    "committed": 0
+  },
+  {
+    "name": "create initial authority scope reader 3 code-private",
+    "matched": false,
+    "scopeCalls": 11,
+    "injections": 1,
+    "output": {
+      "success": true,
+      "artifactId": "fresh"
+    },
+    "attempts": 1,
+    "committed": 1
+  },
+  {
+    "name": "create initial authority scope reader 3 auth-extra",
+    "matched": false,
+    "scopeCalls": 11,
+    "injections": 1,
+    "output": {
+      "success": true,
+      "artifactId": "fresh"
+    },
+    "attempts": 1,
+    "committed": 1
+  },
+  {
+    "name": "update initial authority scope reader 1 plain",
+    "matched": true,
+    "scopeCalls": 1,
+    "injections": 1,
+    "error": {
+      "version": 1,
+      "code": "BACKEND_OPERATION_FAILED",
+      "message": "Artifact operation failed.",
+      "retryable": false,
+      "outcome": "not_committed"
+    },
+    "attempts": 0,
+    "committed": 0
+  },
+  {
+    "name": "update initial authority scope reader 1 code-private",
+    "matched": false,
+    "scopeCalls": 1,
+    "injections": 1,
+    "error": {
+      "version": 1,
+      "code": "FORBIDDEN",
+      "message": "Access denied",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "attempts": 0,
+    "committed": 0
+  },
+  {
+    "name": "update initial authority scope reader 1 auth-extra",
+    "matched": false,
+    "scopeCalls": 1,
+    "injections": 1,
+    "error": {
+      "version": 1,
+      "code": "FORBIDDEN",
+      "message": "Access denied",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    },
+    "attempts": 0,
+    "committed": 0
+  },
+  {
+    "name": "update initial authority scope reader 3 plain",
+    "matched": true,
+    "scopeCalls": 3,
+    "injections": 1,
+    "error": {
+      "version": 1,
+      "code": "BACKEND_OPERATION_FAILED",
+      "message": "Artifact operation failed.",
+      "retryable": false,
+      "outcome": "not_committed"
+    },
+    "attempts": 0,
+    "committed": 0
+  },
+  {
+    "name": "update initial authority scope reader 3 code-private",
+    "matched": false,
+    "scopeCalls": 9,
+    "injections": 1,
+    "output": {
+      "success": true,
+      "artifactId": "artifact-a"
+    },
+    "attempts": 1,
+    "committed": 1
+  },
+  {
+    "name": "update initial authority scope reader 3 auth-extra",
+    "matched": false,
+    "scopeCalls": 9,
+    "injections": 1,
+    "output": {
+      "success": true,
+      "artifactId": "artifact-a"
+    },
+    "attempts": 1,
+    "committed": 1
+  },
+  {
+    "name": "get pinned control unexpected FORBIDDEN pre-effect",
+    "matched": true,
+    "scopeQueries": 5,
+    "injections": 1,
+    "error": {
+      "version": 1,
+      "code": "BACKEND_OPERATION_FAILED",
+      "message": "Artifact operation failed.",
+      "retryable": false,
+      "outcome": "not_committed"
+    },
+    "attempts": 0,
+    "committed": 0
+  },
+  {
+    "name": "get pinned control unexpected FORBIDDEN post-effect",
+    "matched": null,
+    "scopeQueries": 6,
+    "injections": 0,
+    "output": {
+      "_id": "artifacts:6",
+      "_creationTime": 1,
+      "artifactId": "artifact-a",
+      "tenantId": "tenant-a",
+      "memorySpaceId": "space-a",
+      "ownerPrincipalId": "runtimeAuthPrincipals:1",
+      "userId": "trusted-user",
+      "kind": "text",
+      "title": "Document",
+      "content": "first",
+      "tags": [],
+      "version": 2,
+      "versionPointer": 2,
+      "versionHistory": [
+        {
+          "version": 1,
+          "content": "first",
+          "title": "First",
+          "timestamp": 1,
+          "changeType": "create"
+        },
+        {
+          "version": 2,
+          "content": "second",
+          "title": "Second",
+          "timestamp": 2,
+          "changeType": "update"
+        }
+      ],
+      "streamingState": "draft",
+      "createdAt": 1,
+      "updatedAt": 2
+    },
+    "attempts": 0,
+    "committed": 0
+  },
+  {
+    "name": "create pinned control unexpected FORBIDDEN pre-effect",
+    "matched": true,
+    "scopeQueries": 5,
+    "injections": 1,
+    "error": {
+      "version": 1,
+      "code": "BACKEND_OPERATION_FAILED",
+      "message": "Artifact operation failed.",
+      "retryable": false,
+      "outcome": "not_committed"
+    },
+    "attempts": 0,
+    "committed": 0
+  },
+  {
+    "name": "create pinned control unexpected FORBIDDEN post-effect",
+    "matched": true,
+    "scopeQueries": 15,
+    "injections": 1,
+    "error": {
+      "version": 1,
+      "code": "BACKEND_OPERATION_FAILED",
+      "message": "Artifact operation failed.",
+      "retryable": false,
+      "outcome": "not_committed"
+    },
+    "attempts": 1,
+    "committed": 0
+  },
+  {
+    "name": "update pinned control unexpected FORBIDDEN pre-effect",
+    "matched": true,
+    "scopeQueries": 5,
+    "injections": 1,
+    "error": {
+      "version": 1,
+      "code": "BACKEND_OPERATION_FAILED",
+      "message": "Artifact operation failed.",
+      "retryable": false,
+      "outcome": "not_committed"
+    },
+    "attempts": 0,
+    "committed": 0
+  },
+  {
+    "name": "update pinned control unexpected FORBIDDEN post-effect",
+    "matched": true,
+    "scopeQueries": 13,
+    "injections": 1,
+    "error": {
+      "version": 1,
+      "code": "BACKEND_OPERATION_FAILED",
+      "message": "Artifact operation failed.",
+      "retryable": false,
+      "outcome": "not_committed"
+    },
+    "attempts": 1,
+    "committed": 0
+  }
+]

@@ -198,9 +198,9 @@
   }
 
   body {
-    @apply bg-background text-foreground;
-    overflow-x: hidden;
     position: relative;
+    overflow-x: hidden;
+    @apply bg-background text-foreground;
   }
 
   html {
@@ -293,8 +293,8 @@
 
 /* firefox scrollbar styling */
 * {
-  scrollbar-width: thin;
   scrollbar-color: var(--border) transparent;
+  scrollbar-width: thin;
 }
 
 @theme inline {

@@ -1,0 +1,20 @@
+import { createRequire,syncBuiltinESMExports } from 'node:module';
+import { pathToFileURL } from 'node:url';
+import { basename } from 'node:path';
+const require=createRequire(import.meta.url), fs=require('node:fs');
+const original=fs.writeFileSync;
+const dir='/tmp/task03c2-live-harness-review1-7m04c8w4';
+const evidence='/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/evidence/';
+let redirected=0;
+fs.writeFileSync=(path,...args)=>{
+  if(typeof path!=='string'||!path.startsWith(evidence)||!basename(path).startsWith('client-prep-')) throw new Error('Unexpected write rejected by judge');
+  redirected++;return original(dir+'/'+basename(path),...args);
+};
+const oldFetch=globalThis.fetch;let network=0;
+globalThis.fetch=async()=>{network++;throw new Error('UNEXPECTED_NETWORK');};
+syncBuiltinESMExports();
+try {
+  await import(pathToFileURL('/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/client-prep.ts').href);
+  if(network!==0||redirected!==1)throw new Error('Unexpected offline effect count');
+}finally{fs.writeFileSync=original;globalThis.fetch=oldFetch;syncBuiltinESMExports();}
+original(dir+'/client-prep-interception.json',JSON.stringify({network,redirected,canonicalWrites:0},null,2)+'\n',{flag:'wx',mode:0o600});

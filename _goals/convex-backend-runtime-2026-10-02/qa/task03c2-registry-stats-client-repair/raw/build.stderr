@@ -1,0 +1,14 @@
+npm notice run @cortexmemory/sdk@0.37.0 build
+npm notice run tsup src/index.ts --format cjs,esm --dts --clean
+src/facts/history.ts(171,46): error TS2339: Property 'logEvent' does not exist on type '{ getHistory: FunctionReference<"query", "public", { tenantId?: string | undefined; memorySpaceId?: string | undefined; limit?: number | undefined; factId: string; }, { _id: Id<"factHistory">; _creationTime: number; ... 14 more ...; action: "CREATE" | ... 2 more ... | "DELETE"; }[], string | undefined>; ... 4 more ....'.
+src/facts/history.ts(346,46): error TS2339: Property 'deleteByFactId' does not exist on type '{ getHistory: FunctionReference<"query", "public", { tenantId?: string | undefined; memorySpaceId?: string | undefined; limit?: number | undefined; factId: string; }, { _id: Id<"factHistory">; _creationTime: number; ... 14 more ...; action: "CREATE" | ... 2 more ... | "DELETE"; }[], string | undefined>; ... 4 more ....'.
+src/facts/history.ts(364,46): error TS2339: Property 'deleteByUserId' does not exist on type '{ getHistory: FunctionReference<"query", "public", { tenantId?: string | undefined; memorySpaceId?: string | undefined; limit?: number | undefined; factId: string; }, { _id: Id<"factHistory">; _creationTime: number; ... 14 more ...; action: "CREATE" | ... 2 more ... | "DELETE"; }[], string | undefined>; ... 4 more ....'.
+src/facts/history.ts(384,46): error TS2339: Property 'deleteByMemorySpace' does not exist on type '{ getHistory: FunctionReference<"query", "public", { tenantId?: string | undefined; memorySpaceId?: string | undefined; limit?: number | undefined; factId: string; }, { _id: Id<"factHistory">; _creationTime: number; ... 14 more ...; action: "CREATE" | ... 2 more ... | "DELETE"; }[], string | undefined>; ... 4 more ....'.
+src/facts/history.ts(408,46): error TS2339: Property 'purgeOldEvents' does not exist on type '{ getHistory: FunctionReference<"query", "public", { tenantId?: string | undefined; memorySpaceId?: string | undefined; limit?: number | undefined; factId: string; }, { _id: Id<"factHistory">; _creationTime: number; ... 14 more ...; action: "CREATE" | ... 2 more ... | "DELETE"; }[], string | undefined>; ... 4 more ....'.
+
+Error: error occurred in dts build
+    at Worker.<anonymous> (/workspace/Project-Cortex/node_modules/tsup/dist/index.js:1545:26)
+    at Worker.emit (node:events:509:28)
+    at MessagePort.<anonymous> (node:internal/worker:350:14)
+    at [nodejs.internal.kHybridDispatch] (node:internal/event_target:856:20)
+    at MessagePort.<anonymous> (node:internal/per_context/messageport:23:28)

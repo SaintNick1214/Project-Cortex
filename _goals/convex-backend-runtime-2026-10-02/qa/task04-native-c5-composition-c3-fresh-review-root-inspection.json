@@ -1,0 +1,58 @@
+{
+  "at": "2026-10-04T18:49:47.877668+00:00",
+  "reportReadFully": true,
+  "status": "ROOT_VERIFIED_FRESH_REVIEW_REJECT_2.2",
+  "checks": [
+    {
+      "scope": "QA",
+      "sealSHA256": "90c01d1dbad8c7f1235851721507c6edd9d48d719639dd484b2e2fd0e02dcc7c",
+      "exactRows": 7,
+      "literalSymlinksNeverFollowed": 0,
+      "regularBytesVerified": 62516,
+      "recordedMetadataVerified": [
+        "mode",
+        "uid",
+        "dev",
+        "ino",
+        "nlink"
+      ],
+      "timestampsAndGidNotInSubjectSeal": "NOT_ASSERTED"
+    },
+    {
+      "scope": "work",
+      "sealSHA256": "24462871bb2b19f00f75f078872748d6ba98ae9989e079203aec1777438a2dc9",
+      "exactRows": 2,
+      "literalSymlinksNeverFollowed": 0,
+      "regularBytesVerified": 5189,
+      "recordedMetadataVerified": [
+        "mode",
+        "uid",
+        "dev",
+        "ino",
+        "nlink"
+      ],
+      "timestampsAndGidNotInSubjectSeal": "NOT_ASSERTED"
+    },
+    {
+      "scope": "tmp",
+      "sealSHA256": "3dcb7c459b4f0bce8a2d13494b0b1243715e55fb577ece9f9cac6d9645421567",
+      "exactRows": 3240,
+      "literalSymlinksNeverFollowed": 0,
+      "regularBytesVerified": 82558214,
+      "recordedMetadataVerified": [
+        "mode",
+        "uid",
+        "dev",
+        "ino",
+        "nlink"
+      ],
+      "timestampsAndGidNotInSubjectSeal": "NOT_ASSERTED"
+    }
+  ],
+  "original122": "HELD",
+  "positiveOwnControls": "PASS",
+  "injectedRestoreFailure": "FAIL_PRIMARY_MASKED_HOOKS_REMAINED",
+  "joinRejection": "UNREACHABLE_IN_CURRENT_NORMALIZED_IMPLEMENTATION_DEFENSIVE_ORDERING_GAP",
+  "partialInstallRollback": "SOURCE_INSPECTED_NOT_REPRODUCED",
+  "rootInitialReadFailure": "glob matched seal.py as JSON; corrected exact literal-self-seal.json paths, no subject mutation"
+}

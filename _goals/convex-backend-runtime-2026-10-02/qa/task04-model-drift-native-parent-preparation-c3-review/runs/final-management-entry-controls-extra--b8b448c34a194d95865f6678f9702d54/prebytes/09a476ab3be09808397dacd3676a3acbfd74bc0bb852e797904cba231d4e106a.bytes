@@ -1,0 +1,6 @@
+from pathlib import Path
+import subprocess
+r=Path.cwd();w=r/'work/resume/task04-model-drift-native-parent-preparation-c3-review'
+for k in ['extension','regression','extra']:
+ for name in ['management-controls','management-entry-controls','management-reserve-controls']:
+  p=subprocess.run(['python',str(w/'record.py'),name+'-'+k,'node','--experimental-vm-modules',str(w/(name+'.mjs')),k],cwd=r,capture_output=True,text=True);print(p.stdout,end='');assert p.returncode==0,p.stderr

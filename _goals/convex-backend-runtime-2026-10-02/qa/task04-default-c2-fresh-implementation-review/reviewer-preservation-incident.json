@@ -1,0 +1,24 @@
+{
+  "command": {
+    "argv": [
+      "node",
+      "checks/c2-reader-dependencies.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture",
+    "startUTC": "2026-10-04T13:02:12.646997+00:00",
+    "endUTC": "2026-10-04T13:02:14.030085+00:00",
+    "exit": 0,
+    "sourcePreBefore": true,
+    "sourcePostAfter": true,
+    "sourceUnchanged": true,
+    "preimageCount": 151,
+    "receipt": "work/resume/task04-default-c2-fresh-implementation-review/commands/reader/run.json",
+    "classification": "NON_CERTIFYING_SCOPE_VIOLATION"
+  },
+  "writtenSubjectPath": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture/checks/c2-reader-runtime-preimage.txt",
+  "incident": "Real same-content subject-scope write by producer diagnostic; non-certifying preservation run. No restoration or further subject writes.",
+  "bytePrePostMatch": true,
+  "beforeModeInodeLinkMetadata": "NOT_CAPTURED; current content cannot prove metadata preservation",
+  "replacementReceipt": "work/resume/task04-default-c2-fresh-implementation-review/commands/reader-owned/run.json",
+  "replacement": "Own copied diagnostic, actual runtime method and assertions unchanged; import relocation/artifact redirection only; actual Ownership dependency from repaired source."
+}

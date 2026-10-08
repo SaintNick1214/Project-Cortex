@@ -1,0 +1,27 @@
+/** Read archived bytes without mutation and retain the current independent-manifest comparison. */
+import fs from "node:fs";
+import path from "node:path";
+import crypto from "node:crypto";
+const base = path.resolve("_goals/convex-backend-runtime-2026-10-02/qa/task03b1-mf");
+const hash = file => crypto.createHash("sha256").update(fs.readFileSync(file)).digest("hex");
+const results = [];
+for (const [cycle, expectedCount] of [["cycle1", 32], ["cycle2-open-final-read", 38], ["cycle2-final", 44]]) {
+  const root = path.join(base, "history", cycle); const manifest = path.join(root, "preservation.json");
+  const source = JSON.parse(fs.readFileSync(manifest, "utf8")); const entries = [];
+  if (source.records) {
+    for (const record of source.records) {
+      const folder = { qa: "qa", source: "source", judge: "independent" }[record.kind];
+      const inert = record.kind === "source" || (record.kind === "judge" && record.path.endsWith(".mts"));
+      entries.push([path.join(root, folder, `${record.path}${inert ? ".text" : ""}`), record.hash]);
+    }
+  } else {
+    for (const [file, expected] of Object.entries(source.files)) entries.push([path.join(root, "qa", file), expected]);
+    for (const record of Object.values(source.sourceHashes ?? source.sources)) entries.push([path.join(base, record.archive), record.sha256]);
+  }
+  const mismatches = entries.filter(([file, expected]) => !fs.existsSync(file) || hash(file) !== expected).map(([file]) => path.relative(base, file));
+  results.push({ cycle, filesChecked: entries.length, expectedCount, manifestSha256: hash(manifest), mismatches });
+}
+const receipt = { observedAt: new Date().toISOString(), command: "node _goals/convex-backend-runtime-2026-10-02/qa/task03b1-mf/archive-integrity.mjs", results };
+fs.writeFileSync(path.join(base, "checks", "third-repair-archive-integrity.json"), `${JSON.stringify(receipt, null, 2)}\n`);
+console.log(JSON.stringify(receipt));
+if (results.some(result => result.filesChecked !== result.expectedCount || result.mismatches.length)) process.exitCode = 1;

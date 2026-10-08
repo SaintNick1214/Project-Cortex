@@ -1,0 +1,164 @@
+{
+  "classification": "NATIVE_EXECUTION_REQUIRES_INDEPENDENT_AGGREGATE_REVIEW",
+  "operation": "344b098e-e2bf-4260-a46e-3c143472d70a",
+  "nativeCaseEvents": [
+    {
+      "phase": "case",
+      "caseId": "equal-refinements",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "conflicting-refinements",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "revoked-live-origin",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "initial-duplicates",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "final-lost-response",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "parent-refinement-rollback",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "released-slot",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "late-original-window",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "facts-add-absent",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "facts-change-remove",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "unknown-intermediate",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "malformed-private-raw",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "no-checkpoint",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "closed-renew-ordinary",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "admin-compatibility",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "operator-compatibility",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "partial-marker",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "legacy-preserve",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "healthy-known-attach",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "attachment-current-fences",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "internal-publication",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "peer-no-replay",
+      "status": "PASS"
+    }
+  ],
+  "journalRows": 4380,
+  "nativeTickets": 2581,
+  "createdRowWitnesses": 411,
+  "deletedRowWitnesses": 411,
+  "qualifierStatuses": [
+    "PASS",
+    "PASS"
+  ],
+  "terminalGroups": [
+    {
+      "spawned": 0,
+      "verifiedTerminalGroups": 0,
+      "remaining": 0
+    },
+    {
+      "spawned": 1,
+      "verifiedTerminalGroups": 1,
+      "remaining": 0
+    }
+  ],
+  "targetRetirement": {
+    "version": 1,
+    "operation": "344b098e-e2bf-4260-a46e-3c143472d70a",
+    "phase": "exact-owned-project-retirement",
+    "status": "PASS",
+    "startedAt": "2026-10-04T08:37:55.661Z",
+    "observedAt": "2026-10-04T08:37:55.959Z",
+    "projectId": 3140295,
+    "deploymentName": "modest-puffin-359",
+    "deploymentUrl": "https://modest-puffin-359.convex.cloud",
+    "provisionState": "FULLY_VERIFIED",
+    "verifiedOnlyDevelopmentCloudDeployment": true,
+    "deletionHttpStatus": 200,
+    "absentProjectHttpStatus": 404,
+    "managementCalls": 5
+  },
+  "paidInference": 0,
+  "storageCreated": 0,
+  "targetCredentialRemoval": [
+    "deploy.env",
+    "identities.json",
+    "peer-config.json"
+  ],
+  "nativeTask04PASS": false,
+  "profile": "extension",
+  "nestedNativeUpper": 37,
+  "nestedAuthTickets": 28,
+  "nestedParentTickets": 1
+}

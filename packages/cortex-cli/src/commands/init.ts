@@ -600,7 +600,6 @@ export function registerLifecycleCommands(
                   );
                   stoppedSomething = true;
                   deploymentStopped = true;
-                  convexStopped = true;
                 }
               } else {
                 console.log(pc.dim("   No Convex process running"));

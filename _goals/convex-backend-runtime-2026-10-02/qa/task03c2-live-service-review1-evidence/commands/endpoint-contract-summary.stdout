@@ -1,0 +1,44 @@
+COUNT 41
+GROUPS {'immutable': 12, 'mutable': 11, 'sessions': 10, 'users': 8}
+VISIBILITY {'public': 36, 'internal': 5}
+immutable:store public write
+immutable:get public read
+immutable:getVersion public read
+immutable:getHistory public read
+immutable:getAtTimestamp public read
+immutable:list public read
+immutable:count public read
+immutable:search public read
+immutable:purge public write
+immutable:purgeMany public write
+immutable:purgeVersions public write
+immutable:purgeAll internal trusted deployment-operator internal invocation
+mutable:set public write
+mutable:update public write
+mutable:get public read
+mutable:exists public read
+mutable:list public read
+mutable:count public read
+mutable:deleteKey public write
+mutable:purgeMany public write
+mutable:purgeNamespace public write
+mutable:transaction public write
+mutable:purgeAll internal trusted deployment-operator internal invocation
+sessions:create public write
+sessions:get public read
+sessions:touch public write
+sessions:end public write
+sessions:endAll public write
+sessions:list public read
+sessions:count public read
+sessions:incrementMessageCount internal write
+sessions:incrementMemoryCount internal write
+sessions:expireIdle internal write
+users:get public read
+users:list public read
+users:count public read
+users:getVersion public read
+users:getHistory public read
+users:getAtTimestamp public read
+users:exists public read
+users:deleteUserProfile public write

@@ -1,0 +1,114 @@
+{
+  "start": {
+    "current_time": "2026-10-04 13:36:02 UTC"
+  },
+  "end": {
+    "current_time": "2026-10-04 13:36:02 UTC"
+  },
+  "results": [
+    {
+      "status": "fulfilled",
+      "value": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Action completed."
+          }
+        ],
+        "structuredContent": {
+          "archive_filter_applied": null,
+          "repositories": [
+            {
+              "id": "1349940422",
+              "name": "ai-budget",
+              "owner": {
+                "login": "get-convex",
+                "id": 81530787,
+                "type": "Organization",
+                "avatar_url": "https://avatars.githubusercontent.com/u/81530787?v=4",
+                "url": "https://api.github.com/users/get-convex"
+              },
+              "repository_full_name": "get-convex/ai-budget",
+              "permissions": {
+                "admin": false,
+                "maintain": false,
+                "pull": true,
+                "push": false,
+                "triage": false
+              },
+              "allow_auto_merge": null,
+              "allow_merge_commit": null,
+              "allow_rebase_merge": null,
+              "allow_squash_merge": null,
+              "allow_update_branch": null,
+              "clone_url": "https://github.com/get-convex/ai-budget.git",
+              "size": 903,
+              "default_branch": "main",
+              "git_commits_url": "https://api.github.com/repos/get-convex/ai-budget/git/commits{/sha}",
+              "git_refs_url": "https://api.github.com/repos/get-convex/ai-budget/git/refs{/sha}",
+              "git_url": "git://github.com/get-convex/ai-budget.git",
+              "master_branch": null,
+              "visibility": "public",
+              "archived": false,
+              "is_code_search_indexed": null,
+              "display_title": "get-convex/ai-budget",
+              "display_url": "https://github.com/get-convex/ai-budget"
+            }
+          ]
+        },
+        "isError": false
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Action completed."
+          }
+        ],
+        "structuredContent": {
+          "results": [
+            {
+              "url": "https://github.com/get-convex/convex-backend/blob/588c89b23f669e9ab158848d1ecd53707dac09b8/npm-packages/@convex-dev/ai-sdk-provider/src/index.ts",
+              "path": "npm-packages/@convex-dev/ai-sdk-provider/src/index.ts",
+              "display_url": "https://github.com/get-convex/convex-backend/blob/588c89b23f669e9ab158848d1ecd53707dac09b8/npm-packages/@convex-dev/ai-sdk-provider/src/index.ts",
+              "display_title": "npm-packages/@convex-dev/ai-sdk-provider/src/index.ts",
+              "text_matches": [
+                {
+                  "property": "content",
+                  "fragment": " */\nconst productionGatewayHost = \"https://ai-gateway.convex.dev\";\n",
+                  "matches": [
+                    {
+                      "text": "ai-gateway.convex.dev",
+                      "indices": [
+                        43,
+                        64
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "property": "content",
+                  "fragment": "  if (!usage || typeof usage !== \"object\") return undefined;\n  const { cost, cost_details } = usage as ProviderMetadata[string];\n  const metadata: ProviderMetadata[string] = {};",
+                  "matches": [
+                    {
+                      "text": "cost_details",
+                      "indices": [
+                        77,
+                        89
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "isError": false
+      }
+    }
+  ]
+}
+

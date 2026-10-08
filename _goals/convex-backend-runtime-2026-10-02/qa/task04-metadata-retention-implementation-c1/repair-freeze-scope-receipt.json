@@ -1,0 +1,12 @@
+{
+  "argv": [
+    "python3",
+    "-c",
+    "from pathlib import Path;import json,hashlib;p=Path(\"work/resume/task04-metadata-retention-implementation-c1/freeze-check.py\");s=p.read_text().replace(\"if str(p).startswith(str(q)) and p.suffix in ['.ts','.mjs','.mts'] and p.is_file():\",\"if str(p).startswith(str(q)) and p.suffix in (['.ts','.mts'] if row['receipt'].startswith('strict-types') else ['.ts','.mjs','.mts']) and p.is_file():\");p.write_text(s);p=Path(\"_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c1/report.md\");s=p.read_text().replace('final verifier wrong module/EMPTY expression assertion corrected only in verifier.','final verifier wrong module/EMPTY expression assertion corrected only in verifier; first freeze-input check compared unrelated old JS metadata-test prebytes from the TypeScript-only command, then restricted that command currentness check to its actual TypeScript inputs.');p.write_text(s);p=Path(\"_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c1/requirements-outcomes.json\");j=json.loads(p.read_text());j['reportSha256']=hashlib.sha256(Path(\"_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c1/report.md\").read_bytes()).hexdigest();p.write_text(json.dumps(j,indent=2)+'\\n')"
+  ],
+  "cwd": "/workspace/Project-Cortex",
+  "startUtc": "2026-10-04T14:47:54.909462+00:00",
+  "endUtc": "2026-10-04T14:47:54.936412+00:00",
+  "exit": 0,
+  "recorderSourceSha256": "22b0c7cd03ea9ed7724372bb736f48dcacf7204bbb87a57271b7a06daa6d2db5"
+}

@@ -1,0 +1,901 @@
+{
+  "observedAt": "2026-10-04T02:57:26.021343+00:00",
+  "sources": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/README.md",
+      "sha256": "0643df1cae1ede55a8a5c6d65e19a4b8c990dd8a0f2e677bac012caf4176ce00",
+      "bytes": 7729
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/bootstrap.diff",
+      "sha256": "00c4a93b1b4143a63f43fd6e0d966457602c99f65270afea5be1a0e2ad629d30",
+      "bytes": 1691
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/cases.json",
+      "sha256": "9ccef75616df27f411b7a8c8d1b36d834d218bab6cc86eb19a946b222b98045f",
+      "bytes": 11646
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/divergence.json",
+      "sha256": "57e96c30ee8b1fbccb2d525c0e6720989b42556e73014f5cf47761cc5a7754bf",
+      "bytes": 1382
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/convex/_generated/api.d.ts",
+      "sha256": "ef17837015baea01a4c2035dd7efd94f9641d5d6024362c0b65426591082e682",
+      "bytes": 2448
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/convex/_generated/api.js",
+      "sha256": "f513058549831e85376f8d19cafaf2a4a770b6eb1b859fb371141f2c9dec0d70",
+      "bytes": 480
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/convex/_generated/dataModel.d.ts",
+      "sha256": "db177073d16a4393c7a96bcdc3a2a904e88c2432d54d138ca7715cc431982c17",
+      "bytes": 1736
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/convex/_generated/server.d.ts",
+      "sha256": "2b536ee08d434dd044efe0302aeaf4ccb00cd08af10c9f8c7bc7a6734e4aa49b",
+      "bytes": 6008
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/convex/_generated/server.js",
+      "sha256": "0cdd1d842b9458d8a6f2444c35eb9929312316a384ca76a4b1d964bedde8a6f2",
+      "bytes": 3872
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/convex/a2a.ts",
+      "sha256": "d5f3c93db358f10635bb451f69dae779fd1eb11e1d52aa0a16912dbfc405f7c1",
+      "bytes": 26571
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/convex/admin.ts",
+      "sha256": "8b2eb63eaf6ff4fc41cdb64085840ad70f49bf377f394afd194f7ab08d450345",
+      "bytes": 2259
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/convex/agents.ts",
+      "sha256": "2f62a62e8ae23e84542324fc2201335eb99ca36ae7ed7c9a3173c352e3e3e17d",
+      "bytes": 9633
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/convex/artifacts.ts",
+      "sha256": "3252eb473cd80c9fe222a21322cb55e321704635dfd17596c319183fb9bcc2a3",
+      "bytes": 60622
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/convex/attachments.ts",
+      "sha256": "d76ae987e6f778023c95231dd4b92d19f02232c694128a4f46bbef825fb921f3",
+      "bytes": 23062
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/convex/auth.config.ts",
+      "sha256": "ec6167288dc4684b86d43677580d9b3297994129291d5881f8fd8c795bab09d1",
+      "bytes": 852
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/convex/contexts.ts",
+      "sha256": "facb2f35168ab2243d59b88cc39ac6bafba2044a3fafcbc751f4a323c47367e2",
+      "bytes": 23623
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/convex/conversationShares.ts",
+      "sha256": "17dfb3859fc6e3bd60fa9b4d11af984a252df18995257c28e40415fa1a05d4d1",
+      "bytes": 12683
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/convex/conversationSnapshots.ts",
+      "sha256": "7af4e9ad27d7fd5e1883e57ed560fbc509c4c10d3454ee2fe578edc790e6c1ac",
+      "bytes": 9236
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/convex/conversations.ts",
+      "sha256": "7718c76423d7f275faf51a534fb9ff3ef19eef3d05729028060487c59276e586",
+      "bytes": 52584
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/convex/factHistory.ts",
+      "sha256": "b8734ec5ac5afc25eed9dc66fe27428fa078d3a9f3fb7ace37cbed5c0106e059",
+      "bytes": 12510
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/convex/facts.ts",
+      "sha256": "4a3b972e97b42b7d5cd273adfe28db1ca3a390675424bad57463cafbe30d2b92",
+      "bytes": 57517
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/convex/governance.ts",
+      "sha256": "262c2f892bdc577b44b53dc1bff35ee7c8cebc55937b9f87469938e0b5c4e668",
+      "bytes": 22321
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/convex/graphSync.ts",
+      "sha256": "8d24c1393cf9414a32a5ee5758da1d37efdba041eea006f2457908b38871dae9",
+      "bytes": 9108
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/convex/http.ts",
+      "sha256": "748953da774f9819fb4a21d579e10e3b9b5eddefd057f6bbde06d7dbf2186ac2",
+      "bytes": 215
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/convex/immutable.ts",
+      "sha256": "1bbeca8ed71dd089a8804d34b016900a261a22a65ac70e08330b3a56a4fd0804",
+      "bytes": 9637
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/convex/memories.ts",
+      "sha256": "988143530d6009ac655ba5cc4f918df6ba0721d808001faadd6e60098b179554",
+      "bytes": 33865
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/convex/memorySpaces.ts",
+      "sha256": "cabb138c578220ee3b4b56fd16bf466da9e92e9508f8485ce1582fd3b29eee2c",
+      "bytes": 12862
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/convex/mutable.ts",
+      "sha256": "14feb91094f31b9f72cdab9ecb6faa5025a27972f234b1129d4c77ee4ee037e5",
+      "bytes": 11904
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/convex/productionSchema.ts",
+      "sha256": "b95bdd8b643b9d8d7f3d6ed2770181cff15e116110af3b3648bb4492e58495c2",
+      "bytes": 54581
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/convex/qualificationManifest.ts",
+      "sha256": "a8d82729d6089e6289df3f6db1fa635d30430184ae12a1e1448613a996f1f7b7",
+      "bytes": 3430
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/convex/qualificationOwned.ts",
+      "sha256": "b2e89e9a2c9eee6a681a3474441f647bd738fbe5f71affa3ed03c8cd1d7aa4f5",
+      "bytes": 13908
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/convex/qualificationPeer.ts",
+      "sha256": "48869ec1a74a18e2525487ec74c506db9333fa20f3fb0dbfad775b3426c6857b",
+      "bytes": 3573
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/convex/runtimeArtifactAuth.ts",
+      "sha256": "aa75122698632dfb836b10a12251de7c580f58aa8c16d866913f07fc657962c8",
+      "bytes": 30371
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/convex/runtimeAssetUnavailableAuth.ts",
+      "sha256": "10678769db2fb6c04edeee6c904f31db4da0baca1ba03d1f81c951c3141f18d4",
+      "bytes": 4669
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/convex/runtimeAuth.ts",
+      "sha256": "03ec735f1791d2e9973a320e22dcc58d0f040432782398dcc95d0d65f99b0929",
+      "bytes": 23246
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/convex/runtimeAuthSchema.ts",
+      "sha256": "41859c943e06ed185d88bb4f0da21540e0999d9f736f933dfdcbd572ee9dd5d1",
+      "bytes": 3515
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/convex/runtimeDataAuth.ts",
+      "sha256": "3fd328761100777a06c0fe243deb68825492ddbefd669b23dbc1f9e125e4fd27",
+      "bytes": 56199
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/convex/runtimeMemory.ts",
+      "sha256": "bbe9977ba0fe4d1851c394e4a41e43eaf1978218f9c5b55dea00a536eaeea959",
+      "bytes": 11674
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/convex/runtimeMemoryRepository.ts",
+      "sha256": "74e3db54fa9f1e5794b38b2d25ae7bed06341bf06cf1ba438ca3424605e42833",
+      "bytes": 24131
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/convex/runtimeMemorySchema.ts",
+      "sha256": "24abaebe350c4127c3b4b376b6749ef86ef6e4e1820b59b2d8a9538e7f257aba",
+      "bytes": 4630
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/convex/runtimeMemoryServices.ts",
+      "sha256": "3abc22ad358d1e760e409bd05315e4677216b4f18fbcf43c7873862c05e2bcb8",
+      "bytes": 8399
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/convex/runtimeMetadataAuth.ts",
+      "sha256": "7ba6fe51bb8828a9a18b8486f63e5975b84a99b725b3ffac93ac61fff811428f",
+      "bytes": 15064
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/convex/runtimeModelPolicy.ts",
+      "sha256": "2a499e50107e6ba0064368c6d84c5ecce596bb420114336c3a2bdb86d0be9aa8",
+      "bytes": 71602
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/convex/runtimeModelPolicyBootstrap.ts",
+      "sha256": "51f02b9917720ebe66a5a3ef66583685ea75006a282445243aebc64202dd4075",
+      "bytes": 2697
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/convex/runtimePolicySchema.ts",
+      "sha256": "7fa65fbfa96d8709cd834b09133440e3f189b9ac9b717b96545a3b89085a7c23",
+      "bytes": 5153
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/convex/runtimeRegistryAuth.ts",
+      "sha256": "4fc94bb2165f3e783d3b179256120b34a9e40f63fc3fa98e3fab409039004360",
+      "bytes": 35029
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/convex/runtimeRegistryStats.ts",
+      "sha256": "ea2e7a99230a5fd33c2b445b099646c1015c98e873c1adfb30c01baed8cf49f6",
+      "bytes": 767
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/convex/runtimeUnavailableAuth.ts",
+      "sha256": "c4c2467eb4bbed436bcc57eb9f74f55ebe31b9a54a0e94ace86c5d98528bb126",
+      "bytes": 5536
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/convex/runtimeWorkerAuth.ts",
+      "sha256": "dd5edc4b38263c3ebd6ee4a81301182aac7659e80e3527fe21ab93f06031a92e",
+      "bytes": 13928
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/convex/schema.ts",
+      "sha256": "7eef55a97207d216c5bb3a3834352e6dd91246907f152c618e3b2ebd92c061bf",
+      "bytes": 613
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/convex/sessions.ts",
+      "sha256": "3f5b9649255899c04afd25bcb2ee4dbb126a047a513d4781f359ab4afd0f66c8",
+      "bytes": 9886
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/convex/tsconfig.json",
+      "sha256": "0ce30bab2c20df12faf1792a65abff63adf0c1ea0927a4316a07f66deafec59f",
+      "bytes": 327
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/convex/users.ts",
+      "sha256": "733c926437533d4113feea633e6a1ff365a45803c1db0e63b42a8d2a25550f0f",
+      "bytes": 3230
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/convex.json",
+      "sha256": "fb9e9c070c7e86f79b2bd46222300f9a42c52c9714dbb94ff668fc8608241243",
+      "bytes": 24
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/package.json",
+      "sha256": "18e84dca652b4955501e93b56e68ed1b6fabdad531fb65964eb2af577fa15bb2",
+      "bytes": 376
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/a2a/index.ts",
+      "sha256": "e456badf60ea2a637262736a2853a6e4629b2bc24eff4368f49c1264c35f67e4",
+      "bytes": 9438
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/a2a/validators.ts",
+      "sha256": "a95dd5f4cf10d7816db5c1eb35111087a0c15d39d3e9bb51d7deb3073336597a",
+      "bytes": 16015
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/agents/index.ts",
+      "sha256": "3a6ebfe236d6dd23a5e4c3a23cafb0b1fb62c622e6773dc27fbfa7962604f685",
+      "bytes": 50057
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/agents/statistics.ts",
+      "sha256": "4c765976dee023bf61e1fd09c9eef170b01b8ae46f8ee8084e25a26a0754bb61",
+      "bytes": 2642
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/agents/validators.ts",
+      "sha256": "245a3faf25445b3a9727c5cb605750b5520cee8389440116774afddfd06caf61",
+      "bytes": 14877
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/artifacts/index.ts",
+      "sha256": "2963fcd17ad152498ed48781ab562167af9b088e84e4f6cd3a9849327f124d37",
+      "bytes": 32189
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/artifacts/validators.ts",
+      "sha256": "e1bee3e21ca738b3811d44257970b00871e5e3e28f792d29f7e2c18613787d65",
+      "bytes": 25132
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/assets/errors.ts",
+      "sha256": "c5ff3f38157fc6d08212b0eed610e571cbef70e868a7cd23e082d1da4b47781d",
+      "bytes": 447
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/attachments/index.ts",
+      "sha256": "3b612280d60a451aa5a8033ec1d49584e987f4a5cf29efad31c30693325b6f86",
+      "bytes": 15551
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/attachments/validators.ts",
+      "sha256": "eec80774caa6e7bb91c52cd96c964082d3de22408fad3b2b944b826f37cc5021",
+      "bytes": 16042
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/auth/context.ts",
+      "sha256": "cc6fcdff02ccffbd22f12e7fd3fa301b681cb5c3e426e4ddc2761a5c0a6d1b0e",
+      "bytes": 4391
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/auth/credentials.ts",
+      "sha256": "aebd90d81d02ab57602e07d330961ea2ce735381e63f86f00d330b24886530bc",
+      "bytes": 9388
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/auth/index.ts",
+      "sha256": "b18b802fc3555ca0227595dd9380c014ff41a9585e0738bdd909a1a7baaafe0f",
+      "bytes": 549
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/auth/tenant.ts",
+      "sha256": "2b6c13faa5c36842835796ed80954f5b4a37bb28d2d267348a1c1b6348eb1d0a",
+      "bytes": 505
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/auth/types.ts",
+      "sha256": "162b985c1c28cf6c456e239881594c7f22d6745a2892aae41426cd0e3b394c66",
+      "bytes": 5841
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/auth/validators.ts",
+      "sha256": "c23ace7d0ba2c7d6f9c008cfa0a9f42efe6c4a60299a7e04d503ec49f4e53c4b",
+      "bytes": 5973
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/auth/verified.ts",
+      "sha256": "d2e514b198dcccff783b67ee7c7a625f91bf7553a41342a02bea8fd23f6908b3",
+      "bytes": 1871
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/config.ts",
+      "sha256": "ff1864d79bb5b2720592acc764c9bc92510cd2245326dd8666591842ea1827f0",
+      "bytes": 6590
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/contexts/index.ts",
+      "sha256": "efaf322c786378fcf7320bca3f239fe0212cf4646f0f7b098ceef10df3a06244",
+      "bytes": 28128
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/contexts/validators.ts",
+      "sha256": "7b9e85fc21bd334ec9850ecad40c384f0356fab2c63e415c8e32d9b94790ec2d",
+      "bytes": 11497
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/conversations/index.ts",
+      "sha256": "bc980b8d9145c684486ff04f756b08175aee32b86ee24633398744ffa6f57601",
+      "bytes": 39595
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/conversations/validators.ts",
+      "sha256": "ef29c33b4ebbfce3583d45a35f37c2977cf85bf3d2e6ca81701337bfcb01d6bd",
+      "bytes": 14660
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/domain/clock.ts",
+      "sha256": "7d6124f71c561ba1ce2643600470f37318367084ca9c5a6f5cc2a8f9c9de6497",
+      "bytes": 255
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/domain/conflicts.ts",
+      "sha256": "899bf06d6885fc0c3f909ac2cce6ea08196de76111059785133eb0ef57baa4d4",
+      "bytes": 23517
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/domain/contracts.ts",
+      "sha256": "a40ca52e4d9c1eef84847c86a0b3681a7a3389095817745f3682663260fdc87b",
+      "bytes": 5435
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/domain/deduplication.ts",
+      "sha256": "c99092d8d7ce015e0f13cbf33c1012fb2a2d7c7f41ee4479b6684a0501cc7698",
+      "bytes": 3795
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/domain/extraction.ts",
+      "sha256": "7324f700278531e30ae22d3eca29dd7bef2fbeae1d6aa7c7011ec9bcbb45fa5b",
+      "bytes": 10991
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/domain/index.ts",
+      "sha256": "b1bb56d6df91596512f9c1e35b48f8942207bf9651739885eb81f7755d834648",
+      "bytes": 406
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/domain/model-policy.ts",
+      "sha256": "f43de8775880d1d4f6ddad90e527837d9ddb4ce58d00ea622aabc2609a1769da",
+      "bytes": 28083
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/domain/profile.ts",
+      "sha256": "6b098f33dcfe9fb3f70a44b2d6117884dbc0658142edd6499e79e2d03f7fd63b",
+      "bytes": 3259
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/domain/recall.ts",
+      "sha256": "77f024da7c4d1329cb639d618a7c05af59ac88d41abab4f9c8c29f906f7bdb9e",
+      "bytes": 16404
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/domain/slots.ts",
+      "sha256": "01e164bcd100f82c63ae59ce2057da366ce8bf266602021fbfdd25505a53d54d",
+      "bytes": 7873
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/domain/sources.ts",
+      "sha256": "4015f729bd2dc5a01ea8c24fcd9e1a86ebcab536698affb043fdf287dea3c74e",
+      "bytes": 13583
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/facts/belief-revision.ts",
+      "sha256": "f154aea53bd7e935e26562bd9042f11112f3b5c70a97679f5e382576b8129923",
+      "bytes": 26394
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/facts/conflict-prompts.ts",
+      "sha256": "84346cd4db4dc99a1d9d21594c3f6eb76f06dd875b01e8fff5330946fc20f6c5",
+      "bytes": 1289
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/facts/deduplication.ts",
+      "sha256": "7d15cb94a0886d238ec9d99ff7b1ae1dc8af60b877193b34ae916c3a3a9933eb",
+      "bytes": 9709
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/facts/history.ts",
+      "sha256": "3702193d07c9817ae5b3744ff7e13b948a0e4f97a1999c9a2161b419fdbd9c84",
+      "bytes": 10380
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/facts/index.ts",
+      "sha256": "cd3fe231e9edf4d0aefb5600290546b042664f0eea6c35d90791c600f56289c5",
+      "bytes": 47724
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/facts/slot-matching.ts",
+      "sha256": "c256a5976d9ea4880a79a02cb28239d114649b3d29d12c246a3977721461fc3d",
+      "bytes": 5479
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/facts/validators.ts",
+      "sha256": "aea90cb33f263fec87bf89985d03d777a55e35ac7aea1b1ca984abaaf6a03f1b",
+      "bytes": 15841
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/governance/index.ts",
+      "sha256": "f59390017184a080246c1d6185c8c834ba0ad20d9f936889beb10c3bc4fe785a",
+      "bytes": 17916
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/governance/validators.ts",
+      "sha256": "d36c2942e83db44a8caa8f3cfbfa7006ca0288469276306189610e9ed49e0e74",
+      "bytes": 15849
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/graph/adapters/CypherGraphAdapter.ts",
+      "sha256": "7b1de0fe59cf7746f10bff81a4630713d25f30dffc291209da1f00dfe8fcac7f",
+      "bytes": 31428
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/graph/index.ts",
+      "sha256": "c49ae4a068f53d5fc7a48e7a0d8a43fa58a39134bfb078084556056e14d70f36",
+      "bytes": 856
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/graph/schema/initSchema.ts",
+      "sha256": "1744aa3e526db519389ccf1414450b30f85e2b19f8e399e83ec9ae60541a2221",
+      "bytes": 9333
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/graph/sync/batchSync.ts",
+      "sha256": "a5896839b46375d9fa33e53332f5d544529bf3c2ea4a74c03f85b5f9b558d010",
+      "bytes": 12839
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/graph/sync/index.ts",
+      "sha256": "dfad8e0b581532f760070bf0b9074d4238b59bd6344fc3c6b4214c55928024b6",
+      "bytes": 238
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/graph/sync/orphanDetection.ts",
+      "sha256": "8828050a9bf62e0486fff1548f257845eab7195ab42ee9cf97ac298dea9617e6",
+      "bytes": 12126
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/graph/sync/syncDeletes.ts",
+      "sha256": "55266feea3f9fde77a3114fccdc9bb778d476aa7ad794aba7137fd05241a6c9b",
+      "bytes": 6258
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/graph/sync/syncRelationships.ts",
+      "sha256": "e5881226c175d20d921fd029b00d0345873fd5e38e4067741bbcc0d2e6a556f7",
+      "bytes": 17358
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/graph/sync/syncUtils.ts",
+      "sha256": "2f7dca40300e47f9febf87287163a00f8d814702227b497167b65bcb244b30de",
+      "bytes": 18111
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/graph/types.ts",
+      "sha256": "dadbcc3dcfb23ccb1236c8634446cdbb2b67b9eb774cbc6663ff47fe108f5c3a",
+      "bytes": 12211
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/graph/worker/GraphSyncWorker.ts",
+      "sha256": "dc2ee0e5e74bab03431d816ada715ae62e5333a1b88c36594ec1170dab21ebea",
+      "bytes": 9244
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/immutable/index.ts",
+      "sha256": "7f2ca7f75ce7a414e6c29a15d597caa31eaa4b357c68465dc3cebf8ce813a71f",
+      "bytes": 11411
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/immutable/validators.ts",
+      "sha256": "25ec6226d20090187dff18ee55300be000a86c6645fed13cc4f73d8fc7e38ed7",
+      "bytes": 10266
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/index.ts",
+      "sha256": "98cc074d3295d129b600e92b9fc6a9a93f98e05372b6c94b26f656ad53d196c2",
+      "bytes": 25580
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/llm/index.ts",
+      "sha256": "fbb146f431f29c87acc734c745c024bea3f0fc310c41fd075836aedd7933b53c",
+      "bytes": 13787
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/memory/index.ts",
+      "sha256": "922594191ee1baf89f4ff517ea7c15802359c4bfe84a725939b2954648b73ce9",
+      "bytes": 130832
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/memory/recall/graphEnhancement.ts",
+      "sha256": "a6f46f9a9ee97e4cef94c4d98ec7c83eb8dd9fd87f797cc1b1465be05e8ab02b",
+      "bytes": 15147
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/memory/recall/index.ts",
+      "sha256": "6c5b6e511def00044587a974905ed01a7df57dd68f11dfe4f7141bd2ff654aa3",
+      "bytes": 663
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/memory/recall/resultProcessor.ts",
+      "sha256": "5355b31934d4ea018c2af10b43dfc365184c6eb60a1c04996fb00628eae2e428",
+      "bytes": 1473
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/memory/streamUtils.ts",
+      "sha256": "59da8de53fb1a98f83941cfcec199d8ab8055654a9fb4dd09777447c3408b79f",
+      "bytes": 11012
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/memory/streaming/AdaptiveProcessor.ts",
+      "sha256": "0188e9b06809da51611149417c8609d5218d719ac954b41041ae37e8b01edf38",
+      "bytes": 9127
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/memory/streaming/ChunkingStrategies.ts",
+      "sha256": "908099761f70f9f111b1f253618a0a8f2f88e948b33b4d77f24c30d06ebe8e8d",
+      "bytes": 10993
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/memory/streaming/ErrorRecovery.ts",
+      "sha256": "3b1f6c4fccf90b23b8abe8270a01cef3355e5369ae37e4f1f7685a78349a005d",
+      "bytes": 9844
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/memory/streaming/FactExtractor.ts",
+      "sha256": "bbce1969121332e5af4393000132b1ee481c8c71fffbaa94bacc0d6f11a1ccca",
+      "bytes": 12800
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/memory/streaming/ProgressiveGraphSync.ts",
+      "sha256": "1cb9b6f1065346fb601fe058e8b1cabad0d00631e113b980a5b0374a8db3e548",
+      "bytes": 6013
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/memory/streaming/ProgressiveStorageHandler.ts",
+      "sha256": "b935b32c8f9839cd10abe0a1d0bb2cdb09ebe9a986582672a2f8f143eab5168e",
+      "bytes": 6879
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/memory/streaming/StreamMetrics.ts",
+      "sha256": "de0bcf4235777ae4d9922424c39e4a99456163f98a9e6dea4534968f0d192cdb",
+      "bytes": 7452
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/memory/streaming/StreamProcessor.ts",
+      "sha256": "0b2a989c5b00eb7d1a4470d08d190bd143c0927a58f000ebfb1822dd1c61217a",
+      "bytes": 7413
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/memory/validators.ts",
+      "sha256": "78a1b526b5ef4a22d183e87c9cbb377d7f8494b32b534eed64208931a3378ff8",
+      "bytes": 24050
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/memorySpaces/index.ts",
+      "sha256": "fe33615e387a93fc255d6b26625c70472d7d47d5f0e0ec6ff71b7a8351eff7f7",
+      "bytes": 19352
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/memorySpaces/validators.ts",
+      "sha256": "6260807a26427ffdb3991f75286a4050ae8ebdc4bd058c1a936e70561c9ea0c6",
+      "bytes": 15304
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/mutable/index.ts",
+      "sha256": "3982e9ad85ca0de659fbedbc7d66df6b2ef39884a58ee4f5cbfc275ab12a76db",
+      "bytes": 18030
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/mutable/validators.ts",
+      "sha256": "25fd55a0e22717b5c0cf454fa8c7dd8e2827b67f426b624a40d1f9ab1e6d9fa7",
+      "bytes": 22006
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/resilience/CircuitBreaker.ts",
+      "sha256": "2eaba0a6afa6869269b4e5d681b242dfad23bd48fd75394583b4e6daec8c4141",
+      "bytes": 7238
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/resilience/PriorityQueue.ts",
+      "sha256": "60c6ef2e1f8b2192b7c909a20293b8e7e0018dacd87f01683dade67409f49824",
+      "bytes": 6242
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/resilience/Semaphore.ts",
+      "sha256": "f9e309f1e9301a5fcf39dbfee26f5aad6eaa6eef5c1ca9ae4571582865de48e5",
+      "bytes": 5502
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/resilience/TokenBucket.ts",
+      "sha256": "beadd0655fcaeb3aafc057b86f0c1cf2bdfe9d1b2aa0f399f0628c62da12155a",
+      "bytes": 3870
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/resilience/index.ts",
+      "sha256": "ff471991ee393c47d6b6a0a2637da6e1545b392f83fcab5ae853841f19f59ea0",
+      "bytes": 33579
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/resilience/priorities.ts",
+      "sha256": "13c96b267c97a54e125fb650d8777c9f96a2ddaa8be4ed4aa9c3892c47b7e92f",
+      "bytes": 6868
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/resilience/types.ts",
+      "sha256": "0e2d437a3518b38ed6ae612e7b577298982d373b1dbe9d2d4a0bc06b6de82a96",
+      "bytes": 13174
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/runtime.ts",
+      "sha256": "956b75b3746db82868e0904b4849493d7b67cc00f7e23b4d73a8c26601c58360",
+      "bytes": 266
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/sessions/index.ts",
+      "sha256": "4fbf811980bfaa56fa8f419d3adc62afbf57962106c748bfb00478991f9df11a",
+      "bytes": 13427
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/sessions/types.ts",
+      "sha256": "324557fadfd8e33e58bf151ccc7fbce0401641ae90cc11d186733d3ee8be1fb5",
+      "bytes": 4029
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/sessions/validators.ts",
+      "sha256": "4520c1d21ced706a0e5b54a283f7623a56830bbf1e515eabd1422e2ed9918e5a",
+      "bytes": 5792
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/sharing/index.ts",
+      "sha256": "f546428755477adcbd8f2f9d0e9d2f87a1bc0e644fe9f2da0dfbe5c3195cf2c2",
+      "bytes": 3148
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/types/index.ts",
+      "sha256": "2df3259befcdfffb35d71b5d5e3ad62236839b65c4bf3869ab0bf5527bcd4ca4",
+      "bytes": 118808
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/types/streaming.ts",
+      "sha256": "26f87063d3a94e249dec8b32a8f4d6e883032654baadedcc8c8de926dea22e17",
+      "bytes": 14722
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/users/index.ts",
+      "sha256": "e30af7422e442f5ac823a8f227e79dee17f6409fa6e7332550841d7aee70447f",
+      "bytes": 58246
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/users/schemas.ts",
+      "sha256": "e26c3fc05e26c768f1e55ca55cd63e4a20c3c924693d090e70523215424dc427",
+      "bytes": 8932
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/users/validators.ts",
+      "sha256": "8dbc1856ca431c76558b4ac73522b1d944a8dad5a352068efce93812f19b7ab9",
+      "bytes": 17752
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/vector/index.ts",
+      "sha256": "3d67990b662e51d05a5d88ea6f89c541335c7fe9ffc14fbf58bde5352c931959",
+      "bytes": 18148
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/fixture/src/vector/validators.ts",
+      "sha256": "252af46644d68e7aa469163eab819992b5158753fefd19a4ee658efb331ed7e8",
+      "bytes": 17756
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/profile.json",
+      "sha256": "abe9ea2afee155786f8044bde3eb8ba427512b43deb825140ec2c322340500dd",
+      "bytes": 241
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/project-request.json",
+      "sha256": "f5ab2443b165a3d340ec7ee093979bb7d2433684cc4a84dca5d81029e45df9c9",
+      "bytes": 620
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/public-guard-inventory.json",
+      "sha256": "bd8e7465dd0097f8d4ce1d98c956f061e04d0ee7161538e855f9ba10edd29867",
+      "bytes": 149307
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/registration-inventory.json",
+      "sha256": "b0e162b2471dfcd31a868220ae6d9e5dd450f46479faed6818b38a1d809c137f",
+      "bytes": 566814
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/schema-evidence.json",
+      "sha256": "c47159e136389899bceee6ae075f081419ec0b8ebb8f65610a4bc51a0a827a49",
+      "bytes": 418707
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/scripts/arguments.mjs",
+      "sha256": "02b1a8cf7742814f439a67d55ea143a570dd5fc72d11006c731f8243fb183804",
+      "bytes": 1774
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/scripts/cases.mjs",
+      "sha256": "a7aa7acd24e3d8fcfd2903474a893d5a1fc028cbf9f66831260c8f8a83eab313",
+      "bytes": 15836
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/scripts/cleanup.mjs",
+      "sha256": "6639353ff1f26ff1551beeb1e85334e24d73570aa4aaaed2b2a0ec5433e993d5",
+      "bytes": 1104
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/scripts/deploy.mjs",
+      "sha256": "430006cca42d41c304dc115ffd1357fc50f27222dd0bdac9ed6ae3c161d4a418",
+      "bytes": 2692
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/scripts/driver.mjs",
+      "sha256": "0fd97de0ba88ce9f5ad898e9c3e15846740de400f36fc008ed222241421cc5be",
+      "bytes": 12612
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/scripts/fault-child.mjs",
+      "sha256": "116643a9e250f63e13fa7c8707a7bcc35a562f155b382b4fbb597802b86639c5",
+      "bytes": 2836
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/scripts/fault-driver.mjs",
+      "sha256": "8b84a18437b301d87b07cad8708244b76e6f909a2101edbdf02a98a3f993ec78",
+      "bytes": 2059
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/scripts/fault-recovery.mjs",
+      "sha256": "9c1003c0586cb9960e1fcdabb50e4b6aa2262e420c47f0c18d79a3fc07e2c908",
+      "bytes": 2775
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/scripts/fault-setup.mjs",
+      "sha256": "a45ceeae7189b0a5e6788349bf1806769515bb226b0b9cef01cc439361380594",
+      "bytes": 1853
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/scripts/guard.mjs",
+      "sha256": "3d3d7bb72562cd98f84f85c1bee0a1629821285e5ea077acb6827c24ec4dbd5e",
+      "bytes": 10475
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/scripts/inventory.mjs",
+      "sha256": "ea938c5e37c5d71de5683832b749bd024725cd6f6c80166d2f6888fc4471178b",
+      "bytes": 5464
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/scripts/key-check.mjs",
+      "sha256": "20ae9a0bc72aab86c63d13e54e8c1f52dbc94394a535d2b4192c738e93bf5d2b",
+      "bytes": 1463
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/scripts/management-contract.mjs",
+      "sha256": "231b43a82921e9ac64bbf38e29e896f1b352ba03bb22f9e13b7f16f273178314",
+      "bytes": 2279
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/scripts/offline-check.mjs",
+      "sha256": "4af4acdb9bb2a2052d0ae1d24a70f185a59dc193dfeba76b0ca05485ee9e3d25",
+      "bytes": 9118
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/scripts/ownership.mjs",
+      "sha256": "207f88b9c5fce9bc1be445cd216f110b0070606b11cdb761930d57bb66c6f881",
+      "bytes": 3170
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/scripts/peer.mjs",
+      "sha256": "141580d9099e0d2b90f7a029e26377d00ceac521e8885edbadb7d4f4464d755f",
+      "bytes": 1707
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/scripts/process-owner.mjs",
+      "sha256": "5b685053178163fb04c212538f9c122ae0f01dde0b8e5a19bed7bd3cd8a386f6",
+      "bytes": 3687
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/scripts/process-terminal.mjs",
+      "sha256": "2f04fa9969468e62f93a8a6b38ee25c9904b48cfa558d2116d693e8b63ec9e46",
+      "bytes": 1316
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/scripts/provision.mjs",
+      "sha256": "15d0b0e294e9af500db78be842458e0b343d0e991d24d1e4136dbd37788413f4",
+      "bytes": 5974
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/scripts/publication.mjs",
+      "sha256": "49e9c017bf971896c254987392122cc9c50486ca705f2ff8d3a575b1c03efe59",
+      "bytes": 2249
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/scripts/qualify-owned.mjs",
+      "sha256": "b9816a276876760d1854364ae6d40655871c047db258b20423c8f8b776feb490",
+      "bytes": 1612
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/scripts/reconcile.mjs",
+      "sha256": "e6fe43e6173d9769fd9bb4d0a296a76edaaa42a6573b380a8ab86c4a23c7bd16",
+      "bytes": 1317
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/scripts/retire.mjs",
+      "sha256": "bae6174efd037c8679b9dffb88c93d89ee0c0e438d5bb82ea956dc3222db01b6",
+      "bytes": 3123
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/source-evidence.json",
+      "sha256": "b2fb57b8444aa1f651071a8a864e42106d02f361b296ec94c016dfc3ae599e82",
+      "bytes": 4225
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c1/source-inventory.json",
+      "sha256": "895af1a46976ff80efefd5219e875b5936e19ad2e6ae715acc1f8662f3bc9b86",
+      "bytes": 33633
+    }
+  ],
+  "sourceChangedDuringExecution": []
+}

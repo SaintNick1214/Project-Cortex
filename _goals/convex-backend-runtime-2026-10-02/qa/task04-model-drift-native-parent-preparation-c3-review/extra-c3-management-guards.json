@@ -1,0 +1,400 @@
+{
+  "kind": "extra",
+  "results": [
+    {
+      "mode": "provision",
+      "when": "before",
+      "drift": "healthy",
+      "fetches": 1,
+      "tickets": 1,
+      "error": null,
+      "consumedNoRefund": false,
+      "status": "PASS"
+    },
+    {
+      "mode": "provision",
+      "when": "before",
+      "drift": "source",
+      "fetches": 0,
+      "tickets": 0,
+      "error": "QA_SOURCE_DRIFT",
+      "consumedNoRefund": false,
+      "status": "PASS"
+    },
+    {
+      "mode": "provision",
+      "when": "before",
+      "drift": "pin",
+      "fetches": 0,
+      "tickets": 0,
+      "error": "QA_REVIEW_EXPECTED_PIN_DRIFT",
+      "consumedNoRefund": false,
+      "status": "PASS"
+    },
+    {
+      "mode": "provision",
+      "when": "before",
+      "drift": "credentials",
+      "fetches": 0,
+      "tickets": 0,
+      "error": "QA_MANAGEMENT_CREDENTIAL_DRIFT",
+      "consumedNoRefund": false,
+      "status": "PASS"
+    },
+    {
+      "mode": "provision",
+      "when": "before",
+      "drift": "selectors",
+      "fetches": 0,
+      "tickets": 0,
+      "error": "QA_MANAGEMENT_SELECTOR_DRIFT",
+      "consumedNoRefund": false,
+      "status": "PASS"
+    },
+    {
+      "mode": "provision",
+      "when": "before",
+      "drift": "request",
+      "fetches": 0,
+      "tickets": 0,
+      "error": "QA_SOURCE_DRIFT",
+      "consumedNoRefund": false,
+      "status": "PASS"
+    },
+    {
+      "mode": "provision",
+      "when": "before",
+      "drift": "ownership",
+      "fetches": 0,
+      "tickets": 0,
+      "error": "QA_MANAGEMENT_OWNERSHIP_DRIFT",
+      "consumedNoRefund": false,
+      "status": "PASS"
+    },
+    {
+      "mode": "provision",
+      "when": "before",
+      "drift": "target",
+      "fetches": 0,
+      "tickets": 0,
+      "error": "QA_MANAGEMENT_OWNERSHIP_DRIFT",
+      "consumedNoRefund": false,
+      "status": "PASS"
+    },
+    {
+      "mode": "provision",
+      "when": "before",
+      "drift": "env",
+      "fetches": 0,
+      "tickets": 0,
+      "error": "QA_MANAGEMENT_OWNERSHIP_DRIFT",
+      "consumedNoRefund": false,
+      "status": "PASS"
+    },
+    {
+      "mode": "provision",
+      "when": "before",
+      "drift": "key-check",
+      "fetches": 0,
+      "tickets": 0,
+      "error": "QA_KEY_MATCH_DRIFT",
+      "consumedNoRefund": false,
+      "status": "PASS"
+    },
+    {
+      "mode": "provision",
+      "when": "after-ticket",
+      "drift": "healthy",
+      "fetches": 1,
+      "tickets": 1,
+      "error": null,
+      "consumedNoRefund": false,
+      "status": "PASS"
+    },
+    {
+      "mode": "provision",
+      "when": "after-ticket",
+      "drift": "source",
+      "fetches": 0,
+      "tickets": 1,
+      "error": "QA_SOURCE_DRIFT",
+      "consumedNoRefund": true,
+      "status": "PASS"
+    },
+    {
+      "mode": "provision",
+      "when": "after-ticket",
+      "drift": "pin",
+      "fetches": 0,
+      "tickets": 1,
+      "error": "QA_REVIEW_EXPECTED_PIN_DRIFT",
+      "consumedNoRefund": true,
+      "status": "PASS"
+    },
+    {
+      "mode": "provision",
+      "when": "after-ticket",
+      "drift": "credentials",
+      "fetches": 0,
+      "tickets": 1,
+      "error": "QA_MANAGEMENT_CREDENTIAL_DRIFT",
+      "consumedNoRefund": true,
+      "status": "PASS"
+    },
+    {
+      "mode": "provision",
+      "when": "after-ticket",
+      "drift": "selectors",
+      "fetches": 0,
+      "tickets": 1,
+      "error": "QA_MANAGEMENT_SELECTOR_DRIFT",
+      "consumedNoRefund": true,
+      "status": "PASS"
+    },
+    {
+      "mode": "provision",
+      "when": "after-ticket",
+      "drift": "request",
+      "fetches": 0,
+      "tickets": 1,
+      "error": "QA_SOURCE_DRIFT",
+      "consumedNoRefund": true,
+      "status": "PASS"
+    },
+    {
+      "mode": "provision",
+      "when": "after-ticket",
+      "drift": "ownership",
+      "fetches": 0,
+      "tickets": 1,
+      "error": "QA_MANAGEMENT_OWNERSHIP_DRIFT",
+      "consumedNoRefund": true,
+      "status": "PASS"
+    },
+    {
+      "mode": "provision",
+      "when": "after-ticket",
+      "drift": "target",
+      "fetches": 0,
+      "tickets": 1,
+      "error": "QA_MANAGEMENT_OWNERSHIP_DRIFT",
+      "consumedNoRefund": true,
+      "status": "PASS"
+    },
+    {
+      "mode": "provision",
+      "when": "after-ticket",
+      "drift": "env",
+      "fetches": 0,
+      "tickets": 1,
+      "error": "QA_MANAGEMENT_OWNERSHIP_DRIFT",
+      "consumedNoRefund": true,
+      "status": "PASS"
+    },
+    {
+      "mode": "provision",
+      "when": "after-ticket",
+      "drift": "key-check",
+      "fetches": 0,
+      "tickets": 1,
+      "error": "QA_KEY_MATCH_DRIFT",
+      "consumedNoRefund": true,
+      "status": "PASS"
+    },
+    {
+      "mode": "retire",
+      "when": "before",
+      "drift": "healthy",
+      "fetches": 1,
+      "tickets": 1,
+      "error": null,
+      "consumedNoRefund": false,
+      "status": "PASS"
+    },
+    {
+      "mode": "retire",
+      "when": "before",
+      "drift": "source",
+      "fetches": 0,
+      "tickets": 0,
+      "error": "QA_SOURCE_DRIFT",
+      "consumedNoRefund": false,
+      "status": "PASS"
+    },
+    {
+      "mode": "retire",
+      "when": "before",
+      "drift": "pin",
+      "fetches": 0,
+      "tickets": 0,
+      "error": "QA_REVIEW_EXPECTED_PIN_DRIFT",
+      "consumedNoRefund": false,
+      "status": "PASS"
+    },
+    {
+      "mode": "retire",
+      "when": "before",
+      "drift": "credentials",
+      "fetches": 0,
+      "tickets": 0,
+      "error": "QA_MANAGEMENT_CREDENTIAL_DRIFT",
+      "consumedNoRefund": false,
+      "status": "PASS"
+    },
+    {
+      "mode": "retire",
+      "when": "before",
+      "drift": "selectors",
+      "fetches": 0,
+      "tickets": 0,
+      "error": "QA_MANAGEMENT_SELECTOR_DRIFT",
+      "consumedNoRefund": false,
+      "status": "PASS"
+    },
+    {
+      "mode": "retire",
+      "when": "before",
+      "drift": "request",
+      "fetches": 0,
+      "tickets": 0,
+      "error": "QA_SOURCE_DRIFT",
+      "consumedNoRefund": false,
+      "status": "PASS"
+    },
+    {
+      "mode": "retire",
+      "when": "before",
+      "drift": "ownership",
+      "fetches": 0,
+      "tickets": 0,
+      "error": "QA_MANAGEMENT_OWNERSHIP_DRIFT",
+      "consumedNoRefund": false,
+      "status": "PASS"
+    },
+    {
+      "mode": "retire",
+      "when": "before",
+      "drift": "target",
+      "fetches": 0,
+      "tickets": 0,
+      "error": "QA_MANAGEMENT_OWNERSHIP_DRIFT",
+      "consumedNoRefund": false,
+      "status": "PASS"
+    },
+    {
+      "mode": "retire",
+      "when": "before",
+      "drift": "env",
+      "fetches": 0,
+      "tickets": 0,
+      "error": "QA_MANAGEMENT_OWNERSHIP_DRIFT",
+      "consumedNoRefund": false,
+      "status": "PASS"
+    },
+    {
+      "mode": "retire",
+      "when": "after-ticket",
+      "drift": "healthy",
+      "fetches": 1,
+      "tickets": 1,
+      "error": null,
+      "consumedNoRefund": false,
+      "status": "PASS"
+    },
+    {
+      "mode": "retire",
+      "when": "after-ticket",
+      "drift": "source",
+      "fetches": 0,
+      "tickets": 1,
+      "error": "QA_SOURCE_DRIFT",
+      "consumedNoRefund": true,
+      "status": "PASS"
+    },
+    {
+      "mode": "retire",
+      "when": "after-ticket",
+      "drift": "pin",
+      "fetches": 0,
+      "tickets": 1,
+      "error": "QA_REVIEW_EXPECTED_PIN_DRIFT",
+      "consumedNoRefund": true,
+      "status": "PASS"
+    },
+    {
+      "mode": "retire",
+      "when": "after-ticket",
+      "drift": "credentials",
+      "fetches": 0,
+      "tickets": 1,
+      "error": "QA_MANAGEMENT_CREDENTIAL_DRIFT",
+      "consumedNoRefund": true,
+      "status": "PASS"
+    },
+    {
+      "mode": "retire",
+      "when": "after-ticket",
+      "drift": "selectors",
+      "fetches": 0,
+      "tickets": 1,
+      "error": "QA_MANAGEMENT_SELECTOR_DRIFT",
+      "consumedNoRefund": true,
+      "status": "PASS"
+    },
+    {
+      "mode": "retire",
+      "when": "after-ticket",
+      "drift": "request",
+      "fetches": 0,
+      "tickets": 1,
+      "error": "QA_SOURCE_DRIFT",
+      "consumedNoRefund": true,
+      "status": "PASS"
+    },
+    {
+      "mode": "retire",
+      "when": "after-ticket",
+      "drift": "ownership",
+      "fetches": 0,
+      "tickets": 1,
+      "error": "QA_MANAGEMENT_OWNERSHIP_DRIFT",
+      "consumedNoRefund": true,
+      "status": "PASS"
+    },
+    {
+      "mode": "retire",
+      "when": "after-ticket",
+      "drift": "target",
+      "fetches": 0,
+      "tickets": 1,
+      "error": "QA_MANAGEMENT_OWNERSHIP_DRIFT",
+      "consumedNoRefund": true,
+      "status": "PASS"
+    },
+    {
+      "mode": "retire",
+      "when": "after-ticket",
+      "drift": "env",
+      "fetches": 0,
+      "tickets": 1,
+      "error": "QA_MANAGEMENT_OWNERSHIP_DRIFT",
+      "consumedNoRefund": true,
+      "status": "PASS"
+    }
+  ],
+  "scope": "EXACT_MANAGEMENT_GUARD_CONTRACT_VM_WITH_REAL_DUMMY_FILES_AND_ACTUAL_GUARD_NO_NATIVE",
+  "sourcePins": [
+    {
+      "path": "scripts/management-transport.mjs",
+      "sha256": "aca98de01dedc1d6447d3aee5578a600caa62660d28dca47a0001c396ab74d04"
+    },
+    {
+      "path": "scripts/management-contract.mjs",
+      "sha256": "bc331ac1f68720c70e062301db617e151e1a534b1f84b2c69fa118498936d9b7"
+    },
+    {
+      "path": "scripts/guard.mjs",
+      "sha256": "473e6ae7d6647277aac4369377c77f2d9108e9aaa1dfa207ed862ad47a964261"
+    }
+  ]
+}

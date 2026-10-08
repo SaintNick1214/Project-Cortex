@@ -1,0 +1,106 @@
+{
+  "utc": "2026-10-04T02:44:56.580848+00:00",
+  "runs": {
+    "run05": {
+      "stable": true,
+      "receipts": {
+        "discovery": 0,
+        "unit": 0,
+        "owned-lint": 0,
+        "scoped-types": 0,
+        "root-types": 0
+      }
+    },
+    "frozen-checks": {
+      "stable": true,
+      "receipts": {
+        "discovery": 0,
+        "unit": 0,
+        "owned-lint": 0,
+        "scoped-types": 0,
+        "root-types": 0
+      }
+    },
+    "run04": {
+      "stable": true,
+      "receipts": {
+        "discovery": 0,
+        "unit": 1,
+        "owned-lint": 0,
+        "scoped-types": 0,
+        "root-types": 0
+      }
+    },
+    "run01": {
+      "stable": true,
+      "receipts": {
+        "discovery": 0,
+        "unit": 1,
+        "owned-lint": 1,
+        "scoped-types": 2,
+        "root-types": 2
+      }
+    },
+    "run02": {
+      "stable": true,
+      "receipts": {
+        "discovery": 0,
+        "unit": 0,
+        "owned-lint": 0,
+        "scoped-types": 2,
+        "root-types": 2
+      }
+    },
+    "final-checks": {
+      "stable": true,
+      "receipts": {
+        "discovery": 0,
+        "unit": 0,
+        "owned-lint": 0,
+        "scoped-types": 0,
+        "root-types": 0
+      }
+    },
+    "run03": {
+      "stable": true,
+      "receipts": {
+        "unit": 1,
+        "owned-lint": 0,
+        "scoped-types": 0,
+        "root-types": 0
+      }
+    },
+    "candidate-freeze": {
+      "stable": true,
+      "receipts": {
+        "discovery": 0,
+        "unit": 0,
+        "scoped-types": 0,
+        "root-types": 0,
+        "owned-lint": 0
+      }
+    }
+  },
+  "exploratoryFailure": {
+    "argv": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "--noEmit",
+      "--target",
+      "ES2022",
+      "--module",
+      "ESNext",
+      "--moduleResolution",
+      "bundler",
+      "--strict",
+      "--skipLibCheck",
+      "--ignoreDeprecations",
+      "6.0",
+      "convex-dev/runtimeGateway.ts"
+    ],
+    "exitCode": null,
+    "source": "tool-reported output in conversation; no raw subprocess file exists",
+    "error": "TS5112: tsconfig.json is present but will not be loaded if files are specified on commandline. Use --ignoreConfig.",
+    "exitCodeNote": "Failure observed; exact tool exit code not preserved."
+  }
+}

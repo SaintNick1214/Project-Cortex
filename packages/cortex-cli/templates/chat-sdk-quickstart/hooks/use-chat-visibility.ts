@@ -45,5 +45,5 @@ export function useChatVisibility({
     await mutate(unstable_serialize(getChatHistoryPaginationKey));
   };
 
-  return { visibilityType, setVisibilityType };
+  return { setVisibilityType, visibilityType };
 }

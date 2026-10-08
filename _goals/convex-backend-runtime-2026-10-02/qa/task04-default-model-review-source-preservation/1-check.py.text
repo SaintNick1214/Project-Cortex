@@ -1,0 +1,44 @@
+from pathlib import Path
+from decimal import Decimal,ROUND_CEILING
+import json,hashlib,datetime,subprocess,copy,unicodedata
+root=Path('/workspace/Project-Cortex');q=root/'_goals/convex-backend-runtime-2026-10-02/qa/task04-default-model-qualification-proposal-review';scratch=root/'work/resume/task04-default-model-qualification-proposal-review'
+def run(name,argv):
+ start=datetime.datetime.now(datetime.timezone.utc).isoformat(); p=subprocess.run(argv,cwd=root,capture_output=True,text=True)
+ (q/(name+'.stdout')).write_text(p.stdout);(q/(name+'.stderr')).write_text(p.stderr)
+ (q/(name+'.receipt.json')).write_text(json.dumps({'argv':argv,'cwd':str(root),'startedAtUTC':start,'finishedAtUTC':datetime.datetime.now(datetime.timezone.utc).isoformat(),'exitCode':p.returncode,'kind':'read-only/offline'},indent=2)+'\n')
+ if p.returncode: raise Exception(name+' failed; see raw evidence')
+ return p.stdout
+run('wire-check',['node',str(scratch/'wire-check.mjs')])
+p=root/'_goals/convex-backend-runtime-2026-10-02/qa/task04-default-model-qualification-preparation';m=json.loads((p/'manifest.json').read_text())
+def canon(d):return json.dumps(d,ensure_ascii=False,sort_keys=True,separators=(',',':'))
+def sha(d):return hashlib.sha256(canon(d).encode()).hexdigest()
+checks=[]
+def ok(name,condition):
+ assert condition,name;checks.append({'check':name,'pass':True})
+rows=m['expectedCalls'];ok('fourteen distinct logical scenario IDs',len(rows)==len(set(r['scenarioId'] for r in rows))==14)
+ok('ten Chat/four single embeddings',sum(r['nativeInterface']=='chat' for r in rows)==10 and sum(r['nativeInterface']=='embedding' and r['valueCount']==1 for r in rows)==4)
+ok('thirteen distinct native/wire hashes, equal embedding memory/query deliberately separate purpose',len(set(r['normalizedNativeRequestHash'] for r in rows))==len(set(r['expectedWireBodyHash'] for r in rows))==13 and rows[10]['operationKey']!=rows[13]['operationKey'])
+ok('14 distinct semantic tuples',len(set((r['scenarioId'],r['operationKey'],r['experimentPermitOrdinal']) for r in rows))==14)
+ok('cancellation probes last; every case exactly once',m['executionOrder'][-2:]==['C09','C10'] and sorted(m['executionOrder'])==sorted(r['scenarioId'] for r in rows))
+K=int((Decimal(128000)*Decimal('0.15')+Decimal(16384)*Decimal('0.60')).to_integral_value(rounding=ROUND_CEILING));E=int((Decimal(300000)*Decimal('0.02')).to_integral_value(rounding=ROUND_CEILING))
+ok('full-model K independent of selected U/M',K==29031 and E==6000 and all(r['candidateReservationKMicroUSD']==(K if r['nativeInterface']=='chat' else E) for r in rows))
+ok('outward microUSD total314310 separate voluntary10USD',sum(r['candidateReservationKMicroUSD'] for r in rows)==314310 and m['engineeringLimits']['wholeExistingPlanVoluntaryUSD']=='10')
+for r in rows:
+ d=json.loads((root/'work/resume/task04-default-model-qualification-preparation/candidate-requests'/f"{r['scenarioId']}.json").read_text())
+ if r['nativeInterface']=='chat':
+  msgs=d['wireExpected']['messages'];u=3+sum(3+len(x['role'].encode())+len(x['content'].encode()) for x in msgs)
+  ok(r['scenarioId']+' exact operational U and conditional result bound',u==r['inputU'] and u<=4096 and u+r['maximumOutputM']<=128000 and r['conditionalPrivateMaximumBytes']==128*r['maximumOutputM']+11)
+ else:ok(r['scenarioId']+' exact final UTF8 U/single1536profile',len(d['native']['values'])==1 and len(d['native']['values'][0].encode())==r['inputU']<=8192 and r['conditionalPrivateMaximumBytes']==40177)
+# Independent finite manifest integrity admission predicate, not an implementation of the future native guard.
+def admits(case,params):
+ expected=json.loads((root/'work/resume/task04-default-model-qualification-preparation/candidate-requests'/f"{case['scenarioId']}.json").read_text())['native']
+ return canon(params)==canon(expected) and sha({'method':case['method'],'modelId':case['modelId'],'params':params})==case['normalizedNativeRequestHash']
+r=rows[0];params=json.loads((root/'work/resume/task04-default-model-qualification-preparation/candidate-requests/C01.json').read_text())['native']
+for field,value in [('providerOptions',{'convexGateway':{'stream_options':{'include_usage':True}}}),('headers',{'x':'y'}),('tools',[{'type':'function'}]),('maxOutputTokens',65)]:
+ a=copy.deepcopy(params);a[field]=value;ok('exact compiled identity denies injected '+field,not admits(r,a))
+a=copy.deepcopy(params);a['prompt'][0]['content'][0]['text']+='\ud800';ok('ill-formed scalar cannot equal permitted canonical identity',not admits(r,a))
+a=copy.deepcopy(params);a['prompt'][0]['content'][0]['text']='a'*4097;ok('U+1 replacement denied without token lookup',not admits(r,a))
+e=rows[10];a={'values':['replacement','second']};ok('valueCount2 denied by exact native identity',not admits(e,a))
+ok('no fixture masquerading as actual or readiness',m['readiness']['productionRoot']=='EMPTY' and m['readiness']['actualNative']=='NOT_RUN' and m['classification'].endswith('NOT_READY'))
+(q/'independent-checks.json').write_text(json.dumps({'utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'checks':checks,'count':len(checks),'scope':'preparation arithmetic/finite identity only; no executable guard/native accounting proof'},indent=2)+'\n')
+print(json.dumps({'checks':len(checks),'wireCases':14,'skipped':0,'verdict':'PASS_OFFLINE_PREPARATION_CHECKS'}))

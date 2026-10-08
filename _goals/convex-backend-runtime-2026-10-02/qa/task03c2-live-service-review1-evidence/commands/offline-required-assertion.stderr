@@ -1,0 +1,15 @@
+file:///workspace/Project-Cortex/node_modules/convex/dist/esm/browser/sync/optimistic_updates_impl.js:146
+          new ConvexError(
+          ^
+
+ConvexError: [CONVEX Q(mutable:get)] Uncaught ConvexError: UNAUTHENTICATED
+  Called by client
+    at OptimisticQueryResults.queryResult (file:///workspace/Project-Cortex/node_modules/convex/dist/esm/browser/sync/optimistic_updates_impl.js:146:11)
+    at BaseConvexClient.localQueryResult (file:///workspace/Project-Cortex/node_modules/convex/dist/esm/browser/sync/client.js:447:40)
+    at ConvexClient.query (file:///workspace/Project-Cortex/node_modules/convex/dist/esm/browser/simple_client.js:362:31)
+    at file:///tmp/task03c2-live-service-review-gkwkb7lc/native-recovery.mjs:66:35 {
+  data: { code: 'UNAUTHENTICATED' },
+  Symbol(ConvexError): true
+}
+
+Node.js v24.19.0

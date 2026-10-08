@@ -1,0 +1,51 @@
+{
+  "argv": [
+    "python3",
+    "-c",
+    "from pathlib import Path; names=[\"source-preparation-c3\",\"parent-preparation-c3\",\"parent-preparation-c2\"]; base=Path(\"_goals/convex-backend-runtime-2026-10-02/qa\"); [(print(\"REPORT\",n), print((base/(\"task04-model-drift-native-\"+n+\"-review\")/\"report.md\").read_text())) for n in names]"
+  ],
+  "cwd": "/workspace/Project-Cortex",
+  "utc_before": "2026-10-04T14:17:40.809833+00:00",
+  "utc_after": "2026-10-04T14:17:40.832337+00:00",
+  "exit": 0,
+  "before": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-source-preparation-c3-review/report.md",
+      "bytes": 22862,
+      "sha256": "91e093a2aebfb1a4c479e13c3d3b575ad27d10beef78a677e945251f6938a91f",
+      "preimage": "commands/predecessor-fences/preimages/91e093a2aebfb1a4c479e13c3d3b575ad27d10beef78a677e945251f6938a91f.gz"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-parent-preparation-c3-review/report.md",
+      "bytes": 14610,
+      "sha256": "1018e0f707650dbe0a3b8d8bbacc46cf1cd0d3968dbd9ed16f639cd3aa4a1065",
+      "preimage": "commands/predecessor-fences/preimages/1018e0f707650dbe0a3b8d8bbacc46cf1cd0d3968dbd9ed16f639cd3aa4a1065.gz"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-parent-preparation-c2-review/report.md",
+      "bytes": 12833,
+      "sha256": "d9cc73e670665ab66b29c6d89d1b94ea6e94cca8c2d1d79f68c4a1ba38f8acd2",
+      "preimage": "commands/predecessor-fences/preimages/d9cc73e670665ab66b29c6d89d1b94ea6e94cca8c2d1d79f68c4a1ba38f8acd2.gz"
+    }
+  ],
+  "after": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-source-preparation-c3-review/report.md",
+      "bytes": 22862,
+      "sha256": "91e093a2aebfb1a4c479e13c3d3b575ad27d10beef78a677e945251f6938a91f",
+      "preimage": "commands/predecessor-fences/preimages/91e093a2aebfb1a4c479e13c3d3b575ad27d10beef78a677e945251f6938a91f.gz"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-parent-preparation-c3-review/report.md",
+      "bytes": 14610,
+      "sha256": "1018e0f707650dbe0a3b8d8bbacc46cf1cd0d3968dbd9ed16f639cd3aa4a1065",
+      "preimage": "commands/predecessor-fences/preimages/1018e0f707650dbe0a3b8d8bbacc46cf1cd0d3968dbd9ed16f639cd3aa4a1065.gz"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-parent-preparation-c2-review/report.md",
+      "bytes": 12833,
+      "sha256": "d9cc73e670665ab66b29c6d89d1b94ea6e94cca8c2d1d79f68c4a1ba38f8acd2",
+      "preimage": "commands/predecessor-fences/preimages/d9cc73e670665ab66b29c6d89d1b94ea6e94cca8c2d1d79f68c4a1ba38f8acd2.gz"
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "argv": [
+    "python3",
+    "-c",
+    "from pathlib import Path;import json;q=Path(\"_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c1\");old=q.parent/'task04-default-native-driver-implementation-c2';a=[str(p) for base in ['fixture','fixture-vm','regression'] for p in (q/base).rglob('*') if p.is_file() and p.suffix in ['.ts','.mjs','.mts','.json']];a+=[str(old/Path(p).relative_to(q)) for p in a if (old/Path(p).relative_to(q)).is_file()];a+=[\"work/resume/task04-metadata-retention-implementation-c1/verify-final.py\",\"work/resume/task04-metadata-retention-implementation-c1/capture-store.py\",str(q/'candidate-installation.json')];Path(\"work/resume/task04-metadata-retention-implementation-c1/final-source-inputs.json\").write_text(json.dumps(sorted(set(a)),indent=2)+'\\n')"
+  ],
+  "cwd": "/workspace/Project-Cortex",
+  "startUtc": "2026-10-04T14:44:47.972669+00:00",
+  "endUtc": "2026-10-04T14:44:48.007058+00:00",
+  "exit": 0,
+  "recorderSourceSha256": "22b0c7cd03ea9ed7724372bb736f48dcacf7204bbb87a57271b7a06daa6d2db5"
+}

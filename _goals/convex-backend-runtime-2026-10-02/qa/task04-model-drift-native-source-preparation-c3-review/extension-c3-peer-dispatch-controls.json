@@ -1,0 +1,146 @@
+{
+  "kind": "extension",
+  "results": [
+    {
+      "when": "before",
+      "mode": "healthy",
+      "fetches": 1,
+      "tickets": 1,
+      "consumedLateTicketNoRefund": false,
+      "error": null,
+      "status": "PASS"
+    },
+    {
+      "when": "before",
+      "mode": "source",
+      "fetches": 0,
+      "tickets": 0,
+      "consumedLateTicketNoRefund": false,
+      "error": "QA_SOURCE_DRIFT",
+      "status": "PASS"
+    },
+    {
+      "when": "before",
+      "mode": "target",
+      "fetches": 0,
+      "tickets": 0,
+      "consumedLateTicketNoRefund": false,
+      "error": "QA_TARGET_DRIFT",
+      "status": "PASS"
+    },
+    {
+      "when": "before",
+      "mode": "env",
+      "fetches": 0,
+      "tickets": 0,
+      "consumedLateTicketNoRefund": false,
+      "error": "QA_PRIVATE_SELECTOR_DRIFT",
+      "status": "PASS"
+    },
+    {
+      "when": "before",
+      "mode": "publication",
+      "fetches": 0,
+      "tickets": 0,
+      "consumedLateTicketNoRefund": false,
+      "error": "QA_PUBLICATION_DRIFT",
+      "status": "PASS"
+    },
+    {
+      "when": "before",
+      "mode": "pin",
+      "fetches": 0,
+      "tickets": 0,
+      "consumedLateTicketNoRefund": false,
+      "error": "QA_REVIEW_EXPECTED_PIN_DRIFT",
+      "status": "PASS"
+    },
+    {
+      "when": "before",
+      "mode": "window",
+      "fetches": 0,
+      "tickets": 0,
+      "consumedLateTicketNoRefund": false,
+      "error": "QA_TOTAL_TIME_BUDGET",
+      "status": "PASS"
+    },
+    {
+      "when": "after-ticket",
+      "mode": "healthy",
+      "fetches": 1,
+      "tickets": 1,
+      "consumedLateTicketNoRefund": false,
+      "error": null,
+      "status": "PASS"
+    },
+    {
+      "when": "after-ticket",
+      "mode": "source",
+      "fetches": 0,
+      "tickets": 1,
+      "consumedLateTicketNoRefund": true,
+      "error": "QA_SOURCE_DRIFT",
+      "status": "PASS"
+    },
+    {
+      "when": "after-ticket",
+      "mode": "target",
+      "fetches": 0,
+      "tickets": 1,
+      "consumedLateTicketNoRefund": true,
+      "error": "QA_TARGET_DRIFT",
+      "status": "PASS"
+    },
+    {
+      "when": "after-ticket",
+      "mode": "env",
+      "fetches": 0,
+      "tickets": 1,
+      "consumedLateTicketNoRefund": true,
+      "error": "QA_PRIVATE_SELECTOR_DRIFT",
+      "status": "PASS"
+    },
+    {
+      "when": "after-ticket",
+      "mode": "publication",
+      "fetches": 0,
+      "tickets": 1,
+      "consumedLateTicketNoRefund": true,
+      "error": "QA_PUBLICATION_DRIFT",
+      "status": "PASS"
+    },
+    {
+      "when": "after-ticket",
+      "mode": "pin",
+      "fetches": 0,
+      "tickets": 1,
+      "consumedLateTicketNoRefund": true,
+      "error": "QA_REVIEW_EXPECTED_PIN_DRIFT",
+      "status": "PASS"
+    },
+    {
+      "when": "after-ticket",
+      "mode": "window",
+      "fetches": 0,
+      "tickets": 1,
+      "consumedLateTicketNoRefund": true,
+      "error": "QA_TOTAL_TIME_BUDGET",
+      "status": "PASS"
+    }
+  ],
+  "scope": "EXACT_GUARD_AND_PEER_DUMMY_TARGET_STREAMS_NO_NETWORK_NATIVE_OR_PRIVATE",
+  "sourcePins": [
+    {
+      "path": "scripts/guard.mjs",
+      "sha256": "d9ff341926d38afdbc476ddbbc8a83c1aabebc72069772833e7a4ff9b41c16ab"
+    },
+    {
+      "path": "scripts/peer.mjs",
+      "sha256": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69"
+    },
+    {
+      "path": "scripts/bounded-response.mjs",
+      "sha256": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841"
+    }
+  ]
+}

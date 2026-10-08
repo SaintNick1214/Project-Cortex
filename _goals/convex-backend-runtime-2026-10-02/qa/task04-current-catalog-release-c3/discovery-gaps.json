@@ -1,0 +1,13 @@
+{
+  "scope": "read-only discovery before new bootstrap",
+  "exactUTC": "NOT_CAPTURED",
+  "argv": [
+    "ls _goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-composition-c2-review",
+    "cat _goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-composition-c2-review/report.md"
+  ],
+  "cwd": "/workspace/Project-Cortex",
+  "exit": 1,
+  "raw": "ls: cannot access '_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-composition-c2-review': No such file or directory\ncat: _goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-composition-c2-review/report.md: No such file or directory\n",
+  "correction": "bounded rg discovery found task04-catalog-c2-fresh-review; full report subsequently read; no history reconstructed",
+  "rawProvenance": "copied exact captured tool output; independent UTC was not captured"
+}

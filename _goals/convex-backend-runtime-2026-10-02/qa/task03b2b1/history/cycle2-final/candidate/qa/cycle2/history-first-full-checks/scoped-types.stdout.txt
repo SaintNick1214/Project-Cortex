@@ -1,0 +1,6 @@
+tests/unit/runtimeRegistryAuth/closureRepair.test.ts(115,36): error TS2344: Type 'unknown' does not satisfy the constraint 'Value'.
+tests/unit/runtimeRegistryAuth/fixture.ts(63,68): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(target: (this: { take: (limit: number) => Promise<Row[]>; tableNameForErrorMessages: string; }) => Row | PromiseLike<Row | null> | null, thisArgument: { ...; }, argumentsList: readonly []): Row | ... 1 more ... | null', gave the following error.
+    Argument of type 'unknown' is not assignable to parameter of type '(this: { take: (limit: number) => Promise<Row[]>; tableNameForErrorMessages: string; }) => Row | PromiseLike<Row | null> | null'.
+  Overload 2 of 2, '(target: Function, thisArgument: any, argumentsList: ArrayLike<any>): any', gave the following error.
+    Argument of type 'unknown' is not assignable to parameter of type 'Function'.

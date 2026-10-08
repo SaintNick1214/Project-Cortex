@@ -1,0 +1,237 @@
+{
+  "discovered": 41,
+  "executed": 1,
+  "passed": 0,
+  "skipped": 40,
+  "status": "FAIL",
+  "results": [
+    {
+      "name": "operator-provisioning",
+      "status": "FAIL",
+      "reason": "whole_timeout"
+    },
+    {
+      "name": "valid-owned-metadata",
+      "status": "BLOCKED",
+      "reason": "dependency_blocked"
+    },
+    {
+      "name": "missing-identity",
+      "status": "BLOCKED",
+      "reason": "dependency_blocked"
+    },
+    {
+      "name": "forged-signature",
+      "status": "BLOCKED",
+      "reason": "dependency_blocked"
+    },
+    {
+      "name": "wrong-issuer",
+      "status": "BLOCKED",
+      "reason": "dependency_blocked"
+    },
+    {
+      "name": "wrong-audience",
+      "status": "BLOCKED",
+      "reason": "dependency_blocked"
+    },
+    {
+      "name": "expired-token",
+      "status": "BLOCKED",
+      "reason": "dependency_blocked"
+    },
+    {
+      "name": "wrong-tenant",
+      "status": "BLOCKED",
+      "reason": "dependency_blocked"
+    },
+    {
+      "name": "wrong-space",
+      "status": "BLOCKED",
+      "reason": "dependency_blocked"
+    },
+    {
+      "name": "owner-denied",
+      "status": "BLOCKED",
+      "reason": "dependency_blocked"
+    },
+    {
+      "name": "explicit-space-read",
+      "status": "BLOCKED",
+      "reason": "dependency_blocked"
+    },
+    {
+      "name": "admin-alone-read-denied",
+      "status": "BLOCKED",
+      "reason": "dependency_blocked"
+    },
+    {
+      "name": "admin-alone-write-denied",
+      "status": "BLOCKED",
+      "reason": "dependency_blocked"
+    },
+    {
+      "name": "ambiguous-omission-denied",
+      "status": "BLOCKED",
+      "reason": "dependency_blocked"
+    },
+    {
+      "name": "actor-binding-denied",
+      "status": "BLOCKED",
+      "reason": "dependency_blocked"
+    },
+    {
+      "name": "caller-metadata-no-principal",
+      "status": "BLOCKED",
+      "reason": "dependency_blocked"
+    },
+    {
+      "name": "public-internal-provision-denied",
+      "status": "BLOCKED",
+      "reason": "dependency_blocked"
+    },
+    {
+      "name": "public-internal-maintenance-denied",
+      "status": "BLOCKED",
+      "reason": "dependency_blocked"
+    },
+    {
+      "name": "immutable-delete-read-denied",
+      "status": "BLOCKED",
+      "reason": "dependency_blocked"
+    },
+    {
+      "name": "immutable-delete-write-denied",
+      "status": "BLOCKED",
+      "reason": "dependency_blocked"
+    },
+    {
+      "name": "mutable-delete-read-denied",
+      "status": "BLOCKED",
+      "reason": "dependency_blocked"
+    },
+    {
+      "name": "mutable-delete-write-denied",
+      "status": "BLOCKED",
+      "reason": "dependency_blocked"
+    },
+    {
+      "name": "negative-effect-counts",
+      "status": "BLOCKED",
+      "reason": "dependency_blocked"
+    },
+    {
+      "name": "reactive-wrong-tenant",
+      "status": "BLOCKED",
+      "reason": "dependency_blocked"
+    },
+    {
+      "name": "reactive-wrong-space",
+      "status": "BLOCKED",
+      "reason": "dependency_blocked"
+    },
+    {
+      "name": "resource-deletion-subscription",
+      "status": "BLOCKED",
+      "reason": "dependency_blocked"
+    },
+    {
+      "name": "grant-revocation",
+      "status": "BLOCKED",
+      "reason": "dependency_blocked"
+    },
+    {
+      "name": "principal-deletion",
+      "status": "BLOCKED",
+      "reason": "dependency_blocked"
+    },
+    {
+      "name": "membership-revocation",
+      "status": "BLOCKED",
+      "reason": "dependency_blocked"
+    },
+    {
+      "name": "space-deletion",
+      "status": "BLOCKED",
+      "reason": "dependency_blocked"
+    },
+    {
+      "name": "tenant-deletion",
+      "status": "BLOCKED",
+      "reason": "dependency_blocked"
+    },
+    {
+      "name": "sdk-metadata-consumers",
+      "status": "BLOCKED",
+      "reason": "dependency_blocked"
+    },
+    {
+      "name": "sdk-refresh",
+      "status": "BLOCKED",
+      "reason": "dependency_blocked"
+    },
+    {
+      "name": "sdk-logout",
+      "status": "BLOCKED",
+      "reason": "dependency_blocked"
+    },
+    {
+      "name": "sdk-labels-no-authority",
+      "status": "BLOCKED",
+      "reason": "dependency_blocked"
+    },
+    {
+      "name": "background-after-ordinary-logout",
+      "status": "BLOCKED",
+      "reason": "dependency_blocked"
+    },
+    {
+      "name": "late-credential-fencing",
+      "status": "BLOCKED",
+      "reason": "dependency_blocked"
+    },
+    {
+      "name": "sanitized-host-callback",
+      "status": "BLOCKED",
+      "reason": "dependency_blocked"
+    },
+    {
+      "name": "sdk-session-capability",
+      "status": "BLOCKED",
+      "reason": "dependency_blocked"
+    },
+    {
+      "name": "background-after-revocation",
+      "status": "BLOCKED",
+      "reason": "dependency_blocked"
+    },
+    {
+      "name": "session-end-not-grant-revocation",
+      "status": "BLOCKED",
+      "reason": "dependency_blocked"
+    }
+  ],
+  "effects": [],
+  "completed": false,
+  "terminalReason": "whole_timeout",
+  "phase": "offline-probe",
+  "runId": "a1254945-1584-44d3-b456-8769b6306c81",
+  "operatorEffects": [
+    {
+      "name": "runtimeAuth:provision",
+      "status": "unavailable"
+    }
+  ],
+  "ownedProcessGroups": 2,
+  "remainingOwnedGroups": 0,
+  "terminalVerifiedGroups": 2,
+  "processCleanup": "REAPED",
+  "offlineAudits": [],
+  "evidenceKind": "OFFLINE cycle3 reached-whole-timeout/process control only",
+  "atFinish": {
+    "directChildrenWaited": true,
+    "grandchildState": "Z",
+    "remainingGroups": 0,
+    "terminalVerifiedGroups": 2
+  }
+}

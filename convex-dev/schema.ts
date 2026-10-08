@@ -28,6 +28,9 @@
 
 import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
+import { runtimeAuthorityReference, runtimeAuthTables } from "./runtimeAuthSchema";
+import { runtimeMemoryTables, sourceLineage } from "./runtimeMemorySchema";
+import { runtimePolicyTables } from "./runtimePolicySchema";
 import { graphJobFields, graphReceiptValidator } from "./lib/graphSync";
 import {
   endpointValidator,
@@ -36,6 +39,9 @@ import {
 } from "./lib/factHistoryProvenance";
 
 export default defineSchema({
+  ...runtimeAuthTables,
+  ...runtimeMemoryTables,
+  ...runtimePolicyTables,
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // Layer 1a: Conversations (ACID, Immutable)
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -322,7 +328,10 @@ export default defineSchema({
     userId: v.optional(v.string()), // Links to user for cascade deletion
 
     // Multi-tenancy (NEW - for non-critical path isolation)
-    tenantId: v.optional(v.string()), // Tenant ID for isolation
+    tenantId: v.optional(v.string()), // Trusted tenant selector
+    ownerPrincipalId: v.optional(v.string()),
+    tombstonedAt: v.optional(v.number()),
+    memorySpaceId: v.optional(v.string()), // Optional trusted grant scope
 
     // Versioning
     version: v.number(), // Current version number (starts at 1)
@@ -342,6 +351,8 @@ export default defineSchema({
     createdAt: v.number(),
     updatedAt: v.number(),
   })
+    .index("by_runtime_scope", ["tenantId", "memorySpaceId", "ownerPrincipalId"])
+    .index("by_runtime_key", ["tenantId", "memorySpaceId", "type", "id"])
     .index("by_type_id", ["type", "id"]) // Unique lookup
     .index("by_type", ["type"]) // List by type
     .index("by_tenantId", ["tenantId"]) // Tenant's records
@@ -364,7 +375,10 @@ export default defineSchema({
     userId: v.optional(v.string()), // Links to user for cascade deletion
 
     // Multi-tenancy (NEW - for non-critical path isolation)
-    tenantId: v.optional(v.string()), // Tenant ID for isolation
+    tenantId: v.optional(v.string()), // Trusted tenant selector
+    ownerPrincipalId: v.optional(v.string()),
+    tombstonedAt: v.optional(v.number()),
+    memorySpaceId: v.optional(v.string()), // Optional trusted grant scope
 
     // Metadata (optional)
     metadata: v.optional(v.any()),
@@ -373,6 +387,8 @@ export default defineSchema({
     createdAt: v.number(),
     updatedAt: v.number(),
   })
+    .index("by_runtime_scope", ["tenantId", "memorySpaceId", "ownerPrincipalId"])
+    .index("by_runtime_key", ["tenantId", "memorySpaceId", "namespace", "key"])
     .index("by_namespace_key", ["namespace", "key"]) // Unique lookup
     .index("by_namespace", ["namespace"]) // List by namespace
     .index("by_tenantId", ["tenantId"]) // Tenant's records
@@ -385,6 +401,12 @@ export default defineSchema({
   // Layer 2: Vector Memory (Searchable, memorySpace-scoped, Versioned)
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   memories: defineTable({
+    // Fresh runtime ownership/provenance; old unowned rows are never adopted.
+    ownerPrincipalId: v.optional(v.string()),
+    runtimeEditor: v.optional(v.object({ principalId: v.string(), userId: v.string(), editedAt: v.number() })),
+    manualSourceBinding: v.optional(v.object({ resourceType: v.union(v.literal("memory"), v.literal("fact")), resourceId: v.string() })),
+    lineage: v.optional(sourceLineage),
+    tombstonedAt: v.optional(v.number()),
     // Identity
     memoryId: v.string(), // Unique ID for this memory
     memorySpaceId: v.string(), // NEW: Memory space isolation (was agentId)
@@ -493,7 +515,7 @@ export default defineSchema({
   })
     .index("by_memorySpace", ["memorySpaceId"]) // NEW: Memory space's memories
     .index("by_memoryId", ["memoryId"]) // Unique lookup
-    .index("by_history_scope_memory", ["tenantId", "memorySpaceId", "memoryId"])
+    .index("by_runtime_scope_memoryId", ["tenantId", "memorySpaceId", "memoryId"])
     .index("by_tenantId", ["tenantId"]) // Tenant's memories
     .index("by_tenant_space", ["tenantId", "memorySpaceId"]) // Tenant + space
     .index("by_userId", ["userId"]) // GDPR cascade
@@ -505,6 +527,7 @@ export default defineSchema({
     .searchIndex("by_content", {
       searchField: "content",
       filterFields: [
+        "ownerPrincipalId",
         "memorySpaceId",
         "tenantId",
         "sourceType",
@@ -530,6 +553,14 @@ export default defineSchema({
   // Layer 3: Facts Store (NEW - memorySpace-scoped, Versioned)
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   facts: defineTable({
+    // Trusted runtime provenance; unrelated explicit facts share this authoritative table.
+    ownerPrincipalId: v.optional(v.string()),
+    runtimeEditor: v.optional(v.object({ principalId: v.string(), userId: v.string(), editedAt: v.number() })),
+    manualSourceBinding: v.optional(v.object({ resourceType: v.union(v.literal("memory"), v.literal("fact")), resourceId: v.string() })),
+    lineage: v.optional(sourceLineage),
+    extractionPolicyVersion: v.optional(v.string()),
+    processingReceiptId: v.optional(v.string()),
+    tombstonedAt: v.optional(v.number()),
     // Identity
     factId: v.string(), // Unique ID for this fact
     memorySpaceId: v.string(), // Memory space isolation
@@ -622,7 +653,7 @@ export default defineSchema({
     embedding: v.optional(v.array(v.float64())),
   })
     .index("by_factId", ["factId"]) // Unique lookup
-    .index("by_history_scope_fact", ["tenantId", "memorySpaceId", "factId"])
+    .index("by_runtime_scope_factId", ["tenantId", "memorySpaceId", "factId"])
     .index("by_history_tenant_fact", ["tenantId", "factId"])
     .index("by_memorySpace", ["memorySpaceId"]) // Memory space's facts
     .index("by_tenantId", ["tenantId"]) // Tenant's facts
@@ -632,7 +663,7 @@ export default defineSchema({
     .index("by_userId", ["userId"]) // GDPR cascade
     .searchIndex("by_content", {
       searchField: "fact",
-      filterFields: ["memorySpaceId", "tenantId", "factType"],
+      filterFields: ["memorySpaceId", "tenantId", "factType", "ownerPrincipalId"],
     })
     .vectorIndex("by_embedding", {
       vectorField: "embedding",
@@ -756,6 +787,8 @@ export default defineSchema({
 
     // Multi-tenancy (NEW - critical for SaaS isolation)
     tenantId: v.optional(v.string()), // Tenant ID for isolation
+    ownerPrincipalId: v.optional(v.string()), // Trusted verified resource owner
+    tombstonedAt: v.optional(v.number()), // Retained deletion fence
 
     type: v.union(
       v.literal("personal"),
@@ -783,6 +816,7 @@ export default defineSchema({
     createdAt: v.number(),
     updatedAt: v.number(),
   })
+    .index("by_runtime_scope_owner", ["tenantId", "memorySpaceId", "ownerPrincipalId"])
     .index("by_memorySpaceId", ["memorySpaceId"]) // Unique lookup
     .index("by_tenantId", ["tenantId"]) // Tenant's memory spaces
     .index("by_tenant_memorySpaceId", ["tenantId", "memorySpaceId"]) // Tenant-scoped lookup
@@ -801,6 +835,8 @@ export default defineSchema({
 
     // Multi-tenancy (NEW - critical for SaaS isolation)
     tenantId: v.optional(v.string()), // Tenant ID for isolation
+    ownerPrincipalId: v.optional(v.string()), // Trusted verified resource owner
+    tombstonedAt: v.optional(v.number()), // Retained deletion fence
 
     // Purpose
     purpose: v.string(), // What this context is for
@@ -852,6 +888,7 @@ export default defineSchema({
     metadata: v.optional(v.any()),
 
     // Versioning (automatic version tracking for updates)
+    lastUpdatedBy: v.optional(v.string()), // Actual verified writer of the current revision
     version: v.number(), // Current version number (starts at 1)
     previousVersions: v.array(
       v.object({
@@ -868,6 +905,8 @@ export default defineSchema({
     updatedAt: v.number(),
     completedAt: v.optional(v.number()),
   })
+    .index("by_runtime_scope_context", ["tenantId", "memorySpaceId", "contextId"])
+    .index("by_runtime_scope_owner", ["tenantId", "memorySpaceId", "ownerPrincipalId"])
     .index("by_contextId", ["contextId"]) // Unique lookup
     .index("by_memorySpace", ["memorySpaceId"]) // NEW: Space's contexts
     .index("by_tenantId", ["tenantId"]) // Tenant's contexts
@@ -886,9 +925,12 @@ export default defineSchema({
   agents: defineTable({
     // Identity
     agentId: v.string(), // Unique agent identifier
+    memorySpaceId: v.optional(v.string()), // Optional trusted space scope
 
     // Multi-tenancy (NEW - critical for SaaS isolation)
     tenantId: v.optional(v.string()), // Tenant ID for isolation
+    ownerPrincipalId: v.optional(v.string()), // Trusted verified resource owner
+    tombstonedAt: v.optional(v.number()), // Retained deletion fence
 
     // Metadata
     name: v.string(), // Display name
@@ -910,6 +952,8 @@ export default defineSchema({
     updatedAt: v.number(),
     lastActive: v.optional(v.number()), // Last time agent created data
   })
+    .index("by_runtime_scope_agent", ["tenantId", "memorySpaceId", "agentId"])
+    .index("by_runtime_scope_owner", ["tenantId", "memorySpaceId", "ownerPrincipalId"])
     .index("by_agentId", ["agentId"]) // Unique lookup
     .index("by_tenantId", ["tenantId"]) // Tenant's agents
     .index("by_tenant_status", ["tenantId", "status"]) // Tenant + status
@@ -925,7 +969,10 @@ export default defineSchema({
     userId: v.string(), // User this session belongs to
 
     // Multi-tenancy (NEW - critical for isolation)
-    tenantId: v.optional(v.string()), // Tenant ID for SaaS isolation
+    tenantId: v.optional(v.string()), // Trusted tenant selector
+    ownerPrincipalId: v.optional(v.string()),
+    tombstonedAt: v.optional(v.number()),
+    authorityReference: v.optional(runtimeAuthorityReference), // Server-pinned maintenance authority
 
     // Memory space association
     memorySpaceId: v.optional(v.string()), // Memory space for this session
@@ -944,6 +991,8 @@ export default defineSchema({
     messageCount: v.number(), // Messages in this session
     memoryCount: v.number(), // Memories created in this session
   })
+    .index("by_runtime_scope", ["tenantId", "memorySpaceId", "ownerPrincipalId"])
+    .index("by_runtime_key", ["tenantId", "memorySpaceId", "sessionId"])
     .index("by_sessionId", ["sessionId"])
     .index("by_lifecycle_tenant_sessionId", ["tenantId", "sessionId"]) // Unique lookup
     .index("by_userId", ["userId"]) // User's sessions
@@ -958,6 +1007,10 @@ export default defineSchema({
   // Governance Policies (Data Retention, Purging, and Compliance)
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   governancePolicies: defineTable({
+    // Fresh verified ownership; handlers reject missing fields rather than adopt rows.
+    tenantId: v.optional(v.string()),
+    ownerPrincipalId: v.optional(v.string()),
+    authority: v.optional(runtimeAuthorityReference),
     // Scope
     organizationId: v.optional(v.string()),
     memorySpaceId: v.optional(v.string()), // Memory space override
@@ -976,10 +1029,17 @@ export default defineSchema({
     .index("by_organization", ["organizationId"])
     .index("by_memorySpace", ["memorySpaceId"])
     .index("by_active", ["isActive", "organizationId"])
-    .index("by_updated", ["updatedAt"]),
+    .index("by_updated", ["updatedAt"])
+    .index("by_runtime_scope_active", ["tenantId", "memorySpaceId", "isActive"]),
 
   // Governance Enforcement Log (Audit Trail)
   governanceEnforcement: defineTable({
+    policyId: v.optional(v.id("governancePolicies")),
+    simulation: v.optional(v.boolean()),
+    // Fresh verified ownership; handlers reject missing fields rather than adopt rows.
+    tenantId: v.optional(v.string()),
+    ownerPrincipalId: v.optional(v.string()),
+    authority: v.optional(runtimeAuthorityReference),
     // Scope
     organizationId: v.optional(v.string()),
     memorySpaceId: v.optional(v.string()),
@@ -1002,13 +1062,21 @@ export default defineSchema({
   })
     .index("by_organization", ["organizationId", "executedAt"])
     .index("by_memorySpace", ["memorySpaceId", "executedAt"])
-    .index("by_executed", ["executedAt"]),
+    .index("by_executed", ["executedAt"])
+    .index("by_runtime_scope_executed", ["tenantId", "memorySpaceId", "executedAt"])
+    .index("by_runtime_policy", ["policyId"]),
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // Graph Sync Queue (Real-time Graph Database Synchronization)
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   graphSyncQueue: defineTable({
     ...graphJobFields,
+    entityDocumentId: v.optional(v.id("facts")),
+    entityVersion: v.optional(v.number()),
+    sourceId: v.optional(v.string()),
+    sourceEventId: v.optional(v.string()),
+    ownerPrincipalId: v.optional(v.string()),
+    authority: v.optional(runtimeAuthorityReference),
     // Entity identification
     table: v.string(), // "memories", "facts", "contexts", "conversations", etc.
     entityId: v.string(), // Cortex entity ID
@@ -1045,7 +1113,9 @@ export default defineSchema({
     .index("by_scope_state", ["tenantId", "state", "createdAt"])
     .index("by_scope_source_state", ["tenantId", "physicalSourceId", "state"])
     .index("by_scope_priority_state", ["tenantId", "priority", "state", "createdAt"])
-    .index("by_invocation_source", ["tenantId", "graphInvocationId", "physicalSourceId", "sourceRevision", "operation"]), // Immutable graph invocations
+    .index("by_invocation_source", ["tenantId", "graphInvocationId", "physicalSourceId", "sourceRevision", "operation"])
+    .index("by_runtime_worker_entity", ["tenantId", "memorySpaceId", "authority.grantId", "table", "entityId"])
+    .index("by_runtime_worker_state", ["tenantId", "memorySpaceId", "authority.grantId", "synced", "priority"]), // Immutable graph invocations
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // Artifacts (Interactive Versioned Documents, memorySpace-scoped)
@@ -1058,6 +1128,11 @@ export default defineSchema({
 
     // Multi-tenancy
     tenantId: v.optional(v.string()),
+
+    // Fresh trusted ownership; caller user/participant labels never grant access.
+    ownerPrincipalId: v.optional(v.string()),
+    lastActorPrincipalId: v.optional(v.string()),
+    tombstonedAt: v.optional(v.number()),
 
     // Ownership
     userId: v.optional(v.string()),
@@ -1208,6 +1283,9 @@ export default defineSchema({
     deletedAt: v.optional(v.number()),
     deletedBy: v.optional(v.string()),
   })
+    // Fresh canonical selection; constrain owner before hydration/limit.
+    .index("by_runtime_key", ["tenantId", "memorySpaceId", "artifactId"])
+
     // Unique lookups
     .index("by_artifactId", ["artifactId"])
 

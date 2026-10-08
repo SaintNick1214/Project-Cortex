@@ -1,0 +1,15 @@
+import assert from 'node:assert/strict';
+import {admissionCases, admissionFixture, corruptControl, controlCorruptions} from '/workspace/Project-Cortex/work/resume/registry/candidate/tests/unit/runtimeRegistryAuth/admissionFixture.ts';
+import {invoke} from '/workspace/Project-Cortex/work/resume/registry/candidate/tests/unit/runtimeRegistryAuth/fixture.ts';
+import {ConvexError} from '/workspace/Project-Cortex/work/resume/registry/candidate/node_modules/convex/dist/esm/values/index.js';
+const collectFinding=process.argv.includes('--collect-finding');
+const outcomes=[];
+for(const entry of admissionCases) for(const corruption of controlCorruptions) {
+ const f=admissionFixture(entry);corruptControl(f,corruption);let attempts=0;f.db.beforeWrite=()=>{attempts++;};
+ let result,error;try {result=await f.db.transaction(()=>invoke(entry.registration,f.ctx,entry.args));}catch(e){error=e;}
+ const reached=f.db.traces.some(trace=>trace.table===(corruption.endsWith('Scope')?'runtimeAuthScopes':'runtimeAuthTombstones')&&trace.returned.length===2);
+ assert.equal(reached,true);
+ if(!collectFinding){assert(error instanceof ConvexError);assert.deepEqual(error.data,{version:1,code:'REGISTRY_OPERATION_FAILED',message:'Registry operation failed',retryable:false,outcome:'failed'});assert.equal(attempts,0);assert.equal(f.db.writes,0);assert(!error.message.includes('private-control-document-id'));}
+ outcomes.push({path:entry.path,scopes:entry.scopes,corruption,reached,attempts,writes:f.db.writes,success:!error,result:result??null,errorData:error instanceof ConvexError?error.data:null,errorMessage:error?.message??null});
+}
+console.log(JSON.stringify({mode:collectFinding?'pre-repair observed outcomes without a PASS claim':'post-repair exact negative outcomes',count:outcomes.length,outcomes},null,2));

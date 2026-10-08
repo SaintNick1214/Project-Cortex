@@ -1,0 +1,9 @@
+from pathlib import Path
+import os,subprocess,json,datetime,hashlib,shutil
+r=Path('/workspace/Project-Cortex');s=r/'work/resume/task04-pure-policy-c2-review/run02';q=r/'_goals/convex-backend-runtime-2026-10-02/qa/task04-pure-policy-contracts-c2-review'
+for p in ['fresh-probes.mjs','browser-domain.mjs']:shutil.copy2(s/p,q/('run02-'+p+'.text'))
+args=['node','fresh-probes.mjs'];start=datetime.datetime.now(datetime.timezone.utc).isoformat()
+with (q/'run02-fresh.started.json').open('x') as f:json.dump({'argv':args,'cwd':str(s),'startUTC':start,'probeSHA256':hashlib.sha256((s/'fresh-probes.mjs').read_bytes()).hexdigest(),'bundleSHA256':hashlib.sha256((s/'browser-domain.mjs').read_bytes()).hexdigest()},f,indent=2)
+with (q/'run02-fresh.stdout').open('x') as so,(q/'run02-fresh.stderr').open('x') as se:p=subprocess.run(args,cwd=s,stdout=so,stderr=se,env={'PATH':os.environ['PATH']})
+with (q/'run02-fresh.receipt.json').open('x') as f:json.dump({'argv':args,'cwd':str(s),'startUTC':start,'endUTC':datetime.datetime.now(datetime.timezone.utc).isoformat(),'exitCode':p.returncode,'environmentLoaders':False},f,indent=2)
+print(p.returncode)

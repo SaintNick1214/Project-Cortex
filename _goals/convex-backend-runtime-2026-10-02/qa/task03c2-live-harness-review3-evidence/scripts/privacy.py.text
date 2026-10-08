@@ -1,0 +1,20 @@
+import sys,re
+sys.path.insert(0,'/tmp/task03c2-live-harness-review3-01t5pzfe/scripts')
+from reviewlib import *
+known={'dev:offline-standin|DEVKEY_BOUNDARY_STANDIN','dev:offline-fixture-123|OFFLINE_STANDIN_NOT_A_CREDENTIAL','dev:wrong-fixture-123|STANDIN','prod:offline-fixture-123|STANDIN'}
+# Two exact names use the historical test-only placeholder in frozen Task01 raw source.
+historical={'35fa4dc288456d5d29243fc541f13a59ed27d36cf658c5fcd3e2a2fd2eb59b66','11f1cf21d97761e180767474dce82703e91a383fd408f66712bb0c7bd4b79620'}
+patterns=[('private-pem',re.compile(r'-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----')),('signed-jwt',re.compile(r'eyJ[A-Za-z0-9_-]{16,}\.eyJ[A-Za-z0-9_-]{16,}\.[A-Za-z0-9_-]{32,}')),('deploy-key',re.compile(r'(?:dev|prod):[a-z0-9-]+\|[A-Za-z0-9_-]+'))]
+paths=[p for p in Q.rglob('*') if p.is_file() and not p.is_symlink()];private=[p for p in (S/'offline-cycle3').glob('*') if p.is_file() and p.suffix in ['.py','.mjs','.md']]
+unknown=[];recognized=0;historicalSeen=set()
+for p in paths+private:
+ for kind,rx in patterns:
+  for m in rx.finditer(p.read_bytes().decode('utf8','replace')):
+   h=sha(m.group(0).encode())
+   if kind=='deploy-key' and (m.group(0) in known or h in historical):recognized+=1;historicalSeen.add(h) if h in historical else None
+   else:unknown.append(dict(path=str(p.relative_to(R)),kind=kind))
+assert not unknown,unknown;assert historicalSeen==historical
+write(O/'results/privacy.json',dict(scannedPublicFiles=len(paths),scannedNewPrivateCode=len(private),privatePemMatches=0,signedJwtMatches=0,unknownDeployKeyMatches=0,recognizedExactStandins=recognized,exactAllowedLiteralCount=len(known)+len(historical),historicalPlaceholderSha256=sorted(historical),noArbitrarySuffixAllowance=True))
+write(O/'results/initial-hygiene-failure.json',dict(reason='Reviewer wrongly assumed the original107 QA contained exactly one full test-placeholder key literal. It contained none; two full-name literals instead occur in frozen first independent Task01 ordering/paths source. Initial scan aborted before classifying any unknown actual match. New scan uses exact two historical literal hashes plus four explicit standins, with no suffix wildcard. No canonical/source/assertion changes.'))
+print(json.dumps({'publicFiles':len(paths),'newPrivateCode':len(private),'recognizedExactStandins':recognized,'unknownMatches':0}))
+

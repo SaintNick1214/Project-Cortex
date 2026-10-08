@@ -26,7 +26,7 @@ interface ChatInterfaceProps {
   memorySpaceId: string;
   userId: string;
   conversationId: string | null;
-  /** API endpoint for chat - defaults to /api/chat, use /api/chat-v6 for AI SDK v6 */
+  /** API endpoint for chat - defaults to /api/chat, use /api/chat-v6 for the AI SDK 6+ ToolLoopAgent path */
   apiEndpoint?: string;
   onOrchestrationStart?: () => void;
   onLayerUpdate?: (
@@ -77,6 +77,8 @@ export function ChatInterface({
   // This ensures we always send the latest conversationId
   const transport = useMemo(
     () =>
+      // The body callback reads this ref when a request is sent, after render.
+      // eslint-disable-next-line react-hooks/refs
       new DefaultChatTransport({
         api: apiEndpoint,
         // Use a function to get body so it reads latest conversationId from ref
@@ -191,7 +193,7 @@ export function ChatInterface({
     };
 
     loadConversationHistory();
-  }, [conversationId, setMessages]);
+  }, [conversationId, memorySpaceId, setMessages]);
 
   // Determine if we're actively streaming (only time to show typing indicator)
   const isStreaming = status === "streaming" || status === "submitted";

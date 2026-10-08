@@ -250,7 +250,7 @@ describe("catalog, archive and rendered ownership data", () => {
       envNames: ["CONVEX_URL"],
       backend: true,
       graph: true,
-      compatibility: { sdk: "^0.37.0", convex: "1.46.0" },
+      compatibility: { sdk: "^0.38.0", convex: "1.46.0" },
       files: [
         {
           path: "x.txt",
@@ -441,7 +441,7 @@ describe("semantic package ownership and pure three-way planning", () => {
       mergePackage(
         packageBytes(a),
         packageBytes(a),
-        packageBytes({ devDependencies: { sdk: "^0.37.0" } }),
+        packageBytes({ devDependencies: { sdk: "^0.38.0" } }),
       ).conflicts,
     ).toEqual([]);
   });

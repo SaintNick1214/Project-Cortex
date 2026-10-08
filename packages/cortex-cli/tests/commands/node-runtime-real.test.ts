@@ -10,6 +10,7 @@ let root: string;
 let guard: string;
 let minimum: string;
 const unsupported: Record<string, string> = {};
+const refusedVersions = ["20.0.0", "20.20.2", ...(process.env.CORTEX_RUNTIME_NODE22_16 ? ["22.16.0"] : [])];
 function input(name: string): string {
   const value = process.env[name];
   if (!value || !isAbsolute(value) || !existsSync(value)) throw new Error(`RUNTIME_PROOF_INPUT_REQUIRED: ${name}`);
@@ -22,8 +23,12 @@ beforeAll(() => {
     throw new Error("RUNTIME_PROOF_ROOT_UNSAFE");
   guard = input("CORTEX_RUNTIME_GUARD");
   minimum = input("CORTEX_RUNTIME_NODE_MINIMUM");
+  const minimumProbe = spawnSync(minimum, ["--version"], {encoding: "utf8", timeout: 10000});
+  if (minimumProbe.error || minimumProbe.status !== 0 || minimumProbe.stdout.trim() !== "v24.15.0")
+    throw new Error("RUNTIME_PROOF_MINIMUM_UNVERIFIED: supply actual Node24.15.0");
   unsupported["20.0.0"] = input("CORTEX_RUNTIME_NODE20_0");
   unsupported["20.20.2"] = input("CORTEX_RUNTIME_NODE20_20");
+  if (process.env.CORTEX_RUNTIME_NODE22_16) unsupported["22.16.0"] = input("CORTEX_RUNTIME_NODE22_16");
   if (!existsSync(join(cli, "dist/utils/node-runtime.js"))) throw new Error("RUNTIME_PROOF_BUILD_REQUIRED");
 });
 beforeEach(() => {
@@ -50,7 +55,7 @@ function run(node: string, args: string[]) {
   expect(existsSync(join(root, "config-ran"))).toBe(false);
   return result;
 }
-it.each(["20.0.0", "20.20.2"].flatMap(version => [[], ["--version"], ["--help"], ["doctor"], ["db", "backup"]].map(args => [version, args] as const)))(
+it.each(refusedVersions.flatMap(version => [[], ["--version"], ["--help"], ["doctor"], ["db", "backup"]].map(args => [version, args] as const)))(
   "Node%s refuses %j before linking app/config/env/client factories",
   (version, args) => {
     writeFileSync(join(root, "package/dist/cli-main.js"), `import fs from 'node:fs';fs.writeFileSync(${JSON.stringify(join(root, "app-ran"))},'ran');throw new Error('APPLICATION_LINKED_BEFORE_RUNTIME_CHECK');`);
@@ -59,7 +64,7 @@ it.each(["20.0.0", "20.20.2"].flatMap(version => [[], ["--version"], ["--help"],
     const result = run(unsupported[version], [...args]);
     expect(result.status).toBe(1);
     expect(result.stdout).toBe("");
-    expect(result.stderr).toBe(`Cortex CLI requires Node.js >=22.16.0; found v${version}. Upgrade to a supported Node.js LTS release.\n`);
+    expect(result.stderr).toBe(`Cortex CLI requires Node.js >=24.15.0; found v${version}. Upgrade to a supported Node.js LTS release.\n`);
     expect(existsSync(join(root, "home/.cortexrc"))).toBe(false);
   },
 );

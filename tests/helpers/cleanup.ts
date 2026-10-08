@@ -1,4 +1,3 @@
-import { graphOffResult } from "../../src/graph/erasure";
 /**
  * Test Cleanup Helpers
  *
@@ -12,6 +11,16 @@ import { graphOffResult } from "../../src/graph/erasure";
 import type { ConvexClient } from "convex/browser";
 import { api } from "../../convex-dev/_generated/api";
 import type { TestRunContext } from "./isolation";
+
+/** Global purges require an operator executing inside the trusted backend. */
+export class TestCleanupCapabilityError extends Error {
+  readonly code = "TRUSTED_BACKEND_MAINTENANCE_REQUIRED";
+  readonly requiredCapability = "trusted-backend-maintenance";
+  constructor() {
+    super("Global purge requires trusted backend maintenance execution; a public client cannot invoke internal purge functions.");
+    this.name = "TestCleanupCapabilityError";
+  }
+}
 
 export class TestCleanup {
   constructor(protected client: ConvexClient) {}
@@ -31,9 +40,9 @@ export class TestCleanup {
 
     for (const conversation of conversations) {
       try {
-        graphOffResult(await this.client.mutation(api.conversations.deleteConversation, {
+        await this.client.mutation(api.conversations.deleteConversation, {
           conversationId: conversation.conversationId,
-        }));
+        });
         deleted++;
       } catch (err: any) {
         // Ignore "CONVERSATION_NOT_FOUND" errors (already deleted)
@@ -53,76 +62,28 @@ export class TestCleanup {
    * Safe for test environments with no real data retention requirements
    */
   async purgeMemories(): Promise<{ deleted: number }> {
-    console.log("🧹 Purging ALL memories from database...");
-
-    try {
-      const result = graphOffResult(await this.client.mutation(api.memories.purgeAll, {}));
-
-      console.log(`✅ Purged ${result.deleted} total memories`);
-
-      return { deleted: result.deleted };
-    } catch (err: any) {
-      console.error("❌ Failed to purge memories:", err.message);
-
-      return { deleted: 0 };
-    }
+    throw new TestCleanupCapabilityError();
   }
 
   /**
    * Purge facts from the database
    */
   async purgeFacts(): Promise<{ deleted: number }> {
-    console.log("🧹 Purging facts table...");
-
-    try {
-      const result = graphOffResult(await this.client.mutation(api.facts.purgeAll, {}));
-
-      console.log(`✅ Purged ${result.deleted} facts`);
-
-      return { deleted: result.deleted };
-    } catch (err: any) {
-      console.error("❌ Failed to purge facts:", err.message);
-
-      return { deleted: 0 };
-    }
+    throw new TestCleanupCapabilityError();
   }
 
   /**
    * Purge contexts from the database
    */
   async purgeContexts(): Promise<{ deleted: number }> {
-    console.log("🧹 Purging contexts table...");
-
-    try {
-      const result = graphOffResult(await this.client.mutation(api.contexts.purgeAll, {}));
-
-      console.log(`✅ Purged ${result.deleted} contexts`);
-
-      return { deleted: result.deleted };
-    } catch (err: any) {
-      console.error("❌ Failed to purge contexts:", err.message);
-
-      return { deleted: 0 };
-    }
+    throw new TestCleanupCapabilityError();
   }
 
   /**
    * Purge memory spaces from the database
    */
   async purgeMemorySpaces(): Promise<{ deleted: number }> {
-    console.log("🧹 Purging memorySpaces table...");
-
-    try {
-      const result = graphOffResult(await this.client.mutation(api.memorySpaces.purgeAll, {}));
-
-      console.log(`✅ Purged ${result.deleted} memory spaces`);
-
-      return { deleted: result.deleted };
-    } catch (err: any) {
-      console.error("❌ Failed to purge memory spaces:", err.message);
-
-      return { deleted: 0 };
-    }
+    throw new TestCleanupCapabilityError();
   }
 
   /**
@@ -135,20 +96,7 @@ export class TestCleanup {
     contexts: number;
     memorySpaces: number;
   }> {
-    // Order matters: delete in reverse dependency order
-    const convResult = await this.purgeConversations();
-    const memResult = await this.purgeMemories();
-    const factsResult = await this.purgeFacts();
-    const contextsResult = await this.purgeContexts();
-    const spacesResult = await this.purgeMemorySpaces();
-
-    return {
-      conversations: convResult.deleted,
-      memories: memResult.deleted,
-      facts: factsResult.deleted,
-      contexts: contextsResult.deleted,
-      memorySpaces: spacesResult.deleted,
-    };
+    throw new TestCleanupCapabilityError();
   }
 
   /**
@@ -277,9 +225,9 @@ export class ScopedCleanup {
           this.belongsToRun(conv.conversationId)
         ) {
           try {
-            graphOffResult(await this.client.mutation(api.conversations.deleteConversation, {
+            await this.client.mutation(api.conversations.deleteConversation, {
               conversationId: conv.conversationId,
-            }));
+            });
             deleted++;
           } catch {
             // Ignore already deleted
@@ -348,10 +296,10 @@ export class ScopedCleanup {
 
             for (const mem of memories) {
               try {
-                graphOffResult(await this.client.mutation(api.memories.deleteMemory, {
+                await this.client.mutation(api.memories.deleteMemory, {
                   memorySpaceId: space.memorySpaceId,
                   memoryId: mem.memoryId,
-                }));
+                });
                 deleted++;
               } catch {
                 // Ignore errors
@@ -389,10 +337,10 @@ export class ScopedCleanup {
 
             for (const fact of facts) {
               try {
-                graphOffResult(await this.client.mutation(api.facts.deleteFact, {
+                await this.client.mutation(api.facts.deleteFact, {
                   memorySpaceId: space.memorySpaceId,
                   factId: fact.factId,
-                }));
+                });
                 deleted++;
               } catch {
                 // Ignore errors
@@ -460,10 +408,10 @@ export class ScopedCleanup {
       for (const user of result.entries) {
         if (this.belongsToRun(user.id)) {
           try {
-            graphOffResult(await this.client.mutation(api.immutable.purge, {
+            await this.client.mutation(api.immutable.purge, {
               type: "user",
               id: user.id,
-            }));
+            });
             deleted++;
           } catch {
             // Ignore errors
@@ -527,10 +475,10 @@ export class ScopedCleanup {
         // Check if type or id belongs to this run
         if (this.belongsToRun(record.type) || this.belongsToRun(record.id)) {
           try {
-            graphOffResult(await this.client.mutation(api.immutable.purge, {
+            await this.client.mutation(api.immutable.purge, {
               type: record.type,
               id: record.id,
-            }));
+            });
             deleted++;
           } catch {
             // Ignore errors
@@ -561,9 +509,9 @@ export class ScopedCleanup {
       // Try to purge namespace that matches our runId pattern
       // The runId format is like "mutable-run-1234567890-abc123"
       try {
-        const result = graphOffResult(await this.client.mutation(api.mutable.purgeNamespace, {
+        const result = await this.client.mutation(api.mutable.purgeNamespace, {
           namespace: this.runId,
-        }));
+        });
         deleted += result.deleted;
       } catch {
         // Namespace may not exist
@@ -580,12 +528,12 @@ export class ScopedCleanup {
       for (const suffix of suffixes) {
         const namespace = `${this.runId}-${suffix}`;
         try {
-          const result = graphOffResult(await this.client.mutation(
+          const result = await this.client.mutation(
             api.mutable.purgeNamespace,
             {
               namespace,
             },
-          ));
+          );
           deleted += result.deleted;
         } catch {
           // Namespace may not exist

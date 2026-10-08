@@ -1,0 +1,76 @@
+{
+  "observedAt": "2026-10-05T01:57:41.790142+00:00",
+  "status": "ROOT_READ_ONLY_RETAINED_FAILURE_INSPECTION",
+  "results": [
+    {
+      "batch": "88661e45ea5c4c52a4a258eecc29e38c",
+      "receiptSHA256": "9c06c2e321d33652f1c3c7931b59fe3bff4b603b25568b7382e35eecd2a4d3e1",
+      "receiptIdentity": {
+        "st_dev": 26,
+        "st_ino": 18533,
+        "st_mode": 33152,
+        "st_uid": 1000,
+        "st_gid": 1000,
+        "st_nlink": 1,
+        "st_size": 10113896,
+        "st_mtime_ns": 1791165418127227005,
+        "st_ctime_ns": 1791165418127227005
+      },
+      "commands": [
+        {
+          "argv": [
+            "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+            "--experimental-vm-modules",
+            "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c6/closed-launcher-c6/owner-loss-controls.mjs"
+          ],
+          "utcStart": "2026-10-05T01:55:11.250707+00:00",
+          "utcEnd": "2026-10-05T01:55:46.837827+00:00",
+          "exitCode": 0
+        }
+      ],
+      "streams": [
+        {
+          "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/runs/88661e45ea5c4c52a4a258eecc29e38c/owner-loss-controls.mjs.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "identity": {
+            "st_dev": 26,
+            "st_ino": 18531,
+            "st_mode": 33152,
+            "st_uid": 1000,
+            "st_gid": 1000,
+            "st_nlink": 1,
+            "st_size": 0,
+            "st_mtime_ns": 1791165347520187016,
+            "st_ctime_ns": 1791165347520187016
+          },
+          "text": ""
+        },
+        {
+          "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/runs/88661e45ea5c4c52a4a258eecc29e38c/owner-loss-controls.mjs.stdout",
+          "bytes": 183,
+          "sha256": "d4bcf397b92bc05056be4e155fa7ba0308fea3c9a105051f84c4d5211004f02d",
+          "identity": {
+            "st_dev": 26,
+            "st_ino": 18530,
+            "st_mode": 33152,
+            "st_uid": 1000,
+            "st_gid": 1000,
+            "st_nlink": 1,
+            "st_size": 183,
+            "st_mtime_ns": 1791165347520187016,
+            "st_ctime_ns": 1791165347520187016
+          },
+          "text": "{\"status\":\"PASS_ACTUAL_OUTER_OWNER_LOSS_FIXED_CHAIN_RAW_GROUP_EMPTY\",\"proof\":\"/dev/shm/cortex-native-c6-closed-launcher-c6/owner-loss-control-P7yz4q/proof.json\",\"original122\":\"HELD\"}\n"
+        }
+      ],
+      "fullLiteralRowsCompared": 148325,
+      "sourceRowsCompared": 5381,
+      "uniqueBeforeByteBackingsDecoded": 3374,
+      "beforeByteBackingRawBytes": 298736810,
+      "assessment": "Focused actual live compiler-service owner-loss command exit0 observed. No whole body in this batch; no full qualification inferred. Recorded cleanup is historical, not a fresh process census."
+    }
+  ],
+  "currentSourceQualification": "NOT_PERFORMED: candidate changed after these batches",
+  "original122": "HELD"
+}

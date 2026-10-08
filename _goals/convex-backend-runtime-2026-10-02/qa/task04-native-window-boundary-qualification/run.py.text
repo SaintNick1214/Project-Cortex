@@ -1,0 +1,10 @@
+from pathlib import Path
+import subprocess,datetime,json,hashlib,os
+root=Path('/workspace/Project-Cortex');w=root/'work/resume/task04-native-window-boundary-qualification';q=root/'_goals/convex-backend-runtime-2026-10-02/qa/task04-native-window-boundary-qualification'
+paths=[w/'probe.mjs',w/'run.py',root/'node_modules/esbuild/package.json',root/'node_modules/convex/package.json']
+def hashes():return {str(p.relative_to(root)):{'sha256':hashlib.sha256(p.read_bytes()).hexdigest(),'bytes':p.stat().st_size} for p in paths}
+start=datetime.datetime.now(datetime.timezone.utc).isoformat();before=hashes();argv=['/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node',str(w/'probe.mjs')]
+p=subprocess.run(argv,cwd=root,env={'PATH':'/workspace/Project-Cortex/work/resume/toolchain-bin:'+os.environ['PATH'],'LANG':'C.UTF-8'},capture_output=True)
+(q/'probe.stdout').write_bytes(p.stdout);(q/'probe.stderr').write_bytes(p.stderr)
+(q/'probe.receipt.json').write_text(json.dumps({'argv':argv,'cwd':str(root),'startedAt':start,'endedAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'exitCode':p.returncode,'sourceConfigBefore':before,'sourceConfigAfter':hashes(),'network':0,'nativeRPC':0},indent=2)+'\n')
+print('exit',p.returncode);print(p.stdout.decode());print(p.stderr.decode())

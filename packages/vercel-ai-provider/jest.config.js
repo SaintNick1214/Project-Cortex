@@ -62,6 +62,14 @@ export default {
     {
       ...baseConfig,
       displayName: "integration",
+      // Keep legacy jest.mock fixtures in CJS while Node loads AI SDK 7's ESM dependency.
+      extensionsToTreatAsEsm: [],
+      transform: {
+        "^.+\\.tsx?$": [
+          "ts-jest",
+          { useESM: false, tsconfig: "tsconfig.test.json" },
+        ],
+      },
       testMatch: ["<rootDir>/tests/integration/**/*.test.ts"],
       testTimeout: 30000,
       testEnvironmentOptions: {

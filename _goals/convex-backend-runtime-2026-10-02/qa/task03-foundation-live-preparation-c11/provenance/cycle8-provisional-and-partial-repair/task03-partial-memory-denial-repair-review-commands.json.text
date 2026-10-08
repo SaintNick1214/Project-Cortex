@@ -1,0 +1,60 @@
+{
+  "cwd": "/workspace/Project-Cortex",
+  "observedAtUtc": "2026-10-03T23:37:49.437371+00:00",
+  "toolchain": {
+    "node": "v24.19.0",
+    "nodePath": "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+    "typescript": "6.0.3",
+    "declaredNpm": "12.2.0",
+    "verifiedNpmCli": "/home/agent/.npm/_npx/1106a35d869e25fb/node_modules/npm/bin/npm-cli.js"
+  },
+  "checks": [
+    {
+      "name": "affected tests",
+      "command": "node --experimental-vm-modules node_modules/jest/bin/jest.js --config work/resume/partial-memory-denial-repair-review/jest.config.mjs --runInBand --json --outputFile=_goals/convex-backend-runtime-2026-10-02/qa/task03-partial-memory-denial-repair-review/tests.json",
+      "configSnapshot": "initial-jest.config.mjs.text",
+      "exitCode": 0,
+      "suites": 6,
+      "passed": 408,
+      "pending": 0,
+      "todo": 0
+    },
+    {
+      "name": "initial scratch probes",
+      "command": "node --experimental-vm-modules node_modules/jest/bin/jest.js --config work/resume/partial-memory-denial-repair-review/probes.config.mjs --runInBand --json --outputFile=_goals/convex-backend-runtime-2026-10-02/qa/task03-partial-memory-denial-repair-review/probes.json",
+      "exitCode": 1,
+      "passed": 10,
+      "failed": 1,
+      "cause": "Reviewer scratch positive expectation incorrectly allowed empty manual source text; production correctly rejected INVALID_INPUT."
+    },
+    {
+      "name": "corrected independent probes",
+      "command": "node --experimental-vm-modules node_modules/jest/bin/jest.js --config work/resume/partial-memory-denial-repair-review/probes.config.mjs --runInBand --json --outputFile=_goals/convex-backend-runtime-2026-10-02/qa/task03-partial-memory-denial-repair-review/probes.json",
+      "exitCode": 0,
+      "suites": 1,
+      "passed": 13,
+      "pending": 0,
+      "todo": 0
+    },
+    {
+      "name": "root typecheck",
+      "command": "node node_modules/typescript/bin/tsc --noEmit",
+      "exitCode": 0
+    },
+    {
+      "name": "lint typecheck",
+      "command": "node node_modules/typescript/bin/tsc --project tsconfig.lint.json --noEmit",
+      "exitCode": 0
+    },
+    {
+      "name": "scoped lint",
+      "command": "node node_modules/eslint/bin/eslint.js convex-dev/memories.ts tests/unit/runtimeEndpointAuth/partialMemoryDenials.test.ts --report-unused-disable-directives",
+      "exitCode": 0
+    }
+  ],
+  "services": 0,
+  "keys": 0,
+  "signatures": 0,
+  "network": 0,
+  "gitCommands": 0
+}

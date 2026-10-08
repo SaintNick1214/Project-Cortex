@@ -1,5 +1,6 @@
 /** Internal administration only. Local attribution proofs; the SDK computes global reachability. */
 import { internalQuery } from "./_generated/server";
+import { assertLegacyDomainScope } from "./lib/operatorBoundary";
 import { ConvexError, v } from "convex/values";
 import type { QueryCtx } from "./_generated/server";
 import type { Id } from "./_generated/dataModel";
@@ -208,7 +209,7 @@ async function logicalParent(
     case "facts":
       rows = await ctx.db
         .query("facts")
-        .withIndex("by_history_scope_fact", (q) =>
+        .withIndex("by_runtime_scope_factId", (q) =>
           q
             .eq("tenantId", tenantId)
             .eq("memorySpaceId", String(space))
@@ -219,7 +220,7 @@ async function logicalParent(
     case "memories":
       rows = await ctx.db
         .query("memories")
-        .withIndex("by_history_scope_memory", (q) =>
+        .withIndex("by_runtime_scope_memoryId", (q) =>
           q
             .eq("tenantId", tenantId)
             .eq("memorySpaceId", String(space))
@@ -303,6 +304,7 @@ export const inspect = internalQuery({
     validateIdentity(args);
     const tenant =
       args.scope.kind === "tenant" ? args.scope.tenantId : undefined;
+    await assertLegacyDomainScope(ctx, tenant);
     const profiles = await ctx.db
       .query("immutable")
       .withIndex("by_tenant_type_id", (q) =>

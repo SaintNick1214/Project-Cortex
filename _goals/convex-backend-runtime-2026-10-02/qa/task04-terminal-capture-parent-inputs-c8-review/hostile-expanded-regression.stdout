@@ -1,0 +1,347 @@
+{
+  "profile": "regression",
+  "observations": [
+    {
+      "change": {
+        "expireWithinExclusive": 1
+      },
+      "diagnostic": "PARENT_TOTAL_TIME_BUDGET",
+      "stats": {
+        "preflightCalls": 2,
+        "signatures": 8,
+        "network": 0,
+        "keyReads": 1,
+        "randomCalls": 0,
+        "writes": [
+          "initial-physical-id-provenance.json"
+        ],
+        "stdout": ""
+      },
+      "effects": {
+        "status": "FAIL",
+        "signatures": 8,
+        "peerSecrets": 0,
+        "configurationCalls": 0,
+        "privateOutputs": [
+          "initial-physical-id-provenance.json"
+        ]
+      },
+      "retainedBytes": 5129,
+      "retainedMode": 384,
+      "VIOLATION": "private file created after fixed parent deadline expired within exact exclusive canonical scanner",
+      "realSigning": 0,
+      "realNetwork": 0,
+      "realPrivateReads": 0
+    },
+    {
+      "change": {
+        "failFsync": 1
+      },
+      "diagnostic": "DUMMY_FSYNC_FAILURE",
+      "stats": {
+        "preflightCalls": 2,
+        "signatures": 8,
+        "network": 0,
+        "keyReads": 1,
+        "randomCalls": 0,
+        "writes": [
+          "initial-physical-id-provenance.json"
+        ],
+        "stdout": ""
+      },
+      "effects": {
+        "status": "FAIL",
+        "signatures": 8,
+        "peerSecrets": 0,
+        "configurationCalls": 0,
+        "privateOutputs": []
+      },
+      "retainedBytes": 5129,
+      "retainedMode": 384,
+      "VIOLATION": "successfully written private file absent from retained effect names",
+      "realSigning": 0,
+      "realNetwork": 0,
+      "realPrivateReads": 0
+    },
+    {
+      "change": {
+        "expireWithinExclusive": 2
+      },
+      "diagnostic": "PARENT_TOTAL_TIME_BUDGET",
+      "stats": {
+        "preflightCalls": 2,
+        "signatures": 8,
+        "network": 0,
+        "keyReads": 1,
+        "randomCalls": 0,
+        "writes": [
+          "initial-physical-id-provenance.json",
+          "historical-native-locators.json"
+        ],
+        "stdout": ""
+      },
+      "effects": {
+        "status": "FAIL",
+        "signatures": 8,
+        "peerSecrets": 0,
+        "configurationCalls": 0,
+        "privateOutputs": [
+          "initial-physical-id-provenance.json",
+          "historical-native-locators.json"
+        ]
+      },
+      "retainedBytes": 648,
+      "retainedMode": 384,
+      "VIOLATION": "private file created after fixed parent deadline expired within exact exclusive canonical scanner",
+      "realSigning": 0,
+      "realNetwork": 0,
+      "realPrivateReads": 0
+    },
+    {
+      "change": {
+        "failFsync": 2
+      },
+      "diagnostic": "DUMMY_FSYNC_FAILURE",
+      "stats": {
+        "preflightCalls": 2,
+        "signatures": 8,
+        "network": 0,
+        "keyReads": 1,
+        "randomCalls": 0,
+        "writes": [
+          "initial-physical-id-provenance.json",
+          "historical-native-locators.json"
+        ],
+        "stdout": ""
+      },
+      "effects": {
+        "status": "FAIL",
+        "signatures": 8,
+        "peerSecrets": 0,
+        "configurationCalls": 0,
+        "privateOutputs": [
+          "initial-physical-id-provenance.json"
+        ]
+      },
+      "retainedBytes": 648,
+      "retainedMode": 384,
+      "VIOLATION": "successfully written private file absent from retained effect names",
+      "realSigning": 0,
+      "realNetwork": 0,
+      "realPrivateReads": 0
+    },
+    {
+      "change": {
+        "expireWithinExclusive": 3
+      },
+      "diagnostic": "PARENT_TOTAL_TIME_BUDGET",
+      "stats": {
+        "preflightCalls": 2,
+        "signatures": 8,
+        "network": 0,
+        "keyReads": 1,
+        "randomCalls": 0,
+        "writes": [
+          "initial-physical-id-provenance.json",
+          "historical-native-locators.json",
+          "identities.json"
+        ],
+        "stdout": ""
+      },
+      "effects": {
+        "status": "FAIL",
+        "signatures": 8,
+        "peerSecrets": 0,
+        "configurationCalls": 0,
+        "privateOutputs": [
+          "initial-physical-id-provenance.json",
+          "historical-native-locators.json",
+          "identities.json"
+        ]
+      },
+      "retainedBytes": 3222,
+      "retainedMode": 384,
+      "VIOLATION": "private file created after fixed parent deadline expired within exact exclusive canonical scanner",
+      "realSigning": 0,
+      "realNetwork": 0,
+      "realPrivateReads": 0
+    },
+    {
+      "change": {
+        "failFsync": 3
+      },
+      "diagnostic": "DUMMY_FSYNC_FAILURE",
+      "stats": {
+        "preflightCalls": 2,
+        "signatures": 8,
+        "network": 0,
+        "keyReads": 1,
+        "randomCalls": 0,
+        "writes": [
+          "initial-physical-id-provenance.json",
+          "historical-native-locators.json",
+          "identities.json"
+        ],
+        "stdout": ""
+      },
+      "effects": {
+        "status": "FAIL",
+        "signatures": 8,
+        "peerSecrets": 0,
+        "configurationCalls": 0,
+        "privateOutputs": [
+          "initial-physical-id-provenance.json",
+          "historical-native-locators.json"
+        ]
+      },
+      "retainedBytes": 3222,
+      "retainedMode": 384,
+      "VIOLATION": "successfully written private file absent from retained effect names",
+      "realSigning": 0,
+      "realNetwork": 0,
+      "realPrivateReads": 0
+    },
+    {
+      "change": {
+        "expireWithinExclusive": 4
+      },
+      "diagnostic": "PARENT_TOTAL_TIME_BUDGET",
+      "stats": {
+        "preflightCalls": 3,
+        "signatures": 8,
+        "network": 0,
+        "keyReads": 1,
+        "randomCalls": 1,
+        "writes": [
+          "initial-physical-id-provenance.json",
+          "historical-native-locators.json",
+          "identities.json",
+          "peer-config.json"
+        ],
+        "stdout": ""
+      },
+      "effects": {
+        "status": "FAIL",
+        "signatures": 8,
+        "peerSecrets": 1,
+        "configurationCalls": 0,
+        "privateOutputs": [
+          "initial-physical-id-provenance.json",
+          "historical-native-locators.json",
+          "identities.json",
+          "peer-config.json"
+        ]
+      },
+      "retainedBytes": 142,
+      "retainedMode": 384,
+      "VIOLATION": "private file created after fixed parent deadline expired within exact exclusive canonical scanner",
+      "realSigning": 0,
+      "realNetwork": 0,
+      "realPrivateReads": 0
+    },
+    {
+      "change": {
+        "failFsync": 4
+      },
+      "diagnostic": "DUMMY_FSYNC_FAILURE",
+      "stats": {
+        "preflightCalls": 2,
+        "signatures": 8,
+        "network": 0,
+        "keyReads": 1,
+        "randomCalls": 1,
+        "writes": [
+          "initial-physical-id-provenance.json",
+          "historical-native-locators.json",
+          "identities.json",
+          "peer-config.json"
+        ],
+        "stdout": ""
+      },
+      "effects": {
+        "status": "FAIL",
+        "signatures": 8,
+        "peerSecrets": 1,
+        "configurationCalls": 0,
+        "privateOutputs": [
+          "initial-physical-id-provenance.json",
+          "historical-native-locators.json",
+          "identities.json"
+        ]
+      },
+      "retainedBytes": 142,
+      "retainedMode": 384,
+      "VIOLATION": "successfully written private file absent from retained effect names",
+      "realSigning": 0,
+      "realNetwork": 0,
+      "realPrivateReads": 0
+    },
+    {
+      "change": {
+        "expireWithinExclusive": 5
+      },
+      "diagnostic": "RETURNED_PASS",
+      "stats": {
+        "preflightCalls": 4,
+        "signatures": 8,
+        "network": 1,
+        "keyReads": 1,
+        "randomCalls": 1,
+        "writes": [
+          "initial-physical-id-provenance.json",
+          "historical-native-locators.json",
+          "identities.json",
+          "peer-config.json",
+          "parent-inputs-receipt.json"
+        ],
+        "stdout": "{\"status\":\"PASS\",\"keysCreated\":0,\"signatures\":8,\"storageCreated\":0,\"configurationCalls\":1,\"currentTargetDecoder\":\"NOT_RUN\",\"currentCoreOwnership\":\"PENDING\"}\n"
+      },
+      "effects": null,
+      "retainedBytes": 701,
+      "retainedMode": 384,
+      "VIOLATION": "final receipt created after deadline and PASS printed",
+      "realSigning": 0,
+      "realNetwork": 0,
+      "realPrivateReads": 0
+    },
+    {
+      "change": {
+        "failFsync": 5
+      },
+      "diagnostic": "DUMMY_FSYNC_FAILURE",
+      "stats": {
+        "preflightCalls": 4,
+        "signatures": 8,
+        "network": 1,
+        "keyReads": 1,
+        "randomCalls": 1,
+        "writes": [
+          "initial-physical-id-provenance.json",
+          "historical-native-locators.json",
+          "identities.json",
+          "peer-config.json",
+          "parent-inputs-receipt.json"
+        ],
+        "stdout": ""
+      },
+      "effects": {
+        "status": "FAIL",
+        "signatures": 8,
+        "peerSecrets": 1,
+        "configurationCalls": 1,
+        "privateOutputs": [
+          "initial-physical-id-provenance.json",
+          "historical-native-locators.json",
+          "identities.json",
+          "peer-config.json"
+        ]
+      },
+      "retainedBytes": 701,
+      "retainedMode": 384,
+      "VIOLATION": "successfully written private file absent from retained effect names",
+      "realSigning": 0,
+      "realNetwork": 0,
+      "realPrivateReads": 0
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+/tmp/task03b2c1-review2-3it_0vsh/write-error-output-controls.mts:8
+ if(scenario==="resource-read-owner-denied")assert.equal(readError?.code,"FORBIDDEN");else assert.equal(readOutput.streamingMetadata.sessionId,"private-owner-stream-session");
+                                                                                                                   ^
+
+TypeError: Cannot read properties of undefined (reading 'streamingMetadata')
+    at <anonymous> (/tmp/task03b2c1-review2-3it_0vsh/write-error-output-controls.mts:8:116)
+
+Node.js v24.19.0

@@ -1,0 +1,33 @@
+import assert from 'node:assert/strict';
+import {readFileSync,writeFileSync,mkdirSync} from 'node:fs';
+import {execFileSync} from 'node:child_process';
+import {resolve,join} from 'node:path';
+import {pathToFileURL} from 'node:url';
+import {createRequire} from 'node:module';
+import vm from 'node:vm';
+import {build} from 'esbuild';
+let networkSends=0,judgeSockets=[];globalThis.fetch=async()=>{networkSends++;throw Error('network disabled by judge')};globalThis.WebSocket=class {static CONNECTING=0;static OPEN=1;static CLOSING=2;static CLOSED=3;readyState=0;constructor(){judgeSockets.push(this)}addEventListener(){}removeEventListener(){}send(){networkSends++;throw Error('network disabled by judge')}close(){this.readyState=3;queueMicrotask(()=>this.onclose?.({code:1000,reason:"judge offline close"}))}};
+const root='/workspace/Project-Cortex', scratch=resolve(root,'work/resume/sdk-bridge-review'), target=join(scratch,'packed');
+mkdirSync(target,{recursive:true});
+const npm='/home/agent/.npm/_npx/1106a35d869e25fb/node_modules/npm/bin/npm-cli.js';
+const packResult=JSON.parse(execFileSync('node',[npm,'pack','--workspaces=false','--ignore-scripts','--json','--pack-destination',target],{cwd:root,encoding:'utf8'}));
+const packed=Array.isArray(packResult)?packResult[0]:packResult['@cortexmemory/sdk'];
+const destination=join(target,'node_modules/@cortexmemory/sdk');mkdirSync(destination,{recursive:true});
+execFileSync('tar',['-xzf',join(target,packed.filename),'--strip-components=1','-C',destination]);
+const entry=join(destination,'dist/index.js');
+for(const sdk of [await import(pathToFileURL(entry)),createRequire(join(target,'consumer.cjs'))('@cortexmemory/sdk')]){
+ for(const [name,code] of [['AgentRegistryWriteReceiptError','AGENT_REGISTRY_WRITE_COMMITTED_READ_UNAVAILABLE'],['AgentRegistryCommittedResultError','AGENT_REGISTRY_COMMITTED_RESULT_UNAVAILABLE'],['AgentRegistryCapabilityError','TRUSTED_BACKEND_CASCADE_REQUIRED']])assert.equal(typeof sdk[name],'function');
+ const receipt={accepted:true,resourceType:'agents',resourceId:'actual-server-id',name:'must-not-leak'};
+ const err=new sdk.AgentRegistryWriteReceiptError(receipt);assert.equal(err.code,'AGENT_REGISTRY_WRITE_COMMITTED_READ_UNAVAILABLE');assert.equal(err.retryable,false);assert.equal(err.outcome,'committed');assert.deepEqual(Object.keys(err.receipt).sort(),['accepted','resourceId','resourceType']);assert.equal(err.receipt.resourceId,'actual-server-id');assert(Object.isFrozen(err.receipt));receipt.resourceId='mutated';assert.equal(err.receipt.resourceId,'actual-server-id');
+ const cortex=new sdk.Cortex({convexUrl:'https://example.convex.cloud',auth:{userId:'host-user',tenantId:'tenant-a'},resilience:{enabled:false}});
+ let called=0,requests=[];cortex.client.mutation=async(ref,args)=>{called++;requests.push(args);return {accepted:true,resourceType:'agents',resourceId:'server-id'}};cortex.client.query=async()=>{throw Error('forbidden hydration')};
+ await assert.rejects(cortex.agents.register({id:'agent',name:'requested',memorySpaceId:'space-a'}),sdk.AgentRegistryWriteReceiptError);assert.equal(called,1);assert.equal(requests[0].tenantId,'tenant-a');assert.equal(requests[0].memorySpaceId,'space-a');await assert.rejects(cortex.agents.update('agent',{name:'new',memorySpaceId:'space-a'}),sdk.AgentRegistryWriteReceiptError);assert.equal(called,2);await assert.rejects(cortex.agents.register({id:'agent',name:'requested',tenantId:'tenant-b'}),{code:'TENANT_SCOPE_MISMATCH'});assert.equal(called,2);
+ await assert.rejects(cortex.agents.unregister('agent',{cascade:true}),sdk.AgentRegistryCapabilityError);assert.equal(called,2);const shuttingDown=cortex.shutdown();setTimeout(()=>judgeSockets.forEach(ws=>ws.onclose?.({code:1000,reason:'judge offline close'})),0);await shuttingDown;
+}
+writeFileSync(join(target,'consumer.mts'),`import {Cortex,AgentRegistryWriteReceiptError,AgentRegistryCommittedResultError,AgentRegistryCapabilityError,type AgentRegistryScope,type AgentRegistryWriteReceipt} from '@cortexmemory/sdk';
+const scope:AgentRegistryScope={tenantId:'t',memorySpaceId:'s'}; const receipt:AgentRegistryWriteReceipt={accepted:true,resourceType:'agents',resourceId:'a'};const error=new AgentRegistryWriteReceiptError(receipt);const flag:false=error.retryable; const state:'committed'=error.outcome;declare const c:Cortex;void c.agents.get('a',scope);void c.agents.exists('a',scope);void c.agents.configure('a',{},scope);void c.agents.register({id:'a',name:'a',...scope});void c.agents.unregister('a',scope);void new AgentRegistryCommittedResultError(2);void new AgentRegistryCapabilityError();void flag;void state;`);
+execFileSync(resolve(root,'node_modules/.bin/tsc'),['--ignoreConfig','--noEmit','--strict','--skipLibCheck','--module','NodeNext','--moduleResolution','NodeNext','--target','ES2022',join(target,'consumer.mts')],{cwd:root,stdio:'inherit'});
+const bundled=await build({entryPoints:[entry],platform:'browser',bundle:true,format:'iife',globalName:'CortexSDK',write:false});const sandbox={crypto:globalThis.crypto,TextEncoder,TextDecoder,URL,URLSearchParams,Headers,Response,Request,fetch,WebSocket:globalThis.WebSocket,setTimeout,clearTimeout,setInterval,clearInterval,console};
+const context=vm.createContext(sandbox);vm.runInContext(bundled.outputFiles[0].text,context);vm.runInContext(`if(typeof process!=='undefined'||typeof require!=='undefined')throw Error('Node globals');const e=new CortexSDK.AgentRegistryWriteReceiptError({accepted:true,resourceType:'agents',resourceId:'browser-id'});if(e.retryable!==false||e.receipt.resourceId!=='browser-id'||!Object.isFrozen(e.receipt))throw Error('browser error contract');`,context);
+assert.equal(networkSends,0);
+console.log('PASS packed ESM/CJS facade receipt and cascade behavior, exact immutable receipts, browser-safe exports, consumer declaration selectors.');

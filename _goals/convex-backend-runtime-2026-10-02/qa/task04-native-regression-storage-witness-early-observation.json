@@ -1,0 +1,14 @@
+{
+  "utc": "2026-10-04T08:46:12.452379+00:00",
+  "argv": [
+    "python3",
+    "work/resume/task04-capture-storage-witnesses.py",
+    "regression"
+  ],
+  "cwd": "/workspace/Project-Cortex",
+  "exitCode": 1,
+  "stderr": "AssertionError: Both original storage handler observations required",
+  "classification": "Coordinator observation attempted before both public callers had completed; no output written, no RPC or subject change; wait for new native observations then exact same assertions",
+  "sourceSHA256": "0dce5ad7c2975fac8819a2c059a264d0e400f3506c419a97502d6ebb56c0a38a",
+  "extraRPC": 0
+}

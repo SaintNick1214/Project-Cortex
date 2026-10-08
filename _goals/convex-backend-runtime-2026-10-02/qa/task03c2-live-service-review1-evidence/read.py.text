@@ -1,0 +1,6 @@
+from pathlib import Path
+import sys
+p=Path('/workspace/Project-Cortex');r=Path(__file__).parent
+for name in sys.argv[1:]:
+ f=p/name;dest=r/'source-context'/name;dest.parent.mkdir(parents=True,exist_ok=True);dest.write_bytes(f.read_bytes())
+ print('\nFILE '+name+'\n'+f.read_text())

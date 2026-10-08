@@ -1,5 +1,5 @@
 /** Actual Convex registrations: scope arguments must never make raw admin public. */
-import * as admin from "../../convex-dev/admin";
+import * as admin from "../../convex-dev/cliOperator/admin";
 import { spawnSync } from "node:child_process";
 import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";

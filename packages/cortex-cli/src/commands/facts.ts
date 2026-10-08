@@ -153,6 +153,7 @@ async function writePrivateExport(
       throw new AggregateError(
         errors,
         "Export failed and staging cleanup reported an error",
+        { cause: error },
       );
     throw error;
   }

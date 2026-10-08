@@ -1,0 +1,34 @@
+--- immutable-c5/auth-classifier-check.mjs
++++ new-c6/auth-classifier-check.mjs
+@@ -11,4 +11,30 @@
+ assert.equal(rememberPlatformWire(200,wire),false);assert.equal(rememberPlatformWire(401,JSON.stringify({code:'BadRequest',message:'InvalidAuth'})),false);
+ for(const data of ['DENIED','PERMISSION_DENIED',{code:'DENIED'},{code:'INVALID_INPUT'},{code:'CAPABILITY_NOT_READY'}]){const error=new Error('unsupported');error.data=data;assert.throws(()=>authDenial(undefined,error));}
+ const opaque=new Error('fixed opaque failure');opaque.data={version:1,code:'INTERNAL_FAILURE',message:'Memory control failed.',retryable:false,outcome:'not_dispatched'};assert.equal(opaqueInternalFailure(opaque),true);assert.throws(()=>authDenial(undefined,opaque));for(const patch of [{message:'private diagnostic'},{private:'secret'},{outcome:'unknown'},{code:'FORBIDDEN'}]){const malformed=new Error('unsupported');malformed.data={...opaque.data,...patch};assert.equal(opaqueInternalFailure(malformed),false);assert.throws(()=>authDenial(undefined,malformed));}
+-console.log(JSON.stringify({scope:'OFFLINE_AUTH_CLASSIFIER',status:'PASS',negativeControls:20+malformed,arbitraryDeniedAccepted:false,privateDiagnosticAccepted:false,opaqueFailureIsAuthDenial:false,dispatches:0,signatures:0}));
++let legacyStatusPositives=0;for(const code of ['InvalidAuth','Unauthenticated'])for(const status of [400,401,403]){const body=JSON.stringify({code,message:'Synthetic legacy '+code+' '+status});assert.equal(rememberPlatformWire(status,body),true);authDenial(undefined,new Error(body));legacyStatusPositives++;}
++let headerNegatives=0;
++const headerBody=JSON.stringify({code:'InvalidAuthHeader',message:'Synthetic header rejection'});
++assert.throws(()=>authDenial(undefined,new Error(headerBody)));headerNegatives++;
++assert.equal(rememberPlatformWire(401,headerBody),true);authDenial(undefined,new Error(headerBody));
++for(const status of [0,200,400,403,404,500,560]){const body=JSON.stringify({code:'InvalidAuthHeader',message:'Synthetic wrong status '+status});assert.equal(rememberPlatformWire(status,body),false);assert.throws(()=>authDenial(undefined,new Error(body)));headerNegatives++;}
++for(const value of [
++ {code:'InvalidAuthHeader',message:'Synthetic extra',private:'extra'},
++ {code:'InvalidAuthHeader'}, {message:'Synthetic missing code'},
++ {code:'InvalidAuthHeader',message:3}, {code:'InvalidAuthHeader',message:null},
++ {code:'UnknownHeader',message:'Synthetic unknown code'},
++ {code:3,message:'Synthetic code type'},
++ {code:'InvalidAuthHeader',message:'ArgumentValidationError synthetic'},
++ {code:'InvalidAuthHeader',message:'Could not find public function synthetic'},
++ {code:'InvalidAuthHeader',message:'Server Error synthetic'},
++ {code:'InvalidAuthHeader',message:'Uncaught synthetic'},
++]){const body=JSON.stringify(value);assert.equal(rememberPlatformWire(401,body),false);assert.throws(()=>authDenial(undefined,new Error(body)));headerNegatives++;}
++for(const text of ['InvalidAuthHeader','Synthetic arbitrary InvalidAuthHeader diagnostic','[CONVEX Q(a2a:send)] Server Error '+headerBody,headerBody+' extra']){assert.throws(()=>authDenial(undefined,new Error(text)));headerNegatives++;}
++const fakeNative=new Error('Synthetic backend diagnostic');fakeNative.data={code:'InvalidAuthHeader',message:'Synthetic header rejection'};assert.throws(()=>authDenial(undefined,fakeNative));headerNegatives++;
++const collisionBody=JSON.stringify({code:'InvalidAuthHeader',message:'Synthetic current response collision'});
++assert.equal(rememberPlatformWire(401,collisionBody),true);authDenial(undefined,new Error(collisionBody));
++assert.equal(rememberPlatformWire(560,collisionBody),false);assert.throws(()=>authDenial(undefined,new Error(collisionBody)));headerNegatives++;
++assert.throws(()=>authDenial(undefined,new Error(collisionBody)));headerNegatives++;
++assert.equal(rememberPlatformWire(401,collisionBody),true);authDenial(undefined,new Error(collisionBody));
++assert.equal(rememberPlatformWire(403,collisionBody),false);assert.throws(()=>authDenial(undefined,new Error(collisionBody)));headerNegatives++;
++assert.equal(rememberPlatformWire(401,collisionBody),true);authDenial(undefined,new Error(collisionBody));
++console.log(JSON.stringify({scope:'OFFLINE_AUTH_CLASSIFIER',status:'PASS',originalNegativeControls:20+malformed,observedHeaderNegativeControls:headerNegatives,negativeControls:20+malformed+headerNegatives,observedHeaderPositiveControls:4,legacyStatusPositiveControls:legacyStatusPositives,current401Then560CollisionRejected:true,staleWireRejected:true,fresh401Recovery:true,arbitraryDeniedAccepted:false,privateDiagnosticAccepted:false,opaqueFailureIsAuthDenial:false,dispatches:0,signatures:0}));

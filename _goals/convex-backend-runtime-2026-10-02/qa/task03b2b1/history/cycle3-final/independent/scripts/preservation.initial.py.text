@@ -1,0 +1,89 @@
+from judge import *
+import re,collections,shutil
+allresults={}
+def capture(label,path):
+ r=record(path);r['path']=str(path);allresults[label]=r
+ dst=OUT/'context'/label.replace('/','--')
+ shutil.copyfile(path,dst)
+ return r
+
+for n in ['history/cycle1/preservation-manifest.json','history/cycle2-final/preservation-manifest.json']:
+ d=json.loads((Q/n).read_text())
+ allresults[n]=verify(n.split('/')[1]+'-archive',C,{r['file']:r for r in d['records']})
+ capture(n,Q/n)
+for n in ['history/cycle1/independent/manifest.original.json','history/cycle2-final/independent/manifest.original.json']:
+ d=json.loads((Q/n).read_text())
+ allresults[n]=verify(n.split('/')[1]+'-original-independent',pathlib.Path(d['root']),d['files'])
+ capture(n,Q/n)
+# Verify the old frozen corpus except explicitly admitted helper/core corrections.
+old=json.loads((Q/'source-freeze.json').read_text())
+unchanged={k:v for k,v in old['sourceHashes'].items() if k not in ['convex-dev/runtimeRegistryAuth.ts','convex-dev/runtimeAuth.ts']}
+allresults['old35']=verify('old35-identical',C,unchanged)
+# READY1110 copied source records live at context/source mirrors; immutable raw stayed original.
+ready=Q/'cycle3/provenance/ready1110-before-read-context-fix'
+d=json.loads((ready/'preservation-manifest.json').read_text())
+print('READY layout', list(d),len(d['sourceRecords']),len(d['readyRawRecords']))
+for kind in ['sourceRecords','readyRawRecords']:
+ recs=d[kind];resolved={}
+ for r in recs:
+  src=pathlib.Path(r['file'])
+  if kind=='readyRawRecords':dest=C/src
+  else:
+   matches=[p for p in ready.rglob('*') if p.is_file() and record(p)=={'sha256':r['sha256'],'bytes':r['bytes']}]
+   # Most unchanged records are certified in their original location; altered helper/core use mirror.
+   dest=C/src
+   if not dest.is_file() or record(dest)!={'sha256':r['sha256'],'bytes':r['bytes']}:
+    assert matches,src
+    dest=matches[0]
+  resolved[str(dest)]=r
+ allresults[kind]=verify('READY1110-'+kind,pathlib.Path('/'),resolved)
+# Reproduce additive patch as bytes, not only a count.
+p=run('schema-diff',['git','diff','--','convex-dev/schema.ts'])
+assert p.stdout==(Q/'schema-additive.patch').read_bytes()
+allresults['schemaPatch']={'exact':True,'additions':sum(x.startswith(b'+') and not x.startswith(b'+++') for x in p.stdout.splitlines()),'deletions':sum(x.startswith(b'-') and not x.startswith(b'---') for x in p.stdout.splitlines())}
+# Exact accepted dependencies at reviewed commit.
+for name in ['convex-dev/runtimeAuth.ts','tests/unit/runtimeAuth/provisioning.test.ts']:
+ p=run('accepted-'+pathlib.Path(name).name,['git','show','022e2e3d61161766e90e91dd572bb9b7063d5957:'+name],ROOT)
+ assert p.returncode==0 and p.stdout==(C/name).read_bytes()
+ allresults['accepted-'+name]={'matchesCommit':True,**record(C/name)}
+# Ordered source test outcomes per suite retain duplicate fullNames; no set de-duplication.
+def outcomes(p):
+ d=json.loads(p.read_text());return {pathlib.Path(t['name']).name:[a['fullName'] for a in t['assertionResults']] for t in d['testResults']}
+fresh=outcomes(OUT/'registry-tests.json')
+for n in ['history/cycle1/qa/checks/tests-final.json','checks/tests-final.json','cycle3/continuation/current-base-rerun/checks/tests.json','cycle3/continuation/call-context-rerun/checks/tests.json']:
+ prior=outcomes(Q/n);assert all(v==fresh[k] for k,v in prior.items())
+ allresults[n]={'orderedNamesAndMultiplicityIdentical':True,'count':sum(map(len,prior.values())),'suites':len(prior)}
+core=outcomes(OUT/'core-tests.json')
+legacy=Q/'cycle3/core-replay/legacy-fixture'
+js=list(legacy.glob('*.json'))
+for p in js:
+ d=json.loads(p.read_text())
+ if 'testResults' in d:
+  names=outcomes(p);assert all(v==core[k] for k,v in names.items())
+  assert d['numTotalTests']==133 and d['numPassedTests']==120 and d['numFailedTests']==13
+  failed=[a for t in d['testResults'] for a in t['assertionResults'] if a['status']=='failed']
+  assert len(failed)==13 and all('query.take is not a function' in str(a['failureMessages']) for a in failed)
+  allresults['literalLegacyCore']={'total':133,'pass':120,'fail':13,'sameOrderedNames':True,'allMissingTake':True,'path':str(p)}
+# Byte preservation of all original five registry source/test files.
+for p in (Q/'history/cycle2-final/candidate/source/tests/unit/runtimeRegistryAuth').glob('*.text'):
+ actual=C/'tests/unit/runtimeRegistryAuth'/p.name.removesuffix('.text')
+ assert actual.read_bytes()==p.read_bytes()
+# Source context required by full original review; native dependencies are in source freeze.
+sources=['AGENTS.md','.agents/CODEX-RUNTIME.md','.agents/PROJECT-PROFILE.md','.agents/roles/pessimistic-judge.md','.agents/skills/judge-task/SKILL.md','.agents/skills/feature-orchestrator/SKILL.md','_research/convex-ai-gateway-2026-10-02/decision-gates.md','_research/convex-ai-gateway-2026-10-02/architecture.md','_goals/convex-backend-runtime-2026-10-02/implementation-prompt.md','_goals/convex-backend-runtime-2026-10-02/goal.md','_goals/convex-backend-runtime-2026-10-02/tasks/03-authorization.md','_goals/convex-backend-runtime-2026-10-02/qa/task03a/contracts.md']
+for path in sources:
+ p=ROOT/path
+ capture('required--'+path.replace('/','--'),p)
+for p in [Q/'report.md',Q/'contracts.md',Q/'requirements-mapping.md',Q/'codec-dependency.json',Q/'history/cycle1/independent/judgment.md',Q/'history/cycle2-final/independent/judgment.md']:
+ capture('candidate--'+str(p.relative_to(Q)).replace('/','--'),p)
+for name in json.loads((Q/'cycle3/source-freeze.json').read_text())['sourceRecords']:
+ capture('source--'+name.replace('/','--'),C/name)
+# All executor artifact paths carry exact source/count bindings; no old35 all36 claim.
+cat=json.loads((OUT/'catalog/selected-path-inventory.json').read_text())
+assert cat==json.loads((Q/'cycle3/catalog/selected-path-inventory.json').read_text())
+allresults['catalog']={'exact':True,**cat['counts']}
+for name in ['root-types','root-lint-types']:
+ s=(OUT/'raw'/f'{name}.stdout').read_text();r=collections.Counter(re.findall(r'^(.*)\(\d+,\d+\): error',s,re.M))
+ allresults[name]={'count':sum(r.values()),'byFile':dict(r)}
+ assert dict(r)==({'src/agents/index.ts':26,'tests/helpers/cleanup.ts':2,'src/governance/index.ts':1} if name=='root-types' else {'src/agents/index.ts':26,'src/governance/index.ts':1})
+(OUT/'raw/preservation-checks.json').write_text(json.dumps(allresults,indent=2)+'\n')
+print('PRESERVATION COMPLETE')

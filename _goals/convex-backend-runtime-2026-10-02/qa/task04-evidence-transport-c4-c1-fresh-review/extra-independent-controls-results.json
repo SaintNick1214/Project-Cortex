@@ -1,0 +1,54 @@
+{
+  "status": "PASS",
+  "controls": [
+    {
+      "name": "actual-production-map-max-plus-one-bounded-gzip",
+      "expected": "reject",
+      "actual": "reject",
+      "error": "decoded ceiling exceeded"
+    },
+    {
+      "name": "actual-production-object-max-plus-one-before-read",
+      "expected": "reject",
+      "actual": "reject",
+      "error": "read trusted bound"
+    },
+    {
+      "name": "empty-gzip-zero-ceiling",
+      "expected": "pass",
+      "actual": "pass"
+    },
+    {
+      "name": "gzip-every-encoded-byte-separate-boundary",
+      "expected": "pass",
+      "actual": "pass"
+    },
+    {
+      "name": "bool-is-not-decoded-bound",
+      "expected": "reject",
+      "actual": "reject",
+      "error": "decoded cap"
+    },
+    {
+      "name": "directory0750-no-first-chmod-no-missing-root-mkdir",
+      "expected": "reject",
+      "actual": "reject",
+      "error": "directory owner/type/current-mode mismatch"
+    },
+    {
+      "name": "complete62205directory-idempotence-real-FDlimit64",
+      "expected": "pass",
+      "actual": "pass",
+      "resultCounts": {
+        "changed": 0,
+        "created": 0,
+        "directoriesVerified": 62205
+      }
+    }
+  ],
+  "total": 7,
+  "actualProductionMapCap": 48104635,
+  "bombEncodedBytes": 46786,
+  "actualObjectCap": 49217478,
+  "allFixturesOwned": "/tmp/cortex-evidence-transport-c4-c1-fresh-review/independent-controls"
+}

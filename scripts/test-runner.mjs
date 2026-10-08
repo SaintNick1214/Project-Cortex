@@ -26,7 +26,9 @@ config({ path: resolve(projectRoot, ".env.local"), override: true });
 
 const testMode = process.env.CONVEX_TEST_MODE || "auto";
 const hasLocalConfig = Boolean(
-  process.env.LOCAL_CONVEX_URL || process.env.LOCAL_CONVEX_DEPLOYMENT,
+  process.env.LOCAL_CONVEX_URL || process.env.LOCAL_CONVEX_DEPLOYMENT ||
+    process.env.CONVEX_URL?.includes("localhost") ||
+    process.env.CONVEX_URL?.includes("127.0.0.1"),
 );
 const hasManagedConfig = Boolean(
   process.env.CLOUD_CONVEX_URL ||

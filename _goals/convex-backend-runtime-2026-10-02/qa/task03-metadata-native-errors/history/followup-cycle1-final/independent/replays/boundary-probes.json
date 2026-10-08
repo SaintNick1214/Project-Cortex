@@ -1,0 +1,1036 @@
+[
+  {
+    "name": "immutable.store existing late read-expiry",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}",
+    "writes": 0,
+    "attempts": 1
+  },
+  {
+    "name": "immutable.store existing late read-revocation",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}",
+    "writes": 0,
+    "attempts": 1
+  },
+  {
+    "name": "immutable.store existing late write-expiry",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}",
+    "writes": 0,
+    "attempts": 1
+  },
+  {
+    "name": "immutable.store existing late write-revocation",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}",
+    "writes": 0,
+    "attempts": 1
+  },
+  {
+    "name": "immutable.store new late read-expiry",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}",
+    "writes": 0,
+    "attempts": 1
+  },
+  {
+    "name": "immutable.store new late read-revocation",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}",
+    "writes": 0,
+    "attempts": 1
+  },
+  {
+    "name": "immutable.store new late write-expiry",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}",
+    "writes": 0,
+    "attempts": 1
+  },
+  {
+    "name": "immutable.store new late write-revocation",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}",
+    "writes": 0,
+    "attempts": 1
+  },
+  {
+    "name": "immutable.purge late read-expiry",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}",
+    "writes": 0,
+    "attempts": 2
+  },
+  {
+    "name": "immutable.purge late read-revocation",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}",
+    "writes": 0,
+    "attempts": 2
+  },
+  {
+    "name": "immutable.purge late write-expiry",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}",
+    "writes": 0,
+    "attempts": 2
+  },
+  {
+    "name": "immutable.purge late write-revocation",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}",
+    "writes": 0,
+    "attempts": 2
+  },
+  {
+    "name": "immutable.purgeMany late read-expiry",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}",
+    "writes": 0,
+    "attempts": 2
+  },
+  {
+    "name": "immutable.purgeMany late read-revocation",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}",
+    "writes": 0,
+    "attempts": 2
+  },
+  {
+    "name": "immutable.purgeMany late write-expiry",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}",
+    "writes": 0,
+    "attempts": 2
+  },
+  {
+    "name": "immutable.purgeMany late write-revocation",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}",
+    "writes": 0,
+    "attempts": 2
+  },
+  {
+    "name": "immutable.purgeVersions late read-expiry",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}",
+    "writes": 0,
+    "attempts": 1
+  },
+  {
+    "name": "immutable.purgeVersions late read-revocation",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}",
+    "writes": 0,
+    "attempts": 1
+  },
+  {
+    "name": "immutable.purgeVersions late write-expiry",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}",
+    "writes": 0,
+    "attempts": 1
+  },
+  {
+    "name": "immutable.purgeVersions late write-revocation",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}",
+    "writes": 0,
+    "attempts": 1
+  },
+  {
+    "name": "mutable.set existing late read-expiry",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}",
+    "writes": 0,
+    "attempts": 1
+  },
+  {
+    "name": "mutable.set existing late read-revocation",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}",
+    "writes": 0,
+    "attempts": 1
+  },
+  {
+    "name": "mutable.set existing late write-expiry",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}",
+    "writes": 0,
+    "attempts": 1
+  },
+  {
+    "name": "mutable.set existing late write-revocation",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}",
+    "writes": 0,
+    "attempts": 1
+  },
+  {
+    "name": "mutable.set new late read-expiry",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}",
+    "writes": 0,
+    "attempts": 1
+  },
+  {
+    "name": "mutable.set new late read-revocation",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}",
+    "writes": 0,
+    "attempts": 1
+  },
+  {
+    "name": "mutable.set new late write-expiry",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}",
+    "writes": 0,
+    "attempts": 1
+  },
+  {
+    "name": "mutable.set new late write-revocation",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}",
+    "writes": 0,
+    "attempts": 1
+  },
+  {
+    "name": "mutable.update late read-expiry",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}",
+    "writes": 0,
+    "attempts": 1
+  },
+  {
+    "name": "mutable.update late read-revocation",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}",
+    "writes": 0,
+    "attempts": 1
+  },
+  {
+    "name": "mutable.update late write-expiry",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}",
+    "writes": 0,
+    "attempts": 1
+  },
+  {
+    "name": "mutable.update late write-revocation",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}",
+    "writes": 0,
+    "attempts": 1
+  },
+  {
+    "name": "mutable.transaction late read-expiry",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}",
+    "writes": 0,
+    "attempts": 2
+  },
+  {
+    "name": "mutable.transaction late read-revocation",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}",
+    "writes": 0,
+    "attempts": 2
+  },
+  {
+    "name": "mutable.transaction late write-expiry",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}",
+    "writes": 0,
+    "attempts": 1
+  },
+  {
+    "name": "mutable.transaction late write-revocation",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}",
+    "writes": 0,
+    "attempts": 1
+  },
+  {
+    "name": "mutable.purgeMany late read-expiry",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}",
+    "writes": 0,
+    "attempts": 2
+  },
+  {
+    "name": "mutable.purgeMany late read-revocation",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}",
+    "writes": 0,
+    "attempts": 2
+  },
+  {
+    "name": "mutable.purgeMany late write-expiry",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}",
+    "writes": 0,
+    "attempts": 2
+  },
+  {
+    "name": "mutable.purgeMany late write-revocation",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}",
+    "writes": 0,
+    "attempts": 2
+  },
+  {
+    "name": "mutable.purgeNamespace late read-expiry",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}",
+    "writes": 0,
+    "attempts": 2
+  },
+  {
+    "name": "mutable.purgeNamespace late read-revocation",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}",
+    "writes": 0,
+    "attempts": 2
+  },
+  {
+    "name": "mutable.purgeNamespace late write-expiry",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}",
+    "writes": 0,
+    "attempts": 2
+  },
+  {
+    "name": "mutable.purgeNamespace late write-revocation",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}",
+    "writes": 0,
+    "attempts": 2
+  },
+  {
+    "name": "sessions.create late read-expiry",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}",
+    "writes": 0,
+    "attempts": 1
+  },
+  {
+    "name": "sessions.create late read-revocation",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}",
+    "writes": 0,
+    "attempts": 1
+  },
+  {
+    "name": "sessions.create late write-expiry",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}",
+    "writes": 0,
+    "attempts": 1
+  },
+  {
+    "name": "sessions.create late write-revocation",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}",
+    "writes": 0,
+    "attempts": 1
+  },
+  {
+    "name": "sessions.endAll late read-expiry",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}",
+    "writes": 0,
+    "attempts": 1
+  },
+  {
+    "name": "sessions.endAll late read-revocation",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}",
+    "writes": 0,
+    "attempts": 1
+  },
+  {
+    "name": "sessions.endAll late write-expiry",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}",
+    "writes": 0,
+    "attempts": 1
+  },
+  {
+    "name": "sessions.endAll late write-revocation",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}",
+    "writes": 0,
+    "attempts": 1
+  },
+  {
+    "name": "initial unavailable READ safe receipt own-profile existing=false",
+    "pass": true,
+    "accepted": true,
+    "result": {
+      "updated": true,
+      "type": "user",
+      "id": "alice",
+      "tenantId": "tenant-a",
+      "memorySpaceId": "space-a",
+      "createdId": "immutable:6"
+    },
+    "writes": 1,
+    "attempts": 1
+  },
+  {
+    "name": "initial unavailable READ safe receipt foreign-profile existing=false",
+    "pass": true,
+    "accepted": true,
+    "result": {
+      "updated": true,
+      "type": "user",
+      "id": "bob",
+      "tenantId": "tenant-a",
+      "memorySpaceId": "space-a",
+      "createdId": "immutable:6"
+    },
+    "writes": 1,
+    "attempts": 1
+  },
+  {
+    "name": "initial unavailable READ safe receipt foreign-owner existing=false",
+    "pass": true,
+    "accepted": true,
+    "result": {
+      "updated": true,
+      "type": "user",
+      "id": "bob",
+      "tenantId": "tenant-a",
+      "memorySpaceId": "space-a",
+      "createdId": "immutable:6"
+    },
+    "writes": 1,
+    "attempts": 1
+  },
+  {
+    "name": "initial unavailable READ safe receipt own-profile existing=true",
+    "pass": true,
+    "accepted": true,
+    "result": {
+      "updated": true,
+      "type": "user",
+      "id": "alice",
+      "tenantId": "tenant-a",
+      "memorySpaceId": "space-a"
+    },
+    "writes": 1,
+    "attempts": 1
+  },
+  {
+    "name": "initial unavailable READ safe receipt foreign-profile existing=true",
+    "pass": true,
+    "accepted": true,
+    "result": {
+      "updated": true,
+      "type": "user",
+      "id": "bob",
+      "tenantId": "tenant-a",
+      "memorySpaceId": "space-a"
+    },
+    "writes": 1,
+    "attempts": 1
+  },
+  {
+    "name": "initial unavailable READ safe receipt foreign-owner existing=true",
+    "pass": true,
+    "accepted": true,
+    "result": {
+      "updated": true,
+      "type": "user",
+      "id": "bob",
+      "tenantId": "tenant-a",
+      "memorySpaceId": "space-a"
+    },
+    "writes": 1,
+    "attempts": 1
+  },
+  {
+    "name": "later bulk immutable own collision zero attempts",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"FORBIDDEN\",\"message\":\"Access denied\"}",
+    "writes": 0,
+    "attempts": 0
+  },
+  {
+    "name": "later bulk immutable foreign collision zero attempts",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"FORBIDDEN\",\"message\":\"Access denied\"}",
+    "writes": 0,
+    "attempts": 0
+  },
+  {
+    "name": "later bulk immutable missing-owner collision zero attempts",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"FORBIDDEN\",\"message\":\"Access denied\"}",
+    "writes": 0,
+    "attempts": 0
+  },
+  {
+    "name": "later bulk immutable tombstoned collision zero attempts",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"FORBIDDEN\",\"message\":\"Access denied\"}",
+    "writes": 0,
+    "attempts": 0
+  },
+  {
+    "name": "later bulk mutable own collision zero attempts",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"FORBIDDEN\",\"message\":\"Access denied\"}",
+    "writes": 0,
+    "attempts": 0
+  },
+  {
+    "name": "later bulk mutable foreign collision zero attempts",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"FORBIDDEN\",\"message\":\"Access denied\"}",
+    "writes": 0,
+    "attempts": 0
+  },
+  {
+    "name": "later bulk mutable missing-owner collision zero attempts",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"FORBIDDEN\",\"message\":\"Access denied\"}",
+    "writes": 0,
+    "attempts": 0
+  },
+  {
+    "name": "later bulk mutable tombstoned collision zero attempts",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"FORBIDDEN\",\"message\":\"Access denied\"}",
+    "writes": 0,
+    "attempts": 0
+  },
+  {
+    "name": "later bulk namespace own collision zero attempts",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"FORBIDDEN\",\"message\":\"Access denied\"}",
+    "writes": 0,
+    "attempts": 0
+  },
+  {
+    "name": "later bulk namespace foreign collision zero attempts",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"FORBIDDEN\",\"message\":\"Access denied\"}",
+    "writes": 0,
+    "attempts": 0
+  },
+  {
+    "name": "later bulk namespace missing-owner collision zero attempts",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"FORBIDDEN\",\"message\":\"Access denied\"}",
+    "writes": 0,
+    "attempts": 0
+  },
+  {
+    "name": "later bulk namespace tombstoned collision zero attempts",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"FORBIDDEN\",\"message\":\"Access denied\"}",
+    "writes": 0,
+    "attempts": 0
+  },
+  {
+    "name": "later bulk endAll own collision zero attempts",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"FORBIDDEN\",\"message\":\"Access denied\"}",
+    "writes": 0,
+    "attempts": 0
+  },
+  {
+    "name": "later bulk endAll foreign collision zero attempts",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"FORBIDDEN\",\"message\":\"Access denied\"}",
+    "writes": 0,
+    "attempts": 0
+  },
+  {
+    "name": "later bulk endAll missing-owner collision zero attempts",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"FORBIDDEN\",\"message\":\"Access denied\"}",
+    "writes": 0,
+    "attempts": 0
+  },
+  {
+    "name": "later bulk endAll tombstoned collision zero attempts",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"FORBIDDEN\",\"message\":\"Access denied\"}",
+    "writes": 0,
+    "attempts": 0
+  },
+  {
+    "name": "later bulk expireIdle own collision zero attempts",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"FORBIDDEN\",\"message\":\"Access denied\"}",
+    "writes": 0,
+    "attempts": 0
+  },
+  {
+    "name": "later bulk expireIdle foreign collision zero attempts",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"FORBIDDEN\",\"message\":\"Access denied\"}",
+    "writes": 0,
+    "attempts": 0
+  },
+  {
+    "name": "later bulk expireIdle missing-owner collision zero attempts",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"FORBIDDEN\",\"message\":\"Access denied\"}",
+    "writes": 0,
+    "attempts": 0
+  },
+  {
+    "name": "later bulk expireIdle tombstoned collision zero attempts",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"FORBIDDEN\",\"message\":\"Access denied\"}",
+    "writes": 0,
+    "attempts": 0
+  },
+  {
+    "name": "session touch expires at last-pre-effect-await",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"FORBIDDEN\",\"message\":\"Access denied\"}",
+    "writes": 0,
+    "attempts": 0,
+    "trigger": 4,
+    "preEffect": 4,
+    "total": 6,
+    "gets": 4
+  },
+  {
+    "name": "session touch expires at last-final-await",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"FORBIDDEN\",\"message\":\"Access denied\"}",
+    "writes": 0,
+    "attempts": 1,
+    "trigger": 6,
+    "preEffect": 4,
+    "total": 6,
+    "gets": 6
+  },
+  {
+    "name": "session message expires at last-pre-effect-await",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"FORBIDDEN\",\"message\":\"Access denied\"}",
+    "writes": 0,
+    "attempts": 0,
+    "trigger": 9,
+    "preEffect": 9,
+    "total": 12,
+    "gets": 9
+  },
+  {
+    "name": "session message expires at last-final-await",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"FORBIDDEN\",\"message\":\"Access denied\"}",
+    "writes": 0,
+    "attempts": 1,
+    "trigger": 12,
+    "preEffect": 9,
+    "total": 12,
+    "gets": 12
+  },
+  {
+    "name": "session memory expires at last-pre-effect-await",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"FORBIDDEN\",\"message\":\"Access denied\"}",
+    "writes": 0,
+    "attempts": 0,
+    "trigger": 9,
+    "preEffect": 9,
+    "total": 12,
+    "gets": 9
+  },
+  {
+    "name": "session memory expires at last-final-await",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"FORBIDDEN\",\"message\":\"Access denied\"}",
+    "writes": 0,
+    "attempts": 1,
+    "trigger": 12,
+    "preEffect": 9,
+    "total": 12,
+    "gets": 12
+  },
+  {
+    "name": "session create expires at last-pre-effect-await",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"INVALID_INPUT\",\"message\":\"Invalid metadata input\"}",
+    "writes": 0,
+    "attempts": 0,
+    "trigger": 4,
+    "preEffect": 4,
+    "total": 8,
+    "gets": 4
+  },
+  {
+    "name": "session create expires at last-final-await",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"FORBIDDEN\",\"message\":\"Access denied\"}",
+    "writes": 0,
+    "attempts": 1,
+    "trigger": 8,
+    "preEffect": 4,
+    "total": 8,
+    "gets": 8
+  },
+  {
+    "name": "broad internal message malformed owner",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"FORBIDDEN\",\"message\":\"Access denied\"}",
+    "writes": 0,
+    "attempts": 0
+  },
+  {
+    "name": "broad internal message malformed user",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"FORBIDDEN\",\"message\":\"Access denied\"}",
+    "writes": 0,
+    "attempts": 0
+  },
+  {
+    "name": "broad internal message malformed stored-principal",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"FORBIDDEN\",\"message\":\"Access denied\"}",
+    "writes": 0,
+    "attempts": 0
+  },
+  {
+    "name": "broad internal message malformed stored-membership",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"FORBIDDEN\",\"message\":\"Access denied\"}",
+    "writes": 0,
+    "attempts": 0
+  },
+  {
+    "name": "broad internal message malformed stored-epoch",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"FORBIDDEN\",\"message\":\"Access denied\"}",
+    "writes": 0,
+    "attempts": 0
+  },
+  {
+    "name": "broad internal memory malformed owner",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"FORBIDDEN\",\"message\":\"Access denied\"}",
+    "writes": 0,
+    "attempts": 0
+  },
+  {
+    "name": "broad internal memory malformed user",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"FORBIDDEN\",\"message\":\"Access denied\"}",
+    "writes": 0,
+    "attempts": 0
+  },
+  {
+    "name": "broad internal memory malformed stored-principal",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"FORBIDDEN\",\"message\":\"Access denied\"}",
+    "writes": 0,
+    "attempts": 0
+  },
+  {
+    "name": "broad internal memory malformed stored-membership",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"FORBIDDEN\",\"message\":\"Access denied\"}",
+    "writes": 0,
+    "attempts": 0
+  },
+  {
+    "name": "broad internal memory malformed stored-epoch",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"FORBIDDEN\",\"message\":\"Access denied\"}",
+    "writes": 0,
+    "attempts": 0
+  },
+  {
+    "name": "broad internal expiry malformed owner",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"FORBIDDEN\",\"message\":\"Access denied\"}",
+    "writes": 0,
+    "attempts": 0
+  },
+  {
+    "name": "broad internal expiry malformed user",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"FORBIDDEN\",\"message\":\"Access denied\"}",
+    "writes": 0,
+    "attempts": 0
+  },
+  {
+    "name": "broad internal expiry malformed stored-principal",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"FORBIDDEN\",\"message\":\"Access denied\"}",
+    "writes": 0,
+    "attempts": 0
+  },
+  {
+    "name": "broad internal expiry malformed stored-membership",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"FORBIDDEN\",\"message\":\"Access denied\"}",
+    "writes": 0,
+    "attempts": 0
+  },
+  {
+    "name": "broad internal expiry malformed stored-epoch",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"FORBIDDEN\",\"message\":\"Access denied\"}",
+    "writes": 0,
+    "attempts": 0
+  },
+  {
+    "name": "numeric invalid increment null",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"INVALID_INPUT\",\"message\":\"Invalid metadata input\"}",
+    "writes": 0,
+    "attempts": 0
+  },
+  {
+    "name": "numeric invalid increment 1",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"INVALID_INPUT\",\"message\":\"Invalid metadata input\"}",
+    "writes": 0,
+    "attempts": 0
+  },
+  {
+    "name": "numeric invalid increment NaN",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"INVALID_INPUT\",\"message\":\"Invalid metadata input\"}",
+    "writes": 0,
+    "attempts": 0
+  },
+  {
+    "name": "numeric invalid increment Infinity",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"INVALID_INPUT\",\"message\":\"Invalid metadata input\"}",
+    "writes": 0,
+    "attempts": 0
+  },
+  {
+    "name": "numeric invalid decrement null",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"INVALID_INPUT\",\"message\":\"Invalid metadata input\"}",
+    "writes": 0,
+    "attempts": 0
+  },
+  {
+    "name": "numeric invalid decrement 1",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"INVALID_INPUT\",\"message\":\"Invalid metadata input\"}",
+    "writes": 0,
+    "attempts": 0
+  },
+  {
+    "name": "numeric invalid decrement NaN",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"INVALID_INPUT\",\"message\":\"Invalid metadata input\"}",
+    "writes": 0,
+    "attempts": 0
+  },
+  {
+    "name": "numeric invalid decrement Infinity",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"INVALID_INPUT\",\"message\":\"Invalid metadata input\"}",
+    "writes": 0,
+    "attempts": 0
+  },
+  {
+    "name": "invalid canonical version 0",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"INVALID_INPUT\",\"message\":\"Invalid metadata input\"}",
+    "writes": 0,
+    "attempts": 0
+  },
+  {
+    "name": "invalid canonical version -1",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"INVALID_INPUT\",\"message\":\"Invalid metadata input\"}",
+    "writes": 0,
+    "attempts": 0
+  },
+  {
+    "name": "invalid canonical version 1.5",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"INVALID_INPUT\",\"message\":\"Invalid metadata input\"}",
+    "writes": 0,
+    "attempts": 0
+  },
+  {
+    "name": "invalid canonical version NaN",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"INVALID_INPUT\",\"message\":\"Invalid metadata input\"}",
+    "writes": 0,
+    "attempts": 0
+  },
+  {
+    "name": "invalid canonical version Infinity",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"INVALID_INPUT\",\"message\":\"Invalid metadata input\"}",
+    "writes": 0,
+    "attempts": 0
+  },
+  {
+    "name": "invalid canonical version 9007199254740991",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"INVALID_INPUT\",\"message\":\"Invalid metadata input\"}",
+    "writes": 0,
+    "attempts": 0
+  },
+  {
+    "name": "invalid canonical version 9007199254740992",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"INVALID_INPUT\",\"message\":\"Invalid metadata input\"}",
+    "writes": 0,
+    "attempts": 0
+  },
+  {
+    "name": "last positive safe version increment exact",
+    "pass": true,
+    "accepted": true,
+    "result": {
+      "tenantId": "tenant-a",
+      "ownerPrincipalId": "runtimeAuthPrincipals:1",
+      "type": "note",
+      "id": "one",
+      "userId": "alice",
+      "data": "new",
+      "version": 9007199254740991,
+      "previousVersions": [
+        {
+          "version": 9007199254740990,
+          "data": {
+            "secret": "old"
+          },
+          "timestamp": 1000
+        }
+      ],
+      "createdAt": 1000,
+      "updatedAt": 1791032751255,
+      "_id": "immutable:5",
+      "_creationTime": 1000
+    },
+    "writes": 1,
+    "attempts": 1
+  },
+  {
+    "name": "all source identities collision-safe canonical JSON arrays",
+    "pass": true,
+    "pairs": 7,
+    "tables": 3
+  }
+]

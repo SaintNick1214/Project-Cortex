@@ -1,0 +1,12 @@
+{
+  "argv": [
+    "python",
+    "-c",
+    "from pathlib import Path;import hashlib;p=Path(\"/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa\");names=[\"task03c2-live-harness-review-1.md\",\"task03c2-live-harness-review-2.md\",\"task03c2-live-harness-review-3.md\"];[(print(n,\"SHA\",hashlib.sha256((p/n).read_bytes()).hexdigest(),\"lines\",len((p/n).read_text().splitlines())),print(\"\\n\".join(str(i)+\" \"+s for i,s in enumerate((p/n).read_text().splitlines(),1) if (n==names[1] and i>=180) or (n==names[2] and i<=42)))) for n in names];assert hashlib.sha256((p/names[2]).read_bytes()).hexdigest()==\"556643c11ca4a94a48a1c3d4ff91bdc185466a637e592c72db4db15193ffe9e4\""
+  ],
+  "cwd": "/workspace/Project-Cortex",
+  "startUtc": "2026-10-03T14:36:07.512587+00:00",
+  "endUtc": "2026-10-03T14:36:07.536975+00:00",
+  "exit": 0,
+  "environment": "inherited for read-only context command; no env dump"
+}

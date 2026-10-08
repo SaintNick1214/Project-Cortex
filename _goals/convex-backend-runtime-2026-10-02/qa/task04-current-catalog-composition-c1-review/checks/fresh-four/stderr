@@ -1,0 +1,206 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Owned destination only
+    at compose (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-composition-c1-review/subject-copy/current-compose.mjs:56:46)
+    at file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-composition-c1-review/subject-copy/current-compose.mjs:82:108
+    at ModuleJob.run (node:internal/modules/esm/module_job:439:25)
+    at async node:internal/modules/esm/loader:643:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Node.js v24.19.0
+(node:228983) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL _goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-composition-c1-review/subject-copy/copies/tests/unit/runtimeAssetUnavailableAuth/closure.test.ts (10.467 s)
+  ● accepted22 declarations stay literal-identical;17 original validators unchanged, only absent scope selectors added
+
+    Command failed: /opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node /workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-composition-c1-review/subject-copy/current-compose.mjs /workspace/Project-Cortex/work/resume/task04-current-catalog-composition-c1-review/test-scratch/cortex-asset-index-preservation-iNS4VA
+    node:internal/modules/run_main:107
+        triggerUncaughtException(
+        ^
+
+    AssertionError [ERR_ASSERTION]: Owned destination only
+
+      54 | }
+      55 | export function compose(destination){
+    > 56 |  const dest=path.resolve(destination);assert.ok(dest.startsWith(base+path.sep)||dest.startsWith(root+'/work/resume/task04-current-catalog-composition-c1/'),'Owned destination only');fs.mkdirSync(dest,{recursive:true});
+         |                                              ^
+      57 |  for(const r of pinned){assert.equal(H(fs.readFileSync(path.join(root,r.path))),r.sha256,`Current source drift ${r.path}`);assert.equal(H(fs.readFileSync(path.join(base,'preimages',r.path))),r.sha256,`Exact retained source bytes ${r.path}`)}
+      58 |  const sources=Object.fromEntries(['convex-dev/schema.ts','convex-dev/runtimePolicySchema.ts','convex-dev/runtimeModelPolicy.ts','convex-dev/runtimeGateway.ts'].map(name=>[name,read(root,name)]));
+      59 |  const projection=verifySources(sources);const policy=policyAst(sources['convex-dev/runtimeModelPolicy.ts']);
+
+      at compose (file:/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-composition-c1-review/subject-copy/current-compose.mjs:56:46)
+      at file:/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-composition-c1-review/subject-copy/current-compose.mjs:82:108
+      at async node:internal/modules/esm/loader:643:26
+      at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+        generatedMessage: false,
+        code: 'ERR_ASSERTION',
+        actual: false,
+        expected: true,
+        operator: '==',
+        diff: 'simple'
+      }
+      Node.js v24.19.0
+      at Object.<anonymous> (_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-composition-c1-review/subject-copy/copies/tests/unit/runtimeAssetUnavailableAuth/closure.test.ts:211:36)
+
+FAIL _goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-composition-c1-review/subject-copy/copies/tests/unit/runtimeWorkerAuth/admin-catalog.test.ts
+  ● actual registered visibility and canonical schema/AST catalog › AST inventory resolves exact 25 frozen paths with seven public and eighteen internal
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  2
+    + Received  + 21
+
+      Object {
+    -   "status": 0,
+    -   "stderr": "",
+    +   "status": 1,
+    +   "stderr": "node:internal/modules/run_main:107
+    +     triggerUncaughtException(
+    +     ^
+    +
+    + AssertionError [ERR_ASSERTION]: Owned destination only
+    +     at compose (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-composition-c1-review/subject-copy/current-compose.mjs:56:46)
+    +     at file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-composition-c1-review/subject-copy/current-compose.mjs:82:108
+    +     at ModuleJob.run (node:internal/modules/esm/module_job:439:25)
+    +     at async node:internal/modules/esm/loader:643:26
+    +     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+    +   generatedMessage: false,
+    +   code: 'ERR_ASSERTION',
+    +   actual: false,
+    +   expected: true,
+    +   operator: '==',
+    +   diff: 'simple'
+    + }
+    +
+    + Node.js v24.19.0
+    + ",
+      }
+
+      152 |     try {
+      153 |       const run = spawnSync(process.execPath, ["/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-composition-c1-review/subject-copy/current-compose.mjs", target], { cwd: process.cwd(), encoding: "utf8" });
+    > 154 |       expect({ status: run.status, stderr: run.stderr }).toEqual({ status: 0, stderr: "" });
+          |                                                          ^
+      155 |       const inventory = JSON.parse(fs.readFileSync(path.join(target, "public-path-inventory.json"), "utf8")) as {
+      156 |         completeness: { unresolved: string[] }; endpoints: { path: string; visibility: string }[];
+      157 |       };
+
+      at Object.<anonymous> (_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-composition-c1-review/subject-copy/copies/tests/unit/runtimeWorkerAuth/admin-catalog.test.ts:154:58)
+
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Owned destination only
+    at compose (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-composition-c1-review/subject-copy/current-compose.mjs:56:46)
+    at file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-composition-c1-review/subject-copy/current-compose.mjs:82:108
+    at ModuleJob.run (node:internal/modules/esm/module_job:439:25)
+    at async node:internal/modules/esm/loader:643:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Node.js v24.19.0
+FAIL _goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-composition-c1-review/subject-copy/copies/tests/unit/runtimeArtifactAuth/schema-indexes.test.ts
+  ● deployable native schema indexes › all exported tables, including runtime schema fragments, have unique index field sequences
+
+    Command failed: /opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node /workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-composition-c1-review/subject-copy/current-compose.mjs /workspace/Project-Cortex/work/resume/task04-current-catalog-composition-c1-review/test-scratch/cortex-current-schema-composition-5hWRJn
+    node:internal/modules/run_main:107
+        triggerUncaughtException(
+        ^
+
+    AssertionError [ERR_ASSERTION]: Owned destination only
+
+      54 | }
+      55 | export function compose(destination){
+    > 56 |  const dest=path.resolve(destination);assert.ok(dest.startsWith(base+path.sep)||dest.startsWith(root+'/work/resume/task04-current-catalog-composition-c1/'),'Owned destination only');fs.mkdirSync(dest,{recursive:true});
+         |                                              ^
+      57 |  for(const r of pinned){assert.equal(H(fs.readFileSync(path.join(root,r.path))),r.sha256,`Current source drift ${r.path}`);assert.equal(H(fs.readFileSync(path.join(base,'preimages',r.path))),r.sha256,`Exact retained source bytes ${r.path}`)}
+      58 |  const sources=Object.fromEntries(['convex-dev/schema.ts','convex-dev/runtimePolicySchema.ts','convex-dev/runtimeModelPolicy.ts','convex-dev/runtimeGateway.ts'].map(name=>[name,read(root,name)]));
+      59 |  const projection=verifySources(sources);const policy=policyAst(sources['convex-dev/runtimeModelPolicy.ts']);
+
+      at compose (file:/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-composition-c1-review/subject-copy/current-compose.mjs:56:46)
+      at file:/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-composition-c1-review/subject-copy/current-compose.mjs:82:108
+      at async node:internal/modules/esm/loader:643:26
+      at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+        generatedMessage: false,
+        code: 'ERR_ASSERTION',
+        actual: false,
+        expected: true,
+        operator: '==',
+        diff: 'simple'
+      }
+      Node.js v24.19.0
+      at Object.<anonymous> (_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-composition-c1-review/subject-copy/copies/tests/unit/runtimeArtifactAuth/schema-indexes.test.ts:33:38)
+
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Owned destination only
+    at compose (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-composition-c1-review/subject-copy/current-compose.mjs:56:46)
+    at file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-composition-c1-review/subject-copy/current-compose.mjs:82:108
+    at ModuleJob.run (node:internal/modules/esm/module_job:439:25)
+    at async node:internal/modules/esm/loader:643:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Node.js v24.19.0
+FAIL _goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-composition-c1-review/subject-copy/copies/tests/unit/runtimeArtifactAuth/inventory.test.ts
+  ● native catalog composes accepted selected22 and later five file closures while preserving historical inventory
+
+    Command failed: /opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node /workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-composition-c1-review/subject-copy/current-compose.mjs /workspace/Project-Cortex/work/resume/task04-current-catalog-composition-c1-review/test-scratch/cortex-artifact-inventory-3TrNDV
+    node:internal/modules/run_main:107
+        triggerUncaughtException(
+        ^
+
+    AssertionError [ERR_ASSERTION]: Owned destination only
+
+      54 | }
+      55 | export function compose(destination){
+    > 56 |  const dest=path.resolve(destination);assert.ok(dest.startsWith(base+path.sep)||dest.startsWith(root+'/work/resume/task04-current-catalog-composition-c1/'),'Owned destination only');fs.mkdirSync(dest,{recursive:true});
+         |                                              ^
+      57 |  for(const r of pinned){assert.equal(H(fs.readFileSync(path.join(root,r.path))),r.sha256,`Current source drift ${r.path}`);assert.equal(H(fs.readFileSync(path.join(base,'preimages',r.path))),r.sha256,`Exact retained source bytes ${r.path}`)}
+      58 |  const sources=Object.fromEntries(['convex-dev/schema.ts','convex-dev/runtimePolicySchema.ts','convex-dev/runtimeModelPolicy.ts','convex-dev/runtimeGateway.ts'].map(name=>[name,read(root,name)]));
+      59 |  const projection=verifySources(sources);const policy=policyAst(sources['convex-dev/runtimeModelPolicy.ts']);
+
+      at compose (file:/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-composition-c1-review/subject-copy/current-compose.mjs:56:46)
+      at file:/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-composition-c1-review/subject-copy/current-compose.mjs:82:108
+      at async node:internal/modules/esm/loader:643:26
+      at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+        generatedMessage: false,
+        code: 'ERR_ASSERTION',
+        actual: false,
+        expected: true,
+        operator: '==',
+        diff: 'simple'
+      }
+      Node.js v24.19.0
+      at Object.<anonymous> (_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-composition-c1-review/subject-copy/copies/tests/unit/runtimeArtifactAuth/inventory.test.ts:11:20)
+
+Test Suites: 4 failed, 4 total
+Tests:       4 failed, 450 passed, 454 total
+Snapshots:   0 total
+Time:        14.791 s
+Ran all test suites.
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-composition-c1-review/fresh-four.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

@@ -14,7 +14,7 @@ import type { Id } from "../../convex-dev/_generated/dataModel";
  */
 
 import type { ConvexClient } from "convex/browser";
-import { api } from "../../convex-dev/_generated/api";
+import { api } from "../common/backendApi";
 import type {
   CountMemoriesFilter,
   AuthContext,

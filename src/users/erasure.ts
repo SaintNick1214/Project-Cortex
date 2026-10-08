@@ -1,8 +1,8 @@
+import { randomUUID } from "../common/crypto";
 /** Explicit administrative erasure. Primary mutations are never resilience-retried. */
-import { randomUUID } from "node:crypto";
 import { ConvexHttpClient, type ConvexClient } from "convex/browser";
 import { ConvexError } from "convex/values";
-import { digest } from "../../convex-dev/lib/factHistoryProvenance";
+import { digestConvexValue as digest } from "../common/crypto";
 import type { ErasureDomain, ErasureProjection } from "../../convex-dev/lib/domainErasureScope";
 import { prepareGraphErasure, eraseGraphItem, verifyGraphErasure, type PreparedGraphErasureItem } from "../graph/erasure";
 import type { GraphAdapter, GraphJobReceipt } from "../graph/types";
@@ -64,7 +64,7 @@ export function createErasureTransport(options:{url:string;deploymentKey:string;
     const timer=setTimeout(()=>{expired=true;controller.abort();},timeout);
     try {
       const guardedFetch:typeof fetch=async(input,init)=>{
-        if(Buffer.byteLength(String(init?.body??""))>1024*1024)throw new ErasureTransportError("ERASURE_REQUEST_TOO_LARGE",operation,"notSent");
+        if(new TextEncoder().encode(String(init?.body??"")).length>1024*1024)throw new ErasureTransportError("ERASURE_REQUEST_TOO_LARGE",operation,"notSent");
         sent=true;const response=await fetch(input,{...init,signal:controller.signal,redirect:"error"});
         const reader=response.body?.getReader();if(!reader)throw new ErasureTransportError("ERASURE_PROTOCOL",operation,"unknown");
         const chunks:Uint8Array[]=[];let bytes=0;

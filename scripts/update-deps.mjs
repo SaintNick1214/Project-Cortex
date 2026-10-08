@@ -34,7 +34,7 @@ const log = (msg, color = "") => console.log(`${color}${msg}${c.reset}`);
 function findPackageDirs(dir, results = []) {
   for (const entry of readdirSync(dir)) {
     if (
-      ["node_modules", "dist", ".git", "coverage"].includes(entry) ||
+      ["node_modules", "dist", ".git", "coverage", "_DEPRECATED"].includes(entry) ||
       entry.startsWith(".")
     )
       continue;
@@ -56,8 +56,8 @@ function run(cmd, cwd) {
       timeout: 60000,
       env: { ...process.env, CI: "1" },
     });
-  } catch (e) {
-    return e.stdout || "";
+  } catch (error) {
+    throw new Error(`Dependency command failed in ${relative(ROOT, cwd) || "root"}`, { cause: error });
   }
 }
 
@@ -76,11 +76,14 @@ const results = [];
 
 for (const dir of packageDirs) {
   const name = relative(ROOT, dir) || "(root)";
-  const ncuCmd = DRY_RUN ? `ncu --configFilePath ${ROOT}` : `ncu -u --configFilePath ${ROOT}`;
+  // TS 6.0 is the newest compiler supported by the current Jest/lint toolchain.
+  const updateFlag = DRY_RUN ? "" : " -u";
+  const ncuCmd = `npm exec -- ncu --target latest --reject typescript${updateFlag}`;
+  const typescriptCmd = `npm exec -- ncu --target patch --filter typescript${updateFlag}`;
 
   log(`📦 ${name}`, c.cyan + c.bold);
 
-  const output = run(ncuCmd, dir);
+  const output = run(ncuCmd, dir) + run(typescriptCmd, dir);
   const updates = output
     .split("\n")
     .filter((l) => l.includes("→") || l.includes("->"));

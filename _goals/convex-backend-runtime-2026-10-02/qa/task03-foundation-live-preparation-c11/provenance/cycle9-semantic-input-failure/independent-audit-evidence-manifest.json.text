@@ -1,0 +1,9 @@
+{
+  "scope": "independent local actual-handler semantic audit; not live or C10 judgment",
+  "files": {
+    "report.md": "7251061febbda1979c464379b12b6be978b9a9a5bc8a98435f7e6d412f4abe95",
+    "probe.mjs.text": "f2d1eda612f8afed1720fe883ea1f52382f65ff80c0e790757e88db37a6bd7f9",
+    "nojwt-results.json": "5b88ecc0082cbd095334e11567a13773fca2783388d65c095c1d68034be273ca"
+  },
+  "reproduction": "Restore probe.mjs.text byte-for-byte to work/resume/semantic-fixture-audit/probe.mjs; mkdir scratch first; run node from repository root; esbuild compiled handlers and outputs stay scratch."
+}

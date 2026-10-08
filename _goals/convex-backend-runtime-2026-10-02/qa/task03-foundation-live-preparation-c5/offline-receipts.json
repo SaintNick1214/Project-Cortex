@@ -1,0 +1,296 @@
+{
+  "scope": "FINAL_CYCLE5_OFFLINE_PREPARATION_ONLY",
+  "recordedAtUtc": "2026-10-03T22:46:03.781862+00:00",
+  "candidateSha256": "ade40d6f694fa0987c0bfa56fa99684444dab37f3ee1a9c990d75179ee310084",
+  "operationalFiles": 292,
+  "selectedChecks": 19,
+  "checks": [
+    {
+      "argv": [
+        "node",
+        "--import",
+        "tsx",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c5/scripts/native-validator-check.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAtUtc": "2026-10-03T22:45:54.251362+00:00",
+      "finishedAtUtc": "2026-10-03T22:45:54.503993+00:00",
+      "exitCode": 0,
+      "status": "PASS",
+      "elapsedSeconds": 0.253,
+      "redactedOutput": "{\"status\":\"PASS\",\"registered\":259,\"public\":200,\"internal\":59,\"validatorMismatches\":0,\"dispatches\":0,\"signatures\":0}\n"
+    },
+    {
+      "argv": [
+        "node",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c5/scripts/offline-check.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAtUtc": "2026-10-03T22:45:54.507755+00:00",
+      "finishedAtUtc": "2026-10-03T22:45:55.641190+00:00",
+      "exitCode": 0,
+      "status": "PASS",
+      "elapsedSeconds": 1.133,
+      "redactedOutput": "{\"scope\":\"OFFLINE_ONLY\",\"status\":\"PASS\",\"negativeControls\":25,\"registered\":259,\"public\":200,\"internal\":59,\"liveQualification\":\"BLOCKED\",\"dispatches\":0,\"signatures\":0}\n"
+    },
+    {
+      "argv": [
+        "node",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c5/scripts/offline-arguments-check.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAtUtc": "2026-10-03T22:45:54.508131+00:00",
+      "finishedAtUtc": "2026-10-03T22:45:54.574579+00:00",
+      "exitCode": 0,
+      "status": "PASS",
+      "elapsedSeconds": 0.066,
+      "redactedOutput": "{\"scope\":\"OFFLINE_NATIVE_VALIDATOR_SHAPES\",\"status\":\"PASS\",\"registered\":259,\"realIdEncoding\":\"NOT_RUN_REQUIRES_SEEDED_SERVICE_IDS\",\"dispatches\":0,\"signatures\":0}\n"
+    },
+    {
+      "argv": [
+        "node",
+        "--import",
+        "tsx",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c5/scripts/offline-closure-check.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAtUtc": "2026-10-03T22:45:54.508433+00:00",
+      "finishedAtUtc": "2026-10-03T22:45:54.693410+00:00",
+      "exitCode": 0,
+      "status": "PASS",
+      "elapsedSeconds": 0.185,
+      "redactedOutput": "{\"scope\":\"OFFLINE_NATIVE_VALIDATOR_SHAPES\",\"status\":\"PASS\",\"registered\":259,\"realIdEncoding\":\"NOT_RUN_REQUIRES_SEEDED_SERVICE_IDS\",\"dispatches\":0,\"signatures\":0}\n{\"scope\":\"OFFLINE_CURRENT_TABLE_SHAPES\",\"status\":\"PASS\",\"rows\":12,\"tables\":4,\"realIds\":\"NOT_RUN_REQUIRES_OWNED_SERVICE_IDS\",\"dispatches\":0,\"signatures\":0}\n"
+    },
+    {
+      "argv": [
+        "node",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c5/scripts/auth-classifier-check.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAtUtc": "2026-10-03T22:45:54.508930+00:00",
+      "finishedAtUtc": "2026-10-03T22:45:54.660414+00:00",
+      "exitCode": 0,
+      "status": "PASS",
+      "elapsedSeconds": 0.151,
+      "redactedOutput": "{\"scope\":\"OFFLINE_AUTH_CLASSIFIER\",\"status\":\"PASS\",\"negativeControls\":44,\"arbitraryDeniedAccepted\":false,\"privateDiagnosticAccepted\":false,\"opaqueFailureIsAuthDenial\":false,\"dispatches\":0,\"signatures\":0}\n"
+    },
+    {
+      "argv": [
+        "node",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c5/scripts/callback-check.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAtUtc": "2026-10-03T22:45:54.574620+00:00",
+      "finishedAtUtc": "2026-10-03T22:45:54.886081+00:00",
+      "exitCode": 0,
+      "status": "PASS",
+      "elapsedSeconds": 0.311,
+      "redactedOutput": "{\"scope\":\"OFFLINE_HOST_CALLBACK_PAYLOAD\",\"status\":\"PASS\",\"malformedRejected\":9,\"serviceCalls\":0,\"signatures\":0}\n"
+    },
+    {
+      "argv": [
+        "node",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c5/scripts/management-check.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAtUtc": "2026-10-03T22:45:54.660453+00:00",
+      "finishedAtUtc": "2026-10-03T22:45:54.731100+00:00",
+      "exitCode": 0,
+      "status": "PASS",
+      "elapsedSeconds": 0.071,
+      "redactedOutput": "{\"scope\":\"OFFLINE_MANAGEMENT_CONTRACT\",\"status\":\"PASS\",\"partialRecoveryPrepared\":true,\"negativeControls\":10,\"dispatches\":0}\n"
+    },
+    {
+      "argv": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--ignoreConfig",
+        "--noEmit",
+        "--strict",
+        "--skipLibCheck",
+        "--moduleResolution",
+        "Bundler",
+        "--module",
+        "ESNext",
+        "--target",
+        "ES2022",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c5/scripts/contracts.ts"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAtUtc": "2026-10-03T22:45:54.693451+00:00",
+      "finishedAtUtc": "2026-10-03T22:45:55.424470+00:00",
+      "exitCode": 0,
+      "status": "PASS",
+      "elapsedSeconds": 0.731,
+      "redactedOutput": ""
+    },
+    {
+      "argv": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--project",
+        "work/resume/current-guard-live-c5/offline-fixture/convex/tsconfig.json",
+        "--noEmit"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAtUtc": "2026-10-03T22:45:54.731133+00:00",
+      "finishedAtUtc": "2026-10-03T22:46:03.419667+00:00",
+      "exitCode": 0,
+      "status": "PASS",
+      "elapsedSeconds": 8.689,
+      "redactedOutput": ""
+    },
+    {
+      "argv": [
+        "node",
+        "node_modules/eslint/bin/eslint.js",
+        "--config",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c5/eslint.config.mjs",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c5/scripts",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c5/cases"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAtUtc": "2026-10-03T22:45:54.886119+00:00",
+      "finishedAtUtc": "2026-10-03T22:45:56.935534+00:00",
+      "exitCode": 0,
+      "status": "PASS",
+      "elapsedSeconds": 2.049,
+      "redactedOutput": ""
+    },
+    {
+      "argv": [
+        "node",
+        "--import",
+        "tsx",
+        "work/resume/current-guard-live-c5/offline-mwd.ts"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAtUtc": "2026-10-03T22:45:55.424517+00:00",
+      "finishedAtUtc": "2026-10-03T22:45:56.005207+00:00",
+      "exitCode": 0,
+      "status": "PASS",
+      "elapsedSeconds": 0.581,
+      "redactedOutput": "{\"scope\":\"OFFLINE_AUTHOR_ONLY\",\"status\":\"PASS\",\"syntax\":\"node --check module\",\"actualSchemaRowsValidated\":19,\"tableTypes\":[\"immutable\",\"mutable\",\"sessions\",\"runtimeAuthPrincipals\",\"runtimeAuthMemberships\",\"runtimeAuthGrants\",\"runtimeMemorySources\",\"facts\"],\"registeredPaths\":74,\"metadata\":41,\"worker\":25,\"domain\":8,\"descriptorSuites\":8,\"liveStatus\":\"NOT_RUN\",\"liveDispatches\":0,\"signatures\":0,\"servicesStarted\":0,\"seededRows\":0,\"idValidation\":\"schema-only synthetic string references; actual v.id identity is live prerequisite\"}\n"
+    },
+    {
+      "argv": [
+        "node",
+        "work/resume/current-guard-live-c5/offline-mra.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAtUtc": "2026-10-03T22:45:55.641262+00:00",
+      "finishedAtUtc": "2026-10-03T22:45:56.541628+00:00",
+      "exitCode": 0,
+      "status": "PASS",
+      "elapsedSeconds": 0.9,
+      "redactedOutput": "{\"status\":\"PASS\",\"scope\":\"OFFLINE_AUTHORING_ONLY\",\"registeredPaths\":117,\"caseDescriptors\":122,\"seedRows\":66,\"nativeSchemaValidated\":true,\"nativeArgumentsValidated\":true,\"serviceCalls\":0,\"signatures\":0,\"liveStatus\":\"NOT_RUN\"}\n"
+    },
+    {
+      "argv": [
+        "node",
+        "-e",
+        "import('./_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c5/cases/mf-registry-artifacts.mjs').then(m=>console.log(JSON.stringify(m.offlineDenialControls())))"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAtUtc": "2026-10-03T22:45:56.005244+00:00",
+      "finishedAtUtc": "2026-10-03T22:45:56.257815+00:00",
+      "exitCode": 0,
+      "status": "PASS",
+      "elapsedSeconds": 0.253,
+      "redactedOutput": "{\"scope\":\"OFFLINE_DENIAL_ASSERTIONS\",\"positiveControls\":2,\"malformedRejected\":10,\"serviceCalls\":0}\n"
+    },
+    {
+      "argv": [
+        "node",
+        "--import",
+        "tsx",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c5/scripts/forwarded-native-check.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAtUtc": "2026-10-03T22:45:56.257853+00:00",
+      "finishedAtUtc": "2026-10-03T22:45:57.294595+00:00",
+      "exitCode": 0,
+      "status": "PASS",
+      "elapsedSeconds": 1.037,
+      "redactedOutput": "{\"scope\":\"OFFLINE_NATIVE_VALIDATOR_SHAPES\",\"status\":\"PASS\",\"registered\":259,\"realIdEncoding\":\"NOT_RUN_REQUIRES_SEEDED_SERVICE_IDS\",\"dispatches\":0,\"signatures\":0}\n{\"scope\":\"OFFLINE_ACTUAL_SERIALIZED_FOREGROUND_CONTROL\",\"status\":\"PASS\",\"healthyCases\":[{\"path\":\"runtimeMemory:remember\",\"forwardedReferenceFields\":10,\"nativeSchemaAccepted\":true,\"noBusinessWrites\":true,\"noPrivateHydration\":true,\"extraFieldNegatives\":4},{\"path\":\"runtimeMemory:recall\",\"forwardedReferenceFields\":10,\"nativeSchemaAccepted\":true,\"noBusinessWrites\":true,\"noPrivateHydration\":true,\"extraFieldNegatives\":4}],\"unknownForwardedControls\":4,\"knownFixedDenialControls\":4,\"extraFieldNegatives\":8,\"handlerOnlyBypass\":false,\"serviceCalls\":0,\"signatures\":0,\"live\":\"NOT_RUN\"}\n"
+    },
+    {
+      "argv": [
+        "node",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c5/scripts/first-preservation-check.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAtUtc": "2026-10-03T22:45:56.541667+00:00",
+      "finishedAtUtc": "2026-10-03T22:45:57.006047+00:00",
+      "exitCode": 0,
+      "status": "PASS",
+      "elapsedSeconds": 0.464,
+      "redactedOutput": "{\"scope\":\"OFFLINE_CYCLE4_BYTE_PRESERVATION\",\"status\":\"PASS\",\"files\":273,\"candidateSha256\":\"16fa59a1564dd628bbf1f2507b822f98053bd26140c74fb286840818d3d86cd1\",\"serviceCalls\":0,\"keyReads\":0,\"signatures\":0}\n{\"scope\":\"OFFLINE_CYCLE3_BYTE_PRESERVATION\",\"status\":\"PASS\",\"files\":285,\"candidateSha256\":\"db0d0e879c96c5108018f881ce14d43ec16938ef222680136a8e93a7fec1d044\",\"serviceCalls\":0,\"keyReads\":0,\"signatures\":0}\n{\"scope\":\"OFFLINE_CYCLE2_BYTE_PRESERVATION\",\"status\":\"PASS\",\"files\":278,\"candidateSha256\":\"d3e9984ebca68860c1a98e09092cca1676a24d15169026b6283d965a3eb8fe4e\",\"serviceCalls\":0,\"keyReads\":0,\"signatures\":0}\n{\"scope\":\"OFFLINE_FIRST_CANDIDATE_BYTE_PRESERVATION\",\"status\":\"PASS\",\"files\":186,\"reviewFiles\":43,\"firstDigest\":\"8189fbaecd8e5c588b1446644741642f2525e5c27a0451d72b458b72cba0564c\",\"serviceCalls\":0,\"signatures\":0}\n"
+    },
+    {
+      "argv": [
+        "node",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c5/scripts/process-check.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAtUtc": "2026-10-03T22:45:56.935582+00:00",
+      "finishedAtUtc": "2026-10-03T22:46:00.281344+00:00",
+      "exitCode": 0,
+      "status": "PASS",
+      "elapsedSeconds": 3.346,
+      "redactedOutput": "{\"scope\":\"OFFLINE_ACTUAL_OWNED_PROCESS_GROUPS\",\"status\":\"PASS\",\"processes\":3,\"verifiedGroups\":3,\"remainingGroups\":0,\"timeoutUnknownIsFailure\":true,\"serviceCalls\":0,\"signatures\":0}\n"
+    },
+    {
+      "argv": [
+        "node",
+        "--import",
+        "tsx",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c5/scripts/schema-index-check.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAtUtc": "2026-10-03T22:45:57.006087+00:00",
+      "finishedAtUtc": "2026-10-03T22:45:57.605132+00:00",
+      "exitCode": 0,
+      "status": "PASS",
+      "elapsedSeconds": 0.599,
+      "redactedOutput": "{\"scope\":\"OFFLINE_FULL_NATIVE_SCHEMA_INDEX_UNIQUENESS\",\"status\":\"PASS\",\"tables\":26,\"allIndexes\":181,\"normalDbIndexes\":173,\"searchVectorIndexes\":8,\"stagedDbIndexes\":0,\"searchVectorDefinitionsPreserved\":true,\"fixtureHelperSoleIndexSubstitutionVerified\":true,\"normalConfigurationDuplicates\":0,\"negativeControls\":2,\"serviceCalls\":0,\"signatures\":0}\n"
+    },
+    {
+      "argv": [
+        "node",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c5/scripts/diagnostics-check.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAtUtc": "2026-10-03T22:45:57.294648+00:00",
+      "finishedAtUtc": "2026-10-03T22:45:57.513192+00:00",
+      "exitCode": 0,
+      "status": "PASS",
+      "elapsedSeconds": 0.219,
+      "redactedOutput": "{\"scope\":\"OFFLINE_PRIVATE_DIAGNOSTICS\",\"status\":\"PASS\",\"routineDenials\":560,\"routineDiskRecords\":0,\"maxRecords\":32,\"maxRecordBytes\":65536,\"mode600\":true,\"unknownStillFails\":true,\"unexpectedSuccessStillFails\":true,\"redaction\":true,\"streamBound\":true,\"publicBeforeClosure\":true,\"boundaryObserved\":[{\"serializedBytes\":65535,\"fileBytes\":65536,\"truncated\":false},{\"serializedBytes\":65536,\"fileBytes\":282,\"truncated\":true},{\"serializedBytes\":65537,\"fileBytes\":282,\"truncated\":true}],\"decodeObserved\":[{\"label\":\"plain\",\"sameText\":true,\"byteCount\":61,\"truncated\":false,\"originalAccepted\":true,\"capturedAccepted\":true,\"originalDenial\":true,\"capturedDenial\":true,\"code\":\"InvalidAuth\",\"unknownRejected\":true},{\"label\":\"bom\",\"sameText\":true,\"byteCount\":64,\"truncated\":false,\"originalAccepted\":true,\"capturedAccepted\":true,\"originalDenial\":true,\"capturedDenial\":true,\"code\":\"InvalidAuth\",\"unknownRejected\":true},{\"label\":\"invalidUTF8\",\"sameText\":true,\"byteCount\":37,\"truncated\":false,\"originalAccepted\":true,\"capturedAccepted\":true,\"originalDenial\":true,\"capturedDenial\":true,\"code\":\"InvalidAuth\",\"unknownRejected\":true}],\"serviceCalls\":0,\"keyReads\":0,\"signatures\":0}\n"
+    },
+    {
+      "argv": [
+        "node",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c5/scripts/freeze.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAtUtc": "2026-10-03T22:46:03.420156+00:00",
+      "finishedAtUtc": "2026-10-03T22:46:03.781826+00:00",
+      "exitCode": 0,
+      "status": "PASS",
+      "elapsedSeconds": 0.362,
+      "redactedOutput": "{\"scope\":\"OFFLINE_CANDIDATE_FREEZE\",\"status\":\"PASS\",\"operationalFiles\":292,\"candidateSha256\":\"ade40d6f694fa0987c0bfa56fa99684444dab37f3ee1a9c990d75179ee310084\",\"dispatches\":0,\"signatures\":0}\n"
+    }
+  ],
+  "services": 0,
+  "signatures": 0,
+  "privateKeyReads": 0,
+  "officialCodegen": "NOT_RUN",
+  "officialTypecheck": "NOT_RUN",
+  "liveQualification": "NOT_RUN",
+  "independentPreparationReview": "PENDING",
+  "originalSelectedChecks": 18,
+  "addedDiagnosticChecks": 1,
+  "allSelectionsRerunForThisCandidate": true,
+  "borrowedOldPasses": false
+}

@@ -1,0 +1,134 @@
+{
+  "results": [
+    {
+      "type": "query",
+      "mode": "healthy",
+      "calls": 1,
+      "error": null,
+      "status": "PASS"
+    },
+    {
+      "type": "query",
+      "mode": "http-error",
+      "calls": 1,
+      "error": "{\"status\":\"success\",\"value\":null}",
+      "status": "PASS"
+    },
+    {
+      "type": "query",
+      "mode": "udf-error",
+      "calls": 1,
+      "error": "DUMMY_UDF",
+      "status": "PASS"
+    },
+    {
+      "type": "query",
+      "mode": "transport-error",
+      "calls": 1,
+      "error": "DUMMY_TRANSPORT",
+      "status": "PASS"
+    },
+    {
+      "type": "mutation",
+      "mode": "healthy",
+      "calls": 1,
+      "error": null,
+      "status": "PASS"
+    },
+    {
+      "type": "mutation",
+      "mode": "http-error",
+      "calls": 1,
+      "error": "{\"status\":\"success\",\"value\":null}",
+      "status": "PASS"
+    },
+    {
+      "type": "mutation",
+      "mode": "udf-error",
+      "calls": 1,
+      "error": "DUMMY_UDF",
+      "status": "PASS"
+    },
+    {
+      "type": "mutation",
+      "mode": "transport-error",
+      "calls": 1,
+      "error": "DUMMY_TRANSPORT",
+      "status": "PASS"
+    },
+    {
+      "type": "action",
+      "mode": "healthy",
+      "calls": 1,
+      "error": null,
+      "status": "PASS"
+    },
+    {
+      "type": "action",
+      "mode": "http-error",
+      "calls": 1,
+      "error": "{\"status\":\"success\",\"value\":null}",
+      "status": "PASS"
+    },
+    {
+      "type": "action",
+      "mode": "udf-error",
+      "calls": 1,
+      "error": "DUMMY_UDF",
+      "status": "PASS"
+    },
+    {
+      "type": "action",
+      "mode": "transport-error",
+      "calls": 1,
+      "error": "DUMMY_TRANSPORT",
+      "status": "PASS"
+    },
+    {
+      "type": "function",
+      "mode": "healthy",
+      "calls": 1,
+      "error": null,
+      "status": "PASS"
+    },
+    {
+      "type": "function",
+      "mode": "http-error",
+      "calls": 1,
+      "error": "{\"status\":\"success\",\"value\":null}",
+      "status": "PASS"
+    },
+    {
+      "type": "function",
+      "mode": "udf-error",
+      "calls": 1,
+      "error": "DUMMY_UDF",
+      "status": "PASS"
+    },
+    {
+      "type": "function",
+      "mode": "transport-error",
+      "calls": 1,
+      "error": "DUMMY_TRANSPORT",
+      "status": "PASS"
+    },
+    {
+      "type": "consistentQuery",
+      "mode": "first",
+      "calls": 2,
+      "endpoints": [
+        "/api/query_ts",
+        "/api/query_at_ts",
+        "/api/query_at_ts"
+      ],
+      "status": "PASS_TWO_REQUESTS_SPECIAL_METHOD"
+    },
+    {
+      "type": "consistentQuery",
+      "mode": "cached-timestamp",
+      "totalCalls": 3,
+      "status": "PASS_ONE_SUBSEQUENT_REQUEST"
+    }
+  ],
+  "scope": "EXACT_INSTALLED_SDK_OFFLINE_FETCH_PORT_NO_WRAPPER_CERTIFICATION"
+}

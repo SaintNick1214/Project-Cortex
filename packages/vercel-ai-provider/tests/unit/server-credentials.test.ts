@@ -59,6 +59,7 @@ describe('private server credentials helper', () => {
   it('feature detects setter and passes exactly one argument with native receiver', () => {
     const client = { setAdminAuth: jest.fn(function(this: unknown, ...args: unknown[]) { expect(this).toBe(client); expect(args).toEqual([key]); }) };
     expect(serverRuntimeOptions(credentials)!.initializeTransport!(client as any)).toBeUndefined();
+    expect(serverRuntimeOptions(credentials)!.deploymentOperator).toBe(true);
     expect(client.setAdminAuth).toHaveBeenCalledTimes(1);
   });
   it.each(['missing', 'throw'])('fails closed on %s setter without raw cause', mode => {

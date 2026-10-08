@@ -1,0 +1,49 @@
+from pathlib import Path
+import json,re,subprocess,hashlib,time
+from datetime import datetime,timezone
+root=Path.cwd(); scratch=root/'work/resume/current-guard-preparation-c9-review'; qa=root/'_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c9'; report=root/'_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c9-review'
+freeze=(qa/'runtime-freeze.json').read_bytes(); assert hashlib.sha256(freeze).hexdigest()=='a653cec5eb42a2a2e48e204d4cb31f2c948dc5383a9d4a3a5652101552aa8ad3'
+# Review copies keep original imports, ledger paths, runtime semantics and assertions.
+def imports(s):
+ return re.sub(r"(from |import |import\(|new URL\()(['\"])((?:\./|\.\./)[^'\"]+)\2",lambda m: m[1]+m[2]+str((qa/'scripts'/m[3]).resolve())+m[2],s)
+
+guard=(qa/'scripts/guard.mjs').read_text();guard=guard.replace("export const preparation = resolve(dirname(fileURLToPath(import.meta.url)), '..');",f"export const preparation = {json.dumps(str(qa))};")
+# Synthetic enumeration adds an unreviewed operational path without touching fixture bytes.
+guard=guard.replace("if(entry.isDirectory())operationalFiles(path,selected);", "if(entry.isDirectory())operationalFiles(path,selected);")
+guard=guard.replace('return selected;}','if(directory===fixture)selected.push(relative(repo,resolve(fixture,\'fixture/convex/qualificationUnreviewedSynthetic.ts\')));return selected;}')
+(scratch/'guard-topology.mjs').write_text(guard)
+import shutil
+mirror=scratch/'offline-fixture';shutil.copytree(root/'work/resume/current-guard-live-c9/offline-fixture',mirror,ignore=shutil.ignore_patterns('node_modules'),dirs_exist_ok=True)
+(mirror/'node_modules').symlink_to(root/'node_modules',target_is_directory=True)
+(scratch/'mra').mkdir(exist_ok=True)
+checks=json.loads((qa/'offline-receipts.json').read_text())['checks']; results=[]
+for index,check in enumerate(checks):
+ argv=check['argv'].copy(); label=Path(argv[-1]).name
+ if label.endswith('.mjs') and str(qa.relative_to(root))+'/scripts/' in argv[-1]:
+  src=qa/'scripts'/label;s=src.read_text()
+  if label=='native-validator-check.mjs':
+   s=s.replace("writeFileSync(resolve(preparation,'native-registration-schemas.json'),", "assert.equal(readFileSync(resolve(preparation,'native-registration-schemas.json'),'utf8'),")
+  if label=='freeze.mjs':
+   s="import assert from 'node:assert/strict';\n"+s.replace("writeFileSync(resolve(preparation,'runtime-freeze.json'),", "assert.equal(readFileSync(resolve(preparation,'runtime-freeze.json'),'utf8'),")
+  if label=='offline-check.mjs':
+   s=s.replace('work/resume/current-guard-live-c9/preflight-','work/resume/current-guard-preparation-c9-review/preflight-')
+   start=s.index("const extra=resolve(fixture,");end=s.index('\n',start)
+   s=s[:start]+f"const synthetic=await import({json.dumps(str(scratch/'guard-topology.mjs'))});assert.throws(()=>synthetic.sourcePreflight());negatives++;"+s[end:]
+  if label=='process-check.mjs':
+   s=s.replace('repo, scratch, canonical','repo, canonical');s=f"const scratch={json.dumps(str(scratch))};\n"+s
+  if label=='diagnostics-check.mjs':s=s.replace('work/resume/current-guard-live-c9/diagnostic-controls-','work/resume/current-guard-preparation-c9-review/diagnostic-controls-')
+  s=imports(s);dest=scratch/label;dest.write_text(s);argv[-1]=str(dest)
+ elif label=='offline-mwd.ts':
+  s=(root/argv[-1]).read_text();s=s.replace("'../../../convex-dev/schema'",json.dumps(str(root/'convex-dev/schema.ts'))).replace("'../../../_goals/", "'/workspace/Project-Cortex/_goals/")
+  s=s.replace('work/resume/current-guard-live-c9/mwd-revised-offline-receipt.json','work/resume/current-guard-preparation-c9-review/mwd-revised-offline-receipt.json');dest=scratch/label;dest.write_text(s);argv[-1]=str(dest)
+ elif label=='offline-mra.mjs':
+  s=(root/argv[-1]).read_text().replace("/work/resume/current-guard-live-c9/mra-revised/",'/work/resume/current-guard-preparation-c9-review/mra/');dest=scratch/label;dest.write_text(s);argv[-1]=str(dest)
+ if index==8:
+  argv[3]=str(scratch/'offline-fixture/convex/tsconfig.json')
+ startedUtc=datetime.now(timezone.utc).isoformat();started=time.time();p=subprocess.run(argv,cwd=root,text=True,capture_output=True,timeout=90);row={'startedAtUtc':startedUtc,'finishedAtUtc':datetime.now(timezone.utc).isoformat(),'selection':index+1,'argv':argv,'exitCode':p.returncode,'elapsedSeconds':round(time.time()-started,3),'stdout':p.stdout,'stderr':p.stderr};results.append(row)
+ print(json.dumps(row),flush=True)
+ (report/'independent-offline-receipts.json').write_text(json.dumps(results,indent=2)+'\n')
+ assert p.returncode==0,(index,label)
+assert freeze==(qa/'runtime-freeze.json').read_bytes()
+for entry in json.loads(freeze)['files']:assert hashlib.sha256((root/entry['path']).read_bytes()).hexdigest()==entry['sha256'],entry['path']
+print('ALL19PASS_FINAL_BYTES_IDENTICAL',flush=True)

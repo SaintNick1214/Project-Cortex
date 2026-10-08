@@ -8,7 +8,7 @@ import type { GraphSyncPolicy } from "../graph/types";
  */
 
 import { ConvexClient } from "convex/browser";
-import { api } from "../../convex-dev/_generated/api";
+import { api } from "../common/backendApi";
 import type { GraphAdapter } from "../graph/types";
 import {
 } from "../graph";
@@ -285,6 +285,22 @@ export class ContextsAPI {
    * });
    * ```
    */
+  async get(
+    contextId: string,
+    options?: { includeChain?: false; includeConversation?: boolean },
+  ): Promise<Context | null>;
+  async get(
+    contextId: string,
+    options: { includeChain: true; includeConversation: true },
+  ): Promise<ContextChain | ContextWithConversation | null>;
+  async get(
+    contextId: string,
+    options: { includeChain: true; includeConversation?: false },
+  ): Promise<ContextChain | null>;
+  async get(
+    contextId: string,
+    options: { includeChain?: boolean; includeConversation?: boolean },
+  ): Promise<Context | ContextChain | ContextWithConversation | null>;
   async get(
     contextId: string,
     options?: { includeChain?: boolean; includeConversation?: boolean },

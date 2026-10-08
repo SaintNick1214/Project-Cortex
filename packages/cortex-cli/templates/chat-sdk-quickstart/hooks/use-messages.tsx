@@ -28,10 +28,10 @@ export function useMessages({
   return {
     containerRef,
     endRef,
+    hasSentMessage,
     isAtBottom,
-    scrollToBottom,
     onViewportEnter,
     onViewportLeave,
-    hasSentMessage,
+    scrollToBottom,
   };
 }

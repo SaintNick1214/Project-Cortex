@@ -1,0 +1,11 @@
+{
+  "argv": [
+    "python3",
+    "-c",
+    "from pathlib import Path;import shutil; a=Path(\"_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2\");b=Path(\"_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c1\");shutil.copytree(a/\"fixture\",b/\"fixture\");shutil.copy2(a/\"eslint.config.mjs\",b/\"eslint.config.mjs\");[print(\"\\nFILE \"+f+\"\\n\"+(a/f).read_text()) for f in [\"fixture/checks/harness.mjs\",\"fixture/convex/proofs.ts\",\"fixture/convex/stage-pins.ts\",\"fixture/convex/installed.ts\",\"fixture/tsconfig.json\",\"eslint.config.mjs\"]]"
+  ],
+  "cwd": "/workspace/Project-Cortex",
+  "startUtc": "2026-10-04T14:20:02.197594+00:00",
+  "endUtc": "2026-10-04T14:20:02.229598+00:00",
+  "exit": 0
+}

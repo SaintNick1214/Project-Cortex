@@ -42,7 +42,7 @@ async function selectedGraph(config: CLIConfig, options: ClientOptions): Promise
   try { await lstat(join(projectPath, ".cortex", "graph")); }
   catch (error) {
     if (error && typeof error === "object" && "code" in error && error.code === "ENOENT") {
-      if (mode === "required") throw new Error("Graph required: configure the selected project's graph connection first");
+      if (mode === "required") throw new Error("Graph required: configure the selected project's graph connection first", { cause: error });
       return {};
     }
     throw error;
@@ -93,7 +93,7 @@ export async function createClient(config: CLIConfig, options: ClientOptions): P
     const prior = automationFlags.map(name => process.env[name]);
     try {
       for (const name of automationFlags) process.env[name] = "false";
-      client = new Cortex(clientConfig, { initializeTransport: transport => {
+      client = new Cortex(clientConfig, { ...(resolved.key ? { deploymentOperator: true } : {}), initializeTransport: transport => {
       // Observe exactly the same close promise, including SDK-constructor failure cleanup.
       const originalClose = transport.close.bind(transport);
       transport.close = () => constructorDrain ??= Promise.resolve().then(originalClose);

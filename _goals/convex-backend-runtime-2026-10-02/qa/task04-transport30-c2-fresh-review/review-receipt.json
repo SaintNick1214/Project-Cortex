@@ -1,0 +1,124 @@
+{
+  "argv": [
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-transport30-c2-fresh-review/review.py"
+  ],
+  "utcPre": "2026-10-04T13:39:09.840251+00:00",
+  "failures": [],
+  "checks": [
+    {
+      "name": "clean",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+        "-B",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-evidence-transport-30-c2/materialize.py",
+        "--target",
+        "/workspace/Project-Cortex/work/resume/task04-transport30-c2-fresh-review/replica",
+        "--materialize"
+      ],
+      "utcPre": "2026-10-04T13:39:20.381387+00:00",
+      "utcPost": "2026-10-04T13:40:59.390133+00:00",
+      "exitCode": 0
+    },
+    {
+      "name": "idempotence",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+        "-B",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-evidence-transport-30-c2/materialize.py",
+        "--target",
+        "/workspace/Project-Cortex/work/resume/task04-transport30-c2-fresh-review/replica",
+        "--materialize"
+      ],
+      "utcPre": "2026-10-04T13:40:59.390211+00:00",
+      "utcPost": "2026-10-04T13:41:25.625040+00:00",
+      "exitCode": 0
+    },
+    {
+      "name": "readonly",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+        "-B",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-evidence-transport-30-c2/materialize.py",
+        "--target",
+        "/workspace/Project-Cortex/work/resume/task04-transport30-c2-fresh-review/replica"
+      ],
+      "utcPre": "2026-10-04T13:41:25.625136+00:00",
+      "utcPost": "2026-10-04T13:41:43.405763+00:00",
+      "exitCode": 0
+    },
+    {
+      "name": "adverse",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+        "-B",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-transport30-c2-fresh-review/adverse-independent.py"
+      ],
+      "utcPre": "2026-10-04T13:41:52.726123+00:00",
+      "utcPost": "2026-10-04T13:41:53.339409+00:00",
+      "exitCode": 0
+    }
+  ],
+  "candidateBefore": {
+    "files": 93,
+    "manifestSha256": "72585a1ecf6eeeb6adb619470c2e2a988e7c8e228a0f6f6b8e50b52bbb39009d",
+    "bytes": 18403124,
+    "utc": "2026-10-04T13:39:09.901263+00:00"
+  },
+  "c1Before": {
+    "files": 53,
+    "manifestSha256": "8e0571129a46c31c031a751a6f97d532d54a16e4c9c0de86b72e9a169094f4d8",
+    "bytes": 10444287,
+    "utc": "2026-10-04T13:39:09.914826+00:00"
+  },
+  "lineage": {
+    "files": 53,
+    "manifestSha256": "8e0571129a46c31c031a751a6f97d532d54a16e4c9c0de86b72e9a169094f4d8",
+    "bytes": 10444287,
+    "utc": "2026-10-04T13:39:09.927362+00:00"
+  },
+  "safeLiteralCodepoints": [
+    [
+      92
+    ],
+    [
+      0
+    ]
+  ],
+  "originalBefore": {
+    "files": 63544,
+    "manifestSha256": "0b3f7f43fdfbd1b2e71cb420b7a24d1255773b3ca6973df0775dc4d1c0c5179d",
+    "bytes": 2296620105,
+    "utc": "2026-10-04T13:39:19.882251+00:00"
+  },
+  "exactMapAndArchive": true,
+  "replicaClosure": {
+    "files": 63544,
+    "manifestSha256": "0b3f7f43fdfbd1b2e71cb420b7a24d1255773b3ca6973df0775dc4d1c0c5179d",
+    "bytes": 2296620105,
+    "utc": "2026-10-04T13:41:52.716072+00:00"
+  },
+  "boundGrowthReadRequests": [
+    3
+  ],
+  "exactBoundaryAndShortReject": true,
+  "candidateAfter": {
+    "files": 93,
+    "manifestSha256": "72585a1ecf6eeeb6adb619470c2e2a988e7c8e228a0f6f6b8e50b52bbb39009d",
+    "bytes": 18403124,
+    "utc": "2026-10-04T13:41:53.364261+00:00"
+  },
+  "c1After": {
+    "files": 53,
+    "manifestSha256": "8e0571129a46c31c031a751a6f97d532d54a16e4c9c0de86b72e9a169094f4d8",
+    "bytes": 10444287,
+    "utc": "2026-10-04T13:41:53.380818+00:00"
+  },
+  "originalAfter": {
+    "files": 63544,
+    "manifestSha256": "0b3f7f43fdfbd1b2e71cb420b7a24d1255773b3ca6973df0775dc4d1c0c5179d",
+    "bytes": 2296620105,
+    "utc": "2026-10-04T13:42:11.012060+00:00"
+  },
+  "exitCode": 0,
+  "utcPost": "2026-10-04T13:42:11.021302+00:00"
+}

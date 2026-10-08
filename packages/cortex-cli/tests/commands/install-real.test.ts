@@ -96,14 +96,14 @@ describe("real installer registry and binary", () => {
     const result = run(["init", directory, ...options, "--format", "json"]);
     expect(result.status).toBe(0);
     const output = JSON.parse(result.stdout);
-    expect(output.sdkVersion).toBe("0.37.0");
+    expect(output.sdkVersion).toBe("0.38.0");
     expect(output.convexVersion).toBe("1.46.0");
     expect(output.deployment).toBe("staged");
     const manifest = JSON.parse(
       fs.readFileSync(path.join(directory, "package.json"), "utf8"),
     );
     expect(manifest.scripts.build).toBe("tsc");
-    expect(manifest.version).toBe("1.1.0");
+    expect(manifest.version).toBe("1.2.0");
     expect(fs.existsSync(path.join(directory, ".env.local"))).toBe(false);
     expect(fs.existsSync(path.join(directory, "convex/_generated"))).toBe(
       false,
@@ -356,7 +356,7 @@ it("built npm failure restores scaffold and unpublished registry version never f
   );
   expect(unavailable.status).toBe(1);
   expect(unavailable.stderr).toContain(
-    "@cortexmemory/sdk@0.37.0 registry release unavailable",
+    "@cortexmemory/sdk@0.38.0 registry release unavailable",
   );
   expect(unavailable.stderr).toContain("No older SDK fallback");
   expect(fs.existsSync(directory)).toBe(false);

@@ -1,0 +1,337 @@
+(node:64917) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeAuth/authority.test.ts
+FAIL tests/unit/runtimeAuth/provisioning.test.ts
+  ● internal bootstrap and trusted control table adapters › provisions only trusted control records, returns immutable references and is idempotent
+
+    TypeError: query.take is not a function
+
+    [0m [90m 205 |[39m [90m/** Avoid native unique() diagnostics containing trusted control document IDs. */[39m
+     [90m 206 |[39m [36masync[39m [36mfunction[39m boundedSingle[33m<[39m[33mT[39m[33m>[39m(query[33m:[39m { take(limit[33m:[39m number)[33m:[39m [33mPromise[39m[33m<[39m[33mT[39m[][33m>[39m })[33m:[39m [33mPromise[39m[33m<[39m[33mT[39m [33m|[39m [36mnull[39m[33m>[39m {
+    [31m[1m>[22m[39m[90m 207 |[39m   [36mconst[39m rows [33m=[39m [36mawait[39m query[33m.[39mtake([35m2[39m)[33m;[39m
+     [90m     |[39m                            [31m[1m^[22m[39m
+     [90m 208 |[39m   [36mif[39m (rows[33m.[39mlength [33m>[39m [35m1[39m) deny()[33m;[39m
+     [90m 209 |[39m   [36mreturn[39m rows[[35m0[39m] [33m?[39m[33m?[39m [36mnull[39m[33m;[39m
+     [90m 210 |[39m }[0m
+
+      at boundedSingle (convex-dev/runtimeAuth.ts:207:28)
+      at Object.hasTombstone (convex-dev/runtimeAuth.ts:240:41)
+      at ensureScope (convex-dev/runtimeAuth.ts:279:40)
+      at handler (convex-dev/runtimeAuth.ts:302:20)
+      at Object.<anonymous> (tests/unit/runtimeAuth/provisioning.test.ts:88:19)
+
+  ● internal bootstrap and trusted control table adapters › resolves public identity through Convex auth and never uses tokenIdentifier or admin metadata
+
+    TypeError: query.take is not a function
+
+    [0m [90m 205 |[39m [90m/** Avoid native unique() diagnostics containing trusted control document IDs. */[39m
+     [90m 206 |[39m [36masync[39m [36mfunction[39m boundedSingle[33m<[39m[33mT[39m[33m>[39m(query[33m:[39m { take(limit[33m:[39m number)[33m:[39m [33mPromise[39m[33m<[39m[33mT[39m[][33m>[39m })[33m:[39m [33mPromise[39m[33m<[39m[33mT[39m [33m|[39m [36mnull[39m[33m>[39m {
+    [31m[1m>[22m[39m[90m 207 |[39m   [36mconst[39m rows [33m=[39m [36mawait[39m query[33m.[39mtake([35m2[39m)[33m;[39m
+     [90m     |[39m                            [31m[1m^[22m[39m
+     [90m 208 |[39m   [36mif[39m (rows[33m.[39mlength [33m>[39m [35m1[39m) deny()[33m;[39m
+     [90m 209 |[39m   [36mreturn[39m rows[[35m0[39m] [33m?[39m[33m?[39m [36mnull[39m[33m;[39m
+     [90m 210 |[39m }[0m
+
+      at boundedSingle (convex-dev/runtimeAuth.ts:207:28)
+      at Object.hasTombstone (convex-dev/runtimeAuth.ts:240:41)
+      at ensureScope (convex-dev/runtimeAuth.ts:279:40)
+      at handler (convex-dev/runtimeAuth.ts:302:20)
+      at Object.<anonymous> (tests/unit/runtimeAuth/provisioning.test.ts:100:5)
+
+  ● internal bootstrap and trusted control table adapters › adapts internal action authorization and sessionless background rechecks without mutating authority
+
+    TypeError: query.take is not a function
+
+    [0m [90m 205 |[39m [90m/** Avoid native unique() diagnostics containing trusted control document IDs. */[39m
+     [90m 206 |[39m [36masync[39m [36mfunction[39m boundedSingle[33m<[39m[33mT[39m[33m>[39m(query[33m:[39m { take(limit[33m:[39m number)[33m:[39m [33mPromise[39m[33m<[39m[33mT[39m[][33m>[39m })[33m:[39m [33mPromise[39m[33m<[39m[33mT[39m [33m|[39m [36mnull[39m[33m>[39m {
+    [31m[1m>[22m[39m[90m 207 |[39m   [36mconst[39m rows [33m=[39m [36mawait[39m query[33m.[39mtake([35m2[39m)[33m;[39m
+     [90m     |[39m                            [31m[1m^[22m[39m
+     [90m 208 |[39m   [36mif[39m (rows[33m.[39mlength [33m>[39m [35m1[39m) deny()[33m;[39m
+     [90m 209 |[39m   [36mreturn[39m rows[[35m0[39m] [33m?[39m[33m?[39m [36mnull[39m[33m;[39m
+     [90m 210 |[39m }[0m
+
+      at boundedSingle (convex-dev/runtimeAuth.ts:207:28)
+      at Object.hasTombstone (convex-dev/runtimeAuth.ts:240:41)
+      at ensureScope (convex-dev/runtimeAuth.ts:279:40)
+      at handler (convex-dev/runtimeAuth.ts:302:20)
+      at Object.<anonymous> (tests/unit/runtimeAuth/provisioning.test.ts:120:44)
+
+  ● internal bootstrap and trusted control table adapters › replaces changed capabilities with a new grant generation and invalidates pending old work
+
+    TypeError: query.take is not a function
+
+    [0m [90m 205 |[39m [90m/** Avoid native unique() diagnostics containing trusted control document IDs. */[39m
+     [90m 206 |[39m [36masync[39m [36mfunction[39m boundedSingle[33m<[39m[33mT[39m[33m>[39m(query[33m:[39m { take(limit[33m:[39m number)[33m:[39m [33mPromise[39m[33m<[39m[33mT[39m[][33m>[39m })[33m:[39m [33mPromise[39m[33m<[39m[33mT[39m [33m|[39m [36mnull[39m[33m>[39m {
+    [31m[1m>[22m[39m[90m 207 |[39m   [36mconst[39m rows [33m=[39m [36mawait[39m query[33m.[39mtake([35m2[39m)[33m;[39m
+     [90m     |[39m                            [31m[1m^[22m[39m
+     [90m 208 |[39m   [36mif[39m (rows[33m.[39mlength [33m>[39m [35m1[39m) deny()[33m;[39m
+     [90m 209 |[39m   [36mreturn[39m rows[[35m0[39m] [33m?[39m[33m?[39m [36mnull[39m[33m;[39m
+     [90m 210 |[39m }[0m
+
+      at boundedSingle (convex-dev/runtimeAuth.ts:207:28)
+      at Object.hasTombstone (convex-dev/runtimeAuth.ts:240:41)
+      at ensureScope (convex-dev/runtimeAuth.ts:279:40)
+      at handler (convex-dev/runtimeAuth.ts:302:20)
+      at Object.<anonymous> (tests/unit/runtimeAuth/provisioning.test.ts:130:40)
+
+  ● internal bootstrap and trusted control table adapters › revokes an exact grant permanently; only an explicit trusted new generation can issue later authority
+
+    TypeError: query.take is not a function
+
+    [0m [90m 205 |[39m [90m/** Avoid native unique() diagnostics containing trusted control document IDs. */[39m
+     [90m 206 |[39m [36masync[39m [36mfunction[39m boundedSingle[33m<[39m[33mT[39m[33m>[39m(query[33m:[39m { take(limit[33m:[39m number)[33m:[39m [33mPromise[39m[33m<[39m[33mT[39m[][33m>[39m })[33m:[39m [33mPromise[39m[33m<[39m[33mT[39m [33m|[39m [36mnull[39m[33m>[39m {
+    [31m[1m>[22m[39m[90m 207 |[39m   [36mconst[39m rows [33m=[39m [36mawait[39m query[33m.[39mtake([35m2[39m)[33m;[39m
+     [90m     |[39m                            [31m[1m^[22m[39m
+     [90m 208 |[39m   [36mif[39m (rows[33m.[39mlength [33m>[39m [35m1[39m) deny()[33m;[39m
+     [90m 209 |[39m   [36mreturn[39m rows[[35m0[39m] [33m?[39m[33m?[39m [36mnull[39m[33m;[39m
+     [90m 210 |[39m }[0m
+
+      at boundedSingle (convex-dev/runtimeAuth.ts:207:28)
+      at Object.hasTombstone (convex-dev/runtimeAuth.ts:240:41)
+      at ensureScope (convex-dev/runtimeAuth.ts:279:40)
+      at handler (convex-dev/runtimeAuth.ts:302:20)
+      at Object.<anonymous> (tests/unit/runtimeAuth/provisioning.test.ts:142:40)
+
+  ● internal bootstrap and trusted control table adapters › retains membership revocation fences and refuses to re-provision the same membership
+
+    TypeError: query.take is not a function
+
+    [0m [90m 205 |[39m [90m/** Avoid native unique() diagnostics containing trusted control document IDs. */[39m
+     [90m 206 |[39m [36masync[39m [36mfunction[39m boundedSingle[33m<[39m[33mT[39m[33m>[39m(query[33m:[39m { take(limit[33m:[39m number)[33m:[39m [33mPromise[39m[33m<[39m[33mT[39m[][33m>[39m })[33m:[39m [33mPromise[39m[33m<[39m[33mT[39m [33m|[39m [36mnull[39m[33m>[39m {
+    [31m[1m>[22m[39m[90m 207 |[39m   [36mconst[39m rows [33m=[39m [36mawait[39m query[33m.[39mtake([35m2[39m)[33m;[39m
+     [90m     |[39m                            [31m[1m^[22m[39m
+     [90m 208 |[39m   [36mif[39m (rows[33m.[39mlength [33m>[39m [35m1[39m) deny()[33m;[39m
+     [90m 209 |[39m   [36mreturn[39m rows[[35m0[39m] [33m?[39m[33m?[39m [36mnull[39m[33m;[39m
+     [90m 210 |[39m }[0m
+
+      at boundedSingle (convex-dev/runtimeAuth.ts:207:28)
+      at Object.hasTombstone (convex-dev/runtimeAuth.ts:240:41)
+      at ensureScope (convex-dev/runtimeAuth.ts:279:40)
+      at handler (convex-dev/runtimeAuth.ts:302:20)
+      at Object.<anonymous> (tests/unit/runtimeAuth/provisioning.test.ts:155:40)
+
+  ● internal bootstrap and trusted control table adapters › retains principal deletion fences and refuses issuer/subject recreation
+
+    TypeError: query.take is not a function
+
+    [0m [90m 205 |[39m [90m/** Avoid native unique() diagnostics containing trusted control document IDs. */[39m
+     [90m 206 |[39m [36masync[39m [36mfunction[39m boundedSingle[33m<[39m[33mT[39m[33m>[39m(query[33m:[39m { take(limit[33m:[39m number)[33m:[39m [33mPromise[39m[33m<[39m[33mT[39m[][33m>[39m })[33m:[39m [33mPromise[39m[33m<[39m[33mT[39m [33m|[39m [36mnull[39m[33m>[39m {
+    [31m[1m>[22m[39m[90m 207 |[39m   [36mconst[39m rows [33m=[39m [36mawait[39m query[33m.[39mtake([35m2[39m)[33m;[39m
+     [90m     |[39m                            [31m[1m^[22m[39m
+     [90m 208 |[39m   [36mif[39m (rows[33m.[39mlength [33m>[39m [35m1[39m) deny()[33m;[39m
+     [90m 209 |[39m   [36mreturn[39m rows[[35m0[39m] [33m?[39m[33m?[39m [36mnull[39m[33m;[39m
+     [90m 210 |[39m }[0m
+
+      at boundedSingle (convex-dev/runtimeAuth.ts:207:28)
+      at Object.hasTombstone (convex-dev/runtimeAuth.ts:240:41)
+      at ensureScope (convex-dev/runtimeAuth.ts:279:40)
+      at handler (convex-dev/runtimeAuth.ts:302:20)
+      at Object.<anonymous> (tests/unit/runtimeAuth/provisioning.test.ts:166:40)
+
+  ● internal bootstrap and trusted control table adapters › fences deleted scope undefined and prevents bootstrap recreation
+
+    TypeError: query.take is not a function
+
+    [0m [90m 205 |[39m [90m/** Avoid native unique() diagnostics containing trusted control document IDs. */[39m
+     [90m 206 |[39m [36masync[39m [36mfunction[39m boundedSingle[33m<[39m[33mT[39m[33m>[39m(query[33m:[39m { take(limit[33m:[39m number)[33m:[39m [33mPromise[39m[33m<[39m[33mT[39m[][33m>[39m })[33m:[39m [33mPromise[39m[33m<[39m[33mT[39m [33m|[39m [36mnull[39m[33m>[39m {
+    [31m[1m>[22m[39m[90m 207 |[39m   [36mconst[39m rows [33m=[39m [36mawait[39m query[33m.[39mtake([35m2[39m)[33m;[39m
+     [90m     |[39m                            [31m[1m^[22m[39m
+     [90m 208 |[39m   [36mif[39m (rows[33m.[39mlength [33m>[39m [35m1[39m) deny()[33m;[39m
+     [90m 209 |[39m   [36mreturn[39m rows[[35m0[39m] [33m?[39m[33m?[39m [36mnull[39m[33m;[39m
+     [90m 210 |[39m }[0m
+
+      at boundedSingle (convex-dev/runtimeAuth.ts:207:28)
+      at Object.hasTombstone (convex-dev/runtimeAuth.ts:240:41)
+      at ensureScope (convex-dev/runtimeAuth.ts:279:40)
+      at handler (convex-dev/runtimeAuth.ts:302:20)
+      at tests/unit/runtimeAuth/provisioning.test.ts:177:40
+
+  ● internal bootstrap and trusted control table adapters › fences deleted scope space-a and prevents bootstrap recreation
+
+    TypeError: query.take is not a function
+
+    [0m [90m 205 |[39m [90m/** Avoid native unique() diagnostics containing trusted control document IDs. */[39m
+     [90m 206 |[39m [36masync[39m [36mfunction[39m boundedSingle[33m<[39m[33mT[39m[33m>[39m(query[33m:[39m { take(limit[33m:[39m number)[33m:[39m [33mPromise[39m[33m<[39m[33mT[39m[][33m>[39m })[33m:[39m [33mPromise[39m[33m<[39m[33mT[39m [33m|[39m [36mnull[39m[33m>[39m {
+    [31m[1m>[22m[39m[90m 207 |[39m   [36mconst[39m rows [33m=[39m [36mawait[39m query[33m.[39mtake([35m2[39m)[33m;[39m
+     [90m     |[39m                            [31m[1m^[22m[39m
+     [90m 208 |[39m   [36mif[39m (rows[33m.[39mlength [33m>[39m [35m1[39m) deny()[33m;[39m
+     [90m 209 |[39m   [36mreturn[39m rows[[35m0[39m] [33m?[39m[33m?[39m [36mnull[39m[33m;[39m
+     [90m 210 |[39m }[0m
+
+      at boundedSingle (convex-dev/runtimeAuth.ts:207:28)
+      at Object.hasTombstone (convex-dev/runtimeAuth.ts:240:41)
+      at ensureScope (convex-dev/runtimeAuth.ts:279:40)
+      at handler (convex-dev/runtimeAuth.ts:302:20)
+      at tests/unit/runtimeAuth/provisioning.test.ts:177:40
+
+  ● internal bootstrap and trusted control table adapters › records deletion even before a scope is provisioned, preventing later resurrection
+
+    TypeError: query.take is not a function
+
+    [0m [90m 205 |[39m [90m/** Avoid native unique() diagnostics containing trusted control document IDs. */[39m
+     [90m 206 |[39m [36masync[39m [36mfunction[39m boundedSingle[33m<[39m[33mT[39m[33m>[39m(query[33m:[39m { take(limit[33m:[39m number)[33m:[39m [33mPromise[39m[33m<[39m[33mT[39m[][33m>[39m })[33m:[39m [33mPromise[39m[33m<[39m[33mT[39m [33m|[39m [36mnull[39m[33m>[39m {
+    [31m[1m>[22m[39m[90m 207 |[39m   [36mconst[39m rows [33m=[39m [36mawait[39m query[33m.[39mtake([35m2[39m)[33m;[39m
+     [90m     |[39m                            [31m[1m^[22m[39m
+     [90m 208 |[39m   [36mif[39m (rows[33m.[39mlength [33m>[39m [35m1[39m) deny()[33m;[39m
+     [90m 209 |[39m   [36mreturn[39m rows[[35m0[39m] [33m?[39m[33m?[39m [36mnull[39m[33m;[39m
+     [90m 210 |[39m }[0m
+
+      at boundedSingle (convex-dev/runtimeAuth.ts:207:28)
+      at Object.hasTombstone (convex-dev/runtimeAuth.ts:240:41)
+      at handler (convex-dev/runtimeAuth.ts:386:43)
+      at Object.<anonymous> (tests/unit/runtimeAuth/provisioning.test.ts:191:5)
+
+  ● internal bootstrap and trusted control table adapters › tombstones a resource idempotently and rejects its delayed read/commit
+
+    TypeError: query.take is not a function
+
+    [0m [90m 205 |[39m [90m/** Avoid native unique() diagnostics containing trusted control document IDs. */[39m
+     [90m 206 |[39m [36masync[39m [36mfunction[39m boundedSingle[33m<[39m[33mT[39m[33m>[39m(query[33m:[39m { take(limit[33m:[39m number)[33m:[39m [33mPromise[39m[33m<[39m[33mT[39m[][33m>[39m })[33m:[39m [33mPromise[39m[33m<[39m[33mT[39m [33m|[39m [36mnull[39m[33m>[39m {
+    [31m[1m>[22m[39m[90m 207 |[39m   [36mconst[39m rows [33m=[39m [36mawait[39m query[33m.[39mtake([35m2[39m)[33m;[39m
+     [90m     |[39m                            [31m[1m^[22m[39m
+     [90m 208 |[39m   [36mif[39m (rows[33m.[39mlength [33m>[39m [35m1[39m) deny()[33m;[39m
+     [90m 209 |[39m   [36mreturn[39m rows[[35m0[39m] [33m?[39m[33m?[39m [36mnull[39m[33m;[39m
+     [90m 210 |[39m }[0m
+
+      at boundedSingle (convex-dev/runtimeAuth.ts:207:28)
+      at Object.hasTombstone (convex-dev/runtimeAuth.ts:240:41)
+      at ensureScope (convex-dev/runtimeAuth.ts:279:40)
+      at handler (convex-dev/runtimeAuth.ts:302:20)
+      at Object.<anonymous> (tests/unit/runtimeAuth/provisioning.test.ts:197:40)
+
+  ● internal bootstrap and trusted control table adapters › rejects invalid provisioning, actor rebinding and metadata-user rebinding
+
+    TypeError: query.take is not a function
+
+    [0m [90m 205 |[39m [90m/** Avoid native unique() diagnostics containing trusted control document IDs. */[39m
+     [90m 206 |[39m [36masync[39m [36mfunction[39m boundedSingle[33m<[39m[33mT[39m[33m>[39m(query[33m:[39m { take(limit[33m:[39m number)[33m:[39m [33mPromise[39m[33m<[39m[33mT[39m[][33m>[39m })[33m:[39m [33mPromise[39m[33m<[39m[33mT[39m [33m|[39m [36mnull[39m[33m>[39m {
+    [31m[1m>[22m[39m[90m 207 |[39m   [36mconst[39m rows [33m=[39m [36mawait[39m query[33m.[39mtake([35m2[39m)[33m;[39m
+     [90m     |[39m                            [31m[1m^[22m[39m
+     [90m 208 |[39m   [36mif[39m (rows[33m.[39mlength [33m>[39m [35m1[39m) deny()[33m;[39m
+     [90m 209 |[39m   [36mreturn[39m rows[[35m0[39m] [33m?[39m[33m?[39m [36mnull[39m[33m;[39m
+     [90m 210 |[39m }[0m
+
+      at boundedSingle (convex-dev/runtimeAuth.ts:207:28)
+      at Object.hasTombstone (convex-dev/runtimeAuth.ts:240:41)
+      at ensureScope (convex-dev/runtimeAuth.ts:279:40)
+      at handler (convex-dev/runtimeAuth.ts:302:20)
+      at Object.<anonymous> (tests/unit/runtimeAuth/provisioning.test.ts:216:5)
+
+  ● internal bootstrap and trusted control table adapters › uses table-specific ID normalization and rejects duplicate exact issuer/subject records
+
+    TypeError: query.take is not a function
+
+    [0m [90m 205 |[39m [90m/** Avoid native unique() diagnostics containing trusted control document IDs. */[39m
+     [90m 206 |[39m [36masync[39m [36mfunction[39m boundedSingle[33m<[39m[33mT[39m[33m>[39m(query[33m:[39m { take(limit[33m:[39m number)[33m:[39m [33mPromise[39m[33m<[39m[33mT[39m[][33m>[39m })[33m:[39m [33mPromise[39m[33m<[39m[33mT[39m [33m|[39m [36mnull[39m[33m>[39m {
+    [31m[1m>[22m[39m[90m 207 |[39m   [36mconst[39m rows [33m=[39m [36mawait[39m query[33m.[39mtake([35m2[39m)[33m;[39m
+     [90m     |[39m                            [31m[1m^[22m[39m
+     [90m 208 |[39m   [36mif[39m (rows[33m.[39mlength [33m>[39m [35m1[39m) deny()[33m;[39m
+     [90m 209 |[39m   [36mreturn[39m rows[[35m0[39m] [33m?[39m[33m?[39m [36mnull[39m[33m;[39m
+     [90m 210 |[39m }[0m
+
+      at boundedSingle (convex-dev/runtimeAuth.ts:207:28)
+      at Object.hasTombstone (convex-dev/runtimeAuth.ts:240:41)
+      at ensureScope (convex-dev/runtimeAuth.ts:279:40)
+      at handler (convex-dev/runtimeAuth.ts:302:20)
+      at Object.<anonymous> (tests/unit/runtimeAuth/provisioning.test.ts:222:26)
+
+PASS tests/unit/runtimeAuth/inventory.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     3.9s | 54/54 passed | /tests/unit/runtimeAuth/authority.test.ts
+  ✅     1.5s | 64/64 passed | /tests/unit/runtimeAuth/inventory.test.ts
+  ❌     1.2s | 2/15 passed | /tests/unit/runtimeAuth/provisioning.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.36s ( 5.3%) - portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs accepts changed source bytes and an additional registration without coupling policy to frozen production hashes/counts
+    /tests/unit/runtimeAuth/inventory.test.ts
+
+ 2. [32m✓[0m    0.27s ( 3.9%) - portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs accepts changed source bytes and an additional registration without coupling policy to frozen production hashes/counts
+    /tests/unit/runtimeAuth/inventory.test.ts
+
+ 3. [32m✓[0m    0.01s ( 0.1%) - background rechecks and deletion fences checks ownership synchronously without accepting missing owner/tenant fields
+    /tests/unit/runtimeAuth/authority.test.ts
+
+ 4. [32m✓[0m    0.00s ( 0.0%) - verified principal and grant authority derives exact trusted scope and immutable versions from verified issuer/subject, including omitted selectors
+    /tests/unit/runtimeAuth/authority.test.ts
+
+ 5. [32m✓[0m    0.00s ( 0.0%) - internal bootstrap and trusted control table adapters exposes no public provisioning, revocation, deletion, or action authority resolver
+    /tests/unit/runtimeAuth/provisioning.test.ts
+
+ 6. [32m✓[0m    0.00s ( 0.0%) - verified principal and grant authority rejects missing identity and never turns metadata into a membership
+    /tests/unit/runtimeAuth/authority.test.ts
+
+ 7. [32m✓[0m    0.00s ( 0.0%) - verified principal and grant authority denies revoked membership before a sensitive read
+    /tests/unit/runtimeAuth/authority.test.ts
+
+ 8. [32m✓[0m    0.00s ( 0.0%) - verified principal and grant authority denies missing read capability before a sensitive read
+    /tests/unit/runtimeAuth/authority.test.ts
+
+ 9. [32m✓[0m    0.00s ( 0.0%) - verified principal and grant authority denies invalid grant version before a sensitive read
+    /tests/unit/runtimeAuth/authority.test.ts
+
+10. [32m✓[0m    0.00s ( 0.0%) - verified principal and grant authority denies deleted memory space before a sensitive read
+    /tests/unit/runtimeAuth/authority.test.ts
+
+11. [32m✓[0m    0.00s ( 0.0%) - verified principal and grant authority denies space tombstone before a sensitive read
+    /tests/unit/runtimeAuth/authority.test.ts
+
+12. [32m✓[0m    0.00s ( 0.0%) - verified principal and grant authority denies omitted selectors when eligible grants span tenants or memory spaces
+    /tests/unit/runtimeAuth/authority.test.ts
+
+13. [32m✓[0m    0.00s ( 0.0%) - verified principal and grant authority rejects same-scope active read/write grants before capability pruning
+    /tests/unit/runtimeAuth/authority.test.ts
+
+14. [32m✓[0m    0.00s ( 0.0%) - verified principal and grant authority excludes a retained revokedAt generation without granting its capabilities/access
+    /tests/unit/runtimeAuth/authority.test.ts
+
+15. [32m✓[0m    0.00s ( 0.0%) - verified principal and grant authority does not let expiry/currentness pruning repair duplicate unrevoked generations
+    /tests/unit/runtimeAuth/authority.test.ts
+
+16. [32m✓[0m    0.00s ( 0.0%) - verified principal and grant authority keeps other registered raw spaces independent even when one contains corrupt duplicates
+    /tests/unit/runtimeAuth/authority.test.ts
+
+17. [32m✓[0m    0.00s ( 0.0%) - verified principal and grant authority groups tenant-wide and space-specific grants by raw scope before narrowing, preserving exact capabilities
+    /tests/unit/runtimeAuth/authority.test.ts
+
+18. [32m✓[0m    0.00s ( 0.0%) - verified principal and grant authority requires explicit cross-principal access within the same tenant
+    /tests/unit/runtimeAuth/authority.test.ts
+
+19. [32m✓[0m    0.00s ( 0.0%) - verified principal and grant authority authorizes each private storage capability independently of read/run/admin
+    /tests/unit/runtimeAuth/authority.test.ts
+
+20. [32m✓[0m    0.00s ( 0.0%) - background rechecks and deletion fences a lone grant permits work before expiry and rejects both admission and pinned work at expiry
+    /tests/unit/runtimeAuth/authority.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.66s (9.7% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      6.83s
+  Test suites:        3
+  Individual tests:   37
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 3
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 1 failed, 2 passed, 3 total
+Tests:       13 failed, 120 passed, 133 total
+Snapshots:   0 total
+Time:        6.836 s
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup/literal-original-auth.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

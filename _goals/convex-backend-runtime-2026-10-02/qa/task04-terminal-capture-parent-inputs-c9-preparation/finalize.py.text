@@ -1,0 +1,38 @@
+from pathlib import Path
+import json,hashlib,datetime,shutil
+r=Path('/workspace/Project-Cortex');q=r/'_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c9-preparation';w=r/'work/resume/task04-terminal-capture-parent-inputs-c9-preparation';old=q.parent/'task04-terminal-capture-parent-inputs-c8-preparation';sha=lambda b:hashlib.sha256(b).hexdigest();write=lambda p,x:p.write_text(json.dumps(x,indent=2)+'\n');utc=datetime.datetime.now(datetime.timezone.utc).isoformat()
+rows=[];historical=[]
+for name in ['extension','regression']:
+ a=json.loads((old/f'results-{name}.json').read_text())['checks'];b=json.loads((q/f'results-{name}.json').read_text())['checks'];assert len(a)==len(b)==84
+ for i,(x,y) in enumerate(zip(a,b)):
+  assert x['name']==y['name'] and x['outcome']==y['outcome'];rows.append({'profile':name,'ordinal':i+1,'name':x['name'],'priorOutcome':x['outcome'],'newOutcome':y['outcome']})
+ a=(old/f'parent-inputs-{name}.mjs').read_text();b=(q/f'parent-inputs-{name}.mjs').read_text()
+ for start,end in [('export const historicalSources','export function strictProfile'),('export function historicalEvidence','let setupStarted=false')]:
+  aa=a[a.index(start):a.index(end)];bb=b[b.index(start):b.index(end)];assert aa==bb;historical.append({'profile':name,'segment':start,'sha256':sha(aa.encode()),'bytes':len(aa.encode()),'exactUnchanged':True})
+ assert len(json.loads((q/f'effect-matrix-{name}.json').read_text())['outcomes'])==38
+ assert len(json.loads((q/f'real-chain-{name}.json').read_text())['results'])==106
+write(q/'retention-map.json',{'allOriginal62Plus22PreservedPerProfile':True,'rows':rows,'historicalFourSourcesNineLocatorsAndBodies':historical,'original38PerProfileRetained':True})
+# Deduplicated exact VM execution preimages and all substitution receipts; never actual root-private material.
+vm=q/'DUMMY-VM-source-preimages';vm.mkdir(exist_ok=True);sub=[]
+for p in sorted(w.rglob('vm-parent-DUMMY-source.mjs')):
+ b=p.read_bytes();h=sha(b);d=vm/(h+'.mjs.text');d.write_bytes(b)
+ sub.append({'scratchPath':str(p.relative_to(r)),'vmSourceSHA256':h,'publicPreimage':str(d.relative_to(q))})
+receipts=[]
+for p in sorted(w.rglob('DUMMY-source-substitution.json')):
+ b=p.read_bytes();h=sha(b);d=vm/(h+'.json');d.write_bytes(b);receipts.append({'scratchPath':str(p.relative_to(r)),'sha256':h,'publicReceipt':str(d.relative_to(q))})
+write(q/'DUMMY-substitution-discovery.json',{'vmSourceInstances':sub,'substitutionReceipts':receipts,'uniqueSourcePreimages':len(list(vm.glob('*.mjs.text'))),'boundary':'VM_ONLY_DUMMY; REAL_PRIVATE_NEVER_READ'})
+for p in sorted(w.glob('*')):
+ if p.is_file() and p.suffix in ['.mjs','.py']:
+  (q/(p.name+'.text')).write_bytes(p.read_bytes())
+for suffix in ['stdout','stderr']:(q/('final-focused.'+suffix)).write_bytes((w/('final-focused.'+suffix)).read_bytes())
+interfaces=[]
+for p in sorted(q.glob('*inputs-*.mjs')):interfaces.append({'path':str(p.relative_to(r)),'sha256':sha(p.read_bytes()),'bytes':p.stat().st_size,'imports':'Static exact C4 profile guard/arguments; current imports same-profile parent','entry':'main only root-authorized; strictProfile public validation','deadline':'fixed120000ms from entry shared with controlled exclusive beforeCreate/deadlineMs; no reset'})
+write(q/'public-interface.json',{'authoritativeSources':interfaces,'exclusiveAPI':'exclusive(path,value,true,undefined,{deadlineMs,beforeCreate,observe})','observations':['created','written','durable','closed'],'partialEvidence':['parentSetupEffects','parentCurrentInputEffects'],'actualPrivateInvocation':'NOT_RUN'})
+write(q/'failed-probes.json',{'newC9UnexpectedFinalFailures':0,'expectedHistoricalRED':'Captured raw exit1 C7 requirements and C8 same compliance requirements; unchanged reviewer20 violation assertions PASS as observational defects only','newExploratoryRaw':'Present exact stdout/stderr; passing probes and expected C8 RED','historicalMissingRaw':'Original C7/C8 producer exploratory missing raw remains missing; no reconstruction or retrospective PASS'})
+write(q/'discovery.json',{'originalPerProfile84':168,'originalEffectMatrix38PerProfile':76,'actualTarget':72,'actualPhase':22,'currentRetainedTotal':338,'actualImportedExclusiveChain106PerProfile':212,'sharedIdenticalComplianceGREEN10PerProfile':20,'currentTotal':570,'historicalRequirements':'C7 RED4 / C8 GREEN4 retained separately; C8 RED20 / C9 GREEN20 same expectations','reviewerObservationalViolations':20,'mainCommands':24,'finalFocusedCommands':3,'skipped':0,'todo':0,'failedUnexpectedFinal':0,'productTestsRepeated':0,'privateNativeActual':'NOT_RUN'})
+pre=json.loads((q/'protected-pre.json').read_text());post=[]
+for x in pre:
+ p=r/x['path'];post.append({'path':x['path'],'bytes':p.stat().st_size,'sha256':sha(p.read_bytes())})
+assert pre==post;write(q/'protected-final.json',post)
+write(q/'completion.json',{'status':'COMPLETE_OFFLINE_PREPARATION','utc':utc,'protectedFiles':len(pre),'protectedUnchanged':True,'freshIndependentParentC9AndNativeC4Required':True,'Task04':'INCOMPLETE','actualPrivateReads':0,'actualSigning':0,'actualNetwork':0,'actualProvisionRPC':'NOT_RUN','realNativePhysicalProofs':'NOT_RUN','sourceHelperHashFreeze':'UNCHANGED_FROM_SENT_FINAL_FOUR'})
+print(json.dumps({'status':'ASSEMBLED','vmInstances':len(sub),'uniqueVMSources':len(list(vm.glob('*.mjs.text'))),'protected':len(pre),'interfaces':interfaces}))

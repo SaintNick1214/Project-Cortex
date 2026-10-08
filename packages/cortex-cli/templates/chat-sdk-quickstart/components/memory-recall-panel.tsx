@@ -5,25 +5,25 @@
  */
 "use client";
 
-import { ChevronDown, ChevronUp, Search } from "lucide-react";
-import { useState, useMemo, useEffect } from "react";
 import type {
   LayerState,
   MemoryLayer,
 } from "@cortexmemory/vercel-ai-provider/react";
-import { cn } from "@/lib/utils";
+import { ChevronDown, ChevronUp, Search } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
+import { cn } from "@/lib/utils";
 
 type LayerStatus = LayerState["status"];
 
 interface MemoryRecallPanelProps {
-  layers: Record<MemoryLayer, LayerState>;
-  isRecalling: boolean;
   className?: string;
+  isRecalling: boolean;
+  layers: Record<MemoryLayer, LayerState>;
 }
 
 /**
@@ -36,45 +36,45 @@ const LAYER_CONFIG: Record<
   MemoryLayer,
   { name: string; icon: string; order: number }
 > = {
-  memorySpace: { name: "Memory Space", icon: "📦", order: 0 },
-  user: { name: "User Profile", icon: "👤", order: 1 },
-  agent: { name: "Agent", icon: "🤖", order: 2 },
-  context: { name: "Context Retrieval", icon: "🔍", order: 3 },
+  agent: { icon: "🤖", name: "Agent", order: 2 },
+  context: { icon: "🔍", name: "Context Retrieval", order: 3 },
   // These are storage layers - not shown in recall panel but included for type safety
-  conversation: { name: "Conversation", icon: "💬", order: 4 },
-  vector: { name: "Vector Search", icon: "🎯", order: 5 },
-  facts: { name: "Facts Lookup", icon: "💡", order: 6 },
-  graph: { name: "Graph", icon: "🕸️", order: 7 },
+  conversation: { icon: "💬", name: "Conversation", order: 4 },
+  facts: { icon: "💡", name: "Facts Lookup", order: 6 },
+  graph: { icon: "🕸️", name: "Graph", order: 7 },
+  memorySpace: { icon: "📦", name: "Memory Space", order: 0 },
+  user: { icon: "👤", name: "User Profile", order: 1 },
+  vector: { icon: "🎯", name: "Vector Search", order: 5 },
 };
 
 const STATUS_CONFIG: Record<
   LayerStatus,
   { indicator: string; className: string; dotClass: string }
 > = {
-  pending: {
-    indicator: "○",
-    className: "text-muted-foreground",
-    dotClass: "bg-muted-foreground",
-  },
-  in_progress: {
-    indicator: "◐",
-    className: "text-blue-500",
-    dotClass: "bg-blue-500 animate-pulse",
-  },
   complete: {
-    indicator: "✓",
     className: "text-green-500",
     dotClass: "bg-green-500",
+    indicator: "✓",
   },
   error: {
-    indicator: "✕",
     className: "text-destructive",
     dotClass: "bg-destructive",
+    indicator: "✕",
+  },
+  in_progress: {
+    className: "text-blue-500",
+    dotClass: "bg-blue-500 animate-pulse",
+    indicator: "◐",
+  },
+  pending: {
+    className: "text-muted-foreground",
+    dotClass: "bg-muted-foreground",
+    indicator: "○",
   },
   skipped: {
-    indicator: "○",
     className: "text-muted-foreground/50",
     dotClass: "bg-muted-foreground/50",
+    indicator: "○",
   },
 };
 
@@ -90,13 +90,23 @@ function LayerRow({
 
   // Generate preview text from data
   const preview = useMemo(() => {
-    if (!state.data) return null;
-    if (state.data.id) return state.data.id;
-    if (state.data.preview) return state.data.preview;
+    if (!state.data) {
+      return null;
+    }
+    if (state.data.id) {
+      return state.data.id;
+    }
+    if (state.data.preview) {
+      return state.data.preview;
+    }
     if (state.data.metadata) {
       const meta = state.data.metadata;
-      if ("memories" in meta) return `${meta.memories} memories`;
-      if ("count" in meta) return `${meta.count} items`;
+      if ("memories" in meta) {
+        return `${meta.memories} memories`;
+      }
+      if ("count" in meta) {
+        return `${meta.count} items`;
+      }
       if ("vectorMatches" in meta && "factMatches" in meta) {
         return `${meta.vectorMatches} vectors, ${meta.factMatches} facts`;
       }
@@ -133,12 +143,12 @@ function LayerRow({
       <span
         className={cn(
           "text-xs tabular-nums w-12 text-right",
-          state.latencyMs !== undefined
-            ? "text-muted-foreground"
-            : "text-muted-foreground/30"
+          state.latencyMs === undefined
+            ? "text-muted-foreground/30"
+            : "text-muted-foreground"
         )}
       >
-        {state.latencyMs !== undefined ? `${state.latencyMs}ms` : "-"}
+        {state.latencyMs === undefined ? "-" : `${state.latencyMs}ms`}
       </span>
     </div>
   );
@@ -161,29 +171,35 @@ export function MemoryRecallPanel({
   }, [isRecalling]);
 
   // Calculate total latency from completed recall layers
-  const totalLatency = useMemo(() => {
-    return RECALL_LAYERS.reduce((sum, layerKey) => {
-      const layer = layers[layerKey];
-      return sum + (layer?.latencyMs ?? 0);
-    }, 0);
-  }, [layers]);
+  const totalLatency = useMemo(
+    () =>
+      RECALL_LAYERS.reduce((sum, layerKey) => {
+        const layer = layers[layerKey];
+        return sum + (layer?.latencyMs ?? 0);
+      }, 0),
+    [layers]
+  );
 
   // Get sorted recall layer entries (only recall layers)
-  const sortedLayers = useMemo(() => {
-    return RECALL_LAYERS.map((layerKey) => [layerKey, layers[layerKey]] as [MemoryLayer, LayerState])
-      .filter(([, state]) => state && state.status !== "skipped")
-      .sort(([a], [b]) => {
-        return LAYER_CONFIG[a].order - LAYER_CONFIG[b].order;
-      });
-  }, [layers]);
+  const sortedLayers = useMemo(
+    () =>
+      RECALL_LAYERS.map(
+        (layerKey) => [layerKey, layers[layerKey]] as [MemoryLayer, LayerState]
+      )
+        .filter(([, state]) => state && state.status !== "skipped")
+        .sort(([a], [b]) => LAYER_CONFIG[a].order - LAYER_CONFIG[b].order),
+    [layers]
+  );
 
   // Count completed layers
-  const completedCount = useMemo(() => {
-    return RECALL_LAYERS.filter((layerKey) => {
-      const status = layers[layerKey]?.status;
-      return status === "complete" || status === "skipped";
-    }).length;
-  }, [layers]);
+  const completedCount = useMemo(
+    () =>
+      RECALL_LAYERS.filter((layerKey) => {
+        const status = layers[layerKey]?.status;
+        return status === "complete" || status === "skipped";
+      }).length,
+    [layers]
+  );
 
   const totalCount = RECALL_LAYERS.length;
 
@@ -194,18 +210,18 @@ export function MemoryRecallPanel({
 
   return (
     <Collapsible
-      open={isOpen}
-      onOpenChange={setIsOpen}
       className={cn(
         "border rounded-lg bg-card shadow-sm overflow-hidden",
         isRecalling && "ring-1 ring-blue-500/30",
         className
       )}
+      onOpenChange={setIsOpen}
+      open={isOpen}
     >
       <CollapsibleTrigger asChild>
         <button
-          type="button"
           className="flex items-center gap-3 w-full px-3 py-2.5 hover:bg-accent/50 transition-colors text-left"
+          type="button"
         >
           {/* Search icon with animation during recall */}
           <Search
@@ -219,7 +235,7 @@ export function MemoryRecallPanel({
           <span className="text-sm font-medium flex-1">Memory Recall</span>
 
           {/* Progress indicator */}
-          {isRecalling && (
+          {!!isRecalling && (
             <span className="text-xs text-muted-foreground">
               {completedCount}/{totalCount}
             </span>

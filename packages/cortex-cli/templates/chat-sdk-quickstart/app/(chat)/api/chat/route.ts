@@ -496,7 +496,7 @@ export async function POST(request: Request) {
           // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
           // Stream with Cortex Memory-wrapped model
           // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-          assertV3Provider(provider);
+          assertSupportedProvider(provider);
           const result = streamText({
             model: provider,
             onError: ({ error }) => reportChatStreamError("model-stream", error),
@@ -695,11 +695,11 @@ export async function DELETE(request: Request) {
   });
 }
 
-function assertV3Provider(
+function assertSupportedProvider(
   provider: CortexMemoryProvider,
 ): asserts provider is CortexMemoryProvider & {
-  readonly specificationVersion: "v3";
+  readonly specificationVersion: "v3" | "v4";
 } {
-  if (provider.specificationVersion !== "v3")
-    throw new ChatSDKError("offline:chat", "Use an AI SDK 6 model");
+  if (!["v3", "v4"].includes(provider.specificationVersion))
+    throw new ChatSDKError("offline:chat", "Use an AI SDK 7 compatible model");
 }

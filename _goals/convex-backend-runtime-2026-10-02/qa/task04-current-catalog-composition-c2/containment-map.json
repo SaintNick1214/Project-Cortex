@@ -1,0 +1,33 @@
+{
+  "issues": [
+    {
+      "C1": 1,
+      "repair": "real ancestors/lstat and real parent fence before effects",
+      "controls": "lexical symlink ancestor0outsidewrites; output file/link/nonempty deny0writes"
+    },
+    {
+      "C1": 2,
+      "repair": "private exclusive0700 replica; immutable fd-read buffers; O_EXCL|O_NOFOLLOW copy; exact source/private tree preimports",
+      "controls": "existing replica symlink sentinel unchanged; injected fresh symlink copy denied; wrong live/private dynamic tree no import"
+    },
+    {
+      "C1": 3,
+      "repair": "Socket.prototype.connect and equivalent supported direct APIs guarded",
+      "controls": "17 independent pre-stubbed entrypoints0transportcalls; unchanged legacy guard1call reproduced without realnetwork"
+    },
+    {
+      "C1": 4,
+      "repair": "all136 manifest/preimage/live source and exact dynamic-tree fences before allocations",
+      "controls": "source drift caller-tree equality/no newfilesdirs"
+    },
+    {
+      "C1": 5,
+      "repair": "runner-owned try/catch/finally; owned output inode rollback; diagnostic before cleanup",
+      "controls": "all8stages,3actual child failures,opaque accessor,diagnostic retention failure,partialpublication callerpreservation; no private residue"
+    }
+  ],
+  "currentGroups": 24,
+  "realNetwork": 0,
+  "supportedBoundary": "containment-contract.md",
+  "nativeServices": "NOT_RUN"
+}

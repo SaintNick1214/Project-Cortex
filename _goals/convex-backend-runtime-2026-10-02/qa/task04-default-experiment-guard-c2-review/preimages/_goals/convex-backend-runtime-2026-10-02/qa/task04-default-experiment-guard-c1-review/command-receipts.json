@@ -1,0 +1,108 @@
+[
+  {
+    "name": "node",
+    "argv": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+      "--version"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "utcStart": "2026-10-04T09:22:26.120619+00:00",
+    "utcEnd": "2026-10-04T09:22:26.125518+00:00",
+    "exit": 0,
+    "stdoutSHA256": "b7677d3ec37ee1897ba07dc2cfe8292fe421c9ac93396cca5bbece486d1a2a41",
+    "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "npm",
+    "argv": [
+      "/workspace/Project-Cortex/work/resume/toolchain-bin/npm",
+      "--version"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "utcStart": "2026-10-04T09:22:26.125839+00:00",
+    "utcEnd": "2026-10-04T09:22:26.216686+00:00",
+    "exit": 0,
+    "stdoutSHA256": "4211530c8fb0d148aab950b0005433a64dd6f19f26460831515c07d12fc826a9",
+    "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "baseline23",
+    "argv": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+      "--experimental-strip-types",
+      "/workspace/Project-Cortex/work/resume/task04-default-experiment-guard-c1-review/scripts/offline-check.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "utcStart": "2026-10-04T09:22:26.216945+00:00",
+    "utcEnd": "2026-10-04T09:22:27.481403+00:00",
+    "exit": 0,
+    "stdoutSHA256": "265b3bf3f6517d99e424d8bcfe7a468114139849c73b2106a61a889fc7ab0dfd",
+    "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "hostile6",
+    "argv": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+      "--experimental-strip-types",
+      "/workspace/Project-Cortex/work/resume/task04-default-experiment-guard-c1-review/scripts/hostile.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "utcStart": "2026-10-04T09:22:27.481709+00:00",
+    "utcEnd": "2026-10-04T09:22:27.608422+00:00",
+    "exit": 0,
+    "stdoutSHA256": "7b0d6174b6b84290760f92c4efcd6ccbeed3ad07f84b962891dbe5eaaf30b980",
+    "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "scoped-lint",
+    "argv": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+      "node_modules/eslint/bin/eslint.js",
+      "--config",
+      "/workspace/Project-Cortex/work/resume/task04-default-experiment-guard-c1-review/eslint.config.mjs",
+      "/workspace/Project-Cortex/work/resume/task04-default-experiment-guard-c1-review/fixture/convex/canonical.ts",
+      "/workspace/Project-Cortex/work/resume/task04-default-experiment-guard-c1-review/fixture/convex/compiled.ts",
+      "/workspace/Project-Cortex/work/resume/task04-default-experiment-guard-c1-review/fixture/convex/guard.ts",
+      "/workspace/Project-Cortex/work/resume/task04-default-experiment-guard-c1-review/fixture/convex/runner.ts",
+      "/workspace/Project-Cortex/work/resume/task04-default-experiment-guard-c1-review/fixture/convex/schema.ts",
+      "/workspace/Project-Cortex/work/resume/task04-default-experiment-guard-c1-review/scripts/offline-check.mjs",
+      "/workspace/Project-Cortex/work/resume/task04-default-experiment-guard-c1-review/scripts/verify.mjs",
+      "/workspace/Project-Cortex/work/resume/task04-default-experiment-guard-c1-review/scripts/finalize.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "utcStart": "2026-10-04T09:22:27.608673+00:00",
+    "utcEnd": "2026-10-04T09:22:29.564280+00:00",
+    "exit": 0,
+    "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "strict-typecheck",
+    "argv": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+      "node_modules/typescript/bin/tsc",
+      "--project",
+      "/workspace/Project-Cortex/work/resume/task04-default-experiment-guard-c1-review/fixture/tsconfig.json"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "utcStart": "2026-10-04T09:22:29.564593+00:00",
+    "utcEnd": "2026-10-04T09:22:30.445112+00:00",
+    "exit": 0,
+    "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "hostile6-asserted",
+    "argv": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+      "--experimental-strip-types",
+      "/workspace/Project-Cortex/work/resume/task04-default-experiment-guard-c1-review/scripts/hostile.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "utcStart": "2026-10-04T09:22:50.338439+00:00",
+    "utcEnd": "2026-10-04T09:22:50.462578+00:00",
+    "exit": 1,
+    "stdoutSHA256": "7b0d6174b6b84290760f92c4efcd6ccbeed3ad07f84b962891dbe5eaaf30b980",
+    "stderrSHA256": "f11c00824e03fecdeeedd87a5558432713b107518dd6a05ab920548372350107"
+  }
+]

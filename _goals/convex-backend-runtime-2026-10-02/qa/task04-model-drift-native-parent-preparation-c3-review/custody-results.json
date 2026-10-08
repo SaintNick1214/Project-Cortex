@@ -1,0 +1,2434 @@
+{
+  "argv": [
+    "work/resume/task04-model-drift-native-parent-preparation-c3-review/custody.py"
+  ],
+  "cwd": "/workspace/Project-Cortex",
+  "utc": "2026-10-04T12:19:05.603506+00:00",
+  "status": "PASS_CUSTODY_ONLY",
+  "results": [
+    {
+      "profile": "extension",
+      "commands": 254,
+      "preimageRefsVerified": 128486,
+      "immutableRuns": 114,
+      "runs": [
+        {
+          "run": "final-legacy-extension--d034bb1c407c4dbaaafaea5bd8c90866",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "5376c6fbb289d594c0e427230cf5df10269386f10d4b12812ef3709df49d263a"
+        },
+        {
+          "run": "final-legacy-extra--10f2a9639e214d88911c8bccbe8a7db2",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "048575e0847d78e2909b283f1e2a07e93f0b710baefcb8a600e297e3d887de0b"
+        },
+        {
+          "run": "final-legacy-regression--5902f7d6a2524d7e82ac25c18688437f",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "f9f4aed89e4c3a7f40211accbae13cef430b46d1322e0dae1d47461691260c34"
+        },
+        {
+          "run": "immutable-body--569211cffce54e4d8915e32618e8a958",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "4cb8f0e9f59d0d73c4c116a94ac43af27866cdecd5af05df4910c1798c20ca5d"
+        },
+        {
+          "run": "immutable-bundle--aa0f216e0f3348e6ab233686fa405482",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "26507d14fb88dd45ca92c8e8964f602205955284da713170ba527ef9edd4f605"
+        },
+        {
+          "run": "immutable-dispatch-controls-extension--7661e7f15b194f7e9ac3dd88a01470c4",
+          "exitCode": 0,
+          "beforeRows": 444,
+          "afterRows": 444,
+          "receiptSHA256": "5f7ba8229202ce2d6e0e6b8ae1feec7b4a47d9fa3f2685c6202b16309b173aed"
+        },
+        {
+          "run": "immutable-dispatch-controls-extra--a551767c6e9148e8b34b0092821f4633",
+          "exitCode": 0,
+          "beforeRows": 689,
+          "afterRows": 689,
+          "receiptSHA256": "f77c4b24c3081c47d8a03bbb5617104fe2c927ac5c10f011131987ca380e8e51"
+        },
+        {
+          "run": "immutable-dispatch-controls-regression--fbf755deb6e44400900ce6d98d2b99f4",
+          "exitCode": 0,
+          "beforeRows": 441,
+          "afterRows": 441,
+          "receiptSHA256": "815234eaffdb6684322c8ce8cc7adfb49ae51665cc1bf35f24b3c88861bbba4c"
+        },
+        {
+          "run": "immutable-full-graph--e7c700e41f174aa08439c7983614a10c",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "0626b034a43cca02cce22f6c8de4b383e5e2f7832a175b3fb960968432d2f5d4"
+        },
+        {
+          "run": "immutable-hostile--a4171f630fbf49b888f3482764101524",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "257ce3b8e5f5a07f185e03a79afc941df72dcb726d1f9fc0a8adfb6f27ce005b"
+        },
+        {
+          "run": "immutable-journal--91cef08442254167861d91145a9ec5ec",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "7f1def9173bbdf48846ecf912261dc9310d33852ce1581bc9d56d29e709d88e9"
+        },
+        {
+          "run": "immutable-management-controls-extension--034fed3998ed46239d78196f2d8266f6",
+          "exitCode": 0,
+          "beforeRows": 444,
+          "afterRows": 444,
+          "receiptSHA256": "98c91cdda328e39a8548235389efce05bd93e3886f4c39d51493b4e12373d0df"
+        },
+        {
+          "run": "immutable-management-controls-extra--f3cf9398786e4e019d0b728cad70bd37",
+          "exitCode": 0,
+          "beforeRows": 689,
+          "afterRows": 689,
+          "receiptSHA256": "3f14ffb41350e10a42e9e1781dcf77933197bd2b875ab8662649b726af58739b"
+        },
+        {
+          "run": "immutable-management-controls-regression--cb12c6b2d7aa44aa98b2ed0b69d55340",
+          "exitCode": 0,
+          "beforeRows": 441,
+          "afterRows": 441,
+          "receiptSHA256": "50db60c583a14497166c6ad6072a2954ab8c3e85d3a19951f7cf4981f28aedaa"
+        },
+        {
+          "run": "immutable-management-entry-controls-extension--731617b305f9483d949339e815014314",
+          "exitCode": 0,
+          "beforeRows": 444,
+          "afterRows": 444,
+          "receiptSHA256": "3f57af3b58a95ad49e4add38e4ace34a9797e9eb60feaef39ac85b9b061d6da9"
+        },
+        {
+          "run": "immutable-management-entry-controls-extra--c68875c43bae4c3da875b857368f86e8",
+          "exitCode": 0,
+          "beforeRows": 689,
+          "afterRows": 689,
+          "receiptSHA256": "73a1180efa7d25c9ca4e6df3d59a7c43fb83973404cde63e90f68139ea643376"
+        },
+        {
+          "run": "immutable-management-entry-controls-regression--ec8df02318bd4006ba8cb5ebfbd5f48c",
+          "exitCode": 0,
+          "beforeRows": 441,
+          "afterRows": 441,
+          "receiptSHA256": "9bc0dd813afaa56d05e1aa4f953c4aaa6f626672846509c04fc7f06861313b10"
+        },
+        {
+          "run": "immutable-management-reserve-controls-extension--83bfa5b127c3485387bfaf57857a62e9",
+          "exitCode": 0,
+          "beforeRows": 444,
+          "afterRows": 444,
+          "receiptSHA256": "edc1d753796657ed5f3eed3e07030e25ab4c0496e4101200b209470d863c0d8c"
+        },
+        {
+          "run": "immutable-management-reserve-controls-extra--4bb393d582684895aaf45e601813370e",
+          "exitCode": 0,
+          "beforeRows": 689,
+          "afterRows": 689,
+          "receiptSHA256": "a2f465afff5abb59470be8f5cb5efe1f0a16f307340dfe0b9e904d84d24ac949"
+        },
+        {
+          "run": "immutable-management-reserve-controls-regression--4a194fd501d34651a856a21c6acbff8b",
+          "exitCode": 0,
+          "beforeRows": 441,
+          "afterRows": 441,
+          "receiptSHA256": "62f56e15f604a918c9b3270fec416066dd20455cd773d26326bd857abe6d48d8"
+        },
+        {
+          "run": "final-legacy-extension--d034bb1c407c4dbaaafaea5bd8c90866",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "5376c6fbb289d594c0e427230cf5df10269386f10d4b12812ef3709df49d263a"
+        },
+        {
+          "run": "final-legacy-extra--10f2a9639e214d88911c8bccbe8a7db2",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "048575e0847d78e2909b283f1e2a07e93f0b710baefcb8a600e297e3d887de0b"
+        },
+        {
+          "run": "final-legacy-regression--5902f7d6a2524d7e82ac25c18688437f",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "f9f4aed89e4c3a7f40211accbae13cef430b46d1322e0dae1d47461691260c34"
+        },
+        {
+          "run": "immutable-body--569211cffce54e4d8915e32618e8a958",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "4cb8f0e9f59d0d73c4c116a94ac43af27866cdecd5af05df4910c1798c20ca5d"
+        },
+        {
+          "run": "immutable-bundle--aa0f216e0f3348e6ab233686fa405482",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "26507d14fb88dd45ca92c8e8964f602205955284da713170ba527ef9edd4f605"
+        },
+        {
+          "run": "immutable-dispatch-controls-extension--7661e7f15b194f7e9ac3dd88a01470c4",
+          "exitCode": 0,
+          "beforeRows": 444,
+          "afterRows": 444,
+          "receiptSHA256": "5f7ba8229202ce2d6e0e6b8ae1feec7b4a47d9fa3f2685c6202b16309b173aed"
+        },
+        {
+          "run": "immutable-dispatch-controls-extra--a551767c6e9148e8b34b0092821f4633",
+          "exitCode": 0,
+          "beforeRows": 689,
+          "afterRows": 689,
+          "receiptSHA256": "f77c4b24c3081c47d8a03bbb5617104fe2c927ac5c10f011131987ca380e8e51"
+        },
+        {
+          "run": "immutable-dispatch-controls-regression--fbf755deb6e44400900ce6d98d2b99f4",
+          "exitCode": 0,
+          "beforeRows": 441,
+          "afterRows": 441,
+          "receiptSHA256": "815234eaffdb6684322c8ce8cc7adfb49ae51665cc1bf35f24b3c88861bbba4c"
+        },
+        {
+          "run": "immutable-full-graph--e7c700e41f174aa08439c7983614a10c",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "0626b034a43cca02cce22f6c8de4b383e5e2f7832a175b3fb960968432d2f5d4"
+        },
+        {
+          "run": "immutable-hostile--a4171f630fbf49b888f3482764101524",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "257ce3b8e5f5a07f185e03a79afc941df72dcb726d1f9fc0a8adfb6f27ce005b"
+        },
+        {
+          "run": "immutable-journal--91cef08442254167861d91145a9ec5ec",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "7f1def9173bbdf48846ecf912261dc9310d33852ce1581bc9d56d29e709d88e9"
+        },
+        {
+          "run": "immutable-management-controls-extension--034fed3998ed46239d78196f2d8266f6",
+          "exitCode": 0,
+          "beforeRows": 444,
+          "afterRows": 444,
+          "receiptSHA256": "98c91cdda328e39a8548235389efce05bd93e3886f4c39d51493b4e12373d0df"
+        },
+        {
+          "run": "immutable-management-controls-extra--f3cf9398786e4e019d0b728cad70bd37",
+          "exitCode": 0,
+          "beforeRows": 689,
+          "afterRows": 689,
+          "receiptSHA256": "3f14ffb41350e10a42e9e1781dcf77933197bd2b875ab8662649b726af58739b"
+        },
+        {
+          "run": "immutable-management-controls-regression--cb12c6b2d7aa44aa98b2ed0b69d55340",
+          "exitCode": 0,
+          "beforeRows": 441,
+          "afterRows": 441,
+          "receiptSHA256": "50db60c583a14497166c6ad6072a2954ab8c3e85d3a19951f7cf4981f28aedaa"
+        },
+        {
+          "run": "immutable-management-entry-controls-extension--731617b305f9483d949339e815014314",
+          "exitCode": 0,
+          "beforeRows": 444,
+          "afterRows": 444,
+          "receiptSHA256": "3f57af3b58a95ad49e4add38e4ace34a9797e9eb60feaef39ac85b9b061d6da9"
+        },
+        {
+          "run": "immutable-management-entry-controls-extra--c68875c43bae4c3da875b857368f86e8",
+          "exitCode": 0,
+          "beforeRows": 689,
+          "afterRows": 689,
+          "receiptSHA256": "73a1180efa7d25c9ca4e6df3d59a7c43fb83973404cde63e90f68139ea643376"
+        },
+        {
+          "run": "immutable-management-entry-controls-regression--ec8df02318bd4006ba8cb5ebfbd5f48c",
+          "exitCode": 0,
+          "beforeRows": 441,
+          "afterRows": 441,
+          "receiptSHA256": "9bc0dd813afaa56d05e1aa4f953c4aaa6f626672846509c04fc7f06861313b10"
+        },
+        {
+          "run": "immutable-management-reserve-controls-extension--83bfa5b127c3485387bfaf57857a62e9",
+          "exitCode": 0,
+          "beforeRows": 444,
+          "afterRows": 444,
+          "receiptSHA256": "edc1d753796657ed5f3eed3e07030e25ab4c0496e4101200b209470d863c0d8c"
+        },
+        {
+          "run": "immutable-management-reserve-controls-extra--4bb393d582684895aaf45e601813370e",
+          "exitCode": 0,
+          "beforeRows": 689,
+          "afterRows": 689,
+          "receiptSHA256": "a2f465afff5abb59470be8f5cb5efe1f0a16f307340dfe0b9e904d84d24ac949"
+        },
+        {
+          "run": "immutable-management-reserve-controls-regression--4a194fd501d34651a856a21c6acbff8b",
+          "exitCode": 0,
+          "beforeRows": 441,
+          "afterRows": 441,
+          "receiptSHA256": "62f56e15f604a918c9b3270fec416066dd20455cd773d26326bd857abe6d48d8"
+        },
+        {
+          "run": "immutable-original-c2-peer-body-controls-extension--a48a6ca5df044dbcb3aa934a0d13e0c3",
+          "exitCode": 0,
+          "beforeRows": 444,
+          "afterRows": 444,
+          "receiptSHA256": "700ab67435c4be58143ed523bebd6f689ea02c134feb917d7d30c41b6788c4da"
+        },
+        {
+          "run": "immutable-original-c2-peer-body-controls-extra--2578d3b9ad8e4b739cb9a36cd3dc2bdf",
+          "exitCode": 0,
+          "beforeRows": 689,
+          "afterRows": 689,
+          "receiptSHA256": "1919d2dcb7a5f9df2660eaf67b5e0230d0c8cad11ff4f25330f070ff8d7a3289"
+        },
+        {
+          "run": "immutable-original-c2-peer-body-controls-regression--51a41695f9e44269b3db402e866799d8",
+          "exitCode": 0,
+          "beforeRows": 441,
+          "afterRows": 441,
+          "receiptSHA256": "15686ae717ff23c1f9cca1e86e52739f69cb575ee389fdf9c9ae655130968a54"
+        },
+        {
+          "run": "immutable-original-c2-peer-source-drift-extension--3d57d8e4cfb54527b32e5e8fc07243a3",
+          "exitCode": 0,
+          "beforeRows": 444,
+          "afterRows": 444,
+          "receiptSHA256": "e864052405346b41ce84a5acb3b61c9bb13f74b104821418ba7cff89d3c59910"
+        },
+        {
+          "run": "immutable-original-c2-peer-source-drift-extra--05dc77c3a4104a93b25904cbe275dc52",
+          "exitCode": 0,
+          "beforeRows": 689,
+          "afterRows": 689,
+          "receiptSHA256": "4ed10e53ce7cdb0800ea454a641570957c2fc834152225feb5771e52be3f3efd"
+        },
+        {
+          "run": "immutable-original-c2-peer-source-drift-regression--66222be3995e4238b86683574e0a34b5",
+          "exitCode": 0,
+          "beforeRows": 441,
+          "afterRows": 441,
+          "receiptSHA256": "f06cbfe9999e3e35b2f2f6cf4f3b18e66f612072f5d50d233dc340b04b64644c"
+        },
+        {
+          "run": "immutable-publication-controls-extension--91d54876e4b4414581ef3dacee27afbe",
+          "exitCode": 0,
+          "beforeRows": 444,
+          "afterRows": 444,
+          "receiptSHA256": "d3e32b82f25268d326e9014f12429c4040d03de05958f34bbb1abb58cb5f8828"
+        },
+        {
+          "run": "immutable-publication-controls-extra--2ac470ce1efd4736b5b7c40627c94258",
+          "exitCode": 0,
+          "beforeRows": 689,
+          "afterRows": 689,
+          "receiptSHA256": "e348b772a950b1ab0e8a22d13e7630d175e4d041f0f06120446b71d8572899f9"
+        },
+        {
+          "run": "immutable-publication-controls-regression--dfdae8a5c4ad490092dfcab057ef304c",
+          "exitCode": 0,
+          "beforeRows": 441,
+          "afterRows": 441,
+          "receiptSHA256": "028c9707efe52b896545030c9e40258318915920a3f537ff5326f836f45d3898"
+        },
+        {
+          "run": "immutable-static-path--5305d574596645c78a97a7dba0599758",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "49a0b10697ba476019be5780b474da3cc77aa6d2fb775d198423015e5920946f"
+        },
+        {
+          "run": "immutable-tier-graph--c60dc707675b4501b5fa157f8f44bbea",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "3a7cefc29e250da0d007cc1404a61c1eb9a82eca9dcfb99e10ba7e15b34ecd62"
+        },
+        {
+          "run": "original-body18-extension--810897b64146489ea3a990a5e1914ec1",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "97989d517763c9b49f1cf7d5a99e12e898a30d00b21423f6e288fb815327c27c"
+        },
+        {
+          "run": "original-body18-extra--2df8fde407e64f27a48a1bc0ee9a3185",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "a7a3ac0eaf220f2b7d767db01f91a9aa7f4859fcbf835294fb7e04a5946bc42d"
+        },
+        {
+          "run": "original-body18-regression--ee9cceabd4674318abd3c1d1ed672b95",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "cda65dcce42be9779020de05c277902ac3cf9a03f9bb2f408fc20696ac83f783"
+        },
+        {
+          "run": "original-driver-error-controls-extra--70cecad01f2b42adab641e9e92ed3f64",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "5f8c6c207b738e4feb68c3bfe7c9f926eb35e7c2a182e409daf4b7c66330e23f"
+        },
+        {
+          "run": "original-inventory-extension--faa1c62558f142c4a64f0c07024e3087",
+          "exitCode": 0,
+          "beforeRows": 1111,
+          "afterRows": 1111,
+          "receiptSHA256": "5f3349a68ef6d84b03693efd4f107bffc92d2667e493aa6b85d4b70249e88675"
+        },
+        {
+          "run": "original-inventory-extra--dc90b335c6ed43b2b20f7e1309de70c9",
+          "exitCode": 0,
+          "beforeRows": 1111,
+          "afterRows": 1111,
+          "receiptSHA256": "40ca396430847855c3f597681deb467e0ef2acec8af8c5c192b6650cb47d7462"
+        },
+        {
+          "run": "original-inventory-regression--ef99f1640d3e43b0beb9a0c38ca9b337",
+          "exitCode": 0,
+          "beforeRows": 1111,
+          "afterRows": 1111,
+          "receiptSHA256": "b1d2fec1a5cdd4222b6f195b2473a8f06db7329339bfcddeca5fa922a4b0d402"
+        },
+        {
+          "run": "original-original-first-review-denial-extension--3a4df7904af244aa82d1f5c11a71789c",
+          "exitCode": 0,
+          "beforeRows": 444,
+          "afterRows": 444,
+          "receiptSHA256": "d370bcb0d58525f03a8d995b038403d229b614af60f771bfed1eeea45c5e0fea"
+        },
+        {
+          "run": "original-original-first-review-denial-extra--04f671cc1cfc4f539dc183a9aae79972",
+          "exitCode": 0,
+          "beforeRows": 689,
+          "afterRows": 689,
+          "receiptSHA256": "adc7d160dfa2e6d92f18624a4e3a30eedf7e111ff9b1d78947392fbe9bdc2dc2"
+        },
+        {
+          "run": "original-original-first-review-denial-regression--4a87da26e61f437497418f0b8797b8ea",
+          "exitCode": 0,
+          "beforeRows": 441,
+          "afterRows": 441,
+          "receiptSHA256": "c3156e4dadccf88e7b936d3c3c91624e2ad811e118694692ad7072a76e04524c"
+        },
+        {
+          "run": "original-outcomes-extension--1f8d16fe604f4bd980f7fa95f4ac5937",
+          "exitCode": 0,
+          "beforeRows": 1111,
+          "afterRows": 1111,
+          "receiptSHA256": "c2d7f04f25a5b6d27283a76a2f9d57c0f38915fae4435c412e1be1803d0701d3"
+        },
+        {
+          "run": "original-outcomes-extra--51a18cb5fd324a598ed212d0d20984ec",
+          "exitCode": 0,
+          "beforeRows": 1111,
+          "afterRows": 1111,
+          "receiptSHA256": "b31c5082c4d340b3e074f391d67e87a6d0f50f1646188782c7ddb8faae27d4fa"
+        },
+        {
+          "run": "original-outcomes-regression--776e9fabce8b4372a89278a64f3c05b7",
+          "exitCode": 0,
+          "beforeRows": 1111,
+          "afterRows": 1111,
+          "receiptSHA256": "3a78f3dd72a88f255a24ff9a310cbf705146627eb8489208fa2ad09a02689d81"
+        },
+        {
+          "run": "original-parent-adversarial-extension--0ba224a69d8d40aaaae15e7ff6d26bbd",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "93a36fa5a0b88f10151f5c37a2eaf82a2ff81a64ce4c019e8010dbd5a9ba4072"
+        },
+        {
+          "run": "original-parent-adversarial-extra--0be3316159b043488c20b9be8e3c9ec2",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "a3e23f0880eb715e038104bd1b7532bbb6f6e2c677e710e3f93b10d06d2f4b98"
+        },
+        {
+          "run": "original-parent-adversarial-regression--0af227739158453ba2ec2abcb8217920",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "78a005305df139e2e2798e89b267aeac804049dd3a1f8079f2d5fefac7911daf"
+        },
+        {
+          "run": "original-parent-original-extension--bf6437c05c144ceaa89e177f2919acaf",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "fbb99330917b1459e0630c0750c9ccc3f2c8cf2a0015f5e589ef80d51989f0f0"
+        },
+        {
+          "run": "original-parent-original-extra--5fe784ac80104be38686878be0b5c041",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "1a56135498470e3896e6c76451fa6b6d9779e82f529e957a6066d0f1994f217f"
+        },
+        {
+          "run": "original-parent-original-regression--3455132416664a63a2045fccd25bd59a",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "b6c735b0a2fd36a71d435186d69e045d44fad99bc949da9c36bb468818ed26db"
+        },
+        {
+          "run": "original-parent-watch17-extension--e3e268d64cda4e81a23b68f961d36572",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "72b05a7d1b1f902e6679cb2d4fceaa29b2ed43a9286a1c8bbc62f5bfe6b8c79c"
+        },
+        {
+          "run": "original-parent-watch17-extra--b4a51c0d12e140ca8f5a41e429353402",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "397dadba3589f29df68a906167f5c2f3e83a029c63940babedfa13f9978c12e9"
+        },
+        {
+          "run": "original-parent-watch17-regression--314d2a842b7846f59091d2c1cf17e65f",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "11c3f45e86d7db115e496bc56335f51bacc783566af49418b78ff299c3dd72f8"
+        },
+        {
+          "run": "original-rpc-binding-controls-extra--ff6992d56d83431ca6e114dee7f85289",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "d73b28c56b077c2edc3ce75339ac551a156b54151a9fbfd8a0ec9749957339d3"
+        },
+        {
+          "run": "original-runtime-freeze-extension--197f30d4c2e04f038f46c66f646d41c7",
+          "exitCode": 0,
+          "beforeRows": 1111,
+          "afterRows": 1111,
+          "receiptSHA256": "b1f089d71269273066a27d7e26d39e75476de001d01ad2398c191ceb129043ad"
+        },
+        {
+          "run": "original-runtime-freeze-extra--417c023f71d64d5498b656a813055552",
+          "exitCode": 0,
+          "beforeRows": 1111,
+          "afterRows": 1111,
+          "receiptSHA256": "f703badaf5ee8592ef926f2611933112739f02a518736a17c15296197882d52a"
+        },
+        {
+          "run": "original-runtime-freeze-regression--ab7faba0615f48218cb788c9236aeddb",
+          "exitCode": 0,
+          "beforeRows": 1111,
+          "afterRows": 1111,
+          "receiptSHA256": "d0b2cd9144afa8bc1b461218cd43ea4a210820af5168f468726de2010edb59de"
+        },
+        {
+          "run": "immutable-original-c2-peer-body-controls-extension--a48a6ca5df044dbcb3aa934a0d13e0c3",
+          "exitCode": 0,
+          "beforeRows": 444,
+          "afterRows": 444,
+          "receiptSHA256": "700ab67435c4be58143ed523bebd6f689ea02c134feb917d7d30c41b6788c4da"
+        },
+        {
+          "run": "immutable-original-c2-peer-body-controls-extra--2578d3b9ad8e4b739cb9a36cd3dc2bdf",
+          "exitCode": 0,
+          "beforeRows": 689,
+          "afterRows": 689,
+          "receiptSHA256": "1919d2dcb7a5f9df2660eaf67b5e0230d0c8cad11ff4f25330f070ff8d7a3289"
+        },
+        {
+          "run": "immutable-original-c2-peer-body-controls-regression--51a41695f9e44269b3db402e866799d8",
+          "exitCode": 0,
+          "beforeRows": 441,
+          "afterRows": 441,
+          "receiptSHA256": "15686ae717ff23c1f9cca1e86e52739f69cb575ee389fdf9c9ae655130968a54"
+        },
+        {
+          "run": "immutable-original-c2-peer-source-drift-extension--3d57d8e4cfb54527b32e5e8fc07243a3",
+          "exitCode": 0,
+          "beforeRows": 444,
+          "afterRows": 444,
+          "receiptSHA256": "e864052405346b41ce84a5acb3b61c9bb13f74b104821418ba7cff89d3c59910"
+        },
+        {
+          "run": "immutable-original-c2-peer-source-drift-extra--05dc77c3a4104a93b25904cbe275dc52",
+          "exitCode": 0,
+          "beforeRows": 689,
+          "afterRows": 689,
+          "receiptSHA256": "4ed10e53ce7cdb0800ea454a641570957c2fc834152225feb5771e52be3f3efd"
+        },
+        {
+          "run": "immutable-original-c2-peer-source-drift-regression--66222be3995e4238b86683574e0a34b5",
+          "exitCode": 0,
+          "beforeRows": 441,
+          "afterRows": 441,
+          "receiptSHA256": "f06cbfe9999e3e35b2f2f6cf4f3b18e66f612072f5d50d233dc340b04b64644c"
+        },
+        {
+          "run": "immutable-publication-controls-extension--91d54876e4b4414581ef3dacee27afbe",
+          "exitCode": 0,
+          "beforeRows": 444,
+          "afterRows": 444,
+          "receiptSHA256": "d3e32b82f25268d326e9014f12429c4040d03de05958f34bbb1abb58cb5f8828"
+        },
+        {
+          "run": "immutable-publication-controls-extra--2ac470ce1efd4736b5b7c40627c94258",
+          "exitCode": 0,
+          "beforeRows": 689,
+          "afterRows": 689,
+          "receiptSHA256": "e348b772a950b1ab0e8a22d13e7630d175e4d041f0f06120446b71d8572899f9"
+        },
+        {
+          "run": "immutable-publication-controls-regression--dfdae8a5c4ad490092dfcab057ef304c",
+          "exitCode": 0,
+          "beforeRows": 441,
+          "afterRows": 441,
+          "receiptSHA256": "028c9707efe52b896545030c9e40258318915920a3f537ff5326f836f45d3898"
+        },
+        {
+          "run": "immutable-static-path--5305d574596645c78a97a7dba0599758",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "49a0b10697ba476019be5780b474da3cc77aa6d2fb775d198423015e5920946f"
+        },
+        {
+          "run": "immutable-tier-graph--c60dc707675b4501b5fa157f8f44bbea",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "3a7cefc29e250da0d007cc1404a61c1eb9a82eca9dcfb99e10ba7e15b34ecd62"
+        },
+        {
+          "run": "original-body18-extension--810897b64146489ea3a990a5e1914ec1",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "97989d517763c9b49f1cf7d5a99e12e898a30d00b21423f6e288fb815327c27c"
+        },
+        {
+          "run": "original-body18-extra--2df8fde407e64f27a48a1bc0ee9a3185",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "a7a3ac0eaf220f2b7d767db01f91a9aa7f4859fcbf835294fb7e04a5946bc42d"
+        },
+        {
+          "run": "original-body18-regression--ee9cceabd4674318abd3c1d1ed672b95",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "cda65dcce42be9779020de05c277902ac3cf9a03f9bb2f408fc20696ac83f783"
+        },
+        {
+          "run": "original-driver-error-controls-extra--70cecad01f2b42adab641e9e92ed3f64",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "5f8c6c207b738e4feb68c3bfe7c9f926eb35e7c2a182e409daf4b7c66330e23f"
+        },
+        {
+          "run": "original-inventory-extension--faa1c62558f142c4a64f0c07024e3087",
+          "exitCode": 0,
+          "beforeRows": 1111,
+          "afterRows": 1111,
+          "receiptSHA256": "5f3349a68ef6d84b03693efd4f107bffc92d2667e493aa6b85d4b70249e88675"
+        },
+        {
+          "run": "original-inventory-extra--dc90b335c6ed43b2b20f7e1309de70c9",
+          "exitCode": 0,
+          "beforeRows": 1111,
+          "afterRows": 1111,
+          "receiptSHA256": "40ca396430847855c3f597681deb467e0ef2acec8af8c5c192b6650cb47d7462"
+        },
+        {
+          "run": "original-inventory-regression--ef99f1640d3e43b0beb9a0c38ca9b337",
+          "exitCode": 0,
+          "beforeRows": 1111,
+          "afterRows": 1111,
+          "receiptSHA256": "b1d2fec1a5cdd4222b6f195b2473a8f06db7329339bfcddeca5fa922a4b0d402"
+        },
+        {
+          "run": "original-original-first-review-denial-extension--3a4df7904af244aa82d1f5c11a71789c",
+          "exitCode": 0,
+          "beforeRows": 444,
+          "afterRows": 444,
+          "receiptSHA256": "d370bcb0d58525f03a8d995b038403d229b614af60f771bfed1eeea45c5e0fea"
+        },
+        {
+          "run": "original-original-first-review-denial-extra--04f671cc1cfc4f539dc183a9aae79972",
+          "exitCode": 0,
+          "beforeRows": 689,
+          "afterRows": 689,
+          "receiptSHA256": "adc7d160dfa2e6d92f18624a4e3a30eedf7e111ff9b1d78947392fbe9bdc2dc2"
+        },
+        {
+          "run": "original-original-first-review-denial-regression--4a87da26e61f437497418f0b8797b8ea",
+          "exitCode": 0,
+          "beforeRows": 441,
+          "afterRows": 441,
+          "receiptSHA256": "c3156e4dadccf88e7b936d3c3c91624e2ad811e118694692ad7072a76e04524c"
+        },
+        {
+          "run": "original-outcomes-extension--1f8d16fe604f4bd980f7fa95f4ac5937",
+          "exitCode": 0,
+          "beforeRows": 1111,
+          "afterRows": 1111,
+          "receiptSHA256": "c2d7f04f25a5b6d27283a76a2f9d57c0f38915fae4435c412e1be1803d0701d3"
+        },
+        {
+          "run": "original-outcomes-extra--51a18cb5fd324a598ed212d0d20984ec",
+          "exitCode": 0,
+          "beforeRows": 1111,
+          "afterRows": 1111,
+          "receiptSHA256": "b31c5082c4d340b3e074f391d67e87a6d0f50f1646188782c7ddb8faae27d4fa"
+        },
+        {
+          "run": "original-outcomes-regression--776e9fabce8b4372a89278a64f3c05b7",
+          "exitCode": 0,
+          "beforeRows": 1111,
+          "afterRows": 1111,
+          "receiptSHA256": "3a78f3dd72a88f255a24ff9a310cbf705146627eb8489208fa2ad09a02689d81"
+        },
+        {
+          "run": "original-parent-adversarial-extension--0ba224a69d8d40aaaae15e7ff6d26bbd",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "93a36fa5a0b88f10151f5c37a2eaf82a2ff81a64ce4c019e8010dbd5a9ba4072"
+        },
+        {
+          "run": "original-parent-adversarial-extra--0be3316159b043488c20b9be8e3c9ec2",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "a3e23f0880eb715e038104bd1b7532bbb6f6e2c677e710e3f93b10d06d2f4b98"
+        },
+        {
+          "run": "original-parent-adversarial-regression--0af227739158453ba2ec2abcb8217920",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "78a005305df139e2e2798e89b267aeac804049dd3a1f8079f2d5fefac7911daf"
+        },
+        {
+          "run": "original-parent-original-extension--bf6437c05c144ceaa89e177f2919acaf",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "fbb99330917b1459e0630c0750c9ccc3f2c8cf2a0015f5e589ef80d51989f0f0"
+        },
+        {
+          "run": "original-parent-original-extra--5fe784ac80104be38686878be0b5c041",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "1a56135498470e3896e6c76451fa6b6d9779e82f529e957a6066d0f1994f217f"
+        },
+        {
+          "run": "original-parent-original-regression--3455132416664a63a2045fccd25bd59a",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "b6c735b0a2fd36a71d435186d69e045d44fad99bc949da9c36bb468818ed26db"
+        },
+        {
+          "run": "original-parent-watch17-extension--e3e268d64cda4e81a23b68f961d36572",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "72b05a7d1b1f902e6679cb2d4fceaa29b2ed43a9286a1c8bbc62f5bfe6b8c79c"
+        },
+        {
+          "run": "original-parent-watch17-extra--b4a51c0d12e140ca8f5a41e429353402",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "397dadba3589f29df68a906167f5c2f3e83a029c63940babedfa13f9978c12e9"
+        },
+        {
+          "run": "original-parent-watch17-regression--314d2a842b7846f59091d2c1cf17e65f",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "11c3f45e86d7db115e496bc56335f51bacc783566af49418b78ff299c3dd72f8"
+        },
+        {
+          "run": "original-rpc-binding-controls-extra--ff6992d56d83431ca6e114dee7f85289",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "d73b28c56b077c2edc3ce75339ac551a156b54151a9fbfd8a0ec9749957339d3"
+        },
+        {
+          "run": "original-runtime-freeze-extension--197f30d4c2e04f038f46c66f646d41c7",
+          "exitCode": 0,
+          "beforeRows": 1111,
+          "afterRows": 1111,
+          "receiptSHA256": "b1f089d71269273066a27d7e26d39e75476de001d01ad2398c191ceb129043ad"
+        },
+        {
+          "run": "original-runtime-freeze-extra--417c023f71d64d5498b656a813055552",
+          "exitCode": 0,
+          "beforeRows": 1111,
+          "afterRows": 1111,
+          "receiptSHA256": "f703badaf5ee8592ef926f2611933112739f02a518736a17c15296197882d52a"
+        },
+        {
+          "run": "original-runtime-freeze-regression--ab7faba0615f48218cb788c9236aeddb",
+          "exitCode": 0,
+          "beforeRows": 1111,
+          "afterRows": 1111,
+          "receiptSHA256": "d0b2cd9144afa8bc1b461218cd43ea4a210820af5168f468726de2010edb59de"
+        }
+      ],
+      "earlierEvidence": "NON_CERTIFYING_WHERE_FULL_PRESTATE_RAW_UTC_MISSING",
+      "historicalGapNotBackfilled": true
+    },
+    {
+      "profile": "regression",
+      "commands": 254,
+      "preimageRefsVerified": 128486,
+      "immutableRuns": 114,
+      "runs": [
+        {
+          "run": "final-legacy-extension--d034bb1c407c4dbaaafaea5bd8c90866",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "5376c6fbb289d594c0e427230cf5df10269386f10d4b12812ef3709df49d263a"
+        },
+        {
+          "run": "final-legacy-extra--10f2a9639e214d88911c8bccbe8a7db2",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "048575e0847d78e2909b283f1e2a07e93f0b710baefcb8a600e297e3d887de0b"
+        },
+        {
+          "run": "final-legacy-regression--5902f7d6a2524d7e82ac25c18688437f",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "f9f4aed89e4c3a7f40211accbae13cef430b46d1322e0dae1d47461691260c34"
+        },
+        {
+          "run": "immutable-body--569211cffce54e4d8915e32618e8a958",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "4cb8f0e9f59d0d73c4c116a94ac43af27866cdecd5af05df4910c1798c20ca5d"
+        },
+        {
+          "run": "immutable-bundle--aa0f216e0f3348e6ab233686fa405482",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "26507d14fb88dd45ca92c8e8964f602205955284da713170ba527ef9edd4f605"
+        },
+        {
+          "run": "immutable-dispatch-controls-extension--7661e7f15b194f7e9ac3dd88a01470c4",
+          "exitCode": 0,
+          "beforeRows": 444,
+          "afterRows": 444,
+          "receiptSHA256": "5f7ba8229202ce2d6e0e6b8ae1feec7b4a47d9fa3f2685c6202b16309b173aed"
+        },
+        {
+          "run": "immutable-dispatch-controls-extra--a551767c6e9148e8b34b0092821f4633",
+          "exitCode": 0,
+          "beforeRows": 689,
+          "afterRows": 689,
+          "receiptSHA256": "f77c4b24c3081c47d8a03bbb5617104fe2c927ac5c10f011131987ca380e8e51"
+        },
+        {
+          "run": "immutable-dispatch-controls-regression--fbf755deb6e44400900ce6d98d2b99f4",
+          "exitCode": 0,
+          "beforeRows": 441,
+          "afterRows": 441,
+          "receiptSHA256": "815234eaffdb6684322c8ce8cc7adfb49ae51665cc1bf35f24b3c88861bbba4c"
+        },
+        {
+          "run": "immutable-full-graph--e7c700e41f174aa08439c7983614a10c",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "0626b034a43cca02cce22f6c8de4b383e5e2f7832a175b3fb960968432d2f5d4"
+        },
+        {
+          "run": "immutable-hostile--a4171f630fbf49b888f3482764101524",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "257ce3b8e5f5a07f185e03a79afc941df72dcb726d1f9fc0a8adfb6f27ce005b"
+        },
+        {
+          "run": "immutable-journal--91cef08442254167861d91145a9ec5ec",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "7f1def9173bbdf48846ecf912261dc9310d33852ce1581bc9d56d29e709d88e9"
+        },
+        {
+          "run": "immutable-management-controls-extension--034fed3998ed46239d78196f2d8266f6",
+          "exitCode": 0,
+          "beforeRows": 444,
+          "afterRows": 444,
+          "receiptSHA256": "98c91cdda328e39a8548235389efce05bd93e3886f4c39d51493b4e12373d0df"
+        },
+        {
+          "run": "immutable-management-controls-extra--f3cf9398786e4e019d0b728cad70bd37",
+          "exitCode": 0,
+          "beforeRows": 689,
+          "afterRows": 689,
+          "receiptSHA256": "3f14ffb41350e10a42e9e1781dcf77933197bd2b875ab8662649b726af58739b"
+        },
+        {
+          "run": "immutable-management-controls-regression--cb12c6b2d7aa44aa98b2ed0b69d55340",
+          "exitCode": 0,
+          "beforeRows": 441,
+          "afterRows": 441,
+          "receiptSHA256": "50db60c583a14497166c6ad6072a2954ab8c3e85d3a19951f7cf4981f28aedaa"
+        },
+        {
+          "run": "immutable-management-entry-controls-extension--731617b305f9483d949339e815014314",
+          "exitCode": 0,
+          "beforeRows": 444,
+          "afterRows": 444,
+          "receiptSHA256": "3f57af3b58a95ad49e4add38e4ace34a9797e9eb60feaef39ac85b9b061d6da9"
+        },
+        {
+          "run": "immutable-management-entry-controls-extra--c68875c43bae4c3da875b857368f86e8",
+          "exitCode": 0,
+          "beforeRows": 689,
+          "afterRows": 689,
+          "receiptSHA256": "73a1180efa7d25c9ca4e6df3d59a7c43fb83973404cde63e90f68139ea643376"
+        },
+        {
+          "run": "immutable-management-entry-controls-regression--ec8df02318bd4006ba8cb5ebfbd5f48c",
+          "exitCode": 0,
+          "beforeRows": 441,
+          "afterRows": 441,
+          "receiptSHA256": "9bc0dd813afaa56d05e1aa4f953c4aaa6f626672846509c04fc7f06861313b10"
+        },
+        {
+          "run": "immutable-management-reserve-controls-extension--83bfa5b127c3485387bfaf57857a62e9",
+          "exitCode": 0,
+          "beforeRows": 444,
+          "afterRows": 444,
+          "receiptSHA256": "edc1d753796657ed5f3eed3e07030e25ab4c0496e4101200b209470d863c0d8c"
+        },
+        {
+          "run": "immutable-management-reserve-controls-extra--4bb393d582684895aaf45e601813370e",
+          "exitCode": 0,
+          "beforeRows": 689,
+          "afterRows": 689,
+          "receiptSHA256": "a2f465afff5abb59470be8f5cb5efe1f0a16f307340dfe0b9e904d84d24ac949"
+        },
+        {
+          "run": "immutable-management-reserve-controls-regression--4a194fd501d34651a856a21c6acbff8b",
+          "exitCode": 0,
+          "beforeRows": 441,
+          "afterRows": 441,
+          "receiptSHA256": "62f56e15f604a918c9b3270fec416066dd20455cd773d26326bd857abe6d48d8"
+        },
+        {
+          "run": "final-legacy-extension--d034bb1c407c4dbaaafaea5bd8c90866",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "5376c6fbb289d594c0e427230cf5df10269386f10d4b12812ef3709df49d263a"
+        },
+        {
+          "run": "final-legacy-extra--10f2a9639e214d88911c8bccbe8a7db2",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "048575e0847d78e2909b283f1e2a07e93f0b710baefcb8a600e297e3d887de0b"
+        },
+        {
+          "run": "final-legacy-regression--5902f7d6a2524d7e82ac25c18688437f",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "f9f4aed89e4c3a7f40211accbae13cef430b46d1322e0dae1d47461691260c34"
+        },
+        {
+          "run": "immutable-body--569211cffce54e4d8915e32618e8a958",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "4cb8f0e9f59d0d73c4c116a94ac43af27866cdecd5af05df4910c1798c20ca5d"
+        },
+        {
+          "run": "immutable-bundle--aa0f216e0f3348e6ab233686fa405482",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "26507d14fb88dd45ca92c8e8964f602205955284da713170ba527ef9edd4f605"
+        },
+        {
+          "run": "immutable-dispatch-controls-extension--7661e7f15b194f7e9ac3dd88a01470c4",
+          "exitCode": 0,
+          "beforeRows": 444,
+          "afterRows": 444,
+          "receiptSHA256": "5f7ba8229202ce2d6e0e6b8ae1feec7b4a47d9fa3f2685c6202b16309b173aed"
+        },
+        {
+          "run": "immutable-dispatch-controls-extra--a551767c6e9148e8b34b0092821f4633",
+          "exitCode": 0,
+          "beforeRows": 689,
+          "afterRows": 689,
+          "receiptSHA256": "f77c4b24c3081c47d8a03bbb5617104fe2c927ac5c10f011131987ca380e8e51"
+        },
+        {
+          "run": "immutable-dispatch-controls-regression--fbf755deb6e44400900ce6d98d2b99f4",
+          "exitCode": 0,
+          "beforeRows": 441,
+          "afterRows": 441,
+          "receiptSHA256": "815234eaffdb6684322c8ce8cc7adfb49ae51665cc1bf35f24b3c88861bbba4c"
+        },
+        {
+          "run": "immutable-full-graph--e7c700e41f174aa08439c7983614a10c",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "0626b034a43cca02cce22f6c8de4b383e5e2f7832a175b3fb960968432d2f5d4"
+        },
+        {
+          "run": "immutable-hostile--a4171f630fbf49b888f3482764101524",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "257ce3b8e5f5a07f185e03a79afc941df72dcb726d1f9fc0a8adfb6f27ce005b"
+        },
+        {
+          "run": "immutable-journal--91cef08442254167861d91145a9ec5ec",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "7f1def9173bbdf48846ecf912261dc9310d33852ce1581bc9d56d29e709d88e9"
+        },
+        {
+          "run": "immutable-management-controls-extension--034fed3998ed46239d78196f2d8266f6",
+          "exitCode": 0,
+          "beforeRows": 444,
+          "afterRows": 444,
+          "receiptSHA256": "98c91cdda328e39a8548235389efce05bd93e3886f4c39d51493b4e12373d0df"
+        },
+        {
+          "run": "immutable-management-controls-extra--f3cf9398786e4e019d0b728cad70bd37",
+          "exitCode": 0,
+          "beforeRows": 689,
+          "afterRows": 689,
+          "receiptSHA256": "3f14ffb41350e10a42e9e1781dcf77933197bd2b875ab8662649b726af58739b"
+        },
+        {
+          "run": "immutable-management-controls-regression--cb12c6b2d7aa44aa98b2ed0b69d55340",
+          "exitCode": 0,
+          "beforeRows": 441,
+          "afterRows": 441,
+          "receiptSHA256": "50db60c583a14497166c6ad6072a2954ab8c3e85d3a19951f7cf4981f28aedaa"
+        },
+        {
+          "run": "immutable-management-entry-controls-extension--731617b305f9483d949339e815014314",
+          "exitCode": 0,
+          "beforeRows": 444,
+          "afterRows": 444,
+          "receiptSHA256": "3f57af3b58a95ad49e4add38e4ace34a9797e9eb60feaef39ac85b9b061d6da9"
+        },
+        {
+          "run": "immutable-management-entry-controls-extra--c68875c43bae4c3da875b857368f86e8",
+          "exitCode": 0,
+          "beforeRows": 689,
+          "afterRows": 689,
+          "receiptSHA256": "73a1180efa7d25c9ca4e6df3d59a7c43fb83973404cde63e90f68139ea643376"
+        },
+        {
+          "run": "immutable-management-entry-controls-regression--ec8df02318bd4006ba8cb5ebfbd5f48c",
+          "exitCode": 0,
+          "beforeRows": 441,
+          "afterRows": 441,
+          "receiptSHA256": "9bc0dd813afaa56d05e1aa4f953c4aaa6f626672846509c04fc7f06861313b10"
+        },
+        {
+          "run": "immutable-management-reserve-controls-extension--83bfa5b127c3485387bfaf57857a62e9",
+          "exitCode": 0,
+          "beforeRows": 444,
+          "afterRows": 444,
+          "receiptSHA256": "edc1d753796657ed5f3eed3e07030e25ab4c0496e4101200b209470d863c0d8c"
+        },
+        {
+          "run": "immutable-management-reserve-controls-extra--4bb393d582684895aaf45e601813370e",
+          "exitCode": 0,
+          "beforeRows": 689,
+          "afterRows": 689,
+          "receiptSHA256": "a2f465afff5abb59470be8f5cb5efe1f0a16f307340dfe0b9e904d84d24ac949"
+        },
+        {
+          "run": "immutable-management-reserve-controls-regression--4a194fd501d34651a856a21c6acbff8b",
+          "exitCode": 0,
+          "beforeRows": 441,
+          "afterRows": 441,
+          "receiptSHA256": "62f56e15f604a918c9b3270fec416066dd20455cd773d26326bd857abe6d48d8"
+        },
+        {
+          "run": "immutable-original-c2-peer-body-controls-extension--a48a6ca5df044dbcb3aa934a0d13e0c3",
+          "exitCode": 0,
+          "beforeRows": 444,
+          "afterRows": 444,
+          "receiptSHA256": "700ab67435c4be58143ed523bebd6f689ea02c134feb917d7d30c41b6788c4da"
+        },
+        {
+          "run": "immutable-original-c2-peer-body-controls-extra--2578d3b9ad8e4b739cb9a36cd3dc2bdf",
+          "exitCode": 0,
+          "beforeRows": 689,
+          "afterRows": 689,
+          "receiptSHA256": "1919d2dcb7a5f9df2660eaf67b5e0230d0c8cad11ff4f25330f070ff8d7a3289"
+        },
+        {
+          "run": "immutable-original-c2-peer-body-controls-regression--51a41695f9e44269b3db402e866799d8",
+          "exitCode": 0,
+          "beforeRows": 441,
+          "afterRows": 441,
+          "receiptSHA256": "15686ae717ff23c1f9cca1e86e52739f69cb575ee389fdf9c9ae655130968a54"
+        },
+        {
+          "run": "immutable-original-c2-peer-source-drift-extension--3d57d8e4cfb54527b32e5e8fc07243a3",
+          "exitCode": 0,
+          "beforeRows": 444,
+          "afterRows": 444,
+          "receiptSHA256": "e864052405346b41ce84a5acb3b61c9bb13f74b104821418ba7cff89d3c59910"
+        },
+        {
+          "run": "immutable-original-c2-peer-source-drift-extra--05dc77c3a4104a93b25904cbe275dc52",
+          "exitCode": 0,
+          "beforeRows": 689,
+          "afterRows": 689,
+          "receiptSHA256": "4ed10e53ce7cdb0800ea454a641570957c2fc834152225feb5771e52be3f3efd"
+        },
+        {
+          "run": "immutable-original-c2-peer-source-drift-regression--66222be3995e4238b86683574e0a34b5",
+          "exitCode": 0,
+          "beforeRows": 441,
+          "afterRows": 441,
+          "receiptSHA256": "f06cbfe9999e3e35b2f2f6cf4f3b18e66f612072f5d50d233dc340b04b64644c"
+        },
+        {
+          "run": "immutable-publication-controls-extension--91d54876e4b4414581ef3dacee27afbe",
+          "exitCode": 0,
+          "beforeRows": 444,
+          "afterRows": 444,
+          "receiptSHA256": "d3e32b82f25268d326e9014f12429c4040d03de05958f34bbb1abb58cb5f8828"
+        },
+        {
+          "run": "immutable-publication-controls-extra--2ac470ce1efd4736b5b7c40627c94258",
+          "exitCode": 0,
+          "beforeRows": 689,
+          "afterRows": 689,
+          "receiptSHA256": "e348b772a950b1ab0e8a22d13e7630d175e4d041f0f06120446b71d8572899f9"
+        },
+        {
+          "run": "immutable-publication-controls-regression--dfdae8a5c4ad490092dfcab057ef304c",
+          "exitCode": 0,
+          "beforeRows": 441,
+          "afterRows": 441,
+          "receiptSHA256": "028c9707efe52b896545030c9e40258318915920a3f537ff5326f836f45d3898"
+        },
+        {
+          "run": "immutable-static-path--5305d574596645c78a97a7dba0599758",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "49a0b10697ba476019be5780b474da3cc77aa6d2fb775d198423015e5920946f"
+        },
+        {
+          "run": "immutable-tier-graph--c60dc707675b4501b5fa157f8f44bbea",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "3a7cefc29e250da0d007cc1404a61c1eb9a82eca9dcfb99e10ba7e15b34ecd62"
+        },
+        {
+          "run": "original-body18-extension--810897b64146489ea3a990a5e1914ec1",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "97989d517763c9b49f1cf7d5a99e12e898a30d00b21423f6e288fb815327c27c"
+        },
+        {
+          "run": "original-body18-extra--2df8fde407e64f27a48a1bc0ee9a3185",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "a7a3ac0eaf220f2b7d767db01f91a9aa7f4859fcbf835294fb7e04a5946bc42d"
+        },
+        {
+          "run": "original-body18-regression--ee9cceabd4674318abd3c1d1ed672b95",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "cda65dcce42be9779020de05c277902ac3cf9a03f9bb2f408fc20696ac83f783"
+        },
+        {
+          "run": "original-driver-error-controls-extra--70cecad01f2b42adab641e9e92ed3f64",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "5f8c6c207b738e4feb68c3bfe7c9f926eb35e7c2a182e409daf4b7c66330e23f"
+        },
+        {
+          "run": "original-inventory-extension--faa1c62558f142c4a64f0c07024e3087",
+          "exitCode": 0,
+          "beforeRows": 1111,
+          "afterRows": 1111,
+          "receiptSHA256": "5f3349a68ef6d84b03693efd4f107bffc92d2667e493aa6b85d4b70249e88675"
+        },
+        {
+          "run": "original-inventory-extra--dc90b335c6ed43b2b20f7e1309de70c9",
+          "exitCode": 0,
+          "beforeRows": 1111,
+          "afterRows": 1111,
+          "receiptSHA256": "40ca396430847855c3f597681deb467e0ef2acec8af8c5c192b6650cb47d7462"
+        },
+        {
+          "run": "original-inventory-regression--ef99f1640d3e43b0beb9a0c38ca9b337",
+          "exitCode": 0,
+          "beforeRows": 1111,
+          "afterRows": 1111,
+          "receiptSHA256": "b1d2fec1a5cdd4222b6f195b2473a8f06db7329339bfcddeca5fa922a4b0d402"
+        },
+        {
+          "run": "original-original-first-review-denial-extension--3a4df7904af244aa82d1f5c11a71789c",
+          "exitCode": 0,
+          "beforeRows": 444,
+          "afterRows": 444,
+          "receiptSHA256": "d370bcb0d58525f03a8d995b038403d229b614af60f771bfed1eeea45c5e0fea"
+        },
+        {
+          "run": "original-original-first-review-denial-extra--04f671cc1cfc4f539dc183a9aae79972",
+          "exitCode": 0,
+          "beforeRows": 689,
+          "afterRows": 689,
+          "receiptSHA256": "adc7d160dfa2e6d92f18624a4e3a30eedf7e111ff9b1d78947392fbe9bdc2dc2"
+        },
+        {
+          "run": "original-original-first-review-denial-regression--4a87da26e61f437497418f0b8797b8ea",
+          "exitCode": 0,
+          "beforeRows": 441,
+          "afterRows": 441,
+          "receiptSHA256": "c3156e4dadccf88e7b936d3c3c91624e2ad811e118694692ad7072a76e04524c"
+        },
+        {
+          "run": "original-outcomes-extension--1f8d16fe604f4bd980f7fa95f4ac5937",
+          "exitCode": 0,
+          "beforeRows": 1111,
+          "afterRows": 1111,
+          "receiptSHA256": "c2d7f04f25a5b6d27283a76a2f9d57c0f38915fae4435c412e1be1803d0701d3"
+        },
+        {
+          "run": "original-outcomes-extra--51a18cb5fd324a598ed212d0d20984ec",
+          "exitCode": 0,
+          "beforeRows": 1111,
+          "afterRows": 1111,
+          "receiptSHA256": "b31c5082c4d340b3e074f391d67e87a6d0f50f1646188782c7ddb8faae27d4fa"
+        },
+        {
+          "run": "original-outcomes-regression--776e9fabce8b4372a89278a64f3c05b7",
+          "exitCode": 0,
+          "beforeRows": 1111,
+          "afterRows": 1111,
+          "receiptSHA256": "3a78f3dd72a88f255a24ff9a310cbf705146627eb8489208fa2ad09a02689d81"
+        },
+        {
+          "run": "original-parent-adversarial-extension--0ba224a69d8d40aaaae15e7ff6d26bbd",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "93a36fa5a0b88f10151f5c37a2eaf82a2ff81a64ce4c019e8010dbd5a9ba4072"
+        },
+        {
+          "run": "original-parent-adversarial-extra--0be3316159b043488c20b9be8e3c9ec2",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "a3e23f0880eb715e038104bd1b7532bbb6f6e2c677e710e3f93b10d06d2f4b98"
+        },
+        {
+          "run": "original-parent-adversarial-regression--0af227739158453ba2ec2abcb8217920",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "78a005305df139e2e2798e89b267aeac804049dd3a1f8079f2d5fefac7911daf"
+        },
+        {
+          "run": "original-parent-original-extension--bf6437c05c144ceaa89e177f2919acaf",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "fbb99330917b1459e0630c0750c9ccc3f2c8cf2a0015f5e589ef80d51989f0f0"
+        },
+        {
+          "run": "original-parent-original-extra--5fe784ac80104be38686878be0b5c041",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "1a56135498470e3896e6c76451fa6b6d9779e82f529e957a6066d0f1994f217f"
+        },
+        {
+          "run": "original-parent-original-regression--3455132416664a63a2045fccd25bd59a",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "b6c735b0a2fd36a71d435186d69e045d44fad99bc949da9c36bb468818ed26db"
+        },
+        {
+          "run": "original-parent-watch17-extension--e3e268d64cda4e81a23b68f961d36572",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "72b05a7d1b1f902e6679cb2d4fceaa29b2ed43a9286a1c8bbc62f5bfe6b8c79c"
+        },
+        {
+          "run": "original-parent-watch17-extra--b4a51c0d12e140ca8f5a41e429353402",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "397dadba3589f29df68a906167f5c2f3e83a029c63940babedfa13f9978c12e9"
+        },
+        {
+          "run": "original-parent-watch17-regression--314d2a842b7846f59091d2c1cf17e65f",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "11c3f45e86d7db115e496bc56335f51bacc783566af49418b78ff299c3dd72f8"
+        },
+        {
+          "run": "original-rpc-binding-controls-extra--ff6992d56d83431ca6e114dee7f85289",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "d73b28c56b077c2edc3ce75339ac551a156b54151a9fbfd8a0ec9749957339d3"
+        },
+        {
+          "run": "original-runtime-freeze-extension--197f30d4c2e04f038f46c66f646d41c7",
+          "exitCode": 0,
+          "beforeRows": 1111,
+          "afterRows": 1111,
+          "receiptSHA256": "b1f089d71269273066a27d7e26d39e75476de001d01ad2398c191ceb129043ad"
+        },
+        {
+          "run": "original-runtime-freeze-extra--417c023f71d64d5498b656a813055552",
+          "exitCode": 0,
+          "beforeRows": 1111,
+          "afterRows": 1111,
+          "receiptSHA256": "f703badaf5ee8592ef926f2611933112739f02a518736a17c15296197882d52a"
+        },
+        {
+          "run": "original-runtime-freeze-regression--ab7faba0615f48218cb788c9236aeddb",
+          "exitCode": 0,
+          "beforeRows": 1111,
+          "afterRows": 1111,
+          "receiptSHA256": "d0b2cd9144afa8bc1b461218cd43ea4a210820af5168f468726de2010edb59de"
+        },
+        {
+          "run": "immutable-original-c2-peer-body-controls-extension--a48a6ca5df044dbcb3aa934a0d13e0c3",
+          "exitCode": 0,
+          "beforeRows": 444,
+          "afterRows": 444,
+          "receiptSHA256": "700ab67435c4be58143ed523bebd6f689ea02c134feb917d7d30c41b6788c4da"
+        },
+        {
+          "run": "immutable-original-c2-peer-body-controls-extra--2578d3b9ad8e4b739cb9a36cd3dc2bdf",
+          "exitCode": 0,
+          "beforeRows": 689,
+          "afterRows": 689,
+          "receiptSHA256": "1919d2dcb7a5f9df2660eaf67b5e0230d0c8cad11ff4f25330f070ff8d7a3289"
+        },
+        {
+          "run": "immutable-original-c2-peer-body-controls-regression--51a41695f9e44269b3db402e866799d8",
+          "exitCode": 0,
+          "beforeRows": 441,
+          "afterRows": 441,
+          "receiptSHA256": "15686ae717ff23c1f9cca1e86e52739f69cb575ee389fdf9c9ae655130968a54"
+        },
+        {
+          "run": "immutable-original-c2-peer-source-drift-extension--3d57d8e4cfb54527b32e5e8fc07243a3",
+          "exitCode": 0,
+          "beforeRows": 444,
+          "afterRows": 444,
+          "receiptSHA256": "e864052405346b41ce84a5acb3b61c9bb13f74b104821418ba7cff89d3c59910"
+        },
+        {
+          "run": "immutable-original-c2-peer-source-drift-extra--05dc77c3a4104a93b25904cbe275dc52",
+          "exitCode": 0,
+          "beforeRows": 689,
+          "afterRows": 689,
+          "receiptSHA256": "4ed10e53ce7cdb0800ea454a641570957c2fc834152225feb5771e52be3f3efd"
+        },
+        {
+          "run": "immutable-original-c2-peer-source-drift-regression--66222be3995e4238b86683574e0a34b5",
+          "exitCode": 0,
+          "beforeRows": 441,
+          "afterRows": 441,
+          "receiptSHA256": "f06cbfe9999e3e35b2f2f6cf4f3b18e66f612072f5d50d233dc340b04b64644c"
+        },
+        {
+          "run": "immutable-publication-controls-extension--91d54876e4b4414581ef3dacee27afbe",
+          "exitCode": 0,
+          "beforeRows": 444,
+          "afterRows": 444,
+          "receiptSHA256": "d3e32b82f25268d326e9014f12429c4040d03de05958f34bbb1abb58cb5f8828"
+        },
+        {
+          "run": "immutable-publication-controls-extra--2ac470ce1efd4736b5b7c40627c94258",
+          "exitCode": 0,
+          "beforeRows": 689,
+          "afterRows": 689,
+          "receiptSHA256": "e348b772a950b1ab0e8a22d13e7630d175e4d041f0f06120446b71d8572899f9"
+        },
+        {
+          "run": "immutable-publication-controls-regression--dfdae8a5c4ad490092dfcab057ef304c",
+          "exitCode": 0,
+          "beforeRows": 441,
+          "afterRows": 441,
+          "receiptSHA256": "028c9707efe52b896545030c9e40258318915920a3f537ff5326f836f45d3898"
+        },
+        {
+          "run": "immutable-static-path--5305d574596645c78a97a7dba0599758",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "49a0b10697ba476019be5780b474da3cc77aa6d2fb775d198423015e5920946f"
+        },
+        {
+          "run": "immutable-tier-graph--c60dc707675b4501b5fa157f8f44bbea",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "3a7cefc29e250da0d007cc1404a61c1eb9a82eca9dcfb99e10ba7e15b34ecd62"
+        },
+        {
+          "run": "original-body18-extension--810897b64146489ea3a990a5e1914ec1",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "97989d517763c9b49f1cf7d5a99e12e898a30d00b21423f6e288fb815327c27c"
+        },
+        {
+          "run": "original-body18-extra--2df8fde407e64f27a48a1bc0ee9a3185",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "a7a3ac0eaf220f2b7d767db01f91a9aa7f4859fcbf835294fb7e04a5946bc42d"
+        },
+        {
+          "run": "original-body18-regression--ee9cceabd4674318abd3c1d1ed672b95",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "cda65dcce42be9779020de05c277902ac3cf9a03f9bb2f408fc20696ac83f783"
+        },
+        {
+          "run": "original-driver-error-controls-extra--70cecad01f2b42adab641e9e92ed3f64",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "5f8c6c207b738e4feb68c3bfe7c9f926eb35e7c2a182e409daf4b7c66330e23f"
+        },
+        {
+          "run": "original-inventory-extension--faa1c62558f142c4a64f0c07024e3087",
+          "exitCode": 0,
+          "beforeRows": 1111,
+          "afterRows": 1111,
+          "receiptSHA256": "5f3349a68ef6d84b03693efd4f107bffc92d2667e493aa6b85d4b70249e88675"
+        },
+        {
+          "run": "original-inventory-extra--dc90b335c6ed43b2b20f7e1309de70c9",
+          "exitCode": 0,
+          "beforeRows": 1111,
+          "afterRows": 1111,
+          "receiptSHA256": "40ca396430847855c3f597681deb467e0ef2acec8af8c5c192b6650cb47d7462"
+        },
+        {
+          "run": "original-inventory-regression--ef99f1640d3e43b0beb9a0c38ca9b337",
+          "exitCode": 0,
+          "beforeRows": 1111,
+          "afterRows": 1111,
+          "receiptSHA256": "b1d2fec1a5cdd4222b6f195b2473a8f06db7329339bfcddeca5fa922a4b0d402"
+        },
+        {
+          "run": "original-original-first-review-denial-extension--3a4df7904af244aa82d1f5c11a71789c",
+          "exitCode": 0,
+          "beforeRows": 444,
+          "afterRows": 444,
+          "receiptSHA256": "d370bcb0d58525f03a8d995b038403d229b614af60f771bfed1eeea45c5e0fea"
+        },
+        {
+          "run": "original-original-first-review-denial-extra--04f671cc1cfc4f539dc183a9aae79972",
+          "exitCode": 0,
+          "beforeRows": 689,
+          "afterRows": 689,
+          "receiptSHA256": "adc7d160dfa2e6d92f18624a4e3a30eedf7e111ff9b1d78947392fbe9bdc2dc2"
+        },
+        {
+          "run": "original-original-first-review-denial-regression--4a87da26e61f437497418f0b8797b8ea",
+          "exitCode": 0,
+          "beforeRows": 441,
+          "afterRows": 441,
+          "receiptSHA256": "c3156e4dadccf88e7b936d3c3c91624e2ad811e118694692ad7072a76e04524c"
+        },
+        {
+          "run": "original-outcomes-extension--1f8d16fe604f4bd980f7fa95f4ac5937",
+          "exitCode": 0,
+          "beforeRows": 1111,
+          "afterRows": 1111,
+          "receiptSHA256": "c2d7f04f25a5b6d27283a76a2f9d57c0f38915fae4435c412e1be1803d0701d3"
+        },
+        {
+          "run": "original-outcomes-extra--51a18cb5fd324a598ed212d0d20984ec",
+          "exitCode": 0,
+          "beforeRows": 1111,
+          "afterRows": 1111,
+          "receiptSHA256": "b31c5082c4d340b3e074f391d67e87a6d0f50f1646188782c7ddb8faae27d4fa"
+        },
+        {
+          "run": "original-outcomes-regression--776e9fabce8b4372a89278a64f3c05b7",
+          "exitCode": 0,
+          "beforeRows": 1111,
+          "afterRows": 1111,
+          "receiptSHA256": "3a78f3dd72a88f255a24ff9a310cbf705146627eb8489208fa2ad09a02689d81"
+        },
+        {
+          "run": "original-parent-adversarial-extension--0ba224a69d8d40aaaae15e7ff6d26bbd",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "93a36fa5a0b88f10151f5c37a2eaf82a2ff81a64ce4c019e8010dbd5a9ba4072"
+        },
+        {
+          "run": "original-parent-adversarial-extra--0be3316159b043488c20b9be8e3c9ec2",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "a3e23f0880eb715e038104bd1b7532bbb6f6e2c677e710e3f93b10d06d2f4b98"
+        },
+        {
+          "run": "original-parent-adversarial-regression--0af227739158453ba2ec2abcb8217920",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "78a005305df139e2e2798e89b267aeac804049dd3a1f8079f2d5fefac7911daf"
+        },
+        {
+          "run": "original-parent-original-extension--bf6437c05c144ceaa89e177f2919acaf",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "fbb99330917b1459e0630c0750c9ccc3f2c8cf2a0015f5e589ef80d51989f0f0"
+        },
+        {
+          "run": "original-parent-original-extra--5fe784ac80104be38686878be0b5c041",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "1a56135498470e3896e6c76451fa6b6d9779e82f529e957a6066d0f1994f217f"
+        },
+        {
+          "run": "original-parent-original-regression--3455132416664a63a2045fccd25bd59a",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "b6c735b0a2fd36a71d435186d69e045d44fad99bc949da9c36bb468818ed26db"
+        },
+        {
+          "run": "original-parent-watch17-extension--e3e268d64cda4e81a23b68f961d36572",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "72b05a7d1b1f902e6679cb2d4fceaa29b2ed43a9286a1c8bbc62f5bfe6b8c79c"
+        },
+        {
+          "run": "original-parent-watch17-extra--b4a51c0d12e140ca8f5a41e429353402",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "397dadba3589f29df68a906167f5c2f3e83a029c63940babedfa13f9978c12e9"
+        },
+        {
+          "run": "original-parent-watch17-regression--314d2a842b7846f59091d2c1cf17e65f",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "11c3f45e86d7db115e496bc56335f51bacc783566af49418b78ff299c3dd72f8"
+        },
+        {
+          "run": "original-rpc-binding-controls-extra--ff6992d56d83431ca6e114dee7f85289",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "d73b28c56b077c2edc3ce75339ac551a156b54151a9fbfd8a0ec9749957339d3"
+        },
+        {
+          "run": "original-runtime-freeze-extension--197f30d4c2e04f038f46c66f646d41c7",
+          "exitCode": 0,
+          "beforeRows": 1111,
+          "afterRows": 1111,
+          "receiptSHA256": "b1f089d71269273066a27d7e26d39e75476de001d01ad2398c191ceb129043ad"
+        },
+        {
+          "run": "original-runtime-freeze-extra--417c023f71d64d5498b656a813055552",
+          "exitCode": 0,
+          "beforeRows": 1111,
+          "afterRows": 1111,
+          "receiptSHA256": "f703badaf5ee8592ef926f2611933112739f02a518736a17c15296197882d52a"
+        },
+        {
+          "run": "original-runtime-freeze-regression--ab7faba0615f48218cb788c9236aeddb",
+          "exitCode": 0,
+          "beforeRows": 1111,
+          "afterRows": 1111,
+          "receiptSHA256": "d0b2cd9144afa8bc1b461218cd43ea4a210820af5168f468726de2010edb59de"
+        }
+      ],
+      "earlierEvidence": "NON_CERTIFYING_WHERE_FULL_PRESTATE_RAW_UTC_MISSING",
+      "historicalGapNotBackfilled": true
+    },
+    {
+      "profile": "extra",
+      "commands": 254,
+      "preimageRefsVerified": 128486,
+      "immutableRuns": 114,
+      "runs": [
+        {
+          "run": "final-legacy-extension--d034bb1c407c4dbaaafaea5bd8c90866",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "5376c6fbb289d594c0e427230cf5df10269386f10d4b12812ef3709df49d263a"
+        },
+        {
+          "run": "final-legacy-extra--10f2a9639e214d88911c8bccbe8a7db2",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "048575e0847d78e2909b283f1e2a07e93f0b710baefcb8a600e297e3d887de0b"
+        },
+        {
+          "run": "final-legacy-regression--5902f7d6a2524d7e82ac25c18688437f",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "f9f4aed89e4c3a7f40211accbae13cef430b46d1322e0dae1d47461691260c34"
+        },
+        {
+          "run": "immutable-body--569211cffce54e4d8915e32618e8a958",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "4cb8f0e9f59d0d73c4c116a94ac43af27866cdecd5af05df4910c1798c20ca5d"
+        },
+        {
+          "run": "immutable-bundle--aa0f216e0f3348e6ab233686fa405482",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "26507d14fb88dd45ca92c8e8964f602205955284da713170ba527ef9edd4f605"
+        },
+        {
+          "run": "immutable-dispatch-controls-extension--7661e7f15b194f7e9ac3dd88a01470c4",
+          "exitCode": 0,
+          "beforeRows": 444,
+          "afterRows": 444,
+          "receiptSHA256": "5f7ba8229202ce2d6e0e6b8ae1feec7b4a47d9fa3f2685c6202b16309b173aed"
+        },
+        {
+          "run": "immutable-dispatch-controls-extra--a551767c6e9148e8b34b0092821f4633",
+          "exitCode": 0,
+          "beforeRows": 689,
+          "afterRows": 689,
+          "receiptSHA256": "f77c4b24c3081c47d8a03bbb5617104fe2c927ac5c10f011131987ca380e8e51"
+        },
+        {
+          "run": "immutable-dispatch-controls-regression--fbf755deb6e44400900ce6d98d2b99f4",
+          "exitCode": 0,
+          "beforeRows": 441,
+          "afterRows": 441,
+          "receiptSHA256": "815234eaffdb6684322c8ce8cc7adfb49ae51665cc1bf35f24b3c88861bbba4c"
+        },
+        {
+          "run": "immutable-full-graph--e7c700e41f174aa08439c7983614a10c",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "0626b034a43cca02cce22f6c8de4b383e5e2f7832a175b3fb960968432d2f5d4"
+        },
+        {
+          "run": "immutable-hostile--a4171f630fbf49b888f3482764101524",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "257ce3b8e5f5a07f185e03a79afc941df72dcb726d1f9fc0a8adfb6f27ce005b"
+        },
+        {
+          "run": "immutable-journal--91cef08442254167861d91145a9ec5ec",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "7f1def9173bbdf48846ecf912261dc9310d33852ce1581bc9d56d29e709d88e9"
+        },
+        {
+          "run": "immutable-management-controls-extension--034fed3998ed46239d78196f2d8266f6",
+          "exitCode": 0,
+          "beforeRows": 444,
+          "afterRows": 444,
+          "receiptSHA256": "98c91cdda328e39a8548235389efce05bd93e3886f4c39d51493b4e12373d0df"
+        },
+        {
+          "run": "immutable-management-controls-extra--f3cf9398786e4e019d0b728cad70bd37",
+          "exitCode": 0,
+          "beforeRows": 689,
+          "afterRows": 689,
+          "receiptSHA256": "3f14ffb41350e10a42e9e1781dcf77933197bd2b875ab8662649b726af58739b"
+        },
+        {
+          "run": "immutable-management-controls-regression--cb12c6b2d7aa44aa98b2ed0b69d55340",
+          "exitCode": 0,
+          "beforeRows": 441,
+          "afterRows": 441,
+          "receiptSHA256": "50db60c583a14497166c6ad6072a2954ab8c3e85d3a19951f7cf4981f28aedaa"
+        },
+        {
+          "run": "immutable-management-entry-controls-extension--731617b305f9483d949339e815014314",
+          "exitCode": 0,
+          "beforeRows": 444,
+          "afterRows": 444,
+          "receiptSHA256": "3f57af3b58a95ad49e4add38e4ace34a9797e9eb60feaef39ac85b9b061d6da9"
+        },
+        {
+          "run": "immutable-management-entry-controls-extra--c68875c43bae4c3da875b857368f86e8",
+          "exitCode": 0,
+          "beforeRows": 689,
+          "afterRows": 689,
+          "receiptSHA256": "73a1180efa7d25c9ca4e6df3d59a7c43fb83973404cde63e90f68139ea643376"
+        },
+        {
+          "run": "immutable-management-entry-controls-regression--ec8df02318bd4006ba8cb5ebfbd5f48c",
+          "exitCode": 0,
+          "beforeRows": 441,
+          "afterRows": 441,
+          "receiptSHA256": "9bc0dd813afaa56d05e1aa4f953c4aaa6f626672846509c04fc7f06861313b10"
+        },
+        {
+          "run": "immutable-management-reserve-controls-extension--83bfa5b127c3485387bfaf57857a62e9",
+          "exitCode": 0,
+          "beforeRows": 444,
+          "afterRows": 444,
+          "receiptSHA256": "edc1d753796657ed5f3eed3e07030e25ab4c0496e4101200b209470d863c0d8c"
+        },
+        {
+          "run": "immutable-management-reserve-controls-extra--4bb393d582684895aaf45e601813370e",
+          "exitCode": 0,
+          "beforeRows": 689,
+          "afterRows": 689,
+          "receiptSHA256": "a2f465afff5abb59470be8f5cb5efe1f0a16f307340dfe0b9e904d84d24ac949"
+        },
+        {
+          "run": "immutable-management-reserve-controls-regression--4a194fd501d34651a856a21c6acbff8b",
+          "exitCode": 0,
+          "beforeRows": 441,
+          "afterRows": 441,
+          "receiptSHA256": "62f56e15f604a918c9b3270fec416066dd20455cd773d26326bd857abe6d48d8"
+        },
+        {
+          "run": "final-legacy-extension--d034bb1c407c4dbaaafaea5bd8c90866",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "5376c6fbb289d594c0e427230cf5df10269386f10d4b12812ef3709df49d263a"
+        },
+        {
+          "run": "final-legacy-extra--10f2a9639e214d88911c8bccbe8a7db2",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "048575e0847d78e2909b283f1e2a07e93f0b710baefcb8a600e297e3d887de0b"
+        },
+        {
+          "run": "final-legacy-regression--5902f7d6a2524d7e82ac25c18688437f",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "f9f4aed89e4c3a7f40211accbae13cef430b46d1322e0dae1d47461691260c34"
+        },
+        {
+          "run": "immutable-body--569211cffce54e4d8915e32618e8a958",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "4cb8f0e9f59d0d73c4c116a94ac43af27866cdecd5af05df4910c1798c20ca5d"
+        },
+        {
+          "run": "immutable-bundle--aa0f216e0f3348e6ab233686fa405482",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "26507d14fb88dd45ca92c8e8964f602205955284da713170ba527ef9edd4f605"
+        },
+        {
+          "run": "immutable-dispatch-controls-extension--7661e7f15b194f7e9ac3dd88a01470c4",
+          "exitCode": 0,
+          "beforeRows": 444,
+          "afterRows": 444,
+          "receiptSHA256": "5f7ba8229202ce2d6e0e6b8ae1feec7b4a47d9fa3f2685c6202b16309b173aed"
+        },
+        {
+          "run": "immutable-dispatch-controls-extra--a551767c6e9148e8b34b0092821f4633",
+          "exitCode": 0,
+          "beforeRows": 689,
+          "afterRows": 689,
+          "receiptSHA256": "f77c4b24c3081c47d8a03bbb5617104fe2c927ac5c10f011131987ca380e8e51"
+        },
+        {
+          "run": "immutable-dispatch-controls-regression--fbf755deb6e44400900ce6d98d2b99f4",
+          "exitCode": 0,
+          "beforeRows": 441,
+          "afterRows": 441,
+          "receiptSHA256": "815234eaffdb6684322c8ce8cc7adfb49ae51665cc1bf35f24b3c88861bbba4c"
+        },
+        {
+          "run": "immutable-full-graph--e7c700e41f174aa08439c7983614a10c",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "0626b034a43cca02cce22f6c8de4b383e5e2f7832a175b3fb960968432d2f5d4"
+        },
+        {
+          "run": "immutable-hostile--a4171f630fbf49b888f3482764101524",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "257ce3b8e5f5a07f185e03a79afc941df72dcb726d1f9fc0a8adfb6f27ce005b"
+        },
+        {
+          "run": "immutable-journal--91cef08442254167861d91145a9ec5ec",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "7f1def9173bbdf48846ecf912261dc9310d33852ce1581bc9d56d29e709d88e9"
+        },
+        {
+          "run": "immutable-management-controls-extension--034fed3998ed46239d78196f2d8266f6",
+          "exitCode": 0,
+          "beforeRows": 444,
+          "afterRows": 444,
+          "receiptSHA256": "98c91cdda328e39a8548235389efce05bd93e3886f4c39d51493b4e12373d0df"
+        },
+        {
+          "run": "immutable-management-controls-extra--f3cf9398786e4e019d0b728cad70bd37",
+          "exitCode": 0,
+          "beforeRows": 689,
+          "afterRows": 689,
+          "receiptSHA256": "3f14ffb41350e10a42e9e1781dcf77933197bd2b875ab8662649b726af58739b"
+        },
+        {
+          "run": "immutable-management-controls-regression--cb12c6b2d7aa44aa98b2ed0b69d55340",
+          "exitCode": 0,
+          "beforeRows": 441,
+          "afterRows": 441,
+          "receiptSHA256": "50db60c583a14497166c6ad6072a2954ab8c3e85d3a19951f7cf4981f28aedaa"
+        },
+        {
+          "run": "immutable-management-entry-controls-extension--731617b305f9483d949339e815014314",
+          "exitCode": 0,
+          "beforeRows": 444,
+          "afterRows": 444,
+          "receiptSHA256": "3f57af3b58a95ad49e4add38e4ace34a9797e9eb60feaef39ac85b9b061d6da9"
+        },
+        {
+          "run": "immutable-management-entry-controls-extra--c68875c43bae4c3da875b857368f86e8",
+          "exitCode": 0,
+          "beforeRows": 689,
+          "afterRows": 689,
+          "receiptSHA256": "73a1180efa7d25c9ca4e6df3d59a7c43fb83973404cde63e90f68139ea643376"
+        },
+        {
+          "run": "immutable-management-entry-controls-regression--ec8df02318bd4006ba8cb5ebfbd5f48c",
+          "exitCode": 0,
+          "beforeRows": 441,
+          "afterRows": 441,
+          "receiptSHA256": "9bc0dd813afaa56d05e1aa4f953c4aaa6f626672846509c04fc7f06861313b10"
+        },
+        {
+          "run": "immutable-management-reserve-controls-extension--83bfa5b127c3485387bfaf57857a62e9",
+          "exitCode": 0,
+          "beforeRows": 444,
+          "afterRows": 444,
+          "receiptSHA256": "edc1d753796657ed5f3eed3e07030e25ab4c0496e4101200b209470d863c0d8c"
+        },
+        {
+          "run": "immutable-management-reserve-controls-extra--4bb393d582684895aaf45e601813370e",
+          "exitCode": 0,
+          "beforeRows": 689,
+          "afterRows": 689,
+          "receiptSHA256": "a2f465afff5abb59470be8f5cb5efe1f0a16f307340dfe0b9e904d84d24ac949"
+        },
+        {
+          "run": "immutable-management-reserve-controls-regression--4a194fd501d34651a856a21c6acbff8b",
+          "exitCode": 0,
+          "beforeRows": 441,
+          "afterRows": 441,
+          "receiptSHA256": "62f56e15f604a918c9b3270fec416066dd20455cd773d26326bd857abe6d48d8"
+        },
+        {
+          "run": "immutable-original-c2-peer-body-controls-extension--a48a6ca5df044dbcb3aa934a0d13e0c3",
+          "exitCode": 0,
+          "beforeRows": 444,
+          "afterRows": 444,
+          "receiptSHA256": "700ab67435c4be58143ed523bebd6f689ea02c134feb917d7d30c41b6788c4da"
+        },
+        {
+          "run": "immutable-original-c2-peer-body-controls-extra--2578d3b9ad8e4b739cb9a36cd3dc2bdf",
+          "exitCode": 0,
+          "beforeRows": 689,
+          "afterRows": 689,
+          "receiptSHA256": "1919d2dcb7a5f9df2660eaf67b5e0230d0c8cad11ff4f25330f070ff8d7a3289"
+        },
+        {
+          "run": "immutable-original-c2-peer-body-controls-regression--51a41695f9e44269b3db402e866799d8",
+          "exitCode": 0,
+          "beforeRows": 441,
+          "afterRows": 441,
+          "receiptSHA256": "15686ae717ff23c1f9cca1e86e52739f69cb575ee389fdf9c9ae655130968a54"
+        },
+        {
+          "run": "immutable-original-c2-peer-source-drift-extension--3d57d8e4cfb54527b32e5e8fc07243a3",
+          "exitCode": 0,
+          "beforeRows": 444,
+          "afterRows": 444,
+          "receiptSHA256": "e864052405346b41ce84a5acb3b61c9bb13f74b104821418ba7cff89d3c59910"
+        },
+        {
+          "run": "immutable-original-c2-peer-source-drift-extra--05dc77c3a4104a93b25904cbe275dc52",
+          "exitCode": 0,
+          "beforeRows": 689,
+          "afterRows": 689,
+          "receiptSHA256": "4ed10e53ce7cdb0800ea454a641570957c2fc834152225feb5771e52be3f3efd"
+        },
+        {
+          "run": "immutable-original-c2-peer-source-drift-regression--66222be3995e4238b86683574e0a34b5",
+          "exitCode": 0,
+          "beforeRows": 441,
+          "afterRows": 441,
+          "receiptSHA256": "f06cbfe9999e3e35b2f2f6cf4f3b18e66f612072f5d50d233dc340b04b64644c"
+        },
+        {
+          "run": "immutable-publication-controls-extension--91d54876e4b4414581ef3dacee27afbe",
+          "exitCode": 0,
+          "beforeRows": 444,
+          "afterRows": 444,
+          "receiptSHA256": "d3e32b82f25268d326e9014f12429c4040d03de05958f34bbb1abb58cb5f8828"
+        },
+        {
+          "run": "immutable-publication-controls-extra--2ac470ce1efd4736b5b7c40627c94258",
+          "exitCode": 0,
+          "beforeRows": 689,
+          "afterRows": 689,
+          "receiptSHA256": "e348b772a950b1ab0e8a22d13e7630d175e4d041f0f06120446b71d8572899f9"
+        },
+        {
+          "run": "immutable-publication-controls-regression--dfdae8a5c4ad490092dfcab057ef304c",
+          "exitCode": 0,
+          "beforeRows": 441,
+          "afterRows": 441,
+          "receiptSHA256": "028c9707efe52b896545030c9e40258318915920a3f537ff5326f836f45d3898"
+        },
+        {
+          "run": "immutable-static-path--5305d574596645c78a97a7dba0599758",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "49a0b10697ba476019be5780b474da3cc77aa6d2fb775d198423015e5920946f"
+        },
+        {
+          "run": "immutable-tier-graph--c60dc707675b4501b5fa157f8f44bbea",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "3a7cefc29e250da0d007cc1404a61c1eb9a82eca9dcfb99e10ba7e15b34ecd62"
+        },
+        {
+          "run": "original-body18-extension--810897b64146489ea3a990a5e1914ec1",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "97989d517763c9b49f1cf7d5a99e12e898a30d00b21423f6e288fb815327c27c"
+        },
+        {
+          "run": "original-body18-extra--2df8fde407e64f27a48a1bc0ee9a3185",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "a7a3ac0eaf220f2b7d767db01f91a9aa7f4859fcbf835294fb7e04a5946bc42d"
+        },
+        {
+          "run": "original-body18-regression--ee9cceabd4674318abd3c1d1ed672b95",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "cda65dcce42be9779020de05c277902ac3cf9a03f9bb2f408fc20696ac83f783"
+        },
+        {
+          "run": "original-driver-error-controls-extra--70cecad01f2b42adab641e9e92ed3f64",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "5f8c6c207b738e4feb68c3bfe7c9f926eb35e7c2a182e409daf4b7c66330e23f"
+        },
+        {
+          "run": "original-inventory-extension--faa1c62558f142c4a64f0c07024e3087",
+          "exitCode": 0,
+          "beforeRows": 1111,
+          "afterRows": 1111,
+          "receiptSHA256": "5f3349a68ef6d84b03693efd4f107bffc92d2667e493aa6b85d4b70249e88675"
+        },
+        {
+          "run": "original-inventory-extra--dc90b335c6ed43b2b20f7e1309de70c9",
+          "exitCode": 0,
+          "beforeRows": 1111,
+          "afterRows": 1111,
+          "receiptSHA256": "40ca396430847855c3f597681deb467e0ef2acec8af8c5c192b6650cb47d7462"
+        },
+        {
+          "run": "original-inventory-regression--ef99f1640d3e43b0beb9a0c38ca9b337",
+          "exitCode": 0,
+          "beforeRows": 1111,
+          "afterRows": 1111,
+          "receiptSHA256": "b1d2fec1a5cdd4222b6f195b2473a8f06db7329339bfcddeca5fa922a4b0d402"
+        },
+        {
+          "run": "original-original-first-review-denial-extension--3a4df7904af244aa82d1f5c11a71789c",
+          "exitCode": 0,
+          "beforeRows": 444,
+          "afterRows": 444,
+          "receiptSHA256": "d370bcb0d58525f03a8d995b038403d229b614af60f771bfed1eeea45c5e0fea"
+        },
+        {
+          "run": "original-original-first-review-denial-extra--04f671cc1cfc4f539dc183a9aae79972",
+          "exitCode": 0,
+          "beforeRows": 689,
+          "afterRows": 689,
+          "receiptSHA256": "adc7d160dfa2e6d92f18624a4e3a30eedf7e111ff9b1d78947392fbe9bdc2dc2"
+        },
+        {
+          "run": "original-original-first-review-denial-regression--4a87da26e61f437497418f0b8797b8ea",
+          "exitCode": 0,
+          "beforeRows": 441,
+          "afterRows": 441,
+          "receiptSHA256": "c3156e4dadccf88e7b936d3c3c91624e2ad811e118694692ad7072a76e04524c"
+        },
+        {
+          "run": "original-outcomes-extension--1f8d16fe604f4bd980f7fa95f4ac5937",
+          "exitCode": 0,
+          "beforeRows": 1111,
+          "afterRows": 1111,
+          "receiptSHA256": "c2d7f04f25a5b6d27283a76a2f9d57c0f38915fae4435c412e1be1803d0701d3"
+        },
+        {
+          "run": "original-outcomes-extra--51a18cb5fd324a598ed212d0d20984ec",
+          "exitCode": 0,
+          "beforeRows": 1111,
+          "afterRows": 1111,
+          "receiptSHA256": "b31c5082c4d340b3e074f391d67e87a6d0f50f1646188782c7ddb8faae27d4fa"
+        },
+        {
+          "run": "original-outcomes-regression--776e9fabce8b4372a89278a64f3c05b7",
+          "exitCode": 0,
+          "beforeRows": 1111,
+          "afterRows": 1111,
+          "receiptSHA256": "3a78f3dd72a88f255a24ff9a310cbf705146627eb8489208fa2ad09a02689d81"
+        },
+        {
+          "run": "original-parent-adversarial-extension--0ba224a69d8d40aaaae15e7ff6d26bbd",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "93a36fa5a0b88f10151f5c37a2eaf82a2ff81a64ce4c019e8010dbd5a9ba4072"
+        },
+        {
+          "run": "original-parent-adversarial-extra--0be3316159b043488c20b9be8e3c9ec2",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "a3e23f0880eb715e038104bd1b7532bbb6f6e2c677e710e3f93b10d06d2f4b98"
+        },
+        {
+          "run": "original-parent-adversarial-regression--0af227739158453ba2ec2abcb8217920",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "78a005305df139e2e2798e89b267aeac804049dd3a1f8079f2d5fefac7911daf"
+        },
+        {
+          "run": "original-parent-original-extension--bf6437c05c144ceaa89e177f2919acaf",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "fbb99330917b1459e0630c0750c9ccc3f2c8cf2a0015f5e589ef80d51989f0f0"
+        },
+        {
+          "run": "original-parent-original-extra--5fe784ac80104be38686878be0b5c041",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "1a56135498470e3896e6c76451fa6b6d9779e82f529e957a6066d0f1994f217f"
+        },
+        {
+          "run": "original-parent-original-regression--3455132416664a63a2045fccd25bd59a",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "b6c735b0a2fd36a71d435186d69e045d44fad99bc949da9c36bb468818ed26db"
+        },
+        {
+          "run": "original-parent-watch17-extension--e3e268d64cda4e81a23b68f961d36572",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "72b05a7d1b1f902e6679cb2d4fceaa29b2ed43a9286a1c8bbc62f5bfe6b8c79c"
+        },
+        {
+          "run": "original-parent-watch17-extra--b4a51c0d12e140ca8f5a41e429353402",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "397dadba3589f29df68a906167f5c2f3e83a029c63940babedfa13f9978c12e9"
+        },
+        {
+          "run": "original-parent-watch17-regression--314d2a842b7846f59091d2c1cf17e65f",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "11c3f45e86d7db115e496bc56335f51bacc783566af49418b78ff299c3dd72f8"
+        },
+        {
+          "run": "original-rpc-binding-controls-extra--ff6992d56d83431ca6e114dee7f85289",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "d73b28c56b077c2edc3ce75339ac551a156b54151a9fbfd8a0ec9749957339d3"
+        },
+        {
+          "run": "original-runtime-freeze-extension--197f30d4c2e04f038f46c66f646d41c7",
+          "exitCode": 0,
+          "beforeRows": 1111,
+          "afterRows": 1111,
+          "receiptSHA256": "b1f089d71269273066a27d7e26d39e75476de001d01ad2398c191ceb129043ad"
+        },
+        {
+          "run": "original-runtime-freeze-extra--417c023f71d64d5498b656a813055552",
+          "exitCode": 0,
+          "beforeRows": 1111,
+          "afterRows": 1111,
+          "receiptSHA256": "f703badaf5ee8592ef926f2611933112739f02a518736a17c15296197882d52a"
+        },
+        {
+          "run": "original-runtime-freeze-regression--ab7faba0615f48218cb788c9236aeddb",
+          "exitCode": 0,
+          "beforeRows": 1111,
+          "afterRows": 1111,
+          "receiptSHA256": "d0b2cd9144afa8bc1b461218cd43ea4a210820af5168f468726de2010edb59de"
+        },
+        {
+          "run": "immutable-original-c2-peer-body-controls-extension--a48a6ca5df044dbcb3aa934a0d13e0c3",
+          "exitCode": 0,
+          "beforeRows": 444,
+          "afterRows": 444,
+          "receiptSHA256": "700ab67435c4be58143ed523bebd6f689ea02c134feb917d7d30c41b6788c4da"
+        },
+        {
+          "run": "immutable-original-c2-peer-body-controls-extra--2578d3b9ad8e4b739cb9a36cd3dc2bdf",
+          "exitCode": 0,
+          "beforeRows": 689,
+          "afterRows": 689,
+          "receiptSHA256": "1919d2dcb7a5f9df2660eaf67b5e0230d0c8cad11ff4f25330f070ff8d7a3289"
+        },
+        {
+          "run": "immutable-original-c2-peer-body-controls-regression--51a41695f9e44269b3db402e866799d8",
+          "exitCode": 0,
+          "beforeRows": 441,
+          "afterRows": 441,
+          "receiptSHA256": "15686ae717ff23c1f9cca1e86e52739f69cb575ee389fdf9c9ae655130968a54"
+        },
+        {
+          "run": "immutable-original-c2-peer-source-drift-extension--3d57d8e4cfb54527b32e5e8fc07243a3",
+          "exitCode": 0,
+          "beforeRows": 444,
+          "afterRows": 444,
+          "receiptSHA256": "e864052405346b41ce84a5acb3b61c9bb13f74b104821418ba7cff89d3c59910"
+        },
+        {
+          "run": "immutable-original-c2-peer-source-drift-extra--05dc77c3a4104a93b25904cbe275dc52",
+          "exitCode": 0,
+          "beforeRows": 689,
+          "afterRows": 689,
+          "receiptSHA256": "4ed10e53ce7cdb0800ea454a641570957c2fc834152225feb5771e52be3f3efd"
+        },
+        {
+          "run": "immutable-original-c2-peer-source-drift-regression--66222be3995e4238b86683574e0a34b5",
+          "exitCode": 0,
+          "beforeRows": 441,
+          "afterRows": 441,
+          "receiptSHA256": "f06cbfe9999e3e35b2f2f6cf4f3b18e66f612072f5d50d233dc340b04b64644c"
+        },
+        {
+          "run": "immutable-publication-controls-extension--91d54876e4b4414581ef3dacee27afbe",
+          "exitCode": 0,
+          "beforeRows": 444,
+          "afterRows": 444,
+          "receiptSHA256": "d3e32b82f25268d326e9014f12429c4040d03de05958f34bbb1abb58cb5f8828"
+        },
+        {
+          "run": "immutable-publication-controls-extra--2ac470ce1efd4736b5b7c40627c94258",
+          "exitCode": 0,
+          "beforeRows": 689,
+          "afterRows": 689,
+          "receiptSHA256": "e348b772a950b1ab0e8a22d13e7630d175e4d041f0f06120446b71d8572899f9"
+        },
+        {
+          "run": "immutable-publication-controls-regression--dfdae8a5c4ad490092dfcab057ef304c",
+          "exitCode": 0,
+          "beforeRows": 441,
+          "afterRows": 441,
+          "receiptSHA256": "028c9707efe52b896545030c9e40258318915920a3f537ff5326f836f45d3898"
+        },
+        {
+          "run": "immutable-static-path--5305d574596645c78a97a7dba0599758",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "49a0b10697ba476019be5780b474da3cc77aa6d2fb775d198423015e5920946f"
+        },
+        {
+          "run": "immutable-tier-graph--c60dc707675b4501b5fa157f8f44bbea",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "3a7cefc29e250da0d007cc1404a61c1eb9a82eca9dcfb99e10ba7e15b34ecd62"
+        },
+        {
+          "run": "original-body18-extension--810897b64146489ea3a990a5e1914ec1",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "97989d517763c9b49f1cf7d5a99e12e898a30d00b21423f6e288fb815327c27c"
+        },
+        {
+          "run": "original-body18-extra--2df8fde407e64f27a48a1bc0ee9a3185",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "a7a3ac0eaf220f2b7d767db01f91a9aa7f4859fcbf835294fb7e04a5946bc42d"
+        },
+        {
+          "run": "original-body18-regression--ee9cceabd4674318abd3c1d1ed672b95",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "cda65dcce42be9779020de05c277902ac3cf9a03f9bb2f408fc20696ac83f783"
+        },
+        {
+          "run": "original-driver-error-controls-extra--70cecad01f2b42adab641e9e92ed3f64",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "5f8c6c207b738e4feb68c3bfe7c9f926eb35e7c2a182e409daf4b7c66330e23f"
+        },
+        {
+          "run": "original-inventory-extension--faa1c62558f142c4a64f0c07024e3087",
+          "exitCode": 0,
+          "beforeRows": 1111,
+          "afterRows": 1111,
+          "receiptSHA256": "5f3349a68ef6d84b03693efd4f107bffc92d2667e493aa6b85d4b70249e88675"
+        },
+        {
+          "run": "original-inventory-extra--dc90b335c6ed43b2b20f7e1309de70c9",
+          "exitCode": 0,
+          "beforeRows": 1111,
+          "afterRows": 1111,
+          "receiptSHA256": "40ca396430847855c3f597681deb467e0ef2acec8af8c5c192b6650cb47d7462"
+        },
+        {
+          "run": "original-inventory-regression--ef99f1640d3e43b0beb9a0c38ca9b337",
+          "exitCode": 0,
+          "beforeRows": 1111,
+          "afterRows": 1111,
+          "receiptSHA256": "b1d2fec1a5cdd4222b6f195b2473a8f06db7329339bfcddeca5fa922a4b0d402"
+        },
+        {
+          "run": "original-original-first-review-denial-extension--3a4df7904af244aa82d1f5c11a71789c",
+          "exitCode": 0,
+          "beforeRows": 444,
+          "afterRows": 444,
+          "receiptSHA256": "d370bcb0d58525f03a8d995b038403d229b614af60f771bfed1eeea45c5e0fea"
+        },
+        {
+          "run": "original-original-first-review-denial-extra--04f671cc1cfc4f539dc183a9aae79972",
+          "exitCode": 0,
+          "beforeRows": 689,
+          "afterRows": 689,
+          "receiptSHA256": "adc7d160dfa2e6d92f18624a4e3a30eedf7e111ff9b1d78947392fbe9bdc2dc2"
+        },
+        {
+          "run": "original-original-first-review-denial-regression--4a87da26e61f437497418f0b8797b8ea",
+          "exitCode": 0,
+          "beforeRows": 441,
+          "afterRows": 441,
+          "receiptSHA256": "c3156e4dadccf88e7b936d3c3c91624e2ad811e118694692ad7072a76e04524c"
+        },
+        {
+          "run": "original-outcomes-extension--1f8d16fe604f4bd980f7fa95f4ac5937",
+          "exitCode": 0,
+          "beforeRows": 1111,
+          "afterRows": 1111,
+          "receiptSHA256": "c2d7f04f25a5b6d27283a76a2f9d57c0f38915fae4435c412e1be1803d0701d3"
+        },
+        {
+          "run": "original-outcomes-extra--51a18cb5fd324a598ed212d0d20984ec",
+          "exitCode": 0,
+          "beforeRows": 1111,
+          "afterRows": 1111,
+          "receiptSHA256": "b31c5082c4d340b3e074f391d67e87a6d0f50f1646188782c7ddb8faae27d4fa"
+        },
+        {
+          "run": "original-outcomes-regression--776e9fabce8b4372a89278a64f3c05b7",
+          "exitCode": 0,
+          "beforeRows": 1111,
+          "afterRows": 1111,
+          "receiptSHA256": "3a78f3dd72a88f255a24ff9a310cbf705146627eb8489208fa2ad09a02689d81"
+        },
+        {
+          "run": "original-parent-adversarial-extension--0ba224a69d8d40aaaae15e7ff6d26bbd",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "93a36fa5a0b88f10151f5c37a2eaf82a2ff81a64ce4c019e8010dbd5a9ba4072"
+        },
+        {
+          "run": "original-parent-adversarial-extra--0be3316159b043488c20b9be8e3c9ec2",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "a3e23f0880eb715e038104bd1b7532bbb6f6e2c677e710e3f93b10d06d2f4b98"
+        },
+        {
+          "run": "original-parent-adversarial-regression--0af227739158453ba2ec2abcb8217920",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "78a005305df139e2e2798e89b267aeac804049dd3a1f8079f2d5fefac7911daf"
+        },
+        {
+          "run": "original-parent-original-extension--bf6437c05c144ceaa89e177f2919acaf",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "fbb99330917b1459e0630c0750c9ccc3f2c8cf2a0015f5e589ef80d51989f0f0"
+        },
+        {
+          "run": "original-parent-original-extra--5fe784ac80104be38686878be0b5c041",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "1a56135498470e3896e6c76451fa6b6d9779e82f529e957a6066d0f1994f217f"
+        },
+        {
+          "run": "original-parent-original-regression--3455132416664a63a2045fccd25bd59a",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "b6c735b0a2fd36a71d435186d69e045d44fad99bc949da9c36bb468818ed26db"
+        },
+        {
+          "run": "original-parent-watch17-extension--e3e268d64cda4e81a23b68f961d36572",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "72b05a7d1b1f902e6679cb2d4fceaa29b2ed43a9286a1c8bbc62f5bfe6b8c79c"
+        },
+        {
+          "run": "original-parent-watch17-extra--b4a51c0d12e140ca8f5a41e429353402",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "397dadba3589f29df68a906167f5c2f3e83a029c63940babedfa13f9978c12e9"
+        },
+        {
+          "run": "original-parent-watch17-regression--314d2a842b7846f59091d2c1cf17e65f",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "11c3f45e86d7db115e496bc56335f51bacc783566af49418b78ff299c3dd72f8"
+        },
+        {
+          "run": "original-rpc-binding-controls-extra--ff6992d56d83431ca6e114dee7f85289",
+          "exitCode": 0,
+          "beforeRows": 1112,
+          "afterRows": 1112,
+          "receiptSHA256": "d73b28c56b077c2edc3ce75339ac551a156b54151a9fbfd8a0ec9749957339d3"
+        },
+        {
+          "run": "original-runtime-freeze-extension--197f30d4c2e04f038f46c66f646d41c7",
+          "exitCode": 0,
+          "beforeRows": 1111,
+          "afterRows": 1111,
+          "receiptSHA256": "b1f089d71269273066a27d7e26d39e75476de001d01ad2398c191ceb129043ad"
+        },
+        {
+          "run": "original-runtime-freeze-extra--417c023f71d64d5498b656a813055552",
+          "exitCode": 0,
+          "beforeRows": 1111,
+          "afterRows": 1111,
+          "receiptSHA256": "f703badaf5ee8592ef926f2611933112739f02a518736a17c15296197882d52a"
+        },
+        {
+          "run": "original-runtime-freeze-regression--ab7faba0615f48218cb788c9236aeddb",
+          "exitCode": 0,
+          "beforeRows": 1111,
+          "afterRows": 1111,
+          "receiptSHA256": "d0b2cd9144afa8bc1b461218cd43ea4a210820af5168f468726de2010edb59de"
+        }
+      ],
+      "earlierEvidence": "NON_CERTIFYING_WHERE_FULL_PRESTATE_RAW_UTC_MISSING",
+      "historicalGapNotBackfilled": true
+    }
+  ]
+}

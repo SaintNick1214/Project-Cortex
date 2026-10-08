@@ -1,0 +1,44 @@
+import assert from "node:assert/strict";
+import { writeFileSync } from "node:fs";
+import { fixture } from "/workspace/Project-Cortex/tests/unit/runtimeMetadataAuth/fixture.ts";
+import * as mutable from "/workspace/Project-Cortex/convex-dev/mutable.ts";
+import { QueryImpl } from "/workspace/Project-Cortex/node_modules/convex/dist/esm/server/impl/query_impl.js";
+
+const outcomes = [];
+for (const capability of ["write", "read"] as const) {
+  for (const table of ["runtimeAuthPrincipals", "runtimeAuthScopes", "runtimeAuthTombstones"] as const) {
+    const f = fixture({ capabilities: [capability], space: "space-a" });
+    f.seedMutable();
+    if (table === "runtimeAuthPrincipals") f.db.seed(table, { ...f.principal, _id: "private-control-duplicate" });
+    else if (table === "runtimeAuthScopes") f.db.seed(table, { ...f.db.table(table)[0], _id: "private-control-duplicate" });
+    else {
+      f.db.seed(table, { _id: "private-control-one", tenantId: "tenant-a", resourceType: "tenant", resourceId: "tenant-a", deletedAt: 1000 });
+      f.db.seed(table, { _id: "private-control-duplicate", tenantId: "tenant-a", resourceType: "tenant", resourceId: "tenant-a", deletedAt: 1000 });
+    }
+    const firstId = f.db.table(table)[0]!._id;
+    const original = f.db.query.bind(f.db);
+    let reached = 0;
+    f.db.query = (name) => {
+      const query = original(name);
+      query.unique = async () => await QueryImpl.prototype.unique.call({
+        take: async (limit: number) => { if (name === table) reached++; return await query.take(limit); },
+        tableNameForErrorMessages: name,
+      });
+      return query;
+    };
+    let error: unknown;
+    try { await f.run(capability === "write" ? mutable.set : mutable.get,
+      { tenantId: "tenant-a", memorySpaceId: "space-a", namespace: "counter", key: "one", ...(capability === "write" ? { value: 6 } : {}) }); }
+    catch (caught) { error = caught; }
+    assert(error instanceof Error); assert(reached > 0); assert.equal(f.db.attemptedWrites, 0); assert.equal(f.db.writes, 0);
+    const leaksIds = error.message.includes(firstId) && error.message.includes("private-control-duplicate");
+    assert.equal(leaksIds, true, "Confirmation only: native trusted-control ambiguity currently exposes stored IDs");
+    outcomes.push({ table, capability, actualHandler: "mutable:" + (capability === "write" ? "set" : "get"),
+      nativeUnique: "installed Convex1.46 QueryImpl.prototype.unique", reachedNativeControlLookup: reached,
+      leaksStoredControlIds: leaksIds, attemptedWrites: f.db.attemptedWrites, committedWrites: f.db.writes });
+  }
+}
+const receipt = { classification: "Parent read-only confirmation in accepted shared authority dependency; not an independent verdict or deployed exploit proof",
+  observedAt: new Date().toISOString(), outcomes, sourceOrQaWrites: 0, serviceCalls: 0 };
+writeFileSync("/workspace/Project-Cortex/work/backend-runtime/metadata-control-native-error-confirmation.json", JSON.stringify(receipt, null, 2) + "\n", { flag: "wx" });
+process.stdout.write(JSON.stringify(receipt) + "\n");

@@ -1,0 +1,11 @@
+{
+  "argv": [
+    "python3",
+    "-c",
+    "from pathlib import Path\nq=Path('_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c1')\n(q/'fixture-vm/tsconfig.json').write_bytes((q/'fixture/tsconfig.json').read_bytes())\np=q/'eslint.config.mjs';s=p.read_text().replace(\"'**/checks/*.mjs','**/eslint.config.mjs'\",\"'**/checks/*.mjs','**/dummy-port.mjs','**/eslint.config.mjs'\").replace(\"project:'./fixture/tsconfig.json'\",\"project:['./fixture/tsconfig.json','./fixture-vm/tsconfig.json']\");p.write_text(s)\np=q/'fixture/checks/metadata.mjs';s=p.read_text().replace(\"ACTUAL_PROOFS,EMPTY_RESOLVER\",\"ACTUAL_PROOFS\");p.write_text(s)\n"
+  ],
+  "cwd": "/workspace/Project-Cortex",
+  "startUtc": "2026-10-04T14:31:59.304923+00:00",
+  "endUtc": "2026-10-04T14:31:59.328446+00:00",
+  "exit": 0
+}

@@ -1,0 +1,15 @@
+from pathlib import Path
+import json,hashlib
+r=Path.cwd();q=r/'_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-parent-preparation-c3-review';out=[];H=lambda b:hashlib.sha256(b).hexdigest()
+for k,full,rpc in [('extension',116,98),('regression',113,97),('extra',118,100)]:
+ root=r/f'_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-{k}-preparation-c3';tiers=json.loads((root/'dependency-tiers.json').read_bytes());runner=json.loads((root/'runner-dependency-inventory.json').read_bytes())['inputs'];tools=json.loads((root/'toolchain-evidence.json').read_bytes())['files'];assert len(runner)==full and len(tiers['rpc']['runner'])==rpc;assert len(tools)==18 and len(tiers['boundaryOnly']['tools'])==14
+ for key,total in [('runner',runner),('tools',tools)]:
+  a=tiers['rpc'][key];b=tiers['boundaryOnly'][key];assert not set(x['path'] for x in a)&set(x['path'] for x in b);assert sorted(a+b,key=lambda x:x['path'])==sorted(total,key=lambda x:x['path'])
+ for x in runner+tools:
+  p=r/x['path'];assert not p.is_symlink();d=p.read_bytes();assert H(d)==x['sha256'];assert 'bytes' not in x or len(d)==x['bytes']
+ operative={str(p.relative_to(r)) for p in (root/'scripts').glob('*.mjs')};assert operative<=set(x['path'] for x in runner)
+ inv=json.loads((root/'registration-inventory.json').read_bytes());regs=inv['registrations'];assert len(regs)==287 and len({x['path'] for x in regs})==287;assert sum(x['visibility']=='public' for x in regs)==200;assert sum(x['visibility']=='internal' for x in regs)==87
+ old=(r/f'_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-{k}-preparation-c2/registration-inventory.json').read_text();assert (root/'registration-inventory.json').read_text()==old.replace('task04-model-drift-native-'+k+'-preparation-c2','task04-model-drift-native-'+k+'-preparation-c3')
+ for x in regs:assert x['type'] in ['query','mutation','action'] and isinstance(x['args'],dict)
+ out.append(dict(profile=k,fullRows=full,rpcRows=rpc,tools=18,boundaryTools=14,allScriptsIncluded=True,tupleValidators287ExactApartFromC3SourcePath=True,registeredHandlerOrNativeBoundaryExecution='NOT_RUN',freshGraphReDerivation='SOURCE_JUDGE_GATE'))
+(q/'inventory-results.json').write_text(json.dumps(dict(status='PASS_DECLARED_BYTES_AND_PRESERVATION',results=out),indent=2)+'\n');print(json.dumps(dict(status='PASS',profiles=len(out))))

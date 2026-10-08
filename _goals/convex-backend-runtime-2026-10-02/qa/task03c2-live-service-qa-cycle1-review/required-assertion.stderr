@@ -1,0 +1,15 @@
+/workspace/Project-Cortex/node_modules/convex/src/browser/sync/optimistic_updates_impl.ts:245
+          new ConvexError(
+          ^
+
+ConvexError: [CONVEX Q(mutable:get)] Uncaught ConvexError: UNAUTHENTICATED
+  Called by client
+    at OptimisticQueryResults.queryResult (/workspace/Project-Cortex/node_modules/convex/src/browser/sync/optimistic_updates_impl.ts:245:11)
+    at BaseConvexClient.localQueryResult (/workspace/Project-Cortex/node_modules/convex/src/browser/sync/client.ts:748:40)
+    at ConvexClient.query (/workspace/Project-Cortex/node_modules/convex/src/browser/simple_client.ts:549:31)
+    at <anonymous> (/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-service-qa-cycle1-review/native-regression.mjs:78:35) {
+  data: { code: 'UNAUTHENTICATED' },
+  Symbol(ConvexError): true
+}
+
+Node.js v24.19.0

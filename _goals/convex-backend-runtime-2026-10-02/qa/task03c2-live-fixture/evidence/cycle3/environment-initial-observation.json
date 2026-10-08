@@ -1,0 +1,11 @@
+{
+  "observation": "Managed-shell variable names only, no values inspected or printed",
+  "presentNames": ["OPENAI_API_KEY", "OPENAI_CLUSTER"],
+  "affected": "Initial NEW cycle3 Python runner separate source/packed SDK prep command processes inherited shell environment",
+  "actualQualificationSdkChild": "Existing sdkEnvironment code/import/env/IPC boundary remained sanitized; original interception controls pass",
+  "networkCalls": 0,
+  "workerDispatch": 0,
+  "valuesInspected": false,
+  "globalEnvironmentChanged": false,
+  "correction": "NEW cycle3 runner uses explicit command-local PATH/proxy/CA/LANG/CI/NO_COLOR/NODE_USE_ENV_PROXY/private npmcache allowlist, upstream/deploy keys and private selectors absent"
+}

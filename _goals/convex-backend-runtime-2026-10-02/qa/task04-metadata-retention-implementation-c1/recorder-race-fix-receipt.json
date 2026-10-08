@@ -1,0 +1,12 @@
+{
+  "argv": [
+    "python3",
+    "-c",
+    "from pathlib import Path\np=Path('work/resume/task04-metadata-retention-implementation-c1/capture-store.py');s=p.read_text().replace('sys,gzip,os','sys,gzip,os,fcntl');s=s.replace('def captured(phase):','def capturedUnlocked(phase):');needle=\"captured('pre');start=now();\";insert=\"def captured(phase):\\n with (pool/'.writer-lock').open('a+b') as lock:\\n  fcntl.flock(lock.fileno(),fcntl.LOCK_EX)\\n  try:capturedUnlocked(phase)\\n  finally:fcntl.flock(lock.fileno(),fcntl.LOCK_UN)\\n\";assert needle in s;s=s.replace(needle,insert+needle);p.write_text(s)"
+  ],
+  "cwd": "/workspace/Project-Cortex",
+  "startUtc": "2026-10-04T14:38:15.808525+00:00",
+  "endUtc": "2026-10-04T14:38:15.838869+00:00",
+  "exit": 0,
+  "recorderSourceSha256": "2b6044b160cec6b26819826400c5816b8e283cfcb7afa656756a45a7ba7a4797"
+}

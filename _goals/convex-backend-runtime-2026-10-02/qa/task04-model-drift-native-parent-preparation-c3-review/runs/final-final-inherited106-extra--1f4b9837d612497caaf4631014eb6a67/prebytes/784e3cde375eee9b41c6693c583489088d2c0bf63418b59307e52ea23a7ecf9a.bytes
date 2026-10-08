@@ -1,0 +1,343 @@
+{
+  "version": 1,
+  "scope": "NONPAID_NATIVE_PREPARATION_ONLY",
+  "scenarios": [
+    {
+      "id": "known-drift-40",
+      "kind": "known-drift-40",
+      "status": "PREPARED_OFFLINE_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 16,
+      "rpcCeiling": 36,
+      "postCaseCleanupIncluded": 3,
+      "requiredOutcomes": "R100; requested model exact, truthful different actualModel, terminal known C40. Original operation/run/tenant S40/U0/R0, slot0 once, all three overrun latches TRUE even for C40. Initial bytes/hash/evidenceId immutable, actualModel exact, no private output/eligible attachment. Initial duplicate whole-state equality. Original bind idempotent zero writes; valid successor/child/fallback actual admission denies BUDGET_EXCEEDED/POLICY_DENIED; checkpoint denies dispatch. New same-window bind creates exactly1 owned empty run with original window/root/currency/unit/reference, original rows unchanged; valid new-run admission denies with complete equality. No account/window reset."
+    },
+    {
+      "id": "known-drift-150",
+      "kind": "known-drift-150",
+      "status": "PREPARED_OFFLINE_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 16,
+      "rpcCeiling": 36,
+      "postCaseCleanupIncluded": 3,
+      "requiredOutcomes": "R100; requested model exact, truthful different actualModel, terminal known C150. Original operation/run/tenant S150/U0/R0, slot0 once, all three overrun latches TRUE even for C40. Initial bytes/hash/evidenceId immutable, actualModel exact, no private output/eligible attachment. Initial duplicate whole-state equality. Original bind idempotent zero writes; valid successor/child/fallback actual admission denies BUDGET_EXCEEDED/POLICY_DENIED; checkpoint denies dispatch. New same-window bind creates exactly1 owned empty run with original window/root/currency/unit/reference, original rows unchanged; valid new-run admission denies with complete equality. No account/window reset."
+    },
+    {
+      "id": "unknown-drift-terminal",
+      "kind": "unknown-drift-terminal",
+      "status": "PREPARED_OFFLINE_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 16,
+      "rpcCeiling": 32,
+      "postCaseCleanupIncluded": 3,
+      "requiredOutcomes": "Genuine supported terminal, money unavailable: R0/U100/S0, slot0 once, model drift exact, original three latches TRUE, attachment closed/private absent; duplicate zero writes. Compatible known40 refinement fully charges once and leaves guards/closure TRUE."
+    },
+    {
+      "id": "unknown-lifetime",
+      "kind": "unknown-lifetime",
+      "status": "PREPARED_OFFLINE_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 16,
+      "rpcCeiling": 32,
+      "postCaseCleanupIncluded": 3,
+      "requiredOutcomes": "After original genuine checkpoint, unsupported/no-terminal-proof candidate carrying drift and token facts is denied with complete state equality. No fabricated terminal observation, no terminal hash/private bytes/money release; R100/slot1 remains. Existing recovery without receipt records conservative U100/slot1 and denies checkpoint/replay. Do not claim latch storage for rejected untrusted observation. Accepted source must confirm exact existing recovery contract."
+    },
+    {
+      "id": "token-input-unknown",
+      "kind": "token-input-unknown",
+      "status": "PREPARED_OFFLINE_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 16,
+      "rpcCeiling": 32,
+      "postCaseCleanupIncluded": 3,
+      "requiredOutcomes": "Same actual/requested model; supplied input usage exactly stored measuredInputTokens+1 or maximumOutputTokens+1; other fact within bound. Genuine terminal, unknown money: unknown R0/U100/S0 or known R0/U0/S40, slot0; immutable usage exact; all original latches TRUE, closed/private absent. Duplicate exact zero writes, no clipping. Unknown case refines to known40 once with unchanged usage; healthy guard/admission replay denied."
+    },
+    {
+      "id": "token-input-known40",
+      "kind": "token-input-known40",
+      "status": "PREPARED_OFFLINE_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 16,
+      "rpcCeiling": 36,
+      "postCaseCleanupIncluded": 3,
+      "requiredOutcomes": "Same actual/requested model; supplied input usage exactly stored measuredInputTokens+1 or maximumOutputTokens+1; other fact within bound. Genuine terminal, known40 money: unknown R0/U100/S0 or known R0/U0/S40, slot0; immutable usage exact; all original latches TRUE, closed/private absent. Duplicate exact zero writes, no clipping. Unknown case refines to known40 once with unchanged usage; healthy guard/admission replay denied."
+    },
+    {
+      "id": "token-output-unknown",
+      "kind": "token-output-unknown",
+      "status": "PREPARED_OFFLINE_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 16,
+      "rpcCeiling": 32,
+      "postCaseCleanupIncluded": 3,
+      "requiredOutcomes": "Same actual/requested model; supplied output usage exactly stored measuredInputTokens+1 or maximumOutputTokens+1; other fact within bound. Genuine terminal, unknown money: unknown R0/U100/S0 or known R0/U0/S40, slot0; immutable usage exact; all original latches TRUE, closed/private absent. Duplicate exact zero writes, no clipping. Unknown case refines to known40 once with unchanged usage; healthy guard/admission replay denied."
+    },
+    {
+      "id": "token-output-known40",
+      "kind": "token-output-known40",
+      "status": "PREPARED_OFFLINE_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 16,
+      "rpcCeiling": 36,
+      "postCaseCleanupIncluded": 3,
+      "requiredOutcomes": "Same actual/requested model; supplied output usage exactly stored measuredInputTokens+1 or maximumOutputTokens+1; other fact within bound. Genuine terminal, known40 money: unknown R0/U100/S0 or known R0/U0/S40, slot0; immutable usage exact; all original latches TRUE, closed/private absent. Duplicate exact zero writes, no clipping. Unknown case refines to known40 once with unchanged usage; healthy guard/admission replay denied."
+    },
+    {
+      "id": "refinement-add-absent-model",
+      "kind": "refinement-add-absent-model",
+      "status": "PREPARED_OFFLINE_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 16,
+      "rpcCeiling": 32,
+      "postCaseCleanupIncluded": 3,
+      "requiredOutcomes": "First unknown supported terminal has ABSENT actualModel; preserve that absence in initial bytes. Compatible known40 adds truthful drift model only to final evidence; full40 once, slot0, all latches TRUE, no attachment. Initial/final duplicates zero writes; removal/change of now-present observed model denies with whole-state equality."
+    },
+    {
+      "id": "refinement-add-absent-tokens",
+      "kind": "refinement-add-absent-tokens",
+      "status": "PREPARED_OFFLINE_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 16,
+      "rpcCeiling": 32,
+      "postCaseCleanupIncluded": 3,
+      "requiredOutcomes": "First unknown terminal has ABSENT usage; known40 adds both input=measured+1 and output=max+1, actualModel equal requested. Initial bytes preserve absence, final facts exact; once40/slot0/closed/all latches TRUE. Supplied usage cannot later disappear/change; duplicate/denial whole-state equality."
+    },
+    {
+      "id": "captured-parity-settle",
+      "kind": "captured-parity-settle",
+      "status": "PREPARED_OFFLINE_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 16,
+      "rpcCeiling": 32,
+      "postCaseCleanupIncluded": 3,
+      "requiredOutcomes": "Capture unknown drift; original evidence immutable. Existing positive owner settle authority refines to known150 using the SAME truthful drift evidence with private payload supplied. Full150 original accounts once; slot0; all guards remain TRUE; resultWithheld true/private absent. Exact ordinary-route repeat and capture initial/final duplicates whole-state equality; changed present model/usage denies. Invalid authority still denies. No new operator/public authority."
+    },
+    {
+      "id": "captured-parity-recover",
+      "kind": "captured-parity-recover",
+      "status": "PREPARED_OFFLINE_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 16,
+      "rpcCeiling": 32,
+      "postCaseCleanupIncluded": 3,
+      "requiredOutcomes": "Capture unknown drift; original evidence immutable. Existing positively authorized scoped administrator recover authority refines to known150 using the SAME truthful drift evidence with private payload supplied. Full150 original accounts once; slot0; all guards remain TRUE; resultWithheld true/private absent. Exact ordinary-route repeat and capture initial/final duplicates whole-state equality; changed present model/usage denies. Invalid authority still denies. No new operator/public authority."
+    },
+    {
+      "id": "captured-parity-operator",
+      "kind": "captured-parity-operator",
+      "status": "PREPARED_OFFLINE_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 17,
+      "rpcCeiling": 32,
+      "postCaseCleanupIncluded": 3,
+      "requiredOutcomes": "Capture unknown drift; original evidence immutable. Existing root-only operator reconcile denied before retirement with zero writes; positive original tenant tombstone then permitted refines to known150 using the SAME truthful drift evidence with private payload supplied. Full150 original accounts once; slot0; all guards remain TRUE; resultWithheld true/private absent. Exact ordinary-route repeat and capture initial/final duplicates whole-state equality; changed present model/usage denies. Invalid authority still denies. No new operator/public authority."
+    },
+    {
+      "id": "defensive-initial-model-pending",
+      "kind": "defensive-initial-model-pending",
+      "status": "PREPARED_OFFLINE_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 16,
+      "rpcCeiling": 32,
+      "postCaseCleanupIncluded": 3,
+      "requiredOutcomes": "Valid native capture marker/root/checkpoint/identity; inject ONLY finite owned inconsistent stored initial observation of model violation, inconsistent pending privacy state, private bytes/outputVisible true and attempt/operation/run/tenant latches all falsely unset. Initial-source arm must put violation only in initial canonical, final-source arm only in final canonical; consistent hash/evidence markers retain valid owned IDs, no arbitrary raw patch payload. For model arm attempt.actualModel alone must also be checked via a fixed subarm if final accepted native predicate supports it. attach returns attached:false/resultWithheld:true, no bytes/eligible replay acknowledgment; accounting/slots unchanged. Pending privacy bookkeeping may close once; attached response must never acknowledge eligible attachment. Repeat zero writes after closure; renewal plus compatible ordinary reconciliation cannot reopen. Do not erase legacy private bytes or claim exact whole-row equality for permitted privacy cleanup. Full-account equality required."
+    },
+    {
+      "id": "defensive-initial-model-attached",
+      "kind": "defensive-initial-model-attached",
+      "status": "PREPARED_OFFLINE_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 16,
+      "rpcCeiling": 32,
+      "postCaseCleanupIncluded": 3,
+      "requiredOutcomes": "Valid native capture marker/root/checkpoint/identity; inject ONLY finite owned inconsistent stored initial observation of model violation, inconsistent attached privacy state, private bytes/outputVisible true and attempt/operation/run/tenant latches all falsely unset. Initial-source arm must put violation only in initial canonical, final-source arm only in final canonical; consistent hash/evidence markers retain valid owned IDs, no arbitrary raw patch payload. For model arm attempt.actualModel alone must also be checked via a fixed subarm if final accepted native predicate supports it. attach returns attached:false/resultWithheld:true, no bytes/eligible replay acknowledgment; accounting/slots unchanged. Pending privacy bookkeeping may close once; attached response must never acknowledge eligible attachment. Repeat zero writes after closure; renewal plus compatible ordinary reconciliation cannot reopen. Do not erase legacy private bytes or claim exact whole-row equality for permitted privacy cleanup. Full-account equality required."
+    },
+    {
+      "id": "defensive-initial-token-pending",
+      "kind": "defensive-initial-token-pending",
+      "status": "PREPARED_OFFLINE_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 16,
+      "rpcCeiling": 32,
+      "postCaseCleanupIncluded": 3,
+      "requiredOutcomes": "Valid native capture marker/root/checkpoint/identity; inject ONLY finite owned inconsistent stored initial observation of token violation, inconsistent pending privacy state, private bytes/outputVisible true and attempt/operation/run/tenant latches all falsely unset. Initial-source arm must put violation only in initial canonical, final-source arm only in final canonical; consistent hash/evidence markers retain valid owned IDs, no arbitrary raw patch payload. For model arm attempt.actualModel alone must also be checked via a fixed subarm if final accepted native predicate supports it. attach returns attached:false/resultWithheld:true, no bytes/eligible replay acknowledgment; accounting/slots unchanged. Pending privacy bookkeeping may close once; attached response must never acknowledge eligible attachment. Repeat zero writes after closure; renewal plus compatible ordinary reconciliation cannot reopen. Do not erase legacy private bytes or claim exact whole-row equality for permitted privacy cleanup. Full-account equality required."
+    },
+    {
+      "id": "defensive-initial-token-attached",
+      "kind": "defensive-initial-token-attached",
+      "status": "PREPARED_OFFLINE_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 16,
+      "rpcCeiling": 32,
+      "postCaseCleanupIncluded": 3,
+      "requiredOutcomes": "Valid native capture marker/root/checkpoint/identity; inject ONLY finite owned inconsistent stored initial observation of token violation, inconsistent attached privacy state, private bytes/outputVisible true and attempt/operation/run/tenant latches all falsely unset. Initial-source arm must put violation only in initial canonical, final-source arm only in final canonical; consistent hash/evidence markers retain valid owned IDs, no arbitrary raw patch payload. For model arm attempt.actualModel alone must also be checked via a fixed subarm if final accepted native predicate supports it. attach returns attached:false/resultWithheld:true, no bytes/eligible replay acknowledgment; accounting/slots unchanged. Pending privacy bookkeeping may close once; attached response must never acknowledge eligible attachment. Repeat zero writes after closure; renewal plus compatible ordinary reconciliation cannot reopen. Do not erase legacy private bytes or claim exact whole-row equality for permitted privacy cleanup. Full-account equality required."
+    },
+    {
+      "id": "defensive-final-model-pending",
+      "kind": "defensive-final-model-pending",
+      "status": "PREPARED_OFFLINE_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 16,
+      "rpcCeiling": 32,
+      "postCaseCleanupIncluded": 3,
+      "requiredOutcomes": "Valid native capture marker/root/checkpoint/identity; inject ONLY finite owned inconsistent stored final observation of model violation, inconsistent pending privacy state, private bytes/outputVisible true and attempt/operation/run/tenant latches all falsely unset. Initial-source arm must put violation only in initial canonical, final-source arm only in final canonical; consistent hash/evidence markers retain valid owned IDs, no arbitrary raw patch payload. For model arm attempt.actualModel alone must also be checked via a fixed subarm if final accepted native predicate supports it. attach returns attached:false/resultWithheld:true, no bytes/eligible replay acknowledgment; accounting/slots unchanged. Pending privacy bookkeeping may close once; attached response must never acknowledge eligible attachment. Repeat zero writes after closure; renewal plus compatible ordinary reconciliation cannot reopen. Do not erase legacy private bytes or claim exact whole-row equality for permitted privacy cleanup. Full-account equality required."
+    },
+    {
+      "id": "defensive-final-model-attached",
+      "kind": "defensive-final-model-attached",
+      "status": "PREPARED_OFFLINE_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 16,
+      "rpcCeiling": 32,
+      "postCaseCleanupIncluded": 3,
+      "requiredOutcomes": "Valid native capture marker/root/checkpoint/identity; inject ONLY finite owned inconsistent stored final observation of model violation, inconsistent attached privacy state, private bytes/outputVisible true and attempt/operation/run/tenant latches all falsely unset. Initial-source arm must put violation only in initial canonical, final-source arm only in final canonical; consistent hash/evidence markers retain valid owned IDs, no arbitrary raw patch payload. For model arm attempt.actualModel alone must also be checked via a fixed subarm if final accepted native predicate supports it. attach returns attached:false/resultWithheld:true, no bytes/eligible replay acknowledgment; accounting/slots unchanged. Pending privacy bookkeeping may close once; attached response must never acknowledge eligible attachment. Repeat zero writes after closure; renewal plus compatible ordinary reconciliation cannot reopen. Do not erase legacy private bytes or claim exact whole-row equality for permitted privacy cleanup. Full-account equality required."
+    },
+    {
+      "id": "defensive-final-token-pending",
+      "kind": "defensive-final-token-pending",
+      "status": "PREPARED_OFFLINE_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 16,
+      "rpcCeiling": 32,
+      "postCaseCleanupIncluded": 3,
+      "requiredOutcomes": "Valid native capture marker/root/checkpoint/identity; inject ONLY finite owned inconsistent stored final observation of token violation, inconsistent pending privacy state, private bytes/outputVisible true and attempt/operation/run/tenant latches all falsely unset. Initial-source arm must put violation only in initial canonical, final-source arm only in final canonical; consistent hash/evidence markers retain valid owned IDs, no arbitrary raw patch payload. For model arm attempt.actualModel alone must also be checked via a fixed subarm if final accepted native predicate supports it. attach returns attached:false/resultWithheld:true, no bytes/eligible replay acknowledgment; accounting/slots unchanged. Pending privacy bookkeeping may close once; attached response must never acknowledge eligible attachment. Repeat zero writes after closure; renewal plus compatible ordinary reconciliation cannot reopen. Do not erase legacy private bytes or claim exact whole-row equality for permitted privacy cleanup. Full-account equality required."
+    },
+    {
+      "id": "defensive-final-token-attached",
+      "kind": "defensive-final-token-attached",
+      "status": "PREPARED_OFFLINE_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 16,
+      "rpcCeiling": 32,
+      "postCaseCleanupIncluded": 3,
+      "requiredOutcomes": "Valid native capture marker/root/checkpoint/identity; inject ONLY finite owned inconsistent stored final observation of token violation, inconsistent attached privacy state, private bytes/outputVisible true and attempt/operation/run/tenant latches all falsely unset. Initial-source arm must put violation only in initial canonical, final-source arm only in final canonical; consistent hash/evidence markers retain valid owned IDs, no arbitrary raw patch payload. For model arm attempt.actualModel alone must also be checked via a fixed subarm if final accepted native predicate supports it. attach returns attached:false/resultWithheld:true, no bytes/eligible replay acknowledgment; accounting/slots unchanged. Pending privacy bookkeeping may close once; attached response must never acknowledge eligible attachment. Repeat zero writes after closure; renewal plus compatible ordinary reconciliation cannot reopen. Do not erase legacy private bytes or claim exact whole-row equality for permitted privacy cleanup. Full-account equality required."
+    },
+    {
+      "id": "gateway-native-drift-40",
+      "kind": "gateway-native-drift-40",
+      "status": "PREPARED_OFFLINE_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 16,
+      "rpcCeiling": 32,
+      "postCaseCleanupIncluded": 3,
+      "requiredOutcomes": "Actual frozen governGatewayLanguageModel source runs in ROOT-only server runner with deterministic synthetic terminal raw model drift/C40; trusted synthetic qualification explicitly marked NONPAID. Its ledger.resolve/admit/checkpoint/markVisible/attach adapter and terminalSink.capture use actual registered native handlers on current owned IDs. Exactly one fake-native invocation, actual capture fullC/slot0/latches/closure, Gateway QUALIFICATION_OVERRUN with no delivered private result. No fake accounting sink, direct DB mutation or public proxy. Native duplicate persistence adds no charge/call; rejected re-admission never invokes native source again. Sink result whole-account witness, no paid provider truth."
+    },
+    {
+      "id": "gateway-native-drift-150",
+      "kind": "gateway-native-drift-150",
+      "status": "PREPARED_OFFLINE_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 16,
+      "rpcCeiling": 32,
+      "postCaseCleanupIncluded": 3,
+      "requiredOutcomes": "Actual frozen governGatewayLanguageModel source runs in ROOT-only server runner with deterministic synthetic terminal raw model drift/C150; trusted synthetic qualification explicitly marked NONPAID. Its ledger.resolve/admit/checkpoint/markVisible/attach adapter and terminalSink.capture use actual registered native handlers on current owned IDs. Exactly one fake-native invocation, actual capture fullC/slot0/latches/closure, Gateway QUALIFICATION_OVERRUN with no delivered private result. No fake accounting sink, direct DB mutation or public proxy. Native duplicate persistence adds no charge/call; rejected re-admission never invokes native source again. Sink result whole-account witness, no paid provider truth."
+    },
+    {
+      "id": "gateway-native-healthy-attachment",
+      "kind": "gateway-native-healthy-attachment",
+      "status": "PREPARED_OFFLINE_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 16,
+      "rpcCeiling": 32,
+      "postCaseCleanupIncluded": 3,
+      "requiredOutcomes": "Same actual frozen Gateway-source/native-handler adapter, deterministic requested model and within-bound usage/C40. Genuine registered capture produces pending; genuine attach stores one private result and marks visibility, delivers once, identical retry zero writes. This positively proves attach wiring rather than inferring it from drift path which may exit before attach. One synthetic native invocation only."
+    },
+    {
+      "id": "late-drift-refinement-revoked-cancelled",
+      "kind": "late-drift-refinement-revoked-cancelled",
+      "status": "PREPARED_OFFLINE_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 16,
+      "rpcCeiling": 32,
+      "postCaseCleanupIncluded": 3,
+      "requiredOutcomes": "Unknown captured drift/U100 closes and latches first; revoke ONLY original grant while scopes LIVE, then cancel original run via finite owned fixture fault. Known150 charge-only capture after both fences succeeds original accounts once and slot stays0, exact initial evidence/actualModel retained, closed/private absent. Capture duplicates zero writes and all latches TRUE. No scope revival or alternate ownerRun."
+    },
+    {
+      "id": "late-drift-refinement-original-window",
+      "kind": "late-drift-refinement-original-window",
+      "status": "PREPARED_OFFLINE_NATIVE_NOT_RUN",
+      "maximumCommittedCreatedRows": 16,
+      "rpcCeiling": 32,
+      "postCaseCleanupIncluded": 3,
+      "requiredOutcomes": "Unknown drift/U100 first, retain original account IDs/windows. Genuine bounded server window transition with original uncertainty margin; old obligation blocks current ensureBudget before capture. Known150 charges old original operation/run/tenant windows only; no newer account created by denied successor; old guards remain latched. No time/mock reset or new run to launder old uncertain money. Original late-window22 and original43 remain unchanged."
+    }
+  ],
+  "additionalScenarios": [
+    "current-public-security-matrix",
+    "empty-production-root",
+    "real-peer-before-request-crash",
+    "real-peer-lost-receipt-crash",
+    "real-peer-before-settle-crash",
+    "public-peer-denials"
+  ],
+  "budgets": {
+    "logicalScenarios": 32,
+    "simultaneouslyLiveRows": 320,
+    "cumulativeRows": 444,
+    "cumulativeRowComputation": {
+      "core": 417,
+      "security": 15,
+      "fault": 0,
+      "empty": 12
+    },
+    "nativeRpc": 3000,
+    "rpcWorstCase": 2945,
+    "cleanupRpc": 256,
+    "cleanupWorstCase": 40,
+    "qualifierMs": 1200000,
+    "parentDriverMs": 1440000,
+    "requestMs": 12000,
+    "peerEffectRequests": 8,
+    "peerOtherRequests": 24,
+    "processes": 6,
+    "groups": 2,
+    "storageFiles": 0,
+    "nativeClientRpc": 2963,
+    "nestedNativeInvocations": 37,
+    "rpcComputation": {
+      "coreAssertionsAndPerCaseCleanup": 832,
+      "security": 2044,
+      "fault": 0,
+      "empty": 20,
+      "publication": 2,
+      "finalAndRecovery": 10,
+      "nestedNative": 37
+    },
+    "cumulativeDeletions": 444,
+    "cumulativeCreationAndDeletionEvents": 888,
+    "derivedRowsUpper": 444,
+    "derivedNativeUpper": 2945
+  },
+  "security": {
+    "publicPaths": 200,
+    "negativeIdentities": 7,
+    "authorizationObservations": 1400,
+    "completeStateSnapshots": 400,
+    "internalPaths": 87,
+    "internalVisibilityObservations": 174,
+    "privateTableMaintenanceNegatives": 20,
+    "healthyPublicControl": "mutable:set/get",
+    "publicPeerDenials": 5,
+    "internalRejectionCategory": "published-internal-inaccessible; separate from public-grant-authorization"
+  },
+  "costClassification": "FIXTURE_SYNTHETIC_NO_PROVIDER_TERMINAL_OR_PRICE_QUALIFICATION",
+  "candidate": "MODEL_DRIFT_EXTRA_C1",
+  "publication": "both phases exact tuples and structurally normalized arguments, independently verified in driver",
+  "faultAssertions": {
+    "eachMode": [
+      "parent-killed:attempt/operation/run/tenant R100 U0 S0 slots1",
+      "unknown-recovered:attempt/operation/run/tenant R0 U100 S0 slots1"
+    ],
+    "beforeSettleAlso": "known-settled:attempt/operation/run/tenant R0 U0 S40 slots0; parallel receipt once-only"
+  },
+  "combinedWithOtherProfile": "SEPARATE_NEW_TARGET; no resetting original accounts or unreviewed combined allocation",
+  "nestedEnumeration": {
+    "authorizationQueries": {
+      "paths": [
+        "facts:semanticSearch",
+        "memories:search",
+        "runtimeMemory:remember",
+        "runtimeMemory:recall"
+      ],
+      "identitiesPerPath": 7,
+      "upper": 28,
+      "effectGate": "nested-auth ticket28 before each corresponding Action RPC; each handler denied at first authorization query"
+    },
+    "peerRecord": {
+      "path": "qualificationPeer:effect\u2192record",
+      "upper": 8,
+      "effectGate": "peer-effect ticket8 before every HTTP POST"
+    },
+    "parent": {
+      "paths": [
+        "qualificationOwned:parentRollback\u2192admit",
+        "qualificationCapture:parentRefinementRollback\u2192captureTerminalEvidence"
+      ],
+      "upper": 1,
+      "effectGate": "shared nested-parent ticket1 before parent operator RPC; one planned parent path per profile"
+    },
+    "allOtherNested": "Full AST inventory retained; unreachable after fixed failed authorization/internal visibility. No ctx.runQuery/runMutation in model-policy core."
+  },
+  "designCorrection": {
+    "acceptance": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-design-correction-c2-coordinator-acceptance.json",
+    "selection": "STRONGER",
+    "caseClientUpper": 848,
+    "totalUpper": 2961,
+    "createdUpper": 444
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "utc": "2026-10-04T08:16:01.767117+00:00",
+  "bad": [
+    {
+      "path": "effect-matrix-extension.json",
+      "expected": {
+        "path": "effect-matrix-extension.json",
+        "bytes": 34749,
+        "sha256": "835a8c6ab436683e119fd07223c0b4b346692b22c55f53217a0362b3c5b6ec67"
+      },
+      "actualBytes": 34744,
+      "actualSHA256": "c1c30da3a05530ed181d85fa550932c03785e369499a8481a1897ff93d829f9f"
+    },
+    {
+      "path": "effect-matrix-regression.json",
+      "expected": {
+        "path": "effect-matrix-regression.json",
+        "bytes": 34750,
+        "sha256": "d51f026e90abefd915cbfba2e723141ca64548c04daff9d0e48b5b16100eee4d"
+      },
+      "actualBytes": 34745,
+      "actualSHA256": "5b752369b047be050b9e30aea72a81cecf830abbd5a3b673a00b95697e9a4f3e"
+    }
+  ],
+  "cause": "Review relocation omitted path.join(qa,effect-matrix-*.json) result sink. Subject implementation unchanged; only two subject evidence receipts overwritten by review."
+}

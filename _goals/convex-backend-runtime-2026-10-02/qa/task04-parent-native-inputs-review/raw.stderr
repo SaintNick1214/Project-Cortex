@@ -1,0 +1,19 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: insecure-current-receipt-permissions: unexpected outcome undefined
+
+true !== false
+
+    at probe (file:///workspace/Project-Cortex/work/resume/task04-parent-native-inputs-review/review.mjs:32:9)
+    at async file:///workspace/Project-Cortex/work/resume/task04-parent-native-inputs-review/review.mjs:42:1 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: true,
+  expected: false,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

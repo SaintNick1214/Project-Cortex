@@ -1,0 +1,120 @@
+(node:58478) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeEndpointAuth/partialMemoryDenials.test.ts (7.346 s)
+  partial-memory initial lookup authorization contract
+    ✕ updatePartialMemory denies foreign-tenant without hydration or effects (11 ms)
+    ✕ updatePartialMemory denies foreign-owner without hydration or effects (1 ms)
+    ✕ updatePartialMemory denies missing without hydration or effects (1 ms)
+    ✓ updatePartialMemory preserves owner content, source revision and partial lifecycle (9 ms)
+    ✕ finalizePartialMemory denies foreign-tenant without hydration or effects (1 ms)
+    ✕ finalizePartialMemory denies foreign-owner without hydration or effects (2 ms)
+    ✕ finalizePartialMemory denies missing without hydration or effects (1 ms)
+    ✓ finalizePartialMemory preserves owner content, source revision and partial lifecycle (4 ms)
+
+  ● partial-memory initial lookup authorization contract › updatePartialMemory denies foreign-tenant without hydration or effects
+
+    expect(received).toEqual(expected) // deep equality
+
+    Expected: {"code": "FORBIDDEN", "message": "Access denied", "outcome": "not_dispatched", "retryable": false, "version": 1}
+    Received: "MEMORY_NOT_FOUND"
+
+      26 |       expect(caught).toBeInstanceOf(ConvexError);
+      27 |       if (!(caught instanceof ConvexError)) throw new Error("Expected a structured Convex denial");
+    > 28 |       expect(caught.data).toEqual(denial);
+         |                           ^
+      29 |       expect(h.db.attemptedWrites).toEqual([]);
+      30 |       expect(h.db.rows).toEqual(before);
+      31 |       expect(h.db.reads.filter(read => read.table === "memories")).toEqual([
+
+      at tests/unit/runtimeEndpointAuth/partialMemoryDenials.test.ts:28:27
+
+  ● partial-memory initial lookup authorization contract › updatePartialMemory denies foreign-owner without hydration or effects
+
+    expect(received).toEqual(expected) // deep equality
+
+    Expected: {"code": "FORBIDDEN", "message": "Access denied", "outcome": "not_dispatched", "retryable": false, "version": 1}
+    Received: "MEMORY_NOT_FOUND"
+
+      26 |       expect(caught).toBeInstanceOf(ConvexError);
+      27 |       if (!(caught instanceof ConvexError)) throw new Error("Expected a structured Convex denial");
+    > 28 |       expect(caught.data).toEqual(denial);
+         |                           ^
+      29 |       expect(h.db.attemptedWrites).toEqual([]);
+      30 |       expect(h.db.rows).toEqual(before);
+      31 |       expect(h.db.reads.filter(read => read.table === "memories")).toEqual([
+
+      at tests/unit/runtimeEndpointAuth/partialMemoryDenials.test.ts:28:27
+
+  ● partial-memory initial lookup authorization contract › updatePartialMemory denies missing without hydration or effects
+
+    expect(received).toEqual(expected) // deep equality
+
+    Expected: {"code": "FORBIDDEN", "message": "Access denied", "outcome": "not_dispatched", "retryable": false, "version": 1}
+    Received: "MEMORY_NOT_FOUND"
+
+      26 |       expect(caught).toBeInstanceOf(ConvexError);
+      27 |       if (!(caught instanceof ConvexError)) throw new Error("Expected a structured Convex denial");
+    > 28 |       expect(caught.data).toEqual(denial);
+         |                           ^
+      29 |       expect(h.db.attemptedWrites).toEqual([]);
+      30 |       expect(h.db.rows).toEqual(before);
+      31 |       expect(h.db.reads.filter(read => read.table === "memories")).toEqual([
+
+      at tests/unit/runtimeEndpointAuth/partialMemoryDenials.test.ts:28:27
+
+  ● partial-memory initial lookup authorization contract › finalizePartialMemory denies foreign-tenant without hydration or effects
+
+    expect(received).toEqual(expected) // deep equality
+
+    Expected: {"code": "FORBIDDEN", "message": "Access denied", "outcome": "not_dispatched", "retryable": false, "version": 1}
+    Received: "MEMORY_NOT_FOUND"
+
+      26 |       expect(caught).toBeInstanceOf(ConvexError);
+      27 |       if (!(caught instanceof ConvexError)) throw new Error("Expected a structured Convex denial");
+    > 28 |       expect(caught.data).toEqual(denial);
+         |                           ^
+      29 |       expect(h.db.attemptedWrites).toEqual([]);
+      30 |       expect(h.db.rows).toEqual(before);
+      31 |       expect(h.db.reads.filter(read => read.table === "memories")).toEqual([
+
+      at tests/unit/runtimeEndpointAuth/partialMemoryDenials.test.ts:28:27
+
+  ● partial-memory initial lookup authorization contract › finalizePartialMemory denies foreign-owner without hydration or effects
+
+    expect(received).toEqual(expected) // deep equality
+
+    Expected: {"code": "FORBIDDEN", "message": "Access denied", "outcome": "not_dispatched", "retryable": false, "version": 1}
+    Received: "MEMORY_NOT_FOUND"
+
+      26 |       expect(caught).toBeInstanceOf(ConvexError);
+      27 |       if (!(caught instanceof ConvexError)) throw new Error("Expected a structured Convex denial");
+    > 28 |       expect(caught.data).toEqual(denial);
+         |                           ^
+      29 |       expect(h.db.attemptedWrites).toEqual([]);
+      30 |       expect(h.db.rows).toEqual(before);
+      31 |       expect(h.db.reads.filter(read => read.table === "memories")).toEqual([
+
+      at tests/unit/runtimeEndpointAuth/partialMemoryDenials.test.ts:28:27
+
+  ● partial-memory initial lookup authorization contract › finalizePartialMemory denies missing without hydration or effects
+
+    expect(received).toEqual(expected) // deep equality
+
+    Expected: {"code": "FORBIDDEN", "message": "Access denied", "outcome": "not_dispatched", "retryable": false, "version": 1}
+    Received: "MEMORY_NOT_FOUND"
+
+      26 |       expect(caught).toBeInstanceOf(ConvexError);
+      27 |       if (!(caught instanceof ConvexError)) throw new Error("Expected a structured Convex denial");
+    > 28 |       expect(caught.data).toEqual(denial);
+         |                           ^
+      29 |       expect(h.db.attemptedWrites).toEqual([]);
+      30 |       expect(h.db.rows).toEqual(before);
+      31 |       expect(h.db.reads.filter(read => read.table === "memories")).toEqual([
+
+      at tests/unit/runtimeEndpointAuth/partialMemoryDenials.test.ts:28:27
+
+Test Suites: 1 failed, 1 total
+Tests:       6 failed, 2 passed, 8 total
+Snapshots:   0 total
+Time:        7.574 s
+Ran all test suites within paths "tests/unit/runtimeEndpointAuth/partialMemoryDenials.test.ts".

@@ -66,6 +66,7 @@ async function readStore(): Promise<SelectionStore> {
       return { version: 1, selections: {} };
     throw new Error(
       "Cannot read scoped target selection; inspect the .cortex-current file before selecting a target",
+      { cause: error },
     );
   }
 }

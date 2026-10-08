@@ -1,0 +1,13 @@
+PASS 1: C2 sparse hole rejected before effects; no untrusted getter/map invocation
+PASS 2: C2 element accessor rejected before effects; no untrusted getter/map invocation
+PASS 3: C2 own overridden map rejected before effects; no untrusted getter/map invocation
+PASS 4: C2 extra array key rejected before effects; no untrusted getter/map invocation
+PASS 5: C2 foreign array prototype rejected before effects; no untrusted getter/map invocation
+PASS 6: C2 nonenumerable public field rejected before effects; no untrusted getter/map invocation
+PASS 7: C2 valid raw120000 escaped canonical expansion rejected before effects; no untrusted getter/map invocation
+PASS 8: escaped canonical180001 rejected before effects; no untrusted getter/map invocation
+PASS 9: escaped completed sole wrapper180000 accepted without trimming/collapsing;180001 denied
+PASS 10: multibyte+escaped canonical180001 rejected before effects; no untrusted getter/map invocation
+PASS 11: multibyte+escaped completed sole wrapper180000 accepted without trimming/collapsing;180001 denied
+PASS 12: valid raw120000 multibyte text retained exactly below wrapper cap
+{"assertedOutcomeGroups":12,"classification":"actual canonicalModelJson source plus prospective exact detached mapping/binding reference; no product/native/OCC evidence","sideEffects":3,"skips":[],"native":"NOT_RUN"}

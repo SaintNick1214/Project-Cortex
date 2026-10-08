@@ -5,77 +5,85 @@
  */
 "use client";
 
-import { ChevronDown, ChevronUp, HardDrive } from "lucide-react";
-import { useState, useMemo, useEffect } from "react";
 import type {
   LayerState,
   MemoryLayer,
 } from "@cortexmemory/vercel-ai-provider/react";
-import { cn } from "@/lib/utils";
+import { ChevronDown, ChevronUp, HardDrive } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
+import { cn } from "@/lib/utils";
 
 type LayerStatus = LayerState["status"];
 
 interface MemoryStoragePanelProps {
-  layers: Record<MemoryLayer, LayerState>;
-  isRemembering: boolean;
   className?: string;
+  isRemembering: boolean;
+  layers: Record<MemoryLayer, LayerState>;
 }
 
 /**
  * Remember/Storage phase layers configuration
  * These layers are involved in storing new memories
  */
-const STORAGE_LAYERS: MemoryLayer[] = ["memorySpace", "user", "agent", "conversation", "vector", "facts", "graph"];
+const STORAGE_LAYERS: MemoryLayer[] = [
+  "memorySpace",
+  "user",
+  "agent",
+  "conversation",
+  "vector",
+  "facts",
+  "graph",
+];
 
 const LAYER_CONFIG: Record<
   MemoryLayer,
   { name: string; icon: string; order: number }
 > = {
-  // Recall layers - not shown in storage panel but included for type safety
-  memorySpace: { name: "Memory Space", icon: "📦", order: 0 },
-  user: { name: "User Profile", icon: "👤", order: 1 },
-  agent: { name: "Agent", icon: "🤖", order: 2 },
-  context: { name: "Context Retrieval", icon: "🔍", order: 3 },
+  agent: { icon: "🤖", name: "Agent", order: 2 },
+  context: { icon: "🔍", name: "Context Retrieval", order: 3 },
   // Storage layers - shown in this panel
-  conversation: { name: "Conversation", icon: "💬", order: 4 },
-  vector: { name: "Vector Embedding", icon: "🎯", order: 5 },
-  facts: { name: "Facts Extraction", icon: "💡", order: 6 },
-  graph: { name: "Graph Sync", icon: "🕸️", order: 7 },
+  conversation: { icon: "💬", name: "Conversation", order: 4 },
+  facts: { icon: "💡", name: "Facts Extraction", order: 6 },
+  graph: { icon: "🕸️", name: "Graph Sync", order: 7 },
+  // Recall layers - not shown in storage panel but included for type safety
+  memorySpace: { icon: "📦", name: "Memory Space", order: 0 },
+  user: { icon: "👤", name: "User Profile", order: 1 },
+  vector: { icon: "🎯", name: "Vector Embedding", order: 5 },
 };
 
 const STATUS_CONFIG: Record<
   LayerStatus,
   { indicator: string; className: string; dotClass: string }
 > = {
-  pending: {
-    indicator: "○",
-    className: "text-muted-foreground",
-    dotClass: "bg-muted-foreground",
-  },
-  in_progress: {
-    indicator: "◐",
-    className: "text-yellow-500",
-    dotClass: "bg-yellow-500 animate-pulse",
-  },
   complete: {
-    indicator: "✓",
     className: "text-green-500",
     dotClass: "bg-green-500",
+    indicator: "✓",
   },
   error: {
-    indicator: "✕",
     className: "text-destructive",
     dotClass: "bg-destructive",
+    indicator: "✕",
+  },
+  in_progress: {
+    className: "text-yellow-500",
+    dotClass: "bg-yellow-500 animate-pulse",
+    indicator: "◐",
+  },
+  pending: {
+    className: "text-muted-foreground",
+    dotClass: "bg-muted-foreground",
+    indicator: "○",
   },
   skipped: {
-    indicator: "○",
     className: "text-muted-foreground/50",
     dotClass: "bg-muted-foreground/50",
+    indicator: "○",
   },
 };
 
@@ -91,26 +99,42 @@ function LayerRow({
 
   // Generate preview text from data
   const preview = useMemo(() => {
-    if (!state.data) return null;
-    if (state.data.id) return state.data.id;
-    if (state.data.preview) return state.data.preview;
+    if (!state.data) {
+      return null;
+    }
+    if (state.data.id) {
+      return state.data.id;
+    }
+    if (state.data.preview) {
+      return state.data.preview;
+    }
     if (state.data.metadata) {
       const meta = state.data.metadata;
-      if ("memories" in meta) return `${meta.memories} memories`;
-      if ("count" in meta) return `${meta.count} items`;
-      if ("nodes" in meta) return `${meta.nodes} nodes`;
-      if ("dimensions" in meta) return `${meta.dimensions}d`;
+      if ("memories" in meta) {
+        return `${meta.memories} memories`;
+      }
+      if ("count" in meta) {
+        return `${meta.count} items`;
+      }
+      if ("nodes" in meta) {
+        return `${meta.nodes} nodes`;
+      }
+      if ("dimensions" in meta) {
+        return `${meta.dimensions}d`;
+      }
     }
     return null;
   }, [state.data]);
 
   // Show revision action for facts layer
   const revisionBadge = useMemo(() => {
-    if (layerKey !== "facts" || !state.revisionAction) return null;
+    if (layerKey !== "facts" || !state.revisionAction) {
+      return null;
+    }
     const actionLabels: Record<string, string> = {
       APPEND: "Added",
-      SUPERSEDE: "Updated",
       SKIP: "Skipped",
+      SUPERSEDE: "Updated",
     };
     return actionLabels[state.revisionAction] || state.revisionAction;
   }, [layerKey, state.revisionAction]);
@@ -151,12 +175,12 @@ function LayerRow({
       <span
         className={cn(
           "text-xs tabular-nums w-12 text-right",
-          state.latencyMs !== undefined
-            ? "text-muted-foreground"
-            : "text-muted-foreground/30"
+          state.latencyMs === undefined
+            ? "text-muted-foreground/30"
+            : "text-muted-foreground"
         )}
       >
-        {state.latencyMs !== undefined ? `${state.latencyMs}ms` : "-"}
+        {state.latencyMs === undefined ? "-" : `${state.latencyMs}ms`}
       </span>
     </div>
   );
@@ -179,29 +203,35 @@ export function MemoryStoragePanel({
   }, [isRemembering]);
 
   // Calculate total latency from completed storage layers
-  const totalLatency = useMemo(() => {
-    return STORAGE_LAYERS.reduce((sum, layerKey) => {
-      const layer = layers[layerKey];
-      return sum + (layer?.latencyMs ?? 0);
-    }, 0);
-  }, [layers]);
+  const totalLatency = useMemo(
+    () =>
+      STORAGE_LAYERS.reduce((sum, layerKey) => {
+        const layer = layers[layerKey];
+        return sum + (layer?.latencyMs ?? 0);
+      }, 0),
+    [layers]
+  );
 
   // Get sorted storage layer entries (only storage layers)
-  const sortedLayers = useMemo(() => {
-    return STORAGE_LAYERS.map((layerKey) => [layerKey, layers[layerKey]] as [MemoryLayer, LayerState])
-      .filter(([, state]) => state && state.status !== "skipped")
-      .sort(([a], [b]) => {
-        return LAYER_CONFIG[a].order - LAYER_CONFIG[b].order;
-      });
-  }, [layers]);
+  const sortedLayers = useMemo(
+    () =>
+      STORAGE_LAYERS.map(
+        (layerKey) => [layerKey, layers[layerKey]] as [MemoryLayer, LayerState]
+      )
+        .filter(([, state]) => state && state.status !== "skipped")
+        .sort(([a], [b]) => LAYER_CONFIG[a].order - LAYER_CONFIG[b].order),
+    [layers]
+  );
 
   // Count completed layers
-  const completedCount = useMemo(() => {
-    return STORAGE_LAYERS.filter((layerKey) => {
-      const status = layers[layerKey]?.status;
-      return status === "complete" || status === "skipped";
-    }).length;
-  }, [layers]);
+  const completedCount = useMemo(
+    () =>
+      STORAGE_LAYERS.filter((layerKey) => {
+        const status = layers[layerKey]?.status;
+        return status === "complete" || status === "skipped";
+      }).length,
+    [layers]
+  );
 
   const totalCount = STORAGE_LAYERS.length;
 
@@ -212,18 +242,18 @@ export function MemoryStoragePanel({
 
   return (
     <Collapsible
-      open={isOpen}
-      onOpenChange={setIsOpen}
       className={cn(
         "border rounded-lg bg-card shadow-sm overflow-hidden",
         isRemembering && "ring-1 ring-yellow-500/30",
         className
       )}
+      onOpenChange={setIsOpen}
+      open={isOpen}
     >
       <CollapsibleTrigger asChild>
         <button
-          type="button"
           className="flex items-center gap-3 w-full px-3 py-2.5 hover:bg-accent/50 transition-colors text-left"
+          type="button"
         >
           {/* HardDrive icon with animation during storage */}
           <HardDrive
@@ -237,7 +267,7 @@ export function MemoryStoragePanel({
           <span className="text-sm font-medium flex-1">Memory Storage</span>
 
           {/* Progress indicator */}
-          {isRemembering && (
+          {!!isRemembering && (
             <span className="text-xs text-muted-foreground">
               {completedCount}/{totalCount}
             </span>

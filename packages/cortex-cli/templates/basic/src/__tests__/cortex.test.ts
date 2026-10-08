@@ -30,7 +30,12 @@ describe("cortex", () => {
     create.mockReset().mockResolvedValue(client);
     client.shutdown.mockReset().mockResolvedValue(undefined);
     client.close.mockClear();
-    process.env = { ...originalEnv };
+    process.env = { ...originalEnv, CORTEX_APP_DEPLOYMENT_ADMIN_KEY: "basic-unit-key" };
+    delete process.env.CONVEX_DEPLOY_KEY;
+    delete process.env.USER_ID;
+    delete process.env.CORTEX_APP_TENANT_ID;
+    delete process.env.OPENAI_API_KEY;
+    delete process.env.CORTEX_FACT_EXTRACTION_MODEL;
   });
 
   afterEach(() => {
@@ -92,6 +97,30 @@ describe("cortex", () => {
       await expect(initCortex()).rejects.toThrow("CONVEX_URL environment variable is required");
       expect(create).not.toHaveBeenCalled();
     });
+    it("requires one selected private key before SDK construction", async () => {
+      process.env.CONVEX_URL = "https://test.convex.cloud";
+      delete process.env.CORTEX_APP_DEPLOYMENT_ADMIN_KEY;
+      const { initCortex } = await import("../cortex.js");
+      await expect(initCortex()).rejects.toThrow("CORTEX_APP_DEPLOYMENT_ADMIN_KEY is required");
+      process.env.CORTEX_APP_DEPLOYMENT_ADMIN_KEY = "first-unit-key";
+      process.env.CONVEX_DEPLOY_KEY = "different-unit-key";
+      await expect(initCortex()).rejects.toThrow("Conflicting private deployment credentials");
+      expect(create).not.toHaveBeenCalled();
+    });
+    it("forwards CLI private transport once without storing the key in public config", async () => {
+      process.env.CONVEX_URL = "https://test.convex.cloud";
+      delete process.env.CORTEX_APP_DEPLOYMENT_ADMIN_KEY;
+      process.env.CONVEX_DEPLOY_KEY = "cli-unit-key";
+      const { initCortex } = await import("../cortex.js");
+      await initCortex();
+      const [config, runtime] = create.mock.calls[0];
+      expect(runtime.deploymentOperator).toBe(true);
+      expect(JSON.stringify(config)).not.toContain("cli-unit-key");
+      const setAdminAuth = vi.fn();
+      expect(runtime.initializeTransport({ setAdminAuth })).toBeUndefined();
+      expect(setAdminAuth).toHaveBeenCalledExactlyOnceWith("cli-unit-key");
+      expect(() => runtime.initializeTransport({})).toThrow("private deployment transport");
+    });
     it("initializes once for concurrent calls and returns the initialized singleton", async () => {
       process.env.CONVEX_URL = "https://test.convex.cloud";
       const { getCortex, initCortex } = await import("../cortex.js");
@@ -100,7 +129,7 @@ describe("cortex", () => {
       expect(two).toBe(one);
       expect(getCortex()).toBe(one);
       expect(create).toHaveBeenCalledTimes(1);
-      expect(create).toHaveBeenCalledWith({ convexUrl: "https://test.convex.cloud" });
+      expect(create).toHaveBeenCalledWith({ convexUrl: "https://test.convex.cloud", auth: { userId: "demo-user", tenantId: "basic-demo" } }, expect.objectContaining({ deploymentOperator: true, initializeTransport: expect.any(Function) }));
     });
     it("allows a genuine retry after failed creation", async () => {
       process.env.CONVEX_URL = "https://test.convex.cloud";
@@ -158,7 +187,7 @@ describe("cortex", () => {
       process.env.CORTEX_FACT_EXTRACTION = "true";
       const { initCortex } = await import("../cortex.js");
       await initCortex();
-      expect(create).toHaveBeenCalledWith({ convexUrl: "https://test.convex.cloud", llm: { provider: "openai", apiKey: "synthetic-unit-key", model: "gpt-4o-mini" } });
+      expect(create).toHaveBeenCalledWith({ convexUrl: "https://test.convex.cloud", auth: { userId: "demo-user", tenantId: "basic-demo" }, llm: { provider: "openai", apiKey: "synthetic-unit-key", model: "gpt-4o-mini" } }, expect.objectContaining({ deploymentOperator: true }));
     });
   });
 

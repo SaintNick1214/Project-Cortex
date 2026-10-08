@@ -1,10 +1,10 @@
 # {{PROJECT_NAME}}
 
-A terminal chat agent and optional Hono HTTP server with persistent Cortex memory. This application is version 1.1.0 and uses SDK 0.37.0.
+A terminal chat agent and optional Hono HTTP server with persistent Cortex memory. This application is version 1.2.0 and uses SDK 0.38.0.
 
 ## Quick start
 
-Use Node.js 22.16.0 or newer for the Cortex CLI workflow and npm 11 or newer for this app (upgrade explicitly with `npm install -g npm@11`). Native CLI management uses the selected project's Convex 1.46.0 executable.
+Use Node.js 24.15.0 or newer for the Cortex CLI workflow and the declared npm 12.2.0 manager for this app. Native CLI management uses the selected project's Convex 1.46.0 executable.
 
 ```bash
 cortex init my-agent --template basic --local --yes --graph none
@@ -14,7 +14,7 @@ cd my-agent
 Basic is also available through the independently versioned catalog:
 
 ```bash
-cortex templates init my-agent --template basic --template-version 1.1.0 --catalog-version 1.0.0 --yes --graph none
+cortex templates init my-agent --template basic --template-version 1.2.0 --catalog-version 1.1.0 --yes --graph none
 ```
 
 Configure the generated `.env.local` with the URL of your own Convex deployment. For local setup, use the URL actually reported by Convex; do not assume an existing service on a default port. Select that project explicitly for management:
@@ -41,6 +41,8 @@ Use private `.env.local` values for your selected deployment and provider:
 
 ```env
 CONVEX_URL=http://127.0.0.1:3210
+CORTEX_APP_DEPLOYMENT_ADMIN_KEY=your-private-deployment-key
+CORTEX_APP_TENANT_ID=basic-demo
 OPENAI_API_KEY=your-private-openai-key
 MEMORY_SPACE_ID=basic-demo
 USER_ID=demo-user
@@ -51,7 +53,7 @@ CORTEX_FACT_EXTRACTION=true
 CORTEX_GRAPH_SYNC=false
 ```
 
-The demo uses echo responses when no OpenAI key is supplied. Embeddings and LLM-powered extraction require their provider configuration. Basic is a server-trust SDK example; its HTTP server is not an authenticated multi-user application. Add a verified application boundary before exposing it to other users.
+The demo uses echo responses when no OpenAI key is supplied. Embeddings and LLM-powered extraction require their provider configuration. Basic requires the selected deployment's private server key and uses the SDK's internal deployment-operator mode. The CLI-generated `CONVEX_DEPLOY_KEY` is accepted when `CORTEX_APP_DEPLOYMENT_ADMIN_KEY` is unset; conflicting keys refuse startup. Its optional HTTP server binds to loopback and rejects requests from other browser origins. Basic is a server-trust SDK example; its HTTP server is not an authenticated multi-user application. Add a verified application boundary before exposing it to other users.
 
 ## Chat and HTTP interface
 
@@ -95,9 +97,9 @@ Local setup owns project-specific Compose resources and private credentials. Sto
 ## Updating
 
 ```bash
-cortex templates update . --to 1.1.0 --catalog-version 1.0.0 --dry-run
-cortex templates update . --to 1.1.0 --catalog-version 1.0.0
-cortex update -d local --sdk-version 0.37.0 --convex-version 1.46.0 --sync --dry-run
+cortex templates update . --to 1.2.0 --catalog-version 1.1.0 --dry-run
+cortex templates update . --to 1.2.0 --catalog-version 1.1.0
+cortex update -d local --sdk-version 0.38.0 --convex-version 1.46.0 --sync --dry-run
 ```
 
 Template update checks recorded ownership and preserves user-edit conflicts. SDK update plans dependencies and optionally synchronizes SDK-owned backend files; it does not update app files or manage graph containers. An unpublished candidate must be selected explicitly with the applicable `--sdk-package`/`--templates-package` options; unavailable registry versions do not fall back to an older SDK.

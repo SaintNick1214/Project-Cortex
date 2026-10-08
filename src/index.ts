@@ -6,6 +6,8 @@
  */
 
 import { ConvexClient, type ConvexClientOptions } from "convex/browser";
+const runtimeEnv: Record<string, string | undefined> = typeof process === "undefined" ? {} : process.env;
+import { enableDeploymentOperator } from "./common/deploymentOperator";
 import { ConversationsAPI } from "./conversations";
 import { ImmutableAPI } from "./immutable";
 import { MutableAPI } from "./mutable";
@@ -22,6 +24,7 @@ import { SessionsAPI } from "./sessions";
 import { ArtifactsAPI } from "./artifacts";
 import { AttachmentsAPI } from "./attachments";
 import type { AuthContext } from "./auth/types";
+import { HostCredentials, type HostTokenFetcher, type HostAuthErrorHandler } from "./auth/credentials";
 import type { GraphAdapter } from "./graph/types";
 import { CypherGraphAdapter } from "./graph";
 import { resolveGraphConnection, type GraphConnectionOptions } from "./graph/config";
@@ -39,6 +42,10 @@ import {
 /** Ephemeral server transport setup, completed before any Cortex API construction. */
 export interface CortexRuntimeOptions {
   initializeTransport?: (client: ConvexClient) => undefined;
+  /** Trusted server/CLI legacy administration after deployment-key initialization.
+   * This only selects internal APIs; the backend still verifies the admin key.
+   */
+  deploymentOperator?: boolean;
 }
 
 type InitializationResourceStatus = "pending" | "complete" | "failed";
@@ -108,7 +115,7 @@ function initializeTransport(client: ConvexClient, runtime?: CortexRuntimeOption
  * Graph database configuration
  */
 export interface GraphConfig {
-  /** Pre-configured graph adapter */
+  /** Pre-configured graph adapter. The caller owns it and must disconnect it. */
   adapter: GraphAdapter;
 
   /** Enable orphan cleanup on deletes (default: true) */
@@ -286,10 +293,11 @@ export interface CortexConfig {
   embedding?: EmbeddingConfig;
 
   /**
-   * Optional authentication context for multi-tenant applications.
+   * Optional caller metadata and scope selectors for multi-tenant applications.
    *
-   * When provided, all operations are automatically scoped to the
-   * userId and tenantId from the auth context.
+   * Operations inject these userId/tenantId labels as selectors. This context,
+   * including claims/roles, does not authenticate a request or grant access.
+   * Verified identity and trusted memberships/grants are resolved by the backend.
    *
    * @example
    * ```typescript
@@ -301,6 +309,33 @@ export interface CortexConfig {
    * ```
    */
   auth?: AuthContext;
+
+  /**
+   * Get the current host-issued JWT for Convex authentication, or null on logout.
+   * Forward forceRefreshToken to the host provider's cache-bypass/refresh option.
+   * Convex calls this again to refresh credentials for active subscriptions.
+   * Never return a model provider key or derive a token from AuthContext metadata.
+   * Host auth.config.ts remains responsible for issuer/audience verification.
+   *
+   * Logout/null clears transport identity; stop private observers on host logout.
+   * Call cortex.credentials?.notifySessionChanged() after login/logout/identity
+   * changes to update active transport credentials immediately.
+   * Stored background grants require explicit backend revocation or deletion.
+   *
+   * @example
+   * ```typescript
+   * fetchAuthToken: async ({ forceRefreshToken }) =>
+   *   hostAuth.getToken({ skipCache: forceRefreshToken }),
+   * ```
+   */
+  fetchAuthToken?: HostTokenFetcher;
+
+  /**
+   * Observe sanitized reactive authentication failures. Reactive auth fails closed
+   * to null; inspect credentials.authFailure for the latest diagnostic. Direct
+   * token/header/HTTP helpers still reject host errors. Observer errors are isolated.
+   */
+  onAuthError?: HostAuthErrorHandler;
 
   /**
    * Resilience/overload protection configuration
@@ -335,10 +370,14 @@ export class Cortex {
   private syncWorkerStart?: Promise<void>;
   private ownedGraphAdapter?: GraphAdapter;
   private cleanupPromise?: Promise<void>;
+  private clientClosePromise?: Promise<void>;
   private readonly resilienceLayer: ResilienceLayer;
   private readonly llmConfig?: LLMConfig;
   private readonly embeddingConfig?: EmbeddingConfig;
   private readonly authContext?: AuthContext;
+
+  /** Host credential seam for HTTP/private fetch transports; absent without a getter. */
+  public readonly credentials?: HostCredentials;
 
   /**
    * Auto-configure embedding from environment variables.
@@ -352,17 +391,17 @@ export class Cortex {
    * @returns EmbeddingConfig if both gates pass, undefined otherwise
    */
   private static autoConfigureEmbedding(): EmbeddingConfig | undefined {
-    const embeddingEnabled = process.env.CORTEX_EMBEDDING === "true";
+    const embeddingEnabled = runtimeEnv.CORTEX_EMBEDDING === "true";
 
     if (!embeddingEnabled) {
       return undefined;
     }
 
     // Check for OpenAI API key
-    if (process.env.OPENAI_API_KEY) {
+    if (runtimeEnv.OPENAI_API_KEY) {
       return {
         provider: "openai",
-        apiKey: process.env.OPENAI_API_KEY,
+        apiKey: runtimeEnv.OPENAI_API_KEY,
         model: "text-embedding-3-small",
       };
     }
@@ -388,24 +427,24 @@ export class Cortex {
    * @returns LLMConfig if both gates pass, undefined otherwise
    */
   private static autoConfigureLLM(): LLMConfig | undefined {
-    const factExtractionEnabled = process.env.CORTEX_FACT_EXTRACTION === "true";
+    const factExtractionEnabled = runtimeEnv.CORTEX_FACT_EXTRACTION === "true";
 
     if (!factExtractionEnabled) {
       return undefined;
     }
 
     // Check providers in priority order
-    if (process.env.OPENAI_API_KEY) {
+    if (runtimeEnv.OPENAI_API_KEY) {
       return {
         provider: "openai",
-        apiKey: process.env.OPENAI_API_KEY,
+        apiKey: runtimeEnv.OPENAI_API_KEY,
       };
     }
 
-    if (process.env.ANTHROPIC_API_KEY) {
+    if (runtimeEnv.ANTHROPIC_API_KEY) {
       return {
         provider: "anthropic",
-        apiKey: process.env.ANTHROPIC_API_KEY,
+        apiKey: runtimeEnv.ANTHROPIC_API_KEY,
       };
     }
 
@@ -525,11 +564,17 @@ export class Cortex {
   public attachments: AttachmentsAPI;
 
   constructor(config: CortexConfig, runtime?: CortexRuntimeOptions) {
+    if (runtime?.deploymentOperator && config.fetchAuthToken !== undefined)
+      throw new Error("Deployment operator transport and host JWT transport must be initialized separately");
+    this.credentials = config.fetchAuthToken === undefined ? undefined
+      : new HostCredentials(config.fetchAuthToken, config.onAuthError);
     // Initialize Convex client
     this.client = config.convexLogger === undefined
       ? new ConvexClient(config.convexUrl)
       : new ConvexClient(config.convexUrl, { logger: config.convexLogger });
     initializeTransport(this.client, runtime);
+    if (runtime?.deploymentOperator) enableDeploymentOperator(this.client);
+    this.credentials?.bindReactiveClient(this.client);
 
     // Store LLM config for fact extraction
     // Use explicit config if provided, otherwise auto-configure from environment
@@ -604,6 +649,7 @@ export class Cortex {
       this.client,
       graphAdapter,
       this.resilienceLayer,
+      this.authContext,
     );
     this.governance = new GovernanceAPI(
       this.client,
@@ -662,10 +708,10 @@ export class Cortex {
   }
 
   /**
-   * Get the authentication context (if configured)
+   * Get the caller metadata and scope selectors (if configured).
    *
    * Returns the AuthContext that was passed during initialization.
-   * Useful for checking the current user/tenant context.
+   * These labels do not establish verified identity or trusted access grants.
    *
    * @example
    * ```typescript
@@ -739,10 +785,21 @@ export class Cortex {
    * Close the connection to Convex and stop all workers
    */
   close(): void {
-    // Keep the synchronous public signature; shutdown() can await the same cleanup.
+    // Close the host transport synchronously; shutdown observes the same result.
+    void this.closeClient();
     void this.dispose(false).catch(() => {
       console.warn("[Cortex] Resource cleanup failed. Use shutdown() to observe completion.");
     });
+  }
+
+  private closeClient(): Promise<void> {
+    if (!this.clientClosePromise) {
+      try { this.clientClosePromise = Promise.resolve(this.client.close()); }
+      catch (error) { this.clientClosePromise = Promise.reject(error); }
+      // Cleanup observes this rejection even when the public close returns void.
+      void this.clientClosePromise.catch(() => undefined);
+    }
+    return this.clientClosePromise;
   }
 
   private dispose(graceful: boolean, timeoutMs = 30000): Promise<void> {
@@ -759,7 +816,7 @@ export class Cortex {
         this.ownedGraphAdapter = undefined;
         // Each owned resource is attempted even if an earlier cleanup fails.
         const results = await Promise.allSettled([
-          Promise.resolve().then(() => this.client.close()),
+          this.closeClient(),
           ...(adapter ? [Promise.resolve().then(() => adapter.disconnect())] : []),
         ]);
         if (failures.length || results.some((result) => result.status === "rejected")) {
@@ -790,16 +847,19 @@ export { GraphSyncWorker } from "./graph/worker/GraphSyncWorker";
 export { CypherGraphAdapter, GraphDatabaseError, GraphConnectionError, GraphAuthenticationError, GraphQueryError, GraphNotFoundError } from "./graph";
 
 // Re-export validation errors for user catch blocks
-export { UserValidationError } from "./users";
-export { GovernanceValidationError } from "./governance";
+export { UserValidationError, UserProfileWriteReceiptError } from "./users";
+export { GovernanceValidationError, GovernanceCapabilityError } from "./governance";
 export { A2AValidationError } from "./a2a";
-export { SessionValidationError } from "./sessions";
+export { SessionValidationError, SessionCapabilityError } from "./sessions";
 export { AuthValidationError } from "./auth";
 export { ArtifactValidationError } from "./artifacts";
 export { AttachmentValidationError } from "./attachments";
+export { MemoryValidationError } from "./memory/validators";
 
 // Re-export auth module
 export { createAuthContext, validateAuthContext } from "./auth";
+export { HostCredentials } from "./auth/credentials";
+export type { HostTokenFetcher, HostTokenRequest, HostAuthFailure, HostAuthErrorHandler } from "./auth/credentials";
 export type { AuthContext, AuthContextParams, AuthMethod } from "./auth/types";
 
 // Re-export sharing utilities (Shareable Chats Phase 2)
@@ -830,6 +890,7 @@ export type { StandardUserProfile, ValidationPreset } from "./users/schemas";
 export {
   ResilienceLayer,
   ResiliencePresets,
+  getPresetForPlan,
   TokenBucket,
   Semaphore,
   PriorityQueue,

@@ -1,0 +1,1 @@
+import "file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c7/scripts/arguments.mjs";process.stdout.write("ENTRY_IMPORT_ONLY\n");

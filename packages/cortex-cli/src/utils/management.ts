@@ -605,10 +605,27 @@ export function inspectSnapshot(file: string): string[] {
   return entries;
 }
 const lifecycleTables = [
+  "cortexErasureReceipts",
   "cortexReferenceTargets",
   "cortexReferenceEdges",
   "cortexReferenceState",
+  "runtimeAuthPrincipals",
+  "runtimeAuthMemberships",
+  "runtimeAuthScopes",
+  "runtimeAuthGrants",
+  "runtimeAuthTombstones",
+  "runtimeMemorySources",
+  "runtimeMemoryChunks",
+  "runtimeMemoryVectors",
+  "runtimeMemoryReceipts",
+  "runtimeModelPolicies",
+  "runtimeModelQualifications",
+  "runtimeBudgetAccounts",
+  "runtimeModelOperations",
+  "runtimeModelAttempts",
 ];
+// Current schemas compose protected tables by imported spread, not inline names.
+const lifecycleSchemaMarkers = [...lifecycleTables, "runtimeAuthTables", "runtimeMemoryTables", "runtimePolicyTables"];
 export async function importSnapshot(
   config: CLIConfig,
   file: string,
@@ -642,12 +659,12 @@ export async function importSnapshot(
       lifecycleTables.some((table) => entry.split("/").includes(table)),
     ) ||
     (fs.existsSync(schema) &&
-      lifecycleTables.some((table) =>
+      lifecycleSchemaMarkers.some((table) =>
         fs.readFileSync(schema, "utf8").includes(table),
       ))
   )
     throw new Error(
-      "Reference lifecycle snapshot import requires a surviving writer barrier and post-import schema migrate/audit; this CLI refuses until that fixed protocol is supported",
+      "Protected reference/runtime lifecycle snapshot import requires a surviving writer barrier and post-import schema migrate/audit; this CLI refuses until that fixed protocol is supported",
     );
   // Check the actual deployed table set too: installed source alone cannot certify it.
   const tables = await nativeOperation(target, ["data"], true);
@@ -658,7 +675,7 @@ export async function importSnapshot(
     )
   )
     throw new Error(
-      "Deployed reference lifecycle detected; native import refused without the supported barrier/rebuild protocol",
+      "Deployed reference lifecycle or protected runtime detected; native import refused without the supported barrier/rebuild protocol",
     );
   console.error(
     "Native snapshot import: full deployment tables; file storage only if included. Reference lifecycle protection unavailable on this older backend.",
@@ -961,11 +978,12 @@ export async function readFiniteLogs(
   } catch (error) {
     if (signalCode !== undefined) {
       process.exitCode = signalCode;
-      throw new Error("Native log read interrupted");
+      throw new Error("Native log read interrupted", { cause: error });
     }
     if (controller.signal.aborted)
       throw new Error(
         "Native log read aborted or timed out; no history result was produced",
+        { cause: error },
       );
     if (
       error instanceof Error &&
@@ -976,6 +994,7 @@ export async function readFiniteLogs(
       throw error;
     throw new Error(
       "Native log request failed; verify selected target and tested backend capability (redirects are refused)",
+      { cause: error },
     );
   } finally {
     clearTimeout(timer);

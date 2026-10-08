@@ -127,6 +127,7 @@ export async function loadConfig(): Promise<CLIConfig> {
     if (!isMissingFile(error))
       throw new Error(
         `Invalid user configuration at ${userPath}: ${safeConfigError(error)}`,
+        { cause: error },
       );
   }
   try {

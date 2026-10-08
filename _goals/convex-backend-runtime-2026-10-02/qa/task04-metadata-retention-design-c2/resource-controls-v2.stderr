@@ -1,0 +1,25 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+
+  assert(Array.isArray(w)&&w.length===3)
+
+    at validateWitnesses (file:///workspace/Project-Cortex/work/resume/task04-metadata-retention-design-c2/resource-controls-v2.mjs:19:121)
+    at capture (file:///workspace/Project-Cortex/work/resume/task04-metadata-retention-design-c2/resource-controls-v2.mjs:20:142)
+    at file:///workspace/Project-Cortex/work/resume/task04-metadata-retention-design-c2/resource-controls-v2.mjs:43:233
+    at test (file:///workspace/Project-Cortex/work/resume/task04-metadata-retention-design-c2/resource-controls-v2.mjs:34:42)
+    at file:///workspace/Project-Cortex/work/resume/task04-metadata-retention-design-c2/resource-controls-v2.mjs:43:1
+    at ModuleJob.run (node:internal/modules/esm/module_job:439:25)
+    at async node:internal/modules/esm/loader:643:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

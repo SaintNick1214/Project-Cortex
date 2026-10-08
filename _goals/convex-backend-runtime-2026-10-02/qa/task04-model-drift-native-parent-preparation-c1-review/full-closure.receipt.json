@@ -1,0 +1,449 @@
+{
+  "argv": [
+    "python3",
+    "/workspace/Project-Cortex/work/resume/task04-model-drift-native-parent-preparation-c1-review/verify-full-closure.py"
+  ],
+  "cwd": "/workspace/Project-Cortex",
+  "utcStart": "2026-10-04T10:57:49.601755+00:00",
+  "utcEnd": "2026-10-04T10:57:53.410792+00:00",
+  "exitCode": 1,
+  "ROOTReleasePins": {
+    "extension": [
+      "8214b9760bcf8d471b716050efeb714f89966ff6538df99803fc28eddddefd7f",
+      "08256428dbbc5e164c72ce02ccbfff51bae2fc75561ee6a5657feeacc3165f15"
+    ],
+    "regression": [
+      "5a42e66d0fe80fc0e24b6d44f724c2f60feface235f2f8c75f5a353470f9c00c",
+      "0dd67f5dbab3be0cb3b9418dea7131a721a18bb6b2c55b04e7bbf9d4038e8bad"
+    ],
+    "extra": [
+      "910a7d13336f1593ee2a58c41bbc0155b3b7a4265bd762485d9ef7ce23c72089",
+      "63128dbd82efdd0932652d4696c2be32d677b83c73f90f66307f846d5b1443e6"
+    ]
+  },
+  "skips": 0,
+  "sourcePre": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c1/qa-manifest.json",
+      "bytes": 49564,
+      "sha256": "8214b9760bcf8d471b716050efeb714f89966ff6538df99803fc28eddddefd7f"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c1/runtime-freeze.json",
+      "bytes": 42736,
+      "sha256": "08256428dbbc5e164c72ce02ccbfff51bae2fc75561ee6a5657feeacc3165f15"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c1/report.md",
+      "bytes": 4827,
+      "sha256": "fc252389bc230dc504df4300b816444e06ced49d26b14fc3da4274100995c778"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c1/parent-input-contract.json",
+      "bytes": 3431,
+      "sha256": "659ef2f404d1c5288f7562246ef8c7c575dd77387a9ecbdbfb5de680cc8082ec"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c1/scripts/parent-inputs.mjs",
+      "bytes": 19205,
+      "sha256": "f2821e1cb0b4b197d09086a0297c2e6b189e9b185e093f64a7e72daa1d127de1"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c1/scripts/current-inputs.mjs",
+      "bytes": 8462,
+      "sha256": "8c227ae78f3b36136ae7d1695c7e2154ef98017e0b0de19693804c05528f0071"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c1/scripts/guard.mjs",
+      "bytes": 20415,
+      "sha256": "419f386149acc725ee3ace38f22e4b7145f97fc1d31407b40e51ce707fe11874"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c1/scripts/driver.mjs",
+      "bytes": 16243,
+      "sha256": "35d78993339818dd682edcdcfd32b48c0f66d0e6fb36b311e5514293f3ed7d6e"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c1/project-request.json",
+      "bytes": 644,
+      "sha256": "d4f4be6c6ea21dcafa5bb6a29a962f39f53523023ef06460e0e63b0e552b26bf"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c1/registration-inventory.json",
+      "bytes": 580049,
+      "sha256": "932661f5bb3205c815b070498e3bf4b083f8afef9c5e8b203abac22fd56aea22"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c1/dependency-tiers.json",
+      "bytes": 166473,
+      "sha256": "381dab79a6987d07927a45e87bb74447abfb2d62b8fb5ae19890dca869cf064e"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c1/runner-dependency-inventory.json",
+      "bytes": 312101,
+      "sha256": "69d6e2f774e64e9ab27137e03263f28dec93d42801715ea1be025735b7aefe22"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c1/evidence/final-parent-original.receipt.json",
+      "bytes": 478,
+      "sha256": "114f08d45a2021354a0f95c3c3ed312fda684f5f158584e0e6fe3ae8897551da"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c1/evidence/final-parent-adversarial.receipt.json",
+      "bytes": 482,
+      "sha256": "90af33d6e0c5c9593cb0589495982fa9226e24b5484b9371f10a008241dd41b2"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/qa-manifest.json",
+      "bytes": 48395,
+      "sha256": "5a42e66d0fe80fc0e24b6d44f724c2f60feface235f2f8c75f5a353470f9c00c"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/runtime-freeze.json",
+      "bytes": 42102,
+      "sha256": "0dd67f5dbab3be0cb3b9418dea7131a721a18bb6b2c55b04e7bbf9d4038e8bad"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/report.md",
+      "bytes": 4828,
+      "sha256": "00b5c8dbcfc12b93c95b18a06f630531aa1d7b83bcb3343f3b4aa0e8b176bf9b"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/parent-input-contract.json",
+      "bytes": 3433,
+      "sha256": "2570efc029526dd2bb20e66c78d8932b9d5a7682b7e28fc9ac45f0d111093687"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/parent-inputs.mjs",
+      "bytes": 19209,
+      "sha256": "f97cbf86f2b349093b8a9a66e047f3e8abaf898e7c186cf8ff2c61e0c95d70e4"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/current-inputs.mjs",
+      "bytes": 8462,
+      "sha256": "8c227ae78f3b36136ae7d1695c7e2154ef98017e0b0de19693804c05528f0071"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/guard.mjs",
+      "bytes": 20417,
+      "sha256": "b8491b55f4423f44653dbad909530ae91f68c253bfe528d612f1695ac17b718b"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/driver.mjs",
+      "bytes": 16243,
+      "sha256": "35d78993339818dd682edcdcfd32b48c0f66d0e6fb36b311e5514293f3ed7d6e"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/project-request.json",
+      "bytes": 646,
+      "sha256": "eb59aa3826e5b016533b9c616495f11d9479a58090871456f43c195ed4b8e6dc"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/registration-inventory.json",
+      "bytes": 580087,
+      "sha256": "d020afffadd53439e711a31163567cb512a47f483f8ec5e4cfe661e027558e52"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/dependency-tiers.json",
+      "bytes": 162042,
+      "sha256": "fe07bfb5e6afe353386299730339b1a524c15cd8bac9465d528775910361afe8"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/runner-dependency-inventory.json",
+      "bytes": 298188,
+      "sha256": "e8e43c6a0b81ad1d873aa3f10c4af32f2ada28935e22f2cbcd28d6147cb74f8c"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/evidence/final-parent-original.receipt.json",
+      "bytes": 479,
+      "sha256": "1c0ab037e83d420f808e309ac52a5741bbe4fb17ec3233c093d04ed7f09a97b2"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/evidence/final-parent-adversarial.receipt.json",
+      "bytes": 483,
+      "sha256": "c5aa7a8addebff2823900c6e090f808804a0c6e2f37f6296ed38b6e1411cfef8"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/qa-manifest.json",
+      "bytes": 79717,
+      "sha256": "910a7d13336f1593ee2a58c41bbc0155b3b7a4265bd762485d9ef7ce23c72089"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/runtime-freeze.json",
+      "bytes": 66793,
+      "sha256": "63128dbd82efdd0932652d4696c2be32d677b83c73f90f66307f846d5b1443e6"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/report.md",
+      "bytes": 6186,
+      "sha256": "ab5e9e1580a49c42b73bf011a7d5191a3016378260075efb58abecc972ff9279"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/parent-input-contract.json",
+      "bytes": 3423,
+      "sha256": "a0207edaab1e27b63033924a19a091829dc14f214c62772a76da0a17a812fa36"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/scripts/parent-inputs.mjs",
+      "bytes": 19189,
+      "sha256": "0b7e31b6d25e649014b1bbe1bbd93b1a081a0e07d7d393e968d750ac04811730"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/scripts/current-inputs.mjs",
+      "bytes": 8462,
+      "sha256": "8c227ae78f3b36136ae7d1695c7e2154ef98017e0b0de19693804c05528f0071"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/scripts/guard.mjs",
+      "bytes": 20929,
+      "sha256": "1a989e1b14fe1d8545319b8bbfe8a1842bdd93e90e80dbd4aab11127d34d9fe5"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/scripts/driver.mjs",
+      "bytes": 16357,
+      "sha256": "156af99e71d7bdbd68949d2bb2069cf1d9c2e217ee7a281a319ae7ce240091af"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/project-request.json",
+      "bytes": 636,
+      "sha256": "bfe6ac133e6910d2a1e60eb848783e70a183a09e825873b1d6da3dc0ec3627ae"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/registration-inventory.json",
+      "bytes": 581671,
+      "sha256": "995089763ce74c58654bf20b5a635ee62a6d47f78d1fec29d8cf9440831a411a"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/dependency-tiers.json",
+      "bytes": 169999,
+      "sha256": "6cf1b87f86b4c4f2508864ed1ac929949f966041bca17a6a455834c4470492f1"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/runner-dependency-inventory.json",
+      "bytes": 315524,
+      "sha256": "1d02576658cc3eb304b8410684173b6e822582c38b6f832ca2c7c471eaf09741"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/evidence/final-parent-original.receipt.json",
+      "bytes": 474,
+      "sha256": "2271a985859267a410a55d055560bd7efdfd0531a7d6969746f7aefac7b80062"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/evidence/final-parent-adversarial.receipt.json",
+      "bytes": 478,
+      "sha256": "2e8fce4a0055c0f332f44c4f281642710c479dbffd44e7affbd956b669f42f00"
+    }
+  ],
+  "sourcePost": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c1/qa-manifest.json",
+      "bytes": 49564,
+      "sha256": "8214b9760bcf8d471b716050efeb714f89966ff6538df99803fc28eddddefd7f"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c1/runtime-freeze.json",
+      "bytes": 42736,
+      "sha256": "08256428dbbc5e164c72ce02ccbfff51bae2fc75561ee6a5657feeacc3165f15"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c1/report.md",
+      "bytes": 4827,
+      "sha256": "fc252389bc230dc504df4300b816444e06ced49d26b14fc3da4274100995c778"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c1/parent-input-contract.json",
+      "bytes": 3431,
+      "sha256": "659ef2f404d1c5288f7562246ef8c7c575dd77387a9ecbdbfb5de680cc8082ec"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c1/scripts/parent-inputs.mjs",
+      "bytes": 19205,
+      "sha256": "f2821e1cb0b4b197d09086a0297c2e6b189e9b185e093f64a7e72daa1d127de1"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c1/scripts/current-inputs.mjs",
+      "bytes": 8462,
+      "sha256": "8c227ae78f3b36136ae7d1695c7e2154ef98017e0b0de19693804c05528f0071"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c1/scripts/guard.mjs",
+      "bytes": 20415,
+      "sha256": "419f386149acc725ee3ace38f22e4b7145f97fc1d31407b40e51ce707fe11874"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c1/scripts/driver.mjs",
+      "bytes": 16243,
+      "sha256": "35d78993339818dd682edcdcfd32b48c0f66d0e6fb36b311e5514293f3ed7d6e"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c1/project-request.json",
+      "bytes": 644,
+      "sha256": "d4f4be6c6ea21dcafa5bb6a29a962f39f53523023ef06460e0e63b0e552b26bf"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c1/registration-inventory.json",
+      "bytes": 580049,
+      "sha256": "932661f5bb3205c815b070498e3bf4b083f8afef9c5e8b203abac22fd56aea22"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c1/dependency-tiers.json",
+      "bytes": 166473,
+      "sha256": "381dab79a6987d07927a45e87bb74447abfb2d62b8fb5ae19890dca869cf064e"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c1/runner-dependency-inventory.json",
+      "bytes": 312101,
+      "sha256": "69d6e2f774e64e9ab27137e03263f28dec93d42801715ea1be025735b7aefe22"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c1/evidence/final-parent-original.receipt.json",
+      "bytes": 478,
+      "sha256": "114f08d45a2021354a0f95c3c3ed312fda684f5f158584e0e6fe3ae8897551da"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c1/evidence/final-parent-adversarial.receipt.json",
+      "bytes": 482,
+      "sha256": "90af33d6e0c5c9593cb0589495982fa9226e24b5484b9371f10a008241dd41b2"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/qa-manifest.json",
+      "bytes": 48395,
+      "sha256": "5a42e66d0fe80fc0e24b6d44f724c2f60feface235f2f8c75f5a353470f9c00c"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/runtime-freeze.json",
+      "bytes": 42102,
+      "sha256": "0dd67f5dbab3be0cb3b9418dea7131a721a18bb6b2c55b04e7bbf9d4038e8bad"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/report.md",
+      "bytes": 4828,
+      "sha256": "00b5c8dbcfc12b93c95b18a06f630531aa1d7b83bcb3343f3b4aa0e8b176bf9b"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/parent-input-contract.json",
+      "bytes": 3433,
+      "sha256": "2570efc029526dd2bb20e66c78d8932b9d5a7682b7e28fc9ac45f0d111093687"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/parent-inputs.mjs",
+      "bytes": 19209,
+      "sha256": "f97cbf86f2b349093b8a9a66e047f3e8abaf898e7c186cf8ff2c61e0c95d70e4"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/current-inputs.mjs",
+      "bytes": 8462,
+      "sha256": "8c227ae78f3b36136ae7d1695c7e2154ef98017e0b0de19693804c05528f0071"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/guard.mjs",
+      "bytes": 20417,
+      "sha256": "b8491b55f4423f44653dbad909530ae91f68c253bfe528d612f1695ac17b718b"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/scripts/driver.mjs",
+      "bytes": 16243,
+      "sha256": "35d78993339818dd682edcdcfd32b48c0f66d0e6fb36b311e5514293f3ed7d6e"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/project-request.json",
+      "bytes": 646,
+      "sha256": "eb59aa3826e5b016533b9c616495f11d9479a58090871456f43c195ed4b8e6dc"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/registration-inventory.json",
+      "bytes": 580087,
+      "sha256": "d020afffadd53439e711a31163567cb512a47f483f8ec5e4cfe661e027558e52"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/dependency-tiers.json",
+      "bytes": 162042,
+      "sha256": "fe07bfb5e6afe353386299730339b1a524c15cd8bac9465d528775910361afe8"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/runner-dependency-inventory.json",
+      "bytes": 298188,
+      "sha256": "e8e43c6a0b81ad1d873aa3f10c4af32f2ada28935e22f2cbcd28d6147cb74f8c"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/evidence/final-parent-original.receipt.json",
+      "bytes": 479,
+      "sha256": "1c0ab037e83d420f808e309ac52a5741bbe4fb17ec3233c093d04ed7f09a97b2"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c1/evidence/final-parent-adversarial.receipt.json",
+      "bytes": 483,
+      "sha256": "c5aa7a8addebff2823900c6e090f808804a0c6e2f37f6296ed38b6e1411cfef8"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/qa-manifest.json",
+      "bytes": 79717,
+      "sha256": "910a7d13336f1593ee2a58c41bbc0155b3b7a4265bd762485d9ef7ce23c72089"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/runtime-freeze.json",
+      "bytes": 66793,
+      "sha256": "63128dbd82efdd0932652d4696c2be32d677b83c73f90f66307f846d5b1443e6"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/report.md",
+      "bytes": 6186,
+      "sha256": "ab5e9e1580a49c42b73bf011a7d5191a3016378260075efb58abecc972ff9279"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/parent-input-contract.json",
+      "bytes": 3423,
+      "sha256": "a0207edaab1e27b63033924a19a091829dc14f214c62772a76da0a17a812fa36"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/scripts/parent-inputs.mjs",
+      "bytes": 19189,
+      "sha256": "0b7e31b6d25e649014b1bbe1bbd93b1a081a0e07d7d393e968d750ac04811730"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/scripts/current-inputs.mjs",
+      "bytes": 8462,
+      "sha256": "8c227ae78f3b36136ae7d1695c7e2154ef98017e0b0de19693804c05528f0071"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/scripts/guard.mjs",
+      "bytes": 20929,
+      "sha256": "1a989e1b14fe1d8545319b8bbfe8a1842bdd93e90e80dbd4aab11127d34d9fe5"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/scripts/driver.mjs",
+      "bytes": 16357,
+      "sha256": "156af99e71d7bdbd68949d2bb2069cf1d9c2e217ee7a281a319ae7ce240091af"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/project-request.json",
+      "bytes": 636,
+      "sha256": "bfe6ac133e6910d2a1e60eb848783e70a183a09e825873b1d6da3dc0ec3627ae"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/registration-inventory.json",
+      "bytes": 581671,
+      "sha256": "995089763ce74c58654bf20b5a635ee62a6d47f78d1fec29d8cf9440831a411a"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/dependency-tiers.json",
+      "bytes": 169999,
+      "sha256": "6cf1b87f86b4c4f2508864ed1ac929949f966041bca17a6a455834c4470492f1"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/runner-dependency-inventory.json",
+      "bytes": 315524,
+      "sha256": "1d02576658cc3eb304b8410684173b6e822582c38b6f832ca2c7c471eaf09741"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/evidence/final-parent-original.receipt.json",
+      "bytes": 474,
+      "sha256": "2271a985859267a410a55d055560bd7efdfd0531a7d6969746f7aefac7b80062"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/evidence/final-parent-adversarial.receipt.json",
+      "bytes": 478,
+      "sha256": "2e8fce4a0055c0f332f44c4f281642710c479dbffd44e7affbd956b669f42f00"
+    }
+  ]
+}

@@ -1,4 +1,3 @@
-import { captureInsertedRow, markDeletedRow, requireLifecycleReady, deleteUnreferencedStorage } from "./lib/referenceLifecycle";
 /**
  * Cortex SDK - Attachments API
  *
@@ -15,7 +14,10 @@ import { captureInsertedRow, markDeletedRow, requireLifecycleReady, deleteUnrefe
  */
 
 import { ConvexError, v } from "convex/values";
-import { mutation, query } from "./_generated/server";
+import type { Doc } from "./_generated/dataModel";
+import { internalMutation, internalQuery, mutation, query } from "./_generated/server";
+
+import { internalAssetUnavailable, runtimeAssetUnavailable } from "./runtimeAssetUnavailableAuth";
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Shared Validators
@@ -92,12 +94,15 @@ async function lookupAttachment(
  * await cortex.attachments.attach({ storageId, ... });
  * ```
  */
-export const generateUploadUrl = mutation({
+export const generateUploadUrl = internalMutation({
   args: {
     // Multi-tenancy (optional - passed by SDKs for consistency/auditing)
     tenantId: v.optional(v.string()),
   },
   handler: async (ctx) => {
+    // Temporary typed dead legacy body: the awaited Promise<never> guard cannot resolve.
+    await internalAssetUnavailable();
+
     // Generate upload URL (expires in 1 hour per Convex docs)
     // Note: tenantId is accepted for SDK consistency but not used here
     // since Convex storage is global; tenant isolation happens at attach()
@@ -147,6 +152,9 @@ export const attach = mutation({
     tenantId: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
+    // Temporary typed dead legacy body: the awaited Promise<never> guard cannot resolve.
+    await runtimeAssetUnavailable(ctx, "storage:write", args);
+
     const now = Date.now();
     const attachmentId = generateAttachmentId();
 
@@ -159,7 +167,7 @@ export const attach = mutation({
       });
     }
 
-    const _id = await captureInsertedRow(ctx, "attachments", {
+    const _id = await ctx.db.insert("attachments", {
       attachmentId,
       memorySpaceId: args.memorySpaceId,
       tenantId: args.tenantId,
@@ -191,10 +199,14 @@ export const attach = mutation({
  */
 export const remove = mutation({
   args: {
+    memorySpaceId: v.optional(v.string()),
     attachmentId: v.string(),
     tenantId: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
+    // Temporary typed dead legacy body: the awaited Promise<never> guard cannot resolve.
+    await runtimeAssetUnavailable(ctx, "storage:write", args);
+
     const attachment = await lookupAttachment(
       ctx,
       args.attachmentId,
@@ -208,15 +220,23 @@ export const remove = mutation({
       });
     }
 
-    await requireLifecycleReady(ctx);
-    await markDeletedRow(ctx, attachment._id);
-    const binaryDisposition = await deleteUnreferencedStorage(ctx, attachment.storageId);
+    // Delete file from storage
+    try {
+      await ctx.storage.delete(attachment.storageId);
+    } catch (error) {
+      // Log but don't fail - file might already be deleted or inaccessible
+      console.warn(
+        `Failed to delete file ${attachment.storageId}:`,
+        error,
+      );
+    }
+
+    // Delete the attachment record
+    await ctx.db.delete(attachment._id);
 
     return {
       deleted: true,
       attachmentId: args.attachmentId,
-      binaryDisposition,
-      fileDeleted: binaryDisposition === "deleted",
       deletedAt: Date.now(),
     };
   },
@@ -230,27 +250,57 @@ export const remove = mutation({
  */
 export const removeMany = mutation({
   args: {
+    memorySpaceId: v.optional(v.string()),
     attachmentIds: v.array(v.string()),
     tenantId: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    await requireLifecycleReady(ctx);
+    // Temporary typed dead legacy body: the awaited Promise<never> guard cannot resolve.
+    await runtimeAssetUnavailable(ctx, "storage:write", args);
+
     let deleted = 0;
     const errors: Array<{ attachmentId: string; error: string }> = [];
-    const binaryDispositions: Array<{ attachmentId: string; disposition: "deleted" | "protected" | "missing" }> = [];
+
     for (const attachmentId of args.attachmentIds) {
-      const attachment = await lookupAttachment(ctx, attachmentId, args.tenantId);
-      if (!attachment) { errors.push({attachmentId, error: "ATTACHMENT_NOT_FOUND"}); continue; }
-      await markDeletedRow(ctx, attachment._id);
-      const disposition = await deleteUnreferencedStorage(ctx, attachment.storageId);
-      binaryDispositions.push({attachmentId, disposition});
-      deleted++;
+      try {
+        const attachment = await lookupAttachment(
+          ctx,
+          attachmentId,
+          args.tenantId,
+        );
+
+        if (!attachment) {
+          errors.push({
+            attachmentId,
+            error: "ATTACHMENT_NOT_FOUND",
+          });
+          continue;
+        }
+
+        // Delete file from storage
+        try {
+          await ctx.storage.delete(attachment.storageId);
+        } catch (error) {
+          console.warn(
+            `Failed to delete file ${attachment.storageId}:`,
+            error,
+          );
+        }
+
+        // Delete the attachment record
+        await ctx.db.delete(attachment._id);
+        deleted++;
+      } catch (error) {
+        errors.push({
+          attachmentId,
+          error: error instanceof Error ? error.message : "Unknown error",
+        });
+      }
     }
 
     return {
       deleted,
       total: args.attachmentIds.length,
-      binaryDispositions,
       errors: errors.length > 0 ? errors : undefined,
     };
   },
@@ -261,12 +311,15 @@ export const removeMany = mutation({
  *
  * WARNING: Permanently deletes all attachments and their files!
  */
-export const purgeAll = mutation({
+export const purgeAll = internalMutation({
   args: {
     memorySpaceId: v.optional(v.string()), // Limit to memory space if provided
     tenantId: v.optional(v.string()), // Limit to tenant if provided
   },
   handler: async (ctx, args) => {
+    // Temporary typed dead legacy body: the awaited Promise<never> guard cannot resolve.
+    await internalAssetUnavailable();
+
     // Safety check: Only allow in test/dev environments
     const siteUrl = process.env.CONVEX_SITE_URL || "";
     const isLocal =
@@ -314,20 +367,26 @@ export const purgeAll = mutation({
       attachments = await ctx.db.query("attachments").collect();
     }
 
-    await requireLifecycleReady(ctx);
     let filesDeleted = 0;
-    const binaryDispositions: Array<{ attachmentId: string; disposition: "deleted" | "protected" | "missing" }> = [];
     for (const attachment of attachments) {
-      await markDeletedRow(ctx, attachment._id);
-      const disposition = await deleteUnreferencedStorage(ctx, attachment.storageId);
-      if (disposition === "deleted") filesDeleted++;
-      binaryDispositions.push({attachmentId: attachment.attachmentId, disposition});
+      // Delete file from storage
+      try {
+        await ctx.storage.delete(attachment.storageId);
+        filesDeleted++;
+      } catch (error) {
+        console.warn(
+          `Failed to delete file ${attachment.storageId}:`,
+          error,
+        );
+      }
+
+      // Delete the attachment record
+      await ctx.db.delete(attachment._id);
     }
 
     return {
       deleted: attachments.length,
       filesDeleted,
-      binaryDispositions,
     };
   },
 });
@@ -341,23 +400,33 @@ export const purgeAll = mutation({
  */
 export const get = query({
   args: {
+    memorySpaceId: v.optional(v.string()),
     attachmentId: v.string(),
     tenantId: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    return await lookupAttachment(ctx, args.attachmentId, args.tenantId);
+    // Temporary typed dead legacy body: the awaited Promise<never> guard cannot resolve.
+    await runtimeAssetUnavailable(ctx, "storage:read", args);
+
+    // Retain the concrete native result type for existing SDK consumers. This
+    // entire legacy lookup remains unreachable behind the non-resolving guard.
+    const attachment: Doc<"attachments"> | null = await lookupAttachment(ctx, args.attachmentId, args.tenantId);
+    return attachment;
   },
 });
 
 /**
  * Get signed download URL for an attachment.
  */
-export const getUrl = query({
+export const getUrl = internalQuery({
   args: {
     attachmentId: v.string(),
     tenantId: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
+    // Temporary typed dead legacy body: the awaited Promise<never> guard cannot resolve.
+    await internalAssetUnavailable();
+
     const attachment = await lookupAttachment(
       ctx,
       args.attachmentId,
@@ -410,6 +479,9 @@ export const list = query({
     sortOrder: v.optional(v.union(v.literal("asc"), v.literal("desc"))),
   },
   handler: async (ctx, args) => {
+    // Temporary typed dead legacy body: the awaited Promise<never> guard cannot resolve.
+    await runtimeAssetUnavailable(ctx, "storage:read", args);
+
     const limit = Math.min(args.limit || 50, 1000); // Max 1000 (matches SDK validators)
 
     // Select optimal index based on provided filters
@@ -528,6 +600,9 @@ export const count = query({
     type: v.optional(attachmentTypeValidator),
   },
   handler: async (ctx, args) => {
+    // Temporary typed dead legacy body: the awaited Promise<never> guard cannot resolve.
+    await runtimeAssetUnavailable(ctx, "storage:read", args);
+
     let attachments;
 
     if (args.tenantId) {
@@ -575,10 +650,14 @@ export const count = query({
  */
 export const getByIds = query({
   args: {
+    memorySpaceId: v.optional(v.string()),
     attachmentIds: v.array(v.string()),
     tenantId: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
+    // Temporary typed dead legacy body: the awaited Promise<never> guard cannot resolve.
+    await runtimeAssetUnavailable(ctx, "storage:read", args);
+
     const results: Array<any> = [];
 
     for (const attachmentId of args.attachmentIds) {
@@ -601,12 +680,16 @@ export const getByIds = query({
  */
 export const getByConversation = query({
   args: {
+    memorySpaceId: v.optional(v.string()),
     conversationId: v.string(),
     tenantId: v.optional(v.string()),
     type: v.optional(attachmentTypeValidator),
     limit: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
+    // Temporary typed dead legacy body: the awaited Promise<never> guard cannot resolve.
+    await runtimeAssetUnavailable(ctx, "storage:read", args);
+
     const limit = Math.min(args.limit || 50, 100);
 
     let attachments = await ctx.db
@@ -642,10 +725,14 @@ export const getByConversation = query({
  */
 export const getByMessage = query({
   args: {
+    memorySpaceId: v.optional(v.string()),
     messageId: v.string(),
     tenantId: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
+    // Temporary typed dead legacy body: the awaited Promise<never> guard cannot resolve.
+    await runtimeAssetUnavailable(ctx, "storage:read", args);
+
     let attachments = await ctx.db
       .query("attachments")
       .withIndex("by_message", (q) => q.eq("messageId", args.messageId))

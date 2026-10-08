@@ -6,7 +6,7 @@
  * Requires: CONVEX_URL, OPENAI_API_KEY
  */
 
-import { createCortexMemory } from "../../src/index";
+import { createCortexMemory } from "../helpers/memory-factory";
 import { Cortex } from "@cortexmemory/sdk";
 import {
   createTestMemorySpaceId,

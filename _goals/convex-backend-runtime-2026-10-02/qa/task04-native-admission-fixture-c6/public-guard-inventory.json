@@ -1,0 +1,4447 @@
+{
+  "version": 1,
+  "basis": "registered metadata plus resolved current import graph; source-review inventory, not runtime authentication evidence",
+  "publicPaths": [
+    {
+      "path": "a2a:send",
+      "source": "convex-dev/a2a.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/a2a.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/runtimeUnavailableAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeUnavailableAuth.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "a2a:request",
+      "source": "convex-dev/a2a.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/a2a.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/runtimeUnavailableAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeUnavailableAuth.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "a2a:broadcast",
+      "source": "convex-dev/a2a.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/a2a.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/runtimeUnavailableAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeUnavailableAuth.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "a2a:getConversation",
+      "source": "convex-dev/a2a.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/a2a.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/runtimeUnavailableAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeUnavailableAuth.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "agents:get",
+      "source": "convex-dev/agents.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/agents.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/runtimeRegistryStats.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "agents:exists",
+      "source": "convex-dev/agents.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/agents.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/runtimeRegistryStats.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "agents:list",
+      "source": "convex-dev/agents.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/agents.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/runtimeRegistryStats.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "agents:count",
+      "source": "convex-dev/agents.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/agents.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/runtimeRegistryStats.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "agents:register",
+      "source": "convex-dev/agents.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/agents.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/runtimeRegistryStats.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "agents:update",
+      "source": "convex-dev/agents.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/agents.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/runtimeRegistryStats.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "agents:updateMany",
+      "source": "convex-dev/agents.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/agents.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/runtimeRegistryStats.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "agents:unregister",
+      "source": "convex-dev/agents.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/agents.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/runtimeRegistryStats.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "agents:unregisterMany",
+      "source": "convex-dev/agents.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/agents.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/runtimeRegistryStats.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "agents:computeStats",
+      "source": "convex-dev/agents.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/agents.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/runtimeRegistryStats.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "artifacts:create",
+      "source": "convex-dev/artifacts.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/artifacts.ts",
+        "convex-dev/runtimeArtifactAuth.ts",
+        "convex-dev/runtimeAssetUnavailableAuth.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "artifacts:update",
+      "source": "convex-dev/artifacts.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/artifacts.ts",
+        "convex-dev/runtimeArtifactAuth.ts",
+        "convex-dev/runtimeAssetUnavailableAuth.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "artifacts:deleteArtifact",
+      "source": "convex-dev/artifacts.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/artifacts.ts",
+        "convex-dev/runtimeArtifactAuth.ts",
+        "convex-dev/runtimeAssetUnavailableAuth.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "artifacts:undo",
+      "source": "convex-dev/artifacts.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/artifacts.ts",
+        "convex-dev/runtimeArtifactAuth.ts",
+        "convex-dev/runtimeAssetUnavailableAuth.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "artifacts:redo",
+      "source": "convex-dev/artifacts.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/artifacts.ts",
+        "convex-dev/runtimeArtifactAuth.ts",
+        "convex-dev/runtimeAssetUnavailableAuth.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "artifacts:setStreamingState",
+      "source": "convex-dev/artifacts.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/artifacts.ts",
+        "convex-dev/runtimeArtifactAuth.ts",
+        "convex-dev/runtimeAssetUnavailableAuth.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "artifacts:purgeVersions",
+      "source": "convex-dev/artifacts.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/artifacts.ts",
+        "convex-dev/runtimeArtifactAuth.ts",
+        "convex-dev/runtimeAssetUnavailableAuth.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "artifacts:get",
+      "source": "convex-dev/artifacts.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/artifacts.ts",
+        "convex-dev/runtimeArtifactAuth.ts",
+        "convex-dev/runtimeAssetUnavailableAuth.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "artifacts:getByConversation",
+      "source": "convex-dev/artifacts.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/artifacts.ts",
+        "convex-dev/runtimeArtifactAuth.ts",
+        "convex-dev/runtimeAssetUnavailableAuth.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "artifacts:list",
+      "source": "convex-dev/artifacts.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/artifacts.ts",
+        "convex-dev/runtimeArtifactAuth.ts",
+        "convex-dev/runtimeAssetUnavailableAuth.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "artifacts:count",
+      "source": "convex-dev/artifacts.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/artifacts.ts",
+        "convex-dev/runtimeArtifactAuth.ts",
+        "convex-dev/runtimeAssetUnavailableAuth.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "artifacts:getVersion",
+      "source": "convex-dev/artifacts.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/artifacts.ts",
+        "convex-dev/runtimeArtifactAuth.ts",
+        "convex-dev/runtimeAssetUnavailableAuth.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "artifacts:getHistory",
+      "source": "convex-dev/artifacts.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/artifacts.ts",
+        "convex-dev/runtimeArtifactAuth.ts",
+        "convex-dev/runtimeAssetUnavailableAuth.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "artifacts:startStreaming",
+      "source": "convex-dev/artifacts.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/artifacts.ts",
+        "convex-dev/runtimeArtifactAuth.ts",
+        "convex-dev/runtimeAssetUnavailableAuth.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "artifacts:appendContent",
+      "source": "convex-dev/artifacts.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/artifacts.ts",
+        "convex-dev/runtimeArtifactAuth.ts",
+        "convex-dev/runtimeAssetUnavailableAuth.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "artifacts:pauseStreaming",
+      "source": "convex-dev/artifacts.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/artifacts.ts",
+        "convex-dev/runtimeArtifactAuth.ts",
+        "convex-dev/runtimeAssetUnavailableAuth.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "artifacts:resumeStreaming",
+      "source": "convex-dev/artifacts.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/artifacts.ts",
+        "convex-dev/runtimeArtifactAuth.ts",
+        "convex-dev/runtimeAssetUnavailableAuth.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "artifacts:cancelStreaming",
+      "source": "convex-dev/artifacts.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/artifacts.ts",
+        "convex-dev/runtimeArtifactAuth.ts",
+        "convex-dev/runtimeAssetUnavailableAuth.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "artifacts:finalizeStreaming",
+      "source": "convex-dev/artifacts.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/artifacts.ts",
+        "convex-dev/runtimeArtifactAuth.ts",
+        "convex-dev/runtimeAssetUnavailableAuth.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "artifacts:setStreamingError",
+      "source": "convex-dev/artifacts.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/artifacts.ts",
+        "convex-dev/runtimeArtifactAuth.ts",
+        "convex-dev/runtimeAssetUnavailableAuth.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "artifacts:retryFromError",
+      "source": "convex-dev/artifacts.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/artifacts.ts",
+        "convex-dev/runtimeArtifactAuth.ts",
+        "convex-dev/runtimeAssetUnavailableAuth.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "artifacts:completeArtifactUpload",
+      "source": "convex-dev/artifacts.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/artifacts.ts",
+        "convex-dev/runtimeArtifactAuth.ts",
+        "convex-dev/runtimeAssetUnavailableAuth.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "artifacts:detachFile",
+      "source": "convex-dev/artifacts.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/artifacts.ts",
+        "convex-dev/runtimeArtifactAuth.ts",
+        "convex-dev/runtimeAssetUnavailableAuth.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "attachments:attach",
+      "source": "convex-dev/attachments.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/attachments.ts",
+        "convex-dev/runtimeAssetUnavailableAuth.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "attachments:remove",
+      "source": "convex-dev/attachments.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/attachments.ts",
+        "convex-dev/runtimeAssetUnavailableAuth.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "attachments:removeMany",
+      "source": "convex-dev/attachments.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/attachments.ts",
+        "convex-dev/runtimeAssetUnavailableAuth.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "attachments:get",
+      "source": "convex-dev/attachments.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/attachments.ts",
+        "convex-dev/runtimeAssetUnavailableAuth.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "attachments:list",
+      "source": "convex-dev/attachments.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/attachments.ts",
+        "convex-dev/runtimeAssetUnavailableAuth.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "attachments:count",
+      "source": "convex-dev/attachments.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/attachments.ts",
+        "convex-dev/runtimeAssetUnavailableAuth.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "attachments:getByIds",
+      "source": "convex-dev/attachments.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/attachments.ts",
+        "convex-dev/runtimeAssetUnavailableAuth.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "attachments:getByConversation",
+      "source": "convex-dev/attachments.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/attachments.ts",
+        "convex-dev/runtimeAssetUnavailableAuth.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "attachments:getByMessage",
+      "source": "convex-dev/attachments.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/attachments.ts",
+        "convex-dev/runtimeAssetUnavailableAuth.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "contexts:create",
+      "source": "convex-dev/contexts.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/contexts.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "contexts:update",
+      "source": "convex-dev/contexts.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/contexts.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "contexts:addParticipant",
+      "source": "convex-dev/contexts.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/contexts.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "contexts:removeParticipant",
+      "source": "convex-dev/contexts.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/contexts.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "contexts:grantAccess",
+      "source": "convex-dev/contexts.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/contexts.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "contexts:deleteContext",
+      "source": "convex-dev/contexts.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/contexts.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "contexts:updateMany",
+      "source": "convex-dev/contexts.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/contexts.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "contexts:deleteMany",
+      "source": "convex-dev/contexts.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/contexts.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "contexts:get",
+      "source": "convex-dev/contexts.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/contexts.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "contexts:list",
+      "source": "convex-dev/contexts.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/contexts.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "contexts:search",
+      "source": "convex-dev/contexts.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/contexts.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "contexts:count",
+      "source": "convex-dev/contexts.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/contexts.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "contexts:getChain",
+      "source": "convex-dev/contexts.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/contexts.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "contexts:getRoot",
+      "source": "convex-dev/contexts.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/contexts.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "contexts:getChildren",
+      "source": "convex-dev/contexts.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/contexts.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "contexts:getByConversation",
+      "source": "convex-dev/contexts.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/contexts.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "contexts:findOrphaned",
+      "source": "convex-dev/contexts.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/contexts.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "contexts:getVersion",
+      "source": "convex-dev/contexts.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/contexts.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "contexts:getHistory",
+      "source": "convex-dev/contexts.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/contexts.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "contexts:getAtTimestamp",
+      "source": "convex-dev/contexts.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/contexts.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "contexts:exportContexts",
+      "source": "convex-dev/contexts.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/contexts.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "conversationShares:create",
+      "source": "convex-dev/conversationShares.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/conversationShares.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/runtimeUnavailableAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeUnavailableAuth.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "conversationShares:revoke",
+      "source": "convex-dev/conversationShares.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/conversationShares.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/runtimeUnavailableAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeUnavailableAuth.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "conversationShares:get",
+      "source": "convex-dev/conversationShares.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/conversationShares.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/runtimeUnavailableAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeUnavailableAuth.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "conversationShares:listByConversation",
+      "source": "convex-dev/conversationShares.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/conversationShares.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/runtimeUnavailableAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeUnavailableAuth.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "conversationShares:listByGranter",
+      "source": "convex-dev/conversationShares.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/conversationShares.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/runtimeUnavailableAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeUnavailableAuth.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "conversationShares:checkAccess",
+      "source": "convex-dev/conversationShares.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/conversationShares.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/runtimeUnavailableAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeUnavailableAuth.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "conversationSnapshots:create",
+      "source": "convex-dev/conversationSnapshots.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/conversationSnapshots.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/runtimeUnavailableAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeUnavailableAuth.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "conversationSnapshots:deleteSnapshot",
+      "source": "convex-dev/conversationSnapshots.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/conversationSnapshots.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/runtimeUnavailableAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeUnavailableAuth.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "conversationSnapshots:get",
+      "source": "convex-dev/conversationSnapshots.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/conversationSnapshots.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/runtimeUnavailableAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeUnavailableAuth.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "conversationSnapshots:listByConversation",
+      "source": "convex-dev/conversationSnapshots.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/conversationSnapshots.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/runtimeUnavailableAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeUnavailableAuth.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "conversationSnapshots:listByUser",
+      "source": "convex-dev/conversationSnapshots.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/conversationSnapshots.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/runtimeUnavailableAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeUnavailableAuth.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "conversations:create",
+      "source": "convex-dev/conversations.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/conversations.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/runtimeUnavailableAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeUnavailableAuth.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "conversations:setVisibility",
+      "source": "convex-dev/conversations.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/conversations.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/runtimeUnavailableAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeUnavailableAuth.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "conversations:setMetadata",
+      "source": "convex-dev/conversations.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/conversations.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/runtimeUnavailableAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeUnavailableAuth.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "conversations:checkAccess",
+      "source": "convex-dev/conversations.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/conversations.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/runtimeUnavailableAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeUnavailableAuth.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "conversations:addMessage",
+      "source": "convex-dev/conversations.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/conversations.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/runtimeUnavailableAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeUnavailableAuth.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "conversations:approveMessage",
+      "source": "convex-dev/conversations.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/conversations.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/runtimeUnavailableAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeUnavailableAuth.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "conversations:rejectMessage",
+      "source": "convex-dev/conversations.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/conversations.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/runtimeUnavailableAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeUnavailableAuth.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "conversations:deleteConversation",
+      "source": "convex-dev/conversations.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/conversations.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/runtimeUnavailableAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeUnavailableAuth.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "conversations:deleteMany",
+      "source": "convex-dev/conversations.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/conversations.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/runtimeUnavailableAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeUnavailableAuth.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "conversations:deleteByIds",
+      "source": "convex-dev/conversations.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/conversations.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/runtimeUnavailableAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeUnavailableAuth.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "conversations:getMessage",
+      "source": "convex-dev/conversations.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/conversations.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/runtimeUnavailableAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeUnavailableAuth.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "conversations:getMessagesByIds",
+      "source": "convex-dev/conversations.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/conversations.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/runtimeUnavailableAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeUnavailableAuth.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "conversations:getOrCreate",
+      "source": "convex-dev/conversations.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/conversations.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/runtimeUnavailableAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeUnavailableAuth.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "conversations:findConversation",
+      "source": "convex-dev/conversations.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/conversations.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/runtimeUnavailableAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeUnavailableAuth.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "conversations:get",
+      "source": "convex-dev/conversations.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/conversations.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/runtimeUnavailableAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeUnavailableAuth.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "conversations:list",
+      "source": "convex-dev/conversations.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/conversations.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/runtimeUnavailableAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeUnavailableAuth.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "conversations:count",
+      "source": "convex-dev/conversations.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/conversations.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/runtimeUnavailableAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeUnavailableAuth.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "conversations:getHistory",
+      "source": "convex-dev/conversations.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/conversations.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/runtimeUnavailableAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeUnavailableAuth.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "conversations:search",
+      "source": "convex-dev/conversations.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/conversations.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/runtimeUnavailableAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeUnavailableAuth.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "conversations:exportConversations",
+      "source": "convex-dev/conversations.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/conversations.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/runtimeUnavailableAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeUnavailableAuth.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "factHistory:getHistory",
+      "source": "convex-dev/factHistory.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/factHistory.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/runtimeUnavailableAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeUnavailableAuth.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "factHistory:getEvent",
+      "source": "convex-dev/factHistory.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/factHistory.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/runtimeUnavailableAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeUnavailableAuth.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "factHistory:getChangesByTimeRange",
+      "source": "convex-dev/factHistory.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/factHistory.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/runtimeUnavailableAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeUnavailableAuth.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "factHistory:countByAction",
+      "source": "convex-dev/factHistory.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/factHistory.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/runtimeUnavailableAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeUnavailableAuth.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "factHistory:getSupersessionChain",
+      "source": "convex-dev/factHistory.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/factHistory.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/runtimeUnavailableAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeUnavailableAuth.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "factHistory:getActivitySummary",
+      "source": "convex-dev/factHistory.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/factHistory.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/runtimeUnavailableAuth.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeUnavailableAuth.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "facts:store",
+      "source": "convex-dev/facts.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/facts.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeDataAuth.ts",
+        "src/auth/verified.ts",
+        "src/domain/contracts.ts",
+        "src/domain/profile.ts",
+        "src/domain/sources.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "facts:update",
+      "source": "convex-dev/facts.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/facts.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeDataAuth.ts",
+        "src/auth/verified.ts",
+        "src/domain/contracts.ts",
+        "src/domain/profile.ts",
+        "src/domain/sources.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "facts:deleteFact",
+      "source": "convex-dev/facts.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/facts.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeDataAuth.ts",
+        "src/auth/verified.ts",
+        "src/domain/contracts.ts",
+        "src/domain/profile.ts",
+        "src/domain/sources.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "facts:supersede",
+      "source": "convex-dev/facts.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/facts.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeDataAuth.ts",
+        "src/auth/verified.ts",
+        "src/domain/contracts.ts",
+        "src/domain/profile.ts",
+        "src/domain/sources.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "facts:updateInPlace",
+      "source": "convex-dev/facts.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/facts.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeDataAuth.ts",
+        "src/auth/verified.ts",
+        "src/domain/contracts.ts",
+        "src/domain/profile.ts",
+        "src/domain/sources.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "facts:deleteMany",
+      "source": "convex-dev/facts.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/facts.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeDataAuth.ts",
+        "src/auth/verified.ts",
+        "src/domain/contracts.ts",
+        "src/domain/profile.ts",
+        "src/domain/sources.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "facts:get",
+      "source": "convex-dev/facts.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/facts.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeDataAuth.ts",
+        "src/auth/verified.ts",
+        "src/domain/contracts.ts",
+        "src/domain/profile.ts",
+        "src/domain/sources.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "facts:list",
+      "source": "convex-dev/facts.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/facts.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeDataAuth.ts",
+        "src/auth/verified.ts",
+        "src/domain/contracts.ts",
+        "src/domain/profile.ts",
+        "src/domain/sources.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "facts:count",
+      "source": "convex-dev/facts.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/facts.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeDataAuth.ts",
+        "src/auth/verified.ts",
+        "src/domain/contracts.ts",
+        "src/domain/profile.ts",
+        "src/domain/sources.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "facts:search",
+      "source": "convex-dev/facts.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/facts.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeDataAuth.ts",
+        "src/auth/verified.ts",
+        "src/domain/contracts.ts",
+        "src/domain/profile.ts",
+        "src/domain/sources.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "facts:semanticSearch",
+      "source": "convex-dev/facts.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/facts.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeDataAuth.ts",
+        "src/auth/verified.ts",
+        "src/domain/contracts.ts",
+        "src/domain/profile.ts",
+        "src/domain/sources.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "facts:getHistory",
+      "source": "convex-dev/facts.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/facts.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeDataAuth.ts",
+        "src/auth/verified.ts",
+        "src/domain/contracts.ts",
+        "src/domain/profile.ts",
+        "src/domain/sources.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "facts:queryBySubject",
+      "source": "convex-dev/facts.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/facts.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeDataAuth.ts",
+        "src/auth/verified.ts",
+        "src/domain/contracts.ts",
+        "src/domain/profile.ts",
+        "src/domain/sources.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "facts:queryByRelationship",
+      "source": "convex-dev/facts.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/facts.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeDataAuth.ts",
+        "src/auth/verified.ts",
+        "src/domain/contracts.ts",
+        "src/domain/profile.ts",
+        "src/domain/sources.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "facts:exportFacts",
+      "source": "convex-dev/facts.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/facts.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeDataAuth.ts",
+        "src/auth/verified.ts",
+        "src/domain/contracts.ts",
+        "src/domain/profile.ts",
+        "src/domain/sources.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "facts:consolidate",
+      "source": "convex-dev/facts.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/facts.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeDataAuth.ts",
+        "src/auth/verified.ts",
+        "src/domain/contracts.ts",
+        "src/domain/profile.ts",
+        "src/domain/sources.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "facts:findByStructure",
+      "source": "convex-dev/facts.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/facts.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeDataAuth.ts",
+        "src/auth/verified.ts",
+        "src/domain/contracts.ts",
+        "src/domain/profile.ts",
+        "src/domain/sources.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "facts:deleteByIds",
+      "source": "convex-dev/facts.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/facts.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeDataAuth.ts",
+        "src/auth/verified.ts",
+        "src/domain/contracts.ts",
+        "src/domain/profile.ts",
+        "src/domain/sources.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "governance:setPolicy",
+      "source": "convex-dev/governance.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/governance.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemoryRepository.ts",
+        "convex-dev/runtimeWorkerAuth.ts",
+        "src/auth/verified.ts",
+        "src/domain/clock.ts",
+        "src/domain/contracts.ts",
+        "src/domain/profile.ts",
+        "src/domain/sources.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemoryRepository.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "governance:setAgentOverride",
+      "source": "convex-dev/governance.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/governance.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemoryRepository.ts",
+        "convex-dev/runtimeWorkerAuth.ts",
+        "src/auth/verified.ts",
+        "src/domain/clock.ts",
+        "src/domain/contracts.ts",
+        "src/domain/profile.ts",
+        "src/domain/sources.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemoryRepository.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "governance:getPolicy",
+      "source": "convex-dev/governance.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/governance.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemoryRepository.ts",
+        "convex-dev/runtimeWorkerAuth.ts",
+        "src/auth/verified.ts",
+        "src/domain/clock.ts",
+        "src/domain/contracts.ts",
+        "src/domain/profile.ts",
+        "src/domain/sources.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemoryRepository.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "governance:getTemplate",
+      "source": "convex-dev/governance.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/governance.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemoryRepository.ts",
+        "convex-dev/runtimeWorkerAuth.ts",
+        "src/auth/verified.ts",
+        "src/domain/clock.ts",
+        "src/domain/contracts.ts",
+        "src/domain/profile.ts",
+        "src/domain/sources.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemoryRepository.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "governance:simulate",
+      "source": "convex-dev/governance.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/governance.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemoryRepository.ts",
+        "convex-dev/runtimeWorkerAuth.ts",
+        "src/auth/verified.ts",
+        "src/domain/clock.ts",
+        "src/domain/contracts.ts",
+        "src/domain/profile.ts",
+        "src/domain/sources.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemoryRepository.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "governance:getComplianceReport",
+      "source": "convex-dev/governance.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/governance.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemoryRepository.ts",
+        "convex-dev/runtimeWorkerAuth.ts",
+        "src/auth/verified.ts",
+        "src/domain/clock.ts",
+        "src/domain/contracts.ts",
+        "src/domain/profile.ts",
+        "src/domain/sources.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemoryRepository.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "governance:getEnforcementStats",
+      "source": "convex-dev/governance.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/governance.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemoryRepository.ts",
+        "convex-dev/runtimeWorkerAuth.ts",
+        "src/auth/verified.ts",
+        "src/domain/clock.ts",
+        "src/domain/contracts.ts",
+        "src/domain/profile.ts",
+        "src/domain/sources.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemoryRepository.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "immutable:store",
+      "source": "convex-dev/immutable.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/immutable.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMetadataAuth.ts",
+        "src/auth/verified.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "immutable:get",
+      "source": "convex-dev/immutable.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/immutable.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMetadataAuth.ts",
+        "src/auth/verified.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "immutable:getVersion",
+      "source": "convex-dev/immutable.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/immutable.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMetadataAuth.ts",
+        "src/auth/verified.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "immutable:getHistory",
+      "source": "convex-dev/immutable.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/immutable.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMetadataAuth.ts",
+        "src/auth/verified.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "immutable:getAtTimestamp",
+      "source": "convex-dev/immutable.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/immutable.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMetadataAuth.ts",
+        "src/auth/verified.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "immutable:list",
+      "source": "convex-dev/immutable.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/immutable.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMetadataAuth.ts",
+        "src/auth/verified.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "immutable:count",
+      "source": "convex-dev/immutable.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/immutable.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMetadataAuth.ts",
+        "src/auth/verified.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "immutable:search",
+      "source": "convex-dev/immutable.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/immutable.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMetadataAuth.ts",
+        "src/auth/verified.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "immutable:purge",
+      "source": "convex-dev/immutable.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/immutable.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMetadataAuth.ts",
+        "src/auth/verified.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "immutable:purgeMany",
+      "source": "convex-dev/immutable.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/immutable.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMetadataAuth.ts",
+        "src/auth/verified.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "immutable:purgeVersions",
+      "source": "convex-dev/immutable.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/immutable.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMetadataAuth.ts",
+        "src/auth/verified.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "memories:store",
+      "source": "convex-dev/memories.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/memories.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeDataAuth.ts",
+        "src/auth/verified.ts",
+        "src/domain/contracts.ts",
+        "src/domain/profile.ts",
+        "src/domain/sources.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "memories:storePartialMemory",
+      "source": "convex-dev/memories.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/memories.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeDataAuth.ts",
+        "src/auth/verified.ts",
+        "src/domain/contracts.ts",
+        "src/domain/profile.ts",
+        "src/domain/sources.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "memories:updatePartialMemory",
+      "source": "convex-dev/memories.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/memories.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeDataAuth.ts",
+        "src/auth/verified.ts",
+        "src/domain/contracts.ts",
+        "src/domain/profile.ts",
+        "src/domain/sources.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "memories:finalizePartialMemory",
+      "source": "convex-dev/memories.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/memories.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeDataAuth.ts",
+        "src/auth/verified.ts",
+        "src/domain/contracts.ts",
+        "src/domain/profile.ts",
+        "src/domain/sources.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "memories:deleteMemory",
+      "source": "convex-dev/memories.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/memories.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeDataAuth.ts",
+        "src/auth/verified.ts",
+        "src/domain/contracts.ts",
+        "src/domain/profile.ts",
+        "src/domain/sources.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "memories:get",
+      "source": "convex-dev/memories.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/memories.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeDataAuth.ts",
+        "src/auth/verified.ts",
+        "src/domain/contracts.ts",
+        "src/domain/profile.ts",
+        "src/domain/sources.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "memories:search",
+      "source": "convex-dev/memories.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/memories.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeDataAuth.ts",
+        "src/auth/verified.ts",
+        "src/domain/contracts.ts",
+        "src/domain/profile.ts",
+        "src/domain/sources.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "memories:list",
+      "source": "convex-dev/memories.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/memories.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeDataAuth.ts",
+        "src/auth/verified.ts",
+        "src/domain/contracts.ts",
+        "src/domain/profile.ts",
+        "src/domain/sources.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "memories:count",
+      "source": "convex-dev/memories.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/memories.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeDataAuth.ts",
+        "src/auth/verified.ts",
+        "src/domain/contracts.ts",
+        "src/domain/profile.ts",
+        "src/domain/sources.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "memories:update",
+      "source": "convex-dev/memories.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/memories.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeDataAuth.ts",
+        "src/auth/verified.ts",
+        "src/domain/contracts.ts",
+        "src/domain/profile.ts",
+        "src/domain/sources.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "memories:getVersion",
+      "source": "convex-dev/memories.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/memories.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeDataAuth.ts",
+        "src/auth/verified.ts",
+        "src/domain/contracts.ts",
+        "src/domain/profile.ts",
+        "src/domain/sources.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "memories:getHistory",
+      "source": "convex-dev/memories.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/memories.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeDataAuth.ts",
+        "src/auth/verified.ts",
+        "src/domain/contracts.ts",
+        "src/domain/profile.ts",
+        "src/domain/sources.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "memories:deleteMany",
+      "source": "convex-dev/memories.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/memories.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeDataAuth.ts",
+        "src/auth/verified.ts",
+        "src/domain/contracts.ts",
+        "src/domain/profile.ts",
+        "src/domain/sources.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "memories:deleteByIds",
+      "source": "convex-dev/memories.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/memories.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeDataAuth.ts",
+        "src/auth/verified.ts",
+        "src/domain/contracts.ts",
+        "src/domain/profile.ts",
+        "src/domain/sources.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "memories:exportMemories",
+      "source": "convex-dev/memories.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/memories.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeDataAuth.ts",
+        "src/auth/verified.ts",
+        "src/domain/contracts.ts",
+        "src/domain/profile.ts",
+        "src/domain/sources.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "memories:updateMany",
+      "source": "convex-dev/memories.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/memories.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeDataAuth.ts",
+        "src/auth/verified.ts",
+        "src/domain/contracts.ts",
+        "src/domain/profile.ts",
+        "src/domain/sources.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "memories:archive",
+      "source": "convex-dev/memories.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/memories.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeDataAuth.ts",
+        "src/auth/verified.ts",
+        "src/domain/contracts.ts",
+        "src/domain/profile.ts",
+        "src/domain/sources.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "memories:restoreFromArchive",
+      "source": "convex-dev/memories.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/memories.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeDataAuth.ts",
+        "src/auth/verified.ts",
+        "src/domain/contracts.ts",
+        "src/domain/profile.ts",
+        "src/domain/sources.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "memories:getAtTimestamp",
+      "source": "convex-dev/memories.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/memories.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeDataAuth.ts",
+        "src/auth/verified.ts",
+        "src/domain/contracts.ts",
+        "src/domain/profile.ts",
+        "src/domain/sources.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "memorySpaces:register",
+      "source": "convex-dev/memorySpaces.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/memorySpaces.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/runtimeRegistryStats.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "memorySpaces:update",
+      "source": "convex-dev/memorySpaces.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/memorySpaces.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/runtimeRegistryStats.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "memorySpaces:addParticipant",
+      "source": "convex-dev/memorySpaces.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/memorySpaces.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/runtimeRegistryStats.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "memorySpaces:removeParticipant",
+      "source": "convex-dev/memorySpaces.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/memorySpaces.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/runtimeRegistryStats.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "memorySpaces:archive",
+      "source": "convex-dev/memorySpaces.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/memorySpaces.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/runtimeRegistryStats.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "memorySpaces:reactivate",
+      "source": "convex-dev/memorySpaces.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/memorySpaces.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/runtimeRegistryStats.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "memorySpaces:updateParticipants",
+      "source": "convex-dev/memorySpaces.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/memorySpaces.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/runtimeRegistryStats.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "memorySpaces:deleteSpace",
+      "source": "convex-dev/memorySpaces.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/memorySpaces.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/runtimeRegistryStats.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "memorySpaces:get",
+      "source": "convex-dev/memorySpaces.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/memorySpaces.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/runtimeRegistryStats.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "memorySpaces:list",
+      "source": "convex-dev/memorySpaces.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/memorySpaces.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/runtimeRegistryStats.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "memorySpaces:count",
+      "source": "convex-dev/memorySpaces.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/memorySpaces.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/runtimeRegistryStats.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "memorySpaces:findByParticipant",
+      "source": "convex-dev/memorySpaces.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/memorySpaces.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/runtimeRegistryStats.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "memorySpaces:search",
+      "source": "convex-dev/memorySpaces.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/memorySpaces.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/runtimeRegistryStats.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "memorySpaces:getStats",
+      "source": "convex-dev/memorySpaces.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/memorySpaces.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimePolicySchema.ts",
+        "convex-dev/runtimeRegistryAuth.ts",
+        "convex-dev/runtimeRegistryStats.ts",
+        "convex-dev/schema.ts",
+        "src/auth/verified.ts",
+        "src/domain/model-policy.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "mutable:set",
+      "source": "convex-dev/mutable.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/mutable.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMetadataAuth.ts",
+        "src/auth/verified.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "mutable:update",
+      "source": "convex-dev/mutable.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/mutable.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMetadataAuth.ts",
+        "src/auth/verified.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "mutable:get",
+      "source": "convex-dev/mutable.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/mutable.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMetadataAuth.ts",
+        "src/auth/verified.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "mutable:exists",
+      "source": "convex-dev/mutable.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/mutable.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMetadataAuth.ts",
+        "src/auth/verified.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "mutable:list",
+      "source": "convex-dev/mutable.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/mutable.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMetadataAuth.ts",
+        "src/auth/verified.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "mutable:count",
+      "source": "convex-dev/mutable.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/mutable.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMetadataAuth.ts",
+        "src/auth/verified.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "mutable:deleteKey",
+      "source": "convex-dev/mutable.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/mutable.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMetadataAuth.ts",
+        "src/auth/verified.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "mutable:purgeMany",
+      "source": "convex-dev/mutable.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/mutable.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMetadataAuth.ts",
+        "src/auth/verified.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "mutable:purgeNamespace",
+      "source": "convex-dev/mutable.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/mutable.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMetadataAuth.ts",
+        "src/auth/verified.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "mutable:transaction",
+      "source": "convex-dev/mutable.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/mutable.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMetadataAuth.ts",
+        "src/auth/verified.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "runtimeMemory:remember",
+      "source": "convex-dev/runtimeMemory.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemory.ts",
+        "convex-dev/runtimeMemoryRepository.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimeMemoryServices.ts",
+        "src/auth/verified.ts",
+        "src/domain/clock.ts",
+        "src/domain/contracts.ts",
+        "src/domain/profile.ts",
+        "src/domain/recall.ts",
+        "src/domain/sources.ts",
+        "src/types/index.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemoryRepository.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "runtimeMemory:recall",
+      "source": "convex-dev/runtimeMemory.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemory.ts",
+        "convex-dev/runtimeMemoryRepository.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimeMemoryServices.ts",
+        "src/auth/verified.ts",
+        "src/domain/clock.ts",
+        "src/domain/contracts.ts",
+        "src/domain/profile.ts",
+        "src/domain/recall.ts",
+        "src/domain/sources.ts",
+        "src/types/index.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMemoryRepository.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "sessions:create",
+      "source": "convex-dev/sessions.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMetadataAuth.ts",
+        "convex-dev/sessions.ts",
+        "src/auth/verified.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "sessions:get",
+      "source": "convex-dev/sessions.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMetadataAuth.ts",
+        "convex-dev/sessions.ts",
+        "src/auth/verified.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "sessions:touch",
+      "source": "convex-dev/sessions.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMetadataAuth.ts",
+        "convex-dev/sessions.ts",
+        "src/auth/verified.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "sessions:end",
+      "source": "convex-dev/sessions.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMetadataAuth.ts",
+        "convex-dev/sessions.ts",
+        "src/auth/verified.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "sessions:endAll",
+      "source": "convex-dev/sessions.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMetadataAuth.ts",
+        "convex-dev/sessions.ts",
+        "src/auth/verified.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "sessions:list",
+      "source": "convex-dev/sessions.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMetadataAuth.ts",
+        "convex-dev/sessions.ts",
+        "src/auth/verified.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "sessions:count",
+      "source": "convex-dev/sessions.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMetadataAuth.ts",
+        "convex-dev/sessions.ts",
+        "src/auth/verified.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "users:get",
+      "source": "convex-dev/users.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/immutable.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMetadataAuth.ts",
+        "convex-dev/users.ts",
+        "src/auth/verified.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "users:list",
+      "source": "convex-dev/users.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/immutable.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMetadataAuth.ts",
+        "convex-dev/users.ts",
+        "src/auth/verified.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "users:count",
+      "source": "convex-dev/users.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/immutable.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMetadataAuth.ts",
+        "convex-dev/users.ts",
+        "src/auth/verified.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "users:getVersion",
+      "source": "convex-dev/users.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/immutable.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMetadataAuth.ts",
+        "convex-dev/users.ts",
+        "src/auth/verified.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "users:getHistory",
+      "source": "convex-dev/users.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/immutable.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMetadataAuth.ts",
+        "convex-dev/users.ts",
+        "src/auth/verified.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "users:getAtTimestamp",
+      "source": "convex-dev/users.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/immutable.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMetadataAuth.ts",
+        "convex-dev/users.ts",
+        "src/auth/verified.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "users:exists",
+      "source": "convex-dev/users.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/immutable.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMetadataAuth.ts",
+        "convex-dev/users.ts",
+        "src/auth/verified.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    },
+    {
+      "path": "users:deleteUserProfile",
+      "source": "convex-dev/users.ts",
+      "importClosure": [
+        "convex-dev/_generated/server.js",
+        "convex-dev/immutable.ts",
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts",
+        "convex-dev/runtimeMetadataAuth.ts",
+        "convex-dev/users.ts",
+        "src/auth/verified.ts"
+      ],
+      "guardSources": [
+        "convex-dev/runtimeAuth.ts",
+        "convex-dev/runtimeAuthSchema.ts"
+      ],
+      "nativeAuthorization": "NOT_RUN",
+      "staticControlFlowVerdict": "PENDING_INDEPENDENT_REVIEW"
+    }
+  ],
+  "maintenance": {
+    "validatorSource": "convex-dev/runtimeWorkerAuth.ts",
+    "validatorSha256": "dd5edc4b38263c3ebd6ee4a81301182aac7659e80e3527fe21ab93f06031a92e",
+    "allowedTables": [
+      "agents",
+      "artifacts",
+      "contexts",
+      "conversations",
+      "factHistory",
+      "facts",
+      "governanceEnforcement",
+      "governancePolicies",
+      "graphSyncQueue",
+      "immutable",
+      "memories",
+      "memorySpaces",
+      "mutable",
+      "sessions"
+    ],
+    "excludedModelTables": [
+      "runtimeModelPolicies",
+      "runtimeModelQualifications",
+      "runtimeBudgetAccounts",
+      "runtimeModelOperations",
+      "runtimeModelAttempts"
+    ],
+    "internalAdminSourceSha256": "8b2eb63eaf6ff4fc41cdb64085840ad70f49bf377f394afd194f7ab08d450345",
+    "actualNativeAll20Denials": "NOT_RUN"
+  }
+}

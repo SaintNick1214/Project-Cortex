@@ -1,0 +1,11 @@
+{
+  "argv": [
+    "python3",
+    "-c",
+    "from pathlib import Path\np=Path('_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c1/fixture/checks/metadata-purge.mjs');s=p.read_text();old=\"await h.mutation(guard.capture,{...capture,observationCanonical:canonical(updated.receipt,8192),transcriptCanonical:transcript});\";new=\"const collisionWrites=h.writes;await assert.rejects(h.mutation(guard.capture,{...capture,observationCanonical:canonical(updated.receipt,8192),transcriptCanonical:transcript}),/CAPTURE_COLLISION/);assert.equal(h.writes,collisionWrites);\";assert old in s;s=s.replace(old,new);p.write_text(s)"
+  ],
+  "cwd": "/workspace/Project-Cortex",
+  "startUtc": "2026-10-04T14:31:01.243742+00:00",
+  "endUtc": "2026-10-04T14:31:01.266746+00:00",
+  "exit": 0
+}

@@ -1,0 +1,99 @@
+{
+  "startedAt": "2026-10-04T11:45:36.696017+00:00",
+  "endedAt": "2026-10-04T11:45:36.752558+00:00",
+  "cwd": "/workspace/Project-Cortex",
+  "status": "OFFLINE_HELPER_SYNTAX_ONLY",
+  "commands": [
+    {
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "--check",
+        "work/resume/task04-model-drift-c3-record-command.mjs"
+      ],
+      "exitCode": 0,
+      "startedAt": "2026-10-04T11:45:36.700481+00:00",
+      "endedAt": "2026-10-04T11:45:36.726945+00:00"
+    },
+    {
+      "argv": [
+        "python",
+        "-c",
+        "from pathlib import Path; compile(Path('work/resume/task04-model-drift-native-c3-progress.py').read_text(), 'work/resume/task04-model-drift-native-c3-progress.py', 'exec')"
+      ],
+      "exitCode": 0,
+      "startedAt": "2026-10-04T11:45:36.726962+00:00",
+      "endedAt": "2026-10-04T11:45:36.752460+00:00"
+    }
+  ],
+  "sourcePre": [
+    {
+      "path": "work/resume/task04-model-drift-c2-record-command.mjs",
+      "sha256": "3efe7a79e30ec5dbbfd722187733b1398e594d6d08d35747281746b83d322dbf",
+      "bytes": 1743
+    },
+    {
+      "path": "work/resume/task04-model-drift-c3-record-command.mjs",
+      "sha256": "b79614db5f3ff03adc7fd0d2a230f97c40a7e2bdf916137727b78aecf1dd0f62",
+      "bytes": 1743
+    },
+    {
+      "path": "work/resume/task04-model-drift-native-c2-progress.py",
+      "sha256": "a448bc226e64f1511a8d50902b161e07e3a657c13c51eaf3a01179dcb9eb8d56",
+      "bytes": 1429
+    },
+    {
+      "path": "work/resume/task04-model-drift-native-c3-progress.py",
+      "sha256": "c517cf249d407405dbab17400799e89c7d0d166ead792091da83d56eff47b834",
+      "bytes": 1499
+    }
+  ],
+  "sourcePost": [
+    {
+      "path": "work/resume/task04-model-drift-c2-record-command.mjs",
+      "sha256": "3efe7a79e30ec5dbbfd722187733b1398e594d6d08d35747281746b83d322dbf",
+      "bytes": 1743
+    },
+    {
+      "path": "work/resume/task04-model-drift-c3-record-command.mjs",
+      "sha256": "b79614db5f3ff03adc7fd0d2a230f97c40a7e2bdf916137727b78aecf1dd0f62",
+      "bytes": 1743
+    },
+    {
+      "path": "work/resume/task04-model-drift-native-c2-progress.py",
+      "sha256": "a448bc226e64f1511a8d50902b161e07e3a657c13c51eaf3a01179dcb9eb8d56",
+      "bytes": 1429
+    },
+    {
+      "path": "work/resume/task04-model-drift-native-c3-progress.py",
+      "sha256": "c517cf249d407405dbab17400799e89c7d0d166ead792091da83d56eff47b834",
+      "bytes": 1499
+    }
+  ],
+  "nativeInvocations": 0,
+  "actualPrivateInputsRead": false,
+  "actualRootApprovalPinCreated": false,
+  "progressChange": "Malformed journal JSON fails with safe fixed diagnostic rather than silently omitting records; monitor remains non-certifying",
+  "initialFailurePreserved": "work/resume/task04-c3-root-helper-initial-failure.json",
+  "sourcePreimages": [
+    {
+      "path": "work/resume/task04-model-drift-c2-record-command.mjs",
+      "sha256": "3efe7a79e30ec5dbbfd722187733b1398e594d6d08d35747281746b83d322dbf",
+      "status": "retained exact source in work/resume; historical C2 untouched"
+    },
+    {
+      "path": "work/resume/task04-model-drift-c3-record-command.mjs",
+      "sha256": "b79614db5f3ff03adc7fd0d2a230f97c40a7e2bdf916137727b78aecf1dd0f62",
+      "status": "retained exact source in work/resume; historical C2 untouched"
+    },
+    {
+      "path": "work/resume/task04-model-drift-native-c2-progress.py",
+      "sha256": "a448bc226e64f1511a8d50902b161e07e3a657c13c51eaf3a01179dcb9eb8d56",
+      "status": "retained exact source in work/resume; historical C2 untouched"
+    },
+    {
+      "path": "work/resume/task04-model-drift-native-c3-progress.py",
+      "sha256": "c517cf249d407405dbab17400799e89c7d0d166ead792091da83d56eff47b834",
+      "status": "retained exact source in work/resume; historical C2 untouched"
+    }
+  ]
+}

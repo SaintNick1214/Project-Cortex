@@ -6,7 +6,7 @@
  */
 
 import { spawn } from "child_process";
-import { existsSync } from "fs";
+import { existsSync, readFileSync } from "fs";
 import path from "path";
 import { createRequire } from "module";
 
@@ -18,7 +18,7 @@ export {
   ALLOWED_COMMANDS,
 } from "./shell-utils.js";
 
-import { ALLOWED_COMMANDS } from "./shell-utils.js";
+import { ALLOWED_COMMANDS, parseNpmViewJson } from "./shell-utils.js";
 
 // Create require function for ES modules (named to avoid conflict with Jest's require)
 const esmRequire = createRequire(import.meta.url);
@@ -159,8 +159,17 @@ export function getSDKPath(projectPath?: string): string | null {
     }
 
     // Fallback: use require.resolve from current location
-    const sdkPackageJson = esmRequire.resolve("@cortexmemory/sdk/package.json");
-    return path.dirname(sdkPackageJson);
+    let directory = path.dirname(esmRequire.resolve("@cortexmemory/sdk"));
+    while (true) {
+      const manifest = path.join(directory, "package.json");
+      if (existsSync(manifest) &&
+          JSON.parse(readFileSync(manifest, "utf8")).name === "@cortexmemory/sdk") {
+        return directory;
+      }
+      const parent = path.dirname(directory);
+      if (parent === directory) return null;
+      directory = parent;
+    }
   } catch {
     return null;
   }
@@ -190,17 +199,9 @@ export async function fetchLatestSDKMetadata(): Promise<{
       throw new Error(`npm view failed: ${result.stderr}`);
     }
 
-    const data = JSON.parse(result.stdout);
-
-    let convexVersion: string;
-    let sdkVersion: string;
-
-    if (typeof data === "string") {
-      throw new Error("Unexpected npm view response format");
-    } else {
-      convexVersion = data["peerDependencies.convex"] || "^1.29.3";
-      sdkVersion = data["version"] || "latest";
-    }
+    const data = parseNpmViewJson(result.stdout);
+    const convexVersion = data["peerDependencies.convex"] || "^1.29.3";
+    const sdkVersion = data["version"] || "latest";
 
     return {
       convexVersion,

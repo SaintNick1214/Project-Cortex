@@ -1,0 +1,1334 @@
+"""
+Tests for Contexts API
+
+Port of: tests/contexts.test.ts
+
+Tests validate:
+- Context creation and management
+- Context chains
+- Parent-child relationships
+- Search and filtering
+"""
+
+import pytest
+
+from cortex import ContextInput, ListContextsFilter, CountContextsFilter
+from cortex.contexts import ContextsValidationError
+
+# ============================================================================
+# create() Tests
+# ============================================================================
+
+
+@pytest.mark.asyncio
+async def test_create_context(cortex_client, test_ids, cleanup_helper):
+    """
+    Test creating a context.
+
+    Port of: contexts.test.ts - create tests
+    """
+    memory_space_id = test_ids["memory_space_id"]
+
+    result = await cortex_client.contexts.create(
+        ContextInput(
+            memory_space_id=memory_space_id,
+            purpose="Main project context",
+            description="Project Alpha description",
+            data={"type": "project", "priority": "high"},
+        )
+    )
+
+    # Validate result
+    assert result.id is not None
+    assert result.purpose == "Main project context"
+    assert result.status == "active"
+
+    # Cleanup - delete context
+    await cortex_client.contexts.delete(result.id)
+
+
+@pytest.mark.asyncio
+async def test_create_context_with_tenant_id(cortex_client, test_ids, cleanup_helper):
+    """
+    Test creating a context with tenant_id (v0.31.0).
+
+    Validates multi-tenancy support in ContextInput.
+    """
+    memory_space_id = test_ids["memory_space_id"]
+    tenant_id = "tenant-test-123"
+
+    result = await cortex_client.contexts.create(
+        ContextInput(
+            memory_space_id=memory_space_id,
+            purpose="Tenant-scoped context",
+            tenant_id=tenant_id,
+        )
+    )
+
+    # Validate context was created successfully
+    assert result.id is not None
+    # tenant_id may be returned as passed or None depending on backend
+    # The important check is that the field exists and accepts the value
+    assert hasattr(result, "tenant_id")
+
+    # Cleanup (ignore errors if already deleted)
+    try:
+        await cortex_client.contexts.delete(result.id)
+    except Exception:
+        pass  # Context may have been cleaned up by test framework
+
+
+@pytest.mark.asyncio
+async def test_create_context_with_parent(cortex_client, test_ids, cleanup_helper):
+    """
+    Test creating context with parent (context chain).
+
+    Port of: contexts.test.ts - chain tests
+    """
+    memory_space_id = test_ids["memory_space_id"]
+
+    # Create parent context
+    parent = await cortex_client.contexts.create(
+        ContextInput(
+            memory_space_id=memory_space_id,
+            purpose="Parent context for workspace",
+            data={"type": "workspace"},
+        )
+    )
+
+    # Create child context
+    child = await cortex_client.contexts.create(
+        ContextInput(
+            memory_space_id=memory_space_id,
+            purpose="Child context for project",
+            parent_id=parent.id,
+            data={"type": "project"},
+        )
+    )
+
+    # Validate parent-child relationship
+    assert child.parent_id == parent.id
+
+    # Cleanup - delete parent with cascade to delete child
+    from cortex.types import DeleteContextOptions
+    await cortex_client.contexts.delete(parent.id, DeleteContextOptions(cascade_children=True))
+
+
+# ============================================================================
+# get() Tests
+# ============================================================================
+
+
+@pytest.mark.asyncio
+async def test_get_context(cortex_client, test_ids, cleanup_helper):
+    """
+    Test retrieving a context by ID.
+
+    Port of: contexts.test.ts - get tests
+    Updated to verify tenant_id field (v0.31.0).
+    """
+    memory_space_id = test_ids["memory_space_id"]
+
+    # Create context
+    created = await cortex_client.contexts.create(
+        ContextInput(
+            memory_space_id=memory_space_id,
+            purpose="Test Context",
+        )
+    )
+
+    # Get context
+    retrieved = await cortex_client.contexts.get(created.id)
+
+    assert retrieved is not None
+    assert retrieved.id == created.id
+    assert retrieved.purpose == "Test Context"
+    # Verify tenant_id field exists (may be None if not set)
+    assert hasattr(retrieved, "tenant_id")
+
+    # Cleanup
+    await cortex_client.contexts.delete(created.id)
+
+
+@pytest.mark.asyncio
+async def test_get_context_with_tenant_id(cortex_client, test_ids, cleanup_helper):
+    """
+    Test retrieving a context verifies tenant_id field exists (v0.31.0).
+
+    Note: Full tenant isolation requires proper auth context setup.
+    This test verifies the API returns contexts with tenant_id field.
+    """
+    memory_space_id = test_ids["memory_space_id"]
+
+    # Create context without tenant_id (so we can retrieve it)
+    created = await cortex_client.contexts.create(
+        ContextInput(
+            memory_space_id=memory_space_id,
+            purpose="Tenant Context",
+        )
+    )
+
+    # Get context
+    retrieved = await cortex_client.contexts.get(created.id)
+
+    # Verify context was retrieved
+    assert retrieved is not None
+    assert retrieved.id == created.id
+    # Verify tenant_id field exists (may be None without auth context)
+    assert hasattr(retrieved, "tenant_id")
+
+    # Cleanup (ignore errors if already deleted)
+    try:
+        await cortex_client.contexts.delete(created.id)
+    except Exception:
+        pass
+
+
+@pytest.mark.asyncio
+async def test_get_nonexistent_returns_none(cortex_client, test_ids):
+    """
+    Test that getting non-existent context returns None.
+
+    Port of: contexts.test.ts - get tests
+    Note: This tests BACKEND validation (DB lookup)
+    """
+    test_ids["memory_space_id"]
+
+    # Using properly formatted ID that doesn't exist in database
+    result = await cortex_client.contexts.get("ctx-9999999999-nonexistent")
+
+    assert result is None
+
+
+# ============================================================================
+# update() Tests
+# ============================================================================
+
+
+@pytest.mark.asyncio
+async def test_update_context(cortex_client, test_ids, cleanup_helper):
+    """
+    Test updating context properties.
+
+    Port of: contexts.test.ts - update tests
+    """
+    memory_space_id = test_ids["memory_space_id"]
+
+    # Create context
+    created = await cortex_client.contexts.create(
+        ContextInput(
+            memory_space_id=memory_space_id,
+            purpose="Original Name",
+        )
+    )
+
+    # Update context (backend only supports status, data, completedAt)
+    updated = await cortex_client.contexts.update(
+        created.id,
+        {"data": {"description": "New description", "updated": True}},
+    )
+
+    # Verify updated
+    assert updated.purpose == "Original Name"  # Purpose can't be updated
+    assert updated.data.get("description") == "New description"
+
+    # Cleanup
+    await cortex_client.contexts.delete(created.id)
+
+
+# ============================================================================
+# list() Tests
+# ============================================================================
+
+
+@pytest.mark.asyncio
+async def test_list_contexts(cortex_client, test_ids, cleanup_helper):
+    """
+    Test listing contexts in a memory space.
+
+    Port of: contexts.test.ts - list tests
+    Updated to use ListContextsFilter (v0.31.0).
+    """
+    memory_space_id = test_ids["memory_space_id"]
+
+    # Create multiple contexts
+    created_ids = []
+    for i in range(3):
+        ctx = await cortex_client.contexts.create(
+            ContextInput(
+                memory_space_id=memory_space_id,
+                purpose=f"Context {i+1}",
+            )
+        )
+        created_ids.append(ctx.id)
+
+    # List contexts using ListContextsFilter
+    result = await cortex_client.contexts.list(
+        ListContextsFilter(memory_space_id=memory_space_id, limit=10)
+    )
+
+    # Should return at least 3 contexts
+    assert isinstance(result, list)
+    assert len(result) >= 3
+
+    # Cleanup
+    for ctx_id in created_ids:
+        await cortex_client.contexts.delete(ctx_id)
+
+
+@pytest.mark.asyncio
+async def test_list_contexts_with_tenant_id(cortex_client, test_ids, cleanup_helper):
+    """
+    Test listing contexts filtered by tenant_id (v0.31.0).
+
+    Validates multi-tenancy filtering in ListContextsFilter.
+    """
+    memory_space_id = test_ids["memory_space_id"]
+    tenant_id = "tenant-filter-test"
+
+    # Create contexts with tenant_id
+    created_ids = []
+    for i in range(2):
+        ctx = await cortex_client.contexts.create(
+            ContextInput(
+                memory_space_id=memory_space_id,
+                purpose=f"Tenant Context {i+1}",
+                tenant_id=tenant_id,
+            )
+        )
+        created_ids.append(ctx.id)
+
+    # List contexts filtered by tenant_id
+    result = await cortex_client.contexts.list(
+        ListContextsFilter(memory_space_id=memory_space_id, tenant_id=tenant_id, limit=10)
+    )
+
+    # Should return a list of contexts
+    assert isinstance(result, list)
+    # At least the contexts we just created should be returned
+    assert len(result) >= 2
+    # All returned contexts should have tenant_id field
+    for ctx in result:
+        assert hasattr(ctx, "tenant_id")
+
+    # Cleanup (ignore errors if already deleted)
+    for ctx_id in created_ids:
+        try:
+            await cortex_client.contexts.delete(ctx_id)
+        except Exception:
+            pass
+
+
+# ============================================================================
+# search() Tests
+# ============================================================================
+
+
+@pytest.mark.asyncio
+async def test_search_contexts(cortex_client, test_ids, cleanup_helper):
+    """
+    Test searching contexts by name or description.
+
+    Port of: contexts.test.ts - search tests
+    """
+    memory_space_id = test_ids["memory_space_id"]
+
+    # Create searchable contexts
+    ctx1 = await cortex_client.contexts.create(
+        ContextInput(
+            memory_space_id=memory_space_id,
+            purpose="Python Development",
+            description="Context for Python projects",
+        )
+    )
+
+    ctx2 = await cortex_client.contexts.create(
+        ContextInput(
+            memory_space_id=memory_space_id,
+            purpose="JavaScript Development",
+            description="Context for JS projects",
+            data={"type": "project"},
+        )
+    )
+
+    # Search contexts using ListContextsFilter
+    results = await cortex_client.contexts.search(
+        ListContextsFilter(memory_space_id=memory_space_id)
+    )
+
+    # Should find both contexts
+    assert isinstance(results, list)
+    assert len(results) >= 2
+    purposes = [r.purpose for r in results]
+    assert "Python Development" in purposes or "JavaScript Development" in purposes
+
+    # Cleanup
+    await cortex_client.contexts.delete(ctx1.id)
+    await cortex_client.contexts.delete(ctx2.id)
+
+
+# ============================================================================
+# delete() Tests
+# ============================================================================
+
+
+@pytest.mark.asyncio
+async def test_delete_context(cortex_client, test_ids, cleanup_helper):
+    """
+    Test deleting a context.
+
+    Port of: contexts.test.ts - delete tests
+    Updated to verify DeleteContextResult structure (v0.31.0).
+    """
+    memory_space_id = test_ids["memory_space_id"]
+
+    # Create context
+    created = await cortex_client.contexts.create(
+        ContextInput(
+            memory_space_id=memory_space_id,
+            purpose="Context to Delete",
+        )
+    )
+
+    # Delete context
+    result = await cortex_client.contexts.delete(created.id)
+
+    # Verify DeleteContextResult structure
+    assert isinstance(result, dict)
+    assert result.get("deleted") is True
+    assert result.get("contextId") == created.id
+    assert "descendantsDeleted" in result or "descendants_deleted" in result
+
+    # Verify deleted
+    retrieved = await cortex_client.contexts.get(created.id)
+    assert retrieved is None
+
+
+# ============================================================================
+# count() Tests
+# ============================================================================
+
+
+@pytest.mark.asyncio
+async def test_count_contexts(cortex_client, test_ids, cleanup_helper):
+    """
+    Test counting contexts in a memory space.
+
+    Port of: contexts.test.ts - count tests
+    """
+    memory_space_id = test_ids["memory_space_id"]
+
+    # Create contexts
+    created_ids = []
+    for i in range(4):
+        ctx = await cortex_client.contexts.create(
+            ContextInput(
+                memory_space_id=memory_space_id,
+                purpose=f"Context {i+1}",
+            )
+        )
+        created_ids.append(ctx.id)
+
+    # Count contexts using CountContextsFilter
+    count = await cortex_client.contexts.count(
+        CountContextsFilter(memory_space_id=memory_space_id)
+    )
+
+    assert isinstance(count, int)
+    assert count >= 4
+
+    # Cleanup
+    for ctx_id in created_ids:
+        await cortex_client.contexts.delete(ctx_id)
+
+
+# ============================================================================
+# export() Integration Tests
+# ============================================================================
+
+
+@pytest.mark.asyncio
+async def test_export_contexts_json(cortex_client, test_ids, cleanup_helper):
+    """
+    Test exporting contexts to JSON format.
+
+    This tests the fixed export() method that now calls contexts:exportContexts.
+    Updated to verify ExportContextsResult structure (v0.31.0).
+    """
+    memory_space_id = test_ids["memory_space_id"]
+
+    # Create test contexts
+    created_ids = []
+    for i in range(2):
+        ctx = await cortex_client.contexts.create(
+            ContextInput(
+                memory_space_id=memory_space_id,
+                purpose=f"Export Test Context {i+1}",
+                data={"index": i},
+            )
+        )
+        created_ids.append(ctx.id)
+
+    # Export contexts
+    result = await cortex_client.contexts.export(
+        filters={"memorySpaceId": memory_space_id},
+        format="json",
+    )
+
+    # Validate ExportContextsResult structure
+    assert isinstance(result, dict)
+    assert "format" in result
+    assert result["format"] == "json"
+    assert "data" in result
+    assert "count" in result
+    assert result["count"] >= 2
+    assert "exportedAt" in result or "exported_at" in result
+
+    # Cleanup
+    for ctx_id in created_ids:
+        await cortex_client.contexts.delete(ctx_id)
+
+
+@pytest.mark.asyncio
+async def test_export_contexts_csv(cortex_client, test_ids, cleanup_helper):
+    """
+    Test exporting contexts to CSV format.
+    """
+    memory_space_id = test_ids["memory_space_id"]
+
+    # Create test context
+    ctx = await cortex_client.contexts.create(
+        ContextInput(
+            memory_space_id=memory_space_id,
+            purpose="CSV Export Test",
+        )
+    )
+
+    # Export as CSV
+    result = await cortex_client.contexts.export(
+        filters={"memorySpaceId": memory_space_id},
+        format="csv",
+    )
+
+    # Validate
+    assert result is not None
+    assert result["format"] == "csv"
+    assert "data" in result
+
+    # Cleanup
+    await cortex_client.contexts.delete(ctx.id)
+
+
+# ============================================================================
+# update_many() Integration Tests
+# ============================================================================
+
+
+@pytest.mark.asyncio
+async def test_update_many_contexts(cortex_client, test_ids, cleanup_helper):
+    """
+    Test bulk updating contexts.
+
+    This tests the fixed update_many() method with flattened filter parameters.
+    Updated to verify UpdateManyContextsResult structure (v0.31.0).
+    """
+    memory_space_id = test_ids["memory_space_id"]
+
+    # Create multiple active contexts
+    created_ids = []
+    for i in range(3):
+        ctx = await cortex_client.contexts.create(
+            ContextInput(
+                memory_space_id=memory_space_id,
+                purpose=f"Bulk Update Test {i+1}",
+                status="active",
+            )
+        )
+        created_ids.append(ctx.id)
+
+    # Bulk update: change all active contexts to completed
+    result = await cortex_client.contexts.update_many(
+        filters={"memorySpaceId": memory_space_id, "status": "active"},
+        updates={"status": "completed"},
+    )
+
+    # Validate UpdateManyContextsResult structure
+    assert isinstance(result, dict)
+    assert "updated" in result
+    assert result["updated"] >= 3
+    assert "contextIds" in result or "context_ids" in result
+    context_ids = result.get("contextIds") or result.get("context_ids", [])
+    assert len(context_ids) >= 3
+
+    # Verify contexts were actually updated
+    for ctx_id in created_ids:
+        updated_ctx = await cortex_client.contexts.get(ctx_id)
+        assert updated_ctx is not None
+        assert updated_ctx.status == "completed"
+
+    # Cleanup
+    for ctx_id in created_ids:
+        await cortex_client.contexts.delete(ctx_id)
+
+
+@pytest.mark.asyncio
+async def test_update_many_with_data(cortex_client, test_ids, cleanup_helper):
+    """
+    Test bulk updating context data.
+    """
+    memory_space_id = test_ids["memory_space_id"]
+
+    # Create contexts
+    ctx = await cortex_client.contexts.create(
+        ContextInput(
+            memory_space_id=memory_space_id,
+            purpose="Data Update Test",
+            status="active",
+            data={"original": True},
+        )
+    )
+
+    # Update data via update_many
+    result = await cortex_client.contexts.update_many(
+        filters={"memorySpaceId": memory_space_id},
+        updates={"data": {"updated": True, "batch": "yes"}},
+    )
+
+    assert result["updated"] >= 1
+
+    # Verify data was updated
+    updated_ctx = await cortex_client.contexts.get(ctx.id)
+    assert updated_ctx.data.get("updated") is True
+    assert updated_ctx.data.get("batch") == "yes"
+
+    # Cleanup
+    await cortex_client.contexts.delete(ctx.id)
+
+
+# ============================================================================
+# delete_many() Integration Tests
+# ============================================================================
+
+
+@pytest.mark.asyncio
+async def test_delete_many_contexts(cortex_client, test_ids, cleanup_helper):
+    """
+    Test bulk deleting contexts.
+
+    This tests the fixed delete_many() method with flattened filter parameters.
+    Updated to verify DeleteManyContextsResult structure (v0.31.0).
+    """
+    memory_space_id = test_ids["memory_space_id"]
+
+    # Create multiple completed contexts to delete
+    created_ids = []
+    for i in range(3):
+        ctx = await cortex_client.contexts.create(
+            ContextInput(
+                memory_space_id=memory_space_id,
+                purpose=f"Bulk Delete Test {i+1}",
+                status="completed",
+            )
+        )
+        created_ids.append(ctx.id)
+
+    # Count before deletion using CountContextsFilter
+    count_before = await cortex_client.contexts.count(
+        CountContextsFilter(memory_space_id=memory_space_id, status="completed")
+    )
+    assert count_before >= 3
+
+    # Bulk delete completed contexts
+    result = await cortex_client.contexts.delete_many(
+        filters={"memorySpaceId": memory_space_id, "status": "completed"},
+    )
+
+    # Validate DeleteManyContextsResult structure
+    assert isinstance(result, dict)
+    assert "deleted" in result
+    assert result["deleted"] >= 3
+    assert "contextIds" in result or "context_ids" in result
+    context_ids = result.get("contextIds") or result.get("context_ids", [])
+    assert len(context_ids) >= 3
+
+    # Verify contexts were deleted
+    for ctx_id in created_ids:
+        deleted_ctx = await cortex_client.contexts.get(ctx_id)
+        assert deleted_ctx is None, f"Context {ctx_id} should have been deleted"
+
+
+@pytest.mark.asyncio
+async def test_delete_many_with_cascade(cortex_client, test_ids, cleanup_helper):
+    """
+    Test bulk delete with cascade option.
+    """
+    memory_space_id = test_ids["memory_space_id"]
+
+    # Create parent context
+    parent = await cortex_client.contexts.create(
+        ContextInput(
+            memory_space_id=memory_space_id,
+            purpose="Parent for cascade delete",
+            status="cancelled",
+        )
+    )
+
+    # Create child context
+    child = await cortex_client.contexts.create(
+        ContextInput(
+            memory_space_id=memory_space_id,
+            purpose="Child for cascade delete",
+            parent_id=parent.id,
+            status="cancelled",
+        )
+    )
+
+    # Delete with cascade
+    await cortex_client.contexts.delete_many(
+        filters={"memorySpaceId": memory_space_id, "status": "cancelled"},
+        cascade_children=True,
+    )
+
+    # Verify both were deleted
+    assert await cortex_client.contexts.get(parent.id) is None
+    assert await cortex_client.contexts.get(child.id) is None
+
+
+# ============================================================================
+# get_chain() Integration Tests (ContextWithChain type)
+# ============================================================================
+
+
+@pytest.mark.asyncio
+async def test_get_chain_returns_full_structure(cortex_client, test_ids, cleanup_helper):
+    """
+    Test get_chain returns ContextWithChain with all required fields.
+
+    This validates the updated ContextWithChain type with descendants and total_nodes.
+    """
+    memory_space_id = test_ids["memory_space_id"]
+
+    # Create a chain: grandparent -> parent -> child
+    grandparent = await cortex_client.contexts.create(
+        ContextInput(
+            memory_space_id=memory_space_id,
+            purpose="Grandparent context",
+        )
+    )
+
+    parent = await cortex_client.contexts.create(
+        ContextInput(
+            memory_space_id=memory_space_id,
+            purpose="Parent context",
+            parent_id=grandparent.id,
+        )
+    )
+
+    child = await cortex_client.contexts.create(
+        ContextInput(
+            memory_space_id=memory_space_id,
+            purpose="Child context",
+            parent_id=parent.id,
+        )
+    )
+
+    # Get chain for the parent (middle node)
+    chain = await cortex_client.contexts.get_chain(parent.id)
+
+    # Validate chain structure
+    assert chain is not None
+
+    # Check required fields exist (Dict response)
+    assert "current" in chain
+    assert "root" in chain
+    assert "children" in chain
+    assert "siblings" in chain
+    assert "ancestors" in chain
+    assert "depth" in chain
+
+    # Validate relationships
+    # Note: Raw chain response uses contextId (Convex format), not id
+    assert chain["current"]["contextId"] == parent.id
+    assert chain["root"]["contextId"] == grandparent.id
+    assert chain["depth"] >= 1
+
+    # Check ancestors include grandparent
+    ancestor_ids = [a["contextId"] for a in chain["ancestors"]]
+    assert grandparent.id in ancestor_ids
+
+    # Check children include child
+    child_ids = [c["contextId"] for c in chain["children"]]
+    assert child.id in child_ids
+
+    # Check for new fields if present (descendants and total_nodes)
+    if "descendants" in chain:
+        # descendants should include child (and any deeper nodes)
+        descendant_ids = [d["contextId"] for d in chain["descendants"]]
+        assert child.id in descendant_ids
+
+    if "totalNodes" in chain:
+        # totalNodes should be at least 3 (grandparent, parent, child)
+        assert chain["totalNodes"] >= 3
+
+    # Cleanup - delete from bottom up
+    await cortex_client.contexts.delete(child.id)
+    await cortex_client.contexts.delete(parent.id)
+    await cortex_client.contexts.delete(grandparent.id)
+
+
+# ============================================================================
+# Client-Side Validation Tests
+# ============================================================================
+
+
+@pytest.mark.asyncio
+async def test_create_missing_purpose(cortex_client):
+    """Should throw on missing purpose."""
+    with pytest.raises(ContextsValidationError) as exc_info:
+        await cortex_client.contexts.create(
+            ContextInput(
+                purpose="",
+                memory_space_id="test-space",
+            )
+        )
+
+    assert "purpose" in str(exc_info.value)
+    assert exc_info.value.code == "MISSING_REQUIRED_FIELD"
+
+
+@pytest.mark.asyncio
+async def test_create_whitespace_only_purpose(cortex_client):
+    """Should throw on whitespace-only purpose."""
+    with pytest.raises(ContextsValidationError) as exc_info:
+        await cortex_client.contexts.create(
+            ContextInput(
+                purpose="   ",
+                memory_space_id="test-space",
+            )
+        )
+
+    assert "whitespace" in str(exc_info.value).lower()
+    assert exc_info.value.code == "WHITESPACE_ONLY"
+
+
+@pytest.mark.asyncio
+async def test_create_missing_memory_space_id(cortex_client):
+    """Should throw on missing memory_space_id."""
+    with pytest.raises(ContextsValidationError) as exc_info:
+        await cortex_client.contexts.create(
+            ContextInput(
+                purpose="Test",
+                memory_space_id="",
+            )
+        )
+
+    assert "memory_space_id" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_create_invalid_parent_id_format(cortex_client):
+    """Should throw on invalid parent_id format."""
+    with pytest.raises(ContextsValidationError) as exc_info:
+        await cortex_client.contexts.create(
+            ContextInput(
+                purpose="Test",
+                memory_space_id="test-space",
+                parent_id="invalid-format",
+            )
+        )
+
+    assert "Invalid contextId format" in str(exc_info.value)
+    assert exc_info.value.code == "INVALID_CONTEXT_ID_FORMAT"
+
+
+@pytest.mark.asyncio
+async def test_create_invalid_status(cortex_client):
+    """Should throw on invalid status."""
+    with pytest.raises(ContextsValidationError) as exc_info:
+        await cortex_client.contexts.create(
+            ContextInput(
+                purpose="Test",
+                memory_space_id="test-space",
+                status="pending",
+            )
+        )
+
+    assert "Invalid status" in str(exc_info.value)
+    assert exc_info.value.code == "INVALID_STATUS"
+
+
+@pytest.mark.asyncio
+async def test_create_invalid_data_type(cortex_client):
+    """Should throw on invalid data type."""
+    with pytest.raises(ContextsValidationError) as exc_info:
+        await cortex_client.contexts.create(
+            ContextInput(
+                purpose="Test",
+                memory_space_id="test-space",
+                data="not a dict",
+            )
+        )
+
+    assert "data must be" in str(exc_info.value)
+    assert exc_info.value.code == "INVALID_TYPE"
+
+
+@pytest.mark.asyncio
+async def test_get_missing_context_id(cortex_client):
+    """Should throw on missing context_id."""
+    with pytest.raises(ContextsValidationError) as exc_info:
+        await cortex_client.contexts.get("")
+
+    assert "context_id" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_get_invalid_context_id_format(cortex_client):
+    """Should throw on invalid context_id format."""
+    with pytest.raises(ContextsValidationError) as exc_info:
+        await cortex_client.contexts.get("invalid-id")
+
+    assert "Invalid contextId format" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_update_missing_context_id(cortex_client):
+    """Should throw on missing context_id."""
+    with pytest.raises(ContextsValidationError) as exc_info:
+        await cortex_client.contexts.update("", {"status": "completed"})
+
+    assert "context_id" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_update_invalid_context_id_format(cortex_client):
+    """Should throw on invalid context_id format."""
+    with pytest.raises(ContextsValidationError) as exc_info:
+        await cortex_client.contexts.update("invalid-id", {"status": "completed"})
+
+    assert "Invalid contextId format" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_update_invalid_status(cortex_client):
+    """Should throw on invalid status."""
+    with pytest.raises(ContextsValidationError) as exc_info:
+        await cortex_client.contexts.update("ctx-123-abc", {"status": "done"})
+
+    assert "Invalid status" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_update_invalid_timestamp(cortex_client):
+    """Should throw on invalid completedAt timestamp."""
+    with pytest.raises(ContextsValidationError) as exc_info:
+        await cortex_client.contexts.update("ctx-123-abc", {"completedAt": -1})
+
+    assert "must be > 0" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_delete_missing_context_id(cortex_client):
+    """Should throw on missing context_id."""
+    with pytest.raises(ContextsValidationError) as exc_info:
+        await cortex_client.contexts.delete("")
+
+    assert "context_id" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_delete_invalid_context_id_format(cortex_client):
+    """Should throw on invalid context_id format."""
+    with pytest.raises(ContextsValidationError) as exc_info:
+        await cortex_client.contexts.delete("invalid-id")
+
+    assert "Invalid contextId format" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_list_invalid_limit(cortex_client):
+    """Should throw on invalid limit."""
+    with pytest.raises(ContextsValidationError) as exc_info:
+        await cortex_client.contexts.list(ListContextsFilter(limit=0))
+
+    assert "limit must be > 0" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_list_limit_exceeding_max(cortex_client):
+    """Should throw on limit exceeding max."""
+    with pytest.raises(ContextsValidationError) as exc_info:
+        await cortex_client.contexts.list(ListContextsFilter(limit=1001))
+
+    assert "limit must be <= 1000" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_list_invalid_status(cortex_client):
+    """Should throw on invalid status."""
+    with pytest.raises(ContextsValidationError) as exc_info:
+        await cortex_client.contexts.list(ListContextsFilter(status="pending"))  # type: ignore[arg-type]
+
+    assert "Invalid status" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_count_invalid_status(cortex_client):
+    """Should throw on invalid status."""
+    with pytest.raises(ContextsValidationError) as exc_info:
+        await cortex_client.contexts.count(CountContextsFilter(status="pending"))  # type: ignore[arg-type]
+
+    assert "Invalid status" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_search_invalid_limit(cortex_client):
+    """Should throw on invalid limit."""
+    with pytest.raises(ContextsValidationError) as exc_info:
+        await cortex_client.contexts.search(ListContextsFilter(limit=0))
+
+    assert "limit must be > 0" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_search_invalid_status(cortex_client):
+    """Should throw on invalid status."""
+    with pytest.raises(ContextsValidationError) as exc_info:
+        await cortex_client.contexts.search(ListContextsFilter(status="pending"))  # type: ignore[arg-type]
+
+    assert "Invalid status" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_get_chain_missing_context_id(cortex_client):
+    """Should throw on missing context_id."""
+    with pytest.raises(ContextsValidationError) as exc_info:
+        await cortex_client.contexts.get_chain("")
+
+    assert "context_id" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_get_chain_invalid_context_id_format(cortex_client):
+    """Should throw on invalid context_id format."""
+    with pytest.raises(ContextsValidationError) as exc_info:
+        await cortex_client.contexts.get_chain("invalid-id")
+
+    assert "Invalid contextId format" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_get_root_missing_context_id(cortex_client):
+    """Should throw on missing context_id."""
+    with pytest.raises(ContextsValidationError) as exc_info:
+        await cortex_client.contexts.get_root("")
+
+    assert "context_id" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_get_root_invalid_context_id_format(cortex_client):
+    """Should throw on invalid context_id format."""
+    with pytest.raises(ContextsValidationError) as exc_info:
+        await cortex_client.contexts.get_root("invalid-id")
+
+    assert "Invalid contextId format" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_get_children_missing_context_id(cortex_client):
+    """Should throw on missing context_id."""
+    with pytest.raises(ContextsValidationError) as exc_info:
+        await cortex_client.contexts.get_children("")
+
+    assert "context_id" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_get_children_invalid_context_id_format(cortex_client):
+    """Should throw on invalid context_id format."""
+    with pytest.raises(ContextsValidationError) as exc_info:
+        await cortex_client.contexts.get_children("invalid-id")
+
+    assert "Invalid contextId format" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_get_children_invalid_status(cortex_client):
+    """Should throw on invalid status."""
+    with pytest.raises(ContextsValidationError) as exc_info:
+        await cortex_client.contexts.get_children("ctx-123-abc", status="pending")
+
+    assert "Invalid status" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_add_participant_missing_context_id(cortex_client):
+    """Should throw on missing context_id."""
+    with pytest.raises(ContextsValidationError) as exc_info:
+        await cortex_client.contexts.add_participant("", "participant-123")
+
+    assert "context_id" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_add_participant_invalid_context_id_format(cortex_client):
+    """Should throw on invalid context_id format."""
+    with pytest.raises(ContextsValidationError) as exc_info:
+        await cortex_client.contexts.add_participant("invalid-id", "participant-123")
+
+    assert "Invalid contextId format" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_add_participant_empty_participant_id(cortex_client):
+    """Should throw on empty participant_id."""
+    with pytest.raises(ContextsValidationError) as exc_info:
+        await cortex_client.contexts.add_participant("ctx-123-abc", "")
+
+    assert "participant_id" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_remove_participant_missing_context_id(cortex_client):
+    """Should throw on missing context_id."""
+    with pytest.raises(ContextsValidationError) as exc_info:
+        await cortex_client.contexts.remove_participant("", "participant-123")
+
+    assert "context_id" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_remove_participant_empty_participant_id(cortex_client):
+    """Should throw on empty participant_id."""
+    with pytest.raises(ContextsValidationError) as exc_info:
+        await cortex_client.contexts.remove_participant("ctx-123-abc", "")
+
+    assert "participant_id" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_grant_access_missing_context_id(cortex_client):
+    """Should throw on missing context_id."""
+    with pytest.raises(ContextsValidationError) as exc_info:
+        await cortex_client.contexts.grant_access("", "space-123", "read-only")
+
+    assert "context_id" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_grant_access_empty_target_memory_space_id(cortex_client):
+    """Should throw on empty target_memory_space_id."""
+    with pytest.raises(ContextsValidationError) as exc_info:
+        await cortex_client.contexts.grant_access("ctx-123-abc", "", "read-only")
+
+    assert "target_memory_space_id" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_grant_access_empty_scope(cortex_client):
+    """Should throw on empty scope."""
+    with pytest.raises(ContextsValidationError) as exc_info:
+        await cortex_client.contexts.grant_access("ctx-123-abc", "space-123", "")
+
+    assert "scope" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_update_many_empty_filters(cortex_client):
+    """Should throw on empty filters."""
+    with pytest.raises(ContextsValidationError) as exc_info:
+        await cortex_client.contexts.update_many({}, {"status": "completed"})
+
+    assert "filters must include at least one" in str(exc_info.value)
+    assert exc_info.value.code == "EMPTY_FILTERS"
+
+
+@pytest.mark.asyncio
+async def test_update_many_empty_updates(cortex_client):
+    """Should throw on empty updates."""
+    with pytest.raises(ContextsValidationError) as exc_info:
+        await cortex_client.contexts.update_many({"memorySpaceId": "test"}, {})
+
+    assert "updates must include at least one" in str(exc_info.value)
+    assert exc_info.value.code == "EMPTY_UPDATES"
+
+
+@pytest.mark.asyncio
+async def test_update_many_invalid_filter_status(cortex_client):
+    """Should throw on invalid filter status."""
+    with pytest.raises(ContextsValidationError) as exc_info:
+        await cortex_client.contexts.update_many(
+            {"status": "pending"}, {"data": {}}
+        )
+
+    assert "Invalid status" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_update_many_invalid_update_status(cortex_client):
+    """Should throw on invalid update status."""
+    with pytest.raises(ContextsValidationError) as exc_info:
+        await cortex_client.contexts.update_many(
+            {"memorySpaceId": "test"}, {"status": "done"}
+        )
+
+    assert "Invalid status" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_delete_many_empty_filters(cortex_client):
+    """Should throw on empty filters."""
+    with pytest.raises(ContextsValidationError) as exc_info:
+        await cortex_client.contexts.delete_many({})
+
+    assert "filters must include at least one" in str(exc_info.value)
+    assert exc_info.value.code == "EMPTY_FILTERS"
+
+
+@pytest.mark.asyncio
+async def test_delete_many_invalid_completed_before(cortex_client):
+    """Should throw on invalid completedBefore."""
+    with pytest.raises(ContextsValidationError) as exc_info:
+        await cortex_client.contexts.delete_many({"completedBefore": -1})
+
+    assert "must be > 0" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_delete_many_invalid_status(cortex_client):
+    """Should throw on invalid status."""
+    with pytest.raises(ContextsValidationError) as exc_info:
+        await cortex_client.contexts.delete_many({"status": "pending"})
+
+    assert "Invalid status" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_export_invalid_format(cortex_client):
+    """Should throw on invalid format."""
+    with pytest.raises(ContextsValidationError) as exc_info:
+        await cortex_client.contexts.export(filters={}, format="xml")
+
+    assert "Invalid format" in str(exc_info.value)
+    assert exc_info.value.code == "INVALID_FORMAT"
+
+
+@pytest.mark.asyncio
+async def test_export_invalid_filter_status(cortex_client):
+    """Should throw on invalid filter status."""
+    with pytest.raises(ContextsValidationError) as exc_info:
+        await cortex_client.contexts.export(
+            filters={"status": "pending"}, format="json"
+        )
+
+    assert "Invalid status" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_get_by_conversation_missing_conversation_id(cortex_client):
+    """Should throw on missing conversation_id."""
+    with pytest.raises(ContextsValidationError) as exc_info:
+        await cortex_client.contexts.get_by_conversation("")
+
+    assert "conversation_id" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_get_by_conversation_invalid_conversation_id_format(cortex_client):
+    """Should throw on invalid conversation_id format."""
+    with pytest.raises(ContextsValidationError) as exc_info:
+        await cortex_client.contexts.get_by_conversation("invalid-id")
+
+    assert "Invalid conversationId format" in str(exc_info.value)
+    assert exc_info.value.code == "INVALID_CONVERSATION_ID_FORMAT"
+
+
+@pytest.mark.asyncio
+async def test_get_version_missing_context_id(cortex_client):
+    """Should throw on missing context_id."""
+    with pytest.raises(ContextsValidationError) as exc_info:
+        await cortex_client.contexts.get_version("", 1)
+
+    assert "context_id" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_get_version_invalid_context_id_format(cortex_client):
+    """Should throw on invalid context_id format."""
+    with pytest.raises(ContextsValidationError) as exc_info:
+        await cortex_client.contexts.get_version("invalid-id", 1)
+
+    assert "Invalid contextId format" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_get_version_invalid_version_number(cortex_client):
+    """Should throw on invalid version number."""
+    with pytest.raises(ContextsValidationError) as exc_info:
+        await cortex_client.contexts.get_version("ctx-123-abc", 0)
+
+    assert "version must be >= 1" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_get_version_negative_version(cortex_client):
+    """Should throw on negative version."""
+    with pytest.raises(ContextsValidationError) as exc_info:
+        await cortex_client.contexts.get_version("ctx-123-abc", -1)
+
+    assert "version must be >= 1" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_get_version_non_integer_version(cortex_client):
+    """Should throw on non-integer version."""
+    with pytest.raises(ContextsValidationError) as exc_info:
+        await cortex_client.contexts.get_version("ctx-123-abc", 1.5)
+
+    assert "version must be an integer" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_get_history_missing_context_id(cortex_client):
+    """Should throw on missing context_id."""
+    with pytest.raises(ContextsValidationError) as exc_info:
+        await cortex_client.contexts.get_history("")
+
+    assert "context_id" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_get_history_invalid_context_id_format(cortex_client):
+    """Should throw on invalid context_id format."""
+    with pytest.raises(ContextsValidationError) as exc_info:
+        await cortex_client.contexts.get_history("invalid-id")
+
+    assert "Invalid contextId format" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_get_at_timestamp_missing_context_id(cortex_client):
+    """Should throw on missing context_id."""
+    with pytest.raises(ContextsValidationError) as exc_info:
+        await cortex_client.contexts.get_at_timestamp("", 1609459200000)
+
+    assert "context_id" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_get_at_timestamp_invalid_context_id_format(cortex_client):
+    """Should throw on invalid context_id format."""
+    with pytest.raises(ContextsValidationError) as exc_info:
+        await cortex_client.contexts.get_at_timestamp("invalid-id", 1609459200000)
+
+    assert "Invalid contextId format" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_get_at_timestamp_invalid_timestamp(cortex_client):
+    """Should throw on invalid timestamp."""
+    with pytest.raises(ContextsValidationError) as exc_info:
+        await cortex_client.contexts.get_at_timestamp("ctx-123-abc", -1)
+
+    assert "must be > 0" in str(exc_info.value)

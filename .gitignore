@@ -51,7 +51,7 @@ build/
 .env.production.local
 
 # Convex development database (local only)
-convex-dev/_generated/
+# Generated Convex bindings are versioned so clean/fork builds need no credentials.
 convex-dev/.env.local
 convex-dev/node_modules/
 # Compiled files (Convex compiles .ts itself, we only commit source .ts files)
@@ -109,4 +109,6 @@ cortex-test/
 dev-docs/
 _goals/
 _tasks/
+# SDK documentation is maintained in cortexmemory.dev/docs-site/docs.
+/Documentation/
 .agents/

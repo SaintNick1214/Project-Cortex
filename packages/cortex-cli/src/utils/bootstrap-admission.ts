@@ -122,7 +122,7 @@ export async function discoverDataSources(cwd: string, explicitProject?: string,
     if (userFile) { const raw = parse(userFile.bytes); validateConfigShape(raw); user = raw; if (imports(user)) barriers.push("User configuration import"); }
   } catch (error) {
     const reason = error instanceof Error && error.message.startsWith("ADMISSION_JSON_INVALID") ? "Malformed configuration syntax" : "unsafe or unreadable supported JSON source";
-    throw new Error(`ADMISSION_USER_CONFIG_INVALID: Invalid user configuration; ${reason}`);
+    throw new Error(`ADMISSION_USER_CONFIG_INVALID: Invalid user configuration; ${reason}`, { cause: error });
   }
   let declarations = hasOwned(user);
   async function project(directory: string) {

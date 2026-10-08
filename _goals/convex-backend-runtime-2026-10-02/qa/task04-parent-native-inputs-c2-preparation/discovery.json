@@ -1,0 +1,35 @@
+{
+  "originalBoundaryNames": [
+    "legitimate-two-current-receipts",
+    "foreign-history-operation",
+    "foreign-history-run",
+    "foreign-current-operation",
+    "missing-current-receipts",
+    "partial-current-receipts",
+    "misnamed-current-receipt",
+    "insecure-current-receipt-permissions",
+    "symlink-history",
+    "preexisting-proof-exclusive",
+    "stale-core-IDs-in-history-bypass-receipts",
+    "foreign-provenance-proof-not-validated",
+    "changed-run-from-repeat-preflight-ignored",
+    "nonstring-current-ID-rejected",
+    "actual-guard-foreign-run-accepted",
+    "actual-parent-private-key-mode-check-accepts-symlink"
+  ],
+  "originalCount": 16,
+  "originalAcceptedCounterexamples": 5,
+  "newExpectedOutcome": "all five hostile counterexamples DENIED; original legitimate current-receipt success retained",
+  "finalExpectedChecks": 49,
+  "finalHealthyPaths": 2,
+  "finalExpectedDenials": 47,
+  "skippedRealActions": [
+    "key/env/credential/JWT reads",
+    "RSA signing/key generation",
+    "network/configuration",
+    "nativeRPC/storage/row creation",
+    "actual public storage decoder observations",
+    "target creation/cleanup/retirement"
+  ],
+  "sourceExecution": "Actual source VM modules; isolated dummy600files/700parents; mocked crypto/fetch; source-bound C11 historical metadata only"
+}

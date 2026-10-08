@@ -1,0 +1,12 @@
+{
+  "argv": [
+    "python3",
+    "-c",
+    "from pathlib import Path\nPath('work/resume/task04-metadata-retention-implementation-c1/restore-archives.py').write_text(\"from pathlib import Path\\nimport hashlib,json,datetime,os,uuid,stat\\nq=Path('_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c1');now=lambda:datetime.datetime.now(datetime.timezone.utc).isoformat();start=now();effects=[]\\nfor p in sorted((q/'preimages').rglob('*')):\\n if not p.is_file() or p.is_symlink() or p.stat().st_nlink<=1:continue\\n old=p.stat();b=p.read_bytes();h=hashlib.sha256(b).hexdigest();tmp=p.with_name(p.name+'.unique-'+uuid.uuid4().hex)\\n with tmp.open('xb') as f:f.write(b)\\n os.chmod(tmp,stat.S_IMODE(old.st_mode))\\n assert tmp.stat().st_nlink==1 and tmp.read_bytes()==b\\n os.replace(tmp,p);after=p.stat();assert after.st_nlink==1 and hashlib.sha256(p.read_bytes()).hexdigest()==h\\n effects.append({'path':str(p.relative_to(q)),'effectUtc':now(),'rawSha256':h,'bytes':len(b),'beforeInode':old.st_ino,'beforeNlink':old.st_nlink,'afterInode':after.st_ino,'afterNlink':after.st_nlink,'mode':stat.S_IMODE(after.st_mode)})\\nremaining=[str(p.relative_to(q)) for p in (q/'preimages').rglob('*') if p.is_file() and p.stat().st_nlink!=1]\\nassert not remaining\\noperative=[p for d in ['fixture','fixture-vm','regression'] for p in (q/d).rglob('*') if p.is_file()]\\nassert all(p.stat().st_nlink==1 and not p.is_symlink() for p in operative)\\nresult={'startUtc':start,'endUtc':now(),'scope':'Only owned unsealed archival preimages; byte+mode equality, unique nlink1 restored; original inode/metadata NOT restored; historical hardlink action retained','replacedPaths':len(effects),'allArchivalNlink1':True,'operativeAllNlink1':True,'effects':effects}\\n(q/'archive-restoration.json').write_text(json.dumps(result,indent=2)+'\\\\n')\\nprint(json.dumps({k:v for k,v in result.items() if k!='effects'}))\\n\")"
+  ],
+  "cwd": "/workspace/Project-Cortex",
+  "startUtc": "2026-10-04T14:38:56.138726+00:00",
+  "endUtc": "2026-10-04T14:38:56.161700+00:00",
+  "exit": 0,
+  "recorderSourceSha256": "2b6044b160cec6b26819826400c5816b8e283cfcb7afa656756a45a7ba7a4797"
+}

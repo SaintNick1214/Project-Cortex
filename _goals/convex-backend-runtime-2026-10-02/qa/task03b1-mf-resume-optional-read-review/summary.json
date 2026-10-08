@@ -1,0 +1,176 @@
+{
+  "totals": {
+    "total": 80,
+    "matched": 20,
+    "unexpectedSuccesses": 60,
+    "ordinaryPositive": 10,
+    "ordinaryErrorDenied": 10
+  },
+  "operations": [
+    {
+      "operation": "facts.store",
+      "positive": 2,
+      "callbackFalseSuccess": 12,
+      "ordinaryErrorRollback": 2,
+      "allFailuresReached": true,
+      "malformedGetterReads": [
+        {
+          "mode": "data-accessor",
+          "timing": "sync",
+          "accessorReads": 4,
+          "injected": 1
+        },
+        {
+          "mode": "code-accessor",
+          "timing": "sync",
+          "accessorReads": 1,
+          "injected": 1
+        },
+        {
+          "mode": "data-accessor",
+          "timing": "rejected",
+          "accessorReads": 4,
+          "injected": 1
+        },
+        {
+          "mode": "code-accessor",
+          "timing": "rejected",
+          "accessorReads": 1,
+          "injected": 1
+        }
+      ]
+    },
+    {
+      "operation": "facts.update",
+      "positive": 2,
+      "callbackFalseSuccess": 12,
+      "ordinaryErrorRollback": 2,
+      "allFailuresReached": true,
+      "malformedGetterReads": [
+        {
+          "mode": "data-accessor",
+          "timing": "sync",
+          "accessorReads": 4,
+          "injected": 1
+        },
+        {
+          "mode": "code-accessor",
+          "timing": "sync",
+          "accessorReads": 1,
+          "injected": 1
+        },
+        {
+          "mode": "data-accessor",
+          "timing": "rejected",
+          "accessorReads": 4,
+          "injected": 1
+        },
+        {
+          "mode": "code-accessor",
+          "timing": "rejected",
+          "accessorReads": 1,
+          "injected": 1
+        }
+      ]
+    },
+    {
+      "operation": "memories.store",
+      "positive": 2,
+      "callbackFalseSuccess": 12,
+      "ordinaryErrorRollback": 2,
+      "allFailuresReached": true,
+      "malformedGetterReads": [
+        {
+          "mode": "data-accessor",
+          "timing": "sync",
+          "accessorReads": 4,
+          "injected": 1
+        },
+        {
+          "mode": "code-accessor",
+          "timing": "sync",
+          "accessorReads": 1,
+          "injected": 1
+        },
+        {
+          "mode": "data-accessor",
+          "timing": "rejected",
+          "accessorReads": 4,
+          "injected": 1
+        },
+        {
+          "mode": "code-accessor",
+          "timing": "rejected",
+          "accessorReads": 1,
+          "injected": 1
+        }
+      ]
+    },
+    {
+      "operation": "memories.update",
+      "positive": 2,
+      "callbackFalseSuccess": 12,
+      "ordinaryErrorRollback": 2,
+      "allFailuresReached": true,
+      "malformedGetterReads": [
+        {
+          "mode": "data-accessor",
+          "timing": "sync",
+          "accessorReads": 4,
+          "injected": 1
+        },
+        {
+          "mode": "code-accessor",
+          "timing": "sync",
+          "accessorReads": 1,
+          "injected": 1
+        },
+        {
+          "mode": "data-accessor",
+          "timing": "rejected",
+          "accessorReads": 4,
+          "injected": 1
+        },
+        {
+          "mode": "code-accessor",
+          "timing": "rejected",
+          "accessorReads": 1,
+          "injected": 1
+        }
+      ]
+    },
+    {
+      "operation": "memories.updateMany",
+      "positive": 2,
+      "callbackFalseSuccess": 12,
+      "ordinaryErrorRollback": 2,
+      "allFailuresReached": true,
+      "malformedGetterReads": [
+        {
+          "mode": "data-accessor",
+          "timing": "sync",
+          "accessorReads": 8,
+          "injected": 2
+        },
+        {
+          "mode": "code-accessor",
+          "timing": "sync",
+          "accessorReads": 2,
+          "injected": 2
+        },
+        {
+          "mode": "data-accessor",
+          "timing": "rejected",
+          "accessorReads": 8,
+          "injected": 2
+        },
+        {
+          "mode": "code-accessor",
+          "timing": "rejected",
+          "accessorReads": 2,
+          "injected": 2
+        }
+      ]
+    }
+  ]
+}

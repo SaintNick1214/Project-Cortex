@@ -1,0 +1,36 @@
+   1: import { describe, expect, it } from "@jest/globals";
+   2: import fs from "node:fs";
+   3: import os from "node:os";
+   4: import path from "node:path";
+   5: import { spawnSync } from "node:child_process";
+   6: import * as immutable from "../../../convex-dev/immutable";
+   7: import * as mutable from "../../../convex-dev/mutable";
+   8: import * as users from "../../../convex-dev/users";
+   9: import * as sessions from "../../../convex-dev/sessions";
+  10: const internal = new Set(["immutable:purgeAll", "mutable:purgeAll", "sessions:expireIdle", "sessions:incrementMessageCount", "sessions:incrementMemoryCount"]);
+  11: describe("import-aware AST and native Convex registration visibility", () => {
+  12:   it("actual framework registrations are exactly 41=36+5 with no public reference credentials", () => {
+  13:     const paths: string[] = [];
+  14:     for (const [module, exports] of Object.entries({ immutable, mutable, users, sessions })) for (const [name, value] of Object.entries(exports)) {
+  15:       const registration = value as unknown as { _handler?: unknown; isPublic?: boolean; isInternal?: boolean; exportArgs(): string };
+  16:       if (!registration._handler) continue; const path = `${module}:${name}`; paths.push(path);
+  17:       expect(registration.isInternal === true).toBe(internal.has(path)); expect(registration.isPublic === true).toBe(!internal.has(path));
+  18:       if (registration.isPublic) expect(JSON.parse(registration.exportArgs()).value.reference).toBeUndefined();
+  19:     }
+  20:     expect(paths).toHaveLength(41); expect(paths.filter((path) => internal.has(path))).toHaveLength(5);
+  21:   });
+  22:   it("retained import-aware AST finds the exact baseline paths with zero unresolved", () => {
+  23:     const base = "_goals/convex-backend-runtime-2026-10-02/qa";
+  24:     const temporary = fs.mkdtempSync(path.join(os.tmpdir(), "cortex-metadata-inventory-"));
+  25:     try {
+  26:       const result = spawnSync(process.execPath, [`${base}/task03b2a/inventory.mjs`, temporary], { encoding: "utf8", timeout: 10000 }); expect({ status: result.status, stderr: result.stderr }).toEqual({ status: 0, stderr: "" });
+  27:       const actual = JSON.parse(fs.readFileSync(path.join(temporary, "public-path-inventory.json"), "utf8"));
+  28:       const original = JSON.parse(fs.readFileSync(`${base}/task03a/public-path-inventory.json`, "utf8"));
+  29:       const selected = original.endpoints.filter((row: { path: string }) => /^(immutable|mutable|users|sessions):/.test(row.path));
+  30:       expect(actual.completeness.unresolved).toEqual([]); expect(actual.completeness.counts).toMatchObject({ registered: 41, public: 36, internal: 5, registeredBuilderCalls: 41, resolvedExports: 41 });
+  31:       expect(actual.endpoints.map((row: { path: string }) => row.path).sort()).toEqual(selected.map((row: { path: string }) => row.path).sort());
+  32:     } finally {
+  33:       fs.rmSync(temporary, { recursive: true, force: true });
+  34:     }
+  35:   });
+  36: });

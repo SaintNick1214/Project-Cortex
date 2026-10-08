@@ -1,0 +1,22 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
++ actual - expected
+
++ 'summary'
+- 'denied'
+
+    at file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c1/fixture/checks/lifecycle.mjs:17:905
+    at async test (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c1/fixture/checks/lifecycle.mjs:9:52)
+    at async file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c1/fixture/checks/lifecycle.mjs:17:1 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: 'summary',
+  expected: 'denied',
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

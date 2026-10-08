@@ -1,13 +1,13 @@
 # Cortex Chat SDK
 
-A Next.js 16/AI SDK 6 chat application with Cortex persistent memory, normal Auth.js guest and email/password sessions, and editable artifacts. Application 1.1.0 uses SDK/provider 0.37.0.
+A Next.js 16/AI SDK 7 chat application with Cortex persistent memory, normal Auth.js guest and email/password sessions, and editable artifacts. Application 1.2.0 uses SDK/provider 0.38.0.
 
 ## Quick start
 
-Use Node.js 22.16.0 or newer for the Cortex CLI workflow and the declared **pnpm 10.33.0** manager for this app.
+Use Node.js 24.15.0 or newer for the Cortex CLI workflow and the declared **pnpm 10.33.0** manager for this app.
 
 ```bash
-cortex templates init my-chatbot --template chat-sdk --template-version 1.1.0 --catalog-version 1.0.0 --yes --graph none
+cortex templates init my-chatbot --template chat-sdk --template-version 1.2.0 --catalog-version 1.1.0 --yes --graph none
 cd my-chatbot
 cp .env.local.example .env.local
 ```
@@ -71,13 +71,13 @@ cortex graph setup . --graph memgraph --graph-mode local --yes
 cortex graph status .
 cortex graph stop .
 cortex graph start .
-cortex templates update . --to 1.1.0 --catalog-version 1.0.0 --dry-run
-cortex templates update . --to 1.1.0 --catalog-version 1.0.0
+cortex templates update . --to 1.2.0 --catalog-version 1.1.0 --dry-run
+cortex templates update . --to 1.2.0 --catalog-version 1.1.0
 ```
 
 Local graph operations select only project-owned resources; stop retains data volumes. For an existing graph, use `--graph-mode existing --graph-uri bolt://localhost:7687` and the matching provider's private environment credentials. The resolver rejects ambiguous enabled provider configuration and failed connections.
 
-Template updates require recorded ownership and refuse conflicting user edits. SDK dependency/backend updates are separate (`cortex update --sync` or `cortex schema sync`). For the recognized older Next shim lacking `MutationCtx`, update the template/app first, then update the SDK backend; the SDK channel cannot overwrite the app shim or Chat handlers. An unrecorded/edited older app needs explicit app migration and conflict resolution. Catalog 1.0.0 and app 1.1.0 versions are independent of CLI/SDK releases; prepublication archives can be selected through `--templates-package`, `--sdk-package` and `--provider-package`.
+Template updates require recorded ownership and refuse conflicting user edits. SDK dependency/backend updates are separate (`cortex update --sync` or `cortex schema sync`). For the recognized older Next shim lacking `MutationCtx`, update the template/app first, then update the SDK backend; the SDK channel cannot overwrite the app shim or Chat handlers. An unrecorded/edited older app needs explicit app migration and conflict resolution. Catalog 1.1.0 and app 1.2.0 versions are independent of CLI/SDK releases; prepublication archives can be selected through `--templates-package`, `--sdk-package` and `--provider-package`.
 
 ## Development
 

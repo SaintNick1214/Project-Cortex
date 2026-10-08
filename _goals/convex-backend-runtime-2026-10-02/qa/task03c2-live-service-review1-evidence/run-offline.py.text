@@ -1,0 +1,11 @@
+import subprocess,sys,json,datetime,os
+from pathlib import Path
+r=Path(__file__).parent;mode=sys.argv[1];node='/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node';argv=[node,str(r/'native-recovery.mjs'),mode];env={'PATH':'/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin:/usr/bin:/bin','TMPDIR':str(r)}
+start=datetime.datetime.now(datetime.timezone.utc).isoformat()
+try:
+ p=subprocess.run(argv,cwd=r,env=env,capture_output=True,timeout=15);code=p.returncode;out=p.stdout;err=p.stderr
+except subprocess.TimeoutExpired as e:
+ code=124;out=e.stdout or b'';err=(e.stderr or b'')+b'OFFLINE_BOUND_EXPIRED\n'
+end=datetime.datetime.now(datetime.timezone.utc).isoformat();b=r/'commands'/('offline-'+mode)
+b.with_suffix('.stdout').write_bytes(out);b.with_suffix('.stderr').write_bytes(err);b.with_suffix('.json').write_text(json.dumps({'argv':argv,'cwd':str(r),'startUtc':start,'endUtc':end,'exit':code,'environment':env,'boundSeconds':15},indent=2)+'\n')
+sys.stdout.buffer.write(out);sys.stderr.buffer.write(err);sys.exit(code)

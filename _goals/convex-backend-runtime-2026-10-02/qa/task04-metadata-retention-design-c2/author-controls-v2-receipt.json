@@ -1,0 +1,11 @@
+{
+  "argv": [
+    "python3",
+    "-c",
+    "from pathlib import Path\np=Path('work/resume/task04-metadata-retention-design-c2/resource-controls.mjs')\ns=p.read_text()\nneedle=\"function capture(text,expected){const x=JSON.parse(text);const got=resource(x);assert.equal(got.text,text);assert.equal(got.digest,expected);return got}\"\nreplacement=\"\"\"function validateWitnesses(x){if(!x||typeof x!=='object')return;if(x.providerShape!==undefined){const w=x.providerShape;assert(Array.isArray(w)&&w.length===3);for(const row of w){assert.deepEqual(Object.keys(row).sort(),['keys','state']);assert(['record','missing','invalid'].includes(row.state));assert(Array.isArray(row.keys));assert(row.keys.every(k=>typeof k==='string'&&k.isWellFormed()));assert.deepEqual([...new Set(row.keys)].sort(),row.keys);if(row.state!=='record')assert.equal(row.keys.length,0)}if(x.providerCost.state==='present'){assert(w.every(row=>row.state==='record'));assert(w[0].keys.includes('providerMetadata')&&w[1].keys.includes('convexGateway')&&w[2].keys.includes('cost'));assert(typeof x.providerCost.cost==='number'&&Number.isFinite(x.providerCost.cost)&&x.providerCost.cost>=0&&!Object.is(x.providerCost.cost,-0))}}for(const v of Object.values(x))validateWitnesses(v)}\nfunction capture(text,expected){const x=JSON.parse(text);const got=resource(x);assert.equal(got.text,text);assert.equal(got.digest,expected);validateWitnesses(x);return got}\"\"\"\nassert needle in s;s=s.replace(needle,replacement)\nneedle=\"console.log(JSON.stringify({status:\"\naddition=\"\"\"test('coherently rehashed malformed duplicate witness rejected',()=>{const x=JSON.parse(resource(small).text);x.providerShape[2].keys.push('cost');const t=encode(x);assert.throws(()=>capture(t,hash(t)))});\n\"\"\"\nassert needle in s;s=s.replace(needle,addition+needle)\nPath('work/resume/task04-metadata-retention-design-c2/resource-controls-v2.mjs').write_text(s)\n"
+  ],
+  "cwd": "/workspace/Project-Cortex",
+  "startUtc": "2026-10-04T14:08:27.280671+00:00",
+  "endUtc": "2026-10-04T14:08:27.304877+00:00",
+  "exit": 0
+}

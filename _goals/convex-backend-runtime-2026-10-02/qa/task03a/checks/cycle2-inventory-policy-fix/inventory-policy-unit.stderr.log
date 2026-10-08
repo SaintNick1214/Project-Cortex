@@ -1,0 +1,30 @@
+npm notice run @cortexmemory/sdk@0.37.0 npx
+npm notice run 'node' --experimental-vm-modules node_modules/jest/bin/jest.js --testPathPatterns=tests/unit/runtimeAuth/inventory.test.ts --runInBand --forceExit
+(node:9308) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeAuth/inventory.test.ts
+  generated auth inventory policies: work/backend-runtime/task03a/inventory.mjs
+    ✓ authorize uses the requested capability and inherited verified issuer/subject (2 ms)
+    ✓ recheck uses the requested capability and exact persisted versions/epochs/optional scope (1 ms)
+    ✓ provision is an operator control without public tenant/owner/current-grant authority (1 ms)
+    ✓ revokeGrant is an operator control without public tenant/owner/current-grant authority (1 ms)
+    ✓ revokeMembership is an operator control without public tenant/owner/current-grant authority
+    ✓ deletePrincipal is an operator control without public tenant/owner/current-grant authority
+    ✓ deleteScope is an operator control without public tenant/owner/current-grant authority
+    ✓ tombstoneResource is an operator control without public tenant/owner/current-grant authority
+  generated auth inventory policies: _goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs
+    ✓ authorize uses the requested capability and inherited verified issuer/subject
+    ✓ recheck uses the requested capability and exact persisted versions/epochs/optional scope (1 ms)
+    ✓ provision is an operator control without public tenant/owner/current-grant authority
+    ✓ revokeGrant is an operator control without public tenant/owner/current-grant authority
+    ✓ revokeMembership is an operator control without public tenant/owner/current-grant authority (1 ms)
+    ✓ deletePrincipal is an operator control without public tenant/owner/current-grant authority
+    ✓ deleteScope is an operator control without public tenant/owner/current-grant authority
+    ✓ tombstoneResource is an operator control without public tenant/owner/current-grant authority (1 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       16 passed, 16 total
+Snapshots:   0 total
+Time:        2.802 s
+Ran all test suites matching tests/unit/runtimeAuth/inventory.test.ts.
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

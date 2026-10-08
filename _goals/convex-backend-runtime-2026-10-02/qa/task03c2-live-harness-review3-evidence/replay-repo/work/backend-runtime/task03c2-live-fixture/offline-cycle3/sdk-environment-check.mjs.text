@@ -1,0 +1,8 @@
+// Separate OFFLINE prep bootstrap: assert the actual SDK command process has
+// no provider/deployment/private-selector environment names, without values.
+const forbidden = /^(?:OPENAI_|ANTHROPIC_|GEMINI_|COHERE_|MISTRAL_|PERPLEXITY_|OLLAMA_|LLM_|MODEL_|INFERENCE_|CONVEX_|CORTEX_QUALIFICATION_)/i;
+function check() {
+  if (Object.keys(process.env).some((name) => forbidden.test(name))) throw new Error('OFFLINE_SDK_PRIVATE_ENVIRONMENT_PRESENT');
+}
+check();
+process.on('exit',()=>{ try { check(); } catch { process.exitCode=1; } });

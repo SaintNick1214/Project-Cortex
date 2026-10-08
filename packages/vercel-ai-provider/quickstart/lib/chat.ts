@@ -233,9 +233,9 @@ export async function chat(
                 },
                 transient: true,
               });
-              if (provider.specificationVersion !== "v3")
-                throw new AppError(503, "Use an AI SDK 6 model");
-              assertV3Provider(provider);
+              if (!["v3", "v4"].includes(provider.specificationVersion))
+                throw new AppError(503, "Use an AI SDK 7 compatible model");
+              assertSupportedProvider(provider);
               const result = streamText({
                 model: provider,
                 messages: modelMessages,
@@ -277,11 +277,11 @@ export async function chat(
   }
 }
 
-function assertV3Provider(
+function assertSupportedProvider(
   provider: CortexMemoryProvider,
 ): asserts provider is CortexMemoryProvider & {
-  readonly specificationVersion: "v3";
+  readonly specificationVersion: "v3" | "v4";
 } {
-  if (provider.specificationVersion !== "v3")
-    throw new AppError(503, "Use an AI SDK 6 model");
+  if (!["v3", "v4"].includes(provider.specificationVersion))
+    throw new AppError(503, "Use an AI SDK 7 compatible model");
 }

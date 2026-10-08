@@ -1,0 +1,15 @@
+node:fs:622
+  return binding.open(
+                 ^
+
+Error: EEXIST: file already exists, open '/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c9-preparation/results-regression.json'
+    at Object.openSync (node:fs:622:18)
+    at Object.writeFileSync (node:fs:2497:35)
+    at file:///workspace/Project-Cortex/work/resume/task04-terminal-capture-parent-inputs-c9-review/offline-regression.mjs:101:653 {
+  errno: -17,
+  code: 'EEXIST',
+  syscall: 'open',
+  path: '/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c9-preparation/results-regression.json'
+}
+
+Node.js v24.19.0

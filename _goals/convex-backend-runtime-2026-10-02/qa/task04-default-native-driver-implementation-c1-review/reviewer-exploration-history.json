@@ -1,0 +1,18 @@
+{
+  "referenceDiscoveryAttempt": {
+    "startUTC": "NOT_CAPTURED",
+    "argv": [
+      "python3",
+      "-"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "exit": 1,
+    "cause": "Adapter outcome rows have scenarioId, not name; formal discovery separately excludes adapter rows and counts them independently.",
+    "source": "Exploratory shell source remains in conversation; no exact standalone source preimage was captured. Formal audit-initial.py/audit-second.py/audit.py and their raw failures are retained.",
+    "diagnosticSummary": "Traceback (most recent call last):\n  File \"<stdin>\", line 7, in <module>\nKeyError: 'name'\n"
+  },
+  "initialClosureDiscovery": {
+    "rawArtifact": "initial-closure-ownself-filter-error.json",
+    "correction": "Only exact root qa-manifest.json excluded in initial-closure.json; all nested manifests counted."
+  }
+}

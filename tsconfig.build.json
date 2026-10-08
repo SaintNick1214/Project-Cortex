@@ -9,9 +9,12 @@
     "module": "CommonJS",
     "target": "ES2022",
     "removeComments": true,
-    "noEmit": false
+    "noEmit": false,
+    "moduleResolution": "node"
   },
-  "include": ["src/**/*"],
+  "include": [
+    "src/**/*"
+  ],
   "exclude": [
     "src/**/*.test.ts",
     "src/**/*.spec.ts",

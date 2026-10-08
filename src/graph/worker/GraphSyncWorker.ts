@@ -1,6 +1,6 @@
 /** Exact-scope reactive worker. One drain owns all deliveries and stop awaits its real work. */
 import type {ConvexClient} from "convex/browser";
-import {api} from "../../../convex-dev/_generated/api";
+import {api} from "../../common/backendApi";
 import type {Id} from "../../../convex-dev/_generated/dataModel";
 import type {GraphAdapter,GraphJob,GraphJobReceipt} from "../types";
 import {GraphDatabaseError,GraphJobUnresolved} from "../types";

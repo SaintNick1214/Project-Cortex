@@ -30,7 +30,7 @@ async function fixture(t, order = ids) {
       ...(id === "chat-sdk" ? { packageManager: "pnpm@10.33.0" } : {}),
       scripts: { build: "tsc", dev: "tsx src/main.ts" },
       dependencies: {
-        "@cortexmemory/sdk": id === "basic" ? "^0.37.0" : "file:../../../sdk",
+        "@cortexmemory/sdk": id === "basic" ? "^0.38.0" : "file:../../../sdk",
         ...(id === "basic" ? {} : { "@cortexmemory/vercel-ai-provider": "file:../../../provider" }),
         convex: "1.46.0",
       },
@@ -91,8 +91,8 @@ test("manifest rendering rewrites exactly the four Next development references w
     const raw = assembly.payloads.get(`payloads/${selection.id}/${version}/package.json`).bytes;
     const rendered = JSON.parse(raw);
     const original = JSON.parse(before[index]);
-    assert.equal(rendered.dependencies["@cortexmemory/sdk"], "^0.37.0");
-    if (selection.id !== "basic") assert.equal(rendered.dependencies["@cortexmemory/vercel-ai-provider"], "^0.37.0");
+    assert.equal(rendered.dependencies["@cortexmemory/sdk"], "^0.38.0");
+    if (selection.id !== "basic") assert.equal(rendered.dependencies["@cortexmemory/vercel-ai-provider"], "^0.38.0");
     assert.equal(rendered.name, original.name);
     assert.equal(rendered.version, "1.1.0");
     assert.equal(rendered.private, true);
@@ -101,7 +101,7 @@ test("manifest rendering rewrites exactly the four Next development references w
     assert.equal(rendered.packageManager, original.packageManager);
     assert.deepEqual(await fs.readFile(path.join(selection.source, "package.json")), before[index]);
     const entry = assembly.catalog.templates.find(item => item.id === selection.id);
-    assert.deepEqual(entry.compatibility, { sdk: "^0.37.0", ...(selection.id === "basic" ? {} : { provider: "^0.37.0" }), convex: "1.46.0" });
+    assert.deepEqual(entry.compatibility, { sdk: "^0.38.0", ...(selection.id === "basic" ? {} : { provider: "^0.38.0" }), convex: "1.46.0" });
     assert.deepEqual(entry.envNames, ["CONVEX_URL", "OPENAI_API_KEY"]);
     assert.equal(entry.backend, true);
     assert.equal(entry.graph, true);
@@ -159,7 +159,7 @@ for (const [name, mutate, code] of [
   ["manifest version", value => { value.version = "1.0.0"; }, "CATALOG_MANIFEST_IDENTITY"],
   ["manager", value => { value.packageManager = "pnpm@10.33.0"; }, "CATALOG_MANAGER_MISMATCH"],
   ["old SDK fallback", value => { value.dependencies["@cortexmemory/sdk"] = "^0.36.0"; }, "CATALOG_RELEASE_SPEC_INVALID"],
-  ["duplicate SDK maps", value => { value.devDependencies = { "@cortexmemory/sdk": "^0.37.0" }; }, "CATALOG_DEPENDENCY_DUPLICATE"],
+  ["duplicate SDK maps", value => { value.devDependencies = { "@cortexmemory/sdk": "^0.38.0" }; }, "CATALOG_DEPENDENCY_DUPLICATE"],
   ["unrelated source link", value => { value.dependencies.other = "file:../private"; }, "CATALOG_LOCAL_DEPENDENCY_REFUSED"],
   ["missing SDK", value => { delete value.dependencies["@cortexmemory/sdk"]; }, "CATALOG_REQUIRED_DEPENDENCY"],
   ["Convex link", value => { value.dependencies.convex = "workspace:*"; }, "CATALOG_LOCAL_DEPENDENCY_REFUSED"],

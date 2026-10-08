@@ -1,4 +1,4 @@
-import { captureInsertedRow, reconcileRow } from "./lib/referenceLifecycle";
+import { runtimeUnavailable, internalUnavailable } from "./runtimeUnavailableAuth";
 /**
  * Cortex SDK - Conversation Shares API
  *
@@ -7,7 +7,7 @@ import { captureInsertedRow, reconcileRow } from "./lib/referenceLifecycle";
  */
 
 import { ConvexError, v } from "convex/values";
-import { mutation, query } from "./_generated/server";
+import { mutation, query, internalMutation } from "./_generated/server";
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Helper Functions
@@ -56,6 +56,7 @@ function isShareValid(share: {
  */
 export const create = mutation({
   args: {
+    memorySpaceId: v.optional(v.string()),
     conversationId: v.string(),
     grantedBy: v.string(), // userId who is sharing
     sourceMemorySpaceId: v.optional(v.string()), // Deprecated: now derived from conversation
@@ -81,12 +82,16 @@ export const create = mutation({
     tenantId: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
+    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
+    await runtimeUnavailable(ctx, "write", args);
+
     // Verify the conversation exists
     const conversation = await ctx.db
       .query("conversations")
-      .withIndex("by_conversationId", q => q.eq("conversationId", args.conversationId))
-      .filter(q => q.eq(q.field("tenantId"), args.tenantId))
-      .unique();
+      .withIndex("by_conversationId", (q) =>
+        q.eq("conversationId", args.conversationId),
+      )
+      .first();
 
     if (!conversation) {
       throw new ConvexError("CONVERSATION_NOT_FOUND");
@@ -106,7 +111,7 @@ export const create = mutation({
     const now = Date.now();
     const shareId = generateShareId();
 
-    const id = await captureInsertedRow(ctx, "conversationShares", {
+    const id = await ctx.db.insert("conversationShares", {
       shareId,
       conversationId: args.conversationId,
       grantedBy: args.grantedBy,
@@ -134,11 +139,16 @@ export const create = mutation({
  */
 export const revoke = mutation({
   args: {
+    tenantId: v.optional(v.string()),
+    memorySpaceId: v.optional(v.string()),
     shareId: v.string(),
     // Optional: caller's userId for authorization
     userId: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
+    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
+    await runtimeUnavailable(ctx, "write", args);
+
     const share = await ctx.db
       .query("conversationShares")
       .withIndex("by_shareId", (q) => q.eq("shareId", args.shareId))
@@ -157,7 +167,7 @@ export const revoke = mutation({
       throw new ConvexError("REVOKE_NOT_AUTHORIZED");
     }
 
-    await reconcileRow(ctx, share._id, {
+    await ctx.db.patch(share._id, {
       status: "revoked",
       revokedAt: Date.now(),
     });
@@ -169,11 +179,14 @@ export const revoke = mutation({
 /**
  * Increment view count when a share is accessed
  */
-export const incrementViewCount = mutation({
+export const incrementViewCount = internalMutation({
   args: {
     shareId: v.string(),
   },
   handler: async (ctx, args) => {
+    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
+    await internalUnavailable();
+
     const share = await ctx.db
       .query("conversationShares")
       .withIndex("by_shareId", (q) => q.eq("shareId", args.shareId))
@@ -187,7 +200,7 @@ export const incrementViewCount = mutation({
     if (!validity.valid) {
       // If share is expired due to views, update status
       if (validity.reason === "MAX_VIEWS_REACHED") {
-        await reconcileRow(ctx, share._id, {
+        await ctx.db.patch(share._id, {
           status: "expired",
         });
       }
@@ -204,7 +217,7 @@ export const incrementViewCount = mutation({
       updates.status = "expired";
     }
 
-    await reconcileRow(ctx, share._id, updates);
+    await ctx.db.patch(share._id, updates);
 
     return {
       viewCount: newCount,
@@ -223,9 +236,14 @@ export const incrementViewCount = mutation({
  */
 export const get = query({
   args: {
+    tenantId: v.optional(v.string()),
+    memorySpaceId: v.optional(v.string()),
     shareId: v.string(),
   },
   handler: async (ctx, args) => {
+    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
+    await runtimeUnavailable(ctx, "read", args);
+
     const share = await ctx.db
       .query("conversationShares")
       .withIndex("by_shareId", (q) => q.eq("shareId", args.shareId))
@@ -251,12 +269,17 @@ export const get = query({
  */
 export const listByConversation = query({
   args: {
+    tenantId: v.optional(v.string()),
+    memorySpaceId: v.optional(v.string()),
     conversationId: v.string(),
     status: v.optional(
       v.union(v.literal("active"), v.literal("revoked"), v.literal("expired")),
     ),
   },
   handler: async (ctx, args) => {
+    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
+    await runtimeUnavailable(ctx, "read", args);
+
     let shares = await ctx.db
       .query("conversationShares")
       .withIndex("by_conversation", (q) =>
@@ -285,12 +308,17 @@ export const listByConversation = query({
  */
 export const listByGranter = query({
   args: {
+    tenantId: v.optional(v.string()),
+    memorySpaceId: v.optional(v.string()),
     grantedBy: v.string(),
     status: v.optional(
       v.union(v.literal("active"), v.literal("revoked"), v.literal("expired")),
     ),
   },
   handler: async (ctx, args) => {
+    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
+    await runtimeUnavailable(ctx, "read", args);
+
     let shares = await ctx.db
       .query("conversationShares")
       .withIndex("by_grantedBy", (q) => q.eq("grantedBy", args.grantedBy))
@@ -317,12 +345,16 @@ export const listByGranter = query({
  */
 export const checkAccess = query({
   args: {
+    tenantId: v.optional(v.string()),
     conversationId: v.string(),
     userId: v.optional(v.string()),
     memorySpaceId: v.optional(v.string()),
     emailDomain: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
+    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
+    await runtimeUnavailable(ctx, "read", args);
+
     // Get all active shares for this conversation
     const shares = await ctx.db
       .query("conversationShares")

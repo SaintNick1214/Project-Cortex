@@ -1,0 +1,27 @@
+(node:224145) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS _goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-composition-c1/copies/tests/unit/runtimeAssetUnavailableAuth/closure.test.ts (12.132 s)
+PASS _goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-composition-c1/copies/tests/unit/runtimeWorkerAuth/admin-catalog.test.ts
+PASS _goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-composition-c1/copies/tests/unit/runtimeArtifactAuth/schema-indexes.test.ts
+FAIL _goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-composition-c1/copies/tests/unit/runtimeArtifactAuth/inventory.test.ts
+  ● native catalog composes accepted selected22 and later five file closures while preserving historical inventory
+
+    ENOENT: no such file or directory, open '/workspace/Project-Cortex/work/resume/task04-current-catalog-composition-c1/test-scratch/cortex-artifact-inventory-JrwRzs/historical-artifact/output/public-path-inventory.json'
+
+      17 |     expect(result.endpoints.every((row: { accepted03ADisposition: string }) => ["guard", "internalize"].includes(row.accepted03ADisposition))).toBe(true);
+      18 |     expect(result.frozenFilePaths.every((row: { unchanged: boolean }) => row.unchanged)).toBe(true);
+    > 19 |     expect(JSON.parse(fs.readFileSync(path.join(directory, "historical-artifact", "output", "public-path-inventory.json"), "utf8"))).toEqual(result);
+         |                          ^
+      20 |   } finally { fs.rmSync(directory, { recursive: true, force: true }); }
+      21 |   expect(fs.existsSync(directory)).toBe(false);
+      22 | });
+
+      at Object.<anonymous> (_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-composition-c1/copies/tests/unit/runtimeArtifactAuth/inventory.test.ts:19:26)
+
+Test Suites: 1 failed, 3 passed, 4 total
+Tests:       1 failed, 453 passed, 454 total
+Snapshots:   0 total
+Time:        23.308 s
+Ran all test suites.
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-composition-c1/isolated-four-02.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

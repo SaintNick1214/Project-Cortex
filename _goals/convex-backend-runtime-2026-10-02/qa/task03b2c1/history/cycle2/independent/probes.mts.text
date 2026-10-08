@@ -1,0 +1,45 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import { fixture } from '/workspace/Project-Cortex/work/backend-runtime/task03b2c1-checkout/tests/unit/runtimeArtifactAuth/fixture.ts';
+const results: any[] = [];
+async function attempt(name: string, f: any, operation: () => Promise<any>) {
+ try { const output = await operation(); results.push({ name, outcome: 'resolved', output, attempts: f.db.attempts, artifactRows: f.db.rows('artifacts'), reads: f.db.reads }); }
+ catch (error: any) { results.push({ name, outcome: 'rejected', error: error.data ?? String(error), attempts: f.db.attempts, artifactRows: f.db.rows('artifacts'), reads: f.db.reads }); }
+}
+{
+ const f = fixture();
+ f.db.hook = (event: any) => { if (event.action === 'insert' && event.table === 'artifacts') f.grant.capabilities = ['write']; };
+ await attempt('initial READ removed after create effect must rollback', f, () => f.invoke('create', { artifactId: 'new-a', memorySpaceId: 'space-a', content: 'must roll back' }));
+}
+{
+ const f = fixture(['write']);
+ const readGrant = f.db.add('runtimeAuthGrants', { principalId: f.principal._id, membershipId: f.membership._id, tenantId: 'tenant-a', tenantEpoch: 1, capabilities: ['read'], resourceAccess: 'own', version: 1 });
+ f.db.hook = (event: any) => { if (event.action === 'insert' && event.table === 'artifacts') readGrant.revokedAt = 1; };
+ await attempt('distinct admitted tenant READ revoked after create effect must rollback', f, () => f.invoke('create', { artifactId: 'new-a', memorySpaceId: 'space-a', content: 'must roll back' }));
+}
+{
+ const f = fixture(); f.conversation({ deletedAt: 1 }); f.row({ conversationRef: { conversationId: 'conversation-a', messageId: 'message-a' } });
+ await attempt('source row deletedAt predicate before private payload hydration', f, () => f.invoke('get', { artifactId: 'artifact-a' }));
+}
+{
+ const f = fixture(); f.row({ memoryRefs: [{ memoryId: 'memory-a' }] });
+ f.db.add('memories', { memoryId: 'memory-a', tenantId: 'tenant-a', memorySpaceId: 'space-a', ownerPrincipalId: f.principal._id, content: 'deleted private memory', deletedAt: 1, version: 1 });
+ await attempt('memory lifecycle predicate before private payload hydration', f, () => f.invoke('get', { artifactId: 'artifact-a' }));
+}
+{
+ const f = fixture(); f.row();
+ f.db.hook = (event: any) => { if (event.action === 'patch' && event.table === 'artifacts') f.db.rows('artifacts')[0].content = 'unexpected postwrite payload'; };
+ await attempt('update never adopts mutated postwrite payload', f, () => f.invoke('update', { artifactId: 'artifact-a', content: 'expected' }));
+}
+{
+ const f = fixture(); const source = f.conversation(); f.row({ conversationRef: { conversationId: 'conversation-a', messageId: 'message-a' } });
+ await f.invoke('get', { artifactId: 'artifact-a' });
+ const last = f.db.reads.filter((event: any) => event.table === 'runtimeAuthTombstones').length;
+ f.db.reads.splice(0);
+ let calls = 0;
+ f.db.hook = (event: any) => { if (event.table === 'runtimeAuthTombstones' && ++calls === last) source.messages[0].content = 'changed after source snapshot read'; };
+ await attempt('source changed on final control await', f, () => f.invoke('get', { artifactId: 'artifact-a' }));
+}
+fs.writeFileSync('/tmp/task03b2c1-review2-3it_0vsh/probe-results.json', JSON.stringify(results, null, 2)+'\n');
+for (const result of results) console.log(JSON.stringify({ name: result.name, outcome: result.outcome, code: result.error?.code, output: result.output, attemptedMutations: result.attempts.length, sourceHydration: result.reads.filter((event: any) => ['conversations', 'memories'].includes(event.table)).map((event: any) => ({ table: event.table, ids: event.ids })) }));
+assert.equal(results.length, 6);

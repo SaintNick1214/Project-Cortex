@@ -1,0 +1,13 @@
+# Native extension preparation — pending final freeze/review
+
+This NEW packet prepares 22 nonpaid qualification outcomes against accepted final policy c8279d4496eb9b6eb5763732dbb7e54cefe27e028f285fe3e31a639af1535710. It certifies no native target, deployed source, actual provider money, or acceptance. ROOT creates/signs/stages/invokes actual inputs later, after fresh independent preparation review. All three selected targets must be fresh verified disposable dev targets and retired before the fresh aggregate gate.
+
+Product/config/original QA/private inputs remain outside write scope. Current source inventory and exact imported registration inventory bind this capsule. Original profile assertions are retained byte exact in the two original profiles, including original43+22 and security1400public denial/200whole state/174internal/20maintenance/5peer, storage prohibition, three original regression process faults without intermediate cleanup, cleanup/reap and retirement. This packet preserves complete old manifest closure including the exact C7 original80 versus full83 supplement. Original engineering caps remain RPC3000/live320/journal6000/8MiB/process6/group2/CLI120s/RPC12s/qualification20m/driver24m; caps never reset on a target/account/window.
+
+Fresh public parent/watch templates are sourced from restored C9. Their offline DUMMY-only source-bound chain exercised106 controls per profile. Actual private signer/native IDs/C11 locators/parent inputs were neither read nor created. Parent template has no placeholder actual binding certification. Official synthetic and EMPTY publication/codegen/typecheck-enable and all287 tuple/validator/raw metadata comparisons remain actual ROOT execution requirements.
+
+Offline evidence and limitations
+
+The three fixture typechecks passed. The original extension22 and regression43 exact assertion functions passed offline handler checks, after permitted fixed-run identity adaptation. Initial exploratory failures/preimages remain preserved. These checks use a fake DB and do not establish native transactions, OCC, native HTTP publication, identity rejection or service retirement. Full raw failing execution evidence must be recorded outside bounded journal; diagnostic overflow blocks acceptance.
+
+Freeze status: NOT FINAL. No runtime-freeze/full own manifest certifies readiness yet. Pending closure includes source-bound scenario/error/finally budget review, exact operational inventory and source freeze, newly prepared independent parent/profile judgments, actual source-specific three native runs and the fresh aggregate. No defaults or paid preparation is enabled here.

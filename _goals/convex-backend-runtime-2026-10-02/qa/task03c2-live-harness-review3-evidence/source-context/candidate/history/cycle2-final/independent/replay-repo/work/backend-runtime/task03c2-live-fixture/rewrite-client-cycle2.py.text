@@ -1,0 +1,92 @@
+from pathlib import Path
+import re
+p=Path('_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/client.ts');s=p.read_text()
+s=s.replace('import { randomUUID, sign } from "node:crypto";\nimport { writeFileSync } from "node:fs";\nimport { resolve } from "node:path";\n','')
+s=s.replace('import { canonical, livePreflight, scratch, writeEvidence } from "./guard.mjs";\nimport { operator } from "./operator.mjs";','import { ParentChannel, type Variant } from "./parent-channel";\nimport { cases, type CaseName } from "./cases.mjs";')
+s=re.sub(r'const runId = randomUUID\(\);.*?const timeoutMs = 12_000;\nconst watchQuietMs = 750;', '''const parent = new ParentChannel();
+const bootstrap = await parent.bootstrap;
+const runId = bootstrap.runId;
+const target = { deploymentUrl: bootstrap.endpoint };
+const issuer = "https://cortex-qualification.invalid";
+const timeoutMs = bootstrap.timeoutMs;
+const watchQuietMs = bootstrap.quietMs;
+if (bootstrap.phase === "live") configureReactiveTransport(target.deploymentUrl);
+const operator = (name: string, args: object) => parent.rpc("operator", { name, args });''',s,flags=re.S)
+s=re.sub(r'function jwt\(.*?\n}\nfunction denial', '''async function jwt(subject: string, variant: Variant = "valid"): Promise<string> { return await parent.sign(subject, variant); }
+function denial''',s,flags=re.S)
+s=s.replace('error.message === "Operator authorization denied."','error.message === "OPERATOR_AUTHORIZATION_DENIED"')
+s=re.sub(r'const ledgerName = .*?\nasync function provision', '''class SetupUnavailable extends Error {}
+async function provision''',s,flags=re.S)
+s=s.replace('  const result = object(await operator("runtimeAuth:provision", { issuer, subject, actorKind: "user", metadataUserId: userId, ...scope, capabilities, resourceAccess: access }));','''  let raw: unknown;
+  try { raw = await operator("runtimeAuth:provision", { issuer, subject, actorKind: "user", metadataUserId: userId, ...scope, capabilities, resourceAccess: access }); }
+  catch (error) { if (error instanceof Error && error.message === "OPERATOR_UNAVAILABLE") throw new SetupUnavailable("operator_setup_unavailable"); throw error; }
+  const result = object(raw);''')
+s=s.replace(' }); saveLedger();',' });')
+s=s.replace('  const token = jwt(subject);','  const token = await jwt(subject);')
+s=re.sub(r'const names = \[.*?\] as const;\ntype Name = typeof names\[number\];', 'const names = cases;\ntype Name = CaseName;',s,flags=re.S)
+s=s.replace('let prerequisiteFailure = "none";\n','')
+s=s.replace('error.message === "Operator invocation unavailable."','error.message === "OPERATOR_UNAVAILABLE"')
+s=re.sub(r'async function test\(name: Name, fn: \(\) => Promise<void>\) \{.*?\n}\nconst openClients', '''async function test(name: Name, fn: () => Promise<void>, dependencies: Name[] = ["valid-owned-metadata"]): Promise<boolean> {
+  const result = results.find((entry) => entry.name === name)!;
+  if (dependencies.some((dependency) => results.find((entry) => entry.name === dependency)?.status !== "PASS")) {
+    result.reason = "dependency_blocked"; parent.send({ type: "case-block", name }); return false;
+  }
+  parent.send({ type: "case-start", name });
+  try { await fn(); result.status = "PASS"; result.reason = "observed_assertions"; }
+  catch (error) { result.status = error instanceof SetupUnavailable ? "BLOCKED" : "FAIL"; result.reason = error instanceof SetupUnavailable ? "operator_setup_unavailable" : failureReason(error); }
+  parent.send({ type: "case-end", name, status: result.status, reason: result.reason });
+  return result.status === "PASS";
+}
+const openClients''',s,flags=re.S)
+s=s.replace('try {\n  const owner = await provision("owner"), other = await provision("other", "own", ["read", "write"], owner.scope);\n  const broad = await provision("reader", "space", ["read"], owner.scope), admin = await provision("admin", "space", ["admin"], owner.scope);','''async function qualifyCases() {
+  if (bootstrap.phase === "offline-probe") {
+    await test("operator-provisioning", async () => { await provision("probe"); assert.equal(await new HostCredentials(async () => null).fetchToken({ forceRefreshToken: false }), null); }, []);
+    return;
+  }
+  const principals: Principal[] = [];
+  const setup = await test("operator-provisioning", async () => {
+    const owner = await provision("owner"); principals.push(owner);
+    principals.push(await provision("other", "own", ["read", "write"], owner.scope));
+    principals.push(await provision("reader", "space", ["read"], owner.scope));
+    principals.push(await provision("admin", "space", ["admin"], owner.scope));
+    assert.equal(owned.length, 4); assert.notEqual(principals[0].reference.principalId, principals[1].reference.principalId);
+  }, []);
+  if (!setup) return;
+  const [owner, other, broad, admin] = principals;''')
+s=s.replace('  await test("operator-provisioning", async () => { assert.equal(owned.length, 4); assert.notEqual(owner.reference.principalId, other.reference.principalId); });\n','')
+s=s.replace('  await test("valid-owned-metadata", async () => {','  await test("valid-owned-metadata", async () => {',1)
+# The baseline has a separate trusted provisioning dependency.
+s=s.replace('    assert.equal(object(await owner.client.query(query("immutable:get"), immutableKey)).version, 1);\n  });','    assert.equal(object(await owner.client.query(query("immutable:get"), immutableKey)).version, 1);\n  }, ["operator-provisioning"]);',1)
+s=s.replace('jwt(owner.subject, { iss: "https://wrong-issuer.invalid" })','await jwt(owner.subject, "wrong-issuer")').replace('jwt(owner.subject, { aud: "wrong-audience" })','await jwt(owner.subject, "wrong-audience")').replace('jwt(owner.subject, { exp: Math.floor(Date.now() / 1000) - 60 })','await jwt(owner.subject, "expired")')
+s=s.replace('http(jwt(`unprovisioned-${runId}`, { role: "admin", tenantId: owner.scope.tenantId }))','http(await jwt(`unprovisioned-${runId}`))')
+s=s.replace('  await owner.client.mutation(mutation("immutable:purge"), immutableKey);\n  await test("immutable-delete-read-denied", async () => { await denied(owner.client.query(query("immutable:get"), immutableKey), "FORBIDDEN"); });','  await test("immutable-delete-read-denied", async () => { await owner.client.mutation(mutation("immutable:purge"), immutableKey); await denied(owner.client.query(query("immutable:get"), immutableKey), "FORBIDDEN"); });')
+s=s.replace('data: { marker: 99 } }), "FORBIDDEN"); });\n  await test("mutable-delete-read-denied"','data: { marker: 99 } }), "FORBIDDEN"); }, ["immutable-delete-read-denied"]);\n  await test("mutable-delete-read-denied"')
+s=s.replace('await denied(owner.client.query(query("mutable:get"), mutableKey), "FORBIDDEN"); });\n  await test("mutable-delete-write-denied"','await denied(owner.client.query(query("mutable:get"), mutableKey), "FORBIDDEN"); }, ["resource-deletion-subscription"]);\n  await test("mutable-delete-write-denied"')
+s=s.replace('await denied(owner.client.mutation(mutation("mutable:set"), payload), "FORBIDDEN"); });\n  for (const [name, kind]','await denied(owner.client.mutation(mutation("mutable:set"), payload), "FORBIDDEN"); }, ["resource-deletion-subscription"]);\n  for (const [name, kind]')
+s=s.replace('await test(name, () => revocation(kind));','await test(name, () => revocation(kind), ["operator-provisioning"]);')
+# SDK setup is part of its named foundational case and no later case runs when it fails.
+start=s.index('  const principal = await provision("sdk")');stop=s.index('  await test("sdk-metadata-consumers", async () => {',start)
+init=s[start:stop]
+init=init.replace('  const principal = await provision("sdk"), sdkSession = `sdk-session-${runId}`;','  const sdkSession = `sdk-session-${runId}`;\n  let principal: Principal, sdk: Cortex, sdkHttp: ConvexHttpClient, sdkKey: Args;')
+init=init.replace('  let currentToken: string | null = principal.token;','  let currentToken: string | null = null;')
+constructStart=init.index('  const sdk = new Cortex(')
+variables=init[:constructStart];construction=init[constructStart:]
+construction=construction.replace('  const sdk = new Cortex(','    principal = await provision("sdk"); currentToken = principal.token;\n    sdk = new Cortex(').replace('  const sdkHttp = http();','    sdkHttp = http();').replace('  const sdkKey = ','    sdkKey = ')
+s=s[:start]+variables+'  const sdkReady = await test("sdk-metadata-consumers", async () => {\n'+construction+s[stop+len('  await test("sdk-metadata-consumers", async () => {\n'):]
+s=s.replace('    assert.equal((await bounded(sdk.users.get(principal.userId)))?.data.marker, 43);\n  });','    assert.equal((await bounded(sdk.users.get(principal.userId)))?.data.marker, 43);\n  }, ["operator-provisioning"]);\n  if (!sdkReady) { for (const name of names.slice(names.indexOf("sdk-refresh"))) await test(name, async () => {}, ["sdk-metadata-consumers"]); return; }',1)
+s=s.replace('currentToken = jwt(principal.subject);','currentToken = await jwt(principal.subject);')
+# Default dependency switches after the SDK foundation.
+s=s.replace('  return result.status === "PASS";','  return result.status === "PASS";')
+s=s.replace('dependencies: Name[] = ["valid-owned-metadata"]','dependencies: Name[] = [names.indexOf(name) > names.indexOf("sdk-metadata-consumers") ? "sdk-metadata-consumers" : "valid-owned-metadata"]')
+# Replace client-owned evidence/final with trusted driver notifications only.
+cut=s.index('} catch (error) {\n  prerequisiteFailure =')
+s=s[:cut]+'''}
+try { await qualifyCases(); }
+finally {
+  await bounded(Promise.allSettled(openClients.map((client) => bounded(client.close()))));
+  await bounded(Promise.allSettled(sdkClients.map((client) => bounded(client.shutdown(2_000)))));
+  parent.send({ type: "complete" });
+  if (process.connected) process.disconnect();
+}
+'''
+p.write_text(s)

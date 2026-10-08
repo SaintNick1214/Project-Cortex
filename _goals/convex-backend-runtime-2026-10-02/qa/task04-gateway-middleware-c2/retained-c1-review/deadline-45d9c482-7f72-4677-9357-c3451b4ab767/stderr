@@ -1,0 +1,26 @@
+(node:80586) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL _goals/convex-backend-runtime-2026-10-02/qa/task04-gateway-middleware-c1-review/deadline.test.ts (5.118 s)
+  independent hostile deadline
+    ✕ reader deadline also bounds a paused visibility RPC and suppresses late delivery (13 ms)
+
+  ● independent hostile deadline › reader deadline also bounds a paused visibility RPC and suppresses late delivery
+
+    TypeError: Cannot assign to read only property 'timeoutMs' of object '#<Object>'
+
+      77 | describe("independent hostile deadline",()=>{
+      78 |  it("reader deadline also bounds a paused visibility RPC and suppresses late delivery",async()=>{
+    > 79 |   const f=fixture(); f.r.snapshot.limits.timeoutMs=20;
+         |                                                   ^
+      80 |   let enter!:()=>void;let release!:()=>void;
+      81 |   const entered=new Promise<void>(r=>enter=r);const paused=new Promise<void>(r=>release=r);
+      82 |   f.composition.ledger.markVisible=async()=>{enter();await paused;return {recorded:true};};
+
+      at Object.<anonymous> (_goals/convex-backend-runtime-2026-10-02/qa/task04-gateway-middleware-c1-review/deadline.test.ts:79:51)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 1 total
+Snapshots:   0 total
+Time:        5.351 s
+Ran all test suites.
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/task04-gateway-middleware-c1-review/deadline-result.json

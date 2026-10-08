@@ -1,0 +1,8 @@
+--- immutable-c8/argument-candidates.mjs
++++ new-c9/argument-candidates.mjs
+@@ -28,4 +28,4 @@
+  // v.object() uses an object parameter; same descriptor name is disambiguated above.
+  throw new Error('BLOCKED_UNSUPPORTED_VALIDATOR:'+schema.type);
+ }
+-export function argumentsFor(row,ctx){const args=candidate(row.validatorSchema,ctx);if(row.path==='facts:deleteByIds')args.factIds=[batchTarget(ctx,'facts')];if(row.path==='memories:deleteByIds')args.memoryIds=[batchTarget(ctx,'memories')];return args;}
++export function argumentsFor(row,ctx){const args=candidate(row.validatorSchema,ctx);if(row.path==='facts:deleteByIds')args.factIds=[batchTarget(ctx,'facts')];if(row.path==='memories:deleteByIds')args.memoryIds=[batchTarget(ctx,'memories')];if(['memories:updatePartialMemory','memories:finalizePartialMemory'].includes(row.path))args.memoryId=batchTarget(ctx,'memories');return args;}

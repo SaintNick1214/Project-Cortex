@@ -1,0 +1,2 @@
+export async function resolve(specifier,context,nextResolve){if(context.parentURL?.endsWith("/scripts/operator.mjs")&&specifier==="./guard.mjs")return {url:new URL("./operator-guard-standin.mjs",import.meta.url).href,shortCircuit:true};return nextResolve(specifier,context);}
+

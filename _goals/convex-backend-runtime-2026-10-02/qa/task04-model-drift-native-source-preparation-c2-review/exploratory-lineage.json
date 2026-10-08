@@ -1,0 +1,35 @@
+{
+  "scope": "OWN_REVIEW_ERRORS_PRESERVED_NOT_SOURCE_VERDICTS",
+  "failures": [
+    {
+      "operation": "initial short qa paths discovery",
+      "error": "rg: qa/task04-model-drift-native-*-preparation-c2: No such file or directory",
+      "correction": "resolved under goal qa directory",
+      "utc": "NOT_CAPTURED"
+    },
+    {
+      "operation": "cat scripts/cli.mjs",
+      "error": "No such file or directory",
+      "correction": "actual process/deploy/cli-prerequisites files inspected",
+      "utc": "NOT_CAPTURED"
+    },
+    {
+      "operation": "C1 copied expected-denial harness first3 executions",
+      "error": "ENOENT owned c1-control parent directory",
+      "raw": "*-c1-denial.stderr/receipt.json",
+      "correction": "mkdir own c1-control parent and unchanged-harness retry raw retained"
+    }
+  ],
+  "closureCommand": {
+    "argv": [
+      "python3",
+      "work/resume/task04-model-drift-native-source-preparation-c2-review/closure-audit.py"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "NOT_CAPTURED",
+    "exitCode": 0,
+    "skipped": 0,
+    "discovery": "3 subjects plus25 unique whole historical closures",
+    "stdoutSummary": "471/463/670 exact whole inventory;208/205/316 operational;all hash/inventory checks zero failures"
+  }
+}

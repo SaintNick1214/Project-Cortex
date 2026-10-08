@@ -1,0 +1,58 @@
+{
+  "utc": "2026-10-04T08:58:48.834224+00:00",
+  "status": "ACTUAL_BOTH_PROFILES_OBSERVED_PASS_PENDING_FRESH_AGGREGATE",
+  "regressionCore": 43,
+  "threeRealForcedKills": "PASS; no cleanup betweenfaults, known40 once, peer0/0|1/1|1/1",
+  "publicDenials": 1400,
+  "wholeStateComparisons": 200,
+  "internalDenials": 174,
+  "maintenanceDenials": 20,
+  "peerDenials": 5,
+  "ownedCreated": 736,
+  "ownedDeleted": 736,
+  "nativeTickets": 2699,
+  "nestedConservativeUpper": 37,
+  "combinedConservativeUpper": 2736,
+  "journalRows": 4540,
+  "processTickets": 6,
+  "remainingManagedGroups": 0,
+  "syntheticEMPTYQualification": "PASS both raw287publication/codegen/typecheck",
+  "retirement": {
+    "version": 1,
+    "operation": "b232e951-277c-41a8-be45-0e2208d5ef19",
+    "phase": "exact-owned-project-retirement",
+    "status": "PASS",
+    "startedAt": "2026-10-04T08:58:10.205Z",
+    "observedAt": "2026-10-04T08:58:10.744Z",
+    "projectId": 3140351,
+    "deploymentName": "quaint-goldfish-866",
+    "deploymentUrl": "https://quaint-goldfish-866.convex.cloud",
+    "provisionState": "FULLY_VERIFIED",
+    "verifiedOnlyDevelopmentCloudDeployment": true,
+    "deletionHttpStatus": 200,
+    "absentProjectHttpStatus": 404,
+    "managementCalls": 5
+  },
+  "credentialRemoval": [
+    "deploy.env",
+    "identities.json",
+    "peer-config.json"
+  ],
+  "rootVerified": [
+    {
+      "packet": "task04-terminal-capture-native-regression-c4-execution",
+      "rows": 2981,
+      "manifestSHA256": "1b11943ae992b96b2d5e874f89e66a796e239c0d1a39dc5c2674d820c11e48c8",
+      "mismatches": []
+    },
+    {
+      "packet": "task04-terminal-capture-native-regression-c4-private-supplement",
+      "rows": 12,
+      "manifestSHA256": "b3f564b4c50d6a8c4888216bd1b589a5338e583fde661fb6920a26373204e669",
+      "mismatches": []
+    }
+  ],
+  "extension": "PASSobserved retired411rows/2581tickets/4380journal; freshaggregate pending",
+  "paidInference": 0,
+  "gateway": "HELD untilfresh independentaggregate accepted"
+}

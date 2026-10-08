@@ -1,0 +1,225 @@
+--- convex-dev/runtimeModelPolicy.ts (accepted B)
++++ convex-dev/runtimeModelPolicy.ts (candidate)
+@@ -484,6 +484,7 @@
+     if (attempts.length > 64 || new Set(attempts.map((entry) => entry.attemptNumber)).size !== attempts.length) fail("POLICY_DENIED");
+     const existing = attempts.sort((a, b) => b.attemptNumber - a.attemptNumber)[0];
+     if (existing) {
++      if (capturedAttempt(existing) && await semanticHash(existing.terminalEvidenceCanonical!) !== existing.terminalEvidenceHash) fail("POLICY_DENIED", "uncertain");
+       const priorSnapshot = attemptSnapshot(existing, operation, manifest);
+       const incoming = validateModelRequest(priorSnapshot, { ...validated.request, inputTokens: deriveQualifiedInputBound(evidence(manifest, priorSnapshot), validated.request), reservationUnits: priorSnapshot.costBound.maximumCostUnits });
+       assertModelRequestIdentity({ canonical: existing.canonical, hash: existing.hash }, { canonical: incoming.canonical, hash: await semanticHash(incoming.canonical) });
+@@ -545,6 +546,7 @@
+   if (!run.reference || !sameAuthority(run.reference, operation.reference)) fail("POLICY_DENIED");
+   const manifest = await trustedRoot(run.root);
+   const snapshot = attemptSnapshot(attempt, operation, manifest); const proof = evidence(manifest, snapshot);
++  if (capturedAttempt(attempt) && await semanticHash(attempt.terminalEvidenceCanonical!) !== attempt.terminalEvidenceHash) fail("POLICY_DENIED", "uncertain");
+   return { attempt, operation, tenant, run, snapshot, proof };
+ }
+ const attemptArgs = { reference: runtimeAuthorityReference, attemptId: v.id("runtimeModelAttempts") };
+@@ -612,6 +614,7 @@
+ }
+ async function writeUnknown(ctx: WriteCtx, state: Awaited<ReturnType<typeof attemptContext>>, terminalCanonical?: string) {
+   const { attempt, operation, tenant, run } = state;
++  if (capturedAttempt(attempt)) return { state: attempt.state, replayAllowed: false as const };
+   if (attempt.state === "settled" || attempt.state === "not_dispatched" || attempt.state === "confirmed_rejected") return { state: attempt.state, replayAllowed: false as const };
+   if (attempt.state === "reserved") fail("POLICY_DENIED");
+   const newlyUnknown = attempt.state !== "uncertain";
+@@ -653,34 +656,55 @@
+     return encoded;
+   } catch { return undefined; }
+ }
+-async function settleAttempt(ctx: WriteCtx, reference: RuntimeAuthorityReference, attemptId: Id<"runtimeModelAttempts">, receiptCanonical: string, liabilityOnly: boolean, deploymentRetirement = false) {
+-  const state = await attemptContext(ctx, attemptId); const { attempt, operation, snapshot, proof, tenant, run } = state;
+-  if (deploymentRetirement) await retiredScope(ctx, operation);
+-  else if (liabilityOnly) await liabilityAuthority(ctx, reference, operation);
+-  else if (!sameAuthority(reference, operation.reference)) fail("FORBIDDEN");
+-  const canDeliver = !liabilityOnly && await permittedResult(ctx, reference, operation);
+-  // Accounting needs a current actor even when original delivery/source rights have disappeared.
+-  if (!liabilityOnly) await currentAuthority(ctx, reference, operation.operationKey);
+-  const parsed = receiptSchema.safeParse(decode(receiptCanonical));
+-  if (!parsed.success) return await writeUnknown(ctx, state);
+-  const receipt = parsed.data;
+-  if (receipt.dispatchIdentity !== attempt.dispatchIdentity || receipt.modelId !== snapshot.modelId || receipt.nativeInterface !== snapshot.nativeInterface) fail("IDEMPOTENCY_CONFLICT", "uncertain");
+-  // Receipt identity contains charge/usage evidence only; invalid/private raw provider parts never enter audit JSON.
+-  const { privateResultCanonical: _privateResult, ...chargeReceipt } = receipt;
+-  const chargeCanonical = canonical(chargeReceipt);
+-  const receiptHash = await semanticHash(chargeCanonical);
++type TerminalReceipt = z.infer<typeof receiptSchema>;
++type AttemptContext = Awaited<ReturnType<typeof attemptContext>>;
++/** A partial capture marker is corruption, never a legacy privilege bypass. */
++function capturedAttempt(attempt: Attempt): boolean {
++  const hashPresent = attempt.terminalEvidenceHash !== undefined;
++  const statePresent = attempt.resultAttachmentState !== undefined;
++  if (hashPresent !== statePresent || (hashPresent && (!attempt.terminalEvidenceCanonical || !digest.test(attempt.terminalEvidenceHash!)))) fail("POLICY_DENIED", "uncertain");
++  return hashPresent;
++}
++function knownCost(receipt: TerminalReceipt, proof: QualifiedDispatchEvidence): number | undefined {
++  if (proof.terminalCost !== "gateway-aggregate-usd-v1" || receipt.costSource !== proof.terminalCost || receipt.aggregateCostUsd === undefined) return undefined;
++  try { return costMicroUnits(receipt.aggregateCostUsd); } catch { return undefined; }
++}
++function chargeOnly(receipt: TerminalReceipt): string {
++  const { privateResultCanonical: _privateResult, ...charge } = receipt;
++  return canonical(charge);
++}
++/** Initial nonmoney facts are immutable; only absent facts may be supplied with complete money. */
++function compatibleRefinement(initialCanonical: string, receipt: TerminalReceipt, proof: QualifiedDispatchEvidence) {
++  const initial = receiptSchema.safeParse(decode(initialCanonical));
++  if (!initial.success || knownCost(initial.data, proof) !== undefined || knownCost(receipt, proof) === undefined) fail("IDEMPOTENCY_CONFLICT", "uncertain");
++  for (const key of ["version", "dispatchIdentity", "receiptId", "modelId", "nativeInterface", "outcome", "proof"] as const) {
++    if (initial.data[key] !== receipt[key]) fail("IDEMPOTENCY_CONFLICT", "uncertain");
++  }
++  if (initial.data.actualModel !== undefined && receipt.actualModel !== initial.data.actualModel) fail("IDEMPOTENCY_CONFLICT", "uncertain");
++  for (const key of ["inputTokens", "outputTokens", "totalTokens", "cachedInputTokens", "reasoningTokens"] as const) {
++    if (initial.data.usage?.[key] !== undefined && receipt.usage?.[key] !== initial.data.usage[key]) fail("IDEMPOTENCY_CONFLICT", "uncertain");
++  }
++}
++async function captureIdentity(attempt: Attempt): Promise<string> {
++  return await semanticHash(canonical(["native-terminal-evidence-v1", attempt._id, attempt.dispatchIdentity, attempt.terminalEvidenceCanonical, attempt.terminalEvidenceHash]));
++}
++async function capturedDuplicate(attempt: Attempt, chargeCanonical: string, receiptHash: string): Promise<boolean> {
++  if (!capturedAttempt(attempt)) return false;
++  if (chargeCanonical === attempt.terminalEvidenceCanonical) {
++    assertModelRequestIdentity({ canonical: attempt.terminalEvidenceCanonical!, hash: attempt.terminalEvidenceHash! }, { canonical: chargeCanonical, hash: receiptHash }, "uncertain");
++    return true;
++  }
+   if (attempt.receiptCanonical) {
+     assertModelRequestIdentity({ canonical: attempt.receiptCanonical, hash: attempt.receiptHash! }, { canonical: chargeCanonical, hash: receiptHash }, "uncertain");
+-    const candidateResult = canDeliver ? validatedPrivateResult(snapshot, attempt, receipt.privateResultCanonical) : undefined;
+-    if (attempt.privateResultCanonical && candidateResult && attempt.privateResultCanonical !== candidateResult) fail("IDEMPOTENCY_CONFLICT");
+-    return { state: attempt.state, settledCostUnits: attempt.settledCostUnits, resultWithheld: attempt.resultWithheld || !canDeliver };
+-  }
+-  if (attempt.state !== "dispatch_pending" && attempt.state !== "uncertain") fail("POLICY_DENIED");
+-  if (proof.terminalCost !== "gateway-aggregate-usd-v1" || receipt.costSource !== proof.terminalCost || receipt.aggregateCostUsd === undefined) return await writeUnknown(ctx, state, chargeCanonical);
+-  let cost: number;
+-  try { cost = costMicroUnits(receipt.aggregateCostUsd); } catch { return await writeUnknown(ctx, state, chargeCanonical); }
+-  const privateResult = canDeliver && receipt.outcome === "confirmed" ? validatedPrivateResult(snapshot, attempt, receipt.privateResultCanonical) : undefined;
+-  const deliverResult = canDeliver && privateResult !== undefined;
++    return true;
++  }
++  return false;
++}
++/** Every route uses the same original-window, full-cost, once-only transition. */
++async function accountKnown(ctx: WriteCtx, state: AttemptContext, receipt: TerminalReceipt, chargeCanonical: string, receiptHash: string,
++  cost: number, privateResult?: string) {
++  const { attempt, operation, snapshot, proof, tenant, run } = state;
++  const deliverResult = privateResult !== undefined;
+   const fromUnknown = attempt.state === "uncertain";
+   integer(attempt.measuredInputTokens, 1); integer(attempt.maximumOutputTokens);
+   const overrun = cost > attempt.reservationUnits || (receipt.usage?.inputTokens !== undefined && receipt.usage.inputTokens > attempt.measuredInputTokens)
+@@ -700,6 +724,116 @@
+     ...(receipt.actualModel ? { actualModel: receipt.actualModel } : {}), ...(deliverResult ? { privateResultCanonical: privateResult } : {}) });
+   return { state: finalState, settledCostUnits: cost, resultWithheld: !deliverResult, overrun };
+ }
++async function settleAttempt(ctx: WriteCtx, reference: RuntimeAuthorityReference, attemptId: Id<"runtimeModelAttempts">, receiptCanonical: string, liabilityOnly: boolean, deploymentRetirement = false) {
++  const state = await attemptContext(ctx, attemptId); const { attempt, operation, snapshot, proof } = state;
++  const captured = capturedAttempt(attempt);
++  if (deploymentRetirement) await retiredScope(ctx, operation);
++  else if (liabilityOnly) await liabilityAuthority(ctx, reference, operation);
++  else if (!sameAuthority(reference, operation.reference)) fail("FORBIDDEN");
++  const canDeliver = !liabilityOnly && await permittedResult(ctx, reference, operation);
++  if (!liabilityOnly) await currentAuthority(ctx, reference, operation.operationKey);
++  const parsed = receiptSchema.safeParse(decode(receiptCanonical));
++  if (!parsed.success) return await writeUnknown(ctx, state);
++  const receipt = parsed.data;
++  if (receipt.dispatchIdentity !== attempt.dispatchIdentity || receipt.modelId !== snapshot.modelId || receipt.nativeInterface !== snapshot.nativeInterface
++    || (captured && receipt.actualModel !== undefined && receipt.actualModel !== snapshot.modelId)) fail("IDEMPOTENCY_CONFLICT", "uncertain");
++  const chargeCanonical = chargeOnly(receipt); const receiptHash = await semanticHash(chargeCanonical);
++  if (captured) {
++    if (await capturedDuplicate(attempt, chargeCanonical, receiptHash)) return { state: attempt.state, settledCostUnits: attempt.settledCostUnits, resultWithheld: attempt.resultWithheld || !canDeliver };
++    if (attempt.state !== "uncertain") fail("IDEMPOTENCY_CONFLICT", "uncertain");
++    compatibleRefinement(attempt.terminalEvidenceCanonical!, receipt, proof);
++  } else if (attempt.receiptCanonical) {
++    assertModelRequestIdentity({ canonical: attempt.receiptCanonical, hash: attempt.receiptHash! }, { canonical: chargeCanonical, hash: receiptHash }, "uncertain");
++    const candidateResult = canDeliver ? validatedPrivateResult(snapshot, attempt, receipt.privateResultCanonical) : undefined;
++    if (attempt.privateResultCanonical && candidateResult && attempt.privateResultCanonical !== candidateResult) fail("IDEMPOTENCY_CONFLICT");
++    return { state: attempt.state, settledCostUnits: attempt.settledCostUnits, resultWithheld: attempt.resultWithheld || !canDeliver };
++  }
++  if (attempt.state !== "dispatch_pending" && attempt.state !== "uncertain") fail("POLICY_DENIED");
++  const cost = knownCost(receipt, proof);
++  if (cost === undefined) return await writeUnknown(ctx, state, chargeCanonical);
++  const privateResult = !captured && canDeliver && receipt.outcome === "confirmed" ? validatedPrivateResult(snapshot, attempt, receipt.privateResultCanonical) : undefined;
++  return await accountKnown(ctx, state, receipt, chargeCanonical, receiptHash, cost, privateResult);
++}
++async function permittedAttachment(ctx: ReadCtx, reference: RuntimeAuthorityReference, state: AttemptContext): Promise<boolean> {
++  try {
++    const checked = await currentOperation(ctx, reference, state.operation);
++    const current = checked.current.snapshot;
++    if (state.proof.checkedAt > Date.now() || Date.now() >= state.proof.expiresAt) return false;
++    if (state.operation.overrun || state.run.overrun || state.tenant.overrun || !current.allowedModels.includes(state.snapshot.modelId)
++      || current.nativeInterface !== state.snapshot.nativeInterface
++      || !checked.current.manifest.qualifications.some((q) => q.receiptId === state.snapshot.qualificationReceiptId && q.modelId === state.snapshot.modelId
++        && q.nativeInterface === state.snapshot.nativeInterface && q.priceRevision === state.snapshot.pins.priceRevision && q.boundRevision === state.snapshot.pins.boundRevision)) return false;
++    const original = decode(state.attempt.canonical) as { request: unknown };
++    validateModelRequest({ ...state.snapshot, limits: current.limits, allowedOptions: current.allowedOptions, allowedTools: current.allowedTools }, original.request);
++    await finalActor(ctx, reference, state.operation.operationKey);
++    return true;
++  } catch { return false; }
++}
++/** Trusted compiled terminal producers only. This authority accounts liability, never grants data access. */
++export const captureTerminalEvidence = internalMutation({ args: { attemptId: v.id("runtimeModelAttempts"), dispatchIdentity: v.string(), receiptCanonical: v.string() }, handler: async (ctx, args) => {
++  const state = await attemptContext(ctx, args.attemptId); const { attempt, operation, snapshot, proof } = state;
++  const captured = capturedAttempt(attempt);
++  if (attempt.checkpointAt === undefined || args.dispatchIdentity !== attempt.dispatchIdentity) fail("POLICY_DENIED", "uncertain");
++  const parsed = receiptSchema.omit({ privateResultCanonical: true }).safeParse(decode(args.receiptCanonical));
++  if (!parsed.success) fail("INVALID_INPUT", "uncertain");
++  const receipt = parsed.data;
++  if (receipt.dispatchIdentity !== attempt.dispatchIdentity || receipt.modelId !== snapshot.modelId || receipt.nativeInterface !== snapshot.nativeInterface
++    || receipt.proof !== proof.terminalProof || (receipt.actualModel !== undefined && receipt.actualModel !== snapshot.modelId)) fail("IDEMPOTENCY_CONFLICT", "uncertain");
++  const chargeCanonical = canonical(receipt); const receiptHash = await semanticHash(chargeCanonical);
++  const result = async () => ({ evidenceId: await captureIdentity(attempt), state: attempt.state as "settled" | "confirmed_rejected" | "uncertain",
++    ...(attempt.settledCostUnits !== undefined ? { settledCostUnits: attempt.settledCostUnits } : {}), overrun: operation.overrun });
++  if (captured) {
++    if (await capturedDuplicate(attempt, chargeCanonical, receiptHash)) return await result();
++    if (attempt.state !== "uncertain") fail("IDEMPOTENCY_CONFLICT", "uncertain");
++    compatibleRefinement(attempt.terminalEvidenceCanonical!, receipt, proof);
++  } else if (attempt.state !== "dispatch_pending" && attempt.state !== "uncertain") {
++    // Legacy terminal rows can acknowledge exact stored charge only; no attachment privilege is created.
++    if (!attempt.receiptCanonical || (attempt.state !== "settled" && attempt.state !== "confirmed_rejected")) fail("POLICY_DENIED", "uncertain");
++    assertModelRequestIdentity({ canonical: attempt.receiptCanonical, hash: attempt.receiptHash! }, { canonical: chargeCanonical, hash: receiptHash }, "uncertain");
++    return { evidenceId: await semanticHash(canonical(["legacy-terminal-evidence-v1", attempt._id, chargeCanonical])), state: attempt.state,
++      settledCostUnits: attempt.settledCostUnits, overrun: operation.overrun };
++  }
++  if (!captured && attempt.state === "uncertain" && attempt.terminalEvidenceCanonical) {
++    // A legacy genuine terminal observation is already terminal, not a fresh capture transition.
++    assertModelRequestIdentity({ canonical: attempt.terminalEvidenceCanonical, hash: await semanticHash(attempt.terminalEvidenceCanonical) },
++      { canonical: chargeCanonical, hash: receiptHash }, "uncertain");
++    return { evidenceId: await semanticHash(canonical(["legacy-terminal-evidence-v1", attempt._id, chargeCanonical])), state: "uncertain" as const, overrun: operation.overrun };
++  }
++  const cost = knownCost(receipt, proof);
++  if (captured && cost === undefined) fail("IDEMPOTENCY_CONFLICT", "uncertain");
++  const deliverable = !captured && !attempt.terminalEvidenceCanonical && cost !== undefined && cost <= attempt.reservationUnits && receipt.outcome === "confirmed"
++    && (receipt.usage?.inputTokens === undefined || receipt.usage.inputTokens <= attempt.measuredInputTokens)
++    && (receipt.usage?.outputTokens === undefined || receipt.usage.outputTokens <= attempt.maximumOutputTokens)
++    && await permittedAttachment(ctx, operation.reference, state);
++  const accounted = cost === undefined ? await writeUnknown(ctx, state, chargeCanonical)
++    : await accountKnown(ctx, state, receipt, chargeCanonical, receiptHash, cost);
++  if (!captured) await ctx.db.patch("runtimeModelAttempts", attempt._id, {
++    terminalEvidenceCanonical: chargeCanonical, terminalEvidenceHash: receiptHash, resultAttachmentState: deliverable ? "pending" : "closed" });
++  const latest = await attemptContext(ctx, args.attemptId);
++  return { evidenceId: await captureIdentity(latest.attempt), state: accounted.state as "settled" | "confirmed_rejected" | "uncertain",
++    ...(latest.attempt.settledCostUnits !== undefined ? { settledCostUnits: latest.attempt.settledCostUnits } : {}), overrun: latest.operation.overrun };
++} });
++/** Private delivery is independently fenced by exact current original authority. Closed never reopens. */
++export const attachTerminalResult = internalMutation({ args: { ...attemptArgs, evidenceId: v.string(), privateResultCanonical: v.string() }, handler: async (ctx, args) => {
++  const state = await attemptContext(ctx, args.attemptId); const { attempt, operation, snapshot } = state;
++  if (!capturedAttempt(attempt)) return { attached: false, resultWithheld: true };
++  if (args.evidenceId !== await captureIdentity(attempt)) fail("IDEMPOTENCY_CONFLICT", "uncertain");
++  if (attempt.resultAttachmentState === "closed") return { attached: false, resultWithheld: true };
++  if (attempt.state !== "settled" || attempt.settledCostUnits === undefined || operation.overrun) return { attached: false, resultWithheld: true };
++  if (!sameAuthority(args.reference, operation.reference)) return { attached: false, resultWithheld: true };
++  if (!await permittedAttachment(ctx, args.reference, state)) {
++    if (attempt.resultAttachmentState === "pending") await ctx.db.patch("runtimeModelAttempts", attempt._id, { resultAttachmentState: "closed", resultWithheld: true });
++    return { attached: false, resultWithheld: true };
++  }
++  const privateResult = validatedPrivateResult(snapshot, attempt, args.privateResultCanonical);
++  if (privateResult === undefined || new TextEncoder().encode(privateResult).length > state.proof.resultBound.maximumPrivateResultBytes) return { attached: false, resultWithheld: true };
++  if (attempt.resultAttachmentState === "attached") {
++    if (attempt.privateResultCanonical !== privateResult) fail("IDEMPOTENCY_CONFLICT", "uncertain");
++    return { attached: true, resultWithheld: false };
++  }
++  await ctx.db.patch("runtimeModelAttempts", attempt._id, { privateResultCanonical: privateResult, resultWithheld: false, resultAttachmentState: "attached", outputVisible: true });
++  return { attached: true, resultWithheld: false };
++} });
+ /** Positive canonical retirement evidence; absence alone is never deployment authority. */
+ async function retiredScope(ctx: ReadCtx, operation: Operation) {
+   const reader = createAuthorityReader(ctx);

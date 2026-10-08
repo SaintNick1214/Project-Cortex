@@ -1,0 +1,68 @@
+"""Freeze exact bounded source/evidence; no source writes or Git staging."""
+import datetime
+import hashlib
+import json
+import pathlib
+import re
+import subprocess
+ROOT = pathlib.Path(__file__).resolve().parents[4]
+QA = ROOT/'_goals/convex-backend-runtime-2026-10-02/qa/task03b2b1'
+def git(*args): return subprocess.check_output(['git',*args],cwd=ROOT)
+def sha(value): return hashlib.sha256(value).hexdigest()
+base=git('rev-parse','HEAD').decode().strip()
+main=git('-C',str(ROOT.parents[2]),'rev-parse','HEAD').decode().strip()
+gov_fix=git('rev-parse','c0c40423').decode().strip()
+owned=['convex-dev/agents.ts','convex-dev/memorySpaces.ts','convex-dev/contexts.ts','convex-dev/runtimeRegistryAuth.ts','convex-dev/schema.ts']
+tests=sorted(str(file.relative_to(ROOT)) for file in (ROOT/'tests/unit/runtimeRegistryAuth').glob('*.ts'))
+dependencies=['convex-dev/runtimeAuth.ts','convex-dev/runtimeAuthSchema.ts','convex-dev/runtimeMemorySchema.ts','src/auth/verified.ts','convex-dev/_generated/server.js','convex-dev/_generated/server.d.ts','convex-dev/_generated/dataModel.d.ts','convex-dev/_generated/api.d.ts','convex-dev/a2a.ts','convex-dev/tsconfig.json','convex.json','package.json','package-lock.json','tsconfig.json','tsconfig.lint.json','eslint.config.js','src/agents/index.ts','src/governance/index.ts','tests/helpers/cleanup.ts']
+dependencies=[file for file in dependencies if (ROOT/file).exists()]
+configs=[str(file.relative_to(ROOT)) for file in [QA/'inventory.mjs',QA/'jest.scoped.cjs',QA/'tsconfig.scoped.json',QA/'checks/run-checks.py',QA/'checks/baseline-diagnostic.py']]
+frozen={file:sha((ROOT/file).read_bytes()) for file in owned+tests+dependencies+configs}
+unchanged=[]
+for file in dependencies:
+ original=git('show',f'{base}:{file}')
+ unchanged.append({'file':file,'sha256':sha((ROOT/file).read_bytes()),'pinnedBaseSha256':sha(original),'unchanged':original==(ROOT/file).read_bytes()})
+if not all(record['unchanged'] for record in unchanged):raise RuntimeError('Out-of-scope source changed')
+current_schema=(ROOT/'convex-dev/schema.ts').read_text();original_schema=git('show',f'{base}:convex-dev/schema.ts').decode()
+def without_owned(schema):
+ for table,next_table in [('memorySpaces','contexts'),('contexts','agents'),('agents','sessions')]:
+  start=schema.index('  '+table+': defineTable({'); end=schema.index('  '+next_table+': defineTable({',start)
+  schema=schema[:start]+schema[end:]
+ return schema
+outside=without_owned(current_schema)==without_owned(original_schema)
+if not outside:raise RuntimeError('Schema outside owned blocks changed')
+(QA/'schema-additive.patch').write_bytes(git('diff','--','convex-dev/schema.ts'))
+stat_records=[]
+for file,name,snapshot in [('convex-dev/agents.ts','computeStats','stats-agents.frozen.txt'),('convex-dev/memorySpaces.ts','getStats','stats-spaces.frozen.txt')]:
+ def registration(source):
+  start=source.index('export const '+name+' =');end=source.index('\n});',start)+4;return source[start:end]
+ original=registration(git('show',f'{base}:{file}').decode());actual=registration((ROOT/file).read_text())
+ if original!=actual or actual!=(QA/snapshot).read_text():raise RuntimeError('Excluded stats changed')
+ stat_records.append({'path':file+':'+name,'unchanged':True,'sha256':sha(actual.encode()),'status':'PENDING excluded from selected46'})
+consumer=[]
+for file in ['src/agents/index.ts','tests/helpers/cleanup.ts','src/governance/index.ts']:
+ current=git('show',f'{main}:{file}'); pinned=git('show',f'{base}:{file}')
+ consumer.append({'file':file,'acceptedMainCommit':main,'acceptedMainSha256':sha(current),'pinnedBaseSha256':sha(pinned),'sameBytes':current==pinned})
+def diagnostics(file):
+ value=(QA/'checks'/file).read_text()
+ return [{'file':p,'line':int(line),'column':int(column),'code':code,'message':message} for p,line,column,code,message in re.findall(r'^(.*)\((\d+),(\d+)\): error (TS\d+): (.*)$',value,re.M)]
+root=diagnostics('root-types-diagnostic.stdout.txt');lint=diagnostics('root-lint-types-diagnostic.stdout.txt');baseline=diagnostics('baseline-root-types.stdout.txt');baseline_lint=diagnostics('baseline-root-lint-types.stdout.txt')
+classification={'pinnedBase':base,'acceptedMainObserved':main,'baselineRoot':baseline,'baselineLint':baseline_lint,'root':root,'lint':lint,
+ 'counts':{'root':len(root),'lint':len(lint),'baselineRoot':len(baseline),'baselineLint':len(baseline_lint),'introducedAgentSDK':sum(record['file']=='src/agents/index.ts' for record in root),'introducedCleanup':sum(record['file']=='tests/helpers/cleanup.ts' for record in root)},
+ 'classification':[{'kind':'historical isolated-base integration failure','file':'src/governance/index.ts','count':1,'explanation':f'a2c982 references public governance.enforce after accepted worker internalization. Exact archive confirms this in both root gates; accepted c0c40423 removes client dispatch and throws GovernanceCapabilityError, inherited in observed accepted main {main}. Not a global/current-main preexisting failure.','fixedAcceptedCommit':gov_fix},
+ {'kind':'introduced integration-pending receipt adaptation','file':'src/agents/index.ts','count':25,'explanation':'SDK assumes register/update always returns private row. Actual guarded mutation can return a safe receipt without READ. The union is retained honestly. Accepted main consumer bytes still equal isolated base. Task03C2/09 owns adaptation; no SDK writes allowed here.'},
+ {'kind':'introduced integration-pending internal purge consumer','file':'tests/helpers/cleanup.ts','count':2,'explanation':'Legacy public contexts/memorySpaces purgeAll references are absent from native public api after required internalization. Accepted main consumer bytes still equal isolated base. Task03C2/09 must use qualified trusted cleanup; no unsafe public purge or casts added.'}],
+ 'acceptedMainConsumerComparison':consumer,'wholeRootPass':False}
+if len(root)!=28 or len(lint)!=26 or len(baseline)!=1 or len(baseline_lint)!=1 or classification['counts']['introducedAgentSDK']!=25 or classification['counts']['introducedCleanup']!=2:raise RuntimeError('Root diagnostic classification changed')
+codec=json.loads((QA/'codec-dependency.json').read_text())
+if codec['version']!='1.46.0' or codec['pinnedLockVersion']!='1.46.0':raise RuntimeError('Native codec differs from pinned stack')
+if any(sha((ROOT/record['file']).read_bytes())!=record['sha256'] for record in codec['files']):raise RuntimeError('Native codec receipt is stale')
+(QA/'root-diagnostic-classification.json').write_text(json.dumps(classification,indent=2)+'\n')
+checks=json.loads((QA/'checks/commands.json').read_text());result=json.loads((QA/'checks/tests-final.json').read_text());discovery=(QA/'checks/discovery.stdout.txt').read_text().splitlines()
+required=['backend-types','scoped-types','scoped-lint','discovery','tests','catalog','diff-check']
+if any(next(record for record in checks if record['name']==name)['exitCode']!=0 for name in required):raise RuntimeError('Bounded gate not passing')
+if result['numTotalTests']!=337 or result['numPassedTests']!=337 or result['numPendingTests']!=0 or result['numTodoTests']!=0 or len(discovery)!=3:raise RuntimeError('Discovery/count/skips mismatch')
+(QA/'preservation.json').write_text(json.dumps({'pinnedBase':base,'readonlySources':unchanged,'schemaOutsideThreeOwnedBlocksUnchanged':outside,'excludedStats':stat_records,'a2a':'untouched; all4 registrations PENDING','noSourceBridge':'helper imports only official Convex codec/schema/frozen03A/generated/types; no MF/metadata/worker helper','nativeCodec':'codec-dependency.json; exact Convex1.46.0 matches pinned lock','noOperations':'no live/paid/Docker/deploy/codegen/build/package/stage/commit/push'},indent=2)+'\n')
+freeze={'utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'status':'FINAL source freeze; parent inspection/fresh independent judgment PENDING','pinnedBase':base,'sourceHashes':frozen,'counts':{'selected':46,'public':43,'internal':3,'testSuites':3,'tests':337,'skipped':0,'todo':0},'pending':['stats2','A2A4','whole03B2B52','MF/source bridge','Task03T/05 live canonical owner/anchor delivery','Task08/12/15 derived cascade','Task03C2/09 SDK and cleanup consumer adaptation','wholeTask03','wholeGoal'],'schemaPatch':'schema-additive.patch','requirements':'requirements-mapping.md','contracts':'contracts.md','checks':'checks/commands.json','rootClassification':'root-diagnostic-classification.json'}
+(QA/'source-freeze.json').write_text(json.dumps(freeze,indent=2)+'\n')
+print(json.dumps({'bounded':'PASS execution; fresh judge PENDING','tests':337,'suites':3,'skipped':0,'rootErrors':len(root),'lintTypesErrors':len(lint),'schemaOutsideOwnedBlocks':outside,'sourceFiles':len(frozen)},indent=2))

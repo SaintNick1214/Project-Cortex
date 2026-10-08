@@ -1,0 +1,13 @@
+import {drive} from '/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/driver-engine.mjs';
+import {ProcessOwner} from '/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/process-owner.mjs';
+import {readFileSync,writeFileSync} from 'node:fs';import {randomUUID} from 'node:crypto';
+const dir='/tmp/task03c2-live-harness-review2-oj6uebre'; const rows=[];
+const state=(pid)=>{try{const raw=readFileSync(`/proc/${pid}/stat`,'utf8');return raw.slice(raw.lastIndexOf(')')+2).split(' ')[0];}catch(e){if(e.code==='ENOENT')return 'ABSENT';throw e;}};
+for(let i=0;i<10;i++){
+ const owner=new ProcessOwner(),runId=randomUUID(),pidFile=`${dir}/race-grandchild-${runId}.pid`;let atFinish;
+ const receipt=await drive({owner,args:[`${dir}/process-race-child.mjs`],env:{PATH:process.env.PATH},cwd:dir,bootstrap:{version:1,phase:'offline-probe',runId,endpoint:'https://offline-fixture-123.convex.cloud',timeoutMs:12000,quietMs:750},wholeMs:300,caseMs:2000,sign:async()=>{throw Error('UNUSED');},checkpoint:async()=>{},
+ operator:async()=>{await owner.run(['-e',`const cp=require('node:child_process'),fs=require('node:fs');const c=cp.spawn(process.execPath,['-e','process.on("SIGTERM",()=>{});setInterval(()=>{},1000)'],{stdio:'ignore'});fs.writeFileSync(${JSON.stringify(pidFile)},String(c.pid),{mode:384,flag:'wx'});process.on('SIGTERM',()=>{});setInterval(()=>{},1000)`],{env:{PATH:process.env.PATH},cwd:dir},25000);throw Error('OPERATOR_UNAVAILABLE');},
+ finish:async value=>{const pid=Number(readFileSync(pidFile,'utf8'));atFinish={pid,state:state(pid),groupCount:owner.records.size,processCleanup:value.processCleanup,discovered:value.discovered,at:new Date().toISOString()};writeFileSync(`${dir}/race-receipt-${runId}.json`,JSON.stringify({...value,evidenceKind:'OFFLINE focused actual frozen process-owner probe',atFinish},null,2),{mode:384,flag:'wx'});}});
+ await new Promise(resolve=>setTimeout(resolve,5));rows.push({...atFinish,stateAfter5ms:state(atFinish.pid),receiptStatus:receipt.status,runId});
+}
+const result={rows,runningAtReceipt:rows.filter(x=>!['Z','X','ABSENT'].includes(x.state)).length,discovered:rows.length,networkCalls:0,serviceEffects:0};writeFileSync(`${dir}/process-race-recorded.json`,JSON.stringify(result,null,2),{mode:384,flag:'wx'});process.stdout.write(JSON.stringify(result)+'\n');

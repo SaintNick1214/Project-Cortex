@@ -1,0 +1,60 @@
+{
+  "outcomes": [
+    {
+      "name": "snapshot detaches trusted scope, agent, source and qualified ceiling",
+      "pass": true
+    },
+    {
+      "name": "shared aliases cannot freeze caller or change admitted graph/identity",
+      "pass": true
+    },
+    {
+      "name": "complete definitions preserve ordinary own special-looking keys",
+      "pass": true
+    },
+    {
+      "name": "every fallback accessor rejects with zero effects",
+      "pass": true
+    },
+    {
+      "name": "nested getter and array iterator reject with zero effects",
+      "pass": true
+    },
+    {
+      "name": "invalid graphs and policy rejections never freeze caller data",
+      "pass": true
+    },
+    {
+      "name": "all six ranks have arrival-independent scalar precedence and intersected limits",
+      "pass": true
+    },
+    {
+      "name": "authorized override cannot escape specialized deployment constraints",
+      "pass": true
+    },
+    {
+      "name": "fallback candidate covers ceiling caps options capabilities and proof",
+      "pass": true
+    },
+    {
+      "name": "ordered message IDs definitions and tool payloads enter exact canonical",
+      "pass": true
+    },
+    {
+      "name": "scope source receipt policy price provenance and agent pins enter identity",
+      "pass": true
+    },
+    {
+      "name": "every text operation enforces structured schema invariant",
+      "pass": true
+    },
+    {
+      "name": "root tool definition exact own keys survive schema parse",
+      "pass": false,
+      "error": "Expected values to be strictly equal:\n+ actual - expected\n\n+ '{\"constructor\":{\"type\":\"number\"}}'\n- '{\"__proto__\":{\"type\":\"string\"},\"constructor\":{\"type\":\"number\"}}'\n"
+    }
+  ],
+  "total": 13,
+  "passed": 12,
+  "failed": 1
+}

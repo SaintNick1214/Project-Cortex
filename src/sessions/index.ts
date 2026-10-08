@@ -5,9 +5,9 @@
  * Sessions are stored in Convex for real-time reactivity.
  */
 
-import { randomBytes } from "crypto";
+import { resolveTenantId } from "../auth/tenant";
 import type { ConvexClient } from "convex/browser";
-import { api } from "../../convex-dev/_generated/api";
+import { api } from "../common/backendApi";
 import type {
   Session,
   CreateSessionParams,
@@ -41,6 +41,22 @@ export type {
 export { SessionValidationError } from "./validators";
 
 import type { AuthContext } from "../auth/types";
+
+/** Idle session expiration requires a trusted backend worker. */
+export class SessionCapabilityError extends Error {
+  readonly code = "BACKEND_MAINTENANCE_ONLY";
+  readonly retryable = false;
+  readonly outcome = "not_dispatched";
+  readonly requiredExecution = "trusted_backend_worker";
+
+  constructor() {
+    super(
+      "Idle session expiration requires a trusted backend worker. " +
+        "No operation was dispatched by this client.",
+    );
+    this.name = "SessionCapabilityError";
+  }
+}
 
 /**
  * Sessions API
@@ -105,7 +121,7 @@ export class SessionsAPI {
         this.client.mutation(api.sessions.create, {
           sessionId,
           userId: params.userId,
-          tenantId: params.tenantId ?? this.authContext?.tenantId, // Fall back to auth context
+          tenantId: resolveTenantId(this.authContext?.tenantId, params.tenantId), // Fall back to auth context
           memorySpaceId: params.memorySpaceId,
           metadata: params.metadata,
           startedAt: now,
@@ -275,7 +291,7 @@ export class SessionsAPI {
     validateUserId(userId);
 
     // Use explicit tenantId, fall back to auth context for tenant isolation
-    const tenantId = options?.tenantId ?? this.authContext?.tenantId;
+    const tenantId = resolveTenantId(this.authContext?.tenantId, options?.tenantId);
 
     const result = await this.executeWithResilience(
       () =>
@@ -391,41 +407,23 @@ export class SessionsAPI {
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   /**
-   * Expire idle sessions based on governance policies.
+   * Request idle session expiration, which requires a trusted backend worker.
    *
-   * This is typically called by a scheduled job or governance enforcement.
+   * Valid client requests reject with SessionCapabilityError before dispatch.
+   * This method does not perform or schedule automatic session maintenance.
+   * Tenant selectors retain the existing SDK auth-context mismatch validation.
    *
-   * @param options - Expiration options
-   * @returns Result with count of expired sessions
-   *
-   * @example
-   * ```typescript
-   * // Expire sessions idle for more than 30 minutes
-   * const result = await cortex.sessions.expireIdle({
-   *   idleTimeout: 30 * 60 * 1000, // 30 minutes in ms
-   * });
-   * console.log(`Expired ${result.expired} idle sessions`);
-   *
-   * // Expire for specific tenant
-   * const tenantResult = await cortex.sessions.expireIdle({
-   *   tenantId: 'tenant-456',
-   *   idleTimeout: 15 * 60 * 1000, // 15 minutes
-   * });
-   * ```
+   * @param options - Expiration options (idle timeout defaults to 30 minutes)
+   * @throws SessionCapabilityError when trusted backend execution is required
    */
   async expireIdle(
     options?: ExpireSessionsOptions,
   ): Promise<{ expired: number }> {
-    const result = await this.executeWithResilience(
-      () =>
-        this.client.mutation(api.sessions.expireIdle, {
-          tenantId: options?.tenantId,
-          idleTimeout: options?.idleTimeout ?? 30 * 60 * 1000, // Default 30 min
-        }),
-      "sessions:expireIdle",
-    );
-
-    return result as { expired: number };
+    resolveTenantId(this.authContext?.tenantId, options?.tenantId);
+    // Preserve the existing default before reporting the execution boundary.
+    const idleTimeout = options?.idleTimeout ?? 30 * 60 * 1000;
+    void idleTimeout;
+    throw new SessionCapabilityError();
   }
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -437,7 +435,8 @@ export class SessionsAPI {
    */
   private generateSessionId(): string {
     const timestamp = Date.now().toString(36);
-    const randomPart = randomBytes(8).toString("hex");
+    const randomPart = Array.from(globalThis.crypto.getRandomValues(new Uint8Array(8)),
+      (byte) => byte.toString(16).padStart(2, "0")).join("");
     return `sess-${timestamp}-${randomPart}`;
   }
 }

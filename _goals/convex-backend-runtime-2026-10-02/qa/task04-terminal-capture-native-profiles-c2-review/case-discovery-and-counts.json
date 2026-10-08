@@ -1,0 +1,620 @@
+[
+  {
+    "profile": "extension",
+    "cases": [
+      {
+        "id": "equal-refinements",
+        "rpc": 11,
+        "committedCreates": 15,
+        "peakRows": 15,
+        "nested": 0,
+        "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+      },
+      {
+        "id": "conflicting-refinements",
+        "rpc": 14,
+        "committedCreates": 15,
+        "peakRows": 15,
+        "nested": 0,
+        "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+      },
+      {
+        "id": "revoked-live-origin",
+        "rpc": 12,
+        "committedCreates": 15,
+        "peakRows": 15,
+        "nested": 0,
+        "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+      },
+      {
+        "id": "initial-duplicates",
+        "rpc": 16,
+        "committedCreates": 15,
+        "peakRows": 15,
+        "nested": 0,
+        "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+      },
+      {
+        "id": "final-lost-response",
+        "rpc": 16,
+        "committedCreates": 15,
+        "peakRows": 15,
+        "nested": 0,
+        "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+      },
+      {
+        "id": "parent-refinement-rollback",
+        "rpc": 12,
+        "committedCreates": 15,
+        "peakRows": 15,
+        "nested": 1,
+        "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+      },
+      {
+        "id": "released-slot",
+        "rpc": 16,
+        "committedCreates": 15,
+        "peakRows": 15,
+        "nested": 0,
+        "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+      },
+      {
+        "id": "late-original-window",
+        "rpc": 16,
+        "committedCreates": 15,
+        "peakRows": 15,
+        "nested": 0,
+        "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+      },
+      {
+        "id": "facts-add-absent",
+        "rpc": 10,
+        "committedCreates": 15,
+        "peakRows": 15,
+        "nested": 0,
+        "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+      },
+      {
+        "id": "facts-change-remove",
+        "rpc": 23,
+        "committedCreates": 15,
+        "peakRows": 15,
+        "nested": 0,
+        "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+      },
+      {
+        "id": "unknown-intermediate",
+        "rpc": 11,
+        "committedCreates": 15,
+        "peakRows": 15,
+        "nested": 0,
+        "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+      },
+      {
+        "id": "malformed-private-raw",
+        "rpc": 31,
+        "committedCreates": 15,
+        "peakRows": 15,
+        "nested": 0,
+        "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+      },
+      {
+        "id": "no-checkpoint",
+        "rpc": 9,
+        "committedCreates": 15,
+        "peakRows": 15,
+        "nested": 0,
+        "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+      },
+      {
+        "id": "closed-renew-ordinary",
+        "rpc": 24,
+        "committedCreates": 15,
+        "peakRows": 15,
+        "nested": 0,
+        "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+      },
+      {
+        "id": "admin-compatibility",
+        "rpc": 25,
+        "committedCreates": 15,
+        "peakRows": 15,
+        "nested": 0,
+        "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+      },
+      {
+        "id": "operator-compatibility",
+        "rpc": 26,
+        "committedCreates": 16,
+        "peakRows": 16,
+        "nested": 0,
+        "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+      },
+      {
+        "id": "partial-marker",
+        "rpc": 38,
+        "committedCreates": 26,
+        "peakRows": 26,
+        "nested": 0,
+        "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+      },
+      {
+        "id": "legacy-preserve",
+        "rpc": 32,
+        "committedCreates": 26,
+        "peakRows": 26,
+        "nested": 0,
+        "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+      },
+      {
+        "id": "healthy-known-attach",
+        "rpc": 23,
+        "committedCreates": 15,
+        "peakRows": 15,
+        "nested": 0,
+        "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+      },
+      {
+        "id": "attachment-current-fences",
+        "rpc": 75,
+        "committedCreates": 61,
+        "peakRows": 61,
+        "nested": 0,
+        "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+      },
+      {
+        "id": "internal-publication",
+        "rpc": 0,
+        "committedCreates": 0,
+        "peakRows": 0,
+        "nested": 0,
+        "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+      },
+      {
+        "id": "peer-no-replay",
+        "rpc": 17,
+        "committedCreates": 16,
+        "peakRows": 16,
+        "nested": 1,
+        "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+      }
+    ],
+    "observedOfflineRPC": 457,
+    "observedOfflineCommittedCreates": 385,
+    "sourceBoundCeilingSum": 713,
+    "budgets": {
+      "logicalScenarios": 49,
+      "simultaneouslyLiveRows": 320,
+      "cumulativeRows": 783,
+      "cumulativeRowComputation": {
+        "core": 716,
+        "security": 15,
+        "fault": 40,
+        "empty": 12,
+        "recovery": 0
+      },
+      "nativeRpc": 3000,
+      "rpcWorstCase": 2892,
+      "cleanupRpc": 256,
+      "cleanupWorstCase": 51,
+      "qualifierMs": 1200000,
+      "parentDriverMs": 1440000,
+      "requestMs": 12000,
+      "peerEffectRequests": 8,
+      "peerOtherRequests": 24,
+      "processes": 6,
+      "groups": 2,
+      "storageFiles": 0,
+      "nativeClientRpc": 2963,
+      "nestedNativeInvocations": 37,
+      "rpcComputation": {
+        "coreAssertions": 713,
+        "coreCleanupAndSnapshots": 66,
+        "security": 2044,
+        "fault": 0,
+        "empty": 20,
+        "publication": 2,
+        "finalAndRecovery": 10,
+        "nestedNative": 37
+      },
+      "cumulativeDeletions": 783,
+      "cumulativeCreationAndDeletionEvents": 1566,
+      "derivedRowsUpper": 465,
+      "derivedNativeUpper": 2892
+    }
+  },
+  {
+    "profile": "regression",
+    "cases": [
+      {
+        "id": "parent-distinct-child-fence",
+        "rpc": 9,
+        "committedCreates": 17,
+        "peakRows": 17,
+        "nested": 0,
+        "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+      },
+      {
+        "id": "root-idempotent",
+        "rpc": 9,
+        "committedCreates": 11,
+        "peakRows": 11,
+        "nested": 0,
+        "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+      },
+      {
+        "id": "parent-native-rollback",
+        "rpc": 5,
+        "committedCreates": 11,
+        "peakRows": 11,
+        "nested": 1,
+        "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+      },
+      {
+        "id": "identity-canonical",
+        "rpc": 8,
+        "committedCreates": 15,
+        "peakRows": 15,
+        "nested": 0,
+        "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+      },
+      {
+        "id": "checkpoint-race",
+        "rpc": 11,
+        "committedCreates": 15,
+        "peakRows": 15,
+        "nested": 0,
+        "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+      },
+      {
+        "id": "money-run-race",
+        "rpc": 7,
+        "committedCreates": 16,
+        "peakRows": 16,
+        "nested": 0,
+        "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+      },
+      {
+        "id": "money-tenant-race",
+        "rpc": 8,
+        "committedCreates": 17,
+        "peakRows": 17,
+        "nested": 0,
+        "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+      },
+      {
+        "id": "slot-race",
+        "rpc": 7,
+        "committedCreates": 16,
+        "peakRows": 16,
+        "nested": 0,
+        "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+      },
+      {
+        "id": "known-settlement-race",
+        "rpc": 14,
+        "committedCreates": 15,
+        "peakRows": 15,
+        "nested": 0,
+        "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+      },
+      {
+        "id": "unknown-running-terminal",
+        "rpc": 14,
+        "committedCreates": 15,
+        "peakRows": 15,
+        "nested": 0,
+        "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+      },
+      {
+        "id": "known-overrun",
+        "rpc": 13,
+        "committedCreates": 15,
+        "peakRows": 15,
+        "nested": 0,
+        "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+      },
+      {
+        "id": "collision-canonical",
+        "rpc": 8,
+        "committedCreates": 15,
+        "peakRows": 15,
+        "nested": 0,
+        "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+      },
+      {
+        "id": "fence-grant-version",
+        "rpc": 8,
+        "committedCreates": 15,
+        "peakRows": 15,
+        "nested": 0,
+        "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+      },
+      {
+        "id": "fence-grant-expiry",
+        "rpc": 8,
+        "committedCreates": 15,
+        "peakRows": 15,
+        "nested": 0,
+        "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+      },
+      {
+        "id": "fence-principal-revoke",
+        "rpc": 8,
+        "committedCreates": 15,
+        "peakRows": 15,
+        "nested": 0,
+        "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+      },
+      {
+        "id": "fence-membership-revoke",
+        "rpc": 8,
+        "committedCreates": 15,
+        "peakRows": 15,
+        "nested": 0,
+        "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+      },
+      {
+        "id": "fence-source-edit",
+        "rpc": 8,
+        "committedCreates": 15,
+        "peakRows": 15,
+        "nested": 0,
+        "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+      },
+      {
+        "id": "fence-source-delete",
+        "rpc": 8,
+        "committedCreates": 15,
+        "peakRows": 15,
+        "nested": 0,
+        "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+      },
+      {
+        "id": "fence-policy-revoke",
+        "rpc": 8,
+        "committedCreates": 15,
+        "peakRows": 15,
+        "nested": 0,
+        "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+      },
+      {
+        "id": "fence-qualification-revoke",
+        "rpc": 8,
+        "committedCreates": 15,
+        "peakRows": 15,
+        "nested": 0,
+        "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+      },
+      {
+        "id": "fence-corrupt-counter",
+        "rpc": 8,
+        "committedCreates": 15,
+        "peakRows": 15,
+        "nested": 0,
+        "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+      },
+      {
+        "id": "retired-tenant-overrun",
+        "rpc": 15,
+        "committedCreates": 16,
+        "peakRows": 16,
+        "nested": 0,
+        "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+      },
+      {
+        "id": "retired-space-overrun",
+        "rpc": 15,
+        "committedCreates": 16,
+        "peakRows": 16,
+        "nested": 0,
+        "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+      },
+      {
+        "id": "retired-absence-denial",
+        "rpc": 10,
+        "committedCreates": 15,
+        "peakRows": 15,
+        "nested": 0,
+        "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+      },
+      {
+        "id": "cancel-current",
+        "rpc": 8,
+        "committedCreates": 15,
+        "peakRows": 15,
+        "nested": 0,
+        "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+      },
+      {
+        "id": "fallback-fresh-money",
+        "rpc": 12,
+        "committedCreates": 16,
+        "peakRows": 16,
+        "nested": 0,
+        "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+      },
+      {
+        "id": "fallback-current-query-reserve",
+        "rpc": 12,
+        "committedCreates": 16,
+        "peakRows": 16,
+        "nested": 0,
+        "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+      },
+      {
+        "id": "fallback-postreserve-revoke",
+        "rpc": 13,
+        "committedCreates": 17,
+        "peakRows": 17,
+        "nested": 0,
+        "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+      },
+      {
+        "id": "fallback-postreserve-money",
+        "rpc": 13,
+        "committedCreates": 17,
+        "peakRows": 17,
+        "nested": 0,
+        "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+      },
+      {
+        "id": "held-current-operation",
+        "rpc": 10,
+        "committedCreates": 17,
+        "peakRows": 17,
+        "nested": 0,
+        "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+      },
+      {
+        "id": "held-current-run",
+        "rpc": 10,
+        "committedCreates": 18,
+        "peakRows": 18,
+        "nested": 0,
+        "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+      },
+      {
+        "id": "held-current-tenant",
+        "rpc": 11,
+        "committedCreates": 19,
+        "peakRows": 19,
+        "nested": 0,
+        "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+      },
+      {
+        "id": "held-current-concurrency",
+        "rpc": 10,
+        "committedCreates": 17,
+        "peakRows": 17,
+        "nested": 0,
+        "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+      },
+      {
+        "id": "held-exact-cap",
+        "rpc": 8,
+        "committedCreates": 17,
+        "peakRows": 17,
+        "nested": 0,
+        "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+      },
+      {
+        "id": "fallback-exact-cap",
+        "rpc": 12,
+        "committedCreates": 17,
+        "peakRows": 17,
+        "nested": 0,
+        "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+      },
+      {
+        "id": "visibility-monotone",
+        "rpc": 35,
+        "committedCreates": 18,
+        "peakRows": 18,
+        "nested": 0,
+        "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+      },
+      {
+        "id": "embedding-single-bound",
+        "rpc": 11,
+        "committedCreates": 13,
+        "peakRows": 13,
+        "nested": 0,
+        "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+      },
+      {
+        "id": "agent-selector-denial",
+        "rpc": 12,
+        "committedCreates": 15,
+        "peakRows": 15,
+        "nested": 0,
+        "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+      },
+      {
+        "id": "window-original-liability",
+        "rpc": 18,
+        "committedCreates": 17,
+        "peakRows": 17,
+        "nested": 0,
+        "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+      },
+      {
+        "id": "private-invalid-result",
+        "rpc": 15,
+        "committedCreates": 15,
+        "peakRows": 15,
+        "nested": 0,
+        "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+      },
+      {
+        "id": "known-private-privacy",
+        "rpc": 16,
+        "committedCreates": 15,
+        "peakRows": 15,
+        "nested": 0,
+        "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+      },
+      {
+        "id": "predispatch-compatible-fallback",
+        "rpc": 8,
+        "committedCreates": 16,
+        "peakRows": 16,
+        "nested": 0,
+        "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+      },
+      {
+        "id": "private-byte-exact-bound",
+        "rpc": 12,
+        "committedCreates": 16,
+        "peakRows": 16,
+        "nested": 0,
+        "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+      }
+    ],
+    "observedOfflineRPC": 471,
+    "observedOfflineCommittedCreates": 671,
+    "sourceBoundCeilingSum": 557,
+    "budgets": {
+      "logicalScenarios": 49,
+      "simultaneouslyLiveRows": 320,
+      "cumulativeRows": 783,
+      "cumulativeRowComputation": {
+        "core": 716,
+        "security": 15,
+        "fault": 40,
+        "empty": 12,
+        "recovery": 0
+      },
+      "nativeRpc": 3000,
+      "rpcWorstCase": 2875,
+      "cleanupRpc": 256,
+      "cleanupWorstCase": 51,
+      "qualifierMs": 1200000,
+      "parentDriverMs": 1440000,
+      "requestMs": 12000,
+      "peerEffectRequests": 8,
+      "peerOtherRequests": 24,
+      "processes": 6,
+      "groups": 2,
+      "storageFiles": 0,
+      "nativeClientRpc": 2963,
+      "nestedNativeInvocations": 37,
+      "rpcComputation": {
+        "coreAssertions": 557,
+        "coreCleanupAndSnapshots": 129,
+        "security": 2044,
+        "fault": 76,
+        "empty": 20,
+        "publication": 2,
+        "finalAndRecovery": 10,
+        "nestedNative": 37
+      },
+      "cumulativeDeletions": 783,
+      "cumulativeCreationAndDeletionEvents": 1566,
+      "derivedRowsUpper": 783,
+      "derivedNativeUpper": 2875,
+      "originalObservedCreatedRows": 736,
+      "sourceBoundExactCoreCommittedRows": 671
+    }
+  }
+]

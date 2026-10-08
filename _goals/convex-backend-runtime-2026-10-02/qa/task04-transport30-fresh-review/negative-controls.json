@@ -1,0 +1,176 @@
+[
+  {
+    "name": "unsafe-'/a'",
+    "utcPre": "2026-10-04T13:33:10.083084+00:00",
+    "rejected": true,
+    "type": "ValueError",
+    "message": "unsafe path",
+    "utcPost": "2026-10-04T13:33:10.083099+00:00"
+  },
+  {
+    "name": "unsafe-'../a'",
+    "utcPre": "2026-10-04T13:33:10.083103+00:00",
+    "rejected": true,
+    "type": "ValueError",
+    "message": "unsafe path",
+    "utcPost": "2026-10-04T13:33:10.083115+00:00"
+  },
+  {
+    "name": "unsafe-'a/../b'",
+    "utcPre": "2026-10-04T13:33:10.083118+00:00",
+    "rejected": true,
+    "type": "ValueError",
+    "message": "unsafe path",
+    "utcPost": "2026-10-04T13:33:10.083123+00:00"
+  },
+  {
+    "name": "unsafe-'a//b'",
+    "utcPre": "2026-10-04T13:33:10.083125+00:00",
+    "rejected": true,
+    "type": "ValueError",
+    "message": "unsafe path",
+    "utcPost": "2026-10-04T13:33:10.083129+00:00"
+  },
+  {
+    "name": "unsafe-'a/./b'",
+    "utcPre": "2026-10-04T13:33:10.083131+00:00",
+    "rejected": true,
+    "type": "ValueError",
+    "message": "unsafe path",
+    "utcPost": "2026-10-04T13:33:10.083137+00:00"
+  },
+  {
+    "name": "unsafe-'a\\\\\\\\b'",
+    "utcPre": "2026-10-04T13:33:10.083139+00:00",
+    "rejected": true,
+    "type": "ValueError",
+    "message": "unsafe path",
+    "utcPost": "2026-10-04T13:33:10.083141+00:00"
+  },
+  {
+    "name": "single-backslash-rejection",
+    "utcPre": "2026-10-04T13:33:10.083143+00:00",
+    "rejected": true,
+    "type": "ValueError",
+    "message": "unsafe path",
+    "utcPost": "2026-10-04T13:33:10.083146+00:00"
+  },
+  {
+    "name": "nul-rejection",
+    "utcPre": "2026-10-04T13:33:10.083148+00:00",
+    "rejected": true,
+    "type": "ValueError",
+    "message": "unsafe path",
+    "utcPost": "2026-10-04T13:33:10.083150+00:00"
+  },
+  {
+    "name": "exclusive-no-overwrite",
+    "utcPre": "2026-10-04T13:33:10.083305+00:00",
+    "rejected": true,
+    "type": "FileExistsError",
+    "message": "[Errno 17] File exists: 'foreign'",
+    "utcPost": "2026-10-04T13:33:10.083473+00:00"
+  },
+  {
+    "name": "existing-hash-mismatch",
+    "utcPre": "2026-10-04T13:33:10.083506+00:00",
+    "rejected": true,
+    "type": "ValueError",
+    "message": "existing original mismatch: foreign",
+    "utcPost": "2026-10-04T13:33:10.083602+00:00"
+  },
+  {
+    "name": "unknown-target-path",
+    "utcPre": "2026-10-04T13:33:10.083606+00:00",
+    "rejected": true,
+    "type": "ValueError",
+    "message": "restored original file set mismatch",
+    "utcPost": "2026-10-04T13:33:10.083773+00:00"
+  },
+  {
+    "name": "symlink-ancestor-write",
+    "utcPre": "2026-10-04T13:33:10.083904+00:00",
+    "rejected": true,
+    "type": "NotADirectoryError",
+    "message": "[Errno 20] Not a directory: 'link'",
+    "utcPost": "2026-10-04T13:33:10.083978+00:00"
+  },
+  {
+    "name": "symlink-target-ancestor",
+    "utcPre": "2026-10-04T13:33:10.084059+00:00",
+    "rejected": true,
+    "type": "NotADirectoryError",
+    "message": "[Errno 20] Not a directory: 'ancestor'",
+    "utcPost": "2026-10-04T13:33:10.084118+00:00"
+  },
+  {
+    "name": "symlink-file-read",
+    "utcPre": "2026-10-04T13:33:10.084179+00:00",
+    "rejected": true,
+    "type": "OSError",
+    "message": "[Errno 40] Too many levels of symbolic links: 'leaf'",
+    "utcPost": "2026-10-04T13:33:10.084238+00:00"
+  },
+  {
+    "name": "unknown-archive",
+    "utcPre": "2026-10-04T13:33:10.084667+00:00",
+    "rejected": true,
+    "type": "ValueError",
+    "message": "unknown or duplicate archive entry",
+    "utcPost": "2026-10-04T13:33:10.084907+00:00"
+  },
+  {
+    "name": "duplicate-archive",
+    "utcPre": "2026-10-04T13:33:10.085377+00:00",
+    "rejected": true,
+    "type": "ValueError",
+    "message": "unknown or duplicate archive entry",
+    "utcPost": "2026-10-04T13:33:10.085631+00:00"
+  },
+  {
+    "name": "link-member",
+    "utcPre": "2026-10-04T13:33:10.085893+00:00",
+    "rejected": true,
+    "type": "ValueError",
+    "message": "nonregular archive entry",
+    "utcPost": "2026-10-04T13:33:10.086048+00:00"
+  },
+  {
+    "name": "hardlink-member",
+    "utcPre": "2026-10-04T13:33:10.086289+00:00",
+    "rejected": true,
+    "type": "ValueError",
+    "message": "nonregular archive entry",
+    "utcPost": "2026-10-04T13:33:10.086483+00:00"
+  },
+  {
+    "name": "missing-member",
+    "utcPre": "2026-10-04T13:33:10.086660+00:00",
+    "rejected": true,
+    "type": "ValueError",
+    "message": "archive entry set mismatch",
+    "utcPost": "2026-10-04T13:33:10.086785+00:00"
+  },
+  {
+    "name": "content-hash",
+    "utcPre": "2026-10-04T13:33:10.087041+00:00",
+    "rejected": true,
+    "type": "ValueError",
+    "message": "archive content mismatch",
+    "utcPost": "2026-10-04T13:33:10.087208+00:00"
+  },
+  {
+    "name": "write-failure",
+    "utcPre": "2026-10-04T13:33:10.087216+00:00",
+    "rejected": true,
+    "type": "OSError",
+    "message": "review injected write failure",
+    "utcPost": "2026-10-04T13:33:10.087350+00:00"
+  },
+  {
+    "name": "failure-ownership-observation",
+    "ownedPartialFileBytes": 0,
+    "foreignFileUnchanged": true,
+    "automaticRollback": false
+  }
+]

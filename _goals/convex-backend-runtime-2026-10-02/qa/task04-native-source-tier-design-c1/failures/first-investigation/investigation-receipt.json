@@ -1,0 +1,11 @@
+{
+  "argv": [
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-source-tier-design-c1/investigate.py"
+  ],
+  "utcPre": "2026-10-04T14:07:27.808687+00:00",
+  "failures": [
+    "Traceback (most recent call last):\n  File \"/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-source-tier-design-c1/investigate.py\", line 22, in <module>\n    freeze=load(base+'/runtime-freeze.json');src=load(base+'/source-inventory.json');deps=load(base+'/dependency-inventory.json');runtime=load(base+'/runtime-inputs.json')\n                                                                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-source-tier-design-c1/investigate.py\", line 15, in load\n    def load(p):return json.loads(preserve(p))\n                                  ^^^^^^^^^^^\n  File \"/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-source-tier-design-c1/investigate.py\", line 8, in preserve\n    p=R/path;assert p.is_file() and not p.is_symlink();b=p.read_bytes();key=p.relative_to(R).as_posix()\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+  ],
+  "exitCode": 1,
+  "utcPost": "2026-10-04T14:07:30.766889+00:00"
+}

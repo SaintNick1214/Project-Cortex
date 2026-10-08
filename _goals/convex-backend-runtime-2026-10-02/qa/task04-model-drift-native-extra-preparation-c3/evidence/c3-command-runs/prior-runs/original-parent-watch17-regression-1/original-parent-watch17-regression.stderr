@@ -1,0 +1,59 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: independent-current-owned-pair
++ actual - expected
+
++ AssertionError [ERR_ASSERTION]: PARENT_PROFILE_ROOT
++ + actual - expected
++ 
++ + '/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c3/regression/parent-proof/case-2di5y3/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c2'
++ - '/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c3/regression/parent-proof/case-2di5y3/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c3'
++ 
++     at strictProfile (/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c3/scripts/parent-inputs.mjs:13:40)
++     at Module.main (/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c3/scripts/current-inputs.mjs:18:8)
++     at judgeCase (file:///workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c3/regression/parent-proof/independent-watch17.mjs:34:151)
++     at async file:///workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c3/regression/parent-proof/independent-watch17.mjs:41:1 {
++   actual: '/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c3/regression/parent-proof/case-2di5y3/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c2',
++   code: 'ERR_ASSERTION',
++   diff: 'simple',
++   expected: '/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c3/regression/parent-proof/case-2di5y3/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c3',
++   generatedMessage: false,
++   operator: 'strictEqual',
++   parentCurrentInputEffects: {
++     privateOutputStates: [],
++     privateOutputs: [],
++     status: 'FAIL'
++   }
++ }
+- undefined
+
+    at judgeCase (file:///workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c3/regression/parent-proof/independent-watch17.mjs:36:15)
+    at async file:///workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c3/regression/parent-proof/independent-watch17.mjs:41:1 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: AssertionError [ERR_ASSERTION]: PARENT_PROFILE_ROOT
+  + actual - expected
+  
+  + '/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c3/regression/parent-proof/case-2di5y3/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c2'
+  - '/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c3/regression/parent-proof/case-2di5y3/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c3'
+  
+      at strictProfile (/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c3/scripts/parent-inputs.mjs:13:40)
+      at Module.main (/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c3/scripts/current-inputs.mjs:18:8)
+      at judgeCase (file:///workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c3/regression/parent-proof/independent-watch17.mjs:34:151)
+      at async file:///workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c3/regression/parent-proof/independent-watch17.mjs:41:1 {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: '/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c3/regression/parent-proof/case-2di5y3/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c2',
+    expected: '/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c3/regression/parent-proof/case-2di5y3/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c3',
+    operator: 'strictEqual',
+    diff: 'simple',
+    parentCurrentInputEffects: { status: 'FAIL', privateOutputs: [], privateOutputStates: [] }
+  },
+  expected: undefined,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

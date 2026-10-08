@@ -1,0 +1,11 @@
+{
+  "argv": [
+    "python3",
+    "-c",
+    "from pathlib import Path\np=Path('_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c1/fixture/convex/provider-cost.ts');s=p.read_text();s=s.replace(\"const noParent=\", \"const descriptorValue=(d:Descriptors,k:string):unknown=>Object.hasOwn(d,k)?d[k]!.value:undefined;\\nconst noParent=\");s=s.replace(\"a.descriptors!.providerMetadata?.value\",\"descriptorValue(a.descriptors!,'providerMetadata')\").replace(\"b.descriptors!.convexGateway?.value\",\"descriptorValue(b.descriptors!,'convexGateway')\").replace(\"c.descriptors!.cost?.value\",\"descriptorValue(c.descriptors!,'cost')\");p.write_text(s)\n"
+  ],
+  "cwd": "/workspace/Project-Cortex",
+  "startUtc": "2026-10-04T14:25:14.956265+00:00",
+  "endUtc": "2026-10-04T14:25:14.989707+00:00",
+  "exit": 0
+}

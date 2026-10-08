@@ -1,0 +1,271 @@
+{
+  "utc": "2026-10-04T11:52:53.628012+00:00",
+  "phase": "verified AFTER completed final executions; before byte-preimages physically copied BEFORE invocation",
+  "dependencyClosures": {
+    "final-four-04": [
+      "current-compose.mjs",
+      "native-probe.mts",
+      "offline-guard.mjs",
+      "jest.config.mjs",
+      "setup.mjs",
+      "approved-additions.json",
+      "source-pre.json",
+      "copies",
+      "proposed-four-file-minimal.patch",
+      "checks/make-copies.py",
+      "checks/run.py"
+    ],
+    "final-composition-03": [
+      "current-compose.mjs",
+      "native-probe.mts",
+      "offline-guard.mjs",
+      "approved-additions.json",
+      "source-pre.json"
+    ],
+    "final-adverse-03": [
+      "current-compose.mjs",
+      "adverse.mjs",
+      "offline-guard.mjs",
+      "approved-additions.json",
+      "source-pre.json"
+    ],
+    "final-types-03": [
+      "native-probe.mts",
+      "tsconfig.json"
+    ],
+    "final-lint-04": [
+      "current-compose.mjs",
+      "adverse.mjs",
+      "offline-guard.mjs",
+      "setup.mjs",
+      "jest.config.mjs",
+      "eslint.config.mjs"
+    ]
+  },
+  "rows": [
+    {
+      "check": "final-four-04",
+      "path": "current-compose.mjs",
+      "beforeSHA256": "b68a32f6abd20d71aa5ab86848928f6d63332e687ac8192903f892f48b13ad8a",
+      "postSHA256": "b68a32f6abd20d71aa5ab86848928f6d63332e687ac8192903f892f48b13ad8a",
+      "unchanged": true
+    },
+    {
+      "check": "final-four-04",
+      "path": "native-probe.mts",
+      "beforeSHA256": "65f92ad6e13e561d2f40b5333a7069a0267fbeb3150d85605260608bf23daedd",
+      "postSHA256": "65f92ad6e13e561d2f40b5333a7069a0267fbeb3150d85605260608bf23daedd",
+      "unchanged": true
+    },
+    {
+      "check": "final-four-04",
+      "path": "offline-guard.mjs",
+      "beforeSHA256": "5692e9d5687b76adbce30860ded03cf6585e4642c201f761b173039fb776db05",
+      "postSHA256": "5692e9d5687b76adbce30860ded03cf6585e4642c201f761b173039fb776db05",
+      "unchanged": true
+    },
+    {
+      "check": "final-four-04",
+      "path": "jest.config.mjs",
+      "beforeSHA256": "fed716fdc2c5a739661d6242bfce8092a0b0e164538b3da6eebc225008a09784",
+      "postSHA256": "fed716fdc2c5a739661d6242bfce8092a0b0e164538b3da6eebc225008a09784",
+      "unchanged": true
+    },
+    {
+      "check": "final-four-04",
+      "path": "setup.mjs",
+      "beforeSHA256": "75150408e4ac80b07546921566e16dd4a43189a08100dee107f630139b23b4e3",
+      "postSHA256": "75150408e4ac80b07546921566e16dd4a43189a08100dee107f630139b23b4e3",
+      "unchanged": true
+    },
+    {
+      "check": "final-four-04",
+      "path": "approved-additions.json",
+      "beforeSHA256": "0f0c4f0ea80d9ec768ccd6c4dd53331d5071c7279341a35ef21ad66bfb97178b",
+      "postSHA256": "0f0c4f0ea80d9ec768ccd6c4dd53331d5071c7279341a35ef21ad66bfb97178b",
+      "unchanged": true
+    },
+    {
+      "check": "final-four-04",
+      "path": "source-pre.json",
+      "beforeSHA256": "81f5aa3db369433a701b64aea0a613cdb3a0fa01e43211f9b214abeb2d881a50",
+      "postSHA256": "81f5aa3db369433a701b64aea0a613cdb3a0fa01e43211f9b214abeb2d881a50",
+      "unchanged": true
+    },
+    {
+      "check": "final-four-04",
+      "path": "copies/tests/unit/runtimeAssetUnavailableAuth/closure.test.ts",
+      "beforeSHA256": "f129fa39050cfbdb4b37965b938b5c258ae2bf5614747376b337290ecb54cbb3",
+      "postSHA256": "f129fa39050cfbdb4b37965b938b5c258ae2bf5614747376b337290ecb54cbb3",
+      "unchanged": true
+    },
+    {
+      "check": "final-four-04",
+      "path": "copies/tests/unit/runtimeArtifactAuth/schema-indexes.test.ts",
+      "beforeSHA256": "d3c9a18b5c87d2266b4cf7599ea2454bc341643cf0b0f6040e64ef352d2cfc84",
+      "postSHA256": "d3c9a18b5c87d2266b4cf7599ea2454bc341643cf0b0f6040e64ef352d2cfc84",
+      "unchanged": true
+    },
+    {
+      "check": "final-four-04",
+      "path": "copies/tests/unit/runtimeArtifactAuth/inventory.test.ts",
+      "beforeSHA256": "a6a1668effced0dce7ebb74c2e017540124ee662d273b944557cf71d74b837a3",
+      "postSHA256": "a6a1668effced0dce7ebb74c2e017540124ee662d273b944557cf71d74b837a3",
+      "unchanged": true
+    },
+    {
+      "check": "final-four-04",
+      "path": "copies/tests/unit/runtimeWorkerAuth/admin-catalog.test.ts",
+      "beforeSHA256": "7602bf42138b887fcd306a28ed59a0d4840c92ae73c2e2044bfb400dc3f79d04",
+      "postSHA256": "7602bf42138b887fcd306a28ed59a0d4840c92ae73c2e2044bfb400dc3f79d04",
+      "unchanged": true
+    },
+    {
+      "check": "final-four-04",
+      "path": "proposed-four-file-minimal.patch",
+      "beforeSHA256": "62353e33e19fb75ba2ed880a7d2396f74143b785c450330cca83a3739957fadb",
+      "postSHA256": "62353e33e19fb75ba2ed880a7d2396f74143b785c450330cca83a3739957fadb",
+      "unchanged": true
+    },
+    {
+      "check": "final-four-04",
+      "path": "checks/make-copies.py",
+      "beforeSHA256": "b4ccea0b3f2f65e15f9292f92897a5b2127015a63fc7b661188c6e152673bfc3",
+      "postSHA256": "b4ccea0b3f2f65e15f9292f92897a5b2127015a63fc7b661188c6e152673bfc3",
+      "unchanged": true
+    },
+    {
+      "check": "final-four-04",
+      "path": "checks/run.py",
+      "beforeSHA256": "ba8292c1dea1f77d01ec20f39a2d6b9863c8b18d2a7b5ae2ee73d9678aff2b0e",
+      "postSHA256": "ba8292c1dea1f77d01ec20f39a2d6b9863c8b18d2a7b5ae2ee73d9678aff2b0e",
+      "unchanged": true
+    },
+    {
+      "check": "final-composition-03",
+      "path": "current-compose.mjs",
+      "beforeSHA256": "b68a32f6abd20d71aa5ab86848928f6d63332e687ac8192903f892f48b13ad8a",
+      "postSHA256": "b68a32f6abd20d71aa5ab86848928f6d63332e687ac8192903f892f48b13ad8a",
+      "unchanged": true
+    },
+    {
+      "check": "final-composition-03",
+      "path": "native-probe.mts",
+      "beforeSHA256": "65f92ad6e13e561d2f40b5333a7069a0267fbeb3150d85605260608bf23daedd",
+      "postSHA256": "65f92ad6e13e561d2f40b5333a7069a0267fbeb3150d85605260608bf23daedd",
+      "unchanged": true
+    },
+    {
+      "check": "final-composition-03",
+      "path": "offline-guard.mjs",
+      "beforeSHA256": "5692e9d5687b76adbce30860ded03cf6585e4642c201f761b173039fb776db05",
+      "postSHA256": "5692e9d5687b76adbce30860ded03cf6585e4642c201f761b173039fb776db05",
+      "unchanged": true
+    },
+    {
+      "check": "final-composition-03",
+      "path": "approved-additions.json",
+      "beforeSHA256": "0f0c4f0ea80d9ec768ccd6c4dd53331d5071c7279341a35ef21ad66bfb97178b",
+      "postSHA256": "0f0c4f0ea80d9ec768ccd6c4dd53331d5071c7279341a35ef21ad66bfb97178b",
+      "unchanged": true
+    },
+    {
+      "check": "final-composition-03",
+      "path": "source-pre.json",
+      "beforeSHA256": "81f5aa3db369433a701b64aea0a613cdb3a0fa01e43211f9b214abeb2d881a50",
+      "postSHA256": "81f5aa3db369433a701b64aea0a613cdb3a0fa01e43211f9b214abeb2d881a50",
+      "unchanged": true
+    },
+    {
+      "check": "final-adverse-03",
+      "path": "current-compose.mjs",
+      "beforeSHA256": "b68a32f6abd20d71aa5ab86848928f6d63332e687ac8192903f892f48b13ad8a",
+      "postSHA256": "b68a32f6abd20d71aa5ab86848928f6d63332e687ac8192903f892f48b13ad8a",
+      "unchanged": true
+    },
+    {
+      "check": "final-adverse-03",
+      "path": "adverse.mjs",
+      "beforeSHA256": "98fbbb499c10f635cec7d5c3a1f7a5a7e16d951089e86c82f709a916b1291d8c",
+      "postSHA256": "98fbbb499c10f635cec7d5c3a1f7a5a7e16d951089e86c82f709a916b1291d8c",
+      "unchanged": true
+    },
+    {
+      "check": "final-adverse-03",
+      "path": "offline-guard.mjs",
+      "beforeSHA256": "5692e9d5687b76adbce30860ded03cf6585e4642c201f761b173039fb776db05",
+      "postSHA256": "5692e9d5687b76adbce30860ded03cf6585e4642c201f761b173039fb776db05",
+      "unchanged": true
+    },
+    {
+      "check": "final-adverse-03",
+      "path": "approved-additions.json",
+      "beforeSHA256": "0f0c4f0ea80d9ec768ccd6c4dd53331d5071c7279341a35ef21ad66bfb97178b",
+      "postSHA256": "0f0c4f0ea80d9ec768ccd6c4dd53331d5071c7279341a35ef21ad66bfb97178b",
+      "unchanged": true
+    },
+    {
+      "check": "final-adverse-03",
+      "path": "source-pre.json",
+      "beforeSHA256": "81f5aa3db369433a701b64aea0a613cdb3a0fa01e43211f9b214abeb2d881a50",
+      "postSHA256": "81f5aa3db369433a701b64aea0a613cdb3a0fa01e43211f9b214abeb2d881a50",
+      "unchanged": true
+    },
+    {
+      "check": "final-types-03",
+      "path": "native-probe.mts",
+      "beforeSHA256": "65f92ad6e13e561d2f40b5333a7069a0267fbeb3150d85605260608bf23daedd",
+      "postSHA256": "65f92ad6e13e561d2f40b5333a7069a0267fbeb3150d85605260608bf23daedd",
+      "unchanged": true
+    },
+    {
+      "check": "final-types-03",
+      "path": "tsconfig.json",
+      "beforeSHA256": "cb6312db872f1d9cd23bdded1dbb31cc8265a3fce09f5afd188d56b7fb577a93",
+      "postSHA256": "cb6312db872f1d9cd23bdded1dbb31cc8265a3fce09f5afd188d56b7fb577a93",
+      "unchanged": true
+    },
+    {
+      "check": "final-lint-04",
+      "path": "current-compose.mjs",
+      "beforeSHA256": "b68a32f6abd20d71aa5ab86848928f6d63332e687ac8192903f892f48b13ad8a",
+      "postSHA256": "b68a32f6abd20d71aa5ab86848928f6d63332e687ac8192903f892f48b13ad8a",
+      "unchanged": true
+    },
+    {
+      "check": "final-lint-04",
+      "path": "adverse.mjs",
+      "beforeSHA256": "98fbbb499c10f635cec7d5c3a1f7a5a7e16d951089e86c82f709a916b1291d8c",
+      "postSHA256": "98fbbb499c10f635cec7d5c3a1f7a5a7e16d951089e86c82f709a916b1291d8c",
+      "unchanged": true
+    },
+    {
+      "check": "final-lint-04",
+      "path": "offline-guard.mjs",
+      "beforeSHA256": "5692e9d5687b76adbce30860ded03cf6585e4642c201f761b173039fb776db05",
+      "postSHA256": "5692e9d5687b76adbce30860ded03cf6585e4642c201f761b173039fb776db05",
+      "unchanged": true
+    },
+    {
+      "check": "final-lint-04",
+      "path": "setup.mjs",
+      "beforeSHA256": "75150408e4ac80b07546921566e16dd4a43189a08100dee107f630139b23b4e3",
+      "postSHA256": "75150408e4ac80b07546921566e16dd4a43189a08100dee107f630139b23b4e3",
+      "unchanged": true
+    },
+    {
+      "check": "final-lint-04",
+      "path": "jest.config.mjs",
+      "beforeSHA256": "fed716fdc2c5a739661d6242bfce8092a0b0e164538b3da6eebc225008a09784",
+      "postSHA256": "fed716fdc2c5a739661d6242bfce8092a0b0e164538b3da6eebc225008a09784",
+      "unchanged": true
+    },
+    {
+      "check": "final-lint-04",
+      "path": "eslint.config.mjs",
+      "beforeSHA256": "99b50371e0a24ad4dc77f1aea05b5b51815fe2b66217835a31c5d17a3069ec2e",
+      "postSHA256": "99b50371e0a24ad4dc77f1aea05b5b51815fe2b66217835a31c5d17a3069ec2e",
+      "unchanged": true
+    }
+  ]
+}

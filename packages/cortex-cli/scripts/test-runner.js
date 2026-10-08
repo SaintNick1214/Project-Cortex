@@ -22,6 +22,7 @@ const toolInputs = [
   "CORTEX_RUNTIME_NODE_MINIMUM",
   "CORTEX_RUNTIME_NODE20_0",
   "CORTEX_RUNTIME_NODE20_20",
+  "CORTEX_RUNTIME_NODE22_16",
 ];
 
 /** Fresh HOME precedes Jest startup. Optional tool inputs never select a data target. */

@@ -1,0 +1,13 @@
+--- immutable-c7/argument-candidates.mjs
++++ new-c8/argument-candidates.mjs
+@@ -1,3 +1,4 @@
++import { batchTarget } from './batch-bindings.mjs';
+ /** Validator-valid shapes. Every v.id resolves an actually seeded ID, never an encoded guess.
+  * Semantic fixture bindings remain per-path reviewer obligations. */
+ export function candidate(schema,ctx,key='argument') {
+@@ -27,4 +28,4 @@
+  // v.object() uses an object parameter; same descriptor name is disambiguated above.
+  throw new Error('BLOCKED_UNSUPPORTED_VALIDATOR:'+schema.type);
+ }
+-export function argumentsFor(row,ctx){return candidate(row.validatorSchema,ctx);}
++export function argumentsFor(row,ctx){const args=candidate(row.validatorSchema,ctx);if(row.path==='facts:deleteByIds')args.factIds=[batchTarget(ctx,'facts')];if(row.path==='memories:deleteByIds')args.memoryIds=[batchTarget(ctx,'memories')];return args;}

@@ -1,0 +1,17 @@
+--- immutable-c9/qualify.mjs
++++ new-c10/qualify.mjs
+@@ -1,4 +1,5 @@
+ import assert from 'node:assert/strict';
++import { qualifyPolicyTemplate } from './policy-fixture.mjs';
+ import { qualifyBatchTargets } from './batch-bindings.mjs';
+ import { readFileSync, writeFileSync, openSync, writeSync, fsyncSync, closeSync } from 'node:fs';
+ import { resolve } from 'node:path';
+@@ -30,6 +31,8 @@
+  const observed=new Set();
+  activeCase={id:'healthy-owned-batch-fixtures',paths:['facts:get','memories:get'],phase:'healthy-batch-fixture',identityAlias:'reader',expectedCode:'OWNED_FIXTURE_BOUND'};
+  for(const control of await qualifyBatchTargets(ctx))record(control);
++ activeCase={id:'governance:healthy-scoped-GDPR-template',paths:['governance:getTemplate'],phase:'healthy-policy-fixture',identityAlias:'reader',expectedCode:'SCOPED_TEMPLATE_VALID'};
++ record(await qualifyPolicyTemplate(ctx));
+  // Every public registration uses exact native validators; no function-not-found or validation error counts as authorization.
+  for(const row of ledger.cases.filter(row=>row.visibility==='public')) {
+   const args=argumentsFor(row,ctx),before=await ctx.snapshot();

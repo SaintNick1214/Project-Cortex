@@ -1,0 +1,41 @@
+TAP version 13
+# {"case":"official-offline-staged-typecheck","status":"PASS","before":"cantTypeCheck","after":"success","compilerCalls":2,"installs":0,"network":0,"nativeDeploy":"NOT_RUN"}
+# Subtest: EXACT installed official dependency preflight rejects original manifest and accepts repaired convex pin for dev/codegen/push
+ok 1 - EXACT installed official dependency preflight rejects original manifest and accepts repaired convex pin for dev/codegen/push
+  ---
+  duration_ms: 11.855158
+  type: 'test'
+  ...
+# Subtest: EXACT installed official project/config/functions/compiler prerequisites accept only supported root config
+ok 2 - EXACT installed official project/config/functions/compiler prerequisites accept only supported root config
+  ---
+  duration_ms: 12.55295
+  type: 'test'
+  ...
+# Subtest: EXACT official staged typecheck is unavailable without local installation path and succeeds through source-bound stage-only link
+ok 3 - EXACT official staged typecheck is unavailable without local installation path and succeeds through source-bound stage-only link
+  ---
+  duration_ms: 8866.582319
+  type: 'test'
+  ...
+# Subtest: official router surface returns the actual sole POST route and exact handler identity; apiSpec source guarantees no HTTP identifier
+ok 4 - official router surface returns the actual sole POST route and exact handler identity; apiSpec source guarantees no HTTP identifier
+  ---
+  duration_ms: 65.298927
+  type: 'test'
+  ...
+# Subtest: fresh C4 execution bindings cannot reuse retired C3 operation/run/slug/private target selectors
+ok 5 - fresh C4 execution bindings cannot reuse retired C3 operation/run/slug/private target selectors
+  ---
+  duration_ms: 0.590171
+  type: 'test'
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 5
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 9518.288829

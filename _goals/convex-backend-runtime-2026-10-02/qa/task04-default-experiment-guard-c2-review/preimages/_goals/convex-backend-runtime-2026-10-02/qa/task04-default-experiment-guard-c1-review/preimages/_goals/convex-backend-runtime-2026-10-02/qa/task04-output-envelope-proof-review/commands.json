@@ -1,0 +1,77 @@
+[
+  {
+    "label": "python-runtime",
+    "argv": [
+      "python",
+      "--version"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUTC": "2026-10-04T03:24:02.362173+00:00",
+    "endUTC": "2026-10-04T03:24:02.364182+00:00",
+    "exitCode": 0,
+    "stdout": "python-runtime.stdout",
+    "stderr": "python-runtime.stderr",
+    "stdoutSHA256": "4c3569f5da09975434dd9fd9a91fadbc4367a91d8f3c3fab59e9241ab9ee4bd8",
+    "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "node-runtime",
+    "argv": [
+      "node",
+      "--version"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUTC": "2026-10-04T03:24:02.364272+00:00",
+    "endUTC": "2026-10-04T03:24:02.368924+00:00",
+    "exitCode": 0,
+    "stdout": "node-runtime.stdout",
+    "stderr": "node-runtime.stderr",
+    "stdoutSHA256": "b7677d3ec37ee1897ba07dc2cfe8292fe421c9ac93396cca5bbece486d1a2a41",
+    "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "reproduce-fragment",
+    "argv": [
+      "python",
+      "/workspace/Project-Cortex/work/resume/task04-output-envelope-proof-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task04-output-envelope-proof-preparation/fragment-proof.py"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUTC": "2026-10-04T03:24:02.369100+00:00",
+    "endUTC": "2026-10-04T03:24:03.660676+00:00",
+    "exitCode": 0,
+    "stdout": "reproduce-fragment.stdout",
+    "stderr": "reproduce-fragment.stderr",
+    "stdoutSHA256": "d50b51ed630acb760397b38d6c34eaaa8f83385699c8820e39859a6b7c62d58b",
+    "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "reproduce-envelope",
+    "argv": [
+      "node",
+      "/workspace/Project-Cortex/work/resume/task04-output-envelope-proof-review/mirror/_goals/convex-backend-runtime-2026-10-02/qa/task04-output-envelope-proof-preparation/envelope-proof.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUTC": "2026-10-04T03:24:03.661158+00:00",
+    "endUTC": "2026-10-04T03:24:03.706585+00:00",
+    "exitCode": 0,
+    "stdout": "reproduce-envelope.stdout",
+    "stderr": "reproduce-envelope.stderr",
+    "stdoutSHA256": "ca13a3f81896eab8fcea3bd06caa183ba1bbf9abd169d7780d330ec6974d47b7",
+    "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "independent-adversarial",
+    "argv": [
+      "node",
+      "/workspace/Project-Cortex/work/resume/task04-output-envelope-proof-review/independent-check.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startUTC": "2026-10-04T03:24:03.707178+00:00",
+    "endUTC": "2026-10-04T03:24:07.865792+00:00",
+    "exitCode": 0,
+    "stdout": "independent-adversarial.stdout",
+    "stderr": "independent-adversarial.stderr",
+    "stdoutSHA256": "7988dfe74a645b30900c5d865e33508005dc4955bc2bae4fa6187269a90fe259",
+    "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+]

@@ -1,0 +1,3006 @@
+"""
+Cortex SDK - Memory Convenience API
+
+Layer 4: High-level helpers that orchestrate Layer 1 (ACID) and Layer 2 (Vector) automatically
+"""
+
+import asyncio
+import time
+from typing import Any, Dict, List, Literal, Optional, Tuple, Union, cast
+
+from ..conversations import ConversationsAPI
+from ..errors import CortexError, ErrorCode
+from ..facts import FactsAPI, StoreFactWithDedupOptions
+from ..facts.belief_revision import ConflictCandidate, ReviseParams
+from ..facts.deduplication import (
+    DeduplicationConfig,
+    FactDeduplicationService,
+)
+from ..llm import ExtractedFact, LLMClient, create_llm_client
+from ..types import (
+    ArchiveResult,
+    AuthContext,
+    ConversationType,
+    CreatedIds,
+    DeleteManyResult,
+    DeleteMemoryOptions,
+    DeleteMemoryResult,
+    EnrichedMemory,
+    FactRevisionAction,
+    ForgetOptions,
+    ForgetResult,
+    LayerEvent,
+    LayerEventData,
+    LayerEventError,
+    LayerStatus,
+    LLMConfig,
+    MemoryEntry,
+    MemoryLayer,
+    MemoryMetadata,
+    MemorySource,
+    MemoryVersionInfo,
+    OrchestrationObserver,
+    OrchestrationPhase,
+    OrchestrationSummary,
+    RecallContext,
+    RecallGraphExpansionConfig,
+    RecallParams,
+    RecallResult,
+    RecallSourceConfig,
+    RecallSummary,
+    RememberOptions,
+    RememberParams,
+    RememberResult,
+    SearchOptions,
+    SourceType,
+    StoreMemoryInput,
+    StoreMemoryResult,
+    UpdateManyResult,
+    UpdateMemoryOptions,
+    UpdateMemoryResult,
+)
+from ..types import (
+    RevisionAction as RevisionAction,
+)
+from ..vector import VectorAPI
+from .validators import (
+    MemoryValidationError,
+    validate_content,
+    validate_conversation_id,
+    validate_conversation_ref_requirement,
+    validate_export_format,
+    validate_filter_combination,
+    validate_importance,
+    validate_limit,
+    validate_memory_id,
+    validate_memory_space_id,
+    validate_recall_params,
+    validate_remember_params,
+    validate_search_options,
+    validate_source_type,
+    validate_store_memory_input,
+    validate_stream_object,
+    validate_tags,
+    validate_timestamp,
+    validate_update_options,
+    validate_user_id,
+    validate_version,
+)
+
+
+class MemoryAPI:
+    """
+    Memory Convenience API - Layer 4
+
+    High-level interface that manages both ACID conversations and Vector memories automatically.
+    This is the recommended API for most use cases.
+    """
+
+    def __init__(
+        self,
+        client: Any,
+        graph_adapter: Optional[Any] = None,
+        resilience: Optional[Any] = None,
+        llm_config: Optional[LLMConfig] = None,
+        auth_context: Optional[AuthContext] = None,
+    ) -> None:
+        """
+        Initialize Memory API.
+
+        Args:
+            client: Convex client instance
+            graph_adapter: Optional graph database adapter
+            resilience: Optional resilience layer for overload protection
+            llm_config: Optional LLM configuration for automatic fact extraction
+            auth_context: Optional auth context for multi-tenancy
+        """
+        self.client = client
+        self.graph_adapter = graph_adapter
+        self._resilience = resilience
+        self._llm_config = llm_config
+        self._auth_context = auth_context
+        self._llm_client: Optional[LLMClient] = None
+        # Pass resilience layer and auth context to sub-APIs
+        self.conversations = ConversationsAPI(client, graph_adapter, resilience, auth_context)
+        self.vector = VectorAPI(client, graph_adapter, resilience, auth_context)
+
+        # Create belief revision LLM client adapter if LLM is configured
+        # The LLM client needs a complete() method for belief revision
+        belief_revision_llm_client = None
+        if llm_config:
+            llm_client = create_llm_client(llm_config)
+            if llm_client and hasattr(llm_client, "complete"):
+                belief_revision_llm_client = llm_client
+
+        self.facts = FactsAPI(client, graph_adapter, resilience, auth_context, belief_revision_llm_client)
+
+    @property
+    def _tenant_id(self) -> Optional[str]:
+        """Get tenant_id from auth context (for multi-tenancy)."""
+        return self._auth_context.tenant_id if self._auth_context else None
+
+    async def _execute_with_resilience(
+        self,
+        operation: Any,
+        operation_name: str,
+    ) -> Any:
+        """Execute an operation through the resilience layer (if available)."""
+        if self._resilience:
+            return await self._resilience.execute(operation, operation_name)
+        return await operation()
+
+    def _should_skip_layer(self, layer: str, skip_layers: Optional[List[str]]) -> bool:
+        """Check if a layer should be skipped during orchestration."""
+        return skip_layers is not None and layer in skip_layers
+
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    # Orchestration Observer Helpers (Phase-Aware)
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    def _create_layer_event(
+        self,
+        layer: MemoryLayer,
+        status: LayerStatus,
+        start_time: int,
+        phase: OrchestrationPhase,
+        data: Optional[LayerEventData] = None,
+        error: Optional[LayerEventError] = None,
+        revision_info: Optional[Dict[str, Any]] = None,
+    ) -> LayerEvent:
+        """Create a layer event with current timing info and phase."""
+        now = int(time.time() * 1000)
+        return LayerEvent(
+            layer=layer,
+            status=status,
+            timestamp=now,
+            phase=phase,
+            latency_ms=now - start_time,
+            data=data,
+            error=error,
+            revision_action=revision_info.get("action") if revision_info else None,
+            superseded_facts=revision_info.get("superseded_facts") if revision_info else None,
+        )
+
+    def _notify_layer_update(
+        self,
+        observer: Optional[OrchestrationObserver],
+        event: LayerEvent,
+    ) -> None:
+        """Notify the observer of a layer update."""
+        if not observer:
+            return
+        try:
+            if hasattr(observer, "on_layer_update"):
+                observer.on_layer_update(event)
+        except Exception as e:
+            print(f"[Cortex] Observer on_layer_update failed: {e}")
+
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    # Remember (Write) Phase Helpers
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    def _notify_remember_start(
+        self,
+        observer: Optional[OrchestrationObserver],
+        orchestration_id: str,
+    ) -> None:
+        """Notify the observer of remember (write) phase start."""
+        if not observer:
+            return
+        try:
+            if hasattr(observer, "on_remember_start"):
+                observer.on_remember_start(orchestration_id)
+        except Exception as e:
+            print(f"[Cortex] Observer on_remember_start failed: {e}")
+
+    def _notify_remember_complete(
+        self,
+        observer: Optional[OrchestrationObserver],
+        summary: OrchestrationSummary,
+    ) -> None:
+        """Notify the observer of remember (write) phase completion."""
+        if not observer:
+            return
+        try:
+            if hasattr(observer, "on_remember_complete"):
+                observer.on_remember_complete(summary)
+        except Exception as e:
+            print(f"[Cortex] Observer on_remember_complete failed: {e}")
+
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    # Recall (Read) Phase Helpers
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    def _notify_recall_start(
+        self,
+        observer: Optional[OrchestrationObserver],
+        orchestration_id: str,
+    ) -> None:
+        """Notify the observer of recall (read) phase start."""
+        if not observer:
+            return
+        try:
+            if hasattr(observer, "on_recall_start"):
+                observer.on_recall_start(orchestration_id)
+        except Exception as e:
+            print(f"[Cortex] Observer on_recall_start failed: {e}")
+
+    def _notify_recall_complete(
+        self,
+        observer: Optional[OrchestrationObserver],
+        summary: RecallSummary,
+    ) -> None:
+        """Notify the observer of recall (read) phase completion."""
+        if not observer:
+            return
+        try:
+            if hasattr(observer, "on_recall_complete"):
+                observer.on_recall_complete(summary)
+        except Exception as e:
+            print(f"[Cortex] Observer on_recall_complete failed: {e}")
+
+    def _get_llm_client(self) -> Optional[LLMClient]:
+        """Get or create LLM client for fact extraction."""
+        # Return cached client if already created
+        if self._llm_client is not None:
+            return self._llm_client
+
+        # Create and cache client
+        if self._llm_config:
+            self._llm_client = create_llm_client(self._llm_config)
+
+        return self._llm_client
+
+    async def _create_llm_fact_extractor(
+        self, user_message: str, agent_response: str
+    ) -> Optional[List[ExtractedFact]]:
+        """
+        Create an LLM-based fact extractor function.
+
+        Uses the configured LLM provider (OpenAI or Anthropic) to automatically
+        extract structured facts from conversations. Falls back to None if
+        extraction fails or LLM is not properly configured.
+        """
+        client = self._get_llm_client()
+        if not client:
+            print(
+                "[Cortex] LLM fact extraction configured but client could not be created. "
+                "Ensure openai or anthropic is installed."
+            )
+            return None
+
+        try:
+            return await client.extract_facts(user_message, agent_response)
+        except Exception as e:
+            print(f"[Cortex] LLM fact extraction failed: {e}")
+            return None
+
+    def _get_fact_extractor(self, params: RememberParams) -> Optional[Any]:
+        """
+        Get fact extractor function with fallback chain.
+
+        Priority:
+        1. params.extract_facts (explicit callback)
+        2. LLM config's extract_facts (if configured)
+        3. LLM client's extract_facts (if api_key configured)
+        4. None (no fact extraction)
+        """
+        # Use provided extractor if available
+        if params.extract_facts:
+            return params.extract_facts
+
+        # Check LLM config for custom extractor
+        if self._llm_config and self._llm_config.extract_facts:
+            return self._llm_config.extract_facts
+
+        # Check LLM config for API key - use built-in extraction
+        if self._llm_config and self._llm_config.api_key:
+            return self._create_llm_fact_extractor
+
+        return None
+
+    def _build_deduplication_config(
+        self, params: RememberParams
+    ) -> Optional[DeduplicationConfig]:
+        """
+        Build deduplication config from RememberParams.
+
+        Default behavior:
+        - Uses 'semantic' deduplication if generate_embedding is available
+        - Falls back to 'structural' if no embedding function
+        - Returns None if deduplication is explicitly disabled
+
+        Args:
+            params: Remember parameters
+
+        Returns:
+            Deduplication configuration or None if disabled
+        """
+        # Check if deduplication is explicitly disabled
+        fact_dedup = getattr(params, "fact_deduplication", None)
+        if fact_dedup is False:
+            return None
+
+        # Get embedding function from params or LLM config
+        generate_embedding = params.generate_embedding
+        if not generate_embedding and self._llm_config:
+            # Try to get embedding function from LLM config
+            generate_embedding = getattr(self._llm_config, "generate_embedding", None)
+
+        # Build config based on what's provided
+        if fact_dedup is not None and fact_dedup is not True:
+            # User provided explicit config or strategy
+            if isinstance(fact_dedup, str):
+                # Strategy shorthand
+                return FactDeduplicationService.resolve_config(
+                    fact_dedup,  # type: ignore
+                    generate_embedding,
+                )
+            elif isinstance(fact_dedup, DeduplicationConfig):
+                # Full config - add fallback embedding if needed
+                if fact_dedup.generate_embedding is None and generate_embedding:
+                    return DeduplicationConfig(
+                        strategy=fact_dedup.strategy,
+                        similarity_threshold=fact_dedup.similarity_threshold,
+                        generate_embedding=generate_embedding,
+                    )
+                return fact_dedup
+
+        # Default: semantic with fallback to structural
+        return FactDeduplicationService.resolve_config("semantic", generate_embedding)
+
+    async def _ensure_user_exists(self, user_id: str, user_name: Optional[str]) -> None:
+        """
+        Auto-create user profile if it doesn't exist.
+
+        This ensures that user profiles are automatically registered when
+        remember() is called, matching the TypeScript SDK behavior.
+
+        Uses immutable:store with type='user' (same as UsersAPI.update).
+        """
+        try:
+            # Check if user exists via immutable:get
+            existing = await self._execute_with_resilience(
+                lambda: self.client.query("immutable:get", {"type": "user", "id": user_id}),
+                "immutable:get",
+            )
+            if not existing:
+                # Create user profile using immutable store pattern
+                # This matches TypeScript SDK's UsersAPI.update() which calls api.immutable.store
+                await self._execute_with_resilience(
+                    lambda: self.client.mutation("immutable:store", {
+                        "type": "user",
+                        "id": user_id,
+                        "data": {
+                            "displayName": user_name or user_id,
+                            "createdAt": int(time.time() * 1000),
+                        },
+                    }),
+                    "immutable:store",
+                )
+        except Exception as error:
+            # Log warning but don't fail - user registration is optional
+            print(f"Warning: Failed to auto-create user profile: {error}")
+
+    async def _ensure_agent_exists(self, agent_id: str) -> None:
+        """
+        Auto-register agent if it doesn't exist.
+
+        This ensures that agents are automatically registered when
+        remember() is called, matching the TypeScript SDK behavior.
+
+        Uses agents:exists query and agents:register mutation.
+        """
+        try:
+            # Check if agent exists using agents:exists query
+            existing = await self._execute_with_resilience(
+                lambda: self.client.query("agents:exists", {"agentId": agent_id}),
+                "agents:exists",
+            )
+            if not existing:
+                # Register agent with minimal data (matching TS SDK's ensureAgentExists)
+                try:
+                    await self._execute_with_resilience(
+                        lambda: self.client.mutation("agents:register", {
+                            "agentId": agent_id,
+                            "name": agent_id,
+                            "description": "Auto-registered by memory.remember()",
+                        }),
+                        "agents:register",
+                    )
+                except Exception as register_error:
+                    # Handle "AGENT_ALREADY_REGISTERED" - race condition is OK
+                    if "AGENT_ALREADY_REGISTERED" in str(register_error):
+                        pass  # Another call registered it first - that's fine
+                    else:
+                        raise register_error
+        except Exception as error:
+            # Log warning but don't fail - agent registration is optional
+            print(f"Warning: Failed to auto-register agent: {error}")
+
+    async def _ensure_memory_space_exists(self, memory_space_id: str, sync_to_graph: bool = False) -> None:
+        """
+        Auto-register memory space if it doesn't exist.
+
+        Memory spaces are always auto-created when used - they cannot be skipped.
+        Uses memorySpaces:get query and memorySpaces:register mutation.
+        """
+        try:
+            # Check if memory space exists
+            existing = await self._execute_with_resilience(
+                lambda: self.client.query("memorySpaces:get", {"memorySpaceId": memory_space_id}),
+                "memorySpaces:get",
+            )
+            if not existing:
+                # Register memory space with minimal data
+                try:
+                    await self._execute_with_resilience(
+                        lambda: self.client.mutation("memorySpaces:register", {
+                            "memorySpaceId": memory_space_id,
+                            "name": memory_space_id,
+                            "type": "custom",
+                        }),
+                        "memorySpaces:register",
+                    )
+                except Exception as register_error:
+                    # Handle race condition - another call may have registered it first
+                    if "ALREADY_EXISTS" in str(register_error) or "already exists" in str(register_error).lower():
+                        pass  # That's fine
+                    else:
+                        raise register_error
+        except Exception as error:
+            # Log warning but don't fail
+            print(f"Warning: Failed to auto-register memory space: {error}")
+
+    async def remember(
+        self, params: RememberParams, options: Optional[RememberOptions] = None
+    ) -> RememberResult:
+        """
+        Remember a conversation exchange (stores in both ACID and Vector).
+
+        This is the main method for storing conversation memories. It handles both
+        ACID storage and Vector indexing automatically. All configured layers are
+        enabled by default - use skip_layers to explicitly opt-out.
+
+        Args:
+            params: Remember parameters including conversation details
+            options: Optional parameters for extraction and graph sync
+
+        Returns:
+            RememberResult with conversation details, memories, and extracted facts
+
+        Example:
+            >>> # Full orchestration (default)
+            >>> result = await cortex.memory.remember(
+            ...     RememberParams(
+            ...         memory_space_id='agent-1',
+            ...         conversation_id='conv-123',
+            ...         user_message='The password is Blue',
+            ...         agent_response="I'll remember that!",
+            ...         user_id='user-1',
+            ...         user_name='Alex',
+            ...         agent_id='assistant-v1',
+            ...     )
+            ... )
+            >>>
+            >>> # Skip specific layers
+            >>> result = await cortex.memory.remember(
+            ...     RememberParams(
+            ...         memory_space_id='agent-1',
+            ...         conversation_id='conv-456',
+            ...         user_message='Quick question',
+            ...         agent_response='Quick answer',
+            ...         agent_id='assistant-v1',
+            ...         skip_layers=['facts', 'graph'],
+            ...     )
+            ... )
+            >>>
+            >>> # With orchestration observer
+            >>> class MyObserver:
+            ...     def on_layer_update(self, event):
+            ...         print(f"{event.layer}: {event.status}")
+            >>> result = await cortex.memory.remember(
+            ...     RememberParams(..., observer=MyObserver())
+            ... )
+        """
+        import uuid
+
+        # Client-side validation
+        validate_remember_params(params)
+
+        now = int(time.time() * 1000)
+        orchestration_start_time = now
+        opts = options or RememberOptions()
+        skip_layers = params.skip_layers or []
+        observer = params.observer
+
+        # Generate orchestration ID for tracking
+        orchestration_id = f"orch_{uuid.uuid4().hex[:12]}"
+
+        # Initialize layer events tracking
+        layer_events: Dict[str, LayerEvent] = {}
+        created_ids: Dict[str, Any] = {}
+
+        # Notify remember (write) phase start
+        self._notify_remember_start(observer, orchestration_id)
+
+        # Determine if we should sync to graph (check skipLayers)
+        should_sync_to_graph = (
+            opts.sync_to_graph is not False
+            and self.graph_adapter is not None
+            and not self._should_skip_layer("graph", skip_layers)
+        )
+
+        # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        # STEP 1: MEMORYSPACE (Cannot be skipped)
+        # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        if observer:
+            event = self._create_layer_event("memorySpace", "in_progress", orchestration_start_time, "remember")
+            layer_events["memorySpace"] = event
+            self._notify_layer_update(observer, event)
+
+        try:
+            await self._ensure_memory_space_exists(params.memory_space_id, should_sync_to_graph)
+            if observer:
+                event = self._create_layer_event(
+                    "memorySpace", "complete", orchestration_start_time, "remember",
+                    data=LayerEventData(id=params.memory_space_id, preview=f"Memory space: {params.memory_space_id}")
+                )
+                layer_events["memorySpace"] = event
+                self._notify_layer_update(observer, event)
+        except Exception as e:
+            if observer:
+                event = self._create_layer_event(
+                    "memorySpace", "error", orchestration_start_time, "remember",
+                    error=LayerEventError(message=str(e))
+                )
+                layer_events["memorySpace"] = event
+                self._notify_layer_update(observer, event)
+            raise
+
+        # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        # STEP 2: OWNER PROFILES (skip: 'users'/'agents')
+        # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        # User layer
+        if params.user_id and not self._should_skip_layer("users", skip_layers):
+            if observer:
+                event = self._create_layer_event("user", "in_progress", orchestration_start_time, "remember")
+                layer_events["user"] = event
+                self._notify_layer_update(observer, event)
+            try:
+                await self._ensure_user_exists(params.user_id, params.user_name)
+                if observer:
+                    event = self._create_layer_event(
+                        "user", "complete", orchestration_start_time, "remember",
+                        data=LayerEventData(id=params.user_id, preview=f"User: {params.user_name or params.user_id}")
+                    )
+                    layer_events["user"] = event
+                    self._notify_layer_update(observer, event)
+            except Exception as e:
+                if observer:
+                    event = self._create_layer_event(
+                        "user", "error", orchestration_start_time, "remember",
+                        error=LayerEventError(message=str(e))
+                    )
+                    layer_events["user"] = event
+                    self._notify_layer_update(observer, event)
+                raise
+        elif observer:
+            event = self._create_layer_event("user", "skipped", orchestration_start_time, "remember")
+            layer_events["user"] = event
+            self._notify_layer_update(observer, event)
+
+        # Agent layer
+        if params.agent_id and not self._should_skip_layer("agents", skip_layers):
+            if observer:
+                event = self._create_layer_event("agent", "in_progress", orchestration_start_time, "remember")
+                layer_events["agent"] = event
+                self._notify_layer_update(observer, event)
+            try:
+                await self._ensure_agent_exists(params.agent_id)
+                if observer:
+                    event = self._create_layer_event(
+                        "agent", "complete", orchestration_start_time, "remember",
+                        data=LayerEventData(id=params.agent_id, preview=f"Agent: {params.agent_id}")
+                    )
+                    layer_events["agent"] = event
+                    self._notify_layer_update(observer, event)
+            except Exception as e:
+                if observer:
+                    event = self._create_layer_event(
+                        "agent", "error", orchestration_start_time, "remember",
+                        error=LayerEventError(message=str(e))
+                    )
+                    layer_events["agent"] = event
+                    self._notify_layer_update(observer, event)
+                raise
+        elif observer:
+            event = self._create_layer_event("agent", "skipped", orchestration_start_time, "remember")
+            layer_events["agent"] = event
+            self._notify_layer_update(observer, event)
+
+        # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        # STEP 3: CONVERSATION (skip: 'conversations')
+        # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        user_message_id = None
+        agent_message_id = None
+
+        if not self._should_skip_layer("conversations", skip_layers):
+            if observer:
+                event = self._create_layer_event("conversation", "in_progress", orchestration_start_time, "remember")
+                layer_events["conversation"] = event
+                self._notify_layer_update(observer, event)
+
+            try:
+                from ..types import (
+                    AddMessageInput,
+                    AddMessageOptions,
+                    ConversationParticipants,
+                    CreateConversationInput,
+                    CreateConversationOptions,
+                )
+
+                existing_conversation = await self.conversations.get(params.conversation_id)
+
+                if not existing_conversation:
+                    # Always use user-agent type for remember() function
+                    # agent-agent conversations are for explicit multi-agent collaboration
+                    # and require memorySpaceIds (hive-mode or collaboration-mode)
+                    conversation_type: ConversationType = "user-agent"
+                    participants = ConversationParticipants(
+                        user_id=params.user_id,
+                        agent_id=params.agent_id,
+                        participant_id=params.participant_id,
+                    )
+
+                    await self.conversations.create(
+                        CreateConversationInput(
+                            memory_space_id=params.memory_space_id,
+                            conversation_id=params.conversation_id,
+                            type=conversation_type,
+                            participants=participants,
+                        ),
+                        CreateConversationOptions(sync_to_graph=should_sync_to_graph),
+                    )
+
+                # Store user message in ACID
+                user_msg = await self.conversations.add_message(
+                    AddMessageInput(
+                        conversation_id=params.conversation_id,
+                        role="user",
+                        content=params.user_message,
+                    ),
+                    AddMessageOptions(sync_to_graph=should_sync_to_graph),
+                )
+
+                # Store agent response in ACID
+                agent_msg = await self.conversations.add_message(
+                    AddMessageInput(
+                        conversation_id=params.conversation_id,
+                        role="agent",
+                        content=params.agent_response,
+                        participant_id=params.participant_id or params.agent_id,
+                    ),
+                    AddMessageOptions(sync_to_graph=should_sync_to_graph),
+                )
+
+                # Extract message IDs
+                user_message_id = user_msg.messages[-1]["id"] if isinstance(user_msg.messages[-1], dict) else user_msg.messages[-1].id
+                agent_message_id = agent_msg.messages[-1]["id"] if isinstance(agent_msg.messages[-1], dict) else agent_msg.messages[-1].id
+
+                # Track created IDs
+                created_ids["conversationId"] = params.conversation_id
+
+                if observer:
+                    event = self._create_layer_event(
+                        "conversation", "complete", orchestration_start_time, "remember",
+                        data=LayerEventData(
+                            id=params.conversation_id,
+                            preview=f"Conversation: {params.conversation_id} (2 messages)",
+                            metadata={"userMsgId": user_message_id, "agentMsgId": agent_message_id}
+                        )
+                    )
+                    layer_events["conversation"] = event
+                    self._notify_layer_update(observer, event)
+            except Exception as e:
+                if observer:
+                    event = self._create_layer_event(
+                        "conversation", "error", orchestration_start_time, "remember",
+                        error=LayerEventError(message=str(e))
+                    )
+                    layer_events["conversation"] = event
+                    self._notify_layer_update(observer, event)
+                raise
+        elif observer:
+            event = self._create_layer_event("conversation", "skipped", orchestration_start_time, "remember")
+            layer_events["conversation"] = event
+            self._notify_layer_update(observer, event)
+
+        # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        # STEP 4: VECTOR MEMORY (skip: 'vector')
+        # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        stored_memories: List[MemoryEntry] = []
+
+        if not self._should_skip_layer("vector", skip_layers):
+            if observer:
+                event = self._create_layer_event("vector", "in_progress", orchestration_start_time, "remember")
+                layer_events["vector"] = event
+                self._notify_layer_update(observer, event)
+
+            try:
+                from ..types import ConversationRef, StoreMemoryOptions
+
+                # Extract content if provided
+                user_content = params.user_message
+                agent_content = params.agent_response
+                content_type = "raw"
+
+                if params.extract_content:
+                    extracted = await params.extract_content(
+                        params.user_message, params.agent_response
+                    )
+                    if extracted:
+                        user_content = extracted
+                        content_type = "summarized"
+
+                # Generate embeddings if provided
+                user_embedding = None
+                agent_embedding = None
+
+                if params.generate_embedding:
+                    user_embedding = await params.generate_embedding(user_content)
+                    agent_embedding = await params.generate_embedding(agent_content)
+
+                # Store user message in Vector
+                user_memory = await self.vector.store(
+                    params.memory_space_id,
+                    StoreMemoryInput(
+                        content=user_content,
+                        content_type=cast(Literal["raw", "summarized"], content_type),
+                        participant_id=params.participant_id,
+                        embedding=user_embedding,
+                        user_id=params.user_id,
+                        agent_id=params.agent_id,
+                        message_role="user",
+                        source=MemorySource(
+                            type="conversation",
+                            user_id=params.user_id,
+                            user_name=params.user_name,
+                            timestamp=now,
+                        ),
+                        conversation_ref=(
+                            ConversationRef(
+                                conversation_id=params.conversation_id,
+                                message_ids=[user_message_id],
+                            )
+                            if user_message_id
+                            else None
+                        ),
+                        metadata=MemoryMetadata(
+                            importance=params.importance or 50, tags=params.tags or []
+                        ),
+                    ),
+                    StoreMemoryOptions(sync_to_graph=should_sync_to_graph),
+                )
+                stored_memories.append(user_memory)
+
+                # Detect if agent response is just an acknowledgment
+                agent_content_lower = agent_content.lower()
+                is_acknowledgment = len(agent_content) < 80 and any(
+                    phrase in agent_content_lower
+                    for phrase in [
+                        "got it", "i've noted", "i'll remember", "noted", "understood",
+                        "i'll set", "i'll call you", "will do", "sure thing", "okay,", "ok,",
+                    ]
+                )
+
+                # Only store agent response in vector if it contains meaningful information
+                if not is_acknowledgment:
+                    agent_memory = await self.vector.store(
+                        params.memory_space_id,
+                        StoreMemoryInput(
+                            content=agent_content,
+                            content_type="raw",
+                            participant_id=params.participant_id,
+                            embedding=agent_embedding,
+                            user_id=params.user_id,
+                            agent_id=params.agent_id,
+                            message_role="agent",
+                            source=MemorySource(
+                                type="conversation",
+                                user_id=params.user_id,
+                                user_name=params.user_name,
+                                timestamp=now + 1,
+                            ),
+                            conversation_ref=(
+                                ConversationRef(
+                                    conversation_id=params.conversation_id,
+                                    message_ids=[agent_message_id],
+                                )
+                                if agent_message_id
+                                else None
+                            ),
+                            metadata=MemoryMetadata(
+                                importance=params.importance or 50, tags=params.tags or []
+                            ),
+                        ),
+                        StoreMemoryOptions(sync_to_graph=should_sync_to_graph),
+                    )
+                    stored_memories.append(agent_memory)
+
+                # Track created memory IDs
+                created_ids["memoryIds"] = [m.memory_id for m in stored_memories]
+
+                if observer:
+                    event = self._create_layer_event(
+                        "vector", "complete", orchestration_start_time, "remember",
+                        data=LayerEventData(
+                            id=stored_memories[0].memory_id if stored_memories else None,
+                            preview=f"Stored {len(stored_memories)} memories",
+                            metadata={"memoryCount": len(stored_memories)}
+                        )
+                    )
+                    layer_events["vector"] = event
+                    self._notify_layer_update(observer, event)
+            except Exception as e:
+                if observer:
+                    event = self._create_layer_event(
+                        "vector", "error", orchestration_start_time, "remember",
+                        error=LayerEventError(message=str(e))
+                    )
+                    layer_events["vector"] = event
+                    self._notify_layer_update(observer, event)
+                raise
+        elif observer:
+            event = self._create_layer_event("vector", "skipped", orchestration_start_time, "remember")
+            layer_events["vector"] = event
+            self._notify_layer_update(observer, event)
+
+        # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        # STEP 5: FACTS (skip: 'facts') - with belief revision or deduplication
+        # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        from ..types import FactRecord as FactRecordModel
+        extracted_facts: List[FactRecordModel] = []
+        revision_actions: List[FactRevisionAction] = []
+
+        if not self._should_skip_layer("facts", skip_layers):
+            if observer:
+                event = self._create_layer_event("facts", "in_progress", orchestration_start_time, "remember")
+                layer_events["facts"] = event
+                self._notify_layer_update(observer, event)
+
+            fact_extractor = self._get_fact_extractor(params)
+
+            if fact_extractor:
+                try:
+                    facts_to_store = await fact_extractor(
+                        params.user_message, params.agent_response
+                    )
+
+                    if facts_to_store:
+                        from ..types import (
+                            FactSourceRef,
+                            StoreFactParams,
+                        )
+
+                        # Determine if we should use belief revision
+                        # Batteries included: ON by default when LLM is configured
+                        use_belief_revision = (
+                            opts.belief_revision is not False
+                            and self.facts.has_belief_revision()
+                        )
+
+                        # Build deduplication config for fallback path
+                        dedup_config = self._build_deduplication_config(params)
+
+                        # Helper to get value from dict or dataclass
+                        def _get_fact_value(fact_data: Any, key: str, default: Any = None) -> Any:
+                            """Get value from fact_data whether it's a dict or dataclass."""
+                            if isinstance(fact_data, dict):
+                                # Handle both camelCase and snake_case for dicts
+                                return fact_data.get(key) or fact_data.get(
+                                    # Convert camelCase to snake_case
+                                    ''.join(['_' + c.lower() if c.isupper() else c for c in key]).lstrip('_'),
+                                    default
+                                )
+                            else:
+                                # For dataclass/object, convert key from camelCase to snake_case
+                                snake_key = ''.join(['_' + c.lower() if c.isupper() else c for c in key]).lstrip('_')
+                                return getattr(fact_data, snake_key, default)
+
+                        for fact_data in facts_to_store:
+                            try:
+                                if use_belief_revision:
+                                    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+                                    # BELIEF REVISION PATH (intelligent fact management)
+                                    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+                                    fact_text = _get_fact_value(fact_data, "fact")
+                                    fact_type_val = _get_fact_value(fact_data, "factType")
+                                    subject_val = _get_fact_value(fact_data, "subject", params.user_id or params.agent_id)
+                                    predicate_val = _get_fact_value(fact_data, "predicate")
+                                    object_val = _get_fact_value(fact_data, "object")
+                                    confidence_raw = _get_fact_value(fact_data, "confidence", 80)
+                                    tags_val = _get_fact_value(fact_data, "tags", params.tags or [])
+
+                                    # Normalize confidence: if float <= 1, treat as percentage and multiply
+                                    confidence_val = int(confidence_raw * 100) if isinstance(confidence_raw, float) and confidence_raw <= 1 else int(confidence_raw)
+
+                                    revise_result = await self.facts.revise(
+                                        ReviseParams(
+                                            memory_space_id=params.memory_space_id,
+                                            user_id=params.user_id,
+                                            participant_id=params.participant_id,
+                                            fact=ConflictCandidate(
+                                                fact=fact_text,
+                                                fact_type=fact_type_val,
+                                                subject=subject_val,
+                                                predicate=predicate_val,
+                                                object=object_val,
+                                                confidence=confidence_val,
+                                                tags=tags_val,
+                                            ),
+                                        )
+                                    )
+
+                                    # Track revision action
+                                    # Handle both dict and object results from revise()
+                                    from ..types import FactRecord as FactRecordType
+                                    action: str
+                                    final_fact: FactRecordType
+                                    superseded: List[Any]
+                                    reason: Optional[str]
+
+                                    if isinstance(revise_result, dict):
+                                        action = str(revise_result.get("action", "ADD"))
+                                        raw_fact = revise_result.get("fact")
+                                        superseded = list(revise_result.get("superseded") or [])
+                                        reason = revise_result.get("reason")
+                                    else:
+                                        action = revise_result.action
+                                        raw_fact = revise_result.fact
+                                        superseded = list(revise_result.superseded or [])
+                                        reason = revise_result.reason
+
+                                    # Convert fact to FactRecord if it's a dict
+                                    if isinstance(raw_fact, dict):
+                                        # Handle case where fact is a dict (from belief revision)
+                                        # Skip if fact was skipped (NONE action without real fact)
+                                        if raw_fact.get("skipped"):
+                                            revision_actions.append(
+                                                FactRevisionAction(
+                                                    action=cast(Any, action),
+                                                    fact=FactRecordType(
+                                                        _id="",
+                                                        fact_id=str(raw_fact.get("fact_id") or ""),
+                                                        memory_space_id=params.memory_space_id,
+                                                        fact=str(raw_fact.get("fact", "")),
+                                                        fact_type="custom",
+                                                        confidence=0,
+                                                        source_type="conversation",
+                                                        tags=[],
+                                                        created_at=0,
+                                                        updated_at=0,
+                                                        version=1,
+                                                    ),
+                                                    superseded=None,
+                                                    reason=reason or str(raw_fact.get("reason") or ""),
+                                                )
+                                            )
+                                            continue
+
+                                        # Build source_ref from raw fact or construct from params
+                                        source_ref_data = raw_fact.get("sourceRef") or raw_fact.get("source_ref")
+                                        fact_source_ref = None
+                                        if source_ref_data:
+                                            if isinstance(source_ref_data, dict):
+                                                from ..types import FactSourceRef
+                                                fact_source_ref = FactSourceRef(
+                                                    conversation_id=source_ref_data.get("conversationId") or source_ref_data.get("conversation_id"),
+                                                    message_ids=source_ref_data.get("messageIds") or source_ref_data.get("message_ids"),
+                                                    memory_id=source_ref_data.get("memoryId") or source_ref_data.get("memory_id"),
+                                                )
+                                            else:
+                                                fact_source_ref = source_ref_data
+                                        elif params.conversation_id:
+                                            # Construct source_ref from params if not in raw fact
+                                            from ..types import FactSourceRef
+                                            fact_source_ref = FactSourceRef(
+                                                conversation_id=params.conversation_id,
+                                                message_ids=[user_message_id, agent_message_id] if user_message_id and agent_message_id else None,
+                                                memory_id=stored_memories[0].memory_id if stored_memories else None,
+                                            )
+
+                                        final_fact = FactRecordType(
+                                            _id=str(raw_fact.get("_id", "")),
+                                            fact_id=str(raw_fact.get("factId") or raw_fact.get("fact_id") or ""),
+                                            memory_space_id=str(raw_fact.get("memorySpaceId") or params.memory_space_id),
+                                            fact=str(raw_fact.get("fact", "")),
+                                            fact_type=cast(Any, raw_fact.get("factType") or raw_fact.get("fact_type") or "custom"),
+                                            confidence=int(raw_fact.get("confidence") or 0),
+                                            source_type=cast(Any, raw_fact.get("sourceType") or raw_fact.get("source_type") or "conversation"),
+                                            tags=list(raw_fact.get("tags") or []),
+                                            created_at=int(raw_fact.get("createdAt") or raw_fact.get("created_at") or 0),
+                                            updated_at=int(raw_fact.get("updatedAt") or raw_fact.get("updated_at") or 0),
+                                            version=int(raw_fact.get("version") or 1),
+                                            subject=raw_fact.get("subject"),
+                                            predicate=raw_fact.get("predicate"),
+                                            object=raw_fact.get("object"),
+                                            # Propagate user_id and participant_id from the raw fact or params
+                                            user_id=raw_fact.get("userId") or raw_fact.get("user_id") or params.user_id,
+                                            participant_id=raw_fact.get("participantId") or raw_fact.get("participant_id") or params.participant_id,
+                                            source_ref=fact_source_ref,
+                                        )
+                                    elif raw_fact is not None:
+                                        # It's already a FactRecord
+                                        final_fact = raw_fact
+                                    else:
+                                        # Skip if no fact
+                                        continue
+
+                                    revision_actions.append(
+                                        FactRevisionAction(
+                                            action=cast(Any, action),
+                                            fact=final_fact,
+                                            superseded=superseded if superseded else None,
+                                            reason=reason,
+                                        )
+                                    )
+
+                                    # Only add to extracted_facts if action wasn't NONE (duplicate/skip)
+                                    if action != "NONE":
+                                        extracted_facts.append(final_fact)
+
+                                else:
+                                    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+                                    # DEDUPLICATION PATH (fallback when no LLM)
+                                    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+                                    fact_text = _get_fact_value(fact_data, "fact")
+                                    fact_type_val = _get_fact_value(fact_data, "factType")
+                                    subject_val = _get_fact_value(fact_data, "subject", params.user_id or params.agent_id)
+                                    predicate_val = _get_fact_value(fact_data, "predicate")
+                                    object_val = _get_fact_value(fact_data, "object")
+                                    confidence_raw = _get_fact_value(fact_data, "confidence", 80)
+                                    tags_val = _get_fact_value(fact_data, "tags", params.tags or [])
+
+                                    # Normalize confidence: if float <= 1, treat as percentage and multiply
+                                    confidence_val = int(confidence_raw * 100) if isinstance(confidence_raw, float) and confidence_raw <= 1 else int(confidence_raw)
+
+                                    store_params = StoreFactParams(
+                                        memory_space_id=params.memory_space_id,
+                                        participant_id=params.participant_id,
+                                        user_id=params.user_id,
+                                        fact=fact_text,
+                                        fact_type=fact_type_val,
+                                        subject=subject_val,
+                                        predicate=predicate_val,
+                                        object=object_val,
+                                        confidence=confidence_val,
+                                        source_type="conversation",
+                                        source_ref=FactSourceRef(
+                                            conversation_id=params.conversation_id,
+                                            message_ids=(
+                                                [user_message_id, agent_message_id]
+                                                if user_message_id and agent_message_id
+                                                else None
+                                            ),
+                                            memory_id=stored_memories[0].memory_id if stored_memories else None,
+                                        ),
+                                        tags=tags_val,
+                                    )
+
+                                    # Use store_with_dedup if deduplication is configured
+                                    if dedup_config:
+                                        result = await self.facts.store_with_dedup(
+                                            store_params,
+                                            StoreFactWithDedupOptions(
+                                                deduplication=dedup_config,
+                                                sync_to_graph=should_sync_to_graph,
+                                            ),
+                                        )
+                                        extracted_facts.append(result.fact)
+                                    else:
+                                        from ..types import StoreFactOptions
+                                        stored_fact = await self.facts.store(
+                                            store_params,
+                                            StoreFactOptions(sync_to_graph=should_sync_to_graph),
+                                        )
+                                        extracted_facts.append(stored_fact)
+                            except Exception as error:
+                                print(f"Warning: Failed to store fact: {error}")
+                except Exception as error:
+                    print(f"Warning: Failed to extract facts: {error}")
+
+            # Track created fact IDs
+            created_ids["factIds"] = [f.fact_id for f in extracted_facts]
+
+            if observer:
+                # Build revision info for the facts layer event
+                revision_info = None
+                if revision_actions:
+                    supersede_actions = [ra for ra in revision_actions if ra.action == "SUPERSEDE"]
+                    if supersede_actions:
+                        revision_info = {
+                            "action": "SUPERSEDE",
+                            "superseded_facts": [
+                                f.fact_id for ra in supersede_actions
+                                for f in (ra.superseded or [])
+                                if hasattr(f, 'fact_id')
+                            ]
+                        }
+
+                event = self._create_layer_event(
+                    "facts", "complete", orchestration_start_time, "remember",
+                    data=LayerEventData(
+                        id=extracted_facts[0].fact_id if extracted_facts else None,
+                        preview=f"Extracted {len(extracted_facts)} facts",
+                        metadata={"factCount": len(extracted_facts), "revisionCount": len(revision_actions)}
+                    ),
+                    revision_info=revision_info
+                )
+                layer_events["facts"] = event
+                self._notify_layer_update(observer, event)
+        elif observer:
+            event = self._create_layer_event("facts", "skipped", orchestration_start_time, "remember")
+            layer_events["facts"] = event
+            self._notify_layer_update(observer, event)
+
+        # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        # STEP 6: GRAPH (handled via syncToGraph in previous steps)
+        # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        # Graph sync is handled inline with each layer via the shouldSyncToGraph flag
+        if observer:
+            if should_sync_to_graph:
+                event = self._create_layer_event(
+                    "graph", "complete", orchestration_start_time, "remember",
+                    data=LayerEventData(preview="Graph sync performed inline with layers")
+                )
+            else:
+                event = self._create_layer_event("graph", "skipped", orchestration_start_time, "remember")
+            layer_events["graph"] = event
+            self._notify_layer_update(observer, event)
+
+        # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        # Notify remember (write) phase complete
+        # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        if observer:
+            total_latency = int(time.time() * 1000) - orchestration_start_time
+            summary = OrchestrationSummary(
+                orchestration_id=orchestration_id,
+                total_latency_ms=total_latency,
+                layers=layer_events,
+                created_ids=CreatedIds(
+                    conversation_id=created_ids.get("conversationId"),
+                    memory_ids=created_ids.get("memoryIds"),
+                    fact_ids=created_ids.get("factIds"),
+                ),
+                phase="remember",
+            )
+            self._notify_remember_complete(observer, summary)
+
+        return RememberResult(
+            conversation={
+                "messageIds": [user_message_id, agent_message_id] if user_message_id and agent_message_id else [],
+                "conversationId": params.conversation_id,
+            },
+            memories=stored_memories,
+            facts=extracted_facts,
+            # Include belief revision actions if any were taken
+            fact_revisions=revision_actions if revision_actions else None,
+        )
+
+    async def remember_stream(
+        self, params: Any, options: Optional[Any] = None
+    ) -> Any:
+        """
+        Remember a conversation exchange from a streaming response (ENHANCED).
+
+        This method provides true streaming capabilities with:
+        - Progressive storage during streaming
+        - Real-time fact extraction
+        - Streaming hooks for monitoring
+        - Error recovery with resume capability
+        - Adaptive processing based on stream characteristics
+        - Optional chunking for very long responses
+
+        Auto-syncs to graph if configured (default: true).
+
+        Args:
+            params: RememberStreamParams with stream parameters
+            options: Optional StreamingOptions for advanced features
+
+        Returns:
+            EnhancedRememberStreamResult with metrics and progressive processing details
+
+        Example:
+            >>> # Basic usage
+            >>> result = await cortex.memory.remember_stream({
+            ...     'memorySpaceId': 'agent-1',
+            ...     'conversationId': 'conv-123',
+            ...     'userMessage': 'What is the weather?',
+            ...     'responseStream': llm_stream,
+            ...     'userId': 'user-1',
+            ...     'userName': 'Alex',
+            ... })
+            >>>
+            >>> # With progressive features
+            >>> result = await cortex.memory.remember_stream({
+            ...     'memorySpaceId': 'agent-1',
+            ...     'conversationId': 'conv-123',
+            ...     'userMessage': 'Explain quantum computing',
+            ...     'responseStream': llm_stream,
+            ...     'userId': 'user-1',
+            ...     'userName': 'Alex',
+            ...     'extractFacts': extract_facts_from_text,
+            ... }, {
+            ...     'storePartialResponse': True,
+            ...     'partialResponseInterval': 3000,
+            ...     'progressiveFactExtraction': True,
+            ...     'factExtractionThreshold': 500,
+            ...     'hooks': {
+            ...         'onChunk': lambda event: print(f'Chunk: {event.chunk}'),
+            ...         'onProgress': lambda event: print(f'Progress: {event.bytes_processed}'),
+            ...     },
+            ...     'partialFailureHandling': 'store-partial',
+            ... })
+        """
+        # Client-side validation (skip agent_response since it comes from stream)
+        memory_space_id = params.get("memorySpaceId") if isinstance(params, dict) else params.memory_space_id
+        conversation_id = params.get("conversationId") if isinstance(params, dict) else params.conversation_id
+        user_id = params.get("userId") if isinstance(params, dict) else params.user_id
+        user_name = params.get("userName") if isinstance(params, dict) else params.user_name
+        agent_id = params.get("agentId") if isinstance(params, dict) else getattr(params, "agent_id", None)
+        user_message = params.get("userMessage") if isinstance(params, dict) else params.user_message
+        importance = params.get("importance") if isinstance(params, dict) else getattr(params, "importance", None)
+        tags = params.get("tags") if isinstance(params, dict) else getattr(params, "tags", None)
+        response_stream = params.get("responseStream") if isinstance(params, dict) else params.response_stream
+        skip_layers = params.get("skipLayers") if isinstance(params, dict) else getattr(params, "skip_layers", None)
+
+        validate_memory_space_id(str(memory_space_id or ""))
+        validate_conversation_id(str(conversation_id or ""))
+        validate_content(str(user_message or ""), "user_message")
+
+        # Owner validation
+        has_user_id = user_id and isinstance(user_id, str) and str(user_id).strip() != ""
+        has_agent_id = agent_id and isinstance(agent_id, str) and str(agent_id).strip() != ""
+
+        # Either user_id or agent_id must be provided
+        if not has_user_id and not has_agent_id:
+            raise MemoryValidationError(
+                "Either user_id or agent_id must be provided for memory ownership. "
+                "Use user_id for user-owned memories, agent_id for agent-owned memories.",
+                "OWNER_REQUIRED",
+                "user_id/agent_id",
+            )
+
+        # If user_id is provided, agent_id is required
+        if has_user_id and not has_agent_id:
+            raise MemoryValidationError(
+                "agent_id is required when user_id is provided. "
+                "User-agent conversations require both a user and an agent participant.",
+                "AGENT_REQUIRED_FOR_USER_CONVERSATION",
+                "agent_id",
+            )
+
+        # If user_id is provided, user_name is required
+        if has_user_id:
+            if not user_name or not isinstance(user_name, str) or str(user_name).strip() == "":
+                raise MemoryValidationError(
+                    "user_name is required when user_id is provided",
+                    "MISSING_REQUIRED_FIELD",
+                    "user_name",
+                )
+
+        if importance is not None:
+            validate_importance(importance)
+
+        if tags is not None:
+            validate_tags(tags)
+
+        validate_stream_object(response_stream)
+
+        # Import streaming components
+        from .streaming import (
+            MetricsCollector,
+            ProgressiveFactExtractor,
+            ProgressiveFactExtractorConfig,
+            ProgressiveGraphSync,
+            ProgressiveStorageHandler,
+            StreamErrorRecovery,
+            StreamProcessor,
+            create_stream_context,
+        )
+        from .streaming_types import (
+            EnhancedRememberStreamResult,
+            PerformanceInsights,
+            ProgressiveProcessing,
+            StreamingOptions,
+        )
+
+        # Parse options - ensure we always have a StreamingOptions object
+        if options is None:
+            opts = StreamingOptions()
+        elif isinstance(options, dict):
+            opts = StreamingOptions(**options)
+        else:
+            opts = options
+
+        # Initialize components
+        metrics = MetricsCollector()
+
+        context = create_stream_context(
+            memory_space_id=str(memory_space_id or ""),
+            conversation_id=str(conversation_id or ""),
+            user_id=str(user_id or ""),
+            user_name=str(user_name or ""),
+        )
+
+        # Progressive storage handler (if enabled)
+        storage_handler: Optional[ProgressiveStorageHandler] = None
+        if opts and opts.store_partial_response:
+            storage_handler = ProgressiveStorageHandler(
+                self.client,
+                str(memory_space_id or ""),
+                str(conversation_id or ""),
+                str(user_id or ""),
+                opts.partial_response_interval or 3000,
+                resilience=self._resilience,
+            )
+
+        # Progressive fact extractor (if enabled)
+        fact_extractor: Optional[ProgressiveFactExtractor] = None
+        extract_facts_fn = params.get("extractFacts") if isinstance(params, dict) else getattr(params, "extract_facts", None)
+        if opts and opts.progressive_fact_extraction and extract_facts_fn:
+            # Build deduplication config for streaming
+            # Get fact_deduplication from params if available
+            fact_dedup = params.get("factDeduplication") if isinstance(params, dict) else getattr(params, "fact_deduplication", None)
+            generate_embedding_fn = params.get("generateEmbedding") if isinstance(params, dict) else getattr(params, "generate_embedding", None)
+
+            # Build deduplication config
+            dedup_config = None
+            if fact_dedup is not False:
+                if fact_dedup is not None and fact_dedup is not True:
+                    # Explicit config or strategy provided
+                    dedup_config = FactDeduplicationService.resolve_config(
+                        fact_dedup,  # type: ignore
+                        generate_embedding_fn,
+                    )
+                else:
+                    # Default to semantic with structural fallback
+                    dedup_config = FactDeduplicationService.resolve_config(
+                        "semantic",
+                        generate_embedding_fn,
+                    )
+
+            extractor_config = ProgressiveFactExtractorConfig(
+                deduplication=dedup_config,
+                extraction_threshold=opts.fact_extraction_threshold or 500,
+            )
+
+            fact_extractor = ProgressiveFactExtractor(
+                self.facts,
+                str(memory_space_id or ""),
+                str(user_id or ""),
+                params.get("participantId") if isinstance(params, dict) else getattr(params, "participant_id", None),
+                extractor_config,
+            )
+
+        # Adaptive processor (if enabled)
+        # Note: adaptive_processor currently not integrated, keeping for future use
+        # adaptive_processor: Optional[AdaptiveStreamProcessor] = None
+        # if opts and opts.enable_adaptive_processing:
+        #     adaptive_processor = AdaptiveStreamProcessor()
+
+        # Progressive graph sync (if enabled)
+        graph_sync: Optional[ProgressiveGraphSync] = None
+        if opts and opts.progressive_graph_sync and self.graph_adapter:
+            graph_sync = ProgressiveGraphSync(
+                self.graph_adapter,
+                opts.graph_sync_interval or 5000,
+            )
+
+        # Enhanced hooks that integrate progressive features
+        from .streaming_types import ChunkEvent, ProgressEvent, StreamHooks
+
+        original_hooks = opts.hooks if opts else None
+        progressive_facts: List[Any] = []
+
+        # Create enhanced hooks that integrate progressive components
+        async def enhanced_on_chunk(event: ChunkEvent) -> None:
+            # Call original hook if exists
+            hook_fn = None
+            if original_hooks:
+                if isinstance(original_hooks, dict):
+                    hook_fn = original_hooks.get("onChunk")
+                elif hasattr(original_hooks, 'on_chunk'):
+                    hook_fn = original_hooks.on_chunk
+
+            if hook_fn and callable(hook_fn):
+                hook_result = hook_fn(event)
+                if asyncio.iscoroutine(hook_result):
+                    await hook_result
+
+            # Progressive storage update
+            if storage_handler and storage_handler.should_update():
+                await storage_handler.update_partial_content(
+                    event.accumulated, event.chunk_number
+                )
+
+            # Progressive fact extraction
+            if fact_extractor and fact_extractor.should_extract(len(event.accumulated)):
+                user_message_val = params.get("userMessage") if isinstance(params, dict) else params.user_message
+                facts = await fact_extractor.extract_from_chunk(
+                    event.accumulated,
+                    event.chunk_number,
+                    extract_facts_fn,  # type: ignore
+                    str(user_message_val or ""),
+                    str(conversation_id or ""),
+                    sync_to_graph=(opts.sync_to_graph if opts else True) and self.graph_adapter is not None,
+                )
+                progressive_facts.extend(facts)
+
+            # Progressive graph sync update
+            if graph_sync and graph_sync.should_sync():
+                await graph_sync.update_partial_node(event.accumulated, context)
+
+        async def enhanced_on_progress(event: ProgressEvent) -> None:
+            # Call original hook if exists
+            hook_fn = None
+            if original_hooks:
+                if isinstance(original_hooks, dict):
+                    hook_fn = original_hooks.get("onProgress")
+                elif hasattr(original_hooks, 'on_progress'):
+                    hook_fn = original_hooks.on_progress
+
+            if hook_fn and callable(hook_fn):
+                hook_result = hook_fn(event)
+                if asyncio.iscoroutine(hook_result):
+                    await hook_result
+
+        async def enhanced_on_error(event: Any) -> None:
+            # Call original hook if exists
+            hook_fn = None
+            if original_hooks:
+                if isinstance(original_hooks, dict):
+                    hook_fn = original_hooks.get("onError")
+                elif hasattr(original_hooks, 'on_error'):
+                    hook_fn = original_hooks.on_error
+
+            if hook_fn and callable(hook_fn):
+                hook_result = hook_fn(event)
+                if asyncio.iscoroutine(hook_result):
+                    await hook_result
+
+        async def enhanced_on_complete(event: Any) -> None:
+            # Call original hook if exists
+            hook_fn = None
+            if original_hooks:
+                if isinstance(original_hooks, dict):
+                    hook_fn = original_hooks.get("onComplete")
+                elif hasattr(original_hooks, 'on_complete'):
+                    hook_fn = original_hooks.on_complete
+
+            if hook_fn and callable(hook_fn):
+                hook_result = hook_fn(event)
+                if asyncio.iscoroutine(hook_result):
+                    await hook_result
+
+        enhanced_hooks = StreamHooks(
+            on_chunk=enhanced_on_chunk,
+            on_progress=enhanced_on_progress,
+            on_error=enhanced_on_error,
+            on_complete=enhanced_on_complete,
+        )
+
+        processor = StreamProcessor(context, enhanced_hooks, metrics)
+        error_recovery = StreamErrorRecovery(self.client, resilience=self._resilience)
+
+        full_response = ""
+
+        try:
+            # Determine if we should sync to graph (check skipLayers)
+            should_sync_to_graph = (
+                (opts.sync_to_graph if opts else True)
+                and self.graph_adapter is not None
+                and not self._should_skip_layer("graph", skip_layers)
+            )
+
+            # Step 1: Ensure conversation exists (skip if 'conversations' in skipLayers)
+            if not self._should_skip_layer("conversations", skip_layers):
+                existing_conversation = await self.conversations.get(
+                    str(conversation_id or "")
+                )
+                if not existing_conversation:
+                    from ..types import (
+                        ConversationParticipants,
+                        CreateConversationInput,
+                        CreateConversationOptions,
+                    )
+
+                    # Always use user-agent type for remember_stream() function
+                    # agent-agent conversations are for explicit multi-agent collaboration
+                    # and require memorySpaceIds (hive-mode or collaboration-mode)
+                    conversation_type: ConversationType = "user-agent"
+                    participants = ConversationParticipants(
+                        user_id=user_id,
+                        agent_id=agent_id,
+                        participant_id=params.get("participantId") if isinstance(params, dict) else getattr(params, "participant_id", None),
+                    )
+
+                    await self.conversations.create(
+                        CreateConversationInput(
+                            memory_space_id=str(memory_space_id or ""),
+                            conversation_id=str(conversation_id or ""),
+                            type=conversation_type,
+                            participants=participants,
+                        ),
+                        CreateConversationOptions(sync_to_graph=should_sync_to_graph),
+                    )
+
+            # Step 2: Initialize progressive storage
+            if storage_handler:
+                user_message_val = params.get("userMessage") if isinstance(params, dict) else params.user_message
+                importance_val = params.get("importance") if isinstance(params, dict) else getattr(params, "importance", None)
+                partial_memory_id = await storage_handler.initialize_partial_memory(
+                    participant_id=params.get("participantId") if isinstance(params, dict) else getattr(params, "participant_id", None),
+                    user_message=str(user_message_val or ""),
+                    importance=int(importance_val or 50),
+                    tags=params.get("tags") if isinstance(params, dict) else getattr(params, "tags", None),
+                )
+                context.partial_memory_id = partial_memory_id
+
+                # Initialize graph node if enabled
+                if graph_sync:
+                    await graph_sync.initialize_partial_node({
+                        "memoryId": partial_memory_id,
+                        "memorySpaceId": params.get("memorySpaceId") if isinstance(params, dict) else params.memory_space_id,
+                        "userId": params.get("userId") if isinstance(params, dict) else params.user_id,
+                        "content": "[Streaming...]",
+                    })
+
+            # Step 3: Process stream with all features
+            response_stream = params.get("responseStream") if isinstance(params, dict) else params.response_stream
+            full_response = await processor.process_stream(response_stream, opts)  # type: ignore
+
+            # Step 4: Validate we got content
+            if not full_response or full_response.strip() == "":
+                raise Exception("Response stream completed but produced no content.")
+
+            # Step 5: Finalize storage
+            generate_embedding_fn = params.get("generateEmbedding") if isinstance(params, dict) else getattr(params, "generate_embedding", None)
+            if storage_handler and storage_handler.is_ready():
+                embedding = None
+                if generate_embedding_fn:
+                    embedding = await generate_embedding_fn(full_response)
+                await storage_handler.finalize_memory(full_response, embedding)
+
+            # Step 6: Use remember() for final storage
+            # Determine sync_to_graph - default to True if graph adapter exists
+            should_sync = (opts.sync_to_graph if opts and hasattr(opts, 'sync_to_graph') else True) and self.graph_adapter is not None
+
+            user_message_val = params.get("userMessage") if isinstance(params, dict) else params.user_message
+            # Determine belief_revision setting from options
+            belief_revision_setting = opts.belief_revision if opts and hasattr(opts, 'belief_revision') else None
+            # Extract observer from params (v0.25.0+)
+            stream_observer = params.get("observer") if isinstance(params, dict) else getattr(params, "observer", None)
+
+            remember_result = await self.remember(
+                RememberParams(
+                    memory_space_id=str(memory_space_id or ""),
+                    conversation_id=str(conversation_id or ""),
+                    user_message=str(user_message_val or ""),
+                    agent_response=full_response,
+                    user_id=str(user_id or "") if user_id else None,
+                    user_name=str(user_name or "") if user_name else None,
+                    agent_id=str(agent_id or "") if agent_id else None,
+                    participant_id=params.get("participantId") if isinstance(params, dict) else getattr(params, "participant_id", None),
+                    skip_layers=skip_layers,  # Pass through skip_layers
+                    extract_content=params.get("extractContent") if isinstance(params, dict) else getattr(params, "extract_content", None),
+                    generate_embedding=generate_embedding_fn,
+                    extract_facts=extract_facts_fn,
+                    auto_embed=params.get("autoEmbed") if isinstance(params, dict) else getattr(params, "auto_embed", None),
+                    auto_summarize=params.get("autoSummarize") if isinstance(params, dict) else getattr(params, "auto_summarize", None),
+                    importance=params.get("importance") if isinstance(params, dict) else getattr(params, "importance", None),
+                    tags=params.get("tags") if isinstance(params, dict) else getattr(params, "tags", None),
+                    observer=stream_observer,  # Pass observer for real-time monitoring (v0.25.0+)
+                ),
+                RememberOptions(sync_to_graph=should_sync, belief_revision=belief_revision_setting),
+            )
+
+            # Step 7: Finalize graph sync
+            if graph_sync and remember_result.memories:
+                await graph_sync.finalize_node(remember_result.memories[0])
+
+            # Step 8: Generate performance insights
+            metrics_snapshot = metrics.get_snapshot()
+            insights = metrics.generate_insights()
+
+            # Step 9: Return enhanced result
+            return EnhancedRememberStreamResult(
+                conversation=remember_result.conversation,
+                memories=remember_result.memories,
+                facts=remember_result.facts,
+                full_response=full_response,
+                stream_metrics=metrics_snapshot,
+                progressive_processing=ProgressiveProcessing(
+                    facts_extracted_during_stream=progressive_facts,
+                    partial_storage_history=storage_handler.get_update_history() if storage_handler else [],
+                    graph_sync_events=graph_sync.get_sync_events() if graph_sync else None,
+                ),
+                performance=PerformanceInsights(
+                    bottlenecks=insights["bottlenecks"],
+                    recommendations=insights["recommendations"],
+                    cost_estimate=metrics_snapshot.estimated_cost,
+                ),
+                # Include belief revision actions from remember() result
+                fact_revisions=remember_result.fact_revisions,
+            )
+
+        except Exception as error:
+            # Error recovery
+            _ = error_recovery.create_stream_error(
+                error, context, "streaming"
+            )
+
+            # Handle based on strategy
+            if opts and opts.partial_failure_handling:
+                from .streaming_types import RecoveryOptions
+
+                recovery_result = await error_recovery.handle_stream_error(
+                    error,
+                    context,
+                    RecoveryOptions(
+                        strategy=opts.partial_failure_handling,
+                        max_retries=opts.max_retries or 3,
+                        retry_delay=opts.retry_delay or 1000,
+                        preserve_partial_data=True,
+                    ),
+                )
+
+                if recovery_result.success and opts.generate_resume_token:
+                    from .streaming.error_recovery import ResumableStreamError
+
+                    raise ResumableStreamError(
+                        error, recovery_result.resume_token or ""
+                    )
+
+            # Cleanup on failure
+            if storage_handler:
+                await storage_handler.rollback()
+            if graph_sync:
+                await graph_sync.rollback()
+
+            raise
+
+    async def forget(
+        self,
+        memory_space_id: str,
+        memory_id: str,
+        options: Optional[ForgetOptions] = None,
+    ) -> ForgetResult:
+        """
+        Forget a memory (delete from Vector and optionally ACID).
+
+        Args:
+            memory_space_id: Memory space ID
+            memory_id: Memory ID to forget
+            options: Optional forget options
+
+        Returns:
+            Forget result with deletion details
+
+        Example:
+            >>> result = await cortex.memory.forget(
+            ...     'agent-1', 'mem-123',
+            ...     ForgetOptions(delete_conversation=True)
+            ... )
+        """
+        # Client-side validation
+        validate_memory_space_id(memory_space_id)
+        validate_memory_id(memory_id)
+
+        opts = options or ForgetOptions()
+
+        # Get the memory first
+        memory = await self.vector.get(memory_space_id, memory_id)
+
+        if not memory:
+            raise CortexError(ErrorCode.MEMORY_NOT_FOUND, f"Memory {memory_id} not found")
+
+        should_sync_to_graph = (
+            opts.sync_to_graph is not False and self.graph_adapter is not None
+        )
+
+        # Delete from vector
+        await self.vector.delete(
+            memory_space_id,
+            memory_id,
+            DeleteMemoryOptions(sync_to_graph=should_sync_to_graph),
+        )
+
+        # Cascade delete associated facts
+        conv_id = None
+        if memory.conversation_ref:
+            conv_id = memory.conversation_ref["conversation_id"] if isinstance(memory.conversation_ref, dict) else memory.conversation_ref.conversation_id
+        facts_deleted, fact_ids = await self._cascade_delete_facts(
+            memory_space_id,
+            memory_id,
+            conv_id,
+            should_sync_to_graph,
+        )
+
+        conversation_deleted = False
+        messages_deleted = 0
+
+        # Optionally delete from ACID
+        if opts.delete_conversation and memory.conversation_ref:
+            conv_id = memory.conversation_ref["conversation_id"] if isinstance(memory.conversation_ref, dict) else memory.conversation_ref.conversation_id
+            if opts.delete_entire_conversation:
+                conv = await self.conversations.get(conv_id)
+                messages_deleted = conv.message_count if conv else 0
+
+                from ..types import DeleteConversationOptions
+
+                await self.conversations.delete(
+                    conv_id,
+                    DeleteConversationOptions(sync_to_graph=should_sync_to_graph),
+                )
+                conversation_deleted = True
+            else:
+                msg_ids = memory.conversation_ref["message_ids"] if isinstance(memory.conversation_ref, dict) else memory.conversation_ref.message_ids
+                messages_deleted = len(msg_ids)
+
+        return ForgetResult(
+            memory_deleted=True,
+            conversation_deleted=conversation_deleted,
+            messages_deleted=messages_deleted,
+            facts_deleted=facts_deleted,
+            fact_ids=fact_ids,
+            restorable=not opts.delete_conversation,
+        )
+
+    async def get(
+        self,
+        memory_space_id: str,
+        memory_id: str,
+        include_conversation: bool = False,
+    ) -> Optional[Union[MemoryEntry, EnrichedMemory]]:
+        """
+        Get memory with optional ACID enrichment.
+
+        Args:
+            memory_space_id: Memory space ID
+            memory_id: Memory ID
+            include_conversation: Fetch ACID conversation too
+
+        Returns:
+            Memory entry or enriched memory if found, None otherwise
+
+        Example:
+            >>> enriched = await cortex.memory.get(
+            ...     'agent-1', 'mem-123',
+            ...     include_conversation=True
+            ... )
+        """
+        # Client-side validation
+        validate_memory_space_id(memory_space_id)
+        validate_memory_id(memory_id)
+
+        memory = await self.vector.get(memory_space_id, memory_id)
+
+        if not memory:
+            return None
+
+        if not include_conversation:
+            return memory
+
+        # Fetch conversation and facts
+        conversation = None
+        source_messages = None
+
+        if memory.conversation_ref:
+            # conversation_ref is a dict after conversion
+            conv_id = memory.conversation_ref["conversation_id"] if isinstance(memory.conversation_ref, dict) else memory.conversation_ref.conversation_id
+            conv = await self.conversations.get(conv_id)
+            if conv:
+                conversation = conv
+                msg_ids = memory.conversation_ref["message_ids"] if isinstance(memory.conversation_ref, dict) else memory.conversation_ref.message_ids
+                source_messages = [
+                    msg
+                    for msg in conv.messages
+                    if (msg["id"] if isinstance(msg, dict) else msg.id) in msg_ids
+                ]
+
+        # Fetch associated facts
+        conv_id = None
+        if memory.conversation_ref:
+            conv_id = memory.conversation_ref["conversation_id"] if isinstance(memory.conversation_ref, dict) else memory.conversation_ref.conversation_id
+        related_facts = await self._fetch_facts_for_memory(
+            memory_space_id, memory_id, conv_id
+        )
+
+        return EnrichedMemory(
+            memory=memory,
+            conversation=conversation,
+            source_messages=source_messages,
+            facts=related_facts if related_facts else None,
+        )
+
+    async def search(
+        self,
+        memory_space_id: str,
+        query: str,
+        options: Optional[SearchOptions] = None,
+    ) -> List[Union[MemoryEntry, EnrichedMemory]]:
+        """
+        Search memories with optional ACID enrichment.
+
+        Args:
+            memory_space_id: Memory space ID
+            query: Search query string
+            options: Optional search options
+
+        Returns:
+            List of matching memories (enriched if requested)
+
+        Example:
+            >>> results = await cortex.memory.search(
+            ...     'agent-1', 'password',
+            ...     SearchOptions(
+            ...         min_importance=50,
+            ...         limit=10,
+            ...         enrich_conversation=True
+            ...     )
+            ... )
+        """
+        # Client-side validation
+        validate_memory_space_id(memory_space_id)
+        validate_content(query, "query")
+
+        if options:
+            validate_search_options(options)
+
+        opts = options or SearchOptions()
+
+        # Search vector
+        memories = await self.vector.search(memory_space_id, query, opts)
+
+        if not opts.enrich_conversation:
+            return memories  # type: ignore[return-value]
+
+        # Batch fetch conversations
+        conversation_ids = set()
+        for mem in memories:
+            if mem.conversation_ref:
+                conv_id = mem.conversation_ref.get("conversation_id") if isinstance(mem.conversation_ref, dict) else mem.conversation_ref.conversation_id
+                if conv_id:
+                    conversation_ids.add(conv_id)
+
+        conversations = {}
+        for conv_id in conversation_ids:
+            conv = await self.conversations.get(conv_id)
+            if conv:
+                conversations[conv_id] = conv
+
+        # Batch fetch facts
+        from ..types import ListFactsFilter
+        all_facts = await self.facts.list(
+            ListFactsFilter(memory_space_id=memory_space_id, limit=10000)
+        )
+
+        facts_by_memory_id: Dict[str, List[Any]] = {}
+        facts_by_conversation_id: Dict[str, List[Any]] = {}
+
+        for fact in all_facts:
+            if fact.source_ref and fact.source_ref.memory_id:
+                if fact.source_ref.memory_id not in facts_by_memory_id:
+                    facts_by_memory_id[fact.source_ref.memory_id] = []
+                facts_by_memory_id[fact.source_ref.memory_id].append(fact)
+
+            if fact.source_ref and fact.source_ref.conversation_id:
+                if fact.source_ref.conversation_id not in facts_by_conversation_id:
+                    facts_by_conversation_id[fact.source_ref.conversation_id] = []
+                facts_by_conversation_id[fact.source_ref.conversation_id].append(fact)
+
+        # Enrich results
+        enriched = []
+        for memory in memories:
+            result = EnrichedMemory(memory=memory)
+
+            # Add conversation
+            if memory.conversation_ref:
+                conv_id = memory.conversation_ref.get("conversation_id") if isinstance(memory.conversation_ref, dict) else memory.conversation_ref.conversation_id
+                conv = conversations.get(conv_id)
+                if conv:
+                    result.conversation = conv
+                    message_ids = memory.conversation_ref.get("message_ids") if isinstance(memory.conversation_ref, dict) else memory.conversation_ref.message_ids
+                    result.source_messages = [
+                        msg
+                        for msg in conv.messages
+                        if (msg.get("id") if isinstance(msg, dict) else msg.id) in message_ids  # type: ignore[operator]
+                    ]
+
+            # Add facts
+            related_facts = facts_by_memory_id.get(memory.memory_id, [])
+            if memory.conversation_ref:
+                conv_id = memory.conversation_ref.get("conversation_id") if isinstance(memory.conversation_ref, dict) else memory.conversation_ref.conversation_id
+                related_facts.extend(
+                    facts_by_conversation_id.get(conv_id, [])  # type: ignore[arg-type]
+                )
+
+            # Deduplicate facts
+            unique_facts = list(
+                {fact.fact_id: fact for fact in related_facts}.values()
+            )
+
+            if unique_facts:
+                result.facts = unique_facts
+
+            enriched.append(result)
+
+        return enriched  # type: ignore[return-value]
+
+    async def recall(
+        self,
+        params: "RecallParams",
+    ) -> "RecallResult":
+        """
+        Recall context with full orchestration.
+
+        Mirrors remember() for retrieval - searches all layers in parallel,
+        leverages graph for relational discovery, and returns unified,
+        ranked context ready for LLM injection.
+
+        This is the main method for retrieving conversation context. It handles:
+        - Vector memory search (Layer 2)
+        - Facts search (Layer 3)
+        - Graph expansion for relational context discovery
+        - Result merging, deduplication, and ranking
+        - LLM-ready context formatting
+
+        Args:
+            params: RecallParams with search configuration
+
+        Returns:
+            RecallResult with unified results, source breakdown, and LLM context
+
+        Example:
+            >>> # Minimal usage - full orchestration
+            >>> result = await cortex.memory.recall(
+            ...     RecallParams(
+            ...         memory_space_id='user-123-space',
+            ...         query='user preferences',
+            ...     )
+            ... )
+            >>>
+            >>> # Inject context into LLM
+            >>> response = await llm.chat(
+            ...     messages=[
+            ...         {'role': 'system', 'content': f'You are helpful.\\n\\n{result.context}'},
+            ...         {'role': 'user', 'content': user_message},
+            ...     ],
+            ... )
+            >>>
+            >>> # With filters and source control
+            >>> result = await cortex.memory.recall(
+            ...     RecallParams(
+            ...         memory_space_id='agent-1',
+            ...         query='dark mode preferences',
+            ...         user_id='user-123',
+            ...         sources=RecallSourceConfig(vector=True, facts=True, graph=False),
+            ...         min_importance=50,
+            ...         limit=10,
+            ...     )
+            ... )
+        """
+        import uuid
+
+        from ..config import resolve_recall_limits
+        from ..types import SearchFactsOptions
+        from .recall import (
+            GraphExpansionConfig,
+            enrich_with_conversations,
+            perform_graph_expansion,
+            process_recall_results,
+        )
+
+        start_time = int(time.time() * 1000)
+
+        # Client-side validation
+        validate_recall_params(params)
+
+        # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        # OBSERVER SETUP (Phase-aware orchestration monitoring)
+        # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        observer = params.observer
+        orchestration_id = f"recall_{uuid.uuid4().hex[:12]}"
+        layer_events: Dict[str, LayerEvent] = {}
+
+        # Notify recall (read) phase start
+        self._notify_recall_start(observer, orchestration_id)
+
+        # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        # STEP 0: RESOLVE LIMITS (v0.31.0+ - configurable per-source limits)
+        # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        # Resolve limits from defaults + env vars + per-call overrides
+        limits = resolve_recall_limits(params.limits, params.limit)
+
+        # Extract params with defaults
+        memory_space_id = params.memory_space_id
+        query = params.query
+        embedding = params.embedding
+        user_id = params.user_id
+        tenant_id = params.tenant_id  # Multi-tenancy support (v0.31.0+)
+
+        # Source configuration (all enabled by default)
+        sources = params.sources or RecallSourceConfig()
+        search_vector = sources.vector if sources.vector is not None else True
+        search_facts = sources.facts if sources.facts is not None else True
+        search_graph = sources.graph if sources.graph is not None else (self.graph_adapter is not None)
+
+        # Graph expansion configuration - check limits.graph_hops to determine if enabled
+        graph_exp = params.graph_expansion or RecallGraphExpansionConfig()
+        graph_expansion_enabled = (
+            graph_exp.enabled if graph_exp.enabled is not None
+            else (self.graph_adapter is not None)
+        ) and limits.graph_hops > 0  # Disable if graph_hops is 0
+
+        # Result options
+        include_conversation = params.include_conversation if params.include_conversation is not None else True
+        format_for_llm_flag = params.format_for_llm if params.format_for_llm is not None else True
+
+        # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        # STEP 1: PARALLEL SEARCH (vector, facts) - with per-source limits
+        # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        vector_memories: List[MemoryEntry] = []
+        direct_facts: List[Any] = []
+
+        # Build vector search options (using per-source limit)
+        vector_search_opts = SearchOptions(
+            limit=limits.memories,  # Use per-source limit
+            embedding=embedding,
+            user_id=user_id,
+            min_importance=params.min_importance,
+            tags=params.tags,
+        )
+
+        # Vector search - skip if limits.memories is 0
+        if search_vector and limits.memories > 0:
+            if observer:
+                event = self._create_layer_event("vector", "in_progress", start_time, "recall")
+                layer_events["vector"] = event
+                self._notify_layer_update(observer, event)
+            try:
+                vector_memories = await self.vector.search(
+                    memory_space_id, query, vector_search_opts
+                )
+                # Apply tenant isolation filter if tenant_id is configured
+                if tenant_id:
+                    vector_memories = [
+                        m for m in vector_memories
+                        if getattr(m, 'tenant_id', None) == tenant_id
+                    ]
+                if observer:
+                    event = self._create_layer_event(
+                        "vector", "complete", start_time, "recall",
+                        data=LayerEventData(
+                            preview=f"Found {len(vector_memories)} memories",
+                            metadata={"memoryCount": len(vector_memories)}
+                        )
+                    )
+                    layer_events["vector"] = event
+                    self._notify_layer_update(observer, event)
+            except Exception as e:
+                print(f"[Cortex] Vector search failed: {e}")
+                if observer:
+                    event = self._create_layer_event(
+                        "vector", "error", start_time, "recall",
+                        error=LayerEventError(message=str(e))
+                    )
+                    layer_events["vector"] = event
+                    self._notify_layer_update(observer, event)
+        elif observer:
+            event = self._create_layer_event("vector", "skipped", start_time, "recall")
+            layer_events["vector"] = event
+            self._notify_layer_update(observer, event)
+
+        # Facts search - skip if limits.facts is 0
+        if search_facts and limits.facts > 0:
+            if observer:
+                event = self._create_layer_event("facts", "in_progress", start_time, "recall")
+                layer_events["facts"] = event
+                self._notify_layer_update(observer, event)
+            try:
+                facts_search_opts = SearchFactsOptions(
+                    limit=limits.facts,  # Use per-source limit
+                    min_confidence=params.min_confidence,
+                    user_id=user_id,
+                )
+
+                direct_facts = await self.facts.search(
+                    memory_space_id, query, facts_search_opts
+                )
+                # Apply tenant isolation filter if tenant_id is configured
+                if tenant_id:
+                    direct_facts = [
+                        f for f in direct_facts
+                        if getattr(f, 'tenant_id', None) == tenant_id
+                    ]
+                if observer:
+                    event = self._create_layer_event(
+                        "facts", "complete", start_time, "recall",
+                        data=LayerEventData(
+                            preview=f"Found {len(direct_facts)} facts",
+                            metadata={"factCount": len(direct_facts)}
+                        )
+                    )
+                    layer_events["facts"] = event
+                    self._notify_layer_update(observer, event)
+            except Exception as e:
+                print(f"[Cortex] Facts search failed: {e}")
+                if observer:
+                    event = self._create_layer_event(
+                        "facts", "error", start_time, "recall",
+                        error=LayerEventError(message=str(e))
+                    )
+                    layer_events["facts"] = event
+                    self._notify_layer_update(observer, event)
+        elif observer:
+            event = self._create_layer_event("facts", "skipped", start_time, "recall")
+            layer_events["facts"] = event
+            self._notify_layer_update(observer, event)
+
+        # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        # STEP 2: GRAPH EXPANSION (if enabled and graph_hops > 0)
+        # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        graph_expanded_memories: List[MemoryEntry] = []
+        graph_expanded_facts: List[Any] = []
+        discovered_entities: List[str] = []
+        graph_expansion_applied = False
+
+        if graph_expansion_enabled and search_graph and self.graph_adapter:
+            if observer:
+                event = self._create_layer_event("graph", "in_progress", start_time, "recall")
+                layer_events["graph"] = event
+                self._notify_layer_update(observer, event)
+            try:
+                # Build expansion config with per-source limits
+                expansion_config = GraphExpansionConfig(
+                    max_depth=graph_exp.max_depth if graph_exp.max_depth else limits.graph_hops,
+                    relationship_types=graph_exp.relationship_types or [],
+                    expand_from_facts=graph_exp.expand_from_facts if graph_exp.expand_from_facts is not None else True,
+                    expand_from_memories=graph_exp.expand_from_memories if graph_exp.expand_from_memories is not None else True,
+                    # NEW: Pass entity limits to graph expansion (v0.31.0+)
+                    entities_per_hop=graph_exp.entities_per_hop if graph_exp.entities_per_hop else limits.graph_entities_per_hop,
+                    results_per_entity=graph_exp.results_per_entity if graph_exp.results_per_entity else limits.graph_results_per_entity,
+                )
+
+                # NEW: Pass query text for entity extraction (v0.31.0+)
+                expansion_result = await perform_graph_expansion(
+                    vector_memories,
+                    direct_facts,
+                    memory_space_id,
+                    self.graph_adapter,
+                    self.vector,
+                    self.facts,
+                    expansion_config,
+                    query_text=query,  # NEW: enables graph expansion without facts
+                )
+
+                discovered_entities = expansion_result.discovered_entities
+                graph_expanded_memories = expansion_result.related_memories
+                graph_expanded_facts = expansion_result.related_facts
+                graph_expansion_applied = len(discovered_entities) > 0
+
+                if observer:
+                    event = self._create_layer_event(
+                        "graph", "complete", start_time, "recall",
+                        data=LayerEventData(
+                            preview=f"Discovered {len(discovered_entities)} entities",
+                            metadata={
+                                "entityCount": len(discovered_entities),
+                                "expandedMemories": len(graph_expanded_memories),
+                                "expandedFacts": len(graph_expanded_facts),
+                            }
+                        )
+                    )
+                    layer_events["graph"] = event
+                    self._notify_layer_update(observer, event)
+
+            except Exception as e:
+                print(f"[Cortex] Graph expansion failed: {e}")
+                if observer:
+                    event = self._create_layer_event(
+                        "graph", "error", start_time, "recall",
+                        error=LayerEventError(message=str(e))
+                    )
+                    layer_events["graph"] = event
+                    self._notify_layer_update(observer, event)
+        elif observer:
+            event = self._create_layer_event("graph", "skipped", start_time, "recall")
+            layer_events["graph"] = event
+            self._notify_layer_update(observer, event)
+
+        # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        # STEP 3: MERGE, DEDUPE, RANK, FORMAT - with aggregate limit
+        # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        if observer:
+            event = self._create_layer_event("context", "in_progress", start_time, "recall")
+            layer_events["context"] = event
+            self._notify_layer_update(observer, event)
+
+        processed = process_recall_results(
+            vector_memories,
+            direct_facts,
+            graph_expanded_memories,
+            graph_expanded_facts,
+            discovered_entities,
+            {
+                "limit": limits.total,  # Use aggregate limit
+                "format_for_llm": format_for_llm_flag,
+            },
+        )
+
+        items = processed["items"]
+        source_breakdown = processed["sources"]
+        context = processed["context"]
+
+        # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        # STEP 4: CONVERSATION ENRICHMENT (if enabled)
+        # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        if include_conversation:
+            # Collect conversation IDs from memory items
+            conversation_ids: set = set()
+            for item in items:
+                if item.type == "memory" and item.memory and item.memory.conversation_ref:
+                    conv_ref = item.memory.conversation_ref
+                    conv_id = (
+                        conv_ref.get("conversation_id")
+                        if isinstance(conv_ref, dict)
+                        else conv_ref.conversation_id
+                    )
+                    if conv_id:
+                        conversation_ids.add(conv_id)
+
+            # Fetch conversations
+            conversations_map: Dict[str, Any] = {}
+            for conv_id in conversation_ids:
+                try:
+                    conv = await self.conversations.get(conv_id)
+                    if conv:
+                        conversations_map[conv_id] = conv
+                except Exception:
+                    # Individual conversation fetch failure - continue
+                    pass
+
+            # Enrich items
+            items = enrich_with_conversations(items, conversations_map)
+
+        # Context layer complete
+        if observer:
+            event = self._create_layer_event(
+                "context", "complete", start_time, "recall",
+                data=LayerEventData(
+                    preview=f"Assembled context with {len(items)} items",
+                    metadata={
+                        "itemCount": len(items),
+                        "hasFormattedContext": context is not None,
+                    }
+                )
+            )
+            layer_events["context"] = event
+            self._notify_layer_update(observer, event)
+
+        # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        # STEP 5: BUILD RESULT AND NOTIFY RECALL COMPLETE
+        # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        query_time_ms = int(time.time() * 1000) - start_time
+
+        # Notify recall (read) phase complete
+        if observer:
+            # Count graph entities from the expansion
+            graph_entities_count = len(discovered_entities) if graph_expansion_applied else 0
+
+            recall_summary = RecallSummary(
+                orchestration_id=orchestration_id,
+                total_latency_ms=query_time_ms,
+                layers=layer_events,
+                context=RecallContext(
+                    memories_count=len(vector_memories) + len(graph_expanded_memories),
+                    facts_count=len(direct_facts) + len(graph_expanded_facts),
+                    graph_entities_count=graph_entities_count,
+                    formatted=context,
+                ),
+                phase="recall",
+            )
+            self._notify_recall_complete(observer, recall_summary)
+
+        return RecallResult(
+            items=items,
+            sources=source_breakdown,
+            context=context,
+            total_results=(
+                len(vector_memories)
+                + len(direct_facts)
+                + len(graph_expanded_memories)
+                + len(graph_expanded_facts)
+            ),
+            query_time_ms=query_time_ms,
+            graph_expansion_applied=graph_expansion_applied,
+        )
+
+    async def store(
+        self, memory_space_id: str, input: StoreMemoryInput
+    ) -> StoreMemoryResult:
+        """
+        Store memory with smart layer detection.
+
+        Args:
+            memory_space_id: Memory space ID
+            input: Memory input data
+
+        Returns:
+            StoreMemoryResult with memory and facts
+
+        Example:
+            >>> result = await cortex.memory.store(
+            ...     'agent-1',
+            ...     StoreMemoryInput(
+            ...         content='User prefers dark mode',
+            ...         content_type='raw',
+            ...         source=MemorySource(type='system', timestamp=now),
+            ...         metadata=MemoryMetadata(importance=60, tags=['preferences'])
+            ...     )
+            ... )
+        """
+        # Client-side validation
+        validate_memory_space_id(memory_space_id)
+        validate_store_memory_input(input)
+        validate_conversation_ref_requirement(input.source.type, input.conversation_ref)
+
+        # Store memory
+        memory = await self.vector.store(memory_space_id, input)
+
+        # Extract and store facts if callback provided
+        extracted_facts = []
+
+        if hasattr(input, "extract_facts") and input.extract_facts:
+            facts_to_store = await input.extract_facts(input.content)
+
+            if facts_to_store:
+                from ..types import FactSourceRef, StoreFactOptions, StoreFactParams
+
+                for fact_data in facts_to_store:
+                    try:
+                        stored_fact = await self.facts.store(
+                            StoreFactParams(
+                                memory_space_id=memory_space_id,
+                                participant_id=input.participant_id,
+                                user_id=input.user_id,  # BUG FIX: Add userId to facts!
+                                fact=fact_data["fact"],
+                                fact_type=fact_data["factType"],
+                                subject=fact_data.get("subject", input.user_id),
+                                predicate=fact_data.get("predicate"),
+                                object=fact_data.get("object"),
+                                confidence=fact_data["confidence"],
+                                source_type=input.source.type,
+                                source_ref=FactSourceRef(
+                                    conversation_id=(
+                                        input.conversation_ref.conversation_id
+                                        if input.conversation_ref
+                                        else None
+                                    ),
+                                    message_ids=(
+                                        input.conversation_ref.message_ids
+                                        if input.conversation_ref
+                                        else None
+                                    ),
+                                    memory_id=memory.memory_id,
+                                ),
+                                tags=fact_data.get("tags", input.metadata.tags),
+                            ),
+                            StoreFactOptions(sync_to_graph=True),
+                        )
+                        extracted_facts.append(stored_fact)
+                    except Exception as error:
+                        print(f"Warning: Failed to store fact: {error}")
+
+        return StoreMemoryResult(memory=memory, facts=extracted_facts)
+
+    async def update(
+        self,
+        memory_space_id: str,
+        memory_id: str,
+        updates: Dict[str, Any],
+        options: Optional[UpdateMemoryOptions] = None,
+    ) -> UpdateMemoryResult:
+        """
+        Update a memory with optional fact re-extraction.
+
+        Args:
+            memory_space_id: Memory space ID
+            memory_id: Memory ID
+            updates: Updates to apply
+            options: Optional update options
+
+        Returns:
+            UpdateMemoryResult with memory and facts
+
+        Example:
+            >>> result = await cortex.memory.update(
+            ...     'agent-1', 'mem-123',
+            ...     {'content': 'Updated content', 'importance': 80}
+            ... )
+        """
+        # Client-side validation
+        validate_memory_space_id(memory_space_id)
+        validate_memory_id(memory_id)
+        validate_update_options(updates)
+
+        updated_memory = await self.vector.update(memory_space_id, memory_id, updates)
+
+        facts_reextracted = []
+
+        # Re-extract facts if content changed and reextract requested
+        if (
+            options
+            and options.reextract_facts
+            and updates.get("content")
+            and options.extract_facts
+        ):
+            # Delete old facts first
+            await self._cascade_delete_facts(
+                memory_space_id, memory_id, None, options.sync_to_graph
+            )
+
+            # Extract new facts
+            facts_to_store = await options.extract_facts(updates["content"])
+
+            if facts_to_store:
+                from ..types import FactSourceRef, StoreFactOptions, StoreFactParams
+
+                for fact_data in facts_to_store:
+                    try:
+                        stored_fact = await self.facts.store(
+                            StoreFactParams(
+                                memory_space_id=memory_space_id,
+                                participant_id=updated_memory.participant_id,  # BUG FIX: Add participantId
+                                user_id=updated_memory.user_id,  # BUG FIX: Add userId to facts!
+                                fact=fact_data["fact"],
+                                fact_type=fact_data["factType"],
+                                subject=fact_data.get("subject", updated_memory.user_id),
+                                predicate=fact_data.get("predicate"),
+                                object=fact_data.get("object"),
+                                confidence=fact_data["confidence"],
+                                source_type=updated_memory.source_type,
+                                source_ref=FactSourceRef(
+                                    conversation_id=(
+                                        updated_memory.conversation_ref.conversation_id
+                                        if updated_memory.conversation_ref
+                                        else None
+                                    ),
+                                    message_ids=(
+                                        updated_memory.conversation_ref.message_ids
+                                        if updated_memory.conversation_ref
+                                        else None
+                                    ),
+                                    memory_id=updated_memory.memory_id,
+                                ),
+                                tags=fact_data.get("tags", updated_memory.tags),
+                            ),
+                            StoreFactOptions(sync_to_graph=options.sync_to_graph),
+                        )
+                        facts_reextracted.append(stored_fact)
+                    except Exception as error:
+                        print(f"Warning: Failed to re-extract fact: {error}")
+
+        return UpdateMemoryResult(
+            memory=updated_memory,
+            facts_reextracted=facts_reextracted if facts_reextracted else None,
+        )
+
+    async def delete(
+        self,
+        memory_space_id: str,
+        memory_id: str,
+        options: Optional[DeleteMemoryOptions] = None,
+    ) -> DeleteMemoryResult:
+        """
+        Delete a memory with cascade delete of facts.
+
+        Args:
+            memory_space_id: Memory space ID
+            memory_id: Memory ID
+            options: Optional delete options
+
+        Returns:
+            DeleteMemoryResult with deletion details
+
+        Example:
+            >>> result = await cortex.memory.delete('agent-1', 'mem-123')
+        """
+        # Client-side validation
+        validate_memory_space_id(memory_space_id)
+        validate_memory_id(memory_id)
+
+        opts = options or DeleteMemoryOptions()
+
+        memory = await self.vector.get(memory_space_id, memory_id)
+
+        if not memory:
+            raise CortexError(ErrorCode.MEMORY_NOT_FOUND, f"Memory {memory_id} not found")
+
+        should_sync_to_graph = (
+            opts.sync_to_graph is not False and self.graph_adapter is not None
+        )
+        should_cascade = opts.cascade_delete_facts
+
+        # Delete facts if cascade enabled
+        facts_deleted = 0
+        fact_ids: List[str] = []
+
+        if should_cascade:
+            conv_id = None
+            if memory.conversation_ref:
+                conv_id = memory.conversation_ref["conversation_id"] if isinstance(memory.conversation_ref, dict) else memory.conversation_ref.conversation_id
+            facts_deleted, fact_ids = await self._cascade_delete_facts(
+                memory_space_id,
+                memory_id,
+                conv_id,
+                should_sync_to_graph,
+            )
+
+        # Delete from vector
+        await self.vector.delete(
+            memory_space_id,
+            memory_id,
+            DeleteMemoryOptions(sync_to_graph=should_sync_to_graph),
+        )
+
+        return DeleteMemoryResult(
+            deleted=True,
+            memory_id=memory_id,
+            facts_deleted=facts_deleted,
+            fact_ids=fact_ids,
+        )
+
+    # Delegation methods
+
+    async def list(
+        self,
+        memory_space_id: str,
+        user_id: Optional[str] = None,
+        participant_id: Optional[str] = None,
+        source_type: Optional[SourceType] = None,
+        limit: Optional[int] = None,
+        enrich_facts: bool = False,
+    ) -> List[Union[MemoryEntry, EnrichedMemory]]:
+        """List memories (delegates to vector.list)."""
+        # Client-side validation
+        validate_memory_space_id(memory_space_id)
+
+        if user_id is not None:
+            validate_user_id(user_id)
+
+        if source_type is not None:
+            validate_source_type(source_type)
+
+        if limit is not None:
+            validate_limit(limit)
+
+        return await self.vector.list(  # type: ignore[return-value]
+            memory_space_id, user_id, participant_id, source_type, limit, enrich_facts
+        )
+
+    async def count(
+        self,
+        memory_space_id: str,
+        user_id: Optional[str] = None,
+        participant_id: Optional[str] = None,
+        source_type: Optional[SourceType] = None,
+    ) -> int:
+        """Count memories (delegates to vector.count)."""
+        # Client-side validation
+        validate_memory_space_id(memory_space_id)
+
+        if user_id is not None:
+            validate_user_id(user_id)
+
+        if source_type is not None:
+            validate_source_type(source_type)
+
+        return await self.vector.count(
+            memory_space_id, user_id, participant_id, source_type
+        )
+
+    async def update_many(
+        self, memory_space_id: str, filters: Dict[str, Any], updates: Dict[str, Any]
+    ) -> UpdateManyResult:
+        """Update many memories (delegates to vector.update_many).
+
+        Args:
+            memory_space_id: Memory space ID
+            filters: Filters to select memories
+            updates: Updates to apply
+
+        Returns:
+            UpdateManyResult with update details
+
+        Example:
+            >>> result = await cortex.memory.update_many(
+            ...     'agent-1',
+            ...     {'user_id': 'user-123'},
+            ...     {'importance': 80}
+            ... )
+        """
+        # Client-side validation
+        validate_memory_space_id(memory_space_id)
+        validate_update_options(updates)
+
+        if filters.get("user_id") is not None:
+            validate_user_id(filters["user_id"])
+
+        if filters.get("source_type") is not None:
+            validate_source_type(filters["source_type"])
+
+        result = await self.vector.update_many(
+            memory_space_id,
+            user_id=filters.get("user_id"),
+            source_type=filters.get("source_type"),
+            importance=updates.get("importance"),
+            tags=updates.get("tags"),
+        )
+
+        # Count affected facts
+        from ..types import ListFactsFilter, UpdateManyResult
+        all_facts = await self.facts.list(
+            ListFactsFilter(memory_space_id=memory_space_id, limit=10000)
+        )
+        memory_ids = result.get("memoryIds", [])
+        affected_facts = [
+            fact
+            for fact in all_facts
+            if fact.source_ref
+            and fact.source_ref.memory_id in memory_ids
+        ]
+
+        return UpdateManyResult(
+            updated=result.get("updated", 0),
+            memory_ids=memory_ids,
+            new_versions=result.get("newVersions", []),
+            facts_affected=len(affected_facts),
+        )
+
+    async def delete_many(
+        self, memory_space_id: str, filters: Dict[str, Any]
+    ) -> DeleteManyResult:
+        """Delete many memories (delegates to vector.delete_many).
+
+        Args:
+            memory_space_id: Memory space ID
+            filters: Filters to select memories for deletion
+
+        Returns:
+            DeleteManyResult with deletion details
+
+        Example:
+            >>> result = await cortex.memory.delete_many(
+            ...     'agent-1',
+            ...     {'user_id': 'user-123'}
+            ... )
+        """
+        # Client-side validation
+        validate_memory_space_id(memory_space_id)
+        validate_filter_combination({"memory_space_id": memory_space_id, **filters})
+
+        if filters.get("user_id") is not None:
+            validate_user_id(filters["user_id"])
+
+        if filters.get("source_type") is not None:
+            validate_source_type(filters["source_type"])
+
+        # Get all memories to delete
+        memories = await self.vector.list(memory_space_id, limit=10000)
+
+        total_facts_deleted = 0
+        all_fact_ids: List[str] = []
+
+        # Cascade delete facts for each memory
+        for memory in memories:
+            facts_deleted, fact_ids = await self._cascade_delete_facts(
+                memory_space_id,
+                memory.memory_id,
+                memory.conversation_ref.conversation_id if memory.conversation_ref else None,
+                True,
+            )
+            total_facts_deleted += facts_deleted
+            all_fact_ids.extend(fact_ids)
+
+        # Delete memories
+        result = await self.vector.delete_many(
+            memory_space_id,
+            user_id=filters.get("user_id"),
+            source_type=filters.get("source_type"),
+        )
+
+        from ..types import DeleteManyResult
+        return DeleteManyResult(
+            deleted=result.get("deleted", 0),
+            memory_ids=result.get("memoryIds", []),
+            facts_deleted=total_facts_deleted,
+            fact_ids=all_fact_ids,
+        )
+
+    async def export(
+        self,
+        memory_space_id: str,
+        user_id: Optional[str] = None,
+        format: str = "json",
+        include_embeddings: bool = False,
+        include_facts: bool = False,
+    ) -> Dict[str, Any]:
+        """Export memories (delegates to vector.export)."""
+        # Client-side validation
+        validate_memory_space_id(memory_space_id)
+        validate_export_format(format)
+
+        if user_id is not None:
+            validate_user_id(user_id)
+
+        return await self.vector.export(
+            memory_space_id, user_id, format, include_embeddings, include_facts
+        )
+
+    async def archive(
+        self, memory_space_id: str, memory_id: str
+    ) -> ArchiveResult:
+        """Archive a memory (delegates to vector.archive).
+
+        Args:
+            memory_space_id: Memory space ID
+            memory_id: Memory ID to archive
+
+        Returns:
+            ArchiveResult with archive details
+
+        Example:
+            >>> result = await cortex.memory.archive('agent-1', 'mem-123')
+        """
+        # Client-side validation
+        validate_memory_space_id(memory_space_id)
+        validate_memory_id(memory_id)
+
+        result = await self.vector.archive(memory_space_id, memory_id)
+
+        # Convert dict result to typed ArchiveResult
+        return ArchiveResult(
+            archived=result.get("archived", True),
+            memory_id=result.get("memoryId", memory_id),
+            restorable=result.get("restorable", True),
+            facts_archived=result.get("factsArchived", 0),
+            fact_ids=result.get("factIds", []),
+        )
+
+    async def restore_from_archive(
+        self, memory_space_id: str, memory_id: str
+    ) -> Dict[str, Any]:
+        """
+        Restore memory from archive.
+
+        Args:
+            memory_space_id: Memory space ID
+            memory_id: Memory ID to restore
+
+        Returns:
+            Restore result
+
+        Example:
+            >>> restored = await cortex.memory.restore_from_archive('agent-1', 'mem-123')
+            >>> print(f"Restored: {restored['restored']}")
+        """
+        # Client-side validation
+        validate_memory_space_id(memory_space_id)
+        validate_memory_id(memory_id)
+
+        result = await self._execute_with_resilience(
+            lambda: self.client.mutation(
+                "memories:restoreFromArchive",
+                {"memorySpaceId": memory_space_id, "memoryId": memory_id},
+            ),
+            "memories:restoreFromArchive",
+        )
+
+        return cast(Dict[str, Any], result)
+
+    async def get_version(
+        self, memory_space_id: str, memory_id: str, version: int
+    ) -> Optional[MemoryVersionInfo]:
+        """Get specific version (delegates to vector.get_version).
+
+        Args:
+            memory_space_id: Memory space ID
+            memory_id: Memory ID
+            version: Version number to retrieve
+
+        Returns:
+            MemoryVersionInfo if found, None otherwise
+
+        Example:
+            >>> version = await cortex.memory.get_version('agent-1', 'mem-123', 1)
+        """
+        # Client-side validation
+        validate_memory_space_id(memory_space_id)
+        validate_memory_id(memory_id)
+        validate_version(version)
+
+        result = await self.vector.get_version(memory_space_id, memory_id, version)
+
+        if not result:
+            return None
+
+        return MemoryVersionInfo(
+            memory_id=result.get("memoryId", memory_id),
+            version=result.get("version", version),
+            content=result.get("content", ""),
+            timestamp=result.get("timestamp", 0),
+            embedding=result.get("embedding"),
+        )
+
+    async def get_history(
+        self, memory_space_id: str, memory_id: str
+    ) -> List[MemoryVersionInfo]:
+        """Get version history (delegates to vector.get_history).
+
+        Args:
+            memory_space_id: Memory space ID
+            memory_id: Memory ID
+
+        Returns:
+            List of MemoryVersionInfo for all versions
+
+        Example:
+            >>> history = await cortex.memory.get_history('agent-1', 'mem-123')
+        """
+        # Client-side validation
+        validate_memory_space_id(memory_space_id)
+        validate_memory_id(memory_id)
+
+        results = await self.vector.get_history(memory_space_id, memory_id)
+
+        return [
+            MemoryVersionInfo(
+                memory_id=v.get("memoryId", memory_id),
+                version=v.get("version", 0),
+                content=v.get("content", ""),
+                timestamp=v.get("timestamp", 0),
+                embedding=v.get("embedding"),
+            )
+            for v in results
+        ]
+
+    async def get_at_timestamp(
+        self, memory_space_id: str, memory_id: str, timestamp: int
+    ) -> Optional[MemoryVersionInfo]:
+        """Get version at timestamp (delegates to vector.get_at_timestamp).
+
+        Args:
+            memory_space_id: Memory space ID
+            memory_id: Memory ID
+            timestamp: Unix timestamp in milliseconds
+
+        Returns:
+            MemoryVersionInfo at that timestamp if found, None otherwise
+
+        Example:
+            >>> version = await cortex.memory.get_at_timestamp('agent-1', 'mem-123', 1699886400000)
+        """
+        # Client-side validation
+        validate_memory_space_id(memory_space_id)
+        validate_memory_id(memory_id)
+        validate_timestamp(timestamp)
+
+        result = await self.vector.get_at_timestamp(memory_space_id, memory_id, timestamp)
+
+        if not result:
+            return None
+
+        return MemoryVersionInfo(
+            memory_id=result.get("memoryId", memory_id),
+            version=result.get("version", 0),
+            content=result.get("content", ""),
+            timestamp=result.get("timestamp", 0),
+            embedding=result.get("embedding"),
+        )
+
+    # Helper methods
+
+    async def _cascade_delete_facts(
+        self,
+        memory_space_id: str,
+        memory_id: str,
+        conversation_id: Optional[str],
+        sync_to_graph: Optional[bool],
+    ) -> Tuple[int, List[str]]:
+        """Helper: Find and cascade delete facts linked to a memory."""
+        from ..types import ListFactsFilter
+        all_facts = await self.facts.list(
+            ListFactsFilter(memory_space_id=memory_space_id, limit=10000)
+        )
+
+        facts_to_delete = [
+            fact
+            for fact in all_facts
+            if (
+                fact.source_ref
+                and (
+                    fact.source_ref.memory_id == memory_id
+                    or (
+                        conversation_id
+                        and fact.source_ref.conversation_id == conversation_id
+                    )
+                )
+            )
+        ]
+
+        deleted_fact_ids: List[str] = []
+        for fact in facts_to_delete:
+            try:
+                from ..types import DeleteFactOptions
+
+                await self.facts.delete(
+                    memory_space_id,
+                    fact.fact_id,
+                    DeleteFactOptions(sync_to_graph=sync_to_graph),
+                )
+                deleted_fact_ids.append(fact.fact_id)
+            except Exception as error:
+                print(f"Warning: Failed to delete linked fact: {error}")
+
+        return len(deleted_fact_ids), deleted_fact_ids
+
+    async def _fetch_facts_for_memory(
+        self,
+        memory_space_id: str,
+        memory_id: str,
+        conversation_id: Optional[str],
+    ) -> List:
+        """Helper: Fetch facts for a memory or conversation."""
+        from ..types import ListFactsFilter
+        all_facts = await self.facts.list(
+            ListFactsFilter(memory_space_id=memory_space_id, limit=10000)
+        )
+
+        return [
+            fact
+            for fact in all_facts
+            if (
+                fact.source_ref
+                and (
+                    fact.source_ref.memory_id == memory_id
+                    or (
+                        conversation_id
+                        and fact.source_ref.conversation_id == conversation_id
+                    )
+                )
+            )
+        ]
+

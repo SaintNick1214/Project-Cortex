@@ -1,0 +1,535 @@
+{"frozenPath": "_goals/convex-backend-runtime-2026-10-02/qa/task05-runtime-contract-lock-preparation-c3/preimages/convex-dev--runtimeModelPolicy.ts", "bytes": 73531, "sha256": "bed10cc3934aac6743ff0cb08911765d84e9db18446cd8aebff979815068207f"}
+175:     priceRevision: z.string(), boundRevision: z.string() }).partial().optional() }).strict();
+176: const tenantPolicySchema = z.object({ policyId: z.string().min(1), version: count.min(1), scope: z.literal("tenant"), tenantId: z.string().min(1),
+177:   operationKey: z.enum(["agent.respond", "memory.extract", "facts.resolve", "memory.summarize", "conversation.title", "artifact.text", "artifact.code", "artifact.sheet",
+178:     "artifact.suggestions", "embedding.query", "embedding.memory", "media.image.generate", "media.video.generate"]).optional(), rules: rulesSchema,
+179:   override: z.object({ actorPrincipalId: z.string(), changeRevision: count.min(1), authorizationId: z.string() }).strict().optional(),
+180: }).strict();
+181: export interface TrustedAgentPolicyVersion {
+182:   readonly tenantId: string;
+183:   readonly agent: { readonly agentId: string; readonly version: number };
+184:   readonly policies: readonly TrustedModelPolicyRecord[];
+185: }
+186: /**
+187:  * Task05 composition hook: selectors are never policy authority. Today executable definitions
+188:  * do not exist, so only exact compiled/stored foundation entries are available. Task05 replaces
+189:  * this bounded reader with its CURRENT owned immutable executable-definition/version lookup
+190:  * (including scope/grant/revocation/source hash), and returns validated narrowed policies.
+191:  * All resolve/admit/checkpoint paths use this hook. Scoped administrators register/update
+192:  * owned definitions in Task05's native mutation; they cannot attest deployment prices/bounds.
+193:  * The future lookup uses this same native db context, without a second run/transcript store.
+194:  */
+195: export async function readTrustedAgentPolicyVersion(ctx: ReadCtx, reference: RuntimeAuthorityReference,
+196:   agent: { agentId: string; version: number }): Promise<TrustedAgentPolicyVersion> {
+197:   text(agent.agentId); integer(agent.version, 1);
+198:   await currentAuthority(ctx, reference, "agent.respond");
+199:   const { manifest, root } = await activeRoot(ctx);
+200:   const selected = manifest.policies.filter((policy) => policy.scope === "agent" && policy.tenantId === reference.tenantId
+201:     && policy.agentId === agent.agentId && policy.agentVersion === agent.version);
+202:   if (!selected.length) fail("CAPABILITY_UNAVAILABLE");
+203:   for (const policy of selected) {
+204:     const row = single(await ctx.db.query("runtimeModelPolicies").withIndex("by_policy_version", (q) => q.eq("policyId", policy.policyId).eq("version", policy.version)).take(2));
+205:     if (!row || !row.active || row.revokedAt !== undefined || row.scope !== "agent" || row.tenantId !== reference.tenantId || row.agentId !== agent.agentId
+206:       || row.agentVersion !== agent.version || row.canonical !== canonical(policy) || canonical(row.root) !== canonical(root)) fail("POLICY_DENIED");
+207:   }
+208:   return { tenantId: reference.tenantId, agent, policies: selected };
+209: }
+210: async function policies(ctx: ReadCtx, manifest: DeploymentPolicyManifest, root: Root, reference: RuntimeAuthorityReference, key: ModelOperationKey, agent?: { agentId: string; version: number }): Promise<TrustedModelPolicyRecord[]> {
+211:   const rows = await ctx.db.query("runtimeModelPolicies").withIndex("by_scope_active", (q) => q.eq("scope", "tenant").eq("tenantId", reference.tenantId).eq("active", true)).take(65);
+212:   if (rows.length > 64) fail("POLICY_DENIED");
+213:   const agentPolicies = agent ? (await readTrustedAgentPolicyVersion(ctx, reference, agent)).policies : [];
+214:   const selected: TrustedModelPolicyRecord[] = [...manifest.policies.filter((policy) => policy.scope === "deployment" && (!policy.operationKey || policy.operationKey === key)),
+215:     ...agentPolicies.filter((policy) => !policy.operationKey || policy.operationKey === key)];
+216:   for (const row of rows) {
+217:     if (row.revokedAt !== undefined || canonical(row.root) !== canonical(root) || !row.actorReference) fail("POLICY_DENIED");
+218:     await recheckAuthority(ctx, row.actorReference, { capability: "admin", tenantId: reference.tenantId, memorySpaceId: row.actorReference.memorySpaceId });
+219:     const parsed = tenantPolicySchema.safeParse(decode(row.canonical));
+220:     if (!parsed.success || parsed.data.policyId !== row.policyId || parsed.data.version !== row.version || parsed.data.tenantId !== reference.tenantId) fail("POLICY_DENIED");
+221:     if (parsed.data.override) {
+222:       const expected = await semanticHash(canonical([row.actorReference, parsed.data.policyId, parsed.data.version]));
+223:       if (parsed.data.override.actorPrincipalId !== row.actorReference.principalId || parsed.data.override.changeRevision !== parsed.data.version || parsed.data.override.authorizationId !== expected) fail("POLICY_DENIED");
+224:     }
+225:     if (!parsed.data.operationKey || parsed.data.operationKey === key) selected.push(parsed.data);
+226:   }
+227:   return selected;
+228: }
+229: function resolutionContext(reference: RuntimeAuthorityReference, key: ModelOperationKey, runBudgetId: string, source?: Source, parentOperationId?: string, agent?: { agentId: string; version: number }): TrustedModelPolicyContext {
+230:   return { scope: memoryScope(reference), operationKey: key, runBudgetId, authorizedOverrides: [], ...(agent ? { agent } : {}),
+231:     ...(source ? { source: { sourceId: source.sourceId, sourceEventId: source.sourceEventId, sourceRevision: source.sourceRevision } } : {}),
+232:     ...(parentOperationId ? { parentOperationId } : {}), ...(key.startsWith("embedding.") ? { semanticProfile: DEFAULT_EMBEDDING_PROFILE } : {}) };
+233: }
+234: async function resolveCurrent(ctx: ReadCtx, reference: RuntimeAuthorityReference, key: ModelOperationKey, runBudgetId: string, source?: Source, parentOperationId?: string, agent?: { agentId: string; version: number }) {
+235:   const { manifest, root } = await activeRoot(ctx);
+236:   const records = await policies(ctx, manifest, root, reference, key, agent);
+237:   const context = resolutionContext(reference, key, runBudgetId, source, parentOperationId, agent);
+238:   context.authorizedOverrides = records.flatMap((record) => record.override ? [{ ...record.override, policyId: record.policyId, policyVersion: record.version }] : []);
+239:   const resolution = { context, policies: records, qualifications: manifest.qualifications };
+240:   const snapshot = resolveModelPolicy(resolution);
+241:   return { root, manifest, resolutionCanonical: canonical(resolution), snapshot };
+242: }
+243: function snapshotOf(record: Pick<Operation, "resolutionCanonical" | "snapshotCanonical">): ModelPolicySnapshotV1 {
+244:   const snapshot = resolveModelPolicy(decode(record.resolutionCanonical));
+245:   if (canonical(snapshot) !== record.snapshotCanonical) fail("POLICY_DENIED");
+246:   return snapshot;
+247: }
+248: async function currentOperation(ctx: ReadCtx, reference: RuntimeAuthorityReference, operation: Operation, permitCancelled = false) {
+249:   if (!sameAuthority(reference, operation.reference)) fail("FORBIDDEN");
+250:   await currentAuthority(ctx, reference, operation.operationKey);
+251:   await checkSource(ctx, reference, operation.operationKey, operation.source);
+252:   if (operation.cancelled && !permitCancelled) fail("RUN_CANCELLED");
+253:   const run = await ctx.db.get("runtimeBudgetAccounts", operation.runAccountId);
+254:   if (!run || !run.reference || !sameAuthority(run.reference, reference) || run.tenantId !== reference.tenantId || (run.cancelled && !permitCancelled)) fail("FORBIDDEN");
+255:   let parentId = operation.parentOperationId;
+256:   const visited = new Set<string>([operation._id]);
+257:   while (parentId) {
+258:     if (visited.has(parentId) || visited.size > 16) fail("FORBIDDEN");
+259:     visited.add(parentId);
+260:     const parent = await ctx.db.get("runtimeModelOperations", parentId);
+261:     if (!parent || !sameAuthority(reference, parent.reference) || parent.runAccountId !== operation.runAccountId || parent.cancelled) fail("FORBIDDEN");
+262:     await currentAuthority(ctx, reference, parent.operationKey);
+263:     await checkSource(ctx, reference, parent.operationKey, parent.source);
+264:     parentId = parent.parentOperationId;
+265:   }
+266:   const snapshot = snapshotOf(operation);
+267:   const current = await resolveCurrent(ctx, reference, operation.operationKey, run.runBudgetId!, operation.source, operation.parentOperationId, run.agentId ? { agentId: run.agentId, version: run.agentVersion! } : undefined);
+268:   if (!current.snapshot.allowedModels.includes(snapshot.modelId) || !snapshot.capabilities.every((cap) => current.snapshot.capabilities.includes(cap))
+269:     || !current.manifest.qualifications.some((q) => q.receiptId === snapshot.qualificationReceiptId && q.modelId === snapshot.modelId && q.nativeInterface === snapshot.nativeInterface
+270:       && q.priceRevision === snapshot.pins.priceRevision && q.boundRevision === snapshot.pins.boundRevision)) fail("POLICY_DENIED");
+271:   return { snapshot, run, current };
+272: }
+273: function balanced(account: Account): void {
+274:   [account.limitUnits, account.reservedUnits, account.settledUnits, account.uncertainUnits, account.activeConcurrency, account.concurrencyLimit, account.version].forEach((value) => integer(value));
+275:   add(account.reservedUnits, account.settledUnits, account.uncertainUnits);
+276: }
+277: function capacity(account: Account, ceiling: number, limit = account.limitUnits, concurrency = account.concurrencyLimit): void {
+278:   balanced(account);
+279:   if (!account.current || account.cancelled || account.overrun || Date.now() < account.windowStart || Date.now() >= account.windowEnd
+280:     || add(account.reservedUnits, account.settledUnits, account.uncertainUnits, ceiling) > Math.min(account.limitUnits, integer(limit, 1))
+281:     || account.activeConcurrency >= Math.min(account.concurrencyLimit, integer(concurrency, 1))) fail("BUDGET_EXCEEDED");
+282: }
+283: /** Permit-boundary capacity: the reservation and active slot are already counted. */
+284: function heldCapacity(account: Account, limit: number, concurrency: number): void {
+285:   balanced(account);
+286:   if (!account.current || account.cancelled || account.overrun || Date.now() < account.windowStart || Date.now() >= account.windowEnd
+287:     || add(account.reservedUnits, account.settledUnits, account.uncertainUnits) > Math.min(account.limitUnits, integer(limit, 1))
+288:     || account.activeConcurrency > Math.min(account.concurrencyLimit, integer(concurrency, 1))) fail("BUDGET_EXCEEDED");
+289: }
+290: const bindingArgs = { reference: runtimeAuthorityReference, operationKey: modelOperationKey, requestId: v.string(), requestCanonical: v.string(), agentId: v.optional(v.string()), agentVersion: v.optional(v.number()) };
+291: export type BindBudgetArgs = { reference: RuntimeAuthorityReference; operationKey: ModelOperationKey; requestId: string; requestCanonical: string; agentId?: string; agentVersion?: number };
+292: /** Task05 calls this helper in ITS native parent mutation. Creates accounts, no envelope double reservation. */
+293: export async function bindTrustedBudget(ctx: WriteCtx, args: BindBudgetArgs): Promise<{ runBudgetId: string; runAccountId: Id<"runtimeBudgetAccounts"> }> {
+294:   await currentAuthority(ctx, args.reference, args.operationKey); text(args.requestId); decode(args.requestCanonical);
+295:   const bindingKey = canonical(["run", args.reference.tenantId, args.reference.memorySpaceId, args.reference.principalId, args.operationKey, args.requestId]);
+296:   const runBudgetId = await semanticHash(bindingKey);
+297:   const existing = single(await ctx.db.query("runtimeBudgetAccounts").withIndex("by_run", (q) => q.eq("runBudgetId", runBudgetId)).take(2));
+298:   if (existing) {
+299:     if (!existing.reference || !sameAuthority(existing.reference, args.reference) || existing.scopeKey !== bindingKey || existing.requestCanonical !== args.requestCanonical || existing.agentId !== args.agentId || existing.agentVersion !== args.agentVersion) fail("IDEMPOTENCY_CONFLICT");
+300:     return { runBudgetId, runAccountId: existing._id };
+301:   }
+302:   if ((args.agentId === undefined) !== (args.agentVersion === undefined)) fail("INVALID_INPUT");
+303:   if (args.agentId) { text(args.agentId); integer(args.agentVersion!, 1); }
+304:   const agent = args.agentId ? { agentId: args.agentId, version: args.agentVersion! } : undefined;
+305:   const resolved = await resolveCurrent(ctx, args.reference, args.operationKey, runBudgetId, undefined, undefined, agent);
+306:   const now = integer(Date.now());
+307:   const start = Math.floor(now / resolved.manifest.budgetWindowMs) * resolved.manifest.budgetWindowMs;
+308:   const end = add(start, resolved.manifest.budgetWindowMs);
+309:   const tenantScope = canonical(["tenant", args.reference.tenantId]);
+310:   let tenant = single(await ctx.db.query("runtimeBudgetAccounts").withIndex("by_scope_current", (q) => q.eq("scopeKey", tenantScope).eq("current", true)).take(2));
+311:   if (tenant && (tenant.windowEnd <= now || canonical(tenant.root) !== canonical(resolved.root))) {
+312:     balanced(tenant);
+313:     if (tenant.reservedUnits || tenant.uncertainUnits || tenant.activeConcurrency || tenant.overrun) fail("BUDGET_EXCEEDED");
+314:     // Policy replacement within a window cannot reset money spent.
+315:     if (tenant.windowEnd > now) fail("POLICY_DENIED");
+316:     await ctx.db.patch("runtimeBudgetAccounts", tenant._id, { current: false, version: add(tenant.version, 1) });
+317:     tenant = undefined;
+318:   }
+319:   await finalActor(ctx, args.reference, args.operationKey);
+320:   const counters = { reservedUnits: 0, settledUnits: 0, uncertainUnits: 0, activeConcurrency: 0, overrun: false, current: true, cancelled: false, version: 1, createdAt: now };
+321:   const window = { windowId: canonical([args.reference.tenantId, start, end]), windowStart: start, windowEnd: end, currency: "USD" as const, monetaryUnit: "micro-USD" as const, root: resolved.root };
+322:   if (!tenant) await ctx.db.insert("runtimeBudgetAccounts", { accountKey: await semanticHash(canonical([tenantScope, start, end])), scopeKey: tenantScope,
+323:     kind: "tenant", tenantId: args.reference.tenantId, ...window, ...counters,
+324:     limitUnits: resolved.snapshot.limits.tenantBudgetUnits, concurrencyLimit: resolved.snapshot.limits.concurrency });
+325:   else if (tenant.limitUnits !== resolved.snapshot.limits.tenantBudgetUnits || tenant.concurrencyLimit !== resolved.snapshot.limits.concurrency) {
+326:     // Tenant-wide capacity is the tightest policy seen, never inflated by another operation.
+327:     await ctx.db.patch("runtimeBudgetAccounts", tenant._id, { limitUnits: Math.min(tenant.limitUnits, resolved.snapshot.limits.tenantBudgetUnits),
+328:       concurrencyLimit: Math.min(tenant.concurrencyLimit, resolved.snapshot.limits.concurrency), version: add(tenant.version, 1) });
+329:   }
+330:   const runAccountId = await ctx.db.insert("runtimeBudgetAccounts", { accountKey: runBudgetId, scopeKey: bindingKey, kind: "run",
+331:     tenantId: args.reference.tenantId, runBudgetId, reference: args.reference, requestCanonical: args.requestCanonical, ...(agent ? { agentId: agent.agentId, agentVersion: agent.version } : {}), ...window, ...counters,
+332:     limitUnits: resolved.snapshot.limits.runBudgetUnits, concurrencyLimit: resolved.snapshot.limits.concurrency });
+333:   return { runBudgetId, runAccountId };
+334: }
+335: export const ensureBudget = internalMutation({ args: bindingArgs, handler: bindTrustedBudget });
+336: 
+337: export const installDeploymentPolicy = internalMutation({ args: { manifestId: v.string(), expectedRevision: v.number() }, handler: async (ctx, args) => {
+{"frozenPath": "_goals/convex-backend-runtime-2026-10-02/qa/task05-runtime-contract-lock-preparation-c3/preimages/convex-dev--runtimeAuth.ts", "bytes": 23246, "sha256": "03ec735f1791d2e9973a320e22dcc58d0f040432782398dcc95d0d65f99b0929"}
+100:     || tenant.deletedAt !== undefined || !Number.isSafeInteger(tenant.epoch) || tenant.epoch < 1
+101:     || await reader.hasTombstone({ tenantId, resourceType: "tenant", resourceId: tenantId })) deny();
+102:   if (memorySpaceId === undefined) return { tenantEpoch: tenant.epoch };
+103:   const space = await reader.getScope(tenantId, memorySpaceId);
+104:   if (!space || space.tenantId !== tenantId || space.memorySpaceId !== memorySpaceId
+105:     || space.deletedAt !== undefined || !Number.isSafeInteger(space.epoch) || space.epoch < 1
+106:     || await reader.hasTombstone({ tenantId, memorySpaceId, resourceType: "memorySpace", resourceId: memorySpaceId })) deny();
+107:   return { tenantEpoch: tenant.epoch, memorySpaceEpoch: space.epoch };
+108: }
+109: 
+110: async function materialize(
+111:   reader: AuthorityReader, principal: PrincipalRecord, membership: MembershipRecord,
+112:   grant: GrantRecord, requirement: RuntimeAuthorityRequirement, now: number,
+113:   pinned?: RuntimeAuthorityReference,
+114: ): Promise<RuntimeAuthority> {
+115:   const tenantId = requirement.resource?.tenantId ?? requirement.tenantId ?? pinned?.tenantId ?? grant.tenantId;
+116:   const memorySpaceId = requirement.resource?.memorySpaceId ?? requirement.memorySpaceId
+117:     ?? pinned?.memorySpaceId ?? grant.memorySpaceId;
+118:   if (!active(principal) || !active(membership) || !active(grant)
+119:     || membership.principalId !== principal._id || grant.principalId !== principal._id
+120:     || grant.membershipId !== membership._id || membership.tenantId !== grant.tenantId
+121:     || tenantId !== grant.tenantId || !grant.capabilities.includes(requirement.capability)
+122:     || (requirement.actorKind !== undefined && requirement.actorKind !== principal.actorKind)
+123:     || (grant.expiresAt !== undefined && (!Number.isFinite(grant.expiresAt) || now >= grant.expiresAt))
+124:     || (grant.memorySpaceId !== undefined && grant.memorySpaceId !== memorySpaceId)
+125:     || (grant.resourceAccess === "space" && grant.memorySpaceId === undefined)
+126:     || (grant.resourceAccess === "tenant" && grant.memorySpaceId !== undefined)) deny();
+127:   const epochs = await assertCurrentScope(reader, tenantId, memorySpaceId);
+128:   if (epochs.tenantEpoch !== grant.tenantEpoch
+129:     || (grant.memorySpaceId !== undefined && epochs.memorySpaceEpoch !== grant.memorySpaceEpoch)) deny();
+130:   const authority: RuntimeAuthority = {
+131:     principalId: principal._id, principalVersion: principal.version,
+132:     membershipId: membership._id, membershipVersion: membership.version,
+133:     grantId: grant._id, grantVersion: grant.version, tenantId, ...epochs,
+134:     ...(memorySpaceId === undefined ? {} : { memorySpaceId }),
+135:     actorKind: principal.actorKind, userId: principal.metadataUserId ?? principal._id,
+136:     capabilities: [...grant.capabilities], resourceAccess: grant.resourceAccess,
+137:   };
+138:   if (pinned && (pinned.principalId !== authority.principalId || pinned.principalVersion !== authority.principalVersion
+139:     || pinned.membershipId !== authority.membershipId || pinned.membershipVersion !== authority.membershipVersion
+140:     || pinned.grantId !== authority.grantId || pinned.grantVersion !== authority.grantVersion
+141:     || pinned.tenantId !== authority.tenantId || pinned.tenantEpoch !== authority.tenantEpoch
+142:     || pinned.memorySpaceId !== authority.memorySpaceId
+143:     || pinned.memorySpaceEpoch !== authority.memorySpaceEpoch)) deny();
+144:   if (requirement.resource) {
+145:     assertResourceScope(authority, requirement.resource);
+146:     const key = { tenantId, memorySpaceId: requirement.resource.memorySpaceId,
+147:       resourceType: requirement.resource.resourceType, resourceId: requirement.resource.resourceId };
+148:     if (await reader.hasTombstone(key)
+149:       || (key.memorySpaceId !== undefined && await reader.hasTombstone({ ...key, memorySpaceId: undefined }))) deny();
+150:   }
+151:   return authority;
+152: }
+153: 
+154: /** Pure authority resolution. Only Convex-verified issuer/subject enter this function. */
+155: export async function resolveAuthority(
+{"frozenPath": "_goals/convex-backend-runtime-2026-10-02/qa/task05-runtime-contract-lock-preparation-c3/preimages/convex-dev--runtimeMemoryRepository.ts", "bytes": 24131, "sha256": "74e3db54fa9f1e5794b38b2d25ae7bed06341bf06cf1ba438ca3424605e42833"}
+100:   }
+101:   async putSource(source: SourceContent): Promise<{ source: SourceContent; created: boolean }> {
+102:     const db = this.writeDb();
+103:     await this.authority(sourceResource(source));
+104:     assertSourceLineage(source.lineage);
+105:     if (source.ownerPrincipalId !== this.scope.principalId || source.tombstonedAt !== undefined
+106:       || normalizeSourceText(source.content) !== source.content || await semanticHash(source.content) !== source.contentHash
+107:       || !Number.isFinite(source.createdAt) || source.createdAt < 0 || source.createdAt > 8.64e15) {
+108:       memoryError("INVALID_INPUT", "Source must have canonical content, hash, attribution and owner");
+109:     }
+110:     const existing = await this.getSource(source.lineage.sourceId);
+111:     if (existing) {
+112:       // The initial persisted timestamp remains authoritative on request replay.
+113:       if (canonicalMemoryValue({ ...source, createdAt: existing.createdAt }) !== canonicalMemoryValue(existing)) conflict("Source identity was reused with different content or attribution");
+114:       return { source: existing, created: false };
+115:     }
+116:     const event = await db.query("runtimeMemorySources").withIndex("by_scope_event", (q) =>
+117:       q.eq("tenantId", this.scope.tenantId).eq("memorySpaceId", this.scope.memorySpaceId).eq("lineage.sourceEventId", source.lineage.sourceEventId)).unique();
+118:     if (event) conflict("Source event already belongs to another canonical source");
+119:     await db.insert("runtimeMemorySources", source);
+120:     return { source, created: true };
+121:   }
+122:   async commitDerived(input: DerivedCommit): Promise<{ receiptId: string; created: boolean }> {
+123:     const db = this.writeDb();
+124:     const source = await this.getSource(input.source.sourceId);
+125:     if (!source || !sameReference(source.lineage, input.source) || !sameReference(source.lineage, input.identity)) {
+126:       memoryError("STALE_SOURCE", "Source event/revision is no longer current");
+127:     }
+128:     const receiptId = await processingIdentityKey(input.identity);
+129:     const canonicalIdentity = canonicalMemoryValue(input.identity);
+130:     const canonicalPayload = canonicalMemoryValue(input);
+131:     const receipt = await db.query("runtimeMemoryReceipts").withIndex("by_scope_receipt", (q) =>
+132:       q.eq("tenantId", this.scope.tenantId).eq("memorySpaceId", this.scope.memorySpaceId).eq("receiptId", receiptId)).unique();
+133:     if (receipt) {
+134:       if (receipt.canonicalIdentity !== canonicalIdentity || receipt.canonicalPayload !== canonicalPayload) conflict("Processing receipt identity/hash was reused with a different canonical payload");
+135:       return { receiptId, created: false };
+136:     }
+137:     const prepared = await prepareSourceContent(this.scope, source.lineage, source.content, { now: () => source.createdAt });
+138:     const expectedChunks = new Map(prepared.chunks.map((chunk) => [chunk.chunkId, chunk]));
+139:     const chunks = new Map<string, SourceChunk>();
+140:     for (const chunk of input.chunks ?? []) {
+250:     for (const row of rows) {
+251:       if (!row.ownerPrincipalId || !row.lineage || !row.extractionPolicyVersion || row.tombstonedAt !== undefined
+252:         || row.supersededBy || (row.validUntil !== undefined && row.validUntil <= this.clock.now())
+253:         || (query.subject !== undefined && row.subject !== query.subject)
+254:         || (query.factType !== undefined && row.factType !== query.factType)
+255:         || (authority.resourceAccess === "own" && row.ownerPrincipalId !== authority.principalId)) continue;
+256:       assertResourceScope(authority, { resourceType: "fact", resourceId: row.factId, tenantId: row.tenantId,
+257:         memorySpaceId: row.memorySpaceId, ownerPrincipalId: row.ownerPrincipalId });
+258:       if (await reader.hasTombstone({ tenantId: this.scope.tenantId, memorySpaceId: this.scope.memorySpaceId, resourceType: "fact", resourceId: row.factId })
+259:         || await reader.hasTombstone({ tenantId: this.scope.tenantId, resourceType: "fact", resourceId: row.factId })) continue;
+260:       const source = await this.visibleSource(row.lineage.sourceId, authority);
+261:       if (!source || !sameReference(source.lineage, row.lineage) || source.ownerPrincipalId !== row.ownerPrincipalId
+262:         || row.lineage.role === "assistant" || canonicalMemoryValue(row.lineage) !== canonicalMemoryValue(source.lineage)) continue;
+263:       const { _creationTime: _creationTime, tombstonedAt: _tombstonedAt, processingReceiptId: _receipt,
+264:         lineage, ownerPrincipalId, extractionPolicyVersion, ...record } = row;
+265:       // fact-extraction is an old schema-only source type; fresh runtime writes use manual/tool.
+266:       if (record.sourceType === "fact-extraction") continue;
+267:       const sourceType = record.sourceType;
+268:       facts.push({ ...record, sourceType, lineage, ownerPrincipalId, extractionPolicyVersion });
+269:       if (facts.length === query.limit) break;
+270:     }
+271:     return facts;
+272:   }
+273:   async hydrateVectors(hits: { id: Id<"runtimeMemoryVectors">; score: number }[]): Promise<VectorMatch[]> {
+274:     if (hits.length > 100) memoryError("INVALID_INPUT", "Too many vector candidates");
+275:     const authority = await this.authority(undefined, "read");
+276:     const matches: VectorMatch[] = [];
+277:     for (const hit of hits) {
+278:       const row = await this.ctx.db.get("runtimeMemoryVectors", hit.id);
+279:       if (!row || row.tenantId !== this.scope.tenantId || row.memorySpaceId !== this.scope.memorySpaceId
+280:         || row.profileId !== DEFAULT_EMBEDDING_PROFILE.profileId || !Number.isFinite(hit.score)) continue;
+281:       const sourceRow = await this.ctx.db.query("runtimeMemorySources").withIndex("by_scope_source", (q) =>
+282:         q.eq("tenantId", this.scope.tenantId).eq("memorySpaceId", this.scope.memorySpaceId).eq("lineage.sourceId", row.sourceId)).unique();
+283:       if (!sourceRow || sourceRow.tombstonedAt !== undefined || row.ownerPrincipalId !== sourceRow.ownerPrincipalId
+284:         || (authority.resourceAccess === "own" && sourceRow.ownerPrincipalId !== authority.principalId)) continue;
+285:       const source = await this.visibleSource(row.sourceId, authority);
+286:       const chunk = await this.findChunk(row.chunkId);
+287:       const vector = stripVector(row);
+288:       const receipt = await this.ctx.db.query("runtimeMemoryReceipts").withIndex("by_scope_receipt", (q) =>
+289:         q.eq("tenantId", this.scope.tenantId).eq("memorySpaceId", this.scope.memorySpaceId).eq("receiptId", vector.processingReceiptId)).unique();
+290:       if (!source || !chunk || !receipt || !sameReference(source.lineage, receipt.identity)) continue;
+291:       try {
+292:         if (isCurrentAuthorizedVector(vector, source, chunk, this.scope)) matches.push({ vector, source, chunk, score: hit.score });
+{"frozenPath": "_goals/convex-backend-runtime-2026-10-02/qa/task05-runtime-contract-lock-preparation-c3/preimages/node_modules--@convex-dev--agent--src--vercel--client--search.ts", "bytes": 23005, "sha256": "2a9b50e939d95c5f19a8ad25c33670e89b86fac6895e5aa35c7be71026860875"}
+650:   let prePromptDocs = recentMessages;
+651:   const messages = args.messages ?? [];
+652:   let existingResponseDocs: MessageDoc[] = [];
+653:   if (promptMessage) {
+654:     prePromptDocs = recentMessages.slice(0, promptMessageIndex);
+655:     existingResponseDocs = recentMessages.slice(promptMessageIndex + 1);
+656:     if (promptArray.length === 0) {
+657:       // If they didn't override the prompt, use the existing prompt message.
+658:       if (promptMessage.message) {
+659:         promptArray.push(promptMessage.message);
+660:       }
+661:     }
+662:     if (!promptMessage.embeddingId && effectiveEmbeddingModel) {
+663:       // Lazily generate embeddings for the prompt message, if it doesn't have
+664:       // embeddings yet. This can happen if the message was saved in a mutation
+665:       // where the LLM is not available.
+666:       await generateAndSaveEmbeddings(
+667:         ctx,
+668:         component,
+669:         {
+670:           ...args,
+671:           userId,
+672:           embeddingModel: effectiveEmbeddingModel,
+673:         },
+674:         [promptMessage],
+675:       );
+676:     }
+677:   }
+678: 
+679:   const search = docsToModelMessages(searchMessages);
+680:   const recent = docsToModelMessages(prePromptDocs);
+681:   const inputMessages = messages.map(toModelMessage);
+682:   const inputPrompt = promptArray.map(toModelMessage);
+683:   const existingResponses = docsToModelMessages(existingResponseDocs);
+684: 
+685:   const allMessages = [
+686:     ...search,
+687:     ...recent,
+688:     ...inputMessages,
+689:     ...inputPrompt,
+690:     ...existingResponses,
+691:   ];
+692:   let processedMessages = args.contextHandler
+693:     ? await args.contextHandler(ctx, {
+694:         allMessages,
+695:         search,
+696:         recent,
+697:         inputMessages,
+698:         inputPrompt,
+699:         existingResponses,
+700:         userId,
+701:         threadId,
+702:       })
+703:     : allMessages;
+704: 
+705:   // Post-process: auto-deny unresolved approvals so the AI SDK sees a
+706:   // complete history. Applied after contextHandler so custom handlers
+707:   // don't need to handle this.
+708:   processedMessages = autoDenyUnresolvedApprovals(processedMessages);
+709: 
+710:   // Process messages to inline localhost files (if not, file urls pointing to localhost will be sent to LLM providers)
+711:   if (process.env.CONVEX_CLOUD_URL?.startsWith("http://127.0.0.1")) {
+712:     processedMessages = await inlineMessagesFiles(processedMessages);
+713:   }
+714: 
+715:   return {
+716:     messages: processedMessages,
+717:     order: promptMessage?.order,
+718:     stepOrder: promptMessage?.stepOrder,
+719:   };
+720: }
+721: 
+722: export function getPromptArray(
+{"frozenPath": "_goals/convex-backend-runtime-2026-10-02/qa/task05-runtime-contract-lock-preparation-c3/preimages/node_modules--@convex-dev--agent--src--component--messages.ts", "bytes": 36113, "sha256": "a45d2290b56e09a2bf9b4ce3c9c22aba6cefab07370608f48eaabea1cf8ea5db"}
+537: export const updateMessage = mutation({
+538:   args: {
+539:     messageId: v.id("messages"),
+540:     patch: v.object(
+541:       partial(
+542:         pick(schema.tables.messages.validator.fields, [
+543:           "message",
+544:           "fileIds",
+545:           "status",
+546:           "error",
+547:           "model",
+548:           "provider",
+549:           "providerOptions",
+550:           "finishReason",
+551:         ]),
+552:       ),
+553:     ),
+554:   },
+555:   returns: vMessageDoc,
+556:   handler: async (ctx, args) => {
+557:     const message = await ctx.db.get("messages", args.messageId);
+558:     assert(message, `Message ${args.messageId} not found`);
+559: 
+560:     if (args.patch.fileIds) {
+561:       await changeRefcount(ctx, message.fileIds ?? [], args.patch.fileIds);
+562:     }
+563: 
+564:     const patch: Partial<Doc<"messages">> = { ...args.patch };
+565: 
+566:     if (args.patch.message !== undefined) {
+567:       patch.message = args.patch.message;
+568:       patch.tool = isTool(args.patch.message);
+569:       patch.text = extractText(args.patch.message);
+570:     }
+571: 
+572:     if (args.patch.status === "failed") {
+573:       if (message.embeddingId) {
+574:         const { tableName } = getVectorIdInfo(ctx, message.embeddingId);
+575:         await ctx.db.delete(tableName, message.embeddingId);
+576:       }
+577:       patch.embeddingId = undefined;
+578:     }
+579: 
+580:     await ctx.db.patch("messages", args.messageId, patch);
+581:     return publicMessage((await ctx.db.get("messages", args.messageId))!);
+582:   },
+583: });
+750:   ctx: QueryCtx,
+751:   args: ObjectType<typeof listMessagesByThreadIdArgs>,
+752: ) {
+753:   const statuses = args.statuses ?? vMessageStatus.members.map((m) => m.value);
+754:   const last =
+755:     args.upToAndIncludingMessageId &&
+756:     (await ctx.db.get("messages", args.upToAndIncludingMessageId));
+757:   assert(
+758:     !last || last.threadId === args.threadId,
+759:     "upToAndIncludingMessageId must be a message in the thread",
+760:   );
+761:   const toolOptions = args.excludeToolMessages ? [false] : [true, false];
+762:   const order = args.order ?? "desc";
+763:   const streams = toolOptions.flatMap((tool) =>
+764:     statuses.map((status) =>
+765:       stream(ctx.db, schema)
+766:         .query("messages")
+767:         .withIndex("threadId_status_tool_order_stepOrder", (q) => {
+768:           const qq = q
+769:             .eq("threadId", args.threadId)
+770:             .eq("status", status)
+771:             .eq("tool", tool);
+772:           if (last) {
+773:             return qq.lte("order", last.order);
+774:           }
+775:           return qq;
+776:         })
+777:         .order(order)
+778:         .filterWith(
+779:           // We allow all messages on the same order.
+780:           async (m) => !last || m.order <= last.order,
+781:         ),
+782:     ),
+783:   );
+784:   const messages = await mergedStream(streams, ["order", "stepOrder"]).paginate(
+785:     args.paginationOpts ?? {
+786:       numItems: DEFAULT_RECENT_MESSAGES,
+787:       cursor: null,
+788:     },
+789:   );
+790:   if (messages.page.length === 0) {
+791:     messages.isDone = true;
+792:   }
+793:   return messages;
+{"frozenPath": "_goals/convex-backend-runtime-2026-10-02/qa/task05-runtime-contract-lock-preparation-c3/preimages/node_modules--@convex-dev--agent--src--vercel--client--messages.ts", "bytes": 6035, "sha256": "98defb1657265398fbe485b00f676cf8e517531b7dc6d7fab430ff5b33044db8"}
+85:     /**
+86:      * The agent name to associate with the messages.
+87:      */
+88:     agentName?: string;
+89:   },
+90: ): Promise<{ messages: MessageDoc[] }> {
+91:   const serialized = await Promise.all(
+92:     args.messages.map((message) => serializeMessage(ctx, component, message)),
+93:   );
+94:   return saveCanonicalMessages(ctx, component, {
+95:     threadId: args.threadId,
+96:     userId: args.userId ?? undefined,
+97:     agentName: args.agentName,
+98:     promptMessageId: args.promptMessageId,
+99:     order: args.order,
+100:     pendingMessageId: args.pendingMessageId,
+101:     embeddings: args.embeddings,
+102:     messages: serialized.map(({ message }) => message),
+103:     metadata: serialized.map(({ fileIds }, i) => {
+104:       const base = args.metadata?.[i];
+105:       const allFileIds = [...(base?.fileIds ?? [])];
+106:       if (fileIds) allFileIds.push(...fileIds);
+107:       return {
+108:         ...base,
+109:         ...(allFileIds.length > 0 ? { fileIds: allFileIds } : {}),
+110:       };
+111:     }),
+112:     failPendingSteps: args.failPendingSteps ?? false,
+113:   });
+114: }
+115: 
+116: export type SaveMessageArgs = {
+117:   threadId: string;
+118:   userId?: string | null;
+119:   /**
+120:    * Save the message at this order. Pass `"next"` to allocate a new order
+121:    * after the current latest message. If the numeric order already contains
+122:    * messages, the message is appended at the next stepOrder. Numeric orders
+123:    * must be non-negative safe integers less than Number.MAX_SAFE_INTEGER.
+124:    * Cannot be combined with promptMessageId or pendingMessageId.
+125:    */
+126:   order?: MessageOrder;
+127:   /**
+128:    * The message that these messages are in response to. They will be
+129:    * the same "order" as this message, at increasing stepOrder(s).
+130:    */
+131:   promptMessageId?: string;
+132:   /**
+133:    * Metadata to save with the messages. Each element corresponds to the
+134:    * message at the same index.
+135:    */
+136:   metadata?: Omit<MessageWithMetadata, "message">;
+137:   /**
+138:    * The embedding to save with the message.
+139:    */
+140:   embedding?: { vector: number[]; model: string };
+141:   /**
+142:    * A pending message ID to replace with this message.
+143:    */
+144:   pendingMessageId?: string;
+145: } & (
+{"discovery": "selected exact installed src/frozen model/auth/memory seams; no test runner", "skips": [], "native": "NOT_RUN"}

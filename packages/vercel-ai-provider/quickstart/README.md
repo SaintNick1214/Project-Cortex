@@ -1,13 +1,13 @@
 # Cortex Memory + Vercel AI SDK Quickstart
 
-A Next.js 16/AI SDK 6 demo of streaming chat, memory-layer visualization, fact extraction and recall. Application 1.1.0 uses SDK/provider 0.37.0.
+A Next.js 16/AI SDK 7 demo of streaming chat, memory-layer visualization, fact extraction and recall. Application 1.2.0 uses SDK/provider 0.38.0.
 
 ## Quick start
 
-Use Node.js 22.16.0 or newer for the Cortex CLI workflow and npm for this application.
+Use Node.js 24.15.0 or newer for the Cortex CLI workflow and npm for this application.
 
 ```bash
-cortex templates init demo --template vercel-ai-quickstart --template-version 1.1.0 --catalog-version 1.0.0 --yes --graph none
+cortex templates init demo --template vercel-ai-quickstart --template-version 1.2.0 --catalog-version 1.1.0 --yes --graph none
 cd demo
 cp .env.local.example .env.local
 ```
@@ -59,13 +59,13 @@ cortex graph setup . --graph neo4j --graph-mode local --yes
 cortex graph status .
 cortex graph stop .
 cortex graph start .
-cortex templates update . --to 1.1.0 --catalog-version 1.0.0 --dry-run
-cortex templates update . --to 1.1.0 --catalog-version 1.0.0
+cortex templates update . --to 1.2.0 --catalog-version 1.1.0 --dry-run
+cortex templates update . --to 1.2.0 --catalog-version 1.1.0
 ```
 
 Local setup owns project-specific Compose resources and private credentials. Stop preserves volumes; start/stop never guess unrelated containers/ports. Existing-service configuration uses `--graph-mode existing --graph-uri bolt://localhost:7687` with matching provider environment credentials and probes without graph data writes. Explicit graph enablement refuses missing/ambiguous configuration or a failed connection.
 
-The app/template channel checks recorded ownership and user conflicts. SDK updates (`cortex update --sync` or `cortex schema sync`) own SDK backend files and do not replace app files. A recognized old Next shim missing `MutationCtx` needs the current template/app update first, then the SDK backend update. Unrecorded/edited apps require explicit migration. Catalog 1.0.0 is independent of CLI/SDK 0.37.0; explicit unpublished archives use `--templates-package`, `--sdk-package` and `--provider-package` without older registry fallback.
+The app/template channel checks recorded ownership and user conflicts. SDK updates (`cortex update --sync` or `cortex schema sync`) own SDK backend files and do not replace app files. A recognized old Next shim missing `MutationCtx` needs the current template/app update first, then the SDK backend update. Unrecorded/edited apps require explicit migration. Catalog 1.1.0 is independent of CLI/SDK 0.38.0; explicit unpublished archives use `--templates-package`, `--sdk-package` and `--provider-package` without older registry fallback.
 
 ## Canonical development and checks
 
@@ -79,7 +79,7 @@ npm test
 npm run test:e2e
 ```
 
-Unit/mock integration checks do not prove live service behavior. E2E needs your own running disposable app/backend and provider. The inherited `next lint` script is obsolete with Next 16 and is not a valid quality check. `npm run build` does not deploy the backend; `npm run convex:deploy` is a separate intentional hosted deployment step.
+Unit/mock integration checks do not prove live service behavior. E2E needs your own running disposable app/backend and provider. `npm run lint` uses the current Next.js ESLint configuration. `npm run build` does not deploy the backend; `npm run convex:deploy` is a separate intentional hosted deployment step.
 
 ## Learn more
 

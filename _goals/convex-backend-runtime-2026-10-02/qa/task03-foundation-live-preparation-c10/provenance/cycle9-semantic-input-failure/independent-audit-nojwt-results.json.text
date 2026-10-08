@@ -1,0 +1,2828 @@
+{
+  "scope": "LOCAL_ACTUAL_PUBLIC_HANDLERS_NOJWT_SEMANTIC_AUDIT",
+  "idEncoding": "OFFLINE_ONLY_NOT_NATIVE_WIRE_VALIDATED",
+  "registered": 200,
+  "sourceHashes": {
+    "convex-dev/a2a.ts": "d5f3c93db358f10635bb451f69dae779fd1eb11e1d52aa0a16912dbfc405f7c1",
+    "convex-dev/agents.ts": "2f62a62e8ae23e84542324fc2201335eb99ca36ae7ed7c9a3173c352e3e3e17d",
+    "convex-dev/artifacts.ts": "3252eb473cd80c9fe222a21322cb55e321704635dfd17596c319183fb9bcc2a3",
+    "convex-dev/attachments.ts": "d76ae987e6f778023c95231dd4b92d19f02232c694128a4f46bbef825fb921f3",
+    "convex-dev/contexts.ts": "facb2f35168ab2243d59b88cc39ac6bafba2044a3fafcbc751f4a323c47367e2",
+    "convex-dev/conversationShares.ts": "17dfb3859fc6e3bd60fa9b4d11af984a252df18995257c28e40415fa1a05d4d1",
+    "convex-dev/conversationSnapshots.ts": "7af4e9ad27d7fd5e1883e57ed560fbc509c4c10d3454ee2fe578edc790e6c1ac",
+    "convex-dev/conversations.ts": "7718c76423d7f275faf51a534fb9ff3ef19eef3d05729028060487c59276e586",
+    "convex-dev/factHistory.ts": "b8734ec5ac5afc25eed9dc66fe27428fa078d3a9f3fb7ace37cbed5c0106e059",
+    "convex-dev/facts.ts": "4a3b972e97b42b7d5cd273adfe28db1ca3a390675424bad57463cafbe30d2b92",
+    "convex-dev/governance.ts": "262c2f892bdc577b44b53dc1bff35ee7c8cebc55937b9f87469938e0b5c4e668",
+    "convex-dev/immutable.ts": "1bbeca8ed71dd089a8804d34b016900a261a22a65ac70e08330b3a56a4fd0804",
+    "convex-dev/memories.ts": "988143530d6009ac655ba5cc4f918df6ba0721d808001faadd6e60098b179554",
+    "convex-dev/memorySpaces.ts": "cabb138c578220ee3b4b56fd16bf466da9e92e9508f8485ce1582fd3b29eee2c",
+    "convex-dev/mutable.ts": "14feb91094f31b9f72cdab9ecb6faa5025a27972f234b1129d4c77ee4ee037e5",
+    "convex-dev/runtimeMemory.ts": "bbe9977ba0fe4d1851c394e4a41e43eaf1978218f9c5b55dea00a536eaeea959",
+    "convex-dev/sessions.ts": "3f5b9649255899c04afd25bcb2ee4dbb126a047a513d4781f359ab4afd0f66c8",
+    "convex-dev/users.ts": "733c926437533d4113feea633e6a1ff365a45803c1db0e63b42a8d2a25550f0f",
+    "convex-dev/runtimeAuth.ts": "03ec735f1791d2e9973a320e22dcc58d0f040432782398dcc95d0d65f99b0929"
+  },
+  "results": [
+    {
+      "path": "a2a:send",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "a2a:request",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "a2a:broadcast",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "a2a:getConversation",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "agents:get",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "agents:exists",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "agents:list",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "agents:count",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "agents:register",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "agents:update",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "agents:updateMany",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "agents:unregister",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "agents:unregisterMany",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "agents:computeStats",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "artifacts:create",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "artifacts:update",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "artifacts:deleteArtifact",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "artifacts:undo",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "artifacts:redo",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "artifacts:setStreamingState",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "artifacts:purgeVersions",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "artifacts:get",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "artifacts:getByConversation",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "artifacts:list",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "artifacts:count",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "artifacts:getVersion",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "artifacts:getHistory",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "artifacts:startStreaming",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "artifacts:appendContent",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "artifacts:pauseStreaming",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "artifacts:resumeStreaming",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "artifacts:cancelStreaming",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "artifacts:finalizeStreaming",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "artifacts:setStreamingError",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "artifacts:retryFromError",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "artifacts:completeArtifactUpload",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "artifacts:detachFile",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "attachments:attach",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "attachments:remove",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "attachments:removeMany",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "attachments:get",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "attachments:list",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "attachments:count",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "attachments:getByIds",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "attachments:getByConversation",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "attachments:getByMessage",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "contexts:create",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "contexts:update",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "contexts:addParticipant",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "contexts:removeParticipant",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "contexts:grantAccess",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "contexts:deleteContext",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "contexts:updateMany",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "contexts:deleteMany",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "contexts:get",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "contexts:list",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "contexts:search",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "contexts:count",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "contexts:getChain",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "contexts:getRoot",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "contexts:getChildren",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "contexts:getByConversation",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "contexts:findOrphaned",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "contexts:getVersion",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "contexts:getHistory",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "contexts:getAtTimestamp",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "contexts:exportContexts",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "conversationShares:create",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "conversationShares:revoke",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "conversationShares:get",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "conversationShares:listByConversation",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "conversationShares:listByGranter",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "conversationShares:checkAccess",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "conversationSnapshots:create",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "conversationSnapshots:deleteSnapshot",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "conversationSnapshots:get",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "conversationSnapshots:listByConversation",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "conversationSnapshots:listByUser",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "conversations:create",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "conversations:setVisibility",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "conversations:setMetadata",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "conversations:checkAccess",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "conversations:addMessage",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "conversations:approveMessage",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "conversations:rejectMessage",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "conversations:deleteConversation",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "conversations:deleteMany",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "conversations:deleteByIds",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "conversations:getMessage",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "conversations:getMessagesByIds",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "conversations:getOrCreate",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "conversations:findConversation",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "conversations:get",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "conversations:list",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "conversations:count",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "conversations:getHistory",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "conversations:search",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "conversations:exportConversations",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "factHistory:getHistory",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "factHistory:getEvent",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "factHistory:getChangesByTimeRange",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "factHistory:countByAction",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "factHistory:getSupersessionChain",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "factHistory:getActivitySummary",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "facts:store",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "facts:update",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "facts:deleteFact",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "facts:supersede",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "facts:updateInPlace",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "facts:deleteMany",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "facts:get",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "facts:list",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "facts:count",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "facts:search",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "facts:semanticSearch",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "facts:getHistory",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "facts:queryBySubject",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "facts:queryByRelationship",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "facts:exportFacts",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "facts:consolidate",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "facts:findByStructure",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "facts:deleteByIds",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "governance:setPolicy",
+      "repaired": false,
+      "auth": 0,
+      "traps": 0,
+      "code": "INVALID_INPUT"
+    },
+    {
+      "path": "governance:setAgentOverride",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "governance:getPolicy",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "governance:getTemplate",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "governance:simulate",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "governance:getComplianceReport",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "governance:getEnforcementStats",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "immutable:store",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "immutable:get",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "immutable:getVersion",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "immutable:getHistory",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "immutable:getAtTimestamp",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "immutable:list",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "immutable:count",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "immutable:search",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "immutable:purge",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "immutable:purgeMany",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "immutable:purgeVersions",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "memories:store",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "memories:storePartialMemory",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "memories:updatePartialMemory",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "memories:finalizePartialMemory",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "memories:deleteMemory",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "memories:get",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "memories:search",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "memories:list",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "memories:count",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "memories:update",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "memories:getVersion",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "memories:getHistory",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "memories:deleteMany",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "memories:deleteByIds",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "memories:exportMemories",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "memories:updateMany",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "memories:archive",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "memories:restoreFromArchive",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "memories:getAtTimestamp",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "memorySpaces:register",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "memorySpaces:update",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "memorySpaces:addParticipant",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "memorySpaces:removeParticipant",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "memorySpaces:archive",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "memorySpaces:reactivate",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "memorySpaces:updateParticipants",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "memorySpaces:deleteSpace",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "memorySpaces:get",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "memorySpaces:list",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "memorySpaces:count",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "memorySpaces:findByParticipant",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "memorySpaces:search",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "memorySpaces:getStats",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "mutable:set",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "mutable:update",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "mutable:get",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "mutable:exists",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "mutable:list",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "mutable:count",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "mutable:deleteKey",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "mutable:purgeMany",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "mutable:purgeNamespace",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "mutable:transaction",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "runtimeMemory:remember",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "runtimeMemory:recall",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "sessions:create",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "sessions:get",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "sessions:touch",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "sessions:end",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "sessions:endAll",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "sessions:list",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "sessions:count",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "users:get",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "users:list",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "users:count",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "users:getVersion",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "users:getHistory",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "users:getAtTimestamp",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "users:exists",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "users:deleteUserProfile",
+      "repaired": false,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "a2a:send",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "a2a:request",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "a2a:broadcast",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "a2a:getConversation",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "agents:get",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "agents:exists",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "agents:list",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "agents:count",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "agents:register",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "agents:update",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "agents:updateMany",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "agents:unregister",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "agents:unregisterMany",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "agents:computeStats",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "artifacts:create",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "artifacts:update",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "artifacts:deleteArtifact",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "artifacts:undo",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "artifacts:redo",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "artifacts:setStreamingState",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "artifacts:purgeVersions",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "artifacts:get",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "artifacts:getByConversation",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "artifacts:list",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "artifacts:count",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "artifacts:getVersion",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "artifacts:getHistory",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "artifacts:startStreaming",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "artifacts:appendContent",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "artifacts:pauseStreaming",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "artifacts:resumeStreaming",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "artifacts:cancelStreaming",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "artifacts:finalizeStreaming",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "artifacts:setStreamingError",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "artifacts:retryFromError",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "artifacts:completeArtifactUpload",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "artifacts:detachFile",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "attachments:attach",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "attachments:remove",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "attachments:removeMany",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "attachments:get",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "attachments:list",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "attachments:count",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "attachments:getByIds",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "attachments:getByConversation",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "attachments:getByMessage",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "contexts:create",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "contexts:update",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "contexts:addParticipant",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "contexts:removeParticipant",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "contexts:grantAccess",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "contexts:deleteContext",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "contexts:updateMany",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "contexts:deleteMany",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "contexts:get",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "contexts:list",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "contexts:search",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "contexts:count",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "contexts:getChain",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "contexts:getRoot",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "contexts:getChildren",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "contexts:getByConversation",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "contexts:findOrphaned",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "contexts:getVersion",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "contexts:getHistory",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "contexts:getAtTimestamp",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "contexts:exportContexts",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "conversationShares:create",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "conversationShares:revoke",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "conversationShares:get",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "conversationShares:listByConversation",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "conversationShares:listByGranter",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "conversationShares:checkAccess",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "conversationSnapshots:create",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "conversationSnapshots:deleteSnapshot",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "conversationSnapshots:get",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "conversationSnapshots:listByConversation",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "conversationSnapshots:listByUser",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "conversations:create",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "conversations:setVisibility",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "conversations:setMetadata",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "conversations:checkAccess",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "conversations:addMessage",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "conversations:approveMessage",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "conversations:rejectMessage",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "conversations:deleteConversation",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "conversations:deleteMany",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "conversations:deleteByIds",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "conversations:getMessage",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "conversations:getMessagesByIds",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "conversations:getOrCreate",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "conversations:findConversation",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "conversations:get",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "conversations:list",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "conversations:count",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "conversations:getHistory",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "conversations:search",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "conversations:exportConversations",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "factHistory:getHistory",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "factHistory:getEvent",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "factHistory:getChangesByTimeRange",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "factHistory:countByAction",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "factHistory:getSupersessionChain",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "factHistory:getActivitySummary",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "facts:store",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "facts:update",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "facts:deleteFact",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "facts:supersede",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "facts:updateInPlace",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "facts:deleteMany",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "facts:get",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "facts:list",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "facts:count",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "facts:search",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "facts:semanticSearch",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "facts:getHistory",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "facts:queryBySubject",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "facts:queryByRelationship",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "facts:exportFacts",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "facts:consolidate",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "facts:findByStructure",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "facts:deleteByIds",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "governance:setPolicy",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "governance:setAgentOverride",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "governance:getPolicy",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "governance:getTemplate",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "governance:simulate",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "governance:getComplianceReport",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "governance:getEnforcementStats",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "immutable:store",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "immutable:get",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "immutable:getVersion",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "immutable:getHistory",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "immutable:getAtTimestamp",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "immutable:list",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "immutable:count",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "immutable:search",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "immutable:purge",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "immutable:purgeMany",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "immutable:purgeVersions",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "memories:store",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "memories:storePartialMemory",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "memories:updatePartialMemory",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "memories:finalizePartialMemory",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "memories:deleteMemory",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "memories:get",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "memories:search",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "memories:list",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "memories:count",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "memories:update",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "memories:getVersion",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "memories:getHistory",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "memories:deleteMany",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "memories:deleteByIds",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "memories:exportMemories",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "memories:updateMany",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "memories:archive",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "memories:restoreFromArchive",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "memories:getAtTimestamp",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "memorySpaces:register",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "memorySpaces:update",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "memorySpaces:addParticipant",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "memorySpaces:removeParticipant",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "memorySpaces:archive",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "memorySpaces:reactivate",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "memorySpaces:updateParticipants",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "memorySpaces:deleteSpace",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "memorySpaces:get",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "memorySpaces:list",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "memorySpaces:count",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "memorySpaces:findByParticipant",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "memorySpaces:search",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "memorySpaces:getStats",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "mutable:set",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "mutable:update",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "mutable:get",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "mutable:exists",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "mutable:list",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "mutable:count",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "mutable:deleteKey",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "mutable:purgeMany",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "mutable:purgeNamespace",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "mutable:transaction",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "runtimeMemory:remember",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "runtimeMemory:recall",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "sessions:create",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "sessions:get",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "sessions:touch",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "sessions:end",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "sessions:endAll",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "sessions:list",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "sessions:count",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "users:get",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "users:list",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "users:count",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "users:getVersion",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "users:getHistory",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "users:getAtTimestamp",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "users:exists",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    },
+    {
+      "path": "users:deleteUserProfile",
+      "repaired": true,
+      "auth": 1,
+      "traps": 0,
+      "code": "UNAUTHENTICATED"
+    }
+  ]
+}

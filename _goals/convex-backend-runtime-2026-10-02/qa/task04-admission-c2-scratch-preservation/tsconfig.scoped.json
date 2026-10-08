@@ -1,0 +1,16 @@
+{
+  "extends": "/workspace/Project-Cortex/tsconfig.json",
+  "include": [
+    "/workspace/Project-Cortex/convex-dev/runtimeModelPolicy.ts",
+    "/workspace/Project-Cortex/convex-dev/runtimePolicySchema.ts",
+    "/workspace/Project-Cortex/convex-dev/runtimeModelPolicyBootstrap.ts",
+    "/workspace/Project-Cortex/tests/unit/runtime/model-policy-admission.test.ts"
+  ],
+  "exclude": [
+    "/workspace/Project-Cortex/node_modules",
+    "/workspace/Project-Cortex/dist"
+  ],
+  "compilerOptions": {
+    "rootDir": "/workspace/Project-Cortex"
+  }
+}

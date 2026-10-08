@@ -1,0 +1,24 @@
+import {ConvexError} from 'convex/values';
+import {isDeepStrictEqual} from 'node:util';
+import {harness,identity,memoryStoreArgs,factStoreArgs} from '/workspace/Project-Cortex/tests/unit/runtimeEndpointAuth/sharedfixtures.ts';
+import * as memories from '/workspace/Project-Cortex/convex-dev/memories.ts';
+import * as facts from '/workspace/Project-Cortex/convex-dev/facts.ts';
+const results:any[]=[];
+const envelope=()=>({version:1,code:'FORBIDDEN',message:'Access denied',retryable:false,outcome:'not_dispatched'});
+const operations=['memories.store','memories.update','memories.updateMany','facts.store','facts.update'];
+for(const operation of operations)for(const timing of ['sync','rejected'])for(const mode of ['none','exact','code-only','extra-private','private-message','data-accessor','code-accessor','ordinary-error']){
+ const h=harness();const a=await h.provisionScope({capabilities:['write']});
+ if(operation.includes('update'))await h.seedData(operation.startsWith('memories')?'memories':'facts',a,'target');
+ const before=structuredClone(h.db.rows);h.db.attemptedWrites=[];let injected=0,accessorReads=0,identityCalls=0;const stacks:string[]=[];
+ let error:any=mode==='ordinary-error'?new Error('SYNTHETIC_PRIVATE_DIAGNOSTIC'):new ConvexError(mode==='code-only'?{code:'FORBIDDEN'}:mode==='extra-private'?{...envelope(),privateDiagnostic:'SYNTHETIC_PRIVATE_DIAGNOSTIC'}:mode==='private-message'?{...envelope(),message:'SYNTHETIC_PRIVATE_DIAGNOSTIC'}:envelope());
+ if(mode==='data-accessor')Object.defineProperty(error,'data',{configurable:true,enumerable:true,get(){accessorReads++;return envelope();}});
+ if(mode==='code-accessor')Object.defineProperty(error.data,'code',{configurable:true,enumerable:true,get(){accessorReads++;return 'FORBIDDEN';}});
+ h.ctx.auth.getUserIdentity=(()=>{identityCalls++;const stack=new Error().stack??'';if(mode!=='none'&&stack.includes('optionalMutationRead')){injected++;stacks.push(stack);if(timing==='sync')throw error;return Promise.reject(error);}return Promise.resolve(identity);}) as any;
+ const registrations:any={'memories.store':memories.store,'memories.update':memories.update,'memories.updateMany':memories.updateMany,'facts.store':facts.store,'facts.update':facts.update};
+ const args:any=operation==='memories.store'?memoryStoreArgs:operation==='facts.store'?factStoreArgs:operation==='memories.update'?{memorySpaceId:'space-a',memoryId:'target',importance:77}:operation==='memories.updateMany'?{memorySpaceId:'space-a',importance:77}:{memorySpaceId:'space-a',factId:'target',confidence:88};
+ let actual:any;try{actual={success:true,result:await h.invoke(registrations[operation],args)};}catch(e:any){const d=Object.getOwnPropertyDescriptor(e,'data');const code=d&&'value'in d&&d.value&&typeof d.value==='object'?Object.getOwnPropertyDescriptor(d.value,'code'):undefined;actual={success:false,code:code&&'value'in code?code.value:'NONSTATIC',sameOriginal:e===error};}
+ const rolledBack=isDeepStrictEqual(before,h.db.rows);const expected=mode==='none'?'safe-receipt':'abort-and-rollback';const matched=mode==='none'?actual.success&&actual.result?.mutationReceipt===true:injected>0&&!actual.success&&rolledBack;
+ results.push({operation,timing,mode,expected,matched,injected,accessorReads,identityCalls,rolledBack,attemptedWrites:h.db.attemptedWrites,stacks,...actual});
+}
+const summary={total:results.length,matched:results.filter(x=>x.matched).length,unexpectedSuccesses:results.filter(x=>x.mode!=='none'&&x.success).length,ordinaryPositive:results.filter(x=>x.mode==='none'&&x.matched).length,ordinaryErrorDenied:results.filter(x=>x.mode==='ordinary-error'&&x.matched).length};
+console.log(JSON.stringify({summary,results},null,2));process.exitCode=results.some(x=>!x.matched)?1:0;

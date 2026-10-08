@@ -55,12 +55,43 @@ const operations: Record<string, (api: MemorySpacesType) => Promise<unknown>> = 
   reactivate: api => api.reactivate("shared"), getStats: api => api.getStats("shared",{includeParticipants:true}),
   findByParticipant: api => api.findByParticipant("p"), search: api => api.search("shared"),
   updateParticipants: api => api.updateParticipants("shared",{add:[{id:"p",type:"tool",joinedAt:3}]}),
-  delete: api => api.delete("shared",{cascade:true,reason:"owned fixture",confirmId:"shared"}),
 };
 for (const tenant of scopeCases) describe(`SDK exact ${tenant ?? "tenantless"} scope`,()=>{
   for (const [name,invoke] of Object.entries(operations)) it(`${name} scopes every transport call`,async()=>{
     const f=fixture(tenant); await invoke(new MemorySpacesAPI(f.client,undefined,undefined,f.auth));
     expect(f.calls.length).toBeGreaterThan(0); for(const call of f.calls) expect(call.args.tenantId).toBe(tenant);
+  });
+  it("delete scopes every explicit administrative erasure request and verifies the root outcome", async () => {
+    const { ERASURE_OPERATIONS } = await import("../../src/users/erasure");
+    const f = fixture(tenant), requests: Array<Record<string, any>> = [];
+    const domain = { kind: "space" as const, memorySpaceId: "shared", tenantId: tenant };
+    const envelope = { protocolVersion: 1 as const, domain, observationTime: 1 };
+    const root = { table: "memorySpaces", id: "scoped-root", action: "root", fingerprint: "1".repeat(64), dependencies: [], retainedVersions: 0, messages: 0, serializedBytes: 128, storageIds: [] };
+    let live = true;
+    const page = async (request: Record<string, any>) => {
+      requests.push(request);
+      return { ...envelope, table: request.table, page: live && request.table === "memorySpaces" ? [root] : [], isDone: true, continueCursor: "done" };
+    };
+    const transport = {
+      kind: "cortex-erasure-v1" as const, protocolVersion: 1 as const, operations: ERASURE_OPERATIONS, close: () => undefined,
+      discoverPage: page, verifyPage: page,
+      checkRecord: async (request: Record<string, any>) => { requests.push(request); return { ...envelope, record: root }; },
+      checkBinaryReferences: async (request: Record<string, any>) => { requests.push(request); return { ...envelope, blobs: [] }; },
+      getReceiptPage: async () => ({ ...envelope, page: [], isDone: true, continueCursor: "done" }),
+      eraseRecord: async (request: Record<string, any>) => {
+        requests.push(request); live = false;
+        return { ...envelope, operationId: request.operationId, itemKey: request.itemKey, table: root.table, id: root.id,
+          state: "committed", deleted: 1, detached: 0, retainedVersions: 0, messages: 0, blobs: [], graphJobs: [] };
+      },
+      purgeExpiredReceiptsPage: async () => ({ protocolVersion: 1 as const, deleted: 0, isDone: true, continueCursor: "done" }),
+    };
+    const result = await new MemorySpacesAPI(f.client, undefined, undefined, f.auth).delete("shared", {
+      cascade: true, reason: "owned fixture", confirmId: "shared", erasureTransport: transport as unknown as import("../../src/users/erasure").ErasureTransport,
+    });
+    if (!result.erasure) throw new Error("explicit erasure receipt missing");
+    expect(result.deleted).toBe(true); expect(result.erasure.complete).toBe(true); expect(result.erasure.totalDeleted).toBe(1);
+    expect(f.calls).toHaveLength(0); expect(requests.length).toBeGreaterThan(0);
+    for (const request of requests) expect(request.domain).toEqual(domain);
   });
   for(const name of ["get","update","list","getHistory","count"] as const) it(`profile ${name} scopes actual transport`,async()=>{
     const f=fixture(tenant);const api=new UsersAPI(f.client,undefined,undefined,f.auth);

@@ -1,0 +1,996 @@
+{
+  "status": "PASS_RECOVERY_ONLY",
+  "argv": [
+    "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+    "work/resume/task04-c4-incident-recovery-fresh-review/verify.py"
+  ],
+  "cwd": "/workspace/Project-Cortex",
+  "startedAt": "2026-10-04T15:37:25.281687+00:00",
+  "observedAt": "2026-10-04T15:37:49.048731+00:00",
+  "originalManifestSha256": "0e3575cdb2978556896a4fa41e78a370d417d2b3352367717ad0a274b81e1901",
+  "fullFilelikeCountIncludingSelf": 133252,
+  "manifestRows": 133251,
+  "regularFiles": 133221,
+  "literalSymlinks": 30,
+  "regularBytesRead": 2043566235,
+  "prePostIdentitiesStable": 133251,
+  "selfOnlyExactSet": true,
+  "archiveMembersVerified": 752,
+  "archiveSha256": "6a4d8a32576af62bd92c8201d1f549d31d8e15295ef20d7575262f54d942f046",
+  "incidentAdditionsAbsent": 750,
+  "restored": [
+    {
+      "path": "extension/inventory-bundle.mjs",
+      "sha256": "fdee53b7a6e9ad82f56be35d2cb83f153c717f4ef149e8c07101f3be80b1bcb4",
+      "current": [
+        27,
+        1396514,
+        33152,
+        1,
+        758591,
+        1791128133250748047,
+        1791128133250748047
+      ],
+      "mirror": [
+        34,
+        447663,
+        33152,
+        1,
+        758591,
+        1791127655889415442,
+        1791127655889415442
+      ],
+      "archivedIncidentSha256": "d175f618f88add2a896e1ed7a88cc6cb5ca2e244d8169711c66c5b9e114ada05"
+    },
+    {
+      "path": "extension/inventory-entry.ts",
+      "sha256": "6bc9c3a78fa4ac48a135cbae7175733ba5a63d1c1b77390663ae82fc2be93bd2",
+      "current": [
+        27,
+        1396500,
+        33152,
+        1,
+        4918,
+        1791128133226747655,
+        1791128133226747655
+      ],
+      "mirror": [
+        34,
+        341303,
+        33152,
+        1,
+        4918,
+        1791127634579083224,
+        1791127634579083224
+      ],
+      "archivedIncidentSha256": "6ce35ef89ad1d2a458496decc961225135adce4c8501641e32c28cf72d875505"
+    }
+  ],
+  "hardlinkFixtures": [
+    {
+      "path": "extension/parent-proof/case-32rdbI/work/backend-runtime/task04-model-drift-native-extension-c4/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json",
+      "current": [
+        27,
+        1782827,
+        33152,
+        2,
+        173,
+        1791121675142653797,
+        1791121675142710504
+      ],
+      "mirror": [
+        34,
+        288041,
+        33152,
+        1,
+        173,
+        1791127624864828092,
+        1791127624864828092
+      ],
+      "sha256": "26543f56575b4ff0b0f2a175b9adc1fd2aa98da689249dca369bdd11d86bbacd"
+    },
+    {
+      "path": "extension/parent-proof/case-32rdbI/work/backend-runtime/task04-model-drift-native-extension-c4/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json.DUMMY-link",
+      "current": [
+        27,
+        1782827,
+        33152,
+        2,
+        173,
+        1791121675142653797,
+        1791121675142710504
+      ],
+      "mirror": [
+        34,
+        288042,
+        33152,
+        1,
+        173,
+        1791127624865008852,
+        1791127624865008852
+      ],
+      "sha256": "26543f56575b4ff0b0f2a175b9adc1fd2aa98da689249dca369bdd11d86bbacd"
+    },
+    {
+      "path": "extension/parent-proof/case-3bADjY/work/backend-runtime/task04-model-drift-native-extension-c4/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json",
+      "current": [
+        27,
+        1650968,
+        33152,
+        2,
+        173,
+        1791119609422942252,
+        1791119609422998558
+      ],
+      "mirror": [
+        34,
+        288057,
+        33152,
+        1,
+        173,
+        1791127624866211884,
+        1791127624866211884
+      ],
+      "sha256": "26543f56575b4ff0b0f2a175b9adc1fd2aa98da689249dca369bdd11d86bbacd"
+    },
+    {
+      "path": "extension/parent-proof/case-3bADjY/work/backend-runtime/task04-model-drift-native-extension-c4/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json.DUMMY-link",
+      "current": [
+        27,
+        1650968,
+        33152,
+        2,
+        173,
+        1791119609422942252,
+        1791119609422998558
+      ],
+      "mirror": [
+        34,
+        288058,
+        33152,
+        1,
+        173,
+        1791127624866384399,
+        1791127624866384399
+      ],
+      "sha256": "26543f56575b4ff0b0f2a175b9adc1fd2aa98da689249dca369bdd11d86bbacd"
+    },
+    {
+      "path": "extension/parent-proof/case-jArzmt/work/backend-runtime/task04-model-drift-native-extension-c4/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json",
+      "current": [
+        27,
+        1923413,
+        33152,
+        2,
+        173,
+        1791123725553719027,
+        1791123725553775454
+      ],
+      "mirror": [
+        34,
+        288378,
+        33152,
+        1,
+        173,
+        1791127624896847846,
+        1791127624896847846
+      ],
+      "sha256": "26543f56575b4ff0b0f2a175b9adc1fd2aa98da689249dca369bdd11d86bbacd"
+    },
+    {
+      "path": "extension/parent-proof/case-jArzmt/work/backend-runtime/task04-model-drift-native-extension-c4/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json.DUMMY-link",
+      "current": [
+        27,
+        1923413,
+        33152,
+        2,
+        173,
+        1791123725553719027,
+        1791123725553775454
+      ],
+      "mirror": [
+        34,
+        288379,
+        33152,
+        1,
+        173,
+        1791127624897033545,
+        1791127624897033545
+      ],
+      "sha256": "26543f56575b4ff0b0f2a175b9adc1fd2aa98da689249dca369bdd11d86bbacd"
+    },
+    {
+      "path": "extension/parent-proof/case-lcSmOt/work/backend-runtime/task04-model-drift-native-extension-c4/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json",
+      "current": [
+        27,
+        1643920,
+        33152,
+        2,
+        173,
+        1791117638666365372,
+        1791117638666434532
+      ],
+      "mirror": [
+        34,
+        288395,
+        33152,
+        1,
+        173,
+        1791127624898623035,
+        1791127624898623035
+      ],
+      "sha256": "26543f56575b4ff0b0f2a175b9adc1fd2aa98da689249dca369bdd11d86bbacd"
+    },
+    {
+      "path": "extension/parent-proof/case-lcSmOt/work/backend-runtime/task04-model-drift-native-extension-c4/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json.DUMMY-link",
+      "current": [
+        27,
+        1643920,
+        33152,
+        2,
+        173,
+        1791117638666365372,
+        1791117638666434532
+      ],
+      "mirror": [
+        34,
+        288396,
+        33152,
+        1,
+        173,
+        1791127624898782785,
+        1791127624898782785
+      ],
+      "sha256": "26543f56575b4ff0b0f2a175b9adc1fd2aa98da689249dca369bdd11d86bbacd"
+    },
+    {
+      "path": "extension/parent-proof/case-n0HLEe/work/backend-runtime/task04-model-drift-native-extension-c4/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json",
+      "current": [
+        27,
+        1786477,
+        33152,
+        2,
+        173,
+        1791123401691504451,
+        1791123401691562420
+      ],
+      "mirror": [
+        34,
+        288405,
+        33152,
+        1,
+        173,
+        1791127624899589423,
+        1791127624899589423
+      ],
+      "sha256": "26543f56575b4ff0b0f2a175b9adc1fd2aa98da689249dca369bdd11d86bbacd"
+    },
+    {
+      "path": "extension/parent-proof/case-n0HLEe/work/backend-runtime/task04-model-drift-native-extension-c4/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json.DUMMY-link",
+      "current": [
+        27,
+        1786477,
+        33152,
+        2,
+        173,
+        1791123401691504451,
+        1791123401691562420
+      ],
+      "mirror": [
+        34,
+        288406,
+        33152,
+        1,
+        173,
+        1791127624899729075,
+        1791127624899729075
+      ],
+      "sha256": "26543f56575b4ff0b0f2a175b9adc1fd2aa98da689249dca369bdd11d86bbacd"
+    },
+    {
+      "path": "extra/parent-proof/case-3XdA52/work/backend-runtime/task04-model-drift-native-extra-c4/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json",
+      "current": [
+        27,
+        484101,
+        33152,
+        2,
+        173,
+        1791119664261687860,
+        1791119664261743194
+      ],
+      "mirror": [
+        34,
+        422481,
+        33152,
+        1,
+        173,
+        1791127651142384393,
+        1791127651142384393
+      ],
+      "sha256": "d2180c7aa8057cac50b59f8eeea36b6ead6c2921ae03dc3822684d02d950e5ff"
+    },
+    {
+      "path": "extra/parent-proof/case-3XdA52/work/backend-runtime/task04-model-drift-native-extra-c4/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json.DUMMY-link",
+      "current": [
+        27,
+        484101,
+        33152,
+        2,
+        173,
+        1791119664261687860,
+        1791119664261743194
+      ],
+      "mirror": [
+        34,
+        422482,
+        33152,
+        1,
+        173,
+        1791127651142528945,
+        1791127651142528945
+      ],
+      "sha256": "d2180c7aa8057cac50b59f8eeea36b6ead6c2921ae03dc3822684d02d950e5ff"
+    },
+    {
+      "path": "extra/parent-proof/case-MMmh3i/work/backend-runtime/task04-model-drift-native-extra-c4/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json",
+      "current": [
+        27,
+        393301,
+        33152,
+        2,
+        173,
+        1791117641274569888,
+        1791117641274623388
+      ],
+      "mirror": [
+        34,
+        422571,
+        33152,
+        1,
+        173,
+        1791127651155946552,
+        1791127651155946552
+      ],
+      "sha256": "d2180c7aa8057cac50b59f8eeea36b6ead6c2921ae03dc3822684d02d950e5ff"
+    },
+    {
+      "path": "extra/parent-proof/case-MMmh3i/work/backend-runtime/task04-model-drift-native-extra-c4/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json.DUMMY-link",
+      "current": [
+        27,
+        393301,
+        33152,
+        2,
+        173,
+        1791117641274569888,
+        1791117641274623388
+      ],
+      "mirror": [
+        34,
+        422572,
+        33152,
+        1,
+        173,
+        1791127651156086706,
+        1791127651156086706
+      ],
+      "sha256": "d2180c7aa8057cac50b59f8eeea36b6ead6c2921ae03dc3822684d02d950e5ff"
+    },
+    {
+      "path": "extra/parent-proof/case-YICId3/work/backend-runtime/task04-model-drift-native-extra-c4/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json",
+      "current": [
+        27,
+        531673,
+        33152,
+        2,
+        173,
+        1791123495021118347,
+        1791123495021173030
+      ],
+      "mirror": [
+        34,
+        422632,
+        33152,
+        1,
+        173,
+        1791127651165593648,
+        1791127651165593648
+      ],
+      "sha256": "d2180c7aa8057cac50b59f8eeea36b6ead6c2921ae03dc3822684d02d950e5ff"
+    },
+    {
+      "path": "extra/parent-proof/case-YICId3/work/backend-runtime/task04-model-drift-native-extra-c4/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json.DUMMY-link",
+      "current": [
+        27,
+        531673,
+        33152,
+        2,
+        173,
+        1791123495021118347,
+        1791123495021173030
+      ],
+      "mirror": [
+        34,
+        422633,
+        33152,
+        1,
+        173,
+        1791127651165727710,
+        1791127651165727710
+      ],
+      "sha256": "d2180c7aa8057cac50b59f8eeea36b6ead6c2921ae03dc3822684d02d950e5ff"
+    },
+    {
+      "path": "extra/parent-proof/case-eMuHhx/work/backend-runtime/task04-model-drift-native-extra-c4/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json",
+      "current": [
+        27,
+        323569,
+        33152,
+        2,
+        173,
+        1791117467571471751,
+        1791117467571529710
+      ],
+      "mirror": [
+        34,
+        422654,
+        33152,
+        1,
+        173,
+        1791127651168915205,
+        1791127651168915205
+      ],
+      "sha256": "d2180c7aa8057cac50b59f8eeea36b6ead6c2921ae03dc3822684d02d950e5ff"
+    },
+    {
+      "path": "extra/parent-proof/case-eMuHhx/work/backend-runtime/task04-model-drift-native-extra-c4/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json.DUMMY-link",
+      "current": [
+        27,
+        323569,
+        33152,
+        2,
+        173,
+        1791117467571471751,
+        1791117467571529710
+      ],
+      "mirror": [
+        34,
+        422655,
+        33152,
+        1,
+        173,
+        1791127651169099612,
+        1791127651169099612
+      ],
+      "sha256": "d2180c7aa8057cac50b59f8eeea36b6ead6c2921ae03dc3822684d02d950e5ff"
+    },
+    {
+      "path": "extra/parent-proof/case-kVFk9R/work/backend-runtime/task04-model-drift-native-extra-c4/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json",
+      "current": [
+        27,
+        566573,
+        33152,
+        2,
+        173,
+        1791123840893547537,
+        1791123840893632236
+      ],
+      "mirror": [
+        34,
+        422685,
+        33152,
+        1,
+        173,
+        1791127651173646925,
+        1791127651173646925
+      ],
+      "sha256": "d2180c7aa8057cac50b59f8eeea36b6ead6c2921ae03dc3822684d02d950e5ff"
+    },
+    {
+      "path": "extra/parent-proof/case-kVFk9R/work/backend-runtime/task04-model-drift-native-extra-c4/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json.DUMMY-link",
+      "current": [
+        27,
+        566573,
+        33152,
+        2,
+        173,
+        1791123840893547537,
+        1791123840893632236
+      ],
+      "mirror": [
+        34,
+        422686,
+        33152,
+        1,
+        173,
+        1791127651173788592,
+        1791127651173788592
+      ],
+      "sha256": "d2180c7aa8057cac50b59f8eeea36b6ead6c2921ae03dc3822684d02d950e5ff"
+    },
+    {
+      "path": "extra/parent-proof/case-owwBJZ/work/backend-runtime/task04-model-drift-native-extra-c4/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json",
+      "current": [
+        27,
+        489177,
+        33152,
+        2,
+        173,
+        1791121747653615039,
+        1791121747653670914
+      ],
+      "mirror": [
+        34,
+        422712,
+        33152,
+        1,
+        173,
+        1791127651177714947,
+        1791127651177714947
+      ],
+      "sha256": "d2180c7aa8057cac50b59f8eeea36b6ead6c2921ae03dc3822684d02d950e5ff"
+    },
+    {
+      "path": "extra/parent-proof/case-owwBJZ/work/backend-runtime/task04-model-drift-native-extra-c4/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json.DUMMY-link",
+      "current": [
+        27,
+        489177,
+        33152,
+        2,
+        173,
+        1791121747653615039,
+        1791121747653670914
+      ],
+      "mirror": [
+        34,
+        422713,
+        33152,
+        1,
+        173,
+        1791127651177848779,
+        1791127651177848779
+      ],
+      "sha256": "d2180c7aa8057cac50b59f8eeea36b6ead6c2921ae03dc3822684d02d950e5ff"
+    },
+    {
+      "path": "regression/parent-proof/case-0s5uJ9/work/backend-runtime/task04-model-drift-native-regression-c4/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json",
+      "current": [
+        27,
+        552533,
+        33152,
+        2,
+        173,
+        1791123782127018413,
+        1791123782127103032
+      ],
+      "mirror": [
+        34,
+        311971,
+        33152,
+        1,
+        173,
+        1791127628926630921,
+        1791127628926630921
+      ],
+      "sha256": "3ff49db64c17e73d9e06f7caf065f870f56ea02350a2146a731fceccfa3efdc3"
+    },
+    {
+      "path": "regression/parent-proof/case-0s5uJ9/work/backend-runtime/task04-model-drift-native-regression-c4/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json.DUMMY-link",
+      "current": [
+        27,
+        552533,
+        33152,
+        2,
+        173,
+        1791123782127018413,
+        1791123782127103032
+      ],
+      "mirror": [
+        34,
+        311972,
+        33152,
+        1,
+        173,
+        1791127628926770664,
+        1791127628926770664
+      ],
+      "sha256": "3ff49db64c17e73d9e06f7caf065f870f56ea02350a2146a731fceccfa3efdc3"
+    },
+    {
+      "path": "regression/parent-proof/case-5p5zuk/work/backend-runtime/task04-model-drift-native-regression-c4/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json",
+      "current": [
+        27,
+        1898639,
+        33152,
+        2,
+        173,
+        1791119635337495524,
+        1791119635337551650
+      ],
+      "mirror": [
+        34,
+        312002,
+        33152,
+        1,
+        173,
+        1791127628930134351,
+        1791127628930134351
+      ],
+      "sha256": "3ff49db64c17e73d9e06f7caf065f870f56ea02350a2146a731fceccfa3efdc3"
+    },
+    {
+      "path": "regression/parent-proof/case-5p5zuk/work/backend-runtime/task04-model-drift-native-regression-c4/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json.DUMMY-link",
+      "current": [
+        27,
+        1898639,
+        33152,
+        2,
+        173,
+        1791119635337495524,
+        1791119635337551650
+      ],
+      "mirror": [
+        34,
+        312003,
+        33152,
+        1,
+        173,
+        1791127628930271389,
+        1791127628930271389
+      ],
+      "sha256": "3ff49db64c17e73d9e06f7caf065f870f56ea02350a2146a731fceccfa3efdc3"
+    },
+    {
+      "path": "regression/parent-proof/case-MKO491/work/backend-runtime/task04-model-drift-native-regression-c4/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json",
+      "current": [
+        27,
+        212265,
+        33152,
+        2,
+        173,
+        1791121709582535960,
+        1791121709582591264
+      ],
+      "mirror": [
+        34,
+        312135,
+        33152,
+        1,
+        173,
+        1791127628943828979,
+        1791127628943828979
+      ],
+      "sha256": "3ff49db64c17e73d9e06f7caf065f870f56ea02350a2146a731fceccfa3efdc3"
+    },
+    {
+      "path": "regression/parent-proof/case-MKO491/work/backend-runtime/task04-model-drift-native-regression-c4/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json.DUMMY-link",
+      "current": [
+        27,
+        212265,
+        33152,
+        2,
+        173,
+        1791121709582535960,
+        1791121709582591264
+      ],
+      "mirror": [
+        34,
+        312136,
+        33152,
+        1,
+        173,
+        1791127628943966998,
+        1791127628943966998
+      ],
+      "sha256": "3ff49db64c17e73d9e06f7caf065f870f56ea02350a2146a731fceccfa3efdc3"
+    },
+    {
+      "path": "regression/parent-proof/case-WUDTMk/work/backend-runtime/task04-model-drift-native-regression-c4/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json",
+      "current": [
+        27,
+        1763841,
+        33152,
+        2,
+        173,
+        1791117639965854792,
+        1791117639965936526
+      ],
+      "mirror": [
+        34,
+        312214,
+        33152,
+        1,
+        173,
+        1791127628952392495,
+        1791127628952392495
+      ],
+      "sha256": "3ff49db64c17e73d9e06f7caf065f870f56ea02350a2146a731fceccfa3efdc3"
+    },
+    {
+      "path": "regression/parent-proof/case-WUDTMk/work/backend-runtime/task04-model-drift-native-regression-c4/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json.DUMMY-link",
+      "current": [
+        27,
+        1763841,
+        33152,
+        2,
+        173,
+        1791117639965854792,
+        1791117639965936526
+      ],
+      "mirror": [
+        34,
+        312215,
+        33152,
+        1,
+        173,
+        1791127628952546695,
+        1791127628952546695
+      ],
+      "sha256": "3ff49db64c17e73d9e06f7caf065f870f56ea02350a2146a731fceccfa3efdc3"
+    },
+    {
+      "path": "regression/parent-proof/case-XgHweU/work/backend-runtime/task04-model-drift-native-regression-c4/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json",
+      "current": [
+        27,
+        505649,
+        33152,
+        2,
+        173,
+        1791123447277525087,
+        1791123447277582926
+      ],
+      "mirror": [
+        34,
+        312221,
+        33152,
+        1,
+        173,
+        1791127628953351509,
+        1791127628953351509
+      ],
+      "sha256": "3ff49db64c17e73d9e06f7caf065f870f56ea02350a2146a731fceccfa3efdc3"
+    },
+    {
+      "path": "regression/parent-proof/case-XgHweU/work/backend-runtime/task04-model-drift-native-regression-c4/owned-created-0c0b5fb7a5d5e0e8e44aa9defb60520b014842e6d80bb7d722989828dfcf98ce.json.DUMMY-link",
+      "current": [
+        27,
+        505649,
+        33152,
+        2,
+        173,
+        1791123447277525087,
+        1791123447277582926
+      ],
+      "mirror": [
+        34,
+        312222,
+        33152,
+        1,
+        173,
+        1791127628953500709,
+        1791127628953500709
+      ],
+      "sha256": "3ff49db64c17e73d9e06f7caf065f870f56ea02350a2146a731fceccfa3efdc3"
+    }
+  ],
+  "commands": [
+    {
+      "argv": [
+        "node",
+        "--experimental-vm-modules",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c5/scripts/inventory.mjs",
+        "--verify"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAt": "2026-10-04T15:26:30.878695+00:00",
+      "observedAt": "2026-10-04T15:26:31.832516+00:00",
+      "elapsedMs": 954,
+      "exitCode": 1,
+      "scope": "FULL_OPERATIVE_ACCEPTED_PRODUCT_RUNTIME_TOOL_DECLARED_GRAPH_HELPERS_GENUINE_PRE",
+      "native": "NOT_RUN",
+      "receipt": "work/resume/task04-model-drift-native-preparation-c5/runs/inventory-extension--ac91a8d62c344d94b9c28b7971f279da/receipt.json.gz",
+      "receiptSha256": "5214774a1b8603abaddde57de362e3535f08f2961219378482300cec75f392f0",
+      "preRows": 1249,
+      "postRows": 1249,
+      "captureGap": "Receipt inventory may omit unauthorized C4 scratch paths: scope string is not proof of full namespace pre/post custody.",
+      "rawVerified": {
+        "stdout": {
+          "path": "stdout.gz",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "encodedSHA256": "f61f27bd17de546264aa58f40f3aafaac7021e0ef69c17f6b1b4cd7664a037ec",
+          "encoding": "gzip-lossless"
+        },
+        "stderr": {
+          "path": "stderr.gz",
+          "bytes": 1457,
+          "sha256": "19065eee193fc8d015820b364eee095e89daad34a86454a230f2373dfff25566",
+          "encodedSHA256": "d0dca0fd123a0247930d4473c906a3a1e43382d46a8a7ad214059dec51b0209d",
+          "encoding": "gzip-lossless"
+        }
+      }
+    },
+    {
+      "argv": [
+        "node",
+        "--experimental-vm-modules",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c5/scripts/inventory.mjs",
+        "--verify"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAt": "2026-10-04T15:31:55.076468+00:00",
+      "observedAt": "2026-10-04T15:31:55.879396+00:00",
+      "elapsedMs": 803,
+      "exitCode": 0,
+      "scope": "FULL_OPERATIVE_ACCEPTED_PRODUCT_RUNTIME_TOOL_DECLARED_GRAPH_HELPERS_GENUINE_PRE",
+      "native": "NOT_RUN",
+      "receipt": "work/resume/task04-model-drift-native-preparation-c5/runs/inventory-extension--bf3aa9a2896948d68300aaa47734dc90/receipt.json.gz",
+      "receiptSha256": "3070f0e82e0f40f690a60b42ac7f3b8a2280d481732783cea5a8a5cb355e7bc0",
+      "preRows": 1253,
+      "postRows": 1253,
+      "captureGap": "Receipt inventory may omit unauthorized C4 scratch paths: scope string is not proof of full namespace pre/post custody.",
+      "rawVerified": {
+        "stdout": {
+          "path": "stdout.gz",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "encodedSHA256": "f61f27bd17de546264aa58f40f3aafaac7021e0ef69c17f6b1b4cd7664a037ec",
+          "encoding": "gzip-lossless"
+        },
+        "stderr": {
+          "path": "stderr.gz",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "encodedSHA256": "f61f27bd17de546264aa58f40f3aafaac7021e0ef69c17f6b1b4cd7664a037ec",
+          "encoding": "gzip-lossless"
+        }
+      }
+    },
+    {
+      "argv": [
+        "node",
+        "--experimental-vm-modules",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c5/scripts/offline-extension.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAt": "2026-10-04T15:26:32.321296+00:00",
+      "observedAt": "2026-10-04T15:26:33.532534+00:00",
+      "elapsedMs": 1211,
+      "exitCode": 1,
+      "scope": "FULL_OPERATIVE_ACCEPTED_PRODUCT_RUNTIME_TOOL_DECLARED_GRAPH_HELPERS_GENUINE_PRE",
+      "native": "NOT_RUN",
+      "receipt": "work/resume/task04-model-drift-native-preparation-c5/runs/outcomes-extension--54a14a7645ad44ea803b8fc85d8d425a/receipt.json.gz",
+      "receiptSha256": "a3052602acda67d4a2de75981a8f8d463ae0a76abe475bfa4475dec2dc1f2a32",
+      "preRows": 1249,
+      "postRows": 1249,
+      "captureGap": "Receipt inventory may omit unauthorized C4 scratch paths: scope string is not proof of full namespace pre/post custody.",
+      "rawVerified": {
+        "stdout": {
+          "path": "stdout.gz",
+          "bytes": 6252,
+          "sha256": "59e656be433b97150dd524a4b0f5b65ed23113310ce57c4d89daff1940957379",
+          "encodedSHA256": "b38ffbbed38c74396a52da00d3b4a09ca55c202c1c0f8437e27c95c5ded5d6ff",
+          "encoding": "gzip-lossless"
+        },
+        "stderr": {
+          "path": "stderr.gz",
+          "bytes": 174,
+          "sha256": "b2fb2842b50d845827d4aa23485a23dad5ddbd5410a4f85179bd2609d73c7c2a",
+          "encodedSHA256": "dbc1e7d2955d736c2e2bd7f61988244f5362142829cb5ec85a8d5ac948b681c6",
+          "encoding": "gzip-lossless"
+        }
+      }
+    },
+    {
+      "argv": [
+        "node",
+        "--experimental-vm-modules",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c5/scripts/offline-extension.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAt": "2026-10-04T15:31:56.348607+00:00",
+      "observedAt": "2026-10-04T15:31:57.384063+00:00",
+      "elapsedMs": 1035,
+      "exitCode": 0,
+      "scope": "FULL_OPERATIVE_ACCEPTED_PRODUCT_RUNTIME_TOOL_DECLARED_GRAPH_HELPERS_GENUINE_PRE",
+      "native": "NOT_RUN",
+      "receipt": "work/resume/task04-model-drift-native-preparation-c5/runs/outcomes-extension--b0cafa4c9e03416981505d463173893c/receipt.json.gz",
+      "receiptSha256": "0ec7d15821d82f7babd3df7ddc02132540172e33c95d82cba73b35cad806c754",
+      "preRows": 1253,
+      "postRows": 1253,
+      "captureGap": "Receipt inventory may omit unauthorized C4 scratch paths: scope string is not proof of full namespace pre/post custody.",
+      "rawVerified": {
+        "stdout": {
+          "path": "stdout.gz",
+          "bytes": 4941,
+          "sha256": "896d0c57f65648c07e46e767d663ce7cc90769f25e425854a162df61fa148abd",
+          "encodedSHA256": "e299b4414ba505263161cfc53052c77d687de6ba4eed46a6ab42ef0e245624e7",
+          "encoding": "gzip-lossless"
+        },
+        "stderr": {
+          "path": "stderr.gz",
+          "bytes": 174,
+          "sha256": "6c9e53bdbfe102d06ad2ca35f54eb3e2898df593e877f1f780b64e5093bfda15",
+          "encodedSHA256": "a598c9935ce2f30609f151b773416ab8d07806ca1d81dc0176ab1f1c80288410",
+          "encoding": "gzip-lossless"
+        }
+      }
+    },
+    {
+      "argv": [
+        "node",
+        "--experimental-vm-modules",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c5/scripts/offline-runtime-freeze.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAt": "2026-10-04T15:26:29.939999+00:00",
+      "observedAt": "2026-10-04T15:26:30.384860+00:00",
+      "elapsedMs": 445,
+      "exitCode": 0,
+      "scope": "FULL_OPERATIVE_ACCEPTED_PRODUCT_RUNTIME_TOOL_DECLARED_GRAPH_HELPERS_GENUINE_PRE",
+      "native": "NOT_RUN",
+      "receipt": "work/resume/task04-model-drift-native-preparation-c5/runs/source-anchors-extension--49a094b4f44840198c9e6a16a9834770/receipt.json.gz",
+      "receiptSha256": "ffd80bd797a4f7dc0e99a6da42b059079e6b8e28604759cd7bdb7a061dcb32e7",
+      "preRows": 1249,
+      "postRows": 1249,
+      "captureGap": "Receipt inventory may omit unauthorized C4 scratch paths: scope string is not proof of full namespace pre/post custody.",
+      "rawVerified": {
+        "stdout": {
+          "path": "stdout.gz",
+          "bytes": 2352,
+          "sha256": "c36e4e71d705f1ea49ecfd11439af6c01f2a5ce9bba7932b5646bb476bd58ffc",
+          "encodedSHA256": "ee803ba79120e021cc2bc98be35c71e0da0a0a5f288a0e755f6a6005ed876339",
+          "encoding": "gzip-lossless"
+        },
+        "stderr": {
+          "path": "stderr.gz",
+          "bytes": 174,
+          "sha256": "9b8902db89c3ec06a74c9dbefbe01e8282514c53646745908016998163ccc11e",
+          "encodedSHA256": "b4ba63a3fbe4e12e16020ccb9bb237bd4e4276d7cb44f48436ca0fadf292501f",
+          "encoding": "gzip-lossless"
+        }
+      }
+    },
+    {
+      "argv": [
+        "node",
+        "--experimental-vm-modules",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c5/scripts/offline-runtime-freeze.mjs"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAt": "2026-10-04T15:31:54.181625+00:00",
+      "observedAt": "2026-10-04T15:31:54.608903+00:00",
+      "elapsedMs": 427,
+      "exitCode": 0,
+      "scope": "FULL_OPERATIVE_ACCEPTED_PRODUCT_RUNTIME_TOOL_DECLARED_GRAPH_HELPERS_GENUINE_PRE",
+      "native": "NOT_RUN",
+      "receipt": "work/resume/task04-model-drift-native-preparation-c5/runs/source-anchors-extension--9df64edc0e224e14968c960e879eb589/receipt.json.gz",
+      "receiptSha256": "bfed7bdd69456b452afa710f9e12558cefd689a460dfb0c822d718b15d66ce2f",
+      "preRows": 1253,
+      "postRows": 1253,
+      "captureGap": "Receipt inventory may omit unauthorized C4 scratch paths: scope string is not proof of full namespace pre/post custody.",
+      "rawVerified": {
+        "stdout": {
+          "path": "stdout.gz",
+          "bytes": 2350,
+          "sha256": "3e3e64a6062b6e8b91776a7f2c65bbc06ae8ca775c331631f6d139b2561da430",
+          "encodedSHA256": "7bd31e78c4b084e2fab7534b0065a635387efbca1bb3f978aa0979985af44c61",
+          "encoding": "gzip-lossless"
+        },
+        "stderr": {
+          "path": "stderr.gz",
+          "bytes": 174,
+          "sha256": "16729600bd9b7e24c951a92c7c4da65acf23551d9236905341d5d50115a88aca",
+          "encodedSHA256": "dc4e89297432ac5f72ccf390c02ad980d60022f452eb26b592ffa75d7cbafad5",
+          "encoding": "gzip-lossless"
+        }
+      }
+    }
+  ],
+  "limits": [
+    "No original inode/mtime/ctime recovery or custody continuity claim.",
+    "Recovery is not C4 native preparation acceptance or C5 acceptance.",
+    "Read-only source content audit can update access times; access times are excluded from identity stability.",
+    "Earlier context inspection output was truncated and wrong qa shorthand returned missing path; canonical goal QA subsequently read and independently verified.",
+    "No full historical preincident inode metadata was provided for untouched fixtures; current negative hardlinks and mirror byte/mode agreement establish current content, not historical metadata continuity."
+  ]
+}

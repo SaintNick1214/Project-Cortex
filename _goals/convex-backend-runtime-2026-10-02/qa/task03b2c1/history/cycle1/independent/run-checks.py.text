@@ -1,0 +1,22 @@
+import pathlib,subprocess,json,datetime,concurrent.futures
+root=pathlib.Path('/workspace/Project-Cortex/work/backend-runtime/task03b2c1-checkout'); scratch=pathlib.Path('/tmp/task03b2c1-review1-vm2r9skl')
+qa='_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1/'
+commands={
+ 'backend-types':['node','node_modules/typescript/bin/tsc','--project','convex-dev/tsconfig.json','--noEmit','--pretty','false'],
+ 'scoped-types':['node','node_modules/typescript/bin/tsc','--project',qa+'tsconfig.scoped.json','--noEmit','--pretty','false'],
+ 'lint':['node','node_modules/eslint/bin/eslint.js','convex-dev/artifacts.ts','convex-dev/runtimeArtifactAuth.ts','tests/unit/runtimeArtifactAuth','--max-warnings=0'],
+ 'root-types':['node','node_modules/typescript/bin/tsc','--noEmit','--pretty','false'],
+ 'baseline-types':['node',qa+'baseline-types.mjs'],
+ 'discovery':['node','--experimental-vm-modules','node_modules/jest/bin/jest.js','--config',qa+'jest.scoped.cjs','--listTests','--runInBand','--cacheDirectory',str(scratch/'jest-cache')],
+ 'native-tests':['node','--experimental-vm-modules','node_modules/jest/bin/jest.js','--config',qa+'jest.scoped.cjs','--runInBand','--cacheDirectory',str(scratch/'jest-cache'),'--json','--outputFile',str(scratch/'native-tests.json')],
+ 'inventory':['node',qa+'inventory.mjs',str(scratch/'catalog')],
+ 'whitespace':['git','diff','--check']}
+def run(item):
+ name,command=item; start=datetime.datetime.now(datetime.timezone.utc).isoformat()
+ with (scratch/(name+'.stdout')).open('w') as out,(scratch/(name+'.stderr')).open('w') as err:
+  p=subprocess.run(command,cwd=root,stdout=out,stderr=err)
+ return {'name':name,'command':command,'cwd':str(root),'startedAtUtc':start,'finishedAtUtc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'exitCode':p.returncode,'stdout':str(scratch/(name+'.stdout')),'stderr':str(scratch/(name+'.stderr'))}
+with concurrent.futures.ThreadPoolExecutor(max_workers=3) as executor:
+ results=list(executor.map(run,commands.items()))
+(scratch/'commands.json').write_text(json.dumps(results,indent=2)+'\n')
+print(json.dumps(results,indent=2))

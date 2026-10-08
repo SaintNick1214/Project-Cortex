@@ -1,0 +1,15 @@
+# Task03C2 statistics client normalization repair
+
+Status: implemented and frozen; final actual-root types/build/contracts blocked by concurrent unrelated integration; fresh independent repair review pending. No passing aggregate gate is claimed.
+
+The preceding stats SDK candidate received independent FINAL REJECT3.8 for changing supported non-capability ConvexError behavior in absent/disabled resilience. Before this repair, all six candidate sources were verified against their frozen SHA256s, copied exactly under rejected/source/, and their entire check/test freeze plus independent REJECT report/probes archived under rejected/. Prior getter/global-resilience limitations remain historical evidence.
+
+Only src/memorySpaces/index.ts getStats and the new stats-client-bridge test file changed relative to the rejected source freeze. getStats now restores the original outer handleConvexError normalization for every non-exact-capability failure. Exact native static CAPABILITY_NOT_READY errors remain passthrough, checked by the unchanged shared predicate and thrown after resilience. Tenant mismatch still rejects before dispatch; no other methods, helper policy, agent mappings, root exports, backend or global resilience changed.
+
+The existing76 criteria remain unchanged. Six added native string/object controls span absent/disabled/enabled resilience and correlate each ordinary failure with a subsequent exact pending-capability failure: ordinary errors become plain Error with baseline message/no data; the pending error retains identity. MEMORY_SPACE_NOT_FOUND retains enabled-mode eventual-consistency query retries (3 attempts,2 retry hooks), while absent/disabled modes use1 query; the subsequent capability control always adds exactly1 query. No mutations/actions occur. Current focused gate82/82,0 skipped/failed; scoped ESLint0warnings PASS.
+
+Actual root and lint-config type checks currently exit2 solely at conversations.ts1593 args.conversationIds optional narrowing and five src/facts/history.ts references to newly internalized helpers. Root ESM/CJS build succeeds, declaration build exits1 at the same five unrelated SDK history references. Packed/browser contracts were not run because the failing build produced no declarations. These blockers are outside the executor ownership and were reported promptly; no unauthorized workaround was applied. Once coordinator fixes these independent integrations, the required checks must rerun before aggregate acceptance.
+
+The classifier still never reads malformed getters. Restoring supported normalization also restores legacy malformed error.data accessor behavior in absent/disabled modes; unchanged global resilience retains its enabled-mode accessor behavior. This narrow repair does not certify hostile-error sanitization or functional canonical stats, full Task03/live acceptance, services, or model behavior.
+
+commands.json and raw/ hold observed mixed check receipts; sources.json freezes the six followup sources. No service/network/deploy/cleanup/model/commit operations occurred.

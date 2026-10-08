@@ -1,0 +1,17 @@
+from pathlib import Path
+import hashlib,json,subprocess,datetime,os
+r=Path('/workspace/Project-Cortex');c=r/'_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c2';q=c.parent/'task04-native-admission-fixture-c2-review';w=r/'work/resume/task04-native-admission-fixture-c2-review'
+def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
+def now():return datetime.datetime.now(datetime.timezone.utc).isoformat()
+def fingerprint():
+ paths=set()
+ for folder in ['src','convex-dev','tests',str(c.relative_to(r)),str((c.parent/'task04-native-admission-fixture-c1').relative_to(r)),str((c.parent/'task04-native-admission-fixture-c1-review').relative_to(r))]:
+  paths.update(p for p in (r/folder).rglob('*') if p.is_file())
+ for p in [r/'AGENTS.md',r/'package.json',r/'package-lock.json',r/'convex.json',r/'tsconfig.json']: paths.add(p)
+ for row in json.loads((c/'source-inventory.json').read_text())['acceptedGateHashes']:paths.add(r/row['path'])
+ return {str(p.relative_to(r)):sha(p) for p in sorted(paths)}
+def check(name,argv,cwd=r):
+ d=q/name;d.mkdir();before=fingerprint();meta={'argv':argv,'cwd':str(cwd),'startedAt':now(),'environment':'PATH only; no credential/env-file access','fingerprints':before};(d/'pre.json').write_text(json.dumps(meta,indent=2)+'\n')
+ p=subprocess.run(argv,cwd=cwd,env={'PATH':os.environ['PATH'],'LANG':'C.UTF-8','NO_COLOR':'1'},capture_output=True,timeout=60)
+ (d/'stdout.txt').write_bytes(p.stdout);(d/'stderr.txt').write_bytes(p.stderr);after=fingerprint();(d/'post.json').write_text(json.dumps({'observedAt':now(),'fingerprints':after},indent=2)+'\n');result={'argv':argv,'cwd':str(cwd),'exitCode':p.returncode,'sourceUnchanged':before==after,'observedAt':now()};(d/'result.json').write_text(json.dumps(result,indent=2)+'\n');print(name,json.dumps(result));return result
+result=check('semantic-probe02',['node','--experimental-vm-modules','--test',str(w/'semantic-probe02.mjs')]);checks=json.loads((q/'checks.json').read_text());checks.append(result);(q/'checks.json').write_text(json.dumps(checks,indent=2)+'\n')

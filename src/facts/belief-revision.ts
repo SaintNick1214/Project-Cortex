@@ -583,7 +583,7 @@ export class BeliefRevisionService {
     _reason: string,
     historyIntent: HistoryIntent,
   ): Promise<{ fact: FactRecord; superseded: FactRecord[] }> {
-    const { api } = await import("../../convex-dev/_generated/api");
+    const { api } = await import("../common/backendApi");
     const superseded: FactRecord[] = [];
 
     switch (action) {

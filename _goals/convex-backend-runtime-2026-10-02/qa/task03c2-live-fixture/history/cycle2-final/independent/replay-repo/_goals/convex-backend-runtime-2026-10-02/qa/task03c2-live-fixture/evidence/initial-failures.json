@@ -1,0 +1,32 @@
+{
+  "failures": [
+    {
+      "stage": "private SDK snapshot first invocation",
+      "reason": "cwd had not yet been created; exec server rejected before process creation",
+      "retained": true
+    },
+    {
+      "stage": "client scoped typecheck first execution",
+      "exitCode": 2,
+      "reason": "five getConvexClient references did not match accepted Cortex getClient; corrected to actual API",
+      "backendES2021ExitCode": 0,
+      "retained": true
+    },
+    {
+      "stage": "guard-check first execution",
+      "exitCode": 1,
+      "reason": "Initial archived inventory included installed node_modules CLI symlinks; preservation inventory now covers immutable QA source/evidence only, excludes dependency installation directory",
+      "initialInventoryPrivate": "work/backend-runtime/task03c2-live-fixture/archive-preservation-initial.json",
+      "initialInventoryFiles": 7293,
+      "finalImmutableFiles": 107,
+      "serviceAttempts": 0
+    },
+    {
+      "stage": "offline client-prep first execution",
+      "exitCode": 1,
+      "reason": "Source SessionsAPI emitted its source SessionCapabilityError, while instanceof compared the separately bundled class; changed comparison to the exact source-module class",
+      "serviceAttempts": 0,
+      "workerDispatches": 0
+    }
+  ]
+}

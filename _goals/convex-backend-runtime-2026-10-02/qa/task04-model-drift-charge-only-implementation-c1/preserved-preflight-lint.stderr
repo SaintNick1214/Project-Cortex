@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "/workspace/Project-Cortex/work/resume/task04-model-drift-charge-only-implementation-c1/checks.py", line 34, in <module>
+    elif mode=='lint':run(mode,[node,str(root/'node_modules/eslint/bin/eslint.js'),'convex-dev/runtimeModelPolicy.ts','tests/unit/runtime/model-policy-model-drift.test.ts','--report-unused-disable-directives'])
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/Project-Cortex/work/resume/task04-model-drift-charge-only-implementation-c1/checks.py", line 24, in run
+    start=datetime.datetime.now(datetime.timezone.utc).isoformat();pre=verify();p=subprocess.run(argv,cwd=root,env=env,capture_output=True,text=True,timeout=timeout);end=datetime.datetime.now(datetime.timezone.utc).isoformat();(qa/(label+'.stdout')).write_text(p.stdout);(qa/(label+'.stderr')).write_text(p.stderr)
+                                                                       ^^^^^^^^
+  File "/workspace/Project-Cortex/work/resume/task04-model-drift-charge-only-implementation-c1/checks.py", line 21, in verify
+    f=json.loads((qa/'current-freeze.json').read_text());assert all(sha(r['path'])==r['sha256'] for r in f['files']);return len(f['files'])
+                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

@@ -1,0 +1,40 @@
+import os, sys, json, pathlib, subprocess, hashlib, datetime, time
+OUT = pathlib.Path(__file__).parent
+C = pathlib.Path('/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout')
+M = pathlib.Path('/workspace/Project-Cortex')
+Q = C / '_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup-cycle2'
+def utc(): return datetime.datetime.now(datetime.timezone.utc).isoformat()
+def sha(p): return hashlib.sha256(pathlib.Path(p).read_bytes()).hexdigest()
+def env():
+    e = dict(os.environ)
+    for k in list(e):
+        if any(x in k.upper() for x in ['TOKEN','SECRET','DEPLOY_KEY','API_KEY']): e.pop(k)
+    e.update(TMPDIR=str(OUT/'tmp'), CONVEX_URL='http://127.0.0.1:1',LOCAL_CONVEX_URL='http://127.0.0.1:1',CONVEX_TEST_MODE='local',CI='1',GIT_OPTIONAL_LOCKS='0',npm_config_cache='/workspace/Project-Cortex/work/backend-runtime/npm12-cache',npm_config_offline='true',npm_config_update_notifier='false',npm_config_audit='false',npm_config_userconfig=str(OUT/'user.npmrc'),npm_config_globalconfig=str(OUT/'global.npmrc'))
+    if (OUT/'accepted-copy/bin').exists(): e['PATH']=str(OUT/'accepted-copy/bin')+os.pathsep+e['PATH']
+    return e
+for d in ['tmp','logs','receipts','replays','source-context']: (OUT/d).mkdir(exist_ok=True)
+for p in ['user.npmrc','global.npmrc']: (OUT/p).touch(exist_ok=True)
+def run(name, argv, cwd=C):
+    start=utc(); t=time.monotonic(); e=env()
+    p=subprocess.run(argv,cwd=cwd,env=e,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+    (OUT/'logs'/f'{name}.stdout').write_bytes(p.stdout);(OUT/'logs'/f'{name}.stderr').write_bytes(p.stderr)
+    r=dict(name=name,argv=argv,cwd=str(cwd),startedAt=start,finishedAt=utc(),seconds=time.monotonic()-t,exitCode=p.returncode,environment={k:e[k] for k in ['PATH','TMPDIR','CONVEX_URL','LOCAL_CONVEX_URL','CONVEX_TEST_MODE','CI','GIT_OPTIONAL_LOCKS','npm_config_cache','npm_config_offline','npm_config_userconfig','npm_config_globalconfig']})
+    (OUT/'receipts'/f'{name}.json').write_text(json.dumps(r,indent=2)+'\n')
+    print(name,p.returncode,round(r['seconds'],2),flush=True)
+    return p
+def snapshot(name):
+    f=json.loads((Q/'freeze.json').read_text());b=None
+    paths=set(x['file'] for x in f['sourceRecords']+f['qaRecords'])
+    paths.add(str((Q/'freeze.json').relative_to(C)))
+    preserve=json.loads((Q/'preservation.json').read_text())
+    paths.update(x['file'] for x in preserve['protectedRecords']); paths.update(x for x in subprocess.check_output(['git','ls-files','-z'],cwd=C,env=env()).decode().split('\0') if x)
+    records=[dict(file=p,sha256=sha(C/p) if (C/p).is_file() else None) for p in sorted(paths)]
+    status=run(name+'-candidate-status',['git','status','--porcelain=v1','--untracked-files=all'])
+    mainstatus=run(name+'-main-status',['git','status','--porcelain=v1','--untracked-files=all'],M)
+    mainpaths=subprocess.check_output(['git','ls-files','-z'],cwd=M,env=env()).decode().split('\0')
+    mainrecords=[dict(file=p,sha256=sha(M/p) if (M/p).is_file() else None) for p in sorted(x for x in mainpaths if x)]
+    r=dict(observedAt=utc(),candidateRecords=records,mainTrackedRecords=mainrecords,candidateStatusSha256=hashlib.sha256(status.stdout).hexdigest(),mainStatusSha256=hashlib.sha256(mainstatus.stdout).hexdigest(),freezeSha256=sha(Q/'freeze.json'),candidateHead=subprocess.check_output(['git','rev-parse','HEAD'],cwd=C,env=env()).decode().strip())
+    (OUT/f'{name}-snapshot.json').write_text(json.dumps(r,indent=2)+'\n');print('snapshot',name,len(records),len(mainrecords),r['freezeSha256'])
+if __name__=='__main__':
+    if sys.argv[1]=='snapshot': snapshot(sys.argv[2])
+    else: run(sys.argv[1],sys.argv[2:])

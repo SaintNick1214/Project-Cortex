@@ -1,0 +1,84 @@
+{
+  "observedAt": "2026-10-05T02:15:19.450408+00:00",
+  "status": "ROOT_READ_ONLY_RETAINED_FAILURE_INSPECTION",
+  "results": [
+    {
+      "batch": "1f5a60e5ecc14d4aa3d8746aa5946c43",
+      "receiptSHA256": "aabcab145587c51bdd3dfa5572502c4d451211a3c1333e5570e978989794cb62",
+      "receiptIdentity": {
+        "st_dev": 26,
+        "st_ino": 18551,
+        "st_mode": 33152,
+        "st_uid": 1000,
+        "st_gid": 1000,
+        "st_nlink": 1,
+        "st_size": 10119730,
+        "st_mtime_ns": 1791166188491893234,
+        "st_ctime_ns": 1791166188491893234
+      },
+      "commands": [
+        {
+          "argv": [
+            "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+            "--experimental-vm-modules",
+            "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c6/closed-launcher-c6/external-recipe-setup.mjs"
+          ],
+          "utcStart": "2026-10-05T02:08:35.061377+00:00",
+          "utcEnd": "2026-10-05T02:08:35.365453+00:00",
+          "exitCode": 0
+        }
+      ],
+      "streams": [
+        {
+          "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/runs/1f5a60e5ecc14d4aa3d8746aa5946c43/external-recipe-setup.mjs.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "identity": {
+            "st_dev": 26,
+            "st_ino": 18549,
+            "st_mode": 33152,
+            "st_uid": 1000,
+            "st_gid": 1000,
+            "st_nlink": 1,
+            "st_size": 0,
+            "st_mtime_ns": 1791166116004121001,
+            "st_ctime_ns": 1791166116004121001
+          },
+          "text": ""
+        },
+        {
+          "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/runs/1f5a60e5ecc14d4aa3d8746aa5946c43/external-recipe-setup.mjs.stdout",
+          "bytes": 153,
+          "sha256": "def277ef7c7bdf137dc194cf76420e230b57c95410470ab593587d20661fd5e5",
+          "identity": {
+            "st_dev": 26,
+            "st_ino": 18548,
+            "st_mode": 33152,
+            "st_uid": 1000,
+            "st_gid": 1000,
+            "st_nlink": 1,
+            "st_size": 153,
+            "st_mtime_ns": 1791166116004121001,
+            "st_ctime_ns": 1791166116004121001
+          },
+          "text": "{\"status\":\"OWN_EXTERNAL_TWO_EXACT_VM_CALLS_PREPARED\",\"receipt\":\"/dev/shm/cortex-native-c6-closed-launcher-c6/external-recipe-setup-qZxKIk/receipt.json\"}\n"
+        }
+      ],
+      "fullLiteralRowsCompared": 148325,
+      "sourceRowsCompared": 5384,
+      "uniqueBeforeByteBackingsDecoded": 3377,
+      "beforeByteBackingRawBytes": 298744202,
+      "declaredDeltas": [
+        "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c6/closed-launcher-c6/finite-producer-rules.json",
+        "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c6/closed-launcher-c6/prepared-source-inputs.json"
+      ],
+      "priorProducerEntriesPreserved": 123,
+      "priorProducerCallsPreserved": 244,
+      "addedOwnEntry": "OWN_EXTERNAL_REVIEW",
+      "addedOwnCalls": 2,
+      "assessment": "Declared two-file rules/pin setup exited0, all prior entries/calls preserved. No whole body in this batch; no full qualification inferred. Recorded cleanup is historical, not a fresh process census."
+    }
+  ],
+  "currentSourceQualification": "NOT_PERFORMED: candidate changed after these batches",
+  "original122": "HELD"
+}

@@ -1,0 +1,39 @@
+{
+  "observedAt": "2026-10-04 07:56:10 UTC",
+  "gate": "PENDING_FRESH_INDEPENDENT_PREPARATION_REVIEWS",
+  "profiles": [
+    {
+      "path": "task04-terminal-capture-native-extension-preparation-c3",
+      "rows": 5576,
+      "manifest": "82e0788b3122134b5d7a9cf379702f0fe18d2d78915d75d84bfb9c00ce8ac9a8",
+      "freeze": "7082ba620e6667af63a3b485d152af03fe1ba29079c7cfde0c73e790b0ba4080"
+    },
+    {
+      "path": "task04-terminal-capture-native-extension-preparation-c3/regression",
+      "rows": 247,
+      "manifest": "7b0cc8215d66304d5db6997d4a4a20fc0abd07cc063e02e97eaba6e52f4393ad",
+      "freeze": "678caa05d3aaf26f7777b511a2d0e417e2fb5f5fc7c736617f43ca530dc00286"
+    },
+    {
+      "path": "task04-terminal-capture-parent-inputs-c8-preparation",
+      "rows": 168,
+      "manifest": "16549dddb8ed7dd4f3da8b3405c438720fa10f7cc575e62aba589c5f98bbdfd7"
+    }
+  ],
+  "rootRehashedRows": 5991,
+  "mismatches": 0,
+  "parentCompleteSetVerified": true,
+  "rejectedHistories": [
+    "task04-terminal-capture-parent-inputs-c7-review REJECT2.8",
+    "task04-terminal-capture-native-profiles-c2-review REJECT2.8",
+    "C7review original80rowmanifest omits3nested manifest files; gapretained; NEWstrict83supplement pendingreview"
+  ],
+  "reviewers": [
+    "/root/task04_capture_native_profiles_c3_judge",
+    "/root/task04_capture_parent_inputs_c8_judge"
+  ],
+  "native": "NOT_RUN",
+  "targetsProvisioned": 0,
+  "paidInference": 0,
+  "limits": "Byte/completeness verification only; neither fresh independent preparation verdict nor actual qualification exists yet."
+}

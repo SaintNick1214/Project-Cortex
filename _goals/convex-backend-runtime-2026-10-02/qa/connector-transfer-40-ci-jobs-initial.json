@@ -1,0 +1,829 @@
+[
+  {
+    "run_id": 37233259077,
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "Action completed."
+        }
+      ],
+      "structuredContent": {
+        "jobs": [
+          {
+            "id": 111527215880,
+            "name": "Build demo (packages/cortex-cli/templates/basic)",
+            "status": "in_progress",
+            "conclusion": null,
+            "run_id": 37233259077,
+            "logs_url": null,
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 1
+              },
+              {
+                "name": "Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 2
+              },
+              {
+                "name": "Run actions/setup-node@v6",
+                "status": "in_progress",
+                "conclusion": null,
+                "number": 3
+              },
+              {
+                "name": "Run npm ci",
+                "status": "pending",
+                "conclusion": null,
+                "number": 4
+              },
+              {
+                "name": "Pack the SDK and provider under review",
+                "status": "pending",
+                "conclusion": null,
+                "number": 5
+              },
+              {
+                "name": "Install demo against the packed packages",
+                "status": "pending",
+                "conclusion": null,
+                "number": 6
+              },
+              {
+                "name": "Build demo",
+                "status": "pending",
+                "conclusion": null,
+                "number": 7
+              },
+              {
+                "name": "Run basic demo unit tests",
+                "status": "pending",
+                "conclusion": null,
+                "number": 8
+              },
+              {
+                "name": "Post Run actions/setup-node@v6",
+                "status": "pending",
+                "conclusion": null,
+                "number": 15
+              },
+              {
+                "name": "Post Run actions/checkout@v6",
+                "status": "pending",
+                "conclusion": null,
+                "number": 16
+              }
+            ]
+          },
+          {
+            "id": 111527215924,
+            "name": "Packed package and browser contracts",
+            "status": "in_progress",
+            "conclusion": null,
+            "run_id": 37233259077,
+            "logs_url": null,
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 1
+              },
+              {
+                "name": "Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 2
+              },
+              {
+                "name": "Run actions/setup-node@v6",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 3
+              },
+              {
+                "name": "Run npm ci",
+                "status": "in_progress",
+                "conclusion": null,
+                "number": 4
+              },
+              {
+                "name": "Run npm run build",
+                "status": "pending",
+                "conclusion": null,
+                "number": 5
+              },
+              {
+                "name": "Run npm run test:contracts",
+                "status": "pending",
+                "conclusion": null,
+                "number": 6
+              },
+              {
+                "name": "Post Run actions/setup-node@v6",
+                "status": "pending",
+                "conclusion": null,
+                "number": 11
+              },
+              {
+                "name": "Post Run actions/checkout@v6",
+                "status": "pending",
+                "conclusion": null,
+                "number": 12
+              }
+            ]
+          },
+          {
+            "id": 111527215925,
+            "name": "Build demo (packages/cortex-cli/templates/vercel-ai-quickstart)",
+            "status": "in_progress",
+            "conclusion": null,
+            "run_id": 37233259077,
+            "logs_url": null,
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 1
+              },
+              {
+                "name": "Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 2
+              },
+              {
+                "name": "Run actions/setup-node@v6",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 3
+              },
+              {
+                "name": "Run npm ci",
+                "status": "in_progress",
+                "conclusion": null,
+                "number": 4
+              },
+              {
+                "name": "Pack the SDK and provider under review",
+                "status": "pending",
+                "conclusion": null,
+                "number": 5
+              },
+              {
+                "name": "Install demo against the packed packages",
+                "status": "pending",
+                "conclusion": null,
+                "number": 6
+              },
+              {
+                "name": "Build demo",
+                "status": "pending",
+                "conclusion": null,
+                "number": 7
+              },
+              {
+                "name": "Run basic demo unit tests",
+                "status": "pending",
+                "conclusion": null,
+                "number": 8
+              },
+              {
+                "name": "Post Run actions/setup-node@v6",
+                "status": "pending",
+                "conclusion": null,
+                "number": 15
+              },
+              {
+                "name": "Post Run actions/checkout@v6",
+                "status": "pending",
+                "conclusion": null,
+                "number": 16
+              }
+            ]
+          },
+          {
+            "id": 111527215929,
+            "name": "Build demo (packages/cortex-cli/templates/chat-sdk-quickstart)",
+            "status": "in_progress",
+            "conclusion": null,
+            "run_id": 37233259077,
+            "logs_url": null,
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 1
+              },
+              {
+                "name": "Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 2
+              },
+              {
+                "name": "Run actions/setup-node@v6",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 3
+              },
+              {
+                "name": "Run npm ci",
+                "status": "in_progress",
+                "conclusion": null,
+                "number": 4
+              },
+              {
+                "name": "Pack the SDK and provider under review",
+                "status": "pending",
+                "conclusion": null,
+                "number": 5
+              },
+              {
+                "name": "Install demo against the packed packages",
+                "status": "pending",
+                "conclusion": null,
+                "number": 6
+              },
+              {
+                "name": "Build demo",
+                "status": "pending",
+                "conclusion": null,
+                "number": 7
+              },
+              {
+                "name": "Run basic demo unit tests",
+                "status": "pending",
+                "conclusion": null,
+                "number": 8
+              },
+              {
+                "name": "Post Run actions/setup-node@v6",
+                "status": "pending",
+                "conclusion": null,
+                "number": 15
+              },
+              {
+                "name": "Post Run actions/checkout@v6",
+                "status": "pending",
+                "conclusion": null,
+                "number": 16
+              }
+            ]
+          },
+          {
+            "id": 111527215957,
+            "name": "Build demo (packages/vercel-ai-provider/quickstart)",
+            "status": "in_progress",
+            "conclusion": null,
+            "run_id": 37233259077,
+            "logs_url": null,
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 1
+              },
+              {
+                "name": "Run actions/checkout@v6",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 2
+              },
+              {
+                "name": "Run actions/setup-node@v6",
+                "status": "in_progress",
+                "conclusion": null,
+                "number": 3
+              },
+              {
+                "name": "Run npm ci",
+                "status": "pending",
+                "conclusion": null,
+                "number": 4
+              },
+              {
+                "name": "Pack the SDK and provider under review",
+                "status": "pending",
+                "conclusion": null,
+                "number": 5
+              },
+              {
+                "name": "Install demo against the packed packages",
+                "status": "pending",
+                "conclusion": null,
+                "number": 6
+              },
+              {
+                "name": "Build demo",
+                "status": "pending",
+                "conclusion": null,
+                "number": 7
+              },
+              {
+                "name": "Run basic demo unit tests",
+                "status": "pending",
+                "conclusion": null,
+                "number": 8
+              },
+              {
+                "name": "Post Run actions/setup-node@v6",
+                "status": "pending",
+                "conclusion": null,
+                "number": 15
+              },
+              {
+                "name": "Post Run actions/checkout@v6",
+                "status": "pending",
+                "conclusion": null,
+                "number": 16
+              }
+            ]
+          },
+          {
+            "id": 111527215964,
+            "name": "Neo4j and Memgraph contracts",
+            "status": "in_progress",
+            "conclusion": null,
+            "run_id": 37233259077,
+            "logs_url": null,
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 1
+              },
+              {
+                "name": "Initialize containers",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 2
+              },
+              {
+                "name": "Run actions/checkout@v6",
+                "status": "in_progress",
+                "conclusion": null,
+                "number": 3
+              },
+              {
+                "name": "Run actions/setup-node@v6",
+                "status": "pending",
+                "conclusion": null,
+                "number": 4
+              },
+              {
+                "name": "Run npm ci",
+                "status": "pending",
+                "conclusion": null,
+                "number": 5
+              },
+              {
+                "name": "Wait for graph services and run contracts",
+                "status": "pending",
+                "conclusion": null,
+                "number": 6
+              },
+              {
+                "name": "Post Run actions/checkout@v6",
+                "status": "pending",
+                "conclusion": null,
+                "number": 11
+              },
+              {
+                "name": "Stop containers",
+                "status": "pending",
+                "conclusion": null,
+                "number": 12
+              }
+            ]
+          },
+          {
+            "id": 111527215965,
+            "name": "Detect File Changes",
+            "status": "in_progress",
+            "conclusion": null,
+            "run_id": 37233259077,
+            "logs_url": null,
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 1
+              },
+              {
+                "name": "Checkout PR code",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 2
+              },
+              {
+                "name": "Detect file changes",
+                "status": "in_progress",
+                "conclusion": null,
+                "number": 3
+              },
+              {
+                "name": "Save release paths for this exact main commit",
+                "status": "pending",
+                "conclusion": null,
+                "number": 4
+              },
+              {
+                "name": "Run actions/upload-artifact@v4",
+                "status": "pending",
+                "conclusion": null,
+                "number": 5
+              },
+              {
+                "name": "Show detected changes",
+                "status": "pending",
+                "conclusion": null,
+                "number": 6
+              },
+              {
+                "name": "Post Checkout PR code",
+                "status": "pending",
+                "conclusion": null,
+                "number": 12
+              }
+            ]
+          }
+        ]
+      },
+      "isError": false
+    }
+  },
+  {
+    "run_id": 37233259056,
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "Action completed."
+        }
+      ],
+      "structuredContent": {
+        "jobs": [
+          {
+            "id": 111527315340,
+            "name": "Dependency Vulnerability Scan",
+            "status": "in_progress",
+            "conclusion": null,
+            "run_id": 37233259056,
+            "logs_url": null,
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 1
+              },
+              {
+                "name": "Checkout code",
+                "status": "in_progress",
+                "conclusion": null,
+                "number": 2
+              },
+              {
+                "name": "Run Trivy vulnerability scanner",
+                "status": "pending",
+                "conclusion": null,
+                "number": 3
+              },
+              {
+                "name": "Upload Trivy results to GitHub Security tab",
+                "status": "pending",
+                "conclusion": null,
+                "number": 4
+              },
+              {
+                "name": "Post Checkout code",
+                "status": "pending",
+                "conclusion": null,
+                "number": 8
+              }
+            ]
+          },
+          {
+            "id": 111527315464,
+            "name": "License Compliance",
+            "status": "in_progress",
+            "conclusion": null,
+            "run_id": 37233259056,
+            "logs_url": null,
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 1
+              },
+              {
+                "name": "Checkout code",
+                "status": "in_progress",
+                "conclusion": null,
+                "number": 2
+              },
+              {
+                "name": "Setup Node.js",
+                "status": "pending",
+                "conclusion": null,
+                "number": 3
+              },
+              {
+                "name": "Install dependencies",
+                "status": "pending",
+                "conclusion": null,
+                "number": 4
+              },
+              {
+                "name": "Check licenses",
+                "status": "pending",
+                "conclusion": null,
+                "number": 5
+              },
+              {
+                "name": "Post Checkout code",
+                "status": "pending",
+                "conclusion": null,
+                "number": 10
+              }
+            ]
+          },
+          {
+            "id": 111527315482,
+            "name": "CodeQL Analysis (javascript-typescript)",
+            "status": "in_progress",
+            "conclusion": null,
+            "run_id": 37233259056,
+            "logs_url": null,
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 1
+              },
+              {
+                "name": "Checkout repository",
+                "status": "in_progress",
+                "conclusion": null,
+                "number": 2
+              },
+              {
+                "name": "Initialize CodeQL",
+                "status": "pending",
+                "conclusion": null,
+                "number": 3
+              },
+              {
+                "name": "Setup Node.js (for JS/TS)",
+                "status": "pending",
+                "conclusion": null,
+                "number": 4
+              },
+              {
+                "name": "Install dependencies (for JS/TS)",
+                "status": "pending",
+                "conclusion": null,
+                "number": 5
+              },
+              {
+                "name": "Autobuild",
+                "status": "pending",
+                "conclusion": null,
+                "number": 6
+              },
+              {
+                "name": "Perform CodeQL Analysis",
+                "status": "pending",
+                "conclusion": null,
+                "number": 7
+              },
+              {
+                "name": "Post Checkout repository",
+                "status": "pending",
+                "conclusion": null,
+                "number": 14
+              }
+            ]
+          },
+          {
+            "id": 111527315489,
+            "name": "API Security Scan (Semgrep)",
+            "status": "in_progress",
+            "conclusion": null,
+            "run_id": 37233259056,
+            "logs_url": null,
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 1
+              },
+              {
+                "name": "Pull returntocorp/semgrep-agent:v1",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 2
+              },
+              {
+                "name": "Checkout code",
+                "status": "in_progress",
+                "conclusion": null,
+                "number": 3
+              },
+              {
+                "name": "Run Semgrep",
+                "status": "pending",
+                "conclusion": null,
+                "number": 4
+              },
+              {
+                "name": "Upload SARIF file",
+                "status": "pending",
+                "conclusion": null,
+                "number": 5
+              },
+              {
+                "name": "Post Checkout code",
+                "status": "pending",
+                "conclusion": null,
+                "number": 10
+              }
+            ]
+          },
+          {
+            "id": 111527315510,
+            "name": "Dependency Review",
+            "status": "in_progress",
+            "conclusion": null,
+            "run_id": 37233259056,
+            "logs_url": null,
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 1
+              },
+              {
+                "name": "Checkout code",
+                "status": "in_progress",
+                "conclusion": null,
+                "number": 2
+              },
+              {
+                "name": "Dependency Review",
+                "status": "pending",
+                "conclusion": null,
+                "number": 3
+              },
+              {
+                "name": "Post Checkout code",
+                "status": "pending",
+                "conclusion": null,
+                "number": 6
+              }
+            ]
+          },
+          {
+            "id": 111527315523,
+            "name": "Commit Signature Verification",
+            "status": "in_progress",
+            "conclusion": null,
+            "run_id": 37233259056,
+            "logs_url": null,
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 1
+              },
+              {
+                "name": "Checkout code",
+                "status": "in_progress",
+                "conclusion": null,
+                "number": 2
+              },
+              {
+                "name": "Verify commit signatures",
+                "status": "pending",
+                "conclusion": null,
+                "number": 3
+              },
+              {
+                "name": "Post Checkout code",
+                "status": "pending",
+                "conclusion": null,
+                "number": 6
+              }
+            ]
+          },
+          {
+            "id": 111527315536,
+            "name": "OpenAPI Security Audit",
+            "status": "in_progress",
+            "conclusion": null,
+            "run_id": 37233259056,
+            "logs_url": null,
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 1
+              },
+              {
+                "name": "Build 42Crunch/api-security-audit-action@v4",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 2
+              },
+              {
+                "name": "Checkout code",
+                "status": "in_progress",
+                "conclusion": null,
+                "number": 3
+              },
+              {
+                "name": "Check for OpenAPI specs",
+                "status": "pending",
+                "conclusion": null,
+                "number": 4
+              },
+              {
+                "name": "Run 42Crunch API Security Audit",
+                "status": "pending",
+                "conclusion": null,
+                "number": 5
+              },
+              {
+                "name": "Post Checkout code",
+                "status": "pending",
+                "conclusion": null,
+                "number": 10
+              }
+            ]
+          },
+          {
+            "id": 111527315575,
+            "name": "Secret Scanning",
+            "status": "in_progress",
+            "conclusion": null,
+            "run_id": 37233259056,
+            "logs_url": null,
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 1
+              },
+              {
+                "name": "Checkout code",
+                "status": "in_progress",
+                "conclusion": null,
+                "number": 2
+              },
+              {
+                "name": "Run Gitleaks",
+                "status": "pending",
+                "conclusion": null,
+                "number": 3
+              },
+              {
+                "name": "Post Checkout code",
+                "status": "pending",
+                "conclusion": null,
+                "number": 6
+              }
+            ]
+          },
+          {
+            "id": 111527316292,
+            "name": "Supply Chain Security (Scorecard)",
+            "status": "completed",
+            "conclusion": "skipped",
+            "run_id": 37233259056,
+            "logs_url": null,
+            "steps": null
+          }
+        ]
+      },
+      "isError": false
+    }
+  }
+]

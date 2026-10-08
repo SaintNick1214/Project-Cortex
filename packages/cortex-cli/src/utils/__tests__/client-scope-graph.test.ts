@@ -16,7 +16,7 @@ const resolveGraph = jest.fn((options: { connection: unknown }, _env: unknown) =
 const disposal = { close: jest.fn() };
 const createDisposal = jest.fn((_target: unknown) => disposal);
 const automationObserved: Array<string | undefined> = [];
-jest.unstable_mockModule("convex/browser", () => ({ ConvexHttpClient: jest.fn(() => ({ setAdminAuth: jest.fn(), query: jest.fn(), mutation: jest.fn(), action: jest.fn() })) }));
+jest.unstable_mockModule("convex/browser", () => ({ ConvexHttpClient: jest.fn(() => ({ setAdminAuth: jest.fn(), function: jest.fn(), query: jest.fn(), mutation: jest.fn(), action: jest.fn() })) }));
 jest.unstable_mockModule("@cortexmemory/sdk", () => ({
   createAuthContext: auth,
   resolveGraphConnection: resolveGraph,

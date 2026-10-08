@@ -1,0 +1,18 @@
+import pathlib,hashlib,json,subprocess,datetime,os
+repo=pathlib.Path('/workspace/Project-Cortex'); q=repo/'_goals/convex-backend-runtime-2026-10-02/qa'; cand=q/'task04-native-admission-fixture-c4'; out=q/'task04-native-admission-fixture-c4-review'; work=repo/'work/resume/task04-native-admission-c4-review'; scripts=work/'scripts'; 
+def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
+def write(p,x):p.write_text(json.dumps(x,indent=2)+'\n')
+protected=set()
+for d in [cand,*[q/f'task04-native-admission-fixture-c{x}' for x in [1,2,3]],*[q/f'task04-native-admission-fixture-c{x}-review' for x in [1,2,3]],q/'task04-native-admission-c3-execution',repo/'convex-dev',repo/'src']:
+ protected.update(p for p in d.rglob('*') if p.is_file())
+for n in ['package.json','package-lock.json','convex.json','tsconfig.json']:protected.add(repo/n)
+for r in json.loads((cand/'toolchain-evidence.json').read_text())['files']:protected.add(repo/r['path'])
+protected.update(repo/r['path'] for r in json.loads((cand/'source-inventory.json').read_text())['acceptedGateHashes'])
+pre=json.loads((out/'protected-pre.json').read_text())
+checks=json.loads((out/'checks.json').read_text())
+def run(name,argv,cwd=repo):
+ start=datetime.datetime.now(datetime.timezone.utc).isoformat(); env={'PATH':str(repo/'work/resume/toolchain-bin')+':/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin:'+os.defpath,'LANG':'C.UTF-8','HOME':str(work)}
+ p=subprocess.run(argv,cwd=cwd,env=env,capture_output=True,timeout=110)
+ (out/f'{name}.stdout').write_bytes(p.stdout);(out/f'{name}.stderr').write_bytes(p.stderr)
+ r={'name':name,'argv':argv,'cwd':str(cwd),'startedAt':start,'completedAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'exitCode':p.returncode,'stdoutSha256':sha(out/f'{name}.stdout'),'stderrSha256':sha(out/f'{name}.stderr'),'environment':'only PATH declared shim + /bin:/usr/bin, LANG C.UTF-8, HOME review work (no private env inherited)'};checks.append(r);write(out/'checks.json',checks);print(name,p.returncode,flush=True);return p
+run('adversarial',['node','--test',str(work/'adversarial.mjs')])

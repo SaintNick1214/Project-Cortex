@@ -1,5 +1,5 @@
 /** Pure runtime policy; safe to link before any application dependency. */
-export const MINIMUM_NODE_VERSION = "22.16.0";
+export const MINIMUM_NODE_VERSION = "24.15.0";
 
 export function isSupportedNodeVersion(version: string): boolean {
   const match = /^v?(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/.exec(version);

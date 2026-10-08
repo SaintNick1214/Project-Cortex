@@ -1,0 +1,316 @@
+# Goal: Cortex-owned agent runs on Convex
+
+**Created:** 2026-10-02 (America/Los_Angeles)
+**Status:** Execution resumed — fresh independent resume goal review PASS4.6; authorization foundation repairs and actual41 auth QA correction active. User explicitly superseded numerical review-cycle limits; all independent acceptance gates and approved scope remain. [Current receipts](qa/execution-progress.md).
+**Authorization:** The user sent the implementation prompt, authorizing implementation, incremental commits/pushes and a draft PR against dev. The user subsequently authorized a fresh disposable instance and inference without a spend cap. Historical planning-only statements record the artifacts' creation phase.
+**Cloud handoff:** [Copy-paste implementation prompt](implementation-prompt.md).
+**Research:** [Architecture and evidence](../../_research/convex-ai-gateway-2026-10-02/architecture.md)
+**Supersedes:** The earlier transport-only proposal; historical findings in the Gateway report do not govern this scope.
+**Current authority:** [User decision register](../../_research/convex-ai-gateway-2026-10-02/decision-gates.md). The [earlier planning PASS](qa/planning-review-2.md) covered broader superseded scope. Current [execution goal review](qa/execution-goal-review-2.md) passed before execution; [Task01 review](qa/task01-review-1.md) qualifies the core text stack. Production runtime and extension compatibility remain pending.
+**Confirmed direction:** Indexed memory plus eligible pending context, queued mutating runs within a conversation, tracked transcript unlocks and the remaining tool/retry/default policies are aligned. Embeddings use a clean-slate design; previous models, dimensions and schema layouts impose no constraints. No product decision question remains pending.
+**Target:** This `Project-Cortex` repository; resolve all paths against the cloud checkout root.
+**Branch prerequisite:** COMPLETE: #130/#131 merged; remote dev `3341d64ddc06f1de26ed525312ef2c1b89b16952` contains current main and matches the CI-qualified reconciliation tree; [reconciliation report](../../_research/branch-reconciliation-2026-10-02/report.md). Refresh manifests, runtime floor and canonical documentation paths on that baseline before execution. Planning files were excluded from the reconciliation merge. The implementation handoff is on `feat/convex-backend-runtime`, based on that reconciled dev commit; product implementation began after the execution request.
+
+## Summary
+
+Move ordinary agent-turn orchestration, context injection and built-in memory inference into Cortex's Convex backend. Compose Convex Agent, Workflow/Workpool and the official AI SDK 7 Gateway provider while Cortex owns authorization, model policy, semantic memory and artifacts. TypeScript/application code submits input and observes durable responses rather than owning the model/tool/memory loop.
+
+## Success Criteria
+
+- [ ] One authenticated request starts a scoped backend run with Cortex context and a registered backend tool; TypeScript clients require no upstream provider key.
+- [ ] Cortex owns stable conversation/run identity; Agent owns one canonical executable transcript. Read/write/export/sharing endpoints target that store without independent duplicate message writers. An administrator-controlled write lock retains revision tracking and stale-memory detection when unlocked.
+- [ ] Saved output supports authorized subscriptions, reconnect, multiple observers, typed UI/artifact/tool parts, final-only observation, cancellation and capability-driven approval continuation.
+- [ ] Response completion does not wait for semantic indexing. Admission/finalization durably register ingestion work; next-turn pending-tail continuity and explicit strict-memory barriers handle indexing lag honestly.
+- [ ] Stable event IDs, source eligibility, ordered/version-checked belief commits, stage receipts and tombstones prevent duplicate/stale/resurrected memory after retry, overlap or deletion.
+- [ ] Every billable operation passes a versioned per-function model/interface/capability/budget policy. Secondary title/artifact/suggestion calls have no hidden direct-provider path.
+- [ ] A clean-slate source/chunk/vector schema and supported indexes are chosen for the new runtime. Stored/query vectors carry matching semantic profile/model/dimension/index provenance, with current source revisions and authorization; no previous embedding architecture or upgrade tooling constrains the design.
+- [ ] Image and durable async-video generation create owned Cortex artifact versions with provenance, reference-aware cleanup, authenticated Convex delivery within 20,000,000 bytes and TypeScript/UI parity. No external media storage is added; future image analysis is a lineage seam only. Alpha/unavailable configurations produce clear capability errors.
+- [ ] Verified principals and trusted grants guard all external run/storage/search/share/tool/media/graph paths that could bypass the new boundary. Revocation and user/space deletion are exercised across background jobs.
+- [ ] Modern clients share one backend domain implementation. Vercel AI SDK 7 integration acts as a remote-run UI transport without a second tool loop or memory writer.
+- [ ] Fresh Cortex installation is additive to a host app: unrelated tables/functions, custom functions directory, HTTP/auth routes and Convex/runtime config survive installation retries/conflicts. Existing-Cortex deployments/data are not migrated.
+- [ ] Required affected quality/module/UI checks and actual disposable-target service outcomes pass; missing credentials/services remain incomplete rather than implied success.
+
+## Scope
+
+### In Scope
+
+AI SDK ≥7.0.105; official Gateway provider; Convex ≥1.46; qualified Agent/Workflow composition; backend domain services; canonical transcript/run resources; scoped authorization and bypass closure; deterministic model policy and budgets; reactive streams; durable asynchronous memory/graph projection; clean-slate embedding storage and retrieval; image/video job and artifact integration; bounded authenticated Convex asset delivery; TypeScript/Vercel clients; additive CLI/demo/template setup; new-install documentation and outcome validation.
+
+Broader authorization is included only where required to protect this runtime and its data/alternate entry points, rather than unrelated security or CLI cleanup. Public API/default direction is aligned; exact types and component contracts remain subject to technical qualification. Planning approval is not execution authorization.
+
+### Out of Scope
+
+Decisions/Jev or future Decisions APIs; adaptive quality/cost model optimization; standalone speech/transcription/realtime audio and unqualified media-editing capabilities; arbitrary client closure execution; replacing Cortex semantic memory/artifacts with Agent features; implementing alternate self-hosted/direct inference providers; Python implementation/parity/QA; legacy-Cortex transcript/data/deployment migrations; vector backfills/cutover/rollback; external media storage/R2/large-asset delivery; old AI SDK major compatibility; unrelated sibling repositories/CLI modernization; production deployment; package publishing/releases; merging the implementation PR without a later request. Branch creation and committing/pushing this plan are authorized. The pasted implementation prompt can authorize implementation commits and a draft PR.
+
+### Future Considerations
+
+Explicit browser/device tool lane; measured adaptive routing/Decisions after stability; additional backend provider connectors; image artifact analysis/captions/OCR/visual embeddings; additional derived embedding generations. No image processor or general reindex workflow is built today. Extension seams may be defined without implementing these features.
+
+## Affected Areas
+
+| Profile layer | Areas | Required shift |
+|---|---|---|
+| Backend/contracts | `convex-dev/`, component setup, runtime config | Verified scope, run/policy ledgers, Agent/Workflow adapters, domain services, vector/media jobs |
+| TS domain/client | `src/` | Separate pure domain logic from remote transport; thin run/memory/artifact APIs and tracked direct writes |
+| CLI/provider | `packages/cortex-cli/`, `packages/vercel-ai-provider/` | Additive installation and AI SDK 7 remote-run UI integration |
+| Demo/templates/docs | Canonical quickstart, basic/chat templates, package READMEs and canonical website documentation (separate repository) | Backend tools, auth/setup, reconnect/artifacts and fresh-install guide |
+| Validation | Profile §4/§9 and `qa/` | Scoped security, memory, graph, provider, CLI and demo evidence |
+
+## Key Decisions
+
+| Decision | Aligned direction | Research |
+|---|---|---|
+| Runtime | Compose Agent + Workflow + Gateway under Cortex | Architecture §3–4 |
+| Transcript | Agent executable history; Cortex access metadata; administrator write lock with tracked direct writes | §4 |
+| Memory consistency | Durable async stages + pending tail; explicit strong barrier | §5 |
+| Model controls | Deterministic backend policy per operation, pinned versions | §6 |
+| Embeddings | Clean-slate source/chunk/vector design; compatible profile/index matching; no legacy constraints | §6 |
+| Media | Gateway generation feeds retained Cortex artifacts; Convex delivery within 20,000,000 bytes; future analysis seam | §7 |
+| Public surface | Runs facade + modern explicit memory APIs + UI transport | §8 |
+| New-install default | Gateway when eligible; explicit capability error otherwise | §8 |
+| Auth | Verified principal + trusted grant across every reachable path | §9 |
+| Installation | New-install host integration preserves unrelated app config; no legacy-Cortex upgrade | §10 |
+
+## Risks and Mitigations
+
+| Risk | Impact | Mitigation |
+|---|---|---|
+| Two histories or memory writers | High | One canonical transcript + one ingestion receipt per event |
+| Next-turn stale memory | High | Authorized raw-history/pending-tail overlay, watermark and strict barrier |
+| Replayed external effects/paid calls | High | Stable operation IDs, checkpoints and uncertain outcomes; no blind retry |
+| Authorization bypass/deletion resurrection | High | Inventory/close public paths, trusted grants, revocation and tombstones |
+| Embedding-space mixing | High | Profile-isolated vectors/indexes and per-job resolution pinned to current source revisions |
+| Private files exposed by bearer URL | High | Authenticated Convex HTTP serving with a 20,000,000-byte cap; oversize error/cleanup |
+| Entire deployment disabled by spend cap | High | App admission limits; document Gateway deployment kill switch |
+| Host config or dirty CLI work overwritten | High | Additive fixtures, status reread and disjoint editing ownership |
+| Published peers do not imply live compatibility | High | First bounded qualification gate on a verified disposable target |
+
+## Implementation Phases and Tasks
+
+The original task artifacts were written during planning and are flat under `tasks/`. Execution status and observed evidence are tracked in [qa/execution-progress.md](qa/execution-progress.md) and [qa/outcome-matrix.md](qa/outcome-matrix.md). Relative effort is guidance, not a time estimate. Shared interfaces must be fixed before dependent writes. Each task requires its own observed acceptance evidence.
+
+| Phase | Task | Depends on | Effort |
+|---|---|---|---|
+| Core qualification | [01 Stack and text-boundary qualification](tasks/01-qualification.md) | Execution request + disposable core prerequisites | M |
+| Foundation | [02 Backend domain separation](tasks/02-domain-services.md) | 01 | L |
+| Foundation | [03 Identity and scoped endpoint access](tasks/03-authorization.md) | 01 | L |
+| Foundation | [04 Model policy and admission budgets](tasks/04-model-policy.md) | 01, 03-foundation | M |
+| Runtime | [05 Transcript and run ledger](tasks/05-transcripts-runs.md) | 02, 03-foundation, 04 | M |
+| Early integration | [06 Additive backend installation](tasks/06-additive-installation.md) | 03-foundation, 05 | M |
+| Runtime | [07 Agent execution and reactive output](tasks/07-agent-streams.md) | 05, 06 | L |
+| Memory | [08 Durable memory consistency](tasks/08-memory-pipeline.md) | 02, 05, 07 | L |
+| First vertical slice | [09 Text clients and UI](tasks/09-text-client-slice.md) | 06, 07, 08 | M |
+| Memory extension | [10 Clean-slate embeddings and retrieval](tasks/10-embedding-profiles.md) | 04, 08, 09, own service gate | M |
+| Memory extension | [11 Durable graph projection](tasks/11-graph-outbox.md) | 03-foundation, 08, 09, own service gate | M |
+| Media foundation | [12 Convex assets and bounded delivery](tasks/12-asset-lifecycle.md) | 03-foundation, 05, 09, own storage gate | M |
+| Media extension | [13 Gateway media jobs](tasks/13-media-jobs.md) | 04, 07, 09, 12, own media gate | M |
+| Client extensions | [14 TypeScript and UI extensions](tasks/14-client-extensions.md) | 09, 10, 12, 13 | L; bounded substeps |
+| Full integration | [15 CLI/demo/template integration](tasks/15-product-integration.md) | 06, 11, 14 | L; bounded substeps |
+| Verification | [16 Cross-layer outcomes](tasks/16-outcome-validation.md) | 10–15 | L |
+| Handoff | [17 Documentation and independent gate](tasks/17-docs-audit.md) | 15, 16 | M |
+
+Tasks 01–09 form the first complete vertical slice, independent of media/storage/graph service access. It proves an authenticated text turn, scoped recall, one backend tool, reconnect, immediate next-turn continuity and durable ingestion. Full media/vector/graph scope follows the same foundation. TypeScript/UI substeps may parallelize once the shared contract is stable; serialize overlapping provider/demo/CLI/mirror work and preserve unrelated local work. The handoff branch excludes the dirty local source work from other sessions.
+
+03 dependency edges in this table denote **03-foundation**, independently reviewed after exhaustive currentguard live qualification. Full03-final remains required for17 and is aggregated with16 outcomes. The row-level functional restoration map and exact prerequisites are in [authorization sequencing](qa/resume-dependency-refinement-c2/plan.md). No original acceptance criterion is removed; typed unavailability certifies safety only.
+
+## Open Gates and Definition of Done
+
+Task 01 qualifies core text eligibility, cross-component transaction/finalization semantics, AI SDK 7 UI/tools/reasoning/cancel contracts, interrupted execution and TypeScript UI transport. Tasks 10–13 independently qualify managed embedding profile matching, graph runtime/network, bounded private Convex file delivery and media availability at their entry gates; they cannot block Tasks 01–09. Unsupported features must produce a bounded contract revision; they cannot be silently omitted while claiming success.
+
+Completion requires all success criteria and task evidence, scoped module/quality/UI checks, observed live service outcomes and independent final audit. Use the profile's core modules rather than all workspace siblings. Fresh-install host business data/config must be preserved. Old Cortex deployment/data migrations, Python and external media storage are explicitly excluded by user instruction, overriding broader historical profile/plan obligations.
+
+On the reconciled main baseline, the basic template's `build` is offline TypeScript and `build:convex` separately deploys Convex; use offline TypeScript/Vitest for quality checks without deployment authorization. Chat-SDK template gets its own package checks and title/artifact/suggestions/browser outcomes; canonical quickstart checks alone do not qualify both templates.
+
+When implementation is explicitly requested, invoke feature-orchestrator, reuse this plan, reread current Git status/manifests and run its independent goal judge before Task 01. No application tests, package installation, codegen, paid inference or deployment were performed during planning. This document does not activate the separate goal API.
+# Task 04: Per-function model policy and admission budgets
+
+**Status:** Execution authorized — pending prerequisite implementation and independent acceptance.
+**Goal:** [Cortex-owned backend runs](../goal.md)
+**Depends on:** [01 Stack and execution-boundary qualification](01-qualification.md), [03 authorization foundation](03-authorization.md#authorization-execution-gates)
+
+This execution prerequisite means independently accepted **03-foundation**, not full03-final. All original Task03 functional criteria remain required at their mapped implementation gates and03-final before Task17. See [accepted sequencing contract](../qa/resume-dependency-refinement-c2/plan.md).
+
+## Objective
+
+Resolve and enforce versioned operation/model/capability and cost policy for every billable call.
+
+## Requirements
+
+- [ ] Register operation keys for chat, extraction, conflict, summaries/titles, memory/query embeddings, text/code/sheet/suggestions and image/video generation.
+- [ ] Resolve deployment/tenant/agent/operation policy with trusted overrides; pin model/interface/prompt versions and validate options, token limits and tools.
+- [ ] Atomically reserve run/tenant operation budget and concurrency; settle known usage once, retain uncertain paid outcomes conservatively; explicit safe fallbacks only.
+
+## Acceptance Criteria
+
+- [ ] Distinct function policies select different allowed models with correlated audit receipts; no hidden direct provider call bypasses policy.
+- [ ] Concurrent submissions and child/secondary calls cannot bypass reservation or settle twice; exhausted quotas fail before token mint.
+- [ ] Fallback never repeats visible output, tools or ambiguous paid jobs, and never changes an embedding profile.
+
+## Context and Research
+
+[Architecture and primary evidence](../../../_research/convex-ai-gateway-2026-10-02/architecture.md), Architecture §6. Treat proposed contracts as designs; published metadata does not establish live compatibility. Keep Decisions, Python, legacy-Cortex migration tooling and external media storage excluded; preserve unrelated host application data during new installation.
+
+**Likely areas:** src/config.ts; backend policy/admission/usage schema and helpers; provider secondary-call integrations.
+
+## Validation and Execution Notes
+
+Concurrency/outcome fixtures with controlled failure injection; actual model/interface evidence in Task 14. Gateway deployment kill switch is not the application quota.
+
+No implementation, installation, paid inference, deployment or application testing is authorized by this task's presence. Re-read target AGENTS.md, Git status and manifests at execution. Use explicit working directories, preserve local work and record meaningful outcomes under this goal's qa/ directory.
+# Architecture decision gates: user alignment revision
+
+**Date:** 2026-10-02 (America/Los_Angeles)
+**Phase:** Planning only. This register governs over earlier broader requirements.
+**Authority:** User's responses to the architecture summary and decision questions, including clean-slate embeddings and alignment on the remaining defaults. This records approved direction, not a claim that they reviewed every Markdown implementation detail.
+**Architecture:** [Current proposal](architecture.md)
+**Plan:** [Current goal](../../_goals/convex-backend-runtime-2026-10-02/goal.md)
+
+## Confirmed scope
+
+| Gate | Aligned direction |
+|---|---|
+| Holistic architecture | Cortex/Convex owns ordinary model/tool/context/run orchestration; app submits input and observes output. Compose Agent, Workflow and Gateway. |
+| Transcript authority | One authoritative transcript. Direct endpoint access remains possible through authorized Cortex APIs; it does not introduce a second canonical history. |
+| Transcript openness | Administrator-controlled write lock/policy, locked by default for managed conversations. Unlocking never disables authentication, tenant isolation or billable-operation controls. The user explicitly selected revision tracking and stale-memory detection for unlocked writes. |
+| Asynchronous memory | Durable input immediately; context snapshot plus indexed memory and eligible pending transcript tail; response and memory stages have separate status. |
+| Decisions | Jev/future Decisions APIs are excluded until after stability. |
+| Media | Gateway generation feeds retained Cortex artifacts; image/video support stays in scope. |
+| Media storage/delivery | Convex storage only; supported private delivery stays within a Cortex cap of 20,000,000 bytes per asset/response. No external media storage adapters, R2 or large-video delivery work. |
+| Future image memory | Preserve artifact/source references and analysis version seams; no image understanding, captions/OCR or multimodal embedding implementation now. |
+| Model controls | Versioned per-function backend selection, native interface/capability controls, allowlists, budgets, safe fallback and audit remain pillars. |
+| Existing-data migrations | No old-architecture transcript import, ownership adoption/quarantine, embedding backfill/cutover/rollback, existing-Cortex deployment upgrades or compatibility bridge. Fresh-install target. |
+| Embedding architecture | Clean-slate source, chunk and derived-vector design. Choose profiles, dimensions and indexes for the new runtime without retaining previous embedding architecture. Query/index model matching is inherent retrieval correctness; legacy formats, conversion and upgrade paths impose no constraints. |
+| Public API/default | Primary runs facade and AI SDK 7 remote UI integration; Gateway preferred for eligible new installs and explicit unavailable capability errors. |
+| Python | Deprecated by user instruction; no implementation, parity, observation transport, examples or Python QA in this goal. |
+| Authorization | Verified identity/trusted grants across all reachable APIs, including direct writes; background revocation/deletion and source tombstones remain required. |
+| Host installation | New Cortex installation must preserve unrelated host business tables, auth/routes/functions/settings. This is ordinary safe host integration, not a legacy Cortex migration promise. |
+
+Reconciled baseline refresh (2026-10-03): #130/#131 are merged, remote dev is `3341d64ddc06f1de26ed525312ef2c1b89b16952`, and current main is its ancestor. Python is archived under `_DEPRECATED/`; root active manifests require Node >=24.15.0 and npm 12.2.0. Canonical documentation is in the sibling website repository, not `Documentation/`. The feature handoff excludes unrelated dirty source work in the original desktop checkout.
+
+## Confirmed runtime defaults
+
+The user's “Otherwise, aligned!” confirms the remaining defaults below. Embeddings follow the separate clean-slate instruction; the previous populated-space pinning/reindex question is superseded. No product decision question remains pending in this register.
+
+1. **Unlocked transcript consistency:** Tracked writes to the same canonical store: revisions, actor/source metadata, invalidation of affected derived memory and explicit pending state. The user selected that bookkeeping; raw writes without consistency tracking are not the supported unlock contract. Direct storage mutation by a custom fork is inherently outside managed-runtime guarantees. A transcript unlock is not an authorization bypass.
+2. **Default memory freshness:** Indexed memory plus deduplicated authorized pending events for ordinary chat, with a scoped cutoff watermark and bounded context. Fully indexed mode is an explicit operation/agent override when structured/index-backed completeness is required. If the required tail cannot fit or cannot be read, wait for required stages or return incomplete context; do not claim completeness by truncation.
+3. **Conversation concurrency:** Serialize/queue mutating runs within a conversation. Explicit forks/new conversations can run concurrently. In unlocked mode, an edit concurrent with a run requires revision detection: reject/cancel/branch stale completion rather than silently attach it to a changed history. Exact low-level mechanics are a qualification gate.
+4. **Memory source policy:** User assertions and verified tool results are eligible evidence; assistant output is attributed and cannot automatically become an authoritative user assertion. Manual developer writes retain explicit source role/trust and scope.
+5. **Tool execution/approval:** Deployed backend tools/connectors; approval only for configured consequential operations. Browser/device tools and arbitrary caller closures are outside the ordinary backend-only path.
+6. **Retry/cancel semantics:** Local deduplication and controlled retries; no blind replay of ambiguous paid calls/external effects. Cancellation stops future permitted work where possible, without promising upstream cost/effect reversal.
+7. **Oversized media outcome:** Enforce the 20,000,000-byte cap on uploads, completed outputs and HTTP delivery. Prefer bounded model options, but size cannot always be predicted. Oversized generated output fails materialization with a typed error and cleanup; generation may already have been charged. No external-storage fallback.
+8. **Clean-slate embeddings:** Separate logical source content/chunks from profile-specific derived vectors. Profile identity includes the selected model, dimensions and preprocessing contract. Declare supported index configurations for the new design; pin the resolved profile to each query/job and retrieve only matching, current, authorized vectors. Previous models, dimensions and schema layouts impose no compatibility requirements. Future profiles can have separate derived generations; no old-corpus conversion or general reindex orchestration is added to this goal.
+
+Product direction and defaults are aligned. Exact contracts and technical qualification of component transactions, streams/tools, embedding/index configurations, graph runtime/network and media availability remain later execution work. Planning alignment does not authorize implementation.
+
+## Indexed memory versus fully indexed state
+
+Index use and waiting for all relevant indexing are different decisions. Ordinary runs still use existing indexed memory. The pending tail supplies recent evidence that has been stored durably but has not completed extraction, embedding or graph projection. This is processing lag, not absence of the source message from storage.
+
+Convex documents immediate vector-search visibility once a vector is written. The barrier therefore waits for the relevant Cortex processing receipts/commits, not an assumed eventual vector-index refresh. [Vector search](https://docs.convex.dev/search/vector-search).
+
+“Fully indexed” means the selected eligible sources have completed the stages required by that operation as of a captured cutoff watermark. It does not mean every future event in a busy space must finish, every memory must fit in context, or recall/extraction is infallible.
+
+| Example job | Required behavior |
+|---|---|
+| “My favorite color is purple” → immediate follow-up | Ordinary indexed recall plus recent authoritative message tail; no wait for extraction/vector work. |
+| Continue revising a draft after a just-completed turn | Recent typed transcript and current artifact version can be read directly; no global indexing barrier. |
+| Normal question about established project knowledge | Retrieve already indexed memory and authorized relevant pending context; ordinary mode suffices unless caller requires complete coverage. |
+| Return exact structured current facts changed by a recent message | Wait for extraction/conflict commits through the relevant fact watermark; free-form tail text cannot substitute for an exact normalized facts query. |
+| Semantic search that must include every newly submitted source in a batch | Wait for those sources' embedding/index stages. A small tail can be examined manually, but cannot guarantee complete semantic coverage of a large batch. |
+| Exhaustive cross-conversation summary through a stated time | Require bounded relevant corpus coverage through a cutoff, or an explicit incomplete result. A local conversation tail alone is insufficient. |
+| Graph query over relationships just extracted | Wait for relevant graph projection, not merely fact/vector stages. |
+| Display final response, run state or a ready artifact | Read authoritative run/transcript/artifact records directly; no semantic-memory barrier required. |
+
+Authorization and deletion checks always use trusted current control records. They never wait on, or accept substitutes from, LLM-derived semantic memory.
+
+## Transcript lock design
+
+Reads remain available subject to scope/access policy. The lock governs mutation of runtime-managed history, not ordinary authenticated read access. `conversations.append/edit/delete` would target the same authoritative store via backend adapters. Agent supports manual message save/delete and configurable automatic storage; exact edit/version mechanics must be qualified. [Agent messages](https://docs.convex.dev/agents/messages).
+
+For tracked unlocked writes, proposed bookkeeping is message/source revision, actor, history revision, affected ingestion invalidation and repair status. Cached facts/vectors based on the old source are excluded/marked stale until repaired according to memory policy. Tool-call/result ordering and active-run revisions need validation. Custom forks may bypass managed bookkeeping at their own responsibility; the supported unlock policy retains it and never labels stale derived state complete.
+
+## Future image-memory seam
+
+Keep stable artifact IDs/version IDs/content checksums, MIME/type metadata, authorized source references and lineage from any future analysis to the exact asset version and analysis model. A later processor can create captions/OCR/visual embeddings as separate derived records and feed artifact references into recall. No current generic text vector is labeled a visual embedding, and the image bytes are not embedded in transcript/stream documents.
+
+## Removed obligations
+
+Remove Python APIs/tests/docs from Tasks 01/09/14/16/17, historical ownership adoption/import from Tasks 03/05, old-generation vector migration/rollback from Task 10, external media delivery from Task 12, and legacy existing-Cortex upgrades from Tasks 06/15. Keep host-preservation fixtures for new installation in a host app. Earlier review PASS applies only to the previous scope and is superseded; independent goal review precedes implementation.
+
+No implementation, dependency install, paid inference, application tests, deployment, commits or publication occurred during this alignment revision.
+import pathlib,hashlib,json,datetime,subprocess,sys
+r=pathlib.Path('/workspace/Project-Cortex'); q=r/'_goals/convex-backend-runtime-2026-10-02/qa/task04-supported-money-source-design-c1'
+tag=sys.argv[1]; files=json.loads(sys.argv[2]); argv=sys.argv[3:]
+def capture(phase):
+ out={}
+ for f in files:
+  p=r/f; b=p.read_bytes(); out[f]={'sha256':hashlib.sha256(b).hexdigest(),'bytes':len(b)}
+  if phase=='pre':
+   d=q/'preimages'/f; d.parent.mkdir(parents=True,exist_ok=True); d.write_bytes(b)
+ (q/(tag+'-'+phase+'.json')).write_text(json.dumps({'utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'files':out},indent=2)+'\n')
+capture('pre'); start=datetime.datetime.now(datetime.timezone.utc).isoformat(); x=subprocess.run(argv,cwd=r,capture_output=True); (q/(tag+'.stdout')).write_bytes(x.stdout); (q/(tag+'.stderr')).write_bytes(x.stderr); (q/(tag+'-receipt.json')).write_text(json.dumps({'argv':argv,'cwd':str(r),'startUtc':start,'endUtc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'exit':x.returncode},indent=2)+'\n'); capture('post'); print(x.stdout.decode()); print(x.stderr.decode(),file=sys.stderr); sys.exit(x.returncode)
+from pathlib import Path
+import json,hashlib
+r=Path('/workspace/Project-Cortex'); q=r/'_goals/convex-backend-runtime-2026-10-02/qa/task04-supported-money-source-design-c1'
+doc=r/'_goals/convex-backend-runtime-2026-10-02/qa/task04-money-source-candidate-c1/official-doc-response'
+gen=r/'node_modules/@ai-sdk/gateway/src/gateway-generation-info.ts'
+assert hashlib.sha256(doc.read_bytes()).hexdigest()=='ef607898f92882f45636250be07f3298915b4feea73dea9df38154c96d2bee23'
+assert hashlib.sha256(gen.read_bytes()).hexdigest()=='af9d77a6b0c9cda77d798a4e3f4ea931ef823ba1c672d637532a4eac2468f802'
+assert 'successful attempt of each stage carries its own' in doc.read_text()
+convex=(r/'node_modules/@convex-dev/ai-sdk-provider/src/index.ts').read_text()
+runner=(r/'_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture/convex/runner.ts').read_text()
+assert 'https://ai-gateway.convex.dev' in convex and 'getServiceToken("ai-gateway")' in convex
+assert 'getGenerationInfo' not in convex and 'getGenerationInfo' not in runner
+assert 'const model=convexGateway(c.modelId)' in runner
+assert 'const model=convexGateway.embeddingModel(c.modelId)' in runner
+cases=['one-success-cost','zero-cost','early-generation-id','final-stop','embedding-success','fallback-success','failed-attempt-unlisted','cache-zero-token','local-cancel','local-reject','lookup-404','late-after1000','model-drift','surcharge-unlisted','hash-only-category-proof']
+def diagnostic(gap,k):
+ return {'money':'UNKNOWN','liability':k,'stop':True,'categories':[],'positiveAdmission':False,'missingContract':gap}
+for gap in cases:
+ for k in [0,314310,12000000]:
+  outcome=diagnostic(gap,k)
+  assert outcome['money']=='UNKNOWN' and outcome['liability']==k
+  assert outcome['stop'] and outcome['categories']==[] and not outcome['positiveAdmission']
+# Diagnostic is not a source extraction implementation; unsupported positives remain absent.
+checks=[]
+for pre in sorted(q.glob('*-pre.json')):
+ post=q/(pre.name[:-9]+'-post.json')
+ if post.exists():
+  before=json.loads(pre.read_text())['files']; after=json.loads(post.read_text())['files']
+  assert before==after,(pre.name,'source drift')
+  checks.append({'command':pre.name[:-9],'sourceCount':len(before),'unchanged':True})
+result={'status':'PASS','kind':'DUMMY failclosed diagnostic and exact source pin checks','positiveWholeInvocationQualification':False,'unsupportedAttractiveInputs':len(cases),'liabilityControls':len(cases)*3,'sourceCommands':checks,'currentDomain':'EMPTY','missingServiceContract':True}
+(q/'verification.json').write_text(json.dumps(result,indent=2)+'\n')
+print(json.dumps(result,indent=2))
+from pathlib import Path
+import hashlib,json,datetime,sys
+r=Path('/workspace/Project-Cortex'); q=r/'_goals/convex-backend-runtime-2026-10-02/qa/task04-supported-money-source-design-c1'; w=r/'work/resume/task04-supported-money-source-design-c1'
+now=lambda:datetime.datetime.now(datetime.timezone.utc).isoformat()
+start=now(); pre={}
+for p in [Path(__file__),w/'capture.py',q/'report.md',w/'dummy-controls.py']:
+ b=p.read_bytes(); rel=str(p.relative_to(r)); pre[rel]={'sha256':hashlib.sha256(b).hexdigest(),'bytes':len(b)}
+ d=q/'final-preimages'/rel; d.parent.mkdir(parents=True,exist_ok=True); d.write_bytes(b)
+(q/'final-source-pre.json').write_text(json.dumps({'utc':start,'files':pre},indent=2)+'\n')
+checks=[]
+for p in q.glob('*-pre.json'):
+ if p.name=='final-source-pre.json': continue
+ after=q/(p.name[:-9]+'-post.json')
+ if after.exists():
+  a=json.loads(p.read_text())['files']; b=json.loads(after.read_text())['files']; assert a==b
+  for name,v in a.items():
+   current=r/name
+   assert current.is_file() and hashlib.sha256(current.read_bytes()).hexdigest()==v['sha256'],name
+  checks.append(p.name)
+post={name:{'sha256':hashlib.sha256((r/name).read_bytes()).hexdigest(),'bytes':(r/name).stat().st_size} for name in pre}
+assert post==pre
+(q/'final-source-post.json').write_text(json.dumps({'utc':now(),'files':post},indent=2)+'\n')
+result={'status':'PASS','sourceCommandComparisons':len(checks),'currentSourcePinsUnchanged':True,'actualMoneyDomain':'EMPTY','qualification':False}
+(q/'final-seal.stdout').write_text(json.dumps(result,indent=2)+'\n'); (q/'final-seal.stderr').write_text('')
+(q/'final-seal-receipt.json').write_text(json.dumps({'argv':sys.argv,'cwd':str(r),'startUtc':start,'endUtc':now(),'exit':0},indent=2)+'\n')
+for root,name in [(q,'qa-seal.json'),(w,'scratch-seal.json')]:
+ files=[]
+ for p in sorted(root.rglob('*')):
+  if p.is_file() and p!=root/name:
+   b=p.read_bytes(); files.append({'path':str(p.relative_to(root)),'sha256':hashlib.sha256(b).hexdigest(),'bytes':len(b)})
+ (root/name).write_text(json.dumps({'version':1,'utc':now(),'root':str(root),'excludedExactSelf':name,'recursiveIncludingNestedPreimages':True,'fileCount':len(files),'files':files},indent=2)+'\n')
+print(json.dumps(result))

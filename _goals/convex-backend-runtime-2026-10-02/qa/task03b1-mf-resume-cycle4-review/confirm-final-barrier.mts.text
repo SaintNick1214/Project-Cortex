@@ -1,0 +1,31 @@
+import assert from 'node:assert/strict';
+import {isDeepStrictEqual} from 'node:util';
+import {harness} from '/workspace/Project-Cortex/work/resume/mf/candidate/tests/unit/runtimeEndpointAuth/sharedfixtures.ts';
+import * as memories from '/workspace/Project-Cortex/work/resume/mf/candidate/convex-dev/memories.ts';
+import * as facts from '/workspace/Project-Cortex/work/resume/mf/candidate/convex-dev/facts.ts';
+import {semanticHash} from '/workspace/Project-Cortex/work/resume/mf/candidate/src/domain/profile.ts';
+const results:any[]=[];
+for(const kind of ['memories','facts'])for(const path of ['list','internal'])for(const mode of ['none','early-source-replacement','final-source-replacement','final-source-tombstone']){
+ const h=harness();const a=await h.provisionScope();
+ await h.db.insert('conversations',{tenantId:a.tenantId,memorySpaceId:a.memorySpaceId,ownerPrincipalId:a.principalId,conversationId:'canon',messages:[{id:'anchor'}]});
+ const id=await h.seedData(kind as any,a,'first',kind==='memories'?{conversationRef:{conversationId:'canon',messageIds:['anchor']}}:{sourceRef:{conversationId:'canon',messageIds:['anchor']}});
+ await h.seedData(kind as any,a,'second');const source=h.db.rows.get('runtimeMemorySources')![0];
+ const content='Valid canonical replacement while final linked reload awaits';const contentHash=await semanticHash(content);
+ const sourceId=(source.lineage as any).sourceId;
+ const before=structuredClone(h.db.rows);const query=h.db.query.bind(h.db);const digest=crypto.subtle.digest;
+ let injected=false,hashes=0,hashesAtInjection=-1,sourceReloads=0,injectionStack='';
+ crypto.subtle.digest=async(algorithm,data)=>{hashes++;return await digest.call(crypto.subtle,algorithm,data)};
+ h.db.query=table=>{const q=query(table);const unique=q.unique.bind(q);const collect=q.collect.bind(q);
+ q.unique=async()=>{const row=await unique();if(table==='runtimeMemorySources'&&new Error().stack?.includes('finalizeDataRead'))sourceReloads++;return row;};
+ q.collect=async()=>{const rows=await collect();const stack=new Error().stack??'';
+ if(table==='conversations'&&!injected&&mode!=='none'&&((mode.startsWith('final')&&stack.includes('finalizeDataRead')&&sourceReloads>0)||(mode.startsWith('early')&&!stack.includes('finalizeDataRead')))){
+ injected=true;hashesAtInjection=hashes;injectionStack=stack;
+ if(mode==='final-source-tombstone')await h.db.insert('runtimeAuthTombstones',{tenantId:a.tenantId,memorySpaceId:a.memorySpaceId,resourceType:'source',resourceId:sourceId,deletedAt:Date.now()});
+ else await h.db.patch(source._id,{content,contentHash});
+ }return rows;};return q;};
+ let actual:any;try{actual={success:true,result:await h.invoke(path==='list'?(kind==='memories'?memories.list:facts.list):(kind==='memories'?memories.fetchMemoriesByIds:facts.fetchFactsByIds),{memorySpaceId:'space-a',reference:a,ids:[id]})};}catch(e:any){actual={success:false,data:e.data};}finally{crypto.subtle.digest=digest;}
+ const rolledBack=isDeepStrictEqual(before,h.db.rows);const expectedSuccess=mode==='none';const matched=(mode==='none'||injected)&&actual.success===expectedSuccess&&(expectedSuccess?actual.result.length===(path==='list'?2:1):rolledBack&&['STALE_SOURCE','FORBIDDEN'].includes(actual.data?.code));
+ results.push({kind,path,mode,injected,sourceReloads,hashes,hashesAtInjection,noFurtherDigest:hashes===hashesAtInjection,rolledBack,matched,injectionStack,...actual});
+}
+const summary={total:results.length,matched:results.filter(x=>x.matched).length,failed:results.filter(x=>!x.matched).map(x=>`${x.kind}-${x.path}-${x.mode}`)};
+console.log(JSON.stringify({summary,results},null,2));assert.equal(summary.failed.length,0);

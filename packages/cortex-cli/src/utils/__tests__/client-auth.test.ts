@@ -6,6 +6,7 @@ import {
   beforeEach,
   afterEach,
 } from "@jest/globals";
+import { makeFunctionReference } from "convex/server";
 import type { CLIConfig } from "../../types.js";
 const instances: Array<{
   close: ReturnType<typeof jest.fn>;
@@ -30,12 +31,13 @@ const constructor = jest.fn(
     return {
       shutdown: async () => { await transport.close(); }, close: () => transport.close(),
       getClient: () => (capability ? { setAdminAuth: admin } : {}),
-      memorySpaces: { list: (args: {limit: number}) => transport.query(undefined, args) },
+      memorySpaces: { list: (args: {limit: number}) => transport.query(makeFunctionReference("memorySpaces:list"), args) },
     };
   },
 );
 jest.unstable_mockModule("convex/browser", () => ({ ConvexHttpClient: jest.fn(() => ({
   ...(capability ? {setAdminAuth: instances.at(-1)!.admin} : {}),
+  function: (_ref: unknown, _componentPath: undefined, args: {limit: number}) => operation(args),
   query: (_ref: unknown, args: {limit: number}) => operation(args),
   mutation: jest.fn(), action: jest.fn(),
 })) }));

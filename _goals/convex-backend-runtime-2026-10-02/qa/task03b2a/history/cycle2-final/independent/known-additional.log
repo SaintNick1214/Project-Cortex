@@ -1,0 +1,126 @@
+[
+  {
+    "name": "expiry-late-touch",
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"FORBIDDEN\",\"message\":\"Access denied\"}",
+    "grantGets": 4,
+    "current": 10101,
+    "writes": 0,
+    "row": {
+      "tenantId": "tenant-a",
+      "ownerPrincipalId": "runtimeAuthPrincipals:1",
+      "sessionId": "one",
+      "userId": "alice",
+      "authorityReference": {
+        "principalId": "runtimeAuthPrincipals:1",
+        "principalVersion": 1,
+        "membershipId": "runtimeAuthMemberships:2",
+        "membershipVersion": 1,
+        "grantId": "runtimeAuthGrants:4",
+        "grantVersion": 1,
+        "tenantId": "tenant-a",
+        "tenantEpoch": 1
+      },
+      "status": "idle",
+      "startedAt": 1000,
+      "lastActiveAt": 1000,
+      "messageCount": 0,
+      "memoryCount": 0,
+      "expiresAt": 10100,
+      "_id": "sessions:5",
+      "_creationTime": 1000
+    }
+  },
+  {
+    "name": "expiry-late-message-counter",
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"FORBIDDEN\",\"message\":\"Access denied\"}",
+    "grantGets": 8,
+    "current": 10101,
+    "writes": 0,
+    "row": {
+      "tenantId": "tenant-a",
+      "ownerPrincipalId": "runtimeAuthPrincipals:1",
+      "sessionId": "one",
+      "userId": "alice",
+      "authorityReference": {
+        "principalId": "runtimeAuthPrincipals:1",
+        "principalVersion": 1,
+        "membershipId": "runtimeAuthMemberships:2",
+        "membershipVersion": 1,
+        "grantId": "runtimeAuthGrants:4",
+        "grantVersion": 1,
+        "tenantId": "tenant-a",
+        "tenantEpoch": 1
+      },
+      "status": "idle",
+      "startedAt": 1000,
+      "lastActiveAt": 1000,
+      "messageCount": 0,
+      "memoryCount": 0,
+      "expiresAt": 10100,
+      "_id": "sessions:5",
+      "_creationTime": 1000
+    }
+  },
+  {
+    "name": "expiry-late-memory-counter",
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"FORBIDDEN\",\"message\":\"Access denied\"}",
+    "grantGets": 8,
+    "current": 10101,
+    "writes": 0,
+    "row": {
+      "tenantId": "tenant-a",
+      "ownerPrincipalId": "runtimeAuthPrincipals:1",
+      "sessionId": "one",
+      "userId": "alice",
+      "authorityReference": {
+        "principalId": "runtimeAuthPrincipals:1",
+        "principalVersion": 1,
+        "membershipId": "runtimeAuthMemberships:2",
+        "membershipVersion": 1,
+        "grantId": "runtimeAuthGrants:4",
+        "grantVersion": 1,
+        "tenantId": "tenant-a",
+        "tenantEpoch": 1
+      },
+      "status": "idle",
+      "startedAt": 1000,
+      "lastActiveAt": 1000,
+      "messageCount": 0,
+      "memoryCount": 0,
+      "expiresAt": 10100,
+      "_id": "sessions:5",
+      "_creationTime": 1000
+    }
+  },
+  {
+    "name": "malformed-owner-reference-counter",
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"FORBIDDEN\",\"message\":\"Access denied\"}"
+  },
+  {
+    "name": "malformed-owner-reference-expire",
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"FORBIDDEN\",\"message\":\"Access denied\"}"
+  },
+  {
+    "name": "immutable-filtered-foreign-key-duplicate",
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"FORBIDDEN\",\"message\":\"Access denied\"}",
+    "writes": 0
+  },
+  {
+    "name": "mutable-filtered-foreign-key-duplicate",
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"FORBIDDEN\",\"message\":\"Access denied\"}",
+    "writes": 0
+  },
+  {
+    "name": "sessions-filtered-foreign-key-duplicate",
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"FORBIDDEN\",\"message\":\"Access denied\"}",
+    "writes": 0
+  }
+]

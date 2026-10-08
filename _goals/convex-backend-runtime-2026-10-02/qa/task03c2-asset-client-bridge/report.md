@@ -1,0 +1,13 @@
+# Task03C2 asset client capability safety bridge
+
+Status: implemented and frozen; all offline checks PASS; fresh independent review pending. This is safety-only unavailability, not functional Task12/14 asset acceptance or full Task03.
+
+Four existing methods now uniformly reject exported browser-safe AssetCapabilityUnavailableError(version1, codeCAPABILITY_UNAVAILABLE, retryablefalse, outcomenot_dispatched): ArtifactsAPI.uploadFile/getFileUrl and AttachmentsAPI.generateUploadUrl/getUrl. Rejection precedes validation, input/file/blob/metadata/identity inspection, resilience, query/mutation/action/fetch, URL delivery, storage effects and version success. There are no internal references/casts/makeFunctionReference, URLs, null successes or uploaded-file/version substitutes. Diagnostics contain only fixed public fields and message, no caller IDs, metadata, file or private transport errors.
+
+The original artifact/attachment/root files and four complete method signatures were frozen before edits under prior/. preservation.json verifies signatures unchanged and all other artifact/attachment bytes unchanged after masking only those four JSDoc/method regions and their single shared-error import. src/index.ts adds only the shared error export relative to its prior snapshot. The four JSDoc contracts now state staged capability absence and future bounded authenticated Convex delivery; no signed-expiry claim is made there. Other neighboring method bodies are unchanged.
+
+Observed final root noEmit, lint-config noEmit, scoped ESLint --max-warnings0, npm12.2 ESM/CJS/DTS build and standard packed/browser contracts all exit0.21 native focused outcomes pass,0 failed/skipped, across absent/disabled/enabled resilience: actual four methods, fixed serialized errors, zero transport/resilience/fetch/file/blob/identity getters, an actual unread Blob, empty-ID uniform absence and unchanged neighboring get transport/scope. The browser error leaf has1input/0runtimeimports; built ESM/CJS export diagnostics also pass. Clients are disabled and queries mocked; no network/service/model/cleanup/deploy/commit operations occurred.
+
+Earlier checks surfaced an unrelated backend test generic and pre-existing inferred-any attachment get warning; both were repaired by their separate owner without modifying this executor's preserved neighbor bytes. earlier-checks/ retains those nonpassing observations. Final source/readiness claims use only raw/ and commands.json.
+
+Future Task12/14 must qualify owned storage/catalog/lineage, uploads and private credentialed bounded Convex byte delivery. This bridge intentionally does not implement those pending features, asset cap enforcement, callbacks, shared-owner cleanup or actual live byte authorization.

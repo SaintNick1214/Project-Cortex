@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/workspace/Project-Cortex/work/resume/task04-metadata-retention-implementation-c1-fresh-review/audit.py", line 29, in <module>
+    d=json.loads(p.read_text());tag=p.name[:-len('-receipt.json')];assert sha((B/(tag+'.stdout')).read_bytes())==v['controls'][tag]['stdoutSha256'];assert sha((B/(tag+'.stderr')).read_bytes())==v['controls'][tag]['stderrSha256'];assert d['exit']==v['controls'][tag]['exit']
+                                                                                                                 ~~~~~~~~~~~~~^^^^^
+KeyError: 'preserve-freeze-first-failure'

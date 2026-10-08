@@ -10,7 +10,9 @@ import {
 } from "./template-backend.js";
 
 export const BACKEND_MANIFEST = ".cortex/backend.json";
-export const SDK_VERSION = "0.37.0";
+export const SDK_VERSION = "0.38.0";
+// Reviewed current runtime admin helpers; registrations still require the strict grammar.
+const SDK_ADMIN_RUNTIME_SOURCE_HASH = "8b2eb63eaf6ff4fc41cdb64085840ad70f49bf377f394afd194f7ab08d450345";
 export interface BackendOwnership {
   format: 1;
   sdk: { name: "@cortexmemory/sdk"; version: string; sourceHash: string };
@@ -239,6 +241,9 @@ function validateAdminRegistrations(source: string): void {
           "e99cb954e5f805feb42e5f19e43f9b9eeb312263de1b3a3b42aba92f66b9ee6c"
       )
         fail();
+    } else if (origin === "./runtimeWorkerAuth") {
+      const approved = ["assertMaintenanceTable", "assertDeletionSupported", "boundedInteger", "deleteMaintenanceRecord", "maintenanceTable"];
+      if (names.length !== approved.length || names.some((name, index) => name !== approved[index]) || hashBytes(source) !== SDK_ADMIN_RUNTIME_SOURCE_HASH) fail();
     } else fail();
     expect(";");
   }

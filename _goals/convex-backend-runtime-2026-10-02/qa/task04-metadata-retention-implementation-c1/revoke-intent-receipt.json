@@ -1,0 +1,11 @@
+{
+  "argv": [
+    "python3",
+    "-c",
+    "from pathlib import Path;print(\"\\n\".join(s for s in Path(\"_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c1/fixture/checks/lifecycle.mjs\").read_text().splitlines() if \"revoke-intent\" in s))"
+  ],
+  "cwd": "/workspace/Project-Cortex",
+  "startUtc": "2026-10-04T14:30:25.037180+00:00",
+  "endUtc": "2026-10-04T14:30:25.062259+00:00",
+  "exit": 0
+}

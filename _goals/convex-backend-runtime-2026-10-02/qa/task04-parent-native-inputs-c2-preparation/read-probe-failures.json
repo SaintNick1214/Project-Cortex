@@ -1,0 +1,23 @@
+{
+  "probes": [
+    {
+      "argv": [
+        "cat",
+        "work/resume/task04-parent-native-inputs-review/check.mjs"
+      ],
+      "exit": 1,
+      "outcome": "NOT_FOUND; actual source located as review.mjs and read; preserved tool transcript"
+    },
+    {
+      "argv": [
+        "rg",
+        "-n",
+        "owned-created|created.*table",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c4/scripts/owned-rows.mjs"
+      ],
+      "exit": 2,
+      "outcome": "NOT_FOUND; actual producer located ownership.mjs and read; preserved tool transcript"
+    }
+  ],
+  "impact": "read-only discovery failures; no setup/native actions; no test outcome erased"
+}

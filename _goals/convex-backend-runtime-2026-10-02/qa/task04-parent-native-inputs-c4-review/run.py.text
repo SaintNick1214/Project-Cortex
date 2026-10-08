@@ -1,0 +1,9 @@
+import subprocess,datetime,json,pathlib,hashlib,os
+repo=pathlib.Path.cwd();out=repo/'_goals/convex-backend-runtime-2026-10-02/qa/task04-parent-native-inputs-c4-review';env=os.environ.copy();env['PATH']=str(repo/'work/resume/toolchain-bin')+':'+env['PATH']
+commands=[['node','--version'],['npm','--version'],['node','--check','work/resume/task04-native-c6-parent-inputs.mjs'],['node','--check','work/resume/task04-native-current-inputs-c4.mjs'],['node','--experimental-vm-modules','work/resume/task04-parent-native-inputs-c4-review-independent/independent.mjs']]
+results=[]
+for i,argv in enumerate(commands):
+ start=datetime.datetime.now(datetime.timezone.utc).isoformat();p=subprocess.run(argv,cwd=repo,env=env,capture_output=True,timeout=120);(out/f'command-{i}-stdout.txt').write_bytes(p.stdout);(out/f'command-{i}-stderr.txt').write_bytes(p.stderr);results.append({'argv':argv,'cwd':str(repo),'startedAt':start,'finishedAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'exitCode':p.returncode});print(json.dumps(results[-1]),flush=True)
+ if p.returncode: break
+(out/'commands.json').write_text(json.dumps(results,indent=2)+'\n')
+pre=json.loads((out/'pre.json').read_text());post={p:{'sha256':hashlib.sha256((repo/p).read_bytes()).hexdigest(),'bytes':(repo/p).stat().st_size}for p in pre['files']};(out/'post.json').write_text(json.dumps({'utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'files':post,'unchanged':post==pre['files']},indent=2)+'\n');assert post==pre['files'];assert all(r['exitCode']==0 for r in results)

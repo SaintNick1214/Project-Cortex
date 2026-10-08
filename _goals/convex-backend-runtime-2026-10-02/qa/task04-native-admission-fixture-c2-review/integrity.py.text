@@ -1,0 +1,24 @@
+from pathlib import Path
+import json,hashlib
+r=Path('/workspace/Project-Cortex');c=r/'_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c2';q=c.parent/'task04-native-admission-fixture-c2-review'
+def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
+assert sha(c/'runtime-freeze.json')=='f5ee7dc86a258c2e5c49ccd8f3e6200b6d7b6390d190ce32909fc5a3aff2dfc9';assert sha(c/'qa-manifest.json')=='182f270af595de0a0d2f284728172a0028ec64aa2a23c63847660e35ea0cbd00'
+for packet in [c,c.parent/'task04-native-admission-fixture-c1']:
+ for name in ['runtime-freeze.json','qa-manifest.json']:
+  d=json.loads((packet/name).read_text())
+  for row in d['files']:assert sha(packet/row['path'])==row['sha256'],row['path']
+  print(packet.name,name,len(d['files']))
+inv=json.loads((c/'source-inventory.json').read_text());unequal=[]
+for row in inv['files']:
+ assert sha(r/row['source'])==row['sha256']
+ if (r/row['source']).read_bytes()!=(c/row['copy']).read_bytes():unequal.append(row['source'])
+assert unequal==['convex-dev/runtimeModelPolicyBootstrap.ts']
+for row in inv['acceptedGateHashes']:assert sha(r/row['path'])==row['sha256']
+assert (c/'scripts/cases.mjs').read_bytes()==(c.parent/'task04-native-admission-fixture-c1/scripts/cases.mjs').read_bytes()
+for p in (c/'fixture').rglob('*'):
+ if p.is_file():assert p.read_bytes()==(c.parent/'task04-native-admission-fixture-c1'/p.relative_to(c)).read_bytes()
+p=json.loads((c/'c1-provenance.json').read_text());assert sha(r/p['priorReviewPath'])==p['priorReviewSha256'];assert sha(c.parent/'task04-native-admission-fixture-c1/report.md')==p['priorReportSha256']
+i=json.loads((c/'registration-inventory.json').read_text());g=json.loads((c.parent/'task04-native-admission-fixture-c1/public-guard-inventory.json').read_text());assert sorted(x['path'] for x in g['publicPaths'])==sorted(x['path'] for x in i['registrations'] if x['visibility']=='public');assert len(g['publicPaths'])==200
+budget=json.loads((c/'cases.json').read_text())['budgets'];assert sum(budget['rpcComputation'].values())==2987;assert sum(budget['cumulativeRowComputation'].values())==783
+actual=sorted(str(p.relative_to(c)) for p in c.rglob('*') if p.is_file());manifest=json.loads((c/'qa-manifest.json').read_text());assert actual==sorted([x['path'] for x in manifest['files']]+['qa-manifest.json'])
+print(json.dumps({'sourceMappings':len(inv['files']),'soleDivergence':unequal,'acceptedGates':len(inv['acceptedGateHashes']),'registrations':len(i['registrations']),'public':200,'internal':81,'allManifestRows':235,'actualCandidateFiles':len(actual),'coreCasesUnchanged':True,'allFixtureBytesEqualC1':True,'rpcWorst':2987,'rowWorst':783}))

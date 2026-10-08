@@ -1,0 +1,17 @@
+/** Bounded offline actual process group checks; no target/client/signing. */
+import assert from 'node:assert/strict';
+import { readFileSync, rmSync } from 'node:fs';
+import { resolve } from 'node:path';
+import { randomUUID } from 'node:crypto';
+import { ProcessOwner } from './process-owner.mjs';
+import { linuxGroupMembers, terminal } from './process-terminal.mjs';
+import { repo, scratch, canonical } from './guard.mjs';
+canonical(scratch,repo);const owner=new ProcessOwner(),env={PATH:process.env.PATH};
+try{
+ const success=await owner.run(['-e','process.stdout.write("owned-offline")'],{cwd:repo,env},5000);assert.equal(success.code,0);assert.equal(success.stdout,'owned-offline');
+ const pidFile=resolve(scratch,'offline-process-'+randomUUID()+'.pid');
+ try{const code='const cp=require("node:child_process"),fs=require("node:fs");const child=cp.spawn(process.execPath,["-e","process.on(\"SIGTERM\",()=>{});setInterval(()=>{},1000)"],{stdio:"ignore"});fs.writeFileSync(process.env.OWNED_PIDFILE,String(child.pid),{mode:384,flag:"wx"});process.on("SIGTERM",()=>{});setInterval(()=>{},1000)';const timed=await owner.run(['-e',code],{cwd:repo,env:{...env,OWNED_PIDFILE:pidFile}},1000);assert.equal(timed.timedOut,true,JSON.stringify({code:timed.code,stderr:timed.stderr}));const pid=Number(readFileSync(canonical(pidFile,scratch,true)));assert.ok(Number.isSafeInteger(pid));try{const stat=readFileSync('/proc/'+pid+'/stat','utf8');assert.ok(['Z','X'].includes(stat.slice(stat.lastIndexOf(')')+2).split(' ')[0]));}catch(error){if(error.code!=='ENOENT')throw error;}}finally{rmSync(pidFile,{force:true});}
+ const overflow=await owner.run(['-e','process.stdout.write("x".repeat(300000))'],{cwd:repo,env},5000);assert.equal(overflow.overflow,true);assert.ok(Buffer.byteLength(overflow.stdout)<=256000);
+ assert.equal(terminal([{pid:1,state:'R'}]),false);assert.equal(terminal([{pid:1,state:'Z'}]),true);assert.throws(()=>linuxGroupMembers(process.pid,Date.now()-1));assert.equal(owner.records.size,0);assert.equal(owner.verifiedGroups,3);
+ console.log(JSON.stringify({scope:'OFFLINE_ACTUAL_OWNED_PROCESS_GROUPS',status:'PASS',processes:owner.spawned,verifiedGroups:owner.verifiedGroups,remainingGroups:0,timeoutUnknownIsFailure:true,serviceCalls:0,signatures:0}));
+}finally{await owner.reapAll();assert.equal(owner.records.size,0);}

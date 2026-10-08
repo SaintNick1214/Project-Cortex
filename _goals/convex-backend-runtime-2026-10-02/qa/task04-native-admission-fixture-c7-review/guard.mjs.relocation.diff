@@ -1,0 +1,13 @@
+--- /workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c7/scripts/guard.mjs
++++ /workspace/Project-Cortex/work/resume/task04-native-admission-fixture-c7-review/independent-c4421e44-de81-45e2-bdaa-f99d1fdf0640/scripts/guard.mjs
+@@ -3,8 +3,8 @@
+ import {fileURLToPath} from 'node:url';
+ import {createHash,randomUUID} from 'node:crypto';
+ import {parseEnv} from 'node:util';
+-export const root=resolve(dirname(fileURLToPath(import.meta.url)),'..'),repo=resolve(root,'../../../..'),fixture=resolve(root,'fixture');
+-export const scratch=resolve(repo,'work/backend-runtime/task04-native-admission-c7');
++export const root="/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c7",repo="/workspace/Project-Cortex",fixture=resolve(root,'fixture');
++export const scratch=resolve(repo,'work/resume/task04-native-admission-fixture-c7-review/independent-c4421e44-de81-45e2-bdaa-f99d1fdf0640/native-not-run');
+ export const sha256=v=>createHash('sha256').update(v).digest('hex');
+ export const limits=Object.freeze({rpc:3000,nativeClientRpc:2991,nestedNativeInvocations:9,cleanupRpc:256,concurrency:4,qualifierMs:1200000,driverMs:1440000,rpcMs:12000,scenarios:64,rows:320,storage:0,peerEffects:8,peerOther:24,resultBytes:256000,evidenceBytes:8388608,receiptBytes:16384,journalBytes:4096,journalRows:6000,processes:6,groups:2,cliMs:120000});
+ export function canonical(path,base,privateFile=false){if(path!==resolve(path)||!path.startsWith(base+sep)&&path!==base)throw Error('QA_PATH');let part=sep;

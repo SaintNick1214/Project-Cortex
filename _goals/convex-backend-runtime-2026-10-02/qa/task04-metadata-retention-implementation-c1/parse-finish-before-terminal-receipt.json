@@ -1,0 +1,11 @@
+{
+  "argv": [
+    "python3",
+    "-c",
+    "from pathlib import Path\nb=Path('_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c1/fixture/convex')\np=b/'observer.ts';s=p.read_text()\nold=\"if(++nativeFinishCount>1)fail('CONFLICT');if(!rawEnd){reason(r,'missing-evidence');continue;}if(activeTextId!==null)fail('CONFLICT');const d=record(e.data,tr.version===2?'finish usage providerCost providerShape':'finish usage');if(tr.version===2){providerSnapshot=validateProviderSnapshot(d.providerCost,d.providerShape);providerSequence=e.sequence;}finish\"\nnew=\"if(++nativeFinishCount>1)fail('CONFLICT');const d=record(e.data,tr.version===2?'finish usage providerCost providerShape':'finish usage');if(tr.version===2){providerSnapshot=validateProviderSnapshot(d.providerCost,d.providerShape);providerSequence=e.sequence;}if(!rawEnd){reason(r,'missing-evidence');continue;}if(activeTextId!==null)fail('CONFLICT');finish\"\nassert old in s;s=s.replace(old,new);p.write_text(s)\n"
+  ],
+  "cwd": "/workspace/Project-Cortex",
+  "startUtc": "2026-10-04T14:23:54.949944+00:00",
+  "endUtc": "2026-10-04T14:23:54.984732+00:00",
+  "exit": 0
+}

@@ -1,0 +1,22 @@
+{"case":"preserved-C4-writer-red","basis":"SYNTHETIC_FULL287_OFFICIALLY_SHAPED_FIXTURE_NOT_ACTUAL_SERVICE","registrations":287,"rawBaselineBytes":203228,"rawWorstBytes":256000,"functionsCompactBytes":195617,"equalityCompactBytes":57558,"C4FormattedReceiptBytes":576330,"perArtifactCeiling":256000,"worstBundleUpperBoundBytes":509232}
+{"case":"full287-publication-writer-reader","phase":"synthetic","source":"OFFLINE_SYNTHETIC_NOT_NATIVE","basis":"SYNTHETIC_FULL287_OFFICIALLY_SHAPED_FIXTURE_NOT_ACTUAL_SERVICE","registrations":287,"rawBaselineBytes":203228,"rawWorstBytes":256000,"functionsCompactBytes":195617,"equalityCompactBytes":57558,"C4FormattedReceiptBytes":576330,"perArtifactCeiling":256000,"worstBundleUpperBoundBytes":509232,"bundleBytes":306109,"chunks":[128000,128000,50109],"receiptBytes":1279,"phaseEvidenceBytes":565211}
+{"case":"full287-publication-writer-reader","phase":"empty","source":"OFFLINE_SYNTHETIC_NOT_NATIVE","basis":"SYNTHETIC_FULL287_OFFICIALLY_SHAPED_FIXTURE_NOT_ACTUAL_SERVICE","registrations":287,"rawBaselineBytes":203228,"rawWorstBytes":256000,"functionsCompactBytes":195617,"equalityCompactBytes":57558,"C4FormattedReceiptBytes":576330,"perArtifactCeiling":256000,"worstBundleUpperBoundBytes":509232,"bundleBytes":306105,"chunks":[128000,128000,50105],"receiptBytes":1267,"phaseEvidenceBytes":1130378}
+(node:154395) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ C4 actual formatted exclusive writer reproduces QA_BYTES with FULL287 validator/equality records before any file write (4.933419ms)
+✔ actual C5 writer/reader retains FULL287 tuple+args/equalities/opaque HTTP and exact256000 raw in BOTH phases without cap growth (425.141689ms)
+✔ actual bounded raw capture precedes comparison failure, preserves every byte and fails closed on overwrite or257000-byte response (99.49488ms)
+✔ actual strict reader rejects truncation/altered chunk/order/hash/phase/source/operation/opaque metadata/args after adversarial rehash (1480.737338ms)
+✔ actual driver session independently reconstructs and compares full287 BOTH phases, rejects corrupted artifact before any RPC/client/journal (370.064889ms)
+✔ source-bound publication/driver preserve exactly1 query; aggregate journal reserves bounded publication bytes/rows under unchanged8MiB/6000 (0.42547ms)
+✔ actual stage helper good canonical owned path links only existing installation (30.433922ms)
+✔ actual unchanged C7 helper traversal red is preserved by exact source contract; repaired helper denies both traversal paths BEFORE write (1.168468ms)
+✔ actual stage helper rejects symlink and nonexistent directory before any link creation (0.696079ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 9
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2548.322721

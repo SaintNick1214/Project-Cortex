@@ -1,0 +1,51 @@
+(node:72942) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/domain/model-policy.test.ts
+  trusted pure model policy
+    ✓ registers every approved operation and leaves media unavailable (27 ms)
+    ✓ defaults to qualified gpt-4o-mini Chat and requires explicit Responses receipt (12 ms)
+    ✓ resolves ordered scope specialization independent of database arrival order (4 ms)
+    ✓ selects distinct per-function models only from explicitly supplied qualified receipts (4 ms)
+    ✓ intersects restrictions and never broadens deployment hard bounds (4 ms)
+    ✓ allows only exact versioned authorized overrides within hard bounds (5 ms)
+    ✓ fails ambiguous, incomplete, unknown, cross-scope and stale-agent records closed (6 ms)
+    ✓ requires exact qualified capability/price/bound and rejects ambiguous receipts (8 ms)
+    ✓ rejects invalid integer monetary bound NaN (1 ms)
+    ✓ rejects invalid integer monetary bound Infinity (1 ms)
+    ✓ rejects invalid integer monetary bound -1 (2 ms)
+    ✓ rejects invalid integer monetary bound 0.1 (1 ms)
+    ✓ rejects invalid integer monetary bound 9007199254740992 (1 ms)
+    ✓ rejects zero positive caps, inconsistent ceilings and unqualified model IDs (4 ms)
+    ✓ pins and deeply freezes snapshots without freezing or retaining caller objects (1 ms)
+  exact dispatch request identity
+    ✓ normalizes text and hashes exact canonical scope/source/policy/request (10 ms)
+    ✓ rejects invalid options, retries, headers, versions, token/time/cost/tool caps (26 ms)
+    ✓ enforces combined context capacity independently of individual input/output ceilings (3 ms)
+    ✓ requires structured operation schema and validates tool definitions (4 ms)
+    ✓ canonicalizes key order but rejects coercion, cycles, sparse arrays and accessor values (4 ms)
+  immutable default embedding policy
+    ✓ requires actual qualified embedding receipt and every immutable profile field (8 ms)
+    ✓ pins batch ordinal/range and prohibits language/tool options or changed profiles (6 ms)
+  conservative fallback eligibility
+    ✓ permits only registered qualified candidates with positive predispatch/rejection proof (5 ms)
+    ✓ forbids visible text/tools, committed effects, ambiguous paid/cancelled and unchecked replay (12 ms)
+  detached canonical request data and effect-free fallback evidence
+    ✓ detaches nested tool definition without changing or freezing caller-owned data (2 ms)
+    ✓ detaches nested output schema without changing or freezing caller-owned data (3 ms)
+    ✓ detaches nested tool call input without changing or freezing caller-owned data (3 ms)
+    ✓ detaches nested tool result output without changing or freezing caller-owned data (4 ms)
+    ✓ rejects fallback accessor evidence without evaluating counting or throwing getters (1 ms)
+    ✓ rejects symbolic, nonplain, nonenumerable and iterator fallback evidence with zero effects (2 ms)
+  lossless own JSON keys at arbitrary record boundaries
+    ✓ preserves an own __proto__ key in tool definition and keeps its request identity distinct (11 ms)
+    ✓ preserves an own __proto__ key in output schema and keeps its request identity distinct (4 ms)
+    ✓ preserves an own __proto__ key in tool call input and keeps its request identity distinct (3 ms)
+    ✓ preserves an own __proto__ key in tool result output and keeps its request identity distinct (3 ms)
+    ✓ preserves hostile-looking own keys at multiple depths without prototype mutation or aliasing (2 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       35 passed, 35 total
+Snapshots:   0 total
+Time:        2.692 s
+Ran all test suites.
+Test results written to: ../../../../_goals/convex-backend-runtime-2026-10-02/qa/task04-pure-policy-contracts-c3-review/unit.result.json

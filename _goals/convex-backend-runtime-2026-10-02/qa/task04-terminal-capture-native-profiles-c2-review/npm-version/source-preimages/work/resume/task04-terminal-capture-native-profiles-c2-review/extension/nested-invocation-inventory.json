@@ -1,0 +1,248 @@
+{
+  "kind": "AST_INVOCATION_GRAPH_WITH_COMMENT_EXCLUSION",
+  "profiles": [
+    {
+      "profile": "extension",
+      "calls": [
+        {
+          "source": "fixture/convex/memories.ts",
+          "line": 407,
+          "callee": "ctx.runQuery",
+          "call": "ctx.runQuery(reference, { reference: authority, memorySpaceId: authority.memorySpaceId, query: args.query, limit })",
+          "sourceSHA256": "988143530d6009ac655ba5cc4f918df6ba0721d808001faadd6e60098b179554"
+        },
+        {
+          "source": "fixture/convex/memories.ts",
+          "line": 415,
+          "callee": "ctx.runQuery",
+          "call": "ctx.runQuery(hydrate, { reference: authority, ids: results.slice(0, limit).map(row => row._id) })",
+          "sourceSHA256": "988143530d6009ac655ba5cc4f918df6ba0721d808001faadd6e60098b179554"
+        },
+        {
+          "source": "fixture/convex/qualificationCapture.ts",
+          "line": 28,
+          "callee": "ctx.runMutation",
+          "call": "ctx.runMutation(makeFunctionReference<\"mutation\",{attemptId:Id<\"runtimeModelAttempts\">;dispatchIdentity:string;receiptCanonical:string},{evidenceId:string;state:string;settledCostUnits?:number;overrun:boolean}>(\"runtimeModelPolicy:captureTerminalEvidence\"),{attemptId:args.attemptId,dispatchIdentity:args.dispatchIdentity,receiptCanonical:args.receiptCanonical})",
+          "sourceSHA256": "bff2df14999627fdae9e25ac0e530e0ae7486e5e7f8c497a5edaf8796051315d"
+        },
+        {
+          "source": "fixture/convex/qualificationOwned.ts",
+          "line": 76,
+          "callee": "ctx.runMutation",
+          "call": "ctx.runMutation(makeFunctionReference<\"mutation\",AdmitModelArgs,{status:string}>(\"runtimeModelPolicy:admit\"),{reference:args.reference,operationKey:\"agent.respond\",runBudgetId:bound.runBudgetId,semanticId:\"parent-rollback\",ordinal:0,requestCanonical:canonicalModelJson(request)})",
+          "sourceSHA256": "4f47150f6c1027200c520d6985b977a1a4add0b66ea06461e9e7b607c2cf3881"
+        },
+        {
+          "source": "fixture/convex/qualificationPeer.ts",
+          "line": 36,
+          "callee": "ctx.runMutation",
+          "call": "ctx.runMutation(makeFunctionReference<\"mutation\",{run:string;dispatchDigest:string},{requestCount:number;effectCount:number}>(\"qualificationPeer:record\"),{run:object.run,dispatchDigest:object.dispatchDigest})",
+          "sourceSHA256": "d69ee13019aacbf24143b9872c97cb3450c0e8a0f1c033320903ce940ae94e17"
+        },
+        {
+          "source": "fixture/convex/runtimeDataAuth.ts",
+          "line": 51,
+          "callee": "ctx.runQuery",
+          "call": "ctx.runQuery(dataAuthReferences.authorize, { requirement: { capability,\n    tenantId: selectors.tenantId, memorySpaceId: selectors.memorySpaceId } })",
+          "sourceSHA256": "3fd328761100777a06c0fe243deb68825492ddbefd669b23dbc1f9e125e4fd27"
+        },
+        {
+          "source": "fixture/convex/runtimeDataAuth.ts",
+          "line": 56,
+          "callee": "ctx.runQuery",
+          "call": "ctx.runQuery(dataAuthReferences.recheck, { reference, requirement: { capability,\n    tenantId: reference.tenantId, memorySpaceId: reference.memorySpaceId } })",
+          "sourceSHA256": "3fd328761100777a06c0fe243deb68825492ddbefd669b23dbc1f9e125e4fd27"
+        },
+        {
+          "source": "fixture/convex/runtimeMemory.ts",
+          "line": 132,
+          "callee": "ctx.runQuery",
+          "call": "ctx.runQuery(authorize, { requirement })",
+          "sourceSHA256": "bbe9977ba0fe4d1851c394e4a41e43eaf1978218f9c5b55dea00a536eaeea959"
+        },
+        {
+          "source": "fixture/convex/runtimeMemory.ts",
+          "line": 137,
+          "callee": "ctx.runQuery",
+          "call": "ctx.runQuery(ref, args)",
+          "sourceSHA256": "bbe9977ba0fe4d1851c394e4a41e43eaf1978218f9c5b55dea00a536eaeea959"
+        },
+        {
+          "source": "fixture/convex/runtimeMemoryRepository.ts",
+          "line": 315,
+          "callee": "ctx.runQuery",
+          "call": "ctx.runQuery(memoryReferences.recheck, args)",
+          "sourceSHA256": "74e3db54fa9f1e5794b38b2d25ae7bed06341bf06cf1ba438ca3424605e42833"
+        },
+        {
+          "source": "fixture/convex/runtimeMemoryRepository.ts",
+          "line": 316,
+          "callee": "ctx.runQuery",
+          "call": "ctx.runQuery(memoryReferences.getSource, { ...args, sourceId })",
+          "sourceSHA256": "74e3db54fa9f1e5794b38b2d25ae7bed06341bf06cf1ba438ca3424605e42833"
+        },
+        {
+          "source": "fixture/convex/runtimeMemoryRepository.ts",
+          "line": 317,
+          "callee": "ctx.runMutation",
+          "call": "ctx.runMutation(memoryReferences.putSource, { ...args, source })",
+          "sourceSHA256": "74e3db54fa9f1e5794b38b2d25ae7bed06341bf06cf1ba438ca3424605e42833"
+        },
+        {
+          "source": "fixture/convex/runtimeMemoryRepository.ts",
+          "line": 318,
+          "callee": "ctx.runMutation",
+          "call": "ctx.runMutation(memoryReferences.commitDerived, { ...args, input })",
+          "sourceSHA256": "74e3db54fa9f1e5794b38b2d25ae7bed06341bf06cf1ba438ca3424605e42833"
+        },
+        {
+          "source": "fixture/convex/runtimeMemoryRepository.ts",
+          "line": 319,
+          "callee": "ctx.runQuery",
+          "call": "ctx.runQuery(memoryReferences.listFacts, { ...args, capability: \"read\", query })",
+          "sourceSHA256": "74e3db54fa9f1e5794b38b2d25ae7bed06341bf06cf1ba438ca3424605e42833"
+        },
+        {
+          "source": "fixture/convex/runtimeMemoryRepository.ts",
+          "line": 323,
+          "callee": "ctx.runQuery",
+          "call": "ctx.runQuery(memoryReferences.recheck, readArgs)",
+          "sourceSHA256": "74e3db54fa9f1e5794b38b2d25ae7bed06341bf06cf1ba438ca3424605e42833"
+        },
+        {
+          "source": "fixture/convex/runtimeMemoryRepository.ts",
+          "line": 332,
+          "callee": "ctx.runQuery",
+          "call": "ctx.runQuery(memoryReferences.hydrateVectors, { ...readArgs, hits: hits.map((hit) => ({ id: hit._id, score: hit._score })) })",
+          "sourceSHA256": "74e3db54fa9f1e5794b38b2d25ae7bed06341bf06cf1ba438ca3424605e42833"
+        }
+      ],
+      "methodBindingNote": "runMutation.bind/controlCtx forwarding only after successful auth are also fenced and not invoked by denied fixed identities."
+    },
+    {
+      "profile": "regression",
+      "calls": [
+        {
+          "source": "fixture/convex/memories.ts",
+          "line": 407,
+          "callee": "ctx.runQuery",
+          "call": "ctx.runQuery(reference, { reference: authority, memorySpaceId: authority.memorySpaceId, query: args.query, limit })",
+          "sourceSHA256": "988143530d6009ac655ba5cc4f918df6ba0721d808001faadd6e60098b179554"
+        },
+        {
+          "source": "fixture/convex/memories.ts",
+          "line": 415,
+          "callee": "ctx.runQuery",
+          "call": "ctx.runQuery(hydrate, { reference: authority, ids: results.slice(0, limit).map(row => row._id) })",
+          "sourceSHA256": "988143530d6009ac655ba5cc4f918df6ba0721d808001faadd6e60098b179554"
+        },
+        {
+          "source": "fixture/convex/qualificationCapture.ts",
+          "line": 28,
+          "callee": "ctx.runMutation",
+          "call": "ctx.runMutation(makeFunctionReference<\"mutation\",{attemptId:Id<\"runtimeModelAttempts\">;dispatchIdentity:string;receiptCanonical:string},{evidenceId:string;state:string;settledCostUnits?:number;overrun:boolean}>(\"runtimeModelPolicy:captureTerminalEvidence\"),{attemptId:args.attemptId,dispatchIdentity:args.dispatchIdentity,receiptCanonical:args.receiptCanonical})",
+          "sourceSHA256": "bff2df14999627fdae9e25ac0e530e0ae7486e5e7f8c497a5edaf8796051315d"
+        },
+        {
+          "source": "fixture/convex/qualificationOwned.ts",
+          "line": 76,
+          "callee": "ctx.runMutation",
+          "call": "ctx.runMutation(makeFunctionReference<\"mutation\",AdmitModelArgs,{status:string}>(\"runtimeModelPolicy:admit\"),{reference:args.reference,operationKey:\"agent.respond\",runBudgetId:bound.runBudgetId,semanticId:\"parent-rollback\",ordinal:0,requestCanonical:canonicalModelJson(request)})",
+          "sourceSHA256": "4f47150f6c1027200c520d6985b977a1a4add0b66ea06461e9e7b607c2cf3881"
+        },
+        {
+          "source": "fixture/convex/qualificationPeer.ts",
+          "line": 36,
+          "callee": "ctx.runMutation",
+          "call": "ctx.runMutation(makeFunctionReference<\"mutation\",{run:string;dispatchDigest:string},{requestCount:number;effectCount:number}>(\"qualificationPeer:record\"),{run:object.run,dispatchDigest:object.dispatchDigest})",
+          "sourceSHA256": "8de021fa10ee95196a7f4035fd42e430276d5ede3f73e99e201b3154d94f7122"
+        },
+        {
+          "source": "fixture/convex/runtimeDataAuth.ts",
+          "line": 51,
+          "callee": "ctx.runQuery",
+          "call": "ctx.runQuery(dataAuthReferences.authorize, { requirement: { capability,\n    tenantId: selectors.tenantId, memorySpaceId: selectors.memorySpaceId } })",
+          "sourceSHA256": "3fd328761100777a06c0fe243deb68825492ddbefd669b23dbc1f9e125e4fd27"
+        },
+        {
+          "source": "fixture/convex/runtimeDataAuth.ts",
+          "line": 56,
+          "callee": "ctx.runQuery",
+          "call": "ctx.runQuery(dataAuthReferences.recheck, { reference, requirement: { capability,\n    tenantId: reference.tenantId, memorySpaceId: reference.memorySpaceId } })",
+          "sourceSHA256": "3fd328761100777a06c0fe243deb68825492ddbefd669b23dbc1f9e125e4fd27"
+        },
+        {
+          "source": "fixture/convex/runtimeMemory.ts",
+          "line": 132,
+          "callee": "ctx.runQuery",
+          "call": "ctx.runQuery(authorize, { requirement })",
+          "sourceSHA256": "bbe9977ba0fe4d1851c394e4a41e43eaf1978218f9c5b55dea00a536eaeea959"
+        },
+        {
+          "source": "fixture/convex/runtimeMemory.ts",
+          "line": 137,
+          "callee": "ctx.runQuery",
+          "call": "ctx.runQuery(ref, args)",
+          "sourceSHA256": "bbe9977ba0fe4d1851c394e4a41e43eaf1978218f9c5b55dea00a536eaeea959"
+        },
+        {
+          "source": "fixture/convex/runtimeMemoryRepository.ts",
+          "line": 315,
+          "callee": "ctx.runQuery",
+          "call": "ctx.runQuery(memoryReferences.recheck, args)",
+          "sourceSHA256": "74e3db54fa9f1e5794b38b2d25ae7bed06341bf06cf1ba438ca3424605e42833"
+        },
+        {
+          "source": "fixture/convex/runtimeMemoryRepository.ts",
+          "line": 316,
+          "callee": "ctx.runQuery",
+          "call": "ctx.runQuery(memoryReferences.getSource, { ...args, sourceId })",
+          "sourceSHA256": "74e3db54fa9f1e5794b38b2d25ae7bed06341bf06cf1ba438ca3424605e42833"
+        },
+        {
+          "source": "fixture/convex/runtimeMemoryRepository.ts",
+          "line": 317,
+          "callee": "ctx.runMutation",
+          "call": "ctx.runMutation(memoryReferences.putSource, { ...args, source })",
+          "sourceSHA256": "74e3db54fa9f1e5794b38b2d25ae7bed06341bf06cf1ba438ca3424605e42833"
+        },
+        {
+          "source": "fixture/convex/runtimeMemoryRepository.ts",
+          "line": 318,
+          "callee": "ctx.runMutation",
+          "call": "ctx.runMutation(memoryReferences.commitDerived, { ...args, input })",
+          "sourceSHA256": "74e3db54fa9f1e5794b38b2d25ae7bed06341bf06cf1ba438ca3424605e42833"
+        },
+        {
+          "source": "fixture/convex/runtimeMemoryRepository.ts",
+          "line": 319,
+          "callee": "ctx.runQuery",
+          "call": "ctx.runQuery(memoryReferences.listFacts, { ...args, capability: \"read\", query })",
+          "sourceSHA256": "74e3db54fa9f1e5794b38b2d25ae7bed06341bf06cf1ba438ca3424605e42833"
+        },
+        {
+          "source": "fixture/convex/runtimeMemoryRepository.ts",
+          "line": 323,
+          "callee": "ctx.runQuery",
+          "call": "ctx.runQuery(memoryReferences.recheck, readArgs)",
+          "sourceSHA256": "74e3db54fa9f1e5794b38b2d25ae7bed06341bf06cf1ba438ca3424605e42833"
+        },
+        {
+          "source": "fixture/convex/runtimeMemoryRepository.ts",
+          "line": 332,
+          "callee": "ctx.runQuery",
+          "call": "ctx.runQuery(memoryReferences.hydrateVectors, { ...readArgs, hits: hits.map((hit) => ({ id: hit._id, score: hit._score })) })",
+          "sourceSHA256": "74e3db54fa9f1e5794b38b2d25ae7bed06341bf06cf1ba438ca3424605e42833"
+        }
+      ],
+      "methodBindingNote": "runMutation.bind/controlCtx forwarding only after successful auth are also fenced and not invoked by denied fixed identities."
+    }
+  ],
+  "nestedBound": {
+    "authorizationQueries": 28,
+    "peerRecord": 8,
+    "parentRollback": 1,
+    "total": 37
+  },
+  "excluded": "All remaining direct/query/hydrate/recheck/derived commits require failed authorization/internal visibility to succeed. No policy core nested methods."
+}

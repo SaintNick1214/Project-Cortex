@@ -1,0 +1,15 @@
+--- baseline-runtimeMetadataAuth.raw
++++ baseline-runtimeMetadataAuth.executable
+@@ -1,9 +1,9 @@
+ /** Verified generic metadata authority; deliberately independent of memory/fact adapters. */
+ import { ConvexError, v } from "convex/values";
+-import type { MutationCtx, QueryCtx } from "./_generated/server";
++import type { MutationCtx, QueryCtx } from "/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/convex-dev/_generated/server";
+ import type { Doc } from "./_generated/dataModel";
+-import type { RuntimeAuthority, RuntimeAuthorityReference, RuntimeCapability, RuntimeResource } from "../src/auth/verified";
+-import { createAuthorityReader, requireAuthority, recheckAuthority } from "./runtimeAuth";
++import type { RuntimeAuthority, RuntimeAuthorityReference, RuntimeCapability, RuntimeResource } from "/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/src/auth/verified";
++import { createAuthorityReader, requireAuthority, recheckAuthority } from "/tmp/task03-metadata-native-errors-review2-7ogukSUg/baseline-runtimeAuth";
+ 
+ export const scopeArgs = { tenantId: v.optional(v.string()), memorySpaceId: v.optional(v.string()) };
+ export interface ScopeSelectors { tenantId?: string; memorySpaceId?: string }

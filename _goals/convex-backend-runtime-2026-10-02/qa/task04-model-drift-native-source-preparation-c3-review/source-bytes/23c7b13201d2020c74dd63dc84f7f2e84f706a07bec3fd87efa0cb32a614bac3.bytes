@@ -1,0 +1,41 @@
+import pathlib,json,hashlib,os,datetime
+R=pathlib.Path('/workspace/Project-Cortex'); O=R/'_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-source-preparation-c3-review'
+sha=lambda b:hashlib.sha256(b).hexdigest(); errors=[]; reads=[]
+def read(p):
+ p=pathlib.Path(p); s=p.lstat()
+ if p.is_symlink(): b=os.readlink(p).encode(); t='symlink-literal'
+ else: b=p.read_bytes(); t='file'
+ reads.append({'path':str(p.relative_to(R)),'bytes':len(b),'sha256':sha(b),'kind':t}); return b
+def inv(p):
+ return sorted(str(x.relative_to(p)) for x in p.rglob('*') if x.is_file() or x.is_symlink())
+def verify(p,name,expected=None,override=None):
+ raw=read(p/name); m=json.loads(raw); rows=m['files'] if override is None else override['files']
+ if expected and sha(raw)!=expected: errors.append([str(p),'manifest-pin'])
+ names=[x['path'] for x in rows];actual=[x for x in inv(p) if x!=name]
+ if sorted(names)!=actual or len(set(names))!=len(names): errors.append([str(p),'closure',sorted(set(actual)-set(names)),sorted(set(names)-set(actual))])
+ for row in rows:
+  b=read(p/row['path'])
+  if len(b)!=row['bytes'] or sha(b)!=row['sha256']: errors.append([str(p/row['path']),'bytes-or-hash'])
+ return len(rows)
+subjects=[];history={}
+pins=json.loads(read(R/'work/resume/task04-model-drift-native-preparation-c3/final-packet-pins.json'))
+for pin in pins['packets']:
+ p=R/('_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-'+pin['kind']+'-preparation-c3')
+ count=verify(p,'qa-manifest.json',pin['qaManifestSHA256']); fraw=read(p/'runtime-freeze.json');f=json.loads(fraw)
+ if sha(fraw)!=pin['runtimeFreezeSHA256']:errors.append([pin['kind'],'freeze-pin'])
+ if sha(read(p/'report.md'))!=pin['reportSHA256']:errors.append([pin['kind'],'report-pin'])
+ if sorted(x['path'] for x in f['files'])!=sorted(f['operationalPaths']):errors.append([pin['kind'],'operational-union'])
+ for row in f['files']:
+  b=read(p/row['path'])
+  if len(b)!=row['bytes'] or sha(b)!=row['sha256']:errors.append([pin['kind'],row['path'],'operational-hash'])
+ for h in json.loads(read(p/'historical-preservation.json'))['packets']:
+  key=(h['path'],h['manifest'],h['manifestSHA256'])
+  if key not in history:
+   override=None
+   if h.get('fullClosure'):
+    x=h['fullClosure'];b=read(p/x['path']);override=json.loads(b)
+    if sha(b)!=x['sha256'] or len(b)!=x['bytes']:errors.append([key,'fullClosure'])
+   history[key]=verify(R/h['path'],h['manifest'],h['manifestSHA256'],override)
+ subjects.append({'kind':pin['kind'],'qaRows':count,'operationalRows':len(f['files']),'pins':pin})
+O.joinpath('closure-audit.json').write_text(json.dumps({'observedAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'subjects':subjects,'histories':[{'path':k[0],'manifest':k[1],'sha256':k[2],'rows':v} for k,v in history.items()],'errors':errors,'reads':reads,'privateActual':'NOT_READ','symlinks':'literal bytes only'},indent=2)+'\n')
+print(json.dumps({'subjects':subjects,'uniqueHistories':len(history),'reads':len(reads),'errors':errors}))

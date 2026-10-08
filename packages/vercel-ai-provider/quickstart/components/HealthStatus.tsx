@@ -45,6 +45,8 @@ export function HealthStatus() {
   }, []);
 
   useEffect(() => {
+    // Polling an external service intentionally sets the request loading state.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     checkHealth();
     // Re-check every 30 seconds
     const interval = setInterval(checkHealth, 30000);

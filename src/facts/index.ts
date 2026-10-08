@@ -1,8 +1,8 @@
+import { randomUUID } from "../common/crypto";
 import { GraphCommittedPartial, GraphJobUnresolved } from "../graph/types";
 import type { FunctionReference, FunctionArgs, FunctionReturnType } from "convex/server";
 import { writeGraphMutation, type GraphPrimary } from "../graph/erasure";
 import type { GraphSyncPolicy } from "../graph/types";
-import { randomUUID } from "node:crypto";
 import { waitDomainOperation, isDomainGraphIdentity, domainLoader, collectDomain, selectDomain, sameSelection, resolveDomainTenant, partialFrom, assertDomainActive } from "../common/domainPaging";
 import { factsExport } from "../common/domainExport";
 import { DomainOperationPartialError, type DomainReadOptions, type DomainItemOutcome, type DomainPartial } from "../types";
@@ -16,8 +16,9 @@ import type { Id } from "../../convex-dev/_generated/dataModel";
  * Structured knowledge with versioning and relationships
  */
 
+import { resolveTenantId } from "../auth/tenant";
 import { ConvexClient } from "convex/browser";
-import { api } from "../../convex-dev/_generated/api";
+import { api } from "../common/backendApi";
 import type {
   CountFactsFilter,
   DeleteFactOptions,
@@ -825,7 +826,7 @@ export class FactsAPI {
         this.client.action(api.facts.semanticSearch, {
           memorySpaceId,
           embedding,
-          tenantId: options?.tenantId ?? this.authContext?.tenantId,
+          tenantId: resolveTenantId(this.authContext?.tenantId, options?.tenantId),
           userId: options?.userId,
           minConfidence: options?.minConfidence,
           includeSuperseded: options?.includeSuperseded,

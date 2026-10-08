@@ -1,0 +1,51 @@
+{
+  "status": "PASS",
+  "total": 9,
+  "controls": [
+    {
+      "control": "encoded-part-max-plus-one-before-input-read",
+      "rejected": true,
+      "reason": "encoded part cap"
+    },
+    {
+      "control": "encoded-part-missing",
+      "rejected": true,
+      "reason": "[Errno 2] No such file or directory: 'absent'"
+    },
+    {
+      "control": "encoded-part-corruption",
+      "rejected": true,
+      "reason": "length/hash mismatch"
+    },
+    {
+      "control": "encoded-part-symlink",
+      "rejected": true,
+      "reason": "[Errno 40] Too many levels of symbolic links: 'part-link'"
+    },
+    {
+      "control": "encoded-part-directory",
+      "rejected": true,
+      "reason": "regular exact pre-size required"
+    },
+    {
+      "control": "encoded-part-fifo-nonblocking-regular-guard",
+      "rejected": true,
+      "reason": "regular exact pre-size required"
+    },
+    {
+      "control": "gzip-crc-corruption",
+      "rejected": true,
+      "reason": "Error -3 while decompressing data: incorrect data check"
+    },
+    {
+      "control": "oversized-index-pre-buffer",
+      "rejected": true,
+      "reason": "regular exact pre-size required"
+    },
+    {
+      "control": "production-map-part-corruption-before-writes",
+      "rejected": true,
+      "reason": "length/hash mismatch"
+    }
+  ]
+}

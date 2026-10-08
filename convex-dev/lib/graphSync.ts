@@ -1,6 +1,7 @@
 /** Native fixed outbox capture. Caller intent requests delivery; actual lifecycle rows supply all authority. */
 import {v, ConvexError, type ObjectType, type PropertyValidators, type Infer} from "convex/values";
-import {mutation, type MutationCtx, type QueryCtx} from "../_generated/server";
+import {type MutationCtx, type QueryCtx} from "../_generated/server";
+import {operatorMutation as mutation} from "./operatorBoundary";
 import type {Doc} from "../_generated/dataModel";
 import {canonical, digest, byteSize, clean} from "./factHistoryProvenance";
 import {reserveLifecycle, requireLifecycleReady, ensureLifecycleState, uniqueReference, captureInsertedRow, reconcileRow} from "./referenceLifecycle";
@@ -186,7 +187,7 @@ export async function captureGraphErasure(ctx:MutationCtx,table:GraphTable,row:R
 /** Only the named graph primary writer registrations use this optional capture envelope. */
 export function graphMutation<A extends PropertyValidators,R>(definition:{args:A;handler:(ctx:MutationCtx,args:ObjectType<A>)=>Promise<R>}) {
   return mutation({args:{...definition.args,queueGraph:v.optional(graphRequestValidator)},handler:async(ctx,args)=>{
-    const {queueGraph,...original}=args;
+    const {queueGraph,...original}=args as ObjectType<A> & {queueGraph?:GraphRequest};
     if(!queueGraph)return definition.handler(ctx,original as ObjectType<A>);
     if(!queueGraph.graphInvocationId || queueGraph.graphInvocationId.length>256)graphFail("GRAPH_INVOCATION_INVALID");
     await ensureLifecycleState(ctx);

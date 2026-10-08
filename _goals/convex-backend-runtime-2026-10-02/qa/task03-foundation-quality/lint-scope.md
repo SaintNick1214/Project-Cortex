@@ -1,0 +1,3 @@
+# Standard root lint
+
+Original npm12.2 root lint exited1 with87 errors: frozen QA snapshots/standalone fixture TypeScript sources are outside the root project and two archived QA JavaScript probes lacked root globals. All production/test entries had warnings only. The single config addition excludes `_goals/**/qa/**/*` from application-wide lint; standalone fixture/probe scoped lint remains required and recorded separately. No production, package, or root tests were excluded. Repaired exact standard command exits0,115 warnings remain in the selected application/test sources. This is a root lint PASS, not a full core quality or service gate. Both actual command receipts and streams are retained.

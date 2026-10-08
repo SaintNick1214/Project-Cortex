@@ -1,0 +1,57 @@
+{
+  "results": [
+    {
+      "mode": "inert-import",
+      "error": null,
+      "stats": {
+        "preflightCalls": 0,
+        "signatures": 0,
+        "network": 0,
+        "keyReads": 0,
+        "randomCalls": 0,
+        "writes": [],
+        "stdout": "",
+        "openFDs": 0
+      },
+      "status": "PASS"
+    },
+    {
+      "mode": "direct-healthy",
+      "error": null,
+      "stats": {
+        "preflightCalls": 4,
+        "signatures": 8,
+        "network": 1,
+        "keyReads": 1,
+        "randomCalls": 1,
+        "writes": [
+          "initial-physical-id-provenance.json",
+          "historical-native-locators.json",
+          "identities.json",
+          "peer-config.json",
+          "parent-inputs-receipt.json"
+        ],
+        "stdout": "{\"status\":\"PASS\",\"keysCreated\":0,\"signatures\":8,\"storageCreated\":0,\"configurationCalls\":1,\"currentTargetDecoder\":\"NOT_RUN\",\"currentCoreOwnership\":\"PENDING\"}\n",
+        "openFDs": 0
+      },
+      "status": "PASS"
+    },
+    {
+      "mode": "direct-pin-block",
+      "error": "DUMMY_EXTERNAL_PIN_DENIAL",
+      "stats": {
+        "preflightCalls": 1,
+        "signatures": 0,
+        "network": 0,
+        "keyReads": 0,
+        "randomCalls": 0,
+        "writes": [],
+        "stdout": "",
+        "openFDs": 0
+      },
+      "status": "PASS"
+    }
+  ],
+  "sourceSHA256": "423fdd99b4801c4740fa39d6acf3b14cdf93df8f129e6c2819fc1ef20914bbdd",
+  "scope": "EXACT_FORWARDING_WRAPPER_AND_CURRENT_PARENT_DUMMY_VM;ORIGINAL_PARENT_PORTS;EXTERNAL_ANCHOR_SEPARATELY_TESTED;NO_NATIVE"
+}

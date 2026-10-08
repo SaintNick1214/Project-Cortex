@@ -1,0 +1,11 @@
+{
+  "status": "ROOT_NEW_ASSUMPTION_FAILURE",
+  "originalHelperSha256": "4961d4d578d9a7a84f6e08d65da7a7cee0b34596d8bc27a30b18389358f340f0",
+  "observed": "Tool session1036 exit1 AssertionError line32 scratch global order assertion; full raw trace remains tool transcript, not reconstructed. QA/runtime checks passed before scratch assertion.",
+  "correction": "Scratch generator requires exact unique literal set/hash/pinned seal/self-only; global order not contract. QA/runtime original sorted requirements remain.",
+  "beforeCommandUTC": "NOT_CAPTURED",
+  "argv": [
+    "python",
+    "work/resume/task04-native-c4-root-verify.py"
+  ]
+}

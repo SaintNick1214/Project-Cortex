@@ -1,0 +1,37 @@
+{
+  "archivedAtUTC": "2026-10-04T01:17:56.975859+00:00",
+  "purpose": "Partial conversation-provenance archive, not recovered original filesystem receipts",
+  "files": [
+    {
+      "path": "af7799.tool-output-verbatim.txt",
+      "sha256OfNewArchiveBytes": "a796ac3c59fc6a58066b947f6a59b788df2d6f3e114fb965ecb9e074e21600a1",
+      "provenance": "CONVERSATION_TOOL_OUTPUT_VERBATIM",
+      "qualification": "af7799 nested exec_command response copied from visible conversation; excludes surrounding functions wrapper"
+    },
+    {
+      "path": "initial-jest.config.preimage.txt",
+      "sha256OfNewArchiveBytes": "50f8da1595f94a961c8283b781527e9941f113a06f24eff70da61999ed5b5978",
+      "provenance": "CONVERSATION_TOOL_INPUT_VERBATIM",
+      "qualification": "Complete inert heredoc config preimage"
+    },
+    {
+      "path": "initial-tsconfig.preimage.txt",
+      "sha256OfNewArchiveBytes": "30d145b640bd504b6304bee346080943e95dc26b22d956b428ad8aaad774799e",
+      "provenance": "CONVERSATION_TOOL_INPUT_VERBATIM",
+      "qualification": "Complete inert heredoc config preimage"
+    },
+    {
+      "path": "observed-check-command-fragment.txt",
+      "sha256OfNewArchiveBytes": "b3be0121bc7a5978753e930a6f9a8535e46a6775cac648cda1e616b95b50ef76",
+      "provenance": "CONVERSATION_TOOL_INPUT_VERBATIM",
+      "qualification": "Exact command suffix fragment from tool inputs; not full original exec command"
+    }
+  ],
+  "missing": [
+    "e02110 complete original untruncated stdout/stderr",
+    "Initial failed-run source/test filesystem preimages",
+    "Earlier receipt-backed22-run files overwritten before archive",
+    "Original filesystem timestamps/hashes for initial/preliminary runs"
+  ],
+  "noOriginalFilesystemCryptographicProof": true
+}

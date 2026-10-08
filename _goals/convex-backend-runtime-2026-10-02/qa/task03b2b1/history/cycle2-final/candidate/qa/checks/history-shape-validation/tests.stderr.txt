@@ -1,0 +1,1447 @@
+npm notice run @cortexmemory/sdk@0.37.0 npx
+npm notice run 'node' --experimental-vm-modules node_modules/jest/bin/jest.js --config _goals/convex-backend-runtime-2026-10-02/qa/task03b2b1/jest.scoped.cjs --runInBand --json --outputFile=_goals/convex-backend-runtime-2026-10-02/qa/task03b2b1/checks/tests-final.json
+(node:42294) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeRegistryAuth/catalog.test.ts
+  ● portable inventory, actual schema exports and preserved sources › space deletion final barrier notices a revoked principal after all intentional fence writes and rolls back
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      51 |     f.db.beforeRead = (table) => { if (!changed && table === "runtimeAuthPrincipals" && f.db.writes === 3) { changed = true; f.principal.revokedAt = 1000; } };
+      52 |     await expect(f.db.transaction(async () => await invoke(spaces.deleteSpace, f.ctx, { tenantId: "tenant-a", memorySpaceId: "space-a", cascade: true, reason: "owned" }))).rejects.toMatchObject({ data: { code: "FORBIDDEN" } });
+    > 53 |     expect(changed).toBe(true); expect(f.db.writes).toBe(0); expect(f.db.table("memorySpaces")).toEqual([before]); expect(f.db.table("runtimeAuthTombstones")).toEqual([]);
+         |                     ^
+      54 |   });
+      55 |   it("reading a descriptive access edge requires the target's current independent grant", async () => {
+      56 |     const f = fixture(); seedContext(f, { grantedAccess: [{ memorySpaceId: "ungranted", scope: "read-only", grantedAt: 1000 }] });
+
+      at Object.<anonymous> (tests/unit/runtimeRegistryAuth/catalog.test.ts:53:21)
+
+FAIL tests/unit/runtimeRegistryAuth/adversarial.test.ts
+  ● canonical scope, labels, bulk preflight and independent capabilities › scopes (ctx, args) => {
+        globalThis.console.warn(`Convex functions should not directly call other Convex functions. Consider calling a helper function instead. e.g. \`export const foo = ${funcType}(...); await foo(ctx);\` is not supported. See https://docs.convex.dev/production/best-practices/#use-helper-functions-to-write-shared-code`);
+        return handler(ctx, args);
+    } before hydration/filter/limit even with foreign rows first
+
+    ConvexError: {"version":1,"code":"FORBIDDEN","message":"Access denied or invalid registry input","retryable":false,"outcome":"not_dispatched"}
+
+      11 | export type RegistryCtx = Pick<QueryCtx, "db" | "auth">;
+      12 | export function deny(code = "FORBIDDEN"): never {
+    > 13 |   throw new ConvexError({ version: 1, code, message: "Access denied or invalid registry input", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      14 | }
+      15 | export function textId(value: string): string { if (!value.trim()) deny("INVALID_INPUT"); return value; }
+      16 | export function integer(value: number, min = 0, max = 1000): number {
+
+      at deny (convex-dev/runtimeRegistryAuth.ts:13:9)
+      at canonical (convex-dev/runtimeRegistryAuth.ts:57:132)
+      at all (convex-dev/agents.ts:9:29)
+      at Function.handler [as _handler] (convex-dev/agents.ts:22:17)
+      at tests/unit/runtimeRegistryAuth/adversarial.test.ts:18:41
+
+  ● canonical scope, labels, bulk preflight and independent capabilities › scopes (ctx, args) => {
+        globalThis.console.warn(`Convex functions should not directly call other Convex functions. Consider calling a helper function instead. e.g. \`export const foo = ${funcType}(...); await foo(ctx);\` is not supported. See https://docs.convex.dev/production/best-practices/#use-helper-functions-to-write-shared-code`);
+        return handler(ctx, args);
+    } before hydration/filter/limit even with foreign rows first
+
+    ConvexError: {"version":1,"code":"FORBIDDEN","message":"Access denied or invalid registry input","retryable":false,"outcome":"not_dispatched"}
+
+      11 | export type RegistryCtx = Pick<QueryCtx, "db" | "auth">;
+      12 | export function deny(code = "FORBIDDEN"): never {
+    > 13 |   throw new ConvexError({ version: 1, code, message: "Access denied or invalid registry input", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      14 | }
+      15 | export function textId(value: string): string { if (!value.trim()) deny("INVALID_INPUT"); return value; }
+      16 | export function integer(value: number, min = 0, max = 1000): number {
+
+      at deny (convex-dev/runtimeRegistryAuth.ts:13:9)
+      at canonical (convex-dev/runtimeRegistryAuth.ts:57:132)
+      at spaceAt (convex-dev/runtimeRegistryAuth.ts:186:3)
+      at spacesIn (convex-dev/runtimeRegistryAuth.ts:208:47)
+      at Function.handler [as _handler] (convex-dev/memorySpaces.ts:73:27)
+      at tests/unit/runtimeRegistryAuth/adversarial.test.ts:18:41
+
+  ● canonical scope, labels, bulk preflight and independent capabilities › scopes (ctx, args) => {
+        globalThis.console.warn(`Convex functions should not directly call other Convex functions. Consider calling a helper function instead. e.g. \`export const foo = ${funcType}(...); await foo(ctx);\` is not supported. See https://docs.convex.dev/production/best-practices/#use-helper-functions-to-write-shared-code`);
+        return handler(ctx, args);
+    } before hydration/filter/limit even with foreign rows first
+
+    ConvexError: {"version":1,"code":"FORBIDDEN","message":"Access denied or invalid registry input","retryable":false,"outcome":"not_dispatched"}
+
+      11 | export type RegistryCtx = Pick<QueryCtx, "db" | "auth">;
+      12 | export function deny(code = "FORBIDDEN"): never {
+    > 13 |   throw new ConvexError({ version: 1, code, message: "Access denied or invalid registry input", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      14 | }
+      15 | export function textId(value: string): string { if (!value.trim()) deny("INVALID_INPUT"); return value; }
+      16 | export function integer(value: number, min = 0, max = 1000): number {
+
+      at deny (convex-dev/runtimeRegistryAuth.ts:13:9)
+      at canonical (convex-dev/runtimeRegistryAuth.ts:57:132)
+      at contextsIn (convex-dev/runtimeRegistryAuth.ts:236:31)
+      at selected (convex-dev/contexts.ts:49:25)
+      at Function.handler [as _handler] (convex-dev/contexts.ts:167:122)
+      at tests/unit/runtimeRegistryAuth/adversarial.test.ts:18:41
+
+  ● canonical scope, labels, bulk preflight and independent capabilities › omitted selectors derive exactly one scope, while two spaces/tenants deny without domain hydration
+
+    ConvexError: {"version":1,"code":"FORBIDDEN","message":"Access denied or invalid registry input","retryable":false,"outcome":"not_dispatched"}
+
+      11 | export type RegistryCtx = Pick<QueryCtx, "db" | "auth">;
+      12 | export function deny(code = "FORBIDDEN"): never {
+    > 13 |   throw new ConvexError({ version: 1, code, message: "Access denied or invalid registry input", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      14 | }
+      15 | export function textId(value: string): string { if (!value.trim()) deny("INVALID_INPUT"); return value; }
+      16 | export function integer(value: number, min = 0, max = 1000): number {
+
+      at deny (convex-dev/runtimeRegistryAuth.ts:13:9)
+      at canonical (convex-dev/runtimeRegistryAuth.ts:57:132)
+      at agentAt (convex-dev/runtimeRegistryAuth.ts:177:3)
+      at Function.handler [as _handler] (convex-dev/agents.ts:13:76)
+      at Object.<anonymous> (tests/unit/runtimeRegistryAuth/adversarial.test.ts:34:59)
+
+  ● canonical scope, labels, bulk preflight and independent capabilities › initial absent READ permits (ctx, args) => {
+        globalThis.console.warn(`Convex functions should not directly call other Convex functions. Consider calling a helper function instead. e.g. \`export const foo = ${funcType}(...); await foo(ctx);\` is not supported. See https://docs.convex.dev/production/best-practices/#use-helper-functions-to-write-shared-code`);
+        return handler(ctx, args);
+    } only with a safe receipt
+
+    ConvexError: {"version":1,"code":"FORBIDDEN","message":"Access denied or invalid registry input","retryable":false,"outcome":"not_dispatched"}
+
+      11 | export type RegistryCtx = Pick<QueryCtx, "db" | "auth">;
+      12 | export function deny(code = "FORBIDDEN"): never {
+    > 13 |   throw new ConvexError({ version: 1, code, message: "Access denied or invalid registry input", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      14 | }
+      15 | export function textId(value: string): string { if (!value.trim()) deny("INVALID_INPUT"); return value; }
+      16 | export function integer(value: number, min = 0, max = 1000): number {
+
+      at deny (convex-dev/runtimeRegistryAuth.ts:13:9)
+      at canonical (convex-dev/runtimeRegistryAuth.ts:57:132)
+      at agentAt (convex-dev/runtimeRegistryAuth.ts:177:3)
+      at Function.handler [as _handler] (convex-dev/agents.ts:46:78)
+      at tests/unit/runtimeRegistryAuth/adversarial.test.ts:45:68
+
+  ● canonical scope, labels, bulk preflight and independent capabilities › initial absent READ permits (ctx, args) => {
+        globalThis.console.warn(`Convex functions should not directly call other Convex functions. Consider calling a helper function instead. e.g. \`export const foo = ${funcType}(...); await foo(ctx);\` is not supported. See https://docs.convex.dev/production/best-practices/#use-helper-functions-to-write-shared-code`);
+        return handler(ctx, args);
+    } only with a safe receipt
+
+    ConvexError: {"version":1,"code":"FORBIDDEN","message":"Access denied or invalid registry input","retryable":false,"outcome":"not_dispatched"}
+
+      11 | export type RegistryCtx = Pick<QueryCtx, "db" | "auth">;
+      12 | export function deny(code = "FORBIDDEN"): never {
+    > 13 |   throw new ConvexError({ version: 1, code, message: "Access denied or invalid registry input", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      14 | }
+      15 | export function textId(value: string): string { if (!value.trim()) deny("INVALID_INPUT"); return value; }
+      16 | export function integer(value: number, min = 0, max = 1000): number {
+
+      at deny (convex-dev/runtimeRegistryAuth.ts:13:9)
+      at canonical (convex-dev/runtimeRegistryAuth.ts:57:132)
+      at spaceAt (convex-dev/runtimeRegistryAuth.ts:186:3)
+      at edit (convex-dev/memorySpaces.ts:12:78)
+      at Function.handler [as _handler] (convex-dev/memorySpaces.ts:30:204)
+      at tests/unit/runtimeRegistryAuth/adversarial.test.ts:45:68
+
+  ● canonical scope, labels, bulk preflight and independent capabilities › initial absent READ permits (ctx, args) => {
+        globalThis.console.warn(`Convex functions should not directly call other Convex functions. Consider calling a helper function instead. e.g. \`export const foo = ${funcType}(...); await foo(ctx);\` is not supported. See https://docs.convex.dev/production/best-practices/#use-helper-functions-to-write-shared-code`);
+        return handler(ctx, args);
+    } only with a safe receipt
+
+    ConvexError: {"version":1,"code":"FORBIDDEN","message":"Access denied or invalid registry input","retryable":false,"outcome":"not_dispatched"}
+
+      11 | export type RegistryCtx = Pick<QueryCtx, "db" | "auth">;
+      12 | export function deny(code = "FORBIDDEN"): never {
+    > 13 |   throw new ConvexError({ version: 1, code, message: "Access denied or invalid registry input", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      14 | }
+      15 | export function textId(value: string): string { if (!value.trim()) deny("INVALID_INPUT"); return value; }
+      16 | export function integer(value: number, min = 0, max = 1000): number {
+
+      at deny (convex-dev/runtimeRegistryAuth.ts:13:9)
+      at canonical (convex-dev/runtimeRegistryAuth.ts:57:132)
+      at contextAt (convex-dev/runtimeRegistryAuth.ts:227:5)
+      at edit (convex-dev/contexts.ts:68:78)
+      at Function.handler [as _handler] (convex-dev/contexts.ts:92:240)
+      at tests/unit/runtimeRegistryAuth/adversarial.test.ts:45:68
+
+  ● canonical scope, labels, bulk preflight and independent capabilities › register/create derive owners and privileged user binding without provisioning control records
+
+    ConvexError: {"version":1,"code":"FORBIDDEN","message":"Access denied or invalid registry input","retryable":false,"outcome":"not_dispatched"}
+
+      11 | export type RegistryCtx = Pick<QueryCtx, "db" | "auth">;
+      12 | export function deny(code = "FORBIDDEN"): never {
+    > 13 |   throw new ConvexError({ version: 1, code, message: "Access denied or invalid registry input", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      14 | }
+      15 | export function textId(value: string): string { if (!value.trim()) deny("INVALID_INPUT"); return value; }
+      16 | export function integer(value: number, min = 0, max = 1000): number {
+
+      at deny (convex-dev/runtimeRegistryAuth.ts:13:9)
+      at canonical (convex-dev/runtimeRegistryAuth.ts:57:132)
+      at agentAt (convex-dev/runtimeRegistryAuth.ts:177:3)
+      at Function.handler [as _handler] (convex-dev/agents.ts:37:30)
+      at Object.<anonymous> (tests/unit/runtimeRegistryAuth/adversarial.test.ts:51:19)
+
+  ● canonical scope, labels, bulk preflight and independent capabilities › participant bulk rejects duplicates/collisions before effects
+
+    expect(received).rejects.toMatchObject(expected)
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+        "data": Object {
+    -     "code": "INVALID_INPUT",
+    +     "code": "FORBIDDEN",
+        },
+      }
+
+      70 |     const f = fixture(); seedSpace(f, { participants: [{ id: "exists", type: "user", joinedAt: 1000 }] });
+      71 |     for (const args of [{ add: [{ id: "dup", type: "user", joinedAt: 1000 }, { id: "dup", type: "user", joinedAt: 1000 }] }, { add: [{ id: "exists", type: "user", joinedAt: 1000 }] }, { add: [{ id: "both", type: "user", joinedAt: 1000 }], remove: ["both"] }]) {
+    > 72 |       await expect(invoke(spaces.updateParticipants, f.ctx, { ...scope, ...args })).rejects.toMatchObject({ data: { code: "INVALID_INPUT" } }); expect(f.db.writes).toBe(0);
+         |                                                                                             ^
+      73 |     }
+      74 |   });
+      75 | });
+
+      at Object.toMatchObject (../../../node_modules/expect/build/index.js:2155:20)
+      at Object.<anonymous> (tests/unit/runtimeRegistryAuth/adversarial.test.ts:72:93)
+
+  ● whole-graph links, cross-space grants, deletion and revision attribution › cross-space hierarchy preserves independently admitted current grants for each actual space
+
+    ConvexError: {"version":1,"code":"FORBIDDEN","message":"Access denied or invalid registry input","retryable":false,"outcome":"not_dispatched"}
+
+      11 | export type RegistryCtx = Pick<QueryCtx, "db" | "auth">;
+      12 | export function deny(code = "FORBIDDEN"): never {
+    > 13 |   throw new ConvexError({ version: 1, code, message: "Access denied or invalid registry input", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      14 | }
+      15 | export function textId(value: string): string { if (!value.trim()) deny("INVALID_INPUT"); return value; }
+      16 | export function integer(value: number, min = 0, max = 1000): number {
+
+      at deny (convex-dev/runtimeRegistryAuth.ts:13:9)
+      at canonical (convex-dev/runtimeRegistryAuth.ts:57:132)
+      at contextAt (convex-dev/runtimeRegistryAuth.ts:227:5)
+      at Function.handler [as _handler] (convex-dev/contexts.ts:176:77)
+      at Object.<anonymous> (tests/unit/runtimeRegistryAuth/adversarial.test.ts:79:20)
+
+  ● whole-graph links, cross-space grants, deletion and revision attribution › grantAccess requires current target metadata/grant and only writes descriptive metadata
+
+    ConvexError: {"version":1,"code":"FORBIDDEN","message":"Access denied or invalid registry input","retryable":false,"outcome":"not_dispatched"}
+
+      11 | export type RegistryCtx = Pick<QueryCtx, "db" | "auth">;
+      12 | export function deny(code = "FORBIDDEN"): never {
+    > 13 |   throw new ConvexError({ version: 1, code, message: "Access denied or invalid registry input", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      14 | }
+      15 | export function textId(value: string): string { if (!value.trim()) deny("INVALID_INPUT"); return value; }
+      16 | export function integer(value: number, min = 0, max = 1000): number {
+
+      at deny (convex-dev/runtimeRegistryAuth.ts:13:9)
+      at canonical (convex-dev/runtimeRegistryAuth.ts:57:132)
+      at contextAt (convex-dev/runtimeRegistryAuth.ts:227:5)
+      at edit (convex-dev/contexts.ts:68:78)
+      at Function.handler [as _handler] (convex-dev/contexts.ts:101:168)
+      at Object.<anonymous> (tests/unit/runtimeRegistryAuth/adversarial.test.ts:105:20)
+
+  ● whole-graph links, cross-space grants, deletion and revision attribution › child creation changes parent topology and versions with the actual writer
+
+    ConvexError: {"version":1,"code":"FORBIDDEN","message":"Access denied or invalid registry input","retryable":false,"outcome":"not_dispatched"}
+
+      11 | export type RegistryCtx = Pick<QueryCtx, "db" | "auth">;
+      12 | export function deny(code = "FORBIDDEN"): never {
+    > 13 |   throw new ConvexError({ version: 1, code, message: "Access denied or invalid registry input", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      14 | }
+      15 | export function textId(value: string): string { if (!value.trim()) deny("INVALID_INPUT"); return value; }
+      16 | export function integer(value: number, min = 0, max = 1000): number {
+
+      at deny (convex-dev/runtimeRegistryAuth.ts:13:9)
+      at canonical (convex-dev/runtimeRegistryAuth.ts:57:132)
+      at spaceAt (convex-dev/runtimeRegistryAuth.ts:186:3)
+      at Function.handler [as _handler] (convex-dev/contexts.ts:75:93)
+      at Object.<anonymous> (tests/unit/runtimeRegistryAuth/adversarial.test.ts:110:20)
+
+  ● whole-graph links, cross-space grants, deletion and revision attribution › cross-principal writer is distinct from owner and the archived revision preserves its own writer
+
+    ConvexError: {"version":1,"code":"FORBIDDEN","message":"Access denied or invalid registry input","retryable":false,"outcome":"not_dispatched"}
+
+      11 | export type RegistryCtx = Pick<QueryCtx, "db" | "auth">;
+      12 | export function deny(code = "FORBIDDEN"): never {
+    > 13 |   throw new ConvexError({ version: 1, code, message: "Access denied or invalid registry input", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      14 | }
+      15 | export function textId(value: string): string { if (!value.trim()) deny("INVALID_INPUT"); return value; }
+      16 | export function integer(value: number, min = 0, max = 1000): number {
+
+      at deny (convex-dev/runtimeRegistryAuth.ts:13:9)
+      at canonical (convex-dev/runtimeRegistryAuth.ts:57:132)
+      at contextAt (convex-dev/runtimeRegistryAuth.ts:227:5)
+      at edit (convex-dev/contexts.ts:68:78)
+      at Function.handler [as _handler] (convex-dev/contexts.ts:92:240)
+      at Object.<anonymous> (tests/unit/runtimeRegistryAuth/adversarial.test.ts:117:20)
+
+  ● whole-graph links, cross-space grants, deletion and revision attribution › missing prior actor stays unknown and never fabricates owner attribution
+
+    ConvexError: {"version":1,"code":"FORBIDDEN","message":"Access denied or invalid registry input","retryable":false,"outcome":"not_dispatched"}
+
+      11 | export type RegistryCtx = Pick<QueryCtx, "db" | "auth">;
+      12 | export function deny(code = "FORBIDDEN"): never {
+    > 13 |   throw new ConvexError({ version: 1, code, message: "Access denied or invalid registry input", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      14 | }
+      15 | export function textId(value: string): string { if (!value.trim()) deny("INVALID_INPUT"); return value; }
+      16 | export function integer(value: number, min = 0, max = 1000): number {
+
+      at deny (convex-dev/runtimeRegistryAuth.ts:13:9)
+      at canonical (convex-dev/runtimeRegistryAuth.ts:57:132)
+      at contextAt (convex-dev/runtimeRegistryAuth.ts:227:5)
+      at edit (convex-dev/contexts.ts:68:78)
+      at Function.handler [as _handler] (convex-dev/contexts.ts:92:240)
+      at Object.<anonymous> (tests/unit/runtimeRegistryAuth/adversarial.test.ts:123:84)
+
+  ● whole-graph links, cross-space grants, deletion and revision attribution › orphan deletion repairs all descendant root/depth links and records revisions
+
+    ConvexError: {"version":1,"code":"FORBIDDEN","message":"Access denied or invalid registry input","retryable":false,"outcome":"not_dispatched"}
+
+      11 | export type RegistryCtx = Pick<QueryCtx, "db" | "auth">;
+      12 | export function deny(code = "FORBIDDEN"): never {
+    > 13 |   throw new ConvexError({ version: 1, code, message: "Access denied or invalid registry input", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      14 | }
+      15 | export function textId(value: string): string { if (!value.trim()) deny("INVALID_INPUT"); return value; }
+      16 | export function integer(value: number, min = 0, max = 1000): number {
+
+      at deny (convex-dev/runtimeRegistryAuth.ts:13:9)
+      at canonical (convex-dev/runtimeRegistryAuth.ts:57:132)
+      at contextAt (convex-dev/runtimeRegistryAuth.ts:227:5)
+      at Function.handler [as _handler] (convex-dev/contexts.ts:143:78)
+      at Object.<anonymous> (tests/unit/runtimeRegistryAuth/adversarial.test.ts:129:12)
+
+  ● whole-graph links, cross-space grants, deletion and revision attribution › overlapping cascade bulk preflights and retires each row exactly once
+
+    ConvexError: {"version":1,"code":"FORBIDDEN","message":"Access denied or invalid registry input","retryable":false,"outcome":"not_dispatched"}
+
+      11 | export type RegistryCtx = Pick<QueryCtx, "db" | "auth">;
+      12 | export function deny(code = "FORBIDDEN"): never {
+    > 13 |   throw new ConvexError({ version: 1, code, message: "Access denied or invalid registry input", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      14 | }
+      15 | export function textId(value: string): string { if (!value.trim()) deny("INVALID_INPUT"); return value; }
+      16 | export function integer(value: number, min = 0, max = 1000): number {
+
+      at deny (convex-dev/runtimeRegistryAuth.ts:13:9)
+      at canonical (convex-dev/runtimeRegistryAuth.ts:57:132)
+      at contextsIn (convex-dev/runtimeRegistryAuth.ts:236:31)
+      at selected (convex-dev/contexts.ts:49:25)
+      at Function.handler [as _handler] (convex-dev/contexts.ts:156:78)
+      at Object.<anonymous> (tests/unit/runtimeRegistryAuth/adversarial.test.ts:135:12)
+
+  ● whole-graph links, cross-space grants, deletion and revision attribution › space deletion retains canonical/control barriers for tenant-wide=false and reports downstream cascade pending
+
+    ConvexError: {"version":1,"code":"FORBIDDEN","message":"Access denied or invalid registry input","retryable":false,"outcome":"not_dispatched"}
+
+      11 | export type RegistryCtx = Pick<QueryCtx, "db" | "auth">;
+      12 | export function deny(code = "FORBIDDEN"): never {
+    > 13 |   throw new ConvexError({ version: 1, code, message: "Access denied or invalid registry input", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      14 | }
+      15 | export function textId(value: string): string { if (!value.trim()) deny("INVALID_INPUT"); return value; }
+      16 | export function integer(value: number, min = 0, max = 1000): number {
+
+      at deny (convex-dev/runtimeRegistryAuth.ts:13:9)
+      at canonical (convex-dev/runtimeRegistryAuth.ts:57:132)
+      at spaceAt (convex-dev/runtimeRegistryAuth.ts:186:3)
+      at Function.handler [as _handler] (convex-dev/memorySpaces.ts:47:78)
+      at tests/unit/runtimeRegistryAuth/adversarial.test.ts:140:20
+
+  ● whole-graph links, cross-space grants, deletion and revision attribution › space deletion retains canonical/control barriers for tenant-wide=true and reports downstream cascade pending
+
+    ConvexError: {"version":1,"code":"FORBIDDEN","message":"Access denied or invalid registry input","retryable":false,"outcome":"not_dispatched"}
+
+      11 | export type RegistryCtx = Pick<QueryCtx, "db" | "auth">;
+      12 | export function deny(code = "FORBIDDEN"): never {
+    > 13 |   throw new ConvexError({ version: 1, code, message: "Access denied or invalid registry input", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      14 | }
+      15 | export function textId(value: string): string { if (!value.trim()) deny("INVALID_INPUT"); return value; }
+      16 | export function integer(value: number, min = 0, max = 1000): number {
+
+      at deny (convex-dev/runtimeRegistryAuth.ts:13:9)
+      at canonical (convex-dev/runtimeRegistryAuth.ts:57:132)
+      at spaceAt (convex-dev/runtimeRegistryAuth.ts:186:3)
+      at Function.handler [as _handler] (convex-dev/memorySpaces.ts:47:78)
+      at tests/unit/runtimeRegistryAuth/adversarial.test.ts:140:20
+
+  ● retained authority/row witnesses through the last await and atomic rollback › late admitted read loss after a mutation effect denies and rolls back
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      160 |     f.db.beforeRead = (table) => { if (!changed && table === "runtimeAuthPrincipals" && f.db.writes > 0) { changed = true; f.grant.capabilities = (f.grant.capabilities as string[]).filter((cap) => cap !== lost); } };
+      161 |     await expect(f.db.transaction(async () => await invoke(agents.update, f.ctx, { ...scope, agentId: "agent-a", name: "Late" }))).rejects.toMatchObject(forbidden);
+    > 162 |     expect(changed).toBe(true); expect(f.db.writes).toBe(0); expect(f.db.table("agents")).toEqual([before]);
+          |                     ^
+      163 |   });
+      164 |   it("late peer revocation retains the earlier cross-space graph grant and rolls back the parent edit", async () => {
+      165 |     const f = fixture(); const { parent } = graph(f, true); const before = structuredClone(parent); const peer = f.db.table("runtimeAuthGrants").find((row) => row.memorySpaceId === "space-b")!; let changed = false;
+
+      at tests/unit/runtimeRegistryAuth/adversarial.test.ts:162:21
+
+  ● retained authority/row witnesses through the last await and atomic rollback › late admitted write loss after a mutation effect denies and rolls back
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      160 |     f.db.beforeRead = (table) => { if (!changed && table === "runtimeAuthPrincipals" && f.db.writes > 0) { changed = true; f.grant.capabilities = (f.grant.capabilities as string[]).filter((cap) => cap !== lost); } };
+      161 |     await expect(f.db.transaction(async () => await invoke(agents.update, f.ctx, { ...scope, agentId: "agent-a", name: "Late" }))).rejects.toMatchObject(forbidden);
+    > 162 |     expect(changed).toBe(true); expect(f.db.writes).toBe(0); expect(f.db.table("agents")).toEqual([before]);
+          |                     ^
+      163 |   });
+      164 |   it("late peer revocation retains the earlier cross-space graph grant and rolls back the parent edit", async () => {
+      165 |     const f = fixture(); const { parent } = graph(f, true); const before = structuredClone(parent); const peer = f.db.table("runtimeAuthGrants").find((row) => row.memorySpaceId === "space-b")!; let changed = false;
+
+      at tests/unit/runtimeRegistryAuth/adversarial.test.ts:162:21
+
+  ● retained authority/row witnesses through the last await and atomic rollback › late admitted admin loss after a mutation effect denies and rolls back
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      160 |     f.db.beforeRead = (table) => { if (!changed && table === "runtimeAuthPrincipals" && f.db.writes > 0) { changed = true; f.grant.capabilities = (f.grant.capabilities as string[]).filter((cap) => cap !== lost); } };
+      161 |     await expect(f.db.transaction(async () => await invoke(agents.update, f.ctx, { ...scope, agentId: "agent-a", name: "Late" }))).rejects.toMatchObject(forbidden);
+    > 162 |     expect(changed).toBe(true); expect(f.db.writes).toBe(0); expect(f.db.table("agents")).toEqual([before]);
+          |                     ^
+      163 |   });
+      164 |   it("late peer revocation retains the earlier cross-space graph grant and rolls back the parent edit", async () => {
+      165 |     const f = fixture(); const { parent } = graph(f, true); const before = structuredClone(parent); const peer = f.db.table("runtimeAuthGrants").find((row) => row.memorySpaceId === "space-b")!; let changed = false;
+
+      at tests/unit/runtimeRegistryAuth/adversarial.test.ts:162:21
+
+  ● retained authority/row witnesses through the last await and atomic rollback › late peer revocation retains the earlier cross-space graph grant and rolls back the parent edit
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      166 |     f.db.beforeRead = (table) => { if (!changed && table === "runtimeAuthPrincipals" && f.db.writes > 0) { changed = true; peer.revokedAt = 1000; } };
+      167 |     await expect(f.db.transaction(async () => await invoke(contexts.update, f.ctx, { ...scope, contextId: "context-a", status: "completed" }))).rejects.toMatchObject(forbidden);
+    > 168 |     expect(changed).toBe(true); expect(f.db.writes).toBe(0); expect(f.db.table("contexts")[0]).toEqual(before);
+          |                     ^
+      169 |   });
+      170 |   it("later row admission cannot silently rebind an earlier row's topology/version/owner", async () => {
+      171 |     const f = fixture(); const { parent, child } = graph(f); let changed = false;
+
+      at Object.<anonymous> (tests/unit/runtimeRegistryAuth/adversarial.test.ts:168:21)
+
+  ● retained authority/row witnesses through the last await and atomic rollback › later row admission cannot silently rebind an earlier row's topology/version/owner
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      171 |     const f = fixture(); const { parent, child } = graph(f); let changed = false;
+      172 |     f.db.beforeRead = (table) => { if (!changed && table === "contexts" && f.db.traces.some((trace) => trace.returned.includes(child._id))) { changed = true; parent.ownerPrincipalId = "foreign"; } };
+    > 173 |     await expect(invoke(contexts.getChain, f.ctx, { ...scope, contextId: "context-a" })).rejects.toMatchObject(forbidden); expect(changed).toBe(true); expect(f.db.writes).toBe(0);
+          |                                                                                                                                            ^
+      174 |   });
+      175 |   it("late canonical tombstone before delivery denies private output", async () => {
+      176 |     const f = fixture(); seedAgent(f); let changed = false;
+
+      at Object.<anonymous> (tests/unit/runtimeRegistryAuth/adversarial.test.ts:173:140)
+
+  ● retained authority/row witnesses through the last await and atomic rollback › late canonical tombstone before delivery denies private output
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      177 |     f.db.beforeRead = (table) => { if (!changed && table === "runtimeAuthPrincipals" && f.db.traces.filter((trace) => trace.table === "agents").length > 0) { changed = true;
+      178 |       f.db.seed("runtimeAuthTombstones", { ...scope, resourceType: "source", resourceId: JSON.stringify(["agents", "agent-a"]), deletedAt: 1000 }); } };
+    > 179 |     await expect(invoke(agents.get, f.ctx, { ...scope, agentId: "agent-a" })).rejects.toMatchObject(forbidden); expect(changed).toBe(true);
+          |                                                                                                                                 ^
+      180 |   });
+      181 |   it("bulk database failure rolls back earlier effects and never suppresses the failure", async () => {
+      182 |     const f = fixture(); const first = seedAgent(f); const second = seedAgent(f, { agentId: "agent-b" }); const before = structuredClone([first, second]);
+
+      at Object.<anonymous> (tests/unit/runtimeRegistryAuth/adversarial.test.ts:179:129)
+
+  ● retained authority/row witnesses through the last await and atomic rollback › bulk database failure rolls back earlier effects and never suppresses the failure
+
+    expect(received).rejects.toThrow(expected)
+
+    Expected substring: "Atomic DB failure"
+    Received message:   "{\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied or invalid registry input\",\"retryable\":false,\"outcome\":\"not_dispatched\"}"
+
+          11 | export type RegistryCtx = Pick<QueryCtx, "db" | "auth">;
+          12 | export function deny(code = "FORBIDDEN"): never {
+        > 13 |   throw new ConvexError({ version: 1, code, message: "Access denied or invalid registry input", retryable: false, outcome: "not_dispatched" });
+             |         ^
+          14 | }
+          15 | export function textId(value: string): string { if (!value.trim()) deny("INVALID_INPUT"); return value; }
+          16 | export function integer(value: number, min = 0, max = 1000): number {
+
+      at deny (convex-dev/runtimeRegistryAuth.ts:13:9)
+      at canonical (convex-dev/runtimeRegistryAuth.ts:57:132)
+      at agentAt (convex-dev/runtimeRegistryAuth.ts:177:3)
+      at Function.handler [as _handler] (convex-dev/agents.ts:53:50)
+      at tests/unit/runtimeRegistryAuth/adversarial.test.ts:184:47
+      at RegistryTestDb.transaction (tests/unit/runtimeRegistryAuth/fixture.ts:66:18)
+      at Object.<anonymous> (tests/unit/runtimeRegistryAuth/adversarial.test.ts:184:5)
+      at Object.toThrow (../../../node_modules/expect/build/index.js:2155:20)
+      at Object.<anonymous> (tests/unit/runtimeRegistryAuth/adversarial.test.ts:184:156)
+
+  ● snapshot stability across repeated canonical admission › a repeated graph root lookup cannot adopt a new valid version while later children are checked
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      198 |       changed = true; parent.previousVersions = [{ version: 1, status: "active", data: { private: "a" }, timestamp: 1000, updatedBy: f.principal._id }]; parent.version = 2; parent.data = { private: "rebound" };
+      199 |     } };
+    > 200 |     await expect(invoke(contexts.getChain, f.ctx, { ...scope, contextId: "context-a" })).rejects.toMatchObject(forbidden); expect(changed).toBe(true); expect(f.db.writes).toBe(0);
+          |                                                                                                                                            ^
+      201 |   });
+      202 |   it("an agent list cannot deliver an earlier payload after a later canonical reload changed it", async () => {
+      203 |     const f = fixture(); const row = seedAgent(f); let changed = false;
+
+      at Object.<anonymous> (tests/unit/runtimeRegistryAuth/adversarial.test.ts:200:140)
+
+  ● snapshot stability across repeated canonical admission › an agent list cannot deliver an earlier payload after a later canonical reload changed it
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      203 |     const f = fixture(); const row = seedAgent(f); let changed = false;
+      204 |     f.db.beforeRead = (table) => { if (!changed && table === "agents" && f.db.traces.filter((trace) => trace.table === "agents").length === 1) { changed = true; row.config = { secret: "rebound" }; } };
+    > 205 |     await expect(invoke(agents.list, f.ctx, scope)).rejects.toMatchObject(forbidden); expect(changed).toBe(true);
+          |                                                                                                       ^
+      206 |   });
+      207 | });
+      208 |
+
+      at Object.<anonymous> (tests/unit/runtimeRegistryAuth/adversarial.test.ts:205:103)
+
+  ● mutation collision and serializable-data preflight › a collision introduced while checking a later bulk target remains a retained Boolean witness
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      221 |     } };
+      222 |     await expect(invoke(agents.updateMany, f.ctx, { ...scope, agentIds: ["agent-a", "agent-b"], name: "No" })).rejects.toMatchObject(forbidden);
+    > 223 |     expect(changed).toBe(true); expect(f.db.writes).toBe(0); expect(first.name).toBe("Agent A"); expect(second.name).toBe("Agent A");
+          |                     ^
+      224 |   });
+      225 |   it.each([new Date(0), new Map([["unsupported", true]]), { value: Infinity }])("non-serializable bulk config denies before all effects", async (config) => {
+      226 |     const f = fixture(); seedAgent(f); seedAgent(f, { agentId: "agent-b" });
+
+      at Object.<anonymous> (tests/unit/runtimeRegistryAuth/adversarial.test.ts:223:21)
+
+  ● mutation collision and serializable-data preflight › context retirement creates an attributed revision before retaining the tombstone
+
+    ConvexError: {"version":1,"code":"FORBIDDEN","message":"Access denied or invalid registry input","retryable":false,"outcome":"not_dispatched"}
+
+      11 | export type RegistryCtx = Pick<QueryCtx, "db" | "auth">;
+      12 | export function deny(code = "FORBIDDEN"): never {
+    > 13 |   throw new ConvexError({ version: 1, code, message: "Access denied or invalid registry input", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      14 | }
+      15 | export function textId(value: string): string { if (!value.trim()) deny("INVALID_INPUT"); return value; }
+      16 | export function integer(value: number, min = 0, max = 1000): number {
+
+      at deny (convex-dev/runtimeRegistryAuth.ts:13:9)
+      at canonical (convex-dev/runtimeRegistryAuth.ts:57:132)
+      at contextAt (convex-dev/runtimeRegistryAuth.ts:227:5)
+      at Function.handler [as _handler] (convex-dev/contexts.ts:143:78)
+      at Object.<anonymous> (tests/unit/runtimeRegistryAuth/adversarial.test.ts:231:5)
+
+FAIL tests/unit/runtimeRegistryAuth/registered.test.ts
+  ● exact 46 native registrations and complete missing-auth outcomes › agents:count returns its expected authorized outcome
+
+    ConvexError: {"version":1,"code":"FORBIDDEN","message":"Access denied or invalid registry input","retryable":false,"outcome":"not_dispatched"}
+
+      11 | export type RegistryCtx = Pick<QueryCtx, "db" | "auth">;
+      12 | export function deny(code = "FORBIDDEN"): never {
+    > 13 |   throw new ConvexError({ version: 1, code, message: "Access denied or invalid registry input", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      14 | }
+      15 | export function textId(value: string): string { if (!value.trim()) deny("INVALID_INPUT"); return value; }
+      16 | export function integer(value: number, min = 0, max = 1000): number {
+
+      at deny (convex-dev/runtimeRegistryAuth.ts:13:9)
+      at canonical (convex-dev/runtimeRegistryAuth.ts:57:132)
+      at all (convex-dev/agents.ts:9:29)
+      at Function.handler [as _handler] (convex-dev/agents.ts:26:78)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:55
+      at RegistryTestDb.transaction (tests/unit/runtimeRegistryAuth/fixture.ts:66:18)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:20
+
+  ● exact 46 native registrations and complete missing-auth outcomes › agents:exists returns its expected authorized outcome
+
+    ConvexError: {"version":1,"code":"FORBIDDEN","message":"Access denied or invalid registry input","retryable":false,"outcome":"not_dispatched"}
+
+      11 | export type RegistryCtx = Pick<QueryCtx, "db" | "auth">;
+      12 | export function deny(code = "FORBIDDEN"): never {
+    > 13 |   throw new ConvexError({ version: 1, code, message: "Access denied or invalid registry input", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      14 | }
+      15 | export function textId(value: string): string { if (!value.trim()) deny("INVALID_INPUT"); return value; }
+      16 | export function integer(value: number, min = 0, max = 1000): number {
+
+      at deny (convex-dev/runtimeRegistryAuth.ts:13:9)
+      at canonical (convex-dev/runtimeRegistryAuth.ts:57:132)
+      at agentAt (convex-dev/runtimeRegistryAuth.ts:177:3)
+      at Function.handler [as _handler] (convex-dev/agents.ts:17:76)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:55
+      at RegistryTestDb.transaction (tests/unit/runtimeRegistryAuth/fixture.ts:66:18)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:20
+
+  ● exact 46 native registrations and complete missing-auth outcomes › agents:get returns its expected authorized outcome
+
+    ConvexError: {"version":1,"code":"FORBIDDEN","message":"Access denied or invalid registry input","retryable":false,"outcome":"not_dispatched"}
+
+      11 | export type RegistryCtx = Pick<QueryCtx, "db" | "auth">;
+      12 | export function deny(code = "FORBIDDEN"): never {
+    > 13 |   throw new ConvexError({ version: 1, code, message: "Access denied or invalid registry input", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      14 | }
+      15 | export function textId(value: string): string { if (!value.trim()) deny("INVALID_INPUT"); return value; }
+      16 | export function integer(value: number, min = 0, max = 1000): number {
+
+      at deny (convex-dev/runtimeRegistryAuth.ts:13:9)
+      at canonical (convex-dev/runtimeRegistryAuth.ts:57:132)
+      at agentAt (convex-dev/runtimeRegistryAuth.ts:177:3)
+      at Function.handler [as _handler] (convex-dev/agents.ts:13:76)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:55
+      at RegistryTestDb.transaction (tests/unit/runtimeRegistryAuth/fixture.ts:66:18)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:20
+
+  ● exact 46 native registrations and complete missing-auth outcomes › agents:list returns its expected authorized outcome
+
+    ConvexError: {"version":1,"code":"FORBIDDEN","message":"Access denied or invalid registry input","retryable":false,"outcome":"not_dispatched"}
+
+      11 | export type RegistryCtx = Pick<QueryCtx, "db" | "auth">;
+      12 | export function deny(code = "FORBIDDEN"): never {
+    > 13 |   throw new ConvexError({ version: 1, code, message: "Access denied or invalid registry input", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      14 | }
+      15 | export function textId(value: string): string { if (!value.trim()) deny("INVALID_INPUT"); return value; }
+      16 | export function integer(value: number, min = 0, max = 1000): number {
+
+      at deny (convex-dev/runtimeRegistryAuth.ts:13:9)
+      at canonical (convex-dev/runtimeRegistryAuth.ts:57:132)
+      at all (convex-dev/agents.ts:9:29)
+      at Function.handler [as _handler] (convex-dev/agents.ts:22:17)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:55
+      at RegistryTestDb.transaction (tests/unit/runtimeRegistryAuth/fixture.ts:66:18)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:20
+
+  ● exact 46 native registrations and complete missing-auth outcomes › agents:register returns its expected authorized outcome
+
+    ConvexError: {"version":1,"code":"FORBIDDEN","message":"Access denied or invalid registry input","retryable":false,"outcome":"not_dispatched"}
+
+      11 | export type RegistryCtx = Pick<QueryCtx, "db" | "auth">;
+      12 | export function deny(code = "FORBIDDEN"): never {
+    > 13 |   throw new ConvexError({ version: 1, code, message: "Access denied or invalid registry input", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      14 | }
+      15 | export function textId(value: string): string { if (!value.trim()) deny("INVALID_INPUT"); return value; }
+      16 | export function integer(value: number, min = 0, max = 1000): number {
+
+      at deny (convex-dev/runtimeRegistryAuth.ts:13:9)
+      at canonical (convex-dev/runtimeRegistryAuth.ts:57:132)
+      at agentAt (convex-dev/runtimeRegistryAuth.ts:177:3)
+      at Function.handler [as _handler] (convex-dev/agents.ts:37:30)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:55
+      at RegistryTestDb.transaction (tests/unit/runtimeRegistryAuth/fixture.ts:66:18)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:20
+
+  ● exact 46 native registrations and complete missing-auth outcomes › agents:unregister returns its expected authorized outcome
+
+    ConvexError: {"version":1,"code":"FORBIDDEN","message":"Access denied or invalid registry input","retryable":false,"outcome":"not_dispatched"}
+
+      11 | export type RegistryCtx = Pick<QueryCtx, "db" | "auth">;
+      12 | export function deny(code = "FORBIDDEN"): never {
+    > 13 |   throw new ConvexError({ version: 1, code, message: "Access denied or invalid registry input", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      14 | }
+      15 | export function textId(value: string): string { if (!value.trim()) deny("INVALID_INPUT"); return value; }
+      16 | export function integer(value: number, min = 0, max = 1000): number {
+
+      at deny (convex-dev/runtimeRegistryAuth.ts:13:9)
+      at canonical (convex-dev/runtimeRegistryAuth.ts:57:132)
+      at agentAt (convex-dev/runtimeRegistryAuth.ts:177:3)
+      at Function.handler [as _handler] (convex-dev/agents.ts:59:78)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:55
+      at RegistryTestDb.transaction (tests/unit/runtimeRegistryAuth/fixture.ts:66:18)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:20
+
+  ● exact 46 native registrations and complete missing-auth outcomes › agents:unregisterMany returns its expected authorized outcome
+
+    ConvexError: {"version":1,"code":"FORBIDDEN","message":"Access denied or invalid registry input","retryable":false,"outcome":"not_dispatched"}
+
+      11 | export type RegistryCtx = Pick<QueryCtx, "db" | "auth">;
+      12 | export function deny(code = "FORBIDDEN"): never {
+    > 13 |   throw new ConvexError({ version: 1, code, message: "Access denied or invalid registry input", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      14 | }
+      15 | export function textId(value: string): string { if (!value.trim()) deny("INVALID_INPUT"); return value; }
+      16 | export function integer(value: number, min = 0, max = 1000): number {
+
+      at deny (convex-dev/runtimeRegistryAuth.ts:13:9)
+      at canonical (convex-dev/runtimeRegistryAuth.ts:57:132)
+      at agentAt (convex-dev/runtimeRegistryAuth.ts:177:3)
+      at Function.handler [as _handler] (convex-dev/agents.ts:70:65)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:55
+      at RegistryTestDb.transaction (tests/unit/runtimeRegistryAuth/fixture.ts:66:18)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:20
+
+  ● exact 46 native registrations and complete missing-auth outcomes › agents:update returns its expected authorized outcome
+
+    ConvexError: {"version":1,"code":"FORBIDDEN","message":"Access denied or invalid registry input","retryable":false,"outcome":"not_dispatched"}
+
+      11 | export type RegistryCtx = Pick<QueryCtx, "db" | "auth">;
+      12 | export function deny(code = "FORBIDDEN"): never {
+    > 13 |   throw new ConvexError({ version: 1, code, message: "Access denied or invalid registry input", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      14 | }
+      15 | export function textId(value: string): string { if (!value.trim()) deny("INVALID_INPUT"); return value; }
+      16 | export function integer(value: number, min = 0, max = 1000): number {
+
+      at deny (convex-dev/runtimeRegistryAuth.ts:13:9)
+      at canonical (convex-dev/runtimeRegistryAuth.ts:57:132)
+      at agentAt (convex-dev/runtimeRegistryAuth.ts:177:3)
+      at Function.handler [as _handler] (convex-dev/agents.ts:46:78)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:55
+      at RegistryTestDb.transaction (tests/unit/runtimeRegistryAuth/fixture.ts:66:18)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:20
+
+  ● exact 46 native registrations and complete missing-auth outcomes › agents:updateMany returns its expected authorized outcome
+
+    ConvexError: {"version":1,"code":"FORBIDDEN","message":"Access denied or invalid registry input","retryable":false,"outcome":"not_dispatched"}
+
+      11 | export type RegistryCtx = Pick<QueryCtx, "db" | "auth">;
+      12 | export function deny(code = "FORBIDDEN"): never {
+    > 13 |   throw new ConvexError({ version: 1, code, message: "Access denied or invalid registry input", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      14 | }
+      15 | export function textId(value: string): string { if (!value.trim()) deny("INVALID_INPUT"); return value; }
+      16 | export function integer(value: number, min = 0, max = 1000): number {
+
+      at deny (convex-dev/runtimeRegistryAuth.ts:13:9)
+      at canonical (convex-dev/runtimeRegistryAuth.ts:57:132)
+      at agentAt (convex-dev/runtimeRegistryAuth.ts:177:3)
+      at Function.handler [as _handler] (convex-dev/agents.ts:53:50)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:55
+      at RegistryTestDb.transaction (tests/unit/runtimeRegistryAuth/fixture.ts:66:18)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:20
+
+  ● exact 46 native registrations and complete missing-auth outcomes › memorySpaces:addParticipant returns its expected authorized outcome
+
+    ConvexError: {"version":1,"code":"FORBIDDEN","message":"Access denied or invalid registry input","retryable":false,"outcome":"not_dispatched"}
+
+      11 | export type RegistryCtx = Pick<QueryCtx, "db" | "auth">;
+      12 | export function deny(code = "FORBIDDEN"): never {
+    > 13 |   throw new ConvexError({ version: 1, code, message: "Access denied or invalid registry input", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      14 | }
+      15 | export function textId(value: string): string { if (!value.trim()) deny("INVALID_INPUT"); return value; }
+      16 | export function integer(value: number, min = 0, max = 1000): number {
+
+      at deny (convex-dev/runtimeRegistryAuth.ts:13:9)
+      at canonical (convex-dev/runtimeRegistryAuth.ts:57:132)
+      at spaceAt (convex-dev/runtimeRegistryAuth.ts:186:3)
+      at edit (convex-dev/memorySpaces.ts:12:78)
+      at Function.handler [as _handler] (convex-dev/memorySpaces.ts:33:136)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:55
+      at RegistryTestDb.transaction (tests/unit/runtimeRegistryAuth/fixture.ts:66:18)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:20
+
+  ● exact 46 native registrations and complete missing-auth outcomes › memorySpaces:archive returns its expected authorized outcome
+
+    ConvexError: {"version":1,"code":"FORBIDDEN","message":"Access denied or invalid registry input","retryable":false,"outcome":"not_dispatched"}
+
+      11 | export type RegistryCtx = Pick<QueryCtx, "db" | "auth">;
+      12 | export function deny(code = "FORBIDDEN"): never {
+    > 13 |   throw new ConvexError({ version: 1, code, message: "Access denied or invalid registry input", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      14 | }
+      15 | export function textId(value: string): string { if (!value.trim()) deny("INVALID_INPUT"); return value; }
+      16 | export function integer(value: number, min = 0, max = 1000): number {
+
+      at deny (convex-dev/runtimeRegistryAuth.ts:13:9)
+      at canonical (convex-dev/runtimeRegistryAuth.ts:57:132)
+      at spaceAt (convex-dev/runtimeRegistryAuth.ts:186:3)
+      at edit (convex-dev/memorySpaces.ts:12:78)
+      at Function.handler [as _handler] (convex-dev/memorySpaces.ts:37:179)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:55
+      at RegistryTestDb.transaction (tests/unit/runtimeRegistryAuth/fixture.ts:66:18)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:20
+
+  ● exact 46 native registrations and complete missing-auth outcomes › memorySpaces:count returns its expected authorized outcome
+
+    ConvexError: {"version":1,"code":"FORBIDDEN","message":"Access denied or invalid registry input","retryable":false,"outcome":"not_dispatched"}
+
+      11 | export type RegistryCtx = Pick<QueryCtx, "db" | "auth">;
+      12 | export function deny(code = "FORBIDDEN"): never {
+    > 13 |   throw new ConvexError({ version: 1, code, message: "Access denied or invalid registry input", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      14 | }
+      15 | export function textId(value: string): string { if (!value.trim()) deny("INVALID_INPUT"); return value; }
+      16 | export function integer(value: number, min = 0, max = 1000): number {
+
+      at deny (convex-dev/runtimeRegistryAuth.ts:13:9)
+      at canonical (convex-dev/runtimeRegistryAuth.ts:57:132)
+      at spaceAt (convex-dev/runtimeRegistryAuth.ts:186:3)
+      at spacesIn (convex-dev/runtimeRegistryAuth.ts:208:47)
+      at Function.handler [as _handler] (convex-dev/memorySpaces.ts:78:88)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:55
+      at RegistryTestDb.transaction (tests/unit/runtimeRegistryAuth/fixture.ts:66:18)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:20
+
+  ● exact 46 native registrations and complete missing-auth outcomes › memorySpaces:deleteSpace returns its expected authorized outcome
+
+    ConvexError: {"version":1,"code":"FORBIDDEN","message":"Access denied or invalid registry input","retryable":false,"outcome":"not_dispatched"}
+
+      11 | export type RegistryCtx = Pick<QueryCtx, "db" | "auth">;
+      12 | export function deny(code = "FORBIDDEN"): never {
+    > 13 |   throw new ConvexError({ version: 1, code, message: "Access denied or invalid registry input", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      14 | }
+      15 | export function textId(value: string): string { if (!value.trim()) deny("INVALID_INPUT"); return value; }
+      16 | export function integer(value: number, min = 0, max = 1000): number {
+
+      at deny (convex-dev/runtimeRegistryAuth.ts:13:9)
+      at canonical (convex-dev/runtimeRegistryAuth.ts:57:132)
+      at spaceAt (convex-dev/runtimeRegistryAuth.ts:186:3)
+      at Function.handler [as _handler] (convex-dev/memorySpaces.ts:47:78)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:55
+      at RegistryTestDb.transaction (tests/unit/runtimeRegistryAuth/fixture.ts:66:18)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:20
+
+  ● exact 46 native registrations and complete missing-auth outcomes › memorySpaces:findByParticipant returns its expected authorized outcome
+
+    ConvexError: {"version":1,"code":"FORBIDDEN","message":"Access denied or invalid registry input","retryable":false,"outcome":"not_dispatched"}
+
+      11 | export type RegistryCtx = Pick<QueryCtx, "db" | "auth">;
+      12 | export function deny(code = "FORBIDDEN"): never {
+    > 13 |   throw new ConvexError({ version: 1, code, message: "Access denied or invalid registry input", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      14 | }
+      15 | export function textId(value: string): string { if (!value.trim()) deny("INVALID_INPUT"); return value; }
+      16 | export function integer(value: number, min = 0, max = 1000): number {
+
+      at deny (convex-dev/runtimeRegistryAuth.ts:13:9)
+      at canonical (convex-dev/runtimeRegistryAuth.ts:57:132)
+      at spaceAt (convex-dev/runtimeRegistryAuth.ts:186:3)
+      at spacesIn (convex-dev/runtimeRegistryAuth.ts:208:47)
+      at Function.handler [as _handler] (convex-dev/memorySpaces.ts:81:88)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:55
+      at RegistryTestDb.transaction (tests/unit/runtimeRegistryAuth/fixture.ts:66:18)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:20
+
+  ● exact 46 native registrations and complete missing-auth outcomes › memorySpaces:get returns its expected authorized outcome
+
+    ConvexError: {"version":1,"code":"FORBIDDEN","message":"Access denied or invalid registry input","retryable":false,"outcome":"not_dispatched"}
+
+      11 | export type RegistryCtx = Pick<QueryCtx, "db" | "auth">;
+      12 | export function deny(code = "FORBIDDEN"): never {
+    > 13 |   throw new ConvexError({ version: 1, code, message: "Access denied or invalid registry input", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      14 | }
+      15 | export function textId(value: string): string { if (!value.trim()) deny("INVALID_INPUT"); return value; }
+      16 | export function integer(value: number, min = 0, max = 1000): number {
+
+      at deny (convex-dev/runtimeRegistryAuth.ts:13:9)
+      at canonical (convex-dev/runtimeRegistryAuth.ts:57:132)
+      at spaceAt (convex-dev/runtimeRegistryAuth.ts:186:3)
+      at Function.handler [as _handler] (convex-dev/memorySpaces.ts:64:76)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:55
+      at RegistryTestDb.transaction (tests/unit/runtimeRegistryAuth/fixture.ts:66:18)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:20
+
+  ● exact 46 native registrations and complete missing-auth outcomes › memorySpaces:list returns its expected authorized outcome
+
+    ConvexError: {"version":1,"code":"FORBIDDEN","message":"Access denied or invalid registry input","retryable":false,"outcome":"not_dispatched"}
+
+      11 | export type RegistryCtx = Pick<QueryCtx, "db" | "auth">;
+      12 | export function deny(code = "FORBIDDEN"): never {
+    > 13 |   throw new ConvexError({ version: 1, code, message: "Access denied or invalid registry input", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      14 | }
+      15 | export function textId(value: string): string { if (!value.trim()) deny("INVALID_INPUT"); return value; }
+      16 | export function integer(value: number, min = 0, max = 1000): number {
+
+      at deny (convex-dev/runtimeRegistryAuth.ts:13:9)
+      at canonical (convex-dev/runtimeRegistryAuth.ts:57:132)
+      at spaceAt (convex-dev/runtimeRegistryAuth.ts:186:3)
+      at spacesIn (convex-dev/runtimeRegistryAuth.ts:208:47)
+      at Function.handler [as _handler] (convex-dev/memorySpaces.ts:73:27)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:55
+      at RegistryTestDb.transaction (tests/unit/runtimeRegistryAuth/fixture.ts:66:18)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:20
+
+  ● exact 46 native registrations and complete missing-auth outcomes › memorySpaces:reactivate returns its expected authorized outcome
+
+    ConvexError: {"version":1,"code":"FORBIDDEN","message":"Access denied or invalid registry input","retryable":false,"outcome":"not_dispatched"}
+
+      11 | export type RegistryCtx = Pick<QueryCtx, "db" | "auth">;
+      12 | export function deny(code = "FORBIDDEN"): never {
+    > 13 |   throw new ConvexError({ version: 1, code, message: "Access denied or invalid registry input", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      14 | }
+      15 | export function textId(value: string): string { if (!value.trim()) deny("INVALID_INPUT"); return value; }
+      16 | export function integer(value: number, min = 0, max = 1000): number {
+
+      at deny (convex-dev/runtimeRegistryAuth.ts:13:9)
+      at canonical (convex-dev/runtimeRegistryAuth.ts:57:132)
+      at spaceAt (convex-dev/runtimeRegistryAuth.ts:186:3)
+      at edit (convex-dev/memorySpaces.ts:12:78)
+      at Function.handler [as _handler] (convex-dev/memorySpaces.ts:38:119)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:55
+      at RegistryTestDb.transaction (tests/unit/runtimeRegistryAuth/fixture.ts:66:18)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:20
+
+  ● exact 46 native registrations and complete missing-auth outcomes › memorySpaces:register returns its expected authorized outcome
+
+    ConvexError: {"version":1,"code":"FORBIDDEN","message":"Access denied or invalid registry input","retryable":false,"outcome":"not_dispatched"}
+
+      11 | export type RegistryCtx = Pick<QueryCtx, "db" | "auth">;
+      12 | export function deny(code = "FORBIDDEN"): never {
+    > 13 |   throw new ConvexError({ version: 1, code, message: "Access denied or invalid registry input", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      14 | }
+      15 | export function textId(value: string): string { if (!value.trim()) deny("INVALID_INPUT"); return value; }
+      16 | export function integer(value: number, min = 0, max = 1000): number {
+
+      at deny (convex-dev/runtimeRegistryAuth.ts:13:9)
+      at canonical (convex-dev/runtimeRegistryAuth.ts:57:132)
+      at spaceAt (convex-dev/runtimeRegistryAuth.ts:186:3)
+      at Function.handler [as _handler] (convex-dev/memorySpaces.ts:27:30)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:55
+      at RegistryTestDb.transaction (tests/unit/runtimeRegistryAuth/fixture.ts:66:18)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:20
+
+  ● exact 46 native registrations and complete missing-auth outcomes › memorySpaces:removeParticipant returns its expected authorized outcome
+
+    ConvexError: {"version":1,"code":"FORBIDDEN","message":"Access denied or invalid registry input","retryable":false,"outcome":"not_dispatched"}
+
+      11 | export type RegistryCtx = Pick<QueryCtx, "db" | "auth">;
+      12 | export function deny(code = "FORBIDDEN"): never {
+    > 13 |   throw new ConvexError({ version: 1, code, message: "Access denied or invalid registry input", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      14 | }
+      15 | export function textId(value: string): string { if (!value.trim()) deny("INVALID_INPUT"); return value; }
+      16 | export function integer(value: number, min = 0, max = 1000): number {
+
+      at deny (convex-dev/runtimeRegistryAuth.ts:13:9)
+      at canonical (convex-dev/runtimeRegistryAuth.ts:57:132)
+      at spaceAt (convex-dev/runtimeRegistryAuth.ts:186:3)
+      at edit (convex-dev/memorySpaces.ts:12:78)
+      at Function.handler [as _handler] (convex-dev/memorySpaces.ts:36:153)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:55
+      at RegistryTestDb.transaction (tests/unit/runtimeRegistryAuth/fixture.ts:66:18)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:20
+
+  ● exact 46 native registrations and complete missing-auth outcomes › memorySpaces:search returns its expected authorized outcome
+
+    ConvexError: {"version":1,"code":"FORBIDDEN","message":"Access denied or invalid registry input","retryable":false,"outcome":"not_dispatched"}
+
+      11 | export type RegistryCtx = Pick<QueryCtx, "db" | "auth">;
+      12 | export function deny(code = "FORBIDDEN"): never {
+    > 13 |   throw new ConvexError({ version: 1, code, message: "Access denied or invalid registry input", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      14 | }
+      15 | export function textId(value: string): string { if (!value.trim()) deny("INVALID_INPUT"); return value; }
+      16 | export function integer(value: number, min = 0, max = 1000): number {
+
+      at deny (convex-dev/runtimeRegistryAuth.ts:13:9)
+      at canonical (convex-dev/runtimeRegistryAuth.ts:57:132)
+      at spaceAt (convex-dev/runtimeRegistryAuth.ts:186:3)
+      at spacesIn (convex-dev/runtimeRegistryAuth.ts:208:47)
+      at Function.handler [as _handler] (convex-dev/memorySpaces.ts:85:27)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:55
+      at RegistryTestDb.transaction (tests/unit/runtimeRegistryAuth/fixture.ts:66:18)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:20
+
+  ● exact 46 native registrations and complete missing-auth outcomes › memorySpaces:update returns its expected authorized outcome
+
+    ConvexError: {"version":1,"code":"FORBIDDEN","message":"Access denied or invalid registry input","retryable":false,"outcome":"not_dispatched"}
+
+      11 | export type RegistryCtx = Pick<QueryCtx, "db" | "auth">;
+      12 | export function deny(code = "FORBIDDEN"): never {
+    > 13 |   throw new ConvexError({ version: 1, code, message: "Access denied or invalid registry input", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      14 | }
+      15 | export function textId(value: string): string { if (!value.trim()) deny("INVALID_INPUT"); return value; }
+      16 | export function integer(value: number, min = 0, max = 1000): number {
+
+      at deny (convex-dev/runtimeRegistryAuth.ts:13:9)
+      at canonical (convex-dev/runtimeRegistryAuth.ts:57:132)
+      at spaceAt (convex-dev/runtimeRegistryAuth.ts:186:3)
+      at edit (convex-dev/memorySpaces.ts:12:78)
+      at Function.handler [as _handler] (convex-dev/memorySpaces.ts:30:204)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:55
+      at RegistryTestDb.transaction (tests/unit/runtimeRegistryAuth/fixture.ts:66:18)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:20
+
+  ● exact 46 native registrations and complete missing-auth outcomes › memorySpaces:updateParticipants returns its expected authorized outcome
+
+    ConvexError: {"version":1,"code":"FORBIDDEN","message":"Access denied or invalid registry input","retryable":false,"outcome":"not_dispatched"}
+
+      11 | export type RegistryCtx = Pick<QueryCtx, "db" | "auth">;
+      12 | export function deny(code = "FORBIDDEN"): never {
+    > 13 |   throw new ConvexError({ version: 1, code, message: "Access denied or invalid registry input", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      14 | }
+      15 | export function textId(value: string): string { if (!value.trim()) deny("INVALID_INPUT"); return value; }
+      16 | export function integer(value: number, min = 0, max = 1000): number {
+
+      at deny (convex-dev/runtimeRegistryAuth.ts:13:9)
+      at canonical (convex-dev/runtimeRegistryAuth.ts:57:132)
+      at spaceAt (convex-dev/runtimeRegistryAuth.ts:186:3)
+      at edit (convex-dev/memorySpaces.ts:12:78)
+      at Function.handler [as _handler] (convex-dev/memorySpaces.ts:39:207)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:55
+      at RegistryTestDb.transaction (tests/unit/runtimeRegistryAuth/fixture.ts:66:18)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:20
+
+  ● exact 46 native registrations and complete missing-auth outcomes › contexts:addParticipant returns its expected authorized outcome
+
+    ConvexError: {"version":1,"code":"FORBIDDEN","message":"Access denied or invalid registry input","retryable":false,"outcome":"not_dispatched"}
+
+      11 | export type RegistryCtx = Pick<QueryCtx, "db" | "auth">;
+      12 | export function deny(code = "FORBIDDEN"): never {
+    > 13 |   throw new ConvexError({ version: 1, code, message: "Access denied or invalid registry input", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      14 | }
+      15 | export function textId(value: string): string { if (!value.trim()) deny("INVALID_INPUT"); return value; }
+      16 | export function integer(value: number, min = 0, max = 1000): number {
+
+      at deny (convex-dev/runtimeRegistryAuth.ts:13:9)
+      at canonical (convex-dev/runtimeRegistryAuth.ts:57:132)
+      at contextAt (convex-dev/runtimeRegistryAuth.ts:227:5)
+      at edit (convex-dev/contexts.ts:68:78)
+      at Function.handler [as _handler] (convex-dev/contexts.ts:97:146)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:55
+      at RegistryTestDb.transaction (tests/unit/runtimeRegistryAuth/fixture.ts:66:18)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:20
+
+  ● exact 46 native registrations and complete missing-auth outcomes › contexts:count returns its expected authorized outcome
+
+    ConvexError: {"version":1,"code":"FORBIDDEN","message":"Access denied or invalid registry input","retryable":false,"outcome":"not_dispatched"}
+
+      11 | export type RegistryCtx = Pick<QueryCtx, "db" | "auth">;
+      12 | export function deny(code = "FORBIDDEN"): never {
+    > 13 |   throw new ConvexError({ version: 1, code, message: "Access denied or invalid registry input", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      14 | }
+      15 | export function textId(value: string): string { if (!value.trim()) deny("INVALID_INPUT"); return value; }
+      16 | export function integer(value: number, min = 0, max = 1000): number {
+
+      at deny (convex-dev/runtimeRegistryAuth.ts:13:9)
+      at canonical (convex-dev/runtimeRegistryAuth.ts:57:132)
+      at contextsIn (convex-dev/runtimeRegistryAuth.ts:236:31)
+      at selected (convex-dev/contexts.ts:49:25)
+      at Function.handler [as _handler] (convex-dev/contexts.ts:173:77)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:55
+      at RegistryTestDb.transaction (tests/unit/runtimeRegistryAuth/fixture.ts:66:18)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:20
+
+  ● exact 46 native registrations and complete missing-auth outcomes › contexts:create returns its expected authorized outcome
+
+    ConvexError: {"version":1,"code":"FORBIDDEN","message":"Access denied or invalid registry input","retryable":false,"outcome":"not_dispatched"}
+
+      11 | export type RegistryCtx = Pick<QueryCtx, "db" | "auth">;
+      12 | export function deny(code = "FORBIDDEN"): never {
+    > 13 |   throw new ConvexError({ version: 1, code, message: "Access denied or invalid registry input", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      14 | }
+      15 | export function textId(value: string): string { if (!value.trim()) deny("INVALID_INPUT"); return value; }
+      16 | export function integer(value: number, min = 0, max = 1000): number {
+
+      at deny (convex-dev/runtimeRegistryAuth.ts:13:9)
+      at canonical (convex-dev/runtimeRegistryAuth.ts:57:132)
+      at spaceAt (convex-dev/runtimeRegistryAuth.ts:186:3)
+      at Function.handler [as _handler] (convex-dev/contexts.ts:75:93)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:55
+      at RegistryTestDb.transaction (tests/unit/runtimeRegistryAuth/fixture.ts:66:18)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:20
+
+  ● exact 46 native registrations and complete missing-auth outcomes › contexts:deleteContext returns its expected authorized outcome
+
+    ConvexError: {"version":1,"code":"FORBIDDEN","message":"Access denied or invalid registry input","retryable":false,"outcome":"not_dispatched"}
+
+      11 | export type RegistryCtx = Pick<QueryCtx, "db" | "auth">;
+      12 | export function deny(code = "FORBIDDEN"): never {
+    > 13 |   throw new ConvexError({ version: 1, code, message: "Access denied or invalid registry input", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      14 | }
+      15 | export function textId(value: string): string { if (!value.trim()) deny("INVALID_INPUT"); return value; }
+      16 | export function integer(value: number, min = 0, max = 1000): number {
+
+      at deny (convex-dev/runtimeRegistryAuth.ts:13:9)
+      at canonical (convex-dev/runtimeRegistryAuth.ts:57:132)
+      at contextAt (convex-dev/runtimeRegistryAuth.ts:227:5)
+      at Function.handler [as _handler] (convex-dev/contexts.ts:143:78)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:55
+      at RegistryTestDb.transaction (tests/unit/runtimeRegistryAuth/fixture.ts:66:18)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:20
+
+  ● exact 46 native registrations and complete missing-auth outcomes › contexts:deleteMany returns its expected authorized outcome
+
+    ConvexError: {"version":1,"code":"FORBIDDEN","message":"Access denied or invalid registry input","retryable":false,"outcome":"not_dispatched"}
+
+      11 | export type RegistryCtx = Pick<QueryCtx, "db" | "auth">;
+      12 | export function deny(code = "FORBIDDEN"): never {
+    > 13 |   throw new ConvexError({ version: 1, code, message: "Access denied or invalid registry input", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      14 | }
+      15 | export function textId(value: string): string { if (!value.trim()) deny("INVALID_INPUT"); return value; }
+      16 | export function integer(value: number, min = 0, max = 1000): number {
+
+      at deny (convex-dev/runtimeRegistryAuth.ts:13:9)
+      at canonical (convex-dev/runtimeRegistryAuth.ts:57:132)
+      at contextsIn (convex-dev/runtimeRegistryAuth.ts:236:31)
+      at selected (convex-dev/contexts.ts:49:25)
+      at Function.handler [as _handler] (convex-dev/contexts.ts:156:78)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:55
+      at RegistryTestDb.transaction (tests/unit/runtimeRegistryAuth/fixture.ts:66:18)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:20
+
+  ● exact 46 native registrations and complete missing-auth outcomes › contexts:exportContexts returns its expected authorized outcome
+
+    ConvexError: {"version":1,"code":"FORBIDDEN","message":"Access denied or invalid registry input","retryable":false,"outcome":"not_dispatched"}
+
+      11 | export type RegistryCtx = Pick<QueryCtx, "db" | "auth">;
+      12 | export function deny(code = "FORBIDDEN"): never {
+    > 13 |   throw new ConvexError({ version: 1, code, message: "Access denied or invalid registry input", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      14 | }
+      15 | export function textId(value: string): string { if (!value.trim()) deny("INVALID_INPUT"); return value; }
+      16 | export function integer(value: number, min = 0, max = 1000): number {
+
+      at deny (convex-dev/runtimeRegistryAuth.ts:13:9)
+      at canonical (convex-dev/runtimeRegistryAuth.ts:57:132)
+      at contextsIn (convex-dev/runtimeRegistryAuth.ts:236:31)
+      at selected (convex-dev/contexts.ts:49:25)
+      at Function.handler [as _handler] (convex-dev/contexts.ts:208:77)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:55
+      at RegistryTestDb.transaction (tests/unit/runtimeRegistryAuth/fixture.ts:66:18)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:20
+
+  ● exact 46 native registrations and complete missing-auth outcomes › contexts:findOrphaned returns its expected authorized outcome
+
+    ConvexError: {"version":1,"code":"FORBIDDEN","message":"Access denied or invalid registry input","retryable":false,"outcome":"not_dispatched"}
+
+      11 | export type RegistryCtx = Pick<QueryCtx, "db" | "auth">;
+      12 | export function deny(code = "FORBIDDEN"): never {
+    > 13 |   throw new ConvexError({ version: 1, code, message: "Access denied or invalid registry input", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      14 | }
+      15 | export function textId(value: string): string { if (!value.trim()) deny("INVALID_INPUT"); return value; }
+      16 | export function integer(value: number, min = 0, max = 1000): number {
+
+      at deny (convex-dev/runtimeRegistryAuth.ts:13:9)
+      at canonical (convex-dev/runtimeRegistryAuth.ts:57:132)
+      at contextsIn (convex-dev/runtimeRegistryAuth.ts:236:31)
+      at selected (convex-dev/contexts.ts:49:25)
+      at Function.handler [as _handler] (convex-dev/contexts.ts:191:64)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:55
+      at RegistryTestDb.transaction (tests/unit/runtimeRegistryAuth/fixture.ts:66:18)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:20
+
+  ● exact 46 native registrations and complete missing-auth outcomes › contexts:get returns its expected authorized outcome
+
+    ConvexError: {"version":1,"code":"FORBIDDEN","message":"Access denied or invalid registry input","retryable":false,"outcome":"not_dispatched"}
+
+      11 | export type RegistryCtx = Pick<QueryCtx, "db" | "auth">;
+      12 | export function deny(code = "FORBIDDEN"): never {
+    > 13 |   throw new ConvexError({ version: 1, code, message: "Access denied or invalid registry input", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      14 | }
+      15 | export function textId(value: string): string { if (!value.trim()) deny("INVALID_INPUT"); return value; }
+      16 | export function integer(value: number, min = 0, max = 1000): number {
+
+      at deny (convex-dev/runtimeRegistryAuth.ts:13:9)
+      at canonical (convex-dev/runtimeRegistryAuth.ts:57:132)
+      at contextAt (convex-dev/runtimeRegistryAuth.ts:227:5)
+      at Function.handler [as _handler] (convex-dev/contexts.ts:160:76)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:55
+      at RegistryTestDb.transaction (tests/unit/runtimeRegistryAuth/fixture.ts:66:18)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:20
+
+  ● exact 46 native registrations and complete missing-auth outcomes › contexts:getAtTimestamp returns its expected authorized outcome
+
+    ConvexError: {"version":1,"code":"FORBIDDEN","message":"Access denied or invalid registry input","retryable":false,"outcome":"not_dispatched"}
+
+      11 | export type RegistryCtx = Pick<QueryCtx, "db" | "auth">;
+      12 | export function deny(code = "FORBIDDEN"): never {
+    > 13 |   throw new ConvexError({ version: 1, code, message: "Access denied or invalid registry input", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      14 | }
+      15 | export function textId(value: string): string { if (!value.trim()) deny("INVALID_INPUT"); return value; }
+      16 | export function integer(value: number, min = 0, max = 1000): number {
+
+      at deny (convex-dev/runtimeRegistryAuth.ts:13:9)
+      at canonical (convex-dev/runtimeRegistryAuth.ts:57:132)
+      at contextAt (convex-dev/runtimeRegistryAuth.ts:227:5)
+      at historical (convex-dev/contexts.ts:197:77)
+      at Function.handler [as _handler] (convex-dev/contexts.ts:205:20)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:55
+      at RegistryTestDb.transaction (tests/unit/runtimeRegistryAuth/fixture.ts:66:18)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:20
+
+  ● exact 46 native registrations and complete missing-auth outcomes › contexts:getChain returns its expected authorized outcome
+
+    ConvexError: {"version":1,"code":"FORBIDDEN","message":"Access denied or invalid registry input","retryable":false,"outcome":"not_dispatched"}
+
+      11 | export type RegistryCtx = Pick<QueryCtx, "db" | "auth">;
+      12 | export function deny(code = "FORBIDDEN"): never {
+    > 13 |   throw new ConvexError({ version: 1, code, message: "Access denied or invalid registry input", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      14 | }
+      15 | export function textId(value: string): string { if (!value.trim()) deny("INVALID_INPUT"); return value; }
+      16 | export function integer(value: number, min = 0, max = 1000): number {
+
+      at deny (convex-dev/runtimeRegistryAuth.ts:13:9)
+      at canonical (convex-dev/runtimeRegistryAuth.ts:57:132)
+      at contextAt (convex-dev/runtimeRegistryAuth.ts:227:5)
+      at Function.handler [as _handler] (convex-dev/contexts.ts:176:77)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:55
+      at RegistryTestDb.transaction (tests/unit/runtimeRegistryAuth/fixture.ts:66:18)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:20
+
+  ● exact 46 native registrations and complete missing-auth outcomes › contexts:getChildren returns its expected authorized outcome
+
+    ConvexError: {"version":1,"code":"FORBIDDEN","message":"Access denied or invalid registry input","retryable":false,"outcome":"not_dispatched"}
+
+      11 | export type RegistryCtx = Pick<QueryCtx, "db" | "auth">;
+      12 | export function deny(code = "FORBIDDEN"): never {
+    > 13 |   throw new ConvexError({ version: 1, code, message: "Access denied or invalid registry input", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      14 | }
+      15 | export function textId(value: string): string { if (!value.trim()) deny("INVALID_INPUT"); return value; }
+      16 | export function integer(value: number, min = 0, max = 1000): number {
+
+      at deny (convex-dev/runtimeRegistryAuth.ts:13:9)
+      at canonical (convex-dev/runtimeRegistryAuth.ts:57:132)
+      at contextAt (convex-dev/runtimeRegistryAuth.ts:227:5)
+      at Function.handler [as _handler] (convex-dev/contexts.ts:182:77)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:55
+      at RegistryTestDb.transaction (tests/unit/runtimeRegistryAuth/fixture.ts:66:18)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:20
+
+  ● exact 46 native registrations and complete missing-auth outcomes › contexts:getHistory returns its expected authorized outcome
+
+    ConvexError: {"version":1,"code":"FORBIDDEN","message":"Access denied or invalid registry input","retryable":false,"outcome":"not_dispatched"}
+
+      11 | export type RegistryCtx = Pick<QueryCtx, "db" | "auth">;
+      12 | export function deny(code = "FORBIDDEN"): never {
+    > 13 |   throw new ConvexError({ version: 1, code, message: "Access denied or invalid registry input", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      14 | }
+      15 | export function textId(value: string): string { if (!value.trim()) deny("INVALID_INPUT"); return value; }
+      16 | export function integer(value: number, min = 0, max = 1000): number {
+
+      at deny (convex-dev/runtimeRegistryAuth.ts:13:9)
+      at canonical (convex-dev/runtimeRegistryAuth.ts:57:132)
+      at contextAt (convex-dev/runtimeRegistryAuth.ts:227:5)
+      at historical (convex-dev/contexts.ts:197:77)
+      at Function.handler [as _handler] (convex-dev/contexts.ts:202:112)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:55
+      at RegistryTestDb.transaction (tests/unit/runtimeRegistryAuth/fixture.ts:66:18)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:20
+
+  ● exact 46 native registrations and complete missing-auth outcomes › contexts:getRoot returns its expected authorized outcome
+
+    ConvexError: {"version":1,"code":"FORBIDDEN","message":"Access denied or invalid registry input","retryable":false,"outcome":"not_dispatched"}
+
+      11 | export type RegistryCtx = Pick<QueryCtx, "db" | "auth">;
+      12 | export function deny(code = "FORBIDDEN"): never {
+    > 13 |   throw new ConvexError({ version: 1, code, message: "Access denied or invalid registry input", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      14 | }
+      15 | export function textId(value: string): string { if (!value.trim()) deny("INVALID_INPUT"); return value; }
+      16 | export function integer(value: number, min = 0, max = 1000): number {
+
+      at deny (convex-dev/runtimeRegistryAuth.ts:13:9)
+      at canonical (convex-dev/runtimeRegistryAuth.ts:57:132)
+      at contextAt (convex-dev/runtimeRegistryAuth.ts:227:5)
+      at Function.handler [as _handler] (convex-dev/contexts.ts:179:77)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:55
+      at RegistryTestDb.transaction (tests/unit/runtimeRegistryAuth/fixture.ts:66:18)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:20
+
+  ● exact 46 native registrations and complete missing-auth outcomes › contexts:getVersion returns its expected authorized outcome
+
+    ConvexError: {"version":1,"code":"FORBIDDEN","message":"Access denied or invalid registry input","retryable":false,"outcome":"not_dispatched"}
+
+      11 | export type RegistryCtx = Pick<QueryCtx, "db" | "auth">;
+      12 | export function deny(code = "FORBIDDEN"): never {
+    > 13 |   throw new ConvexError({ version: 1, code, message: "Access denied or invalid registry input", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      14 | }
+      15 | export function textId(value: string): string { if (!value.trim()) deny("INVALID_INPUT"); return value; }
+      16 | export function integer(value: number, min = 0, max = 1000): number {
+
+      at deny (convex-dev/runtimeRegistryAuth.ts:13:9)
+      at canonical (convex-dev/runtimeRegistryAuth.ts:57:132)
+      at contextAt (convex-dev/runtimeRegistryAuth.ts:227:5)
+      at historical (convex-dev/contexts.ts:197:77)
+      at Function.handler [as _handler] (convex-dev/contexts.ts:200:71)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:55
+      at RegistryTestDb.transaction (tests/unit/runtimeRegistryAuth/fixture.ts:66:18)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:20
+
+  ● exact 46 native registrations and complete missing-auth outcomes › contexts:grantAccess returns its expected authorized outcome
+
+    ConvexError: {"version":1,"code":"FORBIDDEN","message":"Access denied or invalid registry input","retryable":false,"outcome":"not_dispatched"}
+
+      11 | export type RegistryCtx = Pick<QueryCtx, "db" | "auth">;
+      12 | export function deny(code = "FORBIDDEN"): never {
+    > 13 |   throw new ConvexError({ version: 1, code, message: "Access denied or invalid registry input", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      14 | }
+      15 | export function textId(value: string): string { if (!value.trim()) deny("INVALID_INPUT"); return value; }
+      16 | export function integer(value: number, min = 0, max = 1000): number {
+
+      at deny (convex-dev/runtimeRegistryAuth.ts:13:9)
+      at canonical (convex-dev/runtimeRegistryAuth.ts:57:132)
+      at contextAt (convex-dev/runtimeRegistryAuth.ts:227:5)
+      at edit (convex-dev/contexts.ts:68:78)
+      at Function.handler [as _handler] (convex-dev/contexts.ts:101:168)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:55
+      at RegistryTestDb.transaction (tests/unit/runtimeRegistryAuth/fixture.ts:66:18)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:20
+
+  ● exact 46 native registrations and complete missing-auth outcomes › contexts:list returns its expected authorized outcome
+
+    ConvexError: {"version":1,"code":"FORBIDDEN","message":"Access denied or invalid registry input","retryable":false,"outcome":"not_dispatched"}
+
+      11 | export type RegistryCtx = Pick<QueryCtx, "db" | "auth">;
+      12 | export function deny(code = "FORBIDDEN"): never {
+    > 13 |   throw new ConvexError({ version: 1, code, message: "Access denied or invalid registry input", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      14 | }
+      15 | export function textId(value: string): string { if (!value.trim()) deny("INVALID_INPUT"); return value; }
+      16 | export function integer(value: number, min = 0, max = 1000): number {
+
+      at deny (convex-dev/runtimeRegistryAuth.ts:13:9)
+      at canonical (convex-dev/runtimeRegistryAuth.ts:57:132)
+      at contextsIn (convex-dev/runtimeRegistryAuth.ts:236:31)
+      at selected (convex-dev/contexts.ts:49:25)
+      at Function.handler [as _handler] (convex-dev/contexts.ts:167:122)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:55
+      at RegistryTestDb.transaction (tests/unit/runtimeRegistryAuth/fixture.ts:66:18)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:20
+
+  ● exact 46 native registrations and complete missing-auth outcomes › contexts:removeParticipant returns its expected authorized outcome
+
+    ConvexError: {"version":1,"code":"FORBIDDEN","message":"Access denied or invalid registry input","retryable":false,"outcome":"not_dispatched"}
+
+      11 | export type RegistryCtx = Pick<QueryCtx, "db" | "auth">;
+      12 | export function deny(code = "FORBIDDEN"): never {
+    > 13 |   throw new ConvexError({ version: 1, code, message: "Access denied or invalid registry input", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      14 | }
+      15 | export function textId(value: string): string { if (!value.trim()) deny("INVALID_INPUT"); return value; }
+      16 | export function integer(value: number, min = 0, max = 1000): number {
+
+      at deny (convex-dev/runtimeRegistryAuth.ts:13:9)
+      at canonical (convex-dev/runtimeRegistryAuth.ts:57:132)
+      at contextAt (convex-dev/runtimeRegistryAuth.ts:227:5)
+      at edit (convex-dev/contexts.ts:68:78)
+      at Function.handler [as _handler] (convex-dev/contexts.ts:100:149)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:55
+      at RegistryTestDb.transaction (tests/unit/runtimeRegistryAuth/fixture.ts:66:18)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:20
+
+  ● exact 46 native registrations and complete missing-auth outcomes › contexts:search returns its expected authorized outcome
+
+    ConvexError: {"version":1,"code":"FORBIDDEN","message":"Access denied or invalid registry input","retryable":false,"outcome":"not_dispatched"}
+
+      11 | export type RegistryCtx = Pick<QueryCtx, "db" | "auth">;
+      12 | export function deny(code = "FORBIDDEN"): never {
+    > 13 |   throw new ConvexError({ version: 1, code, message: "Access denied or invalid registry input", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      14 | }
+      15 | export function textId(value: string): string { if (!value.trim()) deny("INVALID_INPUT"); return value; }
+      16 | export function integer(value: number, min = 0, max = 1000): number {
+
+      at deny (convex-dev/runtimeRegistryAuth.ts:13:9)
+      at canonical (convex-dev/runtimeRegistryAuth.ts:57:132)
+      at contextsIn (convex-dev/runtimeRegistryAuth.ts:236:31)
+      at selected (convex-dev/contexts.ts:49:25)
+      at Function.handler [as _handler] (convex-dev/contexts.ts:170:122)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:55
+      at RegistryTestDb.transaction (tests/unit/runtimeRegistryAuth/fixture.ts:66:18)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:20
+
+  ● exact 46 native registrations and complete missing-auth outcomes › contexts:update returns its expected authorized outcome
+
+    ConvexError: {"version":1,"code":"FORBIDDEN","message":"Access denied or invalid registry input","retryable":false,"outcome":"not_dispatched"}
+
+      11 | export type RegistryCtx = Pick<QueryCtx, "db" | "auth">;
+      12 | export function deny(code = "FORBIDDEN"): never {
+    > 13 |   throw new ConvexError({ version: 1, code, message: "Access denied or invalid registry input", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      14 | }
+      15 | export function textId(value: string): string { if (!value.trim()) deny("INVALID_INPUT"); return value; }
+      16 | export function integer(value: number, min = 0, max = 1000): number {
+
+      at deny (convex-dev/runtimeRegistryAuth.ts:13:9)
+      at canonical (convex-dev/runtimeRegistryAuth.ts:57:132)
+      at contextAt (convex-dev/runtimeRegistryAuth.ts:227:5)
+      at edit (convex-dev/contexts.ts:68:78)
+      at Function.handler [as _handler] (convex-dev/contexts.ts:92:240)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:55
+      at RegistryTestDb.transaction (tests/unit/runtimeRegistryAuth/fixture.ts:66:18)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:20
+
+  ● exact 46 native registrations and complete missing-auth outcomes › contexts:updateMany returns its expected authorized outcome
+
+    ConvexError: {"version":1,"code":"FORBIDDEN","message":"Access denied or invalid registry input","retryable":false,"outcome":"not_dispatched"}
+
+      11 | export type RegistryCtx = Pick<QueryCtx, "db" | "auth">;
+      12 | export function deny(code = "FORBIDDEN"): never {
+    > 13 |   throw new ConvexError({ version: 1, code, message: "Access denied or invalid registry input", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      14 | }
+      15 | export function textId(value: string): string { if (!value.trim()) deny("INVALID_INPUT"); return value; }
+      16 | export function integer(value: number, min = 0, max = 1000): number {
+
+      at deny (convex-dev/runtimeRegistryAuth.ts:13:9)
+      at canonical (convex-dev/runtimeRegistryAuth.ts:57:132)
+      at contextsIn (convex-dev/runtimeRegistryAuth.ts:236:31)
+      at selected (convex-dev/contexts.ts:49:25)
+      at Function.handler [as _handler] (convex-dev/contexts.ts:148:78)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:55
+      at RegistryTestDb.transaction (tests/unit/runtimeRegistryAuth/fixture.ts:66:18)
+      at tests/unit/runtimeRegistryAuth/registered.test.ts:63:20
+
+Test Suites: 3 failed, 3 total
+Tests:       72 failed, 220 passed, 292 total
+Snapshots:   0 total
+Time:        7.378 s, estimated 8 s
+Ran all test suites.
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/task03b2b1/checks/tests-final.json

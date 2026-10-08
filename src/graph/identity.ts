@@ -1,5 +1,5 @@
 /** Fixed managed identities. Logical IDs are display properties, never source authority. */
-import { createHash } from "node:crypto";
+import { createSha256 } from "../common/crypto";
 import { convexToJson, type Value } from "convex/values";
 import { GraphDatabaseError } from "./types";
 import type { GraphIdentity, GraphKind, GraphJob, GraphScope } from "./types";
@@ -33,8 +33,8 @@ function sorted(value: unknown): unknown {
 export const canonicalGraphJson = (value: Value): string =>
   JSON.stringify(sorted(convexToJson(value)));
 export const graphDigest = (value: Value): string =>
-  createHash("sha256").update(canonicalGraphJson(value), "utf8").digest("hex");
-export const graphBytes = (value: Value): number => Buffer.byteLength(canonicalGraphJson(value), "utf8");
+  createSha256().update(canonicalGraphJson(value)).digestHex();
+export const graphBytes = (value: Value): number => new TextEncoder().encode(canonicalGraphJson(value)).length;
 const stringOrNull = (value: unknown): value is string | null => value === null || typeof value === "string";
 
 export function primaryGraphIdentity(
@@ -98,8 +98,8 @@ function validateGraphJobEvidence(job: GraphJob): GraphJob {
     const request = {request:{graphInvocationId:job.graphInvocationId,priority:job.priority??"normal"},table:job.table,operation:job.operation,projection:job.projection,...job.sourceDigest===undefined?{}:{sourceDigest:job.sourceDigest},...job.suppressedJobs===undefined?{}:{suppressedJobs:job.suppressedJobs}};
     if (job.projectionJson !== canonicalGraphJson(job.projection as unknown as Value) ||
         job.requestJson !== canonicalGraphJson(request as unknown as Value) ||
-        job.projectionDigest !== createHash("sha256").update(job.projectionJson, "utf8").digest("hex") ||
-        job.requestDigest !== createHash("sha256").update(job.requestJson, "utf8").digest("hex"))
+        job.projectionDigest !== createSha256().update(job.projectionJson).digestHex() ||
+        job.requestDigest !== createSha256().update(job.requestJson).digestHex())
       throw new GraphDatabaseError("Native canonical projection evidence is contradictory.", "GRAPH_JOB_UNRESOLVED");
   }
   if (job.requestDigest !== expectedDigest)

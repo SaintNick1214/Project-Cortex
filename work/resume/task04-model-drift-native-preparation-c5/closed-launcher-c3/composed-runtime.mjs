@@ -1,0 +1,29 @@
+import fs from 'node:fs';import path from 'node:path';import crypto from 'node:crypto';import {createRequire} from 'node:module';import {routePolicy} from './route-policy.mjs';import {prepareRegistry} from './command-registry.mjs';import {compilerSession} from './compiler-session.mjs';import {verifyGraph} from './fixed-command-launcher.mjs';
+const raw={...fs};raw.realpathSync=raw.realpathSync.native;
+function primitiveRead(p){const fd=raw.openSync(p,raw.constants.O_RDONLY|raw.constants.O_NOFOLLOW);try{const s=raw.fstatSync(fd),parts=[];let bytes=0;while(bytes<s.size){const block=Buffer.allocUnsafe(Math.max(1,Math.min(1048576,s.size-bytes))),n=raw.readSync(fd,block,0,block.length,null);if(!n)break;parts.push(block.subarray(0,n));bytes+=n;}const end=raw.fstatSync(fd);if(s.dev!==end.dev||s.ino!==end.ino||s.size!==end.size||bytes!==s.size)throw Error('QA_BRIDGE_SOURCE_BINDING');return Buffer.concat(parts,bytes);}finally{raw.closeSync(fd);}}
+const require=createRequire(import.meta.url),W=path.dirname(new URL(import.meta.url).pathname),T='/tmp/cortex-native-c5-closed-launcher-c3',R='/workspace/Project-Cortex',H=b=>crypto.createHash('sha256').update(b).digest('hex');
+const row=p=>{const b=fs.readFileSync(p);return {path:p,bytes:b.length,sha256:H(b)};};
+/** Prepared composition for a closed, hash-bound descriptor. No original launch authority exists in this module. */
+export function prepareComposition(id,...extra){
+ if(extra.length)throw Error('QA_BRIDGE_COMMAND_ID');const descriptor=prepareRegistry().get(id),toolClosure=['node_modules/esbuild/lib/main.js','node_modules/esbuild/package.json','node_modules/@esbuild/linux-x64/bin/esbuild'].map(p=>row(path.join(R,p))),packageClosure=JSON.parse(fs.readFileSync(path.join(T,'package-graph.json'))).files.map(({path,bytes,sha256})=>({path,bytes,sha256})),sourceClosure=descriptor.sourceMap.filter(r=>!descriptor.mutableMetadata.includes(r.path)).map(({path,bytes,sha256})=>({path,bytes,sha256})),adapters=fs.readdirSync(W).filter(n=>/\.(mjs|cjs)$/.test(n)).map(n=>row(path.join(W,n))),closure=[...new Map([...sourceClosure,...toolClosure,...packageClosure,...adapters,row(process.execPath)].map(r=>[r.path,r])).values()];
+ const directory=path.join(T,'prepared-'+id+'-'+crypto.randomUUID());fs.mkdirSync(directory,{mode:0o700});
+ const policy=routePolicy({roots:[...descriptor.writeRoots,directory],readFiles:closure.map(r=>r.path),readDirectories:[R,path.join(R,'node_modules')]});
+ const sourceFence=()=>{for(const r of closure){const s=raw.lstatSync(r.path);if(!s.isFile()||s.isSymbolicLink()||s.nlink!==1||raw.realpathSync(r.path)!==r.path)throw Error('QA_BRIDGE_SOURCE_BINDING');const b=primitiveRead(r.path);if(b.length!==r.bytes||H(b)!==r.sha256)throw Error('QA_BRIDGE_SOURCE_DRIFT');}};
+ return Object.freeze({descriptor,closure,toolClosure,policy,sourceFence,directory,
+  installOwnReviewPorts(entry){
+   if(entry!==path.join(W,'composition-runtime-controls.mjs'))throw Error('QA_BRIDGE_OWN_CONTROL_ONLY');sourceFence();
+   const historical=JSON.parse(raw.readFileSync(path.join(T,'original-read-map.json'))).files;const dirs=new Set([R,path.join(R,'node_modules')]);for(const r of historical){let p=path.dirname(r.path);for(;;){dirs.add(p);if(p===path.dirname(p))break;p=path.dirname(p);}}for(const r of closure){let p=path.dirname(r.path);for(;;){dirs.add(p);if(p===path.dirname(p))break;p=path.dirname(p);}}
+   const registry=prepareRegistry();const forbidden=new Set(registry.forbidden.concat(['parent-inputs.mjs','current-inputs.mjs','legacy-current-inputs.mjs','publication-artifacts.mjs']));const deniedEntries=[...registry.descriptors.map(d=>d.entry),...sourceClosure.filter(r=>forbidden.has(path.basename(r.path))).map(r=>r.path)];
+   const moduleBoundary=require('./module-boundary.cjs').install({closure,sourceFence,deniedEntries,redirects:{esbuild:path.join(W,'compiler-facade.mjs')}});
+   const vmPort=require('./vm-port.cjs').install({sourceFence,producerPaths:[...sourceClosure.filter(r=>r.path.endsWith('.mjs')).map(r=>r.path),entry]});
+   const preload=require('./bridge-preload.cjs').install({roots:[...descriptor.writeRoots,directory],readFiles:[...closure.map(r=>r.path),...descriptor.sourceMap.map(r=>r.path),...historical.map(r=>r.path)],readDirectories:[...dirs],effectFence:sourceFence});
+   const compiler=compilerSession({descriptor,policy,toolClosure,sourceFence,recordRoot:directory,moduleBoundary,deadlineMs:Date.now()+20000,inputClosure:toolClosure});
+   globalThis[Symbol.for('CORTEX_OWN_C3_COMPILER_SESSION')]=compiler;
+   const childProcess=require('node:child_process'),prior={...childProcess};for(const name of ['spawn','spawnSync','exec','execSync','execFile','execFileSync','fork'])childProcess[name]=()=>{throw Error('QA_BRIDGE_ROOT_PROCESS_HELD');};require('node:module').syncBuiltinESMExports();
+   return {compiler,preload,moduleBoundary,async close(){await compiler.joined();let primary;try{preload.closeOwned();}catch(e){primary=e;}finally{preload.restore();vmPort.restore();moduleBoundary.remove();delete globalThis[Symbol.for('CORTEX_OWN_C3_COMPILER_SESSION')];for(const name of ['spawn','spawnSync','exec','execSync','execFile','execFileSync','fork'])childProcess[name]=prior[name];require('node:module').syncBuiltinESMExports();}if(primary)throw primary;}};
+  },
+  /** Explicit control-only wiring used by OWN authored composition controls, never an original entry. */
+  createCompilerForOwnControl({moduleBoundary,entryRows=[]}){sourceFence();return compilerSession({descriptor,policy,toolClosure,sourceFence,recordRoot:directory,moduleBoundary,deadlineMs:Date.now()+20000,inputClosure:[...toolClosure,...entryRows]});},
+  paths:{preload:path.join(W,'bridge-preload.cjs'),moduleBoundary:path.join(W,'module-boundary.cjs'),processPort:path.join(W,'process-port.cjs'),compilerFacade:path.join(W,'compiler-facade.mjs')},
+  status:'PREPARED_COMPOSITION_ORIGINAL_LAUNCH_HELD'});
+}

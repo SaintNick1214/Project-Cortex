@@ -1,0 +1,19 @@
+import fs from 'node:fs';import assert from 'node:assert/strict';import {isDeepStrictEqual} from 'node:util';import {ConvexError} from 'convex/values';
+import {setupAuth} from '../../../../node_modules/convex/dist/esm/server/impl/authentication_impl.js';
+import {harness,identity,memoryStoreArgs,factStoreArgs} from '../../../../tests/unit/runtimeEndpointAuth/sharedfixtures.ts';import * as memories from '../../../../convex-dev/memories.ts';import * as facts from '../../../../convex-dev/facts.ts';
+Error.stackTraceLimit=100;
+const operations=[['memories.store',memories.store,memoryStoreArgs],['memories.update',memories.update,{memorySpaceId:'space-a',memoryId:'target',importance:77}],['memories.updateMany',memories.updateMany,{memorySpaceId:'space-a',importance:77}],['facts.store',facts.store,factStoreArgs],['facts.update',facts.update,{memorySpaceId:'space-a',factId:'target',confidence:88}]] as const;
+const results=[];const exact=()=>new ConvexError({version:1,code:'FORBIDDEN',message:'Access denied',retryable:false,outcome:'not_dispatched'});
+for(const [name,registration,args] of operations)for(const mode of ['healthy-json','returned-issuer-getter','returned-subject-getter','callback-sync-exact','callback-reject-exact','invalid-syscall-json']){
+ const h=harness();const writer=await h.provisionScope({capabilities:['write']});if(name.includes('update'))await h.seedData(name.startsWith('memories')?'memories':'facts',writer,'target');const before=structuredClone(h.db.rows);let reached=0,getters=0,syscalls=0;
+ const healthy={...identity,tokenIdentifier:'test-identity'};
+ (globalThis as any).Convex={asyncSyscall:async(op:string)=>{assert.equal(op,'1.0/getUserIdentity');syscalls++;const selected=(new Error().stack??'').includes('optionalMutationRead');if(selected){reached++;if(mode==='invalid-syscall-json')return '{invalid';}return JSON.stringify(healthy);}};
+ const platform=setupAuth('probe');const originalIdentity=platform.getUserIdentity.bind(platform);h.ctx.auth=platform;
+ if(mode.startsWith('returned-')||mode.startsWith('callback-'))h.ctx.auth.getUserIdentity=(()=>{if((new Error().stack??'').includes('optionalMutationRead')){reached++;if(mode==='callback-sync-exact')throw exact();if(mode==='callback-reject-exact')return Promise.reject(exact());const v={...healthy};Object.defineProperty(v,mode.includes('issuer')?'issuer':'subject',{get(){getters++;throw exact();}});return Promise.resolve(v);}return originalIdentity();}) as any;
+ let result:any,error:any;try{result=await h.invoke(registration,args);}catch(e:any){error=e.data;}
+ if(!reached)console.error(JSON.stringify({name,mode,error,result,syscalls}));assert.ok(reached>=1,name+' '+mode+' injection reached');const rollback=isDeepStrictEqual(before,h.db.rows);const synthetic=mode.startsWith('returned-');
+ if(synthetic||mode==='healthy-json'){assert.equal(result?.mutationReceipt,true);assert.equal(rollback,false);}else{assert.equal(result,undefined);assert.equal(rollback,true);assert.deepEqual(error,{version:1,code:'BACKEND_OPERATION_FAILED',message:'Data operation failed.',retryable:false,outcome:'not_committed'});}
+ results.push({name,mode,reached,getters,syscalls,receipt:result?.mutationReceipt??false,error,rollback,supported:!synthetic});
+}
+const json=await setupAuth('ordinary').getUserIdentity();assert.equal(Object.getPrototypeOf(json),Object.prototype);for(const key of ['issuer','subject'])assert.ok('value' in Object.getOwnPropertyDescriptor(json,key)!);
+fs.writeFileSync('work/resume/sdk-safety-judge/mf/results.json',JSON.stringify({total:results.length,supported:20,syntheticReturnedAccessors:10,allExpected:true,results},null,2));console.log('PASS30 expected actual-handler controls;20 supported,10 synthetic accessor reproductions');delete (globalThis as any).Convex;

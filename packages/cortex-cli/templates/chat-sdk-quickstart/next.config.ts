@@ -1,6 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Session and shared-chat routes use dynamic request data.
+  cacheComponents: false,
   // Required for @cortexmemory packages to work with Turbopack
   transpilePackages: [
     "@cortexmemory/vercel-ai-provider",

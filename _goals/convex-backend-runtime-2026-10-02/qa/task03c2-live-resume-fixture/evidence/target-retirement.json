@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "operation": "retire-owned-qualification-auth-project",
+  "startedAt": "2026-10-03T20:12:00.794Z",
+  "observedAt": "2026-10-03T20:12:01.063Z",
+  "projectId": 3137075,
+  "deploymentName": "rosy-blackbird-933",
+  "verifiedProjectName": "Cortex runtime disposable qualification auth 3f344e789f",
+  "verifiedOnlyDevelopmentCloudDeployment": true,
+  "managementDeleteMethod": "POST",
+  "managementDeletePath": "/projects/3137075/delete",
+  "deletionHttpStatus": 200,
+  "absentProjectHttpStatus": 404,
+  "status": "PASS",
+  "coverage": "Exact owned project destroyed; all its disposable fixtures unreachable. This does not replace per-case qualification, owned control-fence checks or full-goal validation."
+}

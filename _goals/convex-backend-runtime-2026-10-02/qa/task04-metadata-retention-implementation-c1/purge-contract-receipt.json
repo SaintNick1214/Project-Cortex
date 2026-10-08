@@ -1,0 +1,11 @@
+{
+  "argv": [
+    "python3",
+    "-c",
+    "from pathlib import Path;b=Path(\"_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c1/fixture/convex\");print(\"\\n\".join(s for s in (b/\"lifecycle.ts\").read_text().splitlines() if any(k in s for k in [\"purgeOwnedPrivate\",\"purgeSummary\",\"recoverOwnedEvidence\",\"function summary\",\"function evidence\",\"snapshotHash\",\"purge-intent\"])));print(\"\\n\".join(s for s in (b/\"store.ts\").read_text().splitlines() if \"purge\" in s or \"summary\" in s))"
+  ],
+  "cwd": "/workspace/Project-Cortex",
+  "startUtc": "2026-10-04T14:30:12.131561+00:00",
+  "endUtc": "2026-10-04T14:30:12.153853+00:00",
+  "exit": 0
+}

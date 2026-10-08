@@ -1,0 +1,58 @@
+{
+  "argv": [
+    "work/resume/task04-evidence-transport-30-c2/verify-c2.py"
+  ],
+  "utcPre": "2026-10-04T13:33:51.638818+00:00",
+  "failures": [],
+  "checks": [
+    {
+      "name": "clean-materialize",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-evidence-transport-30-c2/materialize.py",
+        "--target",
+        "/workspace/Project-Cortex/work/resume/task04-evidence-transport-30-c2/replica",
+        "--materialize"
+      ],
+      "utcPre": "2026-10-04T13:34:00.470342+00:00",
+      "utcPost": "2026-10-04T13:35:53.131872+00:00",
+      "exitCode": 0
+    },
+    {
+      "name": "idempotence",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-evidence-transport-30-c2/materialize.py",
+        "--target",
+        "/workspace/Project-Cortex/work/resume/task04-evidence-transport-30-c2/replica",
+        "--materialize"
+      ],
+      "utcPre": "2026-10-04T13:35:53.131913+00:00",
+      "utcPost": "2026-10-04T13:36:16.980759+00:00",
+      "exitCode": 0
+    },
+    {
+      "name": "readonly",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-evidence-transport-30-c2/materialize.py",
+        "--target",
+        "/workspace/Project-Cortex/work/resume/task04-evidence-transport-30-c2/replica"
+      ],
+      "utcPre": "2026-10-04T13:36:16.981114+00:00",
+      "utcPost": "2026-10-04T13:36:34.654740+00:00",
+      "exitCode": 0
+    }
+  ],
+  "correctedHelperSha256": "52127a96ba92de55b1b91996688ba77dd6add3ffa202c6fd6ba80861dcbd761d",
+  "cleanReplicaAbsentBefore": true,
+  "sourcePreFullClosureUtc": "2026-10-04T13:34:00.470278+00:00",
+  "sourcePreFullClosureVerified": true,
+  "fullReplicaExactClosure": true,
+  "originalManifestSha256": "0b3f7f43fdfbd1b2e71cb420b7a24d1255773b3ca6973df0775dc4d1c0c5179d",
+  "files": 63544,
+  "frozenSourceUnchanged": true,
+  "sourcePostFullClosureUtc": "2026-10-04T13:36:52.620471+00:00",
+  "exitCode": 0,
+  "utcPost": "2026-10-04T13:36:52.620484+00:00"
+}

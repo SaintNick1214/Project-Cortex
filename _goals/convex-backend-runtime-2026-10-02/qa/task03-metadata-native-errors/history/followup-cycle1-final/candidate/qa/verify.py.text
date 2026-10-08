@@ -1,0 +1,37 @@
+from pathlib import Path
+import json,hashlib,subprocess,datetime,re,collections
+r=Path.cwd();q=r/'_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup';digest=lambda p:hashlib.sha256(p.read_bytes()).hexdigest();base=json.loads((q/'baseline-hashes.json').read_text());changed={'convex-dev/runtimeAuth.ts','convex-dev/runtimeMetadataAuth.ts','tests/unit/runtimeAuth/provisioning.test.ts','tests/unit/runtimeMetadataAuth/handlers.test.ts'}
+protected=[];modified=[]
+for row in base['records']:
+ actual=digest(r/row['file']); record={**row,'actualSha256':actual,'unchanged':actual==row['sha256']}
+ if row['file'] in changed: assert not record['unchanged'];modified.append(record)
+ else:assert record['unchanged'],row['file'];protected.append(record)
+qaProtected=[row for row in protected if row['file'].startswith('_goals/convex-backend-runtime-2026-10-02/qa/')]
+archives=[]
+for name,expected in [('cycle1-final',69),('cycle2-final',101)]:
+ archive=r/'_goals/convex-backend-runtime-2026-10-02/qa/task03b2a/history'/name;manifest=json.loads((archive/'preservation.json').read_text());assert len(manifest['records'])==expected
+ for row in manifest['records']:
+  p=archive/row['kind']/(row.get('path')or row['file']);p=Path(str(p)+'.text')if row['kind']=='source'else p;assert digest(p)==row['sha256']
+ archives.append({'archive':name,'records':expected,'unchanged':True,'manifestSha256':digest(archive/'preservation.json')})
+final=json.loads((q/'final-selected-outcomes.json').read_text());auth=json.loads((q/'credentials-outcomes.json').read_text());assert (final['numTotalTests'],final['numPassedTests'],final['numFailedTests'],final['numPendingTests'],final['numTodoTests'])==(787,787,0,0,0);assert(auth['numTotalTests'],auth['numPassedTests'],auth['numFailedTests'],auth['numPendingTests'],auth['numTodoTests'])==(98,98,0,0,0)
+flat=lambda p:[{'name':a['fullName'],'status':a['status'],'file':str(Path(t['name']).relative_to(r))}for t in p['testResults']for a in t['assertionResults']]
+outcomes=flat(final);assert all(a['status']=='passed'for a in outcomes)
+namePreservation=[]
+for initial in ['literal-original-metadata','literal-original-auth']:
+ old=json.loads((q/(initial+'.json')).read_text());oldnames=sorted(a['name']for a in flat(old));oldfiles={a['file']for a in flat(old)};newnames=sorted(a['name']for a in outcomes if a['file']in oldfiles);assert oldnames==newnames;namePreservation.append({'initialReceipt':initial,'originalNamesAndMultiplicitiesRetained':True,'count':len(oldnames),'initialFailed':old['numFailedTests']})
+discovery=json.loads((q/'checks/discovery.log').read_text().splitlines()[0]);ran={t['name']for t in final['testResults']}|{t['name']for t in auth['testResults']};assert set(discovery)==ran;assert len(ran)==15
+catalog=json.loads((q/'catalog/public-path-inventory.json').read_text());original=json.loads((r/'_goals/convex-backend-runtime-2026-10-02/qa/task03b2a/catalog/public-path-inventory.json').read_text());assert catalog['endpoints']==original['endpoints'];assert catalog['completeness']['unresolved']==[];assert catalog['completeness']['counts']['registered']==41;assert catalog['completeness']['counts']['public']==36;assert catalog['completeness']['counts']['internal']==5
+native=json.loads((q/'framework-registration.json').read_text());assert len(native)==41;assert sum(x['visibility']=='public'for x in native)==36;assert sum(x['visibility']=='internal'for x in native)==5
+oldAuth=subprocess.check_output(['git','show','HEAD:convex-dev/runtimeAuth.ts']).decode();newAuth=(r/'convex-dev/runtimeAuth.ts').read_text();assert oldAuth.split('export function createAuthorityReader')[0]==newAuth.split('/** Avoid native unique()')[0];assert oldAuth.split('export async function requireAuthority')[1]==newAuth.split('export async function requireAuthority')[1]
+oldMd=subprocess.check_output(['git','show','HEAD:convex-dev/runtimeMetadataAuth.ts']).decode();newMd=(r/'convex-dev/runtimeMetadataAuth.ts').read_text();oldpiece='const row = await selected.filter((q) => auth.resourceAccess === "own"\n    ? q.eq(q.field("ownerPrincipalId"), auth.principalId) : q.neq(q.field("ownerPrincipalId"), undefined)).unique();';newpiece='const rows = await selected.filter((q) => auth.resourceAccess === "own"\n    ? q.eq(q.field("ownerPrincipalId"), auth.principalId) : q.neq(q.field("ownerPrincipalId"), undefined)).take(2);\n  if (rows.length > 1) denied();\n  const row = rows[0] ?? null;';assert oldMd.count(oldpiece)==3;assert newMd==oldMd.replace(oldpiece,newpiece)
+assert not list((r/'work/native-errors/tmp').glob('cortex-metadata-inventory-*'));assert not list((r/'node_modules').glob('.cortex-contract-*'))
+for f,count in [('boundary-probes.json',118),('extra-probes.json',33)]:v=json.loads((q/f).read_text());assert len(v)==count;assert all(row['pass']for row in v)
+assert len(json.loads((q/'timestamp-equivalence.json').read_text())['outcomes'])==72;assert len(json.loads((q/'cleanup-controls.json').read_text())['outcomes'])==6
+(q/'preservation.json').write_text(json.dumps({'head':base['head'],'protectedTrackedRecords':len(protected),'protectedOriginalQaRecords':len(qaProtected),'protectedRecords':protected,'allowedModifiedRecords':modified,'metadataArchives':archives,'originalTestNamePreservation':namePreservation,'metadataSelectorFiltersConflictFencesAndEverythingOutsideThreeBoundedLookupsUnchanged':True,'runtimeAuthPurePolicyResolverPruningInternalProvisioningPrefixSuffixUnchanged':True,'compilerConfigSchemaGeneratedBindingsSdkAndLockfileUnchanged':True,'catalogEndpointRecordsExactlyUnchanged':True,'ordinaryCatalogAndTemporaryCleanupUnchanged':True,'liveHarnessUnchanged':True},indent=2)+'\n')
+(q/'test-summary.json').write_text(json.dumps({'selected':{'tests':787,'suites':13,'skips':0,'failures':0,'groups':{'metadataOriginal':189,'nativeErrors':106,'authority03A':133,'workers':185,'sdkGovernance':28,'sdkMetadata':106,'credentialSuiteOnly':40}},'separateAuth':{'tests':98,'suites':3,'credentialSuite':40,'contextValidators':58,'skips':0,'failures':0},'uniqueOutcomeCount':845,'credentialOverlap':40,'discoveredSuites':15,'allDiscoveredSuitesExecuted':True,'outcomes':outcomes+flat(auth),'historicalBoundaryCurrentReplay':151,'historicalTimestampCurrentComparison':72,'historical19CompatibilityReplay':19,'cleanupCurrentControls':6},indent=2)+'\n')
+requirements=[]
+for row in catalog['endpoints']:
+ tests=[x for x in outcomes if row['path']in x['name']]
+ requirements.append({'path':row['path'],'visibility':row['visibility'],'requiredCapability':row['requiredCapability'],'scope':row['scope'],'ownership':row['ownership'],'backgroundCheck':row['backgroundCheck'],'resourceLookup':row['resourceLookup'],'currentOutcomeTests':tests,'coverage': 'original authorized/missing identity/forged tenant handler outcomes'if row['visibility']=='public'else'original actual registration and operator/creator/currentness outcomes plus151 current boundary controls'})
+(q/'original41-requirement-mapping.json').write_text(json.dumps(requirements,indent=2)+'\n')
+receipts=[json.loads(p.read_text())for p in sorted((q/'checks').glob('*.receipt.json'))];(q/'commands.json').write_text(json.dumps(sorted(receipts,key=lambda x:x['startedAt']),indent=2)+'\n');print(json.dumps({'protectedTracked':len(protected),'protectedOriginalQa':len(qaProtected),'archives':archives,'outcomes':787,'auth':98,'uniqueOutcomes':845,'registered':41,'public':36,'internal':5,'failures':0,'skips':0,'discovery':15}))

@@ -1,0 +1,42 @@
+(node:80616) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL _goals/convex-backend-runtime-2026-10-02/qa/task04-gateway-middleware-c1-review/deadline-c2.test.ts
+  independent hostile deadline
+    ✕ reader deadline also bounds a paused visibility RPC and suppresses late delivery (108 ms)
+
+  ● independent hostile deadline › reader deadline also bounds a paused visibility RPC and suppresses late delivery
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 2
+    + Received  + 8
+
+      Object {
+    -   "finishedAtDeadline": true,
+    -   "lateDeltas": Array [],
+    +   "finishedAtDeadline": false,
+    +   "lateDeltas": Array [
+    +     Object {
+    +       "delta": "answer",
+    +       "id": "governed-text",
+    +       "type": "text-delta",
+    +     },
+    +   ],
+      }
+
+      90 |   await completion;
+      91 |   expect(aborted).toBe(true);
+    > 92 |   expect({finishedAtDeadline,lateDeltas:seen.filter(x=>x.type==="text-delta")}).toEqual({finishedAtDeadline:true,lateDeltas:[]});
+         |                                                                                 ^
+      93 |  });
+      94 | });
+      95 |
+
+      at Object.<anonymous> (_goals/convex-backend-runtime-2026-10-02/qa/task04-gateway-middleware-c1-review/deadline-c2.test.ts:92:81)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 1 total
+Snapshots:   0 total
+Time:        5.202 s
+Ran all test suites.
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/task04-gateway-middleware-c1-review/deadline-c2-result.json

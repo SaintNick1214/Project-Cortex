@@ -1,0 +1,24 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: legitimate-two-current-receipts: PARENT_PRIVATE_PATH
++ actual - expected
+
++ '/workspace/Project-Cortex/work/resume/task04-parent-native-inputs-c3-preparation/case-gdQsOv/work/backend-runtime/task04-native-admission-c4'
+- '/workspace/Project-Cortex/work/resume/task04-parent-native-inputs-c3-preparation/case-gdQsOv/work/backend-runtime/task04-native-admission-c5'
+
+
+false !== true
+
+    at watcherProbe (file:///workspace/Project-Cortex/work/resume/task04-parent-native-inputs-c3-preparation/offline.mjs:17:278)
+    at async file:///workspace/Project-Cortex/work/resume/task04-parent-native-inputs-c3-preparation/offline.mjs:19:1 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

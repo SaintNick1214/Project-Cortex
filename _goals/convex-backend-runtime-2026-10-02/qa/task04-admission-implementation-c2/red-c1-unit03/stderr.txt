@@ -1,0 +1,231 @@
+(node:77422) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtime/model-policy-admission.test.ts (9.909 s)
+  native private policy ledger — offline logic only
+    ✓ production root is empty, and arbitrary operator manifest selectors cannot attest prices (23 ms)
+    ✓ installs the exact compiled root idempotently and refuses mutated same-version evidence (15 ms)
+    ✓ rejects an invalid root classification before accounts/dispatch (1 ms)
+    ✓ rejects an invalid root acceptance before accounts/dispatch (1 ms)
+    ✓ rejects an invalid root expiry before accounts/dispatch (1 ms)
+    ✓ rejects an invalid root model before accounts/dispatch (1 ms)
+    ✓ rejects an invalid root proof before accounts/dispatch
+    ✓ binds one backend account per exact trusted request and rejects changed request/owner (13 ms)
+    ✓ forced account-key hash collisions compare the complete trusted binding tuple (6 ms)
+    ✓ derives actual normalized input and full trusted ceiling, overriding untrusted estimates (15 ms)
+    ✓ same child canonical replay does not reserve again; changed text/hash collision rejects (29 ms)
+    ✓ one checkpoint winner returns a permit and subsequent attempts cannot dispatch (23 ms)
+    ✓ changed final native request/proof and expired qualifications deny checkpoint (16 ms)
+    ✓ last operation/concurrency capacity applies across distinct children without partial rejection writes (17 ms)
+    ✓ different backend request accounts share one tenant quota and concurrency (18 ms)
+    ✓ known cost settles exactly once and eligible result replay needs no new reservation (32 ms)
+    ✓ invalid private results are withheld without erasing a known complete charge (23 ms)
+    ✓ overrun accounts full spend and blocks further admission without rollback of charge (26 ms)
+    ✓ malformed/missing cost remains unknown liability; qualified terminal proof releases slot only (30 ms)
+    ✓ postcheckpoint crash recovery cannot claim no dispatch or zero cost (18 ms)
+    ✓ proved precheckpoint refusal releases balances and slots exactly once (19 ms)
+    ✓ current admin may release proved precheckpoint liability after origin revocation without delivery (10 ms)
+    ✓ unknown liability blocks rollover; late receipt charges original immutable window (21 ms)
+    ✓ revoked originating grant requires current admin liability-only recovery (15 ms)
+    ✓ monotone visibility flags and cancellation prevent later dispatch and safe fallback (24 ms)
+    ✓ space admin cannot change global/root policy or install own tenant-wide constraints (2 ms)
+    ✓ healthy tenant admin may narrow own rules but cannot forge prices or broaden caps (8 ms)
+    ✓ trusted own tenant override is backend-versioned and never broadens deployment hard bounds (9 ms)
+    ✓ a current source tombstone blocks replay/delivery but retains already incurred charge (16 ms)
+    ✓ source revision changes before checkpoint cannot dispatch or recreate source (9 ms)
+    ✓ child operation inherits exact parent account and cancellation/current authority fences (18 ms)
+    ✓ trusted compiled versioned agent specialization is consumed only by its matching tenant/version (9 ms)
+    ✓ native bound rejects malformed Unicode, tool/schema shapes and part arrays without calling a provider (2 ms)
+    ✓ embedding bound treats per-value and aggregate caps separately and counts normalized UTF8 (2 ms)
+    ✓ invalid terminal cost overflow remains unknown without refund or invented zero (15 ms)
+    ✓ post-admission source/account corruption fails closed before checkpoint (7 ms)
+    ✓ explicit compatible safe fallback reserves once with pinned candidate and no lost prior spend (41 ms)
+    ✓ visible output, unknown outcome and unqualified candidates deny fallback reservation (19 ms)
+    ✓ storage bounds deny multi-vector calls and unbounded output before reservation (7 ms)
+    ✓ usage exceeding trusted input/output caps fully charges and blocks the faulty qualification (20 ms)
+    ✓ retired tenant blocks scoped actors while operator records full private overrun exactly once (21 ms)
+    ✓ retired memorySpace blocks scoped actors while operator records full private overrun exactly once (20 ms)
+    ✓ deployment liability route refuses live scopes and preserves retired unknown charge liability (18 ms)
+    ✓ all registrations are internal and their native argument schemas have no arbitrary payload escape (3 ms)
+    ✓ all five additive native tables have unique index field configurations (2 ms)
+    ✓ rounds authoritative 0 USD upward to 0 microUSD
+    ✓ rounds authoritative 0.0000001 USD upward to 1 microUSD (1 ms)
+    ✓ rounds authoritative 0.000001 USD upward to 1 microUSD
+    ✓ rounds authoritative 1.23456789 USD upward to 1234568 microUSD
+    ✓ rejects invalid or overflowing money NaN (1 ms)
+    ✓ rejects invalid or overflowing money Infinity (1 ms)
+    ✓ rejects invalid or overflowing money -1
+    ✓ rejects invalid or overflowing money 1e4
+    ✓ rejects invalid or overflowing money 9007199254740992 (1 ms)
+  current policy narrowing at fallback and dispatch boundaries
+    ✕ fresh fallback includes prior known spend under current narrowed operation ceiling (29 ms)
+    ✕ current fallback revocation denies fresh reservation and query even with generally allowed model (27 ms)
+    ✕ checkpoint preserves liabilities and denies narrowed current operation aggregate (18 ms)
+    ✕ checkpoint preserves liabilities and denies narrowed current run aggregate (17 ms)
+    ✕ checkpoint preserves liabilities and denies narrowed current tenant aggregate (19 ms)
+    ✕ checkpoint preserves liabilities and denies narrowed current concurrency aggregate (17 ms)
+    ✕ fallback permission revoked after valid reservation denies checkpoint with zero effects (32 ms)
+    ✕ operation narrowing after valid fallback reserve preserves full original liability and denies permit (35 ms)
+    ✓ aggregate at exact current caps permits held reservation without charging it twice (17 ms)
+    ✓ compatible fallback at exact narrowed cumulative ceiling remains permitted (36 ms)
+
+  ● current policy narrowing at fallback and dispatch boundaries › fresh fallback includes prior known spend under current narrowed operation ceiling
+
+    expect(received).rejects.toThrow()
+
+    Received promise resolved instead of rejected
+    Resolved to value: {"attemptId": "runtimeModelAttempts:14", "operationId": "runtimeModelOperations:11", "requestCanonical": "{\"childCallId\":\"f98d7a54e19ff0dc5f924191fcf1fc9fe7c67b1fd4a332f49bd543390ace11b9\",\"extractionVersion\":\"extract-1\",\"inputTokens\":15,\"messages\":[{\"parts\":[{\"text\":\"hello\",\"type\":\"text\"}],\"role\":\"user\"}],\"options\":{\"maxRetries\":0},\"outputTokens\":20,\"promptVersion\":\"prompt-1\",\"reservationUnits\":80,\"schemaVersion\":\"schema-1\",\"semanticId\":\"semantic\",\"texts\":[\"hello\"],\"timeoutMs\":1000,\"toolRegistryVersion\":\"tools-1\",\"toolSteps\":0,\"tools\":[]}", "snapshot": {"allowedModels": ["openai/gpt-4o-mini", "openai/text-embedding-3-small", "fixture/fallback"], "allowedOptions": ["temperature"], "allowedTools": [], "capabilities": ["text"], "costBound": {"coversAllProviderCharges": true, "kind": "qualified-call-ceiling", "maximumCostUnits": 80, "provenance": "synthetic-test-only"}, "currency": "USD", "fallbackCandidates": [{"modelId": "fixture/fallback", "qualificationReceiptId": "synthetic-fallback"}], "limits": {"concurrency": 2, "contextTokens": 2000, "inputTokens": 1000, "operationBudgetUnits": 200, "outputTokens": 500, "runBudgetUnits": 300, "tenantBudgetUnits": 500, "timeoutMs": 10000, "toolSteps": 4}, "modelId": "fixture/fallback", "monetaryUnit": "micro-USD", "nativeInterface": "chat", "operationKey": "agent.respond", "pins": {"boundRevision": "bound-1", "extractionVersion": "extract-1", "priceRevision": "price-1", "promptVersion": "prompt-1", "schemaVersion": "schema-1", "toolRegistryVersion": "tools-1"}, "policyVersions": [{"policyId": "deployment", "version": 1}], "qualificationReceiptId": "synthetic-fallback", "requestedModelId": "openai/gpt-4o-mini", "runBudgetId": "47181d7a85121a0eff3b9f01771e0b3c8cfd10610494a2d0f999e6ec8a4e1434", "scope": {"grantId": "runtimeAuthGrants:5", "grantVersion": 1, "membershipId": "runtimeAuthMemberships:2", "membershipVersion": 1, "memorySpaceEpoch": 1, "memorySpaceId": "space-a", "principalId": "runtimeAuthPrincipals:1", "principalVersion": 1, "tenantEpoch": 1, "tenantId": "tenant-a"}, "version": 1}, "status": "reserved"}
+
+      419 |   }
+      420 |   async function deniedWithoutEffects(f: ReturnType<typeof fixture>, action: () => Promise<unknown>) {
+    > 421 |     const before = effects(f); await expect(action()).rejects.toThrow(); expect(effects(f)).toEqual(before);
+          |                                      ^
+      422 |   }
+      423 |   async function rejectedOriginal() {
+      424 |     fallbackRoot(); const state = await admitted(); await state.f.checkpoint(state.a);
+
+      at expect (node_modules/expect/build/index.js:2116:15)
+      at deniedWithoutEffects (tests/unit/runtime/model-policy-admission.test.ts:421:38)
+      at Object.<anonymous> (tests/unit/runtime/model-policy-admission.test.ts:430:11)
+
+  ● current policy narrowing at fallback and dispatch boundaries › current fallback revocation denies fresh reservation and query even with generally allowed model
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+    -   "allowed": false,
+    +   "allowed": true,
+      }
+
+      433 |   it("current fallback revocation denies fresh reservation and query even with generally allowed model", async () => {
+      434 |     const { f, a } = await rejectedOriginal(); await narrow(f, { fallbackModels: [] });
+    > 435 |     expect(await f.invoke("checkFallback", fallbackArgs(f, a))).toEqual({ allowed: false });
+          |                                                                 ^
+      436 |     await deniedWithoutEffects(f, () => f.invoke("admitFallback", fallbackArgs(f, a)));
+      437 |   });
+      438 |   it.each(["operation", "run", "tenant", "concurrency"])("checkpoint preserves liabilities and denies narrowed current %s aggregate", async (kind) => {
+
+      at Object.<anonymous> (tests/unit/runtime/model-policy-admission.test.ts:435:65)
+
+  ● current policy narrowing at fallback and dispatch boundaries › checkpoint preserves liabilities and denies narrowed current operation aggregate
+
+    expect(received).rejects.toThrow()
+
+    Received promise resolved instead of rejected
+    Resolved to value: {"dispatchIdentity": "285516011518806c2ba530a1c40705498522a941bafa5b32d4443bcb7122f7d1", "dispatchPermit": true, "requestCanonical": "{\"childCallId\":\"5b53d2e3a03c430ca599ca5fee432601f3b2293dc59d2693822263b333b111fb\",\"extractionVersion\":\"extract-1\",\"inputTokens\":16,\"messages\":[{\"parts\":[{\"text\":\"second\",\"type\":\"text\"}],\"role\":\"user\"}],\"options\":{\"maxRetries\":0},\"outputTokens\":20,\"promptVersion\":\"prompt-1\",\"reservationUnits\":100,\"schemaVersion\":\"schema-1\",\"semanticId\":\"semantic\",\"texts\":[\"second\"],\"timeoutMs\":1000,\"toolRegistryVersion\":\"tools-1\",\"toolSteps\":0,\"tools\":[]}", "snapshot": {"allowedModels": ["openai/gpt-4o-mini", "openai/text-embedding-3-small"], "allowedOptions": ["temperature"], "allowedTools": [], "capabilities": ["text"], "costBound": {"coversAllProviderCharges": true, "kind": "qualified-call-ceiling", "maximumCostUnits": 100, "provenance": "synthetic-test-only"}, "currency": "USD", "fallbackCandidates": [], "limits": {"concurrency": 2, "contextTokens": 2000, "inputTokens": 1000, "operationBudgetUnits": 200, "outputTokens": 500, "runBudgetUnits": 300, "tenantBudgetUnits": 500, "timeoutMs": 10000, "toolSteps": 4}, "modelId": "openai/gpt-4o-mini", "monetaryUnit": "micro-USD", "nativeInterface": "chat", "operationKey": "agent.respond", "pins": {"boundRevision": "bound-1", "extractionVersion": "extract-1", "priceRevision": "price-1", "promptVersion": "prompt-1", "schemaVersion": "schema-1", "toolRegistryVersion": "tools-1"}, "policyVersions": [{"policyId": "deployment", "version": 1}], "qualificationReceiptId": "synthetic-chat", "requestedModelId": "openai/gpt-4o-mini", "runBudgetId": "47181d7a85121a0eff3b9f01771e0b3c8cfd10610494a2d0f999e6ec8a4e1434", "scope": {"grantId": "runtimeAuthGrants:5", "grantVersion": 1, "membershipId": "runtimeAuthMemberships:2", "membershipVersion": 1, "memorySpaceEpoch": 1, "memorySpaceId": "space-a", "principalId": "runtimeAuthPrincipals:1", "principalVersion": 1, "tenantEpoch": 1, "tenantId": "tenant-a"}, "version": 1}}
+
+      419 |   }
+      420 |   async function deniedWithoutEffects(f: ReturnType<typeof fixture>, action: () => Promise<unknown>) {
+    > 421 |     const before = effects(f); await expect(action()).rejects.toThrow(); expect(effects(f)).toEqual(before);
+          |                                      ^
+      422 |   }
+      423 |   async function rejectedOriginal() {
+      424 |     fallbackRoot(); const state = await admitted(); await state.f.checkpoint(state.a);
+
+      at expect (node_modules/expect/build/index.js:2116:15)
+      at deniedWithoutEffects (tests/unit/runtime/model-policy-admission.test.ts:421:38)
+      at tests/unit/runtime/model-policy-admission.test.ts:444:49
+
+  ● current policy narrowing at fallback and dispatch boundaries › checkpoint preserves liabilities and denies narrowed current run aggregate
+
+    expect(received).rejects.toThrow()
+
+    Received promise resolved instead of rejected
+    Resolved to value: {"dispatchIdentity": "6fb99cb3ef4cbe36f7269906fea5695dd66943984ecfbd36987238c8b0eca627", "dispatchPermit": true, "requestCanonical": "{\"childCallId\":\"a85e11103914d4ba910c30d4395a9bb5c23278e7c636776c23545cc31f89257e\",\"extractionVersion\":\"extract-1\",\"inputTokens\":16,\"messages\":[{\"parts\":[{\"text\":\"second\",\"type\":\"text\"}],\"role\":\"user\"}],\"options\":{\"maxRetries\":0},\"outputTokens\":20,\"promptVersion\":\"prompt-1\",\"reservationUnits\":100,\"schemaVersion\":\"schema-1\",\"semanticId\":\"another-operation\",\"texts\":[\"second\"],\"timeoutMs\":1000,\"toolRegistryVersion\":\"tools-1\",\"toolSteps\":0,\"tools\":[]}", "snapshot": {"allowedModels": ["openai/gpt-4o-mini", "openai/text-embedding-3-small"], "allowedOptions": ["temperature"], "allowedTools": [], "capabilities": ["text"], "costBound": {"coversAllProviderCharges": true, "kind": "qualified-call-ceiling", "maximumCostUnits": 100, "provenance": "synthetic-test-only"}, "currency": "USD", "fallbackCandidates": [], "limits": {"concurrency": 2, "contextTokens": 2000, "inputTokens": 1000, "operationBudgetUnits": 200, "outputTokens": 500, "runBudgetUnits": 300, "tenantBudgetUnits": 500, "timeoutMs": 10000, "toolSteps": 4}, "modelId": "openai/gpt-4o-mini", "monetaryUnit": "micro-USD", "nativeInterface": "chat", "operationKey": "agent.respond", "pins": {"boundRevision": "bound-1", "extractionVersion": "extract-1", "priceRevision": "price-1", "promptVersion": "prompt-1", "schemaVersion": "schema-1", "toolRegistryVersion": "tools-1"}, "policyVersions": [{"policyId": "deployment", "version": 1}], "qualificationReceiptId": "synthetic-chat", "requestedModelId": "openai/gpt-4o-mini", "runBudgetId": "47181d7a85121a0eff3b9f01771e0b3c8cfd10610494a2d0f999e6ec8a4e1434", "scope": {"grantId": "runtimeAuthGrants:5", "grantVersion": 1, "membershipId": "runtimeAuthMemberships:2", "membershipVersion": 1, "memorySpaceEpoch": 1, "memorySpaceId": "space-a", "principalId": "runtimeAuthPrincipals:1", "principalVersion": 1, "tenantEpoch": 1, "tenantId": "tenant-a"}, "version": 1}}
+
+      419 |   }
+      420 |   async function deniedWithoutEffects(f: ReturnType<typeof fixture>, action: () => Promise<unknown>) {
+    > 421 |     const before = effects(f); await expect(action()).rejects.toThrow(); expect(effects(f)).toEqual(before);
+          |                                      ^
+      422 |   }
+      423 |   async function rejectedOriginal() {
+      424 |     fallbackRoot(); const state = await admitted(); await state.f.checkpoint(state.a);
+
+      at expect (node_modules/expect/build/index.js:2116:15)
+      at deniedWithoutEffects (tests/unit/runtime/model-policy-admission.test.ts:421:38)
+      at tests/unit/runtime/model-policy-admission.test.ts:444:49
+
+  ● current policy narrowing at fallback and dispatch boundaries › checkpoint preserves liabilities and denies narrowed current tenant aggregate
+
+    expect(received).rejects.toThrow()
+
+    Received promise resolved instead of rejected
+    Resolved to value: {"dispatchIdentity": "0426cf0d2a2537848cf849118e4357dffab2dd9f0862089d585c270364904520", "dispatchPermit": true, "requestCanonical": "{\"childCallId\":\"f2766bd917d152c1d5996c4fb4c0ee05c7251bae7f4d449c63ec74e85f06ae7d\",\"extractionVersion\":\"extract-1\",\"inputTokens\":16,\"messages\":[{\"parts\":[{\"text\":\"second\",\"type\":\"text\"}],\"role\":\"user\"}],\"options\":{\"maxRetries\":0},\"outputTokens\":20,\"promptVersion\":\"prompt-1\",\"reservationUnits\":100,\"schemaVersion\":\"schema-1\",\"semanticId\":\"another-operation\",\"texts\":[\"second\"],\"timeoutMs\":1000,\"toolRegistryVersion\":\"tools-1\",\"toolSteps\":0,\"tools\":[]}", "snapshot": {"allowedModels": ["openai/gpt-4o-mini", "openai/text-embedding-3-small"], "allowedOptions": ["temperature"], "allowedTools": [], "capabilities": ["text"], "costBound": {"coversAllProviderCharges": true, "kind": "qualified-call-ceiling", "maximumCostUnits": 100, "provenance": "synthetic-test-only"}, "currency": "USD", "fallbackCandidates": [], "limits": {"concurrency": 2, "contextTokens": 2000, "inputTokens": 1000, "operationBudgetUnits": 200, "outputTokens": 500, "runBudgetUnits": 300, "tenantBudgetUnits": 500, "timeoutMs": 10000, "toolSteps": 4}, "modelId": "openai/gpt-4o-mini", "monetaryUnit": "micro-USD", "nativeInterface": "chat", "operationKey": "agent.respond", "pins": {"boundRevision": "bound-1", "extractionVersion": "extract-1", "priceRevision": "price-1", "promptVersion": "prompt-1", "schemaVersion": "schema-1", "toolRegistryVersion": "tools-1"}, "policyVersions": [{"policyId": "deployment", "version": 1}], "qualificationReceiptId": "synthetic-chat", "requestedModelId": "openai/gpt-4o-mini", "runBudgetId": "69a72841ee9c054c9edd46531e6cb171617561d68ed63f64adcc72f2017f5779", "scope": {"grantId": "runtimeAuthGrants:5", "grantVersion": 1, "membershipId": "runtimeAuthMemberships:2", "membershipVersion": 1, "memorySpaceEpoch": 1, "memorySpaceId": "space-a", "principalId": "runtimeAuthPrincipals:1", "principalVersion": 1, "tenantEpoch": 1, "tenantId": "tenant-a"}, "version": 1}}
+
+      419 |   }
+      420 |   async function deniedWithoutEffects(f: ReturnType<typeof fixture>, action: () => Promise<unknown>) {
+    > 421 |     const before = effects(f); await expect(action()).rejects.toThrow(); expect(effects(f)).toEqual(before);
+          |                                      ^
+      422 |   }
+      423 |   async function rejectedOriginal() {
+      424 |     fallbackRoot(); const state = await admitted(); await state.f.checkpoint(state.a);
+
+      at expect (node_modules/expect/build/index.js:2116:15)
+      at deniedWithoutEffects (tests/unit/runtime/model-policy-admission.test.ts:421:38)
+      at tests/unit/runtime/model-policy-admission.test.ts:444:49
+
+  ● current policy narrowing at fallback and dispatch boundaries › checkpoint preserves liabilities and denies narrowed current concurrency aggregate
+
+    expect(received).rejects.toThrow()
+
+    Received promise resolved instead of rejected
+    Resolved to value: {"dispatchIdentity": "285516011518806c2ba530a1c40705498522a941bafa5b32d4443bcb7122f7d1", "dispatchPermit": true, "requestCanonical": "{\"childCallId\":\"5b53d2e3a03c430ca599ca5fee432601f3b2293dc59d2693822263b333b111fb\",\"extractionVersion\":\"extract-1\",\"inputTokens\":16,\"messages\":[{\"parts\":[{\"text\":\"second\",\"type\":\"text\"}],\"role\":\"user\"}],\"options\":{\"maxRetries\":0},\"outputTokens\":20,\"promptVersion\":\"prompt-1\",\"reservationUnits\":100,\"schemaVersion\":\"schema-1\",\"semanticId\":\"semantic\",\"texts\":[\"second\"],\"timeoutMs\":1000,\"toolRegistryVersion\":\"tools-1\",\"toolSteps\":0,\"tools\":[]}", "snapshot": {"allowedModels": ["openai/gpt-4o-mini", "openai/text-embedding-3-small"], "allowedOptions": ["temperature"], "allowedTools": [], "capabilities": ["text"], "costBound": {"coversAllProviderCharges": true, "kind": "qualified-call-ceiling", "maximumCostUnits": 100, "provenance": "synthetic-test-only"}, "currency": "USD", "fallbackCandidates": [], "limits": {"concurrency": 2, "contextTokens": 2000, "inputTokens": 1000, "operationBudgetUnits": 200, "outputTokens": 500, "runBudgetUnits": 300, "tenantBudgetUnits": 500, "timeoutMs": 10000, "toolSteps": 4}, "modelId": "openai/gpt-4o-mini", "monetaryUnit": "micro-USD", "nativeInterface": "chat", "operationKey": "agent.respond", "pins": {"boundRevision": "bound-1", "extractionVersion": "extract-1", "priceRevision": "price-1", "promptVersion": "prompt-1", "schemaVersion": "schema-1", "toolRegistryVersion": "tools-1"}, "policyVersions": [{"policyId": "deployment", "version": 1}], "qualificationReceiptId": "synthetic-chat", "requestedModelId": "openai/gpt-4o-mini", "runBudgetId": "47181d7a85121a0eff3b9f01771e0b3c8cfd10610494a2d0f999e6ec8a4e1434", "scope": {"grantId": "runtimeAuthGrants:5", "grantVersion": 1, "membershipId": "runtimeAuthMemberships:2", "membershipVersion": 1, "memorySpaceEpoch": 1, "memorySpaceId": "space-a", "principalId": "runtimeAuthPrincipals:1", "principalVersion": 1, "tenantEpoch": 1, "tenantId": "tenant-a"}, "version": 1}}
+
+      419 |   }
+      420 |   async function deniedWithoutEffects(f: ReturnType<typeof fixture>, action: () => Promise<unknown>) {
+    > 421 |     const before = effects(f); await expect(action()).rejects.toThrow(); expect(effects(f)).toEqual(before);
+          |                                      ^
+      422 |   }
+      423 |   async function rejectedOriginal() {
+      424 |     fallbackRoot(); const state = await admitted(); await state.f.checkpoint(state.a);
+
+      at expect (node_modules/expect/build/index.js:2116:15)
+      at deniedWithoutEffects (tests/unit/runtime/model-policy-admission.test.ts:421:38)
+      at tests/unit/runtime/model-policy-admission.test.ts:444:49
+
+  ● current policy narrowing at fallback and dispatch boundaries › fallback permission revoked after valid reservation denies checkpoint with zero effects
+
+    expect(received).rejects.toThrow()
+
+    Received promise resolved instead of rejected
+    Resolved to value: {"dispatchIdentity": "6ba36575cb1143d183454372c6917af22c17ec0b595d51b9d7e03d7b4d4ef456", "dispatchPermit": true, "requestCanonical": "{\"childCallId\":\"f98d7a54e19ff0dc5f924191fcf1fc9fe7c67b1fd4a332f49bd543390ace11b9\",\"extractionVersion\":\"extract-1\",\"inputTokens\":15,\"messages\":[{\"parts\":[{\"text\":\"hello\",\"type\":\"text\"}],\"role\":\"user\"}],\"options\":{\"maxRetries\":0},\"outputTokens\":20,\"promptVersion\":\"prompt-1\",\"reservationUnits\":80,\"schemaVersion\":\"schema-1\",\"semanticId\":\"semantic\",\"texts\":[\"hello\"],\"timeoutMs\":1000,\"toolRegistryVersion\":\"tools-1\",\"toolSteps\":0,\"tools\":[]}", "snapshot": {"allowedModels": ["openai/gpt-4o-mini", "openai/text-embedding-3-small", "fixture/fallback"], "allowedOptions": ["temperature"], "allowedTools": [], "capabilities": ["text"], "costBound": {"coversAllProviderCharges": true, "kind": "qualified-call-ceiling", "maximumCostUnits": 80, "provenance": "synthetic-test-only"}, "currency": "USD", "fallbackCandidates": [{"modelId": "fixture/fallback", "qualificationReceiptId": "synthetic-fallback"}], "limits": {"concurrency": 2, "contextTokens": 2000, "inputTokens": 1000, "operationBudgetUnits": 200, "outputTokens": 500, "runBudgetUnits": 300, "tenantBudgetUnits": 500, "timeoutMs": 10000, "toolSteps": 4}, "modelId": "fixture/fallback", "monetaryUnit": "micro-USD", "nativeInterface": "chat", "operationKey": "agent.respond", "pins": {"boundRevision": "bound-1", "extractionVersion": "extract-1", "priceRevision": "price-1", "promptVersion": "prompt-1", "schemaVersion": "schema-1", "toolRegistryVersion": "tools-1"}, "policyVersions": [{"policyId": "deployment", "version": 1}], "qualificationReceiptId": "synthetic-fallback", "requestedModelId": "openai/gpt-4o-mini", "runBudgetId": "47181d7a85121a0eff3b9f01771e0b3c8cfd10610494a2d0f999e6ec8a4e1434", "scope": {"grantId": "runtimeAuthGrants:5", "grantVersion": 1, "membershipId": "runtimeAuthMemberships:2", "membershipVersion": 1, "memorySpaceEpoch": 1, "memorySpaceId": "space-a", "principalId": "runtimeAuthPrincipals:1", "principalVersion": 1, "tenantEpoch": 1, "tenantId": "tenant-a"}, "version": 1}}
+
+      419 |   }
+      420 |   async function deniedWithoutEffects(f: ReturnType<typeof fixture>, action: () => Promise<unknown>) {
+    > 421 |     const before = effects(f); await expect(action()).rejects.toThrow(); expect(effects(f)).toEqual(before);
+          |                                      ^
+      422 |   }
+      423 |   async function rejectedOriginal() {
+      424 |     fallbackRoot(); const state = await admitted(); await state.f.checkpoint(state.a);
+
+      at expect (node_modules/expect/build/index.js:2116:15)
+      at deniedWithoutEffects (tests/unit/runtime/model-policy-admission.test.ts:421:38)
+      at Object.<anonymous> (tests/unit/runtime/model-policy-admission.test.ts:449:52)
+
+  ● current policy narrowing at fallback and dispatch boundaries › operation narrowing after valid fallback reserve preserves full original liability and denies permit
+
+    expect(received).rejects.toThrow()
+
+    Received promise resolved instead of rejected
+    Resolved to value: {"dispatchIdentity": "6ba36575cb1143d183454372c6917af22c17ec0b595d51b9d7e03d7b4d4ef456", "dispatchPermit": true, "requestCanonical": "{\"childCallId\":\"f98d7a54e19ff0dc5f924191fcf1fc9fe7c67b1fd4a332f49bd543390ace11b9\",\"extractionVersion\":\"extract-1\",\"inputTokens\":15,\"messages\":[{\"parts\":[{\"text\":\"hello\",\"type\":\"text\"}],\"role\":\"user\"}],\"options\":{\"maxRetries\":0},\"outputTokens\":20,\"promptVersion\":\"prompt-1\",\"reservationUnits\":80,\"schemaVersion\":\"schema-1\",\"semanticId\":\"semantic\",\"texts\":[\"hello\"],\"timeoutMs\":1000,\"toolRegistryVersion\":\"tools-1\",\"toolSteps\":0,\"tools\":[]}", "snapshot": {"allowedModels": ["openai/gpt-4o-mini", "openai/text-embedding-3-small", "fixture/fallback"], "allowedOptions": ["temperature"], "allowedTools": [], "capabilities": ["text"], "costBound": {"coversAllProviderCharges": true, "kind": "qualified-call-ceiling", "maximumCostUnits": 80, "provenance": "synthetic-test-only"}, "currency": "USD", "fallbackCandidates": [{"modelId": "fixture/fallback", "qualificationReceiptId": "synthetic-fallback"}], "limits": {"concurrency": 2, "contextTokens": 2000, "inputTokens": 1000, "operationBudgetUnits": 200, "outputTokens": 500, "runBudgetUnits": 300, "tenantBudgetUnits": 500, "timeoutMs": 10000, "toolSteps": 4}, "modelId": "fixture/fallback", "monetaryUnit": "micro-USD", "nativeInterface": "chat", "operationKey": "agent.respond", "pins": {"boundRevision": "bound-1", "extractionVersion": "extract-1", "priceRevision": "price-1", "promptVersion": "prompt-1", "schemaVersion": "schema-1", "toolRegistryVersion": "tools-1"}, "policyVersions": [{"policyId": "deployment", "version": 1}], "qualificationReceiptId": "synthetic-fallback", "requestedModelId": "openai/gpt-4o-mini", "runBudgetId": "47181d7a85121a0eff3b9f01771e0b3c8cfd10610494a2d0f999e6ec8a4e1434", "scope": {"grantId": "runtimeAuthGrants:5", "grantVersion": 1, "membershipId": "runtimeAuthMemberships:2", "membershipVersion": 1, "memorySpaceEpoch": 1, "memorySpaceId": "space-a", "principalId": "runtimeAuthPrincipals:1", "principalVersion": 1, "tenantEpoch": 1, "tenantId": "tenant-a"}, "version": 1}}
+
+      419 |   }
+      420 |   async function deniedWithoutEffects(f: ReturnType<typeof fixture>, action: () => Promise<unknown>) {
+    > 421 |     const before = effects(f); await expect(action()).rejects.toThrow(); expect(effects(f)).toEqual(before);
+          |                                      ^
+      422 |   }
+      423 |   async function rejectedOriginal() {
+      424 |     fallbackRoot(); const state = await admitted(); await state.f.checkpoint(state.a);
+
+      at expect (node_modules/expect/build/index.js:2116:15)
+      at deniedWithoutEffects (tests/unit/runtime/model-policy-admission.test.ts:421:38)
+      at Object.<anonymous> (tests/unit/runtime/model-policy-admission.test.ts:454:71)
+
+Test Suites: 1 failed, 1 total
+Tests:       8 failed, 56 passed, 64 total
+Snapshots:   0 total
+Time:        10.148 s, estimated 17 s
+Ran all test suites.
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2/red-c1-unit03/jest-result.json

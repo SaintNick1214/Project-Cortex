@@ -1,0 +1,19 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: nonstring-current-ID-accepted: unexpected outcome The "data" argument must be of type string or an instance of Buffer, TypedArray, or DataView. Received type number (7)
+
+false !== true
+
+    at probe (file:///workspace/Project-Cortex/work/resume/task04-parent-native-inputs-review/review.mjs:32:9)
+    at async file:///workspace/Project-Cortex/work/resume/task04-parent-native-inputs-review/review.mjs:48:1 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

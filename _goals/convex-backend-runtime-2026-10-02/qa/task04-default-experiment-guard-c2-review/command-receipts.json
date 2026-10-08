@@ -1,0 +1,138 @@
+[
+  {
+    "name": "node",
+    "argv": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+      "--version"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "utcStart": "2026-10-04T09:34:00.365680+00:00",
+    "utcEnd": "2026-10-04T09:34:00.370108+00:00",
+    "exitCode": 0,
+    "expectedExit": 0,
+    "stdoutSha256": "b7677d3ec37ee1897ba07dc2cfe8292fe421c9ac93396cca5bbece486d1a2a41",
+    "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "npm",
+    "argv": [
+      "npm",
+      "--version"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "utcStart": "2026-10-04T09:34:00.370393+00:00",
+    "utcEnd": "2026-10-04T09:34:00.453389+00:00",
+    "exitCode": 0,
+    "expectedExit": 0,
+    "stdoutSha256": "4211530c8fb0d148aab950b0005433a64dd6f19f26460831515c07d12fc826a9",
+    "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "baseline23",
+    "argv": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+      "scripts/offline-check.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-experiment-guard-c2-review/copy-c2",
+    "utcStart": "2026-10-04T09:34:00.453602+00:00",
+    "utcEnd": "2026-10-04T09:34:01.706872+00:00",
+    "exitCode": 0,
+    "expectedExit": 0,
+    "stdoutSha256": "265b3bf3f6517d99e424d8bcfe7a468114139849c73b2106a61a889fc7ab0dfd",
+    "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "hostile6-c2",
+    "argv": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+      "scripts/hostile.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-experiment-guard-c2-review/copy-c2",
+    "utcStart": "2026-10-04T09:34:01.707145+00:00",
+    "utcEnd": "2026-10-04T09:34:01.845978+00:00",
+    "exitCode": 0,
+    "expectedExit": 0,
+    "stdoutSha256": "6a779add53bf9401c54908d85fa26c72878aa36746cc07dfa5575edcf6fc5893",
+    "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "refinement4",
+    "argv": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+      "scripts/refinement-check.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-experiment-guard-c2-review/copy-c2",
+    "utcStart": "2026-10-04T09:34:01.846224+00:00",
+    "utcEnd": "2026-10-04T09:34:01.989911+00:00",
+    "exitCode": 0,
+    "expectedExit": 0,
+    "stdoutSha256": "5c700af963794686bc74fbb07523c1b0376e814ceb175841f0863c616f240a6c",
+    "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "independent5",
+    "argv": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+      "scripts/independent.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-experiment-guard-c2-review/copy-c2",
+    "utcStart": "2026-10-04T09:34:01.990176+00:00",
+    "utcEnd": "2026-10-04T09:34:02.119983+00:00",
+    "exitCode": 0,
+    "expectedExit": 0,
+    "stdoutSha256": "fc1d558dcd5e8de7f3508b0e02ee030d732501b2be6ecc210cce1b946d04e389",
+    "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "hostile6-c1-red",
+    "argv": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+      "scripts/hostile.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-experiment-guard-c2-review/copy-c1",
+    "utcStart": "2026-10-04T09:34:02.120465+00:00",
+    "utcEnd": "2026-10-04T09:34:02.255586+00:00",
+    "exitCode": 1,
+    "expectedExit": 1,
+    "stdoutSha256": "7b0d6174b6b84290760f92c4efcd6ccbeed3ad07f84b962891dbe5eaaf30b980",
+    "stderrSha256": "c766de56c0e4a96900930beb99ea3a094f148723eb47fa21b0971abfd9cfba8e"
+  },
+  {
+    "name": "types",
+    "argv": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+      "/workspace/Project-Cortex/node_modules/typescript/bin/tsc",
+      "--project",
+      "fixture/tsconfig.json",
+      "--noEmit"
+    ],
+    "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-experiment-guard-c2-review/copy-c2",
+    "utcStart": "2026-10-04T09:34:02.256053+00:00",
+    "utcEnd": "2026-10-04T09:34:03.193436+00:00",
+    "exitCode": 0,
+    "expectedExit": 0,
+    "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "lint",
+    "argv": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+      "/workspace/Project-Cortex/node_modules/eslint/bin/eslint.js",
+      "--config",
+      "eslint.config.mjs",
+      "fixture/convex",
+      "scripts/offline-check.mjs",
+      "scripts/refinement-check.mjs",
+      "scripts/independent.mjs",
+      "--report-unused-disable-directives"
+    ],
+    "cwd": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-experiment-guard-c2-review/copy-c2",
+    "utcStart": "2026-10-04T09:34:03.193620+00:00",
+    "utcEnd": "2026-10-04T09:34:05.047831+00:00",
+    "exitCode": 0,
+    "expectedExit": 0,
+    "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+]

@@ -1,0 +1,262 @@
+FILE task04-default-native-driver-design-c4/contracts/observer-proofs.md 
+ # Closed observer and proof APIs
+
+DESIGN signatures are finite; ACTUAL_PROOFS=[] remains EMPTY. No unsupported future extension is delegated to implementation. A missing proof returns unknown with explicit reason and fullK/STOP. Any added proof type/predicate/model/category requires a new design and independent review before installation.
+
+```ts
+type Decision<T> = {kind:"validated"; proofHash:H; value:T} |
+ {kind:"unknown"; reason:"missing-evidence"|"unsupported"|"contradiction"|"bound-violation"};
+interface ObservationContext { binding:BindingV2; scenarioId:CaseId; dispatchIdentity:H;
+ enteredAt:Time; now:Time; originalDeadline:Time; sourceClosureHash:H }
+interface InputGenerate { ctx:ObservationContext; result:LanguageModelV4GenerateResult;
+ nativeRequestCanonical:string; privateText:string }
+interface InputStream { ctx:ObservationContext; events:ObservedEvent[];
+ privateText:string; ended:"reader-done"|"abort"|"deadline"|"error" }
+interface InputEmbed { ctx:ObservationContext; result:EmbeddingModelV4Result;
+ nativeRequestCanonical:string }
+function observeGenerate(x:InputGenerate, proofs:ClosedResolver):ReceiptV2;
+function observeStream(x:InputStream, proofs:ClosedResolver):ReceiptV2;
+function observeEmbed(x:InputEmbed, proofs:ClosedResolver):ReceiptV2;
+function verifyAtCapture(receipt:ReceiptV2, prior:Facts|null,
+ ctx:ObservationContext, proofs:ClosedResolver, backing:VerificationBacking):ReceiptV2;
+```
+
+Inputs are exclusively official v4 result objects/chunks plus compiled private data; no fetch injection or caller truth/proof args. Detach bounded own-data objects before read. Headers/request bodies/reasoning never persist in public receipts. Observer raw working memory <=180000 UTF8 canonical bytes, <=4096nodes/depth16, <=512 stream events, <=8 raw usage-bearing chunks, <=1 native finish; reject oversize before allocating further retained observation. No qualified evidence from clipped buffers. Append digest can be computed incremental over complete serial raw/native event canonical sequence while discarding private raw after observation; private text itself <=conditional case bound. Reasoning/tool/nontext content yields unsupported/private-withhold. This envelope is an engineering STOP, not a provider theorem.
+
+### Generate predicates
+
+Require official result response.body is detached own raw object, raw choices array length1/index0, raw id/model valid ID; choice.message.content is scalar well-formed text, no tool_calls/function_call/reasoning/refusal content admitted. Raw finish exactly stop|length|content_filter and native finish unified/raw exact map/raw. Native response.id/modelId, if present, must equal raw id/model. Never use requested model instance ID as serving evidence. Join all native text content exactly in order and require equality raw content/privateText; any other native content unsupported. Raw usage prompt_tokens/completion_tokens safe N and native mapped inputTokens.total/outputTokens.total safe equal counts establish usage only; missing raw fields remain null even if converter reports0. Presence of conflicting total_tokens, if supplied, yields contradiction unless exact input+output safe sum. Native raw count detail/cache fields remain root-private; money resolver examines exact raw usage categories/source semantics separately. Returned generation alone nominates terminal; only matching lifetimeProof validates it. Raw/model mismatch marks drift before attach; mismatch does not erase genuinely supported terminal or independently covered money.
+
+### Ordered stream reducer
+
+ObservedEvent is exact {sequence:N, kind:"raw"|"response-metadata"|"text-delta"|"text-start"|"text-end"|"finish"|"error"|"unsupported", digest:H, data:unknown}; sequence starts0 contiguous. Reducer reads only detached supported native events; unsupported original types are recorded as kind unsupported and STOP. One reader consumes native stream, no tee/observer loop. Every raw id/model must match the first supplied id/model verbatim; changing either => contradiction. Raw chunks choices length1/index0 while content/finish is present; usage-only tail may choices[]. Each text delta exact scalar, cumulative bounded native text corresponds exactly raw choice.delta.content sequence (each raw data chunk paired with derived native events by serial order). No normalized text reconstruction. At most one distinct raw finish for choice0; repeats identical raw finish/ID facts permitted only on same raw source duplicate? Frozen choice: any SECOND raw finish-bearing chunk => contradiction, even equal, to avoid invented terminal aggregation. Usage raw fields across <=8 chunks may be absent then supplied; once any count/cost/category field supplied, differing later value => contradiction. Required terminal is observed raw finish + stable ID/model + one native finish after that raw finish and after final native text-end; native finish raw/unified must match. Native finish generated by flush with no raw finish is unknown, NEVER trusted terminal. Content/choice chunks after raw finish => contradiction; a usage-only tail is allowed before final native finish. reader-done before native finish/raw terminal unknown; abort/deadline/error unknown unless genuine full terminal had already been reduced (then retain terminal facts). In all cases local endings do not fabricate zero money. Flush nominal finish by itself is not independent upstream lifetime evidence.
+
+### Embedding predicates
+
+Official result response.body rawValue is required for correlation. Minimal upstream accepted response schema validates only data/embedding and optional usage.prompt_tokens/providerMetadata, not id/model. Require data length1, mapped embeddings length1, each raw embedding exactly mapped finite1536 numbers (no -0), profile exact. Raw id/model, when actually supplied, are parsed verbatim ID; missing either means terminal/serving unknown. Never make an ID from dispatch hash, vector hash or mapped modelId. Raw response optional usage.prompt_tokens equals mapped usage.tokens safe N yields usage input; no observed embedding output token counter inferred: semantic mapped/raw output0 is only for the no-generated-token embedding contract source proof; before that receipt output counts null and usage may remain unknown if proof absent. A native successful promise is only a nomination. Resolver must contain accepted terminal rule successful-single-vector-response-id-model-v1 for the exact source/serving model and correlation to returned body. No such actual proof exists now, so even successful valid vector + usage emits unknown lifetime/money/serving/fullK/STOP. Malformed or unsupported raw/body/vector yields unknown/STOP and withheld result.
+
+## Exact closed proof registry
+
+```ts
+interface ProofCommon { version:1; proofHash:H; type:"lifetime"|"serving"|"money";
+ installationHash:H; reviewerAcceptanceHash:H; validatorSourceHash:H;
+ providerSourceHash:H; providerVersion:"0.2.1"; adapterVersion:"3.0.14";
+ providerV4Version:"4.0.21"; loadedClosureHash:H; sourceRevision:H;
+ checkedAt:Time; expiresAt:Time; targetHash:H; manifestHash:H;
+ requestedModel:Model; actualModels:ID[]; methods:Method[] }
+interface LifetimeProof extends ProofCommon { type:"lifetime";
+ rule:"chat-correlated-raw-native-finish-v1"|"successful-single-vector-response-id-model-v1";
+ supportsRawFinish:["stop","length","content_filter"]|[];
+ confirmsWholeInvocationTermination:true }
+interface ServingProof extends ProofCommon { type:"serving";
+ exactObservedModel:ID; immutableRevision:ID; tokenizerArtifact:H;
+ framingProof:H; capProof:H; decoderProof:H; nativePrivateCorrespondenceProof:H;
+ boundsRevision:H; inputUCap:N; outputMCap:N; privateMaximumBytes:N }
+interface MoneyProof extends ProofCommon { type:"money";
+ extraction:"raw-usage-cost-v1"; currency:"USD";
+ aggregate:"complete-whole-invocation-account-charge";
+ categories:["cache-read","cache-write","cancelled","inference","rejected","routing","surcharge"];
+ coversAllAttempts:true; coversDriftModels:ID[]; rejectedAndCancelledChargeRule:H;
+ cacheAndRoutingChargeRule:H; currencySemanticProof:H; wholeInvocationProof:H;
+ rateRevision:H; categorySemanticProof:H }
+interface ClosedResolver {
+ lifetime(ctx,nomination:TerminalNomination):Decision<true>;
+ serving(ctx,rawModel:ID|null):Decision<ServingProof>;
+ money(ctx,facts:MoneyNomination):Decision<{microUSD:N; currency:"USD"; categories:Category[]}> }
+```
+
+All exact own keys with Receipt graph constraints, proof <=8192bytes; actualModels/coversDriftModels sorted unique valid IDs max16, methods sorted unique <=3; checkedAt<expiresAt, lifetime rule interface-specific. Accepted registry includes exact proof content hash, source hashes/review acceptance pin and root-only installation hash; no arbitrary valid-shaped proof is accepted. ACTUAL_PROOFS constant empty frozen array in design sample; root cannot install via run/capture/public mutation or caller ref. Later root stages exact finite records only after fresh evidence/review/current-source/native gates and frozen operator manifest review; registry is compiled server-private, constructor closes over it. Observer selects by exact ctx loadedClosure/target/manifest/requested model/method and raw actual model inclusion, no caller selection. Capture reruns same resolver against dispatch-bound sanitized nominations/raw digest retained privately; receipt label/reference alone never qualifies. If raw backing evidence unavailable to capture, unknown/STOP (no digest-as-provider-attestation).
+
+Dispatch rechecks now in [checkedAt,expiresAt), current installation/source/load hash and target epochs before reserve/entry. Historical capture requires proof valid at enteredAt and exact historical dispatch/source binding; current expiry/revocation closes delivery/future dispatch but does not rewrite qualified historical charge. A proof cryptographically/source revoked for invalid evidence is NOT historical valid and returns unknown; previously committed charge remains immutable until separately reviewed explicit accounting correction, never automatic refund. serving rule additionally requires exact requested raw model equality; documented alias/snapshot source proof cannot normalize a mismatch. money may cover exact drift actualModel only when in both actualModels and coversDriftModels and complete coverage proves all categories. Observed rejected/cancelled/cache/routing cost needs explicit complete proof even if the main request had no tools. Absence of categories does not prove none; unknown category or missing whole-invocation evidence returns unknown. No direct OpenRouter lookup, unsupported currency assertion, tariff inference, dependency hack or fallback.
+
+## Exact monetary conversion
+
+Pin reviewed runtimeGateway.ts SHA e796e43aafe70c37d8af7330a969e5b643eb58e86be7621cc7c08991ff1224be conservativeUsdDecimal lines179–196. Design example duplicates only its pure arithmetic, never imports governed production root. Decimal strings accepted /^\d+(?:\.\d+)?$/ <=80 remain exact; convert to rational BigInt numerator/10^scale, outward ceil(numerator*1000000/denominator); reject result>MAX_SAFE_INTEGER. IEEE numeric positive uses bitwise next representable upper adjacent then exact rational outward microceil; -0/negative/nonfinite/overflow invalid; numeric0 ->0. Store exact resulting decimal and micro integer together. A positive numeric cost exactly at a micro boundary conservatively rounds above it; do not use Math.round/toFixed/float multiplication. This is amount conversion only: empty resolver still returns unknown even on valid0. Entire full accepted cost is charged once above K/$10; no clipping, no guessed token-derived amount.
+
+## Nomination types and deterministic resolver procedure
+
+```ts
+type Model=ReceiptV2["requestedModel"]; type Method=ReceiptV2["method"];
+interface TerminalNomination {method:Method;responseId:ID|null;actualModel:ID|null;
+ rawFinish:ReceiptV2["rawFinish"];nativeFinish:ReceiptV2["nativeFinish"];
+ nativeRawFinish:ID|null;correlatedShape:boolean;rawDigest:H;
+ transcriptRef:H; // private observer store content-addressed reference, not public truth
+ ended:"returned"|"reader-done"|"abort"|"deadline"|"error"}
+interface MoneyNomination {method:Method;responseId:ID|null;actualModel:ID|null;
+ rawCost:string|number|null;rawCurrency:ID|null;observedCategories:Category[];
+ outcome:"returned"|"rejected"|"cancelled"|"unknown";
+ rawDigest:H;transcriptRef:H}
+```
+
+correlatedShape is only reducer's nomination, not an authority label: capture reloads bounded private transcript by transcriptRef, recomputes digest and reducer predicates before calling closed resolver. Transcript cache is fixture-owned private ephemeral/durable staging/evidence, keyed dispatch+rawDigest with bounded180000bytes and max1first+2refinements; if lost/absent return missing-evidence. Add optional fixtureEvidence table exact {dispatchIdentity:H,rawDigest:H,privateTranscriptCanonical:string,createdAt:Time}, by_dispatch_digest index [dispatchIdentity,rawDigest]. It holds only bounded provider evidence, not account/charge/permit truth. Root cleanup hashes it before removal. All access internal, no public get/read. Semantic validator parses provider transcript using exact supported surface predicates, rejects unknown required terminal shapes but may retain unrecognized raw fields privately for category completeness review. Never stringify full response headers/JWT/prompt into it; raw provider chunks/text may be private.
+
+Resolver procedure for all3 methods: (1) recompute transcript/predicate; (2) find unique compiled installed proof whose exact hash/review/source/install binding matches dispatch context; >1matching proof contradiction; no match missing-evidence; (3) historical/currentness rules above; (4) specific rule's exact actualModels/method/terminal or serving or monetary coverage predicates; (5) return validated bound value or unknown reason. No proof can be installed because a receipt shaped correctly. No raw currency field is required if independently accepted currencySemanticProof establishes raw usage.cost is aggregateUSD for this invocation, but ReceiptV2 observedCurrency="USD" must then be explicitly resolver-established classification with provenance (not a claimed raw string). Field name observedCurrency records supported semantic observation, not necessarily raw literal; rawCurrency nomination stays nullable. Actual registry EMPTY means no USD classification is established now.
+
+Rejected invocation/provider error with absent supported correlated raw ID/model/terminal remains unknown lifetime; MoneyNomination outcome rejected/cancelled may be known ONLY if private supported raw response cost and installed proof cover that full invocation/category/actual model. No error object fabrication/refetch. Cancellation is local control and does not by itself nominate cancelled upstream outcome; only supported provider evidence can set that outcome, otherwise unknown.
+
+## Experiment entry source currentness versus actual proof currentness
+
+The experiment does NOT require ACTUAL_PROOFS nonempty to reserve/enter its first investigation: that would falsely apply production bootstrap to unknown premises. Entry uses a separately compiled conditional source snapshot EXACT {version:1,manifestHash:H,targetHash:H,loadedClosureHash:H,providerSourceHash:H,adapterSourceHash:H,providerV4TypesHash:H,modelDocumentHash:H,tokenizerArtifactHash:H,framingProofHash:H,outputProofHash:H,rateDocumentHash:H,boundRevision:H,priceRevision:H,checkedAt:Time,expiresAt:Time,hypothesis:true}. Snapshot is root-installed only in the independently reviewed fixture manifest; every hash/source revision current and checkedAt<=now<expiresAt before reserve/immediate enter. It records accepted conditional U/M/K/output source premises, NEVER actual serving/decoder/aggregate monetary qualification. Account proofCurrent means this hypothesis source snapshot is current; actual resolver EMPTY still permits bounded experiment entry but returns unknown after observations, latching STOP/fullK/withheld results. Already-qualified production governed dispatch remains a separate actual-proof gate. Source expiry prevents future experiment entry without silently renewing the original window/account; no renewal/reset is permitted.
+
+C3 private fixtureEvidence rows additionally carry immutable accountHash,targetHash,operatorHash,manifestHash; ROOT hash-only recovery/purge per replay-cleanup.md is permitted after inference closure. All observation/proof predicates and EMPTY actual registry remain unchanged.
+
+C4 VerificationBacking exact retained|transient union in hash-recovery.md allows independently supported late original-account refinements after private purge without persisting private tables again. All closed resolver/EMPTY actual proof predicates remain identical; missing/unsupported backing remains unknown. Immutable trigger T cannot be changed by capture.
+
+FILE task04-default-native-driver-implementation-c2/design-clarification-c3/money-domain.md 
+ # Present finite money domain and future extraction gate
+
+Current exact frozen observer→closed-money admissible domain is EMPTY: official reviewed observer predicates define raw usage.cost and token counts but no exact category extraction schema. Therefore observedCategories=[] and closed createResolver.money must return UNKNOWN/missing-evidence; cost0 is not qualified zero. Capture reruns observer and preserves UNKNOWN/fullK/STOP. Do not copy diagnostic raw usage.categories, infer inference, accept caller categories/proof, or amend actual registry EMPTY. Mock-resolver full-money positives remain conditional algebra tests, not supported closed pipeline proof. This is an explicit unresolved actual-money pipeline/qualification blocker for ultimate Task04, not removal of required functionality.
+
+Before ANY positive observer-money admissions a separately reviewed finite source-evidence extraction contract must provide: exact official provider/adapter/type source SHA+locations/version; method-specific supported raw result/chunk paths; exact own-data field/type/scalar categories schema; sorted enum/duplicate/conflict/unknown semantics; completeness across cache-read/cache-write/cancelled/inference/rejected/routing/surcharge and all attempts; correlation to raw ID/model/dispatch; usage-tail ordering; rejected/cancelled evidence without inferred local outcome; amount/currency semantic provenance; drift coverage; capture transcript revalidation. A hash-only categorySemanticProof without its exact predicate is insufficient. The future interface remains module-private extractMoneyNomination(ctx, verifiedTranscript, compiledAcceptedCategorySemantics), returning UNKNOWN(reason) or exact immutable categories bound to rawDigest/transcriptRef and actual raw amount/currency. It accepts no public label or proof choice. Until concrete official supported bytes and predicate pass independent design+source gates, only UNKNOWN is admissible. No present synthetic schema is asserted to be official.
+
+FILE task04-ai-budget-public-c3-fresh-review/report.md 
+ # Task Judgment: Official Convex AI-budget public source C3
+
+## Verdict: PASS — source interpretation only
+
+**Actual money qualification: NOT QUALIFIED.** Present actual money domain and ACTUAL_PROOFS remain EMPTY; UNKNOWN/fullK/STOP stays required. This PASS accepts the precise public-source findings below, not Task04 completion, positive admission, service compatibility, or implementation.
+
+## Evidence review
+
+Reviewed repository AGENTS/runtime/profile/pessimistic-judge/judge-task, original goal/Task04, accepted C3 money-domain clarification and C4 observer/proof contract, plus frozen C2 observer/canonical/proofs/runner and companion fixture sources. Applied these local review instructions for this bounded judgment, without executing supplied helpers or application checks.
+
+Independent Python standard-library verification confirms complete subject closure: nine manifest rows, every size/SHA256, and no unlisted file except exact self manifest. Manifest SHA256 is **47e6cd5b0594c4e14839a9bfd343c9e427a7321953cf3626b26c8cc0ac1fb636**; report SHA256 is **ff5322cfb4208f9c3208f2356e1664e323630226967fafdb4ff3dde32174ab29**. Exact UTF8 README/index bytes equal complete pinned structured tool contents at commit **509977282bce11cc1ba41b9ca31897eb43124da8**, with independently recomputed Git blobs **39e34fb64502f9b76fb296028c7d2d2d61df06dc** / **fe4ccb24f6d48ac60013e9674b0b275ec55d7e4d**. Initial failed README patch representation is retained and independently confirmed to be exactly one extra final newline, never substituted for authoritative bytes. verification.json and complete context/subject preimages retain this evidence.
+
+The delegation accidentally supplied a 65-character manifest string by appending row count 9. An exact assertion against that string failed; later coordinator correction confirms the actual 64-character hash and nine rows without changing bytes. Both failure and correction are preserved. A guessed native-driver.ts read also failed; actual driver is runner.ts:25. These are review bootstrap failures, not product results.
+
+## Requirements and source interpretation
+
+| Contract | Newly supported / missing |
+|---|---|
+| Same-provider amount authority | **SUPPORTED, conditional.** README:581–584 names the Convex provider >=0.2.0-alpha.1, real per-request dollar cost at providerMetadata.convexGateway.cost, including cached/reasoning tokens, and says recorded spend equals actual bill. index:237–246 explicitly calls it authoritative USD and accepts finite nonnegative number. This is substantive same-provider aggregate request-charge documentation, not merely a tariff estimate or evidence for a Vercel service. |
+| Amount versus estimate | **SUPPORTED distinction.** Missing/older-provider cost is undefined in index:242–253; README:584–588 describes token fallback. README:977–978 says cancelled/source-error settlement without authoritative usage remains estimated. No absent field establishes zero. |
+| Generate consumption | **SUPPORTED consumer paths, conditional.** index:659–669 forwards generateText result cost; index:862–883 forwards doGenerate result cost. These are method-specific consumer evidence, stronger than a generic meter callback. They do not independently establish pinned provider v4 raw-wire mapping, all SDK steps/retries or complete error-attempt charges. |
+| Stream consumption | **SUPPORTED consumer path, conditional.** index:919–925 reads finish.providerMetadata and index:898–904 extracts its cost. It attempts settlement on finish, reader-done, cancellation and source errors. One memoized settlement promise is client behavior, not a provider finality theorem or revision contract. No finish tail after cancellation is assumed to arrive. |
+| Embed surface | **MISSING.** README:295–297 mentions generic metering of embeddings through caller-reported units/prices. This does not prove an official embedding provider result/chunk amount path or whole embedding invocation cost. |
+| Finite categories | **PARTIAL semantic inclusion, MISSING closed extraction.** Cached and reasoning are expressly included in documented request total. Server-tool fees are discussed at README:598–602 for authoritative costNanos, but arbitrary meter input is not provider evidence. There is no exact own-data category field/type/enum predicate proving cache-read/cache-write/cancelled/inference/rejected/routing/surcharge completeness, duplicate/conflict/unknown behavior. Do not assign inference by default or equate reasoning with an accepted category. |
+| All attempts and drift | **MISSING.** “Each request” / “actual bill” support conditional charge authority for the surfaced request. They do not identify whether a logical dispatch's retries, rejected attempts, cancellations, fallback/routing and drift models are aggregated or billed separately, nor correlate every such charge to the same dispatch. |
+| Finality and lookup | **MISSING.** No published immutable billing identifier/lookup/delegation, authoritative revision ordering, whole-invocation finality after cancellation, or billing reconciliation proof is established by these two files. Hashing a dispatch creates no billing ID. |
+| Correlation | **PARTIAL consumer association only.** Consumer reads cost from the same returned result/finish; no independently reviewed mapping binds this mapped metadata to retained raw ID/model/transcript digest and all attempts. |
+| Exact conversion | **Number input supported in principle; helper not adopted.** index:246 uses Math.round(costUsd*1e9), and :251 rounds hypothetical back-compatible nano fields. Accepted C4 observer-proofs:73 instead requires exact decimal or IEEE upper-neighbor rational outward microceil. Preserve original detached numeric value for that existing converter; no exact original decimal lexeme is promised by the source. Lack of a lexeme alone does not prohibit the already accepted numeric conversion, but the rounded nano result cannot substitute for it. Finite input alone also does not guarantee multiplication is finite/safe. Hypothetical “if ever present” costNanos is not proof that the official provider emits it. |
+| Present nomination and capture | **MISSING current route.** C2 observer.ts:17 selectGenerate omits top-level providerMetadata; :18 selectEmbed omits it; :19 native finish selection retains only finish/usage. :28 nominates rawUsage.cost with observedCategories empty. proofs.ts:10 fixes money extraction raw-usage-cost-v1 and all seven categories; :14 returns unknown without categories and accepted proof. New metadata evidence cannot enter this frozen route without a separately reviewed retention/extraction/source contract and capture revalidation. |
+| Actual/current qualification | **NOT PERFORMED.** No paid/native/service call, keys/environment/private billing read, source installation or registry mutation. Historical public acquisition timestamps and exact Git identities do not certify loaded provider/adapter/current target/native behavior. |
+
+## Issues found
+
+### Critical for any positive actual money claim
+- No closed category/all-attempt/drift/finality/correlation predicate for the accepted whole-invocation account charge.
+- No embedding amount mapping or current C2 retained metadata nomination.
+- No independently qualified native target/source installation or accepted actual proof.
+
+These are explicit remaining qualification gates, not defects in the bounded source-only report. The report accurately keeps them unresolved.
+
+### Important source interpretation clarification
+- Read “generic meter usage is not specific generate/stream/embed proof” narrowly: generic meter does not qualify those interfaces, but this pinned index DOES provide concrete generate and stream-finish cost consumer paths. Preserve those positive findings in any next design.
+- Read “no exact-original-money lexeme/rounding contract” without discarding valid supported numeric input: accepted conservative numeric conversion can operate on a retained original number once semantic proof exists.
+
+### Minor evidence limits
+- Early review bootstrap commands lacked persistent full raw argv/output capture, and the first lacked genuine pre/post UTC brackets. Later direct reads contain genuine shell UTC but several displayed outputs truncate; targeted follow-ups and full frozen preimages resolve source inspection. tool-command-log.json preserves subsequent exact command arguments/tool output/real tool clock brackets; no missing timestamp is invented.
+- Source acquisition tool clocks have one-second resolution, including zero-second search intervals. They bracket returned tool calls only; they cannot certify network/provider inference duration, native phase ceilings, timestamp freshness beyond retrieval, or authenticated billing access. The acquisition report itself acknowledges authoring/bootstrap capture limitations.
+
+## Dimension scores
+
+| Dimension | Score | Evidence |
+|---|---:|---|
+| Requirement fulfillment for bounded source interpretation | 5/5 | Every requested positive/missing contract distinguished; no positive actual proof installed |
+| Evidence quality | 4/5 | Complete source closure and byte/Git checks; explicit bootstrap/tool timing limitations |
+| Pattern adherence and scope | 5/5 | Read-only review; only owned review/resume writes; independent gates preserved |
+| Completeness of source assessment | 5/5 | Generate/stream/embed/category/amount/current observer differences individually addressed |
+
+**Average: 4.75/5.** Test/code implementation dimensions are not applicable to this source-only assessment. Missing actual gates are not scored as completed Task04 requirements.
+
+## Recommendation
+
+Proceed only to a bounded design for preserving original own-data providerMetadata.convexGateway.cost and correlating it with existing native/raw evidence for generate/stream, retaining UNKNOWN for absent/conflicting/unsupported values. Before any positive proof, independently review exact pinned provider/adapter/type mapping, amount/currency semantics and current installed source closure, categories/all-attempt/drift/finality, numeric conversion and capture revalidation. Embedding needs separate concrete official surface evidence. This source can justify that partial next design; it cannot itself install positive whole-invocation money proof.
+
+No AI-budget package, dependencies, approximate caps, token estimates, callbacks, alternate architecture/provider or Jev are adopted. Numeric review-cycle waiver changes only the loop count; acceptance and scope gates remain.
+
+PUBLIC MANIFEST {'excludedExactSelf': 'qa-manifest.json', 'files': [{'path': 'README-tool-receipt.json', 'bytes': 568, 'sha256': 'cd022049f49057a275624c1058e150b127ca827e68a56e47b8228f3fbfa29bfa'}, {'path': 'README.md', 'bytes': 50618, 'sha256': '9da3314fae6a4d679ce6b718faa48aa9ae0660088cc3c332dcc292e8c2b7120d'}, {'path': 'README.md.initial-patch-preimage', 'bytes': 50619, 'sha256': '9369e183e3667fbd04da66a502775155378c63439effa5b12562fa562717c338'}, {'path': 'client-index.ts', 'bytes': 55922, 'sha256': '43af882cc07c645f229528792c059bd7db1d2a9548d837273045d2d2a6f8c0a9'}, {'path': 'cost-source-search-receipt.json', 'bytes': 4558, 'sha256': 'fdf03f80875180e6e8890ff2e69d9bc6879a7b69393c74d5ffe27ed4fe97d03b'}, {'path': 'pinned-source-tool-receipts.json', 'bytes': 110870, 'sha256': 'fbd24981e9a31b0664d3c442b76817ed169abe1198f9b2d57f502327a3895e08'}, {'path': 'report.md', 'bytes': 3604, 'sha256': 'ff5322cfb4208f9c3208f2356e1664e323630226967fafdb4ff3dde32174ab29'}, {'path': 'repository-search-receipts.json', 'bytes': 3938, 'sha256': '96c0769a18f875162e076c092ede675ffea022b2f493a24ccc145e48d6d1716a'}, {'path': 'source-extraction-receipt.json', 'bytes': 546, 'sha256': '7e774d631015c90ec58fc79b21d5f02327fd04020f5dad778650a5032e6eef2f'}]}
+FILE README.md
+575:ai.models.setPolicy(ctx, { mode, models })   // mode: "open" | "allowlist" | "denylist"
+576:ai.models.getPolicy(ctx)
+577:```
+578:
+579:### Pricing & cost
+580:
+581:The component records the gateway's **real per-request dollar cost** when the
+582:provider surfaces it (`@convex-dev/ai-sdk-provider ≥ 0.2.0-alpha.1`, via
+583:`providerMetadata.convexGateway.cost`) — cached and reasoning tokens included, so
+584:recorded spend equals the actual bill. Without it, cost is computed from token
+585:counts, discounting the cached slice (the gateway's real `cacheReadTokens`) at
+586:`cachedNanosPerMTok` (default 10% of input). Either way, an **unknown model is
+587:charged a conservative max, never $0** (so a cap can't be dodged by naming an
+588:unlisted model) and its rows are flagged `unpricedModel: true`.
+589:
+590:Prices are **nanodollars per million tokens**; sensible defaults ship for common
+FILE client-index.ts
+237:// The AI Gateway reports the authoritative dollar cost of each request.
+238:// @convex-dev/ai-sdk-provider surfaces it at
+239:// `providerMetadata.convexGateway.cost` (USD); convert to nanodollars and pass
+240:// it through as authoritative (finishRequest prefers it over the token-based
+241:// estimate). No-op on older provider versions that don't surface it.
+242:function extractGatewayCostNanos(result: any): number | undefined {
+243:  const meta = result?.providerMetadata?.convexGateway;
+244:  const costUsd = meta?.cost;
+245:  if (typeof costUsd === "number" && Number.isFinite(costUsd) && costUsd >= 0) {
+246:    return Math.round(costUsd * NANOS_PER_DOLLAR);
+247:  }
+248:  // Back-compat: honor an explicitly nano-denominated field if ever present.
+249:  const costNanos = meta?.costNanos ?? result?.usage?.costNanos;
+250:  if (typeof costNanos === "number" && Number.isFinite(costNanos) && costNanos >= 0) {
+251:    return Math.round(costNanos);
+252:  }
+253:  return undefined;
+254:}
+255:
+659:        const result = await generateText({
+660:          model: convexGateway(model),
+661:          ...(args.reservation ? { maxOutputTokens: args.reservation.maxOutputTokens } : {}),
+662:          ...(system ? { system } : {}),
+663:          messages: convo as any,
+664:        });
+665:        return {
+666:          text: result.text,
+667:          usage: result.usage,
+668:          costNanos: extractGatewayCostNanos(result),
+669:        };
+862:        wrapGenerate: async ({ doGenerate, params }: any) => {
+863:          const requestId = await begin(params);
+864:          const start = Date.now();
+865:          // Only a failure of the generation itself settles as an error.
+866:          let result: any;
+867:          try {
+868:            result = await doGenerate();
+869:          } catch (e) {
+870:            await finish(requestId, {
+871:              error: String(e),
+872:              latencyMs: Date.now() - start,
+873:            });
+874:            throw e;
+875:          }
+876:          // Generation succeeded (provider may have charged). Settle the real
+877:          // usage; a failure here rethrows rather than recording a false zero.
+878:          await finish(requestId, {
+879:            responseText: extractText(result),
+880:            ...extractUsage(result.usage),
+881:            costNanos: extractGatewayCostNanos(result),
+882:            latencyMs: Date.now() - start,
+883:          });
+898:            const settle = (error?: string) => (settlement ??= finish(requestId, {
+899:              responseText: text,
+900:              error: error ?? streamError,
+901:              ...extractUsage(usage),
+902:              costNanos: extractGatewayCostNanos({ providerMetadata }),
+903:              latencyMs: Date.now() - start,
+904:            }));
+919:                  if (chunk?.type === "finish") {
+920:                    usage = chunk.usage;
+921:                    providerMetadata = chunk.providerMetadata ?? providerMetadata;
+922:                  }
+923:                  if (chunk?.type === "error") streamError = String(chunk.error);
+924:                  controller.enqueue(chunk);
+925:                  if (chunk?.type === "finish") await settle();

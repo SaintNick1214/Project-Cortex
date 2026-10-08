@@ -1,0 +1,48 @@
+{
+  "format": "Concatenate ordered parts to gzip-compressed tar; no execute needed",
+  "sourceManifest": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c5-review/scratch-manifest.json",
+  "sourceManifestSHA256": "c50094efa4ac2aa0942b8bf2350cf04aa44d56ef9d01b2128e151fb196d2bd97",
+  "completeFiles": 1529,
+  "rawFileBytes": 57286453,
+  "compressedBytes": 5035823,
+  "compressedSHA256": "d0673a5c0257dddafbd9aee1cf76a254a63600245b062bd4f1565bb2026238f5",
+  "parts": [
+    {
+      "path": "review-scratch.tar.gz.part-0001",
+      "bytes": 750000,
+      "sha256": "b1736850a94d57e52200107f57b24c306f5567f0d1ca2f2d9026d7f5d2ac5bd9"
+    },
+    {
+      "path": "review-scratch.tar.gz.part-0002",
+      "bytes": 750000,
+      "sha256": "970b3b339f594722ff957450695d42e509028e8bf6a59248b48b525edd9689d3"
+    },
+    {
+      "path": "review-scratch.tar.gz.part-0003",
+      "bytes": 750000,
+      "sha256": "8d74d969c4c6a9670c5423ab5347df313ee64eb54e287dd2f167b39420a9b01b"
+    },
+    {
+      "path": "review-scratch.tar.gz.part-0004",
+      "bytes": 750000,
+      "sha256": "b315392170e1e5c369817f460093fb71aef631bd6453fd54933c4de2b02fe66f"
+    },
+    {
+      "path": "review-scratch.tar.gz.part-0005",
+      "bytes": 750000,
+      "sha256": "ce191ce14c09406566b7797922795a36edc9d15349c79eee9079db6b77555f78"
+    },
+    {
+      "path": "review-scratch.tar.gz.part-0006",
+      "bytes": 750000,
+      "sha256": "a5ff0458aea7e030e88d5361f9c4c8507a97910f98a96468a866037039e0e874"
+    },
+    {
+      "path": "review-scratch.tar.gz.part-0007",
+      "bytes": 535823,
+      "sha256": "0fe2c558db459febee08001f314a643f8ee6b28498ae3d877b5934c6e970bebe"
+    }
+  ],
+  "scratchContains": "Offline synthetic fixture bytes only; source-model/provider/service evidence not inferred",
+  "restoration": "Review-only original work/resume paths; tar has no symlinks; files preserve modes; recreate owned scratch parent dirs as required by harness, do not execute restoration as live qualification"
+}

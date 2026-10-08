@@ -1,0 +1,85 @@
+{
+  "result": {
+    "manifestId": "qa-task04-synthetic-embedding-v1",
+    "revision": 1
+  },
+  "rows": [
+    {
+      "table": "runtimeModelPolicies",
+      "_id": "dummy-1",
+      "policyId": "qa-embedding-deployment",
+      "version": 1,
+      "scope": "deployment",
+      "canonical": "{\"policyId\":\"qa-embedding-deployment\",\"rules\":{\"allowedModels\":[\"openai/gpt-4o-mini\",\"fixture/fallback\",\"openai/text-embedding-3-small\"],\"allowedOptions\":[\"temperature\"],\"allowedTools\":[],\"capabilities\":[\"text\",\"embedding\"],\"fallbackModels\":[],\"interfaces\":[\"chat\",\"embedding\"],\"limits\":{\"concurrency\":4,\"contextTokens\":2000,\"inputTokens\":1000,\"operationBudgetUnits\":10000,\"outputTokens\":500,\"runBudgetUnits\":20000,\"tenantBudgetUnits\":50000,\"timeoutMs\":10000,\"toolSteps\":4},\"pins\":{\"boundRevision\":\"qa-bound-1\",\"extractionVersion\":\"qa-extract-1\",\"priceRevision\":\"qa-price-1\",\"promptVersion\":\"qa-prompt-1\",\"schemaVersion\":\"qa-schema-1\",\"toolRegistryVersion\":\"qa-tools-1\"}},\"scope\":\"deployment\",\"version\":1}",
+      "root": {
+        "manifestId": "qa-task04-synthetic-embedding-v1",
+        "revision": 1,
+        "canonical": "{\"acceptanceHash\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"artifactRevision\":\"qa-c2-ledger-only\",\"budgetWindowMs\":60000,\"classification\":\"fixture-synthetic\",\"dispatchEvidence\":[{\"boundRevision\":\"qa-bound-1\",\"checkedAt\":0,\"evidenceHash\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"expiresAt\":4102444800000,\"inputBound\":{\"documentHash\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"featureEnvelope\":\"default-embedding-v1\",\"nativeTransformHash\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"proofHash\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"revision\":1,\"ruleId\":\"default-embedding-utf8-v1\"},\"modelId\":\"openai/text-embedding-3-small\",\"nativeInterface\":\"embedding\",\"priceRevision\":\"qa-price-1\",\"providerVersion\":\"fixture-synthetic-0\",\"receiptId\":\"qa-embedding\",\"resultBound\":{\"maximumEmbeddingValues\":1,\"maximumOutputTokens\":500,\"maximumPrivateResultBytes\":60000,\"proofHash\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\"},\"terminalCost\":\"gateway-aggregate-usd-v1\",\"terminalProof\":\"provider-terminal-v1\"}],\"evidenceHash\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"manifestId\":\"qa-task04-synthetic-embedding-v1\",\"policies\":[{\"policyId\":\"qa-embedding-deployment\",\"rules\":{\"allowedModels\":[\"openai/gpt-4o-mini\",\"fixture/fallback\",\"openai/text-embedding-3-small\"],\"allowedOptions\":[\"temperature\"],\"allowedTools\":[],\"capabilities\":[\"text\",\"embedding\"],\"fallbackModels\":[],\"interfaces\":[\"chat\",\"embedding\"],\"limits\":{\"concurrency\":4,\"contextTokens\":2000,\"inputTokens\":1000,\"operationBudgetUnits\":10000,\"outputTokens\":500,\"runBudgetUnits\":20000,\"tenantBudgetUnits\":50000,\"timeoutMs\":10000,\"toolSteps\":4},\"pins\":{\"boundRevision\":\"qa-bound-1\",\"extractionVersion\":\"qa-extract-1\",\"priceRevision\":\"qa-price-1\",\"promptVersion\":\"qa-prompt-1\",\"schemaVersion\":\"qa-schema-1\",\"toolRegistryVersion\":\"qa-tools-1\"}},\"scope\":\"deployment\",\"version\":1}],\"qualifications\":[{\"allowedOptions\":[\"temperature\"],\"boundRevision\":\"qa-bound-1\",\"capabilities\":[\"embedding\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100,\"provenance\":\"fixture-synthetic-bookkeeping-only\"},\"limits\":{\"concurrency\":4,\"contextTokens\":2000,\"inputTokens\":1000,\"operationBudgetUnits\":10000,\"outputTokens\":500,\"runBudgetUnits\":20000,\"tenantBudgetUnits\":50000,\"timeoutMs\":10000,\"toolSteps\":4},\"modelId\":\"openai/text-embedding-3-small\",\"nativeInterface\":\"embedding\",\"priceRevision\":\"qa-price-1\",\"receiptId\":\"qa-embedding\"}],\"revision\":1}",
+        "hash": "c7c884a0ec92f2cf395d58355a34da0ea84f6fff9b20d1260e64c270d7a5f70f",
+        "artifactRevision": "qa-c2-ledger-only",
+        "evidenceHash": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "acceptanceHash": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      "active": true,
+      "createdAt": 1791091852131
+    },
+    {
+      "table": "runtimeModelQualifications",
+      "_id": "dummy-2",
+      "receiptId": "qa-embedding",
+      "version": 1,
+      "canonical": "{\"allowedOptions\":[\"temperature\"],\"boundRevision\":\"qa-bound-1\",\"capabilities\":[\"embedding\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100,\"provenance\":\"fixture-synthetic-bookkeeping-only\"},\"limits\":{\"concurrency\":4,\"contextTokens\":2000,\"inputTokens\":1000,\"operationBudgetUnits\":10000,\"outputTokens\":500,\"runBudgetUnits\":20000,\"tenantBudgetUnits\":50000,\"timeoutMs\":10000,\"toolSteps\":4},\"modelId\":\"openai/text-embedding-3-small\",\"nativeInterface\":\"embedding\",\"priceRevision\":\"qa-price-1\",\"receiptId\":\"qa-embedding\"}",
+      "root": {
+        "manifestId": "qa-task04-synthetic-embedding-v1",
+        "revision": 1,
+        "canonical": "{\"acceptanceHash\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"artifactRevision\":\"qa-c2-ledger-only\",\"budgetWindowMs\":60000,\"classification\":\"fixture-synthetic\",\"dispatchEvidence\":[{\"boundRevision\":\"qa-bound-1\",\"checkedAt\":0,\"evidenceHash\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"expiresAt\":4102444800000,\"inputBound\":{\"documentHash\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"featureEnvelope\":\"default-embedding-v1\",\"nativeTransformHash\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"proofHash\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"revision\":1,\"ruleId\":\"default-embedding-utf8-v1\"},\"modelId\":\"openai/text-embedding-3-small\",\"nativeInterface\":\"embedding\",\"priceRevision\":\"qa-price-1\",\"providerVersion\":\"fixture-synthetic-0\",\"receiptId\":\"qa-embedding\",\"resultBound\":{\"maximumEmbeddingValues\":1,\"maximumOutputTokens\":500,\"maximumPrivateResultBytes\":60000,\"proofHash\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\"},\"terminalCost\":\"gateway-aggregate-usd-v1\",\"terminalProof\":\"provider-terminal-v1\"}],\"evidenceHash\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"manifestId\":\"qa-task04-synthetic-embedding-v1\",\"policies\":[{\"policyId\":\"qa-embedding-deployment\",\"rules\":{\"allowedModels\":[\"openai/gpt-4o-mini\",\"fixture/fallback\",\"openai/text-embedding-3-small\"],\"allowedOptions\":[\"temperature\"],\"allowedTools\":[],\"capabilities\":[\"text\",\"embedding\"],\"fallbackModels\":[],\"interfaces\":[\"chat\",\"embedding\"],\"limits\":{\"concurrency\":4,\"contextTokens\":2000,\"inputTokens\":1000,\"operationBudgetUnits\":10000,\"outputTokens\":500,\"runBudgetUnits\":20000,\"tenantBudgetUnits\":50000,\"timeoutMs\":10000,\"toolSteps\":4},\"pins\":{\"boundRevision\":\"qa-bound-1\",\"extractionVersion\":\"qa-extract-1\",\"priceRevision\":\"qa-price-1\",\"promptVersion\":\"qa-prompt-1\",\"schemaVersion\":\"qa-schema-1\",\"toolRegistryVersion\":\"qa-tools-1\"}},\"scope\":\"deployment\",\"version\":1}],\"qualifications\":[{\"allowedOptions\":[\"temperature\"],\"boundRevision\":\"qa-bound-1\",\"capabilities\":[\"embedding\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100,\"provenance\":\"fixture-synthetic-bookkeeping-only\"},\"limits\":{\"concurrency\":4,\"contextTokens\":2000,\"inputTokens\":1000,\"operationBudgetUnits\":10000,\"outputTokens\":500,\"runBudgetUnits\":20000,\"tenantBudgetUnits\":50000,\"timeoutMs\":10000,\"toolSteps\":4},\"modelId\":\"openai/text-embedding-3-small\",\"nativeInterface\":\"embedding\",\"priceRevision\":\"qa-price-1\",\"receiptId\":\"qa-embedding\"}],\"revision\":1}",
+        "hash": "c7c884a0ec92f2cf395d58355a34da0ea84f6fff9b20d1260e64c270d7a5f70f",
+        "artifactRevision": "qa-c2-ledger-only",
+        "evidenceHash": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "acceptanceHash": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      "active": true,
+      "createdAt": 1791091852131
+    }
+  ],
+  "calls": [
+    {
+      "table": "runtimeModelPolicies",
+      "index": "by_scope_active",
+      "kind": "read"
+    },
+    {
+      "table": "runtimeModelPolicies",
+      "index": "by_policy_version",
+      "kind": "read"
+    },
+    {
+      "table": "runtimeModelPolicies",
+      "kind": "insert"
+    },
+    {
+      "table": "runtimeModelQualifications",
+      "index": "by_receipt",
+      "kind": "read"
+    },
+    {
+      "table": "runtimeModelQualifications",
+      "kind": "insert"
+    },
+    {
+      "table": "runtimeModelPolicies",
+      "index": "by_scope_active",
+      "kind": "read"
+    },
+    {
+      "table": "runtimeModelPolicies",
+      "index": "by_policy_version",
+      "kind": "read"
+    },
+    {
+      "table": "runtimeModelQualifications",
+      "index": "by_receipt",
+      "kind": "read"
+    }
+  ]
+}

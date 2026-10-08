@@ -1,0 +1,11 @@
+{
+  "argv": [
+    "python3",
+    "-c",
+    "import pathlib,json,hashlib;r=pathlib.Path(\"_goals/convex-backend-runtime-2026-10-02/qa/task04-convex-ai-budget-public-source-c3\");p=r/\"qa-manifest.json\";h=lambda f:hashlib.sha256(f.read_bytes()).hexdigest();assert h(p)==\"47e6cd5b0594c4e14839a9bfd343c9e427a7321953cf3626b26c8cc0ac1fb636\";x=json.loads(p.read_text());listed=set();[(listed.add(v[\"path\"]),assertion) for v in []];\nfor v in x[\"files\"]:\n f=r/v[\"path\"];assert f.stat().st_size==v[\"bytes\"] and h(f)==v[\"sha256\"];listed.add(v[\"path\"])\nassert {str(f.relative_to(r)) for f in r.rglob(\"*\") if f.is_file() and f!=p}==listed;assert len(listed)==9;print(\"PASS public 9-row recursive exact-self-only closure\")"
+  ],
+  "cwd": "/workspace/Project-Cortex",
+  "startUtc": "2026-10-04T14:13:35.857511+00:00",
+  "endUtc": "2026-10-04T14:13:35.886912+00:00",
+  "exit": 0
+}

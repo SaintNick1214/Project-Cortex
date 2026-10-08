@@ -1,0 +1,2765 @@
+{
+  "scope": "OFFLINE C2 REVIEW CANDIDATE; FRESH INDEPENDENT IMPLEMENTATION GATE REQUIRED",
+  "reportSha256": "8f87941157665e8555f85cb160c1a0e250bf5590eea8c4e9a493508275af5854",
+  "rows": [
+    {
+      "control": "final-construction",
+      "status": "PASS observed offline",
+      "exit": 0,
+      "argv": [
+        "node",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/metadata-construction.mjs"
+      ],
+      "receipt": "final-construction-receipt.json",
+      "sourceBefore": "final-construction-pre.json",
+      "sourceAfter": "final-construction-post.json",
+      "rawStdout": "final-construction.stdout",
+      "rawStderr": "final-construction.stderr",
+      "stdoutSha256": "2b69ea6307c78f81905f84289ddf090000e3d6f881ce4ef04dc07623a88f4e42",
+      "structuredRawOutcomes": [
+        {
+          "scope": "ACTUAL_SHARED_PROSPECTIVE_BUILDER_ORDER_BOUNDARIES_OFFLINE_ONLY",
+          "outcomes": [
+            {
+              "name": "actual generate same historical oversized native source aborts BEFORE witness sort/freeze",
+              "status": "PASS"
+            },
+            {
+              "name": "actual V2 native finish same historical raw prefix counts full history BEFORE sort/freeze",
+              "status": "PASS"
+            },
+            {
+              "name": "actual generate exact4096 construction agrees frozen complete canonical transcript at boundary",
+              "status": "PASS"
+            },
+            {
+              "name": "actual stream explicit prefix cumulative exact4096 then extra prior scalar denies before keys sort",
+              "status": "PASS"
+            },
+            {
+              "name": "actual encoded Unicode escaped key scalar bytes exact180000/180001 before witness sorting",
+              "status": "PASS"
+            },
+            {
+              "name": "actual explicit V2 event count never renews envelope and V1 helper cannot emit metadata provenance",
+              "status": "PASS"
+            }
+          ],
+          "skipped": 0,
+          "actual": "EMPTY/null/uninstalled"
+        }
+      ]
+    },
+    {
+      "control": "final-metadata-collected",
+      "status": "14PASS/2 changed-expectationFAIL;16 unchanged bodies,0NOT_RUN",
+      "exit": 1,
+      "argv": [
+        "node",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/metadata-collection.mjs"
+      ],
+      "receipt": "final-metadata-collected-receipt.json",
+      "sourceBefore": "final-metadata-collected-pre.json",
+      "sourceAfter": "final-metadata-collected-post.json",
+      "rawStdout": "final-metadata-collected.stdout",
+      "rawStderr": "final-metadata-collected.stderr",
+      "stdoutSha256": "b293a092d40b97de4326d45fae9ca484fe52d3090cc0c00bd6750e7449ee885d",
+      "structuredRawOutcomes": [
+        {
+          "outcomes": [
+            {
+              "name": "actual selector number frozen witness state and outward microceil",
+              "status": "PASS"
+            },
+            {
+              "name": "absent own null own undefined produce finite missing with distinct shape",
+              "status": "PASS"
+            },
+            {
+              "name": "negative minuszero nonfinite wrong kinds invalid and zero explicit only",
+              "status": "PASS"
+            },
+            {
+              "name": "descriptor getter0 symbol nonenumerable prototype ancestor aliases",
+              "status": "PASS"
+            },
+            {
+              "name": "unused raw costDetails alias is retained by key only",
+              "status": "PASS"
+            },
+            {
+              "name": "full closed state tuple key reason cost consistency adversaries",
+              "status": "PASS"
+            },
+            {
+              "name": "generate V2 original number correlated private extraction empty actual money",
+              "status": "PASS"
+            },
+            {
+              "name": "raw mapped mismatches missing amount and stable drift never positive",
+              "status": "PASS"
+            },
+            {
+              "name": "stream finish maps original raw cost before nativefinish with one raw identity",
+              "status": "PASS"
+            },
+            {
+              "name": "missing final mapped cost cannot reuse previous raw amount",
+              "status": "PASS"
+            },
+            {
+              "name": "raw usage-only tail before native finish allowed repeated costs equal",
+              "status": "PASS"
+            },
+            {
+              "name": "postfinish raw secondfinish openempty syntheticflush malformed tuple deny",
+              "status": "FAIL",
+              "error": "Error: SHAPE"
+            }
+          ]
+        },
+        {
+          "outcomes": [
+            {
+              "name": "actual selector number frozen witness state and outward microceil",
+              "status": "PASS"
+            },
+            {
+              "name": "absent own null own undefined produce finite missing with distinct shape",
+              "status": "PASS"
+            },
+            {
+              "name": "negative minuszero nonfinite wrong kinds invalid and zero explicit only",
+              "status": "PASS"
+            },
+            {
+              "name": "descriptor getter0 symbol nonenumerable prototype ancestor aliases",
+              "status": "PASS"
+            },
+            {
+              "name": "unused raw costDetails alias is retained by key only",
+              "status": "PASS"
+            },
+            {
+              "name": "full closed state tuple key reason cost consistency adversaries",
+              "status": "PASS"
+            },
+            {
+              "name": "generate V2 original number correlated private extraction empty actual money",
+              "status": "PASS"
+            },
+            {
+              "name": "raw mapped mismatches missing amount and stable drift never positive",
+              "status": "PASS"
+            },
+            {
+              "name": "stream finish maps original raw cost before nativefinish with one raw identity",
+              "status": "PASS"
+            },
+            {
+              "name": "missing final mapped cost cannot reuse previous raw amount",
+              "status": "PASS"
+            },
+            {
+              "name": "raw usage-only tail before native finish allowed repeated costs equal",
+              "status": "PASS"
+            },
+            {
+              "name": "postfinish raw secondfinish openempty syntheticflush malformed tuple deny",
+              "status": "FAIL",
+              "error": "Error: SHAPE"
+            },
+            {
+              "name": "historicalV1 cannot be relabeled with V2 or enter embed V2",
+              "status": "PASS"
+            },
+            {
+              "name": "registered capture reruns V2 and preserves full unknown liability",
+              "status": "PASS"
+            },
+            {
+              "name": "registered capture rejects retained malformed shape and foreign dispatch without writes",
+              "status": "PASS"
+            },
+            {
+              "name": "exact whole transcript node boundary witness cumulative prefix and bytes",
+              "status": "FAIL",
+              "error": "Error: SHAPE"
+            }
+          ]
+        },
+        {
+          "scope": "ACTUAL_CANDIDATE_OFFLINE_METADATA_OBSERVER_CAPTURE",
+          "outcomes": [
+            {
+              "name": "actual selector number frozen witness state and outward microceil",
+              "status": "PASS"
+            },
+            {
+              "name": "absent own null own undefined produce finite missing with distinct shape",
+              "status": "PASS"
+            },
+            {
+              "name": "negative minuszero nonfinite wrong kinds invalid and zero explicit only",
+              "status": "PASS"
+            },
+            {
+              "name": "descriptor getter0 symbol nonenumerable prototype ancestor aliases",
+              "status": "PASS"
+            },
+            {
+              "name": "unused raw costDetails alias is retained by key only",
+              "status": "PASS"
+            },
+            {
+              "name": "full closed state tuple key reason cost consistency adversaries",
+              "status": "PASS"
+            },
+            {
+              "name": "generate V2 original number correlated private extraction empty actual money",
+              "status": "PASS"
+            },
+            {
+              "name": "raw mapped mismatches missing amount and stable drift never positive",
+              "status": "PASS"
+            },
+            {
+              "name": "stream finish maps original raw cost before nativefinish with one raw identity",
+              "status": "PASS"
+            },
+            {
+              "name": "missing final mapped cost cannot reuse previous raw amount",
+              "status": "PASS"
+            },
+            {
+              "name": "raw usage-only tail before native finish allowed repeated costs equal",
+              "status": "PASS"
+            },
+            {
+              "name": "postfinish raw secondfinish openempty syntheticflush malformed tuple deny",
+              "status": "FAIL",
+              "error": "Error: SHAPE"
+            },
+            {
+              "name": "historicalV1 cannot be relabeled with V2 or enter embed V2",
+              "status": "PASS"
+            },
+            {
+              "name": "registered capture reruns V2 and preserves full unknown liability",
+              "status": "PASS"
+            },
+            {
+              "name": "registered capture rejects retained malformed shape and foreign dispatch without writes",
+              "status": "PASS"
+            },
+            {
+              "name": "exact whole transcript node boundary witness cumulative prefix and bytes",
+              "status": "FAIL",
+              "error": "Error: SHAPE"
+            }
+          ],
+          "skipped": 0,
+          "actualMoney": "EMPTY",
+          "ultimateMoneyDiagnostic": "FAIL preserved",
+          "noNativeService": true
+        },
+        {
+          "scope": "UNCHANGED_C1_METADATA16_ASSERTION_BODY_FAILURE_COLLECTION_NOT_QUALIFICATION",
+          "hashes": [
+            {
+              "url": "file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/metadata.mjs",
+              "rawSHA256": "bd1a7016217cb13668b21b8b6a4144ea3b5e4b958d3e29e0547e52e94decfd96",
+              "loadedSHA256": "2c6982dc41547523aacf083291f404f51919426e99c9ffcd5540a324494374d8",
+              "change": "Only outer failure-report rethrow suppressed; all callback assertions unchanged"
+            }
+          ],
+          "total": 16,
+          "passed": 14,
+          "failed": 2,
+          "notRun": 0,
+          "outcomes": [
+            {
+              "name": "actual selector number frozen witness state and outward microceil",
+              "status": "PASS"
+            },
+            {
+              "name": "absent own null own undefined produce finite missing with distinct shape",
+              "status": "PASS"
+            },
+            {
+              "name": "negative minuszero nonfinite wrong kinds invalid and zero explicit only",
+              "status": "PASS"
+            },
+            {
+              "name": "descriptor getter0 symbol nonenumerable prototype ancestor aliases",
+              "status": "PASS"
+            },
+            {
+              "name": "unused raw costDetails alias is retained by key only",
+              "status": "PASS"
+            },
+            {
+              "name": "full closed state tuple key reason cost consistency adversaries",
+              "status": "PASS"
+            },
+            {
+              "name": "generate V2 original number correlated private extraction empty actual money",
+              "status": "PASS"
+            },
+            {
+              "name": "raw mapped mismatches missing amount and stable drift never positive",
+              "status": "PASS"
+            },
+            {
+              "name": "stream finish maps original raw cost before nativefinish with one raw identity",
+              "status": "PASS"
+            },
+            {
+              "name": "missing final mapped cost cannot reuse previous raw amount",
+              "status": "PASS"
+            },
+            {
+              "name": "raw usage-only tail before native finish allowed repeated costs equal",
+              "status": "PASS"
+            },
+            {
+              "name": "postfinish raw secondfinish openempty syntheticflush malformed tuple deny",
+              "status": "FAIL",
+              "error": "Error: SHAPE"
+            },
+            {
+              "name": "historicalV1 cannot be relabeled with V2 or enter embed V2",
+              "status": "PASS"
+            },
+            {
+              "name": "registered capture reruns V2 and preserves full unknown liability",
+              "status": "PASS"
+            },
+            {
+              "name": "registered capture rejects retained malformed shape and foreign dispatch without writes",
+              "status": "PASS"
+            },
+            {
+              "name": "exact whole transcript node boundary witness cumulative prefix and bytes",
+              "status": "FAIL",
+              "error": "Error: SHAPE"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "control": "final-metadata-resource-01",
+      "status": "PASS observed offline",
+      "exit": 0,
+      "argv": [
+        "node",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/metadata-resource.mjs"
+      ],
+      "receipt": "final-metadata-resource-01-receipt.json",
+      "sourceBefore": "final-metadata-resource-01-pre.json",
+      "sourceAfter": "final-metadata-resource-01-post.json",
+      "rawStdout": "final-metadata-resource-01.stdout",
+      "rawStderr": "final-metadata-resource-01.stderr",
+      "stdoutSha256": "ce791605b0244ce5181066163659acd32bf104e2e08b6eacf1da8660633cbaff",
+      "structuredRawOutcomes": [
+        {
+          "scope": "ACTUAL_CANDIDATE_NATIVE_SELECTOR_REGISTERED_CAPTURE_EXACT_RESOURCE_BOUNDARIES",
+          "outcomes": [
+            {
+              "name": "actual native selector and registered capture equality at4096,4097 and identical cost extra parent key",
+              "status": "PASS"
+            },
+            {
+              "name": "actual selector registered capture exact180000 vs180001 full UTF8 bytes",
+              "status": "PASS"
+            },
+            {
+              "name": "actual selector/capture root0 depth16 accepts depth17 denies",
+              "status": "PASS"
+            },
+            {
+              "name": "actual observer repeated identical prefix50 times does not doublecharge, new cumulative event and513 limit deny",
+              "status": "PASS"
+            }
+          ],
+          "actualMoney": "EMPTY",
+          "skipped": 0
+        }
+      ]
+    },
+    {
+      "control": "final-official-denials",
+      "status": "PASS observed offline",
+      "exit": 0,
+      "argv": [
+        "node",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/metadata-official-denials.mjs"
+      ],
+      "receipt": "final-official-denials-receipt.json",
+      "sourceBefore": "final-official-denials-pre.json",
+      "sourceAfter": "final-official-denials-post.json",
+      "rawStdout": "final-official-denials.stdout",
+      "rawStderr": "final-official-denials.stderr",
+      "stdoutSha256": "21f39cada5a476002da7113ac4c03c74d191831247578d26a788fb00ccc92110",
+      "structuredRawOutcomes": [
+        {
+          "scope": "ACTUAL_OFFICIAL_SOURCE_EARLIER_CONSTRUCTION_DENIAL_SUPPLEMENT_OFFLINE_ONLY",
+          "outcomes": [
+            {
+              "name": "actual explicit V2 finish full raw9 prefix rejects before witness sort/freeze",
+              "status": "PASS"
+            },
+            {
+              "name": "actual explicit V2 second finish rejects before witness sort/freeze",
+              "status": "PASS"
+            },
+            {
+              "name": "ACTUAL official runner raw9 structural error owned cancellation/marker/private withholding",
+              "status": "PASS"
+            },
+            {
+              "name": "ACTUAL official runner finish2 structural error owned cancellation/marker/private withholding",
+              "status": "PASS"
+            },
+            {
+              "name": "ACTUAL official generate historical oversized source rejects before keys sort/freeze",
+              "status": "PASS"
+            }
+          ],
+          "actual": "EMPTY/null/uninstalled",
+          "skipped": 0
+        }
+      ]
+    },
+    {
+      "control": "final-store-final-c2-admission",
+      "status": "PASS observed offline",
+      "exit": 0,
+      "argv": [
+        "node",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/c2-admission.mjs"
+      ],
+      "receipt": "final-store-final-c2-admission-receipt.json",
+      "sourceBefore": "final-store-final-c2-admission-pre.json",
+      "sourceAfter": "final-store-final-c2-admission-post.json",
+      "rawStdout": "final-store-final-c2-admission.stdout",
+      "rawStderr": "final-store-final-c2-admission.stderr",
+      "stdoutSha256": "7c5de5daa0e0d9dc41b36d31c745199f67ecfb179a3841995cb9f93d33e6d5dd",
+      "structuredRawOutcomes": [
+        {
+          "scope": "DUMMY_REGISTERED_VM_ORIGINAL_1000MS_PREPARATION_ADMISSION_PENDING",
+          "outcomes": [
+            {
+              "name": "sign-crosses-expiry",
+              "status": "PASS",
+              "elapsed": 1116,
+              "stages": 0,
+              "pending": 1
+            },
+            {
+              "name": "sign-late-rejection",
+              "status": "PASS",
+              "elapsed": 1107,
+              "stages": 0,
+              "pending": 1
+            },
+            {
+              "name": "final-equal-expiry",
+              "status": "PASS",
+              "elapsed": 106,
+              "stages": 0,
+              "pending": 0
+            },
+            {
+              "name": "final-after-expiry",
+              "status": "PASS",
+              "elapsed": 97,
+              "stages": 0,
+              "pending": 0
+            },
+            {
+              "name": "cancel-during-preparation",
+              "status": "PASS",
+              "elapsed": 103,
+              "stages": 0,
+              "pending": 0
+            },
+            {
+              "name": "final-native-equality",
+              "status": "PASS",
+              "elapsed": 91,
+              "stages": 0,
+              "pending": 0
+            },
+            {
+              "name": "final-account-equality",
+              "status": "PASS",
+              "elapsed": 91,
+              "stages": 0,
+              "pending": 0
+            },
+            {
+              "name": "admitted-late-success",
+              "status": "PASS",
+              "elapsed": 1110,
+              "stages": 1,
+              "pending": 1
+            },
+            {
+              "name": "admitted-late-failure",
+              "status": "PASS",
+              "elapsed": 1106,
+              "stages": 1,
+              "pending": 1
+            }
+          ],
+          "unhandled": [],
+          "skipped": 0
+        }
+      ]
+    },
+    {
+      "control": "final-store-final-c2-collect-original-groups",
+      "status": "37PASS/3 historicalFAIL, NOT full40PASS",
+      "exit": 1,
+      "argv": [
+        "node",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/c2-collect-original-groups.mjs"
+      ],
+      "receipt": "final-store-final-c2-collect-original-groups-receipt.json",
+      "sourceBefore": "final-store-final-c2-collect-original-groups-pre.json",
+      "sourceAfter": "final-store-final-c2-collect-original-groups-post.json",
+      "rawStdout": "final-store-final-c2-collect-original-groups.stdout",
+      "rawStderr": "final-store-final-c2-collect-original-groups.stderr",
+      "stdoutSha256": "db23c0e6f706b890cad0b6f7d5c4c82c4829bbb8cf1f7a82944bd3a38327a283",
+      "structuredRawOutcomes": [
+        {
+          "scope": "OFFLINE_REGISTERED_HANDLER_CONTROLS_ONLY_NO_NATIVE_PROOF",
+          "outcomes": [
+            {
+              "name": "initial14 exact native/wire hashes order13unique and K314310",
+              "status": "PASS"
+            },
+            {
+              "name": "descriptor-first Unicode graph getter symbols prototype sparse nonfinite duplicate canonical hostile",
+              "status": "PASS"
+            },
+            {
+              "name": "actual proof registry EMPTY successful raw generation retains fullK active STOP no private",
+              "status": "PASS"
+            },
+            {
+              "name": "missingdriver fails before reserve native factory or token",
+              "status": "PASS"
+            },
+            {
+              "name": "OCC duplicate checkpoint permits one active one ticket and response-loss persistence-only",
+              "status": "PASS"
+            },
+            {
+              "name": "unknownmoney genuine trusted conditional lifetime releases independently; late full overrun once retains STOP",
+              "status": "PASS"
+            },
+            {
+              "name": "typed receipt unknownkeys/crossfields malformed STOP and immutable identity conflict zero writes",
+              "status": "PASS"
+            },
+            {
+              "name": "outward monetary source arithmetic zero boundary fullcharge overflow no tariff inference",
+              "status": "PASS"
+            },
+            {
+              "name": "formatversion2 stays2 across mutations and account fold detects sums flags privatehash corruption",
+              "status": "PASS"
+            },
+            {
+              "name": "safe individual fullcost but unrepresentable account aggregate STOP unknown preserves decimal/fullK without clamp",
+              "status": "PASS"
+            }
+          ]
+        },
+        {
+          "scope": "OFFLINE_LIFECYCLE_ONLY",
+          "outcomes": [
+            {
+              "name": "C09/C10 complete part identity loss replay before closed fences; same text changed sequence/digest denied zero writes",
+              "status": "FAIL",
+              "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n'denied' !== 'replay'\n"
+            }
+          ]
+        },
+        {
+          "scope": "OFFLINE_LIFECYCLE_ONLY",
+          "outcomes": [
+            {
+              "name": "C09/C10 complete part identity loss replay before closed fences; same text changed sequence/digest denied zero writes",
+              "status": "FAIL",
+              "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n'denied' !== 'replay'\n"
+            },
+            {
+              "name": "new late stage denied after STOP zero writes, no private resurrection",
+              "status": "PASS"
+            },
+            {
+              "name": "owned delete after unknown STOP/selfrevoke and exact tombstone replay immutable liabilities",
+              "status": "PASS"
+            },
+            {
+              "name": "purge retained trigger recomputation corrupted row/canonical/hash/redundancies deny no summary zero writes",
+              "status": "FAIL",
+              "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n12 !== 0\n"
+            }
+          ]
+        },
+        {
+          "scope": "OFFLINE_REGISTERED_LIFECYCLE_ONLY_NO_NATIVE_PROOF",
+          "outcomes": [
+            {
+              "name": "C09/C10 complete part identity loss replay before closed fences; same text changed sequence/digest denied zero writes",
+              "status": "FAIL",
+              "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n'denied' !== 'replay'\n"
+            },
+            {
+              "name": "new late stage denied after STOP zero writes, no private resurrection",
+              "status": "PASS"
+            },
+            {
+              "name": "owned delete after unknown STOP/selfrevoke and exact tombstone replay immutable liabilities",
+              "status": "PASS"
+            },
+            {
+              "name": "purge retained trigger recomputation corrupted row/canonical/hash/redundancies deny no summary zero writes",
+              "status": "FAIL",
+              "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n12 !== 0\n"
+            }
+          ]
+        },
+        {
+          "scope": "OFFLINE_REGISTERED_MANAGED_ONLY_NO_NATIVE_INDEX_PROOF",
+          "outcomes": [
+            {
+              "name": "E11 exact vector/native correspondence write duplicate0writes E12/E13 nowrite; bounded E14 current allowlist",
+              "status": "PASS"
+            },
+            {
+              "name": "four independent wrong-field indexed exclusions and forged composite candidate hydration exclusions",
+              "status": "PASS"
+            },
+            {
+              "name": "composite exact codec tuple distinction stored corruption replay denial0writes",
+              "status": "PASS"
+            },
+            {
+              "name": "async search current grant/source/profile mutation hydration denies zero matches no fallback",
+              "status": "PASS"
+            },
+            {
+              "name": "stale source after embedding denies write; default EMPTY and old profile vector caller scope denied before index",
+              "status": "PASS"
+            }
+          ]
+        },
+        {
+          "scope": "OFFLINE_REGISTERED_LATE_ACCOUNTING_ONLY_NO_ACTUAL_PROOF",
+          "outcomes": [
+            {
+              "name": "unknown both \u2192money-only active known\u2192late lifetime max2; purge permits originalaccount charge with no evidence resurrection",
+              "status": "PASS"
+            },
+            {
+              "name": "wrong owned scope/target/root after closure deny precise no summary zero writes",
+              "status": "PASS"
+            }
+          ]
+        },
+        {
+          "scope": "OFFLINE_RUNNER_ONLY",
+          "outcomes": [
+            {
+              "name": "authoritative current enter before selected native closure; canceled entry invokes zero factory",
+              "status": "PASS"
+            },
+            {
+              "name": "entry deadline owns late committed checkpoint no factory; historical run no retry native",
+              "status": "PASS"
+            },
+            {
+              "name": "local native deadline abort never provider terminal; owned late capture retains original fullK no replay",
+              "status": "PASS"
+            },
+            {
+              "name": "capture committed response loss retries persistence only once within original phase",
+              "status": "PASS"
+            },
+            {
+              "name": "firsteligible C09/C10 persisted stage response loss recovered hash-only no publicpartial; noeligible never triggers",
+              "status": "FAIL",
+              "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ 'native-unknown'\n- 'captured'\n"
+            }
+          ]
+        },
+        {
+          "scope": "OFFLINE_REGISTERED_RUNNER_LIFETIME_ONLY_NO_ACTION_RUNTIME_PROOF",
+          "outcomes": [
+            {
+              "name": "authoritative current enter before selected native closure; canceled entry invokes zero factory",
+              "status": "PASS"
+            },
+            {
+              "name": "entry deadline owns late committed checkpoint no factory; historical run no retry native",
+              "status": "PASS"
+            },
+            {
+              "name": "local native deadline abort never provider terminal; owned late capture retains original fullK no replay",
+              "status": "PASS"
+            },
+            {
+              "name": "capture committed response loss retries persistence only once within original phase",
+              "status": "PASS"
+            },
+            {
+              "name": "firsteligible C09/C10 persisted stage response loss recovered hash-only no publicpartial; noeligible never triggers",
+              "status": "FAIL",
+              "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ 'native-unknown'\n- 'captured'\n"
+            },
+            {
+              "name": "ownership pending errors settle independently without inferred terminal",
+              "status": "PASS"
+            },
+            {
+              "name": "qualified synthetic registered runner wires E11write/E14internal search while E12E13 only attach no extra vectors",
+              "status": "PASS"
+            }
+          ]
+        },
+        {
+          "scope": "OFFLINE_OBSERVER_STRUCTURAL_ONLY_NO_ACTUAL_PROOFS",
+          "outcomes": [
+            {
+              "name": "proper original prefix exactsame substantive facts different fullhash actual eligible sequence+1 no rawdigest change",
+              "status": "PASS"
+            },
+            {
+              "name": "prefix alone unknown all dimensions/no eligible no authoritative inferred serving or zero money",
+              "status": "PASS"
+            },
+            {
+              "name": "native prefix malformed descriptors/symbol/prototype/sparse/warnings/missingextra keys reject without getters",
+              "status": "PASS"
+            },
+            {
+              "name": "backing repeat/late prefix/warnings/unknownkey/changedtext/rawID conflict STOP/privatewithhold",
+              "status": "PASS"
+            },
+            {
+              "name": "flush alone no trusted lifetime; genuine completed conditional terminal survives reader error; drift full covered syntheticmoney withheld",
+              "status": "PASS"
+            },
+            {
+              "name": "minimal embed missing IDmodel and unknown categories cannot fabricate output/terminal/currency; all observer bounds retain unknown",
+              "status": "PASS"
+            },
+            {
+              "name": "rawusage ninth/duplicate finish/backing digest contradiction and unknown proof forgedlabels never become authority",
+              "status": "PASS"
+            },
+            {
+              "name": "native text segment IDs/start/end and early mapped response metadata remain ordered/correlated verbatim",
+              "status": "PASS"
+            }
+          ]
+        },
+        {
+          "scope": "OFFLINE_SYNTHETIC_TRUSTED_CODE_REGISTRY_ONLY_ACTUAL_EMPTY",
+          "outcomes": [
+            {
+              "name": "EMPTY actual plus all exact proofkeys/categorycoverage/versions/reviewpins failclosed",
+              "status": "PASS"
+            },
+            {
+              "name": "synthetic compiled accepted bytes conditional predicate bounds/terminal/drift/fullmoney independent no production proof",
+              "status": "PASS"
+            },
+            {
+              "name": "closed loadedsource/currentness/actualmodel coverage/collision provenance cannot normalize or callerinstall",
+              "status": "PASS"
+            }
+          ]
+        },
+        {
+          "scope": "OFFLINE_STRICT_SCHEMA_ADVERSE_ONLY",
+          "outcomes": [
+            {
+              "name": "21 independent typed enum/key/hash/count/category/crossfield rejects and first malformedSTOP1write then0repeat",
+              "status": "PASS",
+              "rejected": 21
+            }
+          ]
+        },
+        {
+          "scope": "OFFLINE_SUPPORTED_ADAPTER_FAKE_FETCH_ONLY",
+          "actualFactoryExecuted": false,
+          "realNetwork": 0,
+          "serviceTokens": 0,
+          "paidCalls": 0,
+          "total": 14,
+          "outcomes": [
+            {
+              "scenarioId": "C01",
+              "wireHash": "581303facf12e52a27958a88ffea73ab5f989c65822e461a12ba988f72475acc",
+              "calls": 1,
+              "kinds": [],
+              "observerReason": "missing-evidence",
+              "eligibleParts": 0,
+              "scope": "OFFLINE_UNDERLYING_ADAPTER_ONLY"
+            },
+            {
+              "scenarioId": "C02",
+              "wireHash": "ce32078630865719b0fbe93a02da12f96e186c489304dd52cc5357b83fabf20a",
+              "calls": 1,
+              "kinds": [
+                "stream-start",
+                "raw",
+                "response-metadata",
+                "text-start",
+                "text-delta",
+                "raw",
+                "text-end",
+                "finish"
+              ],
+              "observerReason": "missing-evidence",
+              "eligibleParts": 1,
+              "scope": "OFFLINE_UNDERLYING_ADAPTER_ONLY"
+            },
+            {
+              "scenarioId": "C03",
+              "wireHash": "cfd3cb767a58fd553497e7118a8b25b96b19081e56db878b5c1989d2fa8722db",
+              "calls": 1,
+              "kinds": [],
+              "observerReason": "missing-evidence",
+              "eligibleParts": 0,
+              "scope": "OFFLINE_UNDERLYING_ADAPTER_ONLY"
+            },
+            {
+              "scenarioId": "C04",
+              "wireHash": "2540abed6fca05d67be4ad7c51cefc9039ef2018ecc4565e00cfa2e1dbc8eaf3",
+              "calls": 1,
+              "kinds": [
+                "stream-start",
+                "raw",
+                "response-metadata",
+                "text-start",
+                "text-delta",
+                "raw",
+                "text-end",
+                "finish"
+              ],
+              "observerReason": "missing-evidence",
+              "eligibleParts": 1,
+              "scope": "OFFLINE_UNDERLYING_ADAPTER_ONLY"
+            },
+            {
+              "scenarioId": "C05",
+              "wireHash": "6bfc75625d9edd11a341278e364177c49bfcbf4b99ee29f9e2edddf56b54139e",
+              "calls": 1,
+              "kinds": [],
+              "observerReason": "missing-evidence",
+              "eligibleParts": 0,
+              "scope": "OFFLINE_UNDERLYING_ADAPTER_ONLY"
+            },
+            {
+              "scenarioId": "C06",
+              "wireHash": "72ff281f55191d7c036bd5e318d76715123266725aa9e4c50322a15e72b40c17",
+              "calls": 1,
+              "kinds": [
+                "stream-start",
+                "raw",
+                "response-metadata",
+                "text-start",
+                "text-delta",
+                "raw",
+                "text-end",
+                "finish"
+              ],
+              "observerReason": "missing-evidence",
+              "eligibleParts": 1,
+              "scope": "OFFLINE_UNDERLYING_ADAPTER_ONLY"
+            },
+            {
+              "scenarioId": "C07",
+              "wireHash": "cbf364e0c13f2d0975dbf331385f5612fadaca970871c7e4bd523357afd1c310",
+              "calls": 1,
+              "kinds": [],
+              "observerReason": "missing-evidence",
+              "eligibleParts": 0,
+              "scope": "OFFLINE_UNDERLYING_ADAPTER_ONLY"
+            },
+            {
+              "scenarioId": "C08",
+              "wireHash": "f11cefccc1827432695802b53ed7d0d990bba3cb3074f1f8eae7065dd0e96cd5",
+              "calls": 1,
+              "kinds": [
+                "stream-start",
+                "raw",
+                "response-metadata",
+                "text-start",
+                "text-delta",
+                "raw",
+                "text-end",
+                "finish"
+              ],
+              "observerReason": "missing-evidence",
+              "eligibleParts": 1,
+              "scope": "OFFLINE_UNDERLYING_ADAPTER_ONLY"
+            },
+            {
+              "scenarioId": "E11",
+              "wireHash": "4b87d065cabb6b721f681fab3099353a5767173f4976b73b175176a34c00a6dc",
+              "calls": 1,
+              "kinds": [],
+              "observerReason": "missing-evidence",
+              "eligibleParts": 0,
+              "scope": "OFFLINE_UNDERLYING_ADAPTER_ONLY"
+            },
+            {
+              "scenarioId": "E12",
+              "wireHash": "407cff1541b6978a4084a558392e34f5c22235d485a9d771b9faae34f854dcaf",
+              "calls": 1,
+              "kinds": [],
+              "observerReason": "missing-evidence",
+              "eligibleParts": 0,
+              "scope": "OFFLINE_UNDERLYING_ADAPTER_ONLY"
+            },
+            {
+              "scenarioId": "E13",
+              "wireHash": "e16f219200a7b594bbc7c03060bdaf39755b3c45cb58d43b991a49d2bca4cd4f",
+              "calls": 1,
+              "kinds": [],
+              "observerReason": "missing-evidence",
+              "eligibleParts": 0,
+              "scope": "OFFLINE_UNDERLYING_ADAPTER_ONLY"
+            },
+            {
+              "scenarioId": "E14",
+              "wireHash": "4b87d065cabb6b721f681fab3099353a5767173f4976b73b175176a34c00a6dc",
+              "calls": 1,
+              "kinds": [],
+              "observerReason": "missing-evidence",
+              "eligibleParts": 0,
+              "scope": "OFFLINE_UNDERLYING_ADAPTER_ONLY"
+            },
+            {
+              "scenarioId": "C09",
+              "wireHash": "310d1adf184569df49510c0917fb17ab643ff5171a19ca270373306445b94c4e",
+              "calls": 1,
+              "kinds": [
+                "stream-start",
+                "raw",
+                "response-metadata",
+                "text-start",
+                "text-delta",
+                "raw",
+                "text-end",
+                "finish"
+              ],
+              "observerReason": "missing-evidence",
+              "eligibleParts": 1,
+              "scope": "OFFLINE_UNDERLYING_ADAPTER_ONLY"
+            },
+            {
+              "scenarioId": "C10",
+              "wireHash": "f31d613cb4930b8df19cb49a8706a163d3b73479ab36d40163763679c1cecc1e",
+              "calls": 1,
+              "kinds": [
+                "stream-start",
+                "raw",
+                "response-metadata",
+                "text-start",
+                "text-delta",
+                "raw",
+                "text-end",
+                "finish"
+              ],
+              "observerReason": "missing-evidence",
+              "eligibleParts": 1,
+              "scope": "OFFLINE_UNDERLYING_ADAPTER_ONLY"
+            }
+          ]
+        },
+        {
+          "scope": "UNCHANGED_ORIGINAL40_CALLBACKS_INDEPENDENT_FAILURE_COLLECTION_NO_AUTHORITY_BYPASS",
+          "transformed": [
+            {
+              "url": "file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/managed.mjs",
+              "rawSHA256": "9f773be684c650fc6f475702d0d302b088d738aef07a36917f963045e18144a6",
+              "loadedSHA256": "d53e7d22f2fe1e9a12a5a7aace4318ef22f51d9384c9e915e5c9394777fc73e9",
+              "change": "Only outer reporting-wrapper rethrow suppressed. Every callback body/assertion and all source/authority/transport/key dependencies byte unchanged."
+            },
+            {
+              "url": "file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/controls.mjs",
+              "rawSHA256": "f56e5030a6231bfaa3c561059e13a6506a6e74a7712a5de62be597c7102b0552",
+              "loadedSHA256": "f8a2374d4b7f4307af330f63d14798dda9ff3c76febc75aba337879df83d465d",
+              "change": "Only outer reporting-wrapper rethrow suppressed. Every callback body/assertion and all source/authority/transport/key dependencies byte unchanged."
+            },
+            {
+              "url": "file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/lifecycle.mjs",
+              "rawSHA256": "69dcf8fa9af0b56a71d5a2aebf33bd75ab9b511549bab3d796db7f326f5d3f58",
+              "loadedSHA256": "4c296b053c104c1c4d31ae8b6e3d8770b6c962db14197fba6d6fc676dc3bd477",
+              "change": "Only outer reporting-wrapper rethrow suppressed. Every callback body/assertion and all source/authority/transport/key dependencies byte unchanged."
+            },
+            {
+              "url": "file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/late-accounting.mjs",
+              "rawSHA256": "5d3b4fa479b2d037c9a67759680dc7c7227d83d6f942282d2a9bf25bf134d42f",
+              "loadedSHA256": "8e3a5a3f6c3fbbf48dc98fc21d47c31545e3965037ff5d1c5ddad8651dd72634",
+              "change": "Only outer reporting-wrapper rethrow suppressed. Every callback body/assertion and all source/authority/transport/key dependencies byte unchanged."
+            },
+            {
+              "url": "file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/runner.mjs",
+              "rawSHA256": "08e53192902c0f971456e5583d6184439762d21c72c0831d5d4aef221c654787",
+              "loadedSHA256": "65599e62af9c2f260403ab8d2d6bd1f6b4551a63837291bdbee0f7a63c5098d3",
+              "change": "Only outer reporting-wrapper rethrow suppressed. Every callback body/assertion and all source/authority/transport/key dependencies byte unchanged."
+            },
+            {
+              "url": "file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/observer.mjs",
+              "rawSHA256": "7b3168395516b0a0470336306679f7a8c9f90a6bcb5b6c1929a8def2f3e8cd06",
+              "loadedSHA256": "61e7058527f2f8c08f588c1516d1bc88b23de3671263026286c7e937b02db0b8",
+              "change": "Only outer reporting-wrapper rethrow suppressed. Every callback body/assertion and all source/authority/transport/key dependencies byte unchanged."
+            }
+          ],
+          "outsideFailure": null,
+          "outcomes": [
+            {
+              "name": "initial14 exact native/wire hashes order13unique and K314310",
+              "status": "PASS"
+            },
+            {
+              "name": "descriptor-first Unicode graph getter symbols prototype sparse nonfinite duplicate canonical hostile",
+              "status": "PASS"
+            },
+            {
+              "name": "actual proof registry EMPTY successful raw generation retains fullK active STOP no private",
+              "status": "PASS"
+            },
+            {
+              "name": "missingdriver fails before reserve native factory or token",
+              "status": "PASS"
+            },
+            {
+              "name": "OCC duplicate checkpoint permits one active one ticket and response-loss persistence-only",
+              "status": "PASS"
+            },
+            {
+              "name": "unknownmoney genuine trusted conditional lifetime releases independently; late full overrun once retains STOP",
+              "status": "PASS"
+            },
+            {
+              "name": "typed receipt unknownkeys/crossfields malformed STOP and immutable identity conflict zero writes",
+              "status": "PASS"
+            },
+            {
+              "name": "outward monetary source arithmetic zero boundary fullcharge overflow no tariff inference",
+              "status": "PASS"
+            },
+            {
+              "name": "formatversion2 stays2 across mutations and account fold detects sums flags privatehash corruption",
+              "status": "PASS"
+            },
+            {
+              "name": "safe individual fullcost but unrepresentable account aggregate STOP unknown preserves decimal/fullK without clamp",
+              "status": "PASS"
+            },
+            {
+              "name": "C09/C10 complete part identity loss replay before closed fences; same text changed sequence/digest denied zero writes",
+              "status": "FAIL",
+              "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n'denied' !== 'replay'\n"
+            },
+            {
+              "name": "new late stage denied after STOP zero writes, no private resurrection",
+              "status": "PASS"
+            },
+            {
+              "name": "owned delete after unknown STOP/selfrevoke and exact tombstone replay immutable liabilities",
+              "status": "PASS"
+            },
+            {
+              "name": "purge retained trigger recomputation corrupted row/canonical/hash/redundancies deny no summary zero writes",
+              "status": "FAIL",
+              "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n12 !== 0\n"
+            },
+            {
+              "name": "E11 exact vector/native correspondence write duplicate0writes E12/E13 nowrite; bounded E14 current allowlist",
+              "status": "PASS"
+            },
+            {
+              "name": "four independent wrong-field indexed exclusions and forged composite candidate hydration exclusions",
+              "status": "PASS"
+            },
+            {
+              "name": "composite exact codec tuple distinction stored corruption replay denial0writes",
+              "status": "PASS"
+            },
+            {
+              "name": "async search current grant/source/profile mutation hydration denies zero matches no fallback",
+              "status": "PASS"
+            },
+            {
+              "name": "stale source after embedding denies write; default EMPTY and old profile vector caller scope denied before index",
+              "status": "PASS"
+            },
+            {
+              "name": "unknown both \u2192money-only active known\u2192late lifetime max2; purge permits originalaccount charge with no evidence resurrection",
+              "status": "PASS"
+            },
+            {
+              "name": "wrong owned scope/target/root after closure deny precise no summary zero writes",
+              "status": "PASS"
+            },
+            {
+              "name": "authoritative current enter before selected native closure; canceled entry invokes zero factory",
+              "status": "PASS"
+            },
+            {
+              "name": "entry deadline owns late committed checkpoint no factory; historical run no retry native",
+              "status": "PASS"
+            },
+            {
+              "name": "local native deadline abort never provider terminal; owned late capture retains original fullK no replay",
+              "status": "PASS"
+            },
+            {
+              "name": "capture committed response loss retries persistence only once within original phase",
+              "status": "PASS"
+            },
+            {
+              "name": "firsteligible C09/C10 persisted stage response loss recovered hash-only no publicpartial; noeligible never triggers",
+              "status": "FAIL",
+              "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ 'native-unknown'\n- 'captured'\n"
+            },
+            {
+              "name": "ownership pending errors settle independently without inferred terminal",
+              "status": "PASS"
+            },
+            {
+              "name": "qualified synthetic registered runner wires E11write/E14internal search while E12E13 only attach no extra vectors",
+              "status": "PASS"
+            },
+            {
+              "name": "proper original prefix exactsame substantive facts different fullhash actual eligible sequence+1 no rawdigest change",
+              "status": "PASS"
+            },
+            {
+              "name": "prefix alone unknown all dimensions/no eligible no authoritative inferred serving or zero money",
+              "status": "PASS"
+            },
+            {
+              "name": "native prefix malformed descriptors/symbol/prototype/sparse/warnings/missingextra keys reject without getters",
+              "status": "PASS"
+            },
+            {
+              "name": "backing repeat/late prefix/warnings/unknownkey/changedtext/rawID conflict STOP/privatewithhold",
+              "status": "PASS"
+            },
+            {
+              "name": "flush alone no trusted lifetime; genuine completed conditional terminal survives reader error; drift full covered syntheticmoney withheld",
+              "status": "PASS"
+            },
+            {
+              "name": "minimal embed missing IDmodel and unknown categories cannot fabricate output/terminal/currency; all observer bounds retain unknown",
+              "status": "PASS"
+            },
+            {
+              "name": "rawusage ninth/duplicate finish/backing digest contradiction and unknown proof forgedlabels never become authority",
+              "status": "PASS"
+            },
+            {
+              "name": "native text segment IDs/start/end and early mapped response metadata remain ordered/correlated verbatim",
+              "status": "PASS"
+            },
+            {
+              "name": "EMPTY actual plus all exact proofkeys/categorycoverage/versions/reviewpins failclosed",
+              "status": "PASS"
+            },
+            {
+              "name": "synthetic compiled accepted bytes conditional predicate bounds/terminal/drift/fullmoney independent no production proof",
+              "status": "PASS"
+            },
+            {
+              "name": "closed loadedsource/currentness/actualmodel coverage/collision provenance cannot normalize or callerinstall",
+              "status": "PASS"
+            },
+            {
+              "name": "21 independent typed enum/key/hash/count/category/crossfield rejects and first malformedSTOP1write then0repeat",
+              "status": "PASS",
+              "rejected": 21
+            }
+          ],
+          "total": 40,
+          "passed": 37,
+          "failed": 3,
+          "notRun": 0,
+          "skipped": 0
+        }
+      ]
+    },
+    {
+      "control": "final-store-final-c2-owned",
+      "status": "PASS observed offline",
+      "exit": 0,
+      "argv": [
+        "node",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/c2-owned.mjs"
+      ],
+      "receipt": "final-store-final-c2-owned-receipt.json",
+      "sourceBefore": "final-store-final-c2-owned-pre.json",
+      "sourceAfter": "final-store-final-c2-owned-post.json",
+      "rawStdout": "final-store-final-c2-owned.stdout",
+      "rawStderr": "final-store-final-c2-owned.stderr",
+      "stdoutSha256": "091304fba76938cedeac44b6b6ec90013285b9e13f3994ae155433b5d0bdf8e2",
+      "structuredRawOutcomes": [
+        {
+          "scope": "OFFLINE_REGISTERED_HANDLER_CONTROLS_ONLY_NO_NATIVE_PROOF",
+          "outcomes": [
+            {
+              "name": "initial14 exact native/wire hashes order13unique and K314310",
+              "status": "PASS"
+            },
+            {
+              "name": "descriptor-first Unicode graph getter symbols prototype sparse nonfinite duplicate canonical hostile",
+              "status": "PASS"
+            },
+            {
+              "name": "actual proof registry EMPTY successful raw generation retains fullK active STOP no private",
+              "status": "PASS"
+            },
+            {
+              "name": "missingdriver fails before reserve native factory or token",
+              "status": "PASS"
+            },
+            {
+              "name": "OCC duplicate checkpoint permits one active one ticket and response-loss persistence-only",
+              "status": "PASS"
+            },
+            {
+              "name": "unknownmoney genuine trusted conditional lifetime releases independently; late full overrun once retains STOP",
+              "status": "PASS"
+            },
+            {
+              "name": "typed receipt unknownkeys/crossfields malformed STOP and immutable identity conflict zero writes",
+              "status": "PASS"
+            },
+            {
+              "name": "outward monetary source arithmetic zero boundary fullcharge overflow no tariff inference",
+              "status": "PASS"
+            },
+            {
+              "name": "formatversion2 stays2 across mutations and account fold detects sums flags privatehash corruption",
+              "status": "PASS"
+            },
+            {
+              "name": "safe individual fullcost but unrepresentable account aggregate STOP unknown preserves decimal/fullK without clamp",
+              "status": "PASS"
+            }
+          ]
+        },
+        {
+          "scope": "DUMMY_C2_OWNED_PRIMARY_SECONDARY_READER_PORT_ONLY",
+          "outcomes": [
+            {
+              "name": "late success owned continuation consumed",
+              "status": "PASS"
+            },
+            {
+              "name": "late failure owned continuation consumed",
+              "status": "PASS"
+            },
+            {
+              "name": "settled persistence failure owned no replay/fullK",
+              "status": "PASS"
+            },
+            {
+              "name": "late persistence failure owned no replay/fullK",
+              "status": "PASS"
+            },
+            {
+              "name": "exact official runtime malformed reader bounded cancel/release",
+              "status": "PASS"
+            },
+            {
+              "name": "exact official runtime read-error reader bounded cancel/release",
+              "status": "PASS"
+            },
+            {
+              "name": "exact official runtime bound reader bounded cancel/release",
+              "status": "PASS"
+            },
+            {
+              "name": "exact official runtime cancel-error reader bounded cancel/release",
+              "status": "PASS"
+            },
+            {
+              "name": "exact official runtime cancel-pending reader bounded cancel/release",
+              "status": "PASS"
+            },
+            {
+              "name": "runner includes unresolved reader cleanup in owned pending count",
+              "status": "PASS"
+            }
+          ],
+          "unhandled": []
+        }
+      ]
+    },
+    {
+      "control": "final-store-final-c2-retained-refinements",
+      "status": "PASS observed offline",
+      "exit": 0,
+      "argv": [
+        "node",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/c2-retained-refinements.mjs"
+      ],
+      "receipt": "final-store-final-c2-retained-refinements-receipt.json",
+      "sourceBefore": "final-store-final-c2-retained-refinements-pre.json",
+      "sourceAfter": "final-store-final-c2-retained-refinements-post.json",
+      "rawStdout": "final-store-final-c2-retained-refinements.stdout",
+      "rawStderr": "final-store-final-c2-retained-refinements.stderr",
+      "stdoutSha256": "df6c71dd287aac59f31ee3fad207080b9f5a178d38eb184d9a727b00c15c609f",
+      "structuredRawOutcomes": [
+        {
+          "scope": "OFFLINE_REGISTERED_HANDLER_CONTROLS_ONLY_NO_NATIVE_PROOF",
+          "outcomes": [
+            {
+              "name": "initial14 exact native/wire hashes order13unique and K314310",
+              "status": "PASS"
+            },
+            {
+              "name": "descriptor-first Unicode graph getter symbols prototype sparse nonfinite duplicate canonical hostile",
+              "status": "PASS"
+            },
+            {
+              "name": "actual proof registry EMPTY successful raw generation retains fullK active STOP no private",
+              "status": "PASS"
+            },
+            {
+              "name": "missingdriver fails before reserve native factory or token",
+              "status": "PASS"
+            },
+            {
+              "name": "OCC duplicate checkpoint permits one active one ticket and response-loss persistence-only",
+              "status": "PASS"
+            },
+            {
+              "name": "unknownmoney genuine trusted conditional lifetime releases independently; late full overrun once retains STOP",
+              "status": "PASS"
+            },
+            {
+              "name": "typed receipt unknownkeys/crossfields malformed STOP and immutable identity conflict zero writes",
+              "status": "PASS"
+            },
+            {
+              "name": "outward monetary source arithmetic zero boundary fullcharge overflow no tariff inference",
+              "status": "PASS"
+            },
+            {
+              "name": "formatversion2 stays2 across mutations and account fold detects sums flags privatehash corruption",
+              "status": "PASS"
+            },
+            {
+              "name": "safe individual fullcost but unrepresentable account aggregate STOP unknown preserves decimal/fullK without clamp",
+              "status": "PASS"
+            }
+          ]
+        },
+        {
+          "scope": "DUMMY_RETAINED_REFINEMENT_AND_COHERENT_FOREIGN_FOLD_NO_NATIVE",
+          "outcomes": [
+            {
+              "name": "refinement-foreign-dispatch",
+              "status": "PASS",
+              "writes": 0,
+              "noSummary": true
+            },
+            {
+              "name": "coherent-foreign-first-plus-refinement",
+              "status": "PASS",
+              "writes": 0,
+              "noSummary": true
+            }
+          ],
+          "skipped": 0
+        }
+      ]
+    },
+    {
+      "control": "final-store-final-c2-stream",
+      "status": "PASS observed offline",
+      "exit": 0,
+      "argv": [
+        "node",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/c2-stream.mjs"
+      ],
+      "receipt": "final-store-final-c2-stream-receipt.json",
+      "sourceBefore": "final-store-final-c2-stream-pre.json",
+      "sourceAfter": "final-store-final-c2-stream-post.json",
+      "rawStdout": "final-store-final-c2-stream.stdout",
+      "rawStderr": "final-store-final-c2-stream.stderr",
+      "stdoutSha256": "5f2318bc56e9b57b46b1c6a028dcedfb399d3870da627008b6668115e707a515",
+      "structuredRawOutcomes": [
+        {
+          "scope": "DUMMY_C2_ORDERED_COMPLETE_ERROR_AND_ALL_SEGMENTS_ONLY",
+          "outcomes": [
+            {
+              "name": "two balanced empty segments positive",
+              "status": "PASS",
+              "lifetime": "validated-provider-terminal"
+            },
+            {
+              "name": "first empty closed second open denies",
+              "status": "PASS",
+              "lifetime": "unknown"
+            },
+            {
+              "name": "complete terminal genuine error retains",
+              "status": "PASS",
+              "lifetime": "validated-provider-terminal"
+            },
+            {
+              "name": "usage raw after complete terminal error denies",
+              "status": "PASS",
+              "lifetime": "unknown"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "control": "final-store-final-independent-account-load",
+      "status": "PASS observed offline",
+      "exit": 0,
+      "argv": [
+        "node",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/independent-account-load.mjs"
+      ],
+      "receipt": "final-store-final-independent-account-load-receipt.json",
+      "sourceBefore": "final-store-final-independent-account-load-pre.json",
+      "sourceAfter": "final-store-final-independent-account-load-post.json",
+      "rawStdout": "final-store-final-independent-account-load.stdout",
+      "rawStderr": "final-store-final-independent-account-load.stderr",
+      "stdoutSha256": "147c9e490f18a6300d0285ca03b24987371e30cdbe160bb76a869225678f0475",
+      "structuredRawOutcomes": [
+        {
+          "scope": "DUMMY_CROSS_ATTEMPT_REGISTERED_LOAD",
+          "recovery": {
+            "kind": "denied",
+            "reason": "corrupt"
+          },
+          "inspect": {
+            "kind": "denied",
+            "reason": "corrupt"
+          },
+          "writes": 0,
+          "expected": "corrupt denial no summary"
+        }
+      ]
+    },
+    {
+      "control": "final-store-final-independent-async",
+      "status": "PASS observed offline",
+      "exit": 0,
+      "argv": [
+        "node",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/independent-async.mjs"
+      ],
+      "receipt": "final-store-final-independent-async-receipt.json",
+      "sourceBefore": "final-store-final-independent-async-pre.json",
+      "sourceAfter": "final-store-final-independent-async-post.json",
+      "rawStdout": "final-store-final-independent-async.stdout",
+      "rawStderr": "final-store-final-independent-async.stderr",
+      "stdoutSha256": "bfaa034203a897839b3a286c6d9b812a38abc069dce5fff4da4f7c8f7726c841",
+      "structuredRawOutcomes": [
+        {
+          "scope": "DUMMY_PROVIDER_REJECTION_NO_NATIVE",
+          "result": {
+            "status": "native-unknown",
+            "dispatched": true,
+            "pending": 0
+          },
+          "calls": 1,
+          "unhandled": [],
+          "state": {
+            "active": "C01",
+            "reserved": 29031,
+            "stopped": true,
+            "attachment": "closed"
+          },
+          "expectedUnhandled": 0
+        }
+      ]
+    },
+    {
+      "control": "final-store-final-independent-codec",
+      "status": "PASS observed offline",
+      "exit": 0,
+      "argv": [
+        "node",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/independent-codec.mjs"
+      ],
+      "receipt": "final-store-final-independent-codec-receipt.json",
+      "sourceBefore": "final-store-final-independent-codec-pre.json",
+      "sourceAfter": "final-store-final-independent-codec-post.json",
+      "rawStdout": "final-store-final-independent-codec.stdout",
+      "rawStderr": "final-store-final-independent-codec.stderr",
+      "stdoutSha256": "b737466cdff8f0cee848cbacc0b27a24e4e8bd5aa8324935c793abd80dd103bf",
+      "structuredRawOutcomes": [
+        {
+          "scope": "DUMMY_CANONICAL_JS_UTF16_ORDER",
+          "actual": "{\"10\":\"DUMMY-ten\",\"2\":\"DUMMY-two\"}",
+          "expected": "{\"10\":\"DUMMY-ten\",\"2\":\"DUMMY-two\"}",
+          "correctAccepted": true,
+          "getterReads": 0
+        }
+      ]
+    },
+    {
+      "control": "final-store-final-independent-money",
+      "status": "FAIL material actual proof blocker retained",
+      "exit": 1,
+      "argv": [
+        "node",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/independent-money.mjs"
+      ],
+      "receipt": "final-store-final-independent-money-receipt.json",
+      "sourceBefore": "final-store-final-independent-money-pre.json",
+      "sourceAfter": "final-store-final-independent-money-post.json",
+      "rawStdout": "final-store-final-independent-money.stdout",
+      "rawStderr": "final-store-final-independent-money.stderr",
+      "stdoutSha256": "2f4d9a5c7153d6c422ffda379e7629502b520c6e617099be7d043fc9a8b86b9a",
+      "structuredRawOutcomes": [
+        {
+          "scope": "DUMMY_CLOSED_MONEY_RESOLVER_ONLY_ACTUAL_REGISTRY_EMPTY",
+          "direct": {
+            "kind": "validated",
+            "proofHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "value": {
+              "microUSD": 50001,
+              "currency": "USD",
+              "categories": [
+                "inference"
+              ]
+            }
+          },
+          "observerMoney": "unknown",
+          "observerCategories": [],
+          "cost": "0.050001",
+          "reason": "missing-evidence",
+          "expected": "money nomination extraction wired or explicit unsupported"
+        }
+      ]
+    },
+    {
+      "control": "final-store-final-independent",
+      "status": "PASS observed offline",
+      "exit": 0,
+      "argv": [
+        "node",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/independent.mjs"
+      ],
+      "receipt": "final-store-final-independent-receipt.json",
+      "sourceBefore": "final-store-final-independent-pre.json",
+      "sourceAfter": "final-store-final-independent-post.json",
+      "rawStdout": "final-store-final-independent.stdout",
+      "rawStderr": "final-store-final-independent.stderr",
+      "stdoutSha256": "8d58b0ecbf7acda56443b1b1ea7376be85400d3e663ef0b45048ce209313f184",
+      "structuredRawOutcomes": [
+        {
+          "scope": "DUMMY_ONLY_INDEPENDENT_EXACT_SOURCE",
+          "results": [
+            {
+              "name": "valid unknown C01 retained account positive control",
+              "observed": "accepted",
+              "expected": "accepted",
+              "pass": true
+            },
+            {
+              "name": "negative arithmetic known corruption",
+              "observed": "rejected",
+              "error": "Error: ACCOUNT",
+              "expected": "rejected",
+              "pass": true
+            },
+            {
+              "name": "foreign receipt scenario/dispatch moved into C01 attempt",
+              "observed": "rejected",
+              "error": "Error: IDENTITY_CONFLICT",
+              "expected": "rejected",
+              "pass": true
+            },
+            {
+              "name": "foreign dispatch only moved into C01 receipt",
+              "observed": "rejected",
+              "error": "Error: IDENTITY_CONFLICT",
+              "expected": "rejected",
+              "pass": true
+            },
+            {
+              "name": "unknown retained capture with impossible dispatch_pending state",
+              "observed": "rejected",
+              "error": "Error: STATE",
+              "expected": "rejected",
+              "pass": true
+            },
+            {
+              "name": "attached status without privateCanonical/result delivery",
+              "observed": "rejected",
+              "error": "Error: STOP",
+              "expected": "rejected",
+              "pass": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "control": "final-store-final-metadata-purge",
+      "status": "PASS observed offline",
+      "exit": 0,
+      "argv": [
+        "node",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/metadata-purge.mjs"
+      ],
+      "receipt": "final-store-final-metadata-purge-receipt.json",
+      "sourceBefore": "final-store-final-metadata-purge-pre.json",
+      "sourceAfter": "final-store-final-metadata-purge-post.json",
+      "rawStdout": "final-store-final-metadata-purge.stdout",
+      "rawStderr": "final-store-final-metadata-purge.stderr",
+      "stdoutSha256": "a43a273ffdd9abe082b0b5adbebb6646ede7ab416576b21fd9f2eea166439d71",
+      "structuredRawOutcomes": [
+        {
+          "scope": "ACTUAL_REGISTERED_METADATA_CAPTURE_DELETE_PURGE_PRIVATE_BACKING",
+          "outcomes": [
+            {
+              "name": "metadata keys private before purge, no public recovery leak",
+              "status": "PASS"
+            },
+            {
+              "name": "purge removes metadata backing, stableT/currentL/fullK retained",
+              "status": "PASS"
+            },
+            {
+              "name": "exact historical capture replay zero writes, coherent changed witness no resurrection",
+              "status": "PASS"
+            },
+            {
+              "name": "purge replay zero writes",
+              "status": "PASS"
+            }
+          ],
+          "actualMoney": "EMPTY",
+          "skipped": 0
+        }
+      ]
+    },
+    {
+      "control": "final-store-final-metadata-stage",
+      "status": "PASS observed offline",
+      "exit": 0,
+      "argv": [
+        "node",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/metadata-stage.mjs"
+      ],
+      "receipt": "final-store-final-metadata-stage-receipt.json",
+      "sourceBefore": "final-store-final-metadata-stage-pre.json",
+      "sourceAfter": "final-store-final-metadata-stage-post.json",
+      "rawStdout": "final-store-final-metadata-stage.stdout",
+      "rawStderr": "final-store-final-metadata-stage.stderr",
+      "stdoutSha256": "be4707f3db6edceeb058eaa2838fcc53774bcdd854dd3aeaa05194f294952bb8",
+      "structuredRawOutcomes": [
+        {
+          "scope": "EXACT_OFFICIAL_DUMMY_PORT_METADATA_ISSUER_SOURCE_VERSION_NO_NATIVE",
+          "outcomes": [
+            {
+              "name": "exact official body uses V2 issuer private prefix with raw V1 identity unchanged",
+              "status": "PASS"
+            },
+            {
+              "name": "proper DUMMY seal cannot relabel V2 prefix into historical V1 fresh authority",
+              "status": "PASS"
+            },
+            {
+              "name": "source manifest closure key source hashes cannot be overridden by caller reseal",
+              "status": "PASS"
+            },
+            {
+              "name": "valid source seal malformed finish witness denies and cannot replace firsteligible",
+              "status": "PASS"
+            },
+            {
+              "name": "new capsule exact replay zero writes and original whole liability retained",
+              "status": "PASS"
+            },
+            {
+              "name": "exact official generate returns retained amount without public qualification or native option change",
+              "status": "PASS"
+            }
+          ],
+          "actualKey": "null",
+          "actualProofs": "EMPTY",
+          "skipped": 0
+        }
+      ]
+    },
+    {
+      "control": "final-store-final-regression-hostile",
+      "status": "PASS observed offline",
+      "exit": 0,
+      "argv": [
+        "node",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/regression/v1-c2/scripts/hostile.mjs"
+      ],
+      "receipt": "final-store-final-regression-hostile-receipt.json",
+      "sourceBefore": "final-store-final-regression-hostile-pre.json",
+      "sourceAfter": "final-store-final-regression-hostile-post.json",
+      "rawStdout": "final-store-final-regression-hostile.stdout",
+      "rawStderr": "final-store-final-regression-hostile.stderr",
+      "stdoutSha256": "6a779add53bf9401c54908d85fa26c72878aa36746cc07dfa5575edcf6fc5893",
+      "structuredRawOutcomes": [
+        {
+          "classification": "INDEPENDENT_HOSTILE_OUTCOMES_OFFLINE_ONLY",
+          "outcomes": [
+            {
+              "name": "late genuine terminal with money still unknown must release slot independently",
+              "contractMet": true,
+              "rejected": null,
+              "active": null,
+              "slotReleased": true
+            },
+            {
+              "name": "known money then genuine terminal missing money should release once",
+              "contractMet": true,
+              "rejected": null,
+              "active": null,
+              "reserved": 0,
+              "known": 10
+            },
+            {
+              "name": "usage evidence cannot conflict between first and refined receipt",
+              "contractMet": true,
+              "rejected": "Error: CAPTURE_COLLISION",
+              "refinements": 0,
+              "known": 0
+            },
+            {
+              "name": "terminal refinement cannot accept unlimited new receipts",
+              "contractMet": true,
+              "rejected": "Error: CAPTURE_COLLISION",
+              "refinements": 1,
+              "slotReleased": true,
+              "known": 10
+            },
+            {
+              "name": "charge scope cannot become production evidence",
+              "contractMet": true
+            },
+            {
+              "name": "private query allowlist excludes attached values",
+              "contractMet": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "control": "final-store-final-regression-independent",
+      "status": "PASS observed offline",
+      "exit": 0,
+      "argv": [
+        "node",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/regression/v1-c2/scripts/independent.mjs"
+      ],
+      "receipt": "final-store-final-regression-independent-receipt.json",
+      "sourceBefore": "final-store-final-regression-independent-pre.json",
+      "sourceAfter": "final-store-final-regression-independent-post.json",
+      "rawStdout": "final-store-final-regression-independent.stdout",
+      "rawStderr": "final-store-final-regression-independent.stderr",
+      "stdoutSha256": "fc1d558dcd5e8de7f3508b0e02ee030d732501b2be6ecc210cce1b946d04e389",
+      "structuredRawOutcomes": [
+        {
+          "status": "PASS_OFFLINE_INDEPENDENT_ONLY",
+          "tests": 5,
+          "skipped": 0,
+          "testsDetail": [
+            {
+              "name": "late C01 terminal/money receipts cannot release or charge C02 active slot",
+              "status": "PASS"
+            },
+            {
+              "name": "numeric unqualified fact cannot be laundered by later lifetime/amount; zero is supplied money",
+              "status": "PASS"
+            },
+            {
+              "name": "every immutable refinement field collision is transactionally read-only",
+              "status": "PASS"
+            },
+            {
+              "name": "late full overrun captures original account and preserves stopped retired private authority",
+              "status": "PASS"
+            },
+            {
+              "name": "simultaneous combined and independent capture publishes compatible one settlement without extra receipt authority",
+              "status": "PASS"
+            }
+          ],
+          "native": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "control": "final-store-final-regression-offline-check",
+      "status": "PASS observed offline",
+      "exit": 0,
+      "argv": [
+        "node",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/regression/v1-c2/scripts/offline-check.mjs"
+      ],
+      "receipt": "final-store-final-regression-offline-check-receipt.json",
+      "sourceBefore": "final-store-final-regression-offline-check-pre.json",
+      "sourceAfter": "final-store-final-regression-offline-check-post.json",
+      "rawStdout": "final-store-final-regression-offline-check.stdout",
+      "rawStderr": "final-store-final-regression-offline-check.stderr",
+      "stdoutSha256": "265b3bf3f6517d99e424d8bcfe7a468114139849c73b2106a61a889fc7ab0dfd",
+      "structuredRawOutcomes": [
+        {
+          "status": "PASS_OFFLINE_HANDLER_HARNESS_ONLY",
+          "tests": 23,
+          "skipped": 0,
+          "testsDetail": [
+            {
+              "name": "compiled immutable initial14 identity/order/U/M/K equals approved exact manifest",
+              "status": "PASS"
+            },
+            {
+              "name": "registered Convex exports internal controls; published runner fail closed without reserve",
+              "status": "PASS"
+            },
+            {
+              "name": "fourteen once-only serial closures; fifteenth and unknown ID denied; same native hash independent semantic permits",
+              "status": "PASS"
+            },
+            {
+              "name": "OCC simultaneous duplicate reserve retries then grants exactly one dispatch ticket",
+              "status": "PASS"
+            },
+            {
+              "name": "simultaneous runner race executes one selected peer closure",
+              "status": "PASS"
+            },
+            {
+              "name": "reserve transaction rollback prevents peer closure; persisted retry then succeeds once",
+              "status": "PASS"
+            },
+            {
+              "name": "checkpoint committed response loss forbids retry closure and retains full active uncertainty",
+              "status": "PASS"
+            },
+            {
+              "name": "capture rollback and lost response recover by persistence-only retry, charge once",
+              "status": "PASS"
+            },
+            {
+              "name": "ambiguous lifetime retains full reservation and active slot; qualified terminal unknown money releases slot once",
+              "status": "PASS"
+            },
+            {
+              "name": "qualified known charge with unknown lifetime retains active slot then late terminal releases once without second charge",
+              "status": "PASS"
+            },
+            {
+              "name": "late known full charge survives revoke/cancel/original window retirement; first evidence immutable and closed attachment never reopens",
+              "status": "PASS"
+            },
+            {
+              "name": "monetary overrun above K retained in full and stops serial next; usage overrun stops and retains full known",
+              "status": "PASS"
+            },
+            {
+              "name": "unqualified money retains full K and stops next; genuine terminal releases slot independently; malformed lifetime retains active",
+              "status": "PASS"
+            },
+            {
+              "name": "immutable dispatch and capture collisions rollback instead of overwrite or double charge",
+              "status": "PASS"
+            },
+            {
+              "name": "currentness source/profile/proof/grant/cancel denies before closure; no new owner-run laundering",
+              "status": "PASS"
+            },
+            {
+              "name": "authenticated exact public shape rejects caller prompt/model/options/price/tool/profile and getters without closure or getter side effects",
+              "status": "PASS"
+            },
+            {
+              "name": "revocation after checkpoint before selected dispatch fence invokes zero peer closure",
+              "status": "PASS"
+            },
+            {
+              "name": "canonical rejects ill Unicode/accessor nested graph/sparse/symbol/prototype/cycle/noncanonical/limits before traversal",
+              "status": "PASS"
+            },
+            {
+              "name": "capture first then attach exact private text; revoke clears attached result; unauthorized and mismatched hashes do not attach",
+              "status": "PASS"
+            },
+            {
+              "name": "embedding exact profile/1536 finite and bytes: profile change dimensions/nonfinite fail; stale source never hydrates",
+              "status": "PASS"
+            },
+            {
+              "name": "owned pending peer deadline retains slot; late handlers capture one full charge and settle without replay",
+              "status": "PASS"
+            },
+            {
+              "name": "action entry reservation deadline owns late committed checkpoint without entering peer or replay",
+              "status": "PASS"
+            },
+            {
+              "name": "lifecycle exposes pending and late errors consume handlers without declaring terminal",
+              "status": "PASS"
+            }
+          ],
+          "native": "NOT_RUN",
+          "officialDriver": "NOT_IMPLEMENTED",
+          "targetProfile": "NOT_IMPLEMENTED",
+          "paid": "NOT_RUN",
+          "managedSearch": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "control": "final-store-final-regression-refinement-check",
+      "status": "PASS observed offline",
+      "exit": 0,
+      "argv": [
+        "node",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/regression/v1-c2/scripts/refinement-check.mjs"
+      ],
+      "receipt": "final-store-final-regression-refinement-check-receipt.json",
+      "sourceBefore": "final-store-final-regression-refinement-check-pre.json",
+      "sourceAfter": "final-store-final-regression-refinement-check-post.json",
+      "rawStdout": "final-store-final-regression-refinement-check.stdout",
+      "rawStderr": "final-store-final-regression-refinement-check.stderr",
+      "stdoutSha256": "5c700af963794686bc74fbb07523c1b0376e814ceb175841f0863c616f240a6c",
+      "structuredRawOutcomes": [
+        {
+          "status": "PASS_OFFLINE_HANDLER_HARNESS_ONLY",
+          "tests": 4,
+          "skipped": 0,
+          "testsDetail": [
+            {
+              "name": "independent money/lifetime upgrades in either order; every historical exact replay has zero writes",
+              "status": "PASS"
+            },
+            {
+              "name": "facts supplied during upgrade cannot later change/remove; no fact-only receipt or terminal downgrade",
+              "status": "PASS"
+            },
+            {
+              "name": "invalid proof STOP cannot be cleared; malformed lifetime never releases; closed controls/provision cannot renew",
+              "status": "PASS"
+            },
+            {
+              "name": "simultaneous independent upgrades OCC-union once; incompatible upgrade rollback is atomic",
+              "status": "PASS"
+            }
+          ],
+          "native": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "control": "final-store-retry-adapter",
+      "status": "PASS observed offline",
+      "exit": 0,
+      "argv": [
+        "node",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/adapter.mjs"
+      ],
+      "receipt": "final-store-retry-adapter-receipt.json",
+      "sourceBefore": "final-store-retry-adapter-pre.json",
+      "sourceAfter": "final-store-retry-adapter-post.json",
+      "rawStdout": "final-store-retry-adapter.stdout",
+      "rawStderr": "final-store-retry-adapter.stderr",
+      "stdoutSha256": "44fd2d055c74d2c526b5b8be4eba1acb78bbbf1e3a664524da78e018073f9e72",
+      "structuredRawOutcomes": [
+        {
+          "scope": "OFFLINE_SUPPORTED_ADAPTER_FAKE_FETCH_ONLY",
+          "actualFactoryExecuted": false,
+          "realNetwork": 0,
+          "serviceTokens": 0,
+          "paidCalls": 0,
+          "total": 14,
+          "outcomes": [
+            {
+              "scenarioId": "C01",
+              "wireHash": "581303facf12e52a27958a88ffea73ab5f989c65822e461a12ba988f72475acc",
+              "calls": 1,
+              "kinds": [],
+              "observerReason": "missing-evidence",
+              "eligibleParts": 0,
+              "scope": "OFFLINE_UNDERLYING_ADAPTER_ONLY"
+            },
+            {
+              "scenarioId": "C02",
+              "wireHash": "ce32078630865719b0fbe93a02da12f96e186c489304dd52cc5357b83fabf20a",
+              "calls": 1,
+              "kinds": [
+                "stream-start",
+                "raw",
+                "response-metadata",
+                "text-start",
+                "text-delta",
+                "raw",
+                "text-end",
+                "finish"
+              ],
+              "observerReason": "missing-evidence",
+              "eligibleParts": 1,
+              "scope": "OFFLINE_UNDERLYING_ADAPTER_ONLY"
+            },
+            {
+              "scenarioId": "C03",
+              "wireHash": "cfd3cb767a58fd553497e7118a8b25b96b19081e56db878b5c1989d2fa8722db",
+              "calls": 1,
+              "kinds": [],
+              "observerReason": "missing-evidence",
+              "eligibleParts": 0,
+              "scope": "OFFLINE_UNDERLYING_ADAPTER_ONLY"
+            },
+            {
+              "scenarioId": "C04",
+              "wireHash": "2540abed6fca05d67be4ad7c51cefc9039ef2018ecc4565e00cfa2e1dbc8eaf3",
+              "calls": 1,
+              "kinds": [
+                "stream-start",
+                "raw",
+                "response-metadata",
+                "text-start",
+                "text-delta",
+                "raw",
+                "text-end",
+                "finish"
+              ],
+              "observerReason": "missing-evidence",
+              "eligibleParts": 1,
+              "scope": "OFFLINE_UNDERLYING_ADAPTER_ONLY"
+            },
+            {
+              "scenarioId": "C05",
+              "wireHash": "6bfc75625d9edd11a341278e364177c49bfcbf4b99ee29f9e2edddf56b54139e",
+              "calls": 1,
+              "kinds": [],
+              "observerReason": "missing-evidence",
+              "eligibleParts": 0,
+              "scope": "OFFLINE_UNDERLYING_ADAPTER_ONLY"
+            },
+            {
+              "scenarioId": "C06",
+              "wireHash": "72ff281f55191d7c036bd5e318d76715123266725aa9e4c50322a15e72b40c17",
+              "calls": 1,
+              "kinds": [
+                "stream-start",
+                "raw",
+                "response-metadata",
+                "text-start",
+                "text-delta",
+                "raw",
+                "text-end",
+                "finish"
+              ],
+              "observerReason": "missing-evidence",
+              "eligibleParts": 1,
+              "scope": "OFFLINE_UNDERLYING_ADAPTER_ONLY"
+            },
+            {
+              "scenarioId": "C07",
+              "wireHash": "cbf364e0c13f2d0975dbf331385f5612fadaca970871c7e4bd523357afd1c310",
+              "calls": 1,
+              "kinds": [],
+              "observerReason": "missing-evidence",
+              "eligibleParts": 0,
+              "scope": "OFFLINE_UNDERLYING_ADAPTER_ONLY"
+            },
+            {
+              "scenarioId": "C08",
+              "wireHash": "f11cefccc1827432695802b53ed7d0d990bba3cb3074f1f8eae7065dd0e96cd5",
+              "calls": 1,
+              "kinds": [
+                "stream-start",
+                "raw",
+                "response-metadata",
+                "text-start",
+                "text-delta",
+                "raw",
+                "text-end",
+                "finish"
+              ],
+              "observerReason": "missing-evidence",
+              "eligibleParts": 1,
+              "scope": "OFFLINE_UNDERLYING_ADAPTER_ONLY"
+            },
+            {
+              "scenarioId": "E11",
+              "wireHash": "4b87d065cabb6b721f681fab3099353a5767173f4976b73b175176a34c00a6dc",
+              "calls": 1,
+              "kinds": [],
+              "observerReason": "missing-evidence",
+              "eligibleParts": 0,
+              "scope": "OFFLINE_UNDERLYING_ADAPTER_ONLY"
+            },
+            {
+              "scenarioId": "E12",
+              "wireHash": "407cff1541b6978a4084a558392e34f5c22235d485a9d771b9faae34f854dcaf",
+              "calls": 1,
+              "kinds": [],
+              "observerReason": "missing-evidence",
+              "eligibleParts": 0,
+              "scope": "OFFLINE_UNDERLYING_ADAPTER_ONLY"
+            },
+            {
+              "scenarioId": "E13",
+              "wireHash": "e16f219200a7b594bbc7c03060bdaf39755b3c45cb58d43b991a49d2bca4cd4f",
+              "calls": 1,
+              "kinds": [],
+              "observerReason": "missing-evidence",
+              "eligibleParts": 0,
+              "scope": "OFFLINE_UNDERLYING_ADAPTER_ONLY"
+            },
+            {
+              "scenarioId": "E14",
+              "wireHash": "4b87d065cabb6b721f681fab3099353a5767173f4976b73b175176a34c00a6dc",
+              "calls": 1,
+              "kinds": [],
+              "observerReason": "missing-evidence",
+              "eligibleParts": 0,
+              "scope": "OFFLINE_UNDERLYING_ADAPTER_ONLY"
+            },
+            {
+              "scenarioId": "C09",
+              "wireHash": "310d1adf184569df49510c0917fb17ab643ff5171a19ca270373306445b94c4e",
+              "calls": 1,
+              "kinds": [
+                "stream-start",
+                "raw",
+                "response-metadata",
+                "text-start",
+                "text-delta",
+                "raw",
+                "text-end",
+                "finish"
+              ],
+              "observerReason": "missing-evidence",
+              "eligibleParts": 1,
+              "scope": "OFFLINE_UNDERLYING_ADAPTER_ONLY"
+            },
+            {
+              "scenarioId": "C10",
+              "wireHash": "f31d613cb4930b8df19cb49a8706a163d3b73479ab36d40163763679c1cecc1e",
+              "calls": 1,
+              "kinds": [
+                "stream-start",
+                "raw",
+                "response-metadata",
+                "text-start",
+                "text-delta",
+                "raw",
+                "text-end",
+                "finish"
+              ],
+              "observerReason": "missing-evidence",
+              "eligibleParts": 1,
+              "scope": "OFFLINE_UNDERLYING_ADAPTER_ONLY"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "control": "final-store-retry-c2-capability-c10",
+      "status": "PASS observed offline",
+      "exit": 0,
+      "argv": [
+        "node",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/c2-capability-c10.mjs"
+      ],
+      "receipt": "final-store-retry-c2-capability-c10-receipt.json",
+      "sourceBefore": "final-store-retry-c2-capability-c10-pre.json",
+      "sourceAfter": "final-store-retry-c2-capability-c10-post.json",
+      "rawStdout": "final-store-retry-c2-capability-c10.stdout",
+      "rawStderr": "final-store-retry-c2-capability-c10.stderr",
+      "stdoutSha256": "70b4859de9b81e3f580e71dc96752ff1e7f3aefa2619d599161ed7e69c766b15",
+      "structuredRawOutcomes": [
+        {
+          "scope": "OFFLINE_REGISTERED_HANDLER_CONTROLS_ONLY_NO_NATIVE_PROOF",
+          "outcomes": [
+            {
+              "name": "initial14 exact native/wire hashes order13unique and K314310",
+              "status": "PASS"
+            },
+            {
+              "name": "descriptor-first Unicode graph getter symbols prototype sparse nonfinite duplicate canonical hostile",
+              "status": "PASS"
+            },
+            {
+              "name": "actual proof registry EMPTY successful raw generation retains fullK active STOP no private",
+              "status": "PASS"
+            },
+            {
+              "name": "missingdriver fails before reserve native factory or token",
+              "status": "PASS"
+            },
+            {
+              "name": "OCC duplicate checkpoint permits one active one ticket and response-loss persistence-only",
+              "status": "PASS"
+            },
+            {
+              "name": "unknownmoney genuine trusted conditional lifetime releases independently; late full overrun once retains STOP",
+              "status": "PASS"
+            },
+            {
+              "name": "typed receipt unknownkeys/crossfields malformed STOP and immutable identity conflict zero writes",
+              "status": "PASS"
+            },
+            {
+              "name": "outward monetary source arithmetic zero boundary fullcharge overflow no tariff inference",
+              "status": "PASS"
+            },
+            {
+              "name": "formatversion2 stays2 across mutations and account fold detects sums flags privatehash corruption",
+              "status": "PASS"
+            },
+            {
+              "name": "safe individual fullcost but unrepresentable account aggregate STOP unknown preserves decimal/fullK without clamp",
+              "status": "PASS"
+            }
+          ]
+        },
+        {
+          "scope": "DUMMY_EXACT_OFFICIAL_BODY_C10_REGISTERED_POSITIVE_HISTORICAL_PREFIX_ONLY",
+          "outcomes": [
+            {
+              "name": "C10 official-issued stage cancels atomically without grant mutation; historical replay zero writes",
+              "status": "PASS"
+            }
+          ],
+          "skipped": 0
+        }
+      ]
+    },
+    {
+      "control": "final-store-retry-c2-capability",
+      "status": "PASS observed offline",
+      "exit": 0,
+      "argv": [
+        "node",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/c2-capability.mjs"
+      ],
+      "receipt": "final-store-retry-c2-capability-receipt.json",
+      "sourceBefore": "final-store-retry-c2-capability-pre.json",
+      "sourceAfter": "final-store-retry-c2-capability-post.json",
+      "rawStdout": "final-store-retry-c2-capability.stdout",
+      "rawStderr": "final-store-retry-c2-capability.stderr",
+      "stdoutSha256": "295819b244ed38af29d0cb0e254315e3a50792c49a62a28a95f9abb4d25dad22",
+      "structuredRawOutcomes": [
+        {
+          "scope": "DUMMY_SOURCE_VM_REGISTERED_CAPABILITY_NO_ACTUAL_FACTORY_KEY_OR_NATIVE",
+          "outcomes": [
+            {
+              "name": "exact official source body DUMMY factory issues fresh registered C09 atomic stage",
+              "status": "PASS"
+            },
+            {
+              "name": "historical full identity replay/collision before capability/live fences zero writes",
+              "status": "PASS"
+            },
+            {
+              "name": "ROOT old sevenargs cannot manufacture fresh stage",
+              "status": "PASS"
+            },
+            {
+              "name": "tampered P field accountHash",
+              "status": "PASS"
+            },
+            {
+              "name": "tampered P field binding",
+              "status": "PASS"
+            },
+            {
+              "name": "tampered P field dispatchIdentity",
+              "status": "PASS"
+            },
+            {
+              "name": "tampered P field domain",
+              "status": "PASS"
+            },
+            {
+              "name": "tampered P field expectedWireHash",
+              "status": "PASS"
+            },
+            {
+              "name": "tampered P field installedClosureHash",
+              "status": "PASS"
+            },
+            {
+              "name": "tampered P field issuerSourceHash",
+              "status": "PASS"
+            },
+            {
+              "name": "tampered P field keyId",
+              "status": "PASS"
+            },
+            {
+              "name": "tampered P field manifestHash",
+              "status": "PASS"
+            },
+            {
+              "name": "tampered P field nativeHash",
+              "status": "PASS"
+            },
+            {
+              "name": "tampered P field observerTranscriptCanonical",
+              "status": "PASS"
+            },
+            {
+              "name": "tampered P field operatorHash",
+              "status": "PASS"
+            },
+            {
+              "name": "tampered P field partSequence",
+              "status": "PASS"
+            },
+            {
+              "name": "tampered P field phaseExpiresAt",
+              "status": "PASS"
+            },
+            {
+              "name": "tampered P field phaseStartedAt",
+              "status": "PASS"
+            },
+            {
+              "name": "tampered P field rawPartDigest",
+              "status": "PASS"
+            },
+            {
+              "name": "tampered P field scenarioId",
+              "status": "PASS"
+            },
+            {
+              "name": "tampered P field stageCanonical",
+              "status": "PASS"
+            },
+            {
+              "name": "tampered P field stageHash",
+              "status": "PASS"
+            },
+            {
+              "name": "tampered P field targetHash",
+              "status": "PASS"
+            },
+            {
+              "name": "tampered P field verifierSourceHash",
+              "status": "PASS"
+            },
+            {
+              "name": "tampered P field version",
+              "status": "PASS"
+            },
+            {
+              "name": "tampered S field domain",
+              "status": "PASS"
+            },
+            {
+              "name": "tampered S field nominationHash",
+              "status": "PASS"
+            },
+            {
+              "name": "tampered S field nominationMac",
+              "status": "PASS"
+            },
+            {
+              "name": "tampered S field phaseExpiresAt",
+              "status": "PASS"
+            },
+            {
+              "name": "tampered S field submittedAt",
+              "status": "PASS"
+            },
+            {
+              "name": "tampered S field version",
+              "status": "PASS"
+            },
+            {
+              "name": "tampered nominationMac",
+              "status": "PASS"
+            },
+            {
+              "name": "tampered submissionMac",
+              "status": "PASS"
+            },
+            {
+              "name": "noncanonical outer envelope",
+              "status": "PASS"
+            },
+            {
+              "name": "overbound outer envelope before parsing",
+              "status": "PASS"
+            },
+            {
+              "name": "later shaped sequence cannot replace firsteligible",
+              "status": "PASS"
+            },
+            {
+              "name": "uninstalled actual verifier refuses DUMMY VM key",
+              "status": "PASS"
+            },
+            {
+              "name": "actual action uninstalled missingdriver before effect",
+              "status": "PASS"
+            },
+            {
+              "name": "child observer bound before retention",
+              "status": "PASS"
+            },
+            {
+              "name": "valid DUMMY seal cannot override compiled keyId",
+              "status": "PASS"
+            },
+            {
+              "name": "valid DUMMY seal cannot override compiled issuerSourceHash",
+              "status": "PASS"
+            },
+            {
+              "name": "valid DUMMY seal cannot override compiled verifierSourceHash",
+              "status": "PASS"
+            },
+            {
+              "name": "valid DUMMY seal cannot override compiled targetHash",
+              "status": "PASS"
+            },
+            {
+              "name": "valid DUMMY seal cannot override compiled manifestHash",
+              "status": "PASS"
+            },
+            {
+              "name": "valid DUMMY seal cannot override compiled operatorHash",
+              "status": "PASS"
+            },
+            {
+              "name": "valid DUMMY seal cannot override compiled nativeHash",
+              "status": "PASS"
+            },
+            {
+              "name": "valid DUMMY seal cannot override compiled expectedWireHash",
+              "status": "PASS"
+            },
+            {
+              "name": "valid DUMMY seal with later nominee fails firsteligible verifier",
+              "status": "PASS"
+            },
+            {
+              "name": "individually bounded child exceeds combined decoded4096",
+              "status": "PASS"
+            },
+            {
+              "name": "individually bounded child exceeds combined decodeddepth16",
+              "status": "PASS"
+            },
+            {
+              "name": "descriptor-first registered/verification boundary invokes no getter",
+              "status": "PASS"
+            },
+            {
+              "name": "capability stage lifecycle purge retains fullT/currentL/fullK and no private resurrection",
+              "status": "PASS"
+            },
+            {
+              "name": "official capability purge all original lifecycle row/canonical/fullT corruption variants deny no summary zero writes",
+              "status": "PASS"
+            },
+            {
+              "name": "official capability admitted stage response loss recovers hashonly within original phase without replay/publicpartial",
+              "status": "PASS"
+            },
+            {
+              "name": "late conditional full12USD terminal after capability stage purge retains stableT/currentindependentL/no resurrection",
+              "status": "PASS"
+            }
+          ],
+          "skipped": 0
+        }
+      ]
+    },
+    {
+      "control": "final-strict-types",
+      "status": "PASS observed offline",
+      "exit": 0,
+      "argv": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit",
+        "-p",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/tsconfig.json"
+      ],
+      "receipt": "final-strict-types-receipt.json",
+      "sourceBefore": "final-strict-types-pre.json",
+      "sourceAfter": "final-strict-types-post.json",
+      "rawStdout": "final-strict-types.stdout",
+      "rawStderr": "final-strict-types.stderr",
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "structuredRawOutcomes": []
+    },
+    {
+      "control": "final-strict-types-vm",
+      "status": "PASS observed offline",
+      "exit": 0,
+      "argv": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "-p",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture-vm/tsconfig.json"
+      ],
+      "receipt": "final-strict-types-vm-receipt.json",
+      "sourceBefore": "final-strict-types-vm-pre.json",
+      "sourceAfter": "final-strict-types-vm-post.json",
+      "rawStdout": "final-strict-types-vm.stdout",
+      "rawStderr": "final-strict-types-vm.stderr",
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "structuredRawOutcomes": []
+    },
+    {
+      "control": "final-suite",
+      "status": "PASS observed offline",
+      "exit": 0,
+      "argv": [
+        "python3",
+        "work/resume/task04-metadata-retention-implementation-c2/rerun-final.py"
+      ],
+      "receipt": "final-suite-receipt.json",
+      "sourceBefore": "final-suite-pre.json",
+      "sourceAfter": "final-suite-post.json",
+      "rawStdout": "final-suite.stdout",
+      "rawStderr": "final-suite.stderr",
+      "stdoutSha256": "d72d1cb5dee40dd67ecb1eb416b17502f694989ac33c6afb19781a8493c5964a",
+      "structuredRawOutcomes": [
+        {
+          "tag": "store-final-metadata-stage",
+          "exit": 0,
+          "stdoutTail": "ability retained\",\"status\":\"PASS\"},{\"name\":\"exact official generate returns retained amount without public qualification or native option change\",\"status\":\"PASS\"}],\"actualKey\":\"null\",\"actualProofs\":\"EMPTY\",\"skipped\":0}\n\n",
+          "stderrTail": "\n"
+        },
+        {
+          "tag": "store-final-metadata-purge",
+          "exit": 0,
+          "stdoutTail": ",\"status\":\"PASS\"},{\"name\":\"exact historical capture replay zero writes, coherent changed witness no resurrection\",\"status\":\"PASS\"},{\"name\":\"purge replay zero writes\",\"status\":\"PASS\"}],\"actualMoney\":\"EMPTY\",\"skipped\":0}\n\n",
+          "stderrTail": "\n"
+        },
+        {
+          "tag": "metadata-resource-01",
+          "exit": 0,
+          "stdoutTail": "16 accepts depth17 denies\",\"status\":\"PASS\"},{\"name\":\"actual observer repeated identical prefix50 times does not doublecharge, new cumulative event and513 limit deny\",\"status\":\"PASS\"}],\"actualMoney\":\"EMPTY\",\"skipped\":0}\n\n",
+          "stderrTail": "\n"
+        },
+        {
+          "tag": "store-final-c2-collect-original-groups",
+          "exit": 1,
+          "stdoutTail": "\"PASS\"},{\"name\":\"21 independent typed enum/key/hash/count/category/crossfield rejects and first malformedSTOP1write then0repeat\",\"status\":\"PASS\",\"rejected\":21}],\"total\":40,\"passed\":37,\"failed\":3,\"notRun\":0,\"skipped\":0}\n\n",
+          "stderrTail": "\n"
+        },
+        {
+          "tag": "store-retry-adapter",
+          "exit": 0,
+          "stdoutTail": "ecc1e\",\"calls\":1,\"kinds\":[\"stream-start\",\"raw\",\"response-metadata\",\"text-start\",\"text-delta\",\"raw\",\"text-end\",\"finish\"],\"observerReason\":\"missing-evidence\",\"eligibleParts\":1,\"scope\":\"OFFLINE_UNDERLYING_ADAPTER_ONLY\"}]}\n\n",
+          "stderrTail": "\n"
+        },
+        {
+          "tag": "store-retry-c2-capability",
+          "exit": 0,
+          "stdoutTail": "riginal phase without replay/publicpartial\",\"status\":\"PASS\"},{\"name\":\"late conditional full12USD terminal after capability stage purge retains stableT/currentindependentL/no resurrection\",\"status\":\"PASS\"}],\"skipped\":0}\n\n",
+          "stderrTail": "\n"
+        },
+        {
+          "tag": "store-retry-c2-capability-c10",
+          "exit": 0,
+          "stdoutTail": "XACT_OFFICIAL_BODY_C10_REGISTERED_POSITIVE_HISTORICAL_PREFIX_ONLY\",\"outcomes\":[{\"name\":\"C10 official-issued stage cancels atomically without grant mutation; historical replay zero writes\",\"status\":\"PASS\"}],\"skipped\":0}\n\n",
+          "stderrTail": "\n"
+        },
+        {
+          "tag": "store-final-c2-admission",
+          "exit": 0,
+          "stdoutTail": ":0,\"pending\":0},{\"name\":\"admitted-late-success\",\"status\":\"PASS\",\"elapsed\":1110,\"stages\":1,\"pending\":1},{\"name\":\"admitted-late-failure\",\"status\":\"PASS\",\"elapsed\":1106,\"stages\":1,\"pending\":1}],\"unhandled\":[],\"skipped\":0}\n\n",
+          "stderrTail": "\n"
+        },
+        {
+          "tag": "store-final-c2-owned",
+          "exit": 0,
+          "stdoutTail": "tatus\":\"PASS\"},{\"name\":\"exact official runtime cancel-pending reader bounded cancel/release\",\"status\":\"PASS\"},{\"name\":\"runner includes unresolved reader cleanup in owned pending count\",\"status\":\"PASS\"}],\"unhandled\":[]}\n\n",
+          "stderrTail": "\n"
+        },
+        {
+          "tag": "store-final-c2-retained-refinements",
+          "exit": 0,
+          "stdoutTail": "FOLD_NO_NATIVE\",\"outcomes\":[{\"name\":\"refinement-foreign-dispatch\",\"status\":\"PASS\",\"writes\":0,\"noSummary\":true},{\"name\":\"coherent-foreign-first-plus-refinement\",\"status\":\"PASS\",\"writes\":0,\"noSummary\":true}],\"skipped\":0}\n\n",
+          "stderrTail": "\n"
+        },
+        {
+          "tag": "store-final-c2-stream",
+          "exit": 0,
+          "stdoutTail": "e\":\"unknown\"},{\"name\":\"complete terminal genuine error retains\",\"status\":\"PASS\",\"lifetime\":\"validated-provider-terminal\"},{\"name\":\"usage raw after complete terminal error denies\",\"status\":\"PASS\",\"lifetime\":\"unknown\"}]}\n\n",
+          "stderrTail": "\n"
+        },
+        {
+          "tag": "store-final-independent",
+          "exit": 0,
+          "stdoutTail": "\":\"rejected\",\"error\":\"Error: STATE\",\"expected\":\"rejected\",\"pass\":true},{\"name\":\"attached status without privateCanonical/result delivery\",\"observed\":\"rejected\",\"error\":\"Error: STOP\",\"expected\":\"rejected\",\"pass\":true}]}\n\n",
+          "stderrTail": "\n"
+        },
+        {
+          "tag": "store-final-independent-account-load",
+          "exit": 0,
+          "stdoutTail": "{\"scope\":\"DUMMY_CROSS_ATTEMPT_REGISTERED_LOAD\",\"recovery\":{\"kind\":\"denied\",\"reason\":\"corrupt\"},\"inspect\":{\"kind\":\"denied\",\"reason\":\"corrupt\"},\"writes\":0,\"expected\":\"corrupt denial no summary\"}\n\n",
+          "stderrTail": "\n"
+        },
+        {
+          "tag": "store-final-independent-codec",
+          "exit": 0,
+          "stdoutTail": "{\"scope\":\"DUMMY_CANONICAL_JS_UTF16_ORDER\",\"actual\":\"{\\\"10\\\":\\\"DUMMY-ten\\\",\\\"2\\\":\\\"DUMMY-two\\\"}\",\"expected\":\"{\\\"10\\\":\\\"DUMMY-ten\\\",\\\"2\\\":\\\"DUMMY-two\\\"}\",\"correctAccepted\":true,\"getterReads\":0}\n\n",
+          "stderrTail": "\n"
+        },
+        {
+          "tag": "store-final-independent-async",
+          "exit": 0,
+          "stdoutTail": "DER_REJECTION_NO_NATIVE\",\"result\":{\"status\":\"native-unknown\",\"dispatched\":true,\"pending\":0},\"calls\":1,\"unhandled\":[],\"state\":{\"active\":\"C01\",\"reserved\":29031,\"stopped\":true,\"attachment\":\"closed\"},\"expectedUnhandled\":0}\n\n",
+          "stderrTail": "\n"
+        },
+        {
+          "tag": "store-final-independent-money",
+          "exit": 1,
+          "stdoutTail": "0001,\"currency\":\"USD\",\"categories\":[\"inference\"]}},\"observerMoney\":\"unknown\",\"observerCategories\":[],\"cost\":\"0.050001\",\"reason\":\"missing-evidence\",\"expected\":\"money nomination extraction wired or explicit unsupported\"}\n\n",
+          "stderrTail": "ecks/independent-money.mjs:11:343 {\n  generatedMessage: false,\n  code: 'ERR_ASSERTION',\n  actual: 'unknown',\n  expected: 'validated-whole-invocation-usd',\n  operator: 'strictEqual',\n  diff: 'simple'\n}\n\nNode.js v24.19.0\n\n"
+        },
+        {
+          "tag": "store-final-regression-offline-check",
+          "exit": 0,
+          "stdoutTail": "pending and late errors consume handlers without declaring terminal\",\"status\":\"PASS\"}],\"native\":\"NOT_RUN\",\"officialDriver\":\"NOT_IMPLEMENTED\",\"targetProfile\":\"NOT_IMPLEMENTED\",\"paid\":\"NOT_RUN\",\"managedSearch\":\"NOT_RUN\"}\n\n",
+          "stderrTail": "\n"
+        },
+        {
+          "tag": "store-final-regression-hostile",
+          "exit": 0,
+          "stdoutTail": "E_COLLISION\",\"refinements\":1,\"slotReleased\":true,\"known\":10},{\"name\":\"charge scope cannot become production evidence\",\"contractMet\":true},{\"name\":\"private query allowlist excludes attached values\",\"contractMet\":true}]}\n\n",
+          "stderrTail": "\n"
+        },
+        {
+          "tag": "store-final-regression-refinement-check",
+          "exit": 0,
+          "stdoutTail": "ifetime never releases; closed controls/provision cannot renew\",\"status\":\"PASS\"},{\"name\":\"simultaneous independent upgrades OCC-union once; incompatible upgrade rollback is atomic\",\"status\":\"PASS\"}],\"native\":\"NOT_RUN\"}\n\n",
+          "stderrTail": "\n"
+        },
+        {
+          "tag": "store-final-regression-independent",
+          "exit": 0,
+          "stdoutTail": "rves stopped retired private authority\",\"status\":\"PASS\"},{\"name\":\"simultaneous combined and independent capture publishes compatible one settlement without extra receipt authority\",\"status\":\"PASS\"}],\"native\":\"NOT_RUN\"}\n\n",
+          "stderrTail": "\n"
+        },
+        {
+          "tag": "strict-types-vm",
+          "exit": 0,
+          "stdoutTail": "\n",
+          "stderrTail": "\n"
+        },
+        {
+          "tag": "typed-lint-complete",
+          "exit": 0,
+          "stdoutTail": "\n",
+          "stderrTail": "\n"
+        }
+      ]
+    },
+    {
+      "control": "final-typed-lint-complete",
+      "status": "PASS observed offline",
+      "exit": 0,
+      "argv": [
+        "node",
+        "node_modules/eslint/bin/eslint.js",
+        "-c",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/eslint.config.mjs",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/convex",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks",
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture-vm/convex"
+      ],
+      "receipt": "final-typed-lint-complete-receipt.json",
+      "sourceBefore": "final-typed-lint-complete-pre.json",
+      "sourceAfter": "final-typed-lint-complete-post.json",
+      "rawStdout": "final-typed-lint-complete.stdout",
+      "rawStderr": "final-typed-lint-complete.stderr",
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "structuredRawOutcomes": []
+    },
+    {
+      "control": "final-verification-02",
+      "status": "PASS observed offline",
+      "exit": 0,
+      "argv": [
+        "python3",
+        "work/resume/task04-metadata-retention-implementation-c2/verify.py"
+      ],
+      "receipt": "final-verification-02-receipt.json",
+      "sourceBefore": "final-verification-02-pre.json",
+      "sourceAfter": "final-verification-02-post.json",
+      "rawStdout": "final-verification-02.stdout",
+      "rawStderr": "final-verification-02.stderr",
+      "stdoutSha256": "676052dfbc12f5d93eaf8af064d0520105e26818cf3fb2c848756cc108e1eef6",
+      "structuredRawOutcomes": [
+        {
+          "pass": true,
+          "assertionFiles": 47,
+          "unchangedDefaultModules": 12,
+          "unchangedC1Modules": 13,
+          "metadata16BodiesEqual": true,
+          "sourceObjects": 121,
+          "encodedBytes": 371896,
+          "beforeReferences": 11353,
+          "finalControls": 28,
+          "oldC1FullSealUnchanged": true,
+          "closure": "1af8d7dc5d08f8e11681c1edf3a85cdcdc029735ce165d64015939e9db220b67"
+        }
+      ]
+    },
+    {
+      "control": "final-verification",
+      "status": "FAIL retained",
+      "exit": 1,
+      "argv": [
+        "python3",
+        "work/resume/task04-metadata-retention-implementation-c2/verify.py"
+      ],
+      "receipt": "final-verification-receipt.json",
+      "sourceBefore": "final-verification-pre.json",
+      "sourceAfter": "final-verification-post.json",
+      "rawStdout": "final-verification.stdout",
+      "rawStderr": "final-verification.stderr",
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "structuredRawOutcomes": []
+    }
+  ],
+  "requirementMapping": {
+    "historicalProbe": "historical-construction-diagnostic-receipt.json, import paths only; exit1 earlyGRAPH_LIMIT; oldC1construction-02 unchanged",
+    "assertions": "verification.json:47 original fullfiles,12 unchanged default modules,13 unchanged C1modules, C1metadata16 callback bodies exact",
+    "newConstructor": "observation-builder.ts +observer.ts prospective +runner.ts explicit events argument",
+    "wholeGraphBoundaries": "final-construction (6PASS) +final-metadata-resource-01 (4PASS actual registered capture)",
+    "raw8finish1Ownership": "final-official-denials (5PASS actual official source)",
+    "version/source/caps/purge/privacy": "final-store-final-metadata-stage +final-store-final-metadata-purge +capability55/C10",
+    "positiveMoney": "FAIL, actual EMPTY/null/false/embedUNKNOWN/fullKSTOP",
+    "native": "NOT_RUN; no actual services"
+  },
+  "noAcceptanceInferred": true
+}

@@ -1,0 +1,204 @@
+{
+  "classification": "NATIVE_EXECUTION_REQUIRES_INDEPENDENT_REVIEW",
+  "operation": "5332cb3d-aae2-4c95-8e9e-8e340dd99fc3",
+  "nativeCaseEvents": [
+    {
+      "phase": "case",
+      "caseId": "parent-distinct-child-fence",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "root-idempotent",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "parent-native-rollback",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "identity-canonical",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "checkpoint-race",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "money-run-race",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "money-tenant-race",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "slot-race",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "known-settlement-race",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "unknown-running-terminal",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "known-overrun",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "collision-canonical",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "fence-grant-version",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "fence-grant-expiry",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "fence-principal-revoke",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "fence-membership-revoke",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "fence-source-edit",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "fence-source-delete",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "fence-policy-revoke",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "fence-qualification-revoke",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "fence-corrupt-counter",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "retired-tenant-overrun",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "retired-space-overrun",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "retired-absence-denial",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "cancel-current",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "fallback-fresh-money",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "fallback-current-query-reserve",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "fallback-postreserve-revoke",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "fallback-postreserve-money",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "held-current-operation",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "held-current-run",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "held-current-tenant",
+      "status": "PASS"
+    }
+  ],
+  "journalRows": 452,
+  "nativeTickets": 419,
+  "createdRowWitnesses": 510,
+  "deletedRowWitnesses": 510,
+  "qualifierStatuses": [
+    "FAIL"
+  ],
+  "terminalGroups": [
+    {
+      "spawned": 1,
+      "verifiedTerminalGroups": 1,
+      "remaining": 0
+    }
+  ],
+  "targetRetirement": {
+    "version": 1,
+    "operation": "5332cb3d-aae2-4c95-8e9e-8e340dd99fc3",
+    "phase": "exact-owned-project-retirement",
+    "status": "PASS",
+    "startedAt": "2026-10-04T05:41:40.461Z",
+    "observedAt": "2026-10-04T05:41:41.147Z",
+    "projectId": 3139416,
+    "deploymentName": "impressive-anaconda-728",
+    "deploymentUrl": "https://impressive-anaconda-728.convex.cloud",
+    "provisionState": "FULLY_VERIFIED",
+    "verifiedOnlyDevelopmentCloudDeployment": true,
+    "deletionHttpStatus": 200,
+    "absentProjectHttpStatus": 404,
+    "managementCalls": 5
+  },
+  "paidInference": 0,
+  "storageCreated": 0,
+  "targetCredentialRemoval": [
+    "deploy.env",
+    "identities.json",
+    "peer-config.json"
+  ],
+  "nativeTask04PASS": false
+}

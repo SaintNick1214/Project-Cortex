@@ -1,0 +1,14 @@
+--- /workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task05-runtime-contract-lock-preparation-c3/preimages/tsconfig.json
++++ /workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task05-current-seam-refresh-c1/preimages/tsconfig.json
+@@ -32,6 +32,10 @@
+   ],
+   "exclude": [
+     "node_modules",
+-    "dist"
++    "dist",
++    // Immutable old Gateway assertions run separately under the mandatory guarded
++    // historical 78-outcome catalog. Current types/tests use the actual Gateway
++    // and gateway-terminal-composition.test.ts with its required attach port.
++    "tests/unit/runtime/gateway-dispatch.test.ts"
+   ]
+ }

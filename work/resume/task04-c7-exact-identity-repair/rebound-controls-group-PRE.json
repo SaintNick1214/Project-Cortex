@@ -1,0 +1,65 @@
+{
+  "owner": {
+    "pid": 396725,
+    "ppid": 525,
+    "pgid": 396725,
+    "state": "R",
+    "startTime": "12121519",
+    "raw": "396725 (python3) R 525 396725 396725 0 -1 4194560 26342 3231 0 0 2236 8 2 0 20 0 1 0 12121519 42053632 3384 18446744073709551615 4329472 32290168 140720547616352 0 0 0 0 16781312 2 0 0 0 17 0 0 0 0 0 0 23068672 32290168 768413696 140720547623542 140720547623624 140720547623624 140720547626926 0\n",
+    "rawBeforeByteBacking": {
+      "path": "/dev/shm/cortex-native-c7-exact-identity-repair/execution-rebound-controls/proc-396725-baa6fa0995b416b6618f9ec1b73da78c8f7a5b1e3707b557a2e2abdcf8ca0c08.raw",
+      "bytes": 296,
+      "sha256": "baa6fa0995b416b6618f9ec1b73da78c8f7a5b1e3707b557a2e2abdcf8ca0c08",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "26",
+          "ino": "33123",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "296",
+          "mtime_ns": "1791177866068850246",
+          "ctime_ns": "1791177866068850246"
+        }
+      }
+    }
+  },
+  "initial": {
+    "pid": 396729,
+    "ppid": 396725,
+    "pgid": 396729,
+    "state": "R",
+    "startTime": "12123768",
+    "raw": "396729 (node) R 396725 396729 396729 0 -1 4194560 23 0 0 0 0 0 0 0 20 0 1 0 12123768 106541056 0 18446744073709551615 7606272 52430497 140723622629664 0 0 0 0 0 0 0 0 0 17 1 0 0 0 0 0 111965664 112154912 718680064 140723622633016 140723622633227 140723622633227 140723622633395 0\n",
+    "rawBeforeByteBacking": {
+      "path": "/dev/shm/cortex-native-c7-exact-identity-repair/execution-rebound-controls/proc-396729-0984295ae492a6934a6aef7181371a370553408696172c716ff7dfecd119f38f.raw",
+      "bytes": 280,
+      "sha256": "0984295ae492a6934a6aef7181371a370553408696172c716ff7dfecd119f38f",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "26",
+          "ino": "33124",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "280",
+          "mtime_ns": "1791177866069926641",
+          "ctime_ns": "1791177866069926641"
+        }
+      }
+    }
+  },
+  "argv": [
+    "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+    "--max-old-space-size=256",
+    "--experimental-vm-modules",
+    "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/rebound-controls.mjs"
+  ],
+  "rawArgvHex": "2f6f70742f636f6465782f72756e74696d65732f636f6465782d7072696d6172792d72756e74696d652f646570656e64656e636965732f6e6f64652f62696e2f6e6f6465002d2d6d61782d6f6c642d73706163652d73697a653d323536002d2d6578706572696d656e74616c2d766d2d6d6f64756c6573002f776f726b73706163652f50726f6a6563742d436f727465782f776f726b2f726573756d652f7461736b30342d63372d65786163742d6964656e746974792d7265706169722f7265626f756e642d636f6e74726f6c732e6d6a7300",
+  "pgid": 396729,
+  "startTime": "12123768"
+}

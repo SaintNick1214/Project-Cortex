@@ -1,0 +1,22 @@
+node:internal/modules/cjs/loader:1517
+  const err = new Error(message);
+              ^
+
+Error: Cannot find module 'convex/values'
+Require stack:
+- /tmp/task03b2a-review3-tgufib91/cycle2-immutable.ts
+    at node:internal/modules/cjs/loader:1517:15
+    at nextResolveSimple (/workspace/Project-Cortex/node_modules/tsx/dist/register-B1c7OH6V.cjs:23:1010)
+    at /workspace/Project-Cortex/node_modules/tsx/dist/register-B1c7OH6V.cjs:22:4512
+    at /workspace/Project-Cortex/node_modules/tsx/dist/register-B1c7OH6V.cjs:22:2830
+    at resolveTsPaths (/workspace/Project-Cortex/node_modules/tsx/dist/register-B1c7OH6V.cjs:23:762)
+    at /workspace/Project-Cortex/node_modules/tsx/dist/register-B1c7OH6V.cjs:23:1203
+    at j._resolveFilename (file:///workspace/Project-Cortex/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:18825)
+    at wrapResolveFilename (node:internal/modules/cjs/loader:1071:27)
+    at defaultResolveImplForCJSLoading (node:internal/modules/cjs/loader:1095:10)
+    at defaultResolve (node:internal/modules/cjs/loader:1152:20) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ '/tmp/task03b2a-review3-tgufib91/cycle2-immutable.ts' ]
+}
+
+Node.js v24.19.0

@@ -56,10 +56,10 @@ export const WebPreview = ({
   };
 
   const contextValue: WebPreviewContextValue = {
-    url,
-    setUrl: handleUrlChange,
     consoleOpen,
     setConsoleOpen,
+    setUrl: handleUrlChange,
+    url,
   };
 
   return (
@@ -174,7 +174,9 @@ export type WebPreviewBodyProps = ComponentProps<"iframe"> & {
  * Only allow http/https URLs and a limited set of relative URLs.
  */
 function sanitizeUrl(url: string | undefined): string | undefined {
-  if (!url) return undefined;
+  if (!url) {
+    return undefined;
+  }
 
   // Reject any control characters outright
   if (/[^\x20-\x7E]/.test(url)) {
@@ -194,7 +196,8 @@ function sanitizeUrl(url: string | undefined): string | undefined {
   } catch {
     // If URL parsing fails, only allow simple relative paths
     // starting with "/", "./", or "../" and containing safe characters.
-    const RELATIVE_PATH_REGEX = /^(\/|\.{1,2}\/)[A-Za-z0-9\-._~\/?#[\]@!$&'()*+,;=%:]*$/;
+    const RELATIVE_PATH_REGEX =
+      /^(\/|\.{1,2}\/)[A-Za-z0-9\-._~/?#[\]@!$&'()*+,;=%:]*$/;
     if (RELATIVE_PATH_REGEX.test(url)) {
       return url;
     }

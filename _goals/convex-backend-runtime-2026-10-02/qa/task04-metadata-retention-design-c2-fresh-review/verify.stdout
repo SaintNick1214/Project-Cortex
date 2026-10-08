@@ -1,0 +1,111 @@
+recursive closure /workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-design-c2 101 55e6095e3d1fc96d2f29621e56248291b992ee92d2819ab53ce8526daeda6761
+recursive closure /workspace/Project-Cortex/work/resume/task04-metadata-retention-design-c2 6 356faab562a02d096c477c91069d030b1e9bcd396dabbe76f3cce17ed1ca4b29
+bracketed source paths verified 20
+current original source pin node_modules/@ai-sdk/openai-compatible/src/chat/openai-compatible-chat-language-model.ts 8cedc84f1a015f63c5c0a76ddba664562a1301adb1ed0d8c858e0b740f65a79a
+current original source pin node_modules/@ai-sdk/provider/src/shared/v4/shared-v4-provider-metadata.ts e683101b04fde5a78ffbbb9a38dd6c5c448cfcf957b5f6bcad3b106709978d8a
+current original source pin node_modules/@ai-sdk/provider/src/language-model/v4/language-model-v4-stream-part.ts eb17a33d107c5f9c43113592da438e37d9a0728adeb02b8f10f87386d9fb383e
+current original source pin _goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture/convex/canonical.ts 7d2c124058ad1aba14a759e2b8bfdcfe112aa38f09f03928a6a795db85abf860
+current original source pin _goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture/convex/observer.ts c3fbcc97a6979c99a4b831b462ee21d90196d46eb2e203f46bd7a62235943b89
+current original source pin _goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture/convex/observer.ts c3fbcc97a6979c99a4b831b462ee21d90196d46eb2e203f46bd7a62235943b89
+current original source pin _goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture/convex/canonical.ts 7d2c124058ad1aba14a759e2b8bfdcfe112aa38f09f03928a6a795db85abf860
+current original source pin _goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture/convex/proofs.ts 7fbf0d2908a8f9bd9dd9024b502b196969dffe3212d3b1523fdbbc55473757d4
+current original source pin node_modules/@convex-dev/ai-sdk-provider/src/index.ts 5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613
+current original source pin node_modules/@convex-dev/ai-sdk-provider/package.json 1067266430ffd373f4200d8cbfb4fce1586eca00642fcde9f3aa88de68c25c8e
+current original source pin node_modules/@ai-sdk/openai-compatible/src/chat/openai-compatible-chat-language-model.ts 8cedc84f1a015f63c5c0a76ddba664562a1301adb1ed0d8c858e0b740f65a79a
+current original source pin node_modules/@ai-sdk/openai-compatible/src/embedding/openai-compatible-embedding-model.ts 24012af5f3fd8f93ec6c6d48690b40bbfc26f907afd4f6b21ee487c8dc225e36
+current original source pin node_modules/@ai-sdk/provider/src/language-model/v4/language-model-v4-generate-result.ts 1b3124cbee9f5cb48689915ca01598b0dd54f496ebf616db17be06fc33f0bd29
+current original source pin node_modules/@ai-sdk/provider/src/language-model/v4/language-model-v4-stream-part.ts eb17a33d107c5f9c43113592da438e37d9a0728adeb02b8f10f87386d9fb383e
+current original source pin node_modules/@ai-sdk/provider/src/shared/v4/shared-v4-provider-metadata.ts e683101b04fde5a78ffbbb9a38dd6c5c448cfcf957b5f6bcad3b106709978d8a
+control provenance resource-controls ['node', 'work/resume/task04-metadata-retention-design-c2/resource-controls.mjs'] 0
+PASS original C1 information-loss failure reproduced
+PASS different parents now replay distinct charged keys
+PASS exact4096 initial and capture
+PASS equal cost different parent crosses exact boundary
+PASS exact byte boundary initial capture and overflow
+PASS root0 depth16 allowed depth17 rejected
+PASS UTF8 keys and JSON escapes counted canonically
+PASS same prefix100times never double charges
+PASS new events count entire cumulative history
+PASS capture key state and scalar mutation with old digest
+PASS coherently rehashed smaller witness grants no provenance
+PASS unused aliased costDetails remains allowed
+PASS getter0 and selected ancestor alias
+PASS mutating original after snapshot changes no retained bytes
+PASS duplicated or aliased retained witness refused
+{"status":"PASS","controls":15,"getters":0,"kind":"DUMMY retained-graph resource/capture model","actualMoney":"EMPTY","productionQualification":false}
+
+
+control provenance resource-controls-v2 ['node', 'work/resume/task04-metadata-retention-design-c2/resource-controls-v2.mjs'] 1
+PASS original C1 information-loss failure reproduced
+PASS different parents now replay distinct charged keys
+PASS exact4096 initial and capture
+PASS equal cost different parent crosses exact boundary
+PASS exact byte boundary initial capture and overflow
+PASS root0 depth16 allowed depth17 rejected
+
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+
+  assert(Array.isArray(w)&&w.length===3)
+
+    at validateWitnesses (file:///workspace/Project-Cortex/work/resume/task04-metadata-retention-design-c2/resource-controls-v2.mjs:19:121)
+    at capture (file:///workspace/Project-Cortex/work/resume/task04-metadata-retention-design-c2/resource-controls-v2.mjs:20:142)
+    at file:///workspace/Project-Cortex/work/resume/task04-metadata-retention-design-c2/resource-controls-v2.mjs:43:233
+    at test (file:///workspace/Project-Cortex/work/resume/task04-metadata-retention-design-c2/resource-controls-v2.mjs:34:42)
+    at file:///workspace/Project-Cortex/work/resume/task04-metadata-retention-design-c2/resource-controls-v2.mjs:43:1
+    at ModuleJob.run (node:internal/modules/esm/module_job:439:25)
+    at async node:internal/modules/esm/loader:643:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Node.js v24.19.0
+
+control provenance resource-controls-v3 ['node', 'work/resume/task04-metadata-retention-design-c2/resource-controls-v3.mjs'] 0
+PASS original C1 information-loss failure reproduced
+PASS different parents now replay distinct charged keys
+PASS exact4096 initial and capture
+PASS equal cost different parent crosses exact boundary
+PASS exact byte boundary initial capture and overflow
+PASS root0 depth16 allowed depth17 rejected
+PASS UTF8 keys and JSON escapes counted canonically
+PASS same prefix100times never double charges
+PASS new events count entire cumulative history
+PASS capture key state and scalar mutation with old digest
+PASS coherently rehashed smaller witness grants no provenance
+PASS unused aliased costDetails remains allowed
+PASS getter0 and selected ancestor alias
+PASS mutating original after snapshot changes no retained bytes
+PASS duplicated or aliased retained witness refused
+PASS coherently rehashed malformed duplicate witness rejected
+{"status":"PASS","controls":16,"getters":0,"kind":"DUMMY retained-graph resource/capture model","actualMoney":"EMPTY","productionQualification":false}
+
+
+control provenance resource-controls-v4 ['node', 'work/resume/task04-metadata-retention-design-c2/resource-controls-v4.mjs'] 0
+PASS original C1 information-loss failure reproduced
+PASS different parents now replay distinct charged keys
+PASS exact4096 initial and capture
+PASS equal cost different parent crosses exact boundary
+PASS exact byte boundary initial capture and overflow
+PASS root0 depth16 allowed depth17 rejected
+PASS UTF8 keys and JSON escapes counted canonically
+PASS same prefix100times never double charges
+PASS new events count entire cumulative history
+PASS capture key state and scalar mutation with old digest
+PASS coherently rehashed smaller witness grants no provenance
+PASS unused aliased costDetails remains allowed
+PASS getter0 and selected ancestor alias
+PASS mutating original after snapshot changes no retained bytes
+PASS duplicated or aliased retained witness refused
+PASS coherently rehashed malformed duplicate witness rejected
+{"status":"PASS","controls":16,"getters":0,"frozenComparisons":4232,"kind":"DUMMY retained-graph resource/capture model","actualMoney":"EMPTY","productionQualification":false}
+
+

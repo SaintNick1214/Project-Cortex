@@ -165,11 +165,11 @@ export function PromptInputProvider({
     setAttachmentFiles((prev) =>
       prev.concat(
         incoming.map((file) => ({
+          filename: file.name,
           id: nanoid(),
+          mediaType: file.type,
           type: "file" as const,
           url: URL.createObjectURL(file),
-          mediaType: file.type,
-          filename: file.name,
         }))
       )
     );
@@ -201,15 +201,16 @@ export function PromptInputProvider({
   attachmentsRef.current = attachmentFiles;
 
   // Cleanup blob URLs on unmount to prevent memory leaks
-  useEffect(() => {
-    return () => {
+  useEffect(
+    () => () => {
       for (const f of attachmentsRef.current) {
         if (f.url) {
           URL.revokeObjectURL(f.url);
         }
       }
-    };
-  }, []);
+    },
+    []
+  );
 
   const openFileDialog = useCallback(() => {
     openRef.current?.();
@@ -217,12 +218,12 @@ export function PromptInputProvider({
 
   const attachments = useMemo<AttachmentsContext>(
     () => ({
-      files: attachmentFiles,
       add,
-      remove,
       clear,
-      openFileDialog,
       fileInputRef,
+      files: attachmentFiles,
+      openFileDialog,
+      remove,
     }),
     [attachmentFiles, add, remove, clear, openFileDialog]
   );
@@ -237,13 +238,13 @@ export function PromptInputProvider({
 
   const controller = useMemo<PromptInputControllerProps>(
     () => ({
-      textInput: {
-        value: textInput,
-        setInput: setTextInput,
-        clear: clearInput,
-      },
-      attachments,
       __registerFileInput,
+      attachments,
+      textInput: {
+        clear: clearInput,
+        setInput: setTextInput,
+        value: textInput,
+      },
     }),
     [textInput, clearInput, attachments, __registerFileInput]
   );
@@ -361,7 +362,7 @@ export function PromptInputAttachment({
               <h4 className="text-sm font-semibold leading-none truncate">
                 {filename || (isImage ? "Image" : "Attachment")}
               </h4>
-              {data.mediaType && (
+              {!!data.mediaType && (
                 <p className="font-mono text-xs truncate text-muted-foreground">
                   {data.mediaType}
                 </p>
@@ -550,11 +551,11 @@ export const PromptInput = ({
         const next: (FileUIPart & { id: string })[] = [];
         for (const file of capped) {
           next.push({
+            filename: file.name,
             id: nanoid(),
+            mediaType: file.type,
             type: "file",
             url: URL.createObjectURL(file),
-            mediaType: file.type,
-            filename: file.name,
           });
         }
         return prev.concat(next);
@@ -709,12 +710,12 @@ export const PromptInput = ({
 
   const ctx = useMemo<AttachmentsContext>(
     () => ({
-      files: files.map((item) => ({ ...item, id: item.id })),
       add,
-      remove,
       clear,
-      openFileDialog,
       fileInputRef: inputRef,
+      files: files.map((item) => ({ ...item, id: item.id })),
+      openFileDialog,
+      remove,
     }),
     [files, add, remove, clear, openFileDialog]
   );
@@ -752,7 +753,7 @@ export const PromptInput = ({
     )
       .then((convertedFiles: FileUIPart[]) => {
         try {
-          const result = onSubmit({ text, files: convertedFiles }, event);
+          const result = onSubmit({ files: convertedFiles, text }, event);
 
           // Handle both sync and async onSubmit
           if (result instanceof Promise) {
@@ -900,11 +901,11 @@ export const PromptInputTextarea = ({
 
   const controlledProps = controller
     ? {
-        value: controller.textInput.value,
         onChange: (e: ChangeEvent<HTMLTextAreaElement>) => {
           controller.textInput.setInput(e.currentTarget.value);
           onChange?.(e);
         },
+        value: controller.textInput.value,
       }
     : {
         onChange,
@@ -1070,32 +1071,32 @@ interface SpeechRecognition extends EventTarget {
   continuous: boolean;
   interimResults: boolean;
   lang: string;
-  start(): void;
-  stop(): void;
-  onstart: ((this: SpeechRecognition, ev: Event) => any) | null;
   onend: ((this: SpeechRecognition, ev: Event) => any) | null;
-  onresult:
-    | ((this: SpeechRecognition, ev: SpeechRecognitionEvent) => any)
-    | null;
   onerror:
     | ((this: SpeechRecognition, ev: SpeechRecognitionErrorEvent) => any)
     | null;
+  onresult:
+    | ((this: SpeechRecognition, ev: SpeechRecognitionEvent) => any)
+    | null;
+  onstart: ((this: SpeechRecognition, ev: Event) => any) | null;
+  start: () => void;
+  stop: () => void;
 }
 
 interface SpeechRecognitionEvent extends Event {
-  results: SpeechRecognitionResultList;
   resultIndex: number;
+  results: SpeechRecognitionResultList;
 }
 
 type SpeechRecognitionResultList = {
   readonly length: number;
-  item(index: number): SpeechRecognitionResult;
+  item: (index: number) => SpeechRecognitionResult;
   [index: number]: SpeechRecognitionResult;
 };
 
 type SpeechRecognitionResult = {
   readonly length: number;
-  item(index: number): SpeechRecognitionAlternative;
+  item: (index: number) => SpeechRecognitionAlternative;
   [index: number]: SpeechRecognitionAlternative;
   isFinal: boolean;
 };

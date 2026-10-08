@@ -1,0 +1,4 @@
+src/users/index.ts(256,46): error TS2345: Argument of type '{ createdId?: Id<"immutable"> | undefined; updated: true; type: string; id: string; tenantId: string; memorySpaceId: string | undefined; }' is not assignable to parameter of type 'UserProfileWriteReceipt'.
+  Types of property 'memorySpaceId' are incompatible.
+    Type 'string | undefined' is not assignable to type 'string'.
+      Type 'undefined' is not assignable to type 'string'.

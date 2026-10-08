@@ -1,0 +1,101 @@
+
+FILE fixture/checks/harness.mjs
+import * as guard from '../convex/guard.ts';
+import * as lifecycle from '../convex/lifecycle.ts';
+import * as managed from '../convex/managed.ts';
+import {BINDING,OWNER_RUN_ID} from '../convex/installed.ts';
+import {canonical} from '../convex/validate.ts';
+export const ROOT_ID='https://fixture.invalid|operator';
+/** Offline snapshot/OCC/rollback/response-loss model only. Real registered handlers run;
+ * native DB permissions, vector index, scheduler and action lifetime remain NOT_RUN. */
+export class Harness {
+ rows=[];version=0;conflicts=0;writes=0;loseResponse=false;failBeforeCommit=false;seq=0;controls=guard;
+ auth={getUserIdentity:async()=>({tokenIdentifier:ROOT_ID})};
+ queryDb(snapshot){return {get:async id=>structuredClone(snapshot.find(r=>r._id===id)??null),normalizeId:(table,id)=>typeof id==='string'&&id.startsWith(table+':')?id:null,query:table=>({take:async n=>snapshot.filter(r=>r._table===table).slice(0,n).map(r=>{const rest={...r};delete rest._table;return structuredClone(rest)}),withIndex:(_index,cb)=>{const conditions=[];const builder={eq:(k,val)=>{conditions.push([k,val]);return builder}};cb(builder);const matches=()=>snapshot.filter(r=>r._table===table&&conditions.every(([k,v])=>r[k]===v)).map(r=>{const rest={...r};delete rest._table;return structuredClone(rest)});return {unique:async()=>{const out=matches();if(out.length>1)throw Error('NON_UNIQUE');return out[0]??null},take:async n=>matches().slice(0,n)}}})}}
+ async mutation(fn,args={}){for(let retry=0;retry<32;retry++){const version=this.version,snapshot=structuredClone(this.rows);let writes=0;const db=this.queryDb(snapshot),clean=r=>{const rest={...r};delete rest._table;return rest};db.get=async id=>{const r=snapshot.find(r=>r._id===id);return r?structuredClone(clean(r)):null};db.insert=async(table,row)=>{writes++;const id=table+':'+(++this.seq);snapshot.push({...structuredClone(row),_id:id,_creationTime:Date.now(),_table:table});return id};db.patch=async(id,patch)=>{writes++;const row=snapshot.find(r=>r._id===id);if(!row)throw Error('MISSING');Object.assign(row,structuredClone(patch))};db.replace=async(id,data)=>{writes++;const i=snapshot.findIndex(r=>r._id===id);if(i<0)throw Error('MISSING');snapshot[i]={...structuredClone(data),_id:id,_creationTime:snapshot[i]._creationTime,_table:snapshot[i]._table}};db.delete=async id=>{writes++;const i=snapshot.findIndex(r=>r._id===id);if(i<0)throw Error('MISSING');snapshot.splice(i,1)};const result=await fn._handler({db,auth:this.auth},args);if(version!==this.version){this.conflicts++;continue}if(this.failBeforeCommit){this.failBeforeCommit=false;throw Error('ROLLBACK_INJECTED')}if(writes){this.rows=snapshot;this.version++;this.writes+=writes}if(this.loseResponse){this.loseResponse=false;throw Error('COMMITTED_RESPONSE_LOST')}return result}throw Error('OCC_EXHAUSTED')}
+ async query(fn,args={}){const db=this.queryDb(this.rows);db.get=async id=>{const r=this.rows.find(r=>r._id===id);if(!r)return null;const rest={...r};delete rest._table;return structuredClone(rest)};return fn._handler({db,auth:this.auth},args)}
+ async setup(controls=guard){this.controls=controls;await this.mutation(controls.provision);await this.mutation(managed.provisionOwned);return this}
+ state(){return JSON.parse(this.rows.find(r=>r._table==='experimentControls').stateCanonical)}
+ setState(s){this.rows.find(r=>r._table==='experimentControls').stateCanonical=canonical(s,524288);this.version++}
+ args(id='C01'){return {scenarioId:id,ownerRunId:OWNER_RUN_ID,principalHash:BINDING.operatorHash}}
+ async reserve(id='C01'){return this.mutation(this.controls.reserveCheckpoint,this.args(id))}
+ async enter(id='C01'){const a=this.state().attempts.find(a=>a.scenarioId===id);return this.mutation(this.controls.enterPeer,{...this.args(id),dispatchIdentity:a.dispatchIdentity})}
+ action(){return {auth:this.auth,runAction:async(ref,args)=>{const [mod,key]=ref[Symbol.for('functionName')].split(':');if(mod!=='managed')throw Error('NO_OFFLINE_ACTION');return managed[key]._handler(this.action(),args)},runMutation:async(ref,args)=>{const name=ref[Symbol.for('functionName')];const [mod,key]=name.split(':');return this.mutation((mod==='guard'?this.controls:mod==='lifecycle'?lifecycle:managed)[key],args)},runQuery:async(ref,args)=>{const [mod,key]=ref[Symbol.for('functionName')].split(':');return this.query((mod==='guard'?this.controls:mod==='lifecycle'?lifecycle:managed)[key],args)},vectorSearch:async()=>[]}}
+}
+
+
+FILE fixture/convex/proofs.ts
+import type {Receipt,BindingV2,Data,Category,Method,Reason} from './contracts.ts';
+import {binding,canonical,count,hash,id,record,one,list,same,micro,conservativeUsdDecimal,caseFor,fail} from './validate.ts';
+import {BINDING,SOURCE_SNAPSHOT} from './installed.ts';
+export interface Context {binding:BindingV2;scenarioId:Receipt['scenarioId'];dispatchIdentity:string;enteredAt:number;now:number;originalDeadline:number;sourceClosureHash:string}
+export type Decision<T>={kind:'validated';proofHash:string;value:T}|{kind:'unknown';reason:Exclude<Reason,'none'|'authority-closed'>};
+export interface Nomination {method:Method;responseId:string|null;actualModel:string|null;rawFinish:Receipt['rawFinish'];nativeFinish:Receipt['nativeFinish'];nativeRawFinish:string|null;correlatedShape:boolean;rawDigest:string;ended:'returned'|'reader-done'|'abort'|'deadline'|'error';rawCost:unknown;rawCurrency:string|null;categories:Category[];outcome:'returned'|'rejected'|'cancelled'|'unknown'}
+export interface Resolver {lifetime(ctx:Context,n:Nomination):Decision<true>;serving(ctx:Context,n:Nomination):Decision<Data>;money(ctx:Context,n:Nomination):Decision<{microUSD:number;currency:'USD';categories:Category[]}>}
+export const ACTUAL_PROOFS:readonly Data[]=Object.freeze([]);
+const common='version proofHash type installationHash reviewerAcceptanceHash validatorSourceHash providerSourceHash providerVersion adapterVersion providerV4Version loadedClosureHash sourceRevision checkedAt expiresAt targetHash manifestHash requestedModel actualModels methods';
+export function validateProof(value:unknown):Data {const r=record(value);const type=one(r.type,['lifetime','serving','money']);const extra=type==='lifetime'?'rule supportsRawFinish confirmsWholeInvocationTermination':type==='serving'?'exactObservedModel immutableRevision tokenizerArtifact framingProof capProof decoderProof nativePrivateCorrespondenceProof boundsRevision inputUCap outputMCap privateMaximumBytes':'extraction currency aggregate categories coversAllAttempts coversDriftModels rejectedAndCancelledChargeRule cacheAndRoutingChargeRule currencySemanticProof wholeInvocationProof rateRevision categorySemanticProof';record(r,common+' '+extra);if(r.version!==1||r.providerVersion!=='0.2.1'||r.adapterVersion!=='3.0.14'||r.providerV4Version!=='4.0.21')fail('PROOF_VERSION');for(const k of ['proofHash','installationHash','reviewerAcceptanceHash','validatorSourceHash','providerSourceHash','loadedClosureHash','sourceRevision','targetHash','manifestHash'])hash(r[k]);count(r.checkedAt);count(r.expiresAt);if(Number(r.checkedAt)>=Number(r.expiresAt))fail('PROOF_TIME');one(r.requestedModel,['openai/gpt-4o-mini','openai/text-embedding-3-small']);const models=list(r.actualModels,16).map(id),methods=list(r.methods,3).map(x=>one(x,['generate','stream','embed']));same(models,[...new Set(models)].sort());same(methods,[...new Set(methods)].sort());if(type==='lifetime'){one(r.rule,['chat-correlated-raw-native-finish-v1','successful-single-vector-response-id-model-v1']);same(r.supportsRawFinish,r.rule==='chat-correlated-raw-native-finish-v1'?['stop','length','content_filter']:[]);if(r.confirmsWholeInvocationTermination!==true)fail('PROOF');}else if(type==='serving'){id(r.exactObservedModel);id(r.immutableRevision);for(const k of ['tokenizerArtifact','framingProof','capProof','decoderProof','nativePrivateCorrespondenceProof','boundsRevision'])hash(r[k]);for(const k of ['inputUCap','outputMCap','privateMaximumBytes'])count(r[k]);}else {if(r.extraction!=='raw-usage-cost-v1'||r.currency!=='USD'||r.aggregate!=='complete-whole-invocation-account-charge'||r.coversAllAttempts!==true)fail('PROOF');same(r.categories,['cache-read','cache-write','cancelled','inference','rejected','routing','surcharge']);const drift=list(r.coversDriftModels,16).map(id);same(drift,[...new Set(drift)].sort());for(const k of ['rejectedAndCancelledChargeRule','cacheAndRoutingChargeRule','currencySemanticProof','wholeInvocationProof','rateRevision','categorySemanticProof'])hash(r[k]);}canonical(r,8192);return r}
+/** Registry constructor is server code only. Accepted content/review/installation pins are compiled,
+ * never run/capture args. Actual exported registry below is EMPTY. Tests use disjoint synthetic pins. */
+export function createResolver(entries:readonly unknown[],accepted:readonly {proofHash:string;canonical:string}[],installationHash:string):Resolver {const proofs=entries.map(validateProof);for(const p of proofs){const pin=accepted.find(x=>x.proofHash===p.proofHash);if(!pin||pin.canonical!==canonical(p,8192)||p.installationHash!==installationHash)fail('UNREVIEWED_PROOF');}const unknown:Decision<never>={kind:'unknown',reason:'missing-evidence'};function choose(type:string,ctx:Context,n:Nomination){binding(ctx.binding);same(ctx.binding,BINDING);const eligible=proofs.filter(p=>p.type===type&&p.providerSourceHash===SOURCE_SNAPSHOT.providerSourceHash&&p.targetHash===ctx.binding.targetHash&&p.manifestHash===ctx.binding.manifestHash&&p.loadedClosureHash===ctx.sourceClosureHash&&ctx.sourceClosureHash===ctx.binding.installedClosureHash&&p.requestedModel===(n.method==='embed'?'openai/text-embedding-3-small':'openai/gpt-4o-mini')&&Number(p.checkedAt)<=ctx.enteredAt&&ctx.enteredAt<Number(p.expiresAt)&&(p.methods as string[]).includes(n.method)&&n.actualModel!==null&&(p.actualModels as string[]).includes(n.actualModel));if(eligible.length>1)fail('PROOF_COLLISION');return eligible[0]}
+return Object.freeze({lifetime(ctx:Context,n:Nomination):Decision<true>{const p=choose('lifetime',ctx,n);if(!p||!n.correlatedShape||!n.responseId||!n.actualModel)return unknown;const rule=n.method==='embed'?'successful-single-vector-response-id-model-v1':'chat-correlated-raw-native-finish-v1';if(p.rule!==rule||n.method!=='embed'&&(!['stop','length','content_filter'].includes(String(n.rawFinish))||n.nativeRawFinish!==n.rawFinish||n.nativeFinish!==({stop:'stop',length:'length',content_filter:'content-filter'} as Data)[String(n.rawFinish)]))return {kind:'unknown',reason:'unsupported'};return {kind:'validated',proofHash:String(p.proofHash),value:true}},serving(ctx:Context,n:Nomination):Decision<Data>{const p=choose('serving',ctx,n);const c=caseFor(ctx.scenarioId);if(!p||n.actualModel!==p.requestedModel||n.actualModel!==p.exactObservedModel||Number(p.inputUCap)<c.inputU||Number(p.outputMCap)<c.maximumOutputM||Number(p.privateMaximumBytes)<c.conditionalPrivateMaximumBytes)return unknown;return {kind:'validated',proofHash:String(p.proofHash),value:p}},money(ctx:Context,n:Nomination):Decision<{microUSD:number;currency:'USD';categories:Category[]}>{const p=choose('money',ctx,n);if(!p||!n.actualModel||!n.responseId||!n.categories.length)return unknown;if(n.actualModel!==p.requestedModel&&!(p.coversDriftModels as string[]).includes(n.actualModel))return unknown;const d=conservativeUsdDecimal(n.rawCost);if(d===undefined)return unknown;try{return {kind:'validated',proofHash:String(p.proofHash),value:{microUSD:micro(d),currency:'USD',categories:n.categories}}}catch{return {kind:'unknown',reason:'unsupported'}}}})}
+export const EMPTY_RESOLVER=createResolver(ACTUAL_PROOFS,[],BINDING.installedClosureHash);
+export function unknownReceipt(ctx:Context,c:{normalizedNativeRequestHash:string;expectedWireBodyHash:string;method:Method;nativeInterface:'chat'|'embedding';modelId:Receipt['requestedModel']},rawDigest:string):Receipt{return {version:2,evidenceScope:'actual-experiment-native',binding:ctx.binding,scenarioId:ctx.scenarioId,dispatchIdentity:ctx.dispatchIdentity,nativeHash:c.normalizedNativeRequestHash,expectedWireHash:c.expectedWireBodyHash,rawDigest,method:c.method,interface:c.nativeInterface,requestedModel:c.modelId,responseId:null,actualModel:null,rawFinish:null,nativeFinish:null,nativeRawFinish:null,rawCounts:{input:null,output:null},mappedCounts:{input:null,output:null},usage:'unknown',lifetime:'unknown',lifetimeProof:null,serving:'unknown',servingProof:null,money:'unknown',observedCostDecimal:null,observedCurrency:null,observedCategories:[],microUSD:null,moneyProof:null,resultHash:null,reason:'missing-evidence'}}
+export function qualify(ctx:Context,r:Receipt,n:Nomination,resolver:Resolver){const lifetime=resolver.lifetime(ctx,n),serving=resolver.serving(ctx,n),money=resolver.money(ctx,n);if(lifetime.kind==='validated'){r.lifetime='validated-provider-terminal';r.lifetimeProof=lifetime.proofHash;}if(serving.kind==='validated'){r.serving='validated-bound-premises';r.servingProof=serving.proofHash;}else if(r.actualModel!==null&&r.actualModel!==r.requestedModel)r.serving='drift';if(money.kind==='validated'){r.money='validated-whole-invocation-usd';r.microUSD=money.value.microUSD;r.observedCurrency='USD';r.observedCategories=money.value.categories;r.moneyProof=money.proofHash;}if(r.reason==='missing-evidence'&&r.usage==='validated-raw-mapped'&&r.lifetime==='validated-provider-terminal'&&r.serving==='validated-bound-premises'&&r.money==='validated-whole-invocation-usd'&&r.resultHash!==null)r.reason='none';return r}
+
+
+FILE fixture/convex/stage-pins.ts
+// UNINSTALLED source pins; per-target private key installation remains ROOT-gated.
+export const STAGE_KEY_ID='dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd';
+export const STAGE_ISSUER_SOURCE_HASH='c62d9f580a87ea43b229c610f68717a059b599fc51ea5ad4a12ae971158b1d71';
+export const STAGE_VERIFIER_SOURCE_HASH=STAGE_ISSUER_SOURCE_HASH;
+
+
+FILE fixture/convex/installed.ts
+import type {BindingV2} from './contracts.ts';
+// NO target installed or verified. ROOT must review a new compiled capsule before native work.
+export const NATIVE_INSTALLATION_ENABLED=false;
+export const ACCOUNT_HASH='49606b28bb467a92ac1f389b4a487b55bba214c6540a4c047001e64a97c54b3d';
+export const OWNER_RUN_ID='fixed-uninstalled-owner-run-v2';
+export const BINDING:BindingV2=Object.freeze({"manifestHash": "6588994a04a5d7a2ead13bf80c82b1e5b0a11c4bf44a5cc1f40d0b85cc16d1ae", "targetHash": "71f69923d48b36599596e4146ae0520a42a73b2109829079bd1647bdf1b4c416", "sourceHash": "db73a15155786ea797d908921bccf10da340beed00086625002d932ab0e78500", "installedClosureHash": "57b1bcfa81c896e431739b5ec86f25633fb960903c7943895635b34dd40a9179", "operatorHash": "0d4c8bc16758c3c6bc4c5c0763c6b7df485ca75631791f726aa9a6282712c3b7", "grantHash": "ca0cd98108f7d0600c724ea589263cb43c5a5a19c04fb644dbdad6ff471bed68", "sourceRecordHash": "cc310cb8c83d153217e250e198545693514466dca50ed10ccd3fc14a280eabeb", "profileHash": "6cf605a0e10ec7b3df6d4870b858d43235ab00081810447d5724b8d5bc43faa6", "grantEpoch": 1, "sourceEpoch": 1, "sourceRevision": 1, "profileEpoch": 1, "windowEpoch": 1, "validatorRevision": 1});
+export const SCOPE=Object.freeze({"tenantHash": "487f2923b6ac466f46eacfe0835abca0870c0ce84af3565eafa05ed5274482eb", "spaceHash": "4216f11be3252b6c7b1f6547aa01d3f04df52418e388311c0bb7bee05bb785cd", "ownerHash": "7fa56f4b817ad5ad34be5eb4650d7f9267c1fa98d35a47259989e7b191fd15e1"});
+export const SOURCE_WINDOW=Object.freeze({checkedAt:1791108000000,expiresAt:1791194400000});
+
+/** Conditional frozen public sources only; target/load values are UNINSTALLED synthetic capsule. */
+export const SOURCE_SNAPSHOT=Object.freeze({"version":1,"manifestHash":"6588994a04a5d7a2ead13bf80c82b1e5b0a11c4bf44a5cc1f40d0b85cc16d1ae","targetHash":"71f69923d48b36599596e4146ae0520a42a73b2109829079bd1647bdf1b4c416","loadedClosureHash":"57b1bcfa81c896e431739b5ec86f25633fb960903c7943895635b34dd40a9179","providerSourceHash":"5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613","adapterSourceHash":"8cedc84f1a015f63c5c0a76ddba664562a1301adb1ed0d8c858e0b740f65a79a","providerV4TypesHash":"1b3124cbee9f5cb48689915ca01598b0dd54f496ebf616db17be06fc33f0bd29","modelDocumentHash":"e751ded5f29e4f2ce8066252774ff75130003a45d4719398ec9ec80a9f028b71","tokenizerArtifactHash":"446a9538cb6c348e3516120d7c08b09f57c36495e2acfffe59a5bf8b0cfb1a2d","framingProofHash":"fc7e474386941b2156c78d3420619aa51063d19f423bfa50fe8499456114e972","outputProofHash":"a1e7384cbcf01d78cbbfb5829e4177c2b6de5afe4d7ca1c729555902838acce2","rateDocumentHash":"5c149452183cda578b779696709c9d9a887d1fa6f5aa36836d6fac483fdb5d6d","boundRevision":"d26d7b2a7c06b24bf0888f777abb4f838167adafa4a96d82e6936af85d5212af","priceRevision":"1496cdec1ed5ba80c4e604ef09102655939a1b7f0ebef9453b2527919e6a1f51","checkedAt":1791108000000,"expiresAt":1791194400000,"hypothesis":true});
+
+
+FILE fixture/tsconfig.json
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "strict": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+    "lib": [
+      "ES2024",
+      "DOM"
+    ]
+  },
+  "include": [
+    "convex/**/*.ts"
+  ]
+}
+
+
+FILE eslint.config.mjs
+import js from '@eslint/js';
+import tsParser from '@typescript-eslint/parser';
+import tsPlugin from '@typescript-eslint/eslint-plugin';
+import globals from 'globals';
+import {dirname} from 'node:path';
+import {fileURLToPath} from 'node:url';
+const here=dirname(fileURLToPath(import.meta.url));
+export default [
+ {files:['**/checks/*.mjs','**/eslint.config.mjs'],languageOptions:{ecmaVersion:2024,sourceType:'module',globals:globals.node},rules:js.configs.recommended.rules},
+ {files:['**/convex/*.ts'],languageOptions:{parser:tsParser,parserOptions:{project:'./fixture/tsconfig.json',tsconfigRootDir:here},globals:{...globals.node,...globals.browser}},plugins:{'@typescript-eslint':tsPlugin},rules:{'@typescript-eslint/no-floating-promises':'error','@typescript-eslint/await-thenable':'error','@typescript-eslint/no-misused-promises':'error','@typescript-eslint/no-explicit-any':'error','@typescript-eslint/no-unused-vars':['error',{argsIgnorePattern:'^_'}]}}
+];
+

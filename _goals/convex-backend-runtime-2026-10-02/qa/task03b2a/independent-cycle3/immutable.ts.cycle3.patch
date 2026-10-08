@@ -1,0 +1,12 @@
+--- cycle2/convex-dev/immutable.ts
++++ cycle3/convex-dev/immutable.ts
+@@ -52,7 +52,8 @@
+ } });
+ export const getAtTimestamp = query({ args: { ...keyArgs, timestamp: v.number() }, handler: async (ctx, args) => {
+   const row = await immutableRow(ctx, await authority(ctx, "read", args), args.type, args.id, "read");
+-  return row ? versions(row).filter((version) => version.timestamp <= args.timestamp).at(-1) ?? null : null;
++  const history = row ? versions(row).filter((version) => version.timestamp <= args.timestamp) : [];
++  return history[history.length - 1] ?? null;
+ } });
+ export const list = query({ args: { ...filterArgs, limit: v.optional(v.number()), offset: v.optional(v.number()), sortBy: v.optional(v.string()), sortOrder: v.optional(v.string()) }, handler: async (ctx, args) => {
+   const auth = await authority(ctx, "read", args); let rows = filter(await candidates(ctx, "immutable", auth, "read"), args);

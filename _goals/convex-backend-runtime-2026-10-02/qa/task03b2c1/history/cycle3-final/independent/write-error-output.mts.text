@@ -1,0 +1,12 @@
+import fs from "node:fs";
+import assert from "node:assert/strict";
+import { fixture } from "/workspace/Project-Cortex/work/backend-runtime/task03b2c1-checkout/tests/unit/runtimeArtifactAuth/fixture.ts";
+const results:any[]=[];
+for(const name of ["appendContent","pauseStreaming","resumeStreaming","cancelStreaming","finalizeStreaming","setStreamingError"]) {
+ const f=fixture(["write"],"space");f.row({ownerPrincipalId:"other-canonical-owner",streamingState:name==="resumeStreaming"?"paused":"streaming",streamingMetadata:{sessionId:"private-owner-stream-session",startedAt:1,bytesReceived:7}});
+ let error:any;try{await f.invoke(name,{artifactId:"artifact-a",sessionId:"guessed",chunk:"text",errorCode:"manual",errorMessage:"manual"});}catch(e:any){error=e.data;}
+ assert.equal(error?.code,"STREAMING_SESSION_INVALID");assert.equal(f.db.attempts.length,0);
+ results.push({name,error,errorContainsPrivateSession:JSON.stringify(error).includes("private-owner-stream-session"),attempts:f.db.attempts.length,grants:f.db.rows("runtimeAuthGrants").map((r:any)=>({capabilities:r.capabilities,resourceAccess:r.resourceAccess})),resourceReadOutcome:"no READ capability"});
+}
+fs.writeFileSync("/tmp/task03b2c1-review3-eopdvclu/write-error-output-results.json",JSON.stringify(results,null,2)+"\n");
+for(const r of results) console.log(JSON.stringify(r));

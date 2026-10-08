@@ -1,0 +1,27 @@
+{
+  "observedAt": "2026-10-04T06:18:58.185839+00:00",
+  "candidateFiles": 3288,
+  "parentFiles": 69,
+  "parentReviewFiles": 229,
+  "producerArchiveManifestRows": 1795,
+  "producerArchiveRoundtripFiles": 1789,
+  "producerArchiveDeterministicChunks": 1790,
+  "parentReviewArchiveManifestRows": 5,
+  "parentReviewArchiveRoundtripFiles": 128,
+  "mismatches": 0,
+  "C8Target": "NOT_CREATED",
+  "native": "NOT_RUN",
+  "coordinatorSetupFailures": [
+    {
+      "operation": "Security CI receipt serialization",
+      "error": "steps null; optional array corrected before any file write",
+      "raw": "actual tool exception available; no separate raw file reconstructed"
+    },
+    {
+      "operation": "Parent review tar roundtrip",
+      "error": "used relative member without inventoried scratch prefix; corrected with unchanged archive",
+      "raw": "actual tool traceback available; no separate raw file reconstructed"
+    }
+  ],
+  "scope": "Read-only source/evidence verification and QA receipts only; all original acceptance gates remain"
+}

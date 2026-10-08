@@ -1,0 +1,60 @@
+{
+  "manifests": [
+    {
+      "packet": "task04-model-drift-charge-only-repair-preparation-c1",
+      "rows": 2,
+      "missing": [],
+      "extra": [],
+      "mismatches": [],
+      "manifestSHA256": "c656e9dda6748433afe445a4cb5dad308d9eec8d256a96b39f47c2900fa5d73c"
+    },
+    {
+      "packet": "task04-gateway-terminal-composition-c1-review",
+      "rows": 71,
+      "missing": [],
+      "extra": [],
+      "mismatches": [],
+      "manifestSHA256": "a4cb72af203cd02da097ec0b99da58a760bf043954855c80d1a5fef93fd46d07"
+    },
+    {
+      "packet": "task04-gateway-capture-composition-preparation-c2",
+      "rows": 147,
+      "missing": [],
+      "extra": [],
+      "mismatches": [],
+      "manifestSHA256": "0f46ab1caa4616c5cc3200671dac1b5451aed8ef13b9c37e9bca5f2f18fd1732"
+    },
+    {
+      "packet": "task04-gateway-capture-composition-c2-design-review",
+      "rows": 120,
+      "missing": [],
+      "extra": [],
+      "mismatches": [],
+      "manifestSHA256": "6a343de298ef9088cb9e4657bc9e549c1cedcb5123af6daa87832e710509f88e"
+    }
+  ],
+  "sourceEvidenceRowsVerified": 8,
+  "controls": {
+    "capture_rejects_drift_before_known_cost": true,
+    "ordinary_captured_route_rejects_drift": true,
+    "production_manifest_registry_empty": true,
+    "terminal_cost_contract_not_k_bound": true,
+    "existing_tables": 5,
+    "existing_indexes": 11,
+    "internal_registrations": 16,
+    "unknown_transition_has_no_overrun_latch": true,
+    "attachment_predicate_has_no_observed_model_guard": true
+  },
+  "prePostStable": true,
+  "limitations": [
+    "Static source checks only; no product implementation execution",
+    "No new qualification of real money, native OCC or services",
+    "Root routing configs outside this scope"
+  ],
+  "failures": [],
+  "skips": [
+    "Application tests",
+    "Native/service/network/paid execution",
+    "Root configuration acceptance"
+  ]
+}

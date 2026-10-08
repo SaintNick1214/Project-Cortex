@@ -1,0 +1,116 @@
+{
+  "argv": [
+    "work/resume/task04-evidence-transport-30/adverse.py"
+  ],
+  "utcPre": "2026-10-04T13:23:46.671264+00:00",
+  "expectedRejections": [
+    {
+      "name": "unsafe:../outside",
+      "utcPre": "2026-10-04T13:23:46.671277+00:00",
+      "utcPost": "2026-10-04T13:23:46.671290+00:00",
+      "type": "ValueError",
+      "message": "unsafe path"
+    },
+    {
+      "name": "unsafe:/absolute",
+      "utcPre": "2026-10-04T13:23:46.671296+00:00",
+      "utcPost": "2026-10-04T13:23:46.671302+00:00",
+      "type": "ValueError",
+      "message": "unsafe path"
+    },
+    {
+      "name": "unsafe:a/../b",
+      "utcPre": "2026-10-04T13:23:46.671307+00:00",
+      "utcPost": "2026-10-04T13:23:46.671347+00:00",
+      "type": "ValueError",
+      "message": "unsafe path"
+    },
+    {
+      "name": "unsafe:a//b",
+      "utcPre": "2026-10-04T13:23:46.671352+00:00",
+      "utcPost": "2026-10-04T13:23:46.671356+00:00",
+      "type": "ValueError",
+      "message": "unsafe path"
+    },
+    {
+      "name": "unsafe:a\\b",
+      "utcPre": "2026-10-04T13:23:46.671359+00:00",
+      "utcPost": "2026-10-04T13:23:46.671361+00:00",
+      "type": "ValueError",
+      "message": "unsafe path"
+    },
+    {
+      "name": "unsafe:a/./b",
+      "utcPre": "2026-10-04T13:23:46.671364+00:00",
+      "utcPost": "2026-10-04T13:23:46.671367+00:00",
+      "type": "ValueError",
+      "message": "unsafe path"
+    },
+    {
+      "name": "exclusive-create-existing-same-content",
+      "utcPre": "2026-10-04T13:23:46.671640+00:00",
+      "utcPost": "2026-10-04T13:23:46.671767+00:00",
+      "type": "FileExistsError",
+      "message": "[Errno 17] File exists: 'present'"
+    },
+    {
+      "name": "existing-content-mismatch",
+      "utcPre": "2026-10-04T13:23:46.671817+00:00",
+      "utcPost": "2026-10-04T13:23:46.671898+00:00",
+      "type": "ValueError",
+      "message": "existing original mismatch: present"
+    },
+    {
+      "name": "symlink-ancestor",
+      "utcPre": "2026-10-04T13:23:46.672062+00:00",
+      "utcPost": "2026-10-04T13:23:46.672156+00:00",
+      "type": "NotADirectoryError",
+      "message": "[Errno 20] Not a directory: 'link'"
+    },
+    {
+      "name": "symlink-file",
+      "utcPre": "2026-10-04T13:23:46.672234+00:00",
+      "utcPost": "2026-10-04T13:23:46.672288+00:00",
+      "type": "OSError",
+      "message": "[Errno 40] Too many levels of symbolic links: 'filelink'"
+    },
+    {
+      "name": "unknown-entry",
+      "utcPre": "2026-10-04T13:23:46.672772+00:00",
+      "utcPost": "2026-10-04T13:23:46.673087+00:00",
+      "type": "ValueError",
+      "message": "unknown or duplicate archive entry"
+    },
+    {
+      "name": "duplicate-entry",
+      "utcPre": "2026-10-04T13:23:46.673524+00:00",
+      "utcPost": "2026-10-04T13:23:46.673841+00:00",
+      "type": "ValueError",
+      "message": "unknown or duplicate archive entry"
+    },
+    {
+      "name": "hash-mismatch",
+      "utcPre": "2026-10-04T13:23:46.674173+00:00",
+      "utcPost": "2026-10-04T13:23:46.674385+00:00",
+      "type": "ValueError",
+      "message": "archive content mismatch"
+    },
+    {
+      "name": "symlink-entry",
+      "utcPre": "2026-10-04T13:23:46.674645+00:00",
+      "utcPost": "2026-10-04T13:23:46.674851+00:00",
+      "type": "ValueError",
+      "message": "nonregular archive entry"
+    },
+    {
+      "name": "missing-entry",
+      "utcPre": "2026-10-04T13:23:46.675064+00:00",
+      "utcPost": "2026-10-04T13:23:46.675224+00:00",
+      "type": "ValueError",
+      "message": "archive entry set mismatch"
+    }
+  ],
+  "unexpectedFailures": [],
+  "exitCode": 0,
+  "utcPost": "2026-10-04T13:23:46.675236+00:00"
+}

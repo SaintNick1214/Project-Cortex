@@ -1,0 +1,56 @@
+(node:262862) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/lifecycle.test.ts (77.857 s)
+  ● SDK lifecycle › waits for connection closure before shutdown resolves
+
+    thrown: "Exceeded timeout of 60000 ms for a test.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+      at _getError (node_modules/jest-circus/build/jestAdapterInit.js:1985:12)
+          at Array.map (<anonymous>)
+
+    Cause:
+        thrown: "Exceeded timeout of 60000 ms for a test.
+        Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+          3 |
+          4 | describe('SDK lifecycle', () => {
+        > 5 |   it('waits for connection closure before shutdown resolves', async () => {
+            |   ^
+          6 |     const cortex = new Cortex({convexUrl:'https://example.convex.cloud'});
+          7 |     const client = cortex.getClient();
+          8 |     const realClose = client.close.bind(client);
+
+          at tests/unit/lifecycle.test.ts:5:3
+          at tests/unit/lifecycle.test.ts:4:1
+
+
+  ● Test suite failed to run
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+    -   "closed": 1,
+    +   "closed": 0,
+        "constructed": 1,
+        "realTransports": 0,
+        "sent": 0,
+      }
+
+      1 | import {afterAll,expect} from '@jest/globals';
+    > 2 | afterAll(()=>{expect(globalThis.__offlineLifecycleCounts).toEqual({constructed:1,closed:1,sent:0,realTransports:0});});
+        |                                                           ^
+      3 |
+
+      at Object.<anonymous> (_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-root-execution-c1/lifecycle-after.mjs:2:59)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 1 total
+Snapshots:   0 total
+Time:        78.09 s
+Ran all test suites within paths "tests/unit/lifecycle.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-root-execution-c1/actual-lifecycle.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

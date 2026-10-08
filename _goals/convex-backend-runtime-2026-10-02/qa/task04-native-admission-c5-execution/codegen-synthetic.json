@@ -1,0 +1,56 @@
+{
+  "operation": "ab31702e-0cbc-4dbc-ac89-42c9c4c65411",
+  "phase": "synthetic",
+  "status": "PASS",
+  "officialCodegen": true,
+  "typecheck": "enable",
+  "freezeSha256": "b40d38cdcec3cd7346980d4cf2bb4af021c34e1d9d647925d3ad83428a5b3688",
+  "bootstrapSha256": "51f02b9917720ebe66a5a3ef66583685ea75006a282445243aebc64202dd4075",
+  "stagePrerequisitesSha256": "2395d4be5b878e2378a057fbc6c5005b47226c31fad21a25c87f7730adf2006d",
+  "httpRouter": {
+    "basis": "actual official HttpRouter.getRoutes over exact stage bytes; not actual server API wire",
+    "routes": [
+      {
+        "path": "/qa/task04-peer/effect",
+        "method": "POST",
+        "handler": "qualificationPeer:effect",
+        "handlerExportIdentityMatched": true
+      }
+    ],
+    "sourceHashes": [
+      {
+        "path": "convex/http.ts",
+        "sha256": "748953da774f9819fb4a21d579e10e3b9b5eddefd057f6bbde06d7dbf2186ac2"
+      },
+      {
+        "path": "convex/qualificationPeer.ts",
+        "sha256": "c11fe0e23e4d5ddf7d0e3c5105be1b55fd23e4edb733ab77456ee631169cd9d6"
+      }
+    ],
+    "nativePeerBehavior": "NOT_RUN"
+  },
+  "generated": [
+    {
+      "path": "convex/_generated/api.d.ts",
+      "sha256": "6ee0e53983431c4e0837a83038d88ba579cf16dda71dea7f7a0a884980d34d5f"
+    },
+    {
+      "path": "convex/_generated/api.js",
+      "sha256": "f513058549831e85376f8d19cafaf2a4a770b6eb1b859fb371141f2c9dec0d70"
+    },
+    {
+      "path": "convex/_generated/dataModel.d.ts",
+      "sha256": "db177073d16a4393c7a96bcdc3a2a904e88c2432d54d138ca7715cc431982c17"
+    },
+    {
+      "path": "convex/_generated/server.d.ts",
+      "sha256": "2b536ee08d434dd044efe0302aeaf4ccb00cd08af10c9f8c7bc7a6734e4aa49b"
+    },
+    {
+      "path": "convex/_generated/server.js",
+      "sha256": "0cdd1d842b9458d8a6f2444c35eb9929312316a384ca76a4b1d964bedde8a6f2"
+    }
+  ],
+  "startedAt": "2026-10-04T04:33:01.443Z",
+  "observedAt": "2026-10-04T04:33:14.995Z"
+}

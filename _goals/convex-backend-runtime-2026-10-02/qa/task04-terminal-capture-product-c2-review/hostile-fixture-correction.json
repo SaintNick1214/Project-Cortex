@@ -1,0 +1,12 @@
+{
+  "observedUTC": "2026-10-04T07:10:00.573558+00:00",
+  "oldRun": "hostile: 64PASS/1FAIL (TypeError before handler)",
+  "cause": "Review fixture assumed a nonexistent runtimeTenants table. Actual retirement uses runtimeAuthTombstones.",
+  "change": "Correct solely the review scratch retirement setup/renewal; expected permanent closure/no money/write assertions unchanged. Product sources and assertions unchanged.",
+  "rawPreserved": [
+    "hostile.results.json",
+    "hostile.stderr",
+    "hostile.command.json",
+    "hostile-first-source.ts"
+  ]
+}

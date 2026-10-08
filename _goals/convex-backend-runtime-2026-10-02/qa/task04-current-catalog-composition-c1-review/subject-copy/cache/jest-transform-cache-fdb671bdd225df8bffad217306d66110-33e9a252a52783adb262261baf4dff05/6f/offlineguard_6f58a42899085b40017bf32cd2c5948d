@@ -1,0 +1,11 @@
+d57c27954746f66cc06bca9fd0f81882
+import http from 'node:http';
+import https from 'node:https';
+import net from 'node:net';
+import tls from 'node:tls';
+import {syncBuiltinESMExports} from 'node:module';
+const denied=()=>{throw new Error('CURRENT_COMPOSITION_NETWORK_FORBIDDEN')};
+globalThis.fetch=async()=>denied();
+http.request=http.get=https.request=https.get=denied;
+net.connect=net.createConnection=tls.connect=denied;
+syncBuiltinESMExports();

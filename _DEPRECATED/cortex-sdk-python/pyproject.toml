@@ -1,0 +1,124 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cortex-memory"
+version = "0.36.0"
+description = "AI agent memory SDK built on Convex - ACID storage, vector search, and conversation management"
+readme = "README.md"
+authors = [{name = "Saint Nick LLC", email = "support@cortexmemory.dev"}]
+license = {file = "LICENSE.md"}
+requires-python = ">=3.10"
+keywords = [
+    "ai",
+    "agents",
+    "memory",
+    "convex",
+    "sdk",
+    "python",
+    "conversations",
+    "vector-search",
+    "llm",
+    "chatbot",
+    "knowledge-graph",
+    "facts",
+    "hive-mode",
+    "memory-spaces",
+    "workflow-coordination",
+    "multi-agent",
+    "infinite-context",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Framework :: AsyncIO",
+    "Typing :: Typed",
+]
+
+dependencies = [
+    "convex>=0.7.0",
+    "pydantic>=2.12.5",  # CVE-2024-3772: Require 2.4.0+ to avoid ReDoS vulnerability
+    "typing-extensions>=4.15.0",
+]
+
+[project.optional-dependencies]
+graph = ["neo4j>=6.1.0"]
+a2a = ["redis>=7.1.0"]
+# LLM providers for automatic fact extraction
+llm = ["openai>=2.15.0", "anthropic>=0.76.0"]
+openai = ["openai>=2.15.0"]
+anthropic = ["anthropic>=0.76.0"]
+all = ["neo4j>=6.1.0", "redis>=7.1.0", "openai>=2.15.0", "anthropic>=0.76.0"]
+dev = [
+    "pytest>=9.0.2",
+    "pytest-asyncio>=1.3.0",
+    "pytest-xdist>=3.8.0",  # Parallel test execution within suites
+    # pytest-split: install via requirements-dev.txt (PyPI doesn't allow git URL deps)
+    "pytest-cov>=7.0.0",
+    "pytest-timeout>=2.4.0",  # Per-test timeout to prevent hangs
+    "black>=26.1.0",  # CVE-2024-21503: Require 24.3.0+ to avoid ReDoS vulnerability
+    "mypy>=1.19.1",
+    "ruff>=0.14.14",
+    "openai>=2.15.0",  # Required for OpenAI integration tests
+    "anthropic>=0.76.0",  # Required for Anthropic integration tests
+]
+
+[project.urls]
+Homepage = "https://github.com/SaintNick1214/Project-Cortex"
+Documentation = "https://github.com/SaintNick1214/Project-Cortex/tree/main/Documentation"
+Repository = "https://github.com/SaintNick1214/Project-Cortex"
+Issues = "https://github.com/SaintNick1214/Project-Cortex/issues"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["cortex*"]
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+addopts = "-ra -q --strict-markers"
+testpaths = ["tests"]
+asyncio_mode = "auto"
+
+[tool.black]
+line-length = 88
+target-version = ['py312', 'py313']
+include = '\.pyi?$'
+
+[tool.mypy]
+python_version = "3.12"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+strict_optional = true
+
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W"]
+# Relax line length and bare except for SDK wrapper code
+ignore = [
+    "E501",  # line-too-long (handled by formatter)
+    "E722",  # bare-except (acceptable for SDK error handling)
+]
+
+[tool.ruff.lint.per-file-ignores]
+# Test files have special patterns that are acceptable
+"tests/*" = [
+    "E402",  # Module imports not at top - expected with pytest.importorskip()
+    "E702",  # Multiple statements on one line - parametrized tests
+    "F401",  # Unused imports - import validation tests
+    "F841",  # Unused variables - test scaffolding
+]

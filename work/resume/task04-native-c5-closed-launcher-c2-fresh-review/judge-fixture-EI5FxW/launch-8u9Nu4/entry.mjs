@@ -1,0 +1,1 @@
+import fs from 'node:fs';fs.openSync("/workspace/Project-Cortex/work/resume/task04-native-c5-closed-launcher-c2-fresh-review/judge-fixture-EI5FxW/launch-8u9Nu4/a",'wx');fs.openSync("/workspace/Project-Cortex/work/resume/task04-native-c5-closed-launcher-c2-fresh-review/judge-fixture-EI5FxW/launch-8u9Nu4/b",'wx');throw Error('SCENARIO_PRIMARY');

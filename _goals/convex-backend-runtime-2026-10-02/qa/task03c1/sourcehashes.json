@@ -1,0 +1,34 @@
+{
+  "branch": "feat/convex-backend-runtime",
+  "headAtEvidenceFreeze": "6939678976fbc6f309fe34374930bdf404e8152f",
+  "task03APrerequisiteCommit": "cf579f3",
+  "sourcePhase": "first-review essential fix final freeze",
+  "ownedFiles": [
+    "src/auth/credentials.ts",
+    "src/auth/index.ts",
+    "src/index.ts",
+    "tests/unit/auth/credentials.test.ts"
+  ],
+  "sha256": {
+    "src/auth/credentials.ts": "aebd90d81d02ab57602e07d330961ea2ce735381e63f86f00d330b24886530bc",
+    "src/auth/index.ts": "b18b802fc3555ca0227595dd9380c014ff41a9585e0738bdd909a1a7baaafe0f",
+    "src/index.ts": "a9b86c2a73e2fbc178da16de30d92c2e71a89b7957eb022e6f56d245f951e059",
+    "tests/unit/auth/credentials.test.ts": "81e15f275c437d16e671b0b97de0f1d8f116ae31adec98d2059325b82b96aa6d",
+    "package.json": "a684600bd22363a6c4127c4dd65e95afa1ffe6659b574a5ea74e0e0a3219f3d6",
+    "package-lock.json": "d85a63567c0340a07eed9655cd8ce9d932f4871a0660350e8e0d25739662abf5",
+    "node_modules/convex/package.json": "bafaba6990e5e8107400da04a66dfde18dd7fa81471c123695779d234717f290",
+    "node_modules/convex/dist/esm-types/browser/simple_client.d.ts": "2a151aed5c03891bd4f1ed1e7c2bf7e303a15a0c4183afc19fde2eade49e955a",
+    "node_modules/convex/dist/esm-types/browser/http_client.d.ts": "570332fd29cb77d107d95ffdbe2d0ea583eef2916fd40643071a35dfca51ce73",
+    "node_modules/convex/dist/esm-types/browser/sync/client.d.ts": "b35c469b8508984cd2ddeeb25946a079cf96c2df393daeda8e29ec8f47fcbc72",
+    "node_modules/convex/dist/esm-types/browser/sync/authentication_manager.d.ts": "20f22fcb04eb19bf6a76c250613255b3235e9efd7290acaaacb376a061d14f99",
+    "node_modules/convex/src/browser/sync/authentication_manager.ts": "13fa5fa3d1f4c64e56f28777eb959d314e9698b51c3656edabcfc7fb8a15ecd6",
+    "node_modules/convex/src/browser/sync/local_state.ts": "ebb500c42bd79f6638f8fa31009597a687edb34aedf2a915d5ad4085f7f1f48f",
+    "node_modules/convex/src/browser/sync/web_socket_manager.ts": "9312e27e093abacf79c1ce544861aaf9ae5ef027dc6463e56ea6c0522e7bdfb3"
+  },
+  "runtime": {
+    "node": "v24.19.0",
+    "npm": "11.9.0",
+    "convex": "1.46.0"
+  },
+  "sharedBuildAndPackageGate": "PASS coordinator serial isolated committed-reviewed HEAD6939678 plus exact four-source C1 overlay; npm12.2.0; reviewed-snapshot-package-gate.json. Aggregate current WT/live/root integration remains pending."
+}

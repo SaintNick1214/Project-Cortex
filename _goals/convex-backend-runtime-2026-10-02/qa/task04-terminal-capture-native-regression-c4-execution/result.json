@@ -1,0 +1,269 @@
+{
+  "classification": "NATIVE_EXECUTION_REQUIRES_INDEPENDENT_AGGREGATE_REVIEW",
+  "operation": "b232e951-277c-41a8-be45-0e2208d5ef19",
+  "nativeCaseEvents": [
+    {
+      "phase": "case",
+      "caseId": "parent-distinct-child-fence",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "root-idempotent",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "parent-native-rollback",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "identity-canonical",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "checkpoint-race",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "money-run-race",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "money-tenant-race",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "slot-race",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "known-settlement-race",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "unknown-running-terminal",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "known-overrun",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "collision-canonical",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "fence-grant-version",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "fence-grant-expiry",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "fence-principal-revoke",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "fence-membership-revoke",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "fence-source-edit",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "fence-source-delete",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "fence-policy-revoke",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "fence-qualification-revoke",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "fence-corrupt-counter",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "retired-tenant-overrun",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "retired-space-overrun",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "retired-absence-denial",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "cancel-current",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "fallback-fresh-money",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "fallback-current-query-reserve",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "fallback-postreserve-revoke",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "fallback-postreserve-money",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "held-current-operation",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "held-current-run",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "held-current-tenant",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "held-current-concurrency",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "held-exact-cap",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "fallback-exact-cap",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "visibility-monotone",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "embedding-single-bound",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "agent-selector-denial",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "window-original-liability",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "private-invalid-result",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "known-private-privacy",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "predispatch-compatible-fallback",
+      "status": "PASS"
+    },
+    {
+      "phase": "case",
+      "caseId": "private-byte-exact-bound",
+      "status": "PASS"
+    }
+  ],
+  "journalRows": 4540,
+  "nativeTickets": 2699,
+  "createdRowWitnesses": 736,
+  "deletedRowWitnesses": 736,
+  "qualifierStatuses": [
+    "PASS",
+    "PASS"
+  ],
+  "terminalGroups": [
+    {
+      "spawned": 0,
+      "verifiedTerminalGroups": 0,
+      "remaining": 0
+    },
+    {
+      "spawned": 1,
+      "verifiedTerminalGroups": 1,
+      "remaining": 0
+    }
+  ],
+  "targetRetirement": {
+    "version": 1,
+    "operation": "b232e951-277c-41a8-be45-0e2208d5ef19",
+    "phase": "exact-owned-project-retirement",
+    "status": "PASS",
+    "startedAt": "2026-10-04T08:58:10.205Z",
+    "observedAt": "2026-10-04T08:58:10.744Z",
+    "projectId": 3140351,
+    "deploymentName": "quaint-goldfish-866",
+    "deploymentUrl": "https://quaint-goldfish-866.convex.cloud",
+    "provisionState": "FULLY_VERIFIED",
+    "verifiedOnlyDevelopmentCloudDeployment": true,
+    "deletionHttpStatus": 200,
+    "absentProjectHttpStatus": 404,
+    "managementCalls": 5
+  },
+  "paidInference": 0,
+  "storageCreated": 0,
+  "targetCredentialRemoval": [
+    "deploy.env",
+    "identities.json",
+    "peer-config.json"
+  ],
+  "nativeTask04PASS": false,
+  "profile": "regression",
+  "nestedNativeUpper": 37,
+  "nestedAuthTickets": 28,
+  "nestedParentTickets": 1
+}

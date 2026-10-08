@@ -4,16 +4,16 @@ CLI for installing the Cortex SDK, managing one selected Convex project, and per
 
 ## Installation and compatibility
 
-These examples describe CLI **0.37.0**, with SDK/provider **0.37.0**, Convex **1.46.0**, and the independently versioned `@cortexmemory/templates` **1.0.0** catalog. The CLI requires **Node.js 22.16.0 or newer**. SDK, Python, and application runtime requirements are declared by their own packages; the CLI floor does not change those requirements.
+These examples describe CLI **0.38.0**, with SDK/provider **0.38.0**, Convex **1.46.0**, and the independently versioned `@cortexmemory/templates` **1.1.0** catalog. The CLI requires **Node.js 24.15.0 or newer**. SDK and application runtime requirements are declared by their own packages; the CLI floor does not change those requirements.
 
 ```bash
-npm install -g @cortexmemory/cli@0.37.0
+npm install -g @cortexmemory/cli@0.38.0
 # Or install a matching published release in your project:
-npm install --save-dev @cortexmemory/cli@0.37.0
+npm install --save-dev @cortexmemory/cli@0.38.0
 npx cortex --help
 ```
 
-For an unpublished release, install the matching local SDK/provider/catalog/CLI archives explicitly. SDK installation and update accept `--sdk-package` for a fixed 0.37.0 directory or tarball; template commands also accept `--provider-package` and `--templates-package`. An unavailable registry release is an error; an older SDK is not substituted. CLI native management uses the selected project's installed Convex 1.46.0 executable rather than a global or arbitrary downloaded executable.
+For an unpublished release, install the matching local SDK/provider/catalog/CLI archives explicitly. SDK installation and update accept `--sdk-package` for a fixed 0.38.0 directory or tarball; template commands also accept `--provider-package` and `--templates-package`. An unavailable registry release is an error; an older SDK is not substituted. CLI native management uses the selected project's installed Convex 1.46.0 executable rather than a global or arbitrary downloaded executable.
 
 ## Quick start
 
@@ -50,10 +50,10 @@ Application templates have their own install/update channel. Catalog versions an
 
 ```bash
 cortex templates list --format json
-cortex templates init demo --template vercel-ai-quickstart --template-version 1.1.0 --catalog-version 1.0.0 --yes
-cortex templates init chat --template chat-sdk --template-version 1.1.0 --catalog-version 1.0.0 --yes
-cortex templates update ./demo --to 1.1.0 --catalog-version 1.0.0 --dry-run
-cortex templates update ./demo --to 1.1.0 --catalog-version 1.0.0
+cortex templates init demo --template vercel-ai-quickstart --template-version 1.2.0 --catalog-version 1.1.0 --yes
+cortex templates init chat --template chat-sdk --template-version 1.2.0 --catalog-version 1.1.0 --yes
+cortex templates update ./demo --to 1.2.0 --catalog-version 1.1.0 --dry-run
+cortex templates update ./demo --to 1.2.0 --catalog-version 1.1.0
 ```
 
 Supported IDs are `basic`, `vercel-ai-quickstart`, and `chat-sdk`. Basic requires npm 11 or newer; Vercel uses npm and Chat uses its declared pnpm manager. Configure the generated app's server credentials, origin, model provider, and backend using its README before starting the app. Foreground `cortex dev` manages Convex; run the application's own development script separately. The generated manifests declare each app's runtime dependencies; a successful build does not certify every possible version permitted by a dependency range.
@@ -77,8 +77,8 @@ For the recognized prior Next app shim that lacks `MutationCtx`, update the app/
 SDK dependency updates, template updates, and graph container lifecycle are separate operations.
 
 ```bash
-cortex update -d local --sdk-version 0.37.0 --convex-version 1.46.0 --sync --dry-run
-cortex update -d local --sdk-version 0.37.0 --convex-version 1.46.0 --sync --yes
+cortex update -d local --sdk-version 0.38.0 --convex-version 1.46.0 --sync --dry-run
+cortex update -d local --sdk-version 0.38.0 --convex-version 1.46.0 --sync --yes
 cortex schema status .
 cortex schema sync . --dry-run
 cortex schema sync .
@@ -87,7 +87,7 @@ cortex schema migrate -d local --dry-run --format json
 cortex schema migrate -d local --format json
 ```
 
-`update` defaults to the pinned SDK 0.37.0/Convex 1.46.0 pair. `convex update` is an alias with the same target/options. `--sync` explicitly synchronizes the owned SDK backend after dependency application. Without it, dependency changes do not imply a backend push. `schema status` inspects installed source; `schema sync` respects the configured functions directory, ownership, and user-edit conflicts. `--overwrite` explicitly backs up and replaces conflicting backend files only. Known canonical Next/Chat layouts use the supported composition; unrelated schemas are not merged by guessing.
+`update` defaults to the pinned SDK 0.38.0/Convex 1.46.0 pair. `convex update` is an alias with the same target/options. `--sync` explicitly synchronizes the owned SDK backend after dependency application. Without it, dependency changes do not imply a backend push. `schema status` inspects installed source; `schema sync` respects the configured functions directory, ownership, and user-edit conflicts. `--overwrite` explicitly backs up and replaces conflicting backend files only. Known canonical Next/Chat layouts use the supported composition; unrelated schemas are not merged by guessing.
 
 `schema references` reports deployed reference coverage. `schema migrate` explicitly resumes the supported backfill, using fixed deployment administrator authority; its dry-run reads the plan without deployment writes. Installation/status/help do not start migration. Operational tables `cortexReferenceTargets`, `cortexReferenceEdges`, `cortexReferenceState`, and `cortexErasureReceipts` hold reference/provenance/control state; they are disclosed exclusions from the user-content export, not additional user-content families.
 
@@ -107,7 +107,7 @@ cortex templates init graph-demo --template basic --graph neo4j --graph-mode loc
 
 Credentials come from the selected provider's environment, private prompts, or `--graph-credentials` on SDK/graph setup. Keep the credential JSON private (mode 0600); URIs must be credential-free. SDK/graph setup exposes `--graph-bolt-port` and `--graph-http-port`; template initialization exposes `--bolt-port` and `--http-port`. `--skip-graph` selects none and conflicts with an enabled `--graph` choice.
 
-Existing-service setup probes readiness without graph-data mutation. Local start/stop acts only on the selected project's validated ownership; stop preserves data volumes. Existing-service start/stop is refused. No unrelated containers or processes are discovered or killed. Missing Docker, bad credentials, and unavailable enabled graphs fail explicitly. The SDK/provider runtime graph resolver and Python graph configuration remain supported; stopping a container is not an SDK or template update.
+Existing-service setup probes readiness without graph-data mutation. Local start/stop acts only on the selected project's validated ownership; stop preserves data volumes. Existing-service start/stop is refused. No unrelated containers or processes are discovered or killed. Missing Docker, bad credentials, and unavailable enabled graphs fail explicitly. The SDK/provider runtime graph resolver remains supported; stopping a container is not an SDK or template update.
 
 ## Target selection and caller scope
 
@@ -129,7 +129,7 @@ Ordinary SDK operations select `-d`, then project-scoped `cortex use`, then conf
 
 Common global options are `-d/--deployment`, `-f/--format`, `--quiet`, `--debug`, `--scope-user`, `--tenant`, and `--graph-sync auto|off|required`. Formats depend on the leaf: ordinary output uses table/json/csv, memory/facts export uses json/csv, conversation export uses json/txt, and complete user export uses json only. Short flags may belong to a leaf; use long flags when their meaning could be ambiguous. URL/key flags are configuration-command options, not universal endpoint overrides.
 
-For ordinary operations, `--scope-user` supplies caller context and `--tenant` requires that explicit caller. Target IDs and `--user` filters do not authenticate the caller. A deployment key grants administrator transport, not a fabricated tenant JWT. `--graph-sync off` disables optional CLI graph work; `required` refuses missing graph configuration, and `auto` uses the selected project's configured graph while reporting configured connection failures.
+For ordinary operations, `--scope-user` supplies caller context and `--tenant` requires that explicit caller. Target IDs and `--user` filters do not authenticate the caller. A selected deployment key grants administrator transport to fixed internal `cliOperator` services; it does not supply a tenant JWT or bypass public runtime authority checks. Public SDK paths retain verified authorization. Runtime-owned rows cannot be changed through the legacy administrative services. `--graph-sync off` disables optional CLI graph work; `required` refuses missing graph configuration, and `auto` uses the selected project's configured graph while reporting configured connection failures.
 
 ## Memory, facts, and conversations
 
@@ -194,7 +194,7 @@ cortex db import snapshot.zip -d local --append --yes
 
 Native ZIP export includes deployment tables and optionally stored file bytes. It excludes application code, configuration, environment variables, pending schedules, and external graph data. The output must be a new `.zip` path. Import requires an explicit target, exactly one of `--append`, `--replace`, or `--replace-all`, and `--yes`. Append requires matching table IDs; replace replaces tables present in the snapshot, and replace-all can clear tables absent from it. Native import has no dry-run.
 
-Import refuses lifecycle-bearing archives, lifecycle-capable installed schemas, and destinations with deployed reference lifecycle tables before mutation. A ZIP export of the current lifecycle backend is therefore not a supported round-trip restore. Protected snapshot create/status/resume/release/stop/discard and `--restore-bundle`, `--restore-session`, and `--provenance` are unsupported and refuse; they do not fall back to unsafe native import.
+Import refuses archives, installed schemas, and deployed destinations containing reference lifecycle tables or protected runtime auth, source, model policy, and operation tables before mutation. A ZIP export of the current lifecycle backend is therefore not a supported round-trip restore. Protected snapshot create/status/resume/release/stop/discard and `--restore-bundle`, `--restore-session`, and `--provenance` are unsupported and refuse; they do not fall back to unsafe native import.
 
 ## Migration from earlier CLI behavior
 

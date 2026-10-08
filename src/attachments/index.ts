@@ -12,8 +12,11 @@
  * - Multi-tenancy support
  */
 
+import { isDeploymentOperatorClient } from "../common/deploymentOperator";
+import { AssetCapabilityUnavailableError } from "../assets/errors";
+import { resolveTenantId } from "../auth/tenant";
 import type { ConvexClient } from "convex/browser";
-import { api } from "../../convex-dev/_generated/api";
+import { api } from "../common/backendApi";
 import type {
   Attachment,
   AttachParams,
@@ -84,32 +87,15 @@ export class AttachmentsAPI {
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   /**
-   * Generate a pre-signed upload URL for file upload.
+   * Asset upload and delivery require a qualified authenticated backend capability.
+   * This intermediate SDK rejects with AssetCapabilityUnavailableError before
+   * transport or file processing; no bearer URL or upload result is returned.
+   * Future support uses bounded authenticated Convex upload and delivery.
    *
-   * This method creates a short-lived upload URL that clients can use
-   * to upload files directly to Convex storage.
-   *
-   * @example
-   * ```typescript
-   * const { uploadUrl } = await cortex.attachments.generateUploadUrl();
-   *
-   * // Client uploads file to uploadUrl via POST
-   * const response = await fetch(uploadUrl, { method: 'POST', body: file });
-   * const { storageId } = await response.json();
-   *
-   * // Then register the attachment
-   * await cortex.attachments.attach({
-   *   storageId,
-   *   memorySpaceId: 'my-space',
-   *   userId: 'user-123',
-   *   type: 'image',
-   *   mimeType: 'image/png',
-   *   filename: 'photo.png',
-   *   size: file.size,
-   * });
-   * ```
+   * @throws AssetCapabilityUnavailableError with CAPABILITY_UNAVAILABLE
    */
   async generateUploadUrl(): Promise<UploadUrlResult> {
+    if (!isDeploymentOperatorClient(this.client)) throw new AssetCapabilityUnavailableError();
     const result = await this.executeWithResilience(
       () => this.client.mutation(api.attachments.generateUploadUrl, {
         tenantId: this.authContext?.tenantId,
@@ -162,7 +148,7 @@ export class AttachmentsAPI {
             dimensions: params.dimensions,
             duration: params.duration,
             metadata: params.metadata,
-            tenantId: params.tenantId ?? this.authContext?.tenantId,
+            tenantId: resolveTenantId(this.authContext?.tenantId, params.tenantId),
           }),
         "attachments:attach",
       );
@@ -205,21 +191,15 @@ export class AttachmentsAPI {
   }
 
   /**
-   * Get a signed download URL for an attachment.
+   * Asset upload and delivery require a qualified authenticated backend capability.
+   * This intermediate SDK rejects with AssetCapabilityUnavailableError before
+   * transport or file processing; no bearer URL or upload result is returned.
+   * Future support uses bounded authenticated Convex upload and delivery.
    *
-   * The URL is temporary and will expire. Use it immediately to display
-   * or download the file.
-   *
-   * @example
-   * ```typescript
-   * const url = await cortex.attachments.getUrl('attach-abc123');
-   * if (url) {
-   *   // Display image or download file
-   *   window.open(url);
-   * }
-   * ```
+   * @throws AssetCapabilityUnavailableError with CAPABILITY_UNAVAILABLE
    */
   async getUrl(attachmentId: string): Promise<string | null> {
+    if (!isDeploymentOperatorClient(this.client)) throw new AssetCapabilityUnavailableError();
     // Client-side validation
     validateAttachmentId(attachmentId);
 
@@ -268,7 +248,7 @@ export class AttachmentsAPI {
       () =>
         this.client.query(api.attachments.list, {
           memorySpaceId: filter.memorySpaceId,
-          tenantId: filter.tenantId ?? this.authContext?.tenantId,
+          tenantId: resolveTenantId(this.authContext?.tenantId, filter.tenantId),
           conversationId: filter.conversationId,
           messageId: filter.messageId,
           memoryId: filter.memoryId,
@@ -364,7 +344,7 @@ export class AttachmentsAPI {
       () =>
         this.client.query(api.attachments.count, {
           memorySpaceId: filter.memorySpaceId,
-          tenantId: filter.tenantId ?? this.authContext?.tenantId,
+          tenantId: resolveTenantId(this.authContext?.tenantId, filter.tenantId),
           conversationId: filter.conversationId,
           messageId: filter.messageId,
           userId: filter.userId,

@@ -1,0 +1,32 @@
+_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/client.ts:267:      if (late) { lateResolve = undefined; mode = "late"; sdk.credentials!.notifySessionChanged(); await waitFor(() => lateResolve !== undefined); }
+_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/client.ts:269:      mode = "current"; currentToken = null; sdk.credentials!.notifySessionChanged();
+_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/client.ts:285:    currentToken = await jwt(principal.subject); sdk.credentials!.notifySessionChanged();
+_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/client.ts:301:    mode = "current"; currentToken = await jwt(principal.subject); sdk.credentials!.notifySessionChanged();
+_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/client.ts:304:  await test("sanitized-host-callback", async () => {
+_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/client.ts:305:    mode = "throw"; sdk.credentials!.notifySessionChanged(); await waitFor(() => callbackCodes.length > 0);
+_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/client.ts:309:    mode = "current"; currentToken = await jwt(principal.subject); sdk.credentials!.notifySessionChanged();
+_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/client.ts:315:    catch (error) { assert(error instanceof SessionCapabilityError); assert.equal(error.outcome, "not_dispatched"); assert.equal(error.code, "BACKEND_MAINTENANCE_ONLY"); }
+_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/client.ts:318:  await test("session-end-not-grant-revocation", async () => {
+_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/client.ts:322:  }, ["sdk-metadata-consumers", "sanitized-host-callback"]);
+node_modules/convex/src/browser/simple_client.ts:336:        const result = this.paginatedClient.localQueryResult(
+node_modules/convex/src/browser/simple_client.ts:549:    const value = this.client.localQueryResult(getFunctionName(query), args) as
+node_modules/convex/src/browser/sync/client.ts:673:    void this.authenticationManager.setConfig(
+node_modules/convex/src/browser/sync/client.ts:742:  localQueryResult(
+node_modules/convex/src/browser/sync/client.ts:748:    return this.optimisticQueryResults.queryResult(queryToken);
+node_modules/convex/src/browser/sync/client.ts:760:    return this.optimisticQueryResults.queryResult(queryToken);
+node_modules/convex/src/browser/sync/client.ts:1155:  localQueryResult(
+node_modules/convex/src/browser/sync/optimistic_updates_impl.ts:231:  queryResult(queryToken: QueryToken): Value | undefined {
+.agents/skills/feature-orchestrator/SKILL.md:64:For QA issues: create bounded fixes, delegate implementation, rejudge, and rerun the
+node_modules/convex/src/browser/sync/authentication_manager.ts:150:  async setConfig(
+node_modules/convex/src/browser/sync/authentication_manager.ts:294:      // setConfig() or stop() ran during the await.
+node_modules/convex/src/browser/sync/authentication_manager.ts:410:      // when the client is ahead and negative when behind. To recover
+src/auth/credentials.ts:99:    this.configureReactiveAuth(client, false);
+src/auth/credentials.ts:109:  notifySessionChanged(): void {
+src/auth/credentials.ts:118:    this.configureReactiveAuth(client, true);
+src/auth/credentials.ts:121:  private configureReactiveAuth(
+_goals/convex-backend-runtime-2026-10-02/qa/task03c1/contracts.md:24:cortex.credentials?.notifySessionChanged();
+_goals/convex-backend-runtime-2026-10-02/qa/task03c1/contracts.md:51:binding throws. A closed transport cannot be bound. `notifySessionChanged` calls
+_goals/convex-backend-runtime-2026-10-02/qa/task03c1/contracts.md:71:clearing or overwriting a newer diagnostic or recovered session. An auth-status true
+_goals/convex-backend-runtime-2026-10-02/qa/task03c1/contracts.md:99:Authenticate(None), recovery, null/logout/login, server-rejected-token refresh,
+_goals/convex-backend-runtime-2026-10-02/qa/task03c1/contracts.md:112:After host logout the getter returns `null`; the host calls `notifySessionChanged`
+src/sessions/index.ts:47:  readonly code = "BACKEND_MAINTENANCE_ONLY";

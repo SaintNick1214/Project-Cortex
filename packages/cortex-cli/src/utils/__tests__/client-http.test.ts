@@ -59,6 +59,28 @@ describe("keyed CLI official HTTP transport", () => {
     const fresh = await createClient(config,{}); expect(fresh.getClient()).toBe(instances[1].transport); expect(instances).toHaveLength(2);
     await closeClient(); expect(instances[1].close).toHaveBeenCalledTimes(1);
   });
+  it.each([
+    ["query", "memories:domainPage", "cliOperator/memories:domainPage"],
+    ["mutation", "facts:deleteMany", "cliOperator/facts:deleteMany"],
+    ["action", "facts:semanticSearch", "cliOperator/facts:semanticSearch"],
+    ["query", "immutable:get", "cliOperator/immutable:get"],
+    ["query", "factHistory:getOperationReceipt", "cliOperator/factHistory:getOperationReceipt"],
+    ["query", "graphSync:getGraphJob", "cliOperator/graphSync:getGraphJob"],
+    ["query", "referenceMaintenance:status", "referenceMaintenance:status"],
+    ["query", "runtimeAuth:status", "runtimeAuth:status"],
+  ] as const)("routes keyed %s %s to the selected internal operator contract", async (kind, name, expected) => {
+    const transport = (await createClient(config,{})).getClient();
+    if (kind === "query") await transport.query(makeFunctionReference<"query">(name), { tenantId: "selected-tenant" });
+    else if (kind === "mutation") await transport.mutation(makeFunctionReference<"mutation">(name), { tenantId: "selected-tenant" });
+    else await transport.action(makeFunctionReference<"action">(name), { tenantId: "selected-tenant" });
+    const [url, init] = fetchMock.mock.calls[0];
+    expect(url).toBe(`${config.deployments.owned.url}/api/function`);
+    expect(JSON.parse(init?.body as string)).toMatchObject({path: expected, args: {tenantId: "selected-tenant"}});
+    expect(init?.headers).toEqual(expect.objectContaining({Authorization: "Convex selected-private-key"}));
+    expect(instances[0].wsQuery).not.toHaveBeenCalled();
+    expect(instances[0].wsMutation).not.toHaveBeenCalled();
+    expect(instances[0].wsAction).not.toHaveBeenCalled();
+  });
   it("leaves keyless public access on its original transport",async () => {
     const keyless = {...config,deployments: {owned: {url: config.deployments.owned.url}}};
     expect(await withClient(keyless,{},async () => "public")).toBe("public");
@@ -80,7 +102,7 @@ describe("keyed CLI official HTTP transport", () => {
     expect(callback).toHaveBeenCalledTimes(1);
     expect(fetchMock).toHaveBeenCalledTimes(2);
     for(const [,init] of fetchMock.mock.calls) expect(init?.headers).toEqual(expect.objectContaining({Authorization: "Convex selected-private-key"}));
-    expect(fetchMock.mock.calls[1][0]).toBe(`${config.deployments.owned.url}/api/${kind}`);
+    expect(fetchMock.mock.calls[1][0]).toBe(`${config.deployments.owned.url}/api/function`);
     expect(instances[0].wsQuery).not.toHaveBeenCalled();expect(instances[0].wsMutation).not.toHaveBeenCalled();expect(instances[0].wsAction).not.toHaveBeenCalled();
     expect(instances[0].close).toHaveBeenCalledTimes(1);
   });
@@ -91,7 +113,7 @@ describe("keyed CLI official HTTP transport", () => {
     const result = kind === "query" ? await transport.query(queryRef,value) : kind === "mutation" ? await transport.mutation(mutationRef,value) : await transport.action(actionRef,value);
     expect(convexToJson(result)).toEqual(convexToJson(value));
     const body = JSON.parse(fetchMock.mock.calls[0][1]?.body as string);
-    expect(body.format).toBe("convex_encoded_json"); expect(body.args).toEqual([convexToJson(value)]);
+    expect(body.format).toBe("convex_encoded_json"); expect(body.args).toEqual(convexToJson(value));
     expect(fetchMock.mock.calls[0][1]?.headers).toEqual(expect.objectContaining({Authorization: "Convex selected-private-key"}));
   });
   it("aborts active HTTP and joins original close without replay",async () => {

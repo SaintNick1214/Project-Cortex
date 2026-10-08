@@ -1,0 +1,39 @@
+{
+  "utc": "2026-10-04T08:18:05.066706+00:00",
+  "scope": "Immutable independently accepted historical Gateway catalog and CI/transfer observations; QA only",
+  "paths": 4587,
+  "uniqueUploaded": 4055,
+  "bytesNew": 111487096,
+  "treeCalls": 46,
+  "parent": "efc527a08217bc3ca3d636077e599d8e1cbdddc7",
+  "tree": "8b0f8ee352f32328a2b1e4bf7b217e0a478974e0",
+  "commit": "63eb5f8169b909ff3ab9e43fbbacd9cd9f86e816",
+  "refUpdate": "fast-forward force=false success",
+  "verifiedPr": {
+    "head": "63eb5f8169b909ff3ab9e43fbbacd9cd9f86e816",
+    "state": "open",
+    "draft": true,
+    "base": "dev"
+  },
+  "localHead": "dee3308d351fb609b8a969fcd7f040fb0556e183",
+  "localSync": "Not performed: CLI authentication unavailable; independent temporary-index proof",
+  "signing": "Unsigned connector commit; signature gate incomplete",
+  "transientFailures": "Two server-disconnected blob attempts preserved; bounded idempotent retries succeeded; zero final failed uploads",
+  "firstFailureEvidence": "task04-connector-transfer-15-upload-failure-01.json",
+  "treeProof": {
+    "startedAt": "2026-10-04T07:45:19.046736+00:00",
+    "endedAt": "2026-10-04T07:45:29.833793+00:00",
+    "status": "LOCAL_FROZEN_QA_TREE_EXPECTATION",
+    "paths": 4587,
+    "uniqueBlobs": 4368,
+    "tree": "8b0f8ee352f32328a2b1e4bf7b217e0a478974e0",
+    "remoteParentCommit": "efc527a08217bc3ca3d636077e599d8e1cbdddc7",
+    "remoteBaseTree": "4f49fff2361f6b5a4118e10eee7b1bd3c1554395",
+    "localHead": "dee3308d351fb609b8a969fcd7f040fb0556e183",
+    "commitObjectNotAvailableLocally": true,
+    "liveIndexAndWorkingFilesUnchanged": true,
+    "scratchIndex": "/workspace/Project-Cortex/work/resume/transfer-15-4f33d05eec11405485a3fd7a591533a3.index",
+    "sourcePlanSHA256": "84f2a48672536ee000d80c07348c5ae14c308c416d28a20c21d96be010fc1159"
+  },
+  "receiptWritingIncident": "Initial JSON bridge double-parse returned dict to write_text and raised TypeError; no file written; corrected dict JSON serialization."
+}

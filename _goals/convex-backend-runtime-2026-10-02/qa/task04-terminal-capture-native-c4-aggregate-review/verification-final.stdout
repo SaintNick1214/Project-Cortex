@@ -1,0 +1,77 @@
+{
+  "manifestRows": [
+    1057,
+    5039,
+    247,
+    74,
+    207,
+    3,
+    2761
+  ],
+  "journals": [
+    [
+      4364,
+      {
+        "published-arguments-equal": 1,
+        "rpc-complete": 935,
+        "outcome-asserted": 22,
+        "rpc-rejected": 1630,
+        "nonempty-public-control": 1,
+        "authorization-denied": 1400,
+        "whole-state-equal": 200,
+        "published-internal-inaccessible": 174,
+        "null": 1
+      }
+    ],
+    [
+      16,
+      {
+        "published-arguments-equal": 1,
+        "rpc-complete": 11,
+        "rpc-rejected": 3,
+        "null": 1
+      }
+    ]
+  ],
+  "ownership": {
+    "created": 411,
+    "deleted": 411,
+    "tables": {
+      "runtimeAuthPrincipals": 30,
+      "runtimeAuthMemberships": 30,
+      "runtimeModelPolicies": 44,
+      "runtimeModelAttempts": 27,
+      "runtimeAuthGrants": 60,
+      "runtimeMemorySources": 30,
+      "runtimeAuthScopes": 60,
+      "runtimeBudgetAccounts": 54,
+      "runtimeModelQualifications": 44,
+      "runtimeModelOperations": 27,
+      "runtimeAuthTombstones": 3,
+      "mutable": 1,
+      "qaAdmissionPeerEffects": 1
+    }
+  },
+  "publications": [
+    {
+      "phase": "synthetic",
+      "bundleSHA256": "280ad3d6d3e369bc567c1fc9864548bac3335b81113875753b60f9dacfb856ac",
+      "functions": 287,
+      "visibility": {
+        "public": 200,
+        "internal": 87
+      },
+      "codegenPASS": true
+    },
+    {
+      "phase": "empty",
+      "bundleSHA256": "aa8a5d9a6b11afbbd052fba28cd70cf20b9879c1330637dfff0228168c537ff4",
+      "functions": 287,
+      "visibility": {
+        "public": 200,
+        "internal": 87
+      },
+      "codegenPASS": true
+    }
+  ]
+}

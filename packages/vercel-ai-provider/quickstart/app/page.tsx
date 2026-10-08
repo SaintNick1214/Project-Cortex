@@ -51,11 +51,9 @@ const ChatHistorySidebar = dynamic(
 
 function MainContent() {
   const { isLoading, isAdminSetup, isAuthenticated, user, error } = useAuth();
-  const [memorySpaceId, setMemorySpaceId] = useState("");
-  useEffect(() => {
-    setMemorySpaceId(user?.allowedMemorySpaceIds[0] || "");
-    setCurrentConversationId(null);
-  }, [user?.id]);
+  const [memorySpaceId, setMemorySpaceId] = useState(
+    () => user?.allowedMemorySpaceIds[0] || "",
+  );
   const [currentConversationId, setCurrentConversationId] = useState<
     string | null
   >(null);
@@ -181,7 +179,7 @@ function MainContent() {
             userId={userId}
             conversationId={currentConversationId}
             apiEndpoint={
-              versions?.aiSdkMajor === 6 ? "/api/chat-v6" : "/api/chat"
+              (versions?.aiSdkMajor ?? 0) >= 6 ? "/api/chat-v6" : "/api/chat"
             }
             onOrchestrationStart={startOrchestration}
             onLayerUpdate={updateLayer}
@@ -222,7 +220,7 @@ function MainContent() {
             </span>
             <span>•</span>
             <span>Vercel AI SDK {versions?.aiSdk ?? "..."}</span>
-            {versions?.aiSdkMajor === 6 && (
+            {(versions?.aiSdkMajor ?? 0) >= 6 && (
               <>
                 <span>•</span>
                 <span className="text-cortex-400">Using ToolLoopAgent</span>
@@ -247,10 +245,16 @@ function MainContent() {
 // Page Component (wraps with AuthProvider)
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
+/** A changed verified account gets fresh chat, space and layer state immediately. */
+function AccountContent() {
+  const { user } = useAuth();
+  return <MainContent key={user?.id || "unauthenticated"} />;
+}
+
 export default function Home() {
   return (
     <AuthProvider>
-      <MainContent />
+      <AccountContent />
     </AuthProvider>
   );
 }

@@ -1,0 +1,24 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: principalId
+    at validate (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation/scripts/offline-arguments-check.mjs:11:219)
+    at validate (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation/scripts/offline-arguments-check.mjs:11:252)
+    at file:///workspace/Project-Cortex/work/resume/current-guard-prep-judge/family-schema-probe.mjs:10:51
+    at Array.map (<anonymous>)
+    at ctx.seed (file:///workspace/Project-Cortex/work/resume/current-guard-prep-judge/family-schema-probe.mjs:10:41)
+    at rows (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation/cases/metadata-worker-domain.mjs:25:47)
+    at metadataRows (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation/cases/metadata-worker-domain.mjs:39:25)
+    at collectOfflineFixtureRows (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation/cases/metadata-worker-domain.mjs:264:9)
+    at file:///workspace/Project-Cortex/work/resume/current-guard-prep-judge/family-schema-probe.mjs:12:7
+    at ModuleJob.run (node:internal/modules/esm/module_job:439:25) {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

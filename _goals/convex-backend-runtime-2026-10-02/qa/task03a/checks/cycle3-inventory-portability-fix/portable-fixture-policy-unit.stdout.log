@@ -1,0 +1,136 @@
+  console.error
+    ◇ injected env (0) from .env.test
+
+      13 | import dotenv from "dotenv";
+      14 | import { resolve } from "path";
+    > 15 |
+         | ^
+      16 | // Load .env.test first (test defaults)
+      17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+      18 |
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:15:8
+
+  console.error
+    ◇ injected env (0) from .env.local
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+  console.log
+
+    🧪 Testing against LOCAL Convex: http://127.0.0.1:1
+
+      at tests/env.ts:35:13
+
+  console.log
+       Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:36:13
+
+  console.log
+
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:121:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:122:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:123:13
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     2.8s | 64/64 passed | /tests/unit/runtimeAuth/inventory.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.24s ( 8.1%) - portable generated inventory policies: /workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs accepts changed source bytes and an additional registration without coupling policy to frozen production hashes/counts
+    /tests/unit/runtimeAuth/inventory.test.ts
+
+ 2. [32m✓[0m    0.24s ( 8.0%) - portable generated inventory policies: /workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs accepts changed source bytes and an additional registration without coupling policy to frozen production hashes/counts
+    /tests/unit/runtimeAuth/inventory.test.ts
+
+ 3. [32m✓[0m    0.00s ( 0.0%) - portable generated inventory policies: /workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs facts:fetchFactsByIds remains a scoped internal read helper
+    /tests/unit/runtimeAuth/inventory.test.ts
+
+ 4. [32m✓[0m    0.00s ( 0.0%) - portable generated inventory policies: /workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs memories:fetchMemoriesByIds remains a scoped internal read helper
+    /tests/unit/runtimeAuth/inventory.test.ts
+
+ 5. [32m✓[0m    0.00s ( 0.0%) - portable generated inventory policies: /workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs admin:listTable requires operator maintenance without a target runtime grant
+    /tests/unit/runtimeAuth/inventory.test.ts
+
+ 6. [32m✓[0m    0.00s ( 0.0%) - portable generated inventory policies: /workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs admin:clearTable requires operator maintenance without a target runtime grant
+    /tests/unit/runtimeAuth/inventory.test.ts
+
+ 7. [32m✓[0m    0.00s ( 0.0%) - portable generated inventory policies: /workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs agents:purgeAll requires operator maintenance without a target runtime grant
+    /tests/unit/runtimeAuth/inventory.test.ts
+
+ 8. [32m✓[0m    0.00s ( 0.0%) - portable generated inventory policies: /workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs recheck uses requested capability and exact persisted versions/epochs/optional scope
+    /tests/unit/runtimeAuth/inventory.test.ts
+
+ 9. [32m✓[0m    0.00s ( 0.0%) - portable generated inventory policies: /workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs runtimeAuth:deleteScope is a deployment operator control
+    /tests/unit/runtimeAuth/inventory.test.ts
+
+10. [32m✓[0m    0.00s ( 0.0%) - portable generated inventory policies: /workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs keeps ordinary memories:store available through scoped write grants
+    /tests/unit/runtimeAuth/inventory.test.ts
+
+11. [32m✓[0m    0.00s ( 0.0%) - portable generated inventory policies: /workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs memories:fetchMemoriesByIds remains a scoped internal read helper
+    /tests/unit/runtimeAuth/inventory.test.ts
+
+12. [32m✓[0m    0.00s ( 0.0%) - portable generated inventory policies: /workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs artifacts:purgeAll requires operator maintenance without a target runtime grant
+    /tests/unit/runtimeAuth/inventory.test.ts
+
+13. [32m✓[0m    0.00s ( 0.0%) - portable generated inventory policies: /workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs facts:purgeAll requires operator maintenance without a target runtime grant
+    /tests/unit/runtimeAuth/inventory.test.ts
+
+14. [32m✓[0m    0.00s ( 0.0%) - portable generated inventory policies: /workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs mutable:purgeAll requires operator maintenance without a target runtime grant
+    /tests/unit/runtimeAuth/inventory.test.ts
+
+15. [32m✓[0m    0.00s ( 0.0%) - portable generated inventory policies: /workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs runtimeAuth:revokeGrant is a deployment operator control
+    /tests/unit/runtimeAuth/inventory.test.ts
+
+16. [32m✓[0m    0.00s ( 0.0%) - portable generated inventory policies: /workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs keeps ordinary facts:get available through scoped read grants
+    /tests/unit/runtimeAuth/inventory.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.49s (16.6% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      2.94s
+  Test suites:        1
+  Individual tests:   16
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════

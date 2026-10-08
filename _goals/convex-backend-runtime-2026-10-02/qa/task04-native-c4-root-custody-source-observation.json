@@ -1,0 +1,11 @@
+{
+  "utc": "2026-10-04T15:00:43.196097+00:00",
+  "status": "SOURCE_OBSERVATION_NOT_GATE_ACCEPTANCE",
+  "sourceRead": {
+    "guard": "task04-model-drift-native-extra-preparation-c4/scripts/guard.mjs:56-74",
+    "ownership": "task04-model-drift-native-extra-preparation-c4/scripts/ownership.mjs full"
+  },
+  "confirmed": "creationAcknowledge state2 only adds process-local memory set; ownership.track EEXIST verifies matching operation/table/id via readable JSON without fsync. A prior complete marker/ID receipt whose fsync failed can therefore be read without new durable sync. Independent SOURCE/PARENT full composition probes remain authoritative pending frozen reports.",
+  "unchangedConstraints": "Unknown P markers remainHELD; no timeout/quiescence/empty snapshot closure; no retry/refund/capreset/source-tier adoption/native action.",
+  "limits": "Read-only source inspection; guessed rpc-ledger/native-http-client paths did not exist, tool errors retained. Broad rg long-line output truncated and not claimed fully read; exact scoped guard and fullownership reread."
+}

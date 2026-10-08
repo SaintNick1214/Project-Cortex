@@ -13,13 +13,12 @@
 [Semgrep](https://github.com/SaintNick1214/Project-Cortex/actions/workflows/security.yml)
 [Trivy](https://github.com/SaintNick1214/Project-Cortex/actions/workflows/security.yml)
 [Gitleaks](https://github.com/SaintNick1214/Project-Cortex/actions/workflows/security.yml)
-[Bandit](https://github.com/SaintNick1214/Project-Cortex/actions/workflows/security.yml)
 [OpenSSF Scorecard](https://scorecard.dev/viewer/?uri=github.com/SaintNick1214/Project-Cortex)
 
 ### ✅ Build & Tests
 
 [TypeScript SDK](https://github.com/SaintNick1214/Project-Cortex/actions/workflows/pr-checks.yml)
-[Python SDK](https://github.com/SaintNick1214/Project-Cortex/actions/workflows/pr-checks.yml)
+[Archived Python SDK](_DEPRECATED/cortex-sdk-python)
 [Vercel AI Provider](https://github.com/SaintNick1214/Project-Cortex/actions/workflows/pr-checks.yml)
 [Socket.dev](https://socket.dev/npm/package/@cortexmemory/sdk)
 
@@ -27,9 +26,9 @@
 
 ## 🚀 Package versions
 
-This checkout declares **0.37.0** for the TypeScript SDK, Python SDK, CLI, and Vercel AI provider. Application templates declare **1.1.0**; their independent `@cortexmemory/templates` catalog declares **1.0.0**. Registry publication and installed-package compatibility are separate from source version numbers. Use a matching released package set, or matching local archives when evaluating an unpublished release.
+This checkout declares **0.38.0** for the TypeScript SDK, CLI, and Vercel AI provider. Application templates declare **1.2.0**; their independent `@cortexmemory/templates` catalog declares **1.1.0**. The retired Python SDK remains archived under `_DEPRECATED/`. Registry publication and installed-package compatibility are separate from source version numbers. Use a matching released package set, or matching local archives when evaluating an unpublished release.
 
-The CLI requires **Node.js 22.16.0 or newer** and uses **Convex 1.46.0** for native installation/management. Other packages keep their own declared runtime requirements. See the [CLI README](packages/cortex-cli/README.md) for target selection, supported operations, and migration instructions.
+The CLI requires **Node.js 24.15.0 or newer** and uses **Convex 1.46.0** for native installation/management. Other packages keep their own declared runtime requirements. See the [CLI README](packages/cortex-cli/README.md) for target selection, supported operations, and migration instructions.
 
 **Want to follow along?**
 
@@ -58,7 +57,7 @@ A unified memory system that gives you everything in one package - production-re
 
 ```bash
 # Install the matching published CLI release
-npm install -g @cortexmemory/cli@0.37.0
+npm install -g @cortexmemory/cli@0.38.0
 
 # Create a basic SDK project with anonymous local Convex setup
 cortex init my-agent --template basic --local --yes --graph none
@@ -81,7 +80,7 @@ SDK updates, application template updates, and graph start/stop are separate ope
 ```bash
 # Select an application through the independent template catalog
 cortex templates list --format json
-cortex templates init demo --template vercel-ai-quickstart --template-version 1.1.0 --catalog-version 1.0.0 --yes
+cortex templates init demo --template vercel-ai-quickstart --template-version 1.2.0 --catalog-version 1.1.0 --yes
 cd demo
 
 # Configure the generated README's server credentials, origin, and model settings
@@ -90,7 +89,7 @@ npm run convex:dev
 npm run dev
 ```
 
-The catalog also supports `basic` and `chat-sdk`; Chat uses its declared pnpm manager. Use `cortex templates update ./demo --to 1.1.0 --catalog-version 1.0.0 --dry-run` to review a recorded template update. User edits and missing ownership require resolution before apply.
+The catalog also supports `basic` and `chat-sdk`; Chat uses its declared pnpm manager. Use `cortex templates update ./demo --to 1.2.0 --catalog-version 1.1.0 --dry-run` to review a recorded template update. User edits and missing ownership require resolution before apply.
 
 For a recognized prior Next app shim lacking `MutationCtx`, update the app/template shim (and corresponding Chat handler) first, then apply the SDK backend update. SDK schema composition refuses incompatible or conflicting app files. The [CLI README](packages/cortex-cli/README.md#application-templates) explains the order and ownership boundary. For monorepo development, follow the [canonical quickstart README](packages/vercel-ai-provider/quickstart/README.md).
 
@@ -101,8 +100,11 @@ The demo includes streaming chat, memory orchestration visualization, memory-spa
 ```typescript
 import { Cortex } from "@cortexmemory/sdk";
 
+// Supply a host-issued Convex JWT for a principal with stored scope grants.
 const cortex = new Cortex({
   convexUrl: process.env.CONVEX_URL!,
+  fetchAuthToken: async () => process.env.CONVEX_AUTH_TOKEN ?? null,
+  auth: { tenantId: "my-app", userId: "user-123" },
 });
 
 // Store a memory
@@ -122,7 +124,11 @@ const results = await cortex.memory.search(
 );
 ```
 
-**That's it!** Your AI agent now has persistent memory.
+The public SDK transport requires a verified host JWT and stored grants for the selected
+scope; `auth` labels alone do not authenticate. Configure the host's Convex `auth.config.ts`
+and token refresh before use. Generated apps use an explicit server-only deployment
+administrator transport for legacy SDK data. See [administrative operations](https://docs.cortexmemory.dev/security/admin-operations)
+for that separate credential boundary.
 
 **Next steps:** [Getting Started Guide](https://docs.cortexmemory.dev/getting-started/introduction) | [CLI README](packages/cortex-cli/README.md)
 
@@ -349,7 +355,7 @@ Cortex is designed with two deployment modes:
 - [API Reference](https://docs.cortexmemory.dev/api-reference/overview) - Full API documentation
 - [CLI README](packages/cortex-cli/README.md) - Current commands, scope, and migrations
 - [System Architecture](https://docs.cortexmemory.dev/architecture/system-overview) - How it works
-- [Local Documentation](https://github.com/SaintNick1214/Project-Cortex/tree/main/Documentation) - Repository documentation
+- Documentation source: `cortexmemory.dev/docs-site/docs/` (maintained in the website repository)
 
 ## 🤝 Get Involved
 
@@ -383,7 +389,7 @@ See [CONTRIBUTING.md](/project/contributing) for detailed contribution guideline
 
 **Production Ready (Now Available):**
 
-- ✅ Core SDK (TypeScript + Python)
+- ✅ Core SDK (TypeScript)
 - ✅ CLI tooling with explicit target selection and foreground Convex development
 - ✅ Vercel AI integration with quickstart demo
 - ✅ Complete documentation site
@@ -420,7 +426,6 @@ See [CONTRIBUTING.md](/project/contributing) for detailed contribution guideline
 - ✅ **Trivy** - Dependency vulnerability scanning
 - ✅ **Gitleaks** - Secret detection
 - ✅ **Semgrep** - API security & OWASP Top 10
-- ✅ **Bandit & Safety** - Python security scanning
 - ✅ **OpenSSF Scorecard** - Supply chain security rating
 - ✅ **Dependency Review** - Automated PR checks
 
@@ -516,3 +521,6 @@ Cortex was born out of building [Project Constellation](https://github.com/Saint
 Built with ❤️ for the AI agent community by [Nicholas Geil](https://github.com/SaintNick1214) / [Saint Nick LLC](https://saintnick.ai)
 
 *Cortex is production-ready. Join [Discussions](https://github.com/SaintNick1214/cortex/discussions) to share your use case and help shape the future of AI agent memory.*
+## Python SDK deprecation
+
+The Python SDK has moved to [`_DEPRECATED/cortex-sdk-python`](_DEPRECATED/cortex-sdk-python). It is retained for reference and is no longer maintained or published.

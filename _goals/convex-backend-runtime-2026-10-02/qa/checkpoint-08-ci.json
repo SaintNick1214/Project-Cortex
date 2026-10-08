@@ -1,0 +1,34 @@
+{
+  "observedAt": "2026-10-04 07:29:15 UTC",
+  "commit": "efc527a08217bc3ca3d636077e599d8e1cbdddc7",
+  "source": "GitHub connector fetch_commit_workflow_runs; pull-request runs first page only",
+  "result": {
+    "workflow_runs": [
+      {
+        "id": 37185880376,
+        "name": "PR Checks",
+        "status": "in_progress",
+        "conclusion": null,
+        "run_number": 353,
+        "jobs_url": "https://api.github.com/repos/SaintNick1214/Project-Cortex/actions/runs/37185880376/jobs",
+        "logs_url": "https://api.github.com/repos/SaintNick1214/Project-Cortex/actions/runs/37185880376/logs",
+        "workflow_id": 208281348
+      },
+      {
+        "id": 37185880355,
+        "name": "Security Scans",
+        "status": "in_progress",
+        "conclusion": null,
+        "run_number": 671,
+        "jobs_url": "https://api.github.com/repos/SaintNick1214/Project-Cortex/actions/runs/37185880355/jobs",
+        "logs_url": "https://api.github.com/repos/SaintNick1214/Project-Cortex/actions/runs/37185880355/logs",
+        "workflow_id": 209496276
+      }
+    ]
+  },
+  "limits": [
+    "Both runs in progress at observation; no quality/security conclusion.",
+    "Unsigned connector ancestry signature failure remains unresolved.",
+    "Required full core/service/native UI coverage is not certified by aggregate CI."
+  ]
+}

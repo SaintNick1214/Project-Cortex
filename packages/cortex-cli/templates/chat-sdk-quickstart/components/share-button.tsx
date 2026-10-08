@@ -9,8 +9,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { useChatVisibility } from "@/hooks/use-chat-visibility";
 import type { VisibilityType } from "@/components/visibility-selector";
+import { useChatVisibility } from "@/hooks/use-chat-visibility";
 import { GlobeIcon, LockIcon, ShareIcon } from "./icons";
 
 interface ShareButtonProps {

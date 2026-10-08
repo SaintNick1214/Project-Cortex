@@ -1,0 +1,65 @@
+{
+  "utc": "2026-10-04T13:37:25.005531+00:00",
+  "originalRoot": "_goals/convex-backend-runtime-2026-10-02/qa/task04-catalog-release-c4-fresh-review",
+  "originalFiles": 63544,
+  "originalBytes": 2296620105,
+  "originalManifest": {
+    "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-catalog-release-c4-fresh-review/qa-manifest.json",
+    "bytes": 17783968,
+    "sha256": "0b3f7f43fdfbd1b2e71cb420b7a24d1255773b3ca6973df0775dc4d1c0c5179d",
+    "transport": "existing unique-content archive; materialization required before original frozen manifest verification"
+  },
+  "directOriginalPaths": [
+    "report.md"
+  ],
+  "excludeOriginalPaths": 63543,
+  "directOriginalReportSha256": "ba1f6a23ec2d6b869c7c57d11e8ff8b700e7db563289e572d2915efea9334335",
+  "directOriginalReportBytes": 11909,
+  "archiveBlobs": 2,
+  "archiveCompressedBytes": 5394882,
+  "archiveSha256": "f174ecf52fc762a8e05114db9ad738b9f279a7d7fc4f4d8d75ccb77af762fb86",
+  "mapCompressedBytes": 2475274,
+  "mapCompressedSha256": "8462ee757b4f68bf281dc645a23c042369cc06c078f9d0f95ab9c2384c5c4d53",
+  "archiveAndMapCompressedBytes": 7870156,
+  "uniqueContents": 436,
+  "sourceAndMapArchiveUnchanged": true,
+  "priorC1ManifestSha256": "8e0571129a46c31c031a751a6f97d532d54a16e4c9c0de86b72e9a169094f4d8",
+  "priorC1PacketFiles": 53,
+  "helperSha256": "52127a96ba92de55b1b91996688ba77dd6add3ffa202c6fd6ba80861dcbd761d",
+  "safeLiteralFinding": "NOT_REPRODUCED; actual forbidden constants [92] and [0] already present; safe semantics unchanged",
+  "confirmedRepair": "read_at fstat size check before buffering and trusted-bound+1 read with oversize rejection; four callsites bounded",
+  "adverseAssertions": {
+    "priorUnchanged": 15,
+    "actualForbiddenCharacterPrecreation": 2,
+    "oversize": 3,
+    "total": 20
+  },
+  "correctedHelperCleanRestoreVerified": true,
+  "correctedHelperIdempotenceVerified": true,
+  "correctedHelperReadOnlyVerified": true,
+  "cleanReplica": "/workspace/Project-Cortex/work/resume/task04-evidence-transport-30-c2/replica",
+  "constructionFailuresPreserved": [
+    {
+      "lineage": "c2-construction-failure",
+      "exitCode": 1,
+      "utcPre": "2026-10-04T13:30:52.339923+00:00",
+      "utcPost": "2026-10-04T13:31:02.297363+00:00",
+      "failures": [
+        "Traceback (most recent call last):\n  File \"/workspace/Project-Cortex/work/resume/task04-evidence-transport-30-c2/prepare-c2.py\", line 28, in <module>\n    corrected=old.replace(needle,replacement);assert old!=corrected;compile(corrected,'materialize.py','exec');(OUT/'materialize.py').write_text(corrected)\n                                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"materialize.py\", line 12\n    require(isinstance(path,str) and path and '\\' not in path and '\\x00' not in path,'unsafe path')\n                                                                    ^\nSyntaxError: unexpected character after line continuation character\n"
+      ]
+    },
+    {
+      "lineage": "c2-construction-failure-2",
+      "exitCode": 1,
+      "utcPre": "2026-10-04T13:31:29.683237+00:00",
+      "utcPost": "2026-10-04T13:31:38.897722+00:00",
+      "failures": [
+        "Traceback (most recent call last):\n  File \"/workspace/Project-Cortex/work/resume/task04-evidence-transport-30-c2/prepare-c2.py\", line 28, in <module>\n    corrected=old.replace(needle,replacement);assert old!=corrected;compile(corrected,'materialize.py','exec');(OUT/'materialize.py').write_text(corrected)\n                                                     ^^^^^^^^^^^^^^\nAssertionError\n"
+      ]
+    }
+  ],
+  "qualificationAcceptance": false,
+  "freshIndependentReview": "required before checkpoint use",
+  "gitNetworkOperations": false,
+  "originalProductPrivateNativePaidWrites": false
+}

@@ -1,0 +1,39 @@
+from pathlib import Path
+import json,hashlib
+p=Path('_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c3')
+S='qualificationOwned:snapshot';C='runtimeModelPolicy:captureTerminalEvidence';A='runtimeModelPolicy:attachTerminalResult';I='runtimeModelPolicy:admit';B='runtimeModelPolicy:ensureBudget';K='runtimeModelPolicy:checkpoint';R='runtimeModelPolicy:recover';F='runtimeModelPolicy:admitFallback';M='qualificationCapture:partialMarker';O='qualificationOwned:change'
+D=lambda x:[S,x,S]
+prefix=['qualificationOwned:seed','runtimeModelPolicy:installDeploymentPolicy',B,I,K,S];post=[S,'qualificationOwned:cleanup',S];first=[C,S];refine=[C,S]+D(C)+D(C)+[A];guard=D(B)+D(I)+D(I)+D(F)+D(K)+[S,B,S]+D(I)
+rows=[]
+for r in json.loads((p/'cases.json').read_text())['scenarios']:
+ id=r['id'];seq=prefix.copy();arm=[]
+ if id.startswith('gateway-native-'):
+  healthy=id.endswith('healthy-attachment');seq=prefix[:3]+['runtimeModelPolicy:resolve',I,K,C]+([A] if healthy else [])+[S]+D(C)+D(A if healthy else I)+D(K)+post;arm=['exact accepted Gateway doGenerate source calls one ledger.admit/checkpoint and capture; healthy attach once; fixed synthetic supported genuine terminal body; finally cancel/complete closes no pending work; no fake sink']
+ elif id=='unknown-lifetime':seq+=D(C)+[S,R,S,K]+post
+ elif id.startswith('defensive-'):
+  # Every helper call has exact source type/handler; these finite arms execute unconditionally.
+  seq+=[C,S,M,S,I,S,A,S]+D(A)
+  if '-model-' in id:seq+=[M,S,I,S,A,S]+D(A);arm+=['mandatory attempt.actualModel-only healthy-canonical subarm unconditional']
+  seq+=D(R)+post;arm+=['private admission replay before attach while flags false: CAPABILITY_UNAVAILABLE and whole-state equality','attachment money equality; duplicate attachment state equality; ordinary recover whole-state equality']
+ elif id in ['known-drift-40','known-drift-150','token-input-known40','token-output-known40']:seq+=first+D(C)+[A]+guard+post
+ else:
+  seq+=first
+  if id.startswith('captured-parity-'):
+   route='runtimeModelPolicy:'+('settle' if id.endswith('settle') else 'recover' if id.endswith('recover') else 'reconcileDeploymentLiability')
+   seq+=D(route)+([O] if id.endswith('operator') else [])+[route]+D(route)+D(route)+[S]+D(C)+D(C)+[A]
+  else:
+   if id.endswith('revoked-cancelled'):seq+=['qualificationCapture:revokeOrigin',S,O]
+   if id.endswith('original-window'):seq+=D(B);arm+=['finite248 polls250ms <=62000ms; no native RPC; original account window identities retained']
+   seq+=refine
+   if id.startswith('refinement-add-absent-'):seq+=D(C)
+   if id in ['unknown-drift-terminal','token-input-unknown','token-output-unknown']:seq+=D(I);arm+=['healthy valid successor BUDGET_EXCEEDED whole-state equality']
+   if id.endswith('original-window'):seq+=D(B)
+  seq+=post
+ assert len(seq)<=r['rpcCeiling'],(id,len(seq),r['rpcCeiling'])
+ rows.append({'id':id,'sourceExpandedClientSequence':seq,'sourceNominalClientCount':len(seq),'hardClientCeilingIncludingPost3':r['rpcCeiling'],'postCase3':post,'errorStop':'Any unanticipated handler/assertion/error aborts scenario and subsequent cases; no scenario retry. Dispatch ceiling checked before native ticket/call. Two outer final cleanup triples are separate shared allocation <=6 within10; EMPTY <=6 within20.','sourceArms':arm})
+# Independent observed handler traces validate this SOURCE-authored grammar; totals are not sourced from observations.
+obs=json.loads(Path('work/resume/task04-model-drift-native-preparation-c3/extra/outcomes-operative-source-validator.json').read_text())
+for row in rows:
+ actual=next(r for r in obs['outcomes'] if r['id']==row['id']);assert row['sourceExpandedClientSequence']==[x['path'] for x in actual['trace']],row['id']
+d={'scope':'SOURCE_EXPANDED_FINITE_BRANCH_GRAMMAR_OFFLINE_TRACE_CORROBORATED_NATIVE_NOT_RUN','rows':rows,'sourceHashes':[{'path':str(f),'sha256':hashlib.sha256(f.read_bytes()).hexdigest()} for f in [p/'scripts/cases.mjs',p/'scripts/driver.mjs',p/'scripts/gateway-native-composition.mjs',p/'runtime-source/convex/runtimeGateway.ts']],'sharedErrorFinallyUpper':{'synthetic':6,'EMPTY':6,'noRetryOrReset':True},'count':len(rows)}
+(p/'evidence/static-path-plan.json').write_text(json.dumps(d,indent=2)+'\n');(p/'evidence/static-path-plan-source.py.text').write_bytes(Path(__file__).read_bytes());print({r['id']:r['sourceNominalClientCount'] for r in rows})

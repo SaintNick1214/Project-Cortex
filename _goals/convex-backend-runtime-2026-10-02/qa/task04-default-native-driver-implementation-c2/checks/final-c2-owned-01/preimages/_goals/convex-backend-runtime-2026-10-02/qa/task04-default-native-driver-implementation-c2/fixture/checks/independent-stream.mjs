@@ -1,0 +1,13 @@
+import assert from 'node:assert/strict';
+import {createResolver} from '../convex/proofs.ts';
+import {BINDING,SOURCE_SNAPSHOT} from '../convex/installed.ts';
+import {canonical} from '../convex/validate.ts';
+import {observeStream,makeEvent} from '../convex/observer.ts';
+const H='a'.repeat(64),model='openai/gpt-4o-mini',now=Date.now();
+const p={version:1,proofHash:H,type:'lifetime',installationHash:BINDING.installedClosureHash,reviewerAcceptanceHash:H,validatorSourceHash:H,providerSourceHash:SOURCE_SNAPSHOT.providerSourceHash,providerVersion:'0.2.1',adapterVersion:'3.0.14',providerV4Version:'4.0.21',loadedClosureHash:BINDING.installedClosureHash,sourceRevision:H,checkedAt:SOURCE_SNAPSHOT.checkedAt,expiresAt:SOURCE_SNAPSHOT.expiresAt,targetHash:BINDING.targetHash,manifestHash:BINDING.manifestHash,requestedModel:model,actualModels:[model],methods:['stream'],rule:'chat-correlated-raw-native-finish-v1',supportsRawFinish:['stop','length','content_filter'],confirmsWholeInvocationTermination:true};
+// Exact closed resolver with disjoint DUMMY compiled accepted bytes; actual registry stays empty.
+const resolver=createResolver([p],[{proofHash:H,canonical:canonical(p,8192)}],BINDING.installedClosureHash),ctx={binding:BINDING,scenarioId:'C09',dispatchIdentity:H,enteredAt:now,now,originalDeadline:now+15000,sourceClosureHash:BINDING.installedClosureHash};
+const raw={id:'DUMMY',model,choices:[{index:0,delta:{},finish_reason:'stop'}],usage:{prompt_tokens:1,completion_tokens:0,cost:'0'}},finish={finish:{unified:'stop',raw:'stop'},usage:{input:1,output:0}};
+const cases=[{name:'balanced empty text segment positive',parts:[['raw',raw],['text-start',{id:'DUMMY'}],['text-end',{id:'DUMMY'}],['finish',finish]],expected:'validated-provider-terminal'},{name:'unclosed empty text segment',parts:[['raw',raw],['text-start',{id:'DUMMY'}],['finish',finish]],expected:'unknown'},{name:'usage-only tail after native finish',parts:[['raw',raw],['text-start',{id:'DUMMY'}],['text-end',{id:'DUMMY'}],['finish',finish],['raw',{id:'DUMMY',model,choices:[],usage:{prompt_tokens:1,completion_tokens:0,cost:'0'}}]],expected:'unknown'}];
+const results=[];for(const c of cases){const events=await Promise.all(c.parts.map(([k,d],i)=>makeEvent(i,k,d))),o=await observeStream(ctx,events,'reader-done',resolver);results.push({name:c.name,expected:c.expected,actual:o.receipt.lifetime,reason:o.receipt.reason,privateRetained:o.privateResultCanonical!==null,pass:o.receipt.lifetime===c.expected})}
+console.log(JSON.stringify({scope:'DUMMY_CLOSED_RESOLVER_STREAM_SHAPES_ONLY',results}));assert.equal(results.filter(x=>!x.pass).length,0,'invalid ordered stream must not nominate provider terminal');

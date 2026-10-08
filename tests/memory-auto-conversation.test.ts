@@ -211,7 +211,7 @@ describe("Memory API - Auto-Conversation Creation", () => {
       limit: 100,
     });
     const convMemories = allMemories.filter((m) => {
-      const memory = "memory" in m ? m.memory : m;
+      const memory = m;
       return memory.conversationRef?.conversationId === convId;
     });
     expect(convMemories.length).toBe(6); // 3 exchanges × 2 memories each

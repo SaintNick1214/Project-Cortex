@@ -1,0 +1,57 @@
+{
+  "requiredFoundationCases": [
+    {
+      "id": "current-sdk-refresh",
+      "status": "PREPARED_NOT_RUN",
+      "entrypoint": "scripts/lifecycle.mjs"
+    },
+    {
+      "id": "cross-tenant-subscription",
+      "status": "PREPARED_NOT_RUN",
+      "entrypoint": "scripts/lifecycle.mjs"
+    },
+    {
+      "id": "logout-real-update-no-delivery",
+      "status": "PREPARED_NOT_RUN",
+      "entrypoint": "scripts/lifecycle.mjs"
+    },
+    {
+      "id": "late-token-session-fence",
+      "status": "PREPARED_NOT_RUN",
+      "entrypoint": "scripts/lifecycle.mjs"
+    },
+    {
+      "id": "sanitized-host-callback",
+      "status": "PREPARED_NOT_RUN",
+      "entrypoint": "scripts/lifecycle.mjs"
+    },
+    {
+      "id": "current-grant-revocation-no-effect",
+      "status": "PREPARED_NOT_RUN",
+      "entrypoint": "scripts/lifecycle.mjs"
+    }
+  ],
+  "frozenUnitOnly": [
+    "single-transaction delayed lookup/commit fault injection",
+    "guard getter/proxy failure containment",
+    "authority generation stability sweeps"
+  ],
+  "laterRestoration": {
+    "05": "canonical transcript writes/share redaction/locks/revisions",
+    "07/08": "actual tool execution/persisted jobs/stale-derived repair",
+    "11": "external graph late writes/deletion races",
+    "12/13/14": "private bytes/HTTP/media callbacks/client delivery"
+  },
+  "fullOriginalTask03": "INCOMPLETE",
+  "requiredFoundationAuthorityCases": [
+    "omitted-single-eligible-scope",
+    "mismatched-tenant-space",
+    "claims-do-not-grant-authority",
+    "ambiguous-scope-explicit-selector",
+    "scope-deletion-no-read-write-recreate",
+    "ambiguous-membership-explicit-tenant",
+    "actual-grant-clock-expiry",
+    "membership-revocation-no-later-effect"
+  ],
+  "membershipExpiry": "Current membership schema has no expiry field. No invented membership-expiry fixture or PASS; actual timed grant expiry and membership revocation are prepared separately."
+}

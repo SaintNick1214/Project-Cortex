@@ -1,0 +1,39 @@
+{
+  "profiles": [
+    {
+      "name": "extension",
+      "candidateArgument": "task04-terminal-capture-native-extension-preparation-c3",
+      "sources": [
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c8-preparation/parent-inputs-extension.mjs",
+          "bytes": 16815,
+          "sha256": "e799de4ce925b2f3220a11e42f66e5da6d79f8935145362e2104bf4d361de727"
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c8-preparation/current-inputs-extension.mjs",
+          "bytes": 5959,
+          "sha256": "f58d17c0bf1e3157219e5bb0b443d297342364044c30104377d0d907ed25d115"
+        }
+      ],
+      "interface": "main() ROOT ONLY; setup once, fixed120sec deadline, every sign/output/random/request gate, no retry/reset; watcher has zeroRPC and exact profile source custody"
+    },
+    {
+      "name": "regression",
+      "candidateArgument": "task04-terminal-capture-native-extension-preparation-c3/regression",
+      "sources": [
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c8-preparation/parent-inputs-regression.mjs",
+          "bytes": 16850,
+          "sha256": "474e0c27896e1ad740b5c2ae2eff46d0d1085e60904823498857bbdc138528c7"
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c8-preparation/current-inputs-regression.mjs",
+          "bytes": 5982,
+          "sha256": "9ee3b5eeb43c3066fbee58f833b1b13e9aa8dd777ecbff5b8f0e227eb19c3a31"
+        }
+      ],
+      "interface": "main() ROOT ONLY; setup once, fixed120sec deadline, every sign/output/random/request gate, no retry/reset; watcher has zeroRPC and exact profile source custody"
+    }
+  ],
+  "authority": "Exact public C8 helpers bound before C3 freeze; static C3 imports only"
+}

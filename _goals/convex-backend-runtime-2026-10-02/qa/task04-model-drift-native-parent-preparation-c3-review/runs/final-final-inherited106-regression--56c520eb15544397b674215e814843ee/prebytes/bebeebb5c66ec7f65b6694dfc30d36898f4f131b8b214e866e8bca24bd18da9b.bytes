@@ -1,0 +1,16 @@
+from pathlib import Path
+import json,hashlib,datetime,sys,subprocess,uuid
+r=Path.cwd();w=r/'work/resume/task04-model-drift-native-parent-preparation-c3-review';q=r/'_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-parent-preparation-c3-review';name=sys.argv[1];argv=sys.argv[2:];run=q/'runs'/(name+'--'+uuid.uuid4().hex);run.mkdir(parents=True);store=run/'prebytes';store.mkdir();H=lambda b:hashlib.sha256(b).hexdigest();paths=[]
+for profile in ['extension','regression','extra']:
+ root=r/f'_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-{profile}-preparation-c3'
+ for row in json.loads((root/'runtime-freeze.json').read_bytes())['files']:paths.append(root/row['path'])
+for arg in argv:
+ p=Path(arg)
+ if p.is_file() and str(p.resolve()).startswith(str(w)):paths.append(p.resolve())
+paths += list(w.glob('*.mjs'))+list(w.glob('*.py'))
+for profile in ['extension','regression','extra']:
+ paths += list((w/profile).glob('*.mjs'))+[x for x in (w/profile/'inputs').rglob('*') if x.is_file()]
+paths=sorted(set(paths));pre=[]
+for p in paths:
+ b=p.read_bytes();h=H(b);(store/(h+'.bytes')).write_bytes(b);pre.append(dict(path=str(p.relative_to(r)),bytes=len(b),sha256=h,bytePath=str((store/(h+'.bytes')).relative_to(q))))
+(store/'index.json').write_text(json.dumps(pre,indent=2)+'\n');start=datetime.datetime.now(datetime.timezone.utc).isoformat();p=subprocess.run(argv,cwd=r,stdout=subprocess.PIPE,stderr=subprocess.PIPE);end=datetime.datetime.now(datetime.timezone.utc).isoformat();(run/'run.stdout').write_bytes(p.stdout);(run/'run.stderr').write_bytes(p.stderr);post=[dict(path=str(x.relative_to(r)),bytes=x.stat().st_size,sha256=H(x.read_bytes())) for x in paths];(run/'run.receipt.json').write_text(json.dumps(dict(argv=argv,cwd=str(r),startedAt=start,endedAt=end,exitCode=p.returncode,sourceBefore=pre,sourceAfter=post,rawComplete=True,actualPrivateReads=0,actualProcesses=0),indent=2)+'\n');print(json.dumps(dict(name=name,exitCode=p.returncode,stdout=p.stdout.decode()[-450:],stderr=p.stderr.decode()[-500:],archive=str(run.relative_to(r)))));sys.exit(p.returncode)

@@ -25,8 +25,8 @@ export function useScrollToBottom() {
       return;
     }
     containerRef.current.scrollTo({
-      top: containerRef.current.scrollHeight,
       behavior,
+      top: containerRef.current.scrollHeight,
     });
   }, []);
 
@@ -74,8 +74,8 @@ export function useScrollToBottom() {
       if (isAtBottomRef.current && !isUserScrollingRef.current) {
         requestAnimationFrame(() => {
           container.scrollTo({
-            top: container.scrollHeight,
             behavior: "instant",
+            top: container.scrollHeight,
           });
           setIsAtBottom(true);
           isAtBottomRef.current = true;
@@ -86,9 +86,9 @@ export function useScrollToBottom() {
     // Watch for DOM changes
     const mutationObserver = new MutationObserver(scrollIfNeeded);
     mutationObserver.observe(container, {
+      characterData: true,
       childList: true,
       subtree: true,
-      characterData: true,
     });
 
     // Watch for size changes
@@ -120,8 +120,8 @@ export function useScrollToBottom() {
     containerRef,
     endRef,
     isAtBottom,
-    scrollToBottom,
     onViewportEnter,
     onViewportLeave,
+    scrollToBottom,
   };
 }

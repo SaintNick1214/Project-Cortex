@@ -1323,6 +1323,7 @@ async function reconcileRowBody(
   ctx: MutationCtx,
   id: Id<Primary>,
   patch: Record<string, unknown>,
+  options: { graphOperation?: "delete" } = {},
 ): Promise<void> {
   const state = await ensureLifecycleState(ctx),
     identity = identifyDocument(ctx, id),
@@ -1392,7 +1393,7 @@ async function reconcileRowBody(
   await ctx.db.patch(identity.id, patch as Partial<Doc<Primary>>);
   if (identity.table in graphTables) {
     source = (await ctx.db.get(source._id))!;
-    await captureGraphChange(ctx, identity.table, after, source, "update");
+    await captureGraphChange(ctx, identity.table, after, source, options.graphOperation ?? "update");
   }
 }
 export async function invalidateLifecycle(ctx: MutationCtx) {
@@ -1679,8 +1680,10 @@ export async function reconcileRow(
   ctx: MutationCtx,
   id: Id<Primary>,
   change: Record<string, unknown>,
+  // Invalidation retains primary/history rows while deleting their current graph projection.
+  options: { graphOperation?: "delete" } = {},
 ): Promise<void> {
-  return measuredHook(ctx, () => reconcileRowBody(ctx, id, change));
+  return measuredHook(ctx, () => reconcileRowBody(ctx, id, change, options));
 }
 export async function markDeletedRow(
   ctx: MutationCtx,

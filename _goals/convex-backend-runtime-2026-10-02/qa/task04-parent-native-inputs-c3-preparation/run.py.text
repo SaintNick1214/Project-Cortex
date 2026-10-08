@@ -1,0 +1,15 @@
+from pathlib import Path
+import subprocess,datetime,json,hashlib,sys,os
+r=Path('/workspace/Project-Cortex');q=r/'_goals/convex-backend-runtime-2026-10-02/qa';p=q/'task04-parent-native-inputs-c3-preparation';e=p/'evidence'/sys.argv[1];e.mkdir(parents=True,exist_ok=False);argv=sys.argv[2:]
+def sha(f):return hashlib.sha256(f.read_bytes()).hexdigest()
+def protected():
+ files=[r/'work/resume/task04-native-c4-parent-inputs.mjs',r/'work/resume/task04-native-current-inputs-c2.mjs',r/'work/resume/task04-native-c3-parent-inputs.mjs',r/'work/resume/task04-native-current-inputs.mjs',q/'current-gates.md']
+ for name in ['task04-native-admission-fixture-c4','task04-parent-native-inputs-review','task04-native-admission-c3-execution','task04-native-admission-c4-execution','task04-native-admission-fixture-c5','task04-parent-native-inputs-c2-preparation','task04-parent-native-inputs-c2-review']:files += [f for f in(q/name).rglob('*')if f.is_file()]
+ inv=json.loads((q/'task04-native-admission-fixture-c4/source-inventory.json').read_text());files += [r/x['source']for x in inv['files']]+[r/x['path']for x in inv['acceptedGateHashes']]
+ old=r/'work/backend-runtime/task03-foundation-live-c11';review=json.loads((p/'prior-review-results.json').read_text());files += [old/x['name']for x in review['sourceVerification']]
+ return [{'path':str(f.relative_to(r)),'sha256':sha(f),'bytes':f.stat().st_size}for f in sorted(set(files),key=str)]
+def source():return [{'path':str(f.relative_to(r)),'sha256':sha(f),'bytes':f.stat().st_size}for f in [r/'work/resume/task04-native-c5-parent-inputs.mjs',r/'work/resume/task04-native-current-inputs-c3.mjs',r/'work/resume/task04-parent-native-inputs-c3-preparation/offline.mjs']]
+pre={'utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'argv':argv,'cwd':str(r),'source':source(),'protected':protected(),'configuration':{'credentialFree':True,'realNetwork':0,'realSigning':0,'realCredentialReads':0,'privateFixtures':'canonical isolated dummy600/700; mockcrypto and mocktransport','deadlineMs':120000},'discovery':'original16 exact boundary names + additional provenance/key/target regressions; actual source modules via VM; syntax checks'}
+(e/'pre.json').write_text(json.dumps(pre,indent=2)+'\n')
+with(e/'stdout.txt').open('x')as out,(e/'stderr.txt').open('x')as err:result=subprocess.run(argv,cwd=r,env={'PATH':os.environ['PATH'],'LANG':'C.UTF-8','NO_COLOR':'1'},stdout=out,stderr=err,timeout=90)
+post={'utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'source':source(),'protected':protected()};(e/'post.json').write_text(json.dumps(post,indent=2)+'\n');receipt={'exitCode':result.returncode,'sourceStable':pre['source']==post['source'],'protectedStable':pre['protected']==post['protected'],'native':'NOT_RUN'};(e/'result.json').write_text(json.dumps(receipt,indent=2)+'\n');print(json.dumps(receipt));sys.exit(result.returncode or not receipt['sourceStable']or not receipt['protectedStable'])

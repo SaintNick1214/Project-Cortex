@@ -1,0 +1,11 @@
+{
+  "argv": [
+    "pwd && rg --files -g 'AGENTS.md' -g '*judge*' -g '*runtime*' -g '*profile*' .agents goalqa/task04-evidence-transport-30 goalqa/task04-catalog-release-c4-fresh-review"
+  ],
+  "cwd": "/workspace/Project-Cortex",
+  "utcPre": null,
+  "utcPost": null,
+  "timestampLimitation": "Initial read-only discovery was not instrumented with UTC; no retrospective timestamps asserted. Subsequent reads and all substantive audit checks are genuinely UTC bracketed.",
+  "exitCode": 2,
+  "rawOutput": "/workspace/Project-Cortex\nrg: goalqa/task04-evidence-transport-30: No such file or directory (os error 2)\nrg: goalqa/task04-catalog-release-c4-fresh-review: No such file or directory (os error 2)\n.agents/roles/qa-judge.md\n.agents/roles/pessimistic-judge.md\n"
+}

@@ -1,0 +1,590 @@
+{
+  "version": 1,
+  "counts": {
+    "selected": 46,
+    "public": 43,
+    "internal": 3,
+    "moduleRegistrations": 48,
+    "excludedStats": 2,
+    "unresolved": 0
+  },
+  "selection": "exact frozen Task03A paths: agents10 + memorySpaces14 + contexts22, excluding cross-data stats2 and A2A4",
+  "pending": [
+    "stats2",
+    "A2A4",
+    "whole03B2B52",
+    "MF/source bridge",
+    "Task03T/05 canonical conversation/anchor delivery",
+    "Task08/12/15 durable derived cascade",
+    "wholeTask03",
+    "wholeGoal"
+  ],
+  "hashes": [
+    {
+      "file": "convex-dev/agents.ts",
+      "sha256": "d9a4cc4cde5d85ad9e1966a4186ce31f2e41d450d151353a86af42893168fd85"
+    },
+    {
+      "file": "convex-dev/memorySpaces.ts",
+      "sha256": "88f73e309d8de5a2d3146db9993d2242888beb045bffaaef6f72c43880e78a92"
+    },
+    {
+      "file": "convex-dev/contexts.ts",
+      "sha256": "facb2f35168ab2243d59b88cc39ac6bafba2044a3fafcbc751f4a323c47367e2"
+    },
+    {
+      "file": "convex-dev/runtimeRegistryAuth.ts",
+      "sha256": "ce7a0770803bef6b68440a0cd1b103228b2da20a5bf386a909a14d022101e8e5"
+    },
+    {
+      "file": "convex-dev/schema.ts",
+      "sha256": "4863a3445f58692a7f5b264c880cb069783971be0182fc0dfe77010111fc5e93"
+    },
+    {
+      "file": "convex-dev/runtimeAuth.ts",
+      "sha256": "03ec735f1791d2e9973a320e22dcc58d0f040432782398dcc95d0d65f99b0929"
+    },
+    {
+      "file": "convex-dev/runtimeAuthSchema.ts",
+      "sha256": "41859c943e06ed185d88bb4f0da21540e0999d9f736f933dfdcbd572ee9dd5d1"
+    },
+    {
+      "file": "src/auth/verified.ts",
+      "sha256": "d2e514b198dcccff783b67ee7c7a625f91bf7553a41342a02bea8fd23f6908b3"
+    },
+    {
+      "file": "convex-dev/tsconfig.json",
+      "sha256": "6b077cd115f1e1a1cd41fe22824624d9ee39d89b2a53b016aaf59dd2981fdc17"
+    }
+  ],
+  "endpoints": [
+    {
+      "path": "agents:count",
+      "file": "convex-dev/agents.ts",
+      "line": 25,
+      "kind": "query",
+      "disposition": "guarded public",
+      "argsExpression": "args: { ...selectors, status: v.optional(status) }",
+      "originalDisposition": "guard",
+      "authority": "exact verified issuer/subject; independent current capability/resource/owner/fences; retained refs and canonical witnesses",
+      "scope": "trusted tenant and actual optional/concrete memory space; owner predicates precede ordinary selection/hydration/limit"
+    },
+    {
+      "path": "agents:exists",
+      "file": "convex-dev/agents.ts",
+      "line": 16,
+      "kind": "query",
+      "disposition": "guarded public",
+      "argsExpression": "args: { ...selectors, agentId: v.string() }",
+      "originalDisposition": "guard",
+      "authority": "exact verified issuer/subject; independent current capability/resource/owner/fences; retained refs and canonical witnesses",
+      "scope": "trusted tenant and actual optional/concrete memory space; owner predicates precede ordinary selection/hydration/limit"
+    },
+    {
+      "path": "agents:get",
+      "file": "convex-dev/agents.ts",
+      "line": 12,
+      "kind": "query",
+      "disposition": "guarded public",
+      "argsExpression": "args: { ...selectors, agentId: v.string() }",
+      "originalDisposition": "guard",
+      "authority": "exact verified issuer/subject; independent current capability/resource/owner/fences; retained refs and canonical witnesses",
+      "scope": "trusted tenant and actual optional/concrete memory space; owner predicates precede ordinary selection/hydration/limit"
+    },
+    {
+      "path": "agents:list",
+      "file": "convex-dev/agents.ts",
+      "line": 20,
+      "kind": "query",
+      "disposition": "guarded public",
+      "argsExpression": "args: { ...selectors, status: v.optional(status), limit: v.optional(v.number()), offset: v.optional(v.number()) }",
+      "originalDisposition": "guard",
+      "authority": "exact verified issuer/subject; independent current capability/resource/owner/fences; retained refs and canonical witnesses",
+      "scope": "trusted tenant and actual optional/concrete memory space; owner predicates precede ordinary selection/hydration/limit"
+    },
+    {
+      "path": "agents:purgeAll",
+      "file": "convex-dev/agents.ts",
+      "line": 82,
+      "kind": "internalMutation",
+      "disposition": "operator internal",
+      "argsExpression": "args: {}",
+      "originalDisposition": "internalize",
+      "authority": "trusted internal deployment operator; retained metadata/source/auth fences",
+      "scope": "trusted tenant and actual optional/concrete memory space; owner predicates precede ordinary selection/hydration/limit"
+    },
+    {
+      "path": "agents:register",
+      "file": "convex-dev/agents.ts",
+      "line": 29,
+      "kind": "mutation",
+      "disposition": "guarded public",
+      "argsExpression": "args: { ...selectors, agentId: v.string(), name: v.string(), description: v.optional(v.string()), metadata: v.optional(v.any()), config: v.optional(v.any()) }",
+      "originalDisposition": "guard",
+      "authority": "exact verified issuer/subject; independent current capability/resource/owner/fences; retained refs and canonical witnesses",
+      "scope": "trusted tenant and actual optional/concrete memory space; owner predicates precede ordinary selection/hydration/limit",
+      "collisionException": "Exact authorized key Boolean-only existence/uniqueness fence; Convex necessarily hydrates server documents then immediately discards them, never processed/authorized/logged/delivered"
+    },
+    {
+      "path": "agents:unregister",
+      "file": "convex-dev/agents.ts",
+      "line": 59,
+      "kind": "mutation",
+      "disposition": "guarded public",
+      "argsExpression": "args: { ...selectors, agentId: v.string() }",
+      "originalDisposition": "guard",
+      "authority": "exact verified issuer/subject; independent current capability/resource/owner/fences; retained refs and canonical witnesses",
+      "scope": "trusted tenant and actual optional/concrete memory space; owner predicates precede ordinary selection/hydration/limit",
+      "collisionException": "Exact authorized key Boolean-only existence/uniqueness fence; Convex necessarily hydrates server documents then immediately discards them, never processed/authorized/logged/delivered"
+    },
+    {
+      "path": "agents:unregisterMany",
+      "file": "convex-dev/agents.ts",
+      "line": 67,
+      "kind": "mutation",
+      "disposition": "guarded public",
+      "argsExpression": "args: { ...selectors, status: v.optional(status), agentIds: v.optional(v.array(v.string())) }",
+      "originalDisposition": "guard",
+      "authority": "exact verified issuer/subject; independent current capability/resource/owner/fences; retained refs and canonical witnesses",
+      "scope": "trusted tenant and actual optional/concrete memory space; owner predicates precede ordinary selection/hydration/limit",
+      "collisionException": "Exact authorized key Boolean-only existence/uniqueness fence; Convex necessarily hydrates server documents then immediately discards them, never processed/authorized/logged/delivered"
+    },
+    {
+      "path": "agents:update",
+      "file": "convex-dev/agents.ts",
+      "line": 46,
+      "kind": "mutation",
+      "disposition": "guarded public",
+      "argsExpression": "args: { ...selectors, agentId: v.string(), name: v.optional(v.string()), description: v.optional(v.string()), metadata: v.optional(v.any()), config: v.optional(v.any()), status: v.optional(status) }",
+      "originalDisposition": "guard",
+      "authority": "exact verified issuer/subject; independent current capability/resource/owner/fences; retained refs and canonical witnesses",
+      "scope": "trusted tenant and actual optional/concrete memory space; owner predicates precede ordinary selection/hydration/limit",
+      "collisionException": "Exact authorized key Boolean-only existence/uniqueness fence; Convex necessarily hydrates server documents then immediately discards them, never processed/authorized/logged/delivered"
+    },
+    {
+      "path": "agents:updateMany",
+      "file": "convex-dev/agents.ts",
+      "line": 52,
+      "kind": "mutation",
+      "disposition": "guarded public",
+      "argsExpression": "args: { ...selectors, agentIds: v.array(v.string()), name: v.optional(v.string()), description: v.optional(v.string()), metadata: v.optional(v.any()), config: v.optional(v.any()) }",
+      "originalDisposition": "guard",
+      "authority": "exact verified issuer/subject; independent current capability/resource/owner/fences; retained refs and canonical witnesses",
+      "scope": "trusted tenant and actual optional/concrete memory space; owner predicates precede ordinary selection/hydration/limit",
+      "collisionException": "Exact authorized key Boolean-only existence/uniqueness fence; Convex necessarily hydrates server documents then immediately discards them, never processed/authorized/logged/delivered"
+    },
+    {
+      "path": "contexts:addParticipant",
+      "file": "convex-dev/contexts.ts",
+      "line": 98,
+      "kind": "mutation",
+      "disposition": "guarded public",
+      "argsExpression": "args: { ...selectors, contextId: v.string(), participantId: v.string() }",
+      "originalDisposition": "guard",
+      "authority": "exact verified issuer/subject; independent current capability/resource/owner/fences; retained refs and canonical witnesses",
+      "scope": "trusted tenant and actual optional/concrete memory space; owner predicates precede ordinary selection/hydration/limit",
+      "collisionException": "Exact authorized key Boolean-only existence/uniqueness fence; Convex necessarily hydrates server documents then immediately discards them, never processed/authorized/logged/delivered"
+    },
+    {
+      "path": "contexts:count",
+      "file": "convex-dev/contexts.ts",
+      "line": 174,
+      "kind": "query",
+      "disposition": "guarded public",
+      "argsExpression": "args: filters",
+      "originalDisposition": "guard",
+      "authority": "exact verified issuer/subject; independent current capability/resource/owner/fences; retained refs and canonical witnesses",
+      "scope": "trusted tenant and actual optional/concrete memory space; owner predicates precede ordinary selection/hydration/limit"
+    },
+    {
+      "path": "contexts:create",
+      "file": "convex-dev/contexts.ts",
+      "line": 74,
+      "kind": "mutation",
+      "disposition": "guarded public",
+      "argsExpression": "args: { ...selectors, memorySpaceId: v.string(), purpose: v.string(), description: v.optional(v.string()), userId: v.optional(v.string()), parentId: v.optional(v.string()), conversationRef: v.optional(v.object({ conversationId: v.string(), messageIds: v.optional(v.array(v.string())) })), data: v.optional(v.any()), status: v.optional(status) }",
+      "originalDisposition": "guard",
+      "authority": "exact verified issuer/subject; independent current capability/resource/owner/fences; retained refs and canonical witnesses",
+      "scope": "trusted tenant and actual optional/concrete memory space; owner predicates precede ordinary selection/hydration/limit",
+      "collisionException": "Exact authorized key Boolean-only existence/uniqueness fence; Convex necessarily hydrates server documents then immediately discards them, never processed/authorized/logged/delivered"
+    },
+    {
+      "path": "contexts:deleteContext",
+      "file": "convex-dev/contexts.ts",
+      "line": 143,
+      "kind": "mutation",
+      "disposition": "guarded public",
+      "argsExpression": "args: { ...selectors, contextId: v.string(), cascadeChildren: v.optional(v.boolean()), orphanChildren: v.optional(v.boolean()) }",
+      "originalDisposition": "guard",
+      "authority": "exact verified issuer/subject; independent current capability/resource/owner/fences; retained refs and canonical witnesses",
+      "scope": "trusted tenant and actual optional/concrete memory space; owner predicates precede ordinary selection/hydration/limit",
+      "collisionException": "Exact authorized key Boolean-only existence/uniqueness fence; Convex necessarily hydrates server documents then immediately discards them, never processed/authorized/logged/delivered"
+    },
+    {
+      "path": "contexts:deleteMany",
+      "file": "convex-dev/contexts.ts",
+      "line": 157,
+      "kind": "mutation",
+      "disposition": "guarded public",
+      "argsExpression": "args: { ...filters, completedBefore: v.optional(v.number()), cascadeChildren: v.optional(v.boolean()) }",
+      "originalDisposition": "guard",
+      "authority": "exact verified issuer/subject; independent current capability/resource/owner/fences; retained refs and canonical witnesses",
+      "scope": "trusted tenant and actual optional/concrete memory space; owner predicates precede ordinary selection/hydration/limit",
+      "collisionException": "Exact authorized key Boolean-only existence/uniqueness fence; Convex necessarily hydrates server documents then immediately discards them, never processed/authorized/logged/delivered"
+    },
+    {
+      "path": "contexts:exportContexts",
+      "file": "convex-dev/contexts.ts",
+      "line": 209,
+      "kind": "query",
+      "disposition": "guarded public",
+      "argsExpression": "args: { ...filters, format: v.union(v.literal(\"json\"), v.literal(\"csv\")), includeChain: v.optional(v.boolean()), includeVersionHistory: v.optional(v.boolean()) }",
+      "originalDisposition": "guard",
+      "authority": "exact verified issuer/subject; independent current capability/resource/owner/fences; retained refs and canonical witnesses",
+      "scope": "trusted tenant and actual optional/concrete memory space; owner predicates precede ordinary selection/hydration/limit"
+    },
+    {
+      "path": "contexts:findOrphaned",
+      "file": "convex-dev/contexts.ts",
+      "line": 192,
+      "kind": "query",
+      "disposition": "guarded public",
+      "argsExpression": "args: selectors",
+      "originalDisposition": "guard",
+      "authority": "exact verified issuer/subject; independent current capability/resource/owner/fences; retained refs and canonical witnesses",
+      "scope": "trusted tenant and actual optional/concrete memory space; owner predicates precede ordinary selection/hydration/limit"
+    },
+    {
+      "path": "contexts:get",
+      "file": "convex-dev/contexts.ts",
+      "line": 161,
+      "kind": "query",
+      "disposition": "guarded public",
+      "argsExpression": "args: { ...selectors, contextId: v.string(), includeChain: v.optional(v.boolean()), includeConversation: v.optional(v.boolean()) }",
+      "originalDisposition": "guard",
+      "authority": "exact verified issuer/subject; independent current capability/resource/owner/fences; retained refs and canonical witnesses",
+      "scope": "trusted tenant and actual optional/concrete memory space; owner predicates precede ordinary selection/hydration/limit"
+    },
+    {
+      "path": "contexts:getAtTimestamp",
+      "file": "convex-dev/contexts.ts",
+      "line": 205,
+      "kind": "query",
+      "disposition": "guarded public",
+      "argsExpression": "args: { ...selectors, contextId: v.string(), timestamp: v.number() }",
+      "originalDisposition": "guard",
+      "authority": "exact verified issuer/subject; independent current capability/resource/owner/fences; retained refs and canonical witnesses",
+      "scope": "trusted tenant and actual optional/concrete memory space; owner predicates precede ordinary selection/hydration/limit"
+    },
+    {
+      "path": "contexts:getByConversation",
+      "file": "convex-dev/contexts.ts",
+      "line": 187,
+      "kind": "query",
+      "disposition": "guarded public",
+      "argsExpression": "args: { ...selectors, conversationId: v.string() }",
+      "originalDisposition": "guard",
+      "authority": "exact verified issuer/subject; independent current capability/resource/owner/fences; retained refs and canonical witnesses",
+      "scope": "trusted tenant and actual optional/concrete memory space; owner predicates precede ordinary selection/hydration/limit",
+      "pendingSeam": "fails closed without reading conversations until Task03T/05 trusted canonical owner/anchor adapter"
+    },
+    {
+      "path": "contexts:getChain",
+      "file": "convex-dev/contexts.ts",
+      "line": 177,
+      "kind": "query",
+      "disposition": "guarded public",
+      "argsExpression": "args: { ...selectors, contextId: v.string() }",
+      "originalDisposition": "guard",
+      "authority": "exact verified issuer/subject; independent current capability/resource/owner/fences; retained refs and canonical witnesses",
+      "scope": "trusted tenant and actual optional/concrete memory space; owner predicates precede ordinary selection/hydration/limit"
+    },
+    {
+      "path": "contexts:getChildren",
+      "file": "convex-dev/contexts.ts",
+      "line": 183,
+      "kind": "query",
+      "disposition": "guarded public",
+      "argsExpression": "args: { ...selectors, contextId: v.string(), status: v.optional(status), recursive: v.optional(v.boolean()) }",
+      "originalDisposition": "guard",
+      "authority": "exact verified issuer/subject; independent current capability/resource/owner/fences; retained refs and canonical witnesses",
+      "scope": "trusted tenant and actual optional/concrete memory space; owner predicates precede ordinary selection/hydration/limit"
+    },
+    {
+      "path": "contexts:getHistory",
+      "file": "convex-dev/contexts.ts",
+      "line": 204,
+      "kind": "query",
+      "disposition": "guarded public",
+      "argsExpression": "args: { ...selectors, contextId: v.string() }",
+      "originalDisposition": "guard",
+      "authority": "exact verified issuer/subject; independent current capability/resource/owner/fences; retained refs and canonical witnesses",
+      "scope": "trusted tenant and actual optional/concrete memory space; owner predicates precede ordinary selection/hydration/limit"
+    },
+    {
+      "path": "contexts:getRoot",
+      "file": "convex-dev/contexts.ts",
+      "line": 180,
+      "kind": "query",
+      "disposition": "guarded public",
+      "argsExpression": "args: { ...selectors, contextId: v.string() }",
+      "originalDisposition": "guard",
+      "authority": "exact verified issuer/subject; independent current capability/resource/owner/fences; retained refs and canonical witnesses",
+      "scope": "trusted tenant and actual optional/concrete memory space; owner predicates precede ordinary selection/hydration/limit"
+    },
+    {
+      "path": "contexts:getVersion",
+      "file": "convex-dev/contexts.ts",
+      "line": 201,
+      "kind": "query",
+      "disposition": "guarded public",
+      "argsExpression": "args: { ...selectors, contextId: v.string(), version: v.number() }",
+      "originalDisposition": "guard",
+      "authority": "exact verified issuer/subject; independent current capability/resource/owner/fences; retained refs and canonical witnesses",
+      "scope": "trusted tenant and actual optional/concrete memory space; owner predicates precede ordinary selection/hydration/limit"
+    },
+    {
+      "path": "contexts:grantAccess",
+      "file": "convex-dev/contexts.ts",
+      "line": 102,
+      "kind": "mutation",
+      "disposition": "guarded public",
+      "argsExpression": "args: { ...selectors, contextId: v.string(), targetMemorySpaceId: v.string(), scope: v.string() }",
+      "originalDisposition": "guard",
+      "authority": "exact verified issuer/subject; independent current capability/resource/owner/fences; retained refs and canonical witnesses",
+      "scope": "trusted tenant and actual optional/concrete memory space; owner predicates precede ordinary selection/hydration/limit",
+      "collisionException": "Exact authorized key Boolean-only existence/uniqueness fence; Convex necessarily hydrates server documents then immediately discards them, never processed/authorized/logged/delivered"
+    },
+    {
+      "path": "contexts:list",
+      "file": "convex-dev/contexts.ts",
+      "line": 168,
+      "kind": "query",
+      "disposition": "guarded public",
+      "argsExpression": "args: { ...filters, parentId: v.optional(v.string()), rootId: v.optional(v.string()), depth: v.optional(v.number()), limit: v.optional(v.number()) }",
+      "originalDisposition": "guard",
+      "authority": "exact verified issuer/subject; independent current capability/resource/owner/fences; retained refs and canonical witnesses",
+      "scope": "trusted tenant and actual optional/concrete memory space; owner predicates precede ordinary selection/hydration/limit"
+    },
+    {
+      "path": "contexts:purgeAll",
+      "file": "convex-dev/contexts.ts",
+      "line": 220,
+      "kind": "internalMutation",
+      "disposition": "operator internal",
+      "argsExpression": "args: {}",
+      "originalDisposition": "internalize",
+      "authority": "trusted internal deployment operator; retained metadata/source/auth fences",
+      "scope": "trusted tenant and actual optional/concrete memory space; owner predicates precede ordinary selection/hydration/limit"
+    },
+    {
+      "path": "contexts:removeParticipant",
+      "file": "convex-dev/contexts.ts",
+      "line": 101,
+      "kind": "mutation",
+      "disposition": "guarded public",
+      "argsExpression": "args: { ...selectors, contextId: v.string(), participantId: v.string() }",
+      "originalDisposition": "guard",
+      "authority": "exact verified issuer/subject; independent current capability/resource/owner/fences; retained refs and canonical witnesses",
+      "scope": "trusted tenant and actual optional/concrete memory space; owner predicates precede ordinary selection/hydration/limit",
+      "collisionException": "Exact authorized key Boolean-only existence/uniqueness fence; Convex necessarily hydrates server documents then immediately discards them, never processed/authorized/logged/delivered"
+    },
+    {
+      "path": "contexts:search",
+      "file": "convex-dev/contexts.ts",
+      "line": 171,
+      "kind": "query",
+      "disposition": "guarded public",
+      "argsExpression": "args: { ...filters, limit: v.optional(v.number()) }",
+      "originalDisposition": "guard",
+      "authority": "exact verified issuer/subject; independent current capability/resource/owner/fences; retained refs and canonical witnesses",
+      "scope": "trusted tenant and actual optional/concrete memory space; owner predicates precede ordinary selection/hydration/limit"
+    },
+    {
+      "path": "contexts:update",
+      "file": "convex-dev/contexts.ts",
+      "line": 93,
+      "kind": "mutation",
+      "disposition": "guarded public",
+      "argsExpression": "args: { ...selectors, contextId: v.string(), status: v.optional(status), description: v.optional(v.string()), data: v.optional(v.any()), completedAt: v.optional(v.number()) }",
+      "originalDisposition": "guard",
+      "authority": "exact verified issuer/subject; independent current capability/resource/owner/fences; retained refs and canonical witnesses",
+      "scope": "trusted tenant and actual optional/concrete memory space; owner predicates precede ordinary selection/hydration/limit",
+      "collisionException": "Exact authorized key Boolean-only existence/uniqueness fence; Convex necessarily hydrates server documents then immediately discards them, never processed/authorized/logged/delivered"
+    },
+    {
+      "path": "contexts:updateMany",
+      "file": "convex-dev/contexts.ts",
+      "line": 148,
+      "kind": "mutation",
+      "disposition": "guarded public",
+      "argsExpression": "args: { ...filters, parentId: v.optional(v.string()), rootId: v.optional(v.string()), updates: v.object({ status: v.optional(status), data: v.optional(v.any()) }) }",
+      "originalDisposition": "guard",
+      "authority": "exact verified issuer/subject; independent current capability/resource/owner/fences; retained refs and canonical witnesses",
+      "scope": "trusted tenant and actual optional/concrete memory space; owner predicates precede ordinary selection/hydration/limit",
+      "collisionException": "Exact authorized key Boolean-only existence/uniqueness fence; Convex necessarily hydrates server documents then immediately discards them, never processed/authorized/logged/delivered"
+    },
+    {
+      "path": "memorySpaces:addParticipant",
+      "file": "convex-dev/memorySpaces.ts",
+      "line": 34,
+      "kind": "mutation",
+      "disposition": "guarded public",
+      "argsExpression": "args: { ...selectors, memorySpaceId: v.string(), participant }",
+      "originalDisposition": "guard",
+      "authority": "exact verified issuer/subject; independent current capability/resource/owner/fences; retained refs and canonical witnesses",
+      "scope": "trusted tenant and actual optional/concrete memory space; owner predicates precede ordinary selection/hydration/limit",
+      "collisionException": "Exact authorized key Boolean-only existence/uniqueness fence; Convex necessarily hydrates server documents then immediately discards them, never processed/authorized/logged/delivered"
+    },
+    {
+      "path": "memorySpaces:archive",
+      "file": "convex-dev/memorySpaces.ts",
+      "line": 38,
+      "kind": "mutation",
+      "disposition": "guarded public",
+      "argsExpression": "args: { ...selectors, memorySpaceId: v.string(), reason: v.optional(v.string()), metadata: v.optional(v.any()) }",
+      "originalDisposition": "guard",
+      "authority": "exact verified issuer/subject; independent current capability/resource/owner/fences; retained refs and canonical witnesses",
+      "scope": "trusted tenant and actual optional/concrete memory space; owner predicates precede ordinary selection/hydration/limit",
+      "collisionException": "Exact authorized key Boolean-only existence/uniqueness fence; Convex necessarily hydrates server documents then immediately discards them, never processed/authorized/logged/delivered"
+    },
+    {
+      "path": "memorySpaces:count",
+      "file": "convex-dev/memorySpaces.ts",
+      "line": 82,
+      "kind": "query",
+      "disposition": "guarded public",
+      "argsExpression": "args: filters",
+      "originalDisposition": "guard",
+      "authority": "exact verified issuer/subject; independent current capability/resource/owner/fences; retained refs and canonical witnesses",
+      "scope": "trusted tenant and actual optional/concrete memory space; owner predicates precede ordinary selection/hydration/limit"
+    },
+    {
+      "path": "memorySpaces:deleteSpace",
+      "file": "convex-dev/memorySpaces.ts",
+      "line": 50,
+      "kind": "mutation",
+      "disposition": "guarded public",
+      "argsExpression": "args: { ...selectors, memorySpaceId: v.string(), cascade: v.boolean(), reason: v.string(), confirmId: v.optional(v.string()) }",
+      "originalDisposition": "guard",
+      "authority": "exact verified issuer/subject; independent current capability/resource/owner/fences; retained refs and canonical witnesses",
+      "scope": "trusted tenant and actual optional/concrete memory space; owner predicates precede ordinary selection/hydration/limit",
+      "collisionException": "Exact authorized key Boolean-only existence/uniqueness fence; Convex necessarily hydrates server documents then immediately discards them, never processed/authorized/logged/delivered"
+    },
+    {
+      "path": "memorySpaces:findByParticipant",
+      "file": "convex-dev/memorySpaces.ts",
+      "line": 85,
+      "kind": "query",
+      "disposition": "guarded public",
+      "argsExpression": "args: { ...selectors, participantId: v.string() }",
+      "originalDisposition": "guard",
+      "authority": "exact verified issuer/subject; independent current capability/resource/owner/fences; retained refs and canonical witnesses",
+      "scope": "trusted tenant and actual optional/concrete memory space; owner predicates precede ordinary selection/hydration/limit"
+    },
+    {
+      "path": "memorySpaces:get",
+      "file": "convex-dev/memorySpaces.ts",
+      "line": 68,
+      "kind": "query",
+      "disposition": "guarded public",
+      "argsExpression": "args: { ...selectors, memorySpaceId: v.string() }",
+      "originalDisposition": "guard",
+      "authority": "exact verified issuer/subject; independent current capability/resource/owner/fences; retained refs and canonical witnesses",
+      "scope": "trusted tenant and actual optional/concrete memory space; owner predicates precede ordinary selection/hydration/limit"
+    },
+    {
+      "path": "memorySpaces:list",
+      "file": "convex-dev/memorySpaces.ts",
+      "line": 76,
+      "kind": "query",
+      "disposition": "guarded public",
+      "argsExpression": "args: { ...filters, participant: v.optional(v.string()), limit: v.optional(v.number()), offset: v.optional(v.number()), sortBy: v.optional(v.union(v.literal(\"createdAt\"), v.literal(\"updatedAt\"), v.literal(\"name\"))), sortOrder: v.optional(v.union(v.literal(\"asc\"), v.literal(\"desc\"))) }",
+      "originalDisposition": "guard",
+      "authority": "exact verified issuer/subject; independent current capability/resource/owner/fences; retained refs and canonical witnesses",
+      "scope": "trusted tenant and actual optional/concrete memory space; owner predicates precede ordinary selection/hydration/limit"
+    },
+    {
+      "path": "memorySpaces:purgeAll",
+      "file": "convex-dev/memorySpaces.ts",
+      "line": 94,
+      "kind": "internalMutation",
+      "disposition": "operator internal",
+      "argsExpression": "args: {}",
+      "originalDisposition": "internalize",
+      "authority": "trusted internal deployment operator; retained metadata/source/auth fences",
+      "scope": "trusted tenant and actual optional/concrete memory space; owner predicates precede ordinary selection/hydration/limit"
+    },
+    {
+      "path": "memorySpaces:reactivate",
+      "file": "convex-dev/memorySpaces.ts",
+      "line": 42,
+      "kind": "mutation",
+      "disposition": "guarded public",
+      "argsExpression": "args: { ...selectors, memorySpaceId: v.string() }",
+      "originalDisposition": "guard",
+      "authority": "exact verified issuer/subject; independent current capability/resource/owner/fences; retained refs and canonical witnesses",
+      "scope": "trusted tenant and actual optional/concrete memory space; owner predicates precede ordinary selection/hydration/limit",
+      "collisionException": "Exact authorized key Boolean-only existence/uniqueness fence; Convex necessarily hydrates server documents then immediately discards them, never processed/authorized/logged/delivered"
+    },
+    {
+      "path": "memorySpaces:register",
+      "file": "convex-dev/memorySpaces.ts",
+      "line": 19,
+      "kind": "mutation",
+      "disposition": "guarded public",
+      "argsExpression": "args: { ...selectors, memorySpaceId: v.string(), name: v.optional(v.string()), type: spaceType, participants: v.optional(v.array(participant)), metadata: v.optional(v.any()) }",
+      "originalDisposition": "guard",
+      "authority": "exact verified issuer/subject; independent current capability/resource/owner/fences; retained refs and canonical witnesses",
+      "scope": "trusted tenant and actual optional/concrete memory space; owner predicates precede ordinary selection/hydration/limit",
+      "collisionException": "Exact authorized key Boolean-only existence/uniqueness fence; Convex necessarily hydrates server documents then immediately discards them, never processed/authorized/logged/delivered"
+    },
+    {
+      "path": "memorySpaces:removeParticipant",
+      "file": "convex-dev/memorySpaces.ts",
+      "line": 37,
+      "kind": "mutation",
+      "disposition": "guarded public",
+      "argsExpression": "args: { ...selectors, memorySpaceId: v.string(), participantId: v.string() }",
+      "originalDisposition": "guard",
+      "authority": "exact verified issuer/subject; independent current capability/resource/owner/fences; retained refs and canonical witnesses",
+      "scope": "trusted tenant and actual optional/concrete memory space; owner predicates precede ordinary selection/hydration/limit",
+      "collisionException": "Exact authorized key Boolean-only existence/uniqueness fence; Convex necessarily hydrates server documents then immediately discards them, never processed/authorized/logged/delivered"
+    },
+    {
+      "path": "memorySpaces:search",
+      "file": "convex-dev/memorySpaces.ts",
+      "line": 88,
+      "kind": "query",
+      "disposition": "guarded public",
+      "argsExpression": "args: { ...filters, query: v.string(), limit: v.optional(v.number()) }",
+      "originalDisposition": "guard",
+      "authority": "exact verified issuer/subject; independent current capability/resource/owner/fences; retained refs and canonical witnesses",
+      "scope": "trusted tenant and actual optional/concrete memory space; owner predicates precede ordinary selection/hydration/limit"
+    },
+    {
+      "path": "memorySpaces:update",
+      "file": "convex-dev/memorySpaces.ts",
+      "line": 31,
+      "kind": "mutation",
+      "disposition": "guarded public",
+      "argsExpression": "args: { ...selectors, memorySpaceId: v.string(), name: v.optional(v.string()), metadata: v.optional(v.any()), status: v.optional(status) }",
+      "originalDisposition": "guard",
+      "authority": "exact verified issuer/subject; independent current capability/resource/owner/fences; retained refs and canonical witnesses",
+      "scope": "trusted tenant and actual optional/concrete memory space; owner predicates precede ordinary selection/hydration/limit",
+      "collisionException": "Exact authorized key Boolean-only existence/uniqueness fence; Convex necessarily hydrates server documents then immediately discards them, never processed/authorized/logged/delivered"
+    },
+    {
+      "path": "memorySpaces:updateParticipants",
+      "file": "convex-dev/memorySpaces.ts",
+      "line": 43,
+      "kind": "mutation",
+      "disposition": "guarded public",
+      "argsExpression": "args: { ...selectors, memorySpaceId: v.string(), add: v.optional(v.array(participant)), remove: v.optional(v.array(v.string())) }",
+      "originalDisposition": "guard",
+      "authority": "exact verified issuer/subject; independent current capability/resource/owner/fences; retained refs and canonical witnesses",
+      "scope": "trusted tenant and actual optional/concrete memory space; owner predicates precede ordinary selection/hydration/limit",
+      "collisionException": "Exact authorized key Boolean-only existence/uniqueness fence; Convex necessarily hydrates server documents then immediately discards them, never processed/authorized/logged/delivered"
+    }
+  ]
+}

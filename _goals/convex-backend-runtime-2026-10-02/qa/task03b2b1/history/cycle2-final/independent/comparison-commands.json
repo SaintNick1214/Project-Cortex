@@ -1,0 +1,110 @@
+[
+  {
+    "name": "pinned-base-root",
+    "ref": "a2c9827783e9dd49b9811a2899ba4acbeadc21cd",
+    "argv": [
+      "npx",
+      "--cache",
+      "/workspace/Project-Cortex/work/backend-runtime/npm12-cache",
+      "--yes",
+      "--package=npm@12.2.0",
+      "--",
+      "npm",
+      "exec",
+      "--",
+      "tsc",
+      "--noEmit"
+    ],
+    "cwd": "/tmp/task03b2b1-review2-onz6ay2u/pinned-base-tqb33z__",
+    "utcStart": "2026-10-03T12:41:35.914586+00:00",
+    "utcEnd": "2026-10-03T12:41:49.843164+00:00",
+    "exitCode": 2,
+    "diagnosticCount": 1,
+    "stdout": "pinned-base-root.stdout.txt",
+    "stderr": "pinned-base-root.stderr.txt"
+  },
+  {
+    "name": "pinned-base-lint",
+    "ref": "a2c9827783e9dd49b9811a2899ba4acbeadc21cd",
+    "argv": [
+      "npx",
+      "--cache",
+      "/workspace/Project-Cortex/work/backend-runtime/npm12-cache",
+      "--yes",
+      "--package=npm@12.2.0",
+      "--",
+      "npm",
+      "exec",
+      "--",
+      "tsc",
+      "--project",
+      "tsconfig.lint.json",
+      "--noEmit"
+    ],
+    "cwd": "/tmp/task03b2b1-review2-onz6ay2u/pinned-base-tqb33z__",
+    "utcStart": "2026-10-03T12:41:49.843610+00:00",
+    "utcEnd": "2026-10-03T12:42:00.129479+00:00",
+    "exitCode": 2,
+    "diagnosticCount": 1,
+    "stdout": "pinned-base-lint.stdout.txt",
+    "stderr": "pinned-base-lint.stderr.txt"
+  },
+  {
+    "temporaryTree": "/tmp/task03b2b1-review2-onz6ay2u/pinned-base-tqb33z__",
+    "removed": true
+  },
+  {
+    "name": "accepted-main-root",
+    "ref": "a793b40603fb55a02acd2230c34d57ac63f297d5",
+    "argv": [
+      "npx",
+      "--cache",
+      "/workspace/Project-Cortex/work/backend-runtime/npm12-cache",
+      "--yes",
+      "--package=npm@12.2.0",
+      "--",
+      "npm",
+      "exec",
+      "--",
+      "tsc",
+      "--noEmit"
+    ],
+    "cwd": "/tmp/task03b2b1-review2-onz6ay2u/accepted-main-n7nvqok4",
+    "utcStart": "2026-10-03T12:42:00.668550+00:00",
+    "utcEnd": "2026-10-03T12:42:14.046941+00:00",
+    "exitCode": 0,
+    "diagnosticCount": 0,
+    "stdout": "accepted-main-root.stdout.txt",
+    "stderr": "accepted-main-root.stderr.txt"
+  },
+  {
+    "name": "accepted-main-lint",
+    "ref": "a793b40603fb55a02acd2230c34d57ac63f297d5",
+    "argv": [
+      "npx",
+      "--cache",
+      "/workspace/Project-Cortex/work/backend-runtime/npm12-cache",
+      "--yes",
+      "--package=npm@12.2.0",
+      "--",
+      "npm",
+      "exec",
+      "--",
+      "tsc",
+      "--project",
+      "tsconfig.lint.json",
+      "--noEmit"
+    ],
+    "cwd": "/tmp/task03b2b1-review2-onz6ay2u/accepted-main-n7nvqok4",
+    "utcStart": "2026-10-03T12:42:14.047389+00:00",
+    "utcEnd": "2026-10-03T12:42:23.795272+00:00",
+    "exitCode": 0,
+    "diagnosticCount": 0,
+    "stdout": "accepted-main-lint.stdout.txt",
+    "stderr": "accepted-main-lint.stderr.txt"
+  },
+  {
+    "temporaryTree": "/tmp/task03b2b1-review2-onz6ay2u/accepted-main-n7nvqok4",
+    "removed": true
+  }
+]

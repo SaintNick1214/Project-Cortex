@@ -1,0 +1,50 @@
+{
+  "utc": "2026-10-04T16:38:54.516779+00:00",
+  "fullReportRead": true,
+  "reportSHA256": "1eb173b2736e9b66c0238a31ac155fb30867a1bd6de617ad30e2c1854c1367e3",
+  "closures": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-c5-closed-launcher-c2-fresh-review/qa-manifest.json",
+      "sha256": "6a869eb95a6e1d8c28afd11e4f8a780d4b7b4d5b1cd9dfa03c6a24350e6f583d",
+      "rows": 5,
+      "literalLinks": 0,
+      "exactSelfOnly": true,
+      "negativeHardlinkFixturePaths": [],
+      "ordinaryFilesNlink1ExceptExactNegativePairs": true,
+      "modeFields": "Not declared by candidate seal; no historical mode assertion made."
+    },
+    {
+      "path": "work/resume/task04-native-c5-closed-launcher-c2-fresh-review/work-manifest.json",
+      "sha256": "61e04b2b0c2c44c2b3b161b1192cc1b028a7703251a6385b8c41d7341c2336de",
+      "rows": 153,
+      "literalLinks": 6,
+      "exactSelfOnly": true,
+      "negativeHardlinkFixturePaths": [
+        "extra-fixture/extra-xZHdI9/hard-a",
+        "extra-fixture/extra-xZHdI9/hard-b",
+        "extra-fixture/extra-PXb0GE/hard-a",
+        "extra-fixture/extra-PXb0GE/hard-b"
+      ],
+      "ordinaryFilesNlink1ExceptExactNegativePairs": true,
+      "modeFields": "Not declared by candidate seal; no historical mode assertion made."
+    },
+    {
+      "path": "/tmp/cortex-native-c5-closed-launcher-c2-fresh-review/tmp-manifest.json",
+      "sha256": "44d7a4aacc881c1811543c54366177c16d8d0c3240524b47cec97729444dc5cd",
+      "rows": 153,
+      "literalLinks": 0,
+      "exactSelfOnly": true,
+      "negativeHardlinkFixturePaths": [],
+      "ordinaryFilesNlink1ExceptExactNegativePairs": true,
+      "modeFields": "Not declared by candidate seal; no historical mode assertion made."
+    }
+  ],
+  "verdict": "PASS_COMPONENT_ONLY",
+  "average": 4.4,
+  "controls": 81,
+  "original122": "HELD",
+  "qualificationsReleased": false,
+  "internalCompilerArgvRaw": "NOT_CAPTURED",
+  "historicalCustody": "BROKEN",
+  "rootInitialVerifierFailures": "Missing-root/mode schema assumptions, then nlink1-only assumption rejected four exact owned negative fixture paths; original failures remain tool history, no child/source edit."
+}

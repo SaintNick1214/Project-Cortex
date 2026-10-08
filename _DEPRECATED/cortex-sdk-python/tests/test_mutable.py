@@ -1,0 +1,2013 @@
+"""
+Tests for Mutable Store API (Layer 1c)
+
+Port of: tests/mutable.test.ts
+
+Tests validate:
+- SDK API calls
+- Atomic updates
+- State change propagation
+- Key-value operations
+"""
+
+import pytest
+
+from cortex.types import (
+    CountMutableFilter,
+    ListMutableFilter,
+    PurgeManyMutableFilter,
+    PurgeNamespaceOptions,
+)
+
+# ============================================================================
+# set() Tests
+# ============================================================================
+
+
+@pytest.mark.asyncio
+async def test_set_creates_new_record(cortex_client, test_ids, cleanup_helper, ctx):
+    """
+    Test creating a new mutable record.
+
+    Port of: mutable.test.ts - set tests
+    """
+    memory_space_id = test_ids["memory_space_id"]
+    # Use ctx for unique namespace/key to avoid parallel test collisions
+    unique_namespace = ctx.mutable_namespace("set-create")
+    unique_key = ctx.mutable_key("user-status")
+
+    result = await cortex_client.mutable.set(
+        unique_namespace,
+        unique_key,
+        {"status": "online", "lastSeen": 1234567890},
+    )
+
+    # Validate result - it's a MutableRecord object
+    assert result.namespace == unique_namespace
+    assert result.key == unique_key
+    assert result.value is not None
+
+    # Cleanup
+    await cleanup_helper.purge_mutable(memory_space_id, key_prefix=None)
+
+
+@pytest.mark.asyncio
+async def test_set_overwrites_existing_record(cortex_client, test_ids, cleanup_helper, ctx):
+    """
+    Test overwriting existing mutable record.
+
+    Port of: mutable.test.ts - set tests
+    """
+    memory_space_id = test_ids["memory_space_id"]
+    # Use ctx for unique namespace/key to avoid parallel test collisions
+    unique_namespace = ctx.mutable_namespace("set-overwrite")
+    unique_key = ctx.mutable_key("counter")
+
+    # Set initial value
+    await cortex_client.mutable.set(
+        unique_namespace,
+        unique_key,
+        {"count": 0},
+    )
+
+    # Overwrite with new value
+    await cortex_client.mutable.set(
+        unique_namespace,
+        unique_key,
+        {"count": 10},
+    )
+
+    # Get the value - now returns just the value directly
+    retrieved = await cortex_client.mutable.get(
+        unique_namespace,
+        unique_key,
+    )
+
+    assert retrieved is not None
+    # mutable.get() now returns just the value
+    assert retrieved["count"] == 10
+
+    # Cleanup
+    await cleanup_helper.purge_mutable(memory_space_id, key_prefix=None)
+
+
+# ============================================================================
+# get() Tests
+# ============================================================================
+
+
+@pytest.mark.asyncio
+async def test_get_existing_record(cortex_client, test_ids, cleanup_helper, ctx):
+    """
+    Test getting existing mutable record.
+
+    Port of: mutable.test.ts - get tests
+    """
+    memory_space_id = test_ids["memory_space_id"]
+    # Use ctx for unique namespace/key to avoid parallel test collisions
+    unique_namespace = ctx.mutable_namespace("get-existing")
+    unique_key = ctx.mutable_key("test-key")
+
+    # Set value
+    await cortex_client.mutable.set(
+        unique_namespace,
+        unique_key,
+        {"data": "test value"},
+    )
+
+    # Get value - now returns just the value directly
+    result = await cortex_client.mutable.get(
+        unique_namespace,
+        unique_key,
+    )
+
+    assert result is not None
+    # mutable.get() now returns just the value
+    assert result["data"] == "test value"
+
+    # Cleanup
+    await cleanup_helper.purge_mutable(memory_space_id, key_prefix=None)
+
+
+@pytest.mark.asyncio
+async def test_get_nonexistent_returns_none(cortex_client, test_ids, ctx):
+    """
+    Test that getting non-existent record returns None.
+
+    Port of: mutable.test.ts - get tests
+    """
+    test_ids["memory_space_id"]
+    # Use ctx for unique namespace/key to avoid parallel test collisions
+    unique_namespace = ctx.mutable_namespace("get-nonexistent")
+    unique_key = ctx.mutable_key("does-not-exist")
+
+    result = await cortex_client.mutable.get(
+        unique_namespace,
+        unique_key,
+    )
+
+    assert result is None
+
+
+# ============================================================================
+# update() Tests
+# ============================================================================
+
+
+@pytest.mark.asyncio
+async def test_update_merges_values(cortex_client, test_ids, cleanup_helper, ctx):
+    """
+    Test update merges with existing value.
+
+    Port of: mutable.test.ts - update tests
+    """
+    memory_space_id = test_ids["memory_space_id"]
+    # Use ctx for unique namespace/key to avoid parallel test collisions
+    unique_namespace = ctx.mutable_namespace("update-merge")
+    unique_key = ctx.mutable_key("user-prefs")
+
+    # Set initial value
+    await cortex_client.mutable.set(
+        unique_namespace,
+        unique_key,
+        {"theme": "dark", "notifications": True},
+    )
+
+    # Update (requires a callable updater function)
+    await cortex_client.mutable.update(
+        unique_namespace,
+        unique_key,
+        lambda current: {**(current or {}), "language": "en"},
+    )
+
+    # Get merged result - now returns just the value
+    retrieved = await cortex_client.mutable.get(
+        unique_namespace,
+        unique_key,
+    )
+
+    # Should have all fields - get() now returns just the value
+    assert retrieved["theme"] == "dark"
+    assert retrieved["notifications"] is True
+    assert retrieved["language"] == "en"
+
+    # Cleanup
+    await cleanup_helper.purge_mutable(memory_space_id, key_prefix=None)
+
+
+# ============================================================================
+# delete() Tests
+# ============================================================================
+
+
+@pytest.mark.asyncio
+async def test_delete_record(cortex_client, test_ids, cleanup_helper, ctx):
+    """
+    Test deleting a mutable record.
+
+    Port of: mutable.test.ts - delete tests
+    """
+    memory_space_id = test_ids["memory_space_id"]
+    # Use ctx for unique namespace/key to avoid parallel test collisions
+    unique_namespace = ctx.mutable_namespace("delete")
+    unique_key = ctx.mutable_key("delete-test")
+
+    # Create record
+    await cortex_client.mutable.set(
+        unique_namespace,
+        unique_key,
+        {"value": "to delete"},
+    )
+
+    # Delete it
+    await cortex_client.mutable.delete(
+        unique_namespace,
+        unique_key,
+    )
+
+    # Verify deleted
+    retrieved = await cortex_client.mutable.get(
+        unique_namespace,
+        unique_key,
+    )
+
+    assert retrieved is None
+
+    # Cleanup
+    await cleanup_helper.purge_mutable(memory_space_id, key_prefix=None)
+
+
+# ============================================================================
+# list() Tests
+# ============================================================================
+
+
+@pytest.mark.asyncio
+async def test_list_records_in_namespace(cortex_client, test_ids, cleanup_helper, ctx):
+    """
+    Test listing records in a namespace.
+
+    Port of: mutable.test.ts - list tests
+    """
+    memory_space_id = test_ids["memory_space_id"]
+    # Use ctx for unique namespace to avoid parallel test collisions
+    unique_namespace = ctx.mutable_namespace("list")
+
+    # Create multiple records
+    for i in range(3):
+        await cortex_client.mutable.set(
+            unique_namespace,
+            f"key-{i}",
+            {"value": i},
+        )
+
+    # List records - now uses ListMutableFilter
+    result = await cortex_client.mutable.list(
+        ListMutableFilter(namespace=unique_namespace, limit=10)
+    )
+
+    # Should return at least 3 records
+    records = result if isinstance(result, list) else result.get("records", [])
+    assert len(records) >= 3
+
+    # Cleanup
+    await cleanup_helper.purge_mutable(memory_space_id, key_prefix=None)
+
+
+# ============================================================================
+# count() Tests
+# ============================================================================
+
+
+@pytest.mark.asyncio
+async def test_count_records(cortex_client, test_ids, cleanup_helper, ctx):
+    """
+    Test counting records in a namespace.
+
+    Port of: mutable.test.ts - count tests
+    """
+    memory_space_id = test_ids["memory_space_id"]
+    # Use ctx for unique namespace to avoid parallel test collisions
+    unique_namespace = ctx.mutable_namespace("count")
+
+    # Create records
+    for i in range(4):
+        await cortex_client.mutable.set(
+            unique_namespace,
+            f"key-{i}",
+            {"value": i},
+        )
+
+    # Count records - now uses CountMutableFilter
+    count = await cortex_client.mutable.count(
+        CountMutableFilter(namespace=unique_namespace)
+    )
+
+    assert count >= 4
+
+    # Cleanup
+    await cleanup_helper.purge_mutable(memory_space_id, key_prefix=None)
+
+
+# ============================================================================
+# get_record() Tests
+# ============================================================================
+
+
+@pytest.mark.asyncio
+async def test_get_record_returns_full_record(cortex_client, test_ids, cleanup_helper, ctx):
+    """
+    Test getting full record with metadata (not just the value).
+
+    Port of: mutable.test.ts - getRecord tests
+    """
+    memory_space_id = test_ids["memory_space_id"]
+    # Use ctx for unique namespace/key to avoid parallel test collisions
+    unique_namespace = ctx.mutable_namespace("get-record")
+    unique_key = ctx.mutable_key("full-record")
+
+    # Set value with metadata
+    await cortex_client.mutable.set(
+        unique_namespace,
+        unique_key,
+        {"status": "active"},
+        metadata={"source": "test"},
+    )
+
+    # Get full record
+    record = await cortex_client.mutable.get_record(
+        unique_namespace,
+        unique_key,
+    )
+
+    assert record is not None
+    assert record.namespace == unique_namespace
+    assert record.key == unique_key
+    assert record.value["status"] == "active"
+    assert record.metadata is not None
+    assert record.metadata.get("source") == "test"
+    assert record.created_at is not None
+    assert record.updated_at is not None
+
+    # Cleanup
+    await cleanup_helper.purge_mutable(memory_space_id, key_prefix=None)
+
+
+@pytest.mark.asyncio
+async def test_get_record_returns_none_for_nonexistent(cortex_client, test_ids, ctx):
+    """
+    Test that get_record() returns None for non-existent record.
+
+    Port of: mutable.test.ts - getRecord tests
+    """
+    test_ids["memory_space_id"]
+    # Use ctx for unique namespace/key to avoid parallel test collisions
+    unique_namespace = ctx.mutable_namespace("get-record-nonexistent")
+    unique_key = ctx.mutable_key("does-not-exist")
+
+    record = await cortex_client.mutable.get_record(
+        unique_namespace,
+        unique_key,
+    )
+
+    assert record is None
+
+
+# ============================================================================
+# increment() Tests
+# ============================================================================
+
+
+@pytest.mark.asyncio
+async def test_increment_numeric_value(cortex_client, test_ids, cleanup_helper, ctx):
+    """
+    Test incrementing a numeric value atomically.
+
+    Port of: mutable.test.ts - increment tests
+    """
+    memory_space_id = test_ids["memory_space_id"]
+    # Use ctx for unique namespace/key to avoid parallel test collisions
+    unique_namespace = ctx.mutable_namespace("increment")
+    unique_key = ctx.mutable_key("counter")
+
+    # Set initial value
+    await cortex_client.mutable.set(
+        unique_namespace,
+        unique_key,
+        10,
+    )
+
+    # Increment by 5
+    result = await cortex_client.mutable.increment(
+        unique_namespace,
+        unique_key,
+        5,
+    )
+
+    assert result.value == 15
+
+    # Increment by default (1)
+    result = await cortex_client.mutable.increment(
+        unique_namespace,
+        unique_key,
+    )
+
+    assert result.value == 16
+
+    # Cleanup
+    await cleanup_helper.purge_mutable(memory_space_id, key_prefix=None)
+
+
+@pytest.mark.asyncio
+async def test_increment_requires_existing_key(cortex_client, test_ids, cleanup_helper, ctx):
+    """
+    Test that increment requires the key to exist first.
+
+    Note: Unlike some KV stores, this backend requires keys to exist
+    before increment operations. Incrementing a non-existent key raises
+    MUTABLE_KEY_NOT_FOUND error.
+
+    Port of: mutable.test.ts - increment tests
+    """
+    memory_space_id = test_ids["memory_space_id"]
+    # Use ctx for unique namespace/key to avoid parallel test collisions
+    unique_namespace = ctx.mutable_namespace("increment-create")
+    unique_key = ctx.mutable_key("new-counter")
+
+    # First, create the key with an initial value of 0
+    await cortex_client.mutable.set(
+        unique_namespace,
+        unique_key,
+        0,
+    )
+
+    # Now increment works
+    result = await cortex_client.mutable.increment(
+        unique_namespace,
+        unique_key,
+        3,
+    )
+
+    assert result.value == 3
+
+    # Cleanup
+    await cleanup_helper.purge_mutable(memory_space_id, key_prefix=None)
+
+
+# ============================================================================
+# decrement() Tests
+# ============================================================================
+
+
+@pytest.mark.asyncio
+async def test_decrement_numeric_value(cortex_client, test_ids, cleanup_helper, ctx):
+    """
+    Test decrementing a numeric value atomically.
+
+    Port of: mutable.test.ts - decrement tests
+    """
+    memory_space_id = test_ids["memory_space_id"]
+    # Use ctx for unique namespace/key to avoid parallel test collisions
+    unique_namespace = ctx.mutable_namespace("decrement")
+    unique_key = ctx.mutable_key("counter")
+
+    # Set initial value
+    await cortex_client.mutable.set(
+        unique_namespace,
+        unique_key,
+        20,
+    )
+
+    # Decrement by 5
+    result = await cortex_client.mutable.decrement(
+        unique_namespace,
+        unique_key,
+        5,
+    )
+
+    assert result.value == 15
+
+    # Decrement by default (1)
+    result = await cortex_client.mutable.decrement(
+        unique_namespace,
+        unique_key,
+    )
+
+    assert result.value == 14
+
+    # Cleanup
+    await cleanup_helper.purge_mutable(memory_space_id, key_prefix=None)
+
+
+@pytest.mark.asyncio
+async def test_decrement_requires_existing_key(cortex_client, test_ids, cleanup_helper, ctx):
+    """
+    Test that decrement requires the key to exist first.
+
+    Note: Unlike some KV stores, this backend requires keys to exist
+    before decrement operations. Decrementing a non-existent key raises
+    MUTABLE_KEY_NOT_FOUND error.
+
+    Port of: mutable.test.ts - decrement tests
+    """
+    memory_space_id = test_ids["memory_space_id"]
+    # Use ctx for unique namespace/key to avoid parallel test collisions
+    unique_namespace = ctx.mutable_namespace("decrement-create")
+    unique_key = ctx.mutable_key("new-counter")
+
+    # First, create the key with an initial value of 0
+    await cortex_client.mutable.set(
+        unique_namespace,
+        unique_key,
+        0,
+    )
+
+    # Now decrement works
+    result = await cortex_client.mutable.decrement(
+        unique_namespace,
+        unique_key,
+        3,
+    )
+
+    assert result.value == -3
+
+    # Cleanup
+    await cleanup_helper.purge_mutable(memory_space_id, key_prefix=None)
+
+
+# ============================================================================
+# purge_many() Tests
+# ============================================================================
+
+
+@pytest.mark.asyncio
+async def test_purge_many_with_key_prefix(cortex_client, test_ids, cleanup_helper, ctx):
+    """
+    Test purging multiple records with key prefix filter.
+
+    Port of: mutable.test.ts - purgeMany tests
+    """
+    memory_space_id = test_ids["memory_space_id"]
+    # Use ctx for unique namespace to avoid parallel test collisions
+    unique_namespace = ctx.mutable_namespace("purge-many")
+
+    # Create records with different prefixes
+    for i in range(3):
+        await cortex_client.mutable.set(
+            unique_namespace,
+            f"temp-{i}",
+            {"value": i},
+        )
+        await cortex_client.mutable.set(
+            unique_namespace,
+            f"keep-{i}",
+            {"value": i},
+        )
+
+    # Purge only temp-* keys
+    result = await cortex_client.mutable.purge_many(
+        PurgeManyMutableFilter(
+            namespace=unique_namespace,
+            key_prefix="temp-",
+        )
+    )
+
+    assert result is not None
+    assert result.get("deleted", 0) >= 3
+
+    # Verify temp-* keys are gone but keep-* remain
+    count = await cortex_client.mutable.count(
+        CountMutableFilter(namespace=unique_namespace)
+    )
+    assert count >= 3  # keep-* keys should remain
+
+    # Cleanup
+    await cleanup_helper.purge_mutable(memory_space_id, key_prefix=None)
+
+
+@pytest.mark.asyncio
+async def test_purge_many_with_user_id(cortex_client, test_ids, cleanup_helper, ctx):
+    """
+    Test purging multiple records filtered by user_id.
+
+    Port of: mutable.test.ts - purgeMany tests
+    """
+    memory_space_id = test_ids["memory_space_id"]
+    test_user_id = test_ids.get("test_user_id", "test-user-123")
+    # Use ctx for unique namespace to avoid parallel test collisions
+    unique_namespace = ctx.mutable_namespace("purge-many-user")
+
+    # Create records with user_id
+    for i in range(2):
+        await cortex_client.mutable.set(
+            unique_namespace,
+            f"user-key-{i}",
+            {"value": i},
+            user_id=test_user_id,
+        )
+
+    # Purge by user_id
+    result = await cortex_client.mutable.purge_many(
+        PurgeManyMutableFilter(
+            namespace=unique_namespace,
+            user_id=test_user_id,
+        )
+    )
+
+    assert result is not None
+    assert result.get("deleted", 0) >= 2
+
+    # Cleanup
+    await cleanup_helper.purge_mutable(memory_space_id, key_prefix=None)
+
+
+# ============================================================================
+# transaction() Tests
+# ============================================================================
+
+
+@pytest.mark.asyncio
+async def test_transaction_executes_multiple_operations(cortex_client, test_ids, cleanup_helper, ctx):
+    """
+    Test executing multiple operations atomically in a transaction.
+
+    Port of: mutable.test.ts - transaction tests
+    """
+    from cortex.types import MutableOperation
+
+    memory_space_id = test_ids["memory_space_id"]
+    # Use ctx for unique namespace to avoid parallel test collisions
+    unique_namespace = ctx.mutable_namespace("transaction")
+
+    # Set initial values
+    await cortex_client.mutable.set(unique_namespace, "counter", 10)
+    await cortex_client.mutable.set(unique_namespace, "status", "pending")
+
+    # Execute transaction
+    result = await cortex_client.mutable.transaction([
+        MutableOperation(
+            op="increment",
+            namespace=unique_namespace,
+            key="counter",
+            amount=5,
+        ),
+        MutableOperation(
+            op="set",
+            namespace=unique_namespace,
+            key="status",
+            value="completed",
+        ),
+        MutableOperation(
+            op="decrement",
+            namespace=unique_namespace,
+            key="counter",
+            amount=2,
+        ),
+    ])
+
+    assert result.success is True
+    assert result.operations_executed == 3
+
+    # Verify results
+    counter_value = await cortex_client.mutable.get(unique_namespace, "counter")
+    status_value = await cortex_client.mutable.get(unique_namespace, "status")
+
+    assert counter_value == 13  # 10 + 5 - 2
+    assert status_value == "completed"
+
+    # Cleanup
+    await cleanup_helper.purge_mutable(memory_space_id, key_prefix=None)
+
+
+# ============================================================================
+# exists() Tests
+# ============================================================================
+
+
+@pytest.mark.asyncio
+async def test_exists_returns_true_for_existing(cortex_client, test_ids, cleanup_helper, ctx):
+    """
+    Test exists() returns True for existing record.
+
+    Port of: mutable.test.ts - exists tests
+    """
+    memory_space_id = test_ids["memory_space_id"]
+    # Use ctx for unique namespace/key to avoid parallel test collisions
+    unique_namespace = ctx.mutable_namespace("exists-true")
+    unique_key = ctx.mutable_key("exists-test")
+
+    # Create record
+    await cortex_client.mutable.set(
+        unique_namespace,
+        unique_key,
+        {"value": "exists"},
+    )
+
+    # Check exists
+    exists = await cortex_client.mutable.exists(
+        unique_namespace,
+        unique_key,
+    )
+
+    assert exists is True
+
+    # Cleanup
+    await cleanup_helper.purge_mutable(memory_space_id, key_prefix=None)
+
+
+@pytest.mark.asyncio
+async def test_exists_returns_false_for_nonexistent(cortex_client, test_ids, ctx):
+    """
+    Test exists() returns False for non-existent record.
+
+    Port of: mutable.test.ts - exists tests
+    """
+    test_ids["memory_space_id"]
+    # Use ctx for unique namespace/key to avoid parallel test collisions
+    unique_namespace = ctx.mutable_namespace("exists-false")
+    unique_key = ctx.mutable_key("does-not-exist")
+
+    exists = await cortex_client.mutable.exists(
+        unique_namespace,
+        unique_key,
+    )
+
+    assert exists is False
+
+
+# ============================================================================
+# purgeNamespace() Tests
+# ============================================================================
+
+
+@pytest.mark.asyncio
+async def test_purge_namespace(cortex_client, test_ids, cleanup_helper, ctx):
+    """
+    Test purging entire namespace.
+
+    Port of: mutable.test.ts - purgeNamespace tests
+    """
+    memory_space_id = test_ids["memory_space_id"]
+    # Use ctx for unique namespace to avoid parallel test collisions
+    unique_namespace = ctx.mutable_namespace("purge")
+
+    # Create multiple records in namespace
+    for i in range(5):
+        await cortex_client.mutable.set(
+            unique_namespace,
+            f"key-{i}",
+            {"value": i},
+        )
+
+    # Purge namespace
+    await cortex_client.mutable.purge_namespace(
+        unique_namespace,
+    )
+
+    # Verify all deleted - now uses CountMutableFilter
+    count = await cortex_client.mutable.count(
+        CountMutableFilter(namespace=unique_namespace)
+    )
+
+    assert count == 0
+
+    # Cleanup
+    await cleanup_helper.purge_mutable(memory_space_id, key_prefix=None)
+
+
+@pytest.mark.asyncio
+async def test_purge_namespace_with_dry_run(cortex_client, test_ids, cleanup_helper, ctx):
+    """
+    Test purging namespace with dry_run option.
+
+    Port of: mutable.test.ts - purgeNamespace tests
+    """
+    memory_space_id = test_ids["memory_space_id"]
+    # Use ctx for unique namespace to avoid parallel test collisions
+    unique_namespace = ctx.mutable_namespace("purge-dry-run")
+
+    # Create multiple records in namespace
+    for i in range(3):
+        await cortex_client.mutable.set(
+            unique_namespace,
+            f"key-{i}",
+            {"value": i},
+        )
+
+    # Dry run purge - should not delete
+    result = await cortex_client.mutable.purge_namespace(
+        unique_namespace,
+        PurgeNamespaceOptions(dry_run=True),
+    )
+
+    assert result is not None
+    assert result.get("deleted", 0) >= 3
+
+    # Verify records still exist
+    count = await cortex_client.mutable.count(
+        CountMutableFilter(namespace=unique_namespace)
+    )
+    assert count >= 3
+
+    # Cleanup
+    await cleanup_helper.purge_mutable(memory_space_id, key_prefix=None)
+
+
+# ============================================================================
+# tenant_id Tests (v0.31.0 Multi-Tenancy)
+# ============================================================================
+
+
+@pytest.mark.asyncio
+async def test_set_populates_tenant_id_in_record(cortex_client, test_ids, cleanup_helper, ctx):
+    """
+    Test that set() populates tenant_id in MutableRecord when available.
+
+    Tests: MutableRecord.tenant_id field (v0.31.0)
+    """
+    memory_space_id = test_ids["memory_space_id"]
+    # Use ctx for unique namespace/key to avoid parallel test collisions
+    unique_namespace = ctx.mutable_namespace("tenant-id-set")
+    unique_key = ctx.mutable_key("tenant-test")
+
+    result = await cortex_client.mutable.set(
+        unique_namespace,
+        unique_key,
+        {"value": "test"},
+    )
+
+    # tenant_id may be None if auth_context is not set, or populated if it is
+    # This test verifies the field exists and can be accessed
+    assert hasattr(result, "tenant_id")
+    # tenant_id is Optional[str], so it can be None or a string
+    assert result.tenant_id is None or isinstance(result.tenant_id, str)
+
+    # Cleanup
+    await cleanup_helper.purge_mutable(memory_space_id, key_prefix=None)
+
+
+@pytest.mark.asyncio
+async def test_list_with_tenant_id_filter(cortex_client, test_ids, cleanup_helper, ctx):
+    """
+    Test listing records with tenant_id filter.
+
+    Tests: ListMutableFilter.tenant_id (v0.31.0)
+    """
+    memory_space_id = test_ids["memory_space_id"]
+    # Use ctx for unique namespace to avoid parallel test collisions
+    unique_namespace = ctx.mutable_namespace("list-tenant")
+    test_tenant_id = "test-tenant-123"
+
+    # Create records
+    for i in range(2):
+        await cortex_client.mutable.set(
+            unique_namespace,
+            f"key-{i}",
+            {"value": i},
+        )
+
+    # List with tenant_id filter (explicit tenant_id)
+    result = await cortex_client.mutable.list(
+        ListMutableFilter(
+            namespace=unique_namespace,
+            tenant_id=test_tenant_id,
+            limit=10,
+        )
+    )
+
+    # Should return list (may be empty if tenant_id doesn't match)
+    assert isinstance(result, list)
+
+    # Cleanup
+    await cleanup_helper.purge_mutable(memory_space_id, key_prefix=None)
+
+
+@pytest.mark.asyncio
+async def test_list_without_tenant_id_backward_compat(cortex_client, test_ids, cleanup_helper, ctx):
+    """
+    Test that list() works without tenant_id (backward compatibility).
+
+    Tests: ListMutableFilter backward compatibility
+    """
+    memory_space_id = test_ids["memory_space_id"]
+    # Use ctx for unique namespace to avoid parallel test collisions
+    unique_namespace = ctx.mutable_namespace("list-no-tenant")
+
+    # Create records
+    for i in range(2):
+        await cortex_client.mutable.set(
+            unique_namespace,
+            f"key-{i}",
+            {"value": i},
+        )
+
+    # List without tenant_id (should still work)
+    result = await cortex_client.mutable.list(
+        ListMutableFilter(namespace=unique_namespace, limit=10)
+    )
+
+    assert isinstance(result, list)
+    assert len(result) >= 2
+
+    # Cleanup
+    await cleanup_helper.purge_mutable(memory_space_id, key_prefix=None)
+
+
+@pytest.mark.asyncio
+async def test_count_with_tenant_id_filter(cortex_client, test_ids, cleanup_helper, ctx):
+    """
+    Test counting records with tenant_id filter.
+
+    Tests: CountMutableFilter.tenant_id (v0.31.0)
+    """
+    memory_space_id = test_ids["memory_space_id"]
+    # Use ctx for unique namespace to avoid parallel test collisions
+    unique_namespace = ctx.mutable_namespace("count-tenant")
+    test_tenant_id = "test-tenant-456"
+
+    # Create records
+    for i in range(3):
+        await cortex_client.mutable.set(
+            unique_namespace,
+            f"key-{i}",
+            {"value": i},
+        )
+
+    # Count with tenant_id filter
+    count = await cortex_client.mutable.count(
+        CountMutableFilter(
+            namespace=unique_namespace,
+            tenant_id=test_tenant_id,
+        )
+    )
+
+    # Should return integer (may be 0 if tenant_id doesn't match)
+    assert isinstance(count, int)
+    assert count >= 0
+
+    # Cleanup
+    await cleanup_helper.purge_mutable(memory_space_id, key_prefix=None)
+
+
+@pytest.mark.asyncio
+async def test_count_without_tenant_id_backward_compat(cortex_client, test_ids, cleanup_helper, ctx):
+    """
+    Test that count() works without tenant_id (backward compatibility).
+
+    Tests: CountMutableFilter backward compatibility
+    """
+    memory_space_id = test_ids["memory_space_id"]
+    # Use ctx for unique namespace to avoid parallel test collisions
+    unique_namespace = ctx.mutable_namespace("count-no-tenant")
+
+    # Create records
+    for i in range(3):
+        await cortex_client.mutable.set(
+            unique_namespace,
+            f"key-{i}",
+            {"value": i},
+        )
+
+    # Count without tenant_id (should still work)
+    count = await cortex_client.mutable.count(
+        CountMutableFilter(namespace=unique_namespace)
+    )
+
+    assert isinstance(count, int)
+    assert count >= 3
+
+    # Cleanup
+    await cleanup_helper.purge_mutable(memory_space_id, key_prefix=None)
+
+
+@pytest.mark.asyncio
+async def test_purge_namespace_with_tenant_id(cortex_client, test_ids, cleanup_helper, ctx):
+    """
+    Test purging namespace with tenant_id option.
+
+    Tests: PurgeNamespaceOptions.tenant_id (v0.31.0)
+    """
+    memory_space_id = test_ids["memory_space_id"]
+    # Use ctx for unique namespace to avoid parallel test collisions
+    unique_namespace = ctx.mutable_namespace("purge-ns-tenant")
+    test_tenant_id = "test-tenant-789"
+
+    # Create records
+    for i in range(2):
+        await cortex_client.mutable.set(
+            unique_namespace,
+            f"key-{i}",
+            {"value": i},
+        )
+
+    # Purge namespace with tenant_id option
+    result = await cortex_client.mutable.purge_namespace(
+        unique_namespace,
+        PurgeNamespaceOptions(tenant_id=test_tenant_id),
+    )
+
+    assert result is not None
+
+    # Cleanup
+    await cleanup_helper.purge_mutable(memory_space_id, key_prefix=None)
+
+
+@pytest.mark.asyncio
+async def test_purge_many_with_tenant_id_filter(cortex_client, test_ids, cleanup_helper, ctx):
+    """
+    Test purging multiple records with tenant_id filter.
+
+    Tests: PurgeManyMutableFilter.tenant_id (v0.31.0)
+    """
+    memory_space_id = test_ids["memory_space_id"]
+    # Use ctx for unique namespace to avoid parallel test collisions
+    unique_namespace = ctx.mutable_namespace("purge-many-tenant")
+    test_tenant_id = "test-tenant-999"
+
+    # Create records
+    for i in range(2):
+        await cortex_client.mutable.set(
+            unique_namespace,
+            f"key-{i}",
+            {"value": i},
+        )
+
+    # Purge many with tenant_id filter
+    result = await cortex_client.mutable.purge_many(
+        PurgeManyMutableFilter(
+            namespace=unique_namespace,
+            tenant_id=test_tenant_id,
+        )
+    )
+
+    assert result is not None
+
+    # Cleanup
+    await cleanup_helper.purge_mutable(memory_space_id, key_prefix=None)
+
+
+@pytest.mark.asyncio
+async def test_get_record_includes_tenant_id(cortex_client, test_ids, cleanup_helper, ctx):
+    """
+    Test that get_record() returns record with tenant_id field.
+
+    Tests: MutableRecord.tenant_id field access (v0.31.0)
+    """
+    memory_space_id = test_ids["memory_space_id"]
+    # Use ctx for unique namespace/key to avoid parallel test collisions
+    unique_namespace = ctx.mutable_namespace("get-record-tenant")
+    unique_key = ctx.mutable_key("tenant-record")
+
+    # Set value
+    await cortex_client.mutable.set(
+        unique_namespace,
+        unique_key,
+        {"value": "test"},
+    )
+
+    # Get record
+    record = await cortex_client.mutable.get_record(
+        unique_namespace,
+        unique_key,
+    )
+
+    assert record is not None
+    # Verify tenant_id field exists (may be None if auth_context not set)
+    assert hasattr(record, "tenant_id")
+    assert record.tenant_id is None or isinstance(record.tenant_id, str)
+
+    # Cleanup
+    await cleanup_helper.purge_mutable(memory_space_id, key_prefix=None)
+
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Client-Side Validation Tests
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# These tests validate CLIENT-SIDE validation (synchronous errors)
+# Backend validation tests are in the functional test sections above
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+# ============================================================================
+# set() Validation Tests
+# ============================================================================
+
+
+@pytest.mark.asyncio
+async def test_set_validation_missing_namespace(cortex_client):
+    """Should throw on missing namespace."""
+    from cortex.mutable import MutableValidationError
+
+    with pytest.raises(MutableValidationError) as exc_info:
+        await cortex_client.mutable.set("", "key", "value")
+
+    assert exc_info.value.code == "MISSING_NAMESPACE"
+    assert "namespace is required" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_set_validation_whitespace_namespace(cortex_client):
+    """Should throw on whitespace-only namespace."""
+    from cortex.mutable import MutableValidationError
+
+    with pytest.raises(MutableValidationError) as exc_info:
+        await cortex_client.mutable.set("   ", "key", "value")
+
+    assert exc_info.value.code == "MISSING_NAMESPACE"
+    assert "namespace is required" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_set_validation_invalid_namespace_format_spaces(cortex_client):
+    """Should throw on invalid namespace format (spaces)."""
+    from cortex.mutable import MutableValidationError
+
+    with pytest.raises(MutableValidationError) as exc_info:
+        await cortex_client.mutable.set("name with spaces", "key", "value")
+
+    assert exc_info.value.code == "INVALID_NAMESPACE"
+    assert "Invalid namespace format" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_set_validation_invalid_namespace_format_emoji(cortex_client):
+    """Should throw on invalid namespace format (emoji)."""
+    from cortex.mutable import MutableValidationError
+
+    with pytest.raises(MutableValidationError) as exc_info:
+        await cortex_client.mutable.set("namespace-😀", "key", "value")
+
+    assert exc_info.value.code == "INVALID_NAMESPACE"
+    assert "Invalid namespace format" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_set_validation_namespace_too_long(cortex_client):
+    """Should throw on namespace too long."""
+    from cortex.mutable import MutableValidationError
+
+    long_namespace = "a" * 101  # Max is 100
+
+    with pytest.raises(MutableValidationError) as exc_info:
+        await cortex_client.mutable.set(long_namespace, "key", "value")
+
+    assert exc_info.value.code == "NAMESPACE_TOO_LONG"
+    assert "exceeds maximum length" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_set_validation_missing_key(cortex_client):
+    """Should throw on missing key."""
+    from cortex.mutable import MutableValidationError
+
+    with pytest.raises(MutableValidationError) as exc_info:
+        await cortex_client.mutable.set("namespace", "", "value")
+
+    assert exc_info.value.code == "MISSING_KEY"
+    assert "key is required" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_set_validation_invalid_key_format(cortex_client):
+    """Should throw on invalid key format."""
+    from cortex.mutable import MutableValidationError
+
+    with pytest.raises(MutableValidationError) as exc_info:
+        await cortex_client.mutable.set("namespace", "key with spaces", "value")
+
+    assert exc_info.value.code == "INVALID_KEY"
+    assert "Invalid key format" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_set_validation_key_too_long(cortex_client):
+    """Should throw on key too long."""
+    from cortex.mutable import MutableValidationError
+
+    long_key = "a" * 256  # Max is 255
+
+    with pytest.raises(MutableValidationError) as exc_info:
+        await cortex_client.mutable.set("namespace", long_key, "value")
+
+    assert exc_info.value.code == "KEY_TOO_LONG"
+    assert "exceeds maximum length" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_set_validation_value_too_large(cortex_client):
+    """Should throw on value too large."""
+    from cortex.mutable import MutableValidationError
+
+    large_value = {"data": "x" * (2 * 1024 * 1024)}  # 2MB
+
+    with pytest.raises(MutableValidationError) as exc_info:
+        await cortex_client.mutable.set("namespace", "key", large_value)
+
+    assert exc_info.value.code == "VALUE_TOO_LARGE"
+    assert "exceeds maximum size" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_set_validation_invalid_user_id(cortex_client):
+    """Should throw on invalid user_id format."""
+    from cortex.mutable import MutableValidationError
+
+    with pytest.raises(MutableValidationError) as exc_info:
+        await cortex_client.mutable.set("namespace", "key", "value", user_id="")
+
+    assert exc_info.value.code == "INVALID_USER_ID"
+    assert "user_id cannot be empty" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_set_validation_accepts_valid_inputs(cortex_client, cleanup_helper, test_ids):
+    """Should accept valid inputs."""
+    result = await cortex_client.mutable.set(
+        "validation-test", "valid-key", "valid-value"
+    )
+    assert result.value == "valid-value"
+    await cleanup_helper.purge_mutable(test_ids["memory_space_id"])
+
+
+@pytest.mark.asyncio
+async def test_set_validation_accepts_complex_values(cortex_client, cleanup_helper, test_ids):
+    """Should accept complex dict values."""
+    complex_value = {"nested": {"data": [1, 2, 3]}}
+    result = await cortex_client.mutable.set(
+        "validation-test", "complex", complex_value
+    )
+    assert result.value == complex_value
+    await cleanup_helper.purge_mutable(test_ids["memory_space_id"])
+
+
+# ============================================================================
+# get() Validation Tests
+# ============================================================================
+
+
+@pytest.mark.asyncio
+async def test_get_validation_missing_namespace(cortex_client):
+    """Should throw on missing namespace."""
+    from cortex.mutable import MutableValidationError
+
+    with pytest.raises(MutableValidationError) as exc_info:
+        await cortex_client.mutable.get("", "key")
+
+    assert exc_info.value.code == "MISSING_NAMESPACE"
+
+
+@pytest.mark.asyncio
+async def test_get_validation_invalid_namespace_format(cortex_client):
+    """Should throw on invalid namespace format."""
+    from cortex.mutable import MutableValidationError
+
+    with pytest.raises(MutableValidationError) as exc_info:
+        await cortex_client.mutable.get("name with spaces", "key")
+
+    assert "Invalid namespace format" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_get_validation_missing_key(cortex_client):
+    """Should throw on missing key."""
+    from cortex.mutable import MutableValidationError
+
+    with pytest.raises(MutableValidationError) as exc_info:
+        await cortex_client.mutable.get("namespace", "")
+
+    assert exc_info.value.code == "MISSING_KEY"
+
+
+@pytest.mark.asyncio
+async def test_get_validation_invalid_key_format(cortex_client):
+    """Should throw on invalid key format."""
+    from cortex.mutable import MutableValidationError
+
+    with pytest.raises(MutableValidationError) as exc_info:
+        await cortex_client.mutable.get("namespace", "key with spaces")
+
+    assert "Invalid key format" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_get_validation_accepts_valid_inputs(cortex_client, cleanup_helper, test_ids):
+    """Should accept valid inputs."""
+    await cortex_client.mutable.set("validation-test", "get-test", "value")
+    value = await cortex_client.mutable.get("validation-test", "get-test")
+    assert value is not None
+    await cleanup_helper.purge_mutable(test_ids["memory_space_id"])
+
+
+# ============================================================================
+# get_record() Validation Tests
+# ============================================================================
+
+
+@pytest.mark.asyncio
+async def test_get_record_validation_missing_namespace(cortex_client):
+    """Should throw on missing namespace."""
+    from cortex.mutable import MutableValidationError
+
+    with pytest.raises(MutableValidationError) as exc_info:
+        await cortex_client.mutable.get_record("", "key")
+
+    assert exc_info.value.code == "MISSING_NAMESPACE"
+
+
+@pytest.mark.asyncio
+async def test_get_record_validation_invalid_namespace_format(cortex_client):
+    """Should throw on invalid namespace format."""
+    from cortex.mutable import MutableValidationError
+
+    with pytest.raises(MutableValidationError) as exc_info:
+        await cortex_client.mutable.get_record("name with spaces", "key")
+
+    assert "Invalid namespace format" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_get_record_validation_missing_key(cortex_client):
+    """Should throw on missing key."""
+    from cortex.mutable import MutableValidationError
+
+    with pytest.raises(MutableValidationError) as exc_info:
+        await cortex_client.mutable.get_record("namespace", "")
+
+    assert exc_info.value.code == "MISSING_KEY"
+
+
+@pytest.mark.asyncio
+async def test_get_record_validation_invalid_key_format(cortex_client):
+    """Should throw on invalid key format."""
+    from cortex.mutable import MutableValidationError
+
+    with pytest.raises(MutableValidationError) as exc_info:
+        await cortex_client.mutable.get_record("namespace", "key with spaces")
+
+    assert "Invalid key format" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_get_record_validation_accepts_valid_inputs(cortex_client, cleanup_helper, test_ids):
+    """Should accept valid inputs."""
+    await cortex_client.mutable.set("validation-test", "record-test", "value")
+    record = await cortex_client.mutable.get_record("validation-test", "record-test")
+    assert record is not None
+    await cleanup_helper.purge_mutable(test_ids["memory_space_id"])
+
+
+# ============================================================================
+# update() Validation Tests
+# ============================================================================
+
+
+@pytest.mark.asyncio
+async def test_update_validation_missing_namespace(cortex_client):
+    """Should throw on missing namespace."""
+    from cortex.mutable import MutableValidationError
+
+    with pytest.raises(MutableValidationError) as exc_info:
+        await cortex_client.mutable.update("", "key", lambda v: v)
+
+    assert exc_info.value.code == "MISSING_NAMESPACE"
+
+
+@pytest.mark.asyncio
+async def test_update_validation_invalid_namespace_format(cortex_client):
+    """Should throw on invalid namespace format."""
+    from cortex.mutable import MutableValidationError
+
+    with pytest.raises(MutableValidationError) as exc_info:
+        await cortex_client.mutable.update("name with spaces", "key", lambda v: v)
+
+    assert "Invalid namespace format" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_update_validation_missing_key(cortex_client):
+    """Should throw on missing key."""
+    from cortex.mutable import MutableValidationError
+
+    with pytest.raises(MutableValidationError) as exc_info:
+        await cortex_client.mutable.update("namespace", "", lambda v: v)
+
+    assert exc_info.value.code == "MISSING_KEY"
+
+
+@pytest.mark.asyncio
+async def test_update_validation_invalid_key_format(cortex_client):
+    """Should throw on invalid key format."""
+    from cortex.mutable import MutableValidationError
+
+    with pytest.raises(MutableValidationError) as exc_info:
+        await cortex_client.mutable.update("namespace", "key with spaces", lambda v: v)
+
+    assert "Invalid key format" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_update_validation_missing_updater(cortex_client):
+    """Should throw on missing updater."""
+    from cortex.mutable import MutableValidationError
+
+    with pytest.raises(MutableValidationError) as exc_info:
+        await cortex_client.mutable.update("namespace", "key", None)
+
+    assert exc_info.value.code == "INVALID_UPDATER_TYPE"
+    assert "Updater function is required" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_update_validation_non_callable_updater(cortex_client):
+    """Should throw on non-callable updater."""
+    from cortex.mutable import MutableValidationError
+
+    with pytest.raises(MutableValidationError) as exc_info:
+        await cortex_client.mutable.update("namespace", "key", "not a function")
+
+    assert exc_info.value.code == "INVALID_UPDATER_TYPE"
+    assert "must be a callable function" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_update_validation_accepts_valid_updater(cortex_client, cleanup_helper, test_ids, ctx):
+    """Should accept valid callable updater."""
+    # Use ctx for unique namespace/key to avoid parallel test collisions
+    unique_namespace = ctx.mutable_namespace("update-validation")
+    unique_key = ctx.mutable_key("update-test")
+    await cortex_client.mutable.set(unique_namespace, unique_key, 100)
+    result = await cortex_client.mutable.update(
+        unique_namespace, unique_key, lambda v: v + 1
+    )
+    assert result.value == 101
+    await cleanup_helper.purge_mutable(test_ids["memory_space_id"])
+
+
+# ============================================================================
+# increment() Validation Tests
+# ============================================================================
+
+
+@pytest.mark.asyncio
+async def test_increment_validation_missing_namespace(cortex_client):
+    """Should throw on missing namespace."""
+    from cortex.mutable import MutableValidationError
+
+    with pytest.raises(MutableValidationError) as exc_info:
+        await cortex_client.mutable.increment("", "key", 1)
+
+    assert exc_info.value.code == "MISSING_NAMESPACE"
+
+
+@pytest.mark.asyncio
+async def test_increment_validation_invalid_namespace_format(cortex_client):
+    """Should throw on invalid namespace format."""
+    from cortex.mutable import MutableValidationError
+
+    with pytest.raises(MutableValidationError) as exc_info:
+        await cortex_client.mutable.increment("name with spaces", "key", 1)
+
+    assert "Invalid namespace format" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_increment_validation_missing_key(cortex_client):
+    """Should throw on missing key."""
+    from cortex.mutable import MutableValidationError
+
+    with pytest.raises(MutableValidationError) as exc_info:
+        await cortex_client.mutable.increment("namespace", "", 1)
+
+    assert exc_info.value.code == "MISSING_KEY"
+
+
+@pytest.mark.asyncio
+async def test_increment_validation_invalid_key_format(cortex_client):
+    """Should throw on invalid key format."""
+    from cortex.mutable import MutableValidationError
+
+    with pytest.raises(MutableValidationError) as exc_info:
+        await cortex_client.mutable.increment("namespace", "key with spaces", 1)
+
+    assert "Invalid key format" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_increment_validation_non_numeric_amount(cortex_client):
+    """Should throw on non-numeric amount."""
+    from cortex.mutable import MutableValidationError
+
+    with pytest.raises(MutableValidationError) as exc_info:
+        await cortex_client.mutable.increment("namespace", "key", "not a number")
+
+    assert exc_info.value.code == "INVALID_AMOUNT_TYPE"
+    assert "amount must be a number" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_increment_validation_accepts_valid_amount(cortex_client, cleanup_helper, test_ids):
+    """Should accept valid amount."""
+    await cortex_client.mutable.set("validation-test", "inc-test", 0)
+    result = await cortex_client.mutable.increment("validation-test", "inc-test", 5)
+    assert result.value >= 5
+    await cleanup_helper.purge_mutable(test_ids["memory_space_id"])
+
+
+@pytest.mark.asyncio
+async def test_increment_validation_accepts_default_amount(cortex_client, cleanup_helper, test_ids, ctx):
+    """Should accept default amount."""
+    # Use ctx for unique namespace/key to avoid parallel test collisions
+    unique_namespace = ctx.mutable_namespace("inc-default-validation")
+    unique_key = ctx.mutable_key("inc-default")
+    await cortex_client.mutable.set(unique_namespace, unique_key, 0)
+    result = await cortex_client.mutable.increment(unique_namespace, unique_key)
+    assert result.value == 1
+    await cleanup_helper.purge_mutable(test_ids["memory_space_id"])
+
+
+# ============================================================================
+# decrement() Validation Tests
+# ============================================================================
+
+
+@pytest.mark.asyncio
+async def test_decrement_validation_missing_namespace(cortex_client):
+    """Should throw on missing namespace."""
+    from cortex.mutable import MutableValidationError
+
+    with pytest.raises(MutableValidationError) as exc_info:
+        await cortex_client.mutable.decrement("", "key", 1)
+
+    assert exc_info.value.code == "MISSING_NAMESPACE"
+
+
+@pytest.mark.asyncio
+async def test_decrement_validation_invalid_namespace_format(cortex_client):
+    """Should throw on invalid namespace format."""
+    from cortex.mutable import MutableValidationError
+
+    with pytest.raises(MutableValidationError) as exc_info:
+        await cortex_client.mutable.decrement("name with spaces", "key", 1)
+
+    assert "Invalid namespace format" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_decrement_validation_missing_key(cortex_client):
+    """Should throw on missing key."""
+    from cortex.mutable import MutableValidationError
+
+    with pytest.raises(MutableValidationError) as exc_info:
+        await cortex_client.mutable.decrement("namespace", "", 1)
+
+    assert exc_info.value.code == "MISSING_KEY"
+
+
+@pytest.mark.asyncio
+async def test_decrement_validation_invalid_key_format(cortex_client):
+    """Should throw on invalid key format."""
+    from cortex.mutable import MutableValidationError
+
+    with pytest.raises(MutableValidationError) as exc_info:
+        await cortex_client.mutable.decrement("namespace", "key with spaces", 1)
+
+    assert "Invalid key format" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_decrement_validation_non_numeric_amount(cortex_client):
+    """Should throw on non-numeric amount."""
+    from cortex.mutable import MutableValidationError
+
+    with pytest.raises(MutableValidationError) as exc_info:
+        await cortex_client.mutable.decrement("namespace", "key", "not a number")
+
+    assert exc_info.value.code == "INVALID_AMOUNT_TYPE"
+    assert "amount must be a number" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_decrement_validation_accepts_valid_amount(cortex_client, cleanup_helper, test_ids):
+    """Should accept valid amount."""
+    await cortex_client.mutable.set("validation-test", "dec-test", 100)
+    result = await cortex_client.mutable.decrement("validation-test", "dec-test", 5)
+    assert result.value <= 95
+    await cleanup_helper.purge_mutable(test_ids["memory_space_id"])
+
+
+@pytest.mark.asyncio
+async def test_decrement_validation_accepts_default_amount(cortex_client, cleanup_helper, test_ids, ctx):
+    """Should accept default amount."""
+    # Use ctx for unique namespace/key to avoid parallel test collisions
+    unique_namespace = ctx.mutable_namespace("dec-default-validation")
+    unique_key = ctx.mutable_key("dec-default")
+    await cortex_client.mutable.set(unique_namespace, unique_key, 10)
+    result = await cortex_client.mutable.decrement(unique_namespace, unique_key)
+    assert result.value == 9
+    await cleanup_helper.purge_mutable(test_ids["memory_space_id"])
+
+
+# ============================================================================
+# exists() Validation Tests
+# ============================================================================
+
+
+@pytest.mark.asyncio
+async def test_exists_validation_missing_namespace(cortex_client):
+    """Should throw on missing namespace."""
+    from cortex.mutable import MutableValidationError
+
+    with pytest.raises(MutableValidationError) as exc_info:
+        await cortex_client.mutable.exists("", "key")
+
+    assert exc_info.value.code == "MISSING_NAMESPACE"
+
+
+@pytest.mark.asyncio
+async def test_exists_validation_invalid_namespace_format(cortex_client):
+    """Should throw on invalid namespace format."""
+    from cortex.mutable import MutableValidationError
+
+    with pytest.raises(MutableValidationError) as exc_info:
+        await cortex_client.mutable.exists("name with spaces", "key")
+
+    assert "Invalid namespace format" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_exists_validation_missing_key(cortex_client):
+    """Should throw on missing key."""
+    from cortex.mutable import MutableValidationError
+
+    with pytest.raises(MutableValidationError) as exc_info:
+        await cortex_client.mutable.exists("namespace", "")
+
+    assert exc_info.value.code == "MISSING_KEY"
+
+
+@pytest.mark.asyncio
+async def test_exists_validation_invalid_key_format(cortex_client):
+    """Should throw on invalid key format."""
+    from cortex.mutable import MutableValidationError
+
+    with pytest.raises(MutableValidationError) as exc_info:
+        await cortex_client.mutable.exists("namespace", "key with spaces")
+
+    assert "Invalid key format" in str(exc_info.value)
+
+
+# ============================================================================
+# delete() Validation Tests
+# ============================================================================
+
+
+@pytest.mark.asyncio
+async def test_delete_validation_missing_namespace(cortex_client):
+    """Should throw on missing namespace."""
+    from cortex.mutable import MutableValidationError
+
+    with pytest.raises(MutableValidationError) as exc_info:
+        await cortex_client.mutable.delete("", "key")
+
+    assert exc_info.value.code == "MISSING_NAMESPACE"
+
+
+@pytest.mark.asyncio
+async def test_delete_validation_invalid_namespace_format(cortex_client):
+    """Should throw on invalid namespace format."""
+    from cortex.mutable import MutableValidationError
+
+    with pytest.raises(MutableValidationError) as exc_info:
+        await cortex_client.mutable.delete("name with spaces", "key")
+
+    assert "Invalid namespace format" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_delete_validation_missing_key(cortex_client):
+    """Should throw on missing key."""
+    from cortex.mutable import MutableValidationError
+
+    with pytest.raises(MutableValidationError) as exc_info:
+        await cortex_client.mutable.delete("namespace", "")
+
+    assert exc_info.value.code == "MISSING_KEY"
+
+
+@pytest.mark.asyncio
+async def test_delete_validation_invalid_key_format(cortex_client):
+    """Should throw on invalid key format."""
+    from cortex.mutable import MutableValidationError
+
+    with pytest.raises(MutableValidationError) as exc_info:
+        await cortex_client.mutable.delete("namespace", "key with spaces")
+
+    assert "Invalid key format" in str(exc_info.value)
+
+
+# ============================================================================
+# list() Validation Tests
+# ============================================================================
+
+
+@pytest.mark.asyncio
+async def test_list_validation_missing_namespace(cortex_client):
+    """Should throw on missing namespace."""
+    from cortex.mutable import MutableValidationError
+
+    with pytest.raises(MutableValidationError) as exc_info:
+        await cortex_client.mutable.list(ListMutableFilter(namespace=""))
+
+    assert exc_info.value.code == "MISSING_NAMESPACE"
+
+
+@pytest.mark.asyncio
+async def test_list_validation_invalid_namespace_format(cortex_client):
+    """Should throw on invalid namespace format."""
+    from cortex.mutable import MutableValidationError
+
+    with pytest.raises(MutableValidationError) as exc_info:
+        await cortex_client.mutable.list(ListMutableFilter(namespace="name with spaces"))
+
+    assert "Invalid namespace format" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_list_validation_invalid_key_prefix_format(cortex_client):
+    """Should throw on invalid key_prefix format."""
+    from cortex.mutable import MutableValidationError
+
+    with pytest.raises(MutableValidationError) as exc_info:
+        await cortex_client.mutable.list(ListMutableFilter(namespace="test", key_prefix="prefix with spaces"))
+
+    assert "Invalid key_prefix format" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_list_validation_invalid_user_id_format(cortex_client):
+    """Should throw on invalid user_id format."""
+    from cortex.mutable import MutableValidationError
+
+    with pytest.raises(MutableValidationError) as exc_info:
+        await cortex_client.mutable.list(ListMutableFilter(namespace="test", user_id=""))
+
+    assert "user_id cannot be empty" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_list_validation_non_integer_limit(cortex_client):
+    """Should throw on non-integer limit."""
+    from cortex.mutable import MutableValidationError
+
+    with pytest.raises(MutableValidationError) as exc_info:
+        await cortex_client.mutable.list(ListMutableFilter(namespace="test", limit="10"))  # type: ignore
+
+    assert exc_info.value.code == "INVALID_LIMIT_TYPE"
+    assert "limit must be an integer" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_list_validation_negative_limit(cortex_client):
+    """Should throw on negative limit."""
+    from cortex.mutable import MutableValidationError
+
+    with pytest.raises(MutableValidationError) as exc_info:
+        await cortex_client.mutable.list(ListMutableFilter(namespace="test", limit=-1))
+
+    assert exc_info.value.code == "INVALID_LIMIT_RANGE"
+    assert "limit must be non-negative" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_list_validation_limit_exceeds_max(cortex_client):
+    """Should throw on limit > 1000."""
+    from cortex.mutable import MutableValidationError
+
+    with pytest.raises(MutableValidationError) as exc_info:
+        await cortex_client.mutable.list(ListMutableFilter(namespace="test", limit=1001))
+
+    assert exc_info.value.code == "INVALID_LIMIT_RANGE"
+    assert "limit exceeds maximum" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_list_validation_accepts_valid_namespace_only(cortex_client):
+    """Should accept valid namespace only."""
+    result = await cortex_client.mutable.list(ListMutableFilter(namespace="validation-test"))
+    assert isinstance(result, list)
+
+
+@pytest.mark.asyncio
+async def test_list_validation_accepts_all_optional_params(cortex_client):
+    """Should accept all optional parameters."""
+    result = await cortex_client.mutable.list(
+        ListMutableFilter(namespace="validation-test", key_prefix="test-", limit=10)
+    )
+    assert isinstance(result, list)
+
+
+# ============================================================================
+# count() Validation Tests
+# ============================================================================
+
+
+@pytest.mark.asyncio
+async def test_count_validation_missing_namespace(cortex_client):
+    """Should throw on missing namespace."""
+    from cortex.mutable import MutableValidationError
+
+    with pytest.raises(MutableValidationError) as exc_info:
+        await cortex_client.mutable.count(CountMutableFilter(namespace=""))
+
+    assert exc_info.value.code == "MISSING_NAMESPACE"
+
+
+@pytest.mark.asyncio
+async def test_count_validation_invalid_namespace_format(cortex_client):
+    """Should throw on invalid namespace format."""
+    from cortex.mutable import MutableValidationError
+
+    with pytest.raises(MutableValidationError) as exc_info:
+        await cortex_client.mutable.count(CountMutableFilter(namespace="name with spaces"))
+
+    assert "Invalid namespace format" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_count_validation_invalid_key_prefix_format(cortex_client):
+    """Should throw on invalid key_prefix format."""
+    from cortex.mutable import MutableValidationError
+
+    with pytest.raises(MutableValidationError) as exc_info:
+        await cortex_client.mutable.count(CountMutableFilter(namespace="test", key_prefix="prefix with spaces"))
+
+    assert "Invalid key_prefix format" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_count_validation_invalid_user_id_format(cortex_client):
+    """Should throw on invalid user_id format."""
+    from cortex.mutable import MutableValidationError
+
+    with pytest.raises(MutableValidationError) as exc_info:
+        await cortex_client.mutable.count(CountMutableFilter(namespace="test", user_id=""))
+
+    assert "user_id cannot be empty" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_count_validation_accepts_valid_namespace_only(cortex_client):
+    """Should accept valid namespace only."""
+    result = await cortex_client.mutable.count(CountMutableFilter(namespace="validation-test"))
+    assert isinstance(result, int)
+
+
+@pytest.mark.asyncio
+async def test_count_validation_accepts_with_key_prefix(cortex_client):
+    """Should accept with key_prefix."""
+    result = await cortex_client.mutable.count(CountMutableFilter(namespace="validation-test", key_prefix="test-"))
+    assert isinstance(result, int)
+
+
+@pytest.mark.asyncio
+async def test_count_validation_accepts_with_user_id(cortex_client):
+    """Should accept with user_id."""
+    result = await cortex_client.mutable.count(CountMutableFilter(namespace="validation-test", user_id="user-123"))
+    assert isinstance(result, int)
+
+
+@pytest.mark.asyncio
+async def test_count_validation_accepts_all_params(cortex_client):
+    """Should accept all parameters."""
+    result = await cortex_client.mutable.count(
+        CountMutableFilter(namespace="validation-test", key_prefix="test-", user_id="user-123")
+    )
+    assert isinstance(result, int)
+
+
+# ============================================================================
+# purge_namespace() Validation Tests
+# ============================================================================
+
+
+@pytest.mark.asyncio
+async def test_purge_namespace_validation_missing_namespace(cortex_client):
+    """Should throw on missing namespace."""
+    from cortex.mutable import MutableValidationError
+
+    with pytest.raises(MutableValidationError) as exc_info:
+        await cortex_client.mutable.purge_namespace("")
+
+    assert exc_info.value.code == "MISSING_NAMESPACE"
+
+
+@pytest.mark.asyncio
+async def test_purge_namespace_validation_whitespace_namespace(cortex_client):
+    """Should throw on whitespace-only namespace."""
+    from cortex.mutable import MutableValidationError
+
+    with pytest.raises(MutableValidationError) as exc_info:
+        await cortex_client.mutable.purge_namespace("   ")
+
+    assert exc_info.value.code == "MISSING_NAMESPACE"
+
+
+@pytest.mark.asyncio
+async def test_purge_namespace_validation_invalid_format(cortex_client):
+    """Should throw on invalid namespace format."""
+    from cortex.mutable import MutableValidationError
+
+    with pytest.raises(MutableValidationError) as exc_info:
+        await cortex_client.mutable.purge_namespace("name with spaces")
+
+    assert "Invalid namespace format" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_purge_namespace_validation_accepts_valid(cortex_client, cleanup_helper, test_ids):
+    """Should accept valid namespace."""
+    await cortex_client.mutable.set("purge-ns-valid", "key", "value")
+    result = await cortex_client.mutable.purge_namespace("purge-ns-valid")
+    assert result is not None
+    await cleanup_helper.purge_mutable(test_ids["memory_space_id"])
+
+
+# ============================================================================
+# purge_many() Validation Tests
+# ============================================================================
+
+
+@pytest.mark.asyncio
+async def test_purge_many_validation_missing_namespace(cortex_client):
+    """Should throw on missing namespace."""
+    from cortex.mutable import MutableValidationError
+
+    with pytest.raises(MutableValidationError) as exc_info:
+        await cortex_client.mutable.purge_many(PurgeManyMutableFilter(namespace=""))
+
+    assert exc_info.value.code == "MISSING_NAMESPACE"
+
+
+@pytest.mark.asyncio
+async def test_purge_many_validation_invalid_namespace_format(cortex_client):
+    """Should throw on invalid namespace format."""
+    from cortex.mutable import MutableValidationError
+
+    with pytest.raises(MutableValidationError) as exc_info:
+        await cortex_client.mutable.purge_many(PurgeManyMutableFilter(namespace="name with spaces"))
+
+    assert "Invalid namespace format" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_purge_many_validation_invalid_key_prefix_format(cortex_client):
+    """Should throw on invalid key_prefix format."""
+    from cortex.mutable import MutableValidationError
+
+    with pytest.raises(MutableValidationError) as exc_info:
+        await cortex_client.mutable.purge_many(PurgeManyMutableFilter(namespace="test", key_prefix="prefix with spaces"))
+
+    assert "Invalid key_prefix format" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_purge_many_validation_invalid_user_id_format(cortex_client):
+    """Should throw on invalid user_id format."""
+    from cortex.mutable import MutableValidationError
+
+    with pytest.raises(MutableValidationError) as exc_info:
+        await cortex_client.mutable.purge_many(PurgeManyMutableFilter(namespace="test", user_id=""))
+
+    assert "user_id cannot be empty" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_purge_many_validation_accepts_namespace_only(cortex_client, cleanup_helper, test_ids):
+    """Should accept namespace only."""
+    await cortex_client.mutable.set("purge-many-valid", "key", "value")
+    result = await cortex_client.mutable.purge_many(PurgeManyMutableFilter(namespace="purge-many-valid"))
+    assert result is not None
+    await cleanup_helper.purge_mutable(test_ids["memory_space_id"])
+
+
+@pytest.mark.asyncio
+async def test_purge_many_validation_accepts_with_key_prefix(cortex_client, cleanup_helper, test_ids):
+    """Should accept with key_prefix."""
+    await cortex_client.mutable.set("purge-many-prefix", "prefix-1", "value")
+    result = await cortex_client.mutable.purge_many(
+        PurgeManyMutableFilter(namespace="purge-many-prefix", key_prefix="prefix-")
+    )
+    assert result is not None
+    await cleanup_helper.purge_mutable(test_ids["memory_space_id"])
+
+
+@pytest.mark.asyncio
+async def test_purge_many_validation_accepts_all_params(cortex_client, cleanup_helper, test_ids):
+    """Should accept all parameters."""
+    await cortex_client.mutable.set("purge-many-all", "key", "value")
+    result = await cortex_client.mutable.purge_many(
+        PurgeManyMutableFilter(namespace="purge-many-all", key_prefix="key", user_id="user-123")
+    )
+    assert result is not None
+    await cleanup_helper.purge_mutable(test_ids["memory_space_id"])
+

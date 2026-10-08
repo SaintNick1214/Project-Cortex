@@ -1,0 +1,3 @@
+import {fixture} from '/workspace/Project-Cortex/work/backend-runtime/task03b2a-checkout/tests/unit/runtimeMetadataAuth/fixture.ts';
+import {update} from '/workspace/Project-Cortex/work/backend-runtime/task03b2a-checkout/convex-dev/mutable.ts';
+const f=fixture();f.seedMutable();const result=await f.run(update,{namespace:'counter',key:'one',operation:'increment',operand:null});console.log(JSON.stringify({name:'explicit null increment operand',result,writes:f.db.writes,finalValue:f.db.table('mutable')[0].value},null,2));

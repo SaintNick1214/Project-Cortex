@@ -1,0 +1,12 @@
+{
+  "argv": [
+    "python3",
+    "-c",
+    "from pathlib import Path;import json;p=Path(\"work/resume/task04-metadata-retention-implementation-c2/inputs.json\");a=json.loads(p.read_text());a += [\"_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2/fixture/checks/metadata-construction.mjs\"];p.write_text(json.dumps(a,indent=2)+'\\n');Path(\"work/resume/task04-metadata-retention-implementation-c2/rerun.py\").write_text(\"from pathlib import Path\\nimport json,subprocess\\nq=Path('_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c2');w=Path('work/resume/task04-metadata-retention-implementation-c2');old=q.parent/'task04-metadata-retention-implementation-c1'\\ntags=[\\\"store-final-metadata-stage\\\",\\\"store-final-metadata-purge\\\",\\\"metadata-resource-01\\\",\\\"store-final-c2-collect-original-groups\\\",\\\"store-retry-adapter\\\",\\\"store-retry-c2-capability\\\",\\\"store-retry-c2-capability-c10\\\",\\\"store-final-c2-admission\\\",\\\"store-final-c2-owned\\\",\\\"store-final-c2-retained-refinements\\\",\\\"store-final-c2-stream\\\",\\\"store-final-independent\\\",\\\"store-final-independent-account-load\\\",\\\"store-final-independent-codec\\\",\\\"store-final-independent-async\\\",\\\"store-final-independent-money\\\",\\\"store-final-regression-offline-check\\\",\\\"store-final-regression-hostile\\\",\\\"store-final-regression-refinement-check\\\",\\\"store-final-regression-independent\\\",\\\"strict-types-vm\\\",\\\"typed-lint-complete\\\"]\\nfor tag in tags:\\n j=json.loads((old/(tag+'-receipt.json')).read_text());argv=[x.replace('task04-metadata-retention-implementation-c1','task04-metadata-retention-implementation-c2') for x in j['argv']]\\n x=subprocess.run(['python3',str(w/'capture.py'),'rerun-'+tag,'@'+str(w/'inputs.json'),*argv],capture_output=True)\\n print(json.dumps({'tag':tag,'exit':x.returncode,'stdoutTail':x.stdout.decode()[-220:],'stderrTail':x.stderr.decode()[-220:]}),flush=True)\\n\")"
+  ],
+  "cwd": "/workspace/Project-Cortex",
+  "startUtc": "2026-10-04T15:05:08.953882+00:00",
+  "endUtc": "2026-10-04T15:05:08.985177+00:00",
+  "exit": 0,
+  "recorderSourceSha256": "96e5bac4d56832a7729fa56ec1cc60568755bc00d17f576b5c0e51e720d08901"
+}

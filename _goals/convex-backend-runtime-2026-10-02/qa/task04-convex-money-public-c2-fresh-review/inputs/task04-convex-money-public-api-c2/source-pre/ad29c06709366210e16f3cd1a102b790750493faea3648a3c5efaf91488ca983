@@ -1,0 +1,10 @@
+import pathlib,json,hashlib,datetime,urllib.request,sys
+r=pathlib.Path.cwd();q=r/'_goals/convex-backend-runtime-2026-10-02/qa/task04-convex-money-public-api-c2';q.mkdir();sources=['node_modules/@convex-dev/ai-sdk-provider/package.json','node_modules/@convex-dev/ai-sdk-provider/README.md','node_modules/@convex-dev/ai-sdk-provider/src/index.ts','work/resume/task04-convex-money-public-api-read.py'];pre=[];archive=q/'source-pre';archive.mkdir()
+for name in sources:
+ b=(r/name).read_bytes();h=hashlib.sha256(b).hexdigest();(archive/h).write_bytes(b);pre.append({'path':name,'bytes':len(b),'sha256':h})
+(q/'source-before.json').write_text(json.dumps(pre,indent=2)+'\n');start=datetime.datetime.now(datetime.timezone.utc).isoformat();url='https://docs.convex.dev/ai-gateway/api.md'
+try:
+ with urllib.request.urlopen(urllib.request.Request(url,headers={'Accept':'text/markdown'}),timeout=30) as response:
+  assert response.geturl().startswith('https://docs.convex.dev/');b=response.read(2*1024*1024+1);assert len(b)<=2*1024*1024;(q/'official-gateway-doc').write_bytes(b);result={'status':response.status,'url':response.geturl(),'contentType':response.headers.get('Content-Type'),'bytes':len(b),'sha256':hashlib.sha256(b).hexdigest()}
+except Exception as e:result={'errorType':type(e).__name__,'message':str(e),'status':'NOT_OBTAINED'}
+post=[{'path':name,'bytes':(r/name).stat().st_size,'sha256':hashlib.sha256((r/name).read_bytes()).hexdigest()} for name in sources];assert pre==post;(q/'source-after.json').write_text(json.dumps(post,indent=2)+'\n');(q/'receipt.json').write_text(json.dumps({'argv':sys.argv,'cwd':str(r),'startedAt':start,'endedAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'publicGetOnly':True,'noServiceCredentialsNativeOrPaid':True,'qualificationAcceptance':False,'result':result},indent=2)+'\n');print(json.dumps(result))

@@ -1,0 +1,136 @@
+01-qualification.md
+# Task 01: Stack and execution-boundary qualification
+
+**Status:** Complete — independent Task 01 review PASS (4.2/5). [Qualification evidence](../qa/task01/); [review](../qa/task01-review-1.md).
+**Goal:** [Cortex-owned backend runs](../goal.md)
+**Depends on:** Later execution request and verified disposable prerequisites
+
+## Objective
+02-domain-services.md
+# Task 02: Backend-friendly memory domain services
+
+**Status:** In progress — execution authorized; Task01 independent PASS. Bounded foundation substeps active.
+**Goal:** [Cortex-owned backend runs](../goal.md)
+**Depends on:** [01 Stack and execution-boundary qualification](01-qualification.md)
+
+## Objective
+03-authorization.md
+# Task 03: Verified identity, grants and alternate endpoint closure
+
+**Status:** In progress — execution authorized; Task01 independent PASS. Bounded foundation substeps active.
+**Goal:** [Cortex-owned backend runs](../goal.md)
+**Depends on:** [01 Stack and execution-boundary qualification](01-qualification.md)
+
+## Objective
+04-model-policy.md
+# Task 04: Per-function model policy and admission budgets
+
+**Status:** Planning only — pending execution authorization.
+**Goal:** [Cortex-owned backend runs](../goal.md)
+**Depends on:** [01 Stack and execution-boundary qualification](01-qualification.md), [03 Verified identity, grants and alternate endpoint closure](03-authorization.md)
+
+## Objective
+05-transcripts-runs.md
+# Task 05: Canonical transcript, agent definitions and run admission
+
+**Status:** Planning only — pending execution authorization.
+**Goal:** [Cortex-owned backend runs](../goal.md)
+**Depends on:** [02 Backend-friendly memory domain services](02-domain-services.md), [03 Verified identity, grants and alternate endpoint closure](03-authorization.md), [04 Per-function model policy and admission budgets](04-model-policy.md)
+
+## Objective
+06-additive-installation.md
+# Task 06: Additive backend development installation
+
+**Status:** Planning only — pending execution authorization.
+**Goal:** [Cortex-owned backend runs](../goal.md)
+**Depends on:** [03 Verified identity, grants and alternate endpoint closure](03-authorization.md), [05 Canonical transcript, agent definitions and run admission](05-transcripts-runs.md)
+
+## Objective
+07-agent-streams.md
+# Task 07: Agent execution and durable reactive output
+
+**Status:** Planning only — pending execution authorization.
+**Goal:** [Cortex-owned backend runs](../goal.md)
+**Depends on:** [06 Additive backend development installation](06-additive-installation.md), [05 Canonical transcript, agent definitions and run admission](05-transcripts-runs.md)
+
+## Objective
+08-memory-pipeline.md
+# Task 08: Durable asynchronous memory and belief consistency
+
+**Status:** Planning only — pending execution authorization.
+**Goal:** [Cortex-owned backend runs](../goal.md)
+**Depends on:** [02 Backend-friendly memory domain services](02-domain-services.md), [05 Canonical transcript, agent definitions and run admission](05-transcripts-runs.md), [07 Agent execution and durable reactive output](07-agent-streams.md)
+
+## Objective
+09-text-client-slice.md
+# Task 09: Minimal text clients and UI vertical slice
+
+**Status:** Planning only — pending execution authorization.
+**Goal:** [Cortex-owned backend runs](../goal.md)
+**Depends on:** [06 Additive backend development installation](06-additive-installation.md), [07 Agent execution and durable reactive output](07-agent-streams.md), [08 Durable asynchronous memory and belief consistency](08-memory-pipeline.md)
+
+## Objective
+10-embedding-profiles.md
+# Task 10: Clean-slate embedding storage and retrieval
+
+**Status:** Planning only — pending execution authorization.
+**Goal:** [Cortex-owned backend runs](../goal.md)
+**Depends on:** [04 Per-function model policy and admission budgets](04-model-policy.md), [08 Durable asynchronous memory and belief consistency](08-memory-pipeline.md)
+
+## Objective
+11-graph-outbox.md
+# Task 11: Scoped durable external graph projection
+
+**Status:** Planning only — pending execution authorization.
+**Goal:** [Cortex-owned backend runs](../goal.md)
+**Depends on:** [03 Verified identity, grants and alternate endpoint closure](03-authorization.md), [08 Durable asynchronous memory and belief consistency](08-memory-pipeline.md)
+
+## Objective
+12-asset-lifecycle.md
+# Task 12: Convex-owned assets and bounded private delivery
+
+**Status:** Planning only — pending execution authorization.
+**Goal:** [Cortex-owned backend runs](../goal.md)
+**Depends on:** [03 Verified identity, grants and alternate endpoint closure](03-authorization.md), [05 Canonical transcript, agent definitions and run admission](05-transcripts-runs.md)
+
+## Objective
+13-media-jobs.md
+# Task 13: Gateway image and durable asynchronous video jobs
+
+**Status:** Planning only — pending execution authorization.
+**Goal:** [Cortex-owned backend runs](../goal.md)
+**Depends on:** [04 Per-function model policy and admission budgets](04-model-policy.md), [07 Agent execution and durable reactive output](07-agent-streams.md), [12 Convex-owned assets and bounded private delivery](12-asset-lifecycle.md)
+
+## Objective
+14-client-extensions.md
+# Task 14: TypeScript media, embedding and UI extensions
+
+**Status:** Planning only — pending execution authorization.
+**Goal:** [Cortex-owned backend runs](../goal.md)
+**Depends on:** [09 Minimal text clients and UI vertical slice](09-text-client-slice.md), [10 Clean-slate embedding storage and retrieval](10-embedding-profiles.md), [12 Convex-owned assets and bounded private delivery](12-asset-lifecycle.md), [13 Gateway image and durable asynchronous video jobs](13-media-jobs.md)
+
+## Objective
+15-product-integration.md
+# Task 15: Additive CLI, quickstart and template integration
+
+**Status:** Planning only — pending execution authorization.
+**Goal:** [Cortex-owned backend runs](../goal.md)
+**Depends on:** [11 Scoped durable external graph projection](11-graph-outbox.md), [14 TypeScript media, embedding and UI extensions](14-client-extensions.md)
+
+## Objective
+16-outcome-validation.md
+# Task 16: Cross-layer live behavior and adversarial outcomes
+
+**Status:** Planning only — pending execution authorization.
+**Goal:** [Cortex-owned backend runs](../goal.md)
+**Depends on:** [10 Clean-slate embedding storage and retrieval](10-embedding-profiles.md), [11 Scoped durable external graph projection](11-graph-outbox.md), [12 Convex-owned assets and bounded private delivery](12-asset-lifecycle.md), [13 Gateway image and durable asynchronous video jobs](13-media-jobs.md), [14 TypeScript media, embedding and UI extensions](14-client-extensions.md), [15 Additive CLI, quickstart and template integration](15-product-integration.md)
+
+## Objective
+17-docs-audit.md
+# Task 17: Installation documentation, quality and independent final gate
+
+**Status:** Planning only — pending execution authorization.
+**Goal:** [Cortex-owned backend runs](../goal.md)
+**Depends on:** [15 Additive CLI, quickstart and template integration](15-product-integration.md), [16 Cross-layer live behavior and adversarial outcomes](16-outcome-validation.md)
+
+## Objective

@@ -1,0 +1,23 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+Error: Transform failed with 4 errors:
+/tmp/task03c2-live-harness-review2-oj6uebre/replay-repo/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/client-prep.ts:15:2: ERROR: Top-level await is currently not supported with the "cjs" output format
+/tmp/task03c2-live-harness-review2-oj6uebre/replay-repo/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/client-prep.ts:21:0: ERROR: Top-level await is currently not supported with the "cjs" output format
+/tmp/task03c2-live-harness-review2-oj6uebre/replay-repo/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/client-prep.ts:23:0: ERROR: Top-level await is currently not supported with the "cjs" output format
+/tmp/task03c2-live-harness-review2-oj6uebre/replay-repo/_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/client-prep.ts:25:74: ERROR: Top-level await is currently not supported with the "cjs" output format
+    at failureErrorWithLog (/tmp/task03c2-live-harness-review2-oj6uebre/replay-repo/node_modules/tsx/node_modules/esbuild/lib/main.js:1752:15)
+    at /tmp/task03c2-live-harness-review2-oj6uebre/replay-repo/node_modules/tsx/node_modules/esbuild/lib/main.js:1019:50
+    at responseCallbacks.<computed> (/tmp/task03c2-live-harness-review2-oj6uebre/replay-repo/node_modules/tsx/node_modules/esbuild/lib/main.js:886:9)
+    at handleIncomingPacket (/tmp/task03c2-live-harness-review2-oj6uebre/replay-repo/node_modules/tsx/node_modules/esbuild/lib/main.js:941:12)
+    at Socket.readFromStdout (/tmp/task03c2-live-harness-review2-oj6uebre/replay-repo/node_modules/tsx/node_modules/esbuild/lib/main.js:864:7)
+    at Socket.emit (node:events:509:28)
+    at addChunk (node:internal/streams/readable:563:12)
+    at readableAddChunkPushByteMode (node:internal/streams/readable:514:3)
+    at Readable.push (node:internal/streams/readable:394:5)
+    at Pipe.onStreamRead (node:internal/stream_base_commons:189:23) {
+  name: 'TransformError'
+}
+
+Node.js v24.19.0

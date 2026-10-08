@@ -1,0 +1,50 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import assert from 'node:assert/strict';
+import crypto from 'node:crypto';
+import {spawnSync as realSpawn} from 'node:child_process';
+import {createRequire} from 'node:module';
+import ts from '/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/node_modules/typescript/lib/typescript.js';
+import {fixture} from '/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/tests/unit/runtimeMetadataAuth/fixture.ts';
+import * as immutable from '/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/convex-dev/immutable.ts';
+import * as users from '/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/convex-dev/users.ts';
+const root='/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout';
+const out='/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/work/native-errors-cycle2/replays';
+const qa=root+'/_goals/convex-backend-runtime-2026-10-02/qa/task03b2a';
+const require=createRequire(import.meta.url); const {expect}=require(root+'/node_modules/expect');
+const sha=p=>crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex');
+const catalogHashes=()=>Object.fromEntries(['json','md'].map(ext=>[ext,sha(qa+'/catalog/public-path-inventory.'+ext)]));
+const source=fs.readFileSync(root+'/tests/unit/runtimeMetadataAuth/registrations.test.ts','utf8');
+const ast=ts.createSourceFile('registrations.test.ts',source,ts.ScriptTarget.Latest,true,ts.ScriptKind.TS);let callback;
+function visit(node){if(ts.isCallExpression(node)&&node.expression.getText(ast)==='it'&&ts.isStringLiteral(node.arguments[0])&&node.arguments[0].text==='retained import-aware AST finds the exact baseline paths with zero unresolved')callback=node.arguments[1];ts.forEachChild(node,visit)}visit(ast);assert.ok(callback);
+const exact=callback.getText(ast);fs.writeFileSync(out+'/inventory-callback.ts.text',exact+'\n');
+const compiled=ts.transpileModule('const candidateCallback='+exact,{compilerOptions:{target:ts.ScriptTarget.ES2021,module:ts.ModuleKind.None}}).outputText;
+const cleanup=[];
+for(const mode of ['ordinary-success','child-nonzero','child-throws','catalog-reader-throws','catalog-malformed-json','catalog-assertion-fails']){
+ const created=[]; const before=catalogHashes();let completed=false,error;
+ const wrappedFs={...fs,mkdtempSync(prefix){assert.equal(path.dirname(prefix),out+'/cleanup-temp');const temporary=fs.mkdtempSync(prefix);created.push(temporary);return temporary},readFileSync(p,...args){if(String(p).endsWith('public-path-inventory.json')&&created.some(dir=>String(p).startsWith(dir+'/'))){if(mode==='catalog-reader-throws')throw new Error('controlled catalog reader failure');if(mode==='catalog-malformed-json')return '{';if(mode==='catalog-assertion-fails'){const data=JSON.parse(fs.readFileSync(p,...args));data.completeness.counts.registered=0;return JSON.stringify(data)}}return fs.readFileSync(p,...args)}};
+ const wrappedSpawn=(cmd,argv,opts)=>{assert.equal(argv.length,2);assert.ok(created.includes(argv[1]));if(mode==='child-nonzero')return {status:7,stderr:'controlled inventory failure'};if(mode==='child-throws')throw new Error('controlled spawn failure');return realSpawn(cmd,argv,opts)};
+ fs.mkdirSync(out+'/cleanup-temp',{recursive:true});
+ const fn=new Function('fs','os','path','spawnSync','process','expect',compiled+'\nreturn candidateCallback;')(wrappedFs,{tmpdir:()=>out+'/cleanup-temp'},path,wrappedSpawn,process,expect);
+ try{fn();completed=true}catch(e){error=String(e)}
+ assert.equal(completed,mode==='ordinary-success');assert.equal(created.length,1);assert.equal(fs.existsSync(created[0]),false);assert.deepEqual(catalogHashes(),before);assert.deepEqual(fs.readdirSync(out+'/cleanup-temp'),[]);
+ cleanup.push({mode,pass:true,completed,expectedFailure:error,createdDirectory:created[0],cleanupObserved:true,canonicalQAUnchanged:true});
+}
+fs.writeFileSync(out+'/cleanup-controls.json',JSON.stringify({candidateSourceSha256:sha(root+'/tests/unit/runtimeMetadataAuth/registrations.test.ts'),method:'Execute the exact AST-extracted candidate inventory test callback with real fs, real Jest expect and real child inventory success; controlled failures only replace child/reader results. Candidate source is unmodified.',outcomes:cleanup},null,2)+'\n');
+for(const module of ['immutable','users']){
+ const original=fs.readFileSync(qa+'/history/cycle2-final/source/convex-dev/'+module+'.ts.text','utf8');
+ const remapped=original.replace(/from "\.\/([^"\n]+)"/g,(_,relative)=>'from "'+root+'/convex-dev/'+relative+'"');
+ fs.writeFileSync(out+'/cycle2-'+module+'.ts',remapped);
+}
+const oldImmutable=await import(out+'/cycle2-immutable.ts');const oldUsers=await import(out+'/cycle2-users.ts');
+const outcomes=[];
+const rows=[{name:'missing',seed:false},{name:'single-null-data',seed:true,patch:{data:null,version:1,updatedAt:2000,previousVersions:[]}},{name:'unordered-history',seed:true,patch:{data:{marker:'v4'},version:4,updatedAt:3000,previousVersions:[{version:3,data:'v3',timestamp:5000},{version:1,data:'v1',timestamp:1000},{version:2,data:'v2',timestamp:3000}]}},{name:'duplicate-timestamps',seed:true,patch:{data:'v3',version:3,updatedAt:3000,previousVersions:[{version:2,data:'v2',timestamp:3000},{version:1,data:'v1',timestamp:3000}]}}];
+for(const [module,newReg,oldReg,key] of [['immutable',immutable.getAtTimestamp,oldImmutable.getAtTimestamp,{type:'note',id:'one'}],['users',users.getAtTimestamp,oldUsers.getAtTimestamp,{userId:'alice'}]])for(const row of rows)for(const timestamp of [0,1000,2000,2999,3000,4000,5000,Infinity,NaN]){
+ const setup=()=>{const f=fixture();f.db.table('immutable');f.db.table('runtimeAuthTombstones');if(row.seed)f.seedImmutable({...row.patch,...(module==='users'?{type:'user',id:'alice'}:{})});return f};const newer=setup(),older=setup();const args={...key,timestamp};const before=structuredClone(newer.db.rows);const actual=await newer.run(newReg,args),previous=await older.run(oldReg,args);assert.deepEqual(actual,previous);assert.deepEqual(newer.db.rows,before);assert.equal(newer.db.attemptedWrites,0);assert.equal(older.db.attemptedWrites,0);
+ if(!row.seed||timestamp===0||Number.isNaN(timestamp))assert.equal(actual,null);
+ if(row.name==='unordered-history'&&timestamp===3000){assert.equal(actual.version,4);assert.deepEqual(actual.data,{marker:'v4'})}
+ if(row.name==='unordered-history'&&timestamp===5000)assert.equal(actual.version,4);
+ outcomes.push({module,case:row.name,timestamp:String(timestamp),pass:true,result:actual,writes:0,identicalToCycle2:true});
+}
+fs.writeFileSync(out+'/timestamp-equivalence.json',JSON.stringify({method:'Compare archived cycle2 native registered handlers and frozen cycle3 handlers with the same current authority/fixture; only relative module imports are relocated in owned /tmp copies. Covers missing/no-match, null data, inclusive boundaries, version ordering distinct from timestamp ordering and duplicate timestamps.',outcomes},null,2)+'\n');
+console.log(JSON.stringify({cleanup:{passed:cleanup.length,total:cleanup.length},timestampEquivalence:{passed:outcomes.length,total:outcomes.length}}));

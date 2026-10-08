@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/workspace/Project-Cortex/work/resume/task04-evidence-transport-c4-c1/directory-controls.py", line 9, in <module>
+    b=T/'Git755';b.mkdir();fd=h.directory(b/r0,True);os.close(fd);assert stat.S_IMODE((b/r0).stat().st_mode)==0o755;res=restore(Q,b,True);assert res['changed']==1 and stat.S_IMODE((b/r0).stat().st_mode)==0o700;results.append({'control':'Git755-root-to-original700-with-identity-evidence','pass':True})
+                                                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

@@ -1,0 +1,350 @@
+
+FILE _goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-harness-review-2.md
+# Task Judgment: Task03C2 second independent offline harness review
+
+## Verdict: REJECT
+
+The FINAL freeze `2026-10-03T12:43:43.267462+00:00`, SHA256 `c36c94ff03fd68f74da4d44feb068c155d0c50e80c0199e6e384b07de86f2cf4`, preserves accepted fixture/SDK source and fixes the original SDK-child key access, positive logout/late-observer baseline, request bounds, case discovery, and setup gating. It still fails the required negative diagnostic and process-finalization guarantees. Three independent malformed diagnostic controls are accepted as authorization denial. One unchanged actual driver replay fails its no-running-grandchild assertion after a receipt says `REAPED`; two later replays pass, so the defect is intermittent. Deployment/cleanup also retain the second-preflight output-loss path that the qualification driver now avoids.
+
+This is an OFFLINE harness verdict. All 41 canonical service outcomes remain UNEXECUTED. No service/network, target creation, model, signing, key generation/rotation, deploy/codegen, fixture cleanup/retirement, staging, commit, push or child-agent operation occurred. The ordinary test processes and their groups were disposable offline probes. No rejected main working-tree candidate was imported, copied or deployed.
+
+The separate accepted metadata/shared-reader native ambiguity follow-up remains ACTIVE, isolated and unapplied. This review neither repairs nor certifies that defect. Parent service execution must remain BLOCKED until the follow-up independently passes, is integrated, both accepted helper fixture copies and provenance are refreshed, and an affected frozen-harness review passes. A future offline harness PASS would still require a separate actual 41-case service qualification and final review. Full Tasks03/09, Task05 run/transcript/tool semantics, private storage/bytes/uploads/media, connector callbacks, automatic maintenance and UI remain pending.
+
+## Evidence Review
+
+Reviewed `/workspace/Project-Cortex/AGENTS.md`, `.agents/CODEX-RUNTIME.md`, full project profile, pessimistic-judge role, judge-task rubric and feature-orchestrator workflow; original goal, Tasks03/09, decision register, and `qa/task03c2-live-preparation.md`. Read the full first FINAL REJECT2.6 judgment and its preserved judgment/probe/source evidence. Examined current README/report, freeze, both inventories, archive/source/SDK provenance, service matrix, all active executable/type files, private offline process/interception helpers, final command receipts and second-cycle initial failures. Inspected the installed Convex1.46 run/HTTP/ConvexError serialization source. The separate metadata native-error report was read only; its isolated implementation was not adopted.
+
+All independent files are under `/tmp/task03c2-live-harness-review2-oj6uebre`. `commands.json` records exact argv, cwd, UTC start/end, exit and raw output for the recorded checks. `manifest.json` binds the report, raw logs, scripts, private replay sources and receipts, excluding itself and dependency `node_modules`/symlinks. Dependency versions are pinned and rechecked. The replay uses byte-identical candidate/SDK/archive files, exact accepted root package.json, and installed dependencies; it contains no target.json, deploy.env or private RSA. No canonical writer was executed: guard/entrypoint/prep/driver checks write only into the disposable replay tree. Actual backend/client typechecks and scoped lint are read-only on the real mainroot.
+
+An initial judge replay omitted root package.json, causing tsx to choose CJS for top-level-await TypeScript. Both raw failed outputs and the full crash receipt are preserved; copying the exact accepted manifest corrected only that replay setup. The subsequent no-running-descendant assertion failure is separate and is not attributed to replay setup. `initial-failures.json` distinguishes these observations. No assertion or frozen source was changed to obtain a pass.
+
+| Observed check | Result | Independent evidence |
+| --- | --- | --- |
+| Guard rejection cases | 37 PASS, skipped0; network/subprocess/output0 | `guard-check.log`, new replay guards receipt |
+| Actual guarded entrypoint import interception | 4 PASS; network/subprocess/output0 | `entrypoint-check.log`, new replay entrypoints receipt |
+| Original accepted SDK preparation | 6 PASS; dispatch/callback0 | `client-prep-retry.log`, new replay client-prep receipt |
+| Supplemental actual packed SDK preparation | 6 PASS; dispatch/callback/network0 | `packed-prep.log`, new replay packed-prep receipt |
+| Frozen classifier controls | 28 PASS, skipped0; network0 | `classifier-check.log` |
+| Independent malformed operator diagnostic controls | **0PASS/3FAIL, skipped0, exit1; all3 falsely accepted** | `operator-lookalike-assertions.{mjs,json,log}`; original captures also preserved |
+| Actual frozen driver/process checks, after replay setup fix | **First exit1**, then two exits0; passing replays discover **34**, not advertised35 | `driver-check-retry.log`, `driver-check-repeat2.log`, `driver-check-repeat3.log` |
+| Failing whole-ceiling process receipt | All41 retained, active FAIL and dependents BLOCKED, but cleanup reports REAPED before the nonterminal grandchild assertion | replay `evidence/qualify-4729e92f-7700-44b0-b0c5-cee0c09cba59.json`, private descendant PID file |
+| Read-only /proc audit on subsequent replays | Six sampled grandchildren Z; no assertion changed | `proc-audit.{mjs,jsonl}` |
+| Focused actual frozen process-owner/engine probes | Two batches of10; sampled descendants Z and all41 retained; does not erase earlier failure | `process-race*.{mjs,json,log}`, own race receipts |
+| Service/shutdown bounds coverage | 72 protected promise sites +4 configured ceilings =76; skipped0 | `bounds-check.log`, AST receipt; source reviewed beyond counts |
+| Backend native accepted ES2021/DOM config | exit0 | `backend-types.log`, `commands.json` |
+| Separate strict client type project | exit0 | `client-types.log`, `commands.json` |
+| Actual house scoped lint | 35files,0errors/0fatal,21 accepted-source warnings | `house-lint.log` |
+| Existing backend-policy selector | 35files,0errors/0warnings/0fatal | `backend-policy-lint.log`; selector inspected, no rule/ignore weakening |
+| Current freeze and inventories | 54 active public +15 private executor bindings;511 public +214 private hashes exact | `integrity.json` |
+| Accepted source and pack | 14 fixture copies exact at both4fb348/c92d548;129 SDK source/config copies exact4fb348;199 SDK provenance entries exact;53 tar entries exact | `integrity.json` |
+| Pack SHA256 | `cd97dabc1428e2dc7f217bf316aff0d7bf4ebf0d843a214a5777a2228275193d` | `integrity.json` |
+| Historical evidence |107 archived QA and280 preserved records exact; all407 original independent manifest bindings accounted for,208 preserved +199 private reproducible omissions | `integrity.json`; preservation manifest SHA57b40f90400b5d6b52d9656a35194c0a01c7f98e77c8516b2a4f18e224361942 |
+| Existing RSA/JWKS comparison | Match, owned0600/unlinked; new keys0, signed tokens0 | `key-and-operator-controls-recorded.json`; RSA not copied or output |
+| Public secret-pattern scan | No actual key/PEM/signed-JWT matches; explicit archived/offline standins recognized | `integrity.json` |
+| Before/after preservation |727 canonical/private files byte/mode/UID/link metadata identical; Git status identical | `before.json`, `preservation.json` |
+| Private output | Review directory0700, own top-level files0600/unlinked/owned; no target/env/RSA copied | `private-output-check.json` |
+| Runtime |Node24.19.0/npm12.2.0; pinned Convex1.46.0/ws8.21.0/https-proxy-agent7.0.6/tsx4.23.15/TS6.0.3 | `node.log`, `npm12.log`, guard/version reads |
+
+The exact failing operator grandchild later reached Z; no persistently running orphan or post-receipt service effect is claimed. Linux non-child zombies under container PID1 are expressly outside Node waitpid ownership. Subsequent passing runs are preserved, rather than substituted for the failed run.
+
+## Requirements Review
+
+| Original bounded requirement | Met offline? | Evidence / practical limit |
+| --- | --- | --- |
+| Accepted03A/03C1/metadata/backend dependencies and accepted SDK bytes only | Yes |14/129 exact Git comparisons, frozen pack/provenance; isolated functions directory excludes MF/artifact/registry/run/inference/storage candidates |
+| Preserve original QA, rejected freeze and complete independent history | Yes |107/280/407 independent checks;199 omissions remain unchanged private bindings |
+| Canonical paths, alias/hardlink rejection, private0700/0600, exclusive outputs before effects | Yes |guard.mjs:20-66,95-107;37 guard and4 actual entrypoint checks; no live receipt/env exists |
+| Fresh purpose/name/slug/ID/URL/dev/cloud/active/nonretired receipt and matching development selectors/key | Prepared |guard.mjs:69-91 and request; actual trusted management verification remains parent-only/unexecuted |
+| No handwritten generated API; actual official codegen later | Prepared |API absent; deploy.mjs:11 uses official dev --once --codegen enable --typecheck enable --tail-logs disable --env-file; no codegen executed |
+| Real official HTTP/reactive client, ws8.21 proxy/CA and packed Cortex/HostCredentials | Prepared |client.ts:2-9,21; reactive-transport exact wss origin; fake transport confined to explicit OFFLINE prep/probes |
+| Trusted parent driver alone owns key/target/sign/operator/ledger/evidence; SDK child gets endpoint/JWT/testrefs/minimal env | Yes for code/import/env/IPC boundary |driver.mjs:12-42; protocol/parent-channel; actual child interception and reviewed import graph; not an OS sandbox on same UID |
+|12s HTTP/SDK/setup/shutdown/observation,25s CLI,600s driver/cleanup,120s deploy limits | Prepared, source bounds present |72 protected sites and inspected loops/timeouts; timer cutoff includes bounded subsequent process finalization, not instantaneous OS shutdown |
+| All41 append-only FAIL/BLOCKED outcomes survive startup/crash/SIGKILL/hang/whole timeout/inflight operator | Yes for ledger retention |CaseLedger/driver-engine; actual failure and passing offline receipts discover41; driver externalSIGKILL remains explicit trusted-parent limitation |
+| Direct children waited and all group descendants terminal before successful cleanup claim | **No stable evidence** |one actual required process assertion fails; ProcessOwner deletes based on leader close; REAPED depends only on its Set size |
+| Final abnormal outputs use initial binding, no second failing key/target preflight | Qualification yes; **deployment/cleanup no** |driver.mjs captures validatedOutput and writeDriverReceipt; deploy:17/cleanup:41 still call writeEvidence -> livePreflight again |
+| Authorization-negative operator classification requires authentic exact official invocation/server/ConvexError shape; unrelated/lookalike errors never PASS | **No** |three malformed in-memory controls accepted by unchanged classifier; substring rather than complete envelope/body parsing |
+| Setup availability BLOCKED; true service/assertion FAIL; explicit dependent gating | Prepared and offline mechanism verified |client.ts:66-105,150-168,219-223,232-251,294-322; actual SDK setup-unavailable receipt all41BLOCKED |
+| Actual packed logout/late observation first proves41/42, counts all success, null/late fences, independently persists/reads42/43, then750ms no new delivery | Prepared correctly |client.ts:252-282,290-303; bounded window only; original never-working-observer defect removed |
+| Private callbacks/errors/receipts carry only allowlisted statuses/codes/counts/numeric observer values | Prepared |console suppression, in-memory parsing, metrics validation; no private row/token/raw diagnostic saved |
+| Owned partial setup cleanup, attempted scopes journaled, known principals only, exact parent retirement for unknown IDs | Prepared |AuthorityProtocol/driver checkpoint; cleanup:14-46; no global purge or SDK admin/public worker seam; cleanup/retirement unexecuted |
+| Honest scope and full Tasks03/09 pending; metadata native-error dependency hold | Yes |README/report/matrix explicitly retain all broader requirements and service hold; no accepted helper refresh made |
+
+Original Task03 inventory/trusted grant/bootstrap and client lifecycle are accepted dependencies here. This fixture prepares metadata alternate-path closure, verified JWT scope, reactive revocation, session references and tombstones. Full memory/fact/conversation/search/share/artifact/attachment/graph/policy closure, transcript administrator unlock/revision tracking, actual paid tool/upload/download/private byte/callback/share behavior remain pending. Ordinary host logout is distinct from trusted grant revocation; session ending is distinct from scope/grant revocation. No whole-Task03 claim is made.
+
+Original Task09 start/get/observe/cancel/approval/memory receipt contracts, remote AI SDK7 UI/backend tool, response versus indexing finality, strict barriers/context overflow, live scoped recall/finality/pending tail, reconnect/multiple observers/cancel/approval, TS/UI parity and the full Tasks01-09 vertical slice remain pending. This bounded fixture supplies metadata/auth transport preparation and packed client consumer checks only. No upstream/model key enters its SDK child.
+
+## Original Five Findings Mapping
+
+1. **Logout/late observer evidence:** fixed in prepared source; exact positive baseline, all-delivery count, independent authenticated mutation/read and750ms quiet window are present. Real service outcome remains UNEXECUTED.
+2. **Bounds/lost receipt/process ownership:** request/shutdown bounds, trusted41-case ledger and crash receipt are fixed. Descendant terminal-state verification remains defective/intermittent; see Critical2. Deployment/cleanup initial output binding also needs completion.
+3. **SDK child deployment-key access:** fixed. Trusted guard/key/operator imports are absent from the child; exact minimal env/IPC and actual child interceptions support the narrower code boundary. No OS isolation is claimed.
+4. **Generic permission stderr falsePASS:** ordinary examples are fixed, but broader malformed lookalikes/wrong outer function still pass; see Critical1. The28 supplied controls do not cover these cases.
+5. **Setup/dependency status:** fixed for prepared foundation/revocation/SDK flows, with actual offline BLOCKED setup evidence and all41 discovery.
+
+## Test Coverage Analysis: All41 Original Service Cases
+
+Every row is UNEXECUTED on a real service. “Prepared” describes assertions, not observed service success. Diagnostic classification/process-finalization findings affect adoption of the entire harness.
+
+| Case | Prepared outcome assertion |
+| --- | --- |
+| operator-provisioning |4 trusted owned principals; distinct IDs; setup operator availability BLOCKED |
+| valid-owned-metadata |Exact immutable version1, mutable23, session messageCount0, absent authorityReference; gates dependents |
+| missing-identity |Both public read/write auth denial |
+| forged-signature |Both public read/write verified-token auth denial |
+| wrong-issuer |Both public read/write auth denial |
+| wrong-audience |Both public read/write auth denial |
+| expired-token |Both public read/write auth denial |
+| wrong-tenant |Read/write FORBIDDEN |
+| wrong-space |Read/write FORBIDDEN |
+| owner-denied |Other own principal read/write FORBIDDEN |
+| explicit-space-read |Explicit broader READ returns23; WRITE FORBIDDEN |
+| admin-alone-read-denied |ADMIN without READ is FORBIDDEN |
+| admin-alone-write-denied |ADMIN without WRITE is FORBIDDEN |
+| ambiguous-omission-denied |Additional trusted scope; omitted scope read/write denied; exact prior23 unchanged |
+| actor-binding-denied |Other actor immutable identity and session creation denied |
+| caller-metadata-no-principal |Caller labels/admin metadata never provisions trusted principal |
+| public-internal-provision-denied |Provision/revoke/delete/tombstone/authorize/recheck not public |
+| public-internal-maintenance-denied |Increment and expireIdle not public |
+| immutable-delete-read-denied |Purge/tombstone then read FORBIDDEN |
+| immutable-delete-write-denied |Tombstone prohibits recreation; explicit dependency |
+| mutable-delete-read-denied |Resource deletion then read FORBIDDEN; explicit dependency |
+| mutable-delete-write-denied |Tombstone prohibits recreation; explicit dependency |
+| negative-effect-counts |Prior mutable23, immutable version1 and session count0 remain exact |
+| reactive-wrong-tenant |Auth error, zero successful callbacks |
+| reactive-wrong-space |Auth error, zero successful callbacks |
+| resource-deletion-subscription |Positive23 baseline; deletion denial; recreation denied; count unchanged750ms |
+| grant-revocation |Positive1 baseline; read/write/reference denial; other authorized write/read2; quiet count unchanged |
+| principal-deletion |Same controls for deleted principal |
+| membership-revocation |Same controls for revoked membership |
+| space-deletion |Positive baseline; denial/recheck; broad writer/provision recreation denied; quiet count unchanged |
+| tenant-deletion |Same controls for deleted tenant |
+| sdk-metadata-consumers |Actual packed session create/get, user update/get marker43; no authorityReference; SDK dependent gate |
+| sdk-refresh |New host JWT; official reactive/HTTP exact41; force-refresh callback observed |
+| sdk-logout |Actual packed positive41; null fence; independent persisted/read42; all success count unchanged750ms; query/header denial |
+| sdk-labels-no-authority |Packed SDK labels/admin claims with null JWT cannot grant access |
+| background-after-ordinary-logout |Trusted reference increases exact session messageCount1 despite host logout |
+| late-credential-fencing |Positive42; pending old token; null fence; release old token; independent persisted/read43; all success count unchanged750ms |
+| sanitized-host-callback |Only attemptId/code, exact HOST_TOKEN_FETCH_FAILED; denied query; successful43 recovery clears failure |
+| sdk-session-capability |Actual packed typed BACKEND_MAINTENANCE_ONLY/not_dispatched; session still active; zero dispatch separately proved offline |
+| background-after-revocation |Old trusted reference cannot increment; auditor reads memoryCount0 |
+| session-end-not-grant-revocation |Ended session status, independent mutable43 and trusted scope recheck still succeed |
+
+## Issues Found
+
+### Critical (must fix; blocks PASS)
+
+1. **Malformed lookalikes still produce operator authorization-negative PASS.** `scripts/operator-classifier.mjs:8` searches for the expected envelope anywhere in stderr. Lines11-12 search for a request marker and `Uncaught ConvexError` anywhere after it. They do not establish that the top-level official envelope belongs to the requested function or that the immediate ConvexError body has the installed server-error serialization. `operator-lookalike-assertions.json` records expected=false/actual=true and failed assertions for: a proxy description that merely contains the server marker/structured JSON; an EACCES body that prints an example marker/JSON; and an outer `runtimeAuth:authorize` envelope whose diagnostic merely mentions `runtimeAuth:recheck`. None has the required actual context/body shape, yet it yields OPERATOR_AUTHORIZATION_DENIED through operator.mjs:16 and satisfies client.ts:59. Require one complete official invocation envelope with the exact actual function and an anchored immediate server-error/structured ConvexError body; reject nested/quoted/mixed envelopes, diagnostic examples and unrelated error prefixes. Keep raw parsing in memory, add these independent falsepositive controls, and retain live compatibility as unexecuted/fail-closed. This is an offline predicate defect, not an asserted deployed exploit.
+
+2. **Process cleanup can claim REAPED before its owned grandchild is terminal.** `scripts/process-owner.mjs:14-16` sends SIGKILL, awaits only the direct leader's `closed`, then deletes the record. `driver-engine.mjs:72-75` derives remaining groups and REAPED solely from that Set. The unchanged actual driver probe, after the accepted root manifest correction, exits1 at driver-check.mjs:80/88: the whole-timeout operator grandchild is neither Z nor X when checked after the41-case receipt. That receipt still says REAPED/remaining0. The PID is65508, recorded in its private replay file, and later reaches Z. Two later full replays and20 focused probes sample terminal descendants, so the failure is intermittent rather than a persistent orphan. There is no bounded group-member terminal-state wait in the frozen ProcessOwner implementation. Keep direct-child waiting, then verify owned descendants are terminal/absent under a bounded Linux check before clearing ownership and emitting REAPED; inability to establish this must retain FAIL. Do not claim waitpid ownership of PID1 zombies or introduce an OS-sandbox claim. Preserve the failed check and ensure the stable required process assertion passes after repair.
+
+### Important (should fix in the same bounded revision)
+
+3. **Deployment/cleanup still lose final operation evidence if key/target preflight becomes unavailable after shutdown.** `deploy.mjs:8` and `cleanup.mjs:11` validate initial output names but discard the output binding. After operator/process shutdown, deploy:17 and cleanup:41 call writeEvidence, whose guard.mjs:133 runs livePreflight again, rereading target/env/key/provenance. A failure there prevents the operation receipt even though work already occurred. The qualification driver correctly retains validatedOutput and uses writeDriverReceipt, proving the required pattern is available, but it is restricted to qualify basenames. Apply the initially validated exclusive binding to deployment and cleanup result/error finalization too, retaining canonical/no-alias/exclusive checks without a second target/key dependency. This finding is from the exact source path; no live deployment/cleanup or target/key mutation was performed to demonstrate it.
+
+### Minor
+
+4. **Advertised driver discovery is35, actual final discovery is34.** README/report repeatedly state35 driver assertions; the preserved final2-driver.txt and driver-check-d5211e5c-0792-4763-8d71-64fba648fbcf.json both say34. Both successful independent replays likewise discover34 with skipped0. Correct the documents/count or supply the missing meaningful assertion; do not relabel34 as35. The live case list remains exactly41.
+
+No additional accepted-byte, SDK package, target-selector, private output, archive preservation, type or scoped lint defect was found. The accepted native helper ambiguity issue remains a separate unresolved dependency; it is not downgraded or certified by this review.
+
+## Dimension Scores
+
+| Dimension | Score | Evidence |
+| --- | --- | --- |
+| Requirement Fulfillment |2/5 |Major original repairs verified, but exact negative classification and stable descendant finalization fail; deployment/cleanup binding criterion incomplete |
+| Code Quality |3/5 |Clear parent/child boundary, explicit bounded calls and ledger; substring context parser and leader-only cleanup completion need repair |
+| Test Quality |2/5 |Many exact data/effect assertions; independent falsepositive controls contradict negativePASS claim; actual required process check fails intermittently |
+| Pattern Adherence |4/5 |Exact accepted source, official CLI/clients, separate native type configs, owned scratch and honest scope/OS limits |
+| Completeness |2/5 |Offline candidate cannot meet its remaining adoption guarantees; three entrypoint output/finalization paths need consistent completion |
+
+**Average:2.6/5.** Judge-task requires Requirement Fulfillment5 and every dimension at least4 for PASS. The supplied35-check claim and later passing replays cannot override the independent failures. No requirement or assertion was weakened during this review.
+
+## Recommendations
+
+Preserve this rejected second freeze and all raw receipts. Within the remaining bounded harness repair cycle, fix the diagnostic context/body parser, bounded group terminal-state verification and initial-binding deployment/cleanup receipts; correct discovery documentation; rerun affected original and new meaningful offline checks, freeze and obtain a fresh independent verdict. Keep the accepted4fb/c92 dependency freeze until the parent separately authorizes the independently qualified native helper refresh. No actual target/service phase should proceed from this verdict. After every dependency/harness gate passes, the parent must execute official guarded codegen, all41 real cases, owned fencing and exact project retirement, followed by an independent service verdict. All broader goal requirements remain pending.
+
+
+FILE _goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-harness-review-3.md
+# Task Judgment: THIRD and last original41 offline Task03C2 harness review
+
+## Verdict: FINAL PASS — bounded offline harness readiness only
+
+Requirement Fulfillment5, Code Quality4, Test Quality5, Pattern Adherence4, Completeness5: **average4.6/5**. All dimensions are at least4 and Requirement Fulfillment is5 under the strict judge-task rubric. This is the third review of the original gate, with the original scope and both REJECT2.6 histories retained.
+
+The frozen preparation repairs all first-five and second-four findings and includes only the independently accepted two-helper dependency refresh. The fresh independent checks below passed. **All41 real service outcomes remain UNEXECUTED.** Whole Task03/Task09, Task05 run/transcript/tool behavior, private bytes/uploads/assets/connector callbacks, automatic maintenance, UI and the full17-task goal remain PENDING. This PASS does not certify those outcomes or adopt rejected memory/facts/artifact/registry work.
+
+## Evidence review and boundaries
+
+Reviewed the bounded third prompt, AGENTS, full runtime/profile, pessimistic-judge role, judge-task and feature workflow; approved implementation prompt, goal, original Tasks03/09, authoritative decisions/architecture, preparation requirements, and both complete FINAL REJECT2.6 reports. Exact first report is qa/task03c2-live-harness-review-1.md. Read active source, README/report/matrix, provenance, inventories/freeze, preserved histories/raw failures and installed Convex1.46 CLI/HTTP/error serialization. Read the accepted metadata SECOND PASS4.6 report, full original41/affected03A mappings and actual-handler/native baseline comparisons as prerequisite evidence.
+
+Canonical repository: /workspace/Project-Cortex. HEAD022e2e3d61161766e90e91dd572bb9b7063d5957 is unchanged. Own evidence is exclusively /tmp/task03c2-live-harness-review3-01t5pzfe. No canonical writer or live target/driver/operator/deploy/cleanup invocation, target.env/deploy.env/key-selector acquisition, network/service/model/signing/key-generation/codegen/deployment/project cleanup/retirement, Git mutation, package installation, global configuration change or agent spawn occurred. Own exact module copies ran only through explicit OFFLINE dependency interception. Git use was read-only rev-parse/status/cat-file.
+
+The disposable replay contains exact frozen script/fixture/SDK/pack/archive bytes and exact accepted root package.json, with installed dependencies linked. It has no actual target.json, deploy.env or RSA. The source and packed SDK preparation processes use the environment bootstrap before import and at exit; no upstream/provider/cluster/deployment/private-selector names reach them. The live SDK child separately has the endpoint/JWT/test-reference/minimal-environment/IPC code boundary. Same UID filesystem access is not OS isolation.
+
+commands.json records actual validation argv/cwd/UTC start/end/exit and separate raw stdout/stderr. The four environment child controls additionally record those fields in results/environment.json; expected exit1 controls are successful rejection assertions. Initial exploratory tool reads/setup failures did not all have explicit UTC/raw-file captures; those limits are stated, without invented timestamps. Original source and failure transcripts/notes are retained, and final successful validators have recorded executions. No failed required harness run was replaced by a later passing run.
+
+## Observed checks
+
+| Independent check | Discovery / observed outcome | Evidence |
+|---|---|---|
+| Original guards |37/37 PASS, skipped0, network/subprocess/output0 |logs/guards.*, replay guards receipt |
+| Actual original guarded entrypoint imports |4/4 PASS, network/subprocess/output0 |logs/entrypoints.*, replay entrypoints receipt |
+| Original source SDK prep |6/6 PASS, skipped0, maintenance dispatch0, invalid-credential callbacks0 |logs/source-prep.*, replay client-prep receipt |
+| Actual packed SDK prep |6/6 PASS, skipped0, dispatch/callback/network0 |logs/packed-prep.*, replay packed-prep receipt |
+| Original classifier |28/28 PASS, skipped0, network0 |logs/classifier.*, replay classifier receipt |
+| New supplied adversarial classifier |22/22 PASS, skipped0 |logs/adversarial.*, replay adversarial receipt |
+| Original three independent second-review counterexamples |3/3 required false predicates now PASS |results/three-original-counterexamples.json; only import/output paths relocated |
+| Own actual operator-module composition |20/20 PASS, skipped0, live effects0 |results/operator-integration.json; synthetic preflight and CLI result only |
+| Original actual driver/environment/import/IPC/process/ledger |34/34 PASS, skipped0, network/service effects0,41 retained |logs/driver.*, replay driver-check receipt |
+| New terminal-group/whole-ceiling controls |25/25 PASS, skipped0; ten actual repeated groups; forced nonterminal/unavailable remain FAIL |logs/group.*, replay process-cycle3 receipt |
+| Actual deploy/cleanup module initial-binding controls |13/13 PASS, skipped0, actual CLI/operator/network effects0 |logs/receipts.*, replay receipt-cycle3 receipt |
+| Actual SDK environment bootstrap |4/4 PASS, skipped0; zero callback/key-value/network/credential-file effects |results/environment.json |
+| Original bounds |72 service/shutdown sites +4 configured ceilings =76 PASS |logs/bounds.*, AST receipt; source inspected beyond counting |
+| Unchanged native backend ES2021+DOM library config |exit0 |logs/backend-types.* |
+| Separate strict client types |exit0 |logs/client-types.* |
+| Actual house scoped lint |39files,0 errors/fatal,65 warnings |logs/house-lint.* |
+| Existing backend-policy selector |39files,0 errors/warnings/fatal |logs/backend-policy-lint.*; config/rules/ignores inspected unchanged |
+| Source/runtime versions |Node24.19.0/npm12.2.0; Convex1.46.0/ws8.21.0/https-proxy-agent7.0.6/tsx4.23.15/TypeScript6.0.3 |results/quality.json |
+| RSA/public JWKS |Match, existing owned0600/unlinked; comparison-only, no copy/sign/new key |results/key-comparison.json |
+| Frozen inventory/preservation |1924 public,2035 private,58 active,1040 private executor,1604 link bindings exact;4068 file metadata +1604 links unchanged before/after |before.json,after.json,results/preservation.json |
+| Public/new private-code privacy |1926 public files (1924 inventory+2 root inventories),16 new private-code files;0 PEM/signed JWT/unknown key matches |results/privacy.json;63 occurrences of six exact historical/offline standins |
+| Immutable history |107 originals;280/1304 saved records; all407/976 independent manifest rows;199/400 private omissions and214 original private bindings exact |results/history-integrity.json |
+
+There is one complete fresh required replay, not a replacement for the historical intermittent failure. New process controls independently repeat ten reached whole-ceiling scenarios. At each normal finish all direct children were waited; the observed grandchild was Z, remainingGroups0 and terminalVerifiedGroups2. Forced nonterminal verification retained1 group; unavailable verification retained2 groups, with processCleanup FAIL. Actual descendants were terminal after instrumentation was removed. PID1 orphan zombies are terminal for this bounded check; Node does not claim waitpid ownership of them.
+
+Own reviewer failures are retained: a JSON writer initially appended a literal backslash-n; an archive path assumption omitted the historical .text suffix; an initial historical-placeholder selection was incomplete; an overescaped privacy regex hit its30s bound. Only reviewer setup/selection/escaping changed; exact candidate source/assertions were untouched. The overescaped scan's yielded stdout/stderr was not retrieved and is explicitly not claimed as captured. Final protected/history/privacy checks have recorded successful commands. No canonical or live effect occurred.
+
+## Original findings and actual repaired paths
+
+| Finding | Independent conclusion |
+|---|---|
+| First1: logout/late observer could pass without positive delivery |Fixed in unchanged prepared client.ts:252-303: exact41/42 baseline, every success counted, null fence, late token released only after denial, independent persisted/read42/43,750ms unchanged count and numeric metric allowlist. Service remains UNEXECUTED. |
+| First2: unbounded requests/lost41-case receipt/unowned operator children |Fixed: all72 sites retain12s wrappers; parent owns41-case ledger before spawn, crash/SIGKILL/hang/inflight/whole-ceiling receipts retain FAIL/BLOCKED rows. ProcessOwner awaits direct close and bounded group terminal verification before removing records. |
+| First3: SDK child reread deployment key |Fixed: no guard/operator/driver/signing/key/evidence imports in child; actual SDK child interceptions observe0 sensitive reads/values/selectors/protocol/network; sdkEnvironment exact allowlist. |
+| First4: arbitrary permission stderr satisfied auth negative |Fixed: operator-classifier.mjs:5-21 anchors complete actual-function envelope, immediate HTTP ConvexError request/server/Uncaught body, canonical parsed allowlisted data and exact exit state. Three original malformed controls and actual operator composition pass. |
+| First5: setup/dependency failure misclassified |Fixed: provisioning unavailability becomes SetupUnavailable/BLOCKED; explicit foundation/SDK/revocation dependencies; actual setup-unavailable child leaves all41 BLOCKED. Assertions/service defects remain FAIL. |
+| Second1: prefixed/nested/quoted/wrong outer diagnostics |Fixed: whole-output parser rejects examples/mixed functions/quoted body/duplicate keys/extra fields/wrong version/code/message/retryable/outcome/success stdout. Raw diagnostics stay in memory; unsupported syntax is unavailability. |
+| Second2: REAPED before grandchild terminal |Fixed in process-owner.mjs:14-32 and process-terminal.mjs:5-20; two bounded Linux snapshots after direct child close, repeated SIGKILL for nonterminal; unknown/unreadable/expired checks retain ownership and FAIL. |
+| Second3: final deploy/cleanup output depended on second private preflight |Fixed: deploy.mjs:8,18 and cleanup.mjs:10,43 retain initial output; writeInitialReceipt only rechecks canonical destination/exclusivity. Actual success/error/timeout/process/invalid-ledger module paths emit one receipt despite synthetic subsequent private-preflight unavailability. Alias/hardlink/prior/out-of-origin paths reject. |
+| Second4: advertised35 vs actual34 |Fixed in active report/freeze/count paragraphs: exact original34 assertions retained. New22/25/13/4 checks are separate. Historical erroneous count is retained as history. |
+
+Installed official runFunctionAndLog uses ConvexHttpClient.function, error.toString().trim and its exact Failed-to-run envelope; logFailure supplies the optional ✖ prefix. HTTP forwarding constructs ConvexError(errorMessage); the structured message uses installed compact stringify. Reactive [CONVEX M/Q(...)] diagnostic context is a separate installed client shape, not invented as a positive CLI fixture contract. Mixed/wrong reactive context is independently rejected by actual operator composition. This parser's live compatibility is expressly UNEXECUTED and unfamiliar output fails closed. It does not assert authenticity of arbitrary same-UID fabricated stderr.
+
+The existing12s requests/observations/shutdown,25s operator,600s qualification/cleanup,120s deploy ceilings are preserved. Bounded group finalization follows timeout (direct-child wait up to2s and Linux verification up to2s); it is not instantaneous OS shutdown. External SIGKILL of the trusted driver itself cannot execute JS finalization and remains a parent invocation limitation. Ordinary child crashes/SIGKILLs/graceful signals/inflight/hangs are covered.
+
+## Accepted dependency and source preservation
+
+All14 per-row Git comparisons pass: runtimeAuth03ec735f1791d2e9973a320e22dcc58d0f040432782398dcc95d0d65f99b0929 and runtimeMetadataAuth7ba6fe51bb8828a9a18b8486f63e5975b84a99b725b3ffac93ac61fff811428f bind accepted022e2e3d61161766e90e91dd572bb9b7063d5957;11 other backend rows bindc92d548368791386c62f39895e381ef6bde2dc86; src/auth/verified binds4fb3482c5e06fcab12ab8513b242a066ef761f2f. The12 other fixture bodies are unchanged. Historical global acceptedCommit/backendAcceptedCommit remain4fb/c92. nativeErrorCorrectionCommit and independentReportSha256 b608adce3d20d8fdac98f8c2541c243dfa72616b6204e21ca1e7cf0dc6d8a94d bind the exact accepted SECOND metadata report.
+
+Read the helper composition: boundedSingle emits AUTHORITY_LOOKUP_AMBIGUOUS, which the unchanged resolver rethrows rather than pruning as FORBIDDEN; current scope/tombstone/final/pinned checks retain exact index and capability semantics. Canonical metadata row ambiguity emits the static native FORBIDDEN shape without private IDs; real infrastructure is not converted. Accepted actual-handler/current18/baseline12/native canonical6/control6 evidence is prerequisite evidence, not newly deployed proof. This review does not rerun or claim the separate925-test metadata gate.
+
+All129 SDK source/config files equal accepted4fb Git objects; all199 provenance rows and53 extracted tar entries match. Pack SHA256 cd97dabc1428e2dc7f217bf316aff0d7bf4ebf0d843a214a5777a2228275193d is unchanged. Old client/protocol/cases/prepare/assertions/schema/auth/config/JWKS files are byte-exact, except the two expressly accepted helper dependencies. Existing original private files214 remain frozen. Current fixture contains accepted metadata/auth functions only; no rejected main MF/schema helper or artifact/registry runtime candidate enters its functions graph. No generated API was invented.
+
+Cycle1 preservation SHA57b40f90400b5d6b52d9656a35194c0a01c7f98e77c8516b2a4f18e224361942 binds280 saved records; original407 independent rows resolve208 saved+199 private reproducible omissions. Cycle2 SHA2e69693b95c7f2dec576c289fcaa0a8c58259f7c557a2fd691597f7da14a6833 binds1304 saved records; original976 independent rows resolve776 saved+200 private omissions. Its400 total omission rows include candidate-private and independent-private bindings, all verified;511 old public inventory rows plus2 inventory files and214 old private rows are accounted for.499 of513 old public files remain exact outside the explicit mechanics/docs/freeze/two-helper/provenance allowance.
+
+The original intermittent driver-check-retry failure and qualify-4729e92f-7700-44b0-b0c5-cee0c09cba59 receipt remain alongside repeat2/repeat3 successes. Later terminal observations do not relabel the old failure. Third-cycle unsanitized inherited environment names OPENAI_API_KEY/OPENAI_CLUSTER (no values), zero network finding, lint/hygiene/count/invocation failures and raw outputs remain frozen. Own successful minimally configured SDK replay does not erase them.
+
+## Full original requirements mapping
+
+| Original requirement | Status / preparation evidence |
+|---|---|
+| Bounded03A inventory/principal/grant/bootstrap;03B closure/background;03C JWT/transport negatives |Accepted dependencies plus prepared metadata/auth transport; live UNEXECUTED. Full03B/03C broader closure PENDING. |
+| Inventory/guard all public memory/fact/conversation/search/share/artifact/attachment/graph/user/agent/policy paths |Original wider inventory remains required. This fixture reaches accepted metadata/auth only; complete alternate path closure PENDING. |
+| Refreshed host JWT; verified issuer/subject; trusted bootstrap; metadata grants no privilege |Prepared all41, packed source/consumer lifecycle prerequisite; real JWT verification UNEXECUTED. |
+| Direct scoped auth; administrator-only transcript unlock; one canonical store/revision/stale tracking; no lock bypass of billing |Metadata scope prepared; transcript/run/unlock/billing adapters Task05/04 PENDING. |
+| Background revocation/deletion, subscriptions, bytes/callback scoped auth, admin policy and redacted shares |Metadata/session refs/subscriptions/tombstones prepared. Real effects UNEXECUTED; tool/storage/upload/download/callback/share semantics PENDING. |
+| Missing/forged/wrong/omitted/unauthorized identity/scope/share cannot read/write/stream/infer |Metadata negative assertions prepared and fail-closed harness qualified. Actual service UNEXECUTED; all alternate path/paid/share coverage PENDING. |
+| Cross-tenant subscriptions/tools/uploads/storage; internal helpers nonpublic |Subscriptions/internal control negatives prepared; actual service UNEXECUTED. Tools/upload/storage PENDING. |
+| Revocation/deletion stops later reads/effects/commits/no recreation; ordinary logout documented |Prepared current-control rechecks, observer baseline/change/quiet windows and tombstones; ordinary logout differs from trusted revocation; service UNEXECUTED. |
+| Task09 versioned start/get/observe/cancel/approval/memory receipt, auth refresh/reconnect, server scope/policy |Metadata JWT subset prepared; complete run/text contract PENDING. |
+| AI SDK7 remote-run UI and one quickstart/backend tool, no second loop/writer |PENDING; no UI/run/tool integration certified. |
+| Response finality separate from indexing, strict barrier/overflow, explicit inference capability |PENDING; session maintenance capability is only its narrower accepted rejection. |
+| Browser-safe boundaries; no Node/backend/token bundle leak |Accepted packed client prerequisite retained; full Task09 bundle/integration PENDING. |
+| Actual text recall/tool/final while indexing pending |PENDING, UNEXECUTED. |
+| Reconnect/second observer one output/no duplicate effects; cancel/approval typed state |Auth metadata subscription preparation only; actual run/text outcomes PENDING. |
+| Immediate pending-tail next turn; strict barrier cannot cross earlier hole |PENDING. |
+| TS/UI equivalent scope/error semantics, no upstream keys, refresh/unauthorized observation |SDK minimal keyless transport prepared; actual JWT/TS/UI service outcomes UNEXECUTED/PENDING. |
+| Tasks01-09 standalone slice; fresh managed core profile correctness |PENDING; no graph/media prerequisite introduced by this fixture, but live core managed retrieval is not certified. |
+
+## All41 original service case mapping
+
+Every row below is **UNEXECUTED** on an actual service. Identity/order matches the unchanged matrix and cases source; prepared assertions are not observed service outcomes.
+
+| Case | Prepared meaningful assertion |
+|---|---|
+| operator-provisioning |Four owned trusted principals, distinct IDs; unavailable prerequisite BLOCKED |
+| valid-owned-metadata |Exact immutable version1, mutable23, session messageCount0; no internal authorityReference |
+| missing-identity |Read and write actual authentication denial |
+| forged-signature |Read/write verified signature denial |
+| wrong-issuer |Read/write issuer rejection |
+| wrong-audience |Read/write audience rejection |
+| expired-token |Read/write expired token rejection |
+| wrong-tenant |Read/write FORBIDDEN |
+| wrong-space |Read/write FORBIDDEN |
+| owner-denied |Other own principal read/write FORBIDDEN |
+| explicit-space-read |Broader READ exact23; WRITE denied |
+| admin-alone-read-denied |ADMIN without READ denied |
+| admin-alone-write-denied |ADMIN without WRITE denied |
+| ambiguous-omission-denied |Second trusted scope; omitted read/write denied; prior23 unchanged |
+| actor-binding-denied |Other actor immutable identity/session creation denied |
+| caller-metadata-no-principal |Caller labels/claims cannot provision a trusted principal |
+| public-internal-provision-denied |Provision/revoke/delete/tombstone/authorize/recheck inaccessible via public JWT |
+| public-internal-maintenance-denied |Increment and expireIdle inaccessible publicly |
+| immutable-delete-read-denied |Tombstone/purge then read denied |
+| immutable-delete-write-denied |Tombstone denies recreation with explicit dependency |
+| mutable-delete-read-denied |Resource deletion then read denied with explicit dependency |
+| mutable-delete-write-denied |Tombstone denies recreation with explicit dependency |
+| negative-effect-counts |Mutable23/immutable version1/session messageCount0 unchanged |
+| reactive-wrong-tenant |Denial callback and0 successful deliveries |
+| reactive-wrong-space |Denial callback and0 successful deliveries |
+| resource-deletion-subscription |Positive23 baseline, deletion denial, recreation denied,750ms no new success |
+| grant-revocation |Positive1, read/write/reference denial, other authorized persisted/read2, unchanged delivery count |
+| principal-deletion |Equivalent baseline/effect/current-reference/nondelivery checks |
+| membership-revocation |Equivalent checks for membership |
+| space-deletion |Baseline/recheck/read/write denial; broader writer and reprovision recreation denied |
+| tenant-deletion |Equivalent checks for tenant |
+| sdk-metadata-consumers |Packed session create/get and user update/get marker43; no authorityReference |
+| sdk-refresh |New host JWT; exact reactive/HTTP41; force-refresh observed |
+| sdk-logout |Working packed observer41, null fence, independent persisted/read42, all success count unchanged750ms, query/header denial |
+| sdk-labels-no-authority |Packed caller labels/admin claim with nullJWT stay UNAUTHENTICATED |
+| background-after-ordinary-logout |Trusted reference increases exact messageCount1 despite host logout |
+| late-credential-fencing |Working observer42; pending old token/null fence/release; independent persisted/read43; no new delivery750ms |
+| sanitized-host-callback |Only attemptId/code and HOST_TOKEN_FETCH_FAILED; unauthenticated query; exact43 recovery clears failure |
+| sdk-session-capability |Packed BACKEND_MAINTENANCE_ONLY/not_dispatched; active session unchanged; offline zero-dispatch controls |
+| background-after-revocation |Old reference increment denied; auditor exact memoryCount0 |
+| session-end-not-grant-revocation |Ended session still allows independently scoped mutable43 and trusted authority recheck |
+
+The separate accepted metadata original41 endpoint mapping is retained verbatim in source-context/original41-independent-requirement-mapping.json (immutable12/mutable11/users8/sessions10; public36/internal5), with full native validators, capability/owner/resource/background requirements and retained test outcomes. It is a dependency mapping, not another41-case service execution or wider240-endpoint closure claim.
+
+## Issues found
+
+Critical: none within this authorized offline readiness gate.
+Important source repairs: none required.
+Minor: README.md's late offline-limits paragraph still says house21 accepted-source warnings. Actual fresh lint, report and freeze say65 after the accepted helper refresh. The earlier top-level dependency-hold sentence is also stale beside the correctly bound accepted022 refresh. These conservative/documentation inconsistencies do not weaken assertions, hide failures or claim live completion; exact report/freeze/source provenance govern this reviewed candidate. No canonical correction was made during review.
+
+Known broader/main blockers remain separate: dirty-main root compiler's three rejected-MF reference errors are not replaced by isolated backend/client types. MF/artifact/registry hardcap and source gates remain pending; this is not a fourth repair or reset.
+
+## Dimension scores
+
+| Dimension | Score | Evidence |
+|---|---:|---|
+| Requirement Fulfillment |5/5|All original offline readiness guarantees and first/second findings mapped with exact fresh outcomes; broader requirements explicitly pending |
+| Code Quality |4/5|Anchored structured parser, awaited bounded group verification, retained initial receipt binding, explicit privacy and ownership; existing dynamic-framework warnings retained |
+| Test Quality |5/5|Exact original controls retained, independent malformed inputs and actual operator composition, repeated reached processes, forced failure states and real module receipt paths |
+| Pattern Adherence |4/5|Official installed CLI/clients, accepted per-row source, native ES2021 libraries/separate client config, existing lint rules and private ownership conventions |
+| Completeness |5/5|All required independent offline checks, provenance/history/env/privacy/preservation complete; original41 discovery retained and entrypoints wired |
+
+**Average4.6/5. FINAL PASS for bounded offline harness readiness.**
+
+## Required next gate and evidence binding
+
+Parent must independently verify the fresh purpose-bound disposable target, use the exact guarded official deployment/codegen entrypoints, execute all41 real cases, observe owned cleanup/fencing and exact project retirement, then obtain a separate fresh actual-service judgment. This report cannot substitute for that gate.
+
+Frozen SHA256 bindings:
+- source-freeze.json:301a0b9a6f08112544e79d49656021d39c31ed28d1e08adb8274db382e5d213f
+- report.md:9f3d0213e60187d2464c794d01c8ab39c64d6b462df66c51cfca7f161189eb89
+- file-inventory.json:70781efe0fec0e514a1b3921472aa693bfa013bf2bf81b41f2276a67fa25d96e
+- private-file-inventory.json:55c0e28feffd66c565003ba3f58a22df72cbbbb6ae27ffae4fcb2f8a34e8261f
+
+The private raw manifest binds this full report, scripts, source contexts, logs/results and exact replay bytes. It excludes itself, dependency node_modules/symlink content and Python caches; explicit link destinations and excluded-file hashes/counts are recorded separately. This review retains all accepted SDK source/build/pack copies privately, with **zero omitted reproducible SDK evidence rows**. Historical omissions remain199/400 as verified above. Report SHA/manifest SHA and exact counts are supplied only after final commands complete. Stop all writes at native FINAL.
+

@@ -1,0 +1,90 @@
+{
+  "at": "2026-10-04T18:22:46.610057+00:00",
+  "scope": "FAILED_TARGETED_C3_RERUN_NOT_ACCEPTANCE",
+  "receiptSHA256": "8917c30f7d25c0e12cf34c609c922a86380d4210c346113053c1bf2dfb8b2e29",
+  "stdoutSHA256": "7814062d67ad59be17eeb3e64650c1ff2e7b03c415b03a186fad05aa8a9cbadc",
+  "commands": [
+    {
+      "entry": "bridge-controls.mjs",
+      "exitCode": 0
+    },
+    {
+      "entry": "fixed-controls.mjs",
+      "exitCode": 0
+    },
+    {
+      "entry": "source-composition-controls.mjs",
+      "exitCode": 0
+    },
+    {
+      "entry": "adapter-route-controls.mjs",
+      "exitCode": 0
+    },
+    {
+      "entry": "composition-runtime-controls.mjs",
+      "exitCode": 1
+    }
+  ],
+  "runtimeResults": [
+    {
+      "name": "all122-prepared-exact-original-preimages-finite-argv-owned-writer-graphs",
+      "status": "PASS",
+      "errorFirstLine": ""
+    },
+    {
+      "name": "unknown-forwarded-arguments-and-release-denied",
+      "status": "PASS",
+      "errorFirstLine": ""
+    },
+    {
+      "name": "full-consumed-package-mirror-and-runtime-source-before-admission",
+      "status": "PASS",
+      "errorFirstLine": ""
+    },
+    {
+      "name": "real-composed-fs-module-compiler-ports-install-own-control-only",
+      "status": "PASS",
+      "errorFirstLine": ""
+    },
+    {
+      "name": "actual-esbuild-facade-own-output-and-generated-import-pin",
+      "status": "FAIL",
+      "errorFirstLine": "Error: EEXIST: file already exists, mkdir '/tmp/cortex-native-c5-closed-launcher-c3/prepared-inventory-extra/compiler-0001'"
+    },
+    {
+      "name": "registered-produced-module-byte-drift-denied-before-load",
+      "status": "FAIL",
+      "errorFirstLine": "AssertionError [ERR_ASSERTION]: The input did not match the regular expression /QA_BRIDGE_IMPORT_DRIFT/. Input:"
+    },
+    {
+      "name": "unregistered-own-generated-import-denied-before-body",
+      "status": "PASS",
+      "errorFirstLine": ""
+    },
+    {
+      "name": "actual-original-entry-and-private-process-builtin-held",
+      "status": "PASS",
+      "errorFirstLine": ""
+    },
+    {
+      "name": "real-named-filesystem-outside-readonly-public-write-denied",
+      "status": "PASS",
+      "errorFirstLine": ""
+    },
+    {
+      "name": "VM-fixed-own-producer-uses-patched-named-ports",
+      "status": "PASS",
+      "errorFirstLine": ""
+    },
+    {
+      "name": "composed-resource-closure-restores-all-ports",
+      "status": "PASS",
+      "errorFirstLine": ""
+    }
+  ],
+  "original8LiteralRowsAndIdentitiesEqual": true,
+  "sourceByteHashesEqual": true,
+  "scopeOfSourceFlag": "actual recorder selected source rows; does not retroactively relabel prior69134False",
+  "implementerDiagnosis": "compiler EEXIST from prior timedout OWN session; drift refusal consequently unregistered graph, fresh UUID session repair pending",
+  "original122": "HELD"
+}

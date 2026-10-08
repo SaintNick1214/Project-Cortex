@@ -1,0 +1,208 @@
+{
+  "observedAt": "2026-10-03T19:54:37.392Z",
+  "node": "v24.19.0",
+  "total": 26,
+  "passed": 26,
+  "results": [
+    {
+      "name": "positive-real-fact-update-history-current",
+      "status": "PASS",
+      "historicalVersions": 2,
+      "currentRevision": 2,
+      "oldCurrentDenied": true
+    },
+    {
+      "name": "positive-real-memory-update-history-and-normalization",
+      "status": "PASS",
+      "historicalVersions": 2,
+      "currentRevision": 2,
+      "normalizedNFC": true
+    },
+    {
+      "name": "positive-extracted-update-dedicated-binding-source-sibling-preserved",
+      "status": "PASS",
+      "sharedSourcePreserved": true,
+      "siblingPreserved": true,
+      "binding": "fact",
+      "actorBound": true
+    },
+    {
+      "name": "positive-extracted-updateInPlace-dedicated-binding-source-sibling-preserved",
+      "status": "PASS",
+      "sharedSourcePreserved": true,
+      "siblingPreserved": true,
+      "binding": "fact",
+      "actorBound": true
+    },
+    {
+      "name": "positive-memory-distinct-raw-tenant-read-space-write",
+      "status": "PASS",
+      "distinctGrant": true,
+      "tenantReader": true,
+      "privateResponse": true
+    },
+    {
+      "name": "positive-fact-distinct-raw-tenant-read-space-write",
+      "status": "PASS",
+      "distinctGrant": true,
+      "tenantReader": true,
+      "privateResponse": true
+    },
+    {
+      "name": "positive-memory-two-row-delete-readable-false",
+      "status": "PASS",
+      "deleted": 2,
+      "unsuppliedIdsDisclosed": false
+    },
+    {
+      "name": "positive-memory-two-row-delete-readable-true",
+      "status": "PASS",
+      "deleted": 2,
+      "unsuppliedIdsDisclosed": true
+    },
+    {
+      "name": "positive-fact-two-row-delete-readable-false",
+      "status": "PASS",
+      "deleted": 2,
+      "unsuppliedIdsDisclosed": false
+    },
+    {
+      "name": "positive-fact-two-row-delete-readable-true",
+      "status": "PASS",
+      "deleted": 2,
+      "unsuppliedIdsDisclosed": false
+    },
+    {
+      "name": "deletion-memory-readable-false-source-valid-payload-late-denies-rollback",
+      "status": "PASS",
+      "injected": true,
+      "code": "STALE_SOURCE",
+      "rolledBack": true,
+      "attemptedDataWrites": 1
+    },
+    {
+      "name": "deletion-memory-readable-false-tenant-resource-late-denies-rollback",
+      "status": "PASS",
+      "injected": true,
+      "code": "FORBIDDEN",
+      "rolledBack": true,
+      "attemptedDataWrites": 1
+    },
+    {
+      "name": "deletion-memory-readable-false-source-control-late-denies-rollback",
+      "status": "PASS",
+      "injected": true,
+      "code": "FORBIDDEN",
+      "rolledBack": true,
+      "attemptedDataWrites": 1
+    },
+    {
+      "name": "deletion-memory-readable-true-source-valid-payload-late-denies-rollback",
+      "status": "PASS",
+      "injected": true,
+      "code": "STALE_SOURCE",
+      "rolledBack": true,
+      "attemptedDataWrites": 1
+    },
+    {
+      "name": "deletion-memory-readable-true-tenant-resource-late-denies-rollback",
+      "status": "PASS",
+      "injected": true,
+      "code": "FORBIDDEN",
+      "rolledBack": true,
+      "attemptedDataWrites": 1
+    },
+    {
+      "name": "deletion-memory-readable-true-source-control-late-denies-rollback",
+      "status": "PASS",
+      "injected": true,
+      "code": "FORBIDDEN",
+      "rolledBack": true,
+      "attemptedDataWrites": 1
+    },
+    {
+      "name": "deletion-fact-readable-false-source-valid-payload-late-denies-rollback",
+      "status": "PASS",
+      "injected": true,
+      "code": "STALE_SOURCE",
+      "rolledBack": true,
+      "attemptedDataWrites": 1
+    },
+    {
+      "name": "deletion-fact-readable-false-tenant-resource-late-denies-rollback",
+      "status": "PASS",
+      "injected": true,
+      "code": "FORBIDDEN",
+      "rolledBack": true,
+      "attemptedDataWrites": 1
+    },
+    {
+      "name": "deletion-fact-readable-false-source-control-late-denies-rollback",
+      "status": "PASS",
+      "injected": true,
+      "code": "FORBIDDEN",
+      "rolledBack": true,
+      "attemptedDataWrites": 1
+    },
+    {
+      "name": "deletion-fact-readable-true-source-valid-payload-late-denies-rollback",
+      "status": "PASS",
+      "injected": true,
+      "code": "STALE_SOURCE",
+      "rolledBack": true,
+      "attemptedDataWrites": 1
+    },
+    {
+      "name": "deletion-fact-readable-true-tenant-resource-late-denies-rollback",
+      "status": "PASS",
+      "injected": true,
+      "code": "FORBIDDEN",
+      "rolledBack": true,
+      "attemptedDataWrites": 1
+    },
+    {
+      "name": "deletion-fact-readable-true-source-control-late-denies-rollback",
+      "status": "PASS",
+      "injected": true,
+      "code": "FORBIDDEN",
+      "rolledBack": true,
+      "attemptedDataWrites": 1
+    },
+    {
+      "name": "final-source-reload-expiry-memory-read",
+      "status": "PASS",
+      "injected": true,
+      "finalRawGrantsFetched": true,
+      "grantReads": 3,
+      "code": "FORBIDDEN",
+      "rolledBack": true
+    },
+    {
+      "name": "final-source-reload-expiry-memory-write",
+      "status": "PASS",
+      "injected": true,
+      "finalRawGrantsFetched": true,
+      "grantReads": 3,
+      "code": "FORBIDDEN",
+      "rolledBack": true
+    },
+    {
+      "name": "final-source-reload-expiry-fact-read",
+      "status": "PASS",
+      "injected": true,
+      "finalRawGrantsFetched": true,
+      "grantReads": 3,
+      "code": "FORBIDDEN",
+      "rolledBack": true
+    },
+    {
+      "name": "final-source-reload-expiry-fact-write",
+      "status": "PASS",
+      "injected": true,
+      "finalRawGrantsFetched": true,
+      "grantReads": 3,
+      "code": "FORBIDDEN",
+      "rolledBack": true
+    }
+  ]
+}

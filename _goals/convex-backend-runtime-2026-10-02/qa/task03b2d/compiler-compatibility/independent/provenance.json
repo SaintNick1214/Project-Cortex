@@ -1,0 +1,64 @@
+{
+  "reviewedAt": "2026-10-03T10:51:03.148867+00:00",
+  "actor": "fresh independent task03b2d_compiler_review_1",
+  "head": "cd5671449beb64ed1ca4a284a761cad60ab70525",
+  "compilerFollowupSourceFreeze": {
+    "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2d/compiler-compatibility/source-freeze.json",
+    "sha256": "44c0e7b66e391b976f1febf3dcc80d1e587f4c2592a9d631526756b66417b16a",
+    "statusAtReview": "FINAL_SOURCE_FREEZE_PENDING_PARENT_INDEPENDENT_REVIEW",
+    "frozenAt": "2026-10-03T10:45:48.604199+00:00"
+  },
+  "actualCompilerProject": {
+    "file": "convex-dev/tsconfig.json",
+    "sha256": "6b077cd115f1e1a1cd41fe22824624d9ee39d89b2a53b016aaf59dd2981fdc17",
+    "lib": [
+      "ES2021",
+      "dom"
+    ],
+    "unchangedFromHead": true
+  },
+  "initialFailure": {
+    "workflowRun": 37117112735,
+    "retainedPrivateLog": "work/backend-runtime/ci-worker-closure-failures.log",
+    "sha256": "b7f1aab9731619fea9147ac25f1baeed741b2114e0fb3d1efaf910b8cb82feff",
+    "rawDiagnosticCount": 2,
+    "executorInitialLog": {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2d/compiler-compatibility/backend-initial.log",
+      "sha256": "385a325ea6b3f7d336b72902d21cf522c63be3631fbce42b303236697d67506b",
+      "exitCode": 2
+    },
+    "independentReversionRun": "Not executed; source was not rewritten. Exact recorded pre-fix source hashes independently match reviewed HEAD and the actual backend ES2021 API incompatibility."
+  },
+  "preservedPreviousJudgments": [
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2d-review-1.md",
+      "sha256": "8cf2311445c7e95451cb8e49f1dec0cb2c608b7b4aa3bdab7ab38ac7eeb92ba9",
+      "verdict": "Original bounded D production FINALPASS 4.4/5 retained; not expanded"
+    },
+    {
+      "file": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2d-test-review-1.md",
+      "sha256": "f944667653922f01bc7f358f43f671bc6cee672c8bb2a9d078f87b1776d0401f",
+      "verdict": "Independent test-only main adjustment FINALPASS 4.4/5 retained; no assertions or test source changed"
+    }
+  ],
+  "concurrentParentReceipt": {
+    "file": "_goals/convex-backend-runtime-2026-10-02/qa/ci-followups/worker-closure-failures.json",
+    "sha256": "f190b74a76bc1912d7e1ee3203ed921a94999bf8ff9076585f24f99a4149e6a7",
+    "observedSha256": "26b647c13590be1c68653a3568a423f6cfa6d0be19b79a991791748fc5674fb3",
+    "matchesExecutorBefore": false,
+    "provenance": "Parent-owned concurrent metadata receipt; no executor/judge write"
+  },
+  "concurrentUnacceptedContext": "Parent-owned MF working files/schema are present on shared checkout; only D and trusted table AST parts were compared to HEAD. No MF helper is an accepted dependency. Other catalog endpoints are discovery context only. Parallel isolated B2A judgment has no shared accepted dependency.",
+  "scopeAndReadOnly": [
+    "Only own /tmp receipt scripts, logs, test JSON and catalog files written",
+    "Existing safe registered-handler suites allocate/remove their own unique OS temp catalog directory",
+    "No retained mutating QA runner invoked",
+    "No candidate/canonical QA, source, config, generated, manifest, stage/index, build, deployment, provider, paid inference or live operation writes by judge",
+    "Before/after monitored D source,16 HEAD files,139 preserved QA,15 followup frozen artifact hashes and Git index SHA match"
+  ],
+  "knownUnresolvedGate": {
+    "rootSdkGovernanceConsumer": "Existing TS2339 src/governance/index.ts:380 calling intentionally internalized enforce API; src/governance/index.ts remains HEAD bytes",
+    "fullRootCi": "FAILURE retained; backend PASS does not certify full CI or consumer integration",
+    "excluded": "Whole Task03,03C/03C2/09, live Convex integration/concurrency/subscriptions, external graph projection, private bytes/storage lifecycle, product/UI and host deployment/install certification"
+  }
+}

@@ -1,0 +1,7 @@
+import base from '../../../eslint.config.js';
+const scope='_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture';
+const backend=base.find(entry=>entry.files?.includes('convex-dev/**/*.ts'));
+export default [...base,
+ {files:[`${scope}/scripts/*.ts`],languageOptions:{parserOptions:{project:`./${scope}/client-tsconfig.json`}}},
+ {files:[`${scope}/fixture/**/*.ts`],languageOptions:{parserOptions:{project:`./${scope}/fixture/convex/tsconfig.json`}},rules:backend.rules},
+];

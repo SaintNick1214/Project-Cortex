@@ -1,0 +1,27 @@
+✔ Provisioned a dev deployment and saved its:
+    client URL as CONVEX_URL
+    HTTP actions URL as CONVEX_SITE_URL
+ to .env.local
+
+Write your Convex functions in convex/
+Give us feedback at https://convex.dev/community or support@convex.dev
+View the Convex dashboard at https://dashboard.convex.dev/d/fiery-setter-784
+
+▌ Developing against deployment:
+▌ [Development] nicholasgeil:cortex-runtime-disposable-qualification-security-8f253abe:dev/nicholasgeil (dev) (dashboard: https://dashboard.convex.dev/t/nicholasgeil/cortex-runtime-disposable-qualification-security-8f253abe/fiery-setter-784)
+▌ └─ https://fiery-setter-784.convex.cloud
+- Preparing Convex functions...
+
+Convex AI files are not installed. Run npx convex ai-files install to get started or npx convex ai-files disable to hide this message.
+✔ Added table indexes:
+  [+] operations.by_operation   operationId, _creationTime
+  [+] receipts.by_run   runId, _creationTime
+  [+] runs.by_request   owner, requestId, _creationTime
+  [+] tools.by_operation   operationId, _creationTime
+✔ Installed component agent.
+✔ Installed component workflow.
+✔ Installed component workflow/workpool.
+✔ Installed component workflow/workpool/batchWorker.
+✔ Installed component workpool.
+✔ Installed component workpool/batchWorker.
+✔ 08:54:47 Convex functions ready! (5.2s)

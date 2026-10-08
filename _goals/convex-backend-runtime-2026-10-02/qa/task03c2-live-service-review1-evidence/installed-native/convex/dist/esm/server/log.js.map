@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../src/server/log.ts"],
+  "sourcesContent": ["import { audit } from \"./audit_logging.js\";\nimport { vars } from \"./logVars.js\";\n\n// Type annotations are needed for the `unique symbol` types in `vars` to typecheck correctly\ninterface Log {\n  /**\n   * Emit a durable audit log. This functionality is only available for Convex\n   * Enterprise (see https://www.convex.dev/enterprise/pricing).\n   *\n   * Use dynamic variables from `log.vars` to include deferred values that will\n   * be resolved when emitting the log. Cached query hits will replay audit logs\n   * with updated values.\n   * ```ts\n   * await log.audit({\n   *   action: \"document.viewed\",\n   *   actor: { userId },\n   *   source: {\n   *     ip: log.vars.ip,\n   *     userAgent: log.vars.userAgent,\n   *   },\n   *   timestamp: log.vars.now,\n   * });\n   * ```\n   *\n   * The log body must be JSON-serializable.\n   */\n  audit: typeof audit;\n  vars: typeof vars;\n}\n\nexport const log: Log = {\n  audit,\n  vars,\n};\n"],
+  "mappings": ";AAAA,SAAS,aAAa;AACtB,SAAS,YAAY;AA6Bd,aAAM,MAAW;AAAA,EACtB;AAAA,EACA;AACF;",
+  "names": []
+}

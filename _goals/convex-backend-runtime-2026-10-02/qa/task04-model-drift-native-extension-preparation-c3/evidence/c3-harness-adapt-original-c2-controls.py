@@ -1,0 +1,9 @@
+from pathlib import Path
+b=Path('_goals/convex-backend-runtime-2026-10-02/qa');w=Path('work/resume/task04-model-drift-native-preparation-c3');r=b/'task04-model-drift-native-source-preparation-c2-review';(w/'source-review-proof').mkdir(exist_ok=True)
+for name in ['peer-source-drift','peer-body-controls']:
+ s=(r/(name+'.mjs.text')).read_text().replace("-preparation-c2'","-preparation-c3'").replace("-preparation-c2/scripts","-preparation-c3/scripts").replace('native-source-preparation-c2-review/runtime-proof','native-preparation-c3/source-review-proof/runtime-proof').replace('Buffer,Date,setTimeout}','Buffer,Date,setTimeout,clearTimeout}')
+ if name=='peer-source-drift':s=s.replace("await peer.link(name=>{let obj;", "const bodyHelper=new SourceTextModule(fs.readFileSync(path.resolve(root,'scripts/bounded-response.mjs'),'utf8'),{context:h.vmContext});await bodyHelper.link(()=>{});await bodyHelper.evaluate();await peer.link(name=>{if(name==='./bounded-response.mjs')return bodyHelper;let obj;")
+ else:
+  s=s.replace('createContext({Buffer,AbortSignal,Error})','createContext({Buffer,AbortSignal,Error,Date,setTimeout,clearTimeout})').replace("const m=new SourceTextModule(source,{context,identifier:sourcePath});await m.link(name=>{", "const helper=new SourceTextModule(fs.readFileSync(path.resolve(path.dirname(sourcePath),'bounded-response.mjs'),'utf8'),{context});await helper.link(()=>{});await helper.evaluate();const m=new SourceTextModule(source,{context,identifier:sourcePath});await m.link(name=>{if(name==='./bounded-response.mjs')return helper;")
+  s=s.replace('limits:{resultBytes:256000},','limits:{resultBytes:256000,rpcMs:12000},livePreflight(){throw Error(\'NO_LIVE\');},qualifierDeadline(){throw Error(\'NO_WINDOW\');},reviewPin(){throw Error(\'NO_PIN\');},')
+ (w/('original-c2-'+name+'.mjs')).write_text(s)

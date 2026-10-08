@@ -1,0 +1,38 @@
+(node:80481) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL _goals/convex-backend-runtime-2026-10-02/qa/task04-gateway-middleware-c1-review/hostile.test.ts (5.323 s)
+  independent hostile cancellation
+    ✕ cancellation during visibility await prevents subsequent delta delivery but captures terminal charge (39 ms)
+
+  ● independent hostile cancellation › cancellation during visibility await prevents subsequent delta delivery but captures terminal charge
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 7
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "delta": "answer",
+    +     "id": "governed-text",
+    +     "type": "text-delta",
+    +   },
+    + ]
+
+      88 |   try {await h.lifecycle.complete();} catch {}
+      89 |   expect(f.receipts).toHaveLength(1);
+    > 90 |   expect(seen.filter(x=>x.type==="text-delta")).toEqual([]);
+         |                                                 ^
+      91 |  });
+      92 | });
+      93 |
+
+      at Object.<anonymous> (_goals/convex-backend-runtime-2026-10-02/qa/task04-gateway-middleware-c1-review/hostile.test.ts:90:49)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 1 total
+Snapshots:   0 total
+Time:        5.551 s
+Ran all test suites.
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/task04-gateway-middleware-c1-review/hostile-c2-result.json

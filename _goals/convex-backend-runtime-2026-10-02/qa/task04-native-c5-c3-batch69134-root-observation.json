@@ -1,0 +1,39 @@
+{
+  "observedAt": "2026-10-04T18:14:18.705747+00:00",
+  "scope": "FAILED_C3_BATCH_COORDINATOR_OBSERVATION_NOT_ACCEPTANCE",
+  "receiptPath": "/tmp/cortex-native-c5-closed-launcher-c3/runs/69134fcd4b8a414280ac5ed5bf5ded67/receipt.json",
+  "receiptBytes": 39450479,
+  "receiptSha256": "0f5ad14b722b79b7770be36940606b64d4434cdb66221ead914a1eb8d5fced28",
+  "commands": [
+    {
+      "entry": "bridge-controls.mjs",
+      "exitCode": 0
+    },
+    {
+      "entry": "fixed-controls.mjs",
+      "exitCode": 0
+    },
+    {
+      "entry": "service-controls.mjs",
+      "exitCode": 0
+    },
+    {
+      "entry": "source-composition-controls.mjs",
+      "exitCode": 1
+    },
+    {
+      "entry": "adapter-route-controls.mjs",
+      "exitCode": 0
+    }
+  ],
+  "primaryFailure": {
+    "type": "TimeoutExpired",
+    "message": "Command '['/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node', '--experimental-vm-modules', '/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c5/closed-launcher-c3/composition-runtime-controls.mjs']' timed out after 120 seconds"
+  },
+  "original8LiteralRowsAndIdentitiesEqual": true,
+  "sourceByteHashesEqual": false,
+  "runtimeRawCapture": "NOT_CAPTURED_PARTIAL_OUTPUT_UNKNOWN",
+  "implementerReportedSourceDelta": "synthetic-bootstrap.json regenerated metadata only; pending ROOT full diff inspection on frozen packet",
+  "implementerReportedCause": "realpathSync JS implementation recurses through patched fs; repair pending",
+  "original122": "HELD"
+}

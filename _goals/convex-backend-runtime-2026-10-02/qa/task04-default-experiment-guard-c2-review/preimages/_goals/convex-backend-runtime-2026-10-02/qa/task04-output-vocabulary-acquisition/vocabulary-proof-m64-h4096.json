@@ -1,0 +1,43 @@
+{
+  "conditionalEscapedTextCanonicalBounds": {
+    "M": 64,
+    "arbitraryUTF8ReplacementBoundBytes": 151554,
+    "replacementFits60000": false,
+    "scope": "one generated text string only; not structured JSON/numeric/tool envelopes or provider IDs; requires qualified total generated-token cap and serving encoding",
+    "strictFits60000": true,
+    "strictValidUTF8BoundBytes": 53250,
+    "trustedEnvelopeOverheadBytes": 4096
+  },
+  "encoding": "o200k_base",
+  "expectedVocabularySHA256": "446a9538cb6c348e3516120d7c08b09f57c36495e2acfffe59a5bf8b0cfb1a2d",
+  "maximumComputation": "EXHAUSTIVE_ARTIFACT_COMPUTED",
+  "maximumMergeableRawBytes": 128,
+  "maximumRawBytesIncludingSpecials": 128,
+  "maximumRawWitnesses": [
+    {
+      "base64": "ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA=",
+      "rank": 72056
+    }
+  ],
+  "maximumSingleTokenReplacementUTF8Bytes": 128,
+  "maximumSpecialUTF8Bytes": 15,
+  "mergeableRanks": 199998,
+  "method": "every mergeable token plus all registered special spellings; no model samples",
+  "modelProvenance": "OpenAI tiktoken.model prefix mappings for gpt-4o-mini and gpt-4.1-mini; serving Gateway tokenizer not qualified",
+  "officialEncodingSourceSHA256": "954392738e60d0fb6dca1dad80872efc47c8e2733babecbbf0a23970ed66c2cb",
+  "officialVocabularyURL": "https://openaipublic.blob.core.windows.net/encodings/o200k_base.tiktoken",
+  "resultByteReadiness": "NOT_QUALIFIED",
+  "specialTokens": [
+    {
+      "spelling": "<|endoftext|>",
+      "tokenId": 199999,
+      "utf8Bytes": 13
+    },
+    {
+      "spelling": "<|endofprompt|>",
+      "tokenId": 200018,
+      "utf8Bytes": 15
+    }
+  ],
+  "vocabularySHA256": "446a9538cb6c348e3516120d7c08b09f57c36495e2acfffe59a5bf8b0cfb1a2d"
+}

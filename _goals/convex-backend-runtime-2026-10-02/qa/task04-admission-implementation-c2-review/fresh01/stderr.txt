@@ -1,0 +1,30 @@
+(node:77787) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS work/resume/task04-admission-c2-review/fresh.test.ts (8.053 s)
+  fresh independent isolated current policy gates
+    ✓ isolated operation rejects over-cap held liability with zero effects (97 ms)
+    ✓ isolated run rejects over-cap held liability with zero effects (28 ms)
+    ✓ isolated tenant rejects over-cap held liability with zero effects (52 ms)
+    ✓ isolated concurrency rejects over-cap held liability with zero effects (31 ms)
+    ✓ isolated operation exact boundary permits without adding held reservation (39 ms)
+    ✓ isolated run exact boundary permits without adding held reservation (22 ms)
+    ✓ isolated tenant exact boundary permits without adding held reservation (20 ms)
+    ✓ isolated concurrency exact boundary permits without adding held reservation (19 ms)
+    ✓ current generally allowed candidate has no fallback authority after explicit removal (36 ms)
+    ✓ cumulative fallback one unit over current operation ceiling cannot reserve (30 ms)
+    ✓ exact cumulative fallback cap reserves and checkpoints once (45 ms)
+    ✓ fallback reserved before current permission narrowing cannot checkpoint (40 ms)
+    ✓ fallback reserved before current operation narrowing cannot checkpoint (35 ms)
+    ✓ run current cap counts unknown paid liability even after its slot releases (30 ms)
+    ✓ tenant current cap counts unknown paid liability even after its slot releases (31 ms)
+    ✓ run current cap counts known settled charges alongside held reservation (27 ms)
+    ✓ tenant current cap counts known settled charges alongside held reservation (31 ms)
+    ✓ persisted limitUnits remains a stricter fence than current and pinned policy (17 ms)
+    ✓ persisted concurrencyLimit remains a stricter fence than current and pinned policy (21 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       19 passed, 19 total
+Snapshots:   0 total
+Time:        8.285 s
+Ran all test suites.
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/task04-admission-implementation-c2-review/fresh01/jest-result.json

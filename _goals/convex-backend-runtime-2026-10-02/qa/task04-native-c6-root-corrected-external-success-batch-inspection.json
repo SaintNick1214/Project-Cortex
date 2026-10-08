@@ -1,0 +1,76 @@
+{
+  "observedAt": "2026-10-05T02:26:23.224211+00:00",
+  "status": "ROOT_READ_ONLY_RETAINED_FAILURE_INSPECTION",
+  "results": [
+    {
+      "batch": "e58d7a62911a458d9a3c629f40d603d8",
+      "receiptSHA256": "d71977d5c3d87003e34320e7a2cc07228f713b5a7d5f79588f97650ba5bc74b9",
+      "receiptIdentity": {
+        "st_dev": 26,
+        "st_ino": 18588,
+        "st_mode": 33152,
+        "st_uid": 1000,
+        "st_gid": 1000,
+        "st_nlink": 1,
+        "st_size": 10124660,
+        "st_mtime_ns": 1791166909896636856,
+        "st_ctime_ns": 1791166909896636856
+      },
+      "commands": [
+        {
+          "argv": [
+            "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+            "--experimental-vm-modules",
+            "/workspace/Project-Cortex/work/resume/task04-model-drift-native-preparation-c6/closed-launcher-c6/external-seam-controls.mjs"
+          ],
+          "utcStart": "2026-10-05T02:20:04.095743+00:00",
+          "utcEnd": "2026-10-05T02:20:38.849727+00:00",
+          "exitCode": 0
+        }
+      ],
+      "streams": [
+        {
+          "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/runs/e58d7a62911a458d9a3c629f40d603d8/external-seam-controls.mjs.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "identity": {
+            "st_dev": 26,
+            "st_ino": 18586,
+            "st_mode": 33152,
+            "st_uid": 1000,
+            "st_gid": 1000,
+            "st_nlink": 1,
+            "st_size": 0,
+            "st_mtime_ns": 1791166839521357123,
+            "st_ctime_ns": 1791166839521357123
+          },
+          "text": ""
+        },
+        {
+          "path": "/dev/shm/cortex-native-c6-closed-launcher-c6/runs/e58d7a62911a458d9a3c629f40d603d8/external-seam-controls.mjs.stdout",
+          "bytes": 302,
+          "sha256": "f57b858264fd420d42e3e93ef90d6cdb3b553166e05b51efcf45a7ab3be76567",
+          "identity": {
+            "st_dev": 26,
+            "st_ino": 18585,
+            "st_mode": 33152,
+            "st_uid": 1000,
+            "st_gid": 1000,
+            "st_nlink": 1,
+            "st_size": 302,
+            "st_mtime_ns": 1791166839521357123,
+            "st_ctime_ns": 1791166839521357123
+          },
+          "text": "{\"status\":\"PASS_CURRENT_EXTERNAL_SEAM\",\"root\":\"/tmp/cortex-native-c6-independent-review-87eb6f28-3812-499b-ab08-09282d98678d\",\"receipt\":\"/tmp/cortex-native-c6-independent-review-87eb6f28-3812-499b-ab08-09282d98678d/session-1089f2a3-4002-4e02-a652-a74fae6efadd/outer-receipt.json\",\"original122\":\"HELD\"}\n"
+        }
+      ],
+      "fullLiteralRowsCompared": 148325,
+      "sourceRowsCompared": 5385,
+      "uniqueBeforeByteBackingsDecoded": 3378,
+      "beforeByteBackingRawBytes": 298753710,
+      "assessment": "Focused corrected external actualexit0 observed. Successful previous code cohort is historical; subsequent whole07 fixture literal changes are not certified by this batch. No whole body in this batch; no full qualification inferred. Recorded cleanup is historical, not a fresh process census."
+    }
+  ],
+  "currentSourceQualification": "NOT_PERFORMED: candidate changed after these batches",
+  "original122": "HELD"
+}

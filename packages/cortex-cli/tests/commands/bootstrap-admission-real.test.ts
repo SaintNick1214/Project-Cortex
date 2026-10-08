@@ -32,7 +32,7 @@ beforeAll(async () => {
   for (const [path, hash] of Object.entries({ ...dependencyBinding.sdkArtifacts, ...dependencyBinding.generated }))
     if (digest(join(sdk, path)) !== hash) throw new Error("BOOTSTRAP_PROOF_DEPENDENCY_CHANGED");
   const npmManifest = JSON.parse(readFileSync(join(npmRoot, "package.json"), "utf8"));
-  if (npmManifest.name !== "npm" || npmManifest.version !== "11.19.1") throw new Error("BOOTSTRAP_PROOF_NPM_UNVERIFIED: expected trusted npm 11.19.1");
+  if (npmManifest.name !== "npm" || npmManifest.version !== "12.2.0") throw new Error("BOOTSTRAP_PROOF_NPM_UNVERIFIED: expected trusted npm 12.2.0");
   if (!existsSync(join(cli, "dist/index.js"))) throw new Error("BOOTSTRAP_PROOF_BUILD_REQUIRED: supply existing compiled CLI; tests never build SDK or CLI");
   expect(readFileSync(join(cli, "dist/index.js"), "utf8").split("\n")[0]).toBe("#!/usr/bin/env -S node --");
   expect(existsSync(join(cli, "dist/cli-main.js"))).toBe(true);
@@ -51,7 +51,8 @@ beforeAll(async () => {
     env: { HOME: fixtureHome, PATH: process.env.PATH ?? "", npm_config_cache: join(stage, "npm-cache"), npm_config_userconfig: join(stage, "absent-user-npmrc"), npm_config_globalconfig: join(stage, "absent-global-npmrc"), npm_config_offline: "true" },
   });
   if (result.error || result.status !== 0) throw new Error("BOOTSTRAP_PROOF_PACK_FAILED: ignored-script local packing failed");
-  const inventory = JSON.parse(result.stdout);
+  const packedResult = JSON.parse(result.stdout);
+  const inventory = Array.isArray(packedResult) ? packedResult : packedResult && typeof packedResult === "object" ? Object.values(packedResult) : [];
   if (!Array.isArray(inventory) || inventory.length !== 1 || typeof inventory[0].filename !== "string" || !/^[a-zA-Z0-9_.-]+\.tgz$/.test(inventory[0].filename)) throw new Error("BOOTSTRAP_PROOF_ARCHIVE_INVALID");
   const archive = join(packed, inventory[0].filename); const archiveSHA256 = digest(archive);
   const { createRequire } = await import("node:module"); const require = createRequire(import.meta.url);
@@ -348,7 +349,11 @@ it.each(["executable", "npm-bin", "npm-sh"])("actual %s launcher places Node bou
   const manifest = JSON.parse(readFileSync(join(pkg, "package.json"), "utf8"));
   await require(join(npmRoot, "node_modules/bin-links"))({ path: pkg, pkg: manifest, top: false, force: true });
   const generated = join(root, "shims", "cortex");
-  await require(join(npmRoot, "node_modules/cmd-shim"))(join(pkg, "dist/index.js"), generated);
+  const binLinkRequire = createRequire(join(npmRoot, "node_modules/bin-links/package.json"));
+  await binLinkRequire("cmd-shim")(join(pkg, "dist/index.js"), generated);
+  // npm12 cmd-shim selects an adjacent interpreter before its Windows PATH fallback.
+  // Bind the actual chosen proof runtime for this cross-platform shell carrier.
+  symlinkSync(process.execPath, join(root, "shims", "node"));
   const invocation = launcher === "executable" ? join(pkg, "dist/index.js") : launcher === "npm-bin" ? join(root, "installation/node_modules/.bin/cortex") : generated;
   const forbidden = join(outside, ".env.forbidden"); expect(spawnSync("mkfifo", [forbidden]).status).toBe(0);
   const observer = instrument(); const args = ["db", "export", "--restore-bundle", "--env-file", forbidden];

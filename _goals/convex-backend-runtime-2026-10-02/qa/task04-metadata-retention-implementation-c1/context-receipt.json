@@ -1,0 +1,11 @@
+{
+  "argv": [
+    "python3",
+    "-c",
+    "from pathlib import Path;print(Path(\"_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-c2-coordinator-acceptance.json\").read_text());p=Path(\"_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2\");print(\"ROOT FILES\");[print(x) for x in p.iterdir() if x.is_file()]; print(\"FIXTURE\");[print(x) for x in (p/\"fixture\").rglob(\"*\") if x.is_file()]"
+  ],
+  "cwd": "/workspace/Project-Cortex",
+  "startUtc": "2026-10-04T14:19:54.476652+00:00",
+  "endUtc": "2026-10-04T14:19:54.500873+00:00",
+  "exit": 0
+}

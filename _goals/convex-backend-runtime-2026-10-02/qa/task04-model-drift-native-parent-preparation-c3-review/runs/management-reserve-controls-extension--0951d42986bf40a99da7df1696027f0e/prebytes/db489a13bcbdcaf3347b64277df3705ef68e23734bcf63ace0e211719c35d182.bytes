@@ -1,0 +1,4737 @@
+{
+  "inputs": {
+    "node_modules/convex/dist/esm/values/base64.js": {
+      "bytes": 3251,
+      "imports": [],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/common/index.js": {
+      "bytes": 1936,
+      "imports": [],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/values/value.js": {
+      "bytes": 10045,
+      "imports": [
+        {
+          "path": "node_modules/convex/dist/esm/values/base64.js",
+          "kind": "import-statement",
+          "original": "./base64.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/common/index.js",
+          "kind": "import-statement",
+          "original": "../common/index.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/values/validators.js": {
+      "bytes": 13168,
+      "imports": [
+        {
+          "path": "node_modules/convex/dist/esm/values/value.js",
+          "kind": "import-statement",
+          "original": "./value.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/values/validator.js": {
+      "bytes": 8089,
+      "imports": [
+        {
+          "path": "node_modules/convex/dist/esm/values/validators.js",
+          "kind": "import-statement",
+          "original": "./validators.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/values/errors.js": {
+      "bytes": 796,
+      "imports": [
+        {
+          "path": "node_modules/convex/dist/esm/values/value.js",
+          "kind": "import-statement",
+          "original": "./value.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/values/compare_utf8.js": {
+      "bytes": 2034,
+      "imports": [],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/values/compare.js": {
+      "bytes": 3289,
+      "imports": [
+        {
+          "path": "node_modules/convex/dist/esm/values/value.js",
+          "kind": "import-statement",
+          "original": "./value.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/values/compare_utf8.js",
+          "kind": "import-statement",
+          "original": "./compare_utf8.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/values/size.js": {
+      "bytes": 2300,
+      "imports": [
+        {
+          "path": "node_modules/convex/dist/esm/values/value.js",
+          "kind": "import-statement",
+          "original": "./value.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/common/index.js",
+          "kind": "import-statement",
+          "original": "../common/index.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/values/index.js": {
+      "bytes": 374,
+      "imports": [
+        {
+          "path": "node_modules/convex/dist/esm/values/value.js",
+          "kind": "import-statement",
+          "original": "./value.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/values/validator.js",
+          "kind": "import-statement",
+          "original": "./validator.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/values/base64.js",
+          "kind": "import-statement",
+          "original": "./base64.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/values/errors.js",
+          "kind": "import-statement",
+          "original": "./errors.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/values/compare.js",
+          "kind": "import-statement",
+          "original": "./compare.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/values/size.js",
+          "kind": "import-statement",
+          "original": "./size.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider/dist/index.js": {
+      "bytes": 12800,
+      "imports": [],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/core/util.js": {
+      "bytes": 34363,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/core.js",
+          "kind": "import-statement",
+          "original": "./core.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/core/core.js": {
+      "bytes": 6642,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "./util.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/core/errors.js": {
+      "bytes": 10871,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/core.js",
+          "kind": "import-statement",
+          "original": "./core.js"
+        },
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "./util.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/core/parse.js": {
+      "bytes": 8267,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/core.js",
+          "kind": "import-statement",
+          "original": "./core.js"
+        },
+        {
+          "path": "node_modules/zod/v4/core/errors.js",
+          "kind": "import-statement",
+          "original": "./errors.js"
+        },
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "./util.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/core/regexes.js": {
+      "bytes": 11818,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "./util.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/core/checks.js": {
+      "bytes": 19491,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/core.js",
+          "kind": "import-statement",
+          "original": "./core.js"
+        },
+        {
+          "path": "node_modules/zod/v4/core/regexes.js",
+          "kind": "import-statement",
+          "original": "./regexes.js"
+        },
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "./util.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/core/doc.js": {
+      "bytes": 1290,
+      "imports": [],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/core/versions.js": {
+      "bytes": 70,
+      "imports": [],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/core/schemas.js": {
+      "bytes": 105968,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/checks.js",
+          "kind": "import-statement",
+          "original": "./checks.js"
+        },
+        {
+          "path": "node_modules/zod/v4/core/core.js",
+          "kind": "import-statement",
+          "original": "./core.js"
+        },
+        {
+          "path": "node_modules/zod/v4/core/doc.js",
+          "kind": "import-statement",
+          "original": "./doc.js"
+        },
+        {
+          "path": "node_modules/zod/v4/core/parse.js",
+          "kind": "import-statement",
+          "original": "./parse.js"
+        },
+        {
+          "path": "node_modules/zod/v4/core/regexes.js",
+          "kind": "import-statement",
+          "original": "./regexes.js"
+        },
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "./util.js"
+        },
+        {
+          "path": "node_modules/zod/v4/core/versions.js",
+          "kind": "import-statement",
+          "original": "./versions.js"
+        },
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "./util.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/core/memoizer.js": {
+      "bytes": 12517,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "./util.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/locales/ar.js": {
+      "bytes": 5404,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "../core/util.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/locales/az.js": {
+      "bytes": 4703,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "../core/util.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/locales/be.js": {
+      "bytes": 6998,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "../core/util.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/locales/bg.js": {
+      "bytes": 6029,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "../core/util.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/locales/bn.js": {
+      "bytes": 5757,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "../core/util.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/locales/ca.js": {
+      "bytes": 4908,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "../core/util.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/locales/ckb.js": {
+      "bytes": 5948,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "../core/util.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/locales/cs.js": {
+      "bytes": 4953,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "../core/util.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/locales/da.js": {
+      "bytes": 4987,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "../core/util.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/locales/de.js": {
+      "bytes": 4774,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "../core/util.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/locales/el.js": {
+      "bytes": 5701,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "../core/util.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/locales/en.js": {
+      "bytes": 5302,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "../core/util.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/locales/eo.js": {
+      "bytes": 4784,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "../core/util.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/locales/es.js": {
+      "bytes": 5591,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "../core/util.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/locales/fa.js": {
+      "bytes": 5343,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "../core/util.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/locales/fi.js": {
+      "bytes": 5007,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "../core/util.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/locales/fr.js": {
+      "bytes": 5414,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "../core/util.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/locales/fr-CA.js": {
+      "bytes": 4749,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "../core/util.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/locales/gu.js": {
+      "bytes": 5930,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "../core/util.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/locales/he.js": {
+      "bytes": 12411,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "../core/util.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/locales/hi.js": {
+      "bytes": 5940,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "../core/util.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/locales/hr.js": {
+      "bytes": 5184,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "../core/util.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/locales/hu.js": {
+      "bytes": 4871,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "../core/util.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/locales/hy.js": {
+      "bytes": 6720,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "../core/util.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/locales/id.js": {
+      "bytes": 4759,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "../core/util.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/locales/is.js": {
+      "bytes": 4822,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "../core/util.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/locales/it.js": {
+      "bytes": 4775,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "../core/util.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/locales/ja.js": {
+      "bytes": 5054,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "../core/util.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/locales/ka.js": {
+      "bytes": 6527,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "../core/util.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/locales/km.js": {
+      "bytes": 6509,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "../core/util.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/locales/kh.js": {
+      "bytes": 111,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/locales/km.js",
+          "kind": "import-statement",
+          "original": "./km.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/locales/kn.js": {
+      "bytes": 6512,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "../core/util.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/locales/ko.js": {
+      "bytes": 5109,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "../core/util.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/locales/lt.js": {
+      "bytes": 8223,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "../core/util.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/locales/mk.js": {
+      "bytes": 5399,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "../core/util.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/locales/ms.js": {
+      "bytes": 4674,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "../core/util.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/locales/ne.js": {
+      "bytes": 5819,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "../core/util.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/locales/nl.js": {
+      "bytes": 4939,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "../core/util.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/locales/nn.js": {
+      "bytes": 4678,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "../core/util.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/locales/no.js": {
+      "bytes": 4693,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "../core/util.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/locales/ota.js": {
+      "bytes": 4723,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "../core/util.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/locales/ps.js": {
+      "bytes": 5123,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "../core/util.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/locales/pl.js": {
+      "bytes": 5150,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "../core/util.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/locales/pt.js": {
+      "bytes": 7024,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "../core/util.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/locales/pt-BR.js": {
+      "bytes": 7024,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "../core/util.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/locales/ro.js": {
+      "bytes": 4883,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "../core/util.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/locales/ru.js": {
+      "bytes": 7095,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "../core/util.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/locales/sk.js": {
+      "bytes": 4949,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "../core/util.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/locales/sl.js": {
+      "bytes": 4756,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "../core/util.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/locales/sv.js": {
+      "bytes": 4841,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "../core/util.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/locales/ta.js": {
+      "bytes": 6688,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "../core/util.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/locales/tg.js": {
+      "bytes": 5647,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "../core/util.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/locales/th.js": {
+      "bytes": 6563,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "../core/util.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/locales/tk.js": {
+      "bytes": 4458,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "../core/util.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/locales/tr.js": {
+      "bytes": 4642,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "../core/util.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/locales/uk.js": {
+      "bytes": 5665,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "../core/util.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/locales/ua.js": {
+      "bytes": 111,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/locales/uk.js",
+          "kind": "import-statement",
+          "original": "./uk.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/locales/ur.js": {
+      "bytes": 5491,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "../core/util.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/locales/uz.js": {
+      "bytes": 4844,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "../core/util.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/locales/vi.js": {
+      "bytes": 4967,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "../core/util.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/locales/zh-CN.js": {
+      "bytes": 4622,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "../core/util.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/locales/zh-TW.js": {
+      "bytes": 4672,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "../core/util.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/locales/yo.js": {
+      "bytes": 4847,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "../core/util.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/locales/index.js": {
+      "bytes": 2607,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/locales/ar.js",
+          "kind": "import-statement",
+          "original": "./ar.js"
+        },
+        {
+          "path": "node_modules/zod/v4/locales/az.js",
+          "kind": "import-statement",
+          "original": "./az.js"
+        },
+        {
+          "path": "node_modules/zod/v4/locales/be.js",
+          "kind": "import-statement",
+          "original": "./be.js"
+        },
+        {
+          "path": "node_modules/zod/v4/locales/bg.js",
+          "kind": "import-statement",
+          "original": "./bg.js"
+        },
+        {
+          "path": "node_modules/zod/v4/locales/bn.js",
+          "kind": "import-statement",
+          "original": "./bn.js"
+        },
+        {
+          "path": "node_modules/zod/v4/locales/ca.js",
+          "kind": "import-statement",
+          "original": "./ca.js"
+        },
+        {
+          "path": "node_modules/zod/v4/locales/ckb.js",
+          "kind": "import-statement",
+          "original": "./ckb.js"
+        },
+        {
+          "path": "node_modules/zod/v4/locales/cs.js",
+          "kind": "import-statement",
+          "original": "./cs.js"
+        },
+        {
+          "path": "node_modules/zod/v4/locales/da.js",
+          "kind": "import-statement",
+          "original": "./da.js"
+        },
+        {
+          "path": "node_modules/zod/v4/locales/de.js",
+          "kind": "import-statement",
+          "original": "./de.js"
+        },
+        {
+          "path": "node_modules/zod/v4/locales/el.js",
+          "kind": "import-statement",
+          "original": "./el.js"
+        },
+        {
+          "path": "node_modules/zod/v4/locales/en.js",
+          "kind": "import-statement",
+          "original": "./en.js"
+        },
+        {
+          "path": "node_modules/zod/v4/locales/eo.js",
+          "kind": "import-statement",
+          "original": "./eo.js"
+        },
+        {
+          "path": "node_modules/zod/v4/locales/es.js",
+          "kind": "import-statement",
+          "original": "./es.js"
+        },
+        {
+          "path": "node_modules/zod/v4/locales/fa.js",
+          "kind": "import-statement",
+          "original": "./fa.js"
+        },
+        {
+          "path": "node_modules/zod/v4/locales/fi.js",
+          "kind": "import-statement",
+          "original": "./fi.js"
+        },
+        {
+          "path": "node_modules/zod/v4/locales/fr.js",
+          "kind": "import-statement",
+          "original": "./fr.js"
+        },
+        {
+          "path": "node_modules/zod/v4/locales/fr-CA.js",
+          "kind": "import-statement",
+          "original": "./fr-CA.js"
+        },
+        {
+          "path": "node_modules/zod/v4/locales/gu.js",
+          "kind": "import-statement",
+          "original": "./gu.js"
+        },
+        {
+          "path": "node_modules/zod/v4/locales/he.js",
+          "kind": "import-statement",
+          "original": "./he.js"
+        },
+        {
+          "path": "node_modules/zod/v4/locales/hi.js",
+          "kind": "import-statement",
+          "original": "./hi.js"
+        },
+        {
+          "path": "node_modules/zod/v4/locales/hr.js",
+          "kind": "import-statement",
+          "original": "./hr.js"
+        },
+        {
+          "path": "node_modules/zod/v4/locales/hu.js",
+          "kind": "import-statement",
+          "original": "./hu.js"
+        },
+        {
+          "path": "node_modules/zod/v4/locales/hy.js",
+          "kind": "import-statement",
+          "original": "./hy.js"
+        },
+        {
+          "path": "node_modules/zod/v4/locales/id.js",
+          "kind": "import-statement",
+          "original": "./id.js"
+        },
+        {
+          "path": "node_modules/zod/v4/locales/is.js",
+          "kind": "import-statement",
+          "original": "./is.js"
+        },
+        {
+          "path": "node_modules/zod/v4/locales/it.js",
+          "kind": "import-statement",
+          "original": "./it.js"
+        },
+        {
+          "path": "node_modules/zod/v4/locales/ja.js",
+          "kind": "import-statement",
+          "original": "./ja.js"
+        },
+        {
+          "path": "node_modules/zod/v4/locales/ka.js",
+          "kind": "import-statement",
+          "original": "./ka.js"
+        },
+        {
+          "path": "node_modules/zod/v4/locales/kh.js",
+          "kind": "import-statement",
+          "original": "./kh.js"
+        },
+        {
+          "path": "node_modules/zod/v4/locales/km.js",
+          "kind": "import-statement",
+          "original": "./km.js"
+        },
+        {
+          "path": "node_modules/zod/v4/locales/kn.js",
+          "kind": "import-statement",
+          "original": "./kn.js"
+        },
+        {
+          "path": "node_modules/zod/v4/locales/ko.js",
+          "kind": "import-statement",
+          "original": "./ko.js"
+        },
+        {
+          "path": "node_modules/zod/v4/locales/lt.js",
+          "kind": "import-statement",
+          "original": "./lt.js"
+        },
+        {
+          "path": "node_modules/zod/v4/locales/mk.js",
+          "kind": "import-statement",
+          "original": "./mk.js"
+        },
+        {
+          "path": "node_modules/zod/v4/locales/ms.js",
+          "kind": "import-statement",
+          "original": "./ms.js"
+        },
+        {
+          "path": "node_modules/zod/v4/locales/ne.js",
+          "kind": "import-statement",
+          "original": "./ne.js"
+        },
+        {
+          "path": "node_modules/zod/v4/locales/nl.js",
+          "kind": "import-statement",
+          "original": "./nl.js"
+        },
+        {
+          "path": "node_modules/zod/v4/locales/nn.js",
+          "kind": "import-statement",
+          "original": "./nn.js"
+        },
+        {
+          "path": "node_modules/zod/v4/locales/no.js",
+          "kind": "import-statement",
+          "original": "./no.js"
+        },
+        {
+          "path": "node_modules/zod/v4/locales/ota.js",
+          "kind": "import-statement",
+          "original": "./ota.js"
+        },
+        {
+          "path": "node_modules/zod/v4/locales/ps.js",
+          "kind": "import-statement",
+          "original": "./ps.js"
+        },
+        {
+          "path": "node_modules/zod/v4/locales/pl.js",
+          "kind": "import-statement",
+          "original": "./pl.js"
+        },
+        {
+          "path": "node_modules/zod/v4/locales/pt.js",
+          "kind": "import-statement",
+          "original": "./pt.js"
+        },
+        {
+          "path": "node_modules/zod/v4/locales/pt-BR.js",
+          "kind": "import-statement",
+          "original": "./pt-BR.js"
+        },
+        {
+          "path": "node_modules/zod/v4/locales/ro.js",
+          "kind": "import-statement",
+          "original": "./ro.js"
+        },
+        {
+          "path": "node_modules/zod/v4/locales/ru.js",
+          "kind": "import-statement",
+          "original": "./ru.js"
+        },
+        {
+          "path": "node_modules/zod/v4/locales/sk.js",
+          "kind": "import-statement",
+          "original": "./sk.js"
+        },
+        {
+          "path": "node_modules/zod/v4/locales/sl.js",
+          "kind": "import-statement",
+          "original": "./sl.js"
+        },
+        {
+          "path": "node_modules/zod/v4/locales/sv.js",
+          "kind": "import-statement",
+          "original": "./sv.js"
+        },
+        {
+          "path": "node_modules/zod/v4/locales/ta.js",
+          "kind": "import-statement",
+          "original": "./ta.js"
+        },
+        {
+          "path": "node_modules/zod/v4/locales/tg.js",
+          "kind": "import-statement",
+          "original": "./tg.js"
+        },
+        {
+          "path": "node_modules/zod/v4/locales/th.js",
+          "kind": "import-statement",
+          "original": "./th.js"
+        },
+        {
+          "path": "node_modules/zod/v4/locales/tk.js",
+          "kind": "import-statement",
+          "original": "./tk.js"
+        },
+        {
+          "path": "node_modules/zod/v4/locales/tr.js",
+          "kind": "import-statement",
+          "original": "./tr.js"
+        },
+        {
+          "path": "node_modules/zod/v4/locales/ua.js",
+          "kind": "import-statement",
+          "original": "./ua.js"
+        },
+        {
+          "path": "node_modules/zod/v4/locales/uk.js",
+          "kind": "import-statement",
+          "original": "./uk.js"
+        },
+        {
+          "path": "node_modules/zod/v4/locales/ur.js",
+          "kind": "import-statement",
+          "original": "./ur.js"
+        },
+        {
+          "path": "node_modules/zod/v4/locales/uz.js",
+          "kind": "import-statement",
+          "original": "./uz.js"
+        },
+        {
+          "path": "node_modules/zod/v4/locales/vi.js",
+          "kind": "import-statement",
+          "original": "./vi.js"
+        },
+        {
+          "path": "node_modules/zod/v4/locales/zh-CN.js",
+          "kind": "import-statement",
+          "original": "./zh-CN.js"
+        },
+        {
+          "path": "node_modules/zod/v4/locales/zh-TW.js",
+          "kind": "import-statement",
+          "original": "./zh-TW.js"
+        },
+        {
+          "path": "node_modules/zod/v4/locales/yo.js",
+          "kind": "import-statement",
+          "original": "./yo.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/core/registries.js": {
+      "bytes": 1540,
+      "imports": [],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/core/compile.js": {
+      "bytes": 91611,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/core.js",
+          "kind": "import-statement",
+          "original": "./core.js"
+        },
+        {
+          "path": "node_modules/zod/v4/core/doc.js",
+          "kind": "import-statement",
+          "original": "./doc.js"
+        },
+        {
+          "path": "node_modules/zod/v4/core/memoizer.js",
+          "kind": "import-statement",
+          "original": "./memoizer.js"
+        },
+        {
+          "path": "node_modules/zod/v4/core/regexes.js",
+          "kind": "import-statement",
+          "original": "./regexes.js"
+        },
+        {
+          "path": "node_modules/zod/v4/core/schemas.js",
+          "kind": "import-statement",
+          "original": "./schemas.js"
+        },
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "./util.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/core/api.js": {
+      "bytes": 28953,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/checks.js",
+          "kind": "import-statement",
+          "original": "./checks.js"
+        },
+        {
+          "path": "node_modules/zod/v4/core/registries.js",
+          "kind": "import-statement",
+          "original": "./registries.js"
+        },
+        {
+          "path": "node_modules/zod/v4/core/schemas.js",
+          "kind": "import-statement",
+          "original": "./schemas.js"
+        },
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "./util.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/core/to-json-schema.js": {
+      "bytes": 29029,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/registries.js",
+          "kind": "import-statement",
+          "original": "./registries.js"
+        },
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "./util.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/core/json-schema-processors.js": {
+      "bytes": 34985,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/regexes.js",
+          "kind": "import-statement",
+          "original": "./regexes.js"
+        },
+        {
+          "path": "node_modules/zod/v4/core/schemas.js",
+          "kind": "import-statement",
+          "original": "./schemas.js"
+        },
+        {
+          "path": "node_modules/zod/v4/core/to-json-schema.js",
+          "kind": "import-statement",
+          "original": "./to-json-schema.js"
+        },
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "./util.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/core/json-schema-generator.js": {
+      "bytes": 3857,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/json-schema-processors.js",
+          "kind": "import-statement",
+          "original": "./json-schema-processors.js"
+        },
+        {
+          "path": "node_modules/zod/v4/core/to-json-schema.js",
+          "kind": "import-statement",
+          "original": "./to-json-schema.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/core/json-schema.js": {
+      "bytes": 11,
+      "imports": [],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/core/index.js": {
+      "bytes": 690,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/core.js",
+          "kind": "import-statement",
+          "original": "./core.js"
+        },
+        {
+          "path": "node_modules/zod/v4/core/parse.js",
+          "kind": "import-statement",
+          "original": "./parse.js"
+        },
+        {
+          "path": "node_modules/zod/v4/core/errors.js",
+          "kind": "import-statement",
+          "original": "./errors.js"
+        },
+        {
+          "path": "node_modules/zod/v4/core/schemas.js",
+          "kind": "import-statement",
+          "original": "./schemas.js"
+        },
+        {
+          "path": "node_modules/zod/v4/core/memoizer.js",
+          "kind": "import-statement",
+          "original": "./memoizer.js"
+        },
+        {
+          "path": "node_modules/zod/v4/core/checks.js",
+          "kind": "import-statement",
+          "original": "./checks.js"
+        },
+        {
+          "path": "node_modules/zod/v4/core/versions.js",
+          "kind": "import-statement",
+          "original": "./versions.js"
+        },
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "./util.js"
+        },
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "./util.js"
+        },
+        {
+          "path": "node_modules/zod/v4/core/regexes.js",
+          "kind": "import-statement",
+          "original": "./regexes.js"
+        },
+        {
+          "path": "node_modules/zod/v4/locales/index.js",
+          "kind": "import-statement",
+          "original": "../locales/index.js"
+        },
+        {
+          "path": "node_modules/zod/v4/core/registries.js",
+          "kind": "import-statement",
+          "original": "./registries.js"
+        },
+        {
+          "path": "node_modules/zod/v4/core/doc.js",
+          "kind": "import-statement",
+          "original": "./doc.js"
+        },
+        {
+          "path": "node_modules/zod/v4/core/compile.js",
+          "kind": "import-statement",
+          "original": "./compile.js"
+        },
+        {
+          "path": "node_modules/zod/v4/core/api.js",
+          "kind": "import-statement",
+          "original": "./api.js"
+        },
+        {
+          "path": "node_modules/zod/v4/core/to-json-schema.js",
+          "kind": "import-statement",
+          "original": "./to-json-schema.js"
+        },
+        {
+          "path": "node_modules/zod/v4/core/json-schema-processors.js",
+          "kind": "import-statement",
+          "original": "./json-schema-processors.js"
+        },
+        {
+          "path": "node_modules/zod/v4/core/json-schema-generator.js",
+          "kind": "import-statement",
+          "original": "./json-schema-generator.js"
+        },
+        {
+          "path": "node_modules/zod/v4/core/json-schema.js",
+          "kind": "import-statement",
+          "original": "./json-schema.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/classic/checks.js": {
+      "bytes": 690,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/index.js",
+          "kind": "import-statement",
+          "original": "../core/index.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/classic/errors.js": {
+      "bytes": 2532,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/index.js",
+          "kind": "import-statement",
+          "original": "../core/index.js"
+        },
+        {
+          "path": "node_modules/zod/v4/core/index.js",
+          "kind": "import-statement",
+          "original": "../core/index.js"
+        },
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "../core/util.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/classic/parse.js": {
+      "bytes": 1057,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/index.js",
+          "kind": "import-statement",
+          "original": "../core/index.js"
+        },
+        {
+          "path": "node_modules/zod/v4/classic/errors.js",
+          "kind": "import-statement",
+          "original": "./errors.js"
+        },
+        {
+          "path": "node_modules/zod/v4/core/index.js",
+          "kind": "import-statement",
+          "original": "../core/index.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/classic/schemas.js": {
+      "bytes": 53354,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/index.js",
+          "kind": "import-statement",
+          "original": "../core/index.js"
+        },
+        {
+          "path": "node_modules/zod/v4/core/index.js",
+          "kind": "import-statement",
+          "original": "../core/index.js"
+        },
+        {
+          "path": "node_modules/zod/v4/core/json-schema-processors.js",
+          "kind": "import-statement",
+          "original": "../core/json-schema-processors.js"
+        },
+        {
+          "path": "node_modules/zod/v4/core/regexes.js",
+          "kind": "import-statement",
+          "original": "../core/regexes.js"
+        },
+        {
+          "path": "node_modules/zod/v4/core/to-json-schema.js",
+          "kind": "import-statement",
+          "original": "../core/to-json-schema.js"
+        },
+        {
+          "path": "node_modules/zod/v4/locales/en.js",
+          "kind": "import-statement",
+          "original": "../locales/en.js"
+        },
+        {
+          "path": "node_modules/zod/v4/classic/checks.js",
+          "kind": "import-statement",
+          "original": "./checks.js"
+        },
+        {
+          "path": "node_modules/zod/v4/classic/parse.js",
+          "kind": "import-statement",
+          "original": "./parse.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/classic/compat.js": {
+      "bytes": 1090,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/index.js",
+          "kind": "import-statement",
+          "original": "../core/index.js"
+        },
+        {
+          "path": "node_modules/zod/v4/core/index.js",
+          "kind": "import-statement",
+          "original": "../core/index.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/classic/iso.js": {
+      "bytes": 556,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/index.js",
+          "kind": "import-statement",
+          "original": "../core/index.js"
+        },
+        {
+          "path": "node_modules/zod/v4/classic/schemas.js",
+          "kind": "import-statement",
+          "original": "./schemas.js"
+        },
+        {
+          "path": "node_modules/zod/v4/classic/schemas.js",
+          "kind": "import-statement",
+          "original": "./schemas.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/classic/from-json-schema.js": {
+      "bytes": 38171,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/registries.js",
+          "kind": "import-statement",
+          "original": "../core/registries.js"
+        },
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "../core/util.js"
+        },
+        {
+          "path": "node_modules/zod/v4/classic/checks.js",
+          "kind": "import-statement",
+          "original": "./checks.js"
+        },
+        {
+          "path": "node_modules/zod/v4/classic/iso.js",
+          "kind": "import-statement",
+          "original": "./iso.js"
+        },
+        {
+          "path": "node_modules/zod/v4/classic/schemas.js",
+          "kind": "import-statement",
+          "original": "./schemas.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/core/visit.js": {
+      "bytes": 6643,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/schemas.js",
+          "kind": "import-statement",
+          "original": "./schemas.js"
+        },
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "./util.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/classic/deep-partial.js": {
+      "bytes": 543,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/visit.js",
+          "kind": "import-statement",
+          "original": "../core/visit.js"
+        },
+        {
+          "path": "node_modules/zod/v4/classic/schemas.js",
+          "kind": "import-statement",
+          "original": "./schemas.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/classic/in-out.js": {
+      "bytes": 2190,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/util.js",
+          "kind": "import-statement",
+          "original": "../core/util.js"
+        },
+        {
+          "path": "node_modules/zod/v4/core/visit.js",
+          "kind": "import-statement",
+          "original": "../core/visit.js"
+        },
+        {
+          "path": "node_modules/zod/v4/classic/schemas.js",
+          "kind": "import-statement",
+          "original": "./schemas.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/classic/coerce.js": {
+      "bytes": 550,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/index.js",
+          "kind": "import-statement",
+          "original": "../core/index.js"
+        },
+        {
+          "path": "node_modules/zod/v4/classic/schemas.js",
+          "kind": "import-statement",
+          "original": "./schemas.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/classic/external.js": {
+      "bytes": 1101,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/core/index.js",
+          "kind": "import-statement",
+          "original": "../core/index.js"
+        },
+        {
+          "path": "node_modules/zod/v4/classic/schemas.js",
+          "kind": "import-statement",
+          "original": "./schemas.js"
+        },
+        {
+          "path": "node_modules/zod/v4/classic/checks.js",
+          "kind": "import-statement",
+          "original": "./checks.js"
+        },
+        {
+          "path": "node_modules/zod/v4/classic/errors.js",
+          "kind": "import-statement",
+          "original": "./errors.js"
+        },
+        {
+          "path": "node_modules/zod/v4/classic/parse.js",
+          "kind": "import-statement",
+          "original": "./parse.js"
+        },
+        {
+          "path": "node_modules/zod/v4/classic/compat.js",
+          "kind": "import-statement",
+          "original": "./compat.js"
+        },
+        {
+          "path": "node_modules/zod/v4/core/index.js",
+          "kind": "import-statement",
+          "original": "../core/index.js"
+        },
+        {
+          "path": "node_modules/zod/v4/core/json-schema-processors.js",
+          "kind": "import-statement",
+          "original": "../core/json-schema-processors.js"
+        },
+        {
+          "path": "node_modules/zod/v4/classic/from-json-schema.js",
+          "kind": "import-statement",
+          "original": "./from-json-schema.js"
+        },
+        {
+          "path": "node_modules/zod/v4/classic/deep-partial.js",
+          "kind": "import-statement",
+          "original": "./deep-partial.js"
+        },
+        {
+          "path": "node_modules/zod/v4/classic/in-out.js",
+          "kind": "import-statement",
+          "original": "./in-out.js"
+        },
+        {
+          "path": "node_modules/zod/v4/locales/index.js",
+          "kind": "import-statement",
+          "original": "../locales/index.js"
+        },
+        {
+          "path": "node_modules/zod/v4/classic/iso.js",
+          "kind": "import-statement",
+          "original": "./iso.js"
+        },
+        {
+          "path": "node_modules/zod/v4/classic/iso.js",
+          "kind": "import-statement",
+          "original": "./iso.js"
+        },
+        {
+          "path": "node_modules/zod/v4/classic/coerce.js",
+          "kind": "import-statement",
+          "original": "./coerce.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/classic/index.js": {
+      "bytes": 177,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/classic/external.js",
+          "kind": "import-statement",
+          "original": "./external.js"
+        },
+        {
+          "path": "node_modules/zod/v4/classic/external.js",
+          "kind": "import-statement",
+          "original": "./external.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v4/index.js": {
+      "bytes": 351,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/classic/external.js",
+          "kind": "import-statement",
+          "original": "./classic/external.js"
+        },
+        {
+          "path": "node_modules/zod/v4/classic/index.js",
+          "kind": "import-statement",
+          "original": "./classic/index.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/eventsource-parser/dist/index.js": {
+      "bytes": 7802,
+      "imports": [],
+      "format": "esm"
+    },
+    "node_modules/eventsource-parser/dist/stream.js": {
+      "bytes": 825,
+      "imports": [
+        {
+          "path": "node_modules/eventsource-parser/dist/index.js",
+          "kind": "import-statement",
+          "original": "./index.js"
+        },
+        {
+          "path": "node_modules/eventsource-parser/dist/index.js",
+          "kind": "import-statement",
+          "original": "./index.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/@workflow/serde/dist/index.js": {
+      "bytes": 951,
+      "imports": [],
+      "format": "esm"
+    },
+    "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js": {
+      "bytes": 118030,
+      "imports": [
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider"
+        },
+        {
+          "path": "node_modules/zod/v4/index.js",
+          "kind": "import-statement",
+          "original": "zod/v4"
+        },
+        {
+          "path": "node_modules/zod/v4/core/index.js",
+          "kind": "import-statement",
+          "original": "zod/v4/core"
+        },
+        {
+          "path": "node_modules/eventsource-parser/dist/stream.js",
+          "kind": "import-statement",
+          "original": "eventsource-parser/stream"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider"
+        },
+        {
+          "path": "node_modules/@workflow/serde/dist/index.js",
+          "kind": "import-statement",
+          "original": "@workflow/serde"
+        },
+        {
+          "path": "node_modules/eventsource-parser/dist/stream.js",
+          "kind": "import-statement",
+          "original": "eventsource-parser/stream"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/anthropic/dist/index.js": {
+      "bytes": 268168,
+      "imports": [
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/zod/v4/index.js",
+          "kind": "import-statement",
+          "original": "zod/v4"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/zod/v4/index.js",
+          "kind": "import-statement",
+          "original": "zod/v4"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/zod/v4/index.js",
+          "kind": "import-statement",
+          "original": "zod/v4"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/zod/v4/index.js",
+          "kind": "import-statement",
+          "original": "zod/v4"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/zod/v4/index.js",
+          "kind": "import-statement",
+          "original": "zod/v4"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/zod/v4/index.js",
+          "kind": "import-statement",
+          "original": "zod/v4"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/zod/v4/index.js",
+          "kind": "import-statement",
+          "original": "zod/v4"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/zod/v4/index.js",
+          "kind": "import-statement",
+          "original": "zod/v4"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/zod/v4/index.js",
+          "kind": "import-statement",
+          "original": "zod/v4"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/zod/v4/index.js",
+          "kind": "import-statement",
+          "original": "zod/v4"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/zod/v4/index.js",
+          "kind": "import-statement",
+          "original": "zod/v4"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/zod/v4/index.js",
+          "kind": "import-statement",
+          "original": "zod/v4"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/zod/v4/index.js",
+          "kind": "import-statement",
+          "original": "zod/v4"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/zod/v4/index.js",
+          "kind": "import-statement",
+          "original": "zod/v4"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/zod/v4/index.js",
+          "kind": "import-statement",
+          "original": "zod/v4"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/zod/v4/index.js",
+          "kind": "import-statement",
+          "original": "zod/v4"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/zod/v4/index.js",
+          "kind": "import-statement",
+          "original": "zod/v4"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/zod/v4/index.js",
+          "kind": "import-statement",
+          "original": "zod/v4"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/zod/v4/index.js",
+          "kind": "import-statement",
+          "original": "zod/v4"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/zod/v4/index.js",
+          "kind": "import-statement",
+          "original": "zod/v4"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/zod/v4/index.js",
+          "kind": "import-statement",
+          "original": "zod/v4"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/zod/v4/index.js",
+          "kind": "import-statement",
+          "original": "zod/v4"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/zod/v4/index.js",
+          "kind": "import-statement",
+          "original": "zod/v4"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/zod/v4/index.js",
+          "kind": "import-statement",
+          "original": "zod/v4"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/zod/v4/index.js",
+          "kind": "import-statement",
+          "original": "zod/v4"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/zod/v4/index.js",
+          "kind": "import-statement",
+          "original": "zod/v4"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/openai/dist/index.js": {
+      "bytes": 382480,
+      "imports": [
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/zod/v4/index.js",
+          "kind": "import-statement",
+          "original": "zod/v4"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/zod/v4/index.js",
+          "kind": "import-statement",
+          "original": "zod/v4"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/zod/v4/index.js",
+          "kind": "import-statement",
+          "original": "zod/v4"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/zod/v4/index.js",
+          "kind": "import-statement",
+          "original": "zod/v4"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/zod/v4/index.js",
+          "kind": "import-statement",
+          "original": "zod/v4"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/zod/v4/index.js",
+          "kind": "import-statement",
+          "original": "zod/v4"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/zod/v4/index.js",
+          "kind": "import-statement",
+          "original": "zod/v4"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/zod/v4/index.js",
+          "kind": "import-statement",
+          "original": "zod/v4"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/zod/v4/index.js",
+          "kind": "import-statement",
+          "original": "zod/v4"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/zod/v4/index.js",
+          "kind": "import-statement",
+          "original": "zod/v4"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/zod/v4/index.js",
+          "kind": "import-statement",
+          "original": "zod/v4"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/zod/v4/index.js",
+          "kind": "import-statement",
+          "original": "zod/v4"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/zod/v4/index.js",
+          "kind": "import-statement",
+          "original": "zod/v4"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/zod/v4/index.js",
+          "kind": "import-statement",
+          "original": "zod/v4"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/zod/v4/index.js",
+          "kind": "import-statement",
+          "original": "zod/v4"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/zod/v4/index.js",
+          "kind": "import-statement",
+          "original": "zod/v4"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/zod/v4/index.js",
+          "kind": "import-statement",
+          "original": "zod/v4"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/zod/v4/index.js",
+          "kind": "import-statement",
+          "original": "zod/v4"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/zod/v4/index.js",
+          "kind": "import-statement",
+          "original": "zod/v4"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/zod/v4/index.js",
+          "kind": "import-statement",
+          "original": "zod/v4"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/zod/v4/index.js",
+          "kind": "import-statement",
+          "original": "zod/v4"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/zod/v4/index.js",
+          "kind": "import-statement",
+          "original": "zod/v4"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/zod/v4/index.js",
+          "kind": "import-statement",
+          "original": "zod/v4"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/zod/v4/index.js",
+          "kind": "import-statement",
+          "original": "zod/v4"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/zod/v4/index.js",
+          "kind": "import-statement",
+          "original": "zod/v4"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/zod/v4/index.js",
+          "kind": "import-statement",
+          "original": "zod/v4"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/zod/v4/index.js",
+          "kind": "import-statement",
+          "original": "zod/v4"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/zod/v4/index.js",
+          "kind": "import-statement",
+          "original": "zod/v4"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/zod/v4/index.js",
+          "kind": "import-statement",
+          "original": "zod/v4"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/zod/v4/index.js",
+          "kind": "import-statement",
+          "original": "zod/v4"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/zod/v4/index.js",
+          "kind": "import-statement",
+          "original": "zod/v4"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/zod/v4/index.js",
+          "kind": "import-statement",
+          "original": "zod/v4"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/zod/v4/index.js",
+          "kind": "import-statement",
+          "original": "zod/v4"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/@ai-sdk/openai-compatible/node_modules/@ai-sdk/provider/dist/index.js": {
+      "bytes": 12800,
+      "imports": [],
+      "format": "esm"
+    },
+    "node_modules/zod/v3/helpers/util.js": {
+      "bytes": 4055,
+      "imports": [],
+      "format": "esm"
+    },
+    "node_modules/zod/v3/ZodError.js": {
+      "bytes": 5061,
+      "imports": [
+        {
+          "path": "node_modules/zod/v3/helpers/util.js",
+          "kind": "import-statement",
+          "original": "./helpers/util.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v3/locales/en.js": {
+      "bytes": 5602,
+      "imports": [
+        {
+          "path": "node_modules/zod/v3/ZodError.js",
+          "kind": "import-statement",
+          "original": "../ZodError.js"
+        },
+        {
+          "path": "node_modules/zod/v3/helpers/util.js",
+          "kind": "import-statement",
+          "original": "../helpers/util.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v3/errors.js": {
+      "bytes": 243,
+      "imports": [
+        {
+          "path": "node_modules/zod/v3/locales/en.js",
+          "kind": "import-statement",
+          "original": "./locales/en.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v3/helpers/parseUtil.js": {
+      "bytes": 3601,
+      "imports": [
+        {
+          "path": "node_modules/zod/v3/errors.js",
+          "kind": "import-statement",
+          "original": "../errors.js"
+        },
+        {
+          "path": "node_modules/zod/v3/locales/en.js",
+          "kind": "import-statement",
+          "original": "../locales/en.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v3/helpers/typeAliases.js": {
+      "bytes": 11,
+      "imports": [],
+      "format": "esm"
+    },
+    "node_modules/zod/v3/helpers/errorUtil.js": {
+      "bytes": 368,
+      "imports": [],
+      "format": "esm"
+    },
+    "node_modules/zod/v3/types.js": {
+      "bytes": 131408,
+      "imports": [
+        {
+          "path": "node_modules/zod/v3/ZodError.js",
+          "kind": "import-statement",
+          "original": "./ZodError.js"
+        },
+        {
+          "path": "node_modules/zod/v3/errors.js",
+          "kind": "import-statement",
+          "original": "./errors.js"
+        },
+        {
+          "path": "node_modules/zod/v3/helpers/errorUtil.js",
+          "kind": "import-statement",
+          "original": "./helpers/errorUtil.js"
+        },
+        {
+          "path": "node_modules/zod/v3/helpers/parseUtil.js",
+          "kind": "import-statement",
+          "original": "./helpers/parseUtil.js"
+        },
+        {
+          "path": "node_modules/zod/v3/helpers/util.js",
+          "kind": "import-statement",
+          "original": "./helpers/util.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v3/external.js": {
+      "bytes": 205,
+      "imports": [
+        {
+          "path": "node_modules/zod/v3/errors.js",
+          "kind": "import-statement",
+          "original": "./errors.js"
+        },
+        {
+          "path": "node_modules/zod/v3/helpers/parseUtil.js",
+          "kind": "import-statement",
+          "original": "./helpers/parseUtil.js"
+        },
+        {
+          "path": "node_modules/zod/v3/helpers/typeAliases.js",
+          "kind": "import-statement",
+          "original": "./helpers/typeAliases.js"
+        },
+        {
+          "path": "node_modules/zod/v3/helpers/util.js",
+          "kind": "import-statement",
+          "original": "./helpers/util.js"
+        },
+        {
+          "path": "node_modules/zod/v3/types.js",
+          "kind": "import-statement",
+          "original": "./types.js"
+        },
+        {
+          "path": "node_modules/zod/v3/ZodError.js",
+          "kind": "import-statement",
+          "original": "./ZodError.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/v3/index.js": {
+      "bytes": 99,
+      "imports": [
+        {
+          "path": "node_modules/zod/v3/external.js",
+          "kind": "import-statement",
+          "original": "./external.js"
+        },
+        {
+          "path": "node_modules/zod/v3/external.js",
+          "kind": "import-statement",
+          "original": "./external.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/@ai-sdk/openai-compatible/node_modules/@ai-sdk/provider-utils/dist/index.js": {
+      "bytes": 112602,
+      "imports": [
+        {
+          "path": "node_modules/@ai-sdk/openai-compatible/node_modules/@ai-sdk/provider/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider"
+        },
+        {
+          "path": "node_modules/@ai-sdk/openai-compatible/node_modules/@ai-sdk/provider/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider"
+        },
+        {
+          "path": "node_modules/@ai-sdk/openai-compatible/node_modules/@ai-sdk/provider/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider"
+        },
+        {
+          "path": "node_modules/@ai-sdk/openai-compatible/node_modules/@ai-sdk/provider/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider"
+        },
+        {
+          "path": "node_modules/@ai-sdk/openai-compatible/node_modules/@ai-sdk/provider/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider"
+        },
+        {
+          "path": "node_modules/@ai-sdk/openai-compatible/node_modules/@ai-sdk/provider/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider"
+        },
+        {
+          "path": "node_modules/@ai-sdk/openai-compatible/node_modules/@ai-sdk/provider/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider"
+        },
+        {
+          "path": "node_modules/@ai-sdk/openai-compatible/node_modules/@ai-sdk/provider/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider"
+        },
+        {
+          "path": "node_modules/@ai-sdk/openai-compatible/node_modules/@ai-sdk/provider/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider"
+        },
+        {
+          "path": "node_modules/@ai-sdk/openai-compatible/node_modules/@ai-sdk/provider/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider"
+        },
+        {
+          "path": "node_modules/zod/v4/index.js",
+          "kind": "import-statement",
+          "original": "zod/v4"
+        },
+        {
+          "path": "node_modules/zod/v3/index.js",
+          "kind": "import-statement",
+          "original": "zod/v3"
+        },
+        {
+          "path": "node_modules/zod/v3/index.js",
+          "kind": "import-statement",
+          "original": "zod/v3"
+        },
+        {
+          "path": "node_modules/zod/v3/index.js",
+          "kind": "import-statement",
+          "original": "zod/v3"
+        },
+        {
+          "path": "node_modules/eventsource-parser/dist/stream.js",
+          "kind": "import-statement",
+          "original": "eventsource-parser/stream"
+        },
+        {
+          "path": "node_modules/@ai-sdk/openai-compatible/node_modules/@ai-sdk/provider/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider"
+        },
+        {
+          "path": "node_modules/@ai-sdk/openai-compatible/node_modules/@ai-sdk/provider/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider"
+        },
+        {
+          "path": "node_modules/@ai-sdk/openai-compatible/node_modules/@ai-sdk/provider/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider"
+        },
+        {
+          "path": "node_modules/@ai-sdk/openai-compatible/node_modules/@ai-sdk/provider/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider"
+        },
+        {
+          "path": "node_modules/@ai-sdk/openai-compatible/node_modules/@ai-sdk/provider/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider"
+        },
+        {
+          "path": "node_modules/@ai-sdk/openai-compatible/node_modules/@ai-sdk/provider/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider"
+        },
+        {
+          "path": "node_modules/@ai-sdk/openai-compatible/node_modules/@ai-sdk/provider/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider"
+        },
+        {
+          "path": "node_modules/@workflow/serde/dist/index.js",
+          "kind": "import-statement",
+          "original": "@workflow/serde"
+        },
+        {
+          "path": "node_modules/eventsource-parser/dist/stream.js",
+          "kind": "import-statement",
+          "original": "eventsource-parser/stream"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/@ai-sdk/openai-compatible/dist/index.js": {
+      "bytes": 61420,
+      "imports": [
+        {
+          "path": "node_modules/@ai-sdk/openai-compatible/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/zod/v4/index.js",
+          "kind": "import-statement",
+          "original": "zod/v4"
+        },
+        {
+          "path": "node_modules/zod/v4/index.js",
+          "kind": "import-statement",
+          "original": "zod/v4"
+        },
+        {
+          "path": "node_modules/@ai-sdk/openai-compatible/node_modules/@ai-sdk/provider/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider"
+        },
+        {
+          "path": "node_modules/@ai-sdk/openai-compatible/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/zod/v4/index.js",
+          "kind": "import-statement",
+          "original": "zod/v4"
+        },
+        {
+          "path": "node_modules/@ai-sdk/openai-compatible/node_modules/@ai-sdk/provider/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider"
+        },
+        {
+          "path": "node_modules/@ai-sdk/openai-compatible/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/zod/v4/index.js",
+          "kind": "import-statement",
+          "original": "zod/v4"
+        },
+        {
+          "path": "node_modules/@ai-sdk/openai-compatible/node_modules/@ai-sdk/provider/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider"
+        },
+        {
+          "path": "node_modules/zod/v4/index.js",
+          "kind": "import-statement",
+          "original": "zod/v4"
+        },
+        {
+          "path": "node_modules/@ai-sdk/openai-compatible/node_modules/@ai-sdk/provider/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider"
+        },
+        {
+          "path": "node_modules/@ai-sdk/openai-compatible/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/zod/v4/index.js",
+          "kind": "import-statement",
+          "original": "zod/v4"
+        },
+        {
+          "path": "node_modules/zod/v4/index.js",
+          "kind": "import-statement",
+          "original": "zod/v4"
+        },
+        {
+          "path": "node_modules/@ai-sdk/openai-compatible/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/zod/v4/index.js",
+          "kind": "import-statement",
+          "original": "zod/v4"
+        },
+        {
+          "path": "node_modules/@ai-sdk/openai-compatible/node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/ai/dist/rolldown-runtime-D7D4PA-g.js": {
+      "bytes": 360,
+      "imports": [],
+      "format": "esm"
+    },
+    "node_modules/@ai-sdk/provider/dist/index.js": {
+      "bytes": 13354,
+      "imports": [],
+      "format": "esm"
+    },
+    "node_modules/@ai-sdk/provider-utils/dist/index.js": {
+      "bytes": 153324,
+      "imports": [
+        {
+          "path": "node_modules/@ai-sdk/provider/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider"
+        },
+        {
+          "path": "node_modules/zod/v4/index.js",
+          "kind": "import-statement",
+          "original": "zod/v4"
+        },
+        {
+          "path": "node_modules/zod/v4/core/index.js",
+          "kind": "import-statement",
+          "original": "zod/v4/core"
+        },
+        {
+          "path": "node_modules/eventsource-parser/dist/stream.js",
+          "kind": "import-statement",
+          "original": "eventsource-parser/stream"
+        },
+        {
+          "path": "node_modules/@workflow/serde/dist/index.js",
+          "kind": "import-statement",
+          "original": "@workflow/serde"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/@vercel/oidc/dist/get-context.js": {
+      "bytes": 1323,
+      "imports": [],
+      "format": "cjs"
+    },
+    "node_modules/@vercel/oidc/dist/token-error.js": {
+      "bytes": 1399,
+      "imports": [],
+      "format": "cjs"
+    },
+    "node_modules/@vercel/oidc/dist/token-io.js": {
+      "bytes": 2881,
+      "imports": [
+        {
+          "path": "path",
+          "kind": "require-call",
+          "external": true
+        },
+        {
+          "path": "fs",
+          "kind": "require-call",
+          "external": true
+        },
+        {
+          "path": "os",
+          "kind": "require-call",
+          "external": true
+        },
+        {
+          "path": "node_modules/@vercel/oidc/dist/token-error.js",
+          "kind": "require-call",
+          "original": "./token-error"
+        }
+      ],
+      "format": "cjs"
+    },
+    "node_modules/@vercel/oidc/dist/auth-config.js": {
+      "bytes": 3169,
+      "imports": [
+        {
+          "path": "fs",
+          "kind": "require-call",
+          "external": true
+        },
+        {
+          "path": "path",
+          "kind": "require-call",
+          "external": true
+        },
+        {
+          "path": "node_modules/@vercel/oidc/dist/token-util.js",
+          "kind": "require-call",
+          "original": "./token-util"
+        }
+      ],
+      "format": "cjs"
+    },
+    "node_modules/@vercel/oidc/dist/oauth.js": {
+      "bytes": 3176,
+      "imports": [
+        {
+          "path": "os",
+          "kind": "require-call",
+          "external": true
+        }
+      ],
+      "format": "cjs"
+    },
+    "node_modules/@vercel/oidc/dist/auth-errors.js": {
+      "bytes": 1603,
+      "imports": [],
+      "format": "cjs"
+    },
+    "node_modules/@vercel/oidc/dist/token-util.js": {
+      "bytes": 7616,
+      "imports": [
+        {
+          "path": "path",
+          "kind": "require-call",
+          "external": true
+        },
+        {
+          "path": "fs",
+          "kind": "require-call",
+          "external": true
+        },
+        {
+          "path": "node_modules/@vercel/oidc/dist/token-error.js",
+          "kind": "require-call",
+          "original": "./token-error"
+        },
+        {
+          "path": "node_modules/@vercel/oidc/dist/token-io.js",
+          "kind": "require-call",
+          "original": "./token-io"
+        },
+        {
+          "path": "node_modules/@vercel/oidc/dist/auth-config.js",
+          "kind": "require-call",
+          "original": "./auth-config"
+        },
+        {
+          "path": "node_modules/@vercel/oidc/dist/oauth.js",
+          "kind": "require-call",
+          "original": "./oauth"
+        },
+        {
+          "path": "node_modules/@vercel/oidc/dist/auth-errors.js",
+          "kind": "require-call",
+          "original": "./auth-errors"
+        }
+      ],
+      "format": "cjs"
+    },
+    "node_modules/@vercel/oidc/dist/token.js": {
+      "bytes": 2487,
+      "imports": [
+        {
+          "path": "node_modules/@vercel/oidc/dist/token-error.js",
+          "kind": "require-call",
+          "original": "./token-error"
+        },
+        {
+          "path": "node_modules/@vercel/oidc/dist/token-util.js",
+          "kind": "require-call",
+          "original": "./token-util"
+        }
+      ],
+      "format": "cjs"
+    },
+    "node_modules/@vercel/oidc/dist/get-vercel-oidc-token.js": {
+      "bytes": 3040,
+      "imports": [
+        {
+          "path": "node_modules/@vercel/oidc/dist/get-context.js",
+          "kind": "require-call",
+          "original": "./get-context"
+        },
+        {
+          "path": "node_modules/@vercel/oidc/dist/token-error.js",
+          "kind": "require-call",
+          "original": "./token-error"
+        },
+        {
+          "path": "node_modules/@vercel/oidc/dist/token-util.js",
+          "kind": "dynamic-import",
+          "original": "./token-util.js"
+        },
+        {
+          "path": "node_modules/@vercel/oidc/dist/token.js",
+          "kind": "dynamic-import",
+          "original": "./token.js"
+        }
+      ],
+      "format": "cjs"
+    },
+    "node_modules/@vercel/oidc/dist/index.js": {
+      "bytes": 1781,
+      "imports": [
+        {
+          "path": "node_modules/@vercel/oidc/dist/get-vercel-oidc-token.js",
+          "kind": "require-call",
+          "original": "./get-vercel-oidc-token"
+        },
+        {
+          "path": "node_modules/@vercel/oidc/dist/get-context.js",
+          "kind": "require-call",
+          "original": "./get-context"
+        },
+        {
+          "path": "node_modules/@vercel/oidc/dist/auth-errors.js",
+          "kind": "require-call",
+          "original": "./auth-errors"
+        },
+        {
+          "path": "node_modules/@vercel/oidc/dist/token-util.js",
+          "kind": "require-call",
+          "original": "./token-util"
+        }
+      ],
+      "format": "cjs"
+    },
+    "node_modules/@ai-sdk/gateway/dist/index.js": {
+      "bytes": 120197,
+      "imports": [
+        {
+          "path": "node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/zod/v4/index.js",
+          "kind": "import-statement",
+          "original": "zod/v4"
+        },
+        {
+          "path": "node_modules/@ai-sdk/provider/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider"
+        },
+        {
+          "path": "node_modules/@vercel/oidc/dist/index.js",
+          "kind": "import-statement",
+          "original": "@vercel/oidc"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/ai/dist/index.js": {
+      "bytes": 723030,
+      "imports": [
+        {
+          "path": "node_modules/ai/dist/rolldown-runtime-D7D4PA-g.js",
+          "kind": "import-statement",
+          "original": "./rolldown-runtime-D7D4PA-g.js"
+        },
+        {
+          "path": "node_modules/@ai-sdk/gateway/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/gateway"
+        },
+        {
+          "path": "node_modules/@ai-sdk/provider-utils/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider-utils"
+        },
+        {
+          "path": "node_modules/@ai-sdk/provider/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/provider"
+        },
+        {
+          "path": "node_modules/zod/v4/index.js",
+          "kind": "import-statement",
+          "original": "zod/v4"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/server/database.js": {
+      "bytes": 51,
+      "imports": [],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/index.js": {
+      "bytes": 81,
+      "imports": [],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/server/impl/syscall.js": {
+      "bytes": 1560,
+      "imports": [
+        {
+          "path": "node_modules/convex/dist/esm/values/errors.js",
+          "kind": "import-statement",
+          "original": "../../values/errors.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/values/value.js",
+          "kind": "import-statement",
+          "original": "../../values/value.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/server/functionName.js": {
+      "bytes": 111,
+      "imports": [],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/server/components/paths.js": {
+      "bytes": 1106,
+      "imports": [
+        {
+          "path": "node_modules/convex/dist/esm/server/functionName.js",
+          "kind": "import-statement",
+          "original": "../functionName.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/server/impl/validate.js": {
+      "bytes": 680,
+      "imports": [],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/server/impl/actions_impl.js": {
+      "bytes": 1609,
+      "imports": [
+        {
+          "path": "node_modules/convex/dist/esm/values/index.js",
+          "kind": "import-statement",
+          "original": "../../values/index.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/index.js",
+          "kind": "import-statement",
+          "original": "../../index.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/impl/syscall.js",
+          "kind": "import-statement",
+          "original": "./syscall.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/common/index.js",
+          "kind": "import-statement",
+          "original": "../../common/index.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/components/paths.js",
+          "kind": "import-statement",
+          "original": "../components/paths.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/impl/validate.js",
+          "kind": "import-statement",
+          "original": "./validate.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/server/vector_search.js": {
+      "bytes": 642,
+      "imports": [],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/server/impl/vector_search_impl.js": {
+      "bytes": 3056,
+      "imports": [
+        {
+          "path": "node_modules/convex/dist/esm/server/impl/syscall.js",
+          "kind": "import-statement",
+          "original": "./syscall.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/index.js",
+          "kind": "import-statement",
+          "original": "../../index.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/vector_search.js",
+          "kind": "import-statement",
+          "original": "../vector_search.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/impl/validate.js",
+          "kind": "import-statement",
+          "original": "./validate.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/values/value.js",
+          "kind": "import-statement",
+          "original": "../../values/value.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/server/impl/authentication_impl.js": {
+      "bytes": 304,
+      "imports": [
+        {
+          "path": "node_modules/convex/dist/esm/server/impl/syscall.js",
+          "kind": "import-statement",
+          "original": "./syscall.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/server/filter_builder.js": {
+      "bytes": 637,
+      "imports": [],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/server/impl/filter_builder_impl.js": {
+      "bytes": 2977,
+      "imports": [
+        {
+          "path": "node_modules/convex/dist/esm/values/value.js",
+          "kind": "import-statement",
+          "original": "../../values/value.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/filter_builder.js",
+          "kind": "import-statement",
+          "original": "../filter_builder.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/server/index_range_builder.js": {
+      "bytes": 535,
+      "imports": [],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/server/impl/index_range_builder_impl.js": {
+      "bytes": 2347,
+      "imports": [
+        {
+          "path": "node_modules/convex/dist/esm/values/value.js",
+          "kind": "import-statement",
+          "original": "../../values/value.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/index_range_builder.js",
+          "kind": "import-statement",
+          "original": "../index_range_builder.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/server/search_filter_builder.js": {
+      "bytes": 541,
+      "imports": [],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/server/impl/search_filter_builder_impl.js": {
+      "bytes": 1818,
+      "imports": [
+        {
+          "path": "node_modules/convex/dist/esm/values/value.js",
+          "kind": "import-statement",
+          "original": "../../values/value.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/search_filter_builder.js",
+          "kind": "import-statement",
+          "original": "../search_filter_builder.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/impl/validate.js",
+          "kind": "import-statement",
+          "original": "./validate.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/server/impl/query_impl.js": {
+      "bytes": 8019,
+      "imports": [
+        {
+          "path": "node_modules/convex/dist/esm/values/index.js",
+          "kind": "import-statement",
+          "original": "../../values/index.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/impl/syscall.js",
+          "kind": "import-statement",
+          "original": "./syscall.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/impl/filter_builder_impl.js",
+          "kind": "import-statement",
+          "original": "./filter_builder_impl.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/impl/index_range_builder_impl.js",
+          "kind": "import-statement",
+          "original": "./index_range_builder_impl.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/impl/search_filter_builder_impl.js",
+          "kind": "import-statement",
+          "original": "./search_filter_builder_impl.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/impl/validate.js",
+          "kind": "import-statement",
+          "original": "./validate.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/index.js",
+          "kind": "import-statement",
+          "original": "../../index.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/server/impl/database_impl.js": {
+      "bytes": 4967,
+      "imports": [
+        {
+          "path": "node_modules/convex/dist/esm/values/index.js",
+          "kind": "import-statement",
+          "original": "../../values/index.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/impl/syscall.js",
+          "kind": "import-statement",
+          "original": "./syscall.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/impl/query_impl.js",
+          "kind": "import-statement",
+          "original": "./query_impl.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/impl/validate.js",
+          "kind": "import-statement",
+          "original": "./validate.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/index.js",
+          "kind": "import-statement",
+          "original": "../../index.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/values/value.js",
+          "kind": "import-statement",
+          "original": "../../values/value.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/server/impl/scheduler_impl.js": {
+      "bytes": 3065,
+      "imports": [
+        {
+          "path": "node_modules/convex/dist/esm/values/index.js",
+          "kind": "import-statement",
+          "original": "../../values/index.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/index.js",
+          "kind": "import-statement",
+          "original": "../../index.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/impl/syscall.js",
+          "kind": "import-statement",
+          "original": "./syscall.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/common/index.js",
+          "kind": "import-statement",
+          "original": "../../common/index.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/impl/validate.js",
+          "kind": "import-statement",
+          "original": "./validate.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/components/paths.js",
+          "kind": "import-statement",
+          "original": "../components/paths.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/server/impl/storage_impl.js": {
+      "bytes": 1653,
+      "imports": [
+        {
+          "path": "node_modules/convex/dist/esm/index.js",
+          "kind": "import-statement",
+          "original": "../../index.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/impl/syscall.js",
+          "kind": "import-statement",
+          "original": "./syscall.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/impl/validate.js",
+          "kind": "import-statement",
+          "original": "./validate.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/server/impl/meta_impl.js": {
+      "bytes": 2252,
+      "imports": [
+        {
+          "path": "node_modules/convex/dist/esm/values/index.js",
+          "kind": "import-statement",
+          "original": "../../values/index.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/impl/syscall.js",
+          "kind": "import-statement",
+          "original": "./syscall.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/server/impl/registration_impl.js": {
+      "bytes": 10102,
+      "imports": [
+        {
+          "path": "node_modules/convex/dist/esm/values/index.js",
+          "kind": "import-statement",
+          "original": "../../values/index.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/impl/actions_impl.js",
+          "kind": "import-statement",
+          "original": "./actions_impl.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/impl/vector_search_impl.js",
+          "kind": "import-statement",
+          "original": "./vector_search_impl.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/impl/authentication_impl.js",
+          "kind": "import-statement",
+          "original": "./authentication_impl.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/impl/database_impl.js",
+          "kind": "import-statement",
+          "original": "./database_impl.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/impl/query_impl.js",
+          "kind": "import-statement",
+          "original": "./query_impl.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/impl/scheduler_impl.js",
+          "kind": "import-statement",
+          "original": "./scheduler_impl.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/impl/storage_impl.js",
+          "kind": "import-statement",
+          "original": "./storage_impl.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/common/index.js",
+          "kind": "import-statement",
+          "original": "../../common/index.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/impl/syscall.js",
+          "kind": "import-statement",
+          "original": "./syscall.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/values/validator.js",
+          "kind": "import-statement",
+          "original": "../../values/validator.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/components/paths.js",
+          "kind": "import-statement",
+          "original": "../components/paths.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/impl/meta_impl.js",
+          "kind": "import-statement",
+          "original": "./meta_impl.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/server/pagination.js": {
+      "bytes": 775,
+      "imports": [
+        {
+          "path": "node_modules/convex/dist/esm/values/validator.js",
+          "kind": "import-statement",
+          "original": "../values/validator.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/server/storage.js": {
+      "bytes": 50,
+      "imports": [],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/server/api.js": {
+      "bytes": 2584,
+      "imports": [
+        {
+          "path": "node_modules/convex/dist/esm/server/functionName.js",
+          "kind": "import-statement",
+          "original": "./functionName.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/components/paths.js",
+          "kind": "import-statement",
+          "original": "./components/paths.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/server/cron.js": {
+      "bytes": 8904,
+      "imports": [
+        {
+          "path": "node_modules/convex/dist/esm/server/api.js",
+          "kind": "import-statement",
+          "original": "../server/api.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/common/index.js",
+          "kind": "import-statement",
+          "original": "../common/index.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/values/index.js",
+          "kind": "import-statement",
+          "original": "../values/index.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/components/paths.js",
+          "kind": "import-statement",
+          "original": "./components/paths.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/server/router.js": {
+      "bytes": 7101,
+      "imports": [
+        {
+          "path": "node_modules/convex/dist/esm/server/impl/syscall.js",
+          "kind": "import-statement",
+          "original": "./impl/syscall.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/server/components/index.js": {
+      "bytes": 9424,
+      "imports": [
+        {
+          "path": "node_modules/convex/dist/esm/index.js",
+          "kind": "import-statement",
+          "original": "../../index.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/impl/syscall.js",
+          "kind": "import-statement",
+          "original": "../impl/syscall.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/components/paths.js",
+          "kind": "import-statement",
+          "original": "./paths.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/values/validator.js",
+          "kind": "import-statement",
+          "original": "../../values/validator.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/components/paths.js",
+          "kind": "import-statement",
+          "original": "./paths.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/server/logVars.js": {
+      "bytes": 976,
+      "imports": [],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/server/audit_logging.js": {
+      "bytes": 1201,
+      "imports": [
+        {
+          "path": "node_modules/convex/dist/esm/index.js",
+          "kind": "import-statement",
+          "original": "../index.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/impl/syscall.js",
+          "kind": "import-statement",
+          "original": "./impl/syscall.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/logVars.js",
+          "kind": "import-statement",
+          "original": "./logVars.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/server/log.js": {
+      "bytes": 167,
+      "imports": [
+        {
+          "path": "node_modules/convex/dist/esm/server/audit_logging.js",
+          "kind": "import-statement",
+          "original": "./audit_logging.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/logVars.js",
+          "kind": "import-statement",
+          "original": "./logVars.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/server/schema.js": {
+      "bytes": 9649,
+      "imports": [
+        {
+          "path": "node_modules/convex/dist/esm/values/validator.js",
+          "kind": "import-statement",
+          "original": "../values/validator.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/convex/dist/esm/server/index.js": {
+      "bytes": 997,
+      "imports": [
+        {
+          "path": "node_modules/convex/dist/esm/server/database.js",
+          "kind": "import-statement",
+          "original": "./database.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/impl/registration_impl.js",
+          "kind": "import-statement",
+          "original": "./impl/registration_impl.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/impl/actions_impl.js",
+          "kind": "import-statement",
+          "original": "./impl/actions_impl.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/pagination.js",
+          "kind": "import-statement",
+          "original": "./pagination.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/search_filter_builder.js",
+          "kind": "import-statement",
+          "original": "./search_filter_builder.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/storage.js",
+          "kind": "import-statement",
+          "original": "./storage.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/cron.js",
+          "kind": "import-statement",
+          "original": "./cron.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/router.js",
+          "kind": "import-statement",
+          "original": "./router.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/api.js",
+          "kind": "import-statement",
+          "original": "./api.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/components/index.js",
+          "kind": "import-statement",
+          "original": "./components/index.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/components/index.js",
+          "kind": "import-statement",
+          "original": "./components/index.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/components/index.js",
+          "kind": "import-statement",
+          "original": "./components/index.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/log.js",
+          "kind": "import-statement",
+          "original": "./log.js"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/schema.js",
+          "kind": "import-statement",
+          "original": "./schema.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/zod/index.js": {
+      "bytes": 422,
+      "imports": [
+        {
+          "path": "node_modules/zod/v4/classic/external.js",
+          "kind": "import-statement",
+          "original": "./v4/classic/external.js"
+        },
+        {
+          "path": "node_modules/zod/v4/classic/external.js",
+          "kind": "import-statement",
+          "original": "./v4/classic/external.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/@convex-dev/ai-sdk-provider/dist/esm/evaluation-model.js": {
+      "bytes": 3834,
+      "imports": [
+        {
+          "path": "node_modules/ai/dist/index.js",
+          "kind": "import-statement",
+          "original": "ai"
+        },
+        {
+          "path": "node_modules/zod/index.js",
+          "kind": "import-statement",
+          "original": "zod"
+        }
+      ],
+      "format": "esm"
+    },
+    "node_modules/@convex-dev/ai-sdk-provider/dist/esm/video-model.js": {
+      "bytes": 7484,
+      "imports": [],
+      "format": "esm"
+    },
+    "node_modules/@convex-dev/ai-sdk-provider/dist/esm/video-webhook.js": {
+      "bytes": 1415,
+      "imports": [],
+      "format": "esm"
+    },
+    "node_modules/@convex-dev/ai-sdk-provider/dist/esm/index.js": {
+      "bytes": 5811,
+      "imports": [
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/anthropic/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/anthropic"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/openai/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/openai"
+        },
+        {
+          "path": "node_modules/@ai-sdk/openai-compatible/dist/index.js",
+          "kind": "import-statement",
+          "original": "@ai-sdk/openai-compatible"
+        },
+        {
+          "path": "node_modules/ai/dist/index.js",
+          "kind": "import-statement",
+          "original": "ai"
+        },
+        {
+          "path": "node_modules/convex/dist/esm/server/index.js",
+          "kind": "import-statement",
+          "original": "convex/server"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/dist/esm/evaluation-model.js",
+          "kind": "import-statement",
+          "original": "./evaluation-model.js"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/dist/esm/video-model.js",
+          "kind": "import-statement",
+          "original": "./video-model.js"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/dist/esm/video-webhook.js",
+          "kind": "import-statement",
+          "original": "./video-webhook.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c3/runtime-source/src/domain/profile.ts": {
+      "bytes": 3259,
+      "imports": [],
+      "format": "esm"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c3/runtime-source/src/domain/model-policy.ts": {
+      "bytes": 28083,
+      "imports": [
+        {
+          "path": "node_modules/zod/index.js",
+          "kind": "import-statement",
+          "original": "zod"
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c3/runtime-source/src/domain/profile.ts",
+          "kind": "import-statement",
+          "original": "./profile.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c3/runtime-source/convex/runtimeGateway.ts": {
+      "bytes": 55759,
+      "imports": [
+        {
+          "path": "node_modules/convex/dist/esm/values/index.js",
+          "kind": "import-statement",
+          "original": "convex/values"
+        },
+        {
+          "path": "node_modules/@convex-dev/ai-sdk-provider/dist/esm/index.js",
+          "kind": "import-statement",
+          "original": "@convex-dev/ai-sdk-provider"
+        },
+        {
+          "path": "node_modules/ai/dist/index.js",
+          "kind": "import-statement",
+          "original": "ai"
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c3/runtime-source/src/domain/model-policy.ts",
+          "kind": "import-statement",
+          "original": "../src/domain/model-policy"
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c3/runtime-source/src/domain/profile.ts",
+          "kind": "import-statement",
+          "original": "../src/domain/profile"
+        }
+      ],
+      "format": "esm"
+    }
+  },
+  "outputs": {
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c3/runtime/gateway.mjs": {
+      "imports": [],
+      "exports": [
+        "DEFAULT_GATEWAY_OWNED_TIMING",
+        "GatewayDispatchError",
+        "conservativeUsdDecimal",
+        "createGovernedGatewayModel",
+        "governGatewayEmbeddingModel",
+        "governGatewayLanguageModel"
+      ],
+      "entryPoint": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c3/runtime-source/convex/runtimeGateway.ts",
+      "inputs": {
+        "node_modules/convex/dist/esm/values/base64.js": {
+          "bytesInOutput": 2878
+        },
+        "node_modules/convex/dist/esm/common/index.js": {
+          "bytesInOutput": 436
+        },
+        "node_modules/convex/dist/esm/values/value.js": {
+          "bytesInOutput": 9549
+        },
+        "node_modules/convex/dist/esm/values/index.js": {
+          "bytesInOutput": 0
+        },
+        "node_modules/convex/dist/esm/values/validators.js": {
+          "bytesInOutput": 11552
+        },
+        "node_modules/convex/dist/esm/values/validator.js": {
+          "bytesInOutput": 7728
+        },
+        "node_modules/convex/dist/esm/values/errors.js": {
+          "bytesInOutput": 704
+        },
+        "node_modules/convex/dist/esm/values/compare_utf8.js": {
+          "bytesInOutput": 92
+        },
+        "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider/dist/index.js": {
+          "bytesInOutput": 11736
+        },
+        "node_modules/zod/v4/classic/external.js": {
+          "bytesInOutput": 7566
+        },
+        "node_modules/zod/v4/core/index.js": {
+          "bytesInOutput": 10313
+        },
+        "node_modules/zod/v4/core/util.js": {
+          "bytesInOutput": 24820
+        },
+        "node_modules/zod/v4/core/core.js": {
+          "bytesInOutput": 3374
+        },
+        "node_modules/zod/v4/core/errors.js": {
+          "bytesInOutput": 6391
+        },
+        "node_modules/zod/v4/core/parse.js": {
+          "bytesInOutput": 5958
+        },
+        "node_modules/zod/v4/core/regexes.js": {
+          "bytesInOutput": 9215
+        },
+        "node_modules/zod/v4/core/checks.js": {
+          "bytesInOutput": 14758
+        },
+        "node_modules/zod/v4/core/doc.js": {
+          "bytesInOutput": 1150
+        },
+        "node_modules/zod/v4/core/versions.js": {
+          "bytesInOutput": 54
+        },
+        "node_modules/zod/v4/core/schemas.js": {
+          "bytesInOutput": 78404
+        },
+        "node_modules/zod/v4/core/memoizer.js": {
+          "bytesInOutput": 7532
+        },
+        "node_modules/zod/v4/locales/index.js": {
+          "bytesInOutput": 1593
+        },
+        "node_modules/zod/v4/locales/ar.js": {
+          "bytesInOutput": 7477
+        },
+        "node_modules/zod/v4/locales/az.js": {
+          "bytesInOutput": 4530
+        },
+        "node_modules/zod/v4/locales/be.js": {
+          "bytesInOutput": 9259
+        },
+        "node_modules/zod/v4/locales/bg.js": {
+          "bytesInOutput": 8261
+        },
+        "node_modules/zod/v4/locales/bn.js": {
+          "bytesInOutput": 6795
+        },
+        "node_modules/zod/v4/locales/ca.js": {
+          "bytesInOutput": 4338
+        },
+        "node_modules/zod/v4/locales/ckb.js": {
+          "bytesInOutput": 7786
+        },
+        "node_modules/zod/v4/locales/cs.js": {
+          "bytesInOutput": 4647
+        },
+        "node_modules/zod/v4/locales/da.js": {
+          "bytesInOutput": 4330
+        },
+        "node_modules/zod/v4/locales/de.js": {
+          "bytesInOutput": 4173
+        },
+        "node_modules/zod/v4/locales/el.js": {
+          "bytesInOutput": 8290
+        },
+        "node_modules/zod/v4/locales/en.js": {
+          "bytesInOutput": 4521
+        },
+        "node_modules/zod/v4/locales/eo.js": {
+          "bytesInOutput": 4204
+        },
+        "node_modules/zod/v4/locales/es.js": {
+          "bytesInOutput": 4927
+        },
+        "node_modules/zod/v4/locales/fa.js": {
+          "bytesInOutput": 7070
+        },
+        "node_modules/zod/v4/locales/fi.js": {
+          "bytesInOutput": 4416
+        },
+        "node_modules/zod/v4/locales/fr.js": {
+          "bytesInOutput": 4806
+        },
+        "node_modules/zod/v4/locales/fr-CA.js": {
+          "bytesInOutput": 4182
+        },
+        "node_modules/zod/v4/locales/gu.js": {
+          "bytesInOutput": 7138
+        },
+        "node_modules/zod/v4/locales/he.js": {
+          "bytesInOutput": 13528
+        },
+        "node_modules/zod/v4/locales/hi.js": {
+          "bytesInOutput": 7248
+        },
+        "node_modules/zod/v4/locales/hr.js": {
+          "bytesInOutput": 4545
+        },
+        "node_modules/zod/v4/locales/hu.js": {
+          "bytesInOutput": 4444
+        },
+        "node_modules/zod/v4/locales/hy.js": {
+          "bytesInOutput": 8732
+        },
+        "node_modules/zod/v4/locales/id.js": {
+          "bytesInOutput": 4126
+        },
+        "node_modules/zod/v4/locales/is.js": {
+          "bytesInOutput": 4321
+        },
+        "node_modules/zod/v4/locales/it.js": {
+          "bytesInOutput": 4135
+        },
+        "node_modules/zod/v4/locales/ja.js": {
+          "bytesInOutput": 5603
+        },
+        "node_modules/zod/v4/locales/ka.js": {
+          "bytesInOutput": 8311
+        },
+        "node_modules/zod/v4/locales/km.js": {
+          "bytesInOutput": 8414
+        },
+        "node_modules/zod/v4/locales/kh.js": {
+          "bytesInOutput": 49
+        },
+        "node_modules/zod/v4/locales/kn.js": {
+          "bytesInOutput": 7971
+        },
+        "node_modules/zod/v4/locales/ko.js": {
+          "bytesInOutput": 5344
+        },
+        "node_modules/zod/v4/locales/lt.js": {
+          "bytesInOutput": 7327
+        },
+        "node_modules/zod/v4/locales/mk.js": {
+          "bytesInOutput": 7430
+        },
+        "node_modules/zod/v4/locales/ms.js": {
+          "bytesInOutput": 4036
+        },
+        "node_modules/zod/v4/locales/ne.js": {
+          "bytesInOutput": 6962
+        },
+        "node_modules/zod/v4/locales/nl.js": {
+          "bytesInOutput": 4286
+        },
+        "node_modules/zod/v4/locales/nn.js": {
+          "bytesInOutput": 4073
+        },
+        "node_modules/zod/v4/locales/no.js": {
+          "bytesInOutput": 4090
+        },
+        "node_modules/zod/v4/locales/ota.js": {
+          "bytesInOutput": 4349
+        },
+        "node_modules/zod/v4/locales/ps.js": {
+          "bytesInOutput": 6422
+        },
+        "node_modules/zod/v4/locales/pl.js": {
+          "bytesInOutput": 4825
+        },
+        "node_modules/zod/v4/locales/pt.js": {
+          "bytesInOutput": 6360
+        },
+        "node_modules/zod/v4/locales/pt-BR.js": {
+          "bytesInOutput": 6355
+        },
+        "node_modules/zod/v4/locales/ro.js": {
+          "bytesInOutput": 4467
+        },
+        "node_modules/zod/v4/locales/ru.js": {
+          "bytesInOutput": 9551
+        },
+        "node_modules/zod/v4/locales/sk.js": {
+          "bytesInOutput": 4607
+        },
+        "node_modules/zod/v4/locales/sl.js": {
+          "bytesInOutput": 4195
+        },
+        "node_modules/zod/v4/locales/sv.js": {
+          "bytesInOutput": 4280
+        },
+        "node_modules/zod/v4/locales/ta.js": {
+          "bytesInOutput": 8654
+        },
+        "node_modules/zod/v4/locales/tg.js": {
+          "bytesInOutput": 7824
+        },
+        "node_modules/zod/v4/locales/th.js": {
+          "bytesInOutput": 8501
+        },
+        "node_modules/zod/v4/locales/tk.js": {
+          "bytesInOutput": 3969
+        },
+        "node_modules/zod/v4/locales/tr.js": {
+          "bytesInOutput": 4267
+        },
+        "node_modules/zod/v4/locales/uk.js": {
+          "bytesInOutput": 8292
+        },
+        "node_modules/zod/v4/locales/ua.js": {
+          "bytesInOutput": 49
+        },
+        "node_modules/zod/v4/locales/ur.js": {
+          "bytesInOutput": 7766
+        },
+        "node_modules/zod/v4/locales/uz.js": {
+          "bytesInOutput": 4311
+        },
+        "node_modules/zod/v4/locales/vi.js": {
+          "bytesInOutput": 4877
+        },
+        "node_modules/zod/v4/locales/zh-CN.js": {
+          "bytesInOutput": 4693
+        },
+        "node_modules/zod/v4/locales/zh-TW.js": {
+          "bytesInOutput": 4805
+        },
+        "node_modules/zod/v4/locales/yo.js": {
+          "bytesInOutput": 4966
+        },
+        "node_modules/zod/v4/core/registries.js": {
+          "bytesInOutput": 1333
+        },
+        "node_modules/zod/v4/core/compile.js": {
+          "bytesInOutput": 58506
+        },
+        "node_modules/zod/v4/core/api.js": {
+          "bytesInOutput": 23734
+        },
+        "node_modules/zod/v4/core/to-json-schema.js": {
+          "bytesInOutput": 17394
+        },
+        "node_modules/zod/v4/core/json-schema-processors.js": {
+          "bytesInOutput": 25453
+        },
+        "node_modules/zod/v4/core/json-schema-generator.js": {
+          "bytesInOutput": 2312
+        },
+        "node_modules/zod/v4/core/json-schema.js": {
+          "bytesInOutput": 30
+        },
+        "node_modules/zod/v4/classic/schemas.js": {
+          "bytesInOutput": 48515
+        },
+        "node_modules/zod/v4/classic/checks.js": {
+          "bytesInOutput": 891
+        },
+        "node_modules/zod/v4/classic/errors.js": {
+          "bytesInOutput": 1562
+        },
+        "node_modules/zod/v4/classic/parse.js": {
+          "bytesInOutput": 736
+        },
+        "node_modules/zod/v4/classic/compat.js": {
+          "bytesInOutput": 641
+        },
+        "node_modules/zod/v4/classic/iso.js": {
+          "bytesInOutput": 581
+        },
+        "node_modules/zod/v4/classic/from-json-schema.js": {
+          "bytesInOutput": 25363
+        },
+        "node_modules/zod/v4/core/visit.js": {
+          "bytesInOutput": 4790
+        },
+        "node_modules/zod/v4/classic/deep-partial.js": {
+          "bytesInOutput": 320
+        },
+        "node_modules/zod/v4/classic/in-out.js": {
+          "bytesInOutput": 1242
+        },
+        "node_modules/zod/v4/classic/coerce.js": {
+          "bytesInOutput": 540
+        },
+        "node_modules/zod/v4/classic/index.js": {
+          "bytesInOutput": 0
+        },
+        "node_modules/eventsource-parser/dist/index.js": {
+          "bytesInOutput": 7760
+        },
+        "node_modules/eventsource-parser/dist/stream.js": {
+          "bytesInOutput": 669
+        },
+        "node_modules/@workflow/serde/dist/index.js": {
+          "bytesInOutput": 122
+        },
+        "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/provider-utils/dist/index.js": {
+          "bytesInOutput": 95845
+        },
+        "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/anthropic/dist/index.js": {
+          "bytesInOutput": 274748
+        },
+        "node_modules/@convex-dev/ai-sdk-provider/node_modules/@ai-sdk/openai/dist/index.js": {
+          "bytesInOutput": 388305
+        },
+        "node_modules/@ai-sdk/openai-compatible/node_modules/@ai-sdk/provider/dist/index.js": {
+          "bytesInOutput": 11372
+        },
+        "node_modules/zod/v3/helpers/util.js": {
+          "bytesInOutput": 3423
+        },
+        "node_modules/zod/v3/ZodError.js": {
+          "bytesInOutput": 3547
+        },
+        "node_modules/zod/v3/locales/en.js": {
+          "bytesInOutput": 4884
+        },
+        "node_modules/zod/v3/errors.js": {
+          "bytesInOutput": 91
+        },
+        "node_modules/zod/v3/helpers/parseUtil.js": {
+          "bytesInOutput": 3006
+        },
+        "node_modules/zod/v3/helpers/errorUtil.js": {
+          "bytesInOutput": 265
+        },
+        "node_modules/zod/v3/types.js": {
+          "bytesInOutput": 102165
+        },
+        "node_modules/@ai-sdk/openai-compatible/node_modules/@ai-sdk/provider-utils/dist/index.js": {
+          "bytesInOutput": 76564
+        },
+        "node_modules/@ai-sdk/openai-compatible/dist/index.js": {
+          "bytesInOutput": 59317
+        },
+        "node_modules/@ai-sdk/provider/dist/index.js": {
+          "bytesInOutput": 4024
+        },
+        "node_modules/@ai-sdk/provider-utils/dist/index.js": {
+          "bytesInOutput": 50286
+        },
+        "node_modules/ai/dist/index.js": {
+          "bytesInOutput": 44626
+        },
+        "node_modules/convex/dist/esm/server/index.js": {
+          "bytesInOutput": 0
+        },
+        "node_modules/convex/dist/esm/index.js": {
+          "bytesInOutput": 25
+        },
+        "node_modules/convex/dist/esm/server/impl/syscall.js": {
+          "bytesInOutput": 646
+        },
+        "node_modules/convex/dist/esm/server/functionName.js": {
+          "bytesInOutput": 47
+        },
+        "node_modules/convex/dist/esm/server/components/paths.js": {
+          "bytesInOutput": 53
+        },
+        "node_modules/convex/dist/esm/server/impl/validate.js": {
+          "bytesInOutput": 176
+        },
+        "node_modules/convex/dist/esm/server/impl/actions_impl.js": {
+          "bytesInOutput": 308
+        },
+        "node_modules/convex/dist/esm/server/pagination.js": {
+          "bytesInOutput": 282
+        },
+        "node_modules/convex/dist/esm/server/api.js": {
+          "bytesInOutput": 937
+        },
+        "node_modules/convex/dist/esm/server/components/index.js": {
+          "bytesInOutput": 0
+        },
+        "node_modules/convex/dist/esm/server/logVars.js": {
+          "bytesInOutput": 326
+        },
+        "node_modules/convex/dist/esm/server/schema.js": {
+          "bytesInOutput": 9352
+        },
+        "node_modules/zod/index.js": {
+          "bytesInOutput": 0
+        },
+        "node_modules/@convex-dev/ai-sdk-provider/dist/esm/evaluation-model.js": {
+          "bytesInOutput": 3409
+        },
+        "node_modules/@convex-dev/ai-sdk-provider/dist/esm/video-model.js": {
+          "bytesInOutput": 6141
+        },
+        "node_modules/@convex-dev/ai-sdk-provider/dist/esm/index.js": {
+          "bytesInOutput": 3965
+        },
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c3/runtime-source/src/domain/profile.ts": {
+          "bytesInOutput": 1338
+        },
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c3/runtime-source/src/domain/model-policy.ts": {
+          "bytesInOutput": 14172
+        },
+        "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c3/runtime-source/convex/runtimeGateway.ts": {
+          "bytesInOutput": 44797
+        }
+      },
+      "bytes": 2018140
+    }
+  }
+}

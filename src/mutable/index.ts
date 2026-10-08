@@ -7,8 +7,9 @@ import type { GraphSyncPolicy } from "../graph/types";
  * Layer 1c: ACID-compliant mutable storage for live data
  */
 
+import { resolveTenantId } from "../auth/tenant";
 import type { ConvexClient } from "convex/browser";
-import { api } from "../../convex-dev/_generated/api";
+import { api } from "../common/backendApi";
 import type {
   CountMutableFilter,
   DeleteMutableOptions,
@@ -379,7 +380,7 @@ export class MutableAPI {
           namespace: filter.namespace,
           keyPrefix: filter.keyPrefix,
           userId: filter.userId,
-          tenantId: filter.tenantId ?? this.authContext?.tenantId, // Support explicit or auth context
+          tenantId: resolveTenantId(this.authContext?.tenantId, filter.tenantId), // Support explicit or auth context
           limit: filter.limit,
           offset: filter.offset,
           updatedAfter: filter.updatedAfter,
@@ -421,7 +422,7 @@ export class MutableAPI {
         this.client.query(api.mutable.count, {
           namespace: filter.namespace,
           userId: filter.userId,
-          tenantId: filter.tenantId ?? this.authContext?.tenantId, // Support explicit or auth context
+          tenantId: resolveTenantId(this.authContext?.tenantId, filter.tenantId), // Support explicit or auth context
           keyPrefix: filter.keyPrefix,
           updatedAfter: filter.updatedAfter,
           updatedBefore: filter.updatedBefore,
@@ -532,7 +533,7 @@ export class MutableAPI {
         this.mutateGraph(api.mutable.purgeNamespace, {
           namespace,
           dryRun: options?.dryRun,
-          tenantId: options?.tenantId ?? this.authContext?.tenantId, // Support explicit or auth context
+          tenantId: resolveTenantId(this.authContext?.tenantId, options?.tenantId), // Support explicit or auth context
         }, options?.syncToGraph),
       "mutable:purgeNamespace", options?.syncToGraph,
     );
@@ -641,7 +642,7 @@ export class MutableAPI {
           keyPrefix: filter.keyPrefix,
           userId: filter.userId,
           updatedBefore: filter.updatedBefore,
-          tenantId: filter.tenantId ?? this.authContext?.tenantId, // Support explicit or auth context
+          tenantId: resolveTenantId(this.authContext?.tenantId, filter.tenantId), // Support explicit or auth context
         }),
       "mutable:purgeMany",
     );

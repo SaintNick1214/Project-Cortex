@@ -60,6 +60,7 @@ jest.mock("convex/browser", () => ({
 jest.mock("@cortexmemory/sdk", () => ({
   Cortex: {
     create: jest.fn(async (config: any, runtime: any) => {
+      expect(runtime.deploymentOperator).toBe(true);
       runtime.initializeTransport({ setAdminAuth: mockAdmin });
       return mockClient;
     }),
@@ -67,7 +68,7 @@ jest.mock("@cortexmemory/sdk", () => ({
 }));
 jest.mock("@cortexmemory/vercel-ai-provider", () => ({
   CortexMemoryProvider: class {
-    specificationVersion = "v3";
+    specificationVersion = "v4";
     constructor(model: unknown, config: unknown, borrowed: unknown) {
       mockBorrow(model, config, borrowed);
     }

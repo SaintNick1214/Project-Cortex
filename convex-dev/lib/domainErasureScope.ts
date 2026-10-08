@@ -6,6 +6,7 @@ import { byteSize, digest } from "./factHistoryProvenance";
 import { PRIMARY_TABLES, ownership, readPhysicalAuthority, requireLifecycleReady, reserveLifecycle, extractReferenceSlots, slotHint, type Primary, type Edge, uniqueReference } from "./referenceLifecycle";
 import { scopedImmutable, scopedSpace, validateDomainScope } from "./domainScope";
 import { graphTables, sourceIdentity } from "./graphSync";
+import { isRuntimeManagedRow, assertLegacyDomainScope } from "./operatorBoundary";
 
 export { PRIMARY_TABLES as erasureTables };
 export interface ErasureDomain { kind: "user" | "space"; tenantId?: string; userId?: string; memorySpaceId?: string; rootDocumentId?: string }
@@ -28,7 +29,7 @@ export function validateErasureDomain(domain: ErasureDomain): void {
   if (!selected?.trim() || selected.length > 256 || (domain.kind === "user" ? domain.memorySpaceId !== undefined : domain.userId !== undefined)) erasureFail("ERASURE_DOMAIN_INVALID");
 }
 export async function erasureRoot(ctx: Reader, domain: ErasureDomain, allowAbsent=false) {
-  validateErasureDomain(domain); await requireLifecycleReady(ctx);
+  validateErasureDomain(domain); await assertLegacyDomainScope(ctx, domain.tenantId, domain.memorySpaceId); await requireLifecycleReady(ctx);
   const root = domain.kind === "user" ? await scopedImmutable(ctx, domain.tenantId, "user", domain.userId!) : await scopedSpace(ctx, domain.tenantId, domain.memorySpaceId!);
   if (domain.rootDocumentId !== undefined && !(allowAbsent&&!root) && root?._id !== domain.rootDocumentId) erasureFail("ERASURE_ROOT_CHANGED");
   return root;
@@ -38,6 +39,7 @@ export function explicitErasureAction(table: Primary, row: ErasureRow, domain: E
   if (table === "governancePolicies" || table === "governanceEnforcement") return domain.kind === "space" && row.memorySpaceId === domain.memorySpaceId ? {action: "block", reason: "ERASURE_GOVERNANCE_SCOPE_UNKNOWN"} : {action: "preserve", reason: "operationalGovernance"};
   if(table==="factHistory"&&row.scopeVersion!==1&&row.tenantId===undefined&&(domain.kind==="user"?row.userId===domain.userId:row.memorySpaceId===domain.memorySpaceId))return {action:"block",reason:"SOURCE_PROVENANCE_UNRESOLVED"};
   if (row.tenantId !== domain.tenantId) return {action: "preserve", reason: "foreignTenant"};
+  if (isRuntimeManagedRow(row)) return {action: "block", reason: "RUNTIME_LIFECYCLE_UNSUPPORTED"};
   if (table === "agents") return {action: "preserve", reason: "sharedRegistry"};
   if (table === "graphSyncQueue") return {action: "preserve", reason: "managedQueueParticipant"};
   if (domain.kind === "space") {

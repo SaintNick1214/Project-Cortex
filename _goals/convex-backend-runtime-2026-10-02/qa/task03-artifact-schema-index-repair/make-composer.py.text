@@ -1,0 +1,105 @@
+import pathlib,json,hashlib
+r=pathlib.Path.cwd();q=r/'_goals/convex-backend-runtime-2026-10-02/qa/task03-artifact-schema-index-repair';qa='_goals/convex-backend-runtime-2026-10-02/qa/'
+inputs=[qa+'task03-foundation-catalog-repair/compose.mjs',qa+'task03b2f-asset-foundation/original/accepted22.json',qa+'task03b2f-asset-foundation/candidate/source-hashes.json',qa+'task03b2f-asset-foundation/original/source-hashes.json',qa+'task03b2b2-stats/frozen-uniform-closure.json',qa+'task03b2f-asset-foundation/original/artifacts.ts',qa+'task03b2f-asset-foundation/candidate/convex-dev/artifacts.ts.text',*[qa+'task03b2c1/'+n for n in ['inventory.mjs','frozen-catalog.json','excluded-baseline.ts.text']]]
+for n in inputs:
+ p=q/'archive'/n;p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes((r/n).read_bytes())
+manifest={n:hashlib.sha256((r/n).read_bytes()).hexdigest() for n in inputs}
+(q/'composer-input-hashes.json').write_text(json.dumps(manifest,indent=2)+'\n')
+pre=json.loads((q/'pre-edit-hashes.json').read_text());post=json.loads((q/'final-hashes.json').read_text())
+constants={'preHashes':{n:pre[n] for n in post if n.startswith('convex-dev/')},'postHashes':{n:h for n,h in post.items() if n.startswith('convex-dev/')},'inputHashes':manifest,'probeHash':hashlib.sha256((r/'work/resume/artifact-schema-index-repair/probe.mts').read_bytes()).hexdigest(),'preNativeHash':hashlib.sha256((q/'pre-edit-native.json').read_bytes()).hexdigest()}
+(q/'strict-compose.mjs').write_text('''import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import path from 'node:path';
+import crypto from 'node:crypto';
+import { execFileSync } from 'node:child_process';
+const root = process.cwd();
+const qa = '_goals/convex-backend-runtime-2026-10-02/qa/task03-artifact-schema-index-repair';
+const constants = '''+json.dumps(constants,indent=2)+''';
+const hash = (text) => crypto.createHash('sha256').update(text).digest('hex');
+const read = (name) => fs.readFileSync(path.join(root, name), 'utf8');
+const archived = (name) => read(`${qa}/archive/${name}`);
+const sources = Object.fromEntries(Object.keys(constants.postHashes).map((name) => [name, read(name)]));
+function verify(current) {
+  for (const [name, expectedHash] of Object.entries(constants.postHashes)) {
+    const before = archived(name);
+    assert.equal(hash(before), constants.preHashes[name], `Exact archived source ${name}`);
+    const needle = name === 'convex-dev/schema.ts'
+      ? '    .index("by_runtime_scope", ["tenantId", "memorySpaceId"])\\n'
+      : '.withIndex("by_runtime_scope",';
+    assert.equal(before.split(needle).length - 1, 1, `Exactly one authorized edit ${name}`);
+    const expected = name === 'convex-dev/schema.ts' ? before.replace(needle, '')
+      : before.replace(needle, '.withIndex("by_tenant_space",');
+    assert.equal(hash(current[name]), expectedHash, `Exact current source hash ${name}`);
+    assert.equal(current[name], expected, `Whole-byte sole authorized edit ${name}`);
+  }
+}
+verify(sources);
+const tamperControls = [];
+for (const [name, target, needle, replacement] of [
+  ['changed tenant scope', 'convex-dev/runtimeArtifactAuth.ts', 'q.eq("tenantId", authority.tenantId)', 'q.eq("tenantId", "foreign")'],
+  ['extra index', 'convex-dev/schema.ts', '.index("by_runtime_key",', '.index("unauthorized", ["tenantId"]).index("by_runtime_key",'],
+  ['changed candidate index', 'convex-dev/runtimeArtifactAuth.ts', '.withIndex("by_tenant_space",', '.withIndex("by_runtime_scope",'],
+  ['changed purge space bound', 'convex-dev/artifacts.ts', '.eq("memorySpaceId", args.memorySpaceId!)', '.eq("memorySpaceId", "foreign")'],
+  ['changed other declaration', 'convex-dev/artifacts.ts', 'export const purgeAll', '/* unrelated tamper */ export const purgeAll'],
+]) {
+  assert.ok(sources[target].includes(needle), `Tamper control reaches ${name}`);
+  assert.throws(() => verify({ ...sources, [target]: sources[target].replace(needle, replacement) }));
+  tamperControls.push(name);
+}
+for (const [name, expected] of Object.entries(constants.inputHashes)) {
+  assert.equal(hash(read(name)), expected, `Original immutable input ${name}`);
+  assert.equal(hash(archived(name)), expected, `Archived original input ${name}`);
+}
+const probe = 'work/resume/artifact-schema-index-repair/probe.mts';
+assert.equal(hash(read(probe)), constants.probeHash, 'Native probe integrity');
+const beforeNativeText = read(`${qa}/pre-edit-native.json`);
+assert.equal(hash(beforeNativeText), constants.preNativeHash, 'Pre-edit native proof integrity');
+assert.ok(process.argv[2], 'Explicit owned scratch destination');
+const destination = path.resolve(process.argv[2]);
+fs.mkdirSync(destination, { recursive: true });
+const witnessFile = path.join(destination, 'exact-current-repair-native.json');
+execFileSync(process.execPath, ['--import', 'tsx', probe, witnessFile], { cwd: root, encoding: 'utf8' });
+const currentNative = JSON.parse(fs.readFileSync(witnessFile, 'utf8'));
+const expectedNative = JSON.parse(beforeNativeText);
+for (const table of expectedNative.definitions) {
+  if (table.table === 'artifacts') {
+    table.indexes = table.indexes.filter((index) => index.indexDescriptor !== 'by_runtime_scope');
+    table.exported.indexes = table.exported.indexes.filter((index) => index.indexDescriptor !== 'by_runtime_scope');
+  }
+}
+assert.equal(currentNative.tableCount, 26);
+assert.deepEqual(currentNative.duplicates, []);
+assert.deepEqual(currentNative.definitions, expectedNative.definitions, 'All native validators and indexes exact except authorized removal');
+assert.deepEqual(currentNative.registrations, expectedNative.registrations, 'Every native registered artifact contract preserved');
+assert.deepEqual(currentNative.definitions.find((table) => table.table === 'artifacts').indexes
+  .filter((index) => JSON.stringify(index.fields) === JSON.stringify(['tenantId', 'memorySpaceId'])),
+[{ indexDescriptor: 'by_tenant_space', fields: ['tenantId', 'memorySpaceId'] }]);
+const replica = fs.mkdtempSync(path.join(destination, 'exact-before-replica-'));
+let composition;
+try {
+  for (const name of Object.keys(constants.inputHashes)) {
+    const target = path.join(replica, name);
+    fs.mkdirSync(path.dirname(target), { recursive: true });
+    fs.writeFileSync(target, archived(name));
+  }
+  for (const name of ['agents', 'memorySpaces', 'runtimeRegistryStats']) {
+    const target = path.join(replica, `convex-dev/${name}.ts`);
+    fs.mkdirSync(path.dirname(target), { recursive: true });
+    fs.copyFileSync(path.join(root, `convex-dev/${name}.ts`), target);
+  }
+  // The exact whole-byte before/after proof above selects the archived accepted
+  // source. No current declaration is normalized or permitted to drift.
+  fs.writeFileSync(path.join(replica, 'convex-dev/artifacts.ts'), archived('convex-dev/artifacts.ts'));
+  fs.symlinkSync(path.join(root, 'node_modules'), path.join(replica, 'node_modules'), 'dir');
+  composition = JSON.parse(execFileSync(process.execPath,
+    [path.join(replica, '_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-catalog-repair/compose.mjs'), destination],
+    { cwd: replica, encoding: 'utf8' }));
+} finally { fs.rmSync(replica, { recursive: true, force: true }); }
+assert.equal(composition.negativeControls, 4);
+composition.exactCurrentRepair = { preHashes: constants.preHashes, postHashes: constants.postHashes,
+  tables: currentNative.tableCount, indexes: currentNative.indexCount, duplicateSequences: 0,
+  wholeByteAuthorizedEdits: 3, currentTamperControls: tamperControls, nativeWitness: witnessFile };
+fs.writeFileSync(path.join(destination, 'composition.json'), JSON.stringify(composition, null, 2) + '\\n');
+console.log(JSON.stringify(composition));
+''')
+p=r/'tests/unit/runtimeArtifactAuth/inventory.test.ts';s=p.read_text();old='_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-catalog-repair/compose.mjs';new='_goals/convex-backend-runtime-2026-10-02/qa/task03-artifact-schema-index-repair/strict-compose.mjs';assert s.count(old)==1;p.write_text(s.replace(old,new))

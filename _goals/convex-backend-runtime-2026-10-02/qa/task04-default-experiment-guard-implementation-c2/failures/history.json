@@ -1,0 +1,14 @@
+[
+  {
+    "failure": "Repair verifier excluded every nested qa-manifest.json rather than only packet root; initial immutable-set assertion failed before behavior checks.",
+    "repair": "Changed set enumeration to root relative exclusion only.",
+    "utc": "not separately recorded; tool invocation transcript retained",
+    "productFailure": false
+  },
+  {
+    "failure": "Repair verifier expected preparation files field; actual field is sources. KeyError before behavior checks.",
+    "repair": "Read documented sources array; full201 lineage verified.",
+    "utc": "not separately recorded; invocation transcript retained",
+    "productFailure": false
+  }
+]

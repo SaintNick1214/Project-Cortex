@@ -1,8 +1,8 @@
+import { randomUUID } from "../common/crypto";
 /** Managed delivery and scoped erasure share the same physical SourceState gate. */
-import {randomUUID} from "node:crypto";
 import {ConvexError,type Value} from "convex/values";
 import type {ConvexClient} from "convex/browser";
-import {api} from "../../convex-dev/_generated/api";
+import {api} from "../common/backendApi";
 import type {Id} from "../../convex-dev/_generated/dataModel";
 import type {GraphAdapter,GraphIdentity,GraphJob,GraphJobReceipt,GraphProjection,GraphApplyResult,ManagedGraphTransaction,GraphSyncPolicy,GraphScope} from "./types";
 import {GraphDatabaseError,GraphCommittedPartial,GraphPrimaryOutcomeUnknown,GraphJobUnresolved} from "./types";

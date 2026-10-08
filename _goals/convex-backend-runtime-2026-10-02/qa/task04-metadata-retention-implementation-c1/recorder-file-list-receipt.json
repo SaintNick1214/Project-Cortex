@@ -1,0 +1,12 @@
+{
+  "argv": [
+    "python3",
+    "-c",
+    "from pathlib import Path\np=Path('work/resume/task04-metadata-retention-implementation-c1/capture-store.py');s=p.read_text();old=\"tag=sys.argv[1];files=json.loads(sys.argv[2]);argv=sys.argv[3:]\";new=\"tag=sys.argv[1];listArg=sys.argv[2];files=json.loads((r/listArg[1:]).read_text()) if listArg.startswith('@') else json.loads(listArg);files=([listArg[1:]]+files) if listArg.startswith('@') else files;argv=sys.argv[3:]\";assert old in s;s=s.replace(old,new);p.write_text(s)"
+  ],
+  "cwd": "/workspace/Project-Cortex",
+  "startUtc": "2026-10-04T14:39:25.710226+00:00",
+  "endUtc": "2026-10-04T14:39:25.732771+00:00",
+  "exit": 0,
+  "recorderSourceSha256": "22b0c7cd03ea9ed7724372bb736f48dcacf7204bbb87a57271b7a06daa6d2db5"
+}

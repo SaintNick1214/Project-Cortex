@@ -1,0 +1,90 @@
+{
+  "outcomes": 6,
+  "failed": 4,
+  "failures": [
+    {
+      "capability": "read",
+      "defect": "scope",
+      "kind": "actual registered handler omitted selectors",
+      "duplicateLookupReached": 1,
+      "accepted": true,
+      "value": {
+        "tenantId": "tenant-a",
+        "memorySpaceId": "space-b",
+        "ownerPrincipalId": "runtimeAuthPrincipals:1",
+        "namespace": "counter",
+        "key": "one",
+        "userId": "alice",
+        "value": "private-b-value",
+        "createdAt": 1000,
+        "updatedAt": 1000,
+        "_id": "mutable:private-b",
+        "_creationTime": 1000
+      },
+      "attempts": 0,
+      "writes": 0,
+      "requirement": "Control-table ambiguity must fail closed, never silently narrow omitted selector authority or permit private reads/effects",
+      "expectedAccepted": false,
+      "pass": false
+    },
+    {
+      "capability": "read",
+      "defect": "space-tombstone",
+      "kind": "actual registered handler omitted selectors",
+      "duplicateLookupReached": 1,
+      "accepted": true,
+      "value": {
+        "tenantId": "tenant-a",
+        "memorySpaceId": "space-b",
+        "ownerPrincipalId": "runtimeAuthPrincipals:1",
+        "namespace": "counter",
+        "key": "one",
+        "userId": "alice",
+        "value": "private-b-value",
+        "createdAt": 1000,
+        "updatedAt": 1000,
+        "_id": "mutable:private-b",
+        "_creationTime": 1000
+      },
+      "attempts": 0,
+      "writes": 0,
+      "requirement": "Control-table ambiguity must fail closed, never silently narrow omitted selector authority or permit private reads/effects",
+      "expectedAccepted": false,
+      "pass": false
+    },
+    {
+      "capability": "write",
+      "defect": "scope",
+      "kind": "actual registered handler omitted selectors",
+      "duplicateLookupReached": 1,
+      "accepted": true,
+      "value": {
+        "updated": true,
+        "namespace": "counter",
+        "key": "one"
+      },
+      "attempts": 1,
+      "writes": 1,
+      "requirement": "Control-table ambiguity must fail closed, never silently narrow omitted selector authority or permit private reads/effects",
+      "expectedAccepted": false,
+      "pass": false
+    },
+    {
+      "capability": "write",
+      "defect": "space-tombstone",
+      "kind": "actual registered handler omitted selectors",
+      "duplicateLookupReached": 1,
+      "accepted": true,
+      "value": {
+        "updated": true,
+        "namespace": "counter",
+        "key": "one"
+      },
+      "attempts": 1,
+      "writes": 1,
+      "requirement": "Control-table ambiguity must fail closed, never silently narrow omitted selector authority or permit private reads/effects",
+      "expectedAccepted": false,
+      "pass": false
+    }
+  ]
+}

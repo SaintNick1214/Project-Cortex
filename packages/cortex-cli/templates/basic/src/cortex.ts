@@ -76,9 +76,22 @@ export async function initCortex(): Promise<Cortex> {
       );
     }
 
-    // Build client config
-     
-    const config: any = { convexUrl };
+    // Resolve the selected deployment's private server credential.
+    const appKey = process.env.CORTEX_APP_DEPLOYMENT_ADMIN_KEY?.trim();
+    const cliKey = process.env.CONVEX_DEPLOY_KEY?.trim();
+    const key = appKey || cliKey;
+    if (!key) throw new Error(
+      "CORTEX_APP_DEPLOYMENT_ADMIN_KEY is required for this trusted server example.",
+    );
+    if (appKey && cliKey && appKey !== cliKey) {
+      throw new Error(
+        "Conflicting private deployment credentials; select one target before startup.",
+      );
+    }
+    const config: Parameters<typeof Cortex.create>[0] = {
+      convexUrl,
+      auth: { userId: CONFIG.userId, tenantId: process.env.CORTEX_APP_TENANT_ID || "basic-demo" },
+    };
 
     // Configure LLM for auto fact extraction when OpenAI key is available
     if (process.env.OPENAI_API_KEY && CONFIG.enableFactExtraction) {
@@ -94,7 +107,16 @@ export async function initCortex(): Promise<Cortex> {
     // - Detects CORTEX_GRAPH_SYNC=true
     // - Reads NEO4J_URI/MEMGRAPH_URI and credentials from env
     // - Creates and connects the CypherGraphAdapter
-    cortexClient = await Cortex.create(config);
+    cortexClient = await Cortex.create(config, {
+      deploymentOperator: true,
+      initializeTransport(client) {
+        const setter = (client as unknown as { setAdminAuth?: (key: string) => void }).setAdminAuth;
+        if (typeof setter !== "function")
+          throw new Error("Installed Convex client lacks private deployment transport.");
+        setter.call(client, key);
+        return undefined;
+      },
+    });
     return cortexClient;
   })();
 

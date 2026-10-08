@@ -1,0 +1,85 @@
+[
+  {
+    "name": "toolchain",
+    "argv": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+      "--version"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "utcStart": "2026-10-04T09:19:04.165Z",
+    "utcEnd": "2026-10-04T09:19:04.171Z",
+    "exit": 0,
+    "signal": null,
+    "stdoutSHA256": "b7677d3ec37ee1897ba07dc2cfe8292fe421c9ac93396cca5bbece486d1a2a41",
+    "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "npm",
+    "argv": [
+      "/workspace/Project-Cortex/work/resume/toolchain-bin/npm",
+      "--version"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "utcStart": "2026-10-04T09:19:04.171Z",
+    "utcEnd": "2026-10-04T09:19:04.268Z",
+    "exit": 0,
+    "signal": null,
+    "stdoutSHA256": "4211530c8fb0d148aab950b0005433a64dd6f19f26460831515c07d12fc826a9",
+    "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "typecheck",
+    "argv": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+      "node_modules/typescript/bin/tsc",
+      "--project",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-experiment-guard-implementation-c1/fixture/tsconfig.json"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "utcStart": "2026-10-04T09:19:04.268Z",
+    "utcEnd": "2026-10-04T09:19:05.153Z",
+    "exit": 0,
+    "signal": null,
+    "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "lint",
+    "argv": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+      "node_modules/eslint/bin/eslint.js",
+      "--config",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-experiment-guard-implementation-c1/eslint.config.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-experiment-guard-implementation-c1/fixture/convex/canonical.ts",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-experiment-guard-implementation-c1/fixture/convex/compiled.ts",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-experiment-guard-implementation-c1/fixture/convex/guard.ts",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-experiment-guard-implementation-c1/fixture/convex/runner.ts",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-experiment-guard-implementation-c1/fixture/convex/schema.ts",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-experiment-guard-implementation-c1/scripts/offline-check.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-experiment-guard-implementation-c1/scripts/verify.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-experiment-guard-implementation-c1/scripts/finalize.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "utcStart": "2026-10-04T09:19:05.153Z",
+    "utcEnd": "2026-10-04T09:19:06.946Z",
+    "exit": 0,
+    "signal": null,
+    "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "offline-handler-outcomes",
+    "argv": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+      "--experimental-strip-types",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-experiment-guard-implementation-c1/scripts/offline-check.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "utcStart": "2026-10-04T09:19:06.946Z",
+    "utcEnd": "2026-10-04T09:19:08.213Z",
+    "exit": 0,
+    "signal": null,
+    "stdoutSHA256": "265b3bf3f6517d99e424d8bcfe7a468114139849c73b2106a61a889fc7ab0dfd",
+    "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+]

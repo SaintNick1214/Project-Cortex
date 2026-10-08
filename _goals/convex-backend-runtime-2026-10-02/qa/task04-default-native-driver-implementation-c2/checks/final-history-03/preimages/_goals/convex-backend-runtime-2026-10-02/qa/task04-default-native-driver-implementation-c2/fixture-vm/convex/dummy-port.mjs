@@ -1,0 +1,1 @@
+let parts=[];export function setParts(value){parts=value;}export function convexGateway(){return {doStream:async()=>({stream:new ReadableStream({start(controller){for(const part of parts)controller.enqueue(part);controller.close();}})})};}

@@ -1,0 +1,541 @@
+diff --git a/convex-dev/runtimeAuth.ts b/convex-dev/runtimeAuth.ts
+index c59e5f5f..f6eaf1aa 100644
+--- a/convex-dev/runtimeAuth.ts
++++ b/convex-dev/runtimeAuth.ts
+@@ -202,10 +202,18 @@ export async function resolveAuthorityReference(
+   return await materialize(reader, principal, membership, grant, requirement, now, reference);
+ }
+ 
++/** Avoid native unique() diagnostics containing trusted control document IDs. */
++async function boundedSingle<T>(query: { take(limit: number): Promise<T[]> }): Promise<T | null> {
++  const rows = await query.take(2);
++  if (rows.length > 1) throw new ConvexError({ version: 1, code: "AUTHORITY_LOOKUP_AMBIGUOUS",
++    message: "Authority lookup is ambiguous", retryable: false, outcome: "not_dispatched" });
++  return rows[0] ?? null;
++}
++
+ export function createAuthorityReader(ctx: Pick<QueryCtx, "db">): AuthorityReader {
+   return {
+-    findPrincipal: async (issuer, subject) => await ctx.db.query("runtimeAuthPrincipals")
+-      .withIndex("by_issuer_subject", (q) => q.eq("issuer", issuer).eq("subject", subject)).unique(),
++    findPrincipal: async (issuer, subject) => await boundedSingle(ctx.db.query("runtimeAuthPrincipals")
++      .withIndex("by_issuer_subject", (q) => q.eq("issuer", issuer).eq("subject", subject))),
+     getPrincipal: async (id) => {
+       const normalized = ctx.db.normalizeId("runtimeAuthPrincipals", id);
+       return normalized ? await ctx.db.get("runtimeAuthPrincipals", normalized) : null;
+@@ -228,11 +236,11 @@ export function createAuthorityReader(ctx: Pick<QueryCtx, "db">): AuthorityReade
+       const normalized = ctx.db.normalizeId("runtimeAuthGrants", id);
+       return normalized ? await ctx.db.get("runtimeAuthGrants", normalized) : null;
+     },
+-    getScope: async (tenantId, memorySpaceId) => await ctx.db.query("runtimeAuthScopes")
+-      .withIndex("by_tenant_space", (q) => q.eq("tenantId", tenantId).eq("memorySpaceId", memorySpaceId)).unique(),
+-    hasTombstone: async (key) => (await ctx.db.query("runtimeAuthTombstones")
++    getScope: async (tenantId, memorySpaceId) => await boundedSingle(ctx.db.query("runtimeAuthScopes")
++      .withIndex("by_tenant_space", (q) => q.eq("tenantId", tenantId).eq("memorySpaceId", memorySpaceId))),
++    hasTombstone: async (key) => (await boundedSingle(ctx.db.query("runtimeAuthTombstones")
+       .withIndex("by_resource", (q) => q.eq("tenantId", key.tenantId).eq("memorySpaceId", key.memorySpaceId)
+-        .eq("resourceType", key.resourceType).eq("resourceId", key.resourceId)).unique()) !== null,
++        .eq("resourceType", key.resourceType).eq("resourceId", key.resourceId)))) !== null,
+   };
+ }
+ 
+diff --git a/convex-dev/runtimeMetadataAuth.ts b/convex-dev/runtimeMetadataAuth.ts
+index 9801eba5..6fee5e42 100644
+--- a/convex-dev/runtimeMetadataAuth.ts
++++ b/convex-dev/runtimeMetadataAuth.ts
+@@ -118,8 +118,10 @@ export async function immutableRow(ctx: ReadCtx, auth: RuntimeAuthority, type: s
+   nonempty(type, id); profile(auth, type, id);
+   const selected = ctx.db.query("immutable").withIndex("by_runtime_key", (q) =>
+     q.eq("tenantId", auth.tenantId).eq("memorySpaceId", auth.memorySpaceId).eq("type", type).eq("id", id));
+-  const row = await selected.filter((q) => auth.resourceAccess === "own"
+-    ? q.eq(q.field("ownerPrincipalId"), auth.principalId) : q.neq(q.field("ownerPrincipalId"), undefined)).unique();
++  const rows = await selected.filter((q) => auth.resourceAccess === "own"
++    ? q.eq(q.field("ownerPrincipalId"), auth.principalId) : q.neq(q.field("ownerPrincipalId"), undefined)).take(2);
++  if (rows.length > 1) denied();
++  const row = rows[0] ?? null;
+   if (await ctx.db.query("immutable").withIndex("by_runtime_key", (q) =>
+     q.eq("tenantId", auth.tenantId).eq("memorySpaceId", auth.memorySpaceId).eq("type", type).eq("id", id)).filter((q) => row ? q.neq(q.field("_id"), row._id) : q.neq(q.field("_id"), undefined)).first()) denied(); // Existence-only conflict/duplicate fence.
+   if (row) await check(ctx, "immutable", row, auth, capability); else await fresh(ctx, auth, capability);
+@@ -129,8 +131,10 @@ export async function mutableRow(ctx: ReadCtx, auth: RuntimeAuthority, namespace
+   nonempty(namespace, key);
+   const selected = ctx.db.query("mutable").withIndex("by_runtime_key", (q) =>
+     q.eq("tenantId", auth.tenantId).eq("memorySpaceId", auth.memorySpaceId).eq("namespace", namespace).eq("key", key));
+-  const row = await selected.filter((q) => auth.resourceAccess === "own"
+-    ? q.eq(q.field("ownerPrincipalId"), auth.principalId) : q.neq(q.field("ownerPrincipalId"), undefined)).unique();
++  const rows = await selected.filter((q) => auth.resourceAccess === "own"
++    ? q.eq(q.field("ownerPrincipalId"), auth.principalId) : q.neq(q.field("ownerPrincipalId"), undefined)).take(2);
++  if (rows.length > 1) denied();
++  const row = rows[0] ?? null;
+   if (await ctx.db.query("mutable").withIndex("by_runtime_key", (q) =>
+     q.eq("tenantId", auth.tenantId).eq("memorySpaceId", auth.memorySpaceId).eq("namespace", namespace).eq("key", key)).filter((q) => row ? q.neq(q.field("_id"), row._id) : q.neq(q.field("_id"), undefined)).first()) denied(); // Existence-only conflict/duplicate fence.
+   if (row) await check(ctx, "mutable", row, auth, capability); else await fresh(ctx, auth, capability);
+@@ -140,8 +144,10 @@ export async function sessionRow(ctx: ReadCtx, auth: RuntimeAuthority, sessionId
+   nonempty(sessionId);
+   const selected = ctx.db.query("sessions").withIndex("by_runtime_key", (q) =>
+     q.eq("tenantId", auth.tenantId).eq("memorySpaceId", auth.memorySpaceId).eq("sessionId", sessionId));
+-  const row = await selected.filter((q) => auth.resourceAccess === "own"
+-    ? q.eq(q.field("ownerPrincipalId"), auth.principalId) : q.neq(q.field("ownerPrincipalId"), undefined)).unique();
++  const rows = await selected.filter((q) => auth.resourceAccess === "own"
++    ? q.eq(q.field("ownerPrincipalId"), auth.principalId) : q.neq(q.field("ownerPrincipalId"), undefined)).take(2);
++  if (rows.length > 1) denied();
++  const row = rows[0] ?? null;
+   if (await ctx.db.query("sessions").withIndex("by_runtime_key", (q) =>
+     q.eq("tenantId", auth.tenantId).eq("memorySpaceId", auth.memorySpaceId).eq("sessionId", sessionId)).filter((q) => row ? q.neq(q.field("_id"), row._id) : q.neq(q.field("_id"), undefined)).first()) denied(); // Existence-only conflict/duplicate fence.
+   if (row) await check(ctx, "sessions", row, auth, capability); else await fresh(ctx, auth, capability);
+diff --git a/tests/unit/runtimeAuth/provisioning.test.ts b/tests/unit/runtimeAuth/provisioning.test.ts
+index aa0a8d8f..38fb04ae 100644
+--- a/tests/unit/runtimeAuth/provisioning.test.ts
++++ b/tests/unit/runtimeAuth/provisioning.test.ts
+@@ -42,6 +42,7 @@ class MemoryDb {
+         callback(q); return result;
+       },
+       unique: async () => { const values = selected(); if (values.length > 1) throw new Error("Duplicate unique control record"); return values[0] ?? null; },
++      take: async (limit: number) => selected().slice(0, limit),
+       collect: async () => selected(),
+     };
+     return result;
+@@ -227,6 +228,10 @@ describe("internal bootstrap and trusted control table adapters", () => {
+     expect(await reader.listMemberships("forged-principal")).toEqual([]);
+     expect(await reader.listGrants("forged-membership")).toEqual([]);
+     await h.db.insert("runtimeAuthPrincipals", { issuer: identity.issuer, subject: identity.subject, actorKind: "user", version: 1 });
+-    await expect(requireAuthority(h.ctx, requirement)).rejects.toThrow("Duplicate unique control record");
++    const writes = [...h.db.writes];
++    await expect(requireAuthority(h.ctx, requirement)).rejects.toHaveProperty("data", {
++      version: 1, code: "AUTHORITY_LOOKUP_AMBIGUOUS", message: "Authority lookup is ambiguous", retryable: false, outcome: "not_dispatched",
++    });
++    expect(h.db.writes).toEqual(writes);
+   });
+ });
+diff --git a/tests/unit/runtimeMetadataAuth/handlers.test.ts b/tests/unit/runtimeMetadataAuth/handlers.test.ts
+index 8c16c4dc..ac1a0cf9 100644
+--- a/tests/unit/runtimeMetadataAuth/handlers.test.ts
++++ b/tests/unit/runtimeMetadataAuth/handlers.test.ts
+@@ -61,7 +61,8 @@ describe("isolation, receipts, fences and transaction outcomes", () => {
+     const f = fixture(); f.seedImmutable({ tenantId: "tenant-foreign", data: { secret: "foreign" } }); f.seedImmutable();
+     expect(await f.run(immutable.get, { type: "note", id: "one" })).toMatchObject({ data: { secret: "old" } });
+     f.db.table("immutable").push({ ...f.db.table("immutable")[1]!, _id: "immutable:duplicate" });
+-    await expect(f.run(immutable.get, { type: "note", id: "one" })).rejects.toThrow("Nonunique");
++    await expect(f.run(immutable.get, { type: "note", id: "one" })).rejects.toHaveProperty("data", { code: "FORBIDDEN", message: "Access denied" });
++    expect(f.db.attemptedWrites).toBe(0); expect(f.db.writes).toBe(0);
+   });
+   it("same scoped composite key with a foreign owner duplicate denies even when own row exists", async () => {
+     const f = fixture(); f.seedMutable({ ownerPrincipalId: "runtimeAuthPrincipals:foreign" }); f.seedMutable();
+@@ -255,8 +256,8 @@ describe("cycle2 independent-review regressions", () => {
+     const f = fixture(); const now = 10000; const clock = jest.spyOn(Date, "now").mockReturnValue(now); f.seedSession({ expiresAt: now + 100, status: "idle" });
+     let grantGets = 0; let armed = false;
+     if (phase === "before-effect") {
+-      const originalQuery = f.db.query.bind(f.db); f.db.query = (table) => { const query = originalQuery(table); const unique = query.unique.bind(query);
+-        query.unique = async () => { const row = await unique(); if (table === "sessions") armed = true; return row; }; return query; };
++      const originalQuery = f.db.query.bind(f.db); f.db.query = (table) => { const query = originalQuery(table); const take = query.take.bind(query);
++        query.take = async (limit) => { const rows = await take(limit); if (table === "sessions") { expect(limit).toBe(2); armed = true; } return rows; }; return query; };
+       const originalGet = f.db.get.bind(f.db); f.db.get = async (table, id) => { const row = await originalGet(table, id);
+         if (armed && table === "runtimeAuthGrants" && ++grantGets === beforeEffectGrantGet) clock.mockReturnValue(now + 101); return row; };
+     } else f.db.afterWrite = () => { clock.mockReturnValue(now + 101); };
+@@ -264,7 +265,7 @@ describe("cycle2 independent-review regressions", () => {
+       await expect(f.run(registration, { sessionId: "one", ...(internal ? { reference: f.reference } : {}) })).rejects.toThrow();
+       expect(f.db.writes).toBe(0); expect(f.db.attemptedWrites).toBe(phase === "before-effect" ? 0 : 1);
+       expect(f.db.table("sessions")[0]).toMatchObject({ status: "idle", lastActiveAt: 1000, messageCount: 0, memoryCount: 0 });
+-      if (phase === "before-effect") expect(grantGets).toBeGreaterThanOrEqual(beforeEffectGrantGet);
++      if (phase === "before-effect") { expect(armed).toBe(true); expect(grantGets).toBeGreaterThanOrEqual(beforeEffectGrantGet); }
+     } finally { clock.mockRestore(); }
+   });
+   it.each(["before-effect", "after-effect"])("session create rejects supplied expiry %s across awaited controls", async (phase) => {
+--- /dev/null
++++ b/tests/unit/runtimeMetadataAuth/native-errors.test.ts
+@@ -0,0 +1,220 @@
++import { describe, expect, it } from "@jest/globals";
++import { ConvexError, type Value } from "convex/values";
++import * as immutable from "../../../convex-dev/immutable";
++import * as mutable from "../../../convex-dev/mutable";
++import * as sessions from "../../../convex-dev/sessions";
++import { createAuthorityReader } from "../../../convex-dev/runtimeAuth";
++import { sourceId } from "../../../convex-dev/runtimeMetadataAuth";
++import { fixture } from "./fixture";
++
++type F = ReturnType<typeof fixture>;
++type Row = ReturnType<F["seedMutable"]>;
++type Table = "immutable" | "mutable" | "sessions";
++type Capability = "read" | "write";
++type Access = "own" | "space" | "tenant";
++type NativeReceiver = { take(limit: number): Promise<Row[]>; tableNameForErrorMessages: string };
++// The installed implementation has no published declaration. Assert only the protocol exercised here.
++const nativeModulePath = "../../../node_modules/convex/dist/esm/server/impl/" + "query_impl.js";
++const { QueryImpl } = await import(nativeModulePath) as {
++  QueryImpl: { prototype: { unique(this: NativeReceiver): Promise<Row | null> } };
++};
++const tables: Table[] = ["immutable", "mutable", "sessions"];
++const capabilities: Capability[] = ["write", "read"];
++const accesses: Access[] = ["own", "space", "tenant"];
++const scope = { tenantId: "tenant-a", memorySpaceId: "space-a" };
++const privateOne = "private-native-id-one";
++const privateTwo = "private-native-id-two";
++const privateValue = "private-native-value";
++
++function scopedFixture(capability: Capability, access: Access = "own") {
++  const f = fixture({ capabilities: [capability], access, ...(access === "tenant" ? {} : { space: "space-a" }) });
++  if (access === "tenant") f.db.seed("runtimeAuthScopes", { ...scope, epoch: 1, createdAt: 1000 });
++  return f;
++}
++function seed(f: F, table: Table, fields: Record<string, unknown> = {}) {
++  const row = { memorySpaceId: "space-a", data: { secret: privateValue }, value: privateValue,
++    metadata: { secret: privateValue }, ...fields };
++  return table === "immutable" ? f.seedImmutable(row) : table === "mutable" ? f.seedMutable(row) : f.seedSession(row);
++}
++function action(table: Table, capability: Capability) {
++  return table === "immutable" ? capability === "write" ? immutable.store : immutable.get
++    : table === "mutable" ? capability === "write" ? mutable.set : mutable.get
++      : capability === "write" ? sessions.touch : sessions.get;
++}
++function args(table: Table, capability: Capability, selectors: Record<string, unknown> = scope) {
++  return table === "immutable" ? { ...selectors, type: "note", id: "one", ...(capability === "write" ? { data: "replacement" } : {}) }
++    : table === "mutable" ? { ...selectors, namespace: "counter", key: "one", ...(capability === "write" ? { value: 6 } : {}) }
++      : { ...selectors, sessionId: "one" };
++}
++function nativeProtocol(f: F) {
++  const original = f.db.query.bind(f.db);
++  const traces: Array<{ table: string; index?: string; keys: [string, unknown][]; limit: number; ids: string[] }> = [];
++  let uniqueCalls = 0;
++  f.db.query = (table) => {
++    const query = original(table);
++    const index = query.withIndex.bind(query);
++    const take = query.take.bind(query);
++    const keys: [string, unknown][] = [];
++    let indexName: string | undefined;
++    // Retain the original database selector as well as the observation.
++    query.withIndex = (name, callback) => {
++      indexName = name;
++      return index(name, (selector) => {
++        const observed = { eq: (key: string, value: unknown) => { keys.push([key, value]); selector.eq(key, value); return observed; } };
++        return callback(observed);
++      });
++    };
++    query.take = async (limit) => {
++      const rows = await take(limit);
++      traces.push({ table, index: indexName, keys: [...keys], limit, ids: rows.map((row) => row._id) });
++      return rows;
++    };
++    query.unique = async () => {
++      uniqueCalls++;
++      // The old fixture infers unique as non-null Row; this assertion preserves native null at runtime.
++      return (await QueryImpl.prototype.unique.call({ take: query.take, tableNameForErrorMessages: table }))!;
++    };
++    return query;
++  };
++  return { traces, uniqueCalls: () => uniqueCalls };
++}
++async function caught(operation: Promise<unknown>): Promise<unknown> {
++  try { await operation; } catch (error) { return error; }
++  throw new Error("Expected operation to fail");
++}
++function opaque(error: unknown, privateFields: string[], controlAmbiguity = false) {
++  expect(error).toBeInstanceOf(ConvexError);
++  if (controlAmbiguity) expect(error).toHaveProperty("data", { version: 1, code: "AUTHORITY_LOOKUP_AMBIGUOUS",
++    message: "Authority lookup is ambiguous", retryable: false, outcome: "not_dispatched" });
++  else expect((error as ConvexError<Value>).data).toMatchObject({ code: "FORBIDDEN", message: "Access denied" });
++  const visible = error instanceof Error ? error.message + error.stack + JSON.stringify((error as ConvexError<Value>).data) : String(error);
++  for (const field of privateFields) expect(visible).not.toContain(field);
++}
++function noEffects(f: F, before: Map<string, Row[]>) {
++  expect(f.db.attemptedWrites).toBe(0); expect(f.db.writes).toBe(0); expect(f.db.rows).toEqual(before);
++}
++
++describe("installed native unique diagnostic and bounded metadata ambiguity", () => {
++  it.each([...tables, "runtimeAuthPrincipals", "runtimeAuthScopes", "runtimeAuthTombstones"])("real QueryImpl.unique exposes both stored IDs for %s; protocol control", async (table) => {
++    const f = fixture();
++    f.db.seed(table, { _id: privateOne, value: privateValue });
++    f.db.seed(table, { _id: privateTwo, value: privateValue });
++    const native = nativeProtocol(f);
++    const before = structuredClone(f.db.rows);
++    const error = await caught(f.db.query(table).filter((q) => q.eq(q.field("value"), privateValue)).unique());
++    expect(error).toBeInstanceOf(Error); expect(error).not.toBeInstanceOf(ConvexError);
++    expect((error as Error).message).toContain(privateOne); expect((error as Error).message).toContain(privateTwo);
++    expect(native.uniqueCalls()).toBe(1);
++    expect(native.traces).toEqual([{ table, index: undefined, keys: [], limit: 2, ids: [privateOne, privateTwo] }]);
++    noEffects(f, before);
++  });
++  it.each(tables.flatMap((table) => capabilities.flatMap((capability) => accesses.map((access) => ({ table, capability, access })))))("$table $capability/$access duplicate canonical rows produce opaque denial before effects", async ({ table, capability, access }) => {
++    const f = scopedFixture(capability, access);
++    seed(f, table, { _id: privateOne }); seed(f, table, { _id: privateTwo });
++    seed(f, table, { _id: "outside-scope", tenantId: "tenant-foreign" });
++    const native = nativeProtocol(f); const before = structuredClone(f.db.rows);
++    opaque(await caught(f.run(action(table, capability), args(table, capability))), [privateOne, privateTwo, privateValue, "outside-scope"]);
++    const selected = native.traces.find((trace) => trace.table === table);
++    expect(selected).toMatchObject({ index: "by_runtime_key", limit: 2, ids: [privateOne, privateTwo] });
++    expect(selected!.keys.slice(0, 2)).toEqual([["tenantId", "tenant-a"], ["memorySpaceId", "space-a"]]);
++    expect(native.uniqueCalls()).toBe(0); noEffects(f, before);
++  });
++  it.each(tables.flatMap((table) => capabilities.flatMap((capability) => ["foreign", "missing-owner"].map((conflict) => ({ table, capability, conflict })))))("$table $capability detects $conflict exact-key collision after owner-filtered selection", async ({ table, capability, conflict }) => {
++    const f = scopedFixture(capability);
++    seed(f, table, { _id: privateOne }); seed(f, table, { _id: privateTwo, ownerPrincipalId: conflict === "foreign" ? "foreign-principal" : undefined });
++    const native = nativeProtocol(f); const before = structuredClone(f.db.rows);
++    opaque(await caught(f.run(action(table, capability), args(table, capability))), [privateOne, privateTwo, privateValue]);
++    expect(native.traces.find((trace) => trace.table === table)).toMatchObject({ limit: 2, ids: [privateOne] });
++    expect(native.uniqueCalls()).toBe(0); noEffects(f, before);
++  });
++  it.each(tables.flatMap((table) => capabilities.map((capability) => ({ table, capability }))))("$table $capability undefined-space ambiguity stays exact and opaque", async ({ table, capability }) => {
++    const f = fixture({ capabilities: [capability] });
++    seed(f, table, { _id: privateOne, memorySpaceId: undefined }); seed(f, table, { _id: privateTwo, memorySpaceId: undefined });
++    seed(f, table, { _id: "other-space", memorySpaceId: "space-a" });
++    const native = nativeProtocol(f); const before = structuredClone(f.db.rows);
++    opaque(await caught(f.run(action(table, capability), args(table, capability, { tenantId: "tenant-a" }))), [privateOne, privateTwo, privateValue]);
++    expect(native.traces.find((trace) => trace.table === table)).toMatchObject({ limit: 2, ids: [privateOne, privateTwo],
++      keys: expect.arrayContaining([["tenantId", "tenant-a"], ["memorySpaceId", undefined]]) });
++    expect(native.uniqueCalls()).toBe(0); noEffects(f, before);
++  });
++  it.each(tables)("%s same external ID in another exact space/tenant does not shadow normal write/read", async (table) => {
++    const f = fixture({ space: "space-a" });
++    seed(f, table, { _id: "foreign-space", memorySpaceId: "space-b" });
++    seed(f, table, { _id: "foreign-tenant", tenantId: "tenant-b" }); seed(f, table, { _id: "own-record", value: 5 });
++    const native = nativeProtocol(f); const foreign = structuredClone(f.db.table(table).slice(0, 2));
++    const result = await f.run(action(table, "write"), args(table, "write"));
++    if (table === "immutable") expect(result).toMatchObject({ data: "replacement", version: 2 });
++    else if (table === "mutable") expect(result).toMatchObject({ value: 6 });
++    else { expect(result).toBeUndefined(); expect(f.db.table(table)[2]!.lastActiveAt).toBeGreaterThan(1000); }
++    const read = await f.run(action(table, "read"), args(table, "read"));
++    expect(read).toMatchObject({ _id: "own-record" });
++    if (table === "sessions") expect(read).not.toHaveProperty("authorityReference");
++    expect(f.db.table(table).slice(0, 2)).toEqual(foreign); expect(f.db.writes).toBe(1);
++    expect(native.uniqueCalls()).toBe(0); expect(native.traces.filter((trace) => trace.table === table).every((trace) => trace.limit === 2 && trace.ids.join() === "own-record")).toBe(true);
++  });
++  it.each(tables)("%s WRITE-only retains safe response semantics with single unambiguous row", async (table) => {
++    const f = scopedFixture("write"); seed(f, table, { _id: privateOne }); const native = nativeProtocol(f);
++    const result = await f.run(action(table, "write"), args(table, "write"));
++    expect(result).toEqual(table === "immutable" ? { updated: true, type: "note", id: "one", ...scope }
++      : table === "mutable" ? { updated: true, namespace: "counter", key: "one" } : undefined);
++    const visible = result === undefined ? "undefined" : JSON.stringify(result);
++    expect(visible).not.toContain(privateOne); expect(visible).not.toContain(privateValue);
++    expect(f.db.attemptedWrites).toBe(1); expect(f.db.writes).toBe(1); expect(native.uniqueCalls()).toBe(0);
++  });
++});
++
++type Control = "principal" | "tenant-scope" | "space-scope" | "tenant-tombstone" | "space-tombstone" | "resource-tombstone" | "tenant-resource-tombstone";
++const controls: Control[] = ["principal", "tenant-scope", "space-scope", "tenant-tombstone", "space-tombstone", "resource-tombstone", "tenant-resource-tombstone"];
++function controlDuplicate(f: F, control: Control) {
++  const table = control === "principal" ? "runtimeAuthPrincipals" : control.endsWith("scope") ? "runtimeAuthScopes" : "runtimeAuthTombstones";
++  let first: Row;
++  if (control === "principal") first = f.principal;
++  else if (control.endsWith("scope")) first = f.db.table(table).find((row) => row.memorySpaceId === (control === "space-scope" ? "space-a" : undefined))!;
++  else first = f.db.seed(table, { _id: privateOne, tenantId: "tenant-a",
++    memorySpaceId: control === "space-tombstone" || control === "resource-tombstone" ? "space-a" : undefined,
++    resourceType: control === "tenant-tombstone" ? "tenant" : control === "space-tombstone" ? "memorySpace" : "source",
++    resourceId: control === "tenant-tombstone" ? "tenant-a" : control === "space-tombstone" ? "space-a" : sourceId("mutable", "counter", "one"), deletedAt: 1000 });
++  f.db.seed(table, { ...first, _id: privateTwo, privateDiagnostic: privateValue });
++  return { table, first };
++}
++describe("accepted shared authority reader native ambiguity and infrastructure distinction", () => {
++  it.each(controls.flatMap((control) => capabilities.flatMap((capability) => accesses.map((access) => ({ control, capability, access })))))("$control $capability/$access duplicate control lookup denies with zero effects", async ({ control, capability, access }) => {
++    const f = scopedFixture(capability, access); f.seedMutable({ memorySpaceId: "space-a" });
++    const { table, first } = controlDuplicate(f, control);
++    const native = nativeProtocol(f); const before = structuredClone(f.db.rows);
++    opaque(await caught(f.run(action("mutable", capability), args("mutable", capability))), [first._id, privateTwo, privateValue], true);
++    expect(native.traces.some((trace) => trace.table === table && trace.limit === 2 && trace.ids.includes(first._id) && trace.ids.includes(privateTwo))).toBe(true);
++    expect(native.uniqueCalls()).toBe(0); noEffects(f, before);
++  });
++  it("hasTombstone distinguishes absent and one matching fence from a foreign scope fence", async () => {
++    const f = scopedFixture("read"); const native = nativeProtocol(f); const reader = createAuthorityReader(f.ctx);
++    const key = { ...scope, resourceType: "source" as const, resourceId: sourceId("mutable", "counter", "one") };
++    expect(await reader.hasTombstone(key)).toBe(false);
++    f.db.seed("runtimeAuthTombstones", { ...key, _id: privateOne, memorySpaceId: "space-b", deletedAt: 1000 });
++    expect(await reader.hasTombstone(key)).toBe(false);
++    f.db.seed("runtimeAuthTombstones", { ...key, _id: privateTwo, deletedAt: 1000 });
++    expect(await reader.hasTombstone(key)).toBe(true);
++    expect(native.traces.filter((trace) => trace.table === "runtimeAuthTombstones").map((trace) => trace.ids)).toEqual([[], [], [privateTwo]]);
++    expect(f.db.attemptedWrites).toBe(0); expect(f.db.writes).toBe(0); expect(native.uniqueCalls()).toBe(0);
++  });
++  it.each(["runtimeAuthPrincipals", "runtimeAuthScopes", "runtimeAuthTombstones", ...tables].flatMap((table) => capabilities.map((capability) => ({ table, capability }))))("$table $capability infrastructure exception remains the same infrastructure failure", async ({ table, capability }) => {
++    const f = scopedFixture(capability); for (const dataTable of tables) seed(f, dataTable);
++    const failure = new Error("unavailable database infrastructure"); let reached = 0;
++    const original = f.db.query.bind(f.db); f.db.query = (name) => { const query = original(name);
++      if (name === table) query.take = async () => { reached++; throw failure; }; return query; };
++    const before = structuredClone(f.db.rows);
++    const target = tables.includes(table as Table) ? table as Table : "mutable";
++    const error = await caught(f.run(action(target, capability), args(target, capability)));
++    expect(reached).toBe(1); expect(error).toBe(failure); expect(error).not.toBeInstanceOf(ConvexError); noEffects(f, before);
++  });
++  it.each(tables)("%s final WRITE-only infrastructure failure aborts without receipt and rolls back", async (table) => {
++    const f = scopedFixture("write"); seed(f, table); let armed = false; let reached = 0;
++    const failure = new Error("final control read unavailable");
++    f.db.afterWrite = () => { armed = true; };
++    const original = f.db.query.bind(f.db); f.db.query = (name) => { const query = original(name); const take = query.take.bind(query);
++      query.take = async (limit) => { if (armed && name === "runtimeAuthScopes") { reached++; throw failure; } return await take(limit); }; return query; };
++    const before = structuredClone(f.db.rows);
++    expect(await caught(f.run(action(table, "write"), args(table, "write")))).toBe(failure);
++    expect(reached).toBe(1); expect(f.db.attemptedWrites).toBe(1); expect(f.db.writes).toBe(0); expect(f.db.rows).toEqual(before);
++  });
++});
+--- /dev/null
++++ b/tests/unit/runtimeMetadataAuth/scope-ambiguity.test.ts
+@@ -0,0 +1,173 @@
++import { describe, expect, it } from "@jest/globals";
++import { ConvexError, type Value } from "convex/values";
++import * as mutable from "../../../convex-dev/mutable";
++import * as sessions from "../../../convex-dev/sessions";
++import { requireAuthority } from "../../../convex-dev/runtimeAuth";
++import { fixture } from "./fixture";
++
++type F = ReturnType<typeof fixture>;
++type Row = ReturnType<F["seedMutable"]>;
++type Capability = "read" | "write";
++type Layout = "spaces" | "tenants";
++type Defect = "scope" | "tombstone";
++const capabilities: Capability[] = ["read", "write"];
++const layouts: Layout[] = ["spaces", "tenants"];
++const defects: Defect[] = ["scope", "tombstone"];
++const ambiguous = { version: 1, code: "AUTHORITY_LOOKUP_AMBIGUOUS", message: "Authority lookup is ambiguous",
++  retryable: false, outcome: "not_dispatched" };
++const forbidden = { version: 1, code: "FORBIDDEN", message: "Access denied", retryable: false, outcome: "not_dispatched" };
++const privateValue = "private-b-value";
++const privateId = "mutable:private-b";
++const nativeModulePath = "../../../node_modules/convex/dist/esm/server/impl/" + "query_impl.js";
++const { QueryImpl } = await import(nativeModulePath) as { QueryImpl: { prototype: {
++  unique(this: { take(limit: number): Promise<Row[]>; tableNameForErrorMessages: string }): Promise<Row | null>;
++} } };
++
++function setup(layout: Layout, capability: Capability, healthyFirst = false) {
++  const f = fixture({ capabilities: [capability], ...(layout === "spaces" ? { space: "space-a", access: "space" } : { access: "tenant" }) });
++  const a = { tenantId: "tenant-a", memorySpaceId: layout === "spaces" ? "space-a" : undefined };
++  const b = { tenantId: layout === "spaces" ? "tenant-a" : "tenant-b", memorySpaceId: layout === "spaces" ? "space-b" : undefined };
++  const membership = layout === "spaces" ? f.membership : f.db.seed("runtimeAuthMemberships", { ...f.membership,
++    _id: "runtimeAuthMemberships:tenant-b", tenantId: "tenant-b" });
++  f.db.seed("runtimeAuthScopes", { ...b, epoch: 1, createdAt: 1000 });
++  f.db.seed("runtimeAuthGrants", { ...f.grant, ...b, _id: "runtimeAuthGrants:scope-b", membershipId: membership._id });
++  f.seedMutable({ ...b, _id: privateId, value: privateValue });
++  if (healthyFirst) f.db.table(layout === "spaces" ? "runtimeAuthGrants" : "runtimeAuthMemberships").reverse();
++  return { f, a, b, layout };
++}
++type Setup = ReturnType<typeof setup>;
++function corrupt(s: Setup, defect: Defect, scope = s.a) {
++  const table = defect === "scope" ? "runtimeAuthScopes" : "runtimeAuthTombstones";
++  let first: Row;
++  if (defect === "scope") first = s.f.db.table(table).find((row) => row.tenantId === scope.tenantId && row.memorySpaceId === scope.memorySpaceId)!;
++  else first = s.f.db.seed(table, { ...scope, _id: "private-control-one", resourceType: s.layout === "spaces" ? "memorySpace" : "tenant",
++    resourceId: scope.memorySpaceId ?? scope.tenantId, deletedAt: 1000 });
++  s.f.db.seed(table, { ...first, _id: "private-control-two", privateDiagnostic: "private-control-value" });
++  return { table, ids: [first._id, "private-control-two"] };
++}
++function protocol(f: F, beforeTake?: (table: string, keys: [string, unknown][]) => void) {
++  const original = f.db.query.bind(f.db);
++  const traces: Array<{ table: string; index?: string; keys: [string, unknown][]; limit: number; ids: string[] }> = [];
++  let uniqueCalls = 0;
++  f.db.query = (table) => {
++    const q = original(table); const index = q.withIndex.bind(q); const take = q.take.bind(q);
++    const keys: [string, unknown][] = []; let indexName: string | undefined;
++    q.withIndex = (name, callback) => {
++      indexName = name;
++      return index(name, (selector) => {
++        const observed = { eq: (key: string, value: unknown) => { keys.push([key, value]); selector.eq(key, value); return observed; } };
++        return callback(observed);
++      });
++    };
++    q.take = async (limit) => {
++      beforeTake?.(table, keys);
++      const rows = await take(limit); traces.push({ table, index: indexName, keys: [...keys], limit, ids: rows.map((row) => row._id) });
++      return rows;
++    };
++    // Keep the installed native diagnostic if a regression reintroduces unique().
++    // The fixture's inferred non-null signature does not change native null at runtime.
++    q.unique = async () => { uniqueCalls++; return (await QueryImpl.prototype.unique.call({ take: q.take, tableNameForErrorMessages: table }))!; };
++    return q;
++  };
++  return { traces, uniqueCalls: () => uniqueCalls };
++}
++async function failure(operation: Promise<unknown>): Promise<unknown> {
++  try { await operation; } catch (error) { return error; }
++  throw new Error("Expected failure without a result or safe receipt");
++}
++function errorShape(error: unknown, expected: typeof ambiguous | typeof forbidden, ids: string[] = []) {
++  expect(error).toBeInstanceOf(ConvexError); expect(error).toHaveProperty("data", expected);
++  const visible = error instanceof Error ? error.message + error.stack + JSON.stringify((error as ConvexError<Value>).data) : String(error);
++  for (const field of [...ids, privateId, privateValue, "private-control-value"]) expect(visible).not.toContain(field);
++}
++function unchanged(f: F, before: Map<string, Row[]>, attempts = 0) {
++  expect(f.db.attemptedWrites).toBe(attempts); expect(f.db.writes).toBe(0); expect(f.db.rows).toEqual(before);
++}
++function invoke(s: Setup, capability: Capability, selectors: Record<string, unknown> = {}) {
++  return s.f.run(capability === "read" ? mutable.get : mutable.set, { namespace: "counter", key: "one", ...selectors,
++    ...(capability === "write" ? { value: "replacement" } : {}) });
++}
++function success(s: Setup, capability: Capability, result: unknown) {
++  if (capability === "read") expect(result).toMatchObject({ _id: privateId, ...s.b, value: privateValue });
++  else {
++    expect(result).toEqual({ updated: true, namespace: "counter", key: "one" });
++    expect(s.f.db.table("mutable")[0]).toMatchObject({ _id: privateId, ...s.b, value: "replacement" });
++  }
++  expect(s.f.db.attemptedWrites).toBe(capability === "write" ? 1 : 0); expect(s.f.db.writes).toBe(capability === "write" ? 1 : 0);
++}
++const corruptions = layouts.flatMap((layout) => defects.flatMap((defect) => capabilities.map((capability) => ({ layout, defect, capability }))));
++
++describe("control ambiguity aborts multi-grant admission instead of pruning to another scope", () => {
++  it.each(corruptions.flatMap((item) => [false, true].map((healthyFirst) => ({ ...item, healthyFirst }))))("$layout/$defect $capability omitted selectors reject; healthy candidate first=$healthyFirst", async ({ layout, defect, capability, healthyFirst }) => {
++    const s = setup(layout, capability, healthyFirst); const corruption = corrupt(s, defect); const native = protocol(s.f);
++    const before = structuredClone(s.f.db.rows);
++    errorShape(await failure(invoke(s, capability)), ambiguous, corruption.ids);
++    expect(native.traces.some((trace) => trace.table === corruption.table && trace.limit === 2
++      && trace.ids.join() === corruption.ids.join())).toBe(true);
++    expect(native.traces.some((trace) => trace.table === "mutable")).toBe(false);
++    expect(native.uniqueCalls()).toBe(0); unchanged(s.f, before);
++  });
++  it.each(corruptions)("$layout/$defect $capability explicitly corrupted scope rejects without an alternative result", async ({ layout, defect, capability }) => {
++    const s = setup(layout, capability); const corruption = corrupt(s, defect); const native = protocol(s.f);
++    const before = structuredClone(s.f.db.rows);
++    errorShape(await failure(invoke(s, capability, s.a)), ambiguous, corruption.ids);
++    expect(native.traces.some((trace) => trace.table === corruption.table && trace.limit === 2 && trace.ids.join() === corruption.ids.join())).toBe(true);
++    expect(native.uniqueCalls()).toBe(0); unchanged(s.f, before);
++  });
++  it.each(corruptions)("$layout/$defect $capability explicit healthy scope remains available despite unselected corrupt controls", async ({ layout, defect, capability }) => {
++    const s = setup(layout, capability); const corruption = corrupt(s, defect); const native = protocol(s.f);
++    success(s, capability, await invoke(s, capability, s.b));
++    expect(native.traces.some((trace) => trace.ids.includes("private-control-two"))).toBe(false);
++    expect(native.traces.filter((trace) => trace.table === "mutable")).toEqual([expect.objectContaining({ limit: 2, ids: [privateId] })]);
++    expect(s.f.db.table(corruption.table).some((row) => row._id === "private-control-two")).toBe(true);
++    expect(native.uniqueCalls()).toBe(0);
++  });
++  it.each(layouts.flatMap((layout) => capabilities.map((capability) => ({ layout, capability }))))("$layout $capability healthy two-scope omission retains ordinary FORBIDDEN ambiguity", async ({ layout, capability }) => {
++    const s = setup(layout, capability); const native = protocol(s.f); const before = structuredClone(s.f.db.rows);
++    errorShape(await failure(invoke(s, capability)), forbidden);
++    expect(native.traces.filter((trace) => trace.table === "runtimeAuthScopes").length).toBeGreaterThanOrEqual(2);
++    expect(native.traces.every((trace) => trace.ids.length < 2)).toBe(true); expect(native.uniqueCalls()).toBe(0); unchanged(s.f, before);
++  });
++  it.each(layouts.flatMap((layout) => capabilities.flatMap((capability) => ["one", "revoked", "expired", "single-tombstone", "deleted-scope", "missing-scope"].map((pruning) => ({ layout, capability, pruning })))))("$layout $capability ordinary $pruning eligibility still selects the one permitted scope", async ({ layout, capability, pruning }) => {
++    const s = setup(layout, capability);
++    if (pruning === "one") s.f.db.rows.set("runtimeAuthGrants", s.f.db.table("runtimeAuthGrants").filter((row) => row._id !== s.f.grant._id));
++    else if (pruning === "revoked") s.f.grant.revokedAt = 1000;
++    else if (pruning === "expired") s.f.grant.expiresAt = 1;
++    else if (pruning === "single-tombstone") s.f.db.seed("runtimeAuthTombstones", { ...s.a,
++      resourceType: layout === "spaces" ? "memorySpace" : "tenant", resourceId: s.a.memorySpaceId ?? s.a.tenantId, deletedAt: 1000 });
++    else {
++      const a = s.f.db.table("runtimeAuthScopes").find((row) => row.tenantId === s.a.tenantId && row.memorySpaceId === s.a.memorySpaceId)!;
++      if (pruning === "deleted-scope") a.deletedAt = 1000;
++      else s.f.db.rows.set("runtimeAuthScopes", s.f.db.table("runtimeAuthScopes").filter((row) => row._id !== a._id));
++    }
++    const native = protocol(s.f); success(s, capability, await invoke(s, capability));
++    expect(native.traces.every((trace) => trace.ids.length < 2)).toBe(true); expect(native.uniqueCalls()).toBe(0);
++  });
++  it.each(layouts.flatMap((layout) => capabilities.flatMap((capability) => [false, true].map((healthyFirst) => ({ layout, capability, healthyFirst })))))("$layout $capability infrastructure failure remains identical; healthy candidate first=$healthyFirst", async ({ layout, capability, healthyFirst }) => {
++    const s = setup(layout, capability, healthyFirst); const infrastructure = new Error("scope infrastructure unavailable"); let reached = 0;
++    const native = protocol(s.f, (table, keys) => { if (table === "runtimeAuthScopes"
++      && keys.some(([key, value]) => key === "tenantId" && value === s.a.tenantId)
++      && keys.some(([key, value]) => key === "memorySpaceId" && value === s.a.memorySpaceId)) { reached++; throw infrastructure; } });
++    const before = structuredClone(s.f.db.rows);
++    const error = await failure(invoke(s, capability)); expect(error).toBe(infrastructure); expect(error).not.toBeInstanceOf(ConvexError);
++    expect(reached).toBe(1); expect(native.uniqueCalls()).toBe(0); unchanged(s.f, before);
++  });
++});
++
++describe("pinned and final control ambiguity never switches scope or returns a WRITE-only receipt", () => {
++  it.each(layouts.flatMap((layout) => defects.flatMap((defect) => ["public-final", "pinned-before", "pinned-final"].map((phase) => ({ layout, defect, phase })))))("$layout/$defect $phase aborts with exact nonpermission error and rollback", async ({ layout, defect, phase }) => {
++    const s = setup(layout, "write");
++    const auth = await requireAuthority(s.f.ctx, { capability: "write", ...s.b });
++    const { actorKind: _actorKind, userId: _userId, capabilities: _capabilities, resourceAccess: _resourceAccess, ...reference } = auth;
++    if (phase !== "public-final") s.f.seedSession({ ...s.b, authorityReference: reference, metadata: { secret: privateValue } });
++    let corruption: ReturnType<typeof corrupt> | undefined;
++    if (phase === "pinned-before") corruption = corrupt(s, defect, s.b);
++    else s.f.db.afterWrite = () => { corruption = corrupt(s, defect, s.b); };
++    const native = protocol(s.f); const before = structuredClone(s.f.db.rows);
++    const operation = phase === "public-final" ? invoke(s, "write", s.b)
++      : s.f.run(sessions.incrementMessageCount, { sessionId: "one", reference });
++    const error = await failure(operation); expect(corruption).toBeDefined(); errorShape(error, ambiguous, corruption!.ids);
++    expect(native.traces.some((trace) => trace.table === corruption!.table && trace.limit === 2 && trace.ids.join() === corruption!.ids.join())).toBe(true);
++    expect(native.uniqueCalls()).toBe(0); unchanged(s.f, before, phase === "pinned-before" ? 0 : 1);
++  });
++});

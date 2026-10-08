@@ -1,0 +1,17 @@
+from pathlib import Path
+import hashlib,json
+R=Path('/workspace/Project-Cortex');P=R/'_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c4';O=P.parent/'task04-terminal-capture-native-c4-aggregate-review'
+def sha(b):return hashlib.sha256(b).hexdigest()
+results=[]
+for prep in [P,P/'regression']:
+ for packet in json.loads((prep/'historical-preservation.json').read_text())['packets']:
+  p=R/packet['path']; assert '/work/backend-runtime/' not in str(p);m=p/packet['manifest'];assert sha(m.read_bytes())==packet['manifestSHA256'];d=json.loads(m.read_text());assert len(d['files'])==packet['rows'];rows=d['files']
+  if 'fullClosure' in packet:
+   assert packet['path'].endswith('task04-terminal-capture-parent-inputs-c7-review') and len(rows)==80 and packet['manifestSHA256']=='07f22936de79632676df613295cabd81e179427bec04f1b9324258f3748ef3ee'
+   c=packet['fullClosure'];f=prep/c['path'];b=f.read_bytes();assert len(b)==c['bytes'] and sha(b)==c['sha256'];full=json.loads(b)['files'];assert len(full)==83
+   old={r['path']:r for r in rows};assert all(old.get(r['path'],r)==r for r in full);extra={r['path'] for r in full}-set(old);assert extra=={'source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c2/qa-manifest.json','source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c2/regression/qa-manifest.json','source-preimages/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c7-preparation/qa-manifest.json'};rows=full
+  assert {str(f.relative_to(p)) for f in p.rglob('*') if f.is_file() and f!=m}=={r['path'] for r in rows}
+  for r in rows:
+   f=p/r['path'];assert not f.is_symlink();b=f.read_bytes();assert len(b)==r['bytes'] and sha(b)==r['sha256']
+  results.append({'profile':prep.name,'path':packet['path'],'originalRows':packet['rows'],'fullRows':len(rows),'manifestSHA256':packet['manifestSHA256']})
+(O/'final-history-verification.json').write_text(json.dumps({'packets':results,'unchanged':True,'originalRejectedVerdictsRetained':True},indent=2)+'\n');print('Full history sets exact:',len(results),'with strict80/83exception unchanged')

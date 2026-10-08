@@ -1,0 +1,74 @@
+[
+  {
+    "name": "backend-types",
+    "argv": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "--noEmit",
+      "--project",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/convex/tsconfig.json"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-03T12:06:12.261657+00:00",
+    "completedAt": "2026-10-03T12:06:15.538061+00:00",
+    "exitCode": 0,
+    "output": "backend-types.txt"
+  },
+  {
+    "name": "client-types",
+    "argv": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "--noEmit",
+      "--project",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/client-tsconfig.json"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-03T12:06:12.262144+00:00",
+    "completedAt": "2026-10-03T12:06:20.669734+00:00",
+    "exitCode": 0,
+    "output": "client-types.txt"
+  },
+  {
+    "name": "scoped-house-lint",
+    "argv": [
+      "node",
+      "node_modules/eslint/bin/eslint.js",
+      "--no-ignore",
+      "--format",
+      "json",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/convex/auth.config.ts",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/convex/immutable.ts",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/convex/mutable.ts",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/convex/runtimeAuth.ts",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/convex/runtimeAuthSchema.ts",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/convex/runtimeMemorySchema.ts",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/convex/runtimeMetadataAuth.ts",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/convex/schema.ts",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/convex/sessions.ts",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/convex/users.ts",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/src/auth/verified.ts",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/cleanup.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/client-prep.ts",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/client.ts",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/create.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/deploy.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/entrypoint-check.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/guard-check.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/guard.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/key-check.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/operator.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/qualify.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/reactive-transport.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-03T12:06:12.262632+00:00",
+    "completedAt": "2026-10-03T12:06:17.752065+00:00",
+    "exitCode": 0,
+    "output": "scoped-house-lint.txt",
+    "files": 23,
+    "errors": 0,
+    "warnings": 21,
+    "fatal": 0
+  }
+]

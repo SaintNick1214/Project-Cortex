@@ -1,0 +1,1599 @@
+"""
+Tests for Agents API
+
+Port of: tests/agents.test.ts
+
+Tests validate:
+- Agent registration
+- Agent metadata
+- Agent discovery
+- Cascade deletion by participantId
+"""
+
+import pytest
+
+from cortex import (
+    AgentFilters,
+    AgentRegistration,
+    ConversationParticipants,
+    CreateConversationInput,
+    ExportAgentsOptions,
+    MemoryMetadata,
+    MemorySource,
+    RegisterMemorySpaceParams,
+    RememberParams,
+    StoreMemoryInput,
+)
+
+# ============================================================================
+# Client-Side Validation Tests
+# ============================================================================
+
+
+@pytest.mark.asyncio
+async def test_register_missing_agent_id(cortex_client):
+    """Should throw on missing agent ID."""
+    with pytest.raises(Exception) as exc_info:
+        await cortex_client.agents.register(
+            AgentRegistration(id=None, name="Test Agent")
+        )
+
+    error = exc_info.value
+    assert hasattr(error, "code")
+    assert error.code == "MISSING_AGENT_ID"
+
+
+@pytest.mark.asyncio
+async def test_register_empty_agent_id(cortex_client):
+    """Should throw on empty agent ID."""
+    with pytest.raises(Exception) as exc_info:
+        await cortex_client.agents.register(
+            AgentRegistration(id="", name="Test Agent")
+        )
+
+    error = exc_info.value
+    assert hasattr(error, "code")
+    assert error.code == "EMPTY_AGENT_ID"
+    assert error.field == "id"
+
+
+@pytest.mark.asyncio
+async def test_register_whitespace_agent_id(cortex_client):
+    """Should throw on whitespace-only agent ID."""
+    with pytest.raises(Exception) as exc_info:
+        await cortex_client.agents.register(
+            AgentRegistration(id="   ", name="Test Agent")
+        )
+
+    error = exc_info.value
+    assert error.code == "EMPTY_AGENT_ID"
+
+
+@pytest.mark.asyncio
+async def test_register_agent_id_too_long(cortex_client):
+    """Should throw on agent ID too long."""
+    with pytest.raises(Exception) as exc_info:
+        await cortex_client.agents.register(
+            AgentRegistration(id="a" * 300, name="Test Agent")
+        )
+
+    error = exc_info.value
+    assert error.code == "AGENT_ID_TOO_LONG"
+
+
+@pytest.mark.asyncio
+async def test_register_missing_agent_name(cortex_client):
+    """Should throw on missing agent name."""
+    with pytest.raises(Exception) as exc_info:
+        await cortex_client.agents.register(
+            AgentRegistration(id="test-agent", name=None)
+        )
+
+    error = exc_info.value
+    assert error.code == "MISSING_AGENT_NAME"
+
+
+@pytest.mark.asyncio
+async def test_register_empty_agent_name(cortex_client):
+    """Should throw on empty agent name."""
+    with pytest.raises(Exception) as exc_info:
+        await cortex_client.agents.register(
+            AgentRegistration(id="test-agent", name="")
+        )
+
+    error = exc_info.value
+    assert error.code == "EMPTY_AGENT_NAME"
+
+
+@pytest.mark.asyncio
+async def test_register_agent_name_too_long(cortex_client):
+    """Should throw on agent name too long."""
+    with pytest.raises(Exception) as exc_info:
+        await cortex_client.agents.register(
+            AgentRegistration(id="test-agent", name="a" * 300)
+        )
+
+    error = exc_info.value
+    assert error.code == "AGENT_NAME_TOO_LONG"
+
+
+@pytest.mark.asyncio
+async def test_register_invalid_metadata_format(cortex_client):
+    """Should throw on invalid metadata format."""
+    with pytest.raises(Exception) as exc_info:
+        await cortex_client.agents.register(
+            AgentRegistration(id="test", name="Test", metadata="invalid")
+        )
+
+    error = exc_info.value
+    assert error.code == "INVALID_METADATA_FORMAT"
+
+
+@pytest.mark.asyncio
+async def test_register_invalid_config_format(cortex_client):
+    """Should throw on invalid config format."""
+    with pytest.raises(Exception) as exc_info:
+        await cortex_client.agents.register(
+            AgentRegistration(id="test", name="Test", config=["invalid"])
+        )
+
+    error = exc_info.value
+    assert error.code == "INVALID_CONFIG_FORMAT"
+
+
+# get() validation tests
+
+
+@pytest.mark.asyncio
+async def test_get_empty_agent_id(cortex_client):
+    """Should throw on empty agent ID."""
+    with pytest.raises(Exception) as exc_info:
+        await cortex_client.agents.get("")
+
+    error = exc_info.value
+    assert error.code == "EMPTY_AGENT_ID"
+
+
+@pytest.mark.asyncio
+async def test_get_whitespace_agent_id(cortex_client):
+    """Should throw on whitespace agent ID."""
+    with pytest.raises(Exception) as exc_info:
+        await cortex_client.agents.get("   ")
+
+    error = exc_info.value
+    assert error.code == "EMPTY_AGENT_ID"
+
+
+# list() validation tests (uses AgentFilters)
+
+
+@pytest.mark.asyncio
+async def test_list_invalid_limit_zero(cortex_client):
+    """Should throw on zero limit."""
+    with pytest.raises(Exception) as exc_info:
+        await cortex_client.agents.list(AgentFilters(limit=0))
+
+    error = exc_info.value
+    assert error.code == "INVALID_LIMIT_VALUE"
+
+
+@pytest.mark.asyncio
+async def test_list_invalid_limit_too_large(cortex_client):
+    """Should throw on limit too large."""
+    with pytest.raises(Exception) as exc_info:
+        await cortex_client.agents.list(AgentFilters(limit=2000))
+
+    error = exc_info.value
+    assert error.code == "INVALID_LIMIT_VALUE"
+
+
+@pytest.mark.asyncio
+async def test_list_negative_offset(cortex_client):
+    """Should throw on negative offset."""
+    with pytest.raises(Exception) as exc_info:
+        await cortex_client.agents.list(AgentFilters(offset=-5))
+
+    error = exc_info.value
+    assert error.code == "INVALID_OFFSET_VALUE"
+
+
+@pytest.mark.asyncio
+async def test_list_invalid_status(cortex_client):
+    """Should throw on invalid status."""
+    with pytest.raises(Exception) as exc_info:
+        await cortex_client.agents.list(AgentFilters(status="deleted"))
+
+    error = exc_info.value
+    assert error.code == "INVALID_STATUS"
+
+
+@pytest.mark.asyncio
+async def test_list_invalid_sort_by(cortex_client):
+    """Should throw on invalid sortBy."""
+    with pytest.raises(Exception) as exc_info:
+        await cortex_client.agents.list(AgentFilters(sort_by="invalid"))
+
+    error = exc_info.value
+    assert error.code == "INVALID_SORT_BY"
+
+
+# search() validation tests (uses AgentFilters)
+
+
+@pytest.mark.asyncio
+async def test_search_invalid_limit(cortex_client):
+    """Should throw on invalid limit."""
+    with pytest.raises(Exception) as exc_info:
+        await cortex_client.agents.search(AgentFilters(limit=-1))
+
+    error = exc_info.value
+    assert error.code == "INVALID_LIMIT_VALUE"
+
+
+@pytest.mark.asyncio
+async def test_search_invalid_status(cortex_client):
+    """Should throw on invalid status in search filters."""
+    with pytest.raises(Exception) as exc_info:
+        await cortex_client.agents.search(AgentFilters(status="invalid"))
+
+    error = exc_info.value
+    assert error.code == "INVALID_STATUS"
+
+
+# count() validation tests (uses AgentFilters)
+
+
+@pytest.mark.asyncio
+async def test_count_invalid_status(cortex_client):
+    """Should throw on invalid status value."""
+    from cortex.agents.validators import AgentValidationError
+
+    with pytest.raises(AgentValidationError) as exc_info:
+        await cortex_client.agents.count(AgentFilters(status="invalid-status"))
+
+    error = exc_info.value
+    assert error.code == "INVALID_STATUS"
+
+
+# get_stats() validation tests
+
+
+@pytest.mark.asyncio
+async def test_get_stats_empty_agent_id(cortex_client):
+    """Should throw on empty agent ID."""
+    with pytest.raises(Exception) as exc_info:
+        await cortex_client.agents.get_stats("")
+
+    error = exc_info.value
+    assert error.code == "EMPTY_AGENT_ID"
+
+
+# update() validation tests
+
+
+@pytest.mark.asyncio
+async def test_update_empty_agent_id(cortex_client):
+    """Should throw on empty agent ID."""
+    with pytest.raises(Exception) as exc_info:
+        await cortex_client.agents.update("", {"name": "New Name"})
+
+    error = exc_info.value
+    assert error.code == "EMPTY_AGENT_ID"
+
+
+@pytest.mark.asyncio
+async def test_update_no_fields(cortex_client):
+    """Should throw when no update fields provided."""
+    with pytest.raises(Exception) as exc_info:
+        await cortex_client.agents.update("test-agent", {})
+
+    error = exc_info.value
+    assert error.code == "MISSING_UPDATES"
+
+
+@pytest.mark.asyncio
+async def test_update_invalid_status(cortex_client):
+    """Should throw on invalid status."""
+    with pytest.raises(Exception) as exc_info:
+        await cortex_client.agents.update("test-agent", {"status": "deleted"})
+
+    error = exc_info.value
+    assert error.code == "INVALID_STATUS"
+
+
+@pytest.mark.asyncio
+async def test_update_empty_name(cortex_client):
+    """Should throw on empty name."""
+    with pytest.raises(Exception) as exc_info:
+        await cortex_client.agents.update("test-agent", {"name": ""})
+
+    error = exc_info.value
+    assert error.code == "EMPTY_AGENT_NAME"
+
+
+# configure() validation tests
+
+
+@pytest.mark.asyncio
+async def test_configure_empty_agent_id(cortex_client):
+    """Should throw on empty agent ID."""
+    with pytest.raises(Exception) as exc_info:
+        await cortex_client.agents.configure("", {"setting": "value"})
+
+    error = exc_info.value
+    assert error.code == "EMPTY_AGENT_ID"
+
+
+@pytest.mark.asyncio
+async def test_configure_empty_config(cortex_client):
+    """Should throw on empty config object."""
+    with pytest.raises(Exception) as exc_info:
+        await cortex_client.agents.configure("test-agent", {})
+
+    error = exc_info.value
+    assert error.code == "EMPTY_CONFIG_OBJECT"
+
+
+@pytest.mark.asyncio
+async def test_configure_invalid_config_format(cortex_client):
+    """Should throw on invalid config format."""
+    with pytest.raises(Exception) as exc_info:
+        await cortex_client.agents.configure("test-agent", "invalid")
+
+    error = exc_info.value
+    assert error.code == "INVALID_CONFIG_FORMAT"
+
+
+# unregister() validation tests
+
+
+@pytest.mark.asyncio
+async def test_unregister_empty_agent_id(cortex_client):
+    """Should throw on empty agent ID."""
+    with pytest.raises(Exception) as exc_info:
+        await cortex_client.agents.unregister("")
+
+    error = exc_info.value
+    assert error.code == "EMPTY_AGENT_ID"
+
+
+@pytest.mark.asyncio
+async def test_unregister_conflicting_options(cortex_client):
+    """Should throw on conflicting options."""
+    from cortex import UnregisterAgentOptions
+
+    with pytest.raises(Exception) as exc_info:
+        await cortex_client.agents.unregister(
+            "test-agent",
+            UnregisterAgentOptions(dry_run=True, verify=False)
+        )
+
+    error = exc_info.value
+    assert error.code == "CONFLICTING_OPTIONS"
+
+
+# unregister_many() validation tests
+
+
+@pytest.mark.asyncio
+async def test_unregister_many_invalid_filters(cortex_client):
+    """Should throw on invalid filters."""
+    with pytest.raises(Exception) as exc_info:
+        await cortex_client.agents.unregister_many(filters="invalid")
+
+    error = exc_info.value
+    assert error.code == "INVALID_METADATA_FORMAT"
+
+
+@pytest.mark.asyncio
+async def test_unregister_many_conflicting_options(cortex_client):
+    """Should throw on conflicting options."""
+    from cortex import UnregisterAgentOptions
+
+    with pytest.raises(Exception) as exc_info:
+        await cortex_client.agents.unregister_many(
+            filters={"status": "archived"},
+            options=UnregisterAgentOptions(dry_run=True, verify=False)
+        )
+
+    error = exc_info.value
+    assert error.code == "CONFLICTING_OPTIONS"
+
+
+# ============================================================================
+# register() Tests
+# ============================================================================
+
+
+@pytest.mark.asyncio
+async def test_register_agent(cortex_client, test_ids):
+    """
+    Test registering an agent.
+
+    Port of: agents.test.ts - register tests
+    """
+    agent_id = test_ids["agent_id"]
+
+    result = await cortex_client.agents.register(
+        AgentRegistration(
+            id=agent_id,
+            name="Test Agent",
+            description="Agent for testing",
+            metadata={"version": "1.0", "capabilities": ["chat", "search"]},
+        )
+    )
+
+    # Validate result
+    agent_id_result = result.get("id") if isinstance(result, dict) else result.id
+    agent_name = result.get("name") if isinstance(result, dict) else result.name
+    assert agent_id_result == agent_id
+    assert agent_name == "Test Agent"
+
+    # Cleanup - unregister agent
+    await cortex_client.agents.unregister(agent_id)
+
+
+@pytest.mark.asyncio
+async def test_register_agent_updates_existing(cortex_client, test_ids):
+    """
+    Test that registering same agent updates existing registration.
+
+    Note: This tests BACKEND validation (duplicate detection)
+    Client-side validation tests are in "Client-Side Validation Tests" section above
+
+    Port of: agents.test.ts - register tests
+    """
+    agent_id = test_ids["agent_id"]
+
+    # Register first time
+    await cortex_client.agents.register(
+        AgentRegistration(
+            id=agent_id,
+            name="Agent V1",
+            metadata={"capabilities": ["chat"]},
+        )
+    )
+
+    # Update with different data (backend doesn't support re-registration)
+    result = await cortex_client.agents.update(
+        agent_id,
+        {
+            "name": "Agent V2",
+            "metadata": {"capabilities": ["chat", "search", "analyze"]},
+        }
+    )
+
+    # Should have updated
+    agent_name = result.get("name") if isinstance(result, dict) else result.name
+    assert agent_name == "Agent V2"
+
+    # Cleanup
+    await cortex_client.agents.unregister(agent_id)
+
+
+@pytest.mark.asyncio
+async def test_register_agent_with_tenant_id(cortex_client, test_ids):
+    """
+    Test registering an agent verifies tenant_id field exists (v0.31.0).
+
+    Note: Full tenant isolation requires proper auth context setup.
+    This test verifies the API accepts the registration without tenant_id
+    and the result type has the tenant_id field.
+    """
+    import uuid
+    # Use unique agent ID to avoid conflicts
+    agent_id = f"tenant-test-agent-{uuid.uuid4().hex[:8]}"
+
+    result = await cortex_client.agents.register(
+        AgentRegistration(
+            id=agent_id,
+            name="Tenant Agent",
+            description="Agent for tenant_id field test",
+            metadata={"version": "1.0"},
+        )
+    )
+
+    # Validate result
+    agent_id_result = result.get("id") if isinstance(result, dict) else result.id
+    assert agent_id_result == agent_id
+    
+    # Verify tenant_id field exists on the type (v0.31.0)
+    if not isinstance(result, dict):
+        assert hasattr(result, "tenant_id")
+        # tenant_id may be None if not stored by backend (backward compatibility)
+        assert result.tenant_id is None or isinstance(result.tenant_id, str)
+    # tenant_id may be returned by backend or None if not stored
+    # Backend behavior may vary, so we just verify registration succeeds
+
+    # Cleanup
+    await cortex_client.agents.unregister(agent_id)
+
+
+@pytest.mark.asyncio
+async def test_register_backward_compatible_without_tenant_id(cortex_client, test_ids):
+    """
+    Test that register() works without tenant_id (backward compatibility).
+
+    tenant_id is optional and should default to None or auth context.
+    """
+    agent_id = test_ids["agent_id"]
+
+    # Register without tenant_id (should work)
+    result = await cortex_client.agents.register(
+        AgentRegistration(
+            id=agent_id,
+            name="No Tenant Test",
+            description="Agent without tenant_id",
+            # tenant_id not provided - should work
+        )
+    )
+
+    assert result.get("id") if isinstance(result, dict) else result.id == agent_id
+    # Verify tenant_id field exists (can be None for backward compatibility)
+    if not isinstance(result, dict):
+        assert hasattr(result, "tenant_id")
+        assert result.tenant_id is None or isinstance(result.tenant_id, str)
+
+    # Cleanup
+    await cortex_client.agents.unregister(agent_id)
+
+
+# ============================================================================
+# get() Tests
+# ============================================================================
+
+
+@pytest.mark.asyncio
+async def test_get_registered_agent(cortex_client, test_ids):
+    """
+    Test getting a registered agent.
+
+    Port of: agents.test.ts - get tests
+    """
+    agent_id = test_ids["agent_id"]
+
+    # Register agent
+    await cortex_client.agents.register(
+        AgentRegistration(
+            id=agent_id,
+            name="Test Agent",
+            metadata={"capabilities": ["chat"]},
+        )
+    )
+
+    # Get agent
+    result = await cortex_client.agents.get(agent_id)
+
+    assert result is not None
+    agent_id_result = result.get("id") if isinstance(result, dict) else result.id
+    agent_name = result.get("name") if isinstance(result, dict) else result.name
+    assert agent_id_result == agent_id
+    assert agent_name == "Test Agent"
+
+    # Cleanup
+    await cortex_client.agents.unregister(agent_id)
+
+
+@pytest.mark.asyncio
+async def test_get_nonexistent_returns_none(cortex_client):
+    """
+    Test that getting non-existent agent returns None.
+
+    Port of: agents.test.ts - get tests
+    """
+    result = await cortex_client.agents.get("agent-does-not-exist")
+
+    assert result is None
+
+
+@pytest.mark.asyncio
+async def test_get_agent_has_tenant_id_field(cortex_client, test_ids):
+    """
+    Test that get() returns agent with tenant_id field (v0.31.0).
+
+    Verify RegisteredAgent includes tenant_id field (can be None for backward compatibility).
+    """
+    agent_id = test_ids["agent_id"]
+
+    # Register agent
+    await cortex_client.agents.register(
+        AgentRegistration(
+            id=agent_id,
+            name="Tenant Field Test Agent",
+            metadata={"capabilities": ["chat"]},
+        )
+    )
+
+    # Get agent
+    result = await cortex_client.agents.get(agent_id)
+
+    assert result is not None
+    # Verify tenant_id field exists (v0.31.0)
+    assert hasattr(result, "tenant_id")
+    # tenant_id can be None for agents created without auth context (backward compatibility)
+    assert result.tenant_id is None or isinstance(result.tenant_id, str)
+
+    # Cleanup
+    await cortex_client.agents.unregister(agent_id)
+
+
+# ============================================================================
+# list() Tests
+# ============================================================================
+
+
+@pytest.mark.asyncio
+async def test_list_agents(cortex_client, test_ids):
+    """
+    Test listing registered agents.
+
+    Port of: agents.test.ts - list tests
+    """
+    # Register multiple agents
+    agent_ids = []
+    for i in range(3):
+        agent_id = f"test-agent-list-{i}-{test_ids['user_id'][-4:]}"
+        await cortex_client.agents.register(
+            AgentRegistration(
+                id=agent_id,
+                name=f"Agent {i+1}",
+                metadata={"capabilities": ["chat"]},
+            )
+        )
+        agent_ids.append(agent_id)
+
+    # List agents with AgentFilters
+    result = await cortex_client.agents.list(AgentFilters(limit=100))
+
+    # Should return at least our 3 agents
+    agents = result if isinstance(result, list) else result.get("agents", [])
+    assert len(agents) >= 3
+
+    # Cleanup
+    for agent_id in agent_ids:
+        await cortex_client.agents.unregister(agent_id)
+
+
+# ============================================================================
+# unregister() Tests
+# ============================================================================
+
+
+@pytest.mark.asyncio
+async def test_unregister_agent(cortex_client, test_ids):
+    """
+    Test unregistering an agent.
+
+    Port of: agents.test.ts - unregister tests
+    """
+    agent_id = test_ids["agent_id"]
+
+    # Register agent
+    await cortex_client.agents.register(
+        AgentRegistration(
+            id=agent_id,
+            name="Test Agent",
+            metadata={"capabilities": ["chat"]},
+        )
+    )
+
+    # Unregister
+    await cortex_client.agents.unregister(agent_id)
+
+    # Verify unregistered
+    retrieved = await cortex_client.agents.get(agent_id)
+    assert retrieved is None
+
+
+# ============================================================================
+# getStats() Tests
+# ============================================================================
+
+
+@pytest.mark.asyncio
+async def test_get_agent_stats(cortex_client, test_ids):
+    """
+    Test getting agent statistics.
+
+    Port of: agents.test.ts - getStats tests
+    """
+    agent_id = test_ids["agent_id"]
+
+    # Register agent
+    await cortex_client.agents.register(
+        AgentRegistration(
+            id=agent_id,
+            name="Stats Test Agent",
+            metadata={"capabilities": ["chat"]},
+        )
+    )
+
+    # Get stats
+    stats = await cortex_client.agents.get_stats(agent_id)
+
+    # Validate stats exist (returns dict with totalMemories, totalConversations, etc.)
+    assert stats is not None
+    assert isinstance(stats, dict)
+    # Stats should have at least these fields
+    assert "totalMemories" in stats or "total_memories" in stats
+
+    # Cleanup
+    await cortex_client.agents.unregister(agent_id)
+
+
+# ============================================================================
+# count() Tests
+# ============================================================================
+
+
+@pytest.mark.asyncio
+async def test_count_agents(cortex_client, test_ids):
+    """
+    Test counting registered agents.
+
+    Port of: agents.test.ts - count tests
+    """
+    # Register agents
+    agent_ids = []
+    for i in range(2):
+        agent_id = f"test-agent-count-{i}-{test_ids['user_id'][-4:]}"
+        await cortex_client.agents.register(
+            AgentRegistration(
+                id=agent_id,
+                name=f"Agent {i+1}",
+                metadata={"capabilities": ["chat"]},
+            )
+        )
+        agent_ids.append(agent_id)
+
+    # Count agents
+    count = await cortex_client.agents.count()
+
+    assert count >= 2
+
+    # Cleanup
+    for agent_id in agent_ids:
+        await cortex_client.agents.unregister(agent_id)
+
+
+# ============================================================================
+# unregister_many() Tests (NEW)
+# ============================================================================
+
+
+@pytest.mark.asyncio
+async def test_unregister_many_without_cascade(cortex_client, ctx):
+    """
+    Test bulk unregistering agents without cascade.
+
+    New method: agents.unregister_many()
+    """
+    from cortex import UnregisterAgentOptions
+
+    # Use test-scoped IDs to avoid parallel conflicts
+    agent1_id = ctx.agent_id("bulk-1")
+    agent2_id = ctx.agent_id("bulk-2")
+    agent3_id = ctx.agent_id("bulk-3")
+    # Use test-scoped metadata tags
+    test_env_tag = f"test-env-{ctx.run_id}"
+    prod_env_tag = f"prod-env-{ctx.run_id}"
+
+    # Register multiple test agents
+    await cortex_client.agents.register(
+        AgentRegistration(
+            id=agent1_id,
+            name="Bulk Test 1",
+            metadata={"environment": test_env_tag, "team": "experimental"},
+        )
+    )
+
+    await cortex_client.agents.register(
+        AgentRegistration(
+            id=agent2_id,
+            name="Bulk Test 2",
+            metadata={"environment": test_env_tag, "team": "experimental"},
+        )
+    )
+
+    await cortex_client.agents.register(
+        AgentRegistration(
+            id=agent3_id,
+            name="Bulk Test 3",
+            metadata={"environment": prod_env_tag, "team": "core"},
+        )
+    )
+
+    # Unregister agents with our test-scoped environment tag
+    result = await cortex_client.agents.unregister_many(
+        filters={"metadata": {"environment": test_env_tag}},
+        options=UnregisterAgentOptions(cascade=False),
+    )
+
+    assert result["deleted"] == 2
+    assert agent1_id in result["agent_ids"]
+    assert agent2_id in result["agent_ids"]
+
+    # Verify unregistered
+    agent1_check = await cortex_client.agents.get(agent1_id)
+    agent2_check = await cortex_client.agents.get(agent2_id)
+    agent3_check = await cortex_client.agents.get(agent3_id)
+
+    assert agent1_check is None
+    assert agent2_check is None
+    assert agent3_check is not None  # Not in filter
+
+    # Cleanup
+    await cortex_client.agents.unregister(agent3_id)
+
+
+@pytest.mark.asyncio
+async def test_unregister_many_dry_run(cortex_client, ctx):
+    """
+    Test dry run for bulk unregister.
+    """
+    from cortex import UnregisterAgentOptions
+
+    # Use test-scoped IDs and metadata
+    agent_id = ctx.agent_id("dry-run")
+    team_tag = f"test-team-{ctx.run_id}"
+
+    # Register test agent
+    await cortex_client.agents.register(
+        AgentRegistration(
+            id=agent_id,
+            name="Dry Run Test",
+            metadata={"team": team_tag},
+        )
+    )
+
+    # Dry run with test-scoped metadata filter
+    result = await cortex_client.agents.unregister_many(
+        filters={"metadata": {"team": team_tag}},
+        options=UnregisterAgentOptions(dry_run=True),
+    )
+
+    assert result["deleted"] == 0
+    assert len(result["agent_ids"]) == 1
+    assert agent_id in result["agent_ids"]
+
+    # Verify agent still exists
+    agent = await cortex_client.agents.get(agent_id)
+    assert agent is not None
+
+    # Cleanup
+    await cortex_client.agents.unregister(agent_id)
+
+
+# ============================================================================
+# Cascade Deletion Tests (Port of: agents.test.ts - cascade mode)
+# ============================================================================
+
+
+@pytest.mark.asyncio
+async def test_cascade_delete_across_memory_spaces(cortex_client, ctx):
+    """
+    Test cascade deletion by participantId across all memory spaces.
+
+    Port of: agents.test.ts - "performs cascade deletion by participantId across all spaces"
+    """
+    import asyncio
+
+    from cortex import UnregisterAgentOptions
+
+    agent_id = ctx.agent_id("cascade")
+    space1_id = ctx.memory_space_id("cascade-1")
+    space2_id = ctx.memory_space_id("cascade-2")
+
+    # Register agent
+    await cortex_client.agents.register(
+        AgentRegistration(id=agent_id, name="Cascade Test Agent")
+    )
+
+    # Register memory spaces
+    await cortex_client.memory_spaces.register(
+        RegisterMemorySpaceParams(
+            memory_space_id=space1_id,
+            type="personal",
+        )
+    )
+    await cortex_client.memory_spaces.register(
+        RegisterMemorySpaceParams(
+            memory_space_id=space2_id,
+            type="personal",
+        )
+    )
+
+    # Create data in space 1 with participantId
+    await cortex_client.conversations.create(
+        CreateConversationInput(
+            memory_space_id=space1_id,
+            participant_id=agent_id,
+            type="user-agent",
+            participants=ConversationParticipants(user_id="test-user-1", agent_id=agent_id, participant_id=agent_id),
+        )
+    )
+
+    await cortex_client.vector.store(
+        space1_id,
+        StoreMemoryInput(
+            content="Memory in space 1",
+            content_type="raw",
+            participant_id=agent_id,
+            source=MemorySource(type="system", timestamp=0),
+            metadata=MemoryMetadata(importance=50, tags=[]),
+        ),
+    )
+
+    # Create data in space 2 with participantId
+    await cortex_client.vector.store(
+        space2_id,
+        StoreMemoryInput(
+            content="Memory in space 2",
+            content_type="raw",
+            participant_id=agent_id,
+            source=MemorySource(type="system", timestamp=0),
+            metadata=MemoryMetadata(importance=50, tags=[]),
+        ),
+    )
+
+    # Wait for data to persist
+    await asyncio.sleep(0.2)
+
+    # Verify setup
+    memories1 = await cortex_client.vector.list(memory_space_id=space1_id)
+    memories2 = await cortex_client.vector.list(memory_space_id=space2_id)
+    print(f"  ℹ️  Setup: {len(memories1)} memories in space1, {len(memories2)} in space2")
+
+    # CASCADE DELETE
+    result = await cortex_client.agents.unregister(
+        agent_id,
+        UnregisterAgentOptions(cascade=True),
+    )
+
+    # Verify counts
+    assert result.agent_id == agent_id
+    assert result.memories_deleted >= 2  # At least 2 memories
+    assert result.conversations_deleted >= 1
+    assert result.total_deleted > 1
+    assert space1_id in result.memory_spaces_affected
+    assert space2_id in result.memory_spaces_affected
+    assert len(result.deleted_layers) > 1
+
+    # Verify agent is unregistered
+    agent = await cortex_client.agents.get(agent_id)
+    assert agent is None
+
+    # Verify memories are deleted in both spaces
+    remaining1 = await cortex_client.vector.list(memory_space_id=space1_id)
+    remaining2 = await cortex_client.vector.list(memory_space_id=space2_id)
+    agent_memories1 = [m for m in remaining1 if getattr(m, "participant_id", None) == agent_id]
+    agent_memories2 = [m for m in remaining2 if getattr(m, "participant_id", None) == agent_id]
+    assert len(agent_memories1) == 0
+    assert len(agent_memories2) == 0
+
+    print(f"  ✅ Cascade complete: Deleted from {len(result.memory_spaces_affected)} spaces")
+    print(f"     Layers: {', '.join(result.deleted_layers)}")
+
+    # Cleanup spaces
+    await cortex_client.memory_spaces.delete(space1_id)
+    await cortex_client.memory_spaces.delete(space2_id)
+
+
+@pytest.mark.asyncio
+async def test_cascade_delete_dry_run(cortex_client, ctx):
+    """
+    Test dry run mode previews deletion without actually deleting.
+
+    Port of: agents.test.ts - "previews deletion without actually deleting"
+    """
+    from cortex import UnregisterAgentOptions
+
+    agent_id = ctx.agent_id("dry-run-cascade")
+
+    # Register agent
+    await cortex_client.agents.register(
+        AgentRegistration(id=agent_id, name="Dry Run Test Agent")
+    )
+
+    # Cascade delete with dry_run
+    result = await cortex_client.agents.unregister(
+        agent_id,
+        UnregisterAgentOptions(cascade=True, dry_run=True),
+    )
+
+    # Should return preview
+    assert result.agent_id == agent_id
+    # In dry run, agent should still exist
+    agent = await cortex_client.agents.get(agent_id)
+    assert agent is not None
+
+    # Cleanup
+    await cortex_client.agents.unregister(agent_id)
+
+
+@pytest.mark.asyncio
+async def test_cascade_delete_with_verification(cortex_client, ctx):
+    """
+    Test verification step after cascade deletion.
+
+    Port of: agents.test.ts - "runs verification step after deletion"
+    """
+    from cortex import UnregisterAgentOptions
+
+    agent_id = ctx.agent_id("verify-cascade")
+
+    # Register agent
+    await cortex_client.agents.register(
+        AgentRegistration(id=agent_id, name="Verify Test Agent")
+    )
+
+    # Cascade delete with verification
+    result = await cortex_client.agents.unregister(
+        agent_id,
+        UnregisterAgentOptions(cascade=True, verify=True),
+    )
+
+    # Should have verification result
+    assert result.verification is not None
+    assert hasattr(result.verification, "complete")
+    assert hasattr(result.verification, "issues")
+
+    # Verification should be complete (or have graph adapter warning)
+    if not result.verification.complete:
+        print(f"  ℹ️  Verification issues: {result.verification.issues}")
+
+
+@pytest.mark.asyncio
+async def test_cascade_delete_without_registration(cortex_client, ctx):
+    """
+    Test cascade delete works even if agent was never registered.
+
+    Port of: agents.test.ts - "deletes data even if agent was never registered"
+    """
+    import asyncio
+
+    from cortex import UnregisterAgentOptions
+
+    agent_id = ctx.agent_id("unregistered")
+    space_id = ctx.memory_space_id("unreg-space")
+
+    # DON'T register the agent - just create data with participantId
+    await cortex_client.memory_spaces.register(
+        RegisterMemorySpaceParams(
+            memory_space_id=space_id,
+            type="personal",
+        )
+    )
+
+    await cortex_client.vector.store(
+        space_id,
+        StoreMemoryInput(
+            content="Memory from unregistered agent",
+            content_type="raw",
+            participant_id=agent_id,  # Agent never registered!
+            source=MemorySource(type="system", timestamp=0),
+            metadata=MemoryMetadata(importance=50, tags=[]),
+        ),
+    )
+
+    # Wait for data to persist
+    await asyncio.sleep(0.2)
+
+    # Verify memory exists
+    before_memories = await cortex_client.vector.list(memory_space_id=space_id)
+    agent_memories = [m for m in before_memories if getattr(m, "participant_id", None) == agent_id]
+    assert len(agent_memories) >= 1
+
+    # CASCADE DELETE (without registration)
+    result = await cortex_client.agents.unregister(
+        agent_id,
+        UnregisterAgentOptions(cascade=True),
+    )
+
+    # Should still delete the memories
+    assert result.memories_deleted >= 1
+    assert result.total_deleted >= 1
+
+    # Verify memories are gone
+    after_memories = await cortex_client.vector.list(memory_space_id=space_id)
+    remaining = [m for m in after_memories if getattr(m, "participant_id", None) == agent_id]
+    assert len(remaining) == 0
+
+    print("  ✅ Cascade works without registration (queries by participantId in data)")
+
+    # Cleanup
+    await cortex_client.memory_spaces.delete(space_id)
+
+
+@pytest.mark.asyncio
+async def test_unregister_many_with_cascade(cortex_client, ctx):
+    """
+    Test bulk unregister with cascade deletion.
+
+    Port of: agents.test.ts - "unregisters with cascade deletion"
+    """
+    import asyncio
+
+    from cortex import UnregisterAgentOptions
+
+    agent1_id = ctx.agent_id("cascade-bulk-1")
+    agent2_id = ctx.agent_id("cascade-bulk-2")
+    space_id = ctx.memory_space_id("bulk-cascade")
+    test_env_tag = f"cascade-test-{ctx.run_id}"
+
+    # Register memory space
+    await cortex_client.memory_spaces.register(
+        RegisterMemorySpaceParams(
+            memory_space_id=space_id,
+            type="personal",
+        )
+    )
+
+    # Register agents with test-scoped metadata
+    await cortex_client.agents.register(
+        AgentRegistration(
+            id=agent1_id,
+            name="Cascade Bulk 1",
+            metadata={"environment": test_env_tag},
+        )
+    )
+    await cortex_client.agents.register(
+        AgentRegistration(
+            id=agent2_id,
+            name="Cascade Bulk 2",
+            metadata={"environment": test_env_tag},
+        )
+    )
+
+    # Create data for agent1
+    conv = await cortex_client.conversations.create(
+        CreateConversationInput(
+            memory_space_id=space_id,
+            type="user-agent",
+            participants=ConversationParticipants(user_id=ctx.user_id("bulk-test"), agent_id=agent1_id, participant_id=agent1_id),
+        )
+    )
+
+    await cortex_client.memory.remember(
+        RememberParams(
+            memory_space_id=space_id,
+            participant_id=agent1_id,
+            conversation_id=conv.conversation_id,
+            user_message="Test",
+            agent_response="OK",
+            user_id=ctx.user_id("bulk-test"),
+            user_name="Test User",
+            agent_id=agent1_id,
+        )
+    )
+
+    await asyncio.sleep(0.2)
+
+    # Verify memory was created
+    before_memories = await cortex_client.vector.list(memory_space_id=space_id)
+    agent_memories = [m for m in before_memories if getattr(m, "participant_id", None) == agent1_id]
+    assert len(agent_memories) > 0
+
+    # Unregister with cascade using scoped metadata filter
+    result = await cortex_client.agents.unregister_many(
+        filters={"metadata": {"environment": test_env_tag}},
+        options=UnregisterAgentOptions(cascade=True),
+    )
+
+    assert result["deleted"] == 2
+    assert result["total_data_deleted"] > 0
+
+    # Cleanup
+    await cortex_client.memory_spaces.delete(space_id)
+
+
+@pytest.mark.asyncio
+async def test_agent_statistics_from_actual_data(cortex_client, ctx):
+    """
+    Test that agent statistics are computed from actual data.
+
+    Port of: agents.test.ts - "computes stats from actual data"
+    """
+    import asyncio
+
+    agent_id = ctx.agent_id("stats-data")
+    space_id = ctx.memory_space_id("stats-space")
+
+    # Register agent and space
+    await cortex_client.agents.register(
+        AgentRegistration(id=agent_id, name="Stats Data Agent")
+    )
+    await cortex_client.memory_spaces.register(
+        RegisterMemorySpaceParams(
+            memory_space_id=space_id,
+            type="personal",
+        )
+    )
+
+    # Create actual data
+    await cortex_client.vector.store(
+        space_id,
+        StoreMemoryInput(
+            content="Test memory 1",
+            content_type="raw",
+            participant_id=agent_id,
+            source=MemorySource(type="system", timestamp=0),
+            metadata=MemoryMetadata(importance=50, tags=[]),
+        ),
+    )
+    await cortex_client.vector.store(
+        space_id,
+        StoreMemoryInput(
+            content="Test memory 2",
+            content_type="raw",
+            participant_id=agent_id,
+            source=MemorySource(type="system", timestamp=0),
+            metadata=MemoryMetadata(importance=50, tags=[]),
+        ),
+    )
+
+    await asyncio.sleep(0.1)
+
+    # Get stats
+    stats = await cortex_client.agents.get_stats(agent_id)
+
+    assert stats is not None
+    # Stats should reflect actual data
+    total_memories = stats.get("totalMemories") or stats.get("total_memories", 0)
+    assert total_memories >= 2
+
+    # Cleanup
+    await cortex_client.agents.unregister(agent_id)
+    await cortex_client.memory_spaces.delete(space_id)
+
+
+# ============================================================================
+# exists() Tests (NEW - TypeScript SDK 0.21.0 parity)
+# ============================================================================
+
+
+@pytest.mark.asyncio
+async def test_exists_registered_agent(cortex_client, test_ids):
+    """
+    Test exists() returns True for registered agent.
+    """
+    agent_id = test_ids["agent_id"]
+
+    # Register agent
+    await cortex_client.agents.register(
+        AgentRegistration(
+            id=agent_id,
+            name="Exists Test Agent",
+        )
+    )
+
+    # Check exists
+    result = await cortex_client.agents.exists(agent_id)
+    assert result is True
+
+    # Cleanup
+    await cortex_client.agents.unregister(agent_id)
+
+
+@pytest.mark.asyncio
+async def test_exists_nonexistent_agent(cortex_client):
+    """
+    Test exists() returns False for non-existent agent.
+    """
+    result = await cortex_client.agents.exists("agent-does-not-exist-123")
+    assert result is False
+
+
+@pytest.mark.asyncio
+async def test_exists_empty_agent_id(cortex_client):
+    """Should throw on empty agent ID."""
+    with pytest.raises(Exception) as exc_info:
+        await cortex_client.agents.exists("")
+
+    error = exc_info.value
+    assert error.code == "EMPTY_AGENT_ID"
+
+
+# ============================================================================
+# update_many() Tests (NEW - TypeScript SDK 0.21.0 parity)
+# ============================================================================
+
+
+@pytest.mark.asyncio
+async def test_update_many_agents(cortex_client, ctx):
+    """
+    Test bulk updating agents matching filters.
+    """
+    # Register agents with test-scoped metadata
+    agent1_id = ctx.agent_id("update-many-1")
+    agent2_id = ctx.agent_id("update-many-2")
+    team_tag = f"update-test-team-{ctx.run_id}"
+
+    await cortex_client.agents.register(
+        AgentRegistration(
+            id=agent1_id,
+            name="Update Many Test 1",
+            metadata={"team": team_tag, "version": "1.0"},
+        )
+    )
+
+    await cortex_client.agents.register(
+        AgentRegistration(
+            id=agent2_id,
+            name="Update Many Test 2",
+            metadata={"team": team_tag, "version": "1.0"},
+        )
+    )
+
+    # Update all agents with the test team tag
+    result = await cortex_client.agents.update_many(
+        AgentFilters(metadata={"team": team_tag}),
+        {"metadata": {"team": team_tag, "version": "2.0", "updated": True}},
+    )
+
+    assert result["updated"] == 2
+    assert agent1_id in result["agent_ids"]
+    assert agent2_id in result["agent_ids"]
+
+    # Verify updates
+    agent1 = await cortex_client.agents.get(agent1_id)
+    agent2 = await cortex_client.agents.get(agent2_id)
+
+    assert agent1.metadata.get("version") == "2.0"
+    assert agent2.metadata.get("version") == "2.0"
+
+    # Cleanup
+    await cortex_client.agents.unregister(agent1_id)
+    await cortex_client.agents.unregister(agent2_id)
+
+
+@pytest.mark.asyncio
+async def test_update_many_no_matches(cortex_client, ctx):
+    """
+    Test update_many with no matching agents returns empty result.
+    """
+    result = await cortex_client.agents.update_many(
+        AgentFilters(metadata={"nonexistent-tag": f"test-{ctx.run_id}"}),
+        {"name": "Updated Name"},
+    )
+
+    assert result["updated"] == 0
+    assert result["agent_ids"] == []
+
+
+# ============================================================================
+# export() Tests (NEW - TypeScript SDK 0.21.0 parity)
+# ============================================================================
+
+
+@pytest.mark.asyncio
+async def test_export_agents_json(cortex_client, ctx):
+    """
+    Test exporting agents as JSON.
+    """
+    import json
+
+    # Register test agents
+    agent1_id = ctx.agent_id("export-json-1")
+    agent2_id = ctx.agent_id("export-json-2")
+
+    await cortex_client.agents.register(
+        AgentRegistration(
+            id=agent1_id,
+            name="Export JSON Test 1",
+            metadata={"team": "export-test"},
+        )
+    )
+
+    await cortex_client.agents.register(
+        AgentRegistration(
+            id=agent2_id,
+            name="Export JSON Test 2",
+            metadata={"team": "export-test"},
+        )
+    )
+
+    # Export as JSON
+    result = await cortex_client.agents.export(
+        ExportAgentsOptions(format="json", include_metadata=True)
+    )
+
+    assert result.format == "json"
+    assert result.count >= 2
+    assert result.exported_at > 0
+
+    # Parse and verify JSON data
+    data = json.loads(result.data)
+    assert isinstance(data, list)
+    assert len(data) >= 2
+
+    # Cleanup
+    await cortex_client.agents.unregister(agent1_id)
+    await cortex_client.agents.unregister(agent2_id)
+
+
+@pytest.mark.asyncio
+async def test_export_agents_csv(cortex_client, ctx):
+    """
+    Test exporting agents as CSV.
+    """
+    # Register test agent
+    agent_id = ctx.agent_id("export-csv")
+
+    await cortex_client.agents.register(
+        AgentRegistration(
+            id=agent_id,
+            name="Export CSV Test",
+            metadata={"team": "csv-test"},
+        )
+    )
+
+    # Export as CSV
+    result = await cortex_client.agents.export(
+        ExportAgentsOptions(format="csv", include_metadata=True)
+    )
+
+    assert result.format == "csv"
+    assert result.count >= 1
+    assert result.exported_at > 0
+    assert "id" in result.data  # Header should contain 'id'
+
+    # Cleanup
+    await cortex_client.agents.unregister(agent_id)
+
+
+@pytest.mark.asyncio
+async def test_export_with_filters(cortex_client, ctx):
+    """
+    Test exporting agents with filters.
+    """
+    import json
+
+    # Register test agents with different metadata
+    agent1_id = ctx.agent_id("export-filter-1")
+    agent2_id = ctx.agent_id("export-filter-2")
+    export_tag = f"export-filter-{ctx.run_id}"
+
+    await cortex_client.agents.register(
+        AgentRegistration(
+            id=agent1_id,
+            name="Export Filter Test 1",
+            metadata={"export_tag": export_tag},
+        )
+    )
+
+    await cortex_client.agents.register(
+        AgentRegistration(
+            id=agent2_id,
+            name="Export Filter Test 2",
+            metadata={"export_tag": "different"},
+        )
+    )
+
+    # Export with filter
+    result = await cortex_client.agents.export(
+        ExportAgentsOptions(
+            format="json",
+            filters=AgentFilters(metadata={"export_tag": export_tag}),
+        )
+    )
+
+    assert result.format == "json"
+    # Should only include agents matching the filter
+    data = json.loads(result.data)
+    matching_ids = [a["id"] for a in data]
+    assert agent1_id in matching_ids
+    # agent2_id should not be in the export (different tag)
+
+    # Cleanup
+    await cortex_client.agents.unregister(agent1_id)
+    await cortex_client.agents.unregister(agent2_id)
+
+
+@pytest.mark.asyncio
+async def test_export_invalid_format(cortex_client):
+    """Should throw on invalid export format."""
+    with pytest.raises(Exception) as exc_info:
+        await cortex_client.agents.export(
+            ExportAgentsOptions(format="xml")  # type: ignore - intentionally wrong
+        )
+
+    error = exc_info.value
+    assert error.code == "INVALID_FORMAT"
+
+
+# ============================================================================
+# AgentFilters Validation Tests (NEW)
+# ============================================================================
+
+
+@pytest.mark.asyncio
+async def test_filters_invalid_sort_order(cortex_client):
+    """Should throw on invalid sort order."""
+    with pytest.raises(Exception) as exc_info:
+        await cortex_client.agents.list(AgentFilters(sort_order="random"))
+
+    error = exc_info.value
+    assert error.code == "INVALID_SORT_ORDER"
+
+
+@pytest.mark.asyncio
+async def test_filters_invalid_capabilities_match(cortex_client):
+    """Should throw on invalid capabilities_match."""
+    with pytest.raises(Exception) as exc_info:
+        await cortex_client.agents.list(AgentFilters(capabilities_match="some"))
+
+    error = exc_info.value
+    assert error.code == "INVALID_CAPABILITIES_MATCH"
+
+
+@pytest.mark.asyncio
+async def test_filters_timestamp_range_validation(cortex_client):
+    """Should throw when registered_after >= registered_before."""
+    with pytest.raises(Exception) as exc_info:
+        await cortex_client.agents.list(
+            AgentFilters(registered_after=2000, registered_before=1000)
+        )
+
+    error = exc_info.value
+    assert error.code == "INVALID_TIMESTAMP_RANGE"
+
+
+@pytest.mark.asyncio
+async def test_filters_last_active_range_validation(cortex_client):
+    """Should throw when last_active_after >= last_active_before."""
+    with pytest.raises(Exception) as exc_info:
+        await cortex_client.agents.list(
+            AgentFilters(last_active_after=2000, last_active_before=1000)
+        )
+
+    error = exc_info.value
+    assert error.code == "INVALID_TIMESTAMP_RANGE"
+
+
+# ============================================================================
+# Edge Cases (Port of: agents.test.ts - edge cases)
+# ============================================================================
+
+
+@pytest.mark.asyncio
+async def test_unregister_nonexistent_agent_gracefully(cortex_client, ctx):
+    """
+    Test handling unregistering non-existent agent gracefully.
+
+    Port of: agents.test.ts - "handles unregistering non-existent agent gracefully"
+    """
+    from cortex import UnregisterAgentOptions
+
+    result = await cortex_client.agents.unregister(
+        ctx.agent_id("non-existent-edge"),
+        UnregisterAgentOptions(cascade=True),
+    )
+
+    assert result.total_deleted == 0
+
+
+@pytest.mark.asyncio
+async def test_unregister_agent_with_no_data(cortex_client, ctx):
+    """
+    Test handling agent with no data.
+
+    Port of: agents.test.ts - "handles agent with no data"
+    """
+    from cortex import UnregisterAgentOptions
+
+    agent_id = ctx.agent_id("empty")
+
+    await cortex_client.agents.register(
+        AgentRegistration(id=agent_id, name="Empty Agent")
+    )
+
+    result = await cortex_client.agents.unregister(
+        agent_id,
+        UnregisterAgentOptions(cascade=True),
+    )
+
+    # Just registration deleted
+    assert result.total_deleted >= 1
+    assert result.memories_deleted == 0
+    assert result.conversations_deleted == 0

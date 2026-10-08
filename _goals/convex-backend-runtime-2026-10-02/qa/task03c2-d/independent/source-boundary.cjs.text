@@ -1,0 +1,21 @@
+const fs = require('node:fs'); const cp = require('node:child_process'); const assert = require('node:assert/strict'); const crypto = require('node:crypto');
+const ts = require('/workspace/Project-Cortex/node_modules/typescript');
+const root='/tmp/task03c2-d-review1-o0v1eus6'; const repo='/workspace/Project-Cortex'; const snap=root+'/snapshot'; const base='a2c9827783e9dd49b9811a2899ba4acbeadc21cd';
+function old(path) { return cp.execFileSync('git',['show',base+':'+path],{cwd:repo,encoding:'utf8'}); }
+function parse(path,text) { return ts.createSourceFile(path,text,ts.ScriptTarget.Latest,true,ts.ScriptKind.TS); }
+function classNode(sf,name) { return sf.statements.find(x=>ts.isClassDeclaration(x)&&x.name?.text===name); }
+const path='src/governance/index.ts';const before=old(path);const after=fs.readFileSync(snap+'/'+path,'utf8');const a=parse(path,before);const b=parse(path,after);
+const names=['setPolicy','getPolicy','setAgentOverride','getTemplate','simulate','getComplianceReport','getEnforcementStats']; const results=[];
+for(const name of names) { const x=classNode(a,'GovernanceAPI').members.find(x=>x.name?.getText(a)===name); const y=classNode(b,'GovernanceAPI').members.find(x=>x.name?.getText(b)===name); assert.ok(x&&y); const equal=x.getText(a)===y.getText(b);assert.ok(equal,name);results.push({name,exactBodyAndSignatureEqual:equal}); }
+for (const name of ['constructor','executeWithResilience']) { const x=classNode(a,'GovernanceAPI').members.find(x=>ts.isConstructorDeclaration(x)||x.name?.getText(a)===name); const y=classNode(b,'GovernanceAPI').members.find(x=>ts.isConstructorDeclaration(x)||x.name?.getText(b)===name);if(name==='executeWithResilience') { const xx=classNode(a,'GovernanceAPI').members.find(x=>x.name?.getText(a)===name);const yy=classNode(b,'GovernanceAPI').members.find(x=>x.name?.getText(b)===name);assert.equal(xx.getText(a),yy.getText(b));} else assert.equal(x.getText(a),y.getText(b)); }
+const enf=classNode(b,'GovernanceAPI').members.find(x=>x.name?.getText(b)==='enforce');
+assert.equal(enf.parameters[0].getText(b),'options: EnforcementOptions');assert.equal(enf.type.getText(b),'Promise<EnforcementResult>');assert.equal(enf.body.statements.length,2);assert.equal(enf.body.statements[0].getText(b),'validateEnforcementOptions(options);');assert.equal(enf.body.statements[1].getText(b),'throw new GovernanceCapabilityError();');
+assert.equal(classNode(b,'GovernanceAPI').members.some(x=>x.name?.getText(b)==='handleConvexError'),false);
+assert.equal(/api\.governance\.enforce|internal\.governance|makeFunctionReference|as\s+any|@ts-ignore|@ts-expect-error/.test(after),false);
+const rootIndex='src/index.ts'; assert.equal(fs.readFileSync(snap+'/'+rootIndex,'utf8'),old(rootIndex).replace('export { GovernanceValidationError } from "./governance";','export { GovernanceValidationError, GovernanceCapabilityError } from "./governance";'));
+const validators='src/governance/validators.ts';assert.equal(fs.readFileSync(snap+'/'+validators,'utf8'),old(validators));
+const implementation=fs.readFileSync(snap+'/convex-dev/governance.ts','utf8');assert.match(implementation,/export const enforce = internalMutation/);assert.match(implementation,/simulation: true/);assert.match(implementation,/RETENTION_EXECUTION_NOT_IMPLEMENTED/);
+const generated=fs.readFileSync(snap+'/convex-dev/_generated/api.d.ts','utf8');assert.match(generated,/"public"/);assert.match(generated,/"internal"/);
+const sha=text=>crypto.createHash('sha256').update(text).digest('hex');
+const out={head:base,unchangedPublicGovernanceMethods:results,constructorAndResilienceHelperUnchanged:true,validationFileUnchanged:true,enforceSignatureRetained:true,enforceBody:['validateEnforcementOptions(options);','throw new GovernanceCapabilityError();'],forbiddenReferenceOrErrorSuppressionAbsent:true,rootExactlyErrorReexportOnly:true,reviewedBackendEnforceInternal:true,sourceHashes:{governance:sha(after),rootIndex:sha(fs.readFileSync(snap+'/'+rootIndex)),test:sha(fs.readFileSync(snap+'/tests/unit/runtimeWorkerClient/governance.test.ts'))}};
+fs.writeFileSync(root+'/raw/source-boundary.json',JSON.stringify(out,null,2)+'\n');console.log(JSON.stringify(out,null,2));

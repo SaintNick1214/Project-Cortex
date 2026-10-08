@@ -1,0 +1,77 @@
+[
+  {
+    "name": "asset-discovery",
+    "argv": [
+      "node",
+      "--experimental-vm-modules",
+      "node_modules/jest/bin/jest.js",
+      "--config",
+      "/workspace/Project-Cortex/work/resume/artifact-schema-index-repair-review/asset-jest.config.mjs",
+      "--listTests",
+      "--runInBand"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "start": 1791065730.2664297,
+    "duration": 0.23926830291748047,
+    "exitCode": 0
+  },
+  {
+    "name": "asset-native",
+    "argv": [
+      "node",
+      "--experimental-vm-modules",
+      "node_modules/jest/bin/jest.js",
+      "--config",
+      "/workspace/Project-Cortex/work/resume/artifact-schema-index-repair-review/asset-jest.config.mjs",
+      "--runInBand",
+      "--json",
+      "--outputFile",
+      "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task03-artifact-schema-index-repair-review/asset-native.json"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "start": 1791065730.505862,
+    "duration": 12.17665433883667,
+    "exitCode": 0
+  },
+  {
+    "name": "asset-scoped-lint",
+    "argv": [
+      "node",
+      "node_modules/eslint/bin/eslint.js",
+      "tests/unit/runtimeAssetUnavailableAuth/closure.test.ts",
+      "--max-warnings",
+      "0",
+      "--report-unused-disable-directives"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "start": 1791065742.6827316,
+    "duration": 6.152809143066406,
+    "exitCode": 0
+  },
+  {
+    "name": "expanded-lint-types",
+    "argv": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "-p",
+      "tsconfig.lint.json",
+      "--noEmit"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "start": 1791065748.8357625,
+    "duration": 11.168358325958252,
+    "exitCode": 0
+  },
+  {
+    "name": "expanded-root-types",
+    "argv": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "--noEmit"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "start": 1791065760.0043943,
+    "duration": 15.428203582763672,
+    "exitCode": 0
+  }
+]

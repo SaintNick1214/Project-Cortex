@@ -1,0 +1,83 @@
+import fs from 'node:fs';
+import assert from 'node:assert/strict';
+import { fixture, happyCase, selected } from '/workspace/Project-Cortex/work/backend-runtime/task03b2c1-checkout/tests/unit/runtimeArtifactAuth/fixture.ts';
+const results: any[] = [];
+async function probe(name: string, f: any, operation: () => Promise<any>, expected: string, expectedAttempts?: number, context: any = {}) {
+ let outcome: string, output: any, error: any;
+ try { output = await operation(); outcome = 'resolved'; } catch (caught: any) { outcome = 'rejected'; error = caught.data ?? String(caught); }
+ const matched = outcome === expected && (expectedAttempts === undefined || f.db.attempts.length === expectedAttempts);
+ const result = { name, expected, expectedAttempts, matched, outcome, output, error, context, attempts: f.db.attempts, rows: Object.fromEntries(f.db.tables), reads: f.db.reads };
+ results.push(result); return result;
+}
+for (const readable of [false, true]) {
+ const f = fixture(readable ? ['read', 'write'] : ['write']);
+ await probe(`create positive ${readable ? 'admitted READ payload' : 'initial absent READ safe receipt'}`, f,
+  () => f.invoke('create', { artifactId: 'new-a', memorySpaceId: 'space-a', content: 'text' }), 'resolved', 1);
+ if (readable) assert.equal(results.at(-1).output.content, 'text'); else assert.deepEqual(results.at(-1).output, { success: true, artifactId: 'new-a' });
+}
+for (const name of ['create', 'update']) {
+ const f = fixture(['write']); const readGrant = f.db.add('runtimeAuthGrants', { principalId: f.principal._id, membershipId: f.membership._id, tenantId: 'tenant-a', tenantEpoch: 1, capabilities: ['read'], resourceAccess: 'own', version: 1 });
+ if (name === 'update') f.row();
+ let injections = 0;
+ f.db.hook = (event: any) => { if (event.table === 'artifacts' && ['insert', 'patch'].includes(event.action)) { readGrant.revokedAt = 1; injections++; } };
+ const result = await probe(`${name} independently admitted READ revocation after effect`, f,
+  () => f.invoke(name, { artifactId: 'new-a', memorySpaceId: 'space-a', content: 'changed', ...(name === 'update' ? { artifactId: 'artifact-a' } : {}) }), 'rejected', 1);
+ result.context = { injections }; assert.equal(injections, 1);
+}
+function linkedList() { const f = fixture(); const source = f.conversation(); f.row({ artifactId: 'first', conversationRef: { conversationId: 'conversation-a', messageId: 'message-a' } }); f.row({ artifactId: 'second' }); return { f, source }; }
+for (const mutation of ['resource', 'anchor', 'state'] as const) {
+ const { f, source } = linkedList(); let seen = false; let injections = 0;
+ f.db.hook = (event: any) => { if (event.table === 'conversations') seen = true;
+  if (seen && event.table === 'runtimeAuthGrants' && injections === 0) { injections++;
+   if (mutation === 'resource') f.db.add('runtimeAuthTombstones', { tenantId: 'tenant-a', memorySpaceId: 'space-a', resourceType: 'conversation', resourceId: 'conversation-a', deletedAt: 1 });
+   if (mutation === 'anchor') source.messages[0].id = 'changed-anchor';
+   if (mutation === 'state') source.deletedAt = 1;
+  }
+ };
+ const result = await probe(`earlier linked ${mutation} invalidation during later admission`, f, () => f.invoke('list', {}), 'rejected', 0);
+ result.context = { injections }; assert.equal(injections, 1);
+}
+for (const mutation of ['resource', 'anchor', 'state'] as const) {
+ const measured = linkedList(); const events: any[] = []; measured.f.db.hook = (event: any) => events.push(event);
+ await measured.f.invoke('list', {}); const finalAwait = events.length; const finalEvent = events.at(-1);
+ const { f, source } = linkedList(); let calls = 0; let injections = 0;
+ f.db.hook = (event: any) => { calls++; if (calls === finalAwait) { injections++;
+  if (mutation === 'resource') f.db.add('runtimeAuthTombstones', { tenantId: 'tenant-a', memorySpaceId: 'space-a', resourceType: 'conversation', resourceId: 'conversation-a', deletedAt: 1 });
+  if (mutation === 'anchor') source.messages[0].id = 'changed-anchor';
+  if (mutation === 'state') source.deletedAt = 1;
+ }};
+ const result = await probe(`earlier linked ${mutation} invalidation at measured final DB await`, f, () => f.invoke('list', {}), 'rejected', 0);
+ result.context = { finalAwait, finalEvent, calls, injections, finalRead: f.db.reads.at(-1), qualification: 'Synthetic mutable fixture. Cross-transaction external mutation cannot alter a real Convex transaction snapshot.' };
+ assert.equal(injections, 1); assert.equal(calls, finalAwait);
+}
+for (const marker of ['deletedAt', 'tombstonedAt', 'isDeleted'] as const) {
+ const f = fixture(); const source = f.conversation({ [marker]: marker === 'isDeleted' ? true : 1 }); f.row({ conversationRef: { conversationId: 'conversation-a', messageId: 'message-a' } });
+ const result = await probe(`conversation ${marker} before private source hydrate`, f, () => f.invoke('get', { artifactId: 'artifact-a' }), 'rejected', 0);
+ const hydrated = f.db.reads.filter((event: any) => event.table === 'conversations').flatMap((event: any) => event.ids).includes(source._id);
+ result.context = { hydrated, expectedHydrated: false, qualification: 'Typed fresh owner seam, not current-schema live transcript evidence.' }; result.matched &&= !hydrated;
+}
+for (const name of selected.filter((name) => name !== 'create')) {
+ const f = happyCase(name); f.db.rows('artifacts')[0].versionHistory[0].fileRef = { storageId: '_storage:foreign', mimeType: 'image/png', size: 1 };
+ const result = await probe(`retained file history ${name}`, f, () => f.invoke(name, f.args), 'rejected', 0);
+ result.matched &&= result.error?.code === 'CAPABILITY_NOT_READY';
+}
+for (const obstacle of ['file-current', 'file-history', 'linked', 'malformed'] as const) {
+ const f = fixture(); f.row({ artifactId: 'first' }); const last = f.row({ artifactId: 'last' });
+ if (obstacle === 'file-current') last.fileRef = { storageId: '_storage:foreign', mimeType: 'image/png', size: 1 };
+ if (obstacle === 'file-history') last.versionHistory[0].fileRef = { storageId: '_storage:foreign', mimeType: 'image/png', size: 1 };
+ if (obstacle === 'linked') last.conversationRef = { conversationId: 'conversation-a' };
+ if (obstacle === 'malformed') last.versionPointer = 0;
+ await probe(`operator whole batch ${obstacle} preflight`, f, () => f.invoke('purgeAll', { tenantId: 'tenant-a', memorySpaceId: 'space-a' }), 'rejected', 0);
+}
+{
+ const f = fixture(); f.row({ artifactId: 'first' }); f.row({ artifactId: 'second' }); f.row({ tenantId: 'foreign', artifactId: 'foreign' });
+ const before = JSON.stringify(f.db.rows('runtimeAuthGrants')); const result = await probe('operator unlinked positive rows/control retention', f, () => f.invoke('purgeAll', { tenantId: 'tenant-a', memorySpaceId: 'space-a' }), 'resolved', 4);
+ assert.deepEqual(result.output, { deleted: 2 }); assert.equal(JSON.stringify(f.db.rows('runtimeAuthGrants')), before); assert.equal(f.db.rows('artifacts')[2].isDeleted, undefined); assert.equal(f.db.rows('runtimeAuthTombstones').length, 2);
+}
+{
+ const f = fixture(['admin']); f.row();
+ for (const name of ['get', 'update']) await probe(`admin-only cannot ${name}`, f, () => f.invoke(name, { artifactId: 'artifact-a', content: 'changed' }), 'rejected', 0);
+}
+fs.writeFileSync('/workspace/Project-Cortex/work/backend-runtime/task03b2c1-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1/cycle2-probes/adversarial-results.json', JSON.stringify(results, null, 2)+'\n');
+fs.writeFileSync('/workspace/Project-Cortex/work/backend-runtime/task03b2c1-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1/cycle2-probes/adversarial-summary.json', JSON.stringify({ total: results.length, matched: results.filter(result => result.matched).length, failedExpectations: results.filter(result => !result.matched).map(({ name, outcome, error, context }) => ({ name, outcome, error, context })) }, null, 2)+'\n');
+for (const { name, matched, outcome, error, context, attempts } of results) console.log(JSON.stringify({ name, matched, outcome, code: error?.code, context, attempts: attempts.length }));

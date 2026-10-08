@@ -1,0 +1,8 @@
+node_modules/convex/src/server/impl/registration_impl.ts(136,12): error TS2304: Cannot find name 'window'.
+node_modules/convex/src/server/impl/registration_impl.ts(137,6): error TS2304: Cannot find name 'window'.
+node_modules/convex/src/values/value.ts(259,7): error TS2322: Type 'ArrayBufferLike' is not assignable to type 'Value'.
+  Type 'SharedArrayBuffer' is not assignable to type 'Value'.
+    Type 'SharedArrayBuffer' is not assignable to type 'ArrayBuffer | CommitTsPlaceholder | Value[] | { [key: string]: Value | undefined; }'.
+      Type 'SharedArrayBuffer' is not assignable to type 'ArrayBuffer'.
+        Types of property '[Symbol.toStringTag]' are incompatible.
+          Type '"SharedArrayBuffer"' is not assignable to type '"ArrayBuffer"'.

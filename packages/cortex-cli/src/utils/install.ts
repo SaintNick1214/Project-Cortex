@@ -213,7 +213,9 @@ function templateFiles(
             version: "1.0.0",
             private: true,
             type: "module",
-            devDependencies: { typescript: "5.9.3", "@types/node": "25.5.2" },
+            packageManager: "npm@12.2.0",
+            engines: { node: ">=24.15.0" },
+            devDependencies: { typescript: "~6.0.3", "@types/node": "^26.6.4" },
           },
           null,
           2,
@@ -478,6 +480,7 @@ export async function installSdk(
       if (backendApplied)
         throw new Error(
           `Project staged; native setup failed. Preserve local state and retry explicit cortex dev: ${error instanceof Error ? error.message : "native failure"}`,
+          { cause: error },
         );
       // Restore only installer-owned manifest/lock/scaffold bytes. Preserve native state,
       // generated bindings and node_modules so failures can be inspected and retried.

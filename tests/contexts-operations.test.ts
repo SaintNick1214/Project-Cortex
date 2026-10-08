@@ -8,32 +8,76 @@
  */
 
 import { Cortex } from "../src";
-import { ConvexClient } from "convex/browser";
-import { TestCleanup } from "./helpers";
+import { createTestRunContext } from "./helpers/isolation";
+
+const runCtx = createTestRunContext();
 
 describe("Context Operations API", () => {
   let cortex: Cortex;
-  let client: ConvexClient;
-  let _cleanup: TestCleanup;
   const CONVEX_URL = process.env.CONVEX_URL || "http://127.0.0.1:3210";
-  const TIMESTAMP = Date.now();
-  const TEST_MEMORY_SPACE = `test-context-ops-space-${TIMESTAMP}`;
+  const TEST_MEMORY_SPACE = runCtx.memorySpaceId("context-ops");
+  const OTHER_MEMORY_SPACE = runCtx.memorySpaceId("context-ops-other");
+  const TEST_USER_ONE = runCtx.userId("one");
+  const TEST_USER_TWO = runCtx.userId("two");
+  const EXPORT_USER = runCtx.userId("export");
+
+  // Shared CI shards use the same backend; cleanup must only delete this suite's records.
+  const cleanupContexts = async () => {
+    for (const memorySpaceId of [TEST_MEMORY_SPACE, OTHER_MEMORY_SPACE]) {
+      await cortex.contexts.deleteMany(
+        { memorySpaceId },
+        { cascadeChildren: true },
+      );
+    }
+  };
 
   beforeAll(async () => {
-    client = new ConvexClient(CONVEX_URL);
     cortex = new Cortex({ convexUrl: CONVEX_URL });
-    _cleanup = new TestCleanup(client);
   });
 
   afterAll(async () => {
-    await _cleanup.purgeContexts();
-    if (client) {
-      client.close();
+    try {
+      await cleanupContexts();
+    } finally {
+      await cortex.shutdown();
     }
   });
 
   beforeEach(async () => {
-    await _cleanup.purgeContexts();
+    await cleanupContexts();
+  });
+
+  it("cleanup preserves another suite's parent context for child creation", async () => {
+    const foreignSpace = runCtx.memorySpaceId("independent-suite");
+    const parent = await cortex.contexts.create({
+      purpose: "Independent suite parent",
+      memorySpaceId: foreignSpace,
+    });
+
+    try {
+      await cortex.contexts.create({
+        purpose: "Owned context to clean up",
+        memorySpaceId: TEST_MEMORY_SPACE,
+      });
+      await cleanupContexts();
+
+      expect(
+        await cortex.contexts.list({ memorySpaceId: TEST_MEMORY_SPACE }),
+      ).toHaveLength(0);
+      expect(await cortex.contexts.get(parent.contextId)).not.toBeNull();
+
+      const child = await cortex.contexts.create({
+        purpose: "Independent suite child",
+        memorySpaceId: foreignSpace,
+        parentId: parent.contextId,
+      });
+      expect(child.parentId).toBe(parent.contextId);
+    } finally {
+      await cortex.contexts.deleteMany(
+        { memorySpaceId: foreignSpace },
+        { cascadeChildren: true },
+      );
+    }
   });
 
   describe("Versioning Operations", () => {
@@ -217,7 +261,7 @@ describe("Context Operations API", () => {
       await cortex.contexts.create({
         purpose: "Task 1",
         memorySpaceId: TEST_MEMORY_SPACE,
-        userId: "user-1",
+        userId: TEST_USER_ONE,
         status: "active",
         data: { importance: 50 },
       });
@@ -225,22 +269,22 @@ describe("Context Operations API", () => {
       await cortex.contexts.create({
         purpose: "Task 2",
         memorySpaceId: TEST_MEMORY_SPACE,
-        userId: "user-1",
+        userId: TEST_USER_ONE,
         status: "active",
         data: { importance: 70 },
       });
 
       await cortex.contexts.create({
         purpose: "Task 3",
-        memorySpaceId: "other-space",
-        userId: "user-2",
+        memorySpaceId: OTHER_MEMORY_SPACE,
+        userId: TEST_USER_TWO,
         status: "active",
       });
 
       // Update all active contexts for user-1
       const result = await cortex.contexts.updateMany(
         {
-          userId: "user-1",
+          userId: TEST_USER_ONE,
           status: "active",
         },
         {
@@ -253,7 +297,7 @@ describe("Context Operations API", () => {
 
       // Verify updates
       const contexts = await cortex.contexts.list({
-        userId: "user-1",
+        userId: TEST_USER_ONE,
       });
 
       for (const ctx of contexts) {
@@ -370,7 +414,7 @@ describe("Context Operations API", () => {
   describe("Query Operations", () => {
     it("finds contexts by conversation ID", async () => {
       // Use valid conversation ID format (must start with "conv-")
-      const conversationId = "conv-test-123";
+      const conversationId = `conv-${runCtx.runId}-context-ops`;
 
       // Create contexts linked to conversation
       await cortex.contexts.create({
@@ -447,17 +491,17 @@ describe("Context Operations API", () => {
       await cortex.contexts.create({
         purpose: "Export test 1",
         memorySpaceId: TEST_MEMORY_SPACE,
-        userId: "export-user",
+        userId: EXPORT_USER,
       });
 
       await cortex.contexts.create({
         purpose: "Export test 2",
         memorySpaceId: TEST_MEMORY_SPACE,
-        userId: "export-user",
+        userId: EXPORT_USER,
       });
 
       const result = await cortex.contexts.export(
-        { userId: "export-user" },
+        { userId: EXPORT_USER },
         { format: "json" },
       );
 

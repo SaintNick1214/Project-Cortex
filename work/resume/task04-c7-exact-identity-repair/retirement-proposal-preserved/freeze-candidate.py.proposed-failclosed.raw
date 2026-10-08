@@ -1,0 +1,69 @@
+raise SystemExit('QA_C7_RETIRED_C5_C6_ADMINISTRATIVE_RECIPE_NO_EXECUTION_AUTHORITY_USE_OWN_C7_PRODUCER')
+from fs_identity import loads as authority_loads
+from fs_identity import fs_identity
+import os,json,stat,hashlib,gzip,pathlib,datetime
+R=pathlib.Path('/workspace/Project-Cortex');W=R/'work/resume/task04-c7-exact-identity-repair/candidate';Q=R/'_goals/convex-backend-runtime-2026-10-02/qa/task04-c7-exact-identity-repair';T=pathlib.Path('/dev/shm/cortex-native-c7-exact-identity-repair');E=pathlib.Path('/tmp/cortex-native-c5-independent-review-c5-15b2ef7a-3243-4271-a78d-bf819fdf7393')
+def ident(s): return fs_identity(s)
+def row(p):
+ s=os.lstat(p);r={'path':str(p),'identity':ident(s)}
+ if stat.S_ISLNK(s.st_mode):r.update(kind='symlink',target=os.readlink(p));assert ident(s)==ident(os.lstat(p));return r
+ if stat.S_ISDIR(s.st_mode):r.update(kind='directory');return r
+ assert stat.S_ISREG(s.st_mode),str(p)
+ fd=os.open(p,os.O_RDONLY|os.O_NOFOLLOW);h=hashlib.sha256();n=0
+ try:
+  assert ident(s)==ident(os.fstat(fd))
+  while True:
+   b=os.read(fd,1024*1024)
+   if not b:break
+   h.update(b);n+=len(b)
+  assert ident(s)==ident(os.fstat(fd))==ident(os.lstat(p))
+ finally:os.close(fd)
+ r.update(kind='file',bytes=n,sha256=h.hexdigest());return r
+def put(p,d):p.write_text(json.dumps(d,sort_keys=True,indent=2)+'\n')
+def load(p):return authority_loads(gzip.decompress(p.read_bytes()) if p.suffix=='.gz' else p.read_bytes())
+contract=R/'work/resume/task04-model-drift-native-preparation-c5/output-route-audit/proposed-closed-command-contract.json';mp=W/'mirror-source-transform-map.json';m={x['source']:x for x in load(mp)['inputs']};commands=load(contract)['commands'];assert len(commands)==122
+bindings=[]
+for c in commands:
+ x=m[c['proposedArgv'][2]];assert x['sha256']==c['entrySha256'];bindings.append({**c,'status':'HELD_PENDING_INDEPENDENT_FULL_COMPOSITION_PASS_AND_ROOT_FIXED_APPROVAL','mirrorEntry':x['destination'],'mirrorEntrySHA256':x['destinationSHA256']})
+put(Q/'prepared122bindings.json',{'contract':row(contract),'mirrorMap':row(mp),'coverage':'SOURCE_INSPECTED_FIXED_BINDINGS_NOT_ORIGINAL_EXECUTION','commands':bindings})
+runs=[]
+for d in sorted((T/'runs').iterdir()):
+ if not d.is_dir():continue
+ p=d/'receipt.json';z=d/'receipt.json.gz';idx=d/'receipt.json.index.json';rec={'run':d.name}
+ if idx.exists():rec['receiptIndex']=load(idx);rec['receiptIndexFile']=row(idx)
+ if p.exists() or z.exists():
+  actual=p if p.exists() else z;rec['receipt']=row(actual)
+  # Large legacy records are retained by byte references; selected final records are decoded for bounded summary.
+  if d.name in ['5104dd6753b54ec581f6e30eb87d4619','6f11ae9de5884682b6e2a9cc24404600','60e3c89463c4451d8ab6f13f927f4c74','c811f8cd703349c58e43f24149ac09ad']:
+   v=load(actual);rec.update({k:v.get(k) for k in ['utcPRE','utcPOST','sourceByteHashesEqual','original8LiteralRowsAndIdentitiesEqual']});rec['commands']=[{k:c.get(k) for k in c if k not in ['sourcePRE','sourcePOST']} for c in v['commands']];rec['original8PRE']=v['original8PRE'];rec['original8POST']=v['original8POST']
+ else:rec['status']='NO_FINAL_RECEIPT_UNKNOWN_NOT_PASS'
+ runs.append(rec)
+put(Q/'evidence-index.json',{'status':'FROZEN_CANDIDATE_NOT_ACCEPTANCE','runs':runs,'ownLosslessMetadataCleanup':row(T/'own-derived-plain-metadata-gzip-cleanup.json'),'externalRoot':str(E),'externalExecutionCohort':'EARLIER_THAN_FINAL_ROOT_DELIVERY_AND_HISTORICAL_ADMISSION_EDITS','original122':'HELD','historicalCustody':'BROKEN_FOREVER'})
+pins=[row(p) for p in sorted(W.iterdir()) if p.is_file() and p.name!='selfseal.json']
+for name in ['package-graph.json','package-aliases.json','historical-plan-index.json','historical-freeze-after-scratch.json','historical-offline-runtime-freeze-extension.json','historical-offline-runtime-freeze-regression.json','historical-offline-runtime-freeze-extra.json']:
+ pins.append(row(T/name))
+put(Q/'sourcepins.json',{'scope':'CURRENT_IMPLEMENTATION_AND_EXACT_FIXED_DATA; FULL_TRANSITIVE_BYTE_BACKING_IN_RECORDED_SOURCE_PRE_AND_LITERAL_SEALS','rows':pins})
+p=Q/'report.md';s=p.read_text().replace('**DRAFT: final affected recorder and literal self-seals pending.**','**Frozen candidate awaiting independent full-criterion review; no acceptance verdict.**')
+s=s.replace('The full 70,020-row control is a concrete snapshot/capture proof, not execution of the original freeze command or historical qualification acceptance.','First actual historical bytes that mismatch the audited declaration are captured and indexed, then denied before child/service admission or read return. The earlier diagnostic boolean is retained in historical evidence; it is no permission to admit mismatched bytes. No original recipe requires mismatched real planned input; original DUMMY negative histories and guard mismatch assertions remain unchanged. The old guard text has exact source-bound VM producer authority only for its approved bytes.\n\nThe full 70,020-row control proves one snapshot/capture, not execution or whole-route timing. ROOT parent and child each perform dispatch input capture plus closure capture under the same 120s parent absolute clock. A roughly 37s single snapshot does not prove the complete freeze route fits that bound; original outcomes remain unexecuted.')
+s=s.replace('It is sealed separately with the candidate. Earlier inside-T seam passes remain inside-T observations.','It is sealed separately with the candidate. Its actual execution used an earlier source cohort, before the final root delivery and first-historical-mismatch denial repairs; it is not a current-code execution claim. Earlier inside-T seam passes remain inside-T observations.')
+s=s.replace('Final recorded results, backing index, exact immutable/generated role evidence, whole Q/W/T/external literal self-seals and frozen source pins are attached when final recorder quiescence is established. Until that freeze and a separate independent full-criterion PASS, all original122 remain HELD.','Final quiescent batch 5104dd6753b54ec581f6e30eb87d4619 (22:51:25–22:54:35 UTC) records three exit0 controls: first-mismatch held-byte capture and denial with zero effects, positive small historical capture, and complete 70,020-row capture. Batch 6f11ae9de5884682b6e2a9cc24404600 records four exit0 controls: root adverse delivery, ROOT surrogate, runtime11 and serial runner. Both batches report source byte and original-eight literal-row/identity PRE/POST equality. Batch60e3 retains ten successes and the stale OWN runtime expected12/actual15 failure; the correction checks the exact three-profile/five-name path set, without changing original assertions. The preceding compiler/projection/serial/deadline/lifecycle controls remain indexed with their actual source cohorts.\n\nThe root adverse delivery control retains a frozen earlier primary as cause, independently attempts both missing stdout/stderr held digests, records both errors, attempts receipt delivery, and leaves evidenceComplete false. It preserves actual child exit0, exhaustive17 restoration and group quiescence. Early setup/config/prebyte persistence failures are not all fault-injected; failed setup is not successful evidence. Initial port rollback has source coverage in addition to the recorded OWN fault combinations, not every possible OS failure injection. Finite graph-derived spool quotas are allocations, not proof that every original122 command fits. Generic owned generated-input capture is not an exact producer-lineage theorem.\n\nSee prepared122bindings.json, evidence-index.json and sourcepins.json. Literal self-seals exclude only their own filename, record directories and link targets without traversal, and bind actual held regular bytes/identities. No source/PARENT/native/default/timing result is inferred. A separate independent full-criterion judgment is required; all original122 remain HELD.')
+p.write_text(s)
+# Create each sole excluded file before taking directory metadata.
+for root,name in [(W,'selfseal.json'),(E,'selfseal.json.gz'),(T,'selfseal.json.gz'),(Q,'selfseal.json')]:
+ with open(root/name,'xb') as f:f.write(b'')
+def seal(root,name,refs=None):
+ rows=[]
+ def walk(p):
+  r=row(p);r['path']=str(p.relative_to(root)) or '.';rows.append(r)
+  if r['kind']=='directory':
+   names=sorted(os.listdir(p));r['members']=names
+   for n in names:
+    if p==root and n==name:continue
+    walk(p/n)
+   assert r['identity']==ident(os.lstat(p))
+ walk(root)
+ d={'root':str(root),'excludedSelfOnly':[name],'status':'LITERAL_FROZEN_CANDIDATE_NOT_ACCEPTANCE','rows':rows,'references':refs or []};raw=(json.dumps(d,sort_keys=True,separators=(',',':'))+'\n').encode();dest=root/name
+ if name.endswith('.gz'):dest.write_bytes(gzip.compress(raw,compresslevel=6,mtime=0))
+ else:dest.write_bytes(raw)
+ out=row(dest);out.update(decodedBytes=len(raw),decodedSHA256=hashlib.sha256(raw).hexdigest(),membershipRows=len(rows));print(json.dumps(out),flush=True);return out
+refs=[seal(W,'selfseal.json'),seal(E,'selfseal.json.gz'),seal(T,'selfseal.json.gz')];seal(Q,'selfseal.json',refs)

@@ -26,14 +26,19 @@ export default [
       "Examples and Proofs/**/*", // Exclude example integrations
       "packages/**/*", // Exclude all packages (wizard has its own linting)
       "*.txt", // Exclude text files
-      "cortex-sdk-python/**/*", // Exclude Python SDK entirely
+      "_DEPRECATED/**/*", // Exclude Python SDK entirely
       "cortex-test/**/*", // Exclude cortex-test directory
       "**/htmlcov/**/*", // Exclude Python code coverage reports
       "**/.venv/**/*", // Exclude Python virtual environments
       "**/venv/**/*", // Exclude Python virtual environments
       "dev-docs/**/*", // Exclude dev documentation
-      "Documentation/**/*", // Exclude documentation
       "Internal Docs/**/*", // Exclude internal docs
+      "work/**/*", // Private scratch files and generated qualification probes
+      "_goals/**/qa/**/*", // Frozen evidence and standalone fixtures use their scoped lint configs
+      // Immutable old Gateway assertions run separately under the mandatory guarded
+      // historical 78-outcome catalog, outside this current typed parser project.
+      // gateway-terminal-composition.test.ts still checks the actual Gateway here.
+      "tests/unit/runtime/gateway-dispatch.test.ts",
     ],
   },
 
@@ -188,6 +193,35 @@ export default [
       "@typescript-eslint/no-unsafe-argument": "off",
       "@typescript-eslint/no-unsafe-return": "off",
       "@typescript-eslint/no-unnecessary-condition": "off",
+    },
+  },
+
+  // Standalone qualification has its own TypeScript project and package install.
+  {
+    files: [
+      "_goals/convex-backend-runtime-2026-10-02/qa/task01/fixture/**/*.ts",
+    ],
+    languageOptions: {
+      parserOptions: {
+        project:
+          "./_goals/convex-backend-runtime-2026-10-02/qa/task01/fixture/tsconfig.json",
+      },
+    },
+  },
+
+  // Isolated live authorization qualification has separate backend/client projects.
+  {
+    files: [
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/**/*.ts",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/**/*.ts",
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: [
+          "./_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/fixture/convex/tsconfig.json",
+          "./_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/client-tsconfig.json",
+        ],
+      },
     },
   },
 

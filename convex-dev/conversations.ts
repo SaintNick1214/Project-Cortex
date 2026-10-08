@@ -1,10 +1,4 @@
-import { graphMutation } from "./lib/graphSync";
-import {validateDomainSelection} from "./lib/domainPaging";
-import type { Doc } from "./_generated/dataModel";
-import { paginationOptsValidator } from "convex/server";
-import { domainGraphIdentity, scopedConversation, conversationFilterFields, matchesConversation, domainFingerprint, checkFingerprint, domainBudget, domainPageOptions, domainInteger } from "./lib/domainPaging";
-import { captureInsertedRow, reconcileRow, markDeletedRow } from "./lib/referenceLifecycle";
-import { validateDomainScope } from "./lib/domainScope";
+import { runtimeUnavailable, internalUnavailable } from "./runtimeUnavailableAuth";
 /**
  * Cortex SDK - Conversations API (Layer 1a)
  *
@@ -14,7 +8,7 @@ import { validateDomainScope } from "./lib/domainScope";
  */
 
 import { ConvexError, v } from "convex/values";
-import { query } from "./_generated/server";
+import { mutation, query, internalMutation } from "./_generated/server";
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Helper Functions
@@ -117,7 +111,7 @@ function isConversationParticipant(
 /**
  * Create a new conversation
  */
-export const create = graphMutation({
+export const create = mutation({
   args: {
     conversationId: v.string(),
     memorySpaceId: v.string(), // NEW: Required - which memory space owns this
@@ -146,6 +140,9 @@ export const create = graphMutation({
     ),
   },
   handler: async (ctx, args) => {
+    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
+    await runtimeUnavailable(ctx, "write", args);
+
     // Validate participants based on type
     if (args.type === "user-agent") {
       // Check for collaborative (userIds) OR single user (userId)
@@ -172,17 +169,24 @@ export const create = graphMutation({
       }
     }
 
-    // The omitted tenant is an exact tenantless scope, not a wildcard.
-    const candidates = await ctx.db.query("conversations")
-      .withIndex("by_conversationId", q => q.eq("conversationId", args.conversationId))
-      .filter(q => q.eq(q.field("tenantId"), args.tenantId)).take(2);
-    if (candidates.length > 1) throw new ConvexError("CONVERSATION_SCOPE_AMBIGUOUS");
-    if (candidates.length) throw new ConvexError("CONVERSATION_ALREADY_EXISTS");
+    // Check if conversation already exists
+    const existing = await ctx.db
+      .query("conversations")
+      .withIndex("by_conversationId", (q) =>
+        q.eq("conversationId", args.conversationId),
+      )
+      .first();
+
+    if (existing) {
+      // Throw error for explicit duplicate creation attempts
+      // Use getOrCreate() for UPSERT behavior if race-safety is needed
+      throw new ConvexError("CONVERSATION_ALREADY_EXISTS");
+    }
 
     const now = Date.now();
 
     // Create conversation with tenantId, visibility, and collaborative settings
-    const id = await captureInsertedRow(ctx, "conversations", {
+    const id = await ctx.db.insert("conversations", {
       conversationId: args.conversationId,
       memorySpaceId: args.memorySpaceId,
       participantId: args.participantId,
@@ -205,8 +209,10 @@ export const create = graphMutation({
 /**
  * Set visibility for a conversation
  */
-export const setVisibility = graphMutation({
+export const setVisibility = mutation({
   args: {
+    tenantId: v.optional(v.string()),
+    memorySpaceId: v.optional(v.string()),
     conversationId: v.string(),
     visibility: v.union(
       v.literal("private"),
@@ -217,6 +223,9 @@ export const setVisibility = graphMutation({
     userId: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
+    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
+    await runtimeUnavailable(ctx, "write", args);
+
     const conversation = await ctx.db
       .query("conversations")
       .withIndex("by_conversationId", (q) =>
@@ -234,7 +243,7 @@ export const setVisibility = graphMutation({
       throw new ConvexError("VISIBILITY_CHANGE_NOT_AUTHORIZED");
     }
 
-    await reconcileRow(ctx, conversation._id, {
+    await ctx.db.patch(conversation._id, {
       visibility: args.visibility,
       updatedAt: Date.now(),
     });
@@ -247,14 +256,19 @@ export const setVisibility = graphMutation({
  * Set or update metadata for a conversation
  * This is used for storing conversation title and other metadata
  */
-export const setMetadata = graphMutation({
+export const setMetadata = mutation({
   args: {
+    tenantId: v.optional(v.string()),
+    memorySpaceId: v.optional(v.string()),
     conversationId: v.string(),
     metadata: v.any(),
     // Required for authorization - must verify ownership before modifying metadata
     userId: v.string(),
   },
   handler: async (ctx, args) => {
+    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
+    await runtimeUnavailable(ctx, "write", args);
+
     const conversation = await ctx.db
       .query("conversations")
       .withIndex("by_conversationId", (q) =>
@@ -277,7 +291,7 @@ export const setMetadata = graphMutation({
       ...args.metadata,
     };
 
-    await reconcileRow(ctx, conversation._id, {
+    await ctx.db.patch(conversation._id, {
       metadata: updatedMetadata,
       updatedAt: Date.now(),
     });
@@ -292,11 +306,15 @@ export const setMetadata = graphMutation({
  */
 export const checkAccess = query({
   args: {
+    tenantId: v.optional(v.string()),
     conversationId: v.string(),
     userId: v.optional(v.string()),
     memorySpaceId: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
+    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
+    await runtimeUnavailable(ctx, "read", args);
+
     const conversation = await ctx.db
       .query("conversations")
       .withIndex("by_conversationId", (q) =>
@@ -366,8 +384,10 @@ export const checkAccess = query({
 /**
  * Add a message to an existing conversation (append-only)
  */
-export const addMessage = graphMutation({
+export const addMessage = mutation({
   args: {
+    tenantId: v.optional(v.string()),
+    memorySpaceId: v.optional(v.string()),
     conversationId: v.string(),
     message: v.object({
       id: v.string(),
@@ -378,6 +398,9 @@ export const addMessage = graphMutation({
     }),
   },
   handler: async (ctx, args) => {
+    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
+    await runtimeUnavailable(ctx, "write", args);
+
     // Get conversation
     const conversation = await ctx.db
       .query("conversations")
@@ -418,7 +441,7 @@ export const addMessage = graphMutation({
     };
 
     // Append message (immutable - never modify existing messages)
-    await reconcileRow(ctx, conversation._id, {
+    await ctx.db.patch(conversation._id, {
       messages: [...conversation.messages, message],
       messageCount: conversation.messageCount + 1,
       updatedAt: Date.now(),
@@ -431,13 +454,18 @@ export const addMessage = graphMutation({
 /**
  * Approve a pending message in a collaborative conversation (Phase 4)
  */
-export const approveMessage = graphMutation({
+export const approveMessage = mutation({
   args: {
+    tenantId: v.optional(v.string()),
+    memorySpaceId: v.optional(v.string()),
     conversationId: v.string(),
     messageId: v.string(),
     approverId: v.string(), // userId of the approver
   },
   handler: async (ctx, args) => {
+    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
+    await runtimeUnavailable(ctx, "write", args);
+
     const conversation = await ctx.db
       .query("conversations")
       .withIndex("by_conversationId", (q) =>
@@ -479,7 +507,7 @@ export const approveMessage = graphMutation({
       approvedAt: Date.now(),
     };
 
-    await reconcileRow(ctx, conversation._id, {
+    await ctx.db.patch(conversation._id, {
       messages: updatedMessages,
       updatedAt: Date.now(),
     });
@@ -491,13 +519,18 @@ export const approveMessage = graphMutation({
 /**
  * Reject a pending message in a collaborative conversation (Phase 4)
  */
-export const rejectMessage = graphMutation({
+export const rejectMessage = mutation({
   args: {
+    tenantId: v.optional(v.string()),
+    memorySpaceId: v.optional(v.string()),
     conversationId: v.string(),
     messageId: v.string(),
     rejecterId: v.string(), // userId of the rejecter
   },
   handler: async (ctx, args) => {
+    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
+    await runtimeUnavailable(ctx, "write", args);
+
     const conversation = await ctx.db
       .query("conversations")
       .withIndex("by_conversationId", (q) =>
@@ -539,7 +572,7 @@ export const rejectMessage = graphMutation({
       approvedAt: Date.now(),
     };
 
-    await reconcileRow(ctx, conversation._id, {
+    await ctx.db.patch(conversation._id, {
       messages: updatedMessages,
       updatedAt: Date.now(),
     });
@@ -551,13 +584,22 @@ export const rejectMessage = graphMutation({
 /**
  * Delete a conversation (for GDPR/cleanup)
  */
-export const deleteConversation = graphMutation({
+export const deleteConversation = mutation({
   args: {
     tenantId: v.optional(v.string()),
+    memorySpaceId: v.optional(v.string()),
     conversationId: v.string(),
   },
   handler: async (ctx, args) => {
-    const conversation = await scopedConversation(ctx, args);
+    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
+    await runtimeUnavailable(ctx, "write", args);
+
+    const conversation = await ctx.db
+      .query("conversations")
+      .withIndex("by_conversationId", (q) =>
+        q.eq("conversationId", args.conversationId),
+      )
+      .first();
 
     if (!conversation) {
       throw new ConvexError("CONVERSATION_NOT_FOUND");
@@ -565,7 +607,7 @@ export const deleteConversation = graphMutation({
 
     const messagesDeleted = conversation.messageCount;
 
-    await markDeletedRow(ctx, conversation._id);
+    await ctx.db.delete(conversation._id);
 
     return {
       deleted: true,
@@ -580,9 +622,88 @@ export const deleteConversation = graphMutation({
 /**
  * Delete many conversations matching filters
  */
-export const deleteMany = graphMutation({
-  args: {...conversationFilterFields, dryRun: v.optional(v.boolean()), requireConfirmation: v.optional(v.boolean()), confirmationThreshold: v.optional(v.number())},
-  handler: async () => { throw new ConvexError("DOMAIN_PREFLIGHT_REQUIRED: use SDK physical selection preflight"); },
+export const deleteMany = mutation({
+  args: {
+    tenantId: v.optional(v.string()),
+    userId: v.optional(v.string()),
+    memorySpaceId: v.optional(v.string()), // Filter by memory space
+    type: v.optional(
+      v.union(v.literal("user-agent"), v.literal("agent-agent")),
+    ),
+    dryRun: v.optional(v.boolean()), // Preview what would be deleted
+    confirmationThreshold: v.optional(v.number()), // Auto-confirm threshold (default: 10)
+  },
+  handler: async (ctx, args) => {
+    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
+    await runtimeUnavailable(ctx, "write", args);
+
+    let conversations;
+
+    // Use index if memorySpaceId provided (fast)
+    if (args.memorySpaceId) {
+      conversations = await ctx.db
+        .query("conversations")
+        .withIndex("by_memorySpace", (q) =>
+          q.eq("memorySpaceId", args.memorySpaceId!),
+        )
+        .collect();
+    } else {
+      conversations = await ctx.db.query("conversations").collect();
+    }
+
+    // Apply additional filters
+    if (args.userId) {
+      conversations = conversations.filter(
+        (c) => c.participants.userId === args.userId,
+      );
+    }
+
+    if (args.type) {
+      conversations = conversations.filter((c) => c.type === args.type);
+    }
+
+    // Calculate total messages that would be deleted
+    const totalMessagesWouldDelete = conversations.reduce(
+      (sum, c) => sum + c.messageCount,
+      0,
+    );
+
+    // Dry run mode - just return what would be deleted
+    if (args.dryRun) {
+      return {
+        deleted: 0,
+        totalMessagesDeleted: 0,
+        conversationIds: [],
+        wouldDelete: conversations.length,
+        wouldDeleteMessages: totalMessagesWouldDelete,
+        dryRun: true,
+      };
+    }
+
+    // Check confirmation threshold
+    const threshold = args.confirmationThreshold ?? 10;
+    if (conversations.length > threshold) {
+      throw new ConvexError(
+        `DELETE_MANY_THRESHOLD_EXCEEDED: Would delete ${conversations.length} conversations (threshold: ${threshold}). Use dryRun first or increase confirmationThreshold.`,
+      );
+    }
+
+    let deleted = 0;
+    let totalMessagesDeleted = 0;
+
+    for (const conversation of conversations) {
+      totalMessagesDeleted += conversation.messageCount;
+      await ctx.db.delete(conversation._id);
+      deleted++;
+    }
+
+    return {
+      deleted,
+      totalMessagesDeleted,
+      conversationIds: conversations.map((c) => c.conversationId),
+      dryRun: false,
+    };
+  },
 });
 
 /**
@@ -590,11 +711,16 @@ export const deleteMany = graphMutation({
  * Much faster than calling deleteConversation multiple times
  * Uses index lookups instead of full table scan to avoid memory issues with large tables
  */
-export const deleteByIds = graphMutation({
+export const deleteByIds = mutation({
   args: {
+    tenantId: v.optional(v.string()),
+    memorySpaceId: v.optional(v.string()),
     conversationIds: v.array(v.string()),
   },
   handler: async (ctx, args) => {
+    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
+    await runtimeUnavailable(ctx, "write", args);
+
     const deletedIds: string[] = [];
     let totalMessagesDeleted = 0;
 
@@ -610,7 +736,7 @@ export const deleteByIds = graphMutation({
 
       if (conversation) {
         totalMessagesDeleted += conversation.messageCount;
-        await markDeletedRow(ctx, conversation._id);
+        await ctx.db.delete(conversation._id);
         deletedIds.push(conversationId);
       }
     }
@@ -626,9 +752,12 @@ export const deleteByIds = graphMutation({
 /**
  * Purge ALL conversations (development/testing only)
  */
-export const purgeAll = graphMutation({
+export const purgeAll = internalMutation({
   args: {},
   handler: async (ctx) => {
+    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
+    await internalUnavailable();
+
     const conversations = await ctx.db.query("conversations").collect();
 
     let deleted = 0;
@@ -636,7 +765,7 @@ export const purgeAll = graphMutation({
 
     for (const conversation of conversations) {
       totalMessagesDeleted += conversation.messageCount;
-      await markDeletedRow(ctx, conversation._id);
+      await ctx.db.delete(conversation._id);
       deleted++;
     }
 
@@ -652,10 +781,15 @@ export const purgeAll = graphMutation({
  */
 export const getMessage = query({
   args: {
+    tenantId: v.optional(v.string()),
+    memorySpaceId: v.optional(v.string()),
     conversationId: v.string(),
     messageId: v.string(),
   },
   handler: async (ctx, args) => {
+    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
+    await runtimeUnavailable(ctx, "read", args);
+
     const conversation = await ctx.db
       .query("conversations")
       .withIndex("by_conversationId", (q) =>
@@ -678,10 +812,15 @@ export const getMessage = query({
  */
 export const getMessagesByIds = query({
   args: {
+    tenantId: v.optional(v.string()),
+    memorySpaceId: v.optional(v.string()),
     conversationId: v.string(),
     messageIds: v.array(v.string()),
   },
   handler: async (ctx, args) => {
+    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
+    await runtimeUnavailable(ctx, "read", args);
+
     const conversation = await ctx.db
       .query("conversations")
       .withIndex("by_conversationId", (q) =>
@@ -704,8 +843,9 @@ export const getMessagesByIds = query({
 /**
  * Get or create a conversation (atomic)
  */
-export const getOrCreate = graphMutation({
+export const getOrCreate = mutation({
   args: {
+    tenantId: v.optional(v.string()),
     memorySpaceId: v.string(), // NEW: Required
     participantId: v.optional(v.string()), // NEW: Hive Mode
     type: v.union(v.literal("user-agent"), v.literal("agent-agent")),
@@ -731,6 +871,9 @@ export const getOrCreate = graphMutation({
     ),
   },
   handler: async (ctx, args) => {
+    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
+    await runtimeUnavailable(ctx, "write", args);
+
     // Try to find existing
     let existing = null;
 
@@ -754,7 +897,7 @@ export const getOrCreate = graphMutation({
 
       // Look for existing in this memory space with this user AND agent
       // v0.17.0: Must match agentId to support multiple agents per user/space
-      const candidates = await ctx.db
+      existing = await ctx.db
         .query("conversations")
         .withIndex("by_memorySpace_user", (q) =>
           q
@@ -763,14 +906,11 @@ export const getOrCreate = graphMutation({
         )
         .filter((q) =>
           q.and(
-            q.eq(q.field("tenantId"), undefined),
             q.eq(q.field("type"), "user-agent"),
             q.eq(q.field("participants.agentId"), args.participants.agentId),
           ),
         )
-        .take(2);
-      if (candidates.length > 1) throw new ConvexError("CONVERSATION_SCOPE_AMBIGUOUS");
-      existing = candidates[0] ?? null;
+        .first();
     } else {
       // agent-agent (Collaboration Mode)
       if (
@@ -784,12 +924,13 @@ export const getOrCreate = graphMutation({
 
       const conversations = await ctx.db
         .query("conversations")
-        .filter((q) => q.and(q.eq(q.field("tenantId"), undefined), q.eq(q.field("type"), "agent-agent")))
+        .filter((q) => q.eq(q.field("type"), "agent-agent"))
         .collect();
 
       const sortedInput = [...args.participants.memorySpaceIds].sort();
 
-      const matches = conversations.filter((c) => {
+      existing =
+        conversations.find((c) => {
           if (!c.participants.memorySpaceIds) {
             return false;
           }
@@ -799,9 +940,7 @@ export const getOrCreate = graphMutation({
             sorted.length === sortedInput.length &&
             sorted.every((id, i) => id === sortedInput[i])
           );
-        });
-      if (matches.length > 1) throw new ConvexError("CONVERSATION_SCOPE_AMBIGUOUS");
-      existing = matches[0] ?? null;
+        }) || null;
     }
 
     if (existing) {
@@ -812,7 +951,7 @@ export const getOrCreate = graphMutation({
     const now = Date.now();
     const conversationId = `conv-${now}-${Math.random().toString(36).substring(2, 11)}`;
 
-    const _id = await captureInsertedRow(ctx, "conversations", {
+    const _id = await ctx.db.insert("conversations", {
       conversationId,
       memorySpaceId: args.memorySpaceId,
       participantId: args.participantId,
@@ -836,12 +975,16 @@ export const getOrCreate = graphMutation({
  */
 export const findConversation = query({
   args: {
+    tenantId: v.optional(v.string()),
     memorySpaceId: v.string(), // NEW: Required
     type: v.union(v.literal("user-agent"), v.literal("agent-agent")),
     userId: v.optional(v.string()),
     memorySpaceIds: v.optional(v.array(v.string())),
   },
   handler: async (ctx, args) => {
+    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
+    await runtimeUnavailable(ctx, "read", args);
+
     if (args.type === "user-agent") {
       if (!args.userId) {
         return null;
@@ -898,13 +1041,22 @@ export const findConversation = query({
  */
 export const get = query({
   args: {
+    memorySpaceId: v.optional(v.string()),
     conversationId: v.string(),
     tenantId: v.optional(v.string()), // Multi-tenancy: filter by tenant
     includeMessages: v.optional(v.boolean()), // Default: true
     messageLimit: v.optional(v.number()), // Limit messages returned
   },
   handler: async (ctx, args) => {
-    const conversation = await scopedConversation(ctx, args);
+    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
+    await runtimeUnavailable(ctx, "read", args);
+
+    const conversation = await ctx.db
+      .query("conversations")
+      .withIndex("by_conversationId", (q) =>
+        q.eq("conversationId", args.conversationId),
+      )
+      .first();
 
     if (!conversation) {
       return null;
@@ -927,10 +1079,10 @@ export const get = query({
     }
 
     // Handle messageLimit option
-    if (args.messageLimit !== undefined) {
+    if (args.messageLimit !== undefined && args.messageLimit > 0) {
       return {
         ...conversation,
-        messages: args.messageLimit === 0 ? [] : conversation.messages.slice(-domainInteger(args.messageLimit, 0)),
+        messages: conversation.messages.slice(-args.messageLimit),
       };
     }
 
@@ -942,17 +1094,218 @@ export const get = query({
  * List conversations with filters and pagination metadata
  */
 export const list = query({
-  args: {...conversationFilterFields, limit: v.optional(v.number()), offset: v.optional(v.number()), sortBy: v.optional(v.union(v.literal("createdAt"), v.literal("updatedAt"), v.literal("lastMessageAt"), v.literal("messageCount"))), sortOrder: v.optional(v.union(v.literal("asc"), v.literal("desc"))), includeMessages: v.optional(v.boolean())},
+  args: {
+    type: v.optional(
+      v.union(v.literal("user-agent"), v.literal("agent-agent")),
+    ),
+    userId: v.optional(v.string()),
+    memorySpaceId: v.optional(v.string()), // Filter by memory space
+    tenantId: v.optional(v.string()), // Multi-tenancy: filter by tenant
+    participantId: v.optional(v.string()), // Hive Mode tracking
+    createdBefore: v.optional(v.number()),
+    createdAfter: v.optional(v.number()),
+    updatedBefore: v.optional(v.number()),
+    updatedAfter: v.optional(v.number()),
+    lastMessageBefore: v.optional(v.number()),
+    lastMessageAfter: v.optional(v.number()),
+    messageCountMin: v.optional(v.number()),
+    messageCountMax: v.optional(v.number()),
+    limit: v.optional(v.number()),
+    offset: v.optional(v.number()),
+    sortBy: v.optional(
+      v.union(
+        v.literal("createdAt"),
+        v.literal("updatedAt"),
+        v.literal("lastMessageAt"),
+        v.literal("messageCount"),
+      ),
+    ),
+    sortOrder: v.optional(v.union(v.literal("asc"), v.literal("desc"))),
+    includeMessages: v.optional(v.boolean()),
+  },
   handler: async (ctx, args) => {
-    validateDomainScope(args.tenantId); validateDomainSelection(args);
-    const scan = await ctx.db.query("conversations").withIndex("by_tenantId", q => q.eq("tenantId", args.tenantId)).take(257);
-    await domainBudget(ctx, scan);
-    const filtered = scan.filter(row => matchesConversation(row, args));
-    const key = (c: Doc<"conversations">) => args.sortBy === "lastMessageAt" ? c.messages[c.messages.length - 1]?.timestamp ?? c.createdAt : args.sortBy === "updatedAt" ? c.updatedAt : args.sortBy === "messageCount" ? c.messageCount : c.createdAt;
-    filtered.sort((a, b) => (key(a) - key(b)) * (args.sortOrder === "asc" ? 1 : -1));
-    const offset = domainInteger(args.offset, 0), limit = domainInteger(args.limit, 50);
-    const conversations = filtered.slice(offset, offset + limit).map(c => args.includeMessages ? c : {...c, messages: []});
-    return {conversations, total: filtered.length, limit, offset, hasMore: offset + limit < filtered.length};
+    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
+    await runtimeUnavailable(ctx, "read", args);
+
+    const limit = args.limit || 50;
+    const offset = args.offset || 0;
+
+    // Apply filters using indexes
+    let conversations;
+
+    // Prioritize tenant + space (best for multi-tenancy)
+    if (args.tenantId && args.memorySpaceId) {
+      conversations = await ctx.db
+        .query("conversations")
+        .withIndex("by_tenant_space", (q) =>
+          q
+            .eq("tenantId", args.tenantId!)
+            .eq("memorySpaceId", args.memorySpaceId!),
+        )
+        .collect();
+    } else if (args.tenantId) {
+      // Tenant only - get all tenant's conversations
+      conversations = await ctx.db
+        .query("conversations")
+        .withIndex("by_tenantId", (q) => q.eq("tenantId", args.tenantId!))
+        .collect();
+    } else if (args.memorySpaceId && args.userId) {
+      // memorySpace + user (common query pattern)
+      conversations = await ctx.db
+        .query("conversations")
+        .withIndex("by_memorySpace_user", (q) =>
+          q
+            .eq("memorySpaceId", args.memorySpaceId!)
+            .eq("participants.userId", args.userId),
+        )
+        .collect();
+    } else if (args.memorySpaceId) {
+      // Memory space only (Hive Mode: all conversations in space)
+      conversations = await ctx.db
+        .query("conversations")
+        .withIndex("by_memorySpace", (q) =>
+          q.eq("memorySpaceId", args.memorySpaceId!),
+        )
+        .collect();
+    } else if (args.userId) {
+      conversations = await ctx.db
+        .query("conversations")
+        .withIndex("by_user", (q) => q.eq("participants.userId", args.userId))
+        .collect();
+    } else if (args.type) {
+      conversations = await ctx.db
+        .query("conversations")
+        .withIndex("by_type", (q) => q.eq("type", args.type!))
+        .collect();
+    } else {
+      conversations = await ctx.db.query("conversations").collect();
+    }
+
+    // Post-filter by userId when tenant indexes are used (security-critical!)
+    // The by_tenant_space and by_tenantId indexes don't include userId,
+    // so we must filter to prevent cross-user data leakage within a tenant.
+    if (args.userId && args.tenantId) {
+      conversations = conversations.filter(
+        (c) => c.participants.userId === args.userId,
+      );
+    }
+
+    // Post-filter by type if needed (when using other indexes)
+    // The by_type index is only used when tenantId, memorySpaceId, and userId are all absent.
+    // If any of those are provided, a different index is used and type must be post-filtered.
+    if (args.type && (args.tenantId || args.memorySpaceId || args.userId)) {
+      conversations = conversations.filter((c) => c.type === args.type);
+    }
+
+    // Apply additional filters
+    if (args.participantId) {
+      conversations = conversations.filter(
+        (c) => c.participantId === args.participantId,
+      );
+    }
+    if (args.createdBefore !== undefined) {
+      conversations = conversations.filter(
+        (c) => c.createdAt < args.createdBefore!,
+      );
+    }
+    if (args.createdAfter !== undefined) {
+      conversations = conversations.filter(
+        (c) => c.createdAt > args.createdAfter!,
+      );
+    }
+    if (args.updatedBefore !== undefined) {
+      conversations = conversations.filter(
+        (c) => c.updatedAt < args.updatedBefore!,
+      );
+    }
+    if (args.updatedAfter !== undefined) {
+      conversations = conversations.filter(
+        (c) => c.updatedAt > args.updatedAfter!,
+      );
+    }
+    if (args.lastMessageBefore !== undefined) {
+      conversations = conversations.filter((c) => {
+        const lastMsgTime =
+          c.messages.length > 0
+            ? c.messages[c.messages.length - 1].timestamp
+            : c.createdAt;
+        return lastMsgTime < args.lastMessageBefore!;
+      });
+    }
+    if (args.lastMessageAfter !== undefined) {
+      conversations = conversations.filter((c) => {
+        const lastMsgTime =
+          c.messages.length > 0
+            ? c.messages[c.messages.length - 1].timestamp
+            : c.createdAt;
+        return lastMsgTime > args.lastMessageAfter!;
+      });
+    }
+    if (args.messageCountMin !== undefined) {
+      conversations = conversations.filter(
+        (c) => c.messageCount >= args.messageCountMin!,
+      );
+    }
+    if (args.messageCountMax !== undefined) {
+      conversations = conversations.filter(
+        (c) => c.messageCount <= args.messageCountMax!,
+      );
+    }
+
+    // Get total before pagination
+    const total = conversations.length;
+
+    // Sort
+    const sortBy = args.sortBy || "createdAt";
+    const sortOrder = args.sortOrder || "desc";
+
+    conversations.sort((a, b) => {
+      let aVal: number;
+      let bVal: number;
+
+      switch (sortBy) {
+        case "updatedAt":
+          aVal = a.updatedAt;
+          bVal = b.updatedAt;
+          break;
+        case "lastMessageAt":
+          aVal =
+            a.messages.length > 0
+              ? a.messages[a.messages.length - 1].timestamp
+              : a.createdAt;
+          bVal =
+            b.messages.length > 0
+              ? b.messages[b.messages.length - 1].timestamp
+              : b.createdAt;
+          break;
+        case "messageCount":
+          aVal = a.messageCount;
+          bVal = b.messageCount;
+          break;
+        default: // createdAt
+          aVal = a.createdAt;
+          bVal = b.createdAt;
+      }
+
+      return sortOrder === "asc" ? aVal - bVal : bVal - aVal;
+    });
+
+    // Paginate
+    const paginatedConversations = conversations.slice(offset, offset + limit);
+
+    // Optionally exclude messages
+    const result =
+      args.includeMessages === false
+        ? paginatedConversations.map((c) => ({ ...c, messages: [] }))
+        : paginatedConversations;
+
+    return {
+      conversations: result,
+      total,
+      limit,
+      offset,
+      hasMore: offset + limit < total,
+    };
   },
 });
 
@@ -969,11 +1322,24 @@ export const count = query({
     ),
   },
   handler: async (ctx, args) => {
-    validateDomainScope(args.tenantId);
-    const conversations = await ctx.db.query("conversations").withIndex("by_tenantId", q => q.eq("tenantId", args.tenantId)).collect();
+    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
+    await runtimeUnavailable(ctx, "read", args);
+
+    let conversations;
+
+    // Use index if memorySpaceId provided
+    if (args.memorySpaceId) {
+      conversations = await ctx.db
+        .query("conversations")
+        .withIndex("by_memorySpace", (q) =>
+          q.eq("memorySpaceId", args.memorySpaceId!),
+        )
+        .collect();
+    } else {
+      conversations = await ctx.db.query("conversations").collect();
+    }
 
     let filtered = conversations;
-    if (args.memorySpaceId !== undefined) filtered = filtered.filter(c => c.memorySpaceId === args.memorySpaceId);
 
     if (args.userId) {
       filtered = filtered.filter((c) => c.participants.userId === args.userId);
@@ -993,6 +1359,7 @@ export const count = query({
 export const getHistory = query({
   args: {
     tenantId: v.optional(v.string()),
+    memorySpaceId: v.optional(v.string()),
     conversationId: v.string(),
     limit: v.optional(v.number()),
     offset: v.optional(v.number()),
@@ -1006,15 +1373,22 @@ export const getHistory = query({
     ), // Filter by role
   },
   handler: async (ctx, args) => {
-    validateDomainSelection(args);
-    const conversation = await scopedConversation(ctx, args);
+    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
+    await runtimeUnavailable(ctx, "read", args);
+
+    const conversation = await ctx.db
+      .query("conversations")
+      .withIndex("by_conversationId", (q) =>
+        q.eq("conversationId", args.conversationId),
+      )
+      .first();
 
     if (!conversation) {
       throw new ConvexError("CONVERSATION_NOT_FOUND");
     }
 
-    const limit = domainInteger(args.limit, 50);
-    const offset = domainInteger(args.offset, 0);
+    const limit = args.limit || 50;
+    const offset = args.offset || 0;
     const sortOrder = args.sortOrder || "asc";
 
     // Get messages (already sorted in storage as append-only)
@@ -1058,6 +1432,7 @@ export const getHistory = query({
  */
 export const search = query({
   args: {
+    tenantId: v.optional(v.string()),
     query: v.string(),
     type: v.optional(
       v.union(v.literal("user-agent"), v.literal("agent-agent")),
@@ -1075,6 +1450,9 @@ export const search = query({
     ), // Default: "contains"
   },
   handler: async (ctx, args) => {
+    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
+    await runtimeUnavailable(ctx, "read", args);
+
     // Get conversations (use index if memorySpace provided)
     let allConversations;
 
@@ -1116,6 +1494,9 @@ export const search = query({
     }> = [];
 
     for (const conversation of allConversations) {
+      if (args.tenantId && conversation.tenantId !== args.tenantId) {
+        continue;
+      }
       // Apply filters
       if (args.type && conversation.type !== args.type) {
         continue;
@@ -1208,9 +1589,22 @@ export const exportConversations = query({
     includeMetadata: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
-    validateDomainScope(args.tenantId); validateDomainSelection(args);
-    let conversations = await ctx.db.query("conversations").withIndex("by_tenantId", q => q.eq("tenantId", args.tenantId)).take(257);
-    await domainBudget(ctx, conversations);
+    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
+    await runtimeUnavailable(ctx, "read", args);
+
+    let conversations;
+
+    // Use index if memorySpaceId provided
+    if (args.memorySpaceId) {
+      conversations = await ctx.db
+        .query("conversations")
+        .withIndex("by_memorySpace", (q) =>
+          q.eq("memorySpaceId", args.memorySpaceId!),
+        )
+        .collect();
+    } else {
+      conversations = await ctx.db.query("conversations").collect();
+    }
 
     // Apply filters
     if (args.conversationIds && args.conversationIds.length > 0) {
@@ -1305,30 +1699,5 @@ export const exportConversations = query({
       count: conversations.length,
       exportedAt: Date.now(),
     };
-  },
-});
-
-export const domainPage = query({
-  args: {...conversationFilterFields, paginationOpts: paginationOptsValidator},
-  handler: async (ctx, args) => {
-    validateDomainScope(args.tenantId); validateDomainSelection(args);
-    const selected = args.memorySpaceId !== undefined
-      ? ctx.db.query("conversations").withIndex("by_tenant_space", q => q.eq("tenantId", args.tenantId).eq("memorySpaceId", args.memorySpaceId!))
-      : ctx.db.query("conversations").withIndex("by_tenantId", q => q.eq("tenantId", args.tenantId));
-    const scan = await selected.order("desc").paginate(domainPageOptions(args.paginationOpts));
-    const page = scan.pageStatus === "SplitRequired" ? [] : scan.page.filter(row => matchesConversation(row, args));
-    const result = {...scan, page, fingerprints: Object.fromEntries(page.map(row => [row._id, domainFingerprint(row)]))};
-    await domainBudget(ctx, result); return result;
-  },
-});
-export const eraseSelected = graphMutation({
-  args: {tenantId: v.optional(v.string()), physicalId: v.id("conversations"), expectedFingerprint: v.string()},
-  handler: async (ctx, args) => {
-    validateDomainScope(args.tenantId); validateDomainSelection(args);
-    const row = await ctx.db.get(args.physicalId);
-    if (!row) return {deleted: false, alreadyAbsent: true, conversationId: "", physicalId: args.physicalId, messagesDeleted: 0};
-    if (row.tenantId !== args.tenantId) throw new ConvexError("DOMAIN_SELECTION_CHANGED");
-    checkFingerprint(row, args.expectedFingerprint); const graphIdentity = await domainGraphIdentity(ctx, "conversations", row); await markDeletedRow(ctx, row._id);
-    return {deleted: true, conversationId: row.conversationId, physicalId: row._id, graphIdentity, messagesDeleted: row.messageCount, deletedAt: Date.now(), restorable: false};
   },
 });

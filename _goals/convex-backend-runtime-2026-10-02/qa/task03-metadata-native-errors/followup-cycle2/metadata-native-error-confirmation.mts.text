@@ -1,0 +1,44 @@
+import assert from "node:assert/strict";
+import { writeFileSync } from "node:fs";
+import { fixture } from "/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/tests/unit/runtimeMetadataAuth/fixture.ts";
+import * as immutable from "/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/work/native-errors-cycle2/native-baseline/immutable.ts";
+import * as mutable from "/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/work/native-errors-cycle2/native-baseline/mutable.ts";
+import * as sessions from "/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/work/native-errors-cycle2/native-baseline/sessions.ts";
+import { QueryImpl } from "/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/node_modules/convex/dist/esm/server/impl/query_impl.js";
+
+const outcomes = [];
+const scope = { tenantId: "tenant-a", memorySpaceId: "space-a" };
+for (const capability of ["write", "read"] as const) {
+  for (const table of ["immutable", "mutable", "sessions"] as const) {
+    const f = fixture({ capabilities: [capability], space: "space-a" });
+    const seed = table === "immutable" ? f.seedImmutable : table === "mutable" ? f.seedMutable : f.seedSession;
+    seed({ _id: "private-native-id-one" }); seed({ _id: "private-native-id-two" });
+    const original = f.db.query.bind(f.db);
+    f.db.query = (name) => {
+      const query = original(name);
+      query.unique = async () => await QueryImpl.prototype.unique.call({
+        take: async (limit: number) => await query.take(limit), tableNameForErrorMessages: name,
+      });
+      return query;
+    };
+    const registration = table === "immutable"
+      ? capability === "write" ? immutable.store : immutable.get
+      : table === "mutable" ? capability === "write" ? mutable.set : mutable.get
+        : capability === "write" ? sessions.touch : sessions.get;
+    const args = table === "immutable" ? { ...scope, type: "note", id: "one", ...(capability === "write" ? { data: { value: "replacement" } } : {}) }
+      : table === "mutable" ? { ...scope, namespace: "counter", key: "one", ...(capability === "write" ? { value: 6 } : {}) }
+        : { ...scope, sessionId: "one" };
+    let error: unknown;
+    try { await f.run(registration, args); } catch (caught) { error = caught; }
+    assert(error instanceof Error); assert.equal(f.db.attemptedWrites, 0); assert.equal(f.db.writes, 0);
+    const leaksIds = error.message.includes("private-native-id-one") && error.message.includes("private-native-id-two");
+    assert.equal(leaksIds, true, "Confirmation only: actual native error currently exposes both IDs");
+    outcomes.push({ table, capability, actualHandler: true, nativeUnique: "installed Convex1.46 QueryImpl.prototype.unique",
+      errorType: error.constructor.name, leaksStoredInternalIds: leaksIds,
+      attemptedWrites: f.db.attemptedWrites, committedWrites: f.db.writes });
+  }
+}
+const receipt = { classification: "Parent confirmation of defect in previously accepted metadata slice; not an independent verdict or service exploit proof",
+  observedAt: new Date().toISOString(), outcomes, sourceOrQaWrites: 0, serviceCalls: 0 };
+writeFileSync("/workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03-metadata-native-errors/followup-cycle2/metadata-native-error-confirmation-current-baseline.json", JSON.stringify(receipt, null, 2) + "\n", { flag: "wx" });
+process.stdout.write(JSON.stringify(receipt) + "\n");

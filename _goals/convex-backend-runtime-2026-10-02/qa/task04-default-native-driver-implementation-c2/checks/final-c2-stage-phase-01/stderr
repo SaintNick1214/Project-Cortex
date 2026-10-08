@@ -1,0 +1,20 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+'denied' !== 'replay'
+
+    at file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture/checks/lifecycle.mjs:14:346
+    at async test (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture/checks/lifecycle.mjs:9:52)
+    at async file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture/checks/lifecycle.mjs:14:1 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: 'denied',
+  expected: 'replay',
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

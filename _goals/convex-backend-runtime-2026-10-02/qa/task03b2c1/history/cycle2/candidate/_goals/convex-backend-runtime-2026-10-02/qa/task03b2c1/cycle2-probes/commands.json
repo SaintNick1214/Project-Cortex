@@ -1,0 +1,68 @@
+[
+  {
+    "name": "probes",
+    "command": [
+      "npx",
+      "--yes",
+      "--package=npm@12.2.0",
+      "--",
+      "npm",
+      "exec",
+      "--",
+      "node",
+      "--import",
+      "tsx",
+      "/workspace/Project-Cortex/work/backend-runtime/task03b2c1-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1/cycle2-probes/probes.mts"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2c1-checkout",
+    "startedAtUtc": "2026-10-03T11:53:10.101278+00:00",
+    "finishedAtUtc": "2026-10-03T11:53:12.081709+00:00",
+    "exitCode": 0,
+    "stdout": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1/cycle2-probes/probes.stdout",
+    "stderr": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1/cycle2-probes/probes.stderr"
+  },
+  {
+    "name": "adversarial",
+    "command": [
+      "npx",
+      "--yes",
+      "--package=npm@12.2.0",
+      "--",
+      "npm",
+      "exec",
+      "--",
+      "node",
+      "--import",
+      "tsx",
+      "/workspace/Project-Cortex/work/backend-runtime/task03b2c1-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1/cycle2-probes/adversarial.mts"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2c1-checkout",
+    "startedAtUtc": "2026-10-03T11:53:12.082178+00:00",
+    "finishedAtUtc": "2026-10-03T11:53:13.924194+00:00",
+    "exitCode": 0,
+    "stdout": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1/cycle2-probes/adversarial.stdout",
+    "stderr": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1/cycle2-probes/adversarial.stderr"
+  },
+  {
+    "name": "repeated-source",
+    "command": [
+      "npx",
+      "--yes",
+      "--package=npm@12.2.0",
+      "--",
+      "npm",
+      "exec",
+      "--",
+      "node",
+      "--import",
+      "tsx",
+      "/workspace/Project-Cortex/work/backend-runtime/task03b2c1-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1/cycle2-probes/repeated-source.mts"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2c1-checkout",
+    "startedAtUtc": "2026-10-03T11:53:13.924589+00:00",
+    "finishedAtUtc": "2026-10-03T11:53:15.919716+00:00",
+    "exitCode": 0,
+    "stdout": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1/cycle2-probes/repeated-source.stdout",
+    "stderr": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1/cycle2-probes/repeated-source.stderr"
+  }
+]

@@ -1,0 +1,40 @@
+{
+  "profile": "regression",
+  "failures": [
+    {
+      "name": "expiry-after-key-before-first-sign",
+      "violationConfirmed": true,
+      "error": "PARENT_TOTAL_TIME_BUDGET",
+      "preflightCalls": 2,
+      "signatures": 8,
+      "network": 0,
+      "keyReads": 1,
+      "writes": [],
+      "stdout": "",
+      "realSigning": 0,
+      "realNetwork": 0,
+      "realPrivateReads": 0
+    },
+    {
+      "name": "expiry-after-first-proof-before-other-outputs",
+      "violationConfirmed": true,
+      "error": "PARENT_TOTAL_TIME_BUDGET",
+      "preflightCalls": 3,
+      "signatures": 8,
+      "network": 0,
+      "keyReads": 1,
+      "writes": [
+        "initial-physical-id-provenance.json",
+        "historical-native-locators.json",
+        "identities.json",
+        "peer-config.json"
+      ],
+      "stdout": "",
+      "realSigning": 0,
+      "realNetwork": 0,
+      "realPrivateReads": 0
+    }
+  ],
+  "tests": 2,
+  "skipped": 0
+}

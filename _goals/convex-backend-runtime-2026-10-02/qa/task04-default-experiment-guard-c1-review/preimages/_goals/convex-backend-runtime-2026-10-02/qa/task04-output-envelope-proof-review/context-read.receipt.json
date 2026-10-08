@@ -1,0 +1,31 @@
+{
+  "argv": [
+    "python",
+    "-c",
+    "import pathlib,sys; [(print(\"SOURCE \"+p),print(pathlib.Path(p).read_text())) for p in sys.argv[1:]]",
+    "AGENTS.md",
+    ".agents/CODEX-RUNTIME.md",
+    ".agents/PROJECT-PROFILE.md",
+    ".agents/roles/pessimistic-judge.md",
+    ".agents/skills/judge-task/SKILL.md",
+    ".agents/skills/feature-orchestrator/SKILL.md",
+    "_goals/convex-backend-runtime-2026-10-02/implementation-prompt.md",
+    "_goals/convex-backend-runtime-2026-10-02/goal.md",
+    "_goals/convex-backend-runtime-2026-10-02/tasks/04-model-policy.md",
+    "_research/convex-ai-gateway-2026-10-02/decision-gates.md",
+    "_research/convex-ai-gateway-2026-10-02/architecture.md",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-input-result-bound-research/report.md",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-structured-gateway-preparation/report.md",
+    "_goals/convex-backend-runtime-2026-10-02/qa/task04-output-vocabulary-acquisition/report.md",
+    "src/domain/profile.ts",
+    "src/domain/model-policy.ts",
+    "convex-dev/runtimeModelPolicy.ts"
+  ],
+  "cwd": "/workspace/Project-Cortex",
+  "startUTC": "2026-10-04T03:25:28.174837+00:00",
+  "endUTC": "2026-10-04T03:25:28.198253+00:00",
+  "exitCode": 0,
+  "stdoutSHA256": "f90d78a5e9f0cc3787e7d4b9e713c3d37cf8e0e49ca375f00fd0e5b6323e42f8",
+  "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "role": "exact inspected context raw source receipt"
+}

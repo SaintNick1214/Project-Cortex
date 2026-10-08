@@ -1,0 +1,396 @@
+{
+  "version": 1,
+  "startedAt": "2026-10-03T08:55:46.358Z",
+  "deployment": "fiery-setter-784",
+  "targetType": "dev",
+  "checks": [
+    {
+      "name": "live-Gateway-tool-disconnect-multiple-observers-no-replay",
+      "status": "PASS",
+      "result": {
+        "evidenceKind": "actual-Gateway-Agent-backend-tool-and-managed-Convex-WebSocket",
+        "runId": "jd75435a6s0865y1t82a6m6zns8fjpez",
+        "disconnectStatus": "running",
+        "toolEffectsAtDisconnect": 1,
+        "aSnapshots": 4,
+        "bSnapshots": 8,
+        "finalStatus": "completed",
+        "modelActionAttempts": 1,
+        "toolEffects": 1,
+        "finalIngestionReceipts": 1,
+        "sameCanonicalFinalIds": [
+          "kx73caccnnmygg725wa7nmrj698fj5b0",
+          "kx750gd5mvq9y1shf6jq785ws58fk3cw"
+        ],
+        "persistedStreams": [
+          {
+            "agentName": "task01-qualified-agent",
+            "format": "UIMessageChunk",
+            "model": "openai/gpt-4o-mini",
+            "order": 0,
+            "provider": "convexGateway.chat",
+            "status": "finished",
+            "stepOrder": 1,
+            "streamId": "m570vq3zz2e7q7jcqqjrfdjndx8fjf2c",
+            "userId": "task01-owner"
+          }
+        ]
+      }
+    },
+    {
+      "name": "persisted-Agent-stream-multiple-observers-reconnect",
+      "status": "PASS",
+      "result": {
+        "evidenceKind": "synthetic-model-on-real-Agent-Workflow-and-managed-Convex",
+        "runId": "jd75426m37a7ev0nkqr1fmn62x8fjw4d",
+        "aSnapshots": 4,
+        "bSnapshots": 3,
+        "disconnectDidNotCancel": true,
+        "savedCursor": 1,
+        "resumedDeltas": {
+          "deltas": [
+            {
+              "end": 2,
+              "parts": [
+                {
+                  "type": "start-step"
+                }
+              ],
+              "start": 1,
+              "streamId": "m57811japgw928aqcct32kcnzx8fj9pk"
+            },
+            {
+              "end": 3,
+              "parts": [],
+              "start": 2,
+              "streamId": "m57811japgw928aqcct32kcnzx8fj9pk"
+            },
+            {
+              "end": 4,
+              "parts": [],
+              "start": 3,
+              "streamId": "m57811japgw928aqcct32kcnzx8fj9pk"
+            },
+            {
+              "end": 5,
+              "parts": [],
+              "start": 4,
+              "streamId": "m57811japgw928aqcct32kcnzx8fj9pk"
+            },
+            {
+              "end": 6,
+              "parts": [],
+              "start": 5,
+              "streamId": "m57811japgw928aqcct32kcnzx8fj9pk"
+            },
+            {
+              "end": 7,
+              "parts": [],
+              "start": 6,
+              "streamId": "m57811japgw928aqcct32kcnzx8fj9pk"
+            },
+            {
+              "end": 8,
+              "parts": [
+                {
+                  "id": "txt-1",
+                  "type": "text-start"
+                }
+              ],
+              "start": 7,
+              "streamId": "m57811japgw928aqcct32kcnzx8fj9pk"
+            },
+            {
+              "end": 9,
+              "parts": [
+                {
+                  "delta": "Cortex ",
+                  "id": "txt-1",
+                  "type": "text-delta"
+                }
+              ],
+              "start": 8,
+              "streamId": "m57811japgw928aqcct32kcnzx8fj9pk"
+            },
+            {
+              "end": 10,
+              "parts": [
+                {
+                  "delta": "durable ",
+                  "id": "txt-1",
+                  "type": "text-delta"
+                }
+              ],
+              "start": 9,
+              "streamId": "m57811japgw928aqcct32kcnzx8fj9pk"
+            },
+            {
+              "end": 11,
+              "parts": [
+                {
+                  "delta": "stream ",
+                  "id": "txt-1",
+                  "type": "text-delta"
+                }
+              ],
+              "start": 10,
+              "streamId": "m57811japgw928aqcct32kcnzx8fj9pk"
+            },
+            {
+              "end": 12,
+              "parts": [
+                {
+                  "delta": "one ",
+                  "id": "txt-1",
+                  "type": "text-delta"
+                }
+              ],
+              "start": 11,
+              "streamId": "m57811japgw928aqcct32kcnzx8fj9pk"
+            },
+            {
+              "end": 13,
+              "parts": [
+                {
+                  "delta": "two ",
+                  "id": "txt-1",
+                  "type": "text-delta"
+                }
+              ],
+              "start": 12,
+              "streamId": "m57811japgw928aqcct32kcnzx8fj9pk"
+            },
+            {
+              "end": 14,
+              "parts": [
+                {
+                  "delta": "three ",
+                  "id": "txt-1",
+                  "type": "text-delta"
+                }
+              ],
+              "start": 13,
+              "streamId": "m57811japgw928aqcct32kcnzx8fj9pk"
+            },
+            {
+              "end": 15,
+              "parts": [
+                {
+                  "delta": "four ",
+                  "id": "txt-1",
+                  "type": "text-delta"
+                }
+              ],
+              "start": 14,
+              "streamId": "m57811japgw928aqcct32kcnzx8fj9pk"
+            },
+            {
+              "end": 16,
+              "parts": [
+                {
+                  "delta": "five ",
+                  "id": "txt-1",
+                  "type": "text-delta"
+                }
+              ],
+              "start": 15,
+              "streamId": "m57811japgw928aqcct32kcnzx8fj9pk"
+            },
+            {
+              "end": 17,
+              "parts": [
+                {
+                  "delta": "six ",
+                  "id": "txt-1",
+                  "type": "text-delta"
+                }
+              ],
+              "start": 16,
+              "streamId": "m57811japgw928aqcct32kcnzx8fj9pk"
+            },
+            {
+              "end": 18,
+              "parts": [
+                {
+                  "delta": "seven ",
+                  "id": "txt-1",
+                  "type": "text-delta"
+                }
+              ],
+              "start": 17,
+              "streamId": "m57811japgw928aqcct32kcnzx8fj9pk"
+            },
+            {
+              "end": 19,
+              "parts": [
+                {
+                  "delta": "eight ",
+                  "id": "txt-1",
+                  "type": "text-delta"
+                }
+              ],
+              "start": 18,
+              "streamId": "m57811japgw928aqcct32kcnzx8fj9pk"
+            },
+            {
+              "end": 20,
+              "parts": [
+                {
+                  "delta": "nine ",
+                  "id": "txt-1",
+                  "type": "text-delta"
+                }
+              ],
+              "start": 19,
+              "streamId": "m57811japgw928aqcct32kcnzx8fj9pk"
+            },
+            {
+              "end": 21,
+              "parts": [
+                {
+                  "delta": "ten.",
+                  "id": "txt-1",
+                  "type": "text-delta"
+                }
+              ],
+              "start": 20,
+              "streamId": "m57811japgw928aqcct32kcnzx8fj9pk"
+            },
+            {
+              "end": 22,
+              "parts": [
+                {
+                  "id": "txt-1",
+                  "type": "text-end"
+                }
+              ],
+              "start": 21,
+              "streamId": "m57811japgw928aqcct32kcnzx8fj9pk"
+            },
+            {
+              "end": 23,
+              "parts": [
+                {
+                  "type": "finish-step"
+                }
+              ],
+              "start": 22,
+              "streamId": "m57811japgw928aqcct32kcnzx8fj9pk"
+            },
+            {
+              "end": 24,
+              "parts": [
+                {
+                  "finishReason": "stop",
+                  "type": "finish"
+                }
+              ],
+              "start": 23,
+              "streamId": "m57811japgw928aqcct32kcnzx8fj9pk"
+            }
+          ],
+          "kind": "deltas"
+        },
+        "finalStatus": "completed",
+        "attempts": 1,
+        "hiddenReasoningParts": 1,
+        "rawReasoningSuppressed": true,
+        "reconnectedCanonicalMessages": [
+          {
+            "id": "kx75q8ar1p9c8rq6gaby7xr6qs8fkv33",
+            "status": "success",
+            "role": "assistant",
+            "content": [
+              {
+                "text": "Cortex durable stream one two three four five six seven eight nine ten.",
+                "type": "text"
+              }
+            ]
+          },
+          {
+            "id": "kx78x6tpr7a3jeqhqvd0gwpdph8fjg9b",
+            "status": "success",
+            "role": "user",
+            "content": "Say exactly: Cortex qualification ready."
+          }
+        ],
+        "snapshots": [
+          {
+            "observer": "A",
+            "status": "queued",
+            "streams": 0
+          },
+          {
+            "observer": "A",
+            "status": "running",
+            "streams": 0
+          },
+          {
+            "observer": "A",
+            "status": "running",
+            "streams": 0
+          },
+          {
+            "observer": "A",
+            "status": "running",
+            "streams": 1
+          },
+          {
+            "observer": "B",
+            "status": "running",
+            "streams": 1
+          },
+          {
+            "observer": "B",
+            "status": "running",
+            "streams": 1
+          },
+          {
+            "observer": "B",
+            "status": "completed",
+            "streams": 1
+          }
+        ]
+      }
+    },
+    {
+      "name": "persisted-Agent-stream-cancellation",
+      "status": "PASS",
+      "result": {
+        "evidenceKind": "synthetic-model-on-real-Agent-Workflow-and-managed-Convex",
+        "runId": "jd70y79vtybjkycp5rkm60tk298fkdv0",
+        "ack": {
+          "abortedStreams": 1,
+          "status": "cancelled",
+          "upstreamReversalGuaranteed": false,
+          "version": 1
+        },
+        "attempts": 1,
+        "receipts": 0,
+        "streams": [
+          {
+            "agentName": "task01-qualified-agent",
+            "format": "UIMessageChunk",
+            "model": "mock-model-id",
+            "order": 0,
+            "provider": "mock-provider",
+            "status": "aborted",
+            "stepOrder": 1,
+            "streamId": "m57b2gf4we2m77se4v9v6vbytn8fkwn7",
+            "userId": "task01-owner"
+          }
+        ]
+      }
+    }
+  ],
+  "selectedChecks": [
+    "live-Gateway-tool-disconnect-multiple-observers-no-replay",
+    "persisted-Agent-stream-multiple-observers-reconnect",
+    "persisted-Agent-stream-cancellation"
+  ],
+  "wsVersion": "8.21.0",
+  "fixtureLockSha256": "2e1066ce717e161979294f981c9ed2a4960f0cb98c7ec0d0e030f181ac49ef69",
+  "rerunStartedAt": "2026-10-03T08:55:46.359Z",
+  "finishedAt": "2026-10-03T08:56:04.750Z",
+  "status": "PASS"
+}

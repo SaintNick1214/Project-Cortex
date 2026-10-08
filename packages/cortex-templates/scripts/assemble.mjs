@@ -10,7 +10,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 /** @typedef {import('../contract.js').TemplateCatalog} TemplateCatalog */
 /** @typedef {import('../contract.js').SourceFileReceipt} SourceFileReceipt */
 
-const releaseRange = "^0.37.0";
+const releaseRange = "^0.38.0";
 const versions = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-[a-zA-Z0-9]+(?:[.-][a-zA-Z0-9]+)*)?$/;
 const managers = { basic: "npm", "vercel-ai-quickstart": "npm", "chat-sdk": "pnpm" };
 const excludedDirectories = new Set([

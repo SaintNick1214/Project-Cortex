@@ -95,6 +95,7 @@ test("private HTTP preflight precedes SDK initialization and applies admin once"
     auth: { userId: "owner", tenantId: "tenant" },
     graphEnabled: false,
   });
+  expect(mocks.create.mock.calls[0][1]).toMatchObject({ deploymentOperator: true });
   expect(client.setAdminAuth).toHaveBeenCalledExactlyOnceWith(
     "unit-private-key"
   );

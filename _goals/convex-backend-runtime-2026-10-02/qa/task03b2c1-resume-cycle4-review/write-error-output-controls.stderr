@@ -1,0 +1,20 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
++ actual - expected
+
++ undefined
+- 'private-owner-stream-session'
+
+    at <anonymous> (/workspace/Project-Cortex/work/resume/artifact-review/write-error-output-controls.mts:11:63) {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: undefined,
+  expected: 'private-owner-stream-session',
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

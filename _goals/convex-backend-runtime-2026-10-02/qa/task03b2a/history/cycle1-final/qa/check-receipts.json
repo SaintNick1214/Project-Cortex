@@ -1,0 +1,139 @@
+[
+  {
+    "name": "backend-types",
+    "argv": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "--project",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03b2a/tsconfig.backend.json",
+      "--pretty",
+      "false"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2a-checkout",
+    "startedAt": "2026-10-03T10:20:53.827947+00:00",
+    "endedAt": "2026-10-03T10:20:55.964798+00:00",
+    "exitCode": 0,
+    "log": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2a/checks/backend-types.log"
+  },
+  {
+    "name": "test-types",
+    "argv": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "--project",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03b2a/tsconfig.tests.json",
+      "--pretty",
+      "false"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2a-checkout",
+    "startedAt": "2026-10-03T10:20:55.965165+00:00",
+    "endedAt": "2026-10-03T10:20:58.305719+00:00",
+    "exitCode": 0,
+    "log": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2a/checks/test-types.log"
+  },
+  {
+    "name": "scoped-jest",
+    "argv": [
+      "node",
+      "--experimental-vm-modules",
+      "node_modules/jest/bin/jest.js",
+      "--testPathPatterns=tests/unit/runtimeMetadataAuth",
+      "--runInBand",
+      "--forceExit",
+      "--silent",
+      "--json",
+      "--outputFile=_goals/convex-backend-runtime-2026-10-02/qa/task03b2a/jest-results.json"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2a-checkout",
+    "startedAt": "2026-10-03T10:21:04.134625+00:00",
+    "endedAt": "2026-10-03T10:21:09.336539+00:00",
+    "exitCode": 0,
+    "log": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2a/checks/scoped-jest.log"
+  },
+  {
+    "name": "ast-inventory",
+    "argv": [
+      "node",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03b2a/inventory.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2a-checkout",
+    "startedAt": "2026-10-03T10:21:09.337022+00:00",
+    "endedAt": "2026-10-03T10:21:09.612631+00:00",
+    "exitCode": 0,
+    "log": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2a/checks/ast-inventory.log"
+  },
+  {
+    "name": "framework-registration",
+    "argv": [
+      "node",
+      "--import",
+      "tsx",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03b2a/registration-probe.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2a-checkout",
+    "startedAt": "2026-10-03T10:21:09.612958+00:00",
+    "endedAt": "2026-10-03T10:21:09.779422+00:00",
+    "exitCode": 0,
+    "log": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2a/checks/framework-registration.log"
+  },
+  {
+    "name": "full-root-types",
+    "argv": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "--noEmit",
+      "--pretty",
+      "false"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2a-checkout",
+    "startedAt": "2026-10-03T10:21:09.779762+00:00",
+    "endedAt": "2026-10-03T10:21:20.132692+00:00",
+    "exitCode": 2,
+    "log": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2a/checks/full-root-types.log"
+  },
+  {
+    "name": "baseline-root-types",
+    "argv": [
+      "node",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03b2a/baseline-root-types.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2a-checkout",
+    "startedAt": "2026-10-03T10:19:13.689547+00:00",
+    "endedAt": "2026-10-03T10:19:25.463184+00:00",
+    "exitCode": 0,
+    "log": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2a/checks/baseline-root-types.log"
+  },
+  {
+    "name": "scoped-lint",
+    "argv": [
+      "node",
+      "node_modules/eslint/bin/eslint.js",
+      "convex-dev/schema.ts",
+      "convex-dev/immutable.ts",
+      "convex-dev/mutable.ts",
+      "convex-dev/users.ts",
+      "convex-dev/sessions.ts",
+      "convex-dev/runtimeMetadataAuth.ts",
+      "tests/unit/runtimeMetadataAuth",
+      "--report-unused-disable-directives"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2a-checkout",
+    "startedAt": "2026-10-03T10:22:46.843584+00:00",
+    "endedAt": "2026-10-03T10:22:52.828516+00:00",
+    "exitCode": 0,
+    "log": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2a/checks/scoped-lint.log"
+  },
+  {
+    "name": "diff-check",
+    "argv": [
+      "git",
+      "diff",
+      "--check"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2a-checkout",
+    "startedAt": "2026-10-03T10:22:52.828734+00:00",
+    "endedAt": "2026-10-03T10:22:52.833557+00:00",
+    "exitCode": 0,
+    "log": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2a/checks/diff-check.log"
+  }
+]

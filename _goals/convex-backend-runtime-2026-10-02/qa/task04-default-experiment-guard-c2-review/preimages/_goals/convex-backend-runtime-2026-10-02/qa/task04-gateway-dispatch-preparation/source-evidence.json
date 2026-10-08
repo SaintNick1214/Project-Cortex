@@ -1,0 +1,379 @@
+{
+  "status": "PREPARATION_ONLY_NOT_ACCEPTANCE",
+  "observedAtUTC": "2026-10-04T01:34:28.899395+00:00",
+  "gitHeadReadOnly": "265156add0d4f5186d8e9cf37b302c4cd644a900",
+  "sources": [
+    {
+      "path": "AGENTS.md",
+      "sha256": "4fbaf846434518261f72e3b1911e2146b508b736e7c46b76261fa8c6fd67724e",
+      "bytes": 4486,
+      "role": "source-reference"
+    },
+    {
+      "path": ".agents/CODEX-RUNTIME.md",
+      "sha256": "8d60140b54b93fa29f388d9608c0b17d9993e1a48f7ec0788e993690ac456895",
+      "bytes": 5824,
+      "role": "source-reference"
+    },
+    {
+      "path": ".agents/PROJECT-PROFILE.md",
+      "sha256": "04ac20437bc36af9202ad748da57a07bfb824cdb92834fd365edfa5a00207a12",
+      "bytes": 14706,
+      "role": "source-reference"
+    },
+    {
+      "path": ".agents/roles/implementation-executor.md",
+      "sha256": "935934e4ae2df19e1b109cd797efa52567b88faf5099e0bfe96f0f403702babd",
+      "bytes": 5881,
+      "role": "source-reference"
+    },
+    {
+      "path": ".agents/skills/feature-orchestrator/SKILL.md",
+      "sha256": "dd08e0e3a828f152ad743e857297c5383741f413f7a3f0e87be04b69dbd5c8f5",
+      "bytes": 3868,
+      "role": "source-reference"
+    },
+    {
+      "path": "package.json",
+      "sha256": "a684600bd22363a6c4127c4dd65e95afa1ffe6659b574a5ea74e0e0a3219f3d6",
+      "bytes": 4593,
+      "role": "source-reference"
+    },
+    {
+      "path": "package-lock.json",
+      "sha256": "d85a63567c0340a07eed9655cd8ce9d932f4871a0660350e8e0d25739662abf5",
+      "bytes": 347061,
+      "role": "source-reference"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/implementation-prompt.md",
+      "sha256": "4667290be427310c4d6988c666925344b8f86b043c09db392542991de0ce0104",
+      "bytes": 3682,
+      "role": "source-reference"
+    },
+    {
+      "path": "_research/convex-ai-gateway-2026-10-02/decision-gates.md",
+      "sha256": "1e12e1cc36f2446acabd6d3ff8464ebbd2a9d17582b17603aff8293ba48cdac4",
+      "bytes": 11937,
+      "role": "source-reference"
+    },
+    {
+      "path": "_research/convex-ai-gateway-2026-10-02/architecture.md",
+      "sha256": "d53e18355904cfd7d9db43951468bc4b0aca0de568008ac4c27d7fa783390c8e",
+      "bytes": 30372,
+      "role": "source-reference"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/goal.md",
+      "sha256": "e54d694d7026ee3b58827dcc80a19156c8b0f141f613c569d3e3637698e1a655",
+      "bytes": 16007,
+      "role": "source-reference"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/tasks/01-qualification.md",
+      "sha256": "0fb9f04f8f4722ac6faa23e15f15ddb8948159f91fcfb228ca7361460bf4dc7b",
+      "bytes": 2992,
+      "role": "source-reference"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/tasks/02-domain-services.md",
+      "sha256": "26aa4660f9c535e45cb93f3881c4c90e8097862b310ae96721a723ce27f76a76",
+      "bytes": 2627,
+      "role": "source-reference"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/tasks/03-authorization.md",
+      "sha256": "3b6df253e472d466a656d46e366fd754038615081a73ee8d64508d842e231d58",
+      "bytes": 4254,
+      "role": "source-reference"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/tasks/04-model-policy.md",
+      "sha256": "44777e644f835c759af09dfa8acefc7f37d29fac5152c8d34fd7b497e9858d74",
+      "bytes": 2759,
+      "role": "source-reference"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/tasks/05-transcripts-runs.md",
+      "sha256": "3e7745d7bd863cb6b417224e46dd1867637b1d28a30cc336071de21e5a723115",
+      "bytes": 3340,
+      "role": "source-reference"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/tasks/06-additive-installation.md",
+      "sha256": "e2d7bae8a7d31bf5b941c91a925342c17c945a17ec04125b3aa103dfc5cb60dc",
+      "bytes": 3398,
+      "role": "source-reference"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/tasks/07-agent-streams.md",
+      "sha256": "62905783d2dc2deab0d2e758c2ea95a24e76c99796b59256d540eab0b361028e",
+      "bytes": 3094,
+      "role": "source-reference"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/tasks/08-memory-pipeline.md",
+      "sha256": "2f883577b0f3a43f969c5f7783803de0a4976a85e530ee7e34b6edfd4719cccf",
+      "bytes": 3992,
+      "role": "source-reference"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/tasks/09-text-client-slice.md",
+      "sha256": "dd483a6a14a266482b92d8c79a4943cff812544c3fed20b4ffde13c0fe738a6d",
+      "bytes": 3588,
+      "role": "source-reference"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/tasks/10-embedding-profiles.md",
+      "sha256": "d7d374add02f9441b74b1320a9e7956f91e714ea705b0b98d702d787078fb12c",
+      "bytes": 3550,
+      "role": "source-reference"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/tasks/11-graph-outbox.md",
+      "sha256": "17d99dd1b34f3d06bda4be2d776da9072a5c8e5fcea15a74331a1e63427d5f10",
+      "bytes": 3246,
+      "role": "source-reference"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/tasks/12-asset-lifecycle.md",
+      "sha256": "8e7b0430d76f589db0b7d1eb7d4dc4022226e4b93ab59f55fbb78065ce5ebd82",
+      "bytes": 3744,
+      "role": "source-reference"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/tasks/13-media-jobs.md",
+      "sha256": "8455cc9fd5ba41db0a4219937439b3d21fb51aaa7054dbe2552d544cda6fa28e",
+      "bytes": 3354,
+      "role": "source-reference"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/tasks/14-client-extensions.md",
+      "sha256": "cfe2c8020b31c4862cca2e09dcc490b037bac6b383114ebac7e710d966925ba9",
+      "bytes": 2789,
+      "role": "source-reference"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/tasks/15-product-integration.md",
+      "sha256": "177e956574ecc9ac5a517ddf98b0d4cc55e1f1b574cc49aaede4423c1445b411",
+      "bytes": 2919,
+      "role": "source-reference"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/tasks/16-outcome-validation.md",
+      "sha256": "d0ca25e342cb4d8496dc8cb7443ebf8d4edeb472161fbf45dc89692ed3d581c7",
+      "bytes": 3620,
+      "role": "source-reference"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/tasks/17-docs-audit.md",
+      "sha256": "6eb1501238c50e6d9d4c0780141a7948345a3e80958daa00fdf4930257ec14fa",
+      "bytes": 3188,
+      "role": "source-reference"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-c11-aggregate-review/report.md",
+      "sha256": "1a932577bb99317891942d44f80756b9270d086f1cbc0c6ad45f8416c28fb274",
+      "bytes": 15219,
+      "role": "source-reference"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-contract-preparation/implementation-packets.md",
+      "sha256": "2c44aff6a0fa98f013880fdee98f3c782a2eb2922768f82c6bff3db26c63c09b",
+      "bytes": 32531,
+      "role": "source-reference"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-admission-preparation/report.md",
+      "sha256": "764c15841ccf5dc62955fb1641adbdabe8087c5f434d04ae498a743ff96137c7",
+      "bytes": 23500,
+      "role": "source-reference"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task01/contracts.md",
+      "sha256": "4877ce555c4044bb0a487a0ad5449534e9b39fc6b30c9d4f319febaa6a93ad9f",
+      "bytes": 13310,
+      "role": "source-reference"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task01-review-1.md",
+      "sha256": "019c4dfb5fbce5e12542fba7295931500c32ee3e59002e9084c37109dc982929",
+      "bytes": 6609,
+      "role": "source-reference"
+    },
+    {
+      "path": "convex-dev/runtimeMemory.ts",
+      "sha256": "bbe9977ba0fe4d1851c394e4a41e43eaf1978218f9c5b55dea00a536eaeea959",
+      "bytes": 11674,
+      "role": "source-reference"
+    },
+    {
+      "path": "convex-dev/runtimeMemoryServices.ts",
+      "sha256": "3abc22ad358d1e760e409bd05315e4677216b4f18fbcf43c7873862c05e2bcb8",
+      "bytes": 8399,
+      "role": "source-reference"
+    },
+    {
+      "path": "convex-dev/runtimeMemoryRepository.ts",
+      "sha256": "74e3db54fa9f1e5794b38b2d25ae7bed06341bf06cf1ba438ca3424605e42833",
+      "bytes": 24131,
+      "role": "source-reference"
+    },
+    {
+      "path": "src/domain/contracts.ts",
+      "sha256": "a40ca52e4d9c1eef84847c86a0b3681a7a3389095817745f3682663260fdc87b",
+      "bytes": 5435,
+      "role": "source-reference"
+    },
+    {
+      "path": "src/domain/profile.ts",
+      "sha256": "6b098f33dcfe9fb3f70a44b2d6117884dbc0658142edd6499e79e2d03f7fd63b",
+      "bytes": 3259,
+      "role": "source-reference"
+    },
+    {
+      "path": "src/domain/sources.ts",
+      "sha256": "4015f729bd2dc5a01ea8c24fcd9e1a86ebcab536698affb043fdf287dea3c74e",
+      "bytes": 13583,
+      "role": "source-reference"
+    },
+    {
+      "path": "src/domain/conflicts.ts",
+      "sha256": "899bf06d6885fc0c3f909ac2cce6ea08196de76111059785133eb0ef57baa4d4",
+      "bytes": 23517,
+      "role": "source-reference"
+    },
+    {
+      "path": "src/domain/model-policy.ts",
+      "sha256": "f43de8775880d1d4f6ddad90e527837d9ddb4ce58d00ea622aabc2609a1769da",
+      "bytes": 28083,
+      "role": "mutable-unaccepted-pure-candidate"
+    },
+    {
+      "path": "src/domain/index.ts",
+      "sha256": "b1bb56d6df91596512f9c1e35b48f8942207bf9651739885eb81f7755d834648",
+      "bytes": 406,
+      "role": "mutable-unaccepted-pure-candidate"
+    },
+    {
+      "path": "src/config.ts",
+      "sha256": "ff1864d79bb5b2720592acc764c9bc92510cd2245326dd8666591842ea1827f0",
+      "bytes": 6590,
+      "role": "source-reference"
+    },
+    {
+      "path": "src/llm/index.ts",
+      "sha256": "fbb146f431f29c87acc734c745c024bea3f0fc310c41fd075836aedd7933b53c",
+      "bytes": 13787,
+      "role": "source-reference"
+    },
+    {
+      "path": "packages/vercel-ai-provider/src/provider.ts",
+      "sha256": "0bf7810fbeb973e50cefc55271830dfb30d8495ffb21998aba1fa97ec158b508",
+      "bytes": 19784,
+      "role": "source-reference"
+    },
+    {
+      "path": "node_modules/@convex-dev/ai-sdk-provider/package.json",
+      "sha256": "1067266430ffd373f4200d8cbfb4fce1586eca00642fcde9f3aa88de68c25c8e",
+      "bytes": 1763,
+      "role": "source-reference"
+    },
+    {
+      "path": "node_modules/@convex-dev/ai-sdk-provider/src/index.ts",
+      "sha256": "5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613",
+      "bytes": 6787,
+      "role": "source-reference"
+    },
+    {
+      "path": "node_modules/ai/package.json",
+      "sha256": "5864a68d58bd8caa46b91fbb0f1e39ae3ba0f3179f38e00581f4428fc7bf1110",
+      "bytes": 3259,
+      "role": "source-reference"
+    },
+    {
+      "path": "node_modules/@ai-sdk/provider/package.json",
+      "sha256": "900a8cfaddb8008b36b340e57c83b2e6a89c6dd4d0a0599147470a3cbe3943f8",
+      "bytes": 1375,
+      "role": "source-reference"
+    },
+    {
+      "path": "node_modules/@ai-sdk/provider/dist/index.d.ts",
+      "sha256": "97906a2da454962e83e74eea307d454d432e9b5a060482bcde517b9fdc3a1ffa",
+      "bytes": 269776,
+      "role": "source-reference"
+    },
+    {
+      "path": "node_modules/ai/src/middleware/wrap-language-model.ts",
+      "sha256": "94d4337a89bf50b3ee030c76c4effdb4925a0a8820915fed675fee5b4e4b1b4a",
+      "bytes": 3776,
+      "role": "source-reference"
+    },
+    {
+      "path": "node_modules/ai/src/middleware/wrap-embedding-model.ts",
+      "sha256": "1fbce0c2e1279057b179fa38960faae389b681f4fc605c0e1c62cb79b125efdc",
+      "bytes": 3864,
+      "role": "source-reference"
+    },
+    {
+      "path": "node_modules/ai/src/embed/embed.ts",
+      "sha256": "eb883e267c19027cab59652664ba6c5bd4af9071db975514a74cf80a04768634",
+      "bytes": 9083,
+      "role": "source-reference"
+    },
+    {
+      "path": "node_modules/ai/src/embed/embed-many.ts",
+      "sha256": "402b21d694e7187e5e92ed1ad01475b127cdcdbaa95a3a077cfa0908386f8d46",
+      "bytes": 17474,
+      "role": "source-reference"
+    },
+    {
+      "path": "node_modules/@convex-dev/agent/package.json",
+      "sha256": "cd92b767cf7a504505a15fccd304d55f0eb9540de3c1969dd9fd7070ada835ee",
+      "bytes": 5401,
+      "role": "source-reference"
+    },
+    {
+      "path": "node_modules/@convex-dev/agent/src/vercel/index.ts",
+      "sha256": "ea9433d529c6358d363dcbfdc50c2dff94a68b2dc3096f5b704acbf3f01406fc",
+      "bytes": 60025,
+      "role": "source-reference"
+    },
+    {
+      "path": "node_modules/@ai-sdk/openai-compatible/src/chat/convert-openai-compatible-chat-usage.ts",
+      "sha256": "2dfa29b462534df8fd1f8d6b0dea378ee54adefa1421a8ac97d3774885e7cec0",
+      "bytes": 1399,
+      "role": "source-reference"
+    },
+    {
+      "path": "node_modules/@ai-sdk/openai-compatible/src/chat/openai-compatible-chat-language-model.ts",
+      "sha256": "8cedc84f1a015f63c5c0a76ddba664562a1301adb1ed0d8c858e0b740f65a79a",
+      "bytes": 26119,
+      "role": "source-reference"
+    },
+    {
+      "path": "node_modules/@ai-sdk/openai-compatible/src/embedding/openai-compatible-embedding-model.ts",
+      "sha256": "24012af5f3fd8f93ec6c6d48690b40bbfc26f907afd4f6b21ee487c8dc225e36",
+      "bytes": 5494,
+      "role": "source-reference"
+    },
+    {
+      "path": "node_modules/@ai-sdk/openai/src/responses/openai-responses-language-model.ts",
+      "sha256": "819980a2396a64fd5d2ee6dacfea1b528ddb40c30c88c1ba9c66a12af9124ba8",
+      "bytes": 111956,
+      "role": "source-reference"
+    }
+  ],
+  "installedVersions": {
+    "ai": "7.0.127",
+    "@convex-dev/ai-sdk-provider": "0.2.1",
+    "@ai-sdk/provider": "4.0.21",
+    "@convex-dev/agent": "0.7.3"
+  },
+  "executedChecks": [],
+  "serviceCalls": 0,
+  "paidCalls": 0,
+  "productionEdits": 0,
+  "reportSha256": "30384f00ef1339d5db7602a5741d02c0caebe0a62e5c72f4f0801a2ec3b5e211",
+  "caveat": "Hashes capture preparation source snapshots, not acceptance, trusted price proof, or future currentness. Pure C3 concurrent executor remains independently owned."
+}

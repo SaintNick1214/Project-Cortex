@@ -1,0 +1,11 @@
+--- C6/fixture/convex/qualificationManifest.ts
++++ C7/fixture/convex/qualificationManifest.ts
+@@ -28,7 +28,7 @@
+   policies: [{ policyId: "qa-deployment", version: 1, scope: "deployment", rules: {
+     allowedModels: [chat, fallback, DEFAULT_EMBEDDING_PROFILE.modelId],
+     interfaces: ["chat", "embedding"], capabilities: ["text", "embedding"], allowedOptions: ["temperature"], allowedTools: [],
+-    fallbackModels: [fallback], limits, pins } }, {policyId:"qa-agent-policy",version:1,scope:"agent",tenantId:"admission-098c7d2b50da7383a11f52a354a5d107-agent-selector-denial",agentId:"qa-agent",agentVersion:7,rules:{limits:{outputTokens:100}}}], qualifications: qualifications.filter(q=>q.nativeInterface==="chat"),
++    fallbackModels: [fallback], limits, pins } }, {policyId:"qa-agent-policy",version:1,scope:"agent",tenantId:"admission-a6f48c36ac2cd274d7b26ff3e6fbbf8a-agent-selector-denial",agentId:"qa-agent",agentVersion:7,rules:{limits:{outputTokens:100}}}], qualifications: qualifications.filter(q=>q.nativeInterface==="chat"),
+   dispatchEvidence: qualifications.filter(q=>q.nativeInterface==="chat").map((q) => ({ receiptId: q.receiptId, evidenceHash: digest, providerVersion: "fixture-synthetic-0",
+     nativeInterface: q.nativeInterface, modelId: q.modelId,
+     inputBound: { ruleId: q.nativeInterface === "embedding" ? "default-embedding-utf8-v1" : "plain-chat-cookbook-utf8-v1",

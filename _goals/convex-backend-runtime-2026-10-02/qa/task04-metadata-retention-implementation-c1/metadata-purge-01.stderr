@@ -1,0 +1,18 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+'denied' !== 'purged'
+
+    at file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c1/fixture/checks/metadata-purge.mjs:22:8 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: 'denied',
+  expected: 'purged',
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

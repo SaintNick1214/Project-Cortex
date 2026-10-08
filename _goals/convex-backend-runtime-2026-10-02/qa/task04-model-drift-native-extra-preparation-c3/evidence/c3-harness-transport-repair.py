@@ -1,0 +1,26 @@
+from pathlib import Path
+b=Path('_goals/convex-backend-runtime-2026-10-02/qa')
+helper='''/** Finite owned incremental body, absolute deadline; cleanup never replaces primary. */
+export async function ownedResponseBytes(response,maxBytes,deadline,{requireBody=false,ceilingCode='QA_RESPONSE_CEILING'}={}){
+ if(!Number.isSafeInteger(maxBytes)||maxBytes<0||!Number.isFinite(deadline))throw Error('QA_BODY_BOUND');
+ const reader=response.body?.getReader();if(!reader){if(requireBody)throw Error('QA_RESPONSE_BODY');if(Date.now()>=deadline)throw Error('QA_RESPONSE_DEADLINE');return Buffer.alloc(0);}let size=0,primary;const parts=[];
+ const secondary=(name,error)=>{if(primary&&typeof primary==='object')try{Object.defineProperty(primary,name,{value:error,enumerable:true});}catch{}};
+ const remaining=()=>{if(Date.now()>=deadline)throw Error('QA_RESPONSE_DEADLINE');return deadline-Date.now();};
+ const bounded=async(pending,cleanup=false)=>{let timer;try{return await Promise.race([pending,new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error('QA_RESPONSE_DEADLINE')),cleanup?Math.max(1,deadline-Date.now()):remaining());})]);}finally{clearTimeout(timer);}};
+ try{remaining();while(true){remaining();const {done,value}=await bounded(reader.read());remaining();if(done)break;if(!(value instanceof Uint8Array))throw Error('QA_RESPONSE_CHUNK');size+=value.byteLength;if(size>maxBytes)throw Error(ceilingCode);parts.push(Buffer.from(value));}return Buffer.concat(parts,size);}
+ catch(error){primary=error;try{await bounded(reader.cancel(),true);}catch(cancelError){secondary('qaBodyCancelFailure',cancelError);}throw error;}
+ finally{try{reader.releaseLock();}catch(releaseError){if(primary)secondary('qaBodyReleaseFailure',releaseError);else throw releaseError;}}
+}
+'''
+peer='''import assert from 'node:assert/strict';
+import {limits,sha256,reserveTicket,livePreflight,qualifierDeadline,reviewPin} from './guard.mjs';
+import {ownedResponseBytes} from './bounded-response.mjs';
+export async function boundedBody(response,max=limits.resultBytes,deadline=Date.now()+limits.rpcMs){return(await ownedResponseBytes(response,max,deadline)).toString('utf8');}
+export function freshPeer(session){const current=livePreflight(session.phase??'synthetic','rpc');if(sha256(JSON.stringify(current.target))!==sha256(JSON.stringify(session.target)))throw Error('QA_TARGET_DRIFT');if(!session.values||sha256(JSON.stringify(current.values))!==sha256(JSON.stringify(session.values)))throw Error('QA_PRIVATE_SELECTOR_DRIFT');if(!session.publicationReceipt||sha256(JSON.stringify(current.publication))!==sha256(JSON.stringify(session.publicationReceipt)))throw Error('QA_PUBLICATION_DRIFT');if(session.expectedReviewPin!==reviewPin())throw Error('QA_REVIEW_EXPECTED_PIN_DRIFT');return qualifierDeadline();}
+export async function peer(session,dispatchIdentity,credential,expected=200,authorization,bodyRun=session.runId){freshPeer(session);session.peerCalls++;if(session.peerCalls>limits.peerEffects+limits.peerOther)throw Error('QA_PEER_BUDGET');const effect=expected===200;if(effect&&++session.peerEffects>limits.peerEffects)throw Error('QA_PEER_BUDGET');if(!effect&&++session.peerOther>limits.peerOther)throw Error('QA_PEER_BUDGET');
+ await reserveTicket(effect?'peer-effect':'peer-other',effect?limits.peerEffects:limits.peerOther);const deadline=Math.min(freshPeer(session),Date.now()+limits.rpcMs),url=session.target.deploymentUrl.replace('.convex.cloud','.convex.site')+'/qa/task04-peer/effect';const response=await fetch(url,{method:'POST',redirect:'error',headers:{'content-type':'application/json',...(credential?{'x-cortex-qa-peer':credential}:{}),...(authorization?{authorization:'Bearer '+authorization}:{})},body:JSON.stringify({run:bodyRun,dispatchDigest:sha256(dispatchIdentity)}),signal:AbortSignal.timeout(Math.max(1,deadline-Date.now()))});const body=await boundedBody(response,2048,deadline);assert.equal(response.status,expected);if(expected===403){assert.equal(body,'denied');return;}const result=JSON.parse(body);assert.deepEqual(Object.keys(result).sort(),['effectCount','requestCount']);return result;}
+'''
+for k in ['extension','regression','extra']:
+ r=b/f'task04-model-drift-native-{k}-preparation-c3';(r/'scripts/bounded-response.mjs').write_text(helper);(r/'scripts/peer.mjs').write_text(peer)
+ p=r/'scripts/driver.mjs';s=p.read_text().replace('exclusive,reviewed,reserveTicket','exclusive,reviewed,reviewPin,reserveTicket').replace('runId:parent.runId,target,parent,publication,','runId:parent.runId,target,values,publicationReceipt,expectedReviewPin:reviewPin(),phase,parent,publication,');s=s.replace("const body=await boundedBody(response);","const body=await boundedBody(response,limits.resultBytes,Math.min(qualifierDeadline(),Date.now()+limits.rpcMs));");p.write_text(s)
+ p=r/'scripts/publication-artifacts.mjs';s=p.read_text();start=s.index('export async function boundedRawResponse(');end=s.index('export function captureRawResponse',start);s=s[:start]+"export async function boundedRawResponse(response,deadline=Date.now()+limits.rpcMs){return ownedResponseBytes(response,artifactBounds.rawBytes,deadline);}\n"+s[end:];s="import {ownedResponseBytes} from './bounded-response.mjs';\n"+s;p.write_text(s)

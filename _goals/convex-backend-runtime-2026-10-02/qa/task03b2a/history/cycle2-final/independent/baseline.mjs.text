@@ -1,0 +1,26 @@
+import ts from "typescript";
+import fs from "node:fs";
+import path from "node:path";
+import { spawnSync } from "node:child_process";
+const root = process.cwd();
+const paths = ["convex-dev/schema.ts", "convex-dev/immutable.ts", "convex-dev/mutable.ts", "convex-dev/users.ts", "convex-dev/sessions.ts"];
+const baseline = new Map(paths.map((file) => {
+  const result = spawnSync("git", ["show", `HEAD:${file}`], { encoding: "utf8" });
+  if (result.status !== 0) throw new Error(result.stderr); return [path.resolve(file), result.stdout];
+}));
+const config = ts.readConfigFile("tsconfig.json", ts.sys.readFile);
+const parsed = ts.parseJsonConfigFileContent(config.config, ts.sys, root);
+const host = ts.createCompilerHost({ ...parsed.options, noEmit: true });
+const readFile = host.readFile.bind(host); host.readFile = (file) => baseline.get(path.resolve(file)) ?? readFile(file);
+const files = parsed.fileNames.filter((file) => !file.includes("/tests/unit/runtimeMetadataAuth/"));
+const program = ts.createProgram(files, { ...parsed.options, noEmit: true }, host);
+const diagnostics = ts.getPreEmitDiagnostics(program);
+const plain = ts.formatDiagnostics(diagnostics, { getCanonicalFileName: (file) => file, getCurrentDirectory: () => root, getNewLine: () => "\n" });
+process.stdout.write(plain);
+const results = diagnostics.map((diagnostic) => {
+  const position = diagnostic.file && diagnostic.start !== undefined ? diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start) : undefined;
+  return { file: diagnostic.file ? path.relative(root, diagnostic.file.fileName) : null, line: position ? position.line + 1 : null,
+    code: diagnostic.code, message: ts.flattenDiagnosticMessageText(diagnostic.messageText, "\n") };
+});
+fs.writeFileSync("/workspace/Project-Cortex/work/backend-runtime/task03b2a-judge-cycle2/baseline-diagnostics.json", JSON.stringify({ baseline: "2edd9435a545ecf0f1e3315fe7ae37c22c7b0623", method: "TypeScript compiler host replaces only five changed tracked source files with git HEAD contents and excludes newly introduced tests; no checkout mutations", diagnostics: results }, null, 2) + "\n");
+process.exitCode = diagnostics.length ? 2 : 0;

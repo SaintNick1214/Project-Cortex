@@ -1,9 +1,9 @@
 import { convexToJson } from "convex/values";
-import * as spaces from "../../convex-dev/memorySpaces";
-import * as immutable from "../../convex-dev/immutable";
-import * as memories from "../../convex-dev/memories";
-import * as conversations from "../../convex-dev/conversations";
-import * as facts from "../../convex-dev/facts";
+import * as spaces from "../../convex-dev/cliOperator/memorySpaces";
+import * as immutable from "../../convex-dev/cliOperator/immutable";
+import * as memories from "../../convex-dev/cliOperator/memories";
+import * as conversations from "../../convex-dev/cliOperator/conversations";
+import * as facts from "../../convex-dev/cliOperator/facts";
 import { ownership, naturalIdentity, referenceDigest, WRITER_MANIFEST_HASH } from "../../convex-dev/lib/referenceLifecycle";
 const scopes=["A","B",undefined];
 const byteSize=(rows:any[])=>rows.reduce((n,row)=>n+Buffer.byteLength(JSON.stringify(convexToJson(row)),"utf8"),0);

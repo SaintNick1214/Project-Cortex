@@ -1,0 +1,948 @@
+
+FILE node_modules/convex/src/browser/sync/client.ts:330
+330:     const protocol = address.substring(0, i);
+331:     let wsProtocol;
+332:     if (protocol === "http") {
+333:       wsProtocol = "ws";
+334:     } else if (protocol === "https") {
+335:       wsProtocol = "wss";
+336:     } else {
+337:       throw new Error(`Unknown parent protocol ${protocol}`);
+338:     }
+339:     const wsUri = `${wsProtocol}://${origin}/api/${version}/sync`;
+340: 
+341:     this.state = new LocalSyncState();
+342:     this.remoteQuerySet = new RemoteQuerySet(
+343:       (queryId) => this.state.queryPath(queryId),
+344:       this.logger,
+345:     );
+346:     this.requestManager = new RequestManager(
+347:       this.logger,
+348:       this.markConnectionStateDirty,
+349:     );
+350: 
+351:     // This is a callback for AuthenticationManager (which can't call
+352:     // this synchronously, the callback wouldn't work) so the initial
+353:     // pause for expectAuth we call it at the end of this constructor.
+354:     const pauseSocket = () => {
+355:       this.webSocketManager.pause();
+356:       this.state.pause();
+357:     };
+358:     this.authenticationManager = new AuthenticationManager(
+359:       this.state,
+360:       {
+361:         authenticate: (token) => {
+362:           const message = this.state.setAuth(token);
+363:           this.webSocketManager.sendMessage(message);
+364:           return message.baseVersion;
+365:         },
+366:         stopSocket: () => this.webSocketManager.stop(),
+367:         tryRestartSocket: () => this.webSocketManager.tryRestart(),
+368:         pauseSocket,
+369:         resumeSocket: () => this.webSocketManager.resume(),
+370:         clearAuth: () => {
+371:           this.clearAuth();
+372:         },
+373:       },
+374:       {
+375:         logger: this.logger,
+376:         refreshTokenLeewaySeconds: authRefreshTokenLeewaySeconds,
+377:         initialAuthTokenReuse: options.initialAuthTokenReuse ?? false,
+378:       },
+379:     );
+380:     this.optimisticQueryResults = new OptimisticQueryResults();
+381:     this.addOnTransitionHandler((transition) => {
+382:       onTransition(transition.queries.map((q) => q.token));
+383:     });
+384:     this._nextRequestId = 0;
+385:     this._sessionId = newSessionId();
+386: 
+387:     const { unsavedChangesWarning } = options;
+388:     if (
+389:       typeof window === "undefined" ||
+390:       typeof window.addEventListener === "undefined"
+391:     ) {
+392:       if (unsavedChangesWarning === true) {
+393:         throw new Error(
+394:           "unsavedChangesWarning requested, but window.addEventListener not found! Remove {unsavedChangesWarning: true} from Convex client options.",
+395:         );
+396:       }
+397:     } else if (unsavedChangesWarning !== false) {
+398:       // Listen for tab close events and notify the user on unsaved changes.
+399:       window.addEventListener("beforeunload", (e) => {
+400:         if (this.requestManager.hasIncompleteRequests()) {
+401:           // There are 3 different ways to trigger this pop up so just try all of
+402:           // them.
+403: 
+404:           e.preventDefault();
+405:           // This confirmation message doesn't actually appear in most modern
+406:           // browsers but we tried.
+407:           const confirmationMessage =
+408:             "Are you sure you want to leave? Your changes may not be saved.";
+409:           // Recommended method for legacy (IE) browsers.
+410:           // casts to avoid deprecation notices
+411:           ((e || (window as any).event) as any).returnValue =
+412:             confirmationMessage;
+413:           return confirmationMessage;
+414:         }
+415:       });
+416:     }
+417: 
+418:     this.webSocketManager = new WebSocketManager(
+419:       wsUri,
+420:       {
+421:         onOpen: (reconnectMetadata: ReconnectMetadata) => {
+422:           // We have a new WebSocket!
+423:           this.mark("convexWebSocketOpen");
+424:           this.webSocketManager.sendMessage({
+425:             ...reconnectMetadata,
+426:             type: "Connect",
+427:             sessionId: this._sessionId,
+428:             maxObservedTimestamp: this.maxObservedTimestamp,
+429:           });
+430: 
+431:           // Throw out our remote query, reissue queries
+432:           // and outstanding mutations, and reauthenticate.
+433:           this.remoteQuerySet = new RemoteQuerySet(
+434:             (queryId) => this.state.queryPath(queryId),
+435:             this.logger,
+436:           );
+437:           const [querySetModification, authModification] = this.state.restart();
+438:           if (authModification) {
+439:             this.webSocketManager.sendMessage(authModification);
+440:           }
+441:           this.webSocketManager.sendMessage(querySetModification);
+442:           for (const message of this.requestManager.restart()) {
+443:             this.webSocketManager.sendMessage(message);
+444:           }
+445:         },
+446:         onResume: () => {
+447:           const [querySetModification, authModification] = this.state.resume();
+448:           if (authModification) {
+449:             this.webSocketManager.sendMessage(authModification);
+450:           }
+451:           if (querySetModification) {
+452:             this.webSocketManager.sendMessage(querySetModification);
+453:           }
+454:           for (const message of this.requestManager.resume()) {
+455:             this.webSocketManager.sendMessage(message);
+456:           }
+457:         },
+458:         onMessage: (serverMessage: ServerMessage) => {
+459:           // Metrics events grow linearly with reconnection attempts so this
+460:           // conditional prevents n^2 metrics reporting.
+461:           if (!this.firstMessageReceived) {
+462:             this.firstMessageReceived = true;
+463:             this.mark("convexFirstMessageReceived");
+464:             this.reportMarks();
+465:           }
+466:           switch (serverMessage.type) {
+467:             case "Transition": {
+468:               this.observedTimestamp(serverMessage.endVersion.ts);
+469:               this.authenticationManager.onTransition(serverMessage);
+470:               this.remoteQuerySet.transition(serverMessage);
+471:               this.state.transition(serverMessage);
+472:               const completedRequests = this.requestManager.removeCompleted(
+473:                 this.remoteQuerySet.timestamp(),
+474:               );
+475:               this.notifyOnQueryResultChanges(completedRequests);
+476:               break;
+477:             }
+478:             case "MutationResponse": {
+479:               if (serverMessage.success) {
+480:                 this.observedTimestamp(serverMessage.ts);
+481:               }
+482:               const completedMutationInfo =
+483:                 this.requestManager.onResponse(serverMessage);
+484:               if (completedMutationInfo !== null) {
+485:                 this.notifyOnQueryResultChanges(
+486:                   new Map([
+487:                     [
+488:                       completedMutationInfo.requestId,
+489:                       completedMutationInfo.result,
+490:                     ],
+491:                   ]),
+492:                 );
+493:               }
+494:               break;
+495:             }
+496:             case "ActionResponse": {
+497:               this.requestManager.onResponse(serverMessage);
+498:               break;
+499:             }
+500:             case "AuthError": {
+501:               this.authenticationManager.onAuthError(serverMessage);
+502:               break;
+503:             }
+504:             case "FatalError": {
+505:               const error = logFatalError(this.logger, serverMessage.error);
+506:               void this.webSocketManager.terminate();
+507:               throw error;
+508:             }
+509:             default: {
+510:               serverMessage satisfies never;
+
+FILE node_modules/convex/src/browser/sync/client.ts:540
+540:       this.requestManager.hasSyncedPastLastReconnect() &&
+541:       this.state.hasSyncedPastLastReconnect();
+542:     return hasSyncedPastLastReconnect;
+543:   }
+544: 
+545:   private observedTimestamp(observedTs: TS) {
+546:     if (
+547:       this.maxObservedTimestamp === undefined ||
+548:       this.maxObservedTimestamp.lessThanOrEqual(observedTs)
+549:     ) {
+550:       this.maxObservedTimestamp = observedTs;
+551:     }
+552:   }
+553: 
+554:   getMaxObservedTimestamp() {
+555:     return this.maxObservedTimestamp;
+556:   }
+557: 
+558:   /**
+559:    * Compute the current query results based on the remoteQuerySet and the
+560:    * current optimistic updates and call `onTransition` for all the changed
+561:    * queries.
+562:    *
+563:    * @param completedMutations - A set of mutation IDs whose optimistic updates
+564:    * are no longer needed.
+565:    */
+566:   private notifyOnQueryResultChanges(
+567:     completedRequests: Map<RequestId, FunctionResult>,
+568:   ) {
+569:     const remoteQueryResults: Map<QueryId, FunctionResult> =
+570:       this.remoteQuerySet.remoteQueryResults();
+571:     const queryTokenToValue: QueryResultsMap = new Map();
+572:     for (const [queryId, result] of remoteQueryResults) {
+573:       const queryToken = this.state.queryToken(queryId);
+574:       // It's possible that we've already unsubscribed to this query but
+575:       // the server hasn't learned about that yet. If so, ignore this one.
+576: 
+577:       if (queryToken !== null) {
+578:         const query = {
+579:           result,
+580:           udfPath: this.state.queryPath(queryId)!,
+581:           args: this.state.queryArgs(queryId)!,
+582:         };
+583:         queryTokenToValue.set(queryToken, query);
+584:       }
+585:     }
+586: 
+587:     // Query tokens that are new (because of new server results or new local optimistic updates)
+588:     // or differ from old values (because of changes from local optimistic updates or new results
+589:     // from the server).
+590:     const changedQueryTokens =
+591:       this.optimisticQueryResults.ingestQueryResultsFromServer(
+592:         queryTokenToValue,
+593:         new Set(completedRequests.keys()),
+594:       );
+595: 
+596:     this.handleTransition({
+597:       queries: changedQueryTokens.map((token) => {
+598:         const optimisticResult =
+599:           this.optimisticQueryResults.rawQueryResult(token);
+600:         return {
+601:           token,
+602:           modification: {
+603:             kind: "Updated" as const,
+604:             result: optimisticResult,
+605:           },
+606:         };
+607:       }),
+608:       reflectedMutations: Array.from(completedRequests).map(
+609:         ([requestId, result]) => ({
+610:           requestId,
+611:           result,
+612:         }),
+613:       ),
+614:       timestamp: this.remoteQuerySet.timestamp(),
+615:     });
+616:   }
+617: 
+618:   private handleTransition(transition: Transition) {
+619:     for (const fn of this._onTransitionFns.values()) {
+620:       fn(transition);
+621:     }
+622:   }
+623: 
+624:   /**
+625:    * Add a handler that will be called on a transition.
+626:    *
+627:    * Any external side effects (e.g. setting React state) should be handled here.
+628:    *
+629:    * @param fn
+630:    *
+631:    * @returns
+632:    */
+633:   addOnTransitionHandler(fn: (transition: Transition) => void) {
+634:     const id = this._transitionHandlerCounter++;
+635:     this._onTransitionFns.set(id, fn);
+636:     return () => this._onTransitionFns.delete(id);
+637:   }
+638: 
+639:   /**
+640:    * Get the current JWT auth token and decoded claims.
+641:    */
+642:   getCurrentAuthClaims():
+
+FILE node_modules/convex/src/browser/sync/client.ts:710
+710:     name: string,
+711:     args?: Record<string, Value>,
+712:     options?: SubscribeOptions,
+713:   ): { queryToken: QueryToken; unsubscribe: () => void } {
+714:     const argsObject = parseArgs(args);
+715: 
+716:     const { modification, queryToken, unsubscribe } = this.state.subscribe(
+717:       name,
+718:       argsObject,
+719:       options?.journal,
+720:       options?.componentPath,
+721:     );
+722:     if (modification !== null) {
+723:       this.webSocketManager.sendMessage(modification);
+724:     }
+725:     return {
+726:       queryToken,
+727:       unsubscribe: () => {
+728:         const modification = unsubscribe();
+729:         if (modification) {
+730:           this.webSocketManager.sendMessage(modification);
+731:         }
+732:       },
+733:     };
+734:   }
+735: 
+736:   /**
+737:    * A query result based only on the current, local state.
+738:    *
+739:    * The only way this will return a value is if we're already subscribed to the
+740:    * query or its value has been set optimistically.
+741:    */
+742:   localQueryResult(
+743:     udfPath: string,
+744:     args?: Record<string, Value>,
+745:   ): Value | undefined {
+746:     const argsObject = parseArgs(args);
+747:     const queryToken = serializePathAndArgs(udfPath, argsObject);
+748:     return this.optimisticQueryResults.queryResult(queryToken);
+749:   }
+750: 
+751:   /**
+752:    * Get query result by query token based on current, local state
+753:    *
+754:    * The only way this will return a value is if we're already subscribed to the
+755:    * query or its value has been set optimistically.
+756:    *
+757:    * @internal
+758:    */
+759:   localQueryResultByToken(queryToken: QueryToken): Value | undefined {
+760:     return this.optimisticQueryResults.queryResult(queryToken);
+761:   }
+762: 
+763:   /**
+764:    * Whether local query result is available for a token.
+765:    *
+766:    * This method does not throw if the result is an error.
+767:    *
+768:    * @internal
+769:    */
+770:   hasLocalQueryResultByToken(queryToken: QueryToken): boolean {
+771:     return this.optimisticQueryResults.hasQueryResult(queryToken);
+772:   }
+773: 
+
+FILE node_modules/convex/src/browser/sync/local_state.ts:60
+60:   private readonly outstandingQueriesOlderThanRestart: Set<QueryId>;
+61:   private outstandingAuthOlderThanRestart: boolean;
+62:   private paused: boolean;
+63:   private pendingQuerySetModifications: Map<QueryId, AddQuery | RemoveQuery>;
+64: 
+65:   constructor() {
+66:     this.nextQueryId = 0;
+67:     this.querySetVersion = 0;
+68:     this.identityVersion = 0;
+69:     this.querySet = new Map();
+70:     this.queryIdToToken = new Map();
+71:     this.outstandingQueriesOlderThanRestart = new Set();
+72:     this.outstandingAuthOlderThanRestart = false;
+73:     this.paused = false;
+74:     this.pendingQuerySetModifications = new Map();
+75:   }
+76: 
+77:   hasSyncedPastLastReconnect(): boolean {
+78:     return (
+79:       this.outstandingQueriesOlderThanRestart.size === 0 &&
+80:       !this.outstandingAuthOlderThanRestart
+81:     );
+82:   }
+83: 
+84:   markAuthCompletion() {
+85:     this.outstandingAuthOlderThanRestart = false;
+86:   }
+87: 
+88:   subscribe(
+89:     udfPath: string,
+90:     args: Record<string, Value>,
+91:     journal?: QueryJournal | undefined,
+92:     componentPath?: string | undefined,
+93:   ): {
+94:     queryToken: QueryToken;
+95:     modification: QuerySetModification | null;
+96:     unsubscribe: () => QuerySetModification | null;
+97:   } {
+98:     const canonicalizedUdfPath = canonicalizeUdfPath(udfPath);
+99:     const queryToken = serializePathAndArgs(canonicalizedUdfPath, args);
+100: 
+101:     const existingEntry = this.querySet.get(queryToken);
+102: 
+103:     if (existingEntry !== undefined) {
+104:       existingEntry.numSubscribers += 1;
+105:       return {
+106:         queryToken,
+107:         modification: null,
+108:         unsubscribe: () => this.removeSubscriber(queryToken),
+109:       };
+110:     } else {
+111:       const queryId = this.nextQueryId++;
+112:       const query: LocalQuery = {
+113:         id: queryId,
+114:         canonicalizedUdfPath,
+115:         args,
+116:         numSubscribers: 1,
+117:         journal,
+118:         componentPath,
+119:       };
+120:       this.querySet.set(queryToken, query);
+121:       this.queryIdToToken.set(queryId, queryToken);
+122: 
+123:       const baseVersion = this.querySetVersion;
+124:       const newVersion = this.querySetVersion + 1;
+125: 
+126:       const add: AddQuery = {
+127:         type: "Add",
+128:         queryId,
+129:         udfPath: canonicalizedUdfPath,
+130:         args: [convexToJson(args)],
+131:         journal,
+132:         componentPath,
+133:       };
+134: 
+135:       if (this.paused) {
+136:         this.pendingQuerySetModifications.set(queryId, add);
+137:       } else {
+138:         this.querySetVersion = newVersion;
+139:       }
+140: 
+141:       const modification: QuerySetModification = {
+142:         type: "ModifyQuerySet",
+143:         baseVersion,
+144:         newVersion,
+145:         modifications: [add],
+146:       };
+147:       return {
+148:         queryToken,
+149:         modification,
+150:         unsubscribe: () => this.removeSubscriber(queryToken),
+151:       };
+152:     }
+153:   }
+154: 
+155:   transition(transition: Transition) {
+156:     for (const modification of transition.modifications) {
+157:       switch (modification.type) {
+158:         case "QueryUpdated":
+159:         case "QueryFailed": {
+160:           this.outstandingQueriesOlderThanRestart.delete(modification.queryId);
+161:           const journal = modification.journal;
+162:           if (journal !== undefined) {
+163:             const queryToken = this.queryIdToToken.get(modification.queryId);
+164:             // We may have already unsubscribed to this query by the time the server
+165:             // sends us the journal. If so, just ignore it.
+166:             if (queryToken !== undefined) {
+167:               this.querySet.get(queryToken)!.journal = journal;
+168:             }
+169:           }
+170: 
+171:           break;
+172:         }
+173:         case "QueryRemoved": {
+174:           this.outstandingQueriesOlderThanRestart.delete(modification.queryId);
+175:           break;
+176:         }
+177:         default: {
+178:           // Enforce that the switch-case is exhaustive.
+179:           modification satisfies never;
+180:           throw new Error(`Invalid modification ${(modification as any).type}`);
+181:         }
+182:       }
+183:     }
+184:   }
+185: 
+186:   queryId(udfPath: string, args: Record<string, Value>): QueryId | null {
+187:     const canonicalizedUdfPath = canonicalizeUdfPath(udfPath);
+188:     const queryToken = serializePathAndArgs(canonicalizedUdfPath, args);
+189:     const existingEntry = this.querySet.get(queryToken);
+190:     if (existingEntry !== undefined) {
+191:       return existingEntry.id;
+192:     }
+193:     return null;
+194:   }
+195: 
+196:   isCurrentOrNewerAuthVersion(version: IdentityVersion): boolean {
+197:     return version >= this.identityVersion;
+198:   }
+199: 
+200:   getAuth(): AuthState | undefined {
+
+FILE node_modules/convex/src/browser/sync/local_state.ts:290
+290:     // Restart works whether we are paused or unpaused.
+291:     // The `this.pendingQuerySetModifications` is not used
+292:     // when restarting as the AddQuery and RemoveQuery are computed
+293:     // from scratch, based on the old remote query results, here.
+294:     this.unpause();
+295: 
+296:     this.outstandingQueriesOlderThanRestart.clear();
+297:     const modifications = [];
+298:     for (const localQuery of this.querySet.values()) {
+299:       const add: AddQuery = {
+300:         type: "Add",
+301:         queryId: localQuery.id,
+302:         udfPath: localQuery.canonicalizedUdfPath,
+303:         args: [convexToJson(localQuery.args)],
+304:         journal: localQuery.journal,
+305:         componentPath: localQuery.componentPath,
+306:       };
+307:       modifications.push(add);
+308: 
+309:       // Track all re-sent queries as outstanding so the backoff retry
+310:       // counter doesn't reset until the server has re-confirmed results
+311:       // for every active query.
+312:       this.outstandingQueriesOlderThanRestart.add(localQuery.id);
+313:     }
+314:     this.querySetVersion = 1;
+315:     const querySet: QuerySetModification = {
+316:       type: "ModifyQuerySet",
+317:       baseVersion: 0,
+318:       newVersion: 1,
+319:       modifications,
+320:     };
+321:     // If there's no auth, no need to send an update as the server will also start with an unknown identity.
+322:     if (!this.auth) {
+323:       this.identityVersion = 0;
+324:       return [querySet, undefined];
+325:     }
+326:     this.outstandingAuthOlderThanRestart = true;
+327:     const authenticate: Authenticate = {
+328:       type: "Authenticate",
+329:       baseVersion: 0,
+330:       ...this.auth,
+331:     };
+332:     this.identityVersion = 1;
+333:     return [querySet, authenticate];
+334:   }
+335: 
+336:   pause() {
+337:     this.paused = true;
+338:   }
+339: 
+340:   resume(): [QuerySetModification | undefined, Authenticate | undefined] {
+341:     const querySet: QuerySetModification | undefined =
+342:       this.pendingQuerySetModifications.size > 0
+343:         ? {
+344:             type: "ModifyQuerySet",
+345:             baseVersion: this.querySetVersion,
+346:             newVersion: ++this.querySetVersion,
+347:             modifications: Array.from(
+348:               this.pendingQuerySetModifications.values(),
+349:             ),
+350:           }
+351:         : undefined;
+352:     const authenticate: Authenticate | undefined =
+353:       this.auth !== undefined
+354:         ? {
+355:             type: "Authenticate",
+356:             baseVersion: this.identityVersion++,
+357:             ...this.auth,
+358:           }
+359:         : undefined;
+360: 
+361:     this.unpause();
+362: 
+363:     return [querySet, authenticate];
+364:   }
+365: 
+366:   private unpause() {
+367:     this.paused = false;
+368:     this.pendingQuerySetModifications.clear();
+369:   }
+370: 
+371:   private removeSubscriber(
+372:     queryToken: QueryToken,
+373:   ): QuerySetModification | null {
+374:     const localQuery = this.querySet.get(queryToken)!;
+375: 
+376:     if (localQuery.numSubscribers > 1) {
+377:       localQuery.numSubscribers -= 1;
+378:       return null;
+379:     } else {
+380:       this.querySet.delete(queryToken);
+381:       this.queryIdToToken.delete(localQuery.id);
+382:       this.outstandingQueriesOlderThanRestart.delete(localQuery.id);
+383:       const baseVersion = this.querySetVersion;
+384:       const newVersion = this.querySetVersion + 1;
+385:       const remove: RemoveQuery = {
+
+FILE node_modules/convex/src/browser/sync/optimistic_updates.ts:185
+
+
+FILE node_modules/convex/src/browser/sync/remote_query_set.ts:1
+1: import { jsonToConvex } from "../../values/index.js";
+2: import { Long } from "../../vendor/long.js";
+3: import { logForFunction, Logger } from "../logging.js";
+4: import { QueryId, StateVersion, Transition } from "./protocol.js";
+5: import { FunctionResult } from "./function_result.js";
+6: 
+7: /**
+8:  * A represention of the query results we've received on the current WebSocket
+9:  * connection.
+10:  *
+11:  * Queries you won't find here include:
+12:  * - queries which have been requested, but no query transition has been received yet for
+13:  * - queries which are populated only though active optimistic updates, but are not subscribed to
+14:  * - queries which have already been removed by the server (which it shouldn't do unless that's
+15:  *   been requested by the client)
+16:  */
+17: export class RemoteQuerySet {
+18:   private version: StateVersion;
+19:   private readonly remoteQuerySet: Map<QueryId, FunctionResult>;
+20:   private readonly queryPath: (queryId: QueryId) => string | null;
+21:   private readonly logger: Logger;
+22: 
+23:   constructor(queryPath: (queryId: QueryId) => string | null, logger: Logger) {
+24:     this.version = { querySet: 0, ts: Long.fromNumber(0), identity: 0 };
+25:     this.remoteQuerySet = new Map();
+26:     this.queryPath = queryPath;
+27:     this.logger = logger;
+28:   }
+29: 
+30:   transition(transition: Transition): void {
+31:     const start = transition.startVersion;
+32:     if (
+33:       this.version.querySet !== start.querySet ||
+34:       this.version.ts.notEquals(start.ts) ||
+35:       this.version.identity !== start.identity
+36:     ) {
+37:       throw new Error(
+38:         `Invalid start version: ${start.ts.toString()}:${start.querySet}:${start.identity}, transitioning from ${this.version.ts.toString()}:${this.version.querySet}:${this.version.identity}`,
+39:       );
+40:     }
+41:     for (const modification of transition.modifications) {
+42:       switch (modification.type) {
+43:         case "QueryUpdated": {
+44:           const queryPath = this.queryPath(modification.queryId);
+45:           if (queryPath) {
+46:             for (const line of modification.logLines) {
+47:               logForFunction(this.logger, "info", "query", queryPath, line);
+48:             }
+49:           }
+50:           const value = jsonToConvex(modification.value ?? null);
+51:           this.remoteQuerySet.set(modification.queryId, {
+52:             success: true,
+53:             value,
+54:             logLines: modification.logLines,
+55:           });
+56:           break;
+57:         }
+58:         case "QueryFailed": {
+59:           const queryPath = this.queryPath(modification.queryId);
+60:           if (queryPath) {
+61:             for (const line of modification.logLines) {
+62:               logForFunction(this.logger, "info", "query", queryPath, line);
+63:             }
+64:           }
+65:           const { errorData } = modification;
+66:           this.remoteQuerySet.set(modification.queryId, {
+67:             success: false,
+68:             errorMessage: modification.errorMessage,
+69:             errorData:
+70:               errorData !== undefined ? jsonToConvex(errorData) : undefined,
+71:             logLines: modification.logLines,
+72:           });
+73:           break;
+74:         }
+75:         case "QueryRemoved": {
+76:           this.remoteQuerySet.delete(modification.queryId);
+77:           break;
+78:         }
+79:         default: {
+80:           // Enforce that the switch-case is exhaustive.
+81:           modification satisfies never;
+82:           throw new Error(`Invalid modification ${(modification as any).type}`);
+83:         }
+84:       }
+85:     }
+86:     this.version = transition.endVersion;
+87:   }
+88: 
+89:   remoteQueryResults(): Map<QueryId, FunctionResult> {
+90:     return this.remoteQuerySet;
+91:   }
+92: 
+93:   timestamp(): Long {
+94:     return this.version.ts;
+95:   }
+96: }
+
+FILE node_modules/convex/src/browser/sync/protocol.ts:1
+1: import type { UserIdentityAttributes } from "../../server/authentication.js";
+2: export type { UserIdentityAttributes } from "../../server/authentication.js";
+3: import { JSONValue, Base64 } from "../../values/index.js";
+4: import { Long } from "../../vendor/long.js";
+5: 
+6: /**
+7:  * Shared schema
+8:  */
+9: 
+10: export function u64ToLong(encoded: EncodedU64): U64 {
+11:   const integerBytes = Base64.toByteArray(encoded);
+12:   return Long.fromBytesLE(Array.from(integerBytes));
+13: }
+14: 
+15: export function longToU64(raw: U64): EncodedU64 {
+16:   const integerBytes = new Uint8Array(raw.toBytesLE());
+17:   return Base64.fromByteArray(integerBytes);
+18: }
+19: 
+20: export function parseServerMessage(
+21:   encoded: EncodedServerMessage,
+22: ): WireServerMessage {
+23:   switch (encoded.type) {
+24:     case "FatalError":
+25:     case "AuthError":
+26:     case "ActionResponse":
+27:     case "TransitionChunk":
+28:     case "Ping": {
+29:       return { ...encoded };
+30:     }
+31:     case "MutationResponse": {
+32:       if (encoded.success) {
+33:         return { ...encoded, ts: u64ToLong(encoded.ts) };
+34:       } else {
+35:         return { ...encoded };
+36:       }
+37:     }
+38:     case "Transition": {
+39:       return {
+40:         ...encoded,
+41:         startVersion: {
+42:           ...encoded.startVersion,
+43:           ts: u64ToLong(encoded.startVersion.ts),
+44:         },
+45:         endVersion: {
+46:           ...encoded.endVersion,
+47:           ts: u64ToLong(encoded.endVersion.ts),
+48:         },
+49:       };
+50:     }
+51:     default: {
+52:       encoded satisfies never;
+53:     }
+54:   }
+55:   return undefined as never;
+56: }
+57: 
+58: export function encodeClientMessage(
+59:   message: ClientMessage,
+60: ): EncodedClientMessage {
+61:   switch (message.type) {
+62:     case "Authenticate":
+63:     case "ModifyQuerySet":
+64:     case "Mutation":
+65:     case "Action":
+66:     case "Event": {
+67:       return { ...message };
+68:     }
+69:     case "Connect": {
+70:       if (message.maxObservedTimestamp !== undefined) {
+71:         return {
+72:           ...message,
+73:           maxObservedTimestamp: longToU64(message.maxObservedTimestamp),
+74:         };
+75:       } else {
+76:         return { ...message, maxObservedTimestamp: undefined };
+77:       }
+78:     }
+79:     default: {
+80:       message satisfies never;
+81:     }
+82:   }
+83:   return undefined as never;
+84: }
+85: 
+86: type U64 = Long;
+87: type EncodedU64 = string;
+88: 
+89: /**
+90:  * Unique nonnegative integer identifying a single query.
+91:  */
+92: export type QueryId = number; // nonnegative int
+93: 
+94: export type QuerySetVersion = number; // nonnegative int
+95: 
+96: export type RequestId = number; // nonnegative int
+97: 
+98: export type IdentityVersion = number; // nonnegative int
+99: 
+100: /**
+101:  * A serialized representation of decisions made during a query's execution.
+102:  *
+103:  * A journal is produced when a query function first executes and is re-used
+104:  * when a query is re-executed.
+105:  *
+106:  * Currently this is used to store pagination end cursors to ensure
+107:  * that pages of paginated queries will always end at the same cursor. This
+108:  * enables gapless, reactive pagination.
+109:  *
+110:  * `null` is used to represent empty journals.
+111:  * @public
+112:  */
+113: export type QueryJournal = string | null;
+114: 
+115: /**
+116:  * Client message schema
+117:  */
+118: 
+119: type Connect = {
+120:   type: "Connect";
+121:   sessionId: string;
+122:   connectionCount: number;
+123:   lastCloseReason: string | null;
+124:   maxObservedTimestamp?: TS | undefined;
+125:   clientTs: number;
+126: };
+127: 
+128: export type AddQuery = {
+129:   type: "Add";
+130:   queryId: QueryId;
+131:   udfPath: string;
+132:   args: JSONValue[];
+133:   journal?: QueryJournal | undefined;
+134:   /**
+135:    * @internal
+136:    */
+137:   componentPath?: string | undefined;
+138: };
+139: 
+140: export type RemoveQuery = {
+141:   type: "Remove";
+142:   queryId: QueryId;
+143: };
+144: 
+145: export type QuerySetModification = {
+146:   type: "ModifyQuerySet";
+147:   baseVersion: QuerySetVersion;
+148:   newVersion: QuerySetVersion;
+149:   modifications: (AddQuery | RemoveQuery)[];
+150: };
+151: 
+152: export type MutationRequest = {
+153:   type: "Mutation";
+154:   requestId: RequestId;
+155:   udfPath: string;
+156:   args: JSONValue[];
+157:   // Execute the mutation on a specific component.
+158:   // Only admin auth is allowed to run mutations on non-root components.
+159:   componentPath?: string | undefined;
+160: };
+161: 
+162: export type ActionRequest = {
+163:   type: "Action";
+164:   requestId: RequestId;
+165:   udfPath: string;
+166:   args: JSONValue[];
+167:   // Execute the action on a specific component.
+168:   // Only admin auth is allowed to run actions on non-root components.
+169:   componentPath?: string | undefined;
+170: };
+171: 
+172: export type AdminAuthentication = {
+173:   type: "Authenticate";
+174:   tokenType: "Admin";
+175:   value: string;
+176:   baseVersion: IdentityVersion;
+177:   impersonating?: UserIdentityAttributes | undefined;
+178: };
+179: 
+180: export type Authenticate =
+181:   | AdminAuthentication
+182:   | {
+183:       type: "Authenticate";
+184:       tokenType: "User";
+185:       value: string;
+186:       baseVersion: IdentityVersion;
+187:     }
+188:   | {
+189:       type: "Authenticate";
+190:       tokenType: "None";
+191:       baseVersion: IdentityVersion;
+192:     };
+193: 
+194: export type Event = {
+195:   type: "Event";
+196:   eventType: string;
+197:   event: any;
+198: };
+199: export type ClientMessage =
+200:   | Connect
+201:   | Authenticate
+202:   | QuerySetModification
+203:   | MutationRequest
+204:   | ActionRequest
+205:   | Event;
+206: 
+207: type EncodedConnect = Omit<Connect, "maxObservedTimestamp"> & {
+208:   maxObservedTimestamp?: EncodedTS | undefined;
+209: };
+210: 
+211: // It's not a big deal to add `| undefined` to any optional properties here because
+212: // these messages are bound for JSON.stringify() serialization, which removes properties
+213: // that are undefined.
+214: type EncodedClientMessage =
+215:   | EncodedConnect
+216:   | Authenticate
+217:   | QuerySetModification
+218:   | MutationRequest
+219:   | ActionRequest
+220:   | Event;
+221: 
+222: /**
+223:  * Server message schema
+224:  */
+225: export type TS = U64;
+226: type EncodedTS = EncodedU64;
+227: type LogLines = string[];
+228: 
+229: export type StateVersion = {
+230:   querySet: QuerySetVersion;
+231:   ts: TS;
+232:   identity: IdentityVersion;
+233: };
+234: type EncodedStateVersion = Omit<StateVersion, "ts"> & { ts: EncodedTS };
+235: 
+236: type StateModification =
+237:   | {
+238:       type: "QueryUpdated";
+239:       queryId: QueryId;
+240:       value: JSONValue;
+241:       logLines: LogLines;
+242:       journal: QueryJournal;
+243:     }
+244:   | {
+245:       type: "QueryFailed";
+246:       queryId: QueryId;
+247:       errorMessage: string;
+248:       logLines: LogLines;
+249:       errorData: JSONValue;
+250:       journal: QueryJournal;

@@ -1,0 +1,33 @@
+node:internal/modules/esm/resolve:271
+    throw new ERR_MODULE_NOT_FOUND(
+          ^
+
+Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-composition-c2/legacy-reproduction-gOhCgF/runtimeAuthSchema' imported from /workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-composition-c2/legacy-reproduction-gOhCgF/host-sentinel.ts
+    at finalizeResolution (node:internal/modules/esm/resolve:271:11)
+    at moduleResolve (node:internal/modules/esm/resolve:865:10)
+    at defaultResolve (node:internal/modules/esm/resolve:992:11)
+    at #cachedDefaultResolve (node:internal/modules/esm/loader:701:20)
+    at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:721:38)
+    at nextStep (node:internal/modules/customization_hooks:189:26)
+    at resolveBaseSync (file:///workspace/Project-Cortex/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:11092)
+    at resolveDirectorySync (file:///workspace/Project-Cortex/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:12398)
+    at resolveTsPathsSync (file:///workspace/Project-Cortex/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:13605)
+    at resolve (file:///workspace/Project-Cortex/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:16832) {
+  code: 'ERR_MODULE_NOT_FOUND',
+  url: 'file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-composition-c2/legacy-reproduction-gOhCgF/runtimeAuthSchema'
+}
+
+Node.js v24.19.0
+file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-composition-c2/legacy-reproduction-gOhCgF/legacy-error-cleanup/destination/replica/_goals/convex-backend-runtime-2026-10-02/qa/task03b2d/inventory.mjs:220
+if (unresolved.length) throw new Error(JSON.stringify(unresolved, null, 2));
+                             ^
+
+Error: [
+  "convex-dev/unapproved.js: external/re-export requires explicit traversal"
+]
+    at file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-composition-c2/legacy-reproduction-gOhCgF/legacy-error-cleanup/destination/replica/_goals/convex-backend-runtime-2026-10-02/qa/task03b2d/inventory.mjs:220:30
+    at ModuleJob.run (node:internal/modules/esm/module_job:439:25)
+    at async node:internal/modules/esm/loader:643:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.19.0

@@ -1,0 +1,81 @@
+import { describe, expect, it } from "@jest/globals";
+import { ConvexError } from "convex/values";
+import { snapshot } from "../../../convex-dev/runtimeRegistryAuth";
+import { admissionCases, admissionFixture, corruptControl, controlCorruptions, type AdmissionCase } from "./admissionFixture";
+import { invoke } from "./fixture";
+
+const domainTables = ["agents", "memorySpaces", "contexts"];
+function controlSnapshot(f: ReturnType<typeof admissionFixture>) {
+  // Querying an absent fixture table creates an empty Map entry; compare the same
+  // trusted table set on both sides, including an initially empty tombstone table.
+  return snapshot(["runtimeAuthPrincipals", "runtimeAuthMemberships", "runtimeAuthGrants", "runtimeAuthScopes", "runtimeAuthTombstones"]
+    .map((table) => [table, f.db.table(table)]));
+}
+async function denied(run: () => Promise<unknown>, code: "FORBIDDEN" | "REGISTRY_OPERATION_FAILED") {
+  let caught: unknown;
+  try { await run(); } catch (error) { caught = error; }
+  expect(caught).toBeInstanceOf(ConvexError);
+  if (!(caught instanceof ConvexError)) throw new Error("Expected a structured admission denial");
+  expect(caught.data).toEqual({ version: 1, code,
+    message: code === "FORBIDDEN" ? "Access denied or invalid registry input" : "Registry operation failed",
+    retryable: false, outcome: code === "FORBIDDEN" ? "not_dispatched" : "failed" });
+  expect(JSON.stringify({ message: caught.message, data: caught.data })).not.toContain("private-control-document-id");
+  expect(JSON.stringify(caught.data)).not.toContain("healthy-second-scope-private-value");
+}
+function selectedOutput(entry: AdmissionCase, result: unknown, f: ReturnType<typeof admissionFixture>) {
+  const selected = f.db.table(entry.table).filter((row) => row.tenantId === f.secondTenant && row.memorySpaceId === f.secondSpace);
+  expect(selected).toHaveLength(1);
+  if (entry.path === "memorySpaces:list") expect(result).toEqual({ spaces: selected, total: 1, hasMore: false, offset: 0 });
+  else expect(result).toEqual(selected[0]);
+  if (entry.mutation) {
+    expect(selected[0]).toHaveProperty(entry.path === "contexts:update" ? "description" : "name", "Updated");
+    if (entry.path === "contexts:update") expect(selected[0]).toMatchObject({ version: 2, lastUpdatedBy: f.principal._id });
+  }
+  expect(f.db.writes).toBe(entry.mutation ? 1 : 0);
+  for (const trace of f.db.traces.filter((trace) => domainTables.includes(trace.table))) {
+    // Full context graph lookup may search another independently admitted space
+    // and find no row; every actual returned document must retain the selected scope.
+    if (trace.returned.length === 0) continue;
+    expect(trace.keys).toContainEqual(["tenantId", f.secondTenant]);
+    expect(trace.keys).toContainEqual(["memorySpaceId", f.secondSpace]);
+  }
+}
+
+describe("cycle3 strict admission cannot prune malformed controls into another scope", () => {
+  it.each(admissionCases.flatMap((entry) => controlCorruptions.map((corruption) => ({ ...entry, corruption }))))
+  ("$scopes $path malformed $corruption denies before hydration or effects", async (entry) => {
+    const f = admissionFixture(entry); corruptControl(f, entry.corruption);
+    const before = snapshot([...f.db.rows]); let attempts = 0;
+    f.db.beforeWrite = () => { attempts++; };
+    await denied(async () => await f.db.transaction(async () => await invoke(entry.registration, f.ctx, entry.args)), "REGISTRY_OPERATION_FAILED");
+    expect(f.db.traces.some((trace) => trace.table === (entry.corruption.endsWith("Scope") ? "runtimeAuthScopes" : "runtimeAuthTombstones")
+      && trace.returned.length === 2)).toBe(true);
+    expect(f.db.traces.filter((trace) => domainTables.includes(trace.table))).toHaveLength(0);
+    expect(attempts).toBe(0); expect(f.db.writes).toBe(0); expect(snapshot([...f.db.rows])).toBe(before);
+  });
+  it.each(admissionCases)("$scopes $path two healthy eligible scopes remain ambiguous", async (entry) => {
+    const f = admissionFixture(entry); const before = snapshot([...f.db.rows]); let attempts = 0;
+    f.db.beforeWrite = () => { attempts++; };
+    await denied(async () => await f.db.transaction(async () => await invoke(entry.registration, f.ctx, entry.args)), "FORBIDDEN");
+    expect(f.db.traces.filter((trace) => domainTables.includes(trace.table))).toHaveLength(0);
+    expect(attempts).toBe(0); expect(f.db.writes).toBe(0); expect(snapshot([...f.db.rows])).toBe(before);
+  });
+  it.each(admissionCases.flatMap((entry) => ["absent", "revoked", "expired"].map((firstGrant) => ({ ...entry, firstGrant }))))
+  ("$scopes $path $firstGrant first grant leaves the sole eligible scope available", async (entry) => {
+    const f = admissionFixture(entry);
+    if (entry.firstGrant === "absent") f.db.rows.set("runtimeAuthGrants", f.db.table("runtimeAuthGrants").filter((grant) => grant._id !== f.grant._id));
+    else if (entry.firstGrant === "revoked") f.grant.revokedAt = 1001;
+    else f.grant.expiresAt = 1001;
+    const controls = controlSnapshot(f);
+    const result = await f.db.transaction(async () => await invoke(entry.registration, f.ctx, entry.args));
+    selectedOutput(entry, result, f);
+    expect(controlSnapshot(f)).toBe(controls);
+  });
+  it.each(admissionCases)("$scopes $path explicit valid selection chooses the requested scope", async (entry) => {
+    const f = admissionFixture(entry); const controls = controlSnapshot(f);
+    const result = await f.db.transaction(async () => await invoke(entry.registration, f.ctx,
+      { ...entry.args, tenantId: f.secondTenant, memorySpaceId: f.secondSpace }));
+    selectedOutput(entry, result, f);
+    expect(controlSnapshot(f)).toBe(controls);
+  });
+});

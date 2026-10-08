@@ -1,0 +1,15 @@
+file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture-vm/convex/canonical.ts:11
+    if (typeof item !== "object" || seen.has(item)) throw new Error("DATA_GRAPH");
+                                                          ^
+
+Error: DATA_GRAPH
+    at inspect (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture-vm/convex/canonical.ts:11:59)
+    at inspect (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture-vm/convex/canonical.ts:24:56)
+    at canonical (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture-vm/convex/canonical.ts:26:3)
+    at exact (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture-vm/convex/canonical.ts:44:3)
+    at record (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture-vm/convex/validate.ts:7:83)
+    at Function.handler [as _handler] (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture-vm/convex/lifecycle.ts:22:293)
+    at Harness.mutation (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture/checks/harness.mjs:13:1011)
+    at file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture/checks/c2-capability.mjs:18:40
+
+Node.js v24.19.0

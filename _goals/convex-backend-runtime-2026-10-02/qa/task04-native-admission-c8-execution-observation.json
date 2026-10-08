@@ -1,0 +1,147 @@
+{
+  "observedAt": "2026-10-04T06:37:52.008039+00:00",
+  "classification": "OBSERVED_NATIVE_CASES_PASS_RETIRED_AWAITING_FRESH_AGGREGATE",
+  "operation": "56bb38d9-d9a2-4bba-b3f6-5fd61684b773",
+  "corePassed": 43,
+  "publicAuthorizationDenials": 1400,
+  "wholeStateNoEffectControls": 200,
+  "publicSnapshots": 400,
+  "internalVisibilityDenials": 162,
+  "privateMaintenanceCases": 20,
+  "peerDenialCases": 5,
+  "realHTTPSFaultModesPassed": [
+    "before-peer",
+    "lost-receipt",
+    "before-settle"
+  ],
+  "known40SettlementOnceOnly": true,
+  "syntheticAndEmptyQualifierStatuses": [
+    "PASS",
+    "PASS"
+  ],
+  "currentTwoPublicStorageHandlerObservations": [
+    {
+      "caller": "artifacts-completeArtifactUpload",
+      "firstNoJWTFailureClass": "unauthenticated",
+      "sequence": 1246,
+      "phase": "synthetic",
+      "sevenDenialClasses": [
+        "unauthenticated",
+        "native_or_transport",
+        "native_or_transport",
+        "native_or_transport",
+        "native_or_transport",
+        "forbidden",
+        "forbidden"
+      ],
+      "identityOrderingSource": "driver security loop noJWT,forgedJWT,wrongIssuer,wrongAudience,expiredJWT,ungranted,foreign",
+      "claim": "structured handler error.data.code after argument validation; native noJWT not a wire auth envelope"
+    },
+    {
+      "caller": "attachments-attach",
+      "firstNoJWTFailureClass": "unauthenticated",
+      "sequence": 1280,
+      "phase": "synthetic",
+      "sevenDenialClasses": [
+        "unauthenticated",
+        "native_or_transport",
+        "native_or_transport",
+        "native_or_transport",
+        "native_or_transport",
+        "forbidden",
+        "forbidden"
+      ],
+      "identityOrderingSource": "driver security loop noJWT,forgedJWT,wrongIssuer,wrongAudience,expiredJWT,ungranted,foreign",
+      "claim": "structured handler error.data.code after argument validation; native noJWT not a wire auth envelope"
+    }
+  ],
+  "journalSources": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-c8-execution/journal-admission-ecad347fca8bc4d5f1e83685a58641c7-270d0077-ab79-444b-975f-60400cd177c3.jsonl",
+      "sha256": "69093d38930215079e68b2b06a48ff56c81e6195b53d9b3c5019eefc20f475fb",
+      "bytes": 6261
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-c8-execution/journal-admission-ecad347fca8bc4d5f1e83685a58641c7-620a5782-5ab1-4d1b-823f-fcb118522841.jsonl",
+      "sha256": "42508dbb68ee9fd9592160c0db3f2575cb4fca7fb3dccc0ffcf885ec4b043ff6",
+      "bytes": 2146
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-c8-execution/journal-admission-ecad347fca8bc4d5f1e83685a58641c7-862b6564-ceee-412d-bf89-cf5bbd2bf228.jsonl",
+      "sha256": "23fd2a94cbc55f2e9bcddcdf647ccf1326c06b8649c1894ccc0a85cb8631f32b",
+      "bytes": 1343
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-c8-execution/journal-admission-ecad347fca8bc4d5f1e83685a58641c7-98f129de-a44d-4c36-aef9-b7b7cadba123.jsonl",
+      "sha256": "ab2a6e430f109445259ddfeb2f74cf02c87d17ae3fd093d47a95e122d9689181",
+      "bytes": 4487
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-c8-execution/journal-admission-ecad347fca8bc4d5f1e83685a58641c7-a5a20f7d-ee4b-411b-bd89-9d0e86d948e7.jsonl",
+      "sha256": "7b019a5cf21ea84949a95820863abde3caf42e7db0123b3a948c1a4f5ac0fead",
+      "bytes": 922
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-c8-execution/journal-admission-ecad347fca8bc4d5f1e83685a58641c7-a6854b5c-cf09-4f35-885c-88f613b00621.jsonl",
+      "sha256": "a6b3514930eba44c4c0797b711d988760d9ba2f6dbd743e56d312a9bfaf38ef1",
+      "bytes": 2201
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-c8-execution/journal-admission-ecad347fca8bc4d5f1e83685a58641c7-c4050e4a-1bc2-4cb5-a09f-a51e70ed4cc2.jsonl",
+      "sha256": "2cd5766468e25d4d9d2435535121cf53b4337343f9fc66c5e7ee61000017a352",
+      "bytes": 1885181
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-c8-execution/journal-admission-ecad347fca8bc4d5f1e83685a58641c7-cfaff4b1-b605-4367-b829-d2c61af27013.jsonl",
+      "sha256": "16b483d769220427aa2f739320f76069d77f8bd0c78cb394a2fc4c7fabef3e35",
+      "bytes": 6974
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-c8-execution/journal-admission-ecad347fca8bc4d5f1e83685a58641c7-d5c67c1e-5ada-411e-8b3c-7a11ed12e589.jsonl",
+      "sha256": "202bb49354cef718ebefc30f8139663deda0beed528c941491b60bae197511ac",
+      "bytes": 1343
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-c8-execution/journal-admission-ecad347fca8bc4d5f1e83685a58641c7-dc54f6b9-d46f-4e8f-acf4-12579dbab590.jsonl",
+      "sha256": "7ded729ce5bde2090d6f136222ebc78bb45c895d12f9554d7d5dcaf30db0081e",
+      "bytes": 4484
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-c8-execution/journal-admission-ecad347fca8bc4d5f1e83685a58641c7-e667571d-82c6-457c-9c06-428b44226aa0.jsonl",
+      "sha256": "f9ceaadf000c0228ff0c6c72448df78f590dfcac7f6b1c33a5d3f1c912915efc",
+      "bytes": 2201
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-c8-execution/journal-admission-ecad347fca8bc4d5f1e83685a58641c7-fc46c003-2d14-4c17-98cf-8d85f3c05a1f.jsonl",
+      "sha256": "3d793bae37591aeadc21a6a0ed892bf19a22ad30707f80bb185229dcd8d98790",
+      "bytes": 2201
+    }
+  ],
+  "securityDriverSHA256": "f0766a68116e737b6c98c290d7bf2d74f736d331e8cdfa04fc9d422607d16cdd",
+  "clientDispatchTickets": 2687,
+  "nestedInvocationDeclaredUpper": 9,
+  "nativeInvocationUpper": 2696,
+  "createdRows": 736,
+  "deletedRows": 736,
+  "journalRows": 4516,
+  "terminalManagedGroups": 6,
+  "remainingManagedGroups": 0,
+  "retirement": {
+    "projectId": 3139649,
+    "managementCalls": 5,
+    "deletionHTTP": 200,
+    "absenceHTTP": 404
+  },
+  "targetCredentialFilesRemoved": 3,
+  "paidInference": 0,
+  "storageObjects": 0,
+  "chargeClassification": "SYNTHETIC_ONLY; actual provider charge/interface/default retrieval NOT_RUN",
+  "BSourceSHA256": "bed10cc3934aac6743ff0cb08911765d84e9db18446cd8aebff979815068207f",
+  "executionManifestSHA256": "23d7bf2e2e81d3f21f74d4b3cd448fce5ed08d4e81984373fd4174b2f262a22b",
+  "faultSupplementManifestSHA256": "7ceb79cc0aea3888dcb9fa3ab6a4c3fbd52ea5f7da33584b091a11545d4e9124",
+  "nativeBAcceptance": "PENDING_FRESH_AGGREGATE",
+  "captureImplementation": "HELD",
+  "wholeTask04": "INCOMPLETE",
+  "full03": "INCOMPLETE",
+  "goal": "INCOMPLETE"
+}

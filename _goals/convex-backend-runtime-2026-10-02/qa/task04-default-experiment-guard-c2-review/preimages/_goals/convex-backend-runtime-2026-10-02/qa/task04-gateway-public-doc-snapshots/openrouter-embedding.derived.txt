@@ -1,0 +1,140 @@
+Text Embedding 3 Small - API Pricing & Providers | OpenRouterSkip to contentSearch⌘KDashboardModelsBenchmarksChatChatRankingsAppsOriPricingDocs
+Models 
+Rankings 
+Ori BenchmarksChatChatPricingDocsSign UpSign Up© 2026 OpenRouter, Inc
+Product
+Chat
+Rankings
+Benchmarks
+Apps
+Discover
+Models
+Collections
+Providers
+Tools
+Pricing
+Business
+Enterprise
+Labs
+Company
+About
+Blog
+CareersHiring
+Privacy
+Terms of Service
+Trust Center
+Support
+Works With OR
+Data
+Brand
+Developer
+Documentation
+API Reference
+Developer Platform
+Status
+AI Site Map
+Connect
+Discord
+GitHub
+LinkedIn
+X
+YouTubeSign UpSign Up
+OpenAI: Text Embedding 3 Small
+openai/text-embedding-3-smallAPI
+text-embedding-3-small is OpenAI's improved, more performant version of the ada embedding model. Embeddings are a numerical representation of text that can be used to measure the relatedness between two pieces of text. Embeddings are useful for search, clustering, recommendations, anomaly detection, and classification tasks.ModalitiesPrice$0.02/M tokensContext8KReleasedOct 30, 2025OpenAI: Text Embedding 3 SmallAPIProvidersPricingPerformanceUptimeAppsActivityFAQExploreProviders
+Providers
+Different companies host the same model. OpenRouter routes your request to one of them based on the routing mode you pick — Balanced (price + speed), Nitro (fastest), Floor (cheapest), or Exacto (highest tool-calling accuracy).
+Pricing
+The average price customers actually pay for this model, next to the prices providers post. Caching and discounts mean the price actually paid is often well below the listed one.
+Performance
+Throughput is how fast the model writes (tokens per second — higher is better). Latency is total round-trip time (lower is better). TTFT is time-to-first-token — how long before you see anything appear (lower is better).
+Uptime
+Uptime is the percentage of the past 3 days that at least one provider was responding to requests. Availability is the percentage of time that inference was successfully served. OpenRouter continuously monitors and uses the next-best provider when one returns an error.
+Apps
+Public apps that send the most traffic to this model. Good signal for what real production workloads look like — and a hint at which use cases this model is best suited for.
+Activity
+Token volume and request traffic to this model over time.
+API
+Drop-in code to call this model. OpenRouter's API is OpenAI-compatible — most SDKs work by just swapping the base URL. The only thing that changes between models is the model slug below.
+Explore more modelsText Embedding ModelsCollectionEmbedding Model RankingsRankingStandardLatencyP50
+
+Provider
+Input /M
+Latency
+Uptime
+
+Azure
+$0.02
+0.21s
+100.00%
+
+OpenAI
+$0.02
+0.21s
+100.00%Latency0.21s
+P50, best providerAll locationsLatency / throughputP501 weekUptime (3d)The model was reachable. Request routed to a provider.100.00%Availability (3d)The model returned inference from any provider. Errors and empty responses count against it.99.99%
+Availability over the last 3 daysLast 72 hoursAvailability 99.99%3 Days Ago2 Days AgoYesterdayNow
+Availability over the last 24 hoursOpenRouter Availability99.99%Without Routing99.38%
+When an error occurs in an upstream provider, we can recover by routing to another healthy provider, if your request filters allow it. You can access per-provider uptime data programmatically through the Endpoints API. Learn more about our load balancing and customization options.1.GBrain new9.59Btokens2.Aflux new7.19Btokens3.jurimetria new6.97Btokens4.Kilo Code new6.85Btokens5.OpenCase new4.44Btokens
+Frequently asked questions
+What is Text Embedding 3 Small?
+text-embedding-3-small is OpenAI's improved, more performant version of the ada embedding model. Embeddings are a numerical representation of text that can be used to measure the relatedness between two pieces of text. Embeddings are useful for search, clustering, recommendations, anomaly detection, and classification tasks.
+How much does Text Embedding 3 Small cost?
+Text Embedding 3 Small costs $0.02/M tokens.
+How much text can Text Embedding 3 Small process at once?
+Text Embedding 3 Small accepts up to 8,192 tokens per input. Longer text has to be split into multiple inputs.
+What inputs and outputs does Text Embedding 3 Small support?
+Text Embedding 3 Small accepts text as input and returns embedding vectors.
+Which providers serve Text Embedding 3 Small?
+Text Embedding 3 Small is served by 2 providers on OpenRouter: Azure and OpenAI. Requests are routed to the best available provider, with automatic failover to the others, and you can pin or exclude providers with provider routing.
+When was Text Embedding 3 Small released?
+Text Embedding 3 Small was released on October 30, 2025.
+More models from OpenAIGPT-6.1 Sol Pro
+GPT-6.1 Sol Pro is the same underlying model as GPT-6.1 Sol, served with reasoning.mode set to pro for higher-quality responses on complex tasks.
+
+Cost note: pro mode spends far more reasoning tokens per request, so a typical request costs several times more than the same request on GPT-6.1 Sol and takes much longer to complete. It is intended for hard, high-stakes problems where the extra accuracy justifies the cost. For everyday coding, agentic, and chat workloads, use GPT-6.1 Sol instead.
+
+Learn more in OpenAI's docs: https://developers.openai.com/api/docs/guides/reasoning#reasoning-modeText1.1M context$2 / $10GPT-6.1 Sol
+GPT-6.1 Sol is an upgrade to GPT-6 Sol from OpenAI, positioned below the flagship GPT-6 Astra in the GPT-6 series. It is suited for agentic coding, computer use, document-heavy professional work, and multi-step business workflow automation, and approaches Astra-level results on these tasks at a much lower cost. Compared with GPT-6 Sol, it makes fewer factual errors and is more reliable at respecting explicit restrictions and user intent during agentic tasks.Text1.1M context$2 / $10GPT-6 Luna Pro
+GPT-6 Luna Pro is the same underlying model as GPT-6 Luna, served with reasoning.mode set to pro for higher-quality responses on complex tasks.
+
+Cost note: pro mode spends far more reasoning tokens per request, so a typical request costs several times more than the same request on GPT-6 Luna and takes much longer to complete. It is intended for hard, high-stakes problems where the extra accuracy justifies the cost. For everyday coding, agentic, and chat workloads, use GPT-6 Luna instead.
+
+Learn more in OpenAI's docs: https://developers.openai.com/api/docs/guides/reasoning#reasoning-modeText1.1M context$0.10 / $0.50GPT-6 Luna Pro
+GPT-6 Luna Pro is the same underlying model as GPT-6 Luna, served with reasoning.mode set to pro for higher-quality responses on complex tasks.
+
+Cost note: pro mode spends far more reasoning tokens per request, so a typical request costs several times more than the same request on GPT-6 Luna and takes much longer to complete. It is intended for hard, high-stakes problems where the extra accuracy justifies the cost. For everyday coding, agentic, and chat workloads, use GPT-6 Luna instead.
+
+Learn more in OpenAI's docs: https://developers.openai.com/api/docs/guides/reasoning#reasoning-modeText1.1M context$0.05 / $0.25GPT-6 Luna
+GPT-6 Luna is the fast, cost-efficient model in OpenAI's GPT-6 series, positioned below GPT-6 Sol. It is suited for high-volume and latency-sensitive workloads such as chat, classification, and lightweight agentic tasks, and at higher reasoning effort it can take on complex software engineering and computer-use tasks that previously called for a Sol-tier model. It shares the GPT-6 family's gains in factual reliability and its clearer, more concise communication style.Text1.1M context$0.10 / $0.50GPT-6 Luna
+GPT-6 Luna is the fast, cost-efficient model in OpenAI's GPT-6 series, positioned below GPT-6 Sol. It is suited for high-volume and latency-sensitive workloads such as chat, classification, and lightweight agentic tasks, and at higher reasoning effort it can take on complex software engineering and computer-use tasks that previously called for a Sol-tier model. It shares the GPT-6 family's gains in factual reliability and its clearer, more concise communication style.Text1.1M context$0.05 / $0.25GPT-6 Sol Pro
+GPT-6 Sol Pro is the same underlying model as GPT-6 Sol, served with reasoning.mode set to pro for higher-quality responses on complex tasks.
+
+Cost note: pro mode spends far more reasoning tokens per request, so a typical request costs several times more than the same request on GPT-6 Sol and takes much longer to complete. It is intended for hard, high-stakes problems where the extra accuracy justifies the cost. For everyday coding, agentic, and chat workloads, use GPT-6 Sol instead.
+
+Learn more in OpenAI's docs: https://developers.openai.com/api/docs/guides/reasoning#reasoning-modeText1.1M context$2 / $10GPT-6 Sol Pro
+GPT-6 Sol Pro is the same underlying model as GPT-6 Sol, served with reasoning.mode set to pro for higher-quality responses on complex tasks.
+
+Cost note: pro mode spends far more reasoning tokens per request, so a typical request costs several times more than the same request on GPT-6 Sol and takes much longer to complete. It is intended for hard, high-stakes problems where the extra accuracy justifies the cost. For everyday coding, agentic, and chat workloads, use GPT-6 Sol instead.
+
+Learn more in OpenAI's docs: https://developers.openai.com/api/docs/guides/reasoning#reasoning-modeText1.1M context$1 / $5GPT-6 Sol
+GPT-6 Sol is the cost-efficient high-end model in OpenAI's GPT-6 series, positioned below the flagship GPT-6 Astra and above the fast GPT-6 Luna tier. It is suited for demanding professional work, agentic coding, business workflow automation, and computer use, and is particularly strong at long-horizon software engineering tasks in real codebases. It approaches Astra-level factual reliability at a much lower cost and shares Astra's clearer, more concise communication style in technical and coding conversations.Text1.1M context$2 / $10GPT-6 Sol
+GPT-6 Sol is the cost-efficient high-end model in OpenAI's GPT-6 series, positioned below the flagship GPT-6 Astra and above the fast GPT-6 Luna tier. It is suited for demanding professional work, agentic coding, business workflow automation, and computer use, and is particularly strong at long-horizon software engineering tasks in real codebases. It approaches Astra-level factual reliability at a much lower cost and shares Astra's clearer, more concise communication style in technical and coding conversations.Text1.1M context$1 / $5GPT Astra Latest
+This model always redirects to the latest model in the GPT Astra family.Text1.1M contextGPT Sol Latest
+This model always redirects to the latest model in the GPT Sol family.Text1.1M contextGPT Terra Latest
+This model always redirects to the latest model in the GPT Terra family.Text1.1M contextGPT Luna Latest
+This model always redirects to the latest model in the GPT Luna family.Text1.1M contextGPT Image 2.5 Sunburst
+GPT Image 2.5 Sunburst is an image generation and editing model from OpenAI, positioned as the precision-oriented tier of the GPT Image 2.5 series. It is suited to detailed creative work where editing accuracy matters more than generation speed, via the dedicated Images API.Image$8 / $30GPT Image 2.5 Flare
+GPT Image 2.5 Flare is an image generation and editing model from OpenAI, positioned as the speed-oriented tier of the GPT Image 2.5 series. It is suited to high-volume everyday generation, creator content, and rapid prototyping via the dedicated Images API.Image$8 / $30GPT-6 Astra
+GPT-6 Astra is OpenAI's flagship model for demanding end-to-end work. It is suited for advanced analysis, software engineering, deep research, scientific work, and document creation, with particular strengths in long-horizon agentic tasks that involve computer and browser use.Text1.1M context$10 / $50GPT-6 Astra
+GPT-6 Astra is OpenAI's flagship model for demanding end-to-end work. It is suited for advanced analysis, software engineering, deep research, scientific work, and document creation, with particular strengths in long-horizon agentic tasks that involve computer and browser use.Text1.1M context$5 / $25GPT-6 Astra Pro
+GPT-6 Astra Pro is the same underlying model as GPT-6 Astra, served with reasoning.mode set to pro for higher-quality responses on complex tasks.
+
+Cost note: pro mode spends far more reasoning tokens per request, so a typical request costs several times more than the same request on GPT-6 Astra and takes much longer to complete. It is intended for hard, high-stakes problems where the extra accuracy justifies the cost. For everyday coding, agentic, and chat workloads, use GPT-6 Astra instead.
+
+Learn more in OpenAI's docs: https://developers.openai.com/api/docs/guides/reasoning#reasoning-modeText1.1M context$10 / $50GPT-6 Astra Pro
+GPT-6 Astra Pro is the same underlying model as GPT-6 Astra, served with reasoning.mode set to pro for higher-quality responses on complex tasks.
+
+Cost note: pro mode spends far more reasoning tokens per request, so a typical request costs several times more than the same request on GPT-6 Astra and takes much longer to complete. It is intended for hard, high-stakes problems where the extra accuracy justifies the cost. For everyday coding, agentic, and chat workloads, use GPT-6 Astra instead.
+
+Learn more in OpenAI's docs: https://developers.openai.com/api/docs/guides/reasoning#reasoning-modeText1.1M context$5 / $25Previous slideNext slide

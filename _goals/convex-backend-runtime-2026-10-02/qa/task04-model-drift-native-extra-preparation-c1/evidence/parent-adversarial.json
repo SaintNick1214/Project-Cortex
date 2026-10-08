@@ -1,0 +1,210 @@
+{
+  "scope": "DUMMY_ONLY_ACTUAL_PUBLIC_SOURCE",
+  "sourcePins": [
+    {
+      "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/scripts/parent-inputs.mjs",
+      "sha256": "0b7e31b6d25e649014b1bbe1bbd93b1a081a0e07d7d393e968d750ac04811730"
+    },
+    {
+      "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c1/scripts/current-inputs.mjs",
+      "sha256": "8c227ae78f3b36136ae7d1695c7e2154ef98017e0b0de19693804c05528f0071"
+    }
+  ],
+  "extra": [
+    {
+      "name": "future-window",
+      "status": "PASS",
+      "observed": {
+        "preflightCalls": 1,
+        "signatures": 0,
+        "network": 0,
+        "keyReads": 0,
+        "randomCalls": 0,
+        "writes": [],
+        "stdout": "",
+        "openFDs": 0
+      },
+      "error": "PARENT_WINDOW_EXPIRED_OR_FUTURE"
+    },
+    {
+      "name": "expired-window",
+      "status": "PASS",
+      "observed": {
+        "preflightCalls": 1,
+        "signatures": 0,
+        "network": 0,
+        "keyReads": 0,
+        "randomCalls": 0,
+        "writes": [],
+        "stdout": "",
+        "openFDs": 0
+      },
+      "error": "PARENT_WINDOW_EXPIRED_OR_FUTURE"
+    },
+    {
+      "name": "stale-receipt",
+      "status": "PASS",
+      "observed": {
+        "preflightCalls": 2,
+        "signatures": 0,
+        "network": 0,
+        "keyReads": 0,
+        "randomCalls": 0,
+        "writes": [],
+        "stdout": "",
+        "openFDs": 0
+      },
+      "error": "PARENT_RECEIPT_WINDOW"
+    },
+    {
+      "name": "future-receipt",
+      "status": "PASS",
+      "observed": {
+        "preflightCalls": 2,
+        "signatures": 0,
+        "network": 0,
+        "keyReads": 0,
+        "randomCalls": 0,
+        "writes": [],
+        "stdout": "",
+        "openFDs": 0
+      },
+      "error": "PARENT_RECEIPT_WINDOW"
+    },
+    {
+      "name": "late-output-window-change",
+      "status": "PASS",
+      "observed": {
+        "preflightCalls": 7,
+        "signatures": 0,
+        "network": 0,
+        "keyReads": 0,
+        "randomCalls": 0,
+        "writes": [
+          "current-physical-id-input-receipt.json"
+        ],
+        "stdout": "",
+        "openFDs": 0
+      },
+      "error": "PARENT_WINDOW_CHANGED\n+ actual - expected\n\n+ 'b64eea3a03465f1f1d1300a3faac2477dea3dfbff8185c841868e27f3b2d8b56'\n- 'ac7ff8bd70b4a1ec3ce0b6157df558b5b865b75b1cbeb87713a17be9ed22248a'\n"
+    },
+    {
+      "name": "oversize-body",
+      "status": "PASS",
+      "error": "PARENT_RESPONSE_BYTES",
+      "observed": {
+        "preflightCalls": 3,
+        "signatures": 8,
+        "network": 1,
+        "keyReads": 1,
+        "randomCalls": 1,
+        "writes": [
+          "initial-physical-id-provenance.json",
+          "historical-native-locators.json",
+          "identities.json",
+          "peer-config.json"
+        ],
+        "stdout": "",
+        "openFDs": 0
+      }
+    },
+    {
+      "name": "late-body",
+      "status": "PASS",
+      "error": "PARENT_RESPONSE_DEADLINE",
+      "observed": {
+        "preflightCalls": 3,
+        "signatures": 8,
+        "network": 1,
+        "keyReads": 1,
+        "randomCalls": 1,
+        "writes": [
+          "initial-physical-id-provenance.json",
+          "historical-native-locators.json",
+          "identities.json",
+          "peer-config.json"
+        ],
+        "stdout": "",
+        "openFDs": 0
+      }
+    },
+    {
+      "name": "HTTP403-openbody",
+      "status": "PASS",
+      "error": "owned peer environment update\n\n403 !== 200\n",
+      "observed": {
+        "preflightCalls": 3,
+        "signatures": 8,
+        "network": 1,
+        "keyReads": 1,
+        "randomCalls": 1,
+        "writes": [
+          "initial-physical-id-provenance.json",
+          "historical-native-locators.json",
+          "identities.json",
+          "peer-config.json"
+        ],
+        "stdout": "",
+        "openFDs": 0
+      }
+    },
+    {
+      "name": "primary-read-plus-release-failure",
+      "status": "PASS",
+      "samePrimary": true,
+      "cancel": 1,
+      "release": 1
+    },
+    {
+      "name": "multiple-legitimate-owned-core-IDs",
+      "status": "PASS",
+      "observed": {
+        "preflightCalls": 10,
+        "signatures": 0,
+        "network": 0,
+        "keyReads": 0,
+        "randomCalls": 0,
+        "writes": [
+          "current-physical-id-input-receipt.json",
+          "argument-scope.json",
+          "public-arguments.json"
+        ],
+        "stdout": "{\"status\":\"PASS_SOURCE_BOUND_INPUTS\",\"extraRPC\":0,\"extraRows\":0,\"storageCreated\":0,\"currentCoreIDTables\":[\"runtimeModelAttempts\",\"runtimeModelOperations\"],\"currentPublicStorageDecoding\":\"NOT_RUN\"}\n",
+        "openFDs": 0
+      }
+    },
+    {
+      "name": "retired-projectId-3140295",
+      "status": "PASS",
+      "parentAndGuardDenied": true
+    },
+    {
+      "name": "retired-projectId-3140351",
+      "status": "PASS",
+      "parentAndGuardDenied": true
+    },
+    {
+      "name": "retired-deploymentName-modest-puffin-359",
+      "status": "PASS",
+      "parentAndGuardDenied": true
+    },
+    {
+      "name": "retired-deploymentName-quaint-goldfish-866",
+      "status": "PASS",
+      "parentAndGuardDenied": true
+    },
+    {
+      "name": "fresh-DUMMY-guard-positive",
+      "status": "PASS"
+    },
+    {
+      "name": "preexpired-owned-body",
+      "status": "PASS",
+      "acquired": 1,
+      "read": 0,
+      "cancel": 1,
+      "release": 1
+    }
+  ],
+  "native": "NOT_RUN"
+}

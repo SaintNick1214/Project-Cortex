@@ -15,11 +15,11 @@ also accepts an explicit JSON configuration and a new output directory:
 node scripts/assemble.mjs /absolute/release-inputs.json /absolute/new-output
 ```
 
-Configuration is `{ "catalogVersion": "1.0.0", "templates": [...] }`. Each selection
+Configuration is `{ "catalogVersion": "1.1.0", "templates": [...] }`. Each selection
 declares `id` (`basic`, `vercel-ai-quickstart` or `chat-sdk`), `version`, absolute
 `source`, portable `provenance`, `manager` (`npm` or `pnpm`), `envNames`, optional
 `envExamples`, and boolean `backend`/`graph`. The manifest version must match the
-selection. SDK/provider dependencies become release-default `^0.37.0`; other
+selection. SDK/provider dependencies become release-default `^0.38.0`; other
 manifest fields and source files retain their values. Proof candidate overrides
 belong to the CLI installer, never this catalog.
 

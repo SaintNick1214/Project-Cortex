@@ -1,0 +1,125 @@
+[
+  {
+    "name": "backend-types",
+    "argv": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "--project",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03b2a/tsconfig.backend.json",
+      "--pretty",
+      "false"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2a-checkout",
+    "startedAt": "2026-10-03T10:18:46.134362+00:00",
+    "endedAt": "2026-10-03T10:18:48.172791+00:00",
+    "exitCode": 0,
+    "log": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2a/checks/backend-types.log"
+  },
+  {
+    "name": "test-types",
+    "argv": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "--project",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03b2a/tsconfig.tests.json",
+      "--pretty",
+      "false"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2a-checkout",
+    "startedAt": "2026-10-03T10:18:48.173131+00:00",
+    "endedAt": "2026-10-03T10:18:50.532608+00:00",
+    "exitCode": 0,
+    "log": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2a/checks/test-types.log"
+  },
+  {
+    "name": "scoped-lint",
+    "argv": [
+      "node",
+      "node_modules/eslint/bin/eslint.js",
+      "convex-dev/immutable.ts",
+      "convex-dev/mutable.ts",
+      "convex-dev/users.ts",
+      "convex-dev/sessions.ts",
+      "convex-dev/runtimeMetadataAuth.ts",
+      "tests/unit/runtimeMetadataAuth",
+      "--report-unused-disable-directives"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2a-checkout",
+    "startedAt": "2026-10-03T10:18:50.532909+00:00",
+    "endedAt": "2026-10-03T10:18:57.004702+00:00",
+    "exitCode": 0,
+    "log": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2a/checks/scoped-lint.log"
+  },
+  {
+    "name": "scoped-jest",
+    "argv": [
+      "node",
+      "--experimental-vm-modules",
+      "node_modules/jest/bin/jest.js",
+      "--testPathPatterns=tests/unit/runtimeMetadataAuth",
+      "--runInBand",
+      "--forceExit",
+      "--silent",
+      "--json",
+      "--outputFile=_goals/convex-backend-runtime-2026-10-02/qa/task03b2a/jest-results.json"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2a-checkout",
+    "startedAt": "2026-10-03T10:18:57.005117+00:00",
+    "endedAt": "2026-10-03T10:19:02.330537+00:00",
+    "exitCode": 0,
+    "log": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2a/checks/scoped-jest.log"
+  },
+  {
+    "name": "ast-inventory",
+    "argv": [
+      "node",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03b2a/inventory.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2a-checkout",
+    "startedAt": "2026-10-03T10:19:02.330931+00:00",
+    "endedAt": "2026-10-03T10:19:02.595827+00:00",
+    "exitCode": 0,
+    "log": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2a/checks/ast-inventory.log"
+  },
+  {
+    "name": "framework-registration",
+    "argv": [
+      "node",
+      "--import",
+      "tsx",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03b2a/registration-probe.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2a-checkout",
+    "startedAt": "2026-10-03T10:19:02.596171+00:00",
+    "endedAt": "2026-10-03T10:19:02.776816+00:00",
+    "exitCode": 0,
+    "log": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2a/checks/framework-registration.log"
+  },
+  {
+    "name": "full-root-types",
+    "argv": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "--noEmit",
+      "--pretty",
+      "false"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2a-checkout",
+    "startedAt": "2026-10-03T10:19:02.777154+00:00",
+    "endedAt": "2026-10-03T10:19:13.689147+00:00",
+    "exitCode": 2,
+    "log": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2a/checks/full-root-types.log"
+  },
+  {
+    "name": "baseline-root-types",
+    "argv": [
+      "node",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03b2a/baseline-root-types.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex/work/backend-runtime/task03b2a-checkout",
+    "startedAt": "2026-10-03T10:19:13.689547+00:00",
+    "endedAt": "2026-10-03T10:19:25.463184+00:00",
+    "exitCode": 0,
+    "log": "_goals/convex-backend-runtime-2026-10-02/qa/task03b2a/checks/baseline-root-types.log"
+  }
+]

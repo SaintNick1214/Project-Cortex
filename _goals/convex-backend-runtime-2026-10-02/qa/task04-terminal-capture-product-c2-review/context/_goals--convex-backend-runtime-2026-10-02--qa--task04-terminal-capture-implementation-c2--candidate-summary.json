@@ -1,0 +1,109 @@
+{
+  "utc": "2026-10-04T07:04:43.253846+00:00",
+  "sources": [
+    {
+      "path": "convex-dev/runtimeModelPolicy.ts",
+      "bytes": 86443,
+      "sha256": "7394c55d00ccdc9c75cd8abab7a30e945d9bcaf76118b7b48ae55d4c02d71dcb",
+      "originalBytes": 85121,
+      "exactOriginalPrefix": null,
+      "unchanged": false
+    },
+    {
+      "path": "convex-dev/runtimePolicySchema.ts",
+      "bytes": 5313,
+      "sha256": "4467a4d4e424fa57cd07de95bce702108765747cfb6afa8a0756fea253926534",
+      "originalBytes": 5313,
+      "exactOriginalPrefix": null,
+      "unchanged": true
+    },
+    {
+      "path": "tests/unit/runtime/model-policy-admission.test.ts",
+      "bytes": 90070,
+      "sha256": "817def96244c30f0eb176afa90163f38d5c9deac842d714c9ad3c3d69829e967",
+      "originalBytes": 83111,
+      "exactOriginalPrefix": true,
+      "unchanged": false
+    }
+  ],
+  "checks": {
+    "c1-red": {
+      "exitCode": 1,
+      "sourceConfigStable": true,
+      "tests": {
+        "numTotalTestSuites": 1,
+        "numPassedTestSuites": 0,
+        "numFailedTestSuites": 1,
+        "numTotalTests": 12,
+        "numPassedTests": 0,
+        "numFailedTests": 1,
+        "numPendingTests": 11,
+        "numTodoTests": 0,
+        "success": false
+      },
+      "skippedTests": [
+        "independent hostile outcomes late expired-root revoked live refinement preserves exact original windows and initial identity",
+        "independent hostile outcomes known inputTokens cannot disappear during refinement",
+        "independent hostile outcomes known outputTokens cannot disappear during refinement",
+        "independent hostile outcomes known totalTokens cannot disappear during refinement",
+        "independent hostile outcomes known cachedInputTokens cannot disappear during refinement",
+        "independent hostile outcomes known reasoningTokens cannot disappear during refinement",
+        "independent hostile outcomes nonterminal legacy recovery keeps active slot then first genuine capture may settle",
+        "independent hostile outcomes caller cannot assert qualification by receipt extra trust flags",
+        "independent hostile outcomes partial capture marker denies ordinary replay with zero effects",
+        "independent hostile outcomes parent cancellation closes pending child and renewal cannot reopen",
+        "independent raw witness: transient read error changes pending to closed and healthy exact retry remains withheld"
+      ]
+    },
+    "c2-hostile": {
+      "exitCode": 0,
+      "sourceConfigStable": true,
+      "tests": {
+        "numTotalTestSuites": 1,
+        "numPassedTestSuites": 1,
+        "numFailedTestSuites": 0,
+        "numTotalTests": 12,
+        "numPassedTests": 11,
+        "numFailedTests": 0,
+        "numPendingTests": 1,
+        "numTodoTests": 0,
+        "success": true
+      },
+      "skippedTests": [
+        "independent raw witness: transient read error changes pending to closed and healthy exact retry remains withheld"
+      ]
+    },
+    "tests-c2": {
+      "exitCode": 0,
+      "sourceConfigStable": true,
+      "tests": {
+        "numTotalTestSuites": 1,
+        "numPassedTestSuites": 1,
+        "numFailedTestSuites": 0,
+        "numTotalTests": 133,
+        "numPassedTests": 133,
+        "numFailedTests": 0,
+        "numPendingTests": 0,
+        "numTodoTests": 0,
+        "success": true
+      },
+      "skippedTests": []
+    },
+    "typecheck-c2": {
+      "exitCode": 0,
+      "sourceConfigStable": true
+    },
+    "lint-c2": {
+      "exitCode": 0,
+      "sourceConfigStable": true
+    }
+  },
+  "counterexampleSourceHash": "f578d105e487dfc3eb79d065986b5736962dcaae43fbd69fb98dbf8270efaaa7",
+  "exactFrozenC1Hash": "7a21d64328b7b0f08f91199cf6a714c78432e0db68eb340713d208763871f64b",
+  "limitations": [
+    "Offline only; actual native OCC/rollback/publication/Gateway and paid/provider truth remain NOT_RUN.",
+    "Red runs exact reviewed failing assertion only: eleven other tests intentionally filtered.",
+    "Green hostile runs all eleven requirement cases; old raw witness asserting C1 broken behavior is intentionally filtered and never executes its old-QA write.",
+    "Independent acceptance remains pending."
+  ]
+}

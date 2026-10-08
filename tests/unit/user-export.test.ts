@@ -1,4 +1,4 @@
-import { operationalExportExclusions } from "../../convex-dev/lib/userDataScope";
+import { operationalExportExclusions, runtimeExportUnsupported } from "../../convex-dev/lib/userDataScope";
 import { createServer, type Server } from "node:http";
 import type { Socket } from "node:net";
 import { convexToJson } from "convex/values";
@@ -108,6 +108,7 @@ it("registers exactly five internal operations and mirrors the independent schem
     new Set([
       ...USER_EXPORT_DOMAINS,
       ...Object.keys(operationalExportExclusions),
+      ...runtimeExportUnsupported,
     ]),
   ).toEqual(new Set(Object.keys(schema.tables)));
   expect(USER_EXPORT_DOMAINS).toHaveLength(17);
@@ -2009,6 +2010,7 @@ function registeredShareFixture(tenantId?: string, incoming = false) {
             };
             choose({ eq });
             return {
+              first: async () => matches[0] ?? null,
               take: async (n: number) => matches.slice(0, n),
               paginate: async () => ({
                 page: matches,

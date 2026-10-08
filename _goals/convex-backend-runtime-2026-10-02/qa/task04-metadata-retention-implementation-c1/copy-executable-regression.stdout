@@ -1,0 +1,68 @@
+FILE offline-check.mjs
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import * as guard from '../fixture/convex/guard.ts';
+import {buildRunner,run,Lifecycle} from '../fixture/convex/runner.ts';
+import {CASES,ORDER,BINDING,PROFILE} from '../fixture/convex/compiled.ts';
+import {canonical,parseCanonical,digest} from '../fixture/convex/canonical.ts';
+/** Faithful single-row OCC snapshot/rollback/retry harness. NOT Convex native proof.
+ * Registered handlers execute unchanged. Exceptions discard all transaction writes;
+ * competing read versions retry the entire mutation before publication. */
+class Harness {
+  rows=[];version=0;conflicts=0; failBeforeCommit=false; loseResponse=false;
+  async mutation(fn,args={}) {
+    for(let retry=0;retry<32;retry++) {
+      const version=this.version,snapshot=structuredClone(this.rows);let writes=false;
+      const db={query:()=>({withIndex:(_name,callback)=>{let selected;callback({eq:(_key,value)=>{selected=value;return {};}});return {unique:async()=>{const rows=snapshot.filter(x=>x.key===selected);if(rows.length>1)throw Error('AMBIGUOUS');return structuredClone(rows[0]??null);}};}}),insert:async(_table,row)=>{writes=true;snapshot.push({...row,_id:'account-1'});return 'account-1';},replace:async(id,row)=>{writes=true;const i=snapshot.findIndex(x=>x._id===id);if(i<0)throw Error('MISSING');snapshot[i]={...row,_id:id};}};
+      const result=await fn._handler({db},args);
+FILE refinement-check.mjs
+import assert from 'node:assert/strict';
+import * as guard from '../fixture/convex/guard.ts';
+import {CASES,BINDING} from '../fixture/convex/compiled.ts';
+import {canonical} from '../fixture/convex/canonical.ts';
+/** Faithful single-row OCC snapshot/rollback/retry harness. NOT Convex native proof.
+ * Registered handlers execute unchanged. Exceptions discard all transaction writes;
+ * competing read versions retry the entire mutation before publication. */
+class Harness {
+  rows=[];version=0;conflicts=0; failBeforeCommit=false; loseResponse=false;
+  async mutation(fn,args={}) {
+    for(let retry=0;retry<32;retry++) {
+      const version=this.version,snapshot=structuredClone(this.rows);let writes=false;
+      const db={query:()=>({withIndex:(_name,callback)=>{let selected;callback({eq:(_key,value)=>{selected=value;return {};}});return {unique:async()=>{const rows=snapshot.filter(x=>x.key===selected);if(rows.length>1)throw Error('AMBIGUOUS');return structuredClone(rows[0]??null);}};}}),insert:async(_table,row)=>{writes=true;snapshot.push({...row,_id:'account-1'});return 'account-1';},replace:async(id,row)=>{writes=true;const i=snapshot.findIndex(x=>x._id===id);if(i<0)throw Error('MISSING');snapshot[i]={...row,_id:id};}};
+      const result=await fn._handler({db},args);
+      if(version!==this.version){this.conflicts++;continue;}
+      if(this.failBeforeCommit){this.failBeforeCommit=false;throw Error('ROLLBACK_INJECTED');}
+FILE independent.mjs
+import assert from 'node:assert/strict';
+import * as guard from '../fixture/convex/guard.ts';
+import {CASES,BINDING} from '../fixture/convex/compiled.ts';
+import {canonical} from '../fixture/convex/canonical.ts';
+/** Faithful single-row OCC snapshot/rollback/retry harness. NOT Convex native proof.
+ * Registered handlers execute unchanged. Exceptions discard all transaction writes;
+ * competing read versions retry the entire mutation before publication. */
+class Harness {
+  rows=[];version=0;conflicts=0; failBeforeCommit=false; loseResponse=false;
+  async mutation(fn,args={}) {
+    for(let retry=0;retry<32;retry++) {
+      const version=this.version,snapshot=structuredClone(this.rows);let writes=false;
+      const db={query:()=>({withIndex:(_name,callback)=>{let selected;callback({eq:(_key,value)=>{selected=value;return {};}});return {unique:async()=>{const rows=snapshot.filter(x=>x.key===selected);if(rows.length>1)throw Error('AMBIGUOUS');return structuredClone(rows[0]??null);}};}}),insert:async(_table,row)=>{writes=true;snapshot.push({...row,_id:'account-1'});return 'account-1';},replace:async(id,row)=>{writes=true;const i=snapshot.findIndex(x=>x._id===id);if(i<0)throw Error('MISSING');snapshot[i]={...row,_id:id};}};
+      const result=await fn._handler({db},args);
+      if(version!==this.version){this.conflicts++;continue;}
+      if(this.failBeforeCommit){this.failBeforeCommit=false;throw Error('ROLLBACK_INJECTED');}
+FILE hostile.mjs
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import * as guard from '../fixture/convex/guard.ts';
+import {buildRunner,run,Lifecycle} from '../fixture/convex/runner.ts';
+import {CASES,ORDER,BINDING,PROFILE} from '../fixture/convex/compiled.ts';
+import {canonical,parseCanonical,digest} from '../fixture/convex/canonical.ts';
+/** Faithful single-row OCC snapshot/rollback/retry harness. NOT Convex native proof.
+ * Registered handlers execute unchanged. Exceptions discard all transaction writes;
+ * competing read versions retry the entire mutation before publication. */
+class Harness {
+  rows=[];version=0;conflicts=0; failBeforeCommit=false; loseResponse=false;
+  async mutation(fn,args={}) {
+    for(let retry=0;retry<32;retry++) {
+      const version=this.version,snapshot=structuredClone(this.rows);let writes=false;
+      const db={query:()=>({withIndex:(_name,callback)=>{let selected;callback({eq:(_key,value)=>{selected=value;return {};}});return {unique:async()=>{const rows=snapshot.filter(x=>x.key===selected);if(rows.length>1)throw Error('AMBIGUOUS');return structuredClone(rows[0]??null);}};}}),insert:async(_table,row)=>{writes=true;snapshot.push({...row,_id:'account-1'});return 'account-1';},replace:async(id,row)=>{writes=true;const i=snapshot.findIndex(x=>x._id===id);if(i<0)throw Error('MISSING');snapshot[i]={...row,_id:id};}};
+      const result=await fn._handler({db},args);

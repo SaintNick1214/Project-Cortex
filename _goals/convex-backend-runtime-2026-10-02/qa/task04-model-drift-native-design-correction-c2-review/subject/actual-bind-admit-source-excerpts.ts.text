@@ -1,0 +1,202 @@
+  if (!account.current || account.cancelled || account.overrun || Date.now() < account.windowStart || Date.now() >= account.windowEnd
+    || add(account.reservedUnits, account.settledUnits, account.uncertainUnits, ceiling) > Math.min(account.limitUnits, integer(limit, 1))
+    || account.activeConcurrency >= Math.min(account.concurrencyLimit, integer(concurrency, 1))) fail("BUDGET_EXCEEDED");
+}
+/** Permit-boundary capacity: the reservation and active slot are already counted. */
+function heldCapacity(account: Account, limit: number, concurrency: number): void {
+  balanced(account);
+  if (!account.current || account.cancelled || account.overrun || Date.now() < account.windowStart || Date.now() >= account.windowEnd
+    || add(account.reservedUnits, account.settledUnits, account.uncertainUnits) > Math.min(account.limitUnits, integer(limit, 1))
+    || account.activeConcurrency > Math.min(account.concurrencyLimit, integer(concurrency, 1))) fail("BUDGET_EXCEEDED");
+}
+const bindingArgs = { reference: runtimeAuthorityReference, operationKey: modelOperationKey, requestId: v.string(), requestCanonical: v.string(), agentId: v.optional(v.string()), agentVersion: v.optional(v.number()) };
+export type BindBudgetArgs = { reference: RuntimeAuthorityReference; operationKey: ModelOperationKey; requestId: string; requestCanonical: string; agentId?: string; agentVersion?: number };
+/** Task05 calls this helper in ITS native parent mutation. Creates accounts, no envelope double reservation. */
+export async function bindTrustedBudget(ctx: WriteCtx, args: BindBudgetArgs): Promise<{ runBudgetId: string; runAccountId: Id<"runtimeBudgetAccounts"> }> {
+  await currentAuthority(ctx, args.reference, args.operationKey); text(args.requestId); decode(args.requestCanonical);
+  const bindingKey = canonical(["run", args.reference.tenantId, args.reference.memorySpaceId, args.reference.principalId, args.operationKey, args.requestId]);
+  const runBudgetId = await semanticHash(bindingKey);
+  const existing = single(await ctx.db.query("runtimeBudgetAccounts").withIndex("by_run", (q) => q.eq("runBudgetId", runBudgetId)).take(2));
+  if (existing) {
+    if (!existing.reference || !sameAuthority(existing.reference, args.reference) || existing.scopeKey !== bindingKey || existing.requestCanonical !== args.requestCanonical || existing.agentId !== args.agentId || existing.agentVersion !== args.agentVersion) fail("IDEMPOTENCY_CONFLICT");
+    return { runBudgetId, runAccountId: existing._id };
+  }
+  if ((args.agentId === undefined) !== (args.agentVersion === undefined)) fail("INVALID_INPUT");
+  if (args.agentId) { text(args.agentId); integer(args.agentVersion!, 1); }
+  const agent = args.agentId ? { agentId: args.agentId, version: args.agentVersion! } : undefined;
+  const resolved = await resolveCurrent(ctx, args.reference, args.operationKey, runBudgetId, undefined, undefined, agent);
+  const now = integer(Date.now());
+  const start = Math.floor(now / resolved.manifest.budgetWindowMs) * resolved.manifest.budgetWindowMs;
+  const end = add(start, resolved.manifest.budgetWindowMs);
+  const tenantScope = canonical(["tenant", args.reference.tenantId]);
+  let tenant = single(await ctx.db.query("runtimeBudgetAccounts").withIndex("by_scope_current", (q) => q.eq("scopeKey", tenantScope).eq("current", true)).take(2));
+  if (tenant && (tenant.windowEnd <= now || canonical(tenant.root) !== canonical(resolved.root))) {
+    balanced(tenant);
+    if (tenant.reservedUnits || tenant.uncertainUnits || tenant.activeConcurrency || tenant.overrun) fail("BUDGET_EXCEEDED");
+    // Policy replacement within a window cannot reset money spent.
+    if (tenant.windowEnd > now) fail("POLICY_DENIED");
+    await ctx.db.patch("runtimeBudgetAccounts", tenant._id, { current: false, version: add(tenant.version, 1) });
+    tenant = undefined;
+  }
+  await finalActor(ctx, args.reference, args.operationKey);
+  const counters = { reservedUnits: 0, settledUnits: 0, uncertainUnits: 0, activeConcurrency: 0, overrun: false, current: true, cancelled: false, version: 1, createdAt: now };
+  const window = { windowId: canonical([args.reference.tenantId, start, end]), windowStart: start, windowEnd: end, currency: "USD" as const, monetaryUnit: "micro-USD" as const, root: resolved.root };
+  if (!tenant) await ctx.db.insert("runtimeBudgetAccounts", { accountKey: await semanticHash(canonical([tenantScope, start, end])), scopeKey: tenantScope,
+    kind: "tenant", tenantId: args.reference.tenantId, ...window, ...counters,
+    limitUnits: resolved.snapshot.limits.tenantBudgetUnits, concurrencyLimit: resolved.snapshot.limits.concurrency });
+  else if (tenant.limitUnits !== resolved.snapshot.limits.tenantBudgetUnits || tenant.concurrencyLimit !== resolved.snapshot.limits.concurrency) {
+    // Tenant-wide capacity is the tightest policy seen, never inflated by another operation.
+    await ctx.db.patch("runtimeBudgetAccounts", tenant._id, { limitUnits: Math.min(tenant.limitUnits, resolved.snapshot.limits.tenantBudgetUnits),
+      concurrencyLimit: Math.min(tenant.concurrencyLimit, resolved.snapshot.limits.concurrency), version: add(tenant.version, 1) });
+  }
+  const runAccountId = await ctx.db.insert("runtimeBudgetAccounts", { accountKey: runBudgetId, scopeKey: bindingKey, kind: "run",
+    tenantId: args.reference.tenantId, runBudgetId, reference: args.reference, requestCanonical: args.requestCanonical, ...(agent ? { agentId: agent.agentId, agentVersion: agent.version } : {}), ...window, ...counters,
+    limitUnits: resolved.snapshot.limits.runBudgetUnits, concurrencyLimit: resolved.snapshot.limits.concurrency });
+  return { runBudgetId, runAccountId };
+}
+export const ensureBudget = internalMutation({ args: bindingArgs, handler: bindTrustedBudget });
+
+export const installDeploymentPolicy = internalMutation({ args: { manifestId: v.string(), expectedRevision: v.number() }, handler: async (ctx, args) => {
+export type AdmitModelArgs = Infer<typeof _admissionValidator>;
+export const admit = internalMutation({ args: admitArgs, handler: async (ctx, args) => {
+  await currentAuthority(ctx, args.reference, args.operationKey); integer(args.ordinal); text(args.semanticId);
+  await checkSource(ctx, args.reference, args.operationKey, args.source);
+  const run = await runAccount(ctx, args.reference, args.runBudgetId);
+  if (args.parentOperationId) {
+    const parent = await ctx.db.get("runtimeModelOperations", args.parentOperationId);
+    if (!parent || parent.runAccountId !== run._id) fail("FORBIDDEN");
+    await currentOperation(ctx, args.reference, parent);
+  }
+  let operation = single(await ctx.db.query("runtimeModelOperations").withIndex("by_identity", (q) => q.eq("tenantId", args.reference.tenantId)
+    .eq("memorySpaceId", args.reference.memorySpaceId!).eq("principalId", args.reference.principalId).eq("semanticId", args.semanticId).eq("operationKey", args.operationKey)).take(2));
+  const binding = canonical({ reference: args.reference, operationKey: args.operationKey, semanticId: args.semanticId, runAccountId: run._id,
+    ...(args.source ? { source: args.source } : {}), ...(args.parentOperationId ? { parentOperationId: args.parentOperationId } : {}) });
+  const bindingHash = await semanticHash(binding);
+  const resolved = operation ? { ...(await currentOperation(ctx, args.reference, operation)), resolutionCanonical: operation.resolutionCanonical } :
+    await resolveCurrent(ctx, args.reference, args.operationKey, args.runBudgetId, args.source, args.parentOperationId, run.agentId ? { agentId: run.agentId, version: run.agentVersion! } : undefined);
+  if (operation) assertModelRequestIdentity({ canonical: operation.identityCanonical, hash: operation.identityHash }, { canonical: binding, hash: bindingHash });
+  const snapshot = resolved.snapshot;
+  const effectiveSnapshot = "current" in resolved ? resolved.current.snapshot : snapshot;
+  const root = "root" in resolved ? resolved.root : run.root;
+  const manifest = await trustedRoot(root);
+  const proof = evidence(manifest, snapshot);
+  const raw = decode(args.requestCanonical);
+  if (!raw || typeof raw !== "object" || Array.isArray(raw)) fail("INVALID_INPUT");
+  const request = raw as Record<string, unknown>;
+  const childCallId = await semanticHash(canonical([bindingHash, args.ordinal]));
+  const preliminary = validateModelRequest(snapshot, { ...request, semanticId: args.semanticId, childCallId, inputTokens: 1, reservationUnits: snapshot.costBound.maximumCostUnits });
+  const bounded = { ...preliminary.request, inputTokens: deriveQualifiedInputBound(proof, preliminary.request) };
+  const validated = validateModelRequest(snapshot, bounded);
+  validateModelRequest({ ...snapshot, limits: effectiveSnapshot.limits, allowedOptions: effectiveSnapshot.allowedOptions, allowedTools: effectiveSnapshot.allowedTools }, validated.request);
+  if ((args.operationKey === "agent.respond" && args.ordinal > snapshot.limits.toolSteps)
+    || (validated.request.batch && validated.request.batch.ordinal !== args.ordinal)) fail("POLICY_DENIED");
+  const requestHash = await semanticHash(validated.canonical);
+  if (operation) {
+    const attempts = await ctx.db.query("runtimeModelAttempts").withIndex("by_child_attempt", (q) => q.eq("operationDocumentId", operation!._id).eq("childCallId", childCallId)).take(65);
+    if (attempts.length > 64 || new Set(attempts.map((entry) => entry.attemptNumber)).size !== attempts.length) fail("POLICY_DENIED");
+    const existing = attempts.sort((a, b) => b.attemptNumber - a.attemptNumber)[0];
+    if (existing) {
+      if (capturedAttempt(existing) && await semanticHash(existing.terminalEvidenceCanonical!) !== existing.terminalEvidenceHash) fail("POLICY_DENIED", "uncertain");
+      const priorSnapshot = attemptSnapshot(existing, operation, manifest);
+      const incoming = validateModelRequest(priorSnapshot, { ...validated.request, inputTokens: deriveQualifiedInputBound(evidence(manifest, priorSnapshot), validated.request), reservationUnits: priorSnapshot.costBound.maximumCostUnits });
+      assertModelRequestIdentity({ canonical: existing.canonical, hash: existing.hash }, { canonical: incoming.canonical, hash: await semanticHash(incoming.canonical) });
+      if (existing.state === "settled" && existing.privateResultCanonical && !existing.resultWithheld
+        && !storedObservationViolation(existing, priorSnapshot)) return { status: "replay" as const, operationId: operation._id, resultCanonical: existing.privateResultCanonical };
+      if (existing.state === "settled" || existing.state === "confirmed_rejected" || existing.state === "not_dispatched") fail("CAPABILITY_UNAVAILABLE");
+      if (existing.state === "uncertain" || existing.state === "dispatch_pending") return { status: "uncertain" as const, operationId: operation._id, attemptId: existing._id, replayAllowed: false as const };
+      return { status: "inflight" as const, operationId: operation._id, attemptId: existing._id };
+    }
+  }
+  const tenant = single(await ctx.db.query("runtimeBudgetAccounts").withIndex("by_scope_current", (q) => q.eq("scopeKey", canonical(["tenant", args.reference.tenantId])).eq("current", true)).take(2));
+  if (!tenant || tenant.windowId !== run.windowId || canonical(tenant.root) !== canonical(root)) fail("BUDGET_EXCEEDED");
+  const ceiling = snapshot.costBound.maximumCostUnits;
+  capacity(tenant, ceiling, effectiveSnapshot.limits.tenantBudgetUnits, effectiveSnapshot.limits.concurrency);
+  capacity(run, ceiling, effectiveSnapshot.limits.runBudgetUnits, effectiveSnapshot.limits.concurrency);
+  if (operation && (operation.overrun || operation.cancelled || add(operation.reservedUnits, operation.settledUnits, operation.uncertainUnits, ceiling) > Math.min(snapshot.limits.operationBudgetUnits, effectiveSnapshot.limits.operationBudgetUnits))) fail("BUDGET_EXCEEDED");
+  await finalActor(ctx, args.reference, args.operationKey);
+  if (proof.checkedAt > Date.now() || Date.now() >= proof.expiresAt) fail("CAPABILITY_UNAVAILABLE");
+  if (!operation) {
+    const operationDocumentId = await ctx.db.insert("runtimeModelOperations", { operationId: bindingHash, reference: args.reference, tenantId: args.reference.tenantId,
+      memorySpaceId: args.reference.memorySpaceId!, principalId: args.reference.principalId, semanticId: args.semanticId, operationKey: args.operationKey, runAccountId: run._id,
+      ...(args.source ? { source: args.source } : {}), ...(args.parentOperationId ? { parentOperationId: args.parentOperationId } : {}),
+      resolutionCanonical: resolved.resolutionCanonical, snapshotCanonical: canonical(snapshot), identityCanonical: binding, identityHash: bindingHash,
+      reservedUnits: 0, settledUnits: 0, uncertainUnits: 0, overrun: false, cancelled: false, createdAt: Date.now() });
+    operation = (await ctx.db.get("runtimeModelOperations", operationDocumentId))!;
+  }
+  const attemptId = await ctx.db.insert("runtimeModelAttempts", { operationDocumentId: operation._id, childCallId, ordinal: args.ordinal, attemptNumber: 1,
+    canonical: validated.canonical, hash: requestHash, resolutionCanonical: resolved.resolutionCanonical, snapshotCanonical: canonical(snapshot), inputProofCanonical: canonical({ proof, requestCanonical: canonical(validated.request), inputTokens: validated.request.inputTokens, outputTokens: validated.request.outputTokens }),
+  if (capturedAttempt(attempt) && await semanticHash(attempt.terminalEvidenceCanonical!) !== attempt.terminalEvidenceHash) fail("POLICY_DENIED", "uncertain");
+  return { attempt, operation, tenant, run, snapshot, proof };
+}
+const attemptArgs = { reference: runtimeAuthorityReference, attemptId: v.id("runtimeModelAttempts") };
+export const checkpoint = internalMutation({ args: { ...attemptArgs, requestCanonical: v.string() }, handler: async (ctx, args) => {
+  const { attempt, operation, snapshot, proof, run, tenant } = await attemptContext(ctx, args.attemptId);
+  const checked = await currentOperation(ctx, args.reference, operation);
+  if (Date.now() >= run.windowEnd) fail("BUDGET_EXCEEDED");
+  if (!checked.current.snapshot.allowedModels.includes(snapshot.modelId) || checked.current.snapshot.nativeInterface !== snapshot.nativeInterface
+    || !checked.current.manifest.qualifications.some((q) => q.receiptId === snapshot.qualificationReceiptId && q.modelId === snapshot.modelId && q.nativeInterface === snapshot.nativeInterface
+      && q.priceRevision === snapshot.pins.priceRevision && q.boundRevision === snapshot.pins.boundRevision)) fail("POLICY_DENIED");
+  const raw = decode(args.requestCanonical);
+  if (!raw || typeof raw !== "object" || Array.isArray(raw)) fail("INVALID_INPUT");
+  const request = raw as Record<string, unknown>;
+  if (request.semanticId !== operation.semanticId || request.childCallId !== attempt.childCallId || request.inputTokens !== deriveQualifiedInputBound(proof, validateModelRequest(snapshot, request).request)
+    || request.reservationUnits !== attempt.reservationUnits) fail("IDEMPOTENCY_CONFLICT");
+  const validated = validateModelRequest(snapshot, request);
+  validateModelRequest({ ...snapshot, limits: checked.current.snapshot.limits, allowedOptions: checked.current.snapshot.allowedOptions, allowedTools: checked.current.snapshot.allowedTools }, validated.request);
+  if (attempt.measuredInputTokens !== validated.request.inputTokens || attempt.maximumOutputTokens !== validated.request.outputTokens || attempt.inputProofCanonical !== canonical({ proof, requestCanonical: canonical(validated.request), inputTokens: validated.request.inputTokens, outputTokens: validated.request.outputTokens })) fail("POLICY_DENIED");
+  assertModelRequestIdentity({ canonical: attempt.canonical, hash: attempt.hash }, { canonical: validated.canonical, hash: await semanticHash(validated.canonical) });
+  if (attempt.state !== "reserved") return { dispatchPermit: false as const, state: attempt.state, replayAllowed: false as const };
+  // This attempt already holds its reservation/slot. Fence aggregate live liability
+  // against both pinned and current limits without adding that reservation twice.
+  const pinned = snapshotOf(operation).limits; const current = checked.current.snapshot.limits;
+  if (operation.overrun || add(operation.reservedUnits, operation.uncertainUnits, operation.settledUnits) > Math.min(pinned.operationBudgetUnits, current.operationBudgetUnits)) fail("BUDGET_EXCEEDED");
+  heldCapacity(tenant, Math.min(pinned.tenantBudgetUnits, current.tenantBudgetUnits), Math.min(pinned.concurrency, current.concurrency));
+  heldCapacity(run, Math.min(pinned.runBudgetUnits, current.runBudgetUnits), Math.min(pinned.concurrency, current.concurrency));
+  if (attempt.fallbackModelId) {
+    const prior = await attemptContext(ctx, attempt.priorAttemptId!);
+    if (prior.operation._id !== operation._id || prior.attempt.childCallId !== attempt.childCallId
+      || !fallbackAllowed(prior.attempt, operation, prior.snapshot, attempt.fallbackModelId)
+      || !fallbackAllowed(prior.attempt, operation, checked.current.snapshot, attempt.fallbackModelId)) fail("POLICY_DENIED");
+  }
+  await finalActor(ctx, args.reference, operation.operationKey);
+  if (proof.checkedAt > Date.now() || Date.now() >= proof.expiresAt) fail("CAPABILITY_UNAVAILABLE");
+  await ctx.db.patch("runtimeModelAttempts", attempt._id, { state: "dispatch_pending", checkpointAt: Date.now() });
+  return { cancelled: true };
+} });
+function fallbackAllowed(attempt: Attempt, operation: Operation, snapshot: ModelPolicySnapshotV1, candidateModelId: string): boolean {
+  return !operation.overrun && candidateModelId !== snapshot.modelId && canFallbackModel(snapshot, candidateModelId, {
+    outcome: attempt.state === "not_dispatched" ? "not_dispatched" : attempt.state === "confirmed_rejected" ? "confirmed_rejected" : "uncertain",
+    proof: attempt.state === "not_dispatched" ? "pre_dispatch" : attempt.state === "confirmed_rejected" && attempt.receiptCanonical ? "qualified_rejection" : "none",
+    outputVisible: attempt.outputVisible, toolInputVisible: attempt.toolInputVisible, toolResultVisible: attempt.toolResultVisible, toolEffectCommitted: attempt.toolEffectCommitted,
+    paidLiabilityUncertain: attempt.state === "uncertain" || attempt.state === "dispatch_pending", cancelled: operation.cancelled,
+    priorAttemptAccounted: attempt.state === "not_dispatched" || attempt.state === "confirmed_rejected", currentAuthorityChecked: true, currentSourceChecked: true, currentPolicyChecked: true });
+}
+/** Explicit compatible retry only after stored safe proof; both accounts reserve the new candidate once. */
+export const admitFallback = internalMutation({ args: { ...attemptArgs, candidateModelId: v.string() }, handler: async (ctx, args) => {
+  const state = await attemptContext(ctx, args.attemptId); const { attempt, operation, run, tenant, snapshot } = state;
+  const checked = await currentOperation(ctx, args.reference, operation);
+  if (!fallbackAllowed(attempt, operation, snapshot, args.candidateModelId) || !fallbackAllowed(attempt, operation, checked.current.snapshot, args.candidateModelId)) fail("POLICY_DENIED");
+  const nextNumber = add(attempt.attemptNumber, 1);
+  if (nextNumber > 64) fail("POLICY_DENIED");
+  const existing = single(await ctx.db.query("runtimeModelAttempts").withIndex("by_child_attempt", (q) => q.eq("operationDocumentId", operation._id)
+    .eq("childCallId", attempt.childCallId).eq("attemptNumber", nextNumber)).take(2));
+  if (existing) {
+    if (existing.priorAttemptId !== attempt._id || existing.fallbackModelId !== args.candidateModelId) fail("IDEMPOTENCY_CONFLICT");
+    return { status: "inflight" as const, attemptId: existing._id };
+  }
+  const candidate = single(checked.current.manifest.qualifications.filter((q) => q.modelId === args.candidateModelId && q.nativeInterface === snapshot.nativeInterface
+    && snapshot.fallbackCandidates.some((entry) => entry.qualificationReceiptId === q.receiptId)));
+  if (!candidate) fail("CAPABILITY_UNAVAILABLE");
+  const nextSnapshot = { ...snapshotOf(operation), modelId: candidate.modelId, qualificationReceiptId: candidate.receiptId, costBound: candidate.costBound };
+  const proof = evidence(checked.current.manifest, nextSnapshot);
+  const decoded = decode(attempt.canonical);
+  if (!decoded || typeof decoded !== "object" || Array.isArray(decoded)) fail("POLICY_DENIED");
+  const old = validateModelRequest(snapshot, (decoded as Record<string, unknown>).request);
+  const next = validateModelRequest(nextSnapshot, { ...old.request, inputTokens: deriveQualifiedInputBound(proof, old.request), reservationUnits: candidate.costBound.maximumCostUnits });
+  const ceiling = candidate.costBound.maximumCostUnits;
+  capacity(tenant, ceiling, Math.min(nextSnapshot.limits.tenantBudgetUnits, checked.current.snapshot.limits.tenantBudgetUnits), checked.current.snapshot.limits.concurrency);
+  capacity(run, ceiling, Math.min(nextSnapshot.limits.runBudgetUnits, checked.current.snapshot.limits.runBudgetUnits), checked.current.snapshot.limits.concurrency);
+  if (operation.overrun || add(operation.reservedUnits, operation.uncertainUnits, operation.settledUnits, ceiling) > Math.min(nextSnapshot.limits.operationBudgetUnits, checked.current.snapshot.limits.operationBudgetUnits)) fail("BUDGET_EXCEEDED");
+  await finalActor(ctx, args.reference, operation.operationKey);
+  const nextId = await ctx.db.insert("runtimeModelAttempts", { operationDocumentId: operation._id, childCallId: attempt.childCallId, ordinal: attempt.ordinal,
+    attemptNumber: nextNumber, fallbackModelId: candidate.modelId, priorAttemptId: attempt._id, canonical: next.canonical, hash: await semanticHash(next.canonical),

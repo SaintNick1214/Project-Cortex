@@ -1,0 +1,5 @@
+# Combined current authorization regression run
+
+Observed45 discovered suites,43 pass/2 fail;4577 tests discovered,4574 passed/3 failed,0 pending. Actual native registrations and SDK bridges were executed together in an isolated offline selection of runtime/auth/domain tests. Command-local CONVEX_URL was inert https://example.convex.cloud; setupFiles are disabled for this explicit offline selection. This is not the full root unit, integration, service or module gate.
+
+Three failures are preserved in raw receipts: two old registry catalog assertions require statistics declarations stay byte-exact to the earlier excluded unsafe implementation, and the old artifact inventory requires five then-excluded file declarations stay unchanged. Those paths now have independently accepted subsequent guards. A bounded preservation-composition repair must retain the historical assertions and prove exact current accepted declarations and unchanged original46/22; the aggregate gate remains FAIL until successful repair/rerun and fresh independent review.

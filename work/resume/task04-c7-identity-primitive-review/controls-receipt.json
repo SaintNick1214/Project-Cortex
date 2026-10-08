@@ -1,0 +1,2681 @@
+{
+  "utcStart": "2026-10-05T04:30:53.260576+00:00",
+  "utcEnd": "2026-10-05T04:30:53.494121+00:00",
+  "argv": [
+    "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+    "--max-old-space-size=64",
+    "--experimental-vm-modules",
+    "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/controls.mjs"
+  ],
+  "cwd": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair",
+  "env": {
+    "PATH": "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin:/usr/bin:/bin",
+    "TMPDIR": "/dev/shm/cortex-native-c7-exact-identity-repair/tmp"
+  },
+  "elapsedSeconds": 0.2335518640029477,
+  "deadlineSeconds": 90,
+  "actualExit": 0,
+  "signal": null,
+  "timeout": false,
+  "groupEmpty": true,
+  "raws": [
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/controls.stdout",
+      "bytes": 1526,
+      "sha256": "918d75e67360a160568919821041a33484222bc4afd0a208758d1c84c7f60acc"
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/controls.stderr",
+      "bytes": 174,
+      "sha256": "386c76deed5c34e0ff06a9d6ca5ae56cc0cfabcf334e81e73f16029580b80aa8"
+    }
+  ],
+  "sourceToolPOST": [
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/adapter-fork-lineage.json",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870063",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "10619",
+          "mtime_ns": "1791174125788885641",
+          "ctime_ns": "1791174125788885641"
+        }
+      },
+      "bytes": 10619,
+      "sha256": "ebc009cbec7c747cc350ed7edc16dd643bd00e2e7c61c879d5090c6e42808ee8",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/adapter-route-controls.mjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870043",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "4854",
+          "mtime_ns": "1791174405097052485",
+          "ctime_ns": "1791174405097052485"
+        }
+      },
+      "bytes": 4854,
+      "sha256": "b184b13f95b7b38a4af0bdcd8de6646db67dadfadaeb0cd6706ea8fab2a1742d",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/ast-producer-refinement-evidence.json",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "869977",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "216408",
+          "mtime_ns": "1791174125769742136",
+          "ctime_ns": "1791174125769742136"
+        }
+      },
+      "bytes": 216408,
+      "sha256": "a7e7af9078916514a14f97b92884d1c3656bf44c9bebd141c5760d531472cf9a",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/bootstrap.cjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "869987",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "1648",
+          "mtime_ns": "1791174405081534180",
+          "ctime_ns": "1791174405081534180"
+        }
+      },
+      "bytes": 1648,
+      "sha256": "555bcb09a08ad346a94af16a146ebc7cb8d95ddb1d00dfbea8a46352d87ba227",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/bridge-controls.mjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870086",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "3853",
+          "mtime_ns": "1791174405109364410",
+          "ctime_ns": "1791174405109364410"
+        }
+      },
+      "bytes": 3853,
+      "sha256": "5329eea1276a9de89aa7316456f825b2e71155c29f6db62c683e25dc5ec88903",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/bridge-preload.cjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870044",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "10655",
+          "mtime_ns": "1791174405097403976",
+          "ctime_ns": "1791174405097403976"
+        }
+      },
+      "bytes": 10655,
+      "sha256": "c1f7df39bba2fd2362a555058524ea39649782ae1cd481f1d9e9a14aa7a63257",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/build-port.mjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870051",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "1368",
+          "mtime_ns": "1791174405099274073",
+          "ctime_ns": "1791174405099274073"
+        }
+      },
+      "bytes": 1368,
+      "sha256": "413a5f7d4bbd8a637be74bf32b861532c9850a60bb33d1c96bfca3bcd2c994c7",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/build-producer-rules.py",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "869970",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "2227",
+          "mtime_ns": "1791174478726814162",
+          "ctime_ns": "1791174478726814162"
+        }
+      },
+      "bytes": 2227,
+      "sha256": "f92d6cc23904832fa45c4f594c198ab9f074bac03361b9903407a5688602f754",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/c4-fork-preimages.json",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870021",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "25542",
+          "mtime_ns": "1791174125779731744",
+          "ctime_ns": "1791174125779731744"
+        }
+      },
+      "bytes": 25542,
+      "sha256": "1dcdfbecf5c40a89ae7cf4e3d8793127e1ad4e87745ac5f3c4fbdc7d15f0a18d",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/c4-lifecycle-controls.mjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870067",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "3810",
+          "mtime_ns": "1791174405103629654",
+          "ctime_ns": "1791174405103629654"
+        }
+      },
+      "bytes": 3810,
+      "sha256": "29a16fd690e7e128b7fc48c648cf2a4070976cc07fda7e49df0c5d3eb7a21176",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/c5-fork-preimages.json",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870046",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "616598",
+          "mtime_ns": "1791174125785564664",
+          "ctime_ns": "1791174125785564664"
+        }
+      },
+      "bytes": 616598,
+      "sha256": "59b8b8e35da060989097cefcbce5424421979768a5cd457d317059bedae33276",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/capture-boundary-controls.mjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870071",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "1558",
+          "mtime_ns": "1791174405104801108",
+          "ctime_ns": "1791174405104801108"
+        }
+      },
+      "bytes": 1558,
+      "sha256": "150b1e1a2f5c8103376ab8060d55cea0f32353cd437f7caf8f6d205a0135ba65",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/capture-originals.py",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870090",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "4149",
+          "mtime_ns": "1791174478730799747",
+          "ctime_ns": "1791174478730799747"
+        }
+      },
+      "bytes": 4149,
+      "sha256": "4a03fb8eca752d2c1c54aeff06994b768e011a101a271d6d7a903d5cd4920f1c",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/command-registry.mjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "869999",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "4886",
+          "mtime_ns": "1791174405084754537",
+          "ctime_ns": "1791174405084754537"
+        }
+      },
+      "bytes": 4886,
+      "sha256": "3cee2f37c2bb83c8887de185e18eacb26ef59871668e599a9f6c3481382e61c8",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/compiler-artifact-controls.mjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870047",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "3709",
+          "mtime_ns": "1791174405098136423",
+          "ctime_ns": "1791174405098136423"
+        }
+      },
+      "bytes": 3709,
+      "sha256": "0f8c93b363db912ff9c00c161a80d74c14ac2ce8cac908417af5b60ce4d365f2",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/compiler-artifact-port.mjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870074",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "3485",
+          "mtime_ns": "1791174405105683407",
+          "ctime_ns": "1791174405105683407"
+        }
+      },
+      "bytes": 3485,
+      "sha256": "0d33fabb360d9d83cc1f83bc547461967a39b6e570c3e021ccf2f9772b8e6b10",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/compiler-copy-controls.mjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "869980",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "1974",
+          "mtime_ns": "1791174405079658292",
+          "ctime_ns": "1791174405079658292"
+        }
+      },
+      "bytes": 1974,
+      "sha256": "3ddd615a67eedc304cbbf67b139a91b64dc77c5e3aaa2013157e9c0b0139e495",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/compiler-facade.mjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870077",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "377",
+          "mtime_ns": "1791174405106654483",
+          "ctime_ns": "1791174405106654483"
+        }
+      },
+      "bytes": 377,
+      "sha256": "27520539c1dbbeb38f2d6d84aa00f40421b3685f99edb606a2e0b093aaeb7c50",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/compiler-recipes.mjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "869978",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "8652",
+          "mtime_ns": "1791174405079277075",
+          "ctime_ns": "1791174405079277075"
+        }
+      },
+      "bytes": 8652,
+      "sha256": "09f41ee40d1358b6937011097f8587c2fb5ded2ae0ef61ee211627d9196f2aa6",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/compiler-session.mjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870048",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "7893",
+          "mtime_ns": "1791174405098230991",
+          "ctime_ns": "1791174405098230991"
+        }
+      },
+      "bytes": 7893,
+      "sha256": "fecd2283e99c088e05f4dd4be037a5ed8128c063c5965065df8b5a80b2772267",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/compiler-tape-controls.mjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "869993",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "2935",
+          "mtime_ns": "1791174405082950925",
+          "ctime_ns": "1791174405082950925"
+        }
+      },
+      "bytes": 2935,
+      "sha256": "721e6b117c18daf870e408c7342d7769574c9b6ac2bf33291dce983dfd2759a0",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/compiler-tape-port.mjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870016",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "2962",
+          "mtime_ns": "1791174405089556257",
+          "ctime_ns": "1791174405089556257"
+        }
+      },
+      "bytes": 2962,
+      "sha256": "a6143a76b781b5ec3558c009d236feadd2edf406b8c8f559a4dfb35fe01a03a5",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/composed-runtime.mjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "869996",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "550",
+          "mtime_ns": "1791174405084144740",
+          "ctime_ns": "1791174405084144740"
+        }
+      },
+      "bytes": 550,
+      "sha256": "26a9925daaa63dd7644d20b05983e2daf6e4c28bda3ac8629a423ee2b844cba0",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/composition-engine.mjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "869991",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "11149",
+          "mtime_ns": "1791174405082455373",
+          "ctime_ns": "1791174405082455373"
+        }
+      },
+      "bytes": 11149,
+      "sha256": "3a9a1bd233636511f0d30bfe6c6536f77833ae239daad4adc52e3dec088042e3",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/composition-runtime-controls.mjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870065",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "5882",
+          "mtime_ns": "1791174405103043131",
+          "ctime_ns": "1791174405103043131"
+        }
+      },
+      "bytes": 5882,
+      "sha256": "2ce3ef4701d0912a8ce3daf25313e76bc7e59a0a47b61138eaa590f80025ad1d",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/compress-completed-evidence-2.py",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870085",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "3112",
+          "mtime_ns": "1791174478730656568",
+          "ctime_ns": "1791174478730656568"
+        }
+      },
+      "bytes": 3112,
+      "sha256": "387a1f97da6cdc84312a63045442b204ccbd63e797ea7f53c32a1b4c443b7647",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/compress-completed-evidence.py",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870062",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "2670",
+          "mtime_ns": "1791174478729913721",
+          "ctime_ns": "1791174478729913721"
+        }
+      },
+      "bytes": 2670,
+      "sha256": "4bb7b0cf05c1fa6b657b6b159274673278f27e3ab65bcd22262ac5daee5dae31",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/diagnostic-controls.mjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "869998",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "2741",
+          "mtime_ns": "1791174405084659498",
+          "ctime_ns": "1791174405084659498"
+        }
+      },
+      "bytes": 2741,
+      "sha256": "0433c6b130b32733cfe9be83dc0c87c542802f5d81462a953d175d0c6533645d",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/external-control-template.mjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870024",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "212",
+          "mtime_ns": "1791174405091623625",
+          "ctime_ns": "1791174405091623625"
+        }
+      },
+      "bytes": 212,
+      "sha256": "82cfd3453ed33e2c19f7f9ec525d45adf8b99d8a56272342abae5095825ce1d5",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/external-recipe-setup.mjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "869976",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "2546",
+          "mtime_ns": "1791174405078950060",
+          "ctime_ns": "1791174405078950060"
+        }
+      },
+      "bytes": 2546,
+      "sha256": "3c099ab268f3eef5b0fbff6d2cc3e445e10d5010ae7cb396fee9eef39da6d9b8",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/external-review-executor.mjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870049",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "4471",
+          "mtime_ns": "1791174405098555041",
+          "ctime_ns": "1791174405098555041"
+        }
+      },
+      "bytes": 4471,
+      "sha256": "0e2d8202d7f4b1f3e8eb77a8317be12e5d46ec44294249051b610fbf06279fbc",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/external-seam-controls.mjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870031",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "6498",
+          "mtime_ns": "1791174405093373837",
+          "ctime_ns": "1791174405093373837"
+        }
+      },
+      "bytes": 6498,
+      "sha256": "8df32e762c8c61d0c3bcdf47648a6daa5f7a672c63e1ee2e32bc82a62c876833",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/fence-diagnostics.mjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870002",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "2911",
+          "mtime_ns": "1791174405085753485",
+          "ctime_ns": "1791174405085753485"
+        }
+      },
+      "bytes": 2911,
+      "sha256": "fa38e12c47d5f613830237a8343b32c81f6c62a195931575590ae13bba59a8ae",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/finalize-package-aliases.py",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "869983",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "1050",
+          "mtime_ns": "1791174478727231587",
+          "ctime_ns": "1791174478727231587"
+        }
+      },
+      "bytes": 1050,
+      "sha256": "c8553ba7f74dd7ec7b0980caa89bd579f02c470f0728008acea24932a1607c61",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/finite-producer-rules.json",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870037",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "375748",
+          "mtime_ns": "1791174125783099258",
+          "ctime_ns": "1791174125783099258"
+        }
+      },
+      "bytes": 375748,
+      "sha256": "9b0c7d85577a37d32e7e22aaef6cfdebaf412e5a4be6dae23256534fbbde7997",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/finite-selector-lineage.json",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870008",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "115358",
+          "mtime_ns": "1791174125774702695",
+          "ctime_ns": "1791174125774702695"
+        }
+      },
+      "bytes": 115358,
+      "sha256": "4afc38253ddacb84c92b16f68c05aeb7d01ffa2434f7c8b5a55b40abd2bb2670",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/fixed-command-launcher.mjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870042",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "2077",
+          "mtime_ns": "1791174405096783319",
+          "ctime_ns": "1791174405096783319"
+        }
+      },
+      "bytes": 2077,
+      "sha256": "93dd648292eabc6468864c6c1a56d076a37559302fead511630e0e6202095aea",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/fixed-controls.mjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870076",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "3793",
+          "mtime_ns": "1791174405106327538",
+          "ctime_ns": "1791174405106327538"
+        }
+      },
+      "bytes": 3793,
+      "sha256": "1ca7aea28aee05cc17f8270a015f164bd716ba01fac5bc08ac254febe1fa60c3",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/fork-adapter-preimages.json",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "869979",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "15968",
+          "mtime_ns": "1791174125770405253",
+          "ctime_ns": "1791174125770405253"
+        }
+      },
+      "bytes": 15968,
+      "sha256": "97670054dfacd2e7bfcd9930855e5af3bbdfc9c9f6a74ccace78e23ea3a4ad3f",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/fork-c5.py",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870050",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "4085",
+          "mtime_ns": "1791174478729495154",
+          "ctime_ns": "1791174478729495154"
+        }
+      },
+      "bytes": 4085,
+      "sha256": "ec538e1b52a7a52e53597087ade40233ddabffb4730734e19c3a7981586743fe",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/fork-metadata-controls.mjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "869968",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "2542",
+          "mtime_ns": "1791174405075966609",
+          "ctime_ns": "1791174405075966609"
+        }
+      },
+      "bytes": 2542,
+      "sha256": "02a5bf1afa11a4056a36c0e5742962f8a2a514da0b372752246044440ad1adab",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/fork-metadata-port.mjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "869985",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "1390",
+          "mtime_ns": "1791174405081043457",
+          "ctime_ns": "1791174405081043457"
+        }
+      },
+      "bytes": 1390,
+      "sha256": "4faf0f47f4168ecee0278b783af8f4aceea872be425f3ad36156b4f87fe49735",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/freeze-candidate.py",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "869986",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "8939",
+          "mtime_ns": "1791174478727546710",
+          "ctime_ns": "1791174478727546710"
+        }
+      },
+      "bytes": 8939,
+      "sha256": "3ac105e915167b0752bbc1fafa2734bf87a08f9cc16f881a9c0d94c1e78cf631",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/fs-identity.cjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "869963",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "4830",
+          "mtime_ns": "1791174405083383198",
+          "ctime_ns": "1791174405083383198"
+        }
+      },
+      "bytes": 4830,
+      "sha256": "2b44d0d8691264b39f0be074a9eef274cddc6d71df7970f2772704a29eb068de",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/fs_identity.py",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870112",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "367",
+          "mtime_ns": "1791174478731163040",
+          "ctime_ns": "1791174478731163040"
+        }
+      },
+      "bytes": 367,
+      "sha256": "7021d16bfe5d92f65d26830ed8abcb743332073f954826a1961870990e52381a",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/generated-parent-port.mjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870033",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "1555",
+          "mtime_ns": "1791174405093783647",
+          "ctime_ns": "1791174405093783647"
+        }
+      },
+      "bytes": 1555,
+      "sha256": "0611049f87781fb7507b240f0274deef857670391d6e9bf9181a87b40428f8ed",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/historical-admission-controls.mjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "869992",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "2334",
+          "mtime_ns": "1791174405082700724",
+          "ctime_ns": "1791174405082700724"
+        }
+      },
+      "bytes": 2334,
+      "sha256": "74e2a6b988581f18398d0558780e5b44aa76efe41275c52084b8a223d0472d55",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/historical-full-capture-controls.mjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870078",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "1325",
+          "mtime_ns": "1791174405106910194",
+          "ctime_ns": "1791174405106910194"
+        }
+      },
+      "bytes": 1325,
+      "sha256": "cc49691bd99870e93f1fec635699219bb328cfdeb6269193c614dc35a1610482",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/historical-input-controls.mjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870082",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "2426",
+          "mtime_ns": "1791174405108078531",
+          "ctime_ns": "1791174405108078531"
+        }
+      },
+      "bytes": 2426,
+      "sha256": "141e31a9fd15297b9f2046c3871a6137bdfee1d0b65bac7380cecb54224de040",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/independent-review-seam.mjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870032",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "181",
+          "mtime_ns": "1791174405093696664",
+          "ctime_ns": "1791174405093696664"
+        }
+      },
+      "bytes": 181,
+      "sha256": "ff15efb6ef9c44ce661a85b98f9b03d2feb42a061253f34d53cac108c174e7dc",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/independent-seam-controls.mjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870055",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "99",
+          "mtime_ns": "1791174405100414979",
+          "ctime_ns": "1791174405100414979"
+        }
+      },
+      "bytes": 99,
+      "sha256": "d9aa894a5c7258006d95bf32e57a54ede9a8ed656e8cf322a1abe3a9245ffd97",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/input-ledger.mjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870089",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "5402",
+          "mtime_ns": "1791174405110185504",
+          "ctime_ns": "1791174405110185504"
+        }
+      },
+      "bytes": 5402,
+      "sha256": "daba63b3adbd6b74c4583b84df756a506ef787b28b90659b800338369deaafa8",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/journal-metadata-controls.mjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870081",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "2571",
+          "mtime_ns": "1791174405107822339",
+          "ctime_ns": "1791174405107822339"
+        }
+      },
+      "bytes": 2571,
+      "sha256": "b52cac889cca573bac15874cad265c17f40425461a5412221dca344c48ed5ac6",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/metadata-input-controls.mjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870028",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "6346",
+          "mtime_ns": "1791174405092367865",
+          "ctime_ns": "1791174405092367865"
+        }
+      },
+      "bytes": 6346,
+      "sha256": "fc5b95a53466b492b1575982da08f72f91c6c58123dbd905716c49b383016b7b",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/metafile-projection-controls.mjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870017",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "6493",
+          "mtime_ns": "1791174405089935210",
+          "ctime_ns": "1791174405089935210"
+        }
+      },
+      "bytes": 6493,
+      "sha256": "6b7b81f45f8f4907cf88c15f9734b692d7ed588528cbb74b5d4909bb2e414ecd",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/metafile-projection.mjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870026",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "3487",
+          "mtime_ns": "1791174405092017666",
+          "ctime_ns": "1791174405092017666"
+        }
+      },
+      "bytes": 3487,
+      "sha256": "7863f3208b2ba794cc18c15bb1648e2dbe65c59dfed796d9d050b372ea2bbb4a",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/metafile-proof-controls.mjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870007",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "4709",
+          "mtime_ns": "1791174405087529415",
+          "ctime_ns": "1791174405087529415"
+        }
+      },
+      "bytes": 4709,
+      "sha256": "0853580bcc0a2eae76c8bbee6ca5db834532972474e7dc3a3168ae163a782b76",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/mirror-source-transform-map.json",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870014",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "1346042",
+          "mtime_ns": "1791174125777573465",
+          "ctime_ns": "1791174125777573465"
+        }
+      },
+      "bytes": 1346042,
+      "sha256": "8b8a7e8944a8380dda3b10721aac408b8efe11e04c2b9f57f05619367e9ee45b",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/module-boundary.cjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870084",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "2814",
+          "mtime_ns": "1791174405108734124",
+          "ctime_ns": "1791174405108734124"
+        }
+      },
+      "bytes": 2814,
+      "sha256": "bdef90b3df777fddb8bef0e83acc7ce68d9b7bd62ff0e8fd751c2412f4d1dc93",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/original122-route-bindings.json",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870056",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "302660",
+          "mtime_ns": "1791174125787774451",
+          "ctime_ns": "1791174125787774451"
+        }
+      },
+      "bytes": 302660,
+      "sha256": "b4d10e8f557d678c3ff381e655c6abf022575733f0ff1a2082a37e3a1aad6c01",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/own-whole-freeze-body-lineage.json",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870060",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "1770",
+          "mtime_ns": "1791174125788546503",
+          "ctime_ns": "1791174125788546503"
+        }
+      },
+      "bytes": 1770,
+      "sha256": "61e7c268a9874e101ff393561385af25c7f07855d53f1342da8f304bbaae0198",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/own-whole-freeze-entry.mjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870041",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "2598",
+          "mtime_ns": "1791174405096414725",
+          "ctime_ns": "1791174405096414725"
+        }
+      },
+      "bytes": 2598,
+      "sha256": "d012523280d3268bc8a4e63732c696f0c9c293791d4c4850e49df4494cb6cd32",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/owned-group.mjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870079",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "2162",
+          "mtime_ns": "1791174405107168429",
+          "ctime_ns": "1791174405107168429"
+        }
+      },
+      "bytes": 2162,
+      "sha256": "64d713f41ca67d98eb2c4bb956aba419885e1aa8547cc567b74e557bc7e8b8d6",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/owner-loss-controls.mjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870083",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "9090",
+          "mtime_ns": "1791174405108373346",
+          "ctime_ns": "1791174405108373346"
+        }
+      },
+      "bytes": 9090,
+      "sha256": "28d4237c4a3e0fa03cb91865ad0bdd679530f0e581971210c7b30f180d6fb90a",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/owner-loss-launch.mjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870069",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "743",
+          "mtime_ns": "1791174405104156605",
+          "ctime_ns": "1791174405104156605"
+        }
+      },
+      "bytes": 743,
+      "sha256": "78fa2326df5622388ced4005b436a8d960221a883059c3e6edb6ff7a0bb9f9aa",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/owner-loss-middle.mjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870025",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "1693",
+          "mtime_ns": "1791174405091929109",
+          "ctime_ns": "1791174405091929109"
+        }
+      },
+      "bytes": 1693,
+      "sha256": "a87931805c147811a16dc19c2e34dfbe9e6b3455245b7ff4ce8224a0616e3653",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/owner-loss-pre-signal-controls.mjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870061",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "1127",
+          "mtime_ns": "1791174405101859305",
+          "ctime_ns": "1791174405101859305"
+        }
+      },
+      "bytes": 1127,
+      "sha256": "fba5c81562b88e016eb380a8a174f507abde0dca9190b60751fcd85aee9559e3",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/package-alias-controls.mjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "869988",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "3127",
+          "mtime_ns": "1791174405081745508",
+          "ctime_ns": "1791174405081745508"
+        }
+      },
+      "bytes": 3127,
+      "sha256": "5dae1a59ae210a04a791f4caa9bd142e7eff0c0777112a2e6e5a9c86b632022e",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/package-aliases.mjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870004",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "3826",
+          "mtime_ns": "1791174405086544333",
+          "ctime_ns": "1791174405086544333"
+        }
+      },
+      "bytes": 3826,
+      "sha256": "a8dd258bb2529cb327926d00e7f2cc90ffb45a23f80a1dc7a4f16ea622d3c715",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/parent-source-recipes.json",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870027",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "6763",
+          "mtime_ns": "1791174125780577965",
+          "ctime_ns": "1791174125780577965"
+        }
+      },
+      "bytes": 6763,
+      "sha256": "a3ff3a6b226856429ec6aa5f96134a805eb926205ccff8d3f73991a6b22a1205",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/preimage-store.mjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870088",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "7406",
+          "mtime_ns": "1791174405109821609",
+          "ctime_ns": "1791174405109821609"
+        }
+      },
+      "bytes": 7406,
+      "sha256": "f4614d1a17c114f67142b43d97578303460c0baa47d400262e08d48d211e94d7",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/prepare-history.py",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870057",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "3895",
+          "mtime_ns": "1791174478729665083",
+          "ctime_ns": "1791174478729665083"
+        }
+      },
+      "bytes": 3895,
+      "sha256": "366a196de4fb078598ab385e1ec5f96ae7f1e056d83adef97cc2871385ad841c",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/prepare-mirrors.py",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "869995",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "8330",
+          "mtime_ns": "1791174478727778345",
+          "ctime_ns": "1791174478727778345"
+        }
+      },
+      "bytes": 8330,
+      "sha256": "dbc96b01cfa7d01f2645b8f4287acf6e2e859096a3ad4da07d8d1d823d7748cb",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/prepare-package-aliases.py",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870020",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "2708",
+          "mtime_ns": "1791174478728762937",
+          "ctime_ns": "1791174478728762937"
+        }
+      },
+      "bytes": 2708,
+      "sha256": "d040761a6650516170946a68ad9debef5df1473c7adf26c6f120bc46ecefc1e3",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/prepare-static-relative-guard.py",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870072",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "3581",
+          "mtime_ns": "1791174478730270241",
+          "ctime_ns": "1791174478730270241"
+        }
+      },
+      "bytes": 3581,
+      "sha256": "0bdd5e4cf98306ef0d2d8593ba026ac258581fb8b97dc4630c15b5247a9665d1",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/prepared-source-inputs.json",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870052",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "1633",
+          "mtime_ns": "1791174125786787555",
+          "ctime_ns": "1791174125786787555"
+        }
+      },
+      "bytes": 1633,
+      "sha256": "c6024ff35ac65bda207a693c79dd4421d3f9ece55df86a5e177c653eacbe81f3",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/preserved-initial-port-failure.json",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870087",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "391",
+          "mtime_ns": "1791174125791868020",
+          "ctime_ns": "1791174125791868020"
+        }
+      },
+      "bytes": 391,
+      "sha256": "d143bb4d4d999f30fbd2b3e5b624b0471ebe8e284802f55ebaa59fd4ef73c8a9",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/process-port.cjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "869973",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "6913",
+          "mtime_ns": "1791174405077957223",
+          "ctime_ns": "1791174405077957223"
+        }
+      },
+      "bytes": 6913,
+      "sha256": "dfff1e46776e31dc263829932a899bb20104fd0ba7ca74338931eab55367cfbd",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/read-compressed-evidence.py",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "869975",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "1089",
+          "mtime_ns": "1791174478727159842",
+          "ctime_ns": "1791174478727159842"
+        }
+      },
+      "bytes": 1089,
+      "sha256": "a89638ddc4fcb2250c2b5d8f1ca0bd89701f3f28075cf4c9f830f4204b662ffe",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/readiness-binding-controls.mjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "869989",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "2878",
+          "mtime_ns": "1791174405082053597",
+          "ctime_ns": "1791174405082053597"
+        }
+      },
+      "bytes": 2878,
+      "sha256": "51e7b493af2816a5c7ba8d206ab374343338dc6ebfa6069c6f622ed87c407adf",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/real-synthetic-entry.mjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870013",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "96",
+          "mtime_ns": "1791174405088922395",
+          "ctime_ns": "1791174405088922395"
+        }
+      },
+      "bytes": 96,
+      "sha256": "eae9354bbc2b59c142f82acebf03a5cfcb58962f75750645a8a9bec9b2e8c046",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/record-artifact-affected.py",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870030",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "6508",
+          "mtime_ns": "1791174478729081035",
+          "ctime_ns": "1791174478729081035"
+        }
+      },
+      "bytes": 6508,
+      "sha256": "8fe9275fbefe67a7c489705470f9f99c8d8482eb2c920555c83ac030d2d9d6be",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/record-batch.py",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870000",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "8801",
+          "mtime_ns": "1791174478728199116",
+          "ctime_ns": "1791174478728199116"
+        }
+      },
+      "bytes": 8801,
+      "sha256": "bc4e393f125d84acbc192e26c00610ff6438bf0e7d82d0d60c310f93e06e4946",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/record-final-affected.py",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870029",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "6583",
+          "mtime_ns": "1791174478728909532",
+          "ctime_ns": "1791174478728909532"
+        }
+      },
+      "bytes": 6583,
+      "sha256": "4da4ffd2c63070ba6fc3a59280a17cfb9a45aa5ed1577409ce5e61c475f7da84",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/record-final-guard-affected.py",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870053",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "6417",
+          "mtime_ns": "1791174478729567660",
+          "ctime_ns": "1791174478729567660"
+        }
+      },
+      "bytes": 6417,
+      "sha256": "534da9f31a86a37c6672b9c9ae403f05edcd6f56511b9fac466e8a831cdb432f",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/record-finalize-aliases.py",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870018",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "6280",
+          "mtime_ns": "1791174478728658049",
+          "ctime_ns": "1791174478728658049"
+        }
+      },
+      "bytes": 6280,
+      "sha256": "f6ecba61a9642ebaab65846e49ea20ecf32a4aec292bd594273120993700df96",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/record-graph-phases.py",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870092",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "6259",
+          "mtime_ns": "1791174478731032114",
+          "ctime_ns": "1791174478731032114"
+        }
+      },
+      "bytes": 6259,
+      "sha256": "edb6ab8a02a67792dead163bf2d86b2039de9251ce2d9bc50e54fa7d87db2d02",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/record-historical-admission-affected.py",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "869971",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "6340",
+          "mtime_ns": "1791174478726970195",
+          "ctime_ns": "1791174478726970195"
+        }
+      },
+      "bytes": 6340,
+      "sha256": "385471d399999800aa31e99ebd13bf46676839aea48d088aee81cf215461f3e7",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/record-historical-full.py",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870040",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "6274",
+          "mtime_ns": "1791174478729358557",
+          "ctime_ns": "1791174478729358557"
+        }
+      },
+      "bytes": 6274,
+      "sha256": "3b471d6bd5394cb7efb29ceb4287b93825a9c7b06ab15b0fd251141374cbfca7",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/record-history-setup.py",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "869997",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "5319",
+          "mtime_ns": "1791174478727948064",
+          "ctime_ns": "1791174478727948064"
+        }
+      },
+      "bytes": 5319,
+      "sha256": "1f2210a89fc81ec48d97ef11284dd258a6c4f71db4f27173dbaae4a6eb54fca7",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/record-metafile-projection.py",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "869990",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "6266",
+          "mtime_ns": "1791174478727643351",
+          "ctime_ns": "1791174478727643351"
+        }
+      },
+      "bytes": 6266,
+      "sha256": "d208bf5ade446b216f05c2d9fa298a6fd660173b2cd904d675a025cd67095313",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/record-metafile-proof.py",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870070",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "6261",
+          "mtime_ns": "1791174478730040449",
+          "ctime_ns": "1791174478730040449"
+        }
+      },
+      "bytes": 6261,
+      "sha256": "8910ef0527a3a2ee09d93878f4ae7c1bdca09c2a8a8df877da9b442a90722ec9",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/record-package-aliases.py",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870073",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "6279",
+          "mtime_ns": "1791174478730424752",
+          "ctime_ns": "1791174478730424752"
+        }
+      },
+      "bytes": 6279,
+      "sha256": "7a7173b55b51eaaa0ac38747933edd0cc6dcd066bab5de1852e6bc93dcbae24e",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/record-repair-controls.py",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "869984",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "6328",
+          "mtime_ns": "1791174478727303763",
+          "ctime_ns": "1791174478727303763"
+        }
+      },
+      "bytes": 6328,
+      "sha256": "1ccb2a9b3cfa4bae9d88aad8609fe425d3c82c75862b07951e04f2b1595725f0",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/record-root-delivery-affected.py",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870001",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "6355",
+          "mtime_ns": "1791174478728349439",
+          "ctime_ns": "1791174478728349439"
+        }
+      },
+      "bytes": 6355,
+      "sha256": "fe1001e46f36f13ff2e5e93bd1db09f844a30917ab6ede362610551259a7e61e",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/record-runner-graph.py",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870039",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "6259",
+          "mtime_ns": "1791174478729191923",
+          "ctime_ns": "1791174478729191923"
+        }
+      },
+      "bytes": 6259,
+      "sha256": "edb6ab8a02a67792dead163bf2d86b2039de9251ce2d9bc50e54fa7d87db2d02",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/record-setup.py",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870009",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "4709",
+          "mtime_ns": "1791174478728493510",
+          "ctime_ns": "1791174478728493510"
+        }
+      },
+      "bytes": 4709,
+      "sha256": "0e323fcca138f3df9b4f7cb4d984a2cc2406aca01cdf8fdd4ec8d09f549b3162",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/record-static-relative-guard.py",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870058",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "6285",
+          "mtime_ns": "1791174478729813943",
+          "ctime_ns": "1791174478729813943"
+        }
+      },
+      "bytes": 6285,
+      "sha256": "790b6c8dccacaefa14b03b77e2d70bf7e967dc2db80002f68876061f051efe2e",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/record-tape-affected.py",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "869972",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "6475",
+          "mtime_ns": "1791174478727062128",
+          "ctime_ns": "1791174478727062128"
+        }
+      },
+      "bytes": 6475,
+      "sha256": "2b9629c23ef271016833a7be9d6305921b17b85d5bc2d5c17f9117f10616268b",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/recorded-esbuild.mjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870034",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "8966",
+          "mtime_ns": "1791174405094051331",
+          "ctime_ns": "1791174405094051331"
+        }
+      },
+      "bytes": 8966,
+      "sha256": "1e530f039ca8181b362bb58ffd012b755840b809fdc60e778ade0dda4f1bbc8e",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/refine-producer-rules.mjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870019",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "3611",
+          "mtime_ns": "1791174405090629996",
+          "ctime_ns": "1791174405090629996"
+        }
+      },
+      "bytes": 3611,
+      "sha256": "e93e81c4cc6ea0e3e657938bee81bc8b15ded0c9c05d9c0c582b9929d5568684",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/refresh-fork-metadata.mjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870066",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "3900",
+          "mtime_ns": "1791174405103338176",
+          "ctime_ns": "1791174405103338176"
+        }
+      },
+      "bytes": 3900,
+      "sha256": "15c099c1b90eacc1abfbd0f7e665567fd986b8bc16f02decefe23ce0f366b06e",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/relative-fork-plumbing-repair.json",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870012",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "13518",
+          "mtime_ns": "1791174125775513751",
+          "ctime_ns": "1791174125775513751"
+        }
+      },
+      "bytes": 13518,
+      "sha256": "876c83c83e15dbb17aa28da02407218609088ef4118b3b8582e388fce4d8d8f9",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/resolve-finite-selectors.py",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870075",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "4520",
+          "mtime_ns": "1791174478730532073",
+          "ctime_ns": "1791174478730532073"
+        }
+      },
+      "bytes": 4520,
+      "sha256": "fd469f3e891ef96e2c1fa460f284b0d89e53caa1fa51143e7fe90f9ae6c68d12",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/resource-owner.mjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870005",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "1333",
+          "mtime_ns": "1791174405086847964",
+          "ctime_ns": "1791174405086847964"
+        }
+      },
+      "bytes": 1333,
+      "sha256": "5ce8ddf1f8eefc8f96d64e9f322aeb5433af5e41354cfaa664a88bb8fea5bb39",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/root-child-bootstrap.mjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870023",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "5798",
+          "mtime_ns": "1791174405091300367",
+          "ctime_ns": "1791174405091300367"
+        }
+      },
+      "bytes": 5798,
+      "sha256": "42acce9a0092b8ab3f256463929e0127a97bced954ecae4c34c47fdf09b09ad6",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/root-delivery-controls.mjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870036",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "3613",
+          "mtime_ns": "1791174405095033959",
+          "ctime_ns": "1791174405095033959"
+        }
+      },
+      "bytes": 3613,
+      "sha256": "57642c40cae4313aab542e337ae2ba48c8b9b1342a7bbba977d9903326399170",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/root-fixture-controls.mjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870064",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "5419",
+          "mtime_ns": "1791174405102685729",
+          "ctime_ns": "1791174405102685729"
+        }
+      },
+      "bytes": 5419,
+      "sha256": "0236237c75a82bb463614217ae309aa392b9c17484527ed77d4cb7cf35e0de31",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/root-gate.mjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "869982",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "2598",
+          "mtime_ns": "1791174405080361334",
+          "ctime_ns": "1791174405080361334"
+        }
+      },
+      "bytes": 2598,
+      "sha256": "2a57e04d5f6a231c25f3cb3870425979c179ab597b70aebbc8c16fdf8a42a7a1",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/root-json-stream.mjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870059",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "3694",
+          "mtime_ns": "1791174405101521550",
+          "ctime_ns": "1791174405101521550"
+        }
+      },
+      "bytes": 3694,
+      "sha256": "0e8cbf7d5195ea7d64feeb94ff6554789ff806b6147859757908cc6ff7445120",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/root-launcher.mjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870015",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "13806",
+          "mtime_ns": "1791174405089070233",
+          "ctime_ns": "1791174405089070233"
+        }
+      },
+      "bytes": 13806,
+      "sha256": "e088961cf7ec08175612c90c440734a23f9165d54390aed92b6c7d39fe69981a",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/root-setup-controls.mjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870022",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "3327",
+          "mtime_ns": "1791174405091208565",
+          "ctime_ns": "1791174405091208565"
+        }
+      },
+      "bytes": 3327,
+      "sha256": "c1f7db4ac7a269c80795295aff4b213f806345143cb875c374be3dc108ebd5bc",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/root-stream-controls.mjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "869974",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "3226",
+          "mtime_ns": "1791174405078266354",
+          "ctime_ns": "1791174405078266354"
+        }
+      },
+      "bytes": 3226,
+      "sha256": "6a3ef53fce5e012ccbd33dc912f5eacacdaaf33e91543904c8b089554451e331",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/root-surrogate-entry.mjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870010",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "827",
+          "mtime_ns": "1791174405088240002",
+          "ctime_ns": "1791174405088240002"
+        }
+      },
+      "bytes": 827,
+      "sha256": "fb89a3f7b70531be2442b256fabd02fb580ba10f89cf322508652b9851f28ee7",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/root-terminal-controls.mjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870011",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "2458",
+          "mtime_ns": "1791174405088601482",
+          "ctime_ns": "1791174405088601482"
+        }
+      },
+      "bytes": 2458,
+      "sha256": "8e4a9a0cb0640dc3e63b6b694392e536e6c0411a9847b5e85feabd37d3026914",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/route-policy.mjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870045",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "9529",
+          "mtime_ns": "1791174405097837692",
+          "ctime_ns": "1791174405097837692"
+        }
+      },
+      "bytes": 9529,
+      "sha256": "2905b451fa312ac3e3531dd5de481b570d9b0aa1eb51f6021e2548d2a548e4e4",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/runner-graph-controls.mjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870035",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "3602",
+          "mtime_ns": "1791174405094558204",
+          "ctime_ns": "1791174405094558204"
+        }
+      },
+      "bytes": 3602,
+      "sha256": "0aabb824b105b04fee703c6a2a6595d0a92192b3c448a0068ebbe4ba1c6c02f5",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/serial-controls-core.mjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "869969",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "3540",
+          "mtime_ns": "1791174405076279318",
+          "ctime_ns": "1791174405076279318"
+        }
+      },
+      "bytes": 3540,
+      "sha256": "4ba4d3b9ce0f3230aa4a48cc8c19e686254648875f7e6dfb217d7bb544533a60",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/serial-runner-controls.mjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870003",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "132",
+          "mtime_ns": "1791174405086008585",
+          "ctime_ns": "1791174405086008585"
+        }
+      },
+      "bytes": 132,
+      "sha256": "9d1dae96cef9421fca49813fe506c4afb388843f7f7ed07cc1947ed19de44a5e",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/serial-tiers-controls.mjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870080",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "134",
+          "mtime_ns": "1791174405107500364",
+          "ctime_ns": "1791174405107500364"
+        }
+      },
+      "bytes": 134,
+      "sha256": "a37e974c2cfb40b6f2ed58100008d8fd69218963d2f60ec39175b697effb5ae6",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/service-controls.mjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870091",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "4109",
+          "mtime_ns": "1791174405110908984",
+          "ctime_ns": "1791174405110908984"
+        }
+      },
+      "bytes": 4109,
+      "sha256": "012df63b620034c6165749460294fe9baead18c149f9b88b16ab325bf2db483d",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/source-composition-controls.mjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "869981",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "4127",
+          "mtime_ns": "1791174405079965490",
+          "ctime_ns": "1791174405079965490"
+        }
+      },
+      "bytes": 4127,
+      "sha256": "62da8ae667e9cdb3171ff71ab252c7139a3d12ece33f023c8c95e5c109a95b53",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/vm-consumer-controls.mjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "869994",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "3070",
+          "mtime_ns": "1791174405083708850",
+          "ctime_ns": "1791174405083708850"
+        }
+      },
+      "bytes": 3070,
+      "sha256": "9d36d58a255d4efc1c4818d3d760fae56374bdcb37a4b95c3ae1de7f6cb9f166",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/vm-consumer.mjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870054",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "4219",
+          "mtime_ns": "1791174405100091651",
+          "ctime_ns": "1791174405100091651"
+        }
+      },
+      "bytes": 4219,
+      "sha256": "91deb20f7303faafb9c54caec2e2b8a50044b46690af9b0c9fe31834813c3fa6",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/vm-install-rollback-controls.mjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870038",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "1577",
+          "mtime_ns": "1791174405095448398",
+          "ctime_ns": "1791174405095448398"
+        }
+      },
+      "bytes": 1577,
+      "sha256": "4fdc70445e8e8a92fb25125fdbec410bdb7a77810d03e8bbdf119dfe3c6415a3",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/vm-port.cjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870068",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "1679",
+          "mtime_ns": "1791174405103893971",
+          "ctime_ns": "1791174405103893971"
+        }
+      },
+      "bytes": 1679,
+      "sha256": "47a2e40b5c3b2099c8b535219621cb08296a81f6797aeb7411b8f643f3cd3e80",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/candidate/whole-freeze-controls.mjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870006",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "2161",
+          "mtime_ns": "1791174405087157766",
+          "ctime_ns": "1791174405087157766"
+        }
+      },
+      "bytes": 2161,
+      "sha256": "8e331ebc0070148c9201859baaea51bb1f225399ccb29c936d46abe7e8ac478b",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/controls.mjs",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870117",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "7678",
+          "mtime_ns": "1791174561277956849",
+          "ctime_ns": "1791174561277956849"
+        }
+      },
+      "bytes": 7678,
+      "sha256": "93522ab6d59ee96a0fb8f24a4f1009bdaa8ad1ff25d4f0e6988dd9fc039b4a16",
+      "equal": true
+    },
+    {
+      "path": "/workspace/Project-Cortex/work/resume/task04-c7-exact-identity-repair/run-controls.py",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "870126",
+          "mode": "33152",
+          "uid": "1000",
+          "gid": "1000",
+          "nlink": "1",
+          "size": "4735",
+          "mtime_ns": "1791174620986928966",
+          "ctime_ns": "1791174620986928966"
+        }
+      },
+      "bytes": 4735,
+      "sha256": "69ee5cb873dd958180cc202b85e7210872f7a630be0c18f12f2600d8d4c0f023",
+      "equal": true
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "9223372036854818761",
+          "mode": "33261",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "125989464",
+          "mtime_ns": "1788486252000000000",
+          "ctime_ns": "1788486252000000000"
+        }
+      },
+      "bytes": 125989464,
+      "sha256": "bc17c508ffeed0ec622934f9b7fa72f8e78da65350e63c3eceb56fa688aa5e12",
+      "equal": true
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+      "identity": {
+        "schema": "FS_IDENTITY_DECIMAL_V1",
+        "fields": {
+          "dev": "27",
+          "ino": "9223372036854859985",
+          "mode": "33261",
+          "uid": "0",
+          "gid": "0",
+          "nlink": "1",
+          "size": "30894944",
+          "mtime_ns": "1788486252000000000",
+          "ctime_ns": "1788486252000000000"
+        }
+      },
+      "bytes": 30894944,
+      "sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+      "equal": true
+    }
+  ],
+  "sourceToolsExactEqual": true,
+  "resourcePOST": {
+    "memory.current": "17093881856\n",
+    "memory.max": "17179869184\n",
+    "memory.stat": "anon 199802880\nfile 15138709504\nkernel 1754316800\nkernel_stack 507904\npagetables 1777664\nsec_pagetables 0\npercpu 13552\nsock 0\nvmalloc 0\nshmem 15100268544\nfile_mapped 20480\nfile_dirty 176128\nfile_writeback 0\nswapcached 0\nanon_thp 0\nfile_thp 0\nshmem_thp 0\ninactive_anon 2904006656\nactive_anon 12396064768\ninactive_file 14172160\nactive_file 24268800\nunevictable 0\nslab_reclaimable 1596421192\nslab_unreclaimable 154655120\nslab 1751076312\nworkingset_refault_anon 0\nworkingset_refault_file 71709539\nworkingset_activate_anon 0\nworkingset_activate_file 12934881\nworkingset_restore_anon 0\nworkingset_restore_file 7603154\nworkingset_nodereclaim 0\npgdemote_kswapd 0\npgdemote_direct 0\npgdemote_khugepaged 0\npgdemote_proactive 0\npgscan 81653701\npgsteal 79992411\npswpin 0\npswpout 0\npgscan_kswapd 32529786\npgscan_direct 49123915\npgscan_khugepaged 0\npgscan_proactive 0\npgsteal_kswapd 30885627\npgsteal_direct 49106784\npgsteal_khugepaged 0\npgsteal_proactive 0\npgfault 1530790424\npgmajfault 70697\npgrefill 28689634\npgactivate 18643666\npgdeactivate 27592244\npglazyfree 2\npglazyfreed 0\nswpin_zero 0\nswpout_zero 0\nthp_fault_alloc 894\nthp_collapse_alloc 94\nthp_swpout 0\nthp_swpout_fallback 0\n",
+    "memory.events": "low 0\nhigh 0\nmax 1387532\noom 0\noom_kill 1\noom_group_kill 0\n"
+  },
+  "fixturePOST": {
+    "identity": {
+      "schema": "FS_IDENTITY_DECIMAL_V1",
+      "fields": {
+        "dev": "26",
+        "ino": "19921",
+        "mode": "33152",
+        "uid": "1000",
+        "gid": "1000",
+        "nlink": "1",
+        "size": "14",
+        "mtime_ns": "1791174653339456868",
+        "ctime_ns": "1791174653339456868"
+      }
+    }
+  },
+  "original122": "HELD",
+  "whole120": "UNEXECUTED_HELD",
+  "rootApproval": "ABSENT_NOT_CREATED"
+}

@@ -1,0 +1,16 @@
+from pathlib import Path
+import json,hashlib,subprocess,datetime
+R=Path.cwd();Q=R/'_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c7-preparation';O=Q.with_name('task04-terminal-capture-parent-inputs-c7-review');W=R/'work/resume/task04-terminal-capture-parent-inputs-c7-review'
+for name in ['guard','phase']:
+ s=(Q/(name+'-controls.mjs.text')).read_text().replace("qa=path.join(repo,'_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c7-preparation')","qa=path.join(repo,'_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c7-review')").replace("work=path.join(repo,'work/resume/task04-terminal-capture-parent-inputs-c7-preparation')","work=path.join(repo,'work/resume/task04-terminal-capture-parent-inputs-c7-review')")
+ p=W/(name+'-controls.mjs');p.write_text(s);(O/(name+'-controls.mjs.text')).write_text(s)
+ argv=['node','--experimental-vm-modules',str(p)];start=datetime.datetime.now(datetime.timezone.utc).isoformat();r=subprocess.run(argv,cwd=R,capture_output=True)
+ (O/(name+'.stdout')).write_bytes(r.stdout);(O/(name+'.stderr')).write_bytes(r.stderr);(O/(name+'.receipt.json')).write_text(json.dumps({'argv':argv,'cwd':str(R),'start':start,'end':datetime.datetime.now(datetime.timezone.utc).isoformat(),'exit':r.returncode},indent=2)+'\n');print(name,r.returncode,r.stdout.decode(),r.stderr.decode()[-200:])
+# Independent historical segment comparison, using public C6 source only.
+a=(Q/'accepted-c6-parent-inputs.mjs.text').read_text();out=[]
+for profile in ['extension','regression']:
+ b=(Q/f'parent-inputs-{profile}.mjs').read_text()
+ for start,end in [('export const historicalSources=','export function exactKeys'),('export function historicalEvidence','export async function main')]:
+  sa=a[a.index(start):a.index(end)];sb=b[b.index(start):b.index(end)];out.append({'profile':profile,'segment':start,'exactUnchanged':sa==sb,'bytes':len(sb.encode()),'sha256':hashlib.sha256(sb.encode()).hexdigest()})
+(O/'independent-history-comparison.json').write_text(json.dumps(out,indent=2)+'\n')
+print('history',out)

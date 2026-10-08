@@ -67,11 +67,11 @@ const groupChatsByDate = (chats: Chat[]): GroupedChats => {
       return groups;
     },
     {
+      lastMonth: [],
+      lastWeek: [],
+      older: [],
       today: [],
       yesterday: [],
-      lastWeek: [],
-      lastMonth: [],
-      older: [],
     } as GroupedChats
   );
 };
@@ -135,6 +135,7 @@ export function SidebarHistory({ user }: { user: User | undefined }) {
     });
 
     toast.promise(deletePromise, {
+      error: "Failed to delete chat",
       loading: "Deleting chat...",
       success: () => {
         mutate((chatHistories) => {
@@ -155,7 +156,6 @@ export function SidebarHistory({ user }: { user: User | undefined }) {
 
         return "Chat deleted successfully";
       },
-      error: "Failed to delete chat",
     });
   };
 
@@ -217,7 +217,7 @@ export function SidebarHistory({ user }: { user: User | undefined }) {
       <SidebarGroup>
         <SidebarGroupContent>
           <SidebarMenu>
-            {paginatedChatHistories &&
+            {!!paginatedChatHistories &&
               (() => {
                 const chatsFromHistory = paginatedChatHistories.flatMap(
                   (paginatedChatHistory) => paginatedChatHistory.chats

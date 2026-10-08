@@ -1,0 +1,13 @@
+node:internal/modules/cjs/loader:2085
+    throw new ERR_INVALID_ARG_VALUE('filename', filenameOrURL, createRequireError);
+          ^
+
+TypeError [ERR_INVALID_ARG_VALUE]: The argument 'filename' must be a file URL object, file URL string, or absolute path string. Received undefined
+    at createRequire (node:internal/modules/cjs/loader:2085:11)
+    at /workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c3/runtime/gateway.mjs:1:86
+    at SourceTextModule.evaluate (node:internal/vm/module:233:26)
+    at file:///workspace/Project-Cortex/work/resume/task04-model-drift-native-source-preparation-c3-review/queue-controls.mjs:8:53 {
+  code: 'ERR_INVALID_ARG_VALUE'
+}
+
+Node.js v24.19.0

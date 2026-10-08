@@ -1,5 +1,4 @@
-import type { Id } from "./_generated/dataModel";
-import { captureInsertedRow, reconcileRow } from "./lib/referenceLifecycle";
+import { runtimeUnavailable } from "./runtimeUnavailableAuth";
 /**
  * Cortex SDK - A2A Communication API
  *
@@ -28,6 +27,8 @@ import { mutation, query } from "./_generated/server";
  */
 export const send = mutation({
   args: {
+    tenantId: v.optional(v.string()),
+    memorySpaceId: v.optional(v.string()),
     from: v.string(),
     to: v.string(),
     message: v.string(),
@@ -39,6 +40,9 @@ export const send = mutation({
     metadata: v.optional(v.any()),
   },
   handler: async (ctx, args) => {
+    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
+    await runtimeUnavailable(ctx, "write", args);
+
     // Validation
     if (!args.from || args.from.trim() === "") {
       throw new Error("INVALID_AGENT_ID: 'from' agent ID is required");
@@ -71,7 +75,6 @@ export const send = mutation({
     const trackConversation = args.trackConversation !== false; // Default true
 
     let conversationId: string | undefined;
-      let physicalConversationId: Id<"conversations"> | undefined;
     let acidMessageId: string | undefined;
 
     // Track in ACID conversation if enabled
@@ -87,7 +90,7 @@ export const send = mutation({
 
       if (!conversation) {
         // Create new A2A conversation
-        const convDocId = await captureInsertedRow(ctx, "conversations", {
+        const convDocId = await ctx.db.insert("conversations", {
           conversationId: convId,
           memorySpaceId: args.from, // Use sender as primary memory space
           type: "agent-agent",
@@ -124,14 +127,13 @@ export const send = mutation({
           timestamp: now,
         };
 
-        await reconcileRow(ctx, conversation._id, {
+        await ctx.db.patch(conversation._id, {
           messages: [...conversation.messages, message],
           messageCount: conversation.messageCount + 1,
           updatedAt: now,
         });
 
         conversationId = convId;
-          physicalConversationId = conversation._id;
       }
     }
 
@@ -145,7 +147,7 @@ export const send = mutation({
 
     // Store in sender's vector memory (outbound)
     const senderMemoryId = `mem-a2a-${now}-${Math.random().toString(36).substring(2, 11)}`;
-    await captureInsertedRow(ctx, "memories", {
+    await ctx.db.insert("memories", {
       memoryId: senderMemoryId,
       memorySpaceId: args.from,
       content: `Sent to ${args.to}: ${args.message}`,
@@ -175,7 +177,7 @@ export const send = mutation({
       createdAt: now,
       updatedAt: now,
       accessCount: 0,
-    }, {physicalConversation: physicalConversationId});
+    });
 
     // Build tags for receiver (inbound)
     const receiverTags = [
@@ -187,7 +189,7 @@ export const send = mutation({
 
     // Store in receiver's vector memory (inbound)
     const receiverMemoryId = `mem-a2a-${now + 1}-${Math.random().toString(36).substring(2, 11)}`;
-    await captureInsertedRow(ctx, "memories", {
+    await ctx.db.insert("memories", {
       memoryId: receiverMemoryId,
       memorySpaceId: args.to,
       content: `Received from ${args.from}: ${args.message}`,
@@ -217,7 +219,7 @@ export const send = mutation({
       createdAt: now,
       updatedAt: now,
       accessCount: 0,
-    }, {physicalConversation: physicalConversationId});
+    });
 
     return {
       messageId,
@@ -242,6 +244,8 @@ export const send = mutation({
  */
 export const request = mutation({
   args: {
+    tenantId: v.optional(v.string()),
+    memorySpaceId: v.optional(v.string()),
     from: v.string(),
     to: v.string(),
     message: v.string(),
@@ -252,6 +256,9 @@ export const request = mutation({
     importance: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
+    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
+    await runtimeUnavailable(ctx, "write", args);
+
     // Validation
     if (!args.from || args.from.trim() === "") {
       throw new Error("INVALID_AGENT_ID: 'from' agent ID is required");
@@ -295,7 +302,7 @@ export const request = mutation({
 
     // Store the request in sender's memory
     const senderMemoryId = `mem-a2a-req-${now}-${Math.random().toString(36).substring(2, 11)}`;
-    await captureInsertedRow(ctx, "memories", {
+    await ctx.db.insert("memories", {
       memoryId: senderMemoryId,
       memorySpaceId: args.from,
       content: `Request to ${args.to}: ${args.message}`,
@@ -329,7 +336,7 @@ export const request = mutation({
 
     // Store in receiver's memory
     const receiverMemoryId = `mem-a2a-req-${now + 1}-${Math.random().toString(36).substring(2, 11)}`;
-    await captureInsertedRow(ctx, "memories", {
+    await ctx.db.insert("memories", {
       memoryId: receiverMemoryId,
       memorySpaceId: args.to,
       content: `Request from ${args.from}: ${args.message}`,
@@ -375,6 +382,8 @@ export const request = mutation({
  */
 export const broadcast = mutation({
   args: {
+    tenantId: v.optional(v.string()),
+    memorySpaceId: v.optional(v.string()),
     from: v.string(),
     to: v.array(v.string()),
     message: v.string(),
@@ -385,6 +394,9 @@ export const broadcast = mutation({
     metadata: v.optional(v.any()),
   },
   handler: async (ctx, args) => {
+    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
+    await runtimeUnavailable(ctx, "write", args);
+
     // Validation
     if (!args.from || args.from.trim() === "") {
       throw new Error("INVALID_AGENT_ID: 'from' agent ID is required");
@@ -449,7 +461,6 @@ export const broadcast = mutation({
       const messageId = `${broadcastId}-${i}`;
 
       let conversationId: string | undefined;
-      let physicalConversationId: Id<"conversations"> | undefined;
       let acidMessageId: string | undefined;
 
       // Track in ACID conversation if enabled
@@ -463,7 +474,7 @@ export const broadcast = mutation({
           .first();
 
         if (!conversation) {
-          const convDocId = await captureInsertedRow(ctx, "conversations", {
+          const convDocId = await ctx.db.insert("conversations", {
             conversationId: convId,
             memorySpaceId: args.from,
             type: "agent-agent",
@@ -501,14 +512,13 @@ export const broadcast = mutation({
             timestamp: now,
           };
 
-          await reconcileRow(ctx, conversation._id, {
+          await ctx.db.patch(conversation._id, {
             messages: [...conversation.messages, message],
             messageCount: conversation.messageCount + 1,
             updatedAt: now,
           });
 
           conversationId = convId;
-          physicalConversationId = conversation._id;
           conversationIds.push(convId);
         }
       }
@@ -524,7 +534,7 @@ export const broadcast = mutation({
 
       // Store in sender's memory
       const senderMemoryId = `mem-a2a-bc-${now}-${i}-s-${Math.random().toString(36).substring(2, 7)}`;
-      await captureInsertedRow(ctx, "memories", {
+      await ctx.db.insert("memories", {
         memoryId: senderMemoryId,
         memorySpaceId: args.from,
         content: `Broadcast to ${recipient}: ${args.message}`,
@@ -556,7 +566,7 @@ export const broadcast = mutation({
         createdAt: now,
         updatedAt: now,
         accessCount: 0,
-      }, {physicalConversation: physicalConversationId});
+      });
       senderMemoryIds.push(senderMemoryId);
 
       // Build tags for receiver (broadcast received)
@@ -570,7 +580,7 @@ export const broadcast = mutation({
 
       // Store in receiver's memory
       const receiverMemoryId = `mem-a2a-bc-${now}-${i}-r-${Math.random().toString(36).substring(2, 7)}`;
-      await captureInsertedRow(ctx, "memories", {
+      await ctx.db.insert("memories", {
         memoryId: receiverMemoryId,
         memorySpaceId: recipient,
         content: `Broadcast from ${args.from}: ${args.message}`,
@@ -602,7 +612,7 @@ export const broadcast = mutation({
         createdAt: now,
         updatedAt: now,
         accessCount: 0,
-      }, {physicalConversation: physicalConversationId});
+      });
       receiverMemoryIds.push(receiverMemoryId);
     }
 
@@ -629,6 +639,8 @@ export const broadcast = mutation({
  */
 export const getConversation = query({
   args: {
+    tenantId: v.optional(v.string()),
+    memorySpaceId: v.optional(v.string()),
     agent1: v.string(),
     agent2: v.string(),
     since: v.optional(v.number()),
@@ -640,6 +652,9 @@ export const getConversation = query({
     offset: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
+    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
+    await runtimeUnavailable(ctx, "read", args);
+
     // Validation
     if (!args.agent1 || args.agent1.trim() === "") {
       throw new Error("INVALID_AGENT_ID: 'agent1' is required");

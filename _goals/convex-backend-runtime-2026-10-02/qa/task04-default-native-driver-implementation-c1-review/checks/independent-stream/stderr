@@ -1,0 +1,18 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: invalid ordered stream must not nominate provider terminal
+
+2 !== 0
+
+    at file:///workspace/Project-Cortex/work/resume/task04-default-native-driver-implementation-c1-review/fixture/checks/independent-stream.mjs:13:96 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 2,
+  expected: 0,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

@@ -1,0 +1,114 @@
+{
+  "evidenceKind": "OFFLINE SDK prep environment-name bootstrap controls; no live outcome",
+  "discovered": 4,
+  "passed": 4,
+  "skipped": 0,
+  "networkCalls": 0,
+  "sdkCallbackEffects": 0,
+  "keyValuesPrinted": 0,
+  "privateKeyReads": 0,
+  "rows": [
+    {
+      "name": "actual-minimal-sdk-process-environment",
+      "passed": true,
+      "argv": [
+        "node",
+        "--import",
+        "/workspace/Project-Cortex/work/backend-runtime/task03c2-live-fixture/offline-cycle3/sdk-environment-check.mjs",
+        "-e",
+        ""
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAt": "2026-10-03T13:39:03.135626+00:00",
+      "completedAt": "2026-10-03T13:39:03.161291+00:00",
+      "expectedExitCode": 0,
+      "exitCode": 0,
+      "commandEnvironmentNames": [
+        "LANG",
+        "PATH"
+      ],
+      "sdkCallbackEffects": 0,
+      "networkCalls": 0,
+      "keyValuesPrinted": 0,
+      "privateKeyReads": 0,
+      "rawError": "discarded; fixed nonsecret bootstrap error and no callback output asserted"
+    },
+    {
+      "name": "upstream-name-rejected-before-sdk-callback",
+      "passed": true,
+      "argv": [
+        "node",
+        "--import",
+        "/workspace/Project-Cortex/work/backend-runtime/task03c2-live-fixture/offline-cycle3/sdk-environment-check.mjs",
+        "-e",
+        "process.stdout.write(\"UNEXPECTED_SDK_CALLBACK\")"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAt": "2026-10-03T13:39:03.161310+00:00",
+      "completedAt": "2026-10-03T13:39:03.189232+00:00",
+      "expectedExitCode": 1,
+      "exitCode": 1,
+      "commandEnvironmentNames": [
+        "LANG",
+        "OPENAI_API_KEY",
+        "PATH"
+      ],
+      "sdkCallbackEffects": 0,
+      "networkCalls": 0,
+      "keyValuesPrinted": 0,
+      "privateKeyReads": 0,
+      "rawError": "discarded; fixed nonsecret bootstrap error and no callback output asserted"
+    },
+    {
+      "name": "deployment-name-rejected-before-sdk-callback",
+      "passed": true,
+      "argv": [
+        "node",
+        "--import",
+        "/workspace/Project-Cortex/work/backend-runtime/task03c2-live-fixture/offline-cycle3/sdk-environment-check.mjs",
+        "-e",
+        "process.stdout.write(\"UNEXPECTED_SDK_CALLBACK\")"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAt": "2026-10-03T13:39:03.189266+00:00",
+      "completedAt": "2026-10-03T13:39:03.215643+00:00",
+      "expectedExitCode": 1,
+      "exitCode": 1,
+      "commandEnvironmentNames": [
+        "CONVEX_DEPLOY_KEY",
+        "LANG",
+        "PATH"
+      ],
+      "sdkCallbackEffects": 0,
+      "networkCalls": 0,
+      "keyValuesPrinted": 0,
+      "privateKeyReads": 0,
+      "rawError": "discarded; fixed nonsecret bootstrap error and no callback output asserted"
+    },
+    {
+      "name": "late-provider-name-rejected-at-sdk-process-exit",
+      "passed": true,
+      "argv": [
+        "node",
+        "--import",
+        "/workspace/Project-Cortex/work/backend-runtime/task03c2-live-fixture/offline-cycle3/sdk-environment-check.mjs",
+        "-e",
+        "process.env.ANTHROPIC_API_KEY=\"OFFLINE_ENVIRONMENT_STANDIN\""
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startedAt": "2026-10-03T13:39:03.215664+00:00",
+      "completedAt": "2026-10-03T13:39:03.240153+00:00",
+      "expectedExitCode": 1,
+      "exitCode": 1,
+      "commandEnvironmentNames": [
+        "LANG",
+        "PATH"
+      ],
+      "sdkCallbackEffects": 0,
+      "networkCalls": 0,
+      "keyValuesPrinted": 0,
+      "privateKeyReads": 0,
+      "rawError": "discarded; fixed nonsecret bootstrap error and no callback output asserted"
+    }
+  ]
+}

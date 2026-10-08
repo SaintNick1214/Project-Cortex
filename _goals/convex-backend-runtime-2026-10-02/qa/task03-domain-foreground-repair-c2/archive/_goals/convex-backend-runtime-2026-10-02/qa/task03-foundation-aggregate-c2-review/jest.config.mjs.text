@@ -1,0 +1,2 @@
+import base from '../../../jest.config.mjs';
+export default {...base,rootDir:'../../..',setupFiles:[],setupFilesAfterEnv:[],reporters:['default'],cacheDirectory:'<rootDir>/work/resume/foundation-aggregate-c2-review/cache',testMatch:['<rootDir>/tests/unit/runtimeMemory/public-closure.test.ts','<rootDir>/tests/unit/runtimeRegistryAuth/catalog.test.ts','<rootDir>/tests/unit/runtimeArtifactAuth/inventory.test.ts']};

@@ -1,0 +1,218 @@
+{
+  "version": 1,
+  "scope": "03B2C1 manual text artifact metadata only",
+  "counts": {
+    "registered": 22,
+    "public": 21,
+    "internal": 1,
+    "unresolved": 0,
+    "pendingFileRegistrations": 5
+  },
+  "sourceHash": "ae32e9cd78c11482f7fb459d8e748deef6aec7fabfd2d3664cc95e70203dc1f6",
+  "endpoints": [
+    {
+      "path": "artifacts:create",
+      "builder": "mutation",
+      "visibility": "public",
+      "line": 49,
+      "accepted03ADisposition": "guard",
+      "closure": "exact verified issuer/sub; pinned current capability, canonical scope/owner, links, revision and retained controls; text only"
+    },
+    {
+      "path": "artifacts:update",
+      "builder": "mutation",
+      "visibility": "public",
+      "line": 112,
+      "accepted03ADisposition": "guard",
+      "closure": "exact verified issuer/sub; pinned current capability, canonical scope/owner, links, revision and retained controls; text only"
+    },
+    {
+      "path": "artifacts:deleteArtifact",
+      "builder": "mutation",
+      "visibility": "public",
+      "line": 206,
+      "accepted03ADisposition": "guard",
+      "closure": "exact verified issuer/sub; pinned current capability, canonical scope/owner, links, revision and retained controls; text only"
+    },
+    {
+      "path": "artifacts:undo",
+      "builder": "mutation",
+      "visibility": "public",
+      "line": 231,
+      "accepted03ADisposition": "guard",
+      "closure": "exact verified issuer/sub; pinned current capability, canonical scope/owner, links, revision and retained controls; text only"
+    },
+    {
+      "path": "artifacts:redo",
+      "builder": "mutation",
+      "visibility": "public",
+      "line": 281,
+      "accepted03ADisposition": "guard",
+      "closure": "exact verified issuer/sub; pinned current capability, canonical scope/owner, links, revision and retained controls; text only"
+    },
+    {
+      "path": "artifacts:setStreamingState",
+      "builder": "mutation",
+      "visibility": "public",
+      "line": 333,
+      "accepted03ADisposition": "guard",
+      "closure": "exact verified issuer/sub; pinned current capability, canonical scope/owner, links, revision and retained controls; text only"
+    },
+    {
+      "path": "artifacts:purgeVersions",
+      "builder": "mutation",
+      "visibility": "public",
+      "line": 426,
+      "accepted03ADisposition": "guard",
+      "closure": "exact verified issuer/sub; pinned current capability, canonical scope/owner, links, revision and retained controls; text only"
+    },
+    {
+      "path": "artifacts:purgeAll",
+      "builder": "internalMutation",
+      "visibility": "internal",
+      "line": 506,
+      "accepted03ADisposition": "internalize",
+      "closure": "trusted operator internal; exact tenant/space; full file/link preflight; retained rows+tombstones"
+    },
+    {
+      "path": "artifacts:get",
+      "builder": "query",
+      "visibility": "public",
+      "line": 549,
+      "accepted03ADisposition": "guard",
+      "closure": "exact verified issuer/sub; pinned current capability, canonical scope/owner, links, revision and retained controls; text only"
+    },
+    {
+      "path": "artifacts:getByConversation",
+      "builder": "query",
+      "visibility": "public",
+      "line": 576,
+      "accepted03ADisposition": "guard",
+      "closure": "exact verified issuer/sub; pinned current capability, canonical scope/owner, links, revision and retained controls; text only"
+    },
+    {
+      "path": "artifacts:list",
+      "builder": "query",
+      "visibility": "public",
+      "line": 597,
+      "accepted03ADisposition": "guard",
+      "closure": "exact verified issuer/sub; pinned current capability, canonical scope/owner, links, revision and retained controls; text only"
+    },
+    {
+      "path": "artifacts:count",
+      "builder": "query",
+      "visibility": "public",
+      "line": 644,
+      "accepted03ADisposition": "guard",
+      "closure": "exact verified issuer/sub; pinned current capability, canonical scope/owner, links, revision and retained controls; text only"
+    },
+    {
+      "path": "artifacts:getVersion",
+      "builder": "query",
+      "visibility": "public",
+      "line": 670,
+      "accepted03ADisposition": "guard",
+      "closure": "exact verified issuer/sub; pinned current capability, canonical scope/owner, links, revision and retained controls; text only"
+    },
+    {
+      "path": "artifacts:getHistory",
+      "builder": "query",
+      "visibility": "public",
+      "line": 708,
+      "accepted03ADisposition": "guard",
+      "closure": "exact verified issuer/sub; pinned current capability, canonical scope/owner, links, revision and retained controls; text only"
+    },
+    {
+      "path": "artifacts:startStreaming",
+      "builder": "mutation",
+      "visibility": "public",
+      "line": 827,
+      "accepted03ADisposition": "guard",
+      "closure": "exact verified issuer/sub; pinned current capability, canonical scope/owner, links, revision and retained controls; text only"
+    },
+    {
+      "path": "artifacts:appendContent",
+      "builder": "mutation",
+      "visibility": "public",
+      "line": 901,
+      "accepted03ADisposition": "guard",
+      "closure": "exact verified issuer/sub; pinned current capability, canonical scope/owner, links, revision and retained controls; text only"
+    },
+    {
+      "path": "artifacts:pauseStreaming",
+      "builder": "mutation",
+      "visibility": "public",
+      "line": 984,
+      "accepted03ADisposition": "guard",
+      "closure": "exact verified issuer/sub; pinned current capability, canonical scope/owner, links, revision and retained controls; text only"
+    },
+    {
+      "path": "artifacts:resumeStreaming",
+      "builder": "mutation",
+      "visibility": "public",
+      "line": 1051,
+      "accepted03ADisposition": "guard",
+      "closure": "exact verified issuer/sub; pinned current capability, canonical scope/owner, links, revision and retained controls; text only"
+    },
+    {
+      "path": "artifacts:cancelStreaming",
+      "builder": "mutation",
+      "visibility": "public",
+      "line": 1117,
+      "accepted03ADisposition": "guard",
+      "closure": "exact verified issuer/sub; pinned current capability, canonical scope/owner, links, revision and retained controls; text only"
+    },
+    {
+      "path": "artifacts:finalizeStreaming",
+      "builder": "mutation",
+      "visibility": "public",
+      "line": 1206,
+      "accepted03ADisposition": "guard",
+      "closure": "exact verified issuer/sub; pinned current capability, canonical scope/owner, links, revision and retained controls; text only"
+    },
+    {
+      "path": "artifacts:setStreamingError",
+      "builder": "mutation",
+      "visibility": "public",
+      "line": 1323,
+      "accepted03ADisposition": "guard",
+      "closure": "exact verified issuer/sub; pinned current capability, canonical scope/owner, links, revision and retained controls; text only"
+    },
+    {
+      "path": "artifacts:retryFromError",
+      "builder": "mutation",
+      "visibility": "public",
+      "line": 1392,
+      "accepted03ADisposition": "guard",
+      "closure": "exact verified issuer/sub; pinned current capability, canonical scope/owner, links, revision and retained controls; text only"
+    }
+  ],
+  "frozenFilePaths": [
+    {
+      "path": "artifacts:setFileRef",
+      "unchanged": true,
+      "state": "PENDING full C2 owned-file admission/private delivery Task12"
+    },
+    {
+      "path": "artifacts:generateArtifactUploadUrl",
+      "unchanged": true,
+      "state": "PENDING full C2 owned-file admission/private delivery Task12"
+    },
+    {
+      "path": "artifacts:completeArtifactUpload",
+      "unchanged": true,
+      "state": "PENDING full C2 owned-file admission/private delivery Task12"
+    },
+    {
+      "path": "artifacts:getArtifactFileUrl",
+      "unchanged": true,
+      "state": "PENDING full C2 owned-file admission/private delivery Task12"
+    },
+    {
+      "path": "artifacts:detachFile",
+      "unchanged": true,
+      "state": "PENDING full C2 owned-file admission/private delivery Task12"
+    }
+  ],
+  "excludedAttachments": "all 12 attachments registrations/source unchanged"
+}

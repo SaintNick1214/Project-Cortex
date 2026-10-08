@@ -1,0 +1,33 @@
+import assert from 'node:assert/strict';
+import {isDeepStrictEqual} from 'node:util';
+import {harness} from '/workspace/Project-Cortex/work/resume/mf/candidate/tests/unit/runtimeEndpointAuth/sharedfixtures.ts';
+import * as memories from '/workspace/Project-Cortex/work/resume/mf/candidate/convex-dev/memories.ts';
+import * as facts from '/workspace/Project-Cortex/work/resume/mf/candidate/convex-dev/facts.ts';
+import {semanticHash} from '/workspace/Project-Cortex/work/resume/mf/candidate/src/domain/profile.ts';
+const results:any[]=[];
+async function outcome(h:any, op:()=>Promise<any>, before:any){try{return {success:true,result:await op(),rolledBack:isDeepStrictEqual(h.db.rows,before),attemptedWrites:h.db.attemptedWrites.slice()};}catch(e:any){return {success:false,code:e.data?.code??e.message,rolledBack:isDeepStrictEqual(h.db.rows,before),attemptedWrites:h.db.attemptedWrites.slice()};}}
+for(const kind of ['memory','fact'] as const)for(const path of ['list','internal'] as const)for(const mode of ['none','early-control','late-control','late-message'] as const){
+ const h=harness();const owner=await h.provisionScope();const conv=await h.db.insert('conversations',{conversationId:'canon',type:'user-agent',tenantId:'tenant-a',memorySpaceId:'space-a',ownerPrincipalId:owner.principalId,participants:{memorySpaceIds:['space-a'],userId:owner.userId},messages:[{id:'anchor',role:'user',content:'Original authoritative source',timestamp:Date.now()}],messageCount:1,createdAt:Date.now(),updatedAt:Date.now()});
+ const a=await h.seedData(kind==='memory'?'memories':'facts',owner,'first',kind==='memory'?{conversationRef:{conversationId:'canon',messageIds:['anchor']}}:{sourceRef:{conversationId:'canon',messageIds:['anchor']}});const b=await h.seedData(kind==='memory'?'memories':'facts',owner,'second');
+ async function invalidate(){if(mode==='late-message')await h.db.patch(conv,{messages:[],messageCount:0});else await h.db.insert('runtimeAuthTombstones',{tenantId:'tenant-a',memorySpaceId:'space-a',resourceType:'conversation',resourceId:'canon',deletedAt:Date.now()});}
+ if(mode==='early-control')await invalidate();const before=structuredClone(h.db.rows);h.db.attemptedWrites=[];let injected=false;let hashes=0;let laterCandidateReached=false;const digest=crypto.subtle.digest;
+ crypto.subtle.digest=async(a:any,b:any)=>{hashes++;if(new TextDecoder().decode(b).includes('private second')){laterCandidateReached=true;if(!injected && mode.startsWith('late')){injected=true;await invalidate();}}return await digest.call(crypto.subtle,a,b);};
+ let actual:any;try{actual=await outcome(h,()=>h.invoke(path==='list'?(kind==='memory'?memories.list:facts.list):(kind==='memory'?memories.fetchMemoriesByIds:facts.fetchFactsByIds),{memorySpaceId:'space-a',reference:owner,ids:[a,b]}),before);}finally{crypto.subtle.digest=digest;}
+ const expectedSuccess=mode==='none';const reached=mode.startsWith('late')?injected:true;const matched=reached && actual.success===expectedSuccess && (actual.success?actual.result.length===2:actual.rolledBack && actual.code==='FORBIDDEN');
+ results.push({name:`${kind}-${path}-${mode}`,expectedSuccess,injected,laterCandidateReached,hashes,matched,...actual});
+}
+for(const path of ['list','internal'] as const)for(const mode of ['none','early-version','late-version','late-peer-control'] as const){
+ const h=harness();const owner=await h.provisionScope();const peer=await h.seedData('facts',owner,'peer');const a=await h.seedData('memories',owner,'first',{factsRef:{factId:'peer',version:1}});const b=await h.seedData('memories',owner,'second');
+ const change=async()=>mode.endsWith('control')?await h.db.insert('runtimeAuthTombstones',{tenantId:'tenant-a',memorySpaceId:'space-a',resourceType:'fact',resourceId:'peer',deletedAt:Date.now()}):await h.db.patch(peer,{version:99});if(mode==='early-version')await change();const before=structuredClone(h.db.rows);h.db.attemptedWrites=[];let injected=false;const digest=crypto.subtle.digest;
+ crypto.subtle.digest=async(a:any,b:any)=>{if(!injected && mode.startsWith('late') && new TextDecoder().decode(b).includes('private second')){injected=true;await change();}return await digest.call(crypto.subtle,a,b);};let actual:any;try{actual=await outcome(h,()=>h.invoke(path==='list'?memories.list:memories.fetchMemoriesByIds,{memorySpaceId:'space-a',reference:owner,ids:[a,b]}),before);}finally{crypto.subtle.digest=digest;}
+ const expectedSuccess=mode==='none';results.push({name:`memory-${path}-linked-fact-${mode}`,expectedSuccess,injected,matched:(mode.startsWith('late')?injected:true)&&actual.success===expectedSuccess &&(actual.success?actual.result.length===2:actual.rolledBack&&actual.code==='FORBIDDEN'),...actual});
+}
+for(const readable of [false,true])for(const mode of ['none','late-valid-source-replacement','late-corrupt-source'] as const){
+ const h=harness();const owner=await h.provisionScope({capabilities:readable?['write','read']:['write']});await h.seedData('memories',owner,'first');await h.seedData('memories',owner,'second');const source=h.db.rows.get('runtimeMemorySources')![0];const content='Replacement valid canonical content';const contentHash=await semanticHash(content);const before=structuredClone(h.db.rows);h.db.attemptedWrites=[];const patch=h.db.patch.bind(h.db);let injected=false;
+ h.db.patch=async(...args:any[])=>{await (patch as any)(...args);const id=typeof args[1]==='string'?args[1]:args[0];if(!injected && mode!=='none' && String(id).startsWith('memories/')){injected=true;await patch(source._id,{content,contentHash:mode==='late-corrupt-source'?'bad':contentHash});}};
+ const actual=await outcome(h,()=>h.invoke(memories.updateMany,{memorySpaceId:'space-a',importance:77}),before);const expectedSuccess=mode==='none';const successPayload=readable?{updated:2,memoryIds:['first','second']}:{updated:2,mutationReceipt:true};
+ const matched=(mode==='none'||injected)&&actual.success===expectedSuccess&&(actual.success?isDeepStrictEqual(actual.result,successPayload):actual.code==='STALE_SOURCE'&&actual.rolledBack);
+ results.push({name:`updateMany-readable-${readable}-${mode}`,expectedSuccess,injected,matched,...actual,currentSources:h.db.rows.get('runtimeMemorySources'),currentMemories:h.db.rows.get('memories')});
+}
+const summary={total:results.length,matched:results.filter(v=>v.matched).length,failedExpectations:results.filter(v=>!v.matched).map(v=>v.name)};
+console.log(JSON.stringify({observedAt:new Date().toISOString(),node:process.version,summary,results},null,2));process.exitCode=summary.failedExpectations.length?1:0;

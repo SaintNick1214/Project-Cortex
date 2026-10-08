@@ -6,7 +6,7 @@
  */
 
 import type { ConvexClient } from "convex/browser";
-import { api } from "../../convex-dev/_generated/api";
+import { api } from "../common/backendApi";
 import type { ResilienceLayer } from "../resilience";
 import type { AuthContext } from "../auth/types";
 import type { Id } from "../../convex-dev/_generated/dataModel";
@@ -16,6 +16,8 @@ import type {
   eventReceipt,
 } from "../../convex-dev/lib/factHistoryProvenance";
 import { makeFunctionReference } from "convex/server";
+import { api as publicApi } from "../../convex-dev/_generated/api";
+import { isDeploymentOperatorClient } from "../common/deploymentOperator";
 import { scopedPages, resolveFactScope, type ScopedPage } from "./discovery";
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -148,6 +150,25 @@ export interface SupersessionChainEntry {
   supersededBy: string | null;
   timestamp: number;
   reason?: string;
+}
+
+/**
+ * Public history writes and maintenance require trusted backend execution.
+ * This static browser-safe error contains no caller input or private metadata.
+ */
+export class FactHistoryCapabilityError extends Error {
+  readonly version = 1;
+  readonly code = "CAPABILITY_UNAVAILABLE";
+  readonly retryable = false;
+  readonly outcome = "not_dispatched";
+
+  constructor() {
+    super(
+      "Fact history writes and maintenance require trusted backend execution. " +
+        "No operation was dispatched by this client.",
+    );
+    this.name = "FactHistoryCapabilityError";
+  }
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -342,6 +363,7 @@ export class FactHistoryService {
       : operation();
   }
   async log(params: LogEventParams): Promise<{ eventId: string }> {
+    if (!isDeploymentOperatorClient(this.client)) throw new FactHistoryCapabilityError();
     const operationId = params.operationId ?? crypto.randomUUID();
     return this.executeWithResilience(
       () =>
@@ -356,6 +378,7 @@ export class FactHistoryService {
   async *pages(
     selector: HistorySelector = {},
   ): AsyncGenerator<FactChangeEvent[]> {
+    if (!isDeploymentOperatorClient(this.client)) throw new FactHistoryCapabilityError();
     validateTimeRange(selector);
     const args = { ...selector, tenantId: this.scope(selector.tenantId) };
     for await (const page of scopedPages<FactChangeEvent>(
@@ -377,6 +400,7 @@ export class FactHistoryService {
     limit = 100,
     selector: HistorySelector = {},
   ): Promise<FactChangeEvent[]> {
+    if (!isDeploymentOperatorClient(this.client)) return this.executeWithResilience(() => this.client.query(publicApi.factHistory.getHistory, { factId, limit, tenantId: this.scope(selector.tenantId), memorySpaceId: selector.memorySpaceId }), "factHistory:getHistory") as Promise<FactChangeEvent[]>;
     if (!Number.isInteger(limit) || limit < 1)
       throw new Error("FACT_HISTORY_INVALID_PAGE_SIZE");
     const result: FactChangeEvent[] = [];
@@ -397,6 +421,7 @@ export class FactHistoryService {
     );
   }
   async getChanges(filter: ChangeFilter): Promise<FactChangeEvent[]> {
+    if (!isDeploymentOperatorClient(this.client)) return this.executeWithResilience(() => this.client.query(publicApi.factHistory.getChangesByTimeRange, { memorySpaceId: filter.memorySpaceId, tenantId: this.scope(filter.tenantId), after: optionalTimestamp(filter.after), before: optionalTimestamp(filter.before), action: filter.action, limit: filter.limit, offset: filter.offset }), "factHistory:getChanges") as Promise<FactChangeEvent[]>;
     const result: FactChangeEvent[] = [];
     let skip = filter.offset ?? 0;
     const limit = filter.limit ?? 100;
@@ -425,6 +450,7 @@ export class FactHistoryService {
     return result;
   }
   async countByAction(memorySpaceId: string, after?: Date, before?: Date) {
+    if (!isDeploymentOperatorClient(this.client)) return this.executeWithResilience(() => this.client.query(publicApi.factHistory.countByAction, { memorySpaceId, tenantId: this.scope(), after: optionalTimestamp(after), before: optionalTimestamp(before) }), "factHistory:countByAction");
     const counts = { CREATE: 0, UPDATE: 0, SUPERSEDE: 0, DELETE: 0, total: 0 };
     for await (const page of this.pages({
       memorySpaceId,
@@ -441,6 +467,7 @@ export class FactHistoryService {
     memorySpaceId: string,
     hours = 24,
   ): Promise<ActivitySummary> {
+    if (!isDeploymentOperatorClient(this.client)) return this.executeWithResilience(() => this.client.query(publicApi.factHistory.getActivitySummary, { memorySpaceId, tenantId: this.scope(), hours }), "factHistory:getActivitySummary") as Promise<ActivitySummary>;
     if (!Number.isFinite(hours) || hours <= 0)
       throw new Error("FACT_HISTORY_INVALID_TIME_RANGE");
     const now = Date.now(),
@@ -489,6 +516,7 @@ export class FactHistoryService {
     return receipt ? freeze(receipt) : null;
   }
   async retryHistory(receipt: HistoryReceipt): Promise<{ eventIds: string[] }> {
+    if (!isDeploymentOperatorClient(this.client)) throw new FactHistoryCapabilityError();
     freeze(receipt);
     const eventIds: string[] = [];
     for (const event of receipt.events) {
@@ -518,6 +546,7 @@ export class FactHistoryService {
     factId: string,
     selector: HistorySelector = {},
   ): Promise<SupersessionChainEntry[]> {
+    if (!isDeploymentOperatorClient(this.client)) return this.executeWithResilience(() => this.client.query(publicApi.factHistory.getSupersessionChain, { factId, tenantId: this.scope(selector.tenantId) }), "factHistory:getSupersessionChain") as Promise<SupersessionChainEntry[]>;
     const tenantId = this.scope(selector.tenantId);
     const initial: FactChangeEvent[] = [];
     for await (const page of this.pages({ ...selector, tenantId, factId }))
@@ -630,6 +659,7 @@ export class FactHistoryService {
     selector: HistorySelector & { olderThan?: number; limit?: number },
     numItems = 256,
   ) {
+    if (!isDeploymentOperatorClient(this.client)) throw new FactHistoryCapabilityError();
     validateTimeRange(selector);
     let deleted = 0;
     try {
@@ -652,16 +682,16 @@ export class FactHistoryService {
     }
     return { deleted };
   }
-  deleteByFactId(factId: string) {
+  async deleteByFactId(factId: string) {
     return this.deletePages("deleteByFactId", { factId });
   }
-  deleteByUserId(userId: string) {
+  async deleteByUserId(userId: string) {
     return this.deletePages("deleteByUserId", { userId });
   }
-  deleteByMemorySpace(memorySpaceId: string) {
+  async deleteByMemorySpace(memorySpaceId: string) {
     return this.deletePages("deleteByMemorySpace", { memorySpaceId });
   }
-  deleteByOwner(ownerUserId: string, memorySpaceId?: string) {
+  async deleteByOwner(ownerUserId: string, memorySpaceId?: string) {
     return this.deletePages("deleteByOwner", { ownerUserId, memorySpaceId });
   }
   async purgeOldEvents(
@@ -669,6 +699,7 @@ export class FactHistoryService {
     memorySpaceId?: string,
     limit?: number,
   ): Promise<{ deleted: number; remaining: number }> {
+    if (!isDeploymentOperatorClient(this.client)) throw new FactHistoryCapabilityError();
     const cutoff = timestamp(olderThan);
     const numItems = batchHint(limit);
     const result = await this.deletePages(

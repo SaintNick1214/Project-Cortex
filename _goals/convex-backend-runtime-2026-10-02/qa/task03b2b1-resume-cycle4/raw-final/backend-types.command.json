@@ -1,0 +1,22 @@
+{
+  "name": "backend-types",
+  "command": [
+    "npm",
+    "exec",
+    "--yes",
+    "--package=npm@12.2.0",
+    "--",
+    "npm",
+    "exec",
+    "--",
+    "node",
+    "/workspace/Project-Cortex/work/resume/registry/candidate/node_modules/typescript/bin/tsc",
+    "-p",
+    "convex-dev/tsconfig.json",
+    "--noEmit"
+  ],
+  "cwd": "/workspace/Project-Cortex/work/resume/registry/candidate",
+  "utcStart": "2026-10-03T19:50:38.791897+00:00",
+  "utcEnd": "2026-10-03T19:50:50.552371+00:00",
+  "exitCode": 0
+}

@@ -1,0 +1,372 @@
+/** Backend-only governed native middleware. No caller is wired and the actual trust root is empty.
+ * Production composition MUST supply a private durable terminal sink; no missing RPC is invented.
+ * Tools/schema/Responses and typed native replay remain later qualification gates. */
+import { convexGateway } from "@convex-dev/ai-sdk-provider";
+import { wrapEmbeddingModel, wrapLanguageModel } from "ai";
+import type { EmbeddingModelV4, EmbeddingModelV4CallOptions, EmbeddingModelV4Result, LanguageModelV4, LanguageModelV4CallOptions, LanguageModelV4StreamPart, LanguageModelV4Usage } from "@ai-sdk/provider";
+import type { RuntimeAuthorityReference } from "../src/auth/verified";
+import { canonicalModelJson, validateModelRequest } from "../src/domain/model-policy";
+import type { ModelCallRequest, ModelOperationKey, ModelPolicySnapshotV1 } from "../src/domain/model-policy";
+import { assertEmbeddingVector, assertProfileMatches, DEFAULT_EMBEDDING_PROFILE, normalizeSourceText } from "../src/domain/profile";
+import type { QualifiedDispatchEvidence } from "./runtimeModelPolicyBootstrap";
+import type { Id } from "./_generated/dataModel";
+
+type AttemptId = Id<"runtimeModelAttempts">;
+type OperationId = Id<"runtimeModelOperations">;
+type Source = { sourceId: string; sourceEventId: string; sourceRevision: number; contentHash: string };
+export interface GatewayBinding {
+  reference: RuntimeAuthorityReference; operationKey: ModelOperationKey; runBudgetId: string;
+  semanticId: string; ordinal: number; source?: Source; parentOperationId?: OperationId;
+}
+export interface GatewayResolution {
+  snapshot: ModelPolicySnapshotV1; dispatchEvidence: QualifiedDispatchEvidence;
+  storageLimits: { canonicalBytes: number; privateResultBytes: number; embeddingValuesPerCall: 1 };
+}
+type Reserved = { status: "reserved"; operationId: OperationId; attemptId: AttemptId; snapshot: ModelPolicySnapshotV1; requestCanonical: string };
+export type GatewayAdmission = Reserved | { status: "replay"; operationId: OperationId; resultCanonical: string }
+  | { status: "inflight" | "uncertain"; operationId: OperationId; attemptId: AttemptId; replayAllowed?: false };
+export interface GatewayLedgerPort {
+  resolve(args: Pick<GatewayBinding, "reference" | "operationKey" | "runBudgetId" | "source">): Promise<GatewayResolution>;
+  admit(args: GatewayBinding & { requestCanonical: string }): Promise<GatewayAdmission>;
+  checkpoint(args: { reference: RuntimeAuthorityReference; attemptId: AttemptId; requestCanonical: string }): Promise<
+    { dispatchPermit: true; dispatchIdentity: string; snapshot: ModelPolicySnapshotV1; requestCanonical: string }
+    | { dispatchPermit: false; state: string; replayAllowed: false }>;
+  markVisible(args: { reference: RuntimeAuthorityReference; attemptId: AttemptId; outputVisible: boolean; toolInputVisible: boolean; toolResultVisible: boolean; toolEffectCommitted: boolean }): Promise<{ recorded: true }>;
+  settle(args: { reference: RuntimeAuthorityReference; attemptId: AttemptId; receiptCanonical: string }): Promise<{
+    state: string; resultWithheld?: boolean; settledCostUnits?: number; overrun?: boolean; replayAllowed?: false }>;
+}
+/** Server code composition only: never a public JSON argument, tenant capability or admin key.
+ * capture must durably store sanitized charge evidence independently of delivery authority,
+ * deduplicate exact receipts, and arrange original-window no-delivery reconciliation.
+ * Native capture/outbox integration is PENDING, so a production caller cannot yet be wired. */
+export interface DurableTerminalEvidenceSink {
+  capture(evidence: { attemptId: AttemptId; dispatchIdentity: string; receiptCanonical: string }): Promise<{ evidenceId: string }>;
+}
+export interface GatewayComposition { ledger: GatewayLedgerPort; terminalSink: DurableTerminalEvidenceSink; now?: () => number }
+export class GatewayDispatchError extends Error {
+  constructor(readonly code: string) { super("Governed model call did not complete for delivery."); this.name = "GatewayDispatchError"; }
+}
+export interface GatewayLifecycle {
+  readonly signal: AbortSignal;
+  /** Observer unsubscribe alone never aborts the owned inference/drain. */
+  cancel(): void;
+  /** The execution owner MUST await this before completing its action. */
+  complete(): Promise<void>;
+  /** Explicit narrow authorized replay payload; never a fabricated native provider result. */
+  consumeReplay(): Promise<{ text: string } | { profile: typeof DEFAULT_EMBEDDING_PROFILE; vectors: number[][] } | undefined>;
+}
+function fail(code: string): never { throw new GatewayDispatchError(code); }
+const utf8 = (text: string): number => {
+  for (const point of text) { const n = point.codePointAt(0)!; if (n >= 0xd800 && n <= 0xdfff) fail("INVALID_UNICODE"); }
+  return new TextEncoder().encode(text).length;
+};
+const count = (value: unknown): value is number => Number.isSafeInteger(value) && (value as number) >= 0;
+/** Capture descriptors before projection; optional undefined SDK fields are only allowed by name. */
+function record(input: unknown, keys: readonly string[]): Record<string, unknown> {
+  if (!input || typeof input !== "object" || Array.isArray(input)) return fail("INVALID_NATIVE_REQUEST");
+  const prototype: unknown = Object.getPrototypeOf(input);
+  if (prototype !== Object.prototype && prototype !== null) fail("INVALID_NATIVE_REQUEST");
+  const result: Record<string, unknown> = Object.create(null) as Record<string, unknown>;
+  for (const key of Reflect.ownKeys(input)) {
+    if (typeof key !== "string" || !keys.includes(key)) fail("UNSUPPORTED_NATIVE_FIELD");
+    const d = Object.getOwnPropertyDescriptor(input, key)!;
+    if (!d.enumerable || !("value" in d)) fail("INVALID_NATIVE_REQUEST");
+    if (d.value !== undefined) Object.defineProperty(result, key, { value: d.value, enumerable: true });
+  }
+  return result;
+}
+function arrayValues(input: unknown): unknown[] {
+  if (!Array.isArray(input) || Object.getPrototypeOf(input) !== Array.prototype) fail("INVALID_NATIVE_REQUEST");
+  const descriptors = Object.getOwnPropertyDescriptors(input);
+  if (Reflect.ownKeys(input).some((key) => typeof key !== "string" || (key !== "length" && !/^(0|[1-9]\d*)$/.test(key)))) fail("INVALID_NATIVE_REQUEST");
+  const values: unknown[] = [];
+  for (let i = 0; i < input.length; i++) { const d = descriptors[String(i)]; if (!d || !d.enumerable || !("value" in d)) fail("INVALID_NATIVE_REQUEST"); values.push(d.value); }
+  if (Object.keys(descriptors).length !== values.length + 1) fail("INVALID_NATIVE_REQUEST");
+  return values;
+}
+function detached<T>(value: T): T { return JSON.parse(canonicalModelJson(value)) as T; }
+function exactJSON(encoded: string, maximum: number): unknown {
+  if (utf8(encoded) > maximum) fail("RESULT_BOUND_EXCEEDED");
+  const value: unknown = JSON.parse(encoded);
+  if (canonicalModelJson(value) !== encoded) fail("CANONICAL_MISMATCH");
+  return value;
+}
+function json(encoded: unknown, maximum: number): string {
+  const result = canonicalModelJson(encoded); if (utf8(result) > maximum) fail("RESULT_BOUND_EXCEEDED"); return result;
+}
+/** Outward microUSD decimal: exact decimal strings stay exact; IEEE numbers are rounded UP
+ * from their upper adjacent representable value, then to integer microUSD. No exponent/NaN. */
+export function conservativeUsdDecimal(value: unknown): string | undefined {
+  if (typeof value === "string") return /^\d+(?:\.\d+)?$/.test(value) && value.length <= 80 ? value : undefined;
+  if (typeof value !== "number" || !Number.isFinite(value) || value < 0 || Object.is(value, -0)) return undefined;
+  if (value === 0) return "0";
+  const view = new DataView(new ArrayBuffer(8)); view.setFloat64(0, value);
+  const bits = view.getBigUint64(0) + 1n; const exponent = Number((bits >> 52n) & 0x7ffn);
+  if (exponent === 0x7ff) return undefined;
+  const significand = (bits & ((1n << 52n) - 1n)) + (exponent ? 1n << 52n : 0n);
+  const power = (exponent || 1) - 1023 - 52;
+  const numerator = significand * 1_000_000n * (power >= 0 ? 1n << BigInt(power) : 1n);
+  const denominator = power < 0 ? 1n << BigInt(-power) : 1n;
+  const units = (numerator + denominator - 1n) / denominator;
+  if (units > BigInt(Number.MAX_SAFE_INTEGER)) return undefined;
+  return `${units / 1_000_000n}.${(units % 1_000_000n).toString().padStart(6, "0")}`;
+}
+function proofFor(resolution: GatewayResolution, now: number): void {
+  const { snapshot: s, dispatchEvidence: p, storageLimits: limits } = resolution;
+  if (p.receiptId !== s.qualificationReceiptId || p.modelId !== s.modelId || p.nativeInterface !== s.nativeInterface
+    || p.providerVersion !== "0.2.1" || p.priceRevision !== s.pins.priceRevision || p.boundRevision !== s.pins.boundRevision
+    || p.checkedAt > now || p.expiresAt <= now || p.terminalProof !== "provider-terminal-v1"
+    || ![p.evidenceHash, p.inputBound.nativeTransformHash, p.inputBound.documentHash, p.inputBound.proofHash, p.resultBound.proofHash].every((h) => /^[a-f0-9]{64}$/.test(h))
+    || p.inputBound.revision !== 1 || !count(p.resultBound.maximumOutputTokens) || !count(p.resultBound.maximumPrivateResultBytes)
+    || p.resultBound.maximumPrivateResultBytes < 1 || p.resultBound.maximumPrivateResultBytes > 60_000
+    || !count(limits.canonicalBytes) || limits.canonicalBytes < 1 || !count(limits.privateResultBytes) || limits.privateResultBytes < 1 || limits.canonicalBytes > 180_000 || limits.privateResultBytes > 60_000 || limits.embeddingValuesPerCall !== 1 || p.resultBound.maximumEmbeddingValues !== 1) fail("CAPABILITY_UNAVAILABLE");
+  if (s.nativeInterface === "chat" && p.inputBound.ruleId === "plain-chat-cookbook-utf8-v1" && p.inputBound.featureEnvelope === "plain-chat-v1") return;
+  if (s.nativeInterface === "embedding" && p.inputBound.ruleId === "default-embedding-utf8-v1" && p.inputBound.featureEnvelope === "default-embedding-v1") {
+    assertProfileMatches(s.semanticProfile!); return;
+  }
+  fail("CAPABILITY_UNAVAILABLE");
+}
+function requestBase(s: ModelPolicySnapshotV1, binding: GatewayBinding): ModelCallRequest {
+  return { semanticId: binding.semanticId, childCallId: "pending-server-identity", texts: [], inputTokens: 1, outputTokens: 0,
+    toolSteps: 0, timeoutMs: s.limits.timeoutMs, reservationUnits: s.costBound.maximumCostUnits, tools: [], options: { maxRetries: 0 },
+    promptVersion: s.pins.promptVersion, schemaVersion: s.pins.schemaVersion, extractionVersion: s.pins.extractionVersion, toolRegistryVersion: s.pins.toolRegistryVersion };
+}
+const standardKeys = ["prompt", "maxOutputTokens", "temperature", "topP", "seed", "stopSequences", "topK", "presencePenalty", "frequencyPenalty", "responseFormat", "tools", "toolChoice", "headers", "providerOptions", "reasoning", "includeRawChunks", "abortSignal"];
+function languageParams(input: LanguageModelV4CallOptions, s: ModelPolicySnapshotV1, p: QualifiedDispatchEvidence, binding: GatewayBinding, signal: AbortSignal): { params: LanguageModelV4CallOptions; request: ModelCallRequest } {
+  const native = record(input, standardKeys);
+  for (const key of ["topK", "presencePenalty", "frequencyPenalty", "tools", "toolChoice", "headers", "providerOptions", "reasoning", "includeRawChunks"]) if (key in native) fail("UNSUPPORTED_NATIVE_FIELD");
+  if (native.abortSignal !== undefined && native.abortSignal !== signal) fail("UNTRUSTED_ABORT_SIGNAL");
+  if (native.responseFormat !== undefined && canonicalModelJson(native.responseFormat) !== '{"type":"text"}') fail("CAPABILITY_UNAVAILABLE");
+  if (!Array.isArray(native.prompt)) fail("INVALID_NATIVE_REQUEST");
+  // Canonical validation catches sparse/custom-iterator arrays BEFORE map/iteration.
+  const messages: NonNullable<ModelCallRequest["messages"]> = arrayValues(native.prompt).map((message: unknown) => {
+    const m = record(message, ["role", "content", "providerOptions"]); if ("providerOptions" in m) fail("UNSUPPORTED_NATIVE_FIELD");
+    if (!["system", "user", "assistant"].includes(m.role as string)) fail("CAPABILITY_UNAVAILABLE");
+    let text: unknown;
+    if (m.role === "system") text = m.content;
+    else {
+      const parts = arrayValues(m.content); if (parts.length !== 1) fail("CAPABILITY_UNAVAILABLE");
+      const part = record(parts[0], ["type", "text", "providerOptions"]);
+      if (part.type !== "text" || "providerOptions" in part) fail("CAPABILITY_UNAVAILABLE"); text = part.text;
+    }
+    if (typeof text !== "string") fail("INVALID_NATIVE_REQUEST"); utf8(text);
+    return { role: m.role as "system" | "user" | "assistant", parts: [{ type: "text", text: normalizeSourceText(text) }] };
+  });
+  if (!count(native.maxOutputTokens) || native.maxOutputTokens === 0 || native.maxOutputTokens > p.resultBound.maximumOutputTokens) fail("OUTPUT_BOUND_EXCEEDED");
+  const request = requestBase(s, binding); request.messages = messages; request.texts = messages.map((m) => m.parts[0]!.type === "text" ? m.parts[0]!.text : "");
+  request.inputTokens = 3 + messages.reduce((n, m, index) => n + 3 + utf8(m.role) + utf8(request.texts[index]!), 0);
+  request.outputTokens = native.maxOutputTokens;
+  for (const key of ["temperature", "topP", "seed", "stopSequences"] as const) if (native[key] !== undefined) Object.assign(request.options, { [key]: detached(native[key]) });
+  const checked = validateModelRequest(s, request).request;
+  return { request: detached(checked), params: nativeLanguage(checked, signal) };
+}
+function nativeLanguage(request: Readonly<ModelCallRequest>, signal: AbortSignal): LanguageModelV4CallOptions {
+  return { prompt: request.messages!.map((m) => m.role === "system" ? { role: "system", content: (m.parts[0] as { text: string }).text }
+    : { role: m.role as "user" | "assistant", content: [{ type: "text", text: (m.parts[0] as { text: string }).text }] }),
+  maxOutputTokens: request.outputTokens, ...request.options.temperature !== undefined ? { temperature: request.options.temperature } : {},
+  ...request.options.topP !== undefined ? { topP: request.options.topP } : {}, ...request.options.seed !== undefined ? { seed: request.options.seed } : {},
+  ...request.options.stopSequences ? { stopSequences: [...request.options.stopSequences] } : {}, abortSignal: signal };
+}
+function nativeIdentity(params: LanguageModelV4CallOptions): string { const { abortSignal: _signal, includeRawChunks: _raw, ...data } = params; return canonicalModelJson(data); }
+function usageOf(raw: Record<string, unknown>): Record<string, number> {
+  const result: Record<string, number> = {};
+  for (const [key, field] of [["prompt_tokens", "inputTokens"], ["completion_tokens", "outputTokens"], ["total_tokens", "totalTokens"]]) if (count(raw[key!])) result[field!] = raw[key!] as number;
+  const prompt = raw.prompt_tokens_details; const completion = raw.completion_tokens_details;
+  if (prompt && typeof prompt === "object" && count((prompt as Record<string, unknown>).cached_tokens)) result.cachedInputTokens = (prompt as { cached_tokens: number }).cached_tokens;
+  if (completion && typeof completion === "object" && count((completion as Record<string, unknown>).reasoning_tokens)) result.reasoningTokens = (completion as { reasoning_tokens: number }).reasoning_tokens;
+  return result;
+}
+function nativeUsage(raw: Record<string, unknown> | undefined): LanguageModelV4Usage {
+  const u = raw ? usageOf(raw) : {};
+  return { inputTokens: { total: u.inputTokens, noCache: undefined, cacheRead: u.cachedInputTokens, cacheWrite: undefined }, outputTokens: { total: u.outputTokens, text: undefined, reasoning: u.reasoningTokens } };
+}
+const terminalReasons = ["stop", "length", "content_filter"];
+/** Generated provider bodies are untrusted, descriptor-safe detached JSON before observation. */
+function providerJSON(input: unknown): Record<string, unknown> | undefined {
+  try { const value: unknown = typeof input === "string" ? JSON.parse(input) : detached(input);
+    if (!value || typeof value !== "object" || Array.isArray(value)) return undefined; return value as Record<string, unknown>;
+  } catch { return undefined; }
+}
+export async function createGovernedGatewayModel(composition: GatewayComposition, inputBinding: GatewayBinding): Promise<{ model: LanguageModelV4 | EmbeddingModelV4; lifecycle: GatewayLifecycle }> {
+  requireSink(composition);
+  const binding = detached(inputBinding); const resolution = await composition.ledger.resolve(resolveArgs(binding)); proofFor(resolution, (composition.now ?? Date.now)());
+  return resolution.snapshot.nativeInterface === "embedding"
+    ? governGatewayEmbeddingModel(convexGateway.embeddingModel(resolution.snapshot.modelId), composition, binding, resolution)
+    : governGatewayLanguageModel(convexGateway(resolution.snapshot.modelId), composition, binding, resolution);
+}
+function resolveArgs(binding: GatewayBinding): Pick<GatewayBinding, "reference" | "operationKey" | "runBudgetId" | "source"> {
+  return { reference: binding.reference, operationKey: binding.operationKey, runBudgetId: binding.runBudgetId, ...(binding.source ? { source: binding.source } : {}) };
+}
+function requireSink(composition: GatewayComposition): void { if (!composition.terminalSink || typeof composition.terminalSink.capture !== "function") fail("DURABLE_TERMINAL_SINK_REQUIRED"); }
+function stateFor(composition: GatewayComposition, inputBinding: GatewayBinding, inputResolution: GatewayResolution) {
+  requireSink(composition); const binding = detached(inputBinding); const resolution = detached(inputResolution);
+  proofFor(resolution, (composition.now ?? Date.now)());
+  if (!count(binding.ordinal) || !binding.semanticId || binding.semanticId.length > 256) fail("INVALID_BINDING");
+  const controller = new AbortController(); const tasks: Promise<void>[] = []; let replay: string | undefined;
+  const capture = composition.terminalSink.capture.bind(composition.terminalSink);
+  const lifecycle: GatewayLifecycle = { signal: controller.signal, cancel: () => controller.abort(), complete: async () => { await Promise.all(tasks); }, consumeReplay: async () => {
+    if (!replay) return undefined; await composition.ledger.resolve(resolveArgs(binding));
+    const result = providerJSON(exactJSON(replay, resolution.storageLimits.privateResultBytes));
+    if (!result) fail("INVALID_REPLAY");
+    if (resolution.snapshot.nativeInterface === "chat") { const item = record(result, ["text"]); if (typeof item.text !== "string" || !item.text) fail("INVALID_REPLAY"); return { text: item.text }; }
+    const item = record(result, ["profile", "vectors"]); assertProfileMatches(item.profile as typeof DEFAULT_EMBEDDING_PROFILE);
+    if (!Array.isArray(item.vectors) || item.vectors.length !== 1) fail("INVALID_REPLAY"); item.vectors.forEach((v: number[]) => assertEmbeddingVector(v));
+    return { profile: DEFAULT_EMBEDDING_PROFILE, vectors: item.vectors as number[][] };
+  } };
+  async function admit(request: ModelCallRequest): Promise<Reserved & { dispatchIdentity: string }> {
+    proofFor(resolution, (composition.now ?? Date.now)());
+    if (controller.signal.aborted) fail("RUN_CANCELLED");
+    const incoming = json(request, resolution.storageLimits.canonicalBytes);
+    const admitted = await composition.ledger.admit({ ...binding, requestCanonical: incoming });
+    if (admitted.status !== "reserved") { if (admitted.status === "replay") replay = admitted.resultCanonical; fail(admitted.status === "replay" ? "REPLAY_AVAILABLE" : "UNCERTAIN_OR_INFLIGHT"); }
+    const flat = exactJSON(admitted.requestCanonical, resolution.storageLimits.canonicalBytes);
+    const validated = validateModelRequest(admitted.snapshot, flat).request;
+    const comparable = { ...validated, semanticId: request.semanticId, childCallId: request.childCallId };
+    if (canonicalModelJson(comparable) !== canonicalModelJson(request) || canonicalModelJson(admitted.snapshot) !== canonicalModelJson(resolution.snapshot)) fail("ADMITTED_REQUEST_MISMATCH");
+    const permit = await composition.ledger.checkpoint({ reference: binding.reference, attemptId: admitted.attemptId, requestCanonical: admitted.requestCanonical });
+    if (!permit.dispatchPermit) fail("DISPATCH_NOT_PERMITTED");
+    if (permit.requestCanonical !== admitted.requestCanonical || canonicalModelJson(permit.snapshot) !== canonicalModelJson(admitted.snapshot)) fail("CHECKPOINT_MISMATCH");
+    if (controller.signal.aborted) fail("RUN_CANCELLED");
+    return { ...admitted, dispatchIdentity: permit.dispatchIdentity };
+  }
+  const visible = async (attempt: Reserved, outputVisible = false) => { await composition.ledger.markVisible({ reference: binding.reference, attemptId: attempt.attemptId, outputVisible, toolInputVisible: false, toolResultVisible: false, toolEffectCommitted: false }); };
+  async function terminal(attempt: Reserved & { dispatchIdentity: string }, raw: Record<string, unknown>, privateResult?: string): Promise<void> {
+    const id = raw.id; const actual = raw.model; const usage = providerJSON(raw.usage);
+    if (typeof id !== "string" || !id || id.length > 256 || actual !== resolution.snapshot.modelId) fail("UNQUALIFIED_TERMINAL");
+    const cost = resolution.dispatchEvidence.terminalCost === "gateway-aggregate-usd-v1" && usage ? conservativeUsdDecimal(usage.cost) : undefined;
+    const receipt = { version: 1, dispatchIdentity: attempt.dispatchIdentity, receiptId: id, modelId: resolution.snapshot.modelId, nativeInterface: resolution.snapshot.nativeInterface,
+      outcome: "confirmed", proof: "provider-terminal-v1", costSource: cost === undefined ? "unavailable" : "gateway-aggregate-usd-v1",
+      ...(cost !== undefined ? { aggregateCostUsd: cost } : {}), ...(usage ? { usage: usageOf(usage) } : {}), actualModel: actual };
+    const receiptCanonical = json(receipt, resolution.storageLimits.canonicalBytes);
+    let captured: { evidenceId: string };
+    try { captured = await capture({ attemptId: attempt.attemptId, dispatchIdentity: attempt.dispatchIdentity, receiptCanonical }); }
+    catch { return fail("TERMINAL_CAPTURE_PENDING"); }
+    if (!captured?.evidenceId || typeof captured.evidenceId !== "string") fail("TERMINAL_CAPTURE_PENDING");
+    let settled: Awaited<ReturnType<GatewayLedgerPort["settle"]>>;
+    try { settled = await composition.ledger.settle({ reference: binding.reference, attemptId: attempt.attemptId,
+      receiptCanonical: json({ ...receipt, ...(privateResult ? { privateResultCanonical: privateResult } : {}) }, resolution.storageLimits.canonicalBytes) }); }
+    catch { return fail("TERMINAL_RECONCILIATION_PENDING"); }
+    if (settled.overrun) fail("QUALIFICATION_OVERRUN");
+    if (settled.state !== "settled" || settled.resultWithheld !== false) fail("TERMINAL_RESULT_WITHHELD");
+  }
+  return { binding, resolution, controller, lifecycle, tasks, admit, visible, terminal };
+}
+/** Native test seams accept ONLY the official Gateway provider identity, never alternate routing.
+ * Production callers use createGovernedGatewayModel; injected-fetch models are offline fixtures. */
+export function governGatewayLanguageModel(model: LanguageModelV4, composition: GatewayComposition, binding: GatewayBinding, resolution: GatewayResolution): { model: LanguageModelV4; lifecycle: GatewayLifecycle } {
+  const state = stateFor(composition, binding, resolution);
+  if (resolution.snapshot.nativeInterface !== "chat" || model.modelId !== resolution.snapshot.modelId || model.provider !== "convexGateway.chat") fail("MODEL_IDENTITY_MISMATCH");
+  const input = new WeakMap<object, ModelCallRequest>();
+  const wrapped = wrapLanguageModel({ model, middleware: { specificationVersion: "v4",
+    transformParams: async ({ params, type }) => { const normalized = languageParams(params, state.resolution.snapshot, state.resolution.dispatchEvidence, state.binding, state.controller.signal);
+      if (type === "stream") normalized.params.includeRawChunks = true; input.set(normalized.params, normalized.request); return normalized.params; },
+    wrapGenerate: async ({ params, doGenerate }) => {
+      const request = input.get(params)!; const attempt = await state.admit(request);
+      const admitted = validateModelRequest(attempt.snapshot, exactJSON(attempt.requestCanonical, state.resolution.storageLimits.canonicalBytes)).request;
+      if (nativeIdentity(params) !== nativeIdentity(nativeLanguage(admitted, state.controller.signal))) fail("ADMITTED_REQUEST_MISMATCH");
+      let result: Awaited<ReturnType<LanguageModelV4["doGenerate"]>>;
+      const timer = setTimeout(() => state.controller.abort(), request.timeoutMs);
+      try { result = await doGenerate(); } catch { return fail("MODEL_INTERRUPTED"); } finally { clearTimeout(timer); }
+      const raw = providerJSON(result.response?.body); const choices = raw?.choices;
+      if (!raw || !Array.isArray(choices) || choices.length !== 1 || !terminalReasons.includes((choices[0] as { finish_reason?: string }).finish_reason ?? "")) fail("UNQUALIFIED_TERMINAL");
+      const text = result.content.filter((part) => part.type === "text").map((part) => part.text).join("");
+      let privateResult: string | undefined;
+      try { privateResult = json({ text }, Math.min(state.resolution.storageLimits.privateResultBytes, state.resolution.dispatchEvidence.resultBound.maximumPrivateResultBytes)); } catch { /* Capture observed charge even when output violated its bound. */ }
+      await state.terminal(attempt, raw, state.controller.signal.aborted ? undefined : privateResult);
+      if (!privateResult || state.controller.signal.aborted) fail("RESULT_BOUND_EXCEEDED");
+      if (!text || result.content.some((part) => !["text", "reasoning"].includes(part.type))) fail("UNSUPPORTED_MODEL_OUTPUT");
+      await state.visible(attempt, true);
+      return { content: [{ type: "text", text }], finishReason: { unified: (choices[0] as { finish_reason: string }).finish_reason === "length" ? "length" : (choices[0] as { finish_reason: string }).finish_reason === "content_filter" ? "content-filter" : "stop", raw: (choices[0] as { finish_reason: string }).finish_reason }, usage: nativeUsage(providerJSON(raw.usage)), warnings: [] };
+    },
+    wrapStream: async ({ params, doStream }) => {
+      const attempt = await state.admit(input.get(params)!);
+      const admitted = validateModelRequest(attempt.snapshot, exactJSON(attempt.requestCanonical, state.resolution.storageLimits.canonicalBytes)).request;
+      if (nativeIdentity(params) !== nativeIdentity(nativeLanguage(admitted, state.controller.signal))) fail("ADMITTED_REQUEST_MISMATCH");
+      let result: Awaited<ReturnType<LanguageModelV4["doStream"]>>;
+      try { result = await doStream(); } catch { return fail("MODEL_INTERRUPTED"); }
+      const reader = result.stream.getReader();
+      let observer: ReadableStreamDefaultController<LanguageModelV4StreamPart>; let observerClosed = false;
+      const output = new ReadableStream<LanguageModelV4StreamPart>({ start(c) { observer = c; }, cancel() { observerClosed = true; } }, { highWaterMark: 64 });
+      let text = ""; let deliveryError: GatewayDispatchError | undefined; let terminalReason: string | undefined; let rawTerminal: Record<string, unknown> | undefined; let id: string | undefined; let actualModel: string | undefined; let textStarted = false; let terminalAttempted = false;
+      const drain = async (): Promise<void> => {
+        let cancelTask: Promise<unknown> | undefined;
+        const timer = setTimeout(() => { state.controller.abort(); cancelTask = reader.cancel().catch(() => undefined); }, input.get(params)!.timeoutMs);
+        try {
+          while (true) {
+            const item = await reader.read(); if (item.done) break; const part = item.value;
+            if (part.type === "raw") {
+              const raw = providerJSON(part.rawValue); if (!raw || "error" in raw) continue;
+              if (typeof raw.id === "string") { if (id && id !== raw.id) fail("UNQUALIFIED_TERMINAL"); id = raw.id; }
+              if (raw.model !== undefined) { if (raw.model !== state.resolution.snapshot.modelId) fail("UNQUALIFIED_TERMINAL"); actualModel = raw.model as string; }
+              const choices = raw.choices; if (Array.isArray(choices) && choices.length === 1 && terminalReasons.includes((choices[0] as { finish_reason?: string }).finish_reason ?? "")) terminalReason = (choices[0] as { finish_reason: string }).finish_reason;
+              if (providerJSON(raw.usage)) rawTerminal = { id, model: actualModel, usage: raw.usage };
+              continue;
+            }
+            if (part.type === "error") fail("STREAM_INTERRUPTED");
+            if (part.type === "text-delta") {
+              text += part.delta;
+              if (utf8(text) > state.resolution.dispatchEvidence.resultBound.maximumPrivateResultBytes / 6) { deliveryError = new GatewayDispatchError("RESULT_BOUND_EXCEEDED"); text = ""; observerClosed = true; observer!.error(deliveryError); }
+              if (!deliveryError) {
+                try { await state.visible(attempt, !observerClosed); }
+                catch { deliveryError = new GatewayDispatchError("DELIVERY_AUTHORITY_REVOKED"); observerClosed = true; observer!.error(deliveryError); }
+              }
+              if (!observerClosed) { if ((observer!.desiredSize ?? 0) <= 0) { observerClosed = true; observer!.error(new GatewayDispatchError("OBSERVER_BUFFER_LIMIT")); } else { if (!textStarted) { observer!.enqueue({ type: "text-start", id: "governed-text" }); textStarted = true; } observer!.enqueue({ type: "text-delta", id: "governed-text", delta: part.delta }); } }
+            } else if (part.type === "finish") { /* Native EOF flush is NOT terminal proof. */ }
+            else if (!["reasoning-start", "reasoning-delta", "reasoning-end", "text-start", "text-end", "response-metadata", "stream-start"].includes(part.type)) fail("UNSUPPORTED_MODEL_OUTPUT");
+          }
+          if (!terminalReason || !rawTerminal) fail("UNQUALIFIED_TERMINAL");
+          terminalAttempted = true;
+          await state.terminal(attempt, rawTerminal, text && !deliveryError && !state.controller.signal.aborted ? json({ text }, state.resolution.dispatchEvidence.resultBound.maximumPrivateResultBytes) : undefined);
+          if (deliveryError) throw deliveryError;
+          if (!observerClosed) { if (textStarted) observer!.enqueue({ type: "text-end", id: "governed-text" }); observer!.enqueue({ type: "finish", finishReason: { unified: terminalReason === "length" ? "length" : terminalReason === "content_filter" ? "content-filter" : "stop", raw: terminalReason }, usage: nativeUsage(providerJSON(rawTerminal.usage)) }); observer!.close(); observerClosed = true; }
+        } catch (error) {
+          // Real terminal evidence may already be complete despite a later observer/authority failure.
+          if (!terminalAttempted && terminalReason && rawTerminal) {
+            try { await state.terminal(attempt, rawTerminal); } catch (terminalError) { error = terminalError; }
+          }
+          if (!observerClosed) { observerClosed = true; observer!.error(error instanceof GatewayDispatchError ? error : new GatewayDispatchError("STREAM_INTERRUPTED")); }
+          throw error instanceof GatewayDispatchError ? error : new GatewayDispatchError("STREAM_INTERRUPTED");
+        } finally { clearTimeout(timer); if (cancelTask) await cancelTask; try { await reader.cancel(); } catch { /* Checkpoint liability remains. */ } reader.releaseLock(); }
+      };
+      // Explicitly retained/joined task; never an unbounded tee. Attach rejection handler immediately
+      // so delayed owner complete() cannot create an unhandled rejection; complete still rejects.
+      const task = drain(); task.catch(() => undefined); state.tasks.push(task);
+      return { stream: output };
+    },
+  } });
+  return { model: wrapped, lifecycle: state.lifecycle };
+}
+export function governGatewayEmbeddingModel(model: EmbeddingModelV4, composition: GatewayComposition, binding: GatewayBinding, resolution: GatewayResolution): { model: EmbeddingModelV4; lifecycle: GatewayLifecycle } {
+  const state = stateFor(composition, binding, resolution);
+  if (resolution.snapshot.nativeInterface !== "embedding" || model.modelId !== DEFAULT_EMBEDDING_PROFILE.modelId || model.provider !== "convexGateway.embedding") fail("MODEL_IDENTITY_MISMATCH");
+  const requests = new WeakMap<object, ModelCallRequest>();
+  const wrapped = wrapEmbeddingModel({ model, middleware: { specificationVersion: "v4", overrideMaxEmbeddingsPerCall: () => 1,
+    transformParams: async ({ params }) => {
+      const n = record(params, ["values", "headers", "providerOptions", "abortSignal"]);
+      if (n.headers !== undefined || n.providerOptions !== undefined || (n.abortSignal !== undefined && n.abortSignal !== state.controller.signal)) fail("UNSUPPORTED_NATIVE_FIELD");
+      const values = arrayValues(n.values); if (values.length !== 1 || typeof values[0] !== "string") fail("EMBEDDING_VALUE_BOUND");
+      const text = values[0]; utf8(text); const normalized = normalizeSourceText(text); const bytes = utf8(normalized); if (bytes > 8192) fail("INPUT_BOUND_EXCEEDED");
+      const request = requestBase(state.resolution.snapshot, state.binding); request.texts = [normalized]; request.inputTokens = bytes; request.profile = DEFAULT_EMBEDDING_PROFILE;
+      request.batch = { ordinal: state.binding.ordinal, start: state.binding.ordinal, end: state.binding.ordinal + 1 };
+      const checked = validateModelRequest(state.resolution.snapshot, request).request;
+      const transformed: EmbeddingModelV4CallOptions = { values: [...checked.texts], abortSignal: state.controller.signal }; requests.set(transformed, detached(checked)); return transformed;
+    },
+    wrapEmbed: async ({ params, doEmbed }) => {
+      const request = requests.get(params)!; const attempt = await state.admit(request);
+      const admitted = validateModelRequest(attempt.snapshot, exactJSON(attempt.requestCanonical, state.resolution.storageLimits.canonicalBytes)).request;
+      if (canonicalModelJson(params.values) !== canonicalModelJson(admitted.texts)) fail("ADMITTED_REQUEST_MISMATCH");
+      let result: EmbeddingModelV4Result; const timer = setTimeout(() => state.controller.abort(), request.timeoutMs);
+      try { result = await doEmbed(); } catch { return fail("MODEL_INTERRUPTED"); } finally { clearTimeout(timer); }
+      const raw = providerJSON(result.response?.body);
+      if (!raw || !Array.isArray(raw.data) || raw.data.length !== 1 || result.embeddings.length !== 1) fail("UNQUALIFIED_TERMINAL");
+      let payload: string | undefined;
+      try { assertEmbeddingVector(result.embeddings[0]!); payload = json({ profile: DEFAULT_EMBEDDING_PROFILE, vectors: result.embeddings }, state.resolution.dispatchEvidence.resultBound.maximumPrivateResultBytes); }
+      catch { /* Invalid output never discards terminal charge. */ }
+      await state.terminal(attempt, raw, state.controller.signal.aborted ? undefined : payload);
+      if (!payload || state.controller.signal.aborted) fail("UNSUPPORTED_MODEL_OUTPUT"); await state.visible(attempt);
+      const usage = providerJSON(raw.usage); const tokens = usage && count(usage.prompt_tokens) ? usage.prompt_tokens : undefined;
+      const safe: EmbeddingModelV4Result = { embeddings: detached(result.embeddings), warnings: [], ...(tokens !== undefined ? { usage: { tokens } } : {}) }; return safe;
+    },
+  } });
+  return { model: wrapped, lifecycle: state.lifecycle };
+}

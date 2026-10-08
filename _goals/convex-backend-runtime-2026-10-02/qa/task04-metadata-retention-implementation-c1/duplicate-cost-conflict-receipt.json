@@ -1,0 +1,11 @@
+{
+  "argv": [
+    "python3",
+    "-c",
+    "from pathlib import Path\np=Path('_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c1/fixture/convex/observer.ts');s=p.read_text();a=\"if(value!==null&&value!==undefined&&u[key]!==undefined)same(value,u[key]);\";b=\"if(value!==null&&value!==undefined&&u[key]!==undefined){if(key==='cost'&&typeof value==='number'&&typeof u[key]==='number'&&!Object.is(value,u[key]))fail('CONFLICT');same(value,u[key]);}\";assert a in s;s=s.replace(a,b);p.write_text(s)"
+  ],
+  "cwd": "/workspace/Project-Cortex",
+  "startUtc": "2026-10-04T14:26:44.594829+00:00",
+  "endUtc": "2026-10-04T14:26:44.618199+00:00",
+  "exit": 0
+}

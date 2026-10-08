@@ -112,7 +112,7 @@ export function createProgram(
     .description(
       "Manage Cortex Memory deployments and administrative operations",
     )
-    .version(options.version ?? "0.36.0")
+    .version(options.version ?? "0.38.0")
     .option("-d, --deployment <name>", "Deployment alias from configuration")
     .option("-f, --format <format>", "Output format: table, json, csv")
     .option("--quiet", "Suppress diagnostic hints")

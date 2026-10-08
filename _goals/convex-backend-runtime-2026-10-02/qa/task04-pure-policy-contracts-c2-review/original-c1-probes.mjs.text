@@ -1,0 +1,37 @@
+import { build } from 'esbuild';
+import assert from 'node:assert/strict';
+import vm from 'node:vm';
+const built=await build({entryPoints:['src/domain/index.ts'],bundle:true,platform:'browser',format:'esm',outfile:'browser-domain.mjs',metafile:true});
+const inputs=Object.keys(built.metafile.inputs);
+assert(!inputs.some(p=>/(?:@convex-dev\/|openai\/|anthropic|neo4j|src\/config\.ts|src\/index\.ts)/.test(p)));
+const d=await import('./browser-domain.mjs');
+const limits={inputTokens:1000,contextTokens:2000,outputTokens:500,toolSteps:3,timeoutMs:10000,operationBudgetUnits:1000,runBudgetUnits:5000,tenantBudgetUnits:10000,concurrency:4};
+const pins={promptVersion:'p',schemaVersion:'s',extractionVersion:'e',toolRegistryVersion:'t',priceRevision:'price',boundRevision:'bound'};
+const context={scope:{tenantId:'tenant',tenantEpoch:1,memorySpaceId:'space',memorySpaceEpoch:1,principalId:'owner',principalVersion:1,membershipId:'member',membershipVersion:1,grantId:'grant',grantVersion:1},agent:{agentId:'agent',version:1},operationKey:'agent.respond',runBudgetId:'run',parentOperationId:'parent',source:{sourceId:'source',sourceEventId:'event',sourceRevision:1},authorizedOverrides:[]};
+const policy={policyId:'deployment',version:1,scope:'deployment',rules:{allowedModels:[d.DEFAULT_CHAT_MODEL_ID,'fixture/other'],interfaces:['chat','responses'],capabilities:['text','structured','tools'],allowedOptions:['temperature'],allowedTools:['lookup'],fallbackModels:['fixture/other'],limits,pins}};
+const receipt={receiptId:'synthetic-primary',modelId:d.DEFAULT_CHAT_MODEL_ID,nativeInterface:'chat',capabilities:['text','structured','tools'],allowedOptions:['temperature'],limits,costBound:{kind:'qualified-call-ceiling',maximumCostUnits:500,provenance:'synthetic-only',coversAllProviderCharges:true},priceRevision:'price',boundRevision:'bound'};
+function base(){return JSON.parse(JSON.stringify({context,policies:[policy],qualifications:[receipt,{...receipt,receiptId:'synthetic-other',modelId:'fixture/other'}]}));}
+function req(){return {semanticId:'semantic',childCallId:'child',texts:['hello'],messages:[{role:'user',parts:[{type:'text',text:'hello'}]}],inputTokens:20,outputTokens:100,toolSteps:0,timeoutMs:1000,reservationUnits:500,promptVersion:'p',schemaVersion:'s',extractionVersion:'e',toolRegistryVersion:'t',tools:[],options:{maxRetries:0}};}
+const snap=d.resolveModelPolicy(base()); const safe={outcome:'not_dispatched',proof:'pre_dispatch',outputVisible:false,toolInputVisible:false,toolResultVisible:false,toolEffectCommitted:false,paidLiabilityUncertain:false,cancelled:false,priorAttemptAccounted:true,currentAuthorityChecked:true,currentSourceChecked:true,currentPolicyChecked:true};
+const findings=[];
+let effects=0;const accessor={...safe};Object.defineProperty(accessor,'outcome',{enumerable:true,get(){effects++;return 'not_dispatched';}});
+let accessorAllowed;try{accessorAllowed=d.canFallbackModel(snap,'fixture/other',accessor);}catch(e){accessorAllowed='threw';}
+findings.push({probe:'fallback getter must not execute',effects,allowed:accessorAllowed,pass:effects===0&&accessorAllowed===false});
+const nested={type:'string',extra:{label:'synthetic'}};const requested=req();requested.tools=[{name:'lookup',definition:{properties:{value:nested}}}];requested.toolSteps=1;
+const validated=d.validateModelRequest(snap,requested);
+findings.push({probe:'nested tool definition detached without freezing input',sameReference:validated.request.tools[0].definition.properties===requested.tools[0].definition.properties,callerFrozen:Object.isFrozen(nested),pass:validated.request.tools[0].definition.properties!==requested.tools[0].definition.properties&&!Object.isFrozen(nested)});
+const structured=base();structured.context.operationKey='memory.extract';const structuredRequest=req();structuredRequest.outputSchema={properties:{value:{type:'string'}}};const sv=d.validateModelRequest(d.resolveModelPolicy(structured),structuredRequest);
+findings.push({probe:'nested output schema detached',sameReference:sv.request.outputSchema.properties===structuredRequest.outputSchema.properties,callerFrozen:Object.isFrozen(structuredRequest.outputSchema.properties),pass:sv.request.outputSchema.properties!==structuredRequest.outputSchema.properties&&!Object.isFrozen(structuredRequest.outputSchema.properties)});
+const toolRequest=req();const toolData={nested:{value:'synthetic'}};toolRequest.messages.push({role:'assistant',parts:[{type:'tool-call',toolName:'lookup',toolCallId:'tc',input:toolData}]},{role:'tool',parts:[{type:'tool-result',toolName:'lookup',toolCallId:'tc',output:{nested:{value:'result'}}}]});const tv=d.validateModelRequest(snap,toolRequest);
+findings.push({probe:'nested tool call and result detached',callSame:tv.request.messages[1].parts[0].input.nested===toolData.nested,resultSame:tv.request.messages[2].parts[0].output.nested===toolRequest.messages[2].parts[0].output.nested,callerFrozen:Object.isFrozen(toolData.nested),pass:tv.request.messages[1].parts[0].input.nested!==toolData.nested&&!Object.isFrozen(toolData.nested)});
+const identity=await d.createModelRequestIdentity(d.validateModelRequest(snap,req()));
+for(const field of ['runBudgetId','parentOperationId']){const b=base();b.context[field]='different';const next=await d.createModelRequestIdentity(d.validateModelRequest(d.resolveModelPolicy(b),req()));assert.notEqual(next.hash,identity.hash);}
+for(const field of ['tenantEpoch','memorySpaceEpoch','principalVersion','membershipVersion','grantVersion']){const b=base();b.context.scope[field]=2;const next=await d.createModelRequestIdentity(d.validateModelRequest(d.resolveModelPolicy(b),req()));assert.notEqual(next.hash,identity.hash);}
+const changed=req();changed.messages=[{role:'assistant',parts:[{type:'text',text:'hello'}]}];assert.notEqual((await d.createModelRequestIdentity(d.validateModelRequest(snap,changed))).hash,identity.hash);
+assert.throws(()=>d.assertModelRequestIdentity(identity,{hash:identity.hash,canonical:identity.canonical+'x'}),/IDEMPOTENCY_CONFLICT/);
+let arrayEffects=0;const arr=['hello'];Object.defineProperty(arr,'0',{enumerable:true,get(){arrayEffects++;return 'hello';}});assert.throws(()=>d.validateModelRequest(snap,{...req(),texts:arr}),/INVALID_INPUT/);assert.equal(arrayEffects,0);
+const ceiling=base();ceiling.qualifications[0].costBound.maximumCostUnits=1001;assert.throws(()=>d.resolveModelPolicy(ceiling),/cost ceiling/);
+const safeInteger=base();safeInteger.policies[0].rules.limits.contextTokens=Number.MAX_SAFE_INTEGER+1;assert.throws(()=>d.resolveModelPolicy(safeInteger),/INVALID_INPUT/);
+const b=await build({entryPoints:['src/domain/index.ts'],bundle:true,platform:'browser',format:'iife',globalName:'Domain',write:false});const sandbox={crypto:globalThis.crypto,TextEncoder};vm.createContext(sandbox);vm.runInContext(b.outputFiles[0].text,sandbox);assert.equal(vm.runInContext("typeof process==='undefined'&&typeof require==='undefined'&&typeof Domain.resolveModelPolicy==='function'",sandbox),true);assert.equal(await vm.runInContext("Domain.semanticHash('synthetic')",sandbox),await d.semanticHash('synthetic'));
+console.log(JSON.stringify({domainBrowser:{exports:Object.keys(d).length,inputs:inputs.length,nodeGlobalsAbsent:true,webCrypto:true},positiveChecks:'scope/run/parent identities,collision,accessor-array,qualified ceiling,safe integers',findings},null,2));
+assert(findings.every(f=>f.pass),'Independent probes found candidate contract gaps');

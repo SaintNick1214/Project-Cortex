@@ -1,0 +1,350 @@
+(node:174421) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ extension independent callback-throw (11.173225ms)
+✔ extension independent bytes-bound (3.511564ms)
+✖ extension independent bad-parent (5.884738ms)
+✔ extension independent observer-created (2.654061ms)
+✔ extension independent observer-written (2.862233ms)
+✔ extension independent observer-durable (5.443588ms)
+✔ extension independent observer-closed (4.235196ms)
+✔ extension independent write-after (2.880498ms)
+✔ extension independent fsync-after (3.943196ms)
+✔ extension independent first-primary-secondary-close (3.057731ms)
+✔ extension independent both-close-before (3.900757ms)
+✔ extension independent write-expiry (4.696313ms)
+✔ extension independent bad-control0 (1.831254ms)
+✔ extension independent bad-control1 (2.011122ms)
+✔ extension independent bad-control2 (1.791559ms)
+✔ extension independent bad-control3 (2.059794ms)
+✔ extension independent bad-control4 (1.962311ms)
+✔ extension independent bad-control5 (2.242348ms)
+✔ extension independent bad-control6 (3.304335ms)
+✔ extension independent bad-control7 (1.910302ms)
+✔ regression independent callback-throw (2.030008ms)
+✔ regression independent bytes-bound (2.230786ms)
+✖ regression independent bad-parent (4.203305ms)
+✔ regression independent observer-created (2.413108ms)
+✔ regression independent observer-written (2.215006ms)
+✔ regression independent observer-durable (3.701131ms)
+✔ regression independent observer-closed (3.96617ms)
+✔ regression independent write-after (2.189128ms)
+✔ regression independent fsync-after (3.846635ms)
+✔ regression independent first-primary-secondary-close (2.346994ms)
+✔ regression independent both-close-before (3.958134ms)
+✔ regression independent write-expiry (3.981208ms)
+✔ regression independent bad-control0 (1.880096ms)
+✔ regression independent bad-control1 (2.937305ms)
+✔ regression independent bad-control2 (1.841063ms)
+✔ regression independent bad-control3 (1.903109ms)
+✔ regression independent bad-control4 (1.727449ms)
+✔ regression independent bad-control5 (2.043954ms)
+✔ regression independent bad-control6 (1.918278ms)
+✔ regression independent bad-control7 (1.945539ms)
+✖ extension exact setup output post-effect expiry (6.38551ms)
+✖ extension exact watcher output post-effect expiry (4.533807ms)
+✖ regression exact setup output post-effect expiry (4.845293ms)
+✖ regression exact watcher output post-effect expiry (4.345303ms)
+ℹ tests 44
+ℹ suites 0
+ℹ pass 38
+ℹ fail 6
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 249.477168
+
+✖ failing tests:
+
+test at work/resume/task04-terminal-capture-native-profiles-c4-review/hostiles.mjs:14:321
+✖ extension independent bad-parent (5.884738ms)
+  TypeError: Cannot read properties of undefined (reading 'message')
+      at probe (file:///workspace/Project-Cortex/work/resume/task04-terminal-capture-native-profiles-c4-review/hostiles.mjs:11:212)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+
+test at work/resume/task04-terminal-capture-native-profiles-c4-review/hostiles.mjs:14:321
+✖ regression independent bad-parent (4.203305ms)
+  TypeError: Cannot read properties of undefined (reading 'message')
+      at probe (file:///workspace/Project-Cortex/work/resume/task04-terminal-capture-native-profiles-c4-review/hostiles.mjs:11:212)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+
+test at work/resume/task04-terminal-capture-native-profiles-c4-review/hostiles.mjs:15:78
+✖ extension exact setup output post-effect expiry (6.38551ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + AssertionError [ERR_ASSERTION]: Values have same structure but are not reference-equal:
+  + 
+  + [
+  +   {
+  +     closed: true,
+  +     created: true,
+  +     durable: true,
+  +     name: 'DUMMY.json',
+  +     written: true
+  +   }
+  + ]
+  + 
+  +     at probe (file:///workspace/Project-Cortex/work/resume/task04-terminal-capture-native-profiles-c4-review/hostiles.mjs:7:971)
+  +     at async Test.run (node:internal/test_runner/test:1389:7)
+  +     at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+  +   actual: [
+  +     {
+  +       closed: true,
+  +       created: true,
+  +       durable: true,
+  +       name: 'DUMMY.json',
+  +       written: true
+  +     }
+  +   ],
+  +   code: 'ERR_ASSERTION',
+  +   diff: 'simple',
+  +   expected: [
+  +     {
+  +       closed: true,
+  +       created: true,
+  +       durable: true,
+  +       name: 'DUMMY.json',
+  +       written: true
+  +     }
+  +   ],
+  +   generatedMessage: true,
+  +   operator: 'deepStrictEqual'
+  + }
+  - undefined
+  
+      at probe (file:///workspace/Project-Cortex/work/resume/task04-terminal-capture-native-profiles-c4-review/hostiles.mjs:11:453)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: AssertionError [ERR_ASSERTION]: Values have same structure but are not reference-equal:
+    
+    [
+      {
+        closed: true,
+        created: true,
+        durable: true,
+        name: 'DUMMY.json',
+        written: true
+      }
+    ]
+    
+        at probe (file:///workspace/Project-Cortex/work/resume/task04-terminal-capture-native-profiles-c4-review/hostiles.mjs:7:971)
+        at async Test.run (node:internal/test_runner/test:1389:7)
+        at async Test.processPendingSubtests (node:internal/test_runner/test:960:7),
+    expected: undefined,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at work/resume/task04-terminal-capture-native-profiles-c4-review/hostiles.mjs:15:78
+✖ extension exact watcher output post-effect expiry (4.533807ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + AssertionError [ERR_ASSERTION]: Values have same structure but are not reference-equal:
+  + 
+  + [
+  +   {
+  +     closed: true,
+  +     created: true,
+  +     durable: true,
+  +     name: 'DUMMY.json',
+  +     written: true
+  +   }
+  + ]
+  + 
+  +     at probe (file:///workspace/Project-Cortex/work/resume/task04-terminal-capture-native-profiles-c4-review/hostiles.mjs:7:971)
+  +     at async Test.run (node:internal/test_runner/test:1389:7)
+  +     at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+  +   actual: [
+  +     {
+  +       closed: true,
+  +       created: true,
+  +       durable: true,
+  +       name: 'DUMMY.json',
+  +       written: true
+  +     }
+  +   ],
+  +   code: 'ERR_ASSERTION',
+  +   diff: 'simple',
+  +   expected: [
+  +     {
+  +       closed: true,
+  +       created: true,
+  +       durable: true,
+  +       name: 'DUMMY.json',
+  +       written: true
+  +     }
+  +   ],
+  +   generatedMessage: true,
+  +   operator: 'deepStrictEqual'
+  + }
+  - undefined
+  
+      at probe (file:///workspace/Project-Cortex/work/resume/task04-terminal-capture-native-profiles-c4-review/hostiles.mjs:11:453)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: AssertionError [ERR_ASSERTION]: Values have same structure but are not reference-equal:
+    
+    [
+      {
+        closed: true,
+        created: true,
+        durable: true,
+        name: 'DUMMY.json',
+        written: true
+      }
+    ]
+    
+        at probe (file:///workspace/Project-Cortex/work/resume/task04-terminal-capture-native-profiles-c4-review/hostiles.mjs:7:971)
+        at async Test.run (node:internal/test_runner/test:1389:7)
+        at async Test.processPendingSubtests (node:internal/test_runner/test:960:7),
+    expected: undefined,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at work/resume/task04-terminal-capture-native-profiles-c4-review/hostiles.mjs:15:78
+✖ regression exact setup output post-effect expiry (4.845293ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + AssertionError [ERR_ASSERTION]: Values have same structure but are not reference-equal:
+  + 
+  + [
+  +   {
+  +     closed: true,
+  +     created: true,
+  +     durable: true,
+  +     name: 'DUMMY.json',
+  +     written: true
+  +   }
+  + ]
+  + 
+  +     at probe (file:///workspace/Project-Cortex/work/resume/task04-terminal-capture-native-profiles-c4-review/hostiles.mjs:7:971)
+  +     at async Test.run (node:internal/test_runner/test:1389:7)
+  +     at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+  +   actual: [
+  +     {
+  +       closed: true,
+  +       created: true,
+  +       durable: true,
+  +       name: 'DUMMY.json',
+  +       written: true
+  +     }
+  +   ],
+  +   code: 'ERR_ASSERTION',
+  +   diff: 'simple',
+  +   expected: [
+  +     {
+  +       closed: true,
+  +       created: true,
+  +       durable: true,
+  +       name: 'DUMMY.json',
+  +       written: true
+  +     }
+  +   ],
+  +   generatedMessage: true,
+  +   operator: 'deepStrictEqual'
+  + }
+  - undefined
+  
+      at probe (file:///workspace/Project-Cortex/work/resume/task04-terminal-capture-native-profiles-c4-review/hostiles.mjs:11:453)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: AssertionError [ERR_ASSERTION]: Values have same structure but are not reference-equal:
+    
+    [
+      {
+        closed: true,
+        created: true,
+        durable: true,
+        name: 'DUMMY.json',
+        written: true
+      }
+    ]
+    
+        at probe (file:///workspace/Project-Cortex/work/resume/task04-terminal-capture-native-profiles-c4-review/hostiles.mjs:7:971)
+        at async Test.run (node:internal/test_runner/test:1389:7)
+        at async Test.processPendingSubtests (node:internal/test_runner/test:960:7),
+    expected: undefined,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at work/resume/task04-terminal-capture-native-profiles-c4-review/hostiles.mjs:15:78
+✖ regression exact watcher output post-effect expiry (4.345303ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + AssertionError [ERR_ASSERTION]: Values have same structure but are not reference-equal:
+  + 
+  + [
+  +   {
+  +     closed: true,
+  +     created: true,
+  +     durable: true,
+  +     name: 'DUMMY.json',
+  +     written: true
+  +   }
+  + ]
+  + 
+  +     at probe (file:///workspace/Project-Cortex/work/resume/task04-terminal-capture-native-profiles-c4-review/hostiles.mjs:7:971)
+  +     at async Test.run (node:internal/test_runner/test:1389:7)
+  +     at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+  +   actual: [
+  +     {
+  +       closed: true,
+  +       created: true,
+  +       durable: true,
+  +       name: 'DUMMY.json',
+  +       written: true
+  +     }
+  +   ],
+  +   code: 'ERR_ASSERTION',
+  +   diff: 'simple',
+  +   expected: [
+  +     {
+  +       closed: true,
+  +       created: true,
+  +       durable: true,
+  +       name: 'DUMMY.json',
+  +       written: true
+  +     }
+  +   ],
+  +   generatedMessage: true,
+  +   operator: 'deepStrictEqual'
+  + }
+  - undefined
+  
+      at probe (file:///workspace/Project-Cortex/work/resume/task04-terminal-capture-native-profiles-c4-review/hostiles.mjs:11:453)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: AssertionError [ERR_ASSERTION]: Values have same structure but are not reference-equal:
+    
+    [
+      {
+        closed: true,
+        created: true,
+        durable: true,
+        name: 'DUMMY.json',
+        written: true
+      }
+    ]
+    
+        at probe (file:///workspace/Project-Cortex/work/resume/task04-terminal-capture-native-profiles-c4-review/hostiles.mjs:7:971)
+        at async Test.run (node:internal/test_runner/test:1389:7)
+        at async Test.processPendingSubtests (node:internal/test_runner/test:960:7),
+    expected: undefined,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

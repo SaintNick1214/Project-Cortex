@@ -1,0 +1,5 @@
+import pathlib,subprocess,json,datetime,hashlib,sys
+r=pathlib.Path('/workspace/Project-Cortex');w=r/'work/resume/task04-default-native-driver-implementation-c1-review';q=r/'_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c1-review';name=sys.argv[1];argv=sys.argv[2:];o=q/'checks'/name;o.mkdir(parents=True,exist_ok=True)
+def snap():
+ return {str(p.relative_to(w)):hashlib.sha256(p.read_bytes()).hexdigest() for p in w.rglob('*') if p.is_file()}
+(o/'source-pre.json').write_text(json.dumps(snap(),indent=2)+'\n');start=datetime.datetime.now(datetime.timezone.utc).isoformat();p=subprocess.run(argv,cwd=w/'fixture',capture_output=True);end=datetime.datetime.now(datetime.timezone.utc).isoformat();(o/'stdout').write_bytes(p.stdout);(o/'stderr').write_bytes(p.stderr);(o/'run.json').write_text(json.dumps(dict(argv=argv,cwd=str(w/'fixture'),startUTC=start,endUTC=end,exit=p.returncode),indent=2)+'\n');(o/'source-post.json').write_text(json.dumps(snap(),indent=2)+'\n');print(name,p.returncode,p.stdout.decode()[-600:],p.stderr.decode()[-600:])

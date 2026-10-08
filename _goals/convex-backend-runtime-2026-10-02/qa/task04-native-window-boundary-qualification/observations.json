@@ -1,0 +1,5785 @@
+{
+  "classification": "OFFLINE_CONTROLLED_HANDLER_DIAGNOSIS_NOT_NATIVE_ACCEPTANCE",
+  "originalScenarioUnmodified": true,
+  "tests": 15,
+  "skipped": 0,
+  "results": [
+    {
+      "id": "held-current-operation",
+      "kind": "held-operation",
+      "mode": "healthy",
+      "outcome": "PASS_ORIGINAL_ASSERTIONS",
+      "trace": [
+        {
+          "path": "qualificationOwned:seed",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [],
+          "after": [],
+          "writes": 7
+        },
+        {
+          "path": "runtimeModelPolicy:installDeploymentPolicy",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [],
+          "after": [],
+          "writes": 4
+        },
+        {
+          "path": "runtimeModelPolicy:ensureBudget",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 0,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 0,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 0,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 0,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 2
+        },
+        {
+          "path": "runtimeModelPolicy:admit",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 0,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 0,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 0,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 0,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 5
+        },
+        {
+          "path": "runtimeModelPolicy:admit",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 4
+        },
+        {
+          "path": "runtimeModelPolicy:provisionTenantPolicy",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 1
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 0
+        },
+        {
+          "path": "runtimeModelPolicy:checkpoint",
+          "time": 1791092350000,
+          "status": "rejected",
+          "code": "BUDGET_EXCEEDED",
+          "before": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 0
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 0
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 0
+        }
+      ]
+    },
+    {
+      "id": "held-current-operation",
+      "kind": "held-operation",
+      "mode": "second-exact-boundary",
+      "outcome": "FAIL_ORIGINAL_ASSERTIONS",
+      "error": {
+        "name": "ConvexError",
+        "code": "BUDGET_EXCEEDED",
+        "message": "{\"version\":1,\"code\":\"BUDGET_EXCEEDED\",\"message\":\"Model operation control failed.\",\"retryable\":false,\"outcome\":\"not_dispatched\"}",
+        "stack": "ConvexError: {\"version\":1,\"code\":\"BUDGET_EXCEEDED\",\"message\":\"Model operation control failed.\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at fail (file:///workspace/Project-Cortex/work/resume/task04-native-window-boundary-qualification/bundle.mjs:1644:9)\n    at capacity (file:///workspace/Project-Cortex/work/resume/task04-native-window-boundary-qualification/bundle.mjs:1934:365)\n    at Function.handler [as _handler] (file:///workspace/Project-Cortex/work/resume/task04-native-window-boundary-qualification/bundle.mjs:2211:3)\n    at async MemoryTestDb.transaction (file:///workspace/Project-Cortex/work/resume/task04-native-window-boundary-qualification/bundle.mjs:6014:14)\n    at async Object.rpc (file:///workspace/Project-Cortex/work/resume/task04-native-window-boundary-qualification/probe.mjs:25:57)\n    at async scenario (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c7/scripts/cases.mjs:47:15)\n    at async file:///workspace/Project-Cortex/work/resume/task04-native-window-boundary-qualification/probe.mjs:29:7"
+      },
+      "trace": [
+        {
+          "path": "qualificationOwned:seed",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [],
+          "after": [],
+          "writes": 7
+        },
+        {
+          "path": "runtimeModelPolicy:installDeploymentPolicy",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [],
+          "after": [],
+          "writes": 4
+        },
+        {
+          "path": "runtimeModelPolicy:ensureBudget",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 0,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 0,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 0,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 0,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 2
+        },
+        {
+          "path": "runtimeModelPolicy:admit",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 0,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 0,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 0,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 0,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 5
+        },
+        {
+          "path": "runtimeModelPolicy:admit",
+          "time": 1791092400000,
+          "status": "rejected",
+          "code": "BUDGET_EXCEEDED",
+          "before": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 0
+        }
+      ]
+    },
+    {
+      "id": "held-current-operation",
+      "kind": "held-operation",
+      "mode": "checkpoint-exact-boundary",
+      "outcome": "PASS_ORIGINAL_ASSERTIONS",
+      "trace": [
+        {
+          "path": "qualificationOwned:seed",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [],
+          "after": [],
+          "writes": 7
+        },
+        {
+          "path": "runtimeModelPolicy:installDeploymentPolicy",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [],
+          "after": [],
+          "writes": 4
+        },
+        {
+          "path": "runtimeModelPolicy:ensureBudget",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 0,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 0,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 0,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 0,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 2
+        },
+        {
+          "path": "runtimeModelPolicy:admit",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 0,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 0,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 0,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 0,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 5
+        },
+        {
+          "path": "runtimeModelPolicy:admit",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 4
+        },
+        {
+          "path": "runtimeModelPolicy:provisionTenantPolicy",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 1
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 0
+        },
+        {
+          "path": "runtimeModelPolicy:checkpoint",
+          "time": 1791092400000,
+          "status": "rejected",
+          "code": "BUDGET_EXCEEDED",
+          "before": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 0
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "time": 1791092400000,
+          "status": "fulfilled",
+          "before": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 0
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "time": 1791092400000,
+          "status": "fulfilled",
+          "before": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 0
+        }
+      ]
+    },
+    {
+      "id": "held-current-run",
+      "kind": "held-run",
+      "mode": "healthy",
+      "outcome": "PASS_ORIGINAL_ASSERTIONS",
+      "trace": [
+        {
+          "path": "qualificationOwned:seed",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [],
+          "after": [],
+          "writes": 7
+        },
+        {
+          "path": "runtimeModelPolicy:installDeploymentPolicy",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [],
+          "after": [],
+          "writes": 4
+        },
+        {
+          "path": "runtimeModelPolicy:ensureBudget",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 0,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 0,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 0,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 0,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 2
+        },
+        {
+          "path": "runtimeModelPolicy:admit",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 0,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 0,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 0,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 0,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 5
+        },
+        {
+          "path": "runtimeModelPolicy:admit",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 5
+        },
+        {
+          "path": "runtimeModelPolicy:provisionTenantPolicy",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 1
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 0
+        },
+        {
+          "path": "runtimeModelPolicy:checkpoint",
+          "time": 1791092350000,
+          "status": "rejected",
+          "code": "BUDGET_EXCEEDED",
+          "before": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 0
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 0
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 0
+        }
+      ]
+    },
+    {
+      "id": "held-current-run",
+      "kind": "held-run",
+      "mode": "second-exact-boundary",
+      "outcome": "FAIL_ORIGINAL_ASSERTIONS",
+      "error": {
+        "name": "ConvexError",
+        "code": "BUDGET_EXCEEDED",
+        "message": "{\"version\":1,\"code\":\"BUDGET_EXCEEDED\",\"message\":\"Model operation control failed.\",\"retryable\":false,\"outcome\":\"not_dispatched\"}",
+        "stack": "ConvexError: {\"version\":1,\"code\":\"BUDGET_EXCEEDED\",\"message\":\"Model operation control failed.\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at fail (file:///workspace/Project-Cortex/work/resume/task04-native-window-boundary-qualification/bundle.mjs:1644:9)\n    at capacity (file:///workspace/Project-Cortex/work/resume/task04-native-window-boundary-qualification/bundle.mjs:1934:365)\n    at Function.handler [as _handler] (file:///workspace/Project-Cortex/work/resume/task04-native-window-boundary-qualification/bundle.mjs:2211:3)\n    at async MemoryTestDb.transaction (file:///workspace/Project-Cortex/work/resume/task04-native-window-boundary-qualification/bundle.mjs:6014:14)\n    at async Object.rpc (file:///workspace/Project-Cortex/work/resume/task04-native-window-boundary-qualification/probe.mjs:25:57)\n    at async scenario (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c7/scripts/cases.mjs:47:15)\n    at async file:///workspace/Project-Cortex/work/resume/task04-native-window-boundary-qualification/probe.mjs:29:7"
+      },
+      "trace": [
+        {
+          "path": "qualificationOwned:seed",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [],
+          "after": [],
+          "writes": 7
+        },
+        {
+          "path": "runtimeModelPolicy:installDeploymentPolicy",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [],
+          "after": [],
+          "writes": 4
+        },
+        {
+          "path": "runtimeModelPolicy:ensureBudget",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 0,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 0,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 0,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 0,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 2
+        },
+        {
+          "path": "runtimeModelPolicy:admit",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 0,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 0,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 0,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 0,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 5
+        },
+        {
+          "path": "runtimeModelPolicy:admit",
+          "time": 1791092400000,
+          "status": "rejected",
+          "code": "BUDGET_EXCEEDED",
+          "before": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 0
+        }
+      ]
+    },
+    {
+      "id": "held-current-run",
+      "kind": "held-run",
+      "mode": "checkpoint-exact-boundary",
+      "outcome": "PASS_ORIGINAL_ASSERTIONS",
+      "trace": [
+        {
+          "path": "qualificationOwned:seed",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [],
+          "after": [],
+          "writes": 7
+        },
+        {
+          "path": "runtimeModelPolicy:installDeploymentPolicy",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [],
+          "after": [],
+          "writes": 4
+        },
+        {
+          "path": "runtimeModelPolicy:ensureBudget",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 0,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 0,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 0,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 0,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 2
+        },
+        {
+          "path": "runtimeModelPolicy:admit",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 0,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 0,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 0,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 0,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 5
+        },
+        {
+          "path": "runtimeModelPolicy:admit",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 5
+        },
+        {
+          "path": "runtimeModelPolicy:provisionTenantPolicy",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 1
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 0
+        },
+        {
+          "path": "runtimeModelPolicy:checkpoint",
+          "time": 1791092400000,
+          "status": "rejected",
+          "code": "BUDGET_EXCEEDED",
+          "before": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 0
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "time": 1791092400000,
+          "status": "fulfilled",
+          "before": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 0
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "time": 1791092400000,
+          "status": "fulfilled",
+          "before": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 0
+        }
+      ]
+    },
+    {
+      "id": "held-current-tenant",
+      "kind": "held-tenant",
+      "mode": "healthy",
+      "outcome": "PASS_ORIGINAL_ASSERTIONS",
+      "trace": [
+        {
+          "path": "qualificationOwned:seed",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [],
+          "after": [],
+          "writes": 7
+        },
+        {
+          "path": "runtimeModelPolicy:installDeploymentPolicy",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [],
+          "after": [],
+          "writes": 4
+        },
+        {
+          "path": "runtimeModelPolicy:ensureBudget",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 0,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 0,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 0,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 0,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 2
+        },
+        {
+          "path": "runtimeModelPolicy:admit",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 0,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 0,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 0,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 0,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 5
+        },
+        {
+          "path": "runtimeModelPolicy:ensureBudget",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 0,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 0,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 1
+        },
+        {
+          "path": "runtimeModelPolicy:admit",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 0,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 0,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 5
+        },
+        {
+          "path": "runtimeModelPolicy:provisionTenantPolicy",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 1
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 0
+        },
+        {
+          "path": "runtimeModelPolicy:checkpoint",
+          "time": 1791092350000,
+          "status": "rejected",
+          "code": "BUDGET_EXCEEDED",
+          "before": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 0
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 0
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 0
+        }
+      ]
+    },
+    {
+      "id": "held-current-tenant",
+      "kind": "held-tenant",
+      "mode": "second-exact-boundary",
+      "outcome": "FAIL_ORIGINAL_ASSERTIONS",
+      "error": {
+        "name": "ConvexError",
+        "code": "BUDGET_EXCEEDED",
+        "message": "{\"version\":1,\"code\":\"BUDGET_EXCEEDED\",\"message\":\"Model operation control failed.\",\"retryable\":false,\"outcome\":\"not_dispatched\"}",
+        "stack": "ConvexError: {\"version\":1,\"code\":\"BUDGET_EXCEEDED\",\"message\":\"Model operation control failed.\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at fail (file:///workspace/Project-Cortex/work/resume/task04-native-window-boundary-qualification/bundle.mjs:1644:9)\n    at capacity (file:///workspace/Project-Cortex/work/resume/task04-native-window-boundary-qualification/bundle.mjs:1934:365)\n    at Function.handler [as _handler] (file:///workspace/Project-Cortex/work/resume/task04-native-window-boundary-qualification/bundle.mjs:2211:3)\n    at async MemoryTestDb.transaction (file:///workspace/Project-Cortex/work/resume/task04-native-window-boundary-qualification/bundle.mjs:6014:14)\n    at async Object.rpc (file:///workspace/Project-Cortex/work/resume/task04-native-window-boundary-qualification/probe.mjs:25:57)\n    at async scenario (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c7/scripts/cases.mjs:47:15)\n    at async file:///workspace/Project-Cortex/work/resume/task04-native-window-boundary-qualification/probe.mjs:29:7"
+      },
+      "trace": [
+        {
+          "path": "qualificationOwned:seed",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [],
+          "after": [],
+          "writes": 7
+        },
+        {
+          "path": "runtimeModelPolicy:installDeploymentPolicy",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [],
+          "after": [],
+          "writes": 4
+        },
+        {
+          "path": "runtimeModelPolicy:ensureBudget",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 0,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 0,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 0,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 0,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 2
+        },
+        {
+          "path": "runtimeModelPolicy:admit",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 0,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 0,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 0,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 0,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 5
+        },
+        {
+          "path": "runtimeModelPolicy:ensureBudget",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 0,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 0,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 1
+        },
+        {
+          "path": "runtimeModelPolicy:admit",
+          "time": 1791092400000,
+          "status": "rejected",
+          "code": "BUDGET_EXCEEDED",
+          "before": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 0,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 0,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 0,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 0,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 0
+        }
+      ]
+    },
+    {
+      "id": "held-current-tenant",
+      "kind": "held-tenant",
+      "mode": "checkpoint-exact-boundary",
+      "outcome": "PASS_ORIGINAL_ASSERTIONS",
+      "trace": [
+        {
+          "path": "qualificationOwned:seed",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [],
+          "after": [],
+          "writes": 7
+        },
+        {
+          "path": "runtimeModelPolicy:installDeploymentPolicy",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [],
+          "after": [],
+          "writes": 4
+        },
+        {
+          "path": "runtimeModelPolicy:ensureBudget",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 0,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 0,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 0,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 0,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 2
+        },
+        {
+          "path": "runtimeModelPolicy:admit",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 0,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 0,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 0,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 0,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 5
+        },
+        {
+          "path": "runtimeModelPolicy:ensureBudget",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 0,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 0,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 1
+        },
+        {
+          "path": "runtimeModelPolicy:admit",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 0,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 0,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 5
+        },
+        {
+          "path": "runtimeModelPolicy:provisionTenantPolicy",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 1
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 0
+        },
+        {
+          "path": "runtimeModelPolicy:checkpoint",
+          "time": 1791092400000,
+          "status": "rejected",
+          "code": "BUDGET_EXCEEDED",
+          "before": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 0
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "time": 1791092400000,
+          "status": "fulfilled",
+          "before": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 0
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "time": 1791092400000,
+          "status": "fulfilled",
+          "before": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 0
+        }
+      ]
+    },
+    {
+      "id": "held-current-concurrency",
+      "kind": "held-concurrency",
+      "mode": "healthy",
+      "outcome": "PASS_ORIGINAL_ASSERTIONS",
+      "trace": [
+        {
+          "path": "qualificationOwned:seed",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [],
+          "after": [],
+          "writes": 7
+        },
+        {
+          "path": "runtimeModelPolicy:installDeploymentPolicy",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [],
+          "after": [],
+          "writes": 4
+        },
+        {
+          "path": "runtimeModelPolicy:ensureBudget",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 0,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 0,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 0,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 0,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 2
+        },
+        {
+          "path": "runtimeModelPolicy:admit",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 0,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 0,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 0,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 0,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 5
+        },
+        {
+          "path": "runtimeModelPolicy:admit",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 4
+        },
+        {
+          "path": "runtimeModelPolicy:provisionTenantPolicy",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 1
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 0
+        },
+        {
+          "path": "runtimeModelPolicy:checkpoint",
+          "time": 1791092350000,
+          "status": "rejected",
+          "code": "BUDGET_EXCEEDED",
+          "before": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 0
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 0
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 0
+        }
+      ]
+    },
+    {
+      "id": "held-current-concurrency",
+      "kind": "held-concurrency",
+      "mode": "second-exact-boundary",
+      "outcome": "FAIL_ORIGINAL_ASSERTIONS",
+      "error": {
+        "name": "ConvexError",
+        "code": "BUDGET_EXCEEDED",
+        "message": "{\"version\":1,\"code\":\"BUDGET_EXCEEDED\",\"message\":\"Model operation control failed.\",\"retryable\":false,\"outcome\":\"not_dispatched\"}",
+        "stack": "ConvexError: {\"version\":1,\"code\":\"BUDGET_EXCEEDED\",\"message\":\"Model operation control failed.\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at fail (file:///workspace/Project-Cortex/work/resume/task04-native-window-boundary-qualification/bundle.mjs:1644:9)\n    at capacity (file:///workspace/Project-Cortex/work/resume/task04-native-window-boundary-qualification/bundle.mjs:1934:365)\n    at Function.handler [as _handler] (file:///workspace/Project-Cortex/work/resume/task04-native-window-boundary-qualification/bundle.mjs:2211:3)\n    at async MemoryTestDb.transaction (file:///workspace/Project-Cortex/work/resume/task04-native-window-boundary-qualification/bundle.mjs:6014:14)\n    at async Object.rpc (file:///workspace/Project-Cortex/work/resume/task04-native-window-boundary-qualification/probe.mjs:25:57)\n    at async scenario (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c7/scripts/cases.mjs:47:15)\n    at async file:///workspace/Project-Cortex/work/resume/task04-native-window-boundary-qualification/probe.mjs:29:7"
+      },
+      "trace": [
+        {
+          "path": "qualificationOwned:seed",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [],
+          "after": [],
+          "writes": 7
+        },
+        {
+          "path": "runtimeModelPolicy:installDeploymentPolicy",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [],
+          "after": [],
+          "writes": 4
+        },
+        {
+          "path": "runtimeModelPolicy:ensureBudget",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 0,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 0,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 0,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 0,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 2
+        },
+        {
+          "path": "runtimeModelPolicy:admit",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 0,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 0,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 0,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 0,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 5
+        },
+        {
+          "path": "runtimeModelPolicy:admit",
+          "time": 1791092400000,
+          "status": "rejected",
+          "code": "BUDGET_EXCEEDED",
+          "before": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 0
+        }
+      ]
+    },
+    {
+      "id": "held-current-concurrency",
+      "kind": "held-concurrency",
+      "mode": "checkpoint-exact-boundary",
+      "outcome": "PASS_ORIGINAL_ASSERTIONS",
+      "trace": [
+        {
+          "path": "qualificationOwned:seed",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [],
+          "after": [],
+          "writes": 7
+        },
+        {
+          "path": "runtimeModelPolicy:installDeploymentPolicy",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [],
+          "after": [],
+          "writes": 4
+        },
+        {
+          "path": "runtimeModelPolicy:ensureBudget",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 0,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 0,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 0,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 0,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 2
+        },
+        {
+          "path": "runtimeModelPolicy:admit",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 0,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 0,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 0,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 0,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 5
+        },
+        {
+          "path": "runtimeModelPolicy:admit",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 4
+        },
+        {
+          "path": "runtimeModelPolicy:provisionTenantPolicy",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 1
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 0
+        },
+        {
+          "path": "runtimeModelPolicy:checkpoint",
+          "time": 1791092400000,
+          "status": "rejected",
+          "code": "BUDGET_EXCEEDED",
+          "before": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 0
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "time": 1791092400000,
+          "status": "fulfilled",
+          "before": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 0
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "time": 1791092400000,
+          "status": "fulfilled",
+          "before": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 0
+        }
+      ]
+    },
+    {
+      "id": "held-exact-cap",
+      "kind": "held-positive",
+      "mode": "healthy",
+      "outcome": "PASS_ORIGINAL_ASSERTIONS",
+      "trace": [
+        {
+          "path": "qualificationOwned:seed",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [],
+          "after": [],
+          "writes": 7
+        },
+        {
+          "path": "runtimeModelPolicy:installDeploymentPolicy",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [],
+          "after": [],
+          "writes": 4
+        },
+        {
+          "path": "runtimeModelPolicy:ensureBudget",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 0,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 0,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 0,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 0,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 2
+        },
+        {
+          "path": "runtimeModelPolicy:admit",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 0,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 0,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 0,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 0,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 5
+        },
+        {
+          "path": "runtimeModelPolicy:admit",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 4
+        },
+        {
+          "path": "runtimeModelPolicy:provisionTenantPolicy",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 1
+        },
+        {
+          "path": "runtimeModelPolicy:checkpoint",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 1
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 0
+        }
+      ]
+    },
+    {
+      "id": "held-exact-cap",
+      "kind": "held-positive",
+      "mode": "second-exact-boundary",
+      "outcome": "FAIL_ORIGINAL_ASSERTIONS",
+      "error": {
+        "name": "ConvexError",
+        "code": "BUDGET_EXCEEDED",
+        "message": "{\"version\":1,\"code\":\"BUDGET_EXCEEDED\",\"message\":\"Model operation control failed.\",\"retryable\":false,\"outcome\":\"not_dispatched\"}",
+        "stack": "ConvexError: {\"version\":1,\"code\":\"BUDGET_EXCEEDED\",\"message\":\"Model operation control failed.\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at fail (file:///workspace/Project-Cortex/work/resume/task04-native-window-boundary-qualification/bundle.mjs:1644:9)\n    at capacity (file:///workspace/Project-Cortex/work/resume/task04-native-window-boundary-qualification/bundle.mjs:1934:365)\n    at Function.handler [as _handler] (file:///workspace/Project-Cortex/work/resume/task04-native-window-boundary-qualification/bundle.mjs:2211:3)\n    at async MemoryTestDb.transaction (file:///workspace/Project-Cortex/work/resume/task04-native-window-boundary-qualification/bundle.mjs:6014:14)\n    at async Object.rpc (file:///workspace/Project-Cortex/work/resume/task04-native-window-boundary-qualification/probe.mjs:25:57)\n    at async scenario (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c7/scripts/cases.mjs:47:15)\n    at async file:///workspace/Project-Cortex/work/resume/task04-native-window-boundary-qualification/probe.mjs:29:7"
+      },
+      "trace": [
+        {
+          "path": "qualificationOwned:seed",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [],
+          "after": [],
+          "writes": 7
+        },
+        {
+          "path": "runtimeModelPolicy:installDeploymentPolicy",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [],
+          "after": [],
+          "writes": 4
+        },
+        {
+          "path": "runtimeModelPolicy:ensureBudget",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 0,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 0,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 0,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 0,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 2
+        },
+        {
+          "path": "runtimeModelPolicy:admit",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 0,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 0,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 0,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 0,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 5
+        },
+        {
+          "path": "runtimeModelPolicy:admit",
+          "time": 1791092400000,
+          "status": "rejected",
+          "code": "BUDGET_EXCEEDED",
+          "before": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 0
+        }
+      ]
+    },
+    {
+      "id": "held-exact-cap",
+      "kind": "held-positive",
+      "mode": "checkpoint-exact-boundary",
+      "outcome": "FAIL_ORIGINAL_ASSERTIONS",
+      "error": {
+        "name": "ConvexError",
+        "code": "BUDGET_EXCEEDED",
+        "message": "{\"version\":1,\"code\":\"BUDGET_EXCEEDED\",\"message\":\"Model operation control failed.\",\"retryable\":false,\"outcome\":\"not_dispatched\"}",
+        "stack": "ConvexError: {\"version\":1,\"code\":\"BUDGET_EXCEEDED\",\"message\":\"Model operation control failed.\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at fail (file:///workspace/Project-Cortex/work/resume/task04-native-window-boundary-qualification/bundle.mjs:1644:9)\n    at Function.handler [as _handler] (file:///workspace/Project-Cortex/work/resume/task04-native-window-boundary-qualification/bundle.mjs:2307:36)\n    at async MemoryTestDb.transaction (file:///workspace/Project-Cortex/work/resume/task04-native-window-boundary-qualification/bundle.mjs:6014:14)\n    at async Object.rpc (file:///workspace/Project-Cortex/work/resume/task04-native-window-boundary-qualification/probe.mjs:25:57)\n    at async scenario (file:///workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c7/scripts/cases.mjs:49:67)\n    at async file:///workspace/Project-Cortex/work/resume/task04-native-window-boundary-qualification/probe.mjs:29:7"
+      },
+      "trace": [
+        {
+          "path": "qualificationOwned:seed",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [],
+          "after": [],
+          "writes": 7
+        },
+        {
+          "path": "runtimeModelPolicy:installDeploymentPolicy",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [],
+          "after": [],
+          "writes": 4
+        },
+        {
+          "path": "runtimeModelPolicy:ensureBudget",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 0,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 0,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 0,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 0,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 2
+        },
+        {
+          "path": "runtimeModelPolicy:admit",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 0,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 0,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 0,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 0,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 5
+        },
+        {
+          "path": "runtimeModelPolicy:admit",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 100,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 1,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 4
+        },
+        {
+          "path": "runtimeModelPolicy:provisionTenantPolicy",
+          "time": 1791092350000,
+          "status": "fulfilled",
+          "before": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 1
+        },
+        {
+          "path": "runtimeModelPolicy:checkpoint",
+          "time": 1791092400000,
+          "status": "rejected",
+          "code": "BUDGET_EXCEEDED",
+          "before": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "after": [
+            {
+              "kind": "tenant",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 50000,
+              "concurrencyLimit": 4
+            },
+            {
+              "kind": "run",
+              "windowStart": 1791092340000,
+              "windowEnd": 1791092400000,
+              "current": true,
+              "reservedUnits": 200,
+              "settledUnits": 0,
+              "uncertainUnits": 0,
+              "activeConcurrency": 2,
+              "limitUnits": 20000,
+              "concurrencyLimit": 4
+            }
+          ],
+          "writes": 0
+        }
+      ]
+    }
+  ]
+}

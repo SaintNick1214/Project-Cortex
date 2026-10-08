@@ -1,0 +1,28 @@
+from pathlib import Path
+import subprocess,json,datetime,hashlib
+r=Path('/workspace/Project-Cortex'); c=r/'work/resume/artifact'; q=r/'_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1-resume-cycle4/final-checks';q.mkdir(exist_ok=True);w=r/'work/resume/artifact-checks'
+commands=[]
+run_native=True
+def run(name,cmd):
+ start=datetime.datetime.now(datetime.timezone.utc).isoformat();p=subprocess.run(cmd,cwd=c,capture_output=True,text=True)
+ (q/(name+'.stdout')).write_text(p.stdout);(q/(name+'.stderr')).write_text(p.stderr)
+ commands.append({'name':name,'argv':cmd,'cwd':str(c),'startUtc':start,'endUtc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'exitCode':p.returncode,'stdout':str(q/(name+'.stdout')),'stderr':str(q/(name+'.stderr'))})
+ (q/'commands.json').write_text(json.dumps(commands,indent=2)+'\n'); print(name,p.returncode,flush=True)
+run('npm-version',['npm','exec','--yes','--package=npm@12.2.0','--','npm','--version'])
+run('backend-types',['node','node_modules/typescript/bin/tsc','--project','convex-dev/tsconfig.json','--noEmit','--pretty','false'])
+run('scoped-types',['node','node_modules/typescript/bin/tsc','--project',str(w/'tsconfig.json'),'--noEmit','--pretty','false'])
+run('lint',['node','node_modules/eslint/bin/eslint.js','convex-dev/artifacts.ts','convex-dev/runtimeArtifactAuth.ts','tests/unit/runtimeArtifactAuth','--max-warnings=0'])
+run('discovery',['node','--experimental-vm-modules','node_modules/jest/bin/jest.js','--config',str(w/'jest.cjs'),'--listTests','--runInBand'])
+run('native',['node','--experimental-vm-modules','node_modules/jest/bin/jest.js','--config',str(w/'jest.cjs'),'--runInBand','--json','--outputFile',str(q/'native-tests.json')])
+run('inventory',['node',str(c/'_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1/inventory.mjs'),str(q/'catalog')])
+run('root-types',['node','node_modules/typescript/bin/tsc','--noEmit','--pretty','false'])
+provenance=[]
+source=r/'_goals/convex-backend-runtime-2026-10-02/qa/task03b2c1/history/cycle3-final/independent'; probes=q/'probes';probes.mkdir(exist_ok=True)
+for name in ['probes','repeated-source','adversarial','additional','write-error-output','write-error-output-controls','private-error-admission','fresh-boundary']:
+ original=source/(name+'.mts.text');target=w/(name+'.mts')
+ s=original.read_text().replace('/workspace/Project-Cortex/work/backend-runtime/task03b2c1-checkout',str(c)).replace('/tmp/task03b2c1-review3-eopdvclu',str(probes))
+ s='import '+json.dumps(str(c/'tests/unit/runtimeArtifactAuth/accepted-reader-compat.ts'))+';\n'+s
+ target.write_text(s)
+ provenance.append({'name':name,'original':str(original),'originalSha256':hashlib.sha256(original.read_bytes()).hexdigest(),'executed':str(target),'executedSha256':hashlib.sha256(target.read_bytes()).hexdigest(),'transform':'only import/output paths and explicit accepted-reader bounded take fixture compatibility import; all original cases/assertions/expectations unchanged'})
+ run('probe-'+name,['node','--import',str(r/'node_modules/tsx/dist/loader.mjs'),str(target)])
+(q/'probe-provenance.json').write_text(json.dumps(provenance,indent=2)+'\n')

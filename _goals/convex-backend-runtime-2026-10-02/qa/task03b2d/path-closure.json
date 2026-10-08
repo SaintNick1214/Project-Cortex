@@ -1,0 +1,312 @@
+{
+  "version": 1,
+  "baseCommit": "6939678976fbc6f309fe34374930bdf404e8152f",
+  "unresolved": [],
+  "counts": {
+    "frozenPaths": 25,
+    "guardedPublic": 7,
+    "internalized": 18
+  },
+  "entries": [
+    {
+      "path": "admin:listTable",
+      "frozenDisposition": "internalize",
+      "actualVisibility": "internal",
+      "actualBuilder": "internalQuery",
+      "contract": "Internal deployment operator; native fixed14table allowlist and strict bound1..1000; no auth/source/tombstone/_storage table.",
+      "source": {
+        "file": "convex-dev/admin.ts",
+        "line": 6
+      },
+      "outcomeTests": "tests/unit/runtimeWorkerAuth/admin-catalog.test.ts"
+    },
+    {
+      "path": "admin:deleteRecord",
+      "frozenDisposition": "internalize",
+      "actualVisibility": "internal",
+      "actualBuilder": "internalMutation",
+      "contract": "Internal deployment operator; allowlisted table + normalizeId exacttable-IDpair before delete; only policy/enforcement/queue metadata supported with reference-aware policy cleanup; other11resource tables typedunsupported.",
+      "source": {
+        "file": "convex-dev/admin.ts",
+        "line": 13
+      },
+      "outcomeTests": "tests/unit/runtimeWorkerAuth/admin-catalog.test.ts"
+    },
+    {
+      "path": "admin:clearTable",
+      "frozenDisposition": "internalize",
+      "actualVisibility": "internal",
+      "actualBuilder": "internalMutation",
+      "contract": "Internal deployment operator; supported metadata lifecycle allowlist and strict bound; transactional bounded cleanup; unsupported11tables typeddeny before reads/writes.",
+      "source": {
+        "file": "convex-dev/admin.ts",
+        "line": 17
+      },
+      "outcomeTests": "tests/unit/runtimeWorkerAuth/admin-catalog.test.ts"
+    },
+    {
+      "path": "admin:countTable",
+      "frozenDisposition": "internalize",
+      "actualVisibility": "internal",
+      "actualBuilder": "internalQuery",
+      "contract": "Internal deployment operator; allowlisted exact table; bounded10000count with explicittruncated flag; controls excluded.",
+      "source": {
+        "file": "convex-dev/admin.ts",
+        "line": 27
+      },
+      "outcomeTests": "tests/unit/runtimeWorkerAuth/admin-catalog.test.ts"
+    },
+    {
+      "path": "admin:getAllCounts",
+      "frozenDisposition": "internalize",
+      "actualVisibility": "internal",
+      "actualBuilder": "internalQuery",
+      "contract": "Internal deployment operator; fixed14table targets; bounded10000counts with explicittruncated flags; controls excluded.",
+      "source": {
+        "file": "convex-dev/admin.ts",
+        "line": 35
+      },
+      "outcomeTests": "tests/unit/runtimeWorkerAuth/admin-catalog.test.ts"
+    },
+    {
+      "path": "governance:setPolicy",
+      "frozenDisposition": "guard",
+      "actualVisibility": "public",
+      "actualBuilder": "mutation",
+      "contract": "Current verified admin; strict native nested policy plus persisted JSON validation; trusted tenant/optionalspace/owner indexed active selection; bind appliedBy and persisted job ref; no grant provisioning.",
+      "source": {
+        "file": "convex-dev/governance.ts",
+        "line": 315
+      },
+      "outcomeTests": "tests/unit/runtimeWorkerAuth/governance.test.ts"
+    },
+    {
+      "path": "governance:setAgentOverride",
+      "frozenDisposition": "guard",
+      "actualVisibility": "public",
+      "actualBuilder": "mutation",
+      "contract": "Current verified admin on exact concrete registered scope; strict overrides cannot change selectors or add privilege; merge only current trusted scoped policy/template; no global organization fallback.",
+      "source": {
+        "file": "convex-dev/governance.ts",
+        "line": 331
+      },
+      "outcomeTests": "tests/unit/runtimeWorkerAuth/governance.test.ts"
+    },
+    {
+      "path": "governance:enforce",
+      "frozenDisposition": "internalize",
+      "actualVisibility": "internal",
+      "actualBuilder": "internalMutation",
+      "contract": "Internal stored immutable policy job ref; current admin check on exact canonical policy owner/scope before validation/materialization and simulation-log commit; selected active ID must match; no deletion claim.",
+      "source": {
+        "file": "convex-dev/governance.ts",
+        "line": 378
+      },
+      "outcomeTests": "tests/unit/runtimeWorkerAuth/governance.test.ts"
+    },
+    {
+      "path": "governance:getPolicy",
+      "frozenDisposition": "guard",
+      "actualVisibility": "public",
+      "actualBuilder": "query",
+      "contract": "Current caller admin, not stored creator grant; exact trusted tenant/optionalspace/owner active selection, canonical ownership and nested policy validation; scoped public template fallback only.",
+      "source": {
+        "file": "convex-dev/governance.ts",
+        "line": 351
+      },
+      "outcomeTests": "tests/unit/runtimeWorkerAuth/governance.test.ts"
+    },
+    {
+      "path": "governance:getTemplate",
+      "frozenDisposition": "guard",
+      "actualVisibility": "public",
+      "actualBuilder": "query",
+      "contract": "Current caller admin derives one trusted scope; static policy template only, no private memory reads.",
+      "source": {
+        "file": "convex-dev/governance.ts",
+        "line": 359
+      },
+      "outcomeTests": "tests/unit/runtimeWorkerAuth/governance.test.ts"
+    },
+    {
+      "path": "governance:simulate",
+      "frozenDisposition": "guard",
+      "actualVisibility": "public",
+      "actualBuilder": "query",
+      "contract": "Current caller admin, strict policy selectors; current scoped config only; explicit simulation with0results/unimplemented retention; no memory/fact/storage reads.",
+      "source": {
+        "file": "convex-dev/governance.ts",
+        "line": 367
+      },
+      "outcomeTests": "tests/unit/runtimeWorkerAuth/governance.test.ts"
+    },
+    {
+      "path": "governance:getComplianceReport",
+      "frozenDisposition": "guard",
+      "actualVisibility": "public",
+      "actualBuilder": "query",
+      "contract": "Current caller admin; tenant/space/time composite indexed log selection with owner filtering before collection; zero actual deletion/storage and explicit simulation status.",
+      "source": {
+        "file": "convex-dev/governance.ts",
+        "line": 417
+      },
+      "outcomeTests": "tests/unit/runtimeWorkerAuth/governance.test.ts"
+    },
+    {
+      "path": "governance:getEnforcementStats",
+      "frozenDisposition": "guard",
+      "actualVisibility": "public",
+      "actualBuilder": "query",
+      "contract": "Current caller admin; strict period; tenant/space/time and owner filtering before aggregation; explicit simulation only.",
+      "source": {
+        "file": "convex-dev/governance.ts",
+        "line": 428
+      },
+      "outcomeTests": "tests/unit/runtimeWorkerAuth/governance.test.ts"
+    },
+    {
+      "path": "governance:purgeAllPolicies",
+      "frozenDisposition": "internalize",
+      "actualVisibility": "internal",
+      "actualBuilder": "internalMutation",
+      "contract": "Internal deployment operator only; fixed policy metadata targets with linked enforcement-reference cleanup; auth/source/tombstone records retained; no target grant requirement.",
+      "source": {
+        "file": "convex-dev/governance.ts",
+        "line": 441
+      },
+      "outcomeTests": "tests/unit/runtimeWorkerAuth/admin-catalog.test.ts"
+    },
+    {
+      "path": "governance:purgeAllEnforcement",
+      "frozenDisposition": "internalize",
+      "actualVisibility": "internal",
+      "actualBuilder": "internalMutation",
+      "contract": "Internal deployment operator only; fixed simulation metadata targets; auth/source/tombstone records retained; no target grant requirement.",
+      "source": {
+        "file": "convex-dev/governance.ts",
+        "line": 448
+      },
+      "outcomeTests": "tests/unit/runtimeWorkerAuth/admin-catalog.test.ts"
+    },
+    {
+      "path": "graphSync:queueForSync",
+      "frozenDisposition": "internalize",
+      "actualVisibility": "internal",
+      "actualBuilder": "internalMutation",
+      "contract": "Internal trusted ref with separatetool+read; exact tenant/space/owner fact plus canonical source/event/revision/hash/normalization/timestamps; derive allowlisted payload; pin immutable ref/document/version/source; unsupported entity/delete lifecycle typeddeny. Essential repair: actual own-owner database predicate before selection/limit; finite lifecycle timestamps; post-digest READ+TOOL fact/source fences and fresh canonical snapshot equality before materialization.",
+      "source": {
+        "file": "convex-dev/graphSync.ts",
+        "line": 39
+      },
+      "outcomeTests": "tests/unit/runtimeWorkerAuth/graph.test.ts"
+    },
+    {
+      "path": "graphSync:markSynced",
+      "frozenDisposition": "internalize",
+      "actualVisibility": "internal",
+      "actualBuilder": "internalMutation",
+      "contract": "Internal exact stored ref/canonical job; tenant/space/grant/principal/ID selection before materialization; source/document/version+read/tool rechecks before state commit; no actual graph projection qualification. Essential repair: actual own-owner database predicate before selection/limit; finite lifecycle timestamps; post-digest READ+TOOL fact/source fences and fresh canonical snapshot equality before materialization.",
+      "source": {
+        "file": "convex-dev/graphSync.ts",
+        "line": 67
+      },
+      "outcomeTests": "tests/unit/runtimeWorkerAuth/graph.test.ts"
+    },
+    {
+      "path": "graphSync:markFailed",
+      "frozenDisposition": "internalize",
+      "actualVisibility": "internal",
+      "actualBuilder": "internalMutation",
+      "contract": "Same current job checks; private error sanitized; failure never implies synced including retry exhaustion; completed state cannot reopen. Essential repair: actual own-owner database predicate before selection/limit; finite lifecycle timestamps; post-digest READ+TOOL fact/source fences and fresh canonical snapshot equality before materialization.",
+      "source": {
+        "file": "convex-dev/graphSync.ts",
+        "line": 75
+      },
+      "outcomeTests": "tests/unit/runtimeWorkerAuth/graph.test.ts"
+    },
+    {
+      "path": "graphSync:deleteSyncItem",
+      "frozenDisposition": "internalize",
+      "actualVisibility": "internal",
+      "actualBuilder": "internalMutation",
+      "contract": "Same current job checks; metadata-only deletion with final canonical recheck; source/fences/bytes retained. Essential repair: actual own-owner database predicate before selection/limit; finite lifecycle timestamps; post-digest READ+TOOL fact/source fences and fresh canonical snapshot equality before materialization.",
+      "source": {
+        "file": "convex-dev/graphSync.ts",
+        "line": 85
+      },
+      "outcomeTests": "tests/unit/runtimeWorkerAuth/graph.test.ts"
+    },
+    {
+      "path": "graphSync:getUnsyncedItems",
+      "frozenDisposition": "internalize",
+      "actualVisibility": "internal",
+      "actualBuilder": "internalQuery",
+      "contract": "Internaltool+read; indexed tenant/space/grant/state/principal selection before limit; each stored ref and canonical source/fact checked before output. Essential repair: actual own-owner database predicate before selection/limit; finite lifecycle timestamps; post-digest READ+TOOL fact/source fences and fresh canonical snapshot equality before materialization.",
+      "source": {
+        "file": "convex-dev/graphSync.ts",
+        "line": 93
+      },
+      "outcomeTests": "tests/unit/runtimeWorkerAuth/graph.test.ts"
+    },
+    {
+      "path": "graphSync:getHighPriorityItems",
+      "frozenDisposition": "internalize",
+      "actualVisibility": "internal",
+      "actualBuilder": "internalQuery",
+      "contract": "Internaltool+read; indexed tenant/space/grant/state/high-priority/principal selection before limit and processing; each stored job/source checked. Essential repair: actual own-owner database predicate before selection/limit; finite lifecycle timestamps; post-digest READ+TOOL fact/source fences and fresh canonical snapshot equality before materialization.",
+      "source": {
+        "file": "convex-dev/graphSync.ts",
+        "line": 97
+      },
+      "outcomeTests": "tests/unit/runtimeWorkerAuth/graph.test.ts"
+    },
+    {
+      "path": "graphSync:getSyncStats",
+      "frozenDisposition": "internalize",
+      "actualVisibility": "internal",
+      "actualBuilder": "internalQuery",
+      "contract": "Internaltool+read; scoped indexed tenant/space/grant/principal selection before aggregation; every actual row/current source checked. Essential repair: actual own-owner database predicate before selection/limit; finite lifecycle timestamps; post-digest READ+TOOL fact/source fences and fresh canonical snapshot equality before materialization.",
+      "source": {
+        "file": "convex-dev/graphSync.ts",
+        "line": 105
+      },
+      "outcomeTests": "tests/unit/runtimeWorkerAuth/graph.test.ts"
+    },
+    {
+      "path": "graphSync:getFailedItems",
+      "frozenDisposition": "internalize",
+      "actualVisibility": "internal",
+      "actualBuilder": "internalQuery",
+      "contract": "Internaltool+read; scoped indexed tenant/space/grant/principal plus database failed predicate before take; every job/source checked before output. Essential repair: actual own-owner database predicate before selection/limit; finite lifecycle timestamps; post-digest READ+TOOL fact/source fences and fresh canonical snapshot equality before materialization.",
+      "source": {
+        "file": "convex-dev/graphSync.ts",
+        "line": 101
+      },
+      "outcomeTests": "tests/unit/runtimeWorkerAuth/graph.test.ts"
+    },
+    {
+      "path": "graphSync:clearSyncedItems",
+      "frozenDisposition": "internalize",
+      "actualVisibility": "internal",
+      "actualBuilder": "internalMutation",
+      "contract": "Internaltool+read; tenant/space/grant/synced/principal plus database cutoff predicate before processing; all candidates current before deletions and final per-job check; metadata only. Essential repair: actual own-owner database predicate before selection/limit; finite lifecycle timestamps; post-digest READ+TOOL fact/source fences and fresh canonical snapshot equality before materialization.",
+      "source": {
+        "file": "convex-dev/graphSync.ts",
+        "line": 119
+      },
+      "outcomeTests": "tests/unit/runtimeWorkerAuth/graph.test.ts"
+    },
+    {
+      "path": "graphSync:purgeAll",
+      "frozenDisposition": "internalize",
+      "actualVisibility": "internal",
+      "actualBuilder": "internalMutation",
+      "contract": "Internal deployment operator only; queue metadata cleanup retains sources/tombstone fences; no target grant or graph/byte effect.",
+      "source": {
+        "file": "convex-dev/graphSync.ts",
+        "line": 133
+      },
+      "outcomeTests": "tests/unit/runtimeWorkerAuth/admin-catalog.test.ts"
+    }
+  ]
+}

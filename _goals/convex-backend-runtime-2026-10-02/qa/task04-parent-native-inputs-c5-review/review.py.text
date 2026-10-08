@@ -1,0 +1,43 @@
+from pathlib import Path
+import json, hashlib, subprocess, datetime, os
+r=Path('/workspace/Project-Cortex');q=r/'_goals/convex-backend-runtime-2026-10-02/qa';p=q/'task04-parent-native-inputs-c5-preparation';out=q/'task04-parent-native-inputs-c5-review';w=r/'work/resume/task04-parent-native-inputs-c5-review'
+def h(b):return hashlib.sha256(b).hexdigest()
+def rows(base):return [{'path':str(f.relative_to(base)),'sha256':h(f.read_bytes()),'bytes':f.stat().st_size}for f in sorted(base.rglob('*'))if f.is_file()]
+freeze=json.loads((p/'runtime-freeze.json').read_text())
+assert h((p/'runtime-freeze.json').read_bytes())=='0d8e2a2c7b571ce019fc79a0ef89b2e4aec93d05d79293f84157953aea20b6a4'
+assert h((p/'qa-manifest.json').read_bytes())=='529702f70942f3ec0ac3b82e6923ed60cb2c1378fb0069de878e37c3cae8fd65'
+for x in freeze['files']:assert h((p/x['path']).read_bytes())==x['sha256'] and (p/x['path']).stat().st_size==x['bytes'],x['path']
+for x in freeze['externalSource']+freeze['frozenC7']:assert h((r/x['path']).read_bytes())==x['sha256'],x['path']
+assert len(json.loads((p/'qa-manifest.json').read_text())['files'])==55
+sources=[r/'work/resume/task04-native-c7-parent-inputs.mjs',r/'work/resume/task04-native-current-inputs-c5.mjs',p/'offline.mjs.text',q/'task04-native-admission-fixture-c7/scripts/arguments.mjs',q/'task04-native-admission-fixture-c7/scripts/guard.mjs',q/'task04-native-admission-fixture-c7/registration-inventory.json',q/'task04-native-admission-fixture-c7/project-request.json']
+for f in sources:
+ d=out/'source-snapshots'/f.relative_to(r);d.parent.mkdir(parents=True,exist_ok=True);d.write_bytes(f.read_bytes())
+source=(p/'offline.mjs.text').read_text().replace("from '../../../../_goals/", "from '/workspace/Project-Cortex/_goals/")
+source=source.replace("qa=path.resolve('_goals/convex-backend-runtime-2026-10-02/qa/task04-parent-native-inputs-c5-preparation')","qa=path.resolve('_goals/convex-backend-runtime-2026-10-02/qa/task04-parent-native-inputs-c5-review')")
+source=source.replace("work=path.resolve('work/resume/task04-native-admission-fixture-c7/parent-c5')","work=path.resolve('work/resume/task04-parent-native-inputs-c5-review')")
+source=source.replace("results-final02.json","fresh-hostile-results.json")
+extra="""
+await watcherProbe('independent-one-operation-without-attempt',{},e=>{dropRows(e);e.putRow(e.currentRows()[0]);});
+await watcherProbe('independent-one-attempt-without-operation',{},e=>{dropRows(e);e.putRow(e.currentRows()[1]);});
+await watcherProbe('independent-invalid-timestamp',{},e=>{dropRows(e);e.putRow({...e.currentRows()[0],observedAt:'invalid'});});
+await watcherProbe('independent-whitespace-ID',{},e=>{dropRows(e);e.putRow({...e.currentRows()[0],id:'native id'});});
+await watcherProbe('independent-request-digest-changed',{repeat:{at:2,mutate:t=>t.requestSha256='0'.repeat(64)}});
+await watcherProbe('independent-target-operation-changed-at-final',{repeat:{at:3,mutate:t=>t.operation='foreign'}});
+await watcherProbe('independent-initial-proof-unknown-field',{},(e,{proof})=>e.put('initial-physical-id-provenance.json',{...proof,fakeSource:true}));
+await watcherProbe('independent-initial-proof-fake-current-decoder',{},(e,{proof})=>e.put('initial-physical-id-provenance.json',{...proof,currentTargetDecoder:'PASS'}));
+"""
+source=source.replace('const final={utc:',extra+'\nconst final={utc:')
+(w/'fresh.mjs').write_text(source)
+(out/'prior-review-results.json').write_bytes((p/'prior-review-results.json').read_bytes())
+argv=['node','--experimental-vm-modules',str(w/'fresh.mjs')]
+protected=[]
+for name in ['task04-parent-native-inputs-c4-preparation','task04-parent-native-inputs-c4-review','task04-native-admission-fixture-c6','task04-native-admission-c6-execution','task04-native-admission-c6-execution-supplement','task04-parent-native-inputs-c5-preparation','task04-native-admission-fixture-c7']:
+ protected += [{'path':name+'/'+x['path'],'sha256':x['sha256'],'bytes':x['bytes']} for x in rows(q/name)]
+pre={'utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'argv':argv,'cwd':str(r),'source':[{'path':str(f.relative_to(r)),'sha256':h(f.read_bytes()),'bytes':f.stat().st_size}for f in sources+[w/'fresh.mjs']],'protected':protected,'config':{'VMcontrolledImports':True,'realNetwork':0,'realRPC':0,'realCredentialReads':0,'realSigning':0,'timeoutSeconds':90},'discovery':{'retainedCases':59,'freshAdditionalCases':8,'skipped':0}}
+(out/'pre.json').write_text(json.dumps(pre,indent=2)+'\n')
+with (out/'stdout.txt').open('x')as stdout,(out/'stderr.txt').open('x')as stderr:res=subprocess.run(argv,cwd=r,env={'PATH':str(r/'work/resume/toolchain-bin')+':'+os.environ['PATH'],'LANG':'C.UTF-8','NO_COLOR':'1'},stdout=stdout,stderr=stderr,timeout=90)
+post={'utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'source':[{'path':str(f.relative_to(r)),'sha256':h(f.read_bytes()),'bytes':f.stat().st_size}for f in sources+[w/'fresh.mjs']],'protected':[]}
+for name in ['task04-parent-native-inputs-c4-preparation','task04-parent-native-inputs-c4-review','task04-native-admission-fixture-c6','task04-native-admission-c6-execution','task04-native-admission-c6-execution-supplement','task04-parent-native-inputs-c5-preparation','task04-native-admission-fixture-c7']:post['protected'] += [{'path':name+'/'+x['path'],'sha256':x['sha256'],'bytes':x['bytes']} for x in rows(q/name)]
+(out/'post.json').write_text(json.dumps(post,indent=2)+'\n')
+result={'exitCode':res.returncode,'sourceStable':pre['source']==post['source'],'protectedStable':pre['protected']==post['protected']};(out/'result.json').write_text(json.dumps(result,indent=2)+'\n');print(result)
+assert res.returncode==0 and result['sourceStable'] and result['protectedStable']

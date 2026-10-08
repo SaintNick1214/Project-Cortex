@@ -1,0 +1,65 @@
+const fs = require('node:fs');
+const vm = require('node:vm');
+const cp = require('node:child_process');
+const assert = require('node:assert/strict');
+const { createRequire } = require('node:module');
+const root='/workspace/Project-Cortex';
+const out='/tmp/task03b2d-compiler-review1-4crx_9fi';
+const requireProject=createRequire(root+'/package.json');
+const ts=requireProject('typescript');
+const head='cd5671449beb64ed1ca4a284a761cad60ab70525';
+const oldSource=(file)=>cp.execFileSync('git',['show',`${head}:${file}`],{cwd:root,encoding:'utf8'});
+const currentSource=(file)=>fs.readFileSync(root+'/'+file,'utf8');
+const ast=(file,source)=>ts.createSourceFile(file,source,ts.ScriptTarget.Latest,true);
+const sourcePair={worker:{file:'convex-dev/runtimeWorkerAuth.ts'},governance:{file:'convex-dev/governance.ts'}};
+function extractFunction(source,name){const parsed=ast('source.ts',source);const node=parsed.statements.find(n=>ts.isFunctionDeclaration(n)&&n.name?.text===name);assert(node);return node.getText(parsed);}
+function functionRuntime(source){const code=ts.transpileModule(extractFunction(source,'matchesValidator'),{compilerOptions:{target:ts.ScriptTarget.ES2021,module:ts.ModuleKind.CommonJS}}).outputText;const sandbox={exports:{}};vm.runInNewContext(code,sandbox);return sandbox.exports.matchesValidator;}
+const original=functionRuntime(oldSource(sourcePair.worker.file));
+const current=functionRuntime(currentSource(sourcePair.worker.file));
+const string={kind:'string',isOptional:'required'};
+const optional={kind:'boolean',isOptional:'optional'};
+const fields={name:string,enabled:optional};
+const object=(fields)=>({kind:'object',fields,isOptional:'required'});
+const nullProto=(value)=>Object.assign(Object.create(null),value);
+const cases=[];
+function check(name,value,schema,expected){const before=original(value,schema);const after=current(value,schema);assert.equal(before,after,name);assert.equal(after,expected,name);cases.push({name,before,after,expected});}
+check('valid persisted JSON object',JSON.parse('{"name":"valid","enabled":true}'),object(fields),true);
+check('optional absence',JSON.parse('{"name":"valid"}'),object(fields),true);
+check('unexpected admin key',JSON.parse('{"name":"valid","admin":true}'),object(fields),false);
+check('null object',null,object(fields),false);
+check('array input',[],object(fields),false);
+check('missing required field',{},object(fields),false);
+check('invalid required value',JSON.parse('{"name":42}'),object(fields),false);
+check('null prototype record and fields',nullProto({name:'valid',enabled:false}),object(nullProto(fields)),true);
+check('null prototype record unknown key',nullProto({name:'valid',admin:true}),object(nullProto(fields)),false);
+for(const key of ['__proto__','constructor','prototype','toString','hasOwnProperty','valueOf']){
+ check('persisted JSON undeclared prototype key '+key,JSON.parse(`{"name":"valid",${JSON.stringify(key)}:"forged"}`),object(fields),false);
+ check('null prototype undeclared key '+key,nullProto(JSON.parse(`{"name":"valid",${JSON.stringify(key)}:"forged"}`)),object(nullProto(fields)),false);
+ const ownFields=JSON.parse('{}');Object.defineProperty(ownFields,key,{enumerable:true,value:string});
+ const ownRecord=JSON.parse(`{${JSON.stringify(key)}:"declared"}`);
+ check('explicit own schema declaration '+key,ownRecord,object(ownFields),true);
+}
+const inheritedFields=Object.create({admin:string});inheritedFields.name=string;
+check('inherited schema field does not authorize own input key',JSON.parse('{"name":"valid","admin":"forged"}'),object(inheritedFields),false);
+check('nested persisted JSON forged prototype key',JSON.parse('{"name":"valid","child":{"name":"nested","__proto__":{"admin":true}}}'),object({name:string,child:object(fields)}),false);
+check('nested persisted JSON valid',JSON.parse('{"name":"valid","child":{"name":"nested"}}'),object({name:string,child:object(fields)}),true);
+const throwingFields={name:string};Object.defineProperty(throwingFields,'hasOwnProperty',{enumerable:false,get(){throw new Error('shadowed own method must not be accessed')}});
+check('shadowed own hasOwnProperty is not called',JSON.parse('{"name":"valid"}'),object(throwingFields),true);
+function extractGuard(source){const parsed=ast('governance.ts',source);let found=[];function visit(n){if(ts.isCallExpression(n)&&n.getText(parsed).startsWith('Object.')&&n.arguments.some(a=>a.getText(parsed)==='durations'))found.push(n.getText(parsed));ts.forEachChild(n,visit);}visit(parsed);assert.equal(found.length,1);return found[0];}
+const guardBefore=extractGuard(oldSource(sourcePair.governance.file));const guardAfter=extractGuard(currentSource(sourcePair.governance.file));
+const guardOld=new Function('durations','options',`return ${guardBefore};`);const guardNew=new Function('durations','options',`return ${guardAfter};`);
+const durations={'7d':7,'30d':30,'90d':90,'1y':365};
+const periodCases=[];
+for(const period of ['7d','30d','90d','1y','__proto__','constructor','toString','hasOwnProperty','valueOf','2d','',null,undefined,7,Symbol('7d')]){
+ const oldValue=guardOld(durations,{period});const newValue=guardNew(durations,{period});assert.equal(oldValue,newValue);const expected=typeof period==='string'&&['7d','30d','90d','1y'].includes(period);assert.equal(newValue,expected);periodCases.push({period:typeof period==='symbol'?String(period):period===undefined?'undefined':period,before:oldValue,after:newValue,expected});
+}
+const intrinsicCases=[];
+function result(fn){try{return {value:fn()}}catch(e){return {errorName:e.name}}}
+for(const [label,record,key] of [['null prototype',nullProto({key:true}),'key'],['JSON own __proto__',JSON.parse('{"__proto__":true}'),'__proto__'],['plain inherited constructor',{},'constructor'],['primitive string','x','0'],['null',null,'key'],['undefined',undefined,'key']]){
+ const a=result(()=>Object.hasOwn(record,key));const b=result(()=>Object.prototype.hasOwnProperty.call(record,key));assert.deepEqual(a,b);intrinsicCases.push({label,original:a,current:b});
+}
+function schemaParts(source){const parsed=ast('schema.ts',source);let schemaObject;function visit(n){if(ts.isCallExpression(n)&&n.expression.getText(parsed)==='defineSchema')schemaObject=n.arguments[0];ts.forEachChild(n,visit);}visit(parsed);assert(schemaObject&&ts.isObjectLiteralExpression(schemaObject));const parts={};for(const p of schemaObject.properties){const key=ts.isSpreadAssignment(p)?'spread:'+p.expression.getText(parsed):p.name?.getText(parsed);if(['governancePolicies','governanceEnforcement','graphSyncQueue','spread:runtimeAuthTables','spread:runtimeMemoryTables'].includes(key))parts[key]=p.getText(parsed);}assert.equal(Object.keys(parts).length,5);return parts;}
+const oldParts=schemaParts(oldSource('convex-dev/schema.ts'));const newParts=schemaParts(currentSource('convex-dev/schema.ts'));assert.deepEqual(oldParts,newParts);
+const output={source:'Actual HEAD and current source function/guard AST extraction, transpiled or evaluated directly; no repository changes or mirrored production test addition',matchesValidator:cases,getEnforcementStatsGuard:{beforeExpression:guardBefore,afterExpression:guardAfter,cases:periodCases},intrinsicCases,schemaParts:{exactFiveDAndTrustedDeclarationsMatchHead:true,parts:Object.keys(newParts)},equivalent:true,qualification:'Unmodified native intrinsics; identical own-property logic including inherited and persisted JSON prototype names/null prototypes. Other validator semantics remain unchanged.'};
+fs.writeFileSync(out+'/equivalence.json',JSON.stringify(output,null,2)+'\n');
+process.stdout.write(JSON.stringify({equivalent:true,validatorCases:cases.length,periodCases:periodCases.length,intrinsicCases:intrinsicCases.length,DAndTrustedSchemaDeclarations:5})+'\n');

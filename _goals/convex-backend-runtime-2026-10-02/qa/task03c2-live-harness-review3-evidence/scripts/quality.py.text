@@ -1,0 +1,16 @@
+import sys
+sys.path.insert(0,'/tmp/task03c2-live-harness-review3-01t5pzfe/scripts')
+from reviewlib import *
+result=[]
+for label,proj in [('backend-types',Q/'fixture/convex/tsconfig.json'),('client-types',Q/'client-tsconfig.json')]:
+ p=run(label,['node','node_modules/typescript/bin/tsc','--noEmit','--project',str(proj),'--pretty','false'],timeout=60);result.append({'name':label,'exitCode':p.returncode});print(json.dumps(result[-1]),flush=True)
+files=sorted(str(p.relative_to(R)) for tree in [Q/'scripts',Q/'fixture'] for p in tree.rglob('*') if p.suffix in ['.ts','.mjs'] and not p.name.endswith('.d.ts') and '_generated' not in p.parts)
+for label,config in [('house-lint',None),('backend-policy-lint','work/backend-runtime/task03c2-live-fixture/eslint.config.mjs')]:
+ argv=['node','node_modules/eslint/bin/eslint.js']+(['--config',config] if config else [])+['--no-ignore','--format','json',*files]
+ p=run(label,argv,timeout=60);v=json.loads(p.stdout);row=dict(name=label,exitCode=p.returncode,files=len(v),errors=sum(x['errorCount'] for x in v),warnings=sum(x['warningCount'] for x in v),fatal=sum(x['fatalErrorCount'] for x in v));result.append(row);print(json.dumps(row),flush=True)
+p=run('node-version',['node','--version']);result.append(dict(name='node',exitCode=p.returncode,version=p.stdout.decode().strip()))
+p=run('npm12-version',['node','work/backend-runtime/npm12-cache/_npx/1106a35d869e25fb/node_modules/npm/bin/npm-cli.js','--version']);result.append(dict(name='npm12',exitCode=p.returncode,version=p.stdout.decode().strip()))
+versions={n:json.loads((R/'node_modules'/n/'package.json').read_text())['version'] for n in ['convex','ws','https-proxy-agent','tsx','typescript']};result.append(dict(name='dependency-versions',versions=versions))
+write(O/'results/quality.json',result)
+print(json.dumps(result[-3:]))
+

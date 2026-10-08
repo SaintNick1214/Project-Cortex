@@ -35,9 +35,9 @@ export function DataStreamHandler() {
 
       if (artifactDefinition?.onStreamPart) {
         artifactDefinition.onStreamPart({
-          streamPart: delta,
           setArtifact,
           setMetadata,
+          streamPart: delta,
         });
       }
 
@@ -57,8 +57,8 @@ export function DataStreamHandler() {
           case "data-title":
             return {
               ...draftArtifact,
-              title: delta.data,
               status: "streaming",
+              title: delta.data,
             };
 
           case "data-kind":

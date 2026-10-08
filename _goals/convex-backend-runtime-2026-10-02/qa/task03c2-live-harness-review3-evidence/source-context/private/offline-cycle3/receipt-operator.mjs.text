@@ -1,0 +1,8 @@
+import assert from "node:assert/strict";
+import { state } from "./receipt-state.mjs";
+export async function operator(name, args) {
+  assert(["runtimeAuth:deleteScope", "runtimeAuth:deletePrincipal"].includes(name));
+  assert(Object.keys(args).length === 1); state.operatorCalls++;
+  if (process.env.OFFLINE_CASE === "cleanup-operator-fail") throw new Error("PRIVATE_OFFLINE_DIAGNOSTIC_MUST_NOT_ESCAPE");
+  return null;
+}

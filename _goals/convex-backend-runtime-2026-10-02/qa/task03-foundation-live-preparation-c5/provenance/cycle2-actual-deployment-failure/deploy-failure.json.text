@@ -1,0 +1,17 @@
+{
+  "status": "FAIL",
+  "nativeCode": "IndexNotUnique",
+  "phase": "start_push/schema_evaluation",
+  "table": "artifacts",
+  "indexes": [
+    "by_tenant_space",
+    "by_runtime_scope"
+  ],
+  "reason": "Indexes with identical fields must be unique within a table",
+  "nativeQualification": "NOT_RUN",
+  "officialCodegen": "NOT_ACCEPTED",
+  "typecheck": "NOT_ACCEPTED",
+  "ownedGroupsRemaining": 0,
+  "verifiedTerminalGroups": 1,
+  "rawDiagnostics": "PRIVATE_ONLY"
+}

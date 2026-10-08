@@ -1,4 +1,4 @@
-import { randomUUID } from "node:crypto";
+import { randomUUID } from "./crypto";
 /** Bounded ordinary query paging and physical-item outcome accounting. */
 import { ConvexError } from "convex/values";
 import type { ConvexClient } from "convex/browser";

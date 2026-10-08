@@ -110,6 +110,8 @@ export function ChatHistorySidebar({
 
   // Fetch on mount and when dependencies change
   useEffect(() => {
+    // State updates follow the asynchronous fetch, not the effect's render.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchConversations();
   }, [fetchConversations]);
 

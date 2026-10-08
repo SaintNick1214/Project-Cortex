@@ -1,0 +1,191 @@
+[
+  {
+    "name": "publicly-created foreign user ID: own READ denied by get, admitted by store",
+    "created": {
+      "updated": true,
+      "type": "user",
+      "id": "bob",
+      "tenantId": "tenant-a",
+      "memorySpaceId": "space-a",
+      "createdId": "immutable:6"
+    },
+    "read": {
+      "accepted": false,
+      "error": "ConvexError: {\"code\":\"FORBIDDEN\",\"message\":\"Access denied\"}",
+      "writes": 1
+    },
+    "store": {
+      "accepted": true,
+      "result": {
+        "type": "user",
+        "id": "bob",
+        "data": {
+          "replacement": true
+        },
+        "tenantId": "tenant-a",
+        "memorySpaceId": "space-a",
+        "ownerPrincipalId": "runtimeAuthPrincipals:1",
+        "userId": "alice",
+        "version": 2,
+        "previousVersions": [
+          {
+            "version": 1,
+            "data": {
+              "secret": "pre-read-old-secret"
+            },
+            "timestamp": 1791023273579
+          }
+        ],
+        "createdAt": 1791023273579,
+        "updatedAt": 1791023273580,
+        "_id": "immutable:6",
+        "_creationTime": 1000
+      },
+      "writes": 2
+    },
+    "leakedPriorValue": true
+  },
+  {
+    "name": "sessions.endAll duplicate",
+    "accepted": true,
+    "result": {
+      "ended": 2,
+      "sessionIds": [
+        "one",
+        "one"
+      ]
+    },
+    "writes": 2,
+    "attemptedWrites": 2,
+    "states": [
+      {
+        "id": "sessions:5",
+        "status": "ended"
+      },
+      {
+        "id": "sessions:6",
+        "status": "ended"
+      }
+    ]
+  },
+  {
+    "name": "sessions.expireIdle duplicate",
+    "accepted": true,
+    "result": {
+      "expired": 2
+    },
+    "writes": 2,
+    "attemptedWrites": 2,
+    "states": [
+      {
+        "id": "sessions:5",
+        "status": "ended"
+      },
+      {
+        "id": "sessions:6",
+        "status": "ended"
+      }
+    ]
+  },
+  {
+    "name": "mutable.purgeMany duplicate",
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}",
+    "writes": 0,
+    "attemptedWrites": 1,
+    "states": [
+      {
+        "id": "mutable:5"
+      },
+      {
+        "id": "mutable:6"
+      }
+    ]
+  },
+  {
+    "name": "immutable.purgeMany duplicate",
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}",
+    "writes": 0,
+    "attemptedWrites": 1,
+    "states": [
+      {
+        "id": "immutable:5"
+      },
+      {
+        "id": "immutable:6"
+      }
+    ]
+  },
+  {
+    "name": "session expiry crosses await: touch",
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"FORBIDDEN\",\"message\":\"Access denied\"}",
+    "writes": 0,
+    "clock": 10101,
+    "expiresAt": 10100,
+    "finalValue": "active",
+    "lastActiveAt": 1000
+  },
+  {
+    "name": "session expiry crosses await: message-counter",
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"FORBIDDEN\",\"message\":\"Access denied\"}",
+    "writes": 0,
+    "clock": 10101,
+    "expiresAt": 10100,
+    "finalValue": 0,
+    "lastActiveAt": 1000
+  },
+  {
+    "name": "session expiry crosses await: memory-counter",
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"FORBIDDEN\",\"message\":\"Access denied\"}",
+    "writes": 0,
+    "clock": 10101,
+    "expiresAt": 10100,
+    "finalValue": 0,
+    "lastActiveAt": 1000
+  },
+  {
+    "name": "immutable version safe integer overflow",
+    "accepted": true,
+    "result": {
+      "tenantId": "tenant-a",
+      "ownerPrincipalId": "runtimeAuthPrincipals:1",
+      "type": "note",
+      "id": "one",
+      "userId": "alice",
+      "data": "next",
+      "version": 9007199254740992,
+      "previousVersions": [
+        {
+          "version": 9007199254740991,
+          "data": {
+            "secret": "old"
+          },
+          "timestamp": 1000
+        }
+      ],
+      "createdAt": 1000,
+      "updatedAt": 1791023273589,
+      "_id": "immutable:5",
+      "_creationTime": 1000
+    },
+    "writes": 1,
+    "version": 9007199254740992,
+    "safeInteger": false
+  },
+  {
+    "name": "JSON-array source IDs disambiguate quotes/backslashes/unicode",
+    "pass": true,
+    "ids": [
+      "immutable:[\"a:b\",\"c\"]",
+      "immutable:[\"a\",\"b:c\"]",
+      "immutable:[\"a\\\"\",\"b\\\\c\"]",
+      "immutable:[\"a\",\"\\\"b\\\\c\"]",
+      "immutable:[\"雪\",\"☃:\"]",
+      "immutable:[\"雪:☃\",\"\"]"
+    ]
+  }
+]

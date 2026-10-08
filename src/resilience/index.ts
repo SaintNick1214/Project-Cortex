@@ -20,6 +20,7 @@
  * ```
  */
 
+import { runtimeEnv } from "../runtime";
 import { CircuitBreaker } from "./CircuitBreaker";
 import { PriorityQueue } from "./PriorityQueue";
 import { getPriority } from "./priorities";
@@ -563,7 +564,7 @@ export type ConvexPlanTier = "free" | "starter" | "professional";
  */
 export function getPresetForPlan(plan?: ConvexPlanTier): ResilienceConfig {
   const effectivePlan =
-    plan || (process.env.CONVEX_PLAN as ConvexPlanTier | undefined) || "free";
+    plan || (runtimeEnv.CONVEX_PLAN as ConvexPlanTier | undefined) || "free";
 
   switch (effectivePlan.toLowerCase()) {
     case "professional":
@@ -585,7 +586,7 @@ export function getPresetForPlan(plan?: ConvexPlanTier): ResilienceConfig {
  * @returns The detected plan tier, defaulting to 'free'
  */
 export function getDetectedPlanTier(): ConvexPlanTier {
-  const envPlan = process.env.CONVEX_PLAN?.toLowerCase();
+  const envPlan = runtimeEnv.CONVEX_PLAN?.toLowerCase();
   if (envPlan === "professional") return "professional";
   if (envPlan === "starter") return "starter";
   return "free";

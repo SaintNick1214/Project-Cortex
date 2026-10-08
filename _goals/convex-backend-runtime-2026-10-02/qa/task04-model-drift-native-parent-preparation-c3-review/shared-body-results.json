@@ -1,0 +1,1225 @@
+{
+  "status": "PASS",
+  "defined": 81,
+  "skipped": 0,
+  "rows": [
+    {
+      "profile": "extension",
+      "entry": "peer",
+      "mode": "exact-two-chunks",
+      "status": "PASS",
+      "reads": 3,
+      "cancels": 0,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "extension",
+      "entry": "peer",
+      "mode": "over-one",
+      "status": "PASS",
+      "reads": 1,
+      "cancels": 1,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "extension",
+      "entry": "peer",
+      "mode": "read-primary-cleanup-secondary",
+      "status": "PASS",
+      "reads": 1,
+      "cancels": 1,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "extension",
+      "entry": "peer",
+      "mode": "entry-expired",
+      "status": "PASS",
+      "reads": 0,
+      "cancels": 1,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "extension",
+      "entry": "peer",
+      "mode": "late-done",
+      "status": "PASS",
+      "reads": 1,
+      "cancels": 1,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "extension",
+      "entry": "peer",
+      "mode": "invalid-chunk",
+      "status": "PASS",
+      "reads": 1,
+      "cancels": 1,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "extension",
+      "entry": "peer",
+      "mode": "cleanup-deadline",
+      "status": "PASS",
+      "reads": 1,
+      "cancels": 1,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "extension",
+      "entry": "peer",
+      "mode": "real-read-deadline",
+      "status": "PASS",
+      "reads": 1,
+      "cancels": 1,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "extension",
+      "entry": "peer",
+      "mode": "release-primary",
+      "status": "PASS",
+      "reads": 1,
+      "cancels": 0,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "extension",
+      "entry": "publication",
+      "mode": "exact-two-chunks",
+      "status": "PASS",
+      "reads": 3,
+      "cancels": 0,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "extension",
+      "entry": "publication",
+      "mode": "over-one",
+      "status": "PASS",
+      "reads": 1,
+      "cancels": 1,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "extension",
+      "entry": "publication",
+      "mode": "read-primary-cleanup-secondary",
+      "status": "PASS",
+      "reads": 1,
+      "cancels": 1,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "extension",
+      "entry": "publication",
+      "mode": "entry-expired",
+      "status": "PASS",
+      "reads": 0,
+      "cancels": 1,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "extension",
+      "entry": "publication",
+      "mode": "late-done",
+      "status": "PASS",
+      "reads": 1,
+      "cancels": 1,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "extension",
+      "entry": "publication",
+      "mode": "invalid-chunk",
+      "status": "PASS",
+      "reads": 1,
+      "cancels": 1,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "extension",
+      "entry": "publication",
+      "mode": "cleanup-deadline",
+      "status": "PASS",
+      "reads": 1,
+      "cancels": 1,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "extension",
+      "entry": "publication",
+      "mode": "real-read-deadline",
+      "status": "PASS",
+      "reads": 1,
+      "cancels": 1,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "extension",
+      "entry": "publication",
+      "mode": "release-primary",
+      "status": "PASS",
+      "reads": 1,
+      "cancels": 0,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "extension",
+      "entry": "management",
+      "mode": "exact-two-chunks",
+      "status": "PASS",
+      "reads": 3,
+      "cancels": 0,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "extension",
+      "entry": "management",
+      "mode": "over-one",
+      "status": "PASS",
+      "reads": 1,
+      "cancels": 1,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "extension",
+      "entry": "management",
+      "mode": "read-primary-cleanup-secondary",
+      "status": "PASS",
+      "reads": 1,
+      "cancels": 1,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "extension",
+      "entry": "management",
+      "mode": "entry-expired",
+      "status": "PASS",
+      "reads": 0,
+      "cancels": 1,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "extension",
+      "entry": "management",
+      "mode": "late-done",
+      "status": "PASS",
+      "reads": 1,
+      "cancels": 1,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "extension",
+      "entry": "management",
+      "mode": "invalid-chunk",
+      "status": "PASS",
+      "reads": 1,
+      "cancels": 1,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "extension",
+      "entry": "management",
+      "mode": "cleanup-deadline",
+      "status": "PASS",
+      "reads": 1,
+      "cancels": 1,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "extension",
+      "entry": "management",
+      "mode": "real-read-deadline",
+      "status": "PASS",
+      "reads": 1,
+      "cancels": 1,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "extension",
+      "entry": "management",
+      "mode": "release-primary",
+      "status": "PASS",
+      "reads": 1,
+      "cancels": 0,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "regression",
+      "entry": "peer",
+      "mode": "exact-two-chunks",
+      "status": "PASS",
+      "reads": 3,
+      "cancels": 0,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "regression",
+      "entry": "peer",
+      "mode": "over-one",
+      "status": "PASS",
+      "reads": 1,
+      "cancels": 1,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "regression",
+      "entry": "peer",
+      "mode": "read-primary-cleanup-secondary",
+      "status": "PASS",
+      "reads": 1,
+      "cancels": 1,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "regression",
+      "entry": "peer",
+      "mode": "entry-expired",
+      "status": "PASS",
+      "reads": 0,
+      "cancels": 1,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "regression",
+      "entry": "peer",
+      "mode": "late-done",
+      "status": "PASS",
+      "reads": 1,
+      "cancels": 1,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "regression",
+      "entry": "peer",
+      "mode": "invalid-chunk",
+      "status": "PASS",
+      "reads": 1,
+      "cancels": 1,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "regression",
+      "entry": "peer",
+      "mode": "cleanup-deadline",
+      "status": "PASS",
+      "reads": 1,
+      "cancels": 1,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "regression",
+      "entry": "peer",
+      "mode": "real-read-deadline",
+      "status": "PASS",
+      "reads": 1,
+      "cancels": 1,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "regression",
+      "entry": "peer",
+      "mode": "release-primary",
+      "status": "PASS",
+      "reads": 1,
+      "cancels": 0,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "regression",
+      "entry": "publication",
+      "mode": "exact-two-chunks",
+      "status": "PASS",
+      "reads": 3,
+      "cancels": 0,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "regression",
+      "entry": "publication",
+      "mode": "over-one",
+      "status": "PASS",
+      "reads": 1,
+      "cancels": 1,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "regression",
+      "entry": "publication",
+      "mode": "read-primary-cleanup-secondary",
+      "status": "PASS",
+      "reads": 1,
+      "cancels": 1,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "regression",
+      "entry": "publication",
+      "mode": "entry-expired",
+      "status": "PASS",
+      "reads": 0,
+      "cancels": 1,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "regression",
+      "entry": "publication",
+      "mode": "late-done",
+      "status": "PASS",
+      "reads": 1,
+      "cancels": 1,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "regression",
+      "entry": "publication",
+      "mode": "invalid-chunk",
+      "status": "PASS",
+      "reads": 1,
+      "cancels": 1,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "regression",
+      "entry": "publication",
+      "mode": "cleanup-deadline",
+      "status": "PASS",
+      "reads": 1,
+      "cancels": 1,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "regression",
+      "entry": "publication",
+      "mode": "real-read-deadline",
+      "status": "PASS",
+      "reads": 1,
+      "cancels": 1,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "regression",
+      "entry": "publication",
+      "mode": "release-primary",
+      "status": "PASS",
+      "reads": 1,
+      "cancels": 0,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "regression",
+      "entry": "management",
+      "mode": "exact-two-chunks",
+      "status": "PASS",
+      "reads": 3,
+      "cancels": 0,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "regression",
+      "entry": "management",
+      "mode": "over-one",
+      "status": "PASS",
+      "reads": 1,
+      "cancels": 1,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "regression",
+      "entry": "management",
+      "mode": "read-primary-cleanup-secondary",
+      "status": "PASS",
+      "reads": 1,
+      "cancels": 1,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "regression",
+      "entry": "management",
+      "mode": "entry-expired",
+      "status": "PASS",
+      "reads": 0,
+      "cancels": 1,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "regression",
+      "entry": "management",
+      "mode": "late-done",
+      "status": "PASS",
+      "reads": 1,
+      "cancels": 1,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "regression",
+      "entry": "management",
+      "mode": "invalid-chunk",
+      "status": "PASS",
+      "reads": 1,
+      "cancels": 1,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "regression",
+      "entry": "management",
+      "mode": "cleanup-deadline",
+      "status": "PASS",
+      "reads": 1,
+      "cancels": 1,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "regression",
+      "entry": "management",
+      "mode": "real-read-deadline",
+      "status": "PASS",
+      "reads": 1,
+      "cancels": 1,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "regression",
+      "entry": "management",
+      "mode": "release-primary",
+      "status": "PASS",
+      "reads": 1,
+      "cancels": 0,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "extra",
+      "entry": "peer",
+      "mode": "exact-two-chunks",
+      "status": "PASS",
+      "reads": 3,
+      "cancels": 0,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "extra",
+      "entry": "peer",
+      "mode": "over-one",
+      "status": "PASS",
+      "reads": 1,
+      "cancels": 1,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "extra",
+      "entry": "peer",
+      "mode": "read-primary-cleanup-secondary",
+      "status": "PASS",
+      "reads": 1,
+      "cancels": 1,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "extra",
+      "entry": "peer",
+      "mode": "entry-expired",
+      "status": "PASS",
+      "reads": 0,
+      "cancels": 1,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "extra",
+      "entry": "peer",
+      "mode": "late-done",
+      "status": "PASS",
+      "reads": 1,
+      "cancels": 1,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "extra",
+      "entry": "peer",
+      "mode": "invalid-chunk",
+      "status": "PASS",
+      "reads": 1,
+      "cancels": 1,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "extra",
+      "entry": "peer",
+      "mode": "cleanup-deadline",
+      "status": "PASS",
+      "reads": 1,
+      "cancels": 1,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "extra",
+      "entry": "peer",
+      "mode": "real-read-deadline",
+      "status": "PASS",
+      "reads": 1,
+      "cancels": 1,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "extra",
+      "entry": "peer",
+      "mode": "release-primary",
+      "status": "PASS",
+      "reads": 1,
+      "cancels": 0,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "extra",
+      "entry": "publication",
+      "mode": "exact-two-chunks",
+      "status": "PASS",
+      "reads": 3,
+      "cancels": 0,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "extra",
+      "entry": "publication",
+      "mode": "over-one",
+      "status": "PASS",
+      "reads": 1,
+      "cancels": 1,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "extra",
+      "entry": "publication",
+      "mode": "read-primary-cleanup-secondary",
+      "status": "PASS",
+      "reads": 1,
+      "cancels": 1,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "extra",
+      "entry": "publication",
+      "mode": "entry-expired",
+      "status": "PASS",
+      "reads": 0,
+      "cancels": 1,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "extra",
+      "entry": "publication",
+      "mode": "late-done",
+      "status": "PASS",
+      "reads": 1,
+      "cancels": 1,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "extra",
+      "entry": "publication",
+      "mode": "invalid-chunk",
+      "status": "PASS",
+      "reads": 1,
+      "cancels": 1,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "extra",
+      "entry": "publication",
+      "mode": "cleanup-deadline",
+      "status": "PASS",
+      "reads": 1,
+      "cancels": 1,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "extra",
+      "entry": "publication",
+      "mode": "real-read-deadline",
+      "status": "PASS",
+      "reads": 1,
+      "cancels": 1,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "extra",
+      "entry": "publication",
+      "mode": "release-primary",
+      "status": "PASS",
+      "reads": 1,
+      "cancels": 0,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "extra",
+      "entry": "management",
+      "mode": "exact-two-chunks",
+      "status": "PASS",
+      "reads": 3,
+      "cancels": 0,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "extra",
+      "entry": "management",
+      "mode": "over-one",
+      "status": "PASS",
+      "reads": 1,
+      "cancels": 1,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "extra",
+      "entry": "management",
+      "mode": "read-primary-cleanup-secondary",
+      "status": "PASS",
+      "reads": 1,
+      "cancels": 1,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "extra",
+      "entry": "management",
+      "mode": "entry-expired",
+      "status": "PASS",
+      "reads": 0,
+      "cancels": 1,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "extra",
+      "entry": "management",
+      "mode": "late-done",
+      "status": "PASS",
+      "reads": 1,
+      "cancels": 1,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "extra",
+      "entry": "management",
+      "mode": "invalid-chunk",
+      "status": "PASS",
+      "reads": 1,
+      "cancels": 1,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "extra",
+      "entry": "management",
+      "mode": "cleanup-deadline",
+      "status": "PASS",
+      "reads": 1,
+      "cancels": 1,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "extra",
+      "entry": "management",
+      "mode": "real-read-deadline",
+      "status": "PASS",
+      "reads": 1,
+      "cancels": 1,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    },
+    {
+      "profile": "extra",
+      "entry": "management",
+      "mode": "release-primary",
+      "status": "PASS",
+      "reads": 1,
+      "cancels": 0,
+      "releases": 1,
+      "sourcePins": {
+        "bounded-response.mjs": "c6ec5828cc875ceee8ae4d441058ef1e6876578b6aec126e3fe056ed798b6841",
+        "peer.mjs": "ae41db30d61b09a749cd1a582918e3ac4cddc585b176f7fca6c155714e7a8c69",
+        "publication-artifacts.mjs": "c54cf44636a7f53d5b45d0f63d2a572d647174bd971e70265a53f43fbf099334",
+        "publication-contract.mjs": "58e1fba6fa4d38cc8d510a90f2cbed9b7624d5cef1038b5339acaac457af9e31"
+      }
+    }
+  ],
+  "native": "NOT_RUN",
+  "privateReads": 0,
+  "network": 0
+}

@@ -1,0 +1,39 @@
+{
+  "utc": "2026-10-04T08:39:16.383553+00:00",
+  "status": "ACTUAL_EXTENSION_OBSERVED_PASS_PENDING_AGGREGATE",
+  "coreFamilies": 22,
+  "publicDenials": 1400,
+  "wholeStateComparisons": 200,
+  "ownedRowsCreated": 411,
+  "ownedRowsDeleted": 411,
+  "nativeClientTickets": 2581,
+  "nestedConservativeUpper": 37,
+  "nativeConservativeUpperObservedClientPlusNested": 2618,
+  "journalRows": 4380,
+  "retirement": {
+    "version": 1,
+    "operation": "344b098e-e2bf-4260-a46e-3c143472d70a",
+    "phase": "exact-owned-project-retirement",
+    "status": "PASS",
+    "startedAt": "2026-10-04T08:37:55.661Z",
+    "observedAt": "2026-10-04T08:37:55.959Z",
+    "projectId": 3140295,
+    "deploymentName": "modest-puffin-359",
+    "deploymentUrl": "https://modest-puffin-359.convex.cloud",
+    "provisionState": "FULLY_VERIFIED",
+    "verifiedOnlyDevelopmentCloudDeployment": true,
+    "deletionHttpStatus": 200,
+    "absentProjectHttpStatus": 404,
+    "managementCalls": 5
+  },
+  "credentialRemoval": [
+    "deploy.env",
+    "identities.json",
+    "peer-config.json"
+  ],
+  "rootVerifiedManifestRows": 2761,
+  "rootVerifiedManifestSHA256": "4a434d5eb08888ae8ad99afc78bfb21471acd6935d541fec8e59f3a2447e870e",
+  "regression": "New target underway; not accepted",
+  "gateway": "HELD until BOTH retired and fresh aggregate PASS",
+  "paidInference": 0
+}

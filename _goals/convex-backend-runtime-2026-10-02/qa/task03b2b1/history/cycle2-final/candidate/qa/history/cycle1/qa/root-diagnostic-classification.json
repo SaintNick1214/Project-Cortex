@@ -1,0 +1,457 @@
+{
+  "pinnedBase": "a2c9827783e9dd49b9811a2899ba4acbeadc21cd",
+  "acceptedMainObserved": "4fb3482c5e06fcab12ab8513b242a066ef761f2f",
+  "baselineRoot": [
+    {
+      "file": "src/governance/index.ts",
+      "line": 380,
+      "column": 28,
+      "code": "TS2339",
+      "message": "Property 'enforce' does not exist on type '{ setPolicy: FunctionReference<\"mutation\", \"public\", { tenantId?: string | undefined; policy: { organizationId?: string | undefined; memorySpaceId?: string | undefined; sessions?: { limits?: { maxActiveSessions?: number | undefined; maxSessionsPerDevice?: number | undefined; } | undefined; lifecycle: { ...; }; clean...'."
+    }
+  ],
+  "baselineLint": [
+    {
+      "file": "src/governance/index.ts",
+      "line": 380,
+      "column": 28,
+      "code": "TS2339",
+      "message": "Property 'enforce' does not exist on type '{ setPolicy: FunctionReference<\"mutation\", \"public\", { tenantId?: string | undefined; policy: { organizationId?: string | undefined; memorySpaceId?: string | undefined; sessions?: { limits?: { maxActiveSessions?: number | undefined; maxSessionsPerDevice?: number | undefined; } | undefined; lifecycle: { ...; }; clean...'."
+    }
+  ],
+  "root": [
+    {
+      "file": "src/agents/index.ts",
+      "line": 189,
+      "column": 29,
+      "code": "TS2339",
+      "message": "Property 'agentId' does not exist on type '{ _id: Id<\"agents\">; _creationTime: number; metadata?: any; lastActive?: number | undefined; memorySpaceId?: string | undefined; tenantId?: string | undefined; ownerPrincipalId?: string | undefined; ... 7 more ...; status: \"active\" | ... 1 more ... | \"inactive\"; } | { ...; }'."
+    },
+    {
+      "file": "src/agents/index.ts",
+      "line": 190,
+      "column": 26,
+      "code": "TS2339",
+      "message": "Property 'name' does not exist on type '{ _id: Id<\"agents\">; _creationTime: number; metadata?: any; lastActive?: number | undefined; memorySpaceId?: string | undefined; tenantId?: string | undefined; ownerPrincipalId?: string | undefined; ... 7 more ...; status: \"active\" | ... 1 more ... | \"inactive\"; } | { ...; }'."
+    },
+    {
+      "file": "src/agents/index.ts",
+      "line": 191,
+      "column": 33,
+      "code": "TS2339",
+      "message": "Property 'description' does not exist on type '{ _id: Id<\"agents\">; _creationTime: number; metadata?: any; lastActive?: number | undefined; memorySpaceId?: string | undefined; tenantId?: string | undefined; ownerPrincipalId?: string | undefined; ... 7 more ...; status: \"active\" | ... 1 more ... | \"inactive\"; } | { ...; }'."
+    },
+    {
+      "file": "src/agents/index.ts",
+      "line": 192,
+      "column": 28,
+      "code": "TS2339",
+      "message": "Property 'status' does not exist on type '{ _id: Id<\"agents\">; _creationTime: number; metadata?: any; lastActive?: number | undefined; memorySpaceId?: string | undefined; tenantId?: string | undefined; ownerPrincipalId?: string | undefined; ... 7 more ...; status: \"active\" | ... 1 more ... | \"inactive\"; } | { ...; }'."
+    },
+    {
+      "file": "src/agents/index.ts",
+      "line": 193,
+      "column": 34,
+      "code": "TS2339",
+      "message": "Property 'registeredAt' does not exist on type '{ _id: Id<\"agents\">; _creationTime: number; metadata?: any; lastActive?: number | undefined; memorySpaceId?: string | undefined; tenantId?: string | undefined; ownerPrincipalId?: string | undefined; ... 7 more ...; status: \"active\" | ... 1 more ... | \"inactive\"; } | { ...; }'."
+    },
+    {
+      "file": "src/agents/index.ts",
+      "line": 194,
+      "column": 31,
+      "code": "TS2339",
+      "message": "Property 'updatedAt' does not exist on type '{ _id: Id<\"agents\">; _creationTime: number; metadata?: any; lastActive?: number | undefined; memorySpaceId?: string | undefined; tenantId?: string | undefined; ownerPrincipalId?: string | undefined; ... 7 more ...; status: \"active\" | ... 1 more ... | \"inactive\"; } | { ...; }'."
+    },
+    {
+      "file": "src/agents/index.ts",
+      "line": 195,
+      "column": 32,
+      "code": "TS2339",
+      "message": "Property 'lastActive' does not exist on type '{ _id: Id<\"agents\">; _creationTime: number; metadata?: any; lastActive?: number | undefined; memorySpaceId?: string | undefined; tenantId?: string | undefined; ownerPrincipalId?: string | undefined; ... 7 more ...; status: \"active\" | ... 1 more ... | \"inactive\"; } | { ...; }'."
+    },
+    {
+      "file": "src/agents/index.ts",
+      "line": 208,
+      "column": 18,
+      "code": "TS2339",
+      "message": "Property 'agentId' does not exist on type '{ _id: Id<\"agents\">; _creationTime: number; metadata?: any; lastActive?: number | undefined; memorySpaceId?: string | undefined; tenantId?: string | undefined; ownerPrincipalId?: string | undefined; ... 7 more ...; status: \"active\" | ... 1 more ... | \"inactive\"; } | { ...; }'."
+    },
+    {
+      "file": "src/agents/index.ts",
+      "line": 209,
+      "column": 20,
+      "code": "TS2339",
+      "message": "Property 'name' does not exist on type '{ _id: Id<\"agents\">; _creationTime: number; metadata?: any; lastActive?: number | undefined; memorySpaceId?: string | undefined; tenantId?: string | undefined; ownerPrincipalId?: string | undefined; ... 7 more ...; status: \"active\" | ... 1 more ... | \"inactive\"; } | { ...; }'."
+    },
+    {
+      "file": "src/agents/index.ts",
+      "line": 210,
+      "column": 27,
+      "code": "TS2339",
+      "message": "Property 'description' does not exist on type '{ _id: Id<\"agents\">; _creationTime: number; metadata?: any; lastActive?: number | undefined; memorySpaceId?: string | undefined; tenantId?: string | undefined; ownerPrincipalId?: string | undefined; ... 7 more ...; status: \"active\" | ... 1 more ... | \"inactive\"; } | { ...; }'."
+    },
+    {
+      "file": "src/agents/index.ts",
+      "line": 211,
+      "column": 25,
+      "code": "TS2339",
+      "message": "Property 'metadata' does not exist on type '{ _id: Id<\"agents\">; _creationTime: number; metadata?: any; lastActive?: number | undefined; memorySpaceId?: string | undefined; tenantId?: string | undefined; ownerPrincipalId?: string | undefined; ... 7 more ...; status: \"active\" | ... 1 more ... | \"inactive\"; } | { ...; }'."
+    },
+    {
+      "file": "src/agents/index.ts",
+      "line": 212,
+      "column": 23,
+      "code": "TS2339",
+      "message": "Property 'config' does not exist on type '{ _id: Id<\"agents\">; _creationTime: number; metadata?: any; lastActive?: number | undefined; memorySpaceId?: string | undefined; tenantId?: string | undefined; ownerPrincipalId?: string | undefined; ... 7 more ...; status: \"active\" | ... 1 more ... | \"inactive\"; } | { ...; }'."
+    },
+    {
+      "file": "src/agents/index.ts",
+      "line": 213,
+      "column": 22,
+      "code": "TS2339",
+      "message": "Property 'status' does not exist on type '{ _id: Id<\"agents\">; _creationTime: number; metadata?: any; lastActive?: number | undefined; memorySpaceId?: string | undefined; tenantId?: string | undefined; ownerPrincipalId?: string | undefined; ... 7 more ...; status: \"active\" | ... 1 more ... | \"inactive\"; } | { ...; }'."
+    },
+    {
+      "file": "src/agents/index.ts",
+      "line": 214,
+      "column": 28,
+      "code": "TS2339",
+      "message": "Property 'registeredAt' does not exist on type '{ _id: Id<\"agents\">; _creationTime: number; metadata?: any; lastActive?: number | undefined; memorySpaceId?: string | undefined; tenantId?: string | undefined; ownerPrincipalId?: string | undefined; ... 7 more ...; status: \"active\" | ... 1 more ... | \"inactive\"; } | { ...; }'."
+    },
+    {
+      "file": "src/agents/index.ts",
+      "line": 215,
+      "column": 25,
+      "code": "TS2339",
+      "message": "Property 'updatedAt' does not exist on type '{ _id: Id<\"agents\">; _creationTime: number; metadata?: any; lastActive?: number | undefined; memorySpaceId?: string | undefined; tenantId?: string | undefined; ownerPrincipalId?: string | undefined; ... 7 more ...; status: \"active\" | ... 1 more ... | \"inactive\"; } | { ...; }'."
+    },
+    {
+      "file": "src/agents/index.ts",
+      "line": 216,
+      "column": 26,
+      "code": "TS2339",
+      "message": "Property 'lastActive' does not exist on type '{ _id: Id<\"agents\">; _creationTime: number; metadata?: any; lastActive?: number | undefined; memorySpaceId?: string | undefined; tenantId?: string | undefined; ownerPrincipalId?: string | undefined; ... 7 more ...; status: \"active\" | ... 1 more ... | \"inactive\"; } | { ...; }'."
+    },
+    {
+      "file": "src/agents/index.ts",
+      "line": 468,
+      "column": 18,
+      "code": "TS2339",
+      "message": "Property 'agentId' does not exist on type '{ accepted: true; resourceType: RegistryTable; resourceId: string; } | { _id: Id<\"agents\">; _creationTime: number; metadata?: any; lastActive?: number | undefined; memorySpaceId?: string | undefined; ... 9 more ...; status: \"active\" | ... 1 more ... | \"inactive\"; }'."
+    },
+    {
+      "file": "src/agents/index.ts",
+      "line": 469,
+      "column": 20,
+      "code": "TS2339",
+      "message": "Property 'name' does not exist on type '{ accepted: true; resourceType: RegistryTable; resourceId: string; } | { _id: Id<\"agents\">; _creationTime: number; metadata?: any; lastActive?: number | undefined; memorySpaceId?: string | undefined; ... 9 more ...; status: \"active\" | ... 1 more ... | \"inactive\"; }'."
+    },
+    {
+      "file": "src/agents/index.ts",
+      "line": 470,
+      "column": 27,
+      "code": "TS2339",
+      "message": "Property 'description' does not exist on type '{ accepted: true; resourceType: RegistryTable; resourceId: string; } | { _id: Id<\"agents\">; _creationTime: number; metadata?: any; lastActive?: number | undefined; memorySpaceId?: string | undefined; ... 9 more ...; status: \"active\" | ... 1 more ... | \"inactive\"; }'."
+    },
+    {
+      "file": "src/agents/index.ts",
+      "line": 471,
+      "column": 25,
+      "code": "TS2339",
+      "message": "Property 'metadata' does not exist on type '{ accepted: true; resourceType: RegistryTable; resourceId: string; } | { _id: Id<\"agents\">; _creationTime: number; metadata?: any; lastActive?: number | undefined; memorySpaceId?: string | undefined; ... 9 more ...; status: \"active\" | ... 1 more ... | \"inactive\"; }'."
+    },
+    {
+      "file": "src/agents/index.ts",
+      "line": 472,
+      "column": 23,
+      "code": "TS2339",
+      "message": "Property 'config' does not exist on type '{ accepted: true; resourceType: RegistryTable; resourceId: string; } | { _id: Id<\"agents\">; _creationTime: number; metadata?: any; lastActive?: number | undefined; memorySpaceId?: string | undefined; ... 9 more ...; status: \"active\" | ... 1 more ... | \"inactive\"; }'."
+    },
+    {
+      "file": "src/agents/index.ts",
+      "line": 473,
+      "column": 22,
+      "code": "TS2339",
+      "message": "Property 'status' does not exist on type '{ accepted: true; resourceType: RegistryTable; resourceId: string; } | { _id: Id<\"agents\">; _creationTime: number; metadata?: any; lastActive?: number | undefined; memorySpaceId?: string | undefined; ... 9 more ...; status: \"active\" | ... 1 more ... | \"inactive\"; }'."
+    },
+    {
+      "file": "src/agents/index.ts",
+      "line": 474,
+      "column": 28,
+      "code": "TS2339",
+      "message": "Property 'registeredAt' does not exist on type '{ accepted: true; resourceType: RegistryTable; resourceId: string; } | { _id: Id<\"agents\">; _creationTime: number; metadata?: any; lastActive?: number | undefined; memorySpaceId?: string | undefined; ... 9 more ...; status: \"active\" | ... 1 more ... | \"inactive\"; }'."
+    },
+    {
+      "file": "src/agents/index.ts",
+      "line": 475,
+      "column": 25,
+      "code": "TS2339",
+      "message": "Property 'updatedAt' does not exist on type '{ accepted: true; resourceType: RegistryTable; resourceId: string; } | { _id: Id<\"agents\">; _creationTime: number; metadata?: any; lastActive?: number | undefined; memorySpaceId?: string | undefined; ... 9 more ...; status: \"active\" | ... 1 more ... | \"inactive\"; }'."
+    },
+    {
+      "file": "src/agents/index.ts",
+      "line": 476,
+      "column": 26,
+      "code": "TS2339",
+      "message": "Property 'lastActive' does not exist on type '{ accepted: true; resourceType: RegistryTable; resourceId: string; } | { _id: Id<\"agents\">; _creationTime: number; metadata?: any; lastActive?: number | undefined; memorySpaceId?: string | undefined; ... 9 more ...; status: \"active\" | ... 1 more ... | \"inactive\"; }'."
+    },
+    {
+      "file": "src/governance/index.ts",
+      "line": 380,
+      "column": 28,
+      "code": "TS2339",
+      "message": "Property 'enforce' does not exist on type '{ setPolicy: FunctionReference<\"mutation\", \"public\", { tenantId?: string | undefined; policy: { organizationId?: string | undefined; memorySpaceId?: string | undefined; sessions?: { limits?: { maxActiveSessions?: number | undefined; maxSessionsPerDevice?: number | undefined; } | undefined; lifecycle: { ...; }; clean...'."
+    },
+    {
+      "file": "tests/helpers/cleanup.ts",
+      "line": 96,
+      "column": 62,
+      "code": "TS2339",
+      "message": "Property 'purgeAll' does not exist on type '{ create: FunctionReference<\"mutation\", \"public\", { userId?: string | undefined; tenantId?: string | undefined; status?: \"active\" | \"completed\" | \"cancelled\" | \"blocked\" | undefined; data?: any; conversationRef?: { ...; } | undefined; description?: string | undefined; parentId?: string | undefined; memorySpaceId: st...'."
+    },
+    {
+      "file": "tests/helpers/cleanup.ts",
+      "line": 115,
+      "column": 66,
+      "code": "TS2339",
+      "message": "Property 'purgeAll' does not exist on type '{ register: FunctionReference<\"mutation\", \"public\", { metadata?: any; name?: string | undefined; tenantId?: string | undefined; participants?: { type: string; id: string; joinedAt: number; }[] | undefined; memorySpaceId: string; type: \"custom\" | ... 2 more ... | \"project\"; }, { ...; } | ... 1 more ... | null, string...'."
+    }
+  ],
+  "lint": [
+    {
+      "file": "src/agents/index.ts",
+      "line": 189,
+      "column": 29,
+      "code": "TS2339",
+      "message": "Property 'agentId' does not exist on type '{ _id: Id<\"agents\">; _creationTime: number; metadata?: any; lastActive?: number | undefined; memorySpaceId?: string | undefined; tenantId?: string | undefined; ownerPrincipalId?: string | undefined; ... 7 more ...; status: \"active\" | ... 1 more ... | \"inactive\"; } | { ...; }'."
+    },
+    {
+      "file": "src/agents/index.ts",
+      "line": 190,
+      "column": 26,
+      "code": "TS2339",
+      "message": "Property 'name' does not exist on type '{ _id: Id<\"agents\">; _creationTime: number; metadata?: any; lastActive?: number | undefined; memorySpaceId?: string | undefined; tenantId?: string | undefined; ownerPrincipalId?: string | undefined; ... 7 more ...; status: \"active\" | ... 1 more ... | \"inactive\"; } | { ...; }'."
+    },
+    {
+      "file": "src/agents/index.ts",
+      "line": 191,
+      "column": 33,
+      "code": "TS2339",
+      "message": "Property 'description' does not exist on type '{ _id: Id<\"agents\">; _creationTime: number; metadata?: any; lastActive?: number | undefined; memorySpaceId?: string | undefined; tenantId?: string | undefined; ownerPrincipalId?: string | undefined; ... 7 more ...; status: \"active\" | ... 1 more ... | \"inactive\"; } | { ...; }'."
+    },
+    {
+      "file": "src/agents/index.ts",
+      "line": 192,
+      "column": 28,
+      "code": "TS2339",
+      "message": "Property 'status' does not exist on type '{ _id: Id<\"agents\">; _creationTime: number; metadata?: any; lastActive?: number | undefined; memorySpaceId?: string | undefined; tenantId?: string | undefined; ownerPrincipalId?: string | undefined; ... 7 more ...; status: \"active\" | ... 1 more ... | \"inactive\"; } | { ...; }'."
+    },
+    {
+      "file": "src/agents/index.ts",
+      "line": 193,
+      "column": 34,
+      "code": "TS2339",
+      "message": "Property 'registeredAt' does not exist on type '{ _id: Id<\"agents\">; _creationTime: number; metadata?: any; lastActive?: number | undefined; memorySpaceId?: string | undefined; tenantId?: string | undefined; ownerPrincipalId?: string | undefined; ... 7 more ...; status: \"active\" | ... 1 more ... | \"inactive\"; } | { ...; }'."
+    },
+    {
+      "file": "src/agents/index.ts",
+      "line": 194,
+      "column": 31,
+      "code": "TS2339",
+      "message": "Property 'updatedAt' does not exist on type '{ _id: Id<\"agents\">; _creationTime: number; metadata?: any; lastActive?: number | undefined; memorySpaceId?: string | undefined; tenantId?: string | undefined; ownerPrincipalId?: string | undefined; ... 7 more ...; status: \"active\" | ... 1 more ... | \"inactive\"; } | { ...; }'."
+    },
+    {
+      "file": "src/agents/index.ts",
+      "line": 195,
+      "column": 32,
+      "code": "TS2339",
+      "message": "Property 'lastActive' does not exist on type '{ _id: Id<\"agents\">; _creationTime: number; metadata?: any; lastActive?: number | undefined; memorySpaceId?: string | undefined; tenantId?: string | undefined; ownerPrincipalId?: string | undefined; ... 7 more ...; status: \"active\" | ... 1 more ... | \"inactive\"; } | { ...; }'."
+    },
+    {
+      "file": "src/agents/index.ts",
+      "line": 208,
+      "column": 18,
+      "code": "TS2339",
+      "message": "Property 'agentId' does not exist on type '{ _id: Id<\"agents\">; _creationTime: number; metadata?: any; lastActive?: number | undefined; memorySpaceId?: string | undefined; tenantId?: string | undefined; ownerPrincipalId?: string | undefined; ... 7 more ...; status: \"active\" | ... 1 more ... | \"inactive\"; } | { ...; }'."
+    },
+    {
+      "file": "src/agents/index.ts",
+      "line": 209,
+      "column": 20,
+      "code": "TS2339",
+      "message": "Property 'name' does not exist on type '{ _id: Id<\"agents\">; _creationTime: number; metadata?: any; lastActive?: number | undefined; memorySpaceId?: string | undefined; tenantId?: string | undefined; ownerPrincipalId?: string | undefined; ... 7 more ...; status: \"active\" | ... 1 more ... | \"inactive\"; } | { ...; }'."
+    },
+    {
+      "file": "src/agents/index.ts",
+      "line": 210,
+      "column": 27,
+      "code": "TS2339",
+      "message": "Property 'description' does not exist on type '{ _id: Id<\"agents\">; _creationTime: number; metadata?: any; lastActive?: number | undefined; memorySpaceId?: string | undefined; tenantId?: string | undefined; ownerPrincipalId?: string | undefined; ... 7 more ...; status: \"active\" | ... 1 more ... | \"inactive\"; } | { ...; }'."
+    },
+    {
+      "file": "src/agents/index.ts",
+      "line": 211,
+      "column": 25,
+      "code": "TS2339",
+      "message": "Property 'metadata' does not exist on type '{ _id: Id<\"agents\">; _creationTime: number; metadata?: any; lastActive?: number | undefined; memorySpaceId?: string | undefined; tenantId?: string | undefined; ownerPrincipalId?: string | undefined; ... 7 more ...; status: \"active\" | ... 1 more ... | \"inactive\"; } | { ...; }'."
+    },
+    {
+      "file": "src/agents/index.ts",
+      "line": 212,
+      "column": 23,
+      "code": "TS2339",
+      "message": "Property 'config' does not exist on type '{ _id: Id<\"agents\">; _creationTime: number; metadata?: any; lastActive?: number | undefined; memorySpaceId?: string | undefined; tenantId?: string | undefined; ownerPrincipalId?: string | undefined; ... 7 more ...; status: \"active\" | ... 1 more ... | \"inactive\"; } | { ...; }'."
+    },
+    {
+      "file": "src/agents/index.ts",
+      "line": 213,
+      "column": 22,
+      "code": "TS2339",
+      "message": "Property 'status' does not exist on type '{ _id: Id<\"agents\">; _creationTime: number; metadata?: any; lastActive?: number | undefined; memorySpaceId?: string | undefined; tenantId?: string | undefined; ownerPrincipalId?: string | undefined; ... 7 more ...; status: \"active\" | ... 1 more ... | \"inactive\"; } | { ...; }'."
+    },
+    {
+      "file": "src/agents/index.ts",
+      "line": 214,
+      "column": 28,
+      "code": "TS2339",
+      "message": "Property 'registeredAt' does not exist on type '{ _id: Id<\"agents\">; _creationTime: number; metadata?: any; lastActive?: number | undefined; memorySpaceId?: string | undefined; tenantId?: string | undefined; ownerPrincipalId?: string | undefined; ... 7 more ...; status: \"active\" | ... 1 more ... | \"inactive\"; } | { ...; }'."
+    },
+    {
+      "file": "src/agents/index.ts",
+      "line": 215,
+      "column": 25,
+      "code": "TS2339",
+      "message": "Property 'updatedAt' does not exist on type '{ _id: Id<\"agents\">; _creationTime: number; metadata?: any; lastActive?: number | undefined; memorySpaceId?: string | undefined; tenantId?: string | undefined; ownerPrincipalId?: string | undefined; ... 7 more ...; status: \"active\" | ... 1 more ... | \"inactive\"; } | { ...; }'."
+    },
+    {
+      "file": "src/agents/index.ts",
+      "line": 216,
+      "column": 26,
+      "code": "TS2339",
+      "message": "Property 'lastActive' does not exist on type '{ _id: Id<\"agents\">; _creationTime: number; metadata?: any; lastActive?: number | undefined; memorySpaceId?: string | undefined; tenantId?: string | undefined; ownerPrincipalId?: string | undefined; ... 7 more ...; status: \"active\" | ... 1 more ... | \"inactive\"; } | { ...; }'."
+    },
+    {
+      "file": "src/agents/index.ts",
+      "line": 468,
+      "column": 18,
+      "code": "TS2339",
+      "message": "Property 'agentId' does not exist on type '{ accepted: true; resourceType: RegistryTable; resourceId: string; } | { _id: Id<\"agents\">; _creationTime: number; metadata?: any; lastActive?: number | undefined; memorySpaceId?: string | undefined; ... 9 more ...; status: \"active\" | ... 1 more ... | \"inactive\"; }'."
+    },
+    {
+      "file": "src/agents/index.ts",
+      "line": 469,
+      "column": 20,
+      "code": "TS2339",
+      "message": "Property 'name' does not exist on type '{ accepted: true; resourceType: RegistryTable; resourceId: string; } | { _id: Id<\"agents\">; _creationTime: number; metadata?: any; lastActive?: number | undefined; memorySpaceId?: string | undefined; ... 9 more ...; status: \"active\" | ... 1 more ... | \"inactive\"; }'."
+    },
+    {
+      "file": "src/agents/index.ts",
+      "line": 470,
+      "column": 27,
+      "code": "TS2339",
+      "message": "Property 'description' does not exist on type '{ accepted: true; resourceType: RegistryTable; resourceId: string; } | { _id: Id<\"agents\">; _creationTime: number; metadata?: any; lastActive?: number | undefined; memorySpaceId?: string | undefined; ... 9 more ...; status: \"active\" | ... 1 more ... | \"inactive\"; }'."
+    },
+    {
+      "file": "src/agents/index.ts",
+      "line": 471,
+      "column": 25,
+      "code": "TS2339",
+      "message": "Property 'metadata' does not exist on type '{ accepted: true; resourceType: RegistryTable; resourceId: string; } | { _id: Id<\"agents\">; _creationTime: number; metadata?: any; lastActive?: number | undefined; memorySpaceId?: string | undefined; ... 9 more ...; status: \"active\" | ... 1 more ... | \"inactive\"; }'."
+    },
+    {
+      "file": "src/agents/index.ts",
+      "line": 472,
+      "column": 23,
+      "code": "TS2339",
+      "message": "Property 'config' does not exist on type '{ accepted: true; resourceType: RegistryTable; resourceId: string; } | { _id: Id<\"agents\">; _creationTime: number; metadata?: any; lastActive?: number | undefined; memorySpaceId?: string | undefined; ... 9 more ...; status: \"active\" | ... 1 more ... | \"inactive\"; }'."
+    },
+    {
+      "file": "src/agents/index.ts",
+      "line": 473,
+      "column": 22,
+      "code": "TS2339",
+      "message": "Property 'status' does not exist on type '{ accepted: true; resourceType: RegistryTable; resourceId: string; } | { _id: Id<\"agents\">; _creationTime: number; metadata?: any; lastActive?: number | undefined; memorySpaceId?: string | undefined; ... 9 more ...; status: \"active\" | ... 1 more ... | \"inactive\"; }'."
+    },
+    {
+      "file": "src/agents/index.ts",
+      "line": 474,
+      "column": 28,
+      "code": "TS2339",
+      "message": "Property 'registeredAt' does not exist on type '{ accepted: true; resourceType: RegistryTable; resourceId: string; } | { _id: Id<\"agents\">; _creationTime: number; metadata?: any; lastActive?: number | undefined; memorySpaceId?: string | undefined; ... 9 more ...; status: \"active\" | ... 1 more ... | \"inactive\"; }'."
+    },
+    {
+      "file": "src/agents/index.ts",
+      "line": 475,
+      "column": 25,
+      "code": "TS2339",
+      "message": "Property 'updatedAt' does not exist on type '{ accepted: true; resourceType: RegistryTable; resourceId: string; } | { _id: Id<\"agents\">; _creationTime: number; metadata?: any; lastActive?: number | undefined; memorySpaceId?: string | undefined; ... 9 more ...; status: \"active\" | ... 1 more ... | \"inactive\"; }'."
+    },
+    {
+      "file": "src/agents/index.ts",
+      "line": 476,
+      "column": 26,
+      "code": "TS2339",
+      "message": "Property 'lastActive' does not exist on type '{ accepted: true; resourceType: RegistryTable; resourceId: string; } | { _id: Id<\"agents\">; _creationTime: number; metadata?: any; lastActive?: number | undefined; memorySpaceId?: string | undefined; ... 9 more ...; status: \"active\" | ... 1 more ... | \"inactive\"; }'."
+    },
+    {
+      "file": "src/governance/index.ts",
+      "line": 380,
+      "column": 28,
+      "code": "TS2339",
+      "message": "Property 'enforce' does not exist on type '{ setPolicy: FunctionReference<\"mutation\", \"public\", { tenantId?: string | undefined; policy: { organizationId?: string | undefined; memorySpaceId?: string | undefined; sessions?: { limits?: { maxActiveSessions?: number | undefined; maxSessionsPerDevice?: number | undefined; } | undefined; lifecycle: { ...; }; clean...'."
+    }
+  ],
+  "counts": {
+    "root": 28,
+    "lint": 26,
+    "baselineRoot": 1,
+    "baselineLint": 1,
+    "introducedAgentSDK": 25,
+    "introducedCleanup": 2
+  },
+  "classification": [
+    {
+      "kind": "historical isolated-base integration failure",
+      "file": "src/governance/index.ts",
+      "count": 1,
+      "explanation": "a2c982 references public governance.enforce after accepted worker internalization. Exact archive confirms this in both root gates; accepted c0c40423 removes client dispatch and throws GovernanceCapabilityError, inherited in observed accepted main 4fb3482c5e06fcab12ab8513b242a066ef761f2f. Not a global/current-main preexisting failure.",
+      "fixedAcceptedCommit": "c0c40423b52e133b9a51f04d07fd21d38f27c7f2"
+    },
+    {
+      "kind": "introduced integration-pending receipt adaptation",
+      "file": "src/agents/index.ts",
+      "count": 25,
+      "explanation": "SDK assumes register/update always returns private row. Actual guarded mutation can return a safe receipt without READ. The union is retained honestly. Accepted main consumer bytes still equal isolated base. Task03C2/09 owns adaptation; no SDK writes allowed here."
+    },
+    {
+      "kind": "introduced integration-pending internal purge consumer",
+      "file": "tests/helpers/cleanup.ts",
+      "count": 2,
+      "explanation": "Legacy public contexts/memorySpaces purgeAll references are absent from native public api after required internalization. Accepted main consumer bytes still equal isolated base. Task03C2/09 must use qualified trusted cleanup; no unsafe public purge or casts added."
+    }
+  ],
+  "acceptedMainConsumerComparison": [
+    {
+      "file": "src/agents/index.ts",
+      "acceptedMainCommit": "4fb3482c5e06fcab12ab8513b242a066ef761f2f",
+      "acceptedMainSha256": "e53a0dcab39242d58fdab6d2be34be3cac600377ec5c794615afe30c089ec042",
+      "pinnedBaseSha256": "e53a0dcab39242d58fdab6d2be34be3cac600377ec5c794615afe30c089ec042",
+      "sameBytes": true
+    },
+    {
+      "file": "tests/helpers/cleanup.ts",
+      "acceptedMainCommit": "4fb3482c5e06fcab12ab8513b242a066ef761f2f",
+      "acceptedMainSha256": "149b497071490b1e1bc6294db2fecdca63c2c42977fffea05df15bab5be72c4c",
+      "pinnedBaseSha256": "149b497071490b1e1bc6294db2fecdca63c2c42977fffea05df15bab5be72c4c",
+      "sameBytes": true
+    },
+    {
+      "file": "src/governance/index.ts",
+      "acceptedMainCommit": "4fb3482c5e06fcab12ab8513b242a066ef761f2f",
+      "acceptedMainSha256": "f59390017184a080246c1d6185c8c834ba0ad20d9f936889beb10c3bc4fe785a",
+      "pinnedBaseSha256": "99a2f5e48620784bf5c6e73b14732ad658e4bed12845bbe587ba4e3576247b10",
+      "sameBytes": false
+    }
+  ],
+  "wholeRootPass": false
+}

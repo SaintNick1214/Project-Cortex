@@ -1,0 +1,11 @@
+file:///workspace/Project-Cortex/work/resume/task04-native-admission-fixture-c7-review/independent-c4421e44-de81-45e2-bdaa-f99d1fdf0640/diagnostics-bdb0a5ab-1e86-409e-8a74-cb93fead5ab9/04a5fade-933e-4e97-9c20-53a7b36c6672/packet/scripts/driver.mjs:1
+import fs from "node:fs";import c from "node:crypto";try{process.stdout.write("bounded stdout π\n");throw Error("CAPABILITY_UNSUPPORTED: selection violates operation policy");}finally{const initial={version:1,operation:"dummy-op",runId:"dummy-run",sequence:1,previousDigest:"0".repeat(64),phase:"synthetic",caseId:"publication-arguments",status:"PASS"};initial.receiptDigest=c.createHash("sha256").update(JSON.stringify(initial)).digest("hex");const row={version:1,operation:"dummy-op",runId:"dummy-run",sequence:2,previousDigest:initial.receiptDigest,phase:"final",caseId:"native-qualifier",status:"FAIL",cleanupComplete:true,counts:{rpc:0}};row.receiptDigest=c.createHash("sha256").update(JSON.stringify(row)).digest("hex");fs.writeFileSync("/workspace/Project-Cortex/work/resume/task04-native-admission-fixture-c7-review/independent-c4421e44-de81-45e2-bdaa-f99d1fdf0640/diagnostics-bdb0a5ab-1e86-409e-8a74-cb93fead5ab9/04a5fade-933e-4e97-9c20-53a7b36c6672/private/journal-dummy.jsonl",JSON.stringify(initial)+"\n"+JSON.stringify(row)+"\n",{flag:"wx",mode:384});}
+                                                                                                          ^
+
+Error: CAPABILITY_UNSUPPORTED: selection violates operation policy
+    at file:///workspace/Project-Cortex/work/resume/task04-native-admission-fixture-c7-review/independent-c4421e44-de81-45e2-bdaa-f99d1fdf0640/diagnostics-bdb0a5ab-1e86-409e-8a74-cb93fead5ab9/04a5fade-933e-4e97-9c20-53a7b36c6672/packet/scripts/driver.mjs:1:107
+    at ModuleJob.run (node:internal/modules/esm/module_job:439:25)
+    at async node:internal/modules/esm/loader:643:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.19.0

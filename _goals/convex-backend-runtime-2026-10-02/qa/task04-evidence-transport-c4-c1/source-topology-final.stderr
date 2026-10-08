@@ -1,0 +1,14 @@
+Traceback (most recent call last):
+  File "/workspace/Project-Cortex/work/resume/task04-evidence-transport-c4-c1/source-topology-final.py", line 25, in <module>
+    for r in rows:h.require(h.present(R,r,unique=r['path'] not in links),'exact source content/mode/literal unchanged')
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "_goals/convex-backend-runtime-2026-10-02/qa/task04-evidence-transport-c4-c1/materialize.py", line 64, in present
+    exactread(base,p,row['bytes'],row['sha256'],row['mode'],unique);return True
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "_goals/convex-backend-runtime-2026-10-02/qa/task04-evidence-transport-c4-c1/materialize.py", line 49, in exactread
+    b=b''.join(chunks);require(len(b)==size and (expected is None or sha(b)==expected),'length/hash mismatch');return b
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "_goals/convex-backend-runtime-2026-10-02/qa/task04-evidence-transport-c4-c1/materialize.py", line 14, in require
+    if not ok:raise ValueError(msg)
+              ^^^^^^^^^^^^^^^^^^^^^
+ValueError: length/hash mismatch

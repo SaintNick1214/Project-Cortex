@@ -1,0 +1,95 @@
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅    10.8s | 117/117 passed | /tests/unit/runtimeEndpointAuth/memory.test.ts
+  ✅     3.7s | 111/111 passed | /tests/unit/runtimeEndpointAuth/facts.test.ts
+  ✅     1.7s | 64/64 passed | /tests/unit/runtimeAuth/inventory.test.ts
+  ✅     1.4s | 10/10 passed | /tests/unit/runtimeEndpointAuth/retainedWitnesses.test.ts
+  ✅     1.1s | 15/15 passed | /tests/unit/runtimeAuth/provisioning.test.ts
+  ✅     0.2s | 54/54 passed | /tests/unit/runtimeAuth/authority.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.30s ( 1.5%) - portable generated inventory policies: /workspace/Project-Cortex/work/resume/mf/candidate/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs accepts changed source bytes and an additional registration without coupling policy to frozen production hashes/counts
+    /tests/unit/runtimeAuth/inventory.test.ts
+
+ 2. [32m✓[0m    0.29s ( 1.5%) - portable generated inventory policies: /workspace/Project-Cortex/work/resume/mf/candidate/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs accepts changed source bytes and an additional registration without coupling policy to frozen production hashes/counts
+    /tests/unit/runtimeAuth/inventory.test.ts
+
+ 3. [32m✓[0m    0.13s ( 0.6%) - actual facts endpoint closure write-only fact deletion keeps independent source-row controls after creating its own scope tombstone
+    /tests/unit/runtimeEndpointAuth/facts.test.ts
+
+ 4. [32m✓[0m    0.08s ( 0.4%) - actual facts endpoint closure editing an extracted fact (explicit sourceRef=true) creates a dedicated assertion without changing the originating memory or siblings
+    /tests/unit/runtimeEndpointAuth/facts.test.ts
+
+ 5. [32m✓[0m    0.07s ( 0.4%) - actual facts endpoint closure fact revision CAS retains the original complete source payload across the new content hash
+    /tests/unit/runtimeEndpointAuth/facts.test.ts
+
+ 6. [32m✓[0m    0.06s ( 0.3%) - actual facts endpoint closure write-only fact deletion keeps independent source-event controls after creating its own scope tombstone
+    /tests/unit/runtimeEndpointAuth/facts.test.ts
+
+ 7. [32m✓[0m    0.05s ( 0.2%) - actual facts endpoint closure current and audited historical reads reject canonical hash corruption and edits cannot repair it
+    /tests/unit/runtimeEndpointAuth/facts.test.ts
+
+ 8. [32m✓[0m    0.04s ( 0.2%) - actual facts endpoint closure actual mutation fixture rolls back all rows and tombstones on a later write failure
+    /tests/unit/runtimeEndpointAuth/facts.test.ts
+
+ 9. [32m✓[0m    0.04s ( 0.2%) - actual facts endpoint closure manual facts cannot retain caller tool trust, and editing extracted tool facts creates a dedicated assertion source
+    /tests/unit/runtimeEndpointAuth/facts.test.ts
+
+10. [32m✓[0m    0.04s ( 0.2%) - actual facts endpoint closure checks linked source memories/conversations and denies foreign history chain targets
+    /tests/unit/runtimeEndpointAuth/facts.test.ts
+
+11. [32m✓[0m    0.04s ( 0.2%) - actual facts endpoint closure editing an extracted fact (explicit sourceRef=false) creates a dedicated assertion without changing the originating memory or siblings
+    /tests/unit/runtimeEndpointAuth/facts.test.ts
+
+12. [32m✓[0m    0.03s ( 0.1%) - actual facts endpoint closure get checks READ expiry after its canonical source reload awaits
+    /tests/unit/runtimeEndpointAuth/facts.test.ts
+
+13. [32m✓[0m    0.03s ( 0.1%) - actual facts endpoint closure updateInPlace retains the original shared source witness while hashing an extracted fact's separate manual assertion
+    /tests/unit/runtimeEndpointAuth/facts.test.ts
+
+14. [32m✓[0m    0.02s ( 0.1%) - actual facts endpoint closure explicit audited history returns both versions after an update while normal current reads exclude the stale old version
+    /tests/unit/runtimeEndpointAuth/facts.test.ts
+
+15. [32m✓[0m    0.02s ( 0.1%) - actual facts endpoint closure store constrains actual canonical selection and mutation with a foreign same-ID row inserted first
+    /tests/unit/runtimeEndpointAuth/facts.test.ts
+
+16. [32m✓[0m    0.02s ( 0.1%) - actual facts endpoint closure current and audited historical reads reject canonical normalization corruption and edits cannot repair it
+    /tests/unit/runtimeEndpointAuth/facts.test.ts
+
+17. [32m✓[0m    0.02s ( 0.1%) - actual facts endpoint closure getHistory constrains actual canonical selection and mutation with a foreign same-ID row inserted first
+    /tests/unit/runtimeEndpointAuth/facts.test.ts
+
+18. [32m✓[0m    0.02s ( 0.1%) - actual memories endpoint closure space write-only mutations succeed with safe receipts and never expose private rows or filter-selected IDs
+    /tests/unit/runtimeEndpointAuth/memory.test.ts
+
+19. [32m✓[0m    0.02s ( 0.1%) - retained linked and bulk preeffect admissions immutable-version invalidation during a later source hash denies the entire multirow delivery
+    /tests/unit/runtimeEndpointAuth/retainedWitnesses.test.ts
+
+20. [32m✓[0m    0.02s ( 0.1%) - actual facts endpoint closure fact receipt downgrade cannot conceal late grant invalidation
+    /tests/unit/runtimeEndpointAuth/facts.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 1.34s (6.8% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      19.55s
+  Test suites:        6
+  Individual tests:   279
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 6
+════════════════════════════════════════════════════════════════════════════════
+

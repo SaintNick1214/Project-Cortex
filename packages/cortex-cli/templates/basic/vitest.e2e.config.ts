@@ -19,10 +19,6 @@ export default defineConfig({
     restoreMocks: true,
     // Run E2E tests sequentially to avoid rate limits
     pool: "forks",
-    poolOptions: {
-      forks: {
-        singleFork: true,
-      },
-    },
+    maxWorkers: 1,
   },
 });

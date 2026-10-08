@@ -1,0 +1,6 @@
+from judge import *
+import concurrent.futures,shutil
+sources=[('original-authority',pathlib.Path('/tmp/task03b2b1-review1-5DtS9Q/authority-probes.mts')),('original-native',pathlib.Path('/tmp/task03b2b1-review1-5DtS9Q/probes.mts')),('original-graph',pathlib.Path('/tmp/task03b2b1-review1-5DtS9Q/graph-boundary.mts')),('original-accessor',pathlib.Path('/tmp/task03b2b1-review2-onz6ay2u/accessor-probes.mts')),('original-stateful',pathlib.Path('/tmp/task03b2b1-review2-onz6ay2u/stateful-envelope-probes.mts')),('required-graph',Q/'cycle2/graph-boundary.mts'),('required-accessor',Q/'cycle3/accessor-outcomes.mts'),('required-stateful',Q/'cycle3/stateful-outcomes.mts'),('required-admission',Q/'cycle3/admission-probes.mts')]
+for name,p in sources:shutil.copyfile(p,OUT/'context'/f'{name}.mts')
+with concurrent.futures.ThreadPoolExecutor(max_workers=3) as e:list(e.map(lambda x:run(x[0],['node',str(C/'node_modules/tsx/dist/cli.mjs'),str(x[1])]),sources))
+run('catalog',['node',str(Q/'inventory.mjs'),str(OUT/'catalog')])

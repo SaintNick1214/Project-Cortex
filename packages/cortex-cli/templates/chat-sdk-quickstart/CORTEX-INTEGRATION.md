@@ -1,6 +1,6 @@
 # Cortex Chat integration
 
-Use the [application README](./README.md) for version 1.1.0 setup, supported features and updates. The recognized backend composes the current SDK schema with `convex/app.schema.ts`; app handlers remain in `convex/app/` and SDK paths retain their names through the trusted internal-registration shim. Genuine codegen supplies the combined model. Do not copy public SDK handlers over this backend.
+Use the [application README](./README.md) for version 1.2.0 setup, supported features and updates. The recognized backend composes the current SDK schema with `convex/app.schema.ts`; app handlers remain in `convex/app/` and SDK paths retain their names through the trusted internal-registration shim. Genuine codegen supplies the combined model. Do not copy public SDK handlers over this backend.
 
 Normal Auth.js guest and credentials flows persist private `chatUsers`. `requireScope` in `lib/cortex.ts` obtains the verified session user, fixed server tenant and per-user memory space. `private-backend.ts` uses only fixed internal operations with the server deployment-admin transport. The request's user/tenant/space identifiers and SDK AuthContext cannot establish app authority. All private routes/actions/loaders verify owner scope; intended public sharing returns a minimal read-only text projection.
 

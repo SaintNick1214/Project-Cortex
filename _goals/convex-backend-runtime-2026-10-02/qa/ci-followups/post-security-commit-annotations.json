@@ -1,0 +1,30 @@
+{
+  "head": "325ede3ac506a444e9d4cd414624d15a942fa897",
+  "observedQuality": "Dependency Review, Trivy and root CI lint PASS; CodeQL fail retained",
+  "annotations": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task01-security/evidence/source-history/keys-before.mjs",
+      "blob_href": "https://github.com/SaintNick1214/Project-Cortex/blob/325ede3ac506a444e9d4cd414624d15a942fa897/_goals/convex-backend-runtime-2026-10-02/qa/task01-security/evidence/source-history/keys-before.mjs",
+      "start_line": 10,
+      "start_column": 1,
+      "end_line": 10,
+      "end_column": 97,
+      "annotation_level": "failure",
+      "title": "Potential file system race condition",
+      "message": "The file may have changed since it [was checked](1).",
+      "raw_details": null
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task01/fixture/scripts/qualify.mjs",
+      "blob_href": "https://github.com/SaintNick1214/Project-Cortex/blob/325ede3ac506a444e9d4cd414624d15a942fa897/_goals/convex-backend-runtime-2026-10-02/qa/task01/fixture/scripts/qualify.mjs",
+      "start_line": 43,
+      "start_column": 28,
+      "end_line": 43,
+      "end_column": 92,
+      "annotation_level": "warning",
+      "title": "File data in outbound network request",
+      "message": "Outbound network request depends on [file data](1).",
+      "raw_details": null
+    }
+  ]
+}

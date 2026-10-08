@@ -1,0 +1,47 @@
+{
+  "scope": "Original48 SAFETYONLY repair; functional gates pending",
+  "checks": [
+    {
+      "command": "CORTEX_UNAVAILABLE_RECEIPT=work/resume/transcript-repair/positive-controls48.json node --experimental-vm-modules node_modules/jest/bin/jest.js --config work/resume/transcript-repair/jest.config.mjs --runInBand",
+      "exitCode": 0,
+      "tests": 1124,
+      "passed": 1124,
+      "receipt": "native-handler-tests.txt"
+    },
+    {
+      "command": "node --experimental-vm-modules node_modules/jest/bin/jest.js --config work/resume/transcript-safety-review/jest.config.mjs --runInBand",
+      "exitCode": 0,
+      "tests": 330,
+      "passed": 330,
+      "receipt": "independent330-replay.txt",
+      "interpretation": "Executor regression replay; fresh independent review still pending"
+    },
+    {
+      "command": "npx --no-install tsc --noEmit -p work/resume/transcript-repair/tsconfig.json",
+      "exitCode": 0,
+      "receipt": "backend-typecheck.txt"
+    },
+    {
+      "command": "npx --no-install eslint convex-dev/conversations.ts convex-dev/conversationShares.ts convex-dev/conversationSnapshots.ts convex-dev/factHistory.ts convex-dev/a2a.ts convex-dev/runtimeUnavailableAuth.ts tests/unit/runtimeUnavailableAuth/closure.test.ts",
+      "exitCode": 0,
+      "receipt": "lint.txt"
+    },
+    {
+      "command": "node _goals/convex-backend-runtime-2026-10-02/qa/resume-dependency-refinement-c2/inventory.mjs _goals/convex-backend-runtime-2026-10-02/qa/task03b2e-transcript-a2a-repair/current-inventory",
+      "exitCode": 0,
+      "registered": 259,
+      "public": 200,
+      "internal": 59,
+      "unresolved": 0,
+      "receipt": "inventory.txt"
+    },
+    {
+      "command": "git diff --check -- convex-dev/conversations.ts convex-dev/conversationShares.ts convex-dev/conversationSnapshots.ts convex-dev/factHistory.ts convex-dev/a2a.ts convex-dev/runtimeUnavailableAuth.ts tests/unit/runtimeUnavailableAuth",
+      "exitCode": 0
+    }
+  ],
+  "rejectedHistory": "rejected/ contains exact7source/test bytes and hashes,837 original outcomes,330 original independent probes including2failures and REJECT3.2 review. Originals remain unchanged.",
+  "independentReview": "PENDING_COORDINATOR_NEW_JUDGE",
+  "Task04": "HELD",
+  "sourceOwnershipTombstoneRevisionsFunctionalGates": "MANDATORY_TASK05_07_08_PENDING"
+}

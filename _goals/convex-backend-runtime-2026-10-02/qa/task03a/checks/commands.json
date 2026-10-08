@@ -1,0 +1,173 @@
+[
+  {
+    "name": "npm-version",
+    "command": "npm",
+    "args": [
+      "exec",
+      "--offline",
+      "--package=npm@12.2.0",
+      "--",
+      "npm",
+      "--version"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-03T08:27:33.339Z",
+    "finishedAt": "2026-10-03T08:27:34.057Z",
+    "exitCode": 0,
+    "signal": null,
+    "stdout": "_goals/convex-backend-runtime-2026-10-02/qa/task03a/checks/npm-version.stdout.log",
+    "stderr": "_goals/convex-backend-runtime-2026-10-02/qa/task03a/checks/npm-version.stderr.log"
+  },
+  {
+    "name": "node-version",
+    "command": "node",
+    "args": [
+      "--version"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-03T08:27:34.058Z",
+    "finishedAt": "2026-10-03T08:27:34.064Z",
+    "exitCode": 0,
+    "signal": null,
+    "stdout": "_goals/convex-backend-runtime-2026-10-02/qa/task03a/checks/node-version.stdout.log",
+    "stderr": "_goals/convex-backend-runtime-2026-10-02/qa/task03a/checks/node-version.stderr.log"
+  },
+  {
+    "name": "inventory",
+    "command": "node",
+    "args": [
+      "work/backend-runtime/task03a/inventory.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-03T08:27:34.064Z",
+    "finishedAt": "2026-10-03T08:27:34.433Z",
+    "exitCode": 0,
+    "signal": null,
+    "stdout": "_goals/convex-backend-runtime-2026-10-02/qa/task03a/checks/inventory.stdout.log",
+    "stderr": "_goals/convex-backend-runtime-2026-10-02/qa/task03a/checks/inventory.stderr.log"
+  },
+  {
+    "name": "backend-strict",
+    "command": "npm",
+    "args": [
+      "exec",
+      "--offline",
+      "--package=npm@12.2.0",
+      "--",
+      "npm",
+      "exec",
+      "--offline",
+      "--",
+      "tsc",
+      "--project",
+      "work/backend-runtime/task03a/tsconfig.backend.json",
+      "--noEmit"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-03T08:27:34.433Z",
+    "finishedAt": "2026-10-03T08:27:37.188Z",
+    "exitCode": 0,
+    "signal": null,
+    "stdout": "_goals/convex-backend-runtime-2026-10-02/qa/task03a/checks/backend-strict.stdout.log",
+    "stderr": "_goals/convex-backend-runtime-2026-10-02/qa/task03a/checks/backend-strict.stderr.log"
+  },
+  {
+    "name": "root-strict",
+    "command": "npm",
+    "args": [
+      "exec",
+      "--offline",
+      "--package=npm@12.2.0",
+      "--",
+      "npm",
+      "exec",
+      "--offline",
+      "--",
+      "tsc",
+      "--project",
+      "work/backend-runtime/task03a/tsconfig.root.json",
+      "--noEmit"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-03T08:27:37.188Z",
+    "finishedAt": "2026-10-03T08:27:40.072Z",
+    "exitCode": 0,
+    "signal": null,
+    "stdout": "_goals/convex-backend-runtime-2026-10-02/qa/task03a/checks/root-strict.stdout.log",
+    "stderr": "_goals/convex-backend-runtime-2026-10-02/qa/task03a/checks/root-strict.stderr.log"
+  },
+  {
+    "name": "scoped-eslint",
+    "command": "npm",
+    "args": [
+      "exec",
+      "--offline",
+      "--package=npm@12.2.0",
+      "--",
+      "npm",
+      "exec",
+      "--offline",
+      "--",
+      "eslint",
+      "convex-dev/runtimeAuth.ts",
+      "convex-dev/runtimeAuthSchema.ts",
+      "convex-dev/schema.ts",
+      "src/auth/verified.ts",
+      "tests/unit/runtimeAuth",
+      "--report-unused-disable-directives"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-03T08:27:40.072Z",
+    "finishedAt": "2026-10-03T08:27:46.571Z",
+    "exitCode": 0,
+    "signal": null,
+    "stdout": "_goals/convex-backend-runtime-2026-10-02/qa/task03a/checks/scoped-eslint.stdout.log",
+    "stderr": "_goals/convex-backend-runtime-2026-10-02/qa/task03a/checks/scoped-eslint.stderr.log"
+  },
+  {
+    "name": "unit",
+    "command": "npm",
+    "args": [
+      "exec",
+      "--offline",
+      "--package=npm@12.2.0",
+      "--",
+      "npm",
+      "exec",
+      "--offline",
+      "--",
+      "node",
+      "--experimental-vm-modules",
+      "node_modules/jest/bin/jest.js",
+      "--testPathPatterns=tests/unit/runtimeAuth",
+      "--runInBand",
+      "--forceExit"
+    ],
+    "environment": {
+      "CONVEX_URL": "http://127.0.0.1:1",
+      "CONVEX_TEST_MODE": "local"
+    },
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-03T08:27:46.571Z",
+    "finishedAt": "2026-10-03T08:27:52.235Z",
+    "exitCode": 0,
+    "signal": null,
+    "stdout": "_goals/convex-backend-runtime-2026-10-02/qa/task03a/checks/unit.stdout.log",
+    "stderr": "_goals/convex-backend-runtime-2026-10-02/qa/task03a/checks/unit.stderr.log"
+  },
+  {
+    "name": "diff-check",
+    "command": "git",
+    "args": [
+      "diff",
+      "--check"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-03T08:27:52.235Z",
+    "finishedAt": "2026-10-03T08:27:52.246Z",
+    "exitCode": 0,
+    "signal": null,
+    "stdout": "_goals/convex-backend-runtime-2026-10-02/qa/task03a/checks/diff-check.stdout.log",
+    "stderr": "_goals/convex-backend-runtime-2026-10-02/qa/task03a/checks/diff-check.stderr.log"
+  }
+]

@@ -1,0 +1,28 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import cp from 'node:child_process';
+import {syncBuiltinESMExports} from 'node:module';
+import {pathToFileURL} from 'node:url';
+import {resolve} from 'node:path';
+import {createHash} from 'node:crypto';
+const repo=process.cwd(),base=resolve(repo,'_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-live-preparation-c3'),scratch=resolve(repo,'work/resume/current-guard-preparation-c3-review');
+const {canonical,sourcePreflight}=await import(pathToFileURL(base+'/scripts/guard.mjs'));
+const processSource=fs.readFileSync(base+'/scripts/process-check.mjs','utf8').replace("import { repo, scratch, canonical } from './guard.mjs';","import { repo, canonical } from '"+base+"/scripts/guard.mjs';\nconst scratch="+JSON.stringify(scratch)+";").replace("from './process-owner.mjs'","from '"+base+"/scripts/process-owner.mjs'").replace("from './process-terminal.mjs'","from '"+base+"/scripts/process-terminal.mjs'");
+fs.writeFileSync(scratch+'/process-check-restricted.mjs',processSource);
+const record={keyReads:0,networkAttempts:0,subprocessAttempts:0,entrypoints:[]},oldRead=fs.readFileSync;
+fs.readFileSync=(path,...args)=>{if(String(path).includes('jwt-private.pem')){record.keyReads++;throw Error('KEY_READ_PROHIBITED');}return oldRead(path,...args);};
+const oldSpawn=cp.spawn;cp.spawn=(...args)=>{record.subprocessAttempts++;throw Error('SPAWN_PROHIBITED');};globalThis.fetch=async()=>{record.networkAttempts++;throw Error('NETWORK_PROHIBITED');};syncBuiltinESMExports();
+for(const [name,arg] of [['key-check',''],['provision',''],['deploy','deploy'],['driver',''],['qualify',''],['cleanup','foundation-'+'a'.repeat(32)],['retire','']]){process.argv[2]=arg;let rejected=false;try{await import(pathToFileURL(base+'/scripts/'+name+'.mjs'));}catch{rejected=true;}assert.equal(rejected,true);record.entrypoints.push({name,rejected});}
+assert.equal(record.keyReads+record.networkAttempts+record.subprocessAttempts,0);fs.readFileSync=oldRead;cp.spawn=oldSpawn;syncBuiltinESMExports();
+fs.writeFileSync(scratch+'/zero-operation-preflight.json',JSON.stringify(record,null,2)+'\n');
+await import(pathToFileURL(scratch+'/process-check-restricted.mjs'));
+sourcePreflight();
+const frozen=JSON.parse(fs.readFileSync(base+'/runtime-freeze.json'));const sha=v=>createHash('sha256').update(v).digest('hex');
+for(const r of frozen.files)assert.equal(sha(fs.readFileSync(resolve(repo,r.path))),r.sha256);
+const inv=JSON.parse(fs.readFileSync(base+'/source-inventory.json'));for(const r of inv.files){assert.equal(sha(fs.readFileSync(resolve(repo,r.source))),r.sha256);assert.equal(sha(fs.readFileSync(resolve(base,'../task03-foundation-live-fixture-c3',r.copy))),r.sha256);}
+const c2=JSON.parse(fs.readFileSync(resolve(base,'../task03-foundation-live-preparation-c2/runtime-freeze.json')));const old=new Map(c2.files.map(r=>[r.path.replaceAll('preparation-c2','preparation-c3').replaceAll('fixture-c2','fixture-c3'),r.sha256]));
+const differences=frozen.files.filter(r=>old.get(r.path)!==r.sha256).map(r=>({path:r.path,priorHash:old.get(r.path)??null,currentHash:r.sha256}));
+const roots=['convex-dev','src'];const imports=[];
+for(const r of inv.files){if(!roots.some(x=>r.source.startsWith(x+'/'))||!r.source.endsWith('.ts'))continue;const text=fs.readFileSync(resolve(repo,r.source),'utf8');for(const m of text.matchAll(/(?:from\s*|import\s*\(|import\s*)(['"])(\.[^'"]+)\1/g)){let target=resolve(repo,r.source,'..',m[2]);if(target.includes('/_generated/'))continue;const paths=[target,target+'.ts',target.replace(/\.js$/,'.ts'),resolve(target,'index.ts')];const found=paths.find(p=>inv.files.some(row=>resolve(repo,row.source)===p));assert.ok(found,'Uninventoried relative source import '+r.source+' '+m[2]);imports.push({source:r.source,import:m[2],target:found.slice(repo.length+1)});}}
+const receipt={scope:'FRESH_INDEPENDENT_PREPARATION_ONLY',candidateSha256:sha(fs.readFileSync(base+'/runtime-freeze.json')),operationalFiles:frozen.files.length,sourceCopies:inv.files.length,relativeImportEdges:imports.length,allOperationalHashesMatch:true,allSourceCopyHashesMatch:true,differencesFromC2: differences,cliRestorationDocumentSha256:sha(fs.readFileSync(base+'/cli-owned-file-restoration.md')),officialGeneratedAbsent:!fs.existsSync(resolve(base,'../task03-foundation-live-fixture-c3/fixture/convex/_generated')),approvalReceiptAbsent:!fs.existsSync(base+'/independent-preparation-review.json')};
+fs.writeFileSync(scratch+'/final-verification.json',JSON.stringify(receipt,null,2)+'\n');console.log(JSON.stringify({...receipt,differencesFromC2:differences.length}));

@@ -1,0 +1,33 @@
+from pathlib import Path
+b=Path('_goals/convex-backend-runtime-2026-10-02/qa/task04-metadata-retention-implementation-c1/fixture/convex')
+p=b/'observer.ts';s=p.read_text()
+s="import {selectProviderSnapshot,validateProviderSnapshot,type ProviderSnapshot,type AmountEvidence} from './provider-cost.ts';\n"+s
+s=s.replace("export interface Transcript {version:1;method:Receipt['method'];events:Event[];ended:", "export type Transcript = {version:1;method:Receipt['method'];events:Event[];ended:")
+s=s.replace("'reader-done'|'abort'|'deadline'|'error'}\nexport interface Observed", "'reader-done'|'abort'|'deadline'|'error'}|{version:2;method:'generate'|'stream';events:Event[];ended:'returned'|'reader-done'|'abort'|'deadline'|'error'}\nexport interface Observed",1)
+s=s.replace("export interface Observed {readerOwnership", "export interface Observed {amountEvidence?:AmountEvidence|null;readerOwnership")
+s=s.replace("usage:selectedUsage(field(r,'usage')),metadata}}", "usage:selectedUsage(field(r,'usage')),metadata,...selectProviderSnapshot(r)}}")
+s=s.replace("data={finish:selectedFinish(p.finishReason??null),usage:selectedUsage(p.usage)}", "data={finish:selectedFinish(p.finishReason??null),usage:selectedUsage(p.usage),...selectProviderSnapshot(part)}")
+s=s.replace("if(tr.version!==1||!Array.isArray", "if((tr.version!==1&&tr.version!==2)||(tr.version===2&&c.method==='embed')||!Array.isArray")
+s=s.replace("const eligible:Observed['eligible']=[];", "let providerSnapshot:ProviderSnapshot|null=null,providerSequence:number|null=null;const rawCostSequences:number[]=[];const eligible:Observed['eligible']=[];")
+s=s.replace("record(events[0]!.data,'body content finish usage metadata')", "record(events[0]!.data,tr.version===2?'body content finish usage metadata providerCost providerShape':'body content finish usage metadata')")
+s=s.replace("body=record(d.body);correlateId(body.id", "body=record(d.body);if(tr.version===2){providerSnapshot=validateProviderSnapshot(d.providerCost,d.providerShape);providerSequence=0;}correlateId(body.id",1)
+s=s.replace("mapped=d.usage===null?null:record(d.usage,'input output');correlated=", "if(rawUsage?.cost!==undefined&&rawUsage.cost!==null)rawCostSequences.push(0);mapped=d.usage===null?null:record(d.usage,'input output');correlated=",1)
+s=s.replace("const u=record(raw.usage);if(rawUsage)", "const u=record(raw.usage);if(u.cost!==undefined&&u.cost!==null)rawCostSequences.push(e.sequence);if(rawUsage)")
+s=s.replace("const d=record(e.data,'finish usage');finish", "const d=record(e.data,tr.version===2?'finish usage providerCost providerShape':'finish usage');if(tr.version===2){providerSnapshot=validateProviderSnapshot(d.providerCost,d.providerShape);providerSequence=e.sequence;}finish")
+s=s.replace("rawCounts(rawUsage);if(mapped)", "if(providerSnapshot?.providerCost.state==='present'&&typeof rawUsage?.cost==='number'&&!Object.is(providerSnapshot.providerCost.cost,rawUsage.cost))fail('CONFLICT');rawCounts(rawUsage);if(mapped)")
+needle="qualify(ctx,r,n,resolver);"
+s=s.replace(needle,"let amountEvidence:AmountEvidence|null=null;if(tr.version===2&&c.method!=='embed'&&providerSnapshot?.providerCost.state==='present'&&providerSequence!==null&&r.usage==='validated-raw-mapped'&&n.correlatedShape&&r.responseId!==null&&r.actualModel!==null&&typeof rawUsage?.cost==='number'&&Number.isFinite(rawUsage.cost)&&rawUsage.cost>=0&&!Object.is(rawUsage.cost,-0)&&Object.is(rawUsage.cost,providerSnapshot.providerCost.cost)){amountEvidence=Object.freeze({version:2,source:'convexGateway.cost',extraction:'convex-metadata-cost-correlated-v2',method:c.method,cost:rawUsage.cost,providerEventSequence:providerSequence,rawUsageEventSequences:Object.freeze([...rawCostSequences]) as unknown as number[],responseId:r.responseId,actualModel:r.actualModel,transcriptDigest:r.rawDigest});}if(amountEvidence)n.amountEvidence=amountEvidence;"+needle)
+s=s.replace("return {receipt:r,transcriptCanonical:text,privateResultCanonical:privateCanonical,eligible}", "return {receipt:r,transcriptCanonical:text,privateResultCanonical:privateCanonical,eligible,amountEvidence}")
+s=s.replace("version:1,method:'generate'", "version:2,method:'generate'")
+s=s.replace("ended:Transcript['ended'],resolver=EMPTY_RESOLVER){return observeTranscript(ctx,canonical({version:1,method:'stream'", "ended:Transcript['ended'],resolver=EMPTY_RESOLVER,version:1|2=1){return observeTranscript(ctx,canonical({version,method:'stream'")
+p.write_text(s)
+p=b/'proofs.ts';s=p.read_text();s="import type {AmountEvidence} from './provider-cost.ts';\n"+s
+s=s.replace("export interface Nomination {method:", "export interface Nomination {amountEvidence?:AmountEvidence;method:")
+s=s.replace("const p=choose('money',ctx,n);if(!p", "const p=choose('money',ctx,n);if(n.amountEvidence)return unknown;if(!p")
+p.write_text(s)
+p=b/'runner.ts';s=p.read_text();s=s.replace("version:1,method:'stream'","version:2,method:'stream'")
+s=s.replace("observeStream(ctx,events,ended)", "observeStream(ctx,events,ended,undefined,2)")
+s=s.replace("observeStream({...oc,now:Date.now()},events,'reader-done')","observeStream({...oc,now:Date.now()},events,'reader-done',undefined,2)")
+needle="const transcript=parseCanonical(str(p.observerTranscriptCanonical,180000),180000),stage="
+s=s.replace(needle,"const transcript=parseCanonical(str(p.observerTranscriptCanonical,180000),180000);const transcriptHeader=record(transcript,'version method events ended');if(transcriptHeader.version!==2||transcriptHeader.method!=='stream')fail('CAPABILITY_TRANSCRIPT_VERSION');const stage=")
+p.write_text(s)

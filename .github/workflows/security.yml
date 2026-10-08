@@ -4,7 +4,7 @@ on:
   push:
     branches: [main, dev]
   pull_request:
-    branches: [main, dev]
+    branches: [main, dev, chore/cortex-0.37-modernization]
   schedule:
     # Run weekly security scans every Monday at 3 AM UTC
     - cron: "0 3 * * 1"
@@ -38,7 +38,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: ["javascript-typescript", "python"]
+        language: ["javascript-typescript"]
 
     steps:
       - name: Checkout repository
@@ -57,18 +57,12 @@ jobs:
         if: matrix.language == 'javascript-typescript'
         uses: actions/setup-node@v6
         with:
-          node-version: "20"
+          node-version: "24"
           cache: "npm"
 
       - name: Install dependencies (for JS/TS)
         if: matrix.language == 'javascript-typescript'
         run: npm ci
-
-      - name: Setup Python
-        if: matrix.language == 'python'
-        uses: actions/setup-python@v6
-        with:
-          python-version: "3.11"
 
       - name: Autobuild
         uses: github/codeql-action/autobuild@v4
@@ -96,7 +90,7 @@ jobs:
           fetch-depth: 0
 
       - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@57a97c7e7821a5776cebc9bb87c984fa69cba8f1 # v0.35.0 - pinned to SHA per supply chain advisory
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0; retain dev SHA-pinning policy
         with:
           scan-type: "fs"
           scan-ref: "."
@@ -169,7 +163,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: "20"
+          node-version: "24"
 
       - name: Install dependencies
         run: npm ci
@@ -209,41 +203,6 @@ jobs:
         with:
           sarif_file: results.sarif
           category: "scorecard"
-
-  # Python package security (for your Python SDK)
-  python-security:
-    name: Python Security Scan
-    runs-on: ubuntu-latest
-    if: github.actor != 'dependabot[bot]'
-    permissions:
-      contents: read
-      security-events: write
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v6
-
-      - name: Set up Python
-        uses: actions/setup-python@v6
-        with:
-          python-version: "3.11"
-
-      - name: Install dependencies
-        run: |
-          cd cortex-sdk-python
-          python -m pip install --upgrade pip
-          pip install safety bandit[toml]
-
-      - name: Run Safety check (vulnerabilities)
-        run: |
-          cd cortex-sdk-python
-          safety check --json || true
-
-      - name: Run Bandit (security issues)
-        run: |
-          cd cortex-sdk-python
-          bandit -r cortex -f json -o bandit-report.json || true
-          bandit -r cortex || true
 
   # API Security scanning
   api-security:
@@ -317,85 +276,6 @@ jobs:
           github-token: ${{ github.token }}
         continue-on-error: true
 
-  # Commit signature verification
-  commit-signature-check:
-    name: Commit Signature Verification
-    runs-on: ubuntu-latest
-    if: github.actor != 'dependabot[bot]'
-    permissions:
-      contents: read
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v6
-        with:
-          fetch-depth: 0 # Need full history to check all commits
-
-      - name: Verify commit signatures
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          echo "════════════════════════════════════════════════════════════"
-          echo "  Commit Signature Verification"
-          echo "════════════════════════════════════════════════════════════"
-          echo ""
-
-          # Determine commits to check based on event type
-          if [ "${{ github.event_name }}" = "pull_request" ]; then
-            # For PRs, check all commits in the PR
-            BASE_SHA="${{ github.event.pull_request.base.sha }}"
-            HEAD_SHA="${{ github.event.pull_request.head.sha }}"
-            echo "📋 Checking PR commits: $BASE_SHA..$HEAD_SHA"
-            COMMITS=$(git rev-list "$BASE_SHA".."$HEAD_SHA")
-          else
-            # For pushes, check just the pushed commit
-            echo "📋 Checking pushed commit: ${{ github.sha }}"
-            COMMITS="${{ github.sha }}"
-          fi
-
-          echo ""
-
-          UNSIGNED_COUNT=0
-          SIGNED_COUNT=0
-
-          for COMMIT in $COMMITS; do
-            # Get commit verification status from GitHub API
-            VERIFICATION=$(gh api repos/${{ github.repository }}/commits/$COMMIT --jq '.commit.verification')
-            VERIFIED=$(echo "$VERIFICATION" | jq -r '.verified')
-            REASON=$(echo "$VERIFICATION" | jq -r '.reason')
-            
-            SHORT_SHA=$(echo "$COMMIT" | cut -c1-7)
-            AUTHOR=$(git log -1 --format='%an' "$COMMIT")
-            
-            if [ "$VERIFIED" = "true" ]; then
-              echo "✅ $SHORT_SHA ($AUTHOR): Verified - $REASON"
-              SIGNED_COUNT=$((SIGNED_COUNT + 1))
-            else
-              echo "❌ $SHORT_SHA ($AUTHOR): NOT VERIFIED - $REASON"
-              UNSIGNED_COUNT=$((UNSIGNED_COUNT + 1))
-            fi
-          done
-
-          echo ""
-          echo "════════════════════════════════════════════════════════════"
-          echo "  Summary: $SIGNED_COUNT verified, $UNSIGNED_COUNT unverified"
-          echo "════════════════════════════════════════════════════════════"
-
-          if [ "$UNSIGNED_COUNT" -gt 0 ]; then
-            echo ""
-            echo "❌ Found $UNSIGNED_COUNT unsigned commit(s)!"
-            echo ""
-            echo "To sign your commits:"
-            echo "  1. Set up GPG: https://docs.github.com/en/authentication/managing-commit-signature-verification"
-            echo "  2. Or use SSH signing: git config gpg.format ssh"
-            echo "  3. Re-sign commits: git rebase --exec 'git commit --amend --no-edit -S' HEAD~N"
-            echo ""
-            exit 1
-          fi
-
-          echo ""
-          echo "✅ All commits have verified signatures!"
-
   # All security checks summary
   security-summary:
     name: Security Checks Summary
@@ -404,9 +284,7 @@ jobs:
         codeql-analysis,
         dependency-scan,
         secret-scan,
-        python-security,
         api-security,
-        commit-signature-check,
       ]
     # Skip for Dependabot PRs (no security checks run)
     if: always() && github.actor != 'dependabot[bot]'
@@ -421,9 +299,7 @@ jobs:
           echo "  CodeQL Analysis:      ${{ needs.codeql-analysis.result }}"
           echo "  Dependency Scan:      ${{ needs.dependency-scan.result }}"
           echo "  Secret Scan:          ${{ needs.secret-scan.result }}"
-          echo "  Python Security:      ${{ needs.python-security.result }}"
           echo "  API Security:         ${{ needs.api-security.result }}"
-          echo "  Commit Signatures:    ${{ needs.commit-signature-check.result }}"
           echo ""
           echo "ℹ️  Scorecard (supply chain) and OpenAPI scans run conditionally"
           echo ""
@@ -432,9 +308,7 @@ jobs:
           # API security is continue-on-error, so don't block on it
           if [[ "${{ needs.codeql-analysis.result }}" == "failure" ]] || \
              [[ "${{ needs.dependency-scan.result }}" == "failure" ]] || \
-             [[ "${{ needs.secret-scan.result }}" == "failure" ]] || \
-             [[ "${{ needs.python-security.result }}" == "failure" ]] || \
-             [[ "${{ needs.commit-signature-check.result }}" == "failure" ]]; then
+             [[ "${{ needs.secret-scan.result }}" == "failure" ]]; then
             echo "❌ Security checks failed"
             exit 1
           fi

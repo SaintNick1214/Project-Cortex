@@ -1,0 +1,1814 @@
+{
+  "records": [
+    {
+      "name": "genuine-full-materialize",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/inputs/index.json",
+        "--index-sha256",
+        "cf6314cb96d9b8b74be64839ff971a0e85068dc6a67c5b8bf8433850263b6866",
+        "--destination",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/genuine"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:54:18.993256+00:00",
+      "endUTC": "2026-10-04T16:54:19.633670+00:00",
+      "exit": 0,
+      "expectedExit": 0,
+      "outcomeMatched": true,
+      "stdoutSHA256": "1435c2fba6fc56ae8641f70d07c9a16a4a76c3fe132e77d59b049306dcc7a213",
+      "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "toolPRE": {
+        "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "bytes": 5830,
+        "sha256": "3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3.gz"
+      },
+      "pythonPRE": {
+        "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "bytes": 30894944,
+        "sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7.gz"
+      },
+      "RLIMIT_FSIZE": null
+    },
+    {
+      "name": "genuine-idempotent-verify",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/inputs/index.json",
+        "--index-sha256",
+        "cf6314cb96d9b8b74be64839ff971a0e85068dc6a67c5b8bf8433850263b6866",
+        "--destination",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/genuine"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:54:19.903943+00:00",
+      "endUTC": "2026-10-04T16:54:20.366457+00:00",
+      "exit": 0,
+      "expectedExit": 0,
+      "outcomeMatched": true,
+      "stdoutSHA256": "8250a872e6b0bc4788380d3ebb03242cdd51333e22fe269e731280cc23fcc560",
+      "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "toolPRE": {
+        "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "bytes": 5830,
+        "sha256": "3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3.gz"
+      },
+      "pythonPRE": {
+        "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "bytes": 30894944,
+        "sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7.gz"
+      },
+      "RLIMIT_FSIZE": null
+    },
+    {
+      "name": "required-small-positive",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/controls/small-positive/index.json",
+        "--index-sha256",
+        "283ed98b8944a20267aa2e88bc051e92d543a6f4dbba92afcb10252e3f697003",
+        "--destination",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/small-positive-dst"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:54:20.668727+00:00",
+      "endUTC": "2026-10-04T16:54:20.713150+00:00",
+      "exit": 0,
+      "expectedExit": 0,
+      "outcomeMatched": true,
+      "stdoutSHA256": "99ecd33a774067ca2de764cf42f7d2166543b73fd2e62f24c1cd32ed5a07e9d2",
+      "stderrSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "toolPRE": {
+        "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "bytes": 5830,
+        "sha256": "3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3.gz"
+      },
+      "pythonPRE": {
+        "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "bytes": 30894944,
+        "sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7.gz"
+      },
+      "RLIMIT_FSIZE": null
+    },
+    {
+      "name": "required-index-pin-mismatch",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/controls/index-pin-mismatch/index.json",
+        "--index-sha256",
+        "0000000000000000000000000000000000000000000000000000000000000000",
+        "--destination",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/index-pin-mismatch-dst"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:54:20.899838+00:00",
+      "endUTC": "2026-10-04T16:54:20.936270+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "outcomeMatched": true,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "5e13b7b059215cb782fb6b08f2138fab87b45598cc2d46f733c6d8336fc2dc3e",
+      "toolPRE": {
+        "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "bytes": 5830,
+        "sha256": "3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3.gz"
+      },
+      "pythonPRE": {
+        "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "bytes": 30894944,
+        "sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7.gz"
+      },
+      "RLIMIT_FSIZE": null
+    },
+    {
+      "name": "required-part-hash-mismatch",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/controls/part-hash-mismatch/index.json",
+        "--index-sha256",
+        "11ab1d977d74c099d6ad9ca344ae81ea9f93605d6afaf766441f4cf907a24cf4",
+        "--destination",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/part-hash-mismatch-dst"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:54:21.118156+00:00",
+      "endUTC": "2026-10-04T16:54:21.158429+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "outcomeMatched": true,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "4de0bb22584bba68ed37b3f9e214df1cc03e2dce0970c4d3a9a2b9a12279c871",
+      "toolPRE": {
+        "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "bytes": 5830,
+        "sha256": "3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3.gz"
+      },
+      "pythonPRE": {
+        "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "bytes": 30894944,
+        "sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7.gz"
+      },
+      "RLIMIT_FSIZE": null
+    },
+    {
+      "name": "required-archive-hash-mismatch",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/controls/archive-hash-mismatch/index.json",
+        "--index-sha256",
+        "2523270497db9af64a2b8aa90371f3ab4229333e633a286d1d37259bb4abc8cf",
+        "--destination",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/archive-hash-mismatch-dst"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:54:21.349231+00:00",
+      "endUTC": "2026-10-04T16:54:21.385016+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "outcomeMatched": true,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "84183e4102b18032df1f6c5ff84b0046615d196f401a221e63c4aa24cd4cfee6",
+      "toolPRE": {
+        "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "bytes": 5830,
+        "sha256": "3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3.gz"
+      },
+      "pythonPRE": {
+        "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "bytes": 30894944,
+        "sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7.gz"
+      },
+      "RLIMIT_FSIZE": null
+    },
+    {
+      "name": "required-gzip-crc",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/controls/gzip-crc/index.json",
+        "--index-sha256",
+        "ce38a1d8c3a982de9b25ae8314153a33dbf5c9ef2ed57a84bb2dfd71e83d5382",
+        "--destination",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/gzip-crc-dst"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:54:21.567092+00:00",
+      "endUTC": "2026-10-04T16:54:21.602400+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "outcomeMatched": true,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "bde40d66ab00c4bdd010e64aee8c0aa1d51cc20874e17cf9e948dcad61dcb935",
+      "toolPRE": {
+        "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "bytes": 5830,
+        "sha256": "3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3.gz"
+      },
+      "pythonPRE": {
+        "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "bytes": 30894944,
+        "sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7.gz"
+      },
+      "RLIMIT_FSIZE": null
+    },
+    {
+      "name": "required-gzip-trailing",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/controls/gzip-trailing/index.json",
+        "--index-sha256",
+        "2607e0fb849b2709bbe32e65c85218165aabf7844274074d47d20af7f3182229",
+        "--destination",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/gzip-trailing-dst"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:54:21.782991+00:00",
+      "endUTC": "2026-10-04T16:54:21.817291+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "outcomeMatched": true,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "d12aee9a05dea33de03dabfd1e1454540db34198604c476808a43c04810e9d33",
+      "toolPRE": {
+        "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "bytes": 5830,
+        "sha256": "3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3.gz"
+      },
+      "pythonPRE": {
+        "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "bytes": 30894944,
+        "sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7.gz"
+      },
+      "RLIMIT_FSIZE": null
+    },
+    {
+      "name": "required-gzip-concatenated",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/controls/gzip-concatenated/index.json",
+        "--index-sha256",
+        "f16b6787c657719429164cb3742de56e186c55e393ff28259be7704ea5cf3b5e",
+        "--destination",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/gzip-concatenated-dst"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:54:21.999264+00:00",
+      "endUTC": "2026-10-04T16:54:22.033835+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "outcomeMatched": true,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "d12aee9a05dea33de03dabfd1e1454540db34198604c476808a43c04810e9d33",
+      "toolPRE": {
+        "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "bytes": 5830,
+        "sha256": "3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3.gz"
+      },
+      "pythonPRE": {
+        "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "bytes": 30894944,
+        "sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7.gz"
+      },
+      "RLIMIT_FSIZE": null
+    },
+    {
+      "name": "required-tar-traversal",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/controls/tar-traversal/index.json",
+        "--index-sha256",
+        "7869fab66c4347f5ed1362668d89c7b76f1399eae08e6b8f862f8002cb69e38b",
+        "--destination",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/tar-traversal-dst"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:54:22.216103+00:00",
+      "endUTC": "2026-10-04T16:54:22.250224+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "outcomeMatched": true,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "6fb8b92d1e0b5a4ed94e7b0cb55bd604bc871aa2bb4d3214d92325b2cad000fc",
+      "toolPRE": {
+        "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "bytes": 5830,
+        "sha256": "3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3.gz"
+      },
+      "pythonPRE": {
+        "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "bytes": 30894944,
+        "sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7.gz"
+      },
+      "RLIMIT_FSIZE": null
+    },
+    {
+      "name": "required-tar-absolute",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/controls/tar-absolute/index.json",
+        "--index-sha256",
+        "bd696982b41a0348a317306166dd8dce30016a2b186540a26ea8817d104dacdb",
+        "--destination",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/tar-absolute-dst"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:54:22.431720+00:00",
+      "endUTC": "2026-10-04T16:54:22.464832+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "outcomeMatched": true,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "6fb8b92d1e0b5a4ed94e7b0cb55bd604bc871aa2bb4d3214d92325b2cad000fc",
+      "toolPRE": {
+        "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "bytes": 5830,
+        "sha256": "3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3.gz"
+      },
+      "pythonPRE": {
+        "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "bytes": 30894944,
+        "sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7.gz"
+      },
+      "RLIMIT_FSIZE": null
+    },
+    {
+      "name": "required-tar-symlink",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/controls/tar-symlink/index.json",
+        "--index-sha256",
+        "5d33227528a63be10f780cfc9fb0bd8bb129ec84889112d79ef1ec6e4b58b208",
+        "--destination",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/tar-symlink-dst"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:54:22.647142+00:00",
+      "endUTC": "2026-10-04T16:54:22.682980+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "outcomeMatched": true,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "6fb8b92d1e0b5a4ed94e7b0cb55bd604bc871aa2bb4d3214d92325b2cad000fc",
+      "toolPRE": {
+        "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "bytes": 5830,
+        "sha256": "3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3.gz"
+      },
+      "pythonPRE": {
+        "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "bytes": 30894944,
+        "sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7.gz"
+      },
+      "RLIMIT_FSIZE": null
+    },
+    {
+      "name": "required-tar-hardlink",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/controls/tar-hardlink/index.json",
+        "--index-sha256",
+        "f35ce65931541a8d523be9105b2dbc01fb3648d134de2b8c07f13cbfd20c19ba",
+        "--destination",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/tar-hardlink-dst"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:54:22.864859+00:00",
+      "endUTC": "2026-10-04T16:54:22.900023+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "outcomeMatched": true,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "6fb8b92d1e0b5a4ed94e7b0cb55bd604bc871aa2bb4d3214d92325b2cad000fc",
+      "toolPRE": {
+        "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "bytes": 5830,
+        "sha256": "3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3.gz"
+      },
+      "pythonPRE": {
+        "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "bytes": 30894944,
+        "sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7.gz"
+      },
+      "RLIMIT_FSIZE": null
+    },
+    {
+      "name": "required-tar-duplicate",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/controls/tar-duplicate/index.json",
+        "--index-sha256",
+        "401cc9f743f1ad48a27f3ce3c543a057bd0d4c3d25d2d3559646d8addefde09f",
+        "--destination",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/tar-duplicate-dst"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:54:23.081733+00:00",
+      "endUTC": "2026-10-04T16:54:23.116271+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "outcomeMatched": true,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "99b8bd0b4454ff895e8d04fd7540b977541ba2c45126aabc29d02b6f96a6a96d",
+      "toolPRE": {
+        "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "bytes": 5830,
+        "sha256": "3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3.gz"
+      },
+      "pythonPRE": {
+        "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "bytes": 30894944,
+        "sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7.gz"
+      },
+      "RLIMIT_FSIZE": null
+    },
+    {
+      "name": "required-tar-missing",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/controls/tar-missing/index.json",
+        "--index-sha256",
+        "6532398ec07a0e4538dc128faa43fcfbf5d451a8b7afa91094f58c4d90aef5e3",
+        "--destination",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/tar-missing-dst"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:54:23.297501+00:00",
+      "endUTC": "2026-10-04T16:54:23.331425+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "outcomeMatched": true,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "98b30c6310744d1a8140778c1f197ee7a72e9575e8df28f68403f83c194b04fd",
+      "toolPRE": {
+        "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "bytes": 5830,
+        "sha256": "3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3.gz"
+      },
+      "pythonPRE": {
+        "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "bytes": 30894944,
+        "sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7.gz"
+      },
+      "RLIMIT_FSIZE": null
+    },
+    {
+      "name": "required-tar-oversize",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/controls/tar-oversize/index.json",
+        "--index-sha256",
+        "4917c5836eefb440750a9be28afe76cddc9cfdcb4385be970c48e6b59389298f",
+        "--destination",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/tar-oversize-dst"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:54:23.522635+00:00",
+      "endUTC": "2026-10-04T16:54:23.557297+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "outcomeMatched": true,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "99b8bd0b4454ff895e8d04fd7540b977541ba2c45126aabc29d02b6f96a6a96d",
+      "toolPRE": {
+        "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "bytes": 5830,
+        "sha256": "3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3.gz"
+      },
+      "pythonPRE": {
+        "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "bytes": 30894944,
+        "sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7.gz"
+      },
+      "RLIMIT_FSIZE": null
+    },
+    {
+      "name": "required-object-hash-mismatch",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/controls/object-hash-mismatch/index.json",
+        "--index-sha256",
+        "221e5fd842bfaf2fadee070ac88305a488df6f47fda14fbb8d097301b82c911d",
+        "--destination",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/object-hash-mismatch-dst"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:54:23.740046+00:00",
+      "endUTC": "2026-10-04T16:54:23.773954+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "outcomeMatched": true,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "a2e7884c395c842364f5f00f2a93e22c637e14d0028fb0c10fb12f463f036aa8",
+      "toolPRE": {
+        "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "bytes": 5830,
+        "sha256": "3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3.gz"
+      },
+      "pythonPRE": {
+        "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "bytes": 30894944,
+        "sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7.gz"
+      },
+      "RLIMIT_FSIZE": null
+    },
+    {
+      "name": "required-tar-mode",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/controls/tar-mode/index.json",
+        "--index-sha256",
+        "b382b00a090068e1db67fec3761e3685cb70e9830a1dc74389f91e8764adfd92",
+        "--destination",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/tar-mode-dst"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:54:23.957298+00:00",
+      "endUTC": "2026-10-04T16:54:23.991297+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "outcomeMatched": true,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "6fb8b92d1e0b5a4ed94e7b0cb55bd604bc871aa2bb4d3214d92325b2cad000fc",
+      "toolPRE": {
+        "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "bytes": 5830,
+        "sha256": "3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3.gz"
+      },
+      "pythonPRE": {
+        "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "bytes": 30894944,
+        "sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7.gz"
+      },
+      "RLIMIT_FSIZE": null
+    },
+    {
+      "name": "required-tar-trailing-nonzero",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/controls/tar-trailing-nonzero/index.json",
+        "--index-sha256",
+        "4de9ce55e58733aae0052225b64eeef5eb235eb6d6d02559b5551f5837e7b98e",
+        "--destination",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/tar-trailing-nonzero-dst"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:54:24.172788+00:00",
+      "endUTC": "2026-10-04T16:54:24.206837+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "outcomeMatched": true,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "98b30c6310744d1a8140778c1f197ee7a72e9575e8df28f68403f83c194b04fd",
+      "toolPRE": {
+        "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "bytes": 5830,
+        "sha256": "3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3.gz"
+      },
+      "pythonPRE": {
+        "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "bytes": 30894944,
+        "sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7.gz"
+      },
+      "RLIMIT_FSIZE": null
+    },
+    {
+      "name": "required-gzip-decompression-cap",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/controls/gzip-decompression-cap/index.json",
+        "--index-sha256",
+        "fc4d78027e084c0c39fc4042c5746b59edf994f959893d2b24c34e9afc2b3466",
+        "--destination",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/gzip-decompression-cap-dst"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:54:24.390250+00:00",
+      "endUTC": "2026-10-04T16:54:24.423967+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "outcomeMatched": true,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "d12aee9a05dea33de03dabfd1e1454540db34198604c476808a43c04810e9d33",
+      "toolPRE": {
+        "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "bytes": 5830,
+        "sha256": "3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3.gz"
+      },
+      "pythonPRE": {
+        "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "bytes": 30894944,
+        "sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7.gz"
+      },
+      "RLIMIT_FSIZE": null
+    },
+    {
+      "name": "required-unsafe-part-path",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/controls/unsafe-part-path/index.json",
+        "--index-sha256",
+        "3b15c2a0673994ecd62789fb4c70a43ba3685484759e34e1f4ddf18e69831105",
+        "--destination",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/unsafe-part-path-dst"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:54:24.619969+00:00",
+      "endUTC": "2026-10-04T16:54:24.655083+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "outcomeMatched": true,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "0096692cfbb068432883ef903e713d90f0ba8ac047ce2b881d83506e9c0f3c37",
+      "toolPRE": {
+        "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "bytes": 5830,
+        "sha256": "3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3.gz"
+      },
+      "pythonPRE": {
+        "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "bytes": 30894944,
+        "sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7.gz"
+      },
+      "RLIMIT_FSIZE": null
+    },
+    {
+      "name": "required-part-bool-size",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/controls/part-bool-size/index.json",
+        "--index-sha256",
+        "d7f389200f4b7485a6cf515a64fde80e220354b1b9a6310cc972b0d55fea9e9a",
+        "--destination",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/part-bool-size-dst"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:54:24.842676+00:00",
+      "endUTC": "2026-10-04T16:54:24.876189+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "outcomeMatched": true,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "0096692cfbb068432883ef903e713d90f0ba8ac047ce2b881d83506e9c0f3c37",
+      "toolPRE": {
+        "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "bytes": 5830,
+        "sha256": "3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3.gz"
+      },
+      "pythonPRE": {
+        "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "bytes": 30894944,
+        "sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7.gz"
+      },
+      "RLIMIT_FSIZE": null
+    },
+    {
+      "name": "required-object-bool-size",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/controls/object-bool-size/index.json",
+        "--index-sha256",
+        "5a2c0ac0bbdf97c18a9447ce4242fa016a4065388178f82350fd763678121c9b",
+        "--destination",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/object-bool-size-dst"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:54:25.061913+00:00",
+      "endUTC": "2026-10-04T16:54:25.096413+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "outcomeMatched": true,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "37f32a265c0e2f19229affe8c8927fdf4dfd3991bd745cefd1ffa05ade78694a",
+      "toolPRE": {
+        "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "bytes": 5830,
+        "sha256": "3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3.gz"
+      },
+      "pythonPRE": {
+        "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "bytes": 30894944,
+        "sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7.gz"
+      },
+      "RLIMIT_FSIZE": null
+    },
+    {
+      "name": "required-archive-byte-cap",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/controls/archive-byte-cap/index.json",
+        "--index-sha256",
+        "4b2724ff816afd6fe6d6663b9a14d3f67d78977e5ed0ac37650c1e8313dd6a54",
+        "--destination",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/archive-byte-cap-dst"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:54:25.292193+00:00",
+      "endUTC": "2026-10-04T16:54:25.326577+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "outcomeMatched": true,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "822abb0a2e3a82484e878b184fe67e6f50254328fda89f1f96a61acc5fe7e764",
+      "toolPRE": {
+        "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "bytes": 5830,
+        "sha256": "3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3.gz"
+      },
+      "pythonPRE": {
+        "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "bytes": 30894944,
+        "sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7.gz"
+      },
+      "RLIMIT_FSIZE": null
+    },
+    {
+      "name": "required-part-byte-cap",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/controls/part-byte-cap/index.json",
+        "--index-sha256",
+        "3b0bb9361469dd46357d5d61e3800ce1e107d72ca07b0d6a40067631ba00db95",
+        "--destination",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/part-byte-cap-dst"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:54:25.517310+00:00",
+      "endUTC": "2026-10-04T16:54:25.552820+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "outcomeMatched": true,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "0096692cfbb068432883ef903e713d90f0ba8ac047ce2b881d83506e9c0f3c37",
+      "toolPRE": {
+        "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "bytes": 5830,
+        "sha256": "3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3.gz"
+      },
+      "pythonPRE": {
+        "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "bytes": 30894944,
+        "sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7.gz"
+      },
+      "RLIMIT_FSIZE": null
+    },
+    {
+      "name": "required-duplicate-object",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/controls/duplicate-object/index.json",
+        "--index-sha256",
+        "30a00514a83486bfdfbdcc35bc33b309b50d3725aa4762354af747ee13da9717",
+        "--destination",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/duplicate-object-dst"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:54:25.746771+00:00",
+      "endUTC": "2026-10-04T16:54:25.781036+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "outcomeMatched": true,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "37f32a265c0e2f19229affe8c8927fdf4dfd3991bd745cefd1ffa05ade78694a",
+      "toolPRE": {
+        "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "bytes": 5830,
+        "sha256": "3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3.gz"
+      },
+      "pythonPRE": {
+        "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "bytes": 30894944,
+        "sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7.gz"
+      },
+      "RLIMIT_FSIZE": null
+    },
+    {
+      "name": "required-missing-late-part",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/controls/missing-late-part/index.json",
+        "--index-sha256",
+        "a465ffa8caa585a771d3d1a6025f021ea6c83cbfcbd6d87a613be26fe747019f",
+        "--destination",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/missing-late-part-dst"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:54:25.968807+00:00",
+      "endUTC": "2026-10-04T16:54:26.002526+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "outcomeMatched": true,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "a3448c1a3e6e31fa8d3f81a7788459919ddf12eb82b6c702d11458eb1d0a0f26",
+      "toolPRE": {
+        "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "bytes": 5830,
+        "sha256": "3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3.gz"
+      },
+      "pythonPRE": {
+        "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "bytes": 30894944,
+        "sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7.gz"
+      },
+      "RLIMIT_FSIZE": null
+    },
+    {
+      "name": "required-source-part-symlink",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/controls/source-part-symlink/index.json",
+        "--index-sha256",
+        "283ed98b8944a20267aa2e88bc051e92d543a6f4dbba92afcb10252e3f697003",
+        "--destination",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/source-part-symlink-dst"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:54:26.190105+00:00",
+      "endUTC": "2026-10-04T16:54:26.224079+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "outcomeMatched": true,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "bea4fabbd25a64ead053f5681f2e945141d35236c1bcce2de814a1d4fed49a93",
+      "toolPRE": {
+        "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "bytes": 5830,
+        "sha256": "3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3.gz"
+      },
+      "pythonPRE": {
+        "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "bytes": 30894944,
+        "sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7.gz"
+      },
+      "RLIMIT_FSIZE": null
+    },
+    {
+      "name": "required-source-index-symlink",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/controls/source-index-symlink/index.json",
+        "--index-sha256",
+        "283ed98b8944a20267aa2e88bc051e92d543a6f4dbba92afcb10252e3f697003",
+        "--destination",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/source-index-symlink-dst"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:54:26.412241+00:00",
+      "endUTC": "2026-10-04T16:54:26.446266+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "outcomeMatched": true,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "c8a1797680ac5aa5b98019666f7383484cc1e208cabd33e1174b33db6f9a316f",
+      "toolPRE": {
+        "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "bytes": 5830,
+        "sha256": "3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3.gz"
+      },
+      "pythonPRE": {
+        "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "bytes": 30894944,
+        "sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7.gz"
+      },
+      "RLIMIT_FSIZE": null
+    },
+    {
+      "name": "required-source-part-hardlink",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/controls/source-part-hardlink/index.json",
+        "--index-sha256",
+        "283ed98b8944a20267aa2e88bc051e92d543a6f4dbba92afcb10252e3f697003",
+        "--destination",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/source-part-hardlink-dst"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:54:26.629628+00:00",
+      "endUTC": "2026-10-04T16:54:26.663868+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "outcomeMatched": true,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "bea4fabbd25a64ead053f5681f2e945141d35236c1bcce2de814a1d4fed49a93",
+      "toolPRE": {
+        "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "bytes": 5830,
+        "sha256": "3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3.gz"
+      },
+      "pythonPRE": {
+        "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "bytes": 30894944,
+        "sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7.gz"
+      },
+      "RLIMIT_FSIZE": null
+    },
+    {
+      "name": "required-destination-public",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/controls/destination-controls/index.json",
+        "--index-sha256",
+        "283ed98b8944a20267aa2e88bc051e92d543a6f4dbba92afcb10252e3f697003",
+        "--destination",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/destination-public"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:54:26.846066+00:00",
+      "endUTC": "2026-10-04T16:54:26.880593+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "outcomeMatched": true,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "216d30c397eba569f923b68054012ab0f91761ba7edcc3851ecd03f9cbbb63ff",
+      "toolPRE": {
+        "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "bytes": 5830,
+        "sha256": "3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3.gz"
+      },
+      "pythonPRE": {
+        "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "bytes": 30894944,
+        "sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7.gz"
+      },
+      "RLIMIT_FSIZE": null
+    },
+    {
+      "name": "required-destination-existing-empty",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/controls/destination-controls/index.json",
+        "--index-sha256",
+        "283ed98b8944a20267aa2e88bc051e92d543a6f4dbba92afcb10252e3f697003",
+        "--destination",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/destination-existing-empty"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:54:27.064583+00:00",
+      "endUTC": "2026-10-04T16:54:27.099868+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "outcomeMatched": true,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "216d30c397eba569f923b68054012ab0f91761ba7edcc3851ecd03f9cbbb63ff",
+      "toolPRE": {
+        "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "bytes": 5830,
+        "sha256": "3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3.gz"
+      },
+      "pythonPRE": {
+        "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "bytes": 30894944,
+        "sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7.gz"
+      },
+      "RLIMIT_FSIZE": null
+    },
+    {
+      "name": "required-destination-existing-sentinel",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/controls/destination-controls/index.json",
+        "--index-sha256",
+        "283ed98b8944a20267aa2e88bc051e92d543a6f4dbba92afcb10252e3f697003",
+        "--destination",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/destination-existing-sentinel"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:54:27.284780+00:00",
+      "endUTC": "2026-10-04T16:54:27.320164+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "outcomeMatched": true,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "216d30c397eba569f923b68054012ab0f91761ba7edcc3851ecd03f9cbbb63ff",
+      "toolPRE": {
+        "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "bytes": 5830,
+        "sha256": "3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3.gz"
+      },
+      "pythonPRE": {
+        "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "bytes": 30894944,
+        "sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7.gz"
+      },
+      "RLIMIT_FSIZE": null
+    },
+    {
+      "name": "required-destination-symlink",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/controls/destination-controls/index.json",
+        "--index-sha256",
+        "283ed98b8944a20267aa2e88bc051e92d543a6f4dbba92afcb10252e3f697003",
+        "--destination",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/destination-symlink"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:54:27.508022+00:00",
+      "endUTC": "2026-10-04T16:54:27.544446+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "outcomeMatched": true,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "0d3a91478c117c40d47ca133c48236617664a7b62c4b94d6b07005ccea9d73d8",
+      "toolPRE": {
+        "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "bytes": 5830,
+        "sha256": "3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3.gz"
+      },
+      "pythonPRE": {
+        "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "bytes": 30894944,
+        "sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7.gz"
+      },
+      "RLIMIT_FSIZE": null
+    },
+    {
+      "name": "required-destination-ancestor-symlink",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/controls/destination-controls/index.json",
+        "--index-sha256",
+        "283ed98b8944a20267aa2e88bc051e92d543a6f4dbba92afcb10252e3f697003",
+        "--destination",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/ancestor-link/new"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:54:27.725808+00:00",
+      "endUTC": "2026-10-04T16:54:27.761886+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "outcomeMatched": true,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "4fe1d9bd4ccc86c271ce3b684135cf10a5aa3dad7c9bab55873ea143fc858435",
+      "toolPRE": {
+        "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "bytes": 5830,
+        "sha256": "3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3.gz"
+      },
+      "pythonPRE": {
+        "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "bytes": 30894944,
+        "sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7.gz"
+      },
+      "RLIMIT_FSIZE": null
+    },
+    {
+      "name": "required-existing-object-no-overwrite",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/controls/destination-controls/index.json",
+        "--index-sha256",
+        "283ed98b8944a20267aa2e88bc051e92d543a6f4dbba92afcb10252e3f697003",
+        "--destination",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/small-positive-dst"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:54:27.943358+00:00",
+      "endUTC": "2026-10-04T16:54:27.979499+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "outcomeMatched": true,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "898cc639ba1079bbac85a7caa48cc2cc4637f0457098a0684daa398d97617757",
+      "toolPRE": {
+        "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "bytes": 5830,
+        "sha256": "3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3.gz"
+      },
+      "pythonPRE": {
+        "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "bytes": 30894944,
+        "sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7.gz"
+      },
+      "RLIMIT_FSIZE": null
+    },
+    {
+      "name": "required-source-index-hardlink-extra",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/source-index-hardlink-extra/index.json",
+        "--index-sha256",
+        "283ed98b8944a20267aa2e88bc051e92d543a6f4dbba92afcb10252e3f697003",
+        "--destination",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/source-index-hardlink-extra-dst"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:54:28.161599+00:00",
+      "endUTC": "2026-10-04T16:54:28.197199+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "outcomeMatched": true,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "c8a1797680ac5aa5b98019666f7383484cc1e208cabd33e1174b33db6f9a316f",
+      "toolPRE": {
+        "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "bytes": 5830,
+        "sha256": "3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3.gz"
+      },
+      "pythonPRE": {
+        "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "bytes": 30894944,
+        "sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7.gz"
+      },
+      "RLIMIT_FSIZE": null
+    },
+    {
+      "name": "required-source-part-directory-extra",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/source-part-directory-extra/index.json",
+        "--index-sha256",
+        "283ed98b8944a20267aa2e88bc051e92d543a6f4dbba92afcb10252e3f697003",
+        "--destination",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/source-part-directory-extra-dst"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:54:28.382500+00:00",
+      "endUTC": "2026-10-04T16:54:28.421671+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "outcomeMatched": true,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "bea4fabbd25a64ead053f5681f2e945141d35236c1bcce2de814a1d4fed49a93",
+      "toolPRE": {
+        "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "bytes": 5830,
+        "sha256": "3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3.gz"
+      },
+      "pythonPRE": {
+        "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "bytes": 30894944,
+        "sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7.gz"
+      },
+      "RLIMIT_FSIZE": null
+    },
+    {
+      "name": "required-source-ancestor-symlink-required-denial",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/source-ancestor-link/index.json",
+        "--index-sha256",
+        "283ed98b8944a20267aa2e88bc051e92d543a6f4dbba92afcb10252e3f697003",
+        "--destination",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/source-ancestor-required-denial"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:54:28.607837+00:00",
+      "endUTC": "2026-10-04T16:54:28.643069+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "outcomeMatched": true,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "5fe2b7e4f335a070c1961c1485a82781994d66871dd8edf24c32d2f40107bfb3",
+      "toolPRE": {
+        "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "bytes": 5830,
+        "sha256": "3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3.gz"
+      },
+      "pythonPRE": {
+        "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "bytes": 30894944,
+        "sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7.gz"
+      },
+      "RLIMIT_FSIZE": null
+    },
+    {
+      "name": "required-destination-object-directory-symlink",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/controls/small-positive/index.json",
+        "--index-sha256",
+        "283ed98b8944a20267aa2e88bc051e92d543a6f4dbba92afcb10252e3f697003",
+        "--destination",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/destination-object-directory-symlink"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:54:28.825722+00:00",
+      "endUTC": "2026-10-04T16:54:28.861185+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "outcomeMatched": true,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "3561ee74359a1d46f07294b5e782cd925a7fce4ff1ed7044aa3d02db35e26c16",
+      "toolPRE": {
+        "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "bytes": 5830,
+        "sha256": "3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3.gz"
+      },
+      "pythonPRE": {
+        "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "bytes": 30894944,
+        "sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7.gz"
+      },
+      "RLIMIT_FSIZE": null
+    },
+    {
+      "name": "required-destination-object-hardlink",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/controls/small-positive/index.json",
+        "--index-sha256",
+        "283ed98b8944a20267aa2e88bc051e92d543a6f4dbba92afcb10252e3f697003",
+        "--destination",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/destination-object-hardlink"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:54:29.044700+00:00",
+      "endUTC": "2026-10-04T16:54:29.078981+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "outcomeMatched": true,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "ddd6e5c1879c076231bdc5b37045250c17b1534c1296a081dcfe33bf883c21a6",
+      "toolPRE": {
+        "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "bytes": 5830,
+        "sha256": "3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3.gz"
+      },
+      "pythonPRE": {
+        "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "bytes": 30894944,
+        "sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7.gz"
+      },
+      "RLIMIT_FSIZE": null
+    },
+    {
+      "name": "required-destination-object-symlink",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/controls/small-positive/index.json",
+        "--index-sha256",
+        "283ed98b8944a20267aa2e88bc051e92d543a6f4dbba92afcb10252e3f697003",
+        "--destination",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/destination-object-symlink"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:54:29.261459+00:00",
+      "endUTC": "2026-10-04T16:54:29.296184+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "outcomeMatched": true,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "50ef7634cb296ba8fea029a0240ff2790488eadf038f1651058c78c966fb44d2",
+      "toolPRE": {
+        "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "bytes": 5830,
+        "sha256": "3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3.gz"
+      },
+      "pythonPRE": {
+        "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "bytes": 30894944,
+        "sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7.gz"
+      },
+      "RLIMIT_FSIZE": null
+    },
+    {
+      "name": "required-late-os-fsize-partial",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/controls/small-positive/index.json",
+        "--index-sha256",
+        "283ed98b8944a20267aa2e88bc051e92d543a6f4dbba92afcb10252e3f697003",
+        "--destination",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/late-fsize-partial"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:54:29.481501+00:00",
+      "endUTC": "2026-10-04T16:54:29.528714+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "outcomeMatched": true,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "2720df25e37cb09de35810d5f033f796d13e0a2265e63b5c2fada3ede3c84f86",
+      "toolPRE": {
+        "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "bytes": 5830,
+        "sha256": "3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3.gz"
+      },
+      "pythonPRE": {
+        "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "bytes": 30894944,
+        "sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7.gz"
+      },
+      "RLIMIT_FSIZE": 1
+    },
+    {
+      "name": "required-late-partial-idempotent-denial",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/controls/small-positive/index.json",
+        "--index-sha256",
+        "283ed98b8944a20267aa2e88bc051e92d543a6f4dbba92afcb10252e3f697003",
+        "--destination",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/prior-controls/late-fsize-partial"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:54:29.719521+00:00",
+      "endUTC": "2026-10-04T16:54:29.754626+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "outcomeMatched": true,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "898cc639ba1079bbac85a7caa48cc2cc4637f0457098a0684daa398d97617757",
+      "toolPRE": {
+        "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "bytes": 5830,
+        "sha256": "3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3.gz"
+      },
+      "pythonPRE": {
+        "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "bytes": 30894944,
+        "sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7.gz"
+      },
+      "RLIMIT_FSIZE": null
+    },
+    {
+      "name": "repaired-original-observation-denial",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/repaired-original-observation-denial-link/index.json",
+        "--index-sha256",
+        "283ed98b8944a20267aa2e88bc051e92d543a6f4dbba92afcb10252e3f697003",
+        "--destination",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/repaired-original-observation-denial-dst"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:54:29.936445+00:00",
+      "endUTC": "2026-10-04T16:54:29.970893+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "outcomeMatched": true,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "5fe2b7e4f335a070c1961c1485a82781994d66871dd8edf24c32d2f40107bfb3",
+      "toolPRE": {
+        "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "bytes": 5830,
+        "sha256": "3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3.gz"
+      },
+      "pythonPRE": {
+        "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "bytes": 30894944,
+        "sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7.gz"
+      },
+      "RLIMIT_FSIZE": null
+    },
+    {
+      "name": "source-nested-ancestor-denial",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-nested-ancestor-denial-outer/linked/index.json",
+        "--index-sha256",
+        "283ed98b8944a20267aa2e88bc051e92d543a6f4dbba92afcb10252e3f697003",
+        "--destination",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-nested-ancestor-denial-dst"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:54:30.152746+00:00",
+      "endUTC": "2026-10-04T16:54:30.186255+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "outcomeMatched": true,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "5fe2b7e4f335a070c1961c1485a82781994d66871dd8edf24c32d2f40107bfb3",
+      "toolPRE": {
+        "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "bytes": 5830,
+        "sha256": "3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3.gz"
+      },
+      "pythonPRE": {
+        "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "bytes": 30894944,
+        "sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7.gz"
+      },
+      "RLIMIT_FSIZE": null
+    },
+    {
+      "name": "index-hardlink-denial",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/index-hardlink-denial/index.json",
+        "--index-sha256",
+        "283ed98b8944a20267aa2e88bc051e92d543a6f4dbba92afcb10252e3f697003",
+        "--destination",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/index-hardlink-denial-dst"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:54:30.368111+00:00",
+      "endUTC": "2026-10-04T16:54:30.401411+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "outcomeMatched": true,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "c8a1797680ac5aa5b98019666f7383484cc1e208cabd33e1174b33db6f9a316f",
+      "toolPRE": {
+        "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "bytes": 5830,
+        "sha256": "3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3.gz"
+      },
+      "pythonPRE": {
+        "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "bytes": 30894944,
+        "sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7.gz"
+      },
+      "RLIMIT_FSIZE": null
+    },
+    {
+      "name": "index-FIFO-denial",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/index-FIFO-denial/index.json",
+        "--index-sha256",
+        "283ed98b8944a20267aa2e88bc051e92d543a6f4dbba92afcb10252e3f697003",
+        "--destination",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/index-FIFO-denial-dst"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:54:30.583560+00:00",
+      "endUTC": "2026-10-04T16:54:30.617389+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "outcomeMatched": true,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "c8a1797680ac5aa5b98019666f7383484cc1e208cabd33e1174b33db6f9a316f",
+      "toolPRE": {
+        "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "bytes": 5830,
+        "sha256": "3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3.gz"
+      },
+      "pythonPRE": {
+        "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "bytes": 30894944,
+        "sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7.gz"
+      },
+      "RLIMIT_FSIZE": null
+    },
+    {
+      "name": "part-FIFO-denial",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "--index",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/part-FIFO-denial/index.json",
+        "--index-sha256",
+        "283ed98b8944a20267aa2e88bc051e92d543a6f4dbba92afcb10252e3f697003",
+        "--destination",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/part-FIFO-denial-dst"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:54:30.816646+00:00",
+      "endUTC": "2026-10-04T16:54:30.851876+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "outcomeMatched": true,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "bea4fabbd25a64ead053f5681f2e945141d35236c1bcce2de814a1d4fed49a93",
+      "toolPRE": {
+        "path": "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-c2-component-byte-backing-c2/materialize.py",
+        "bytes": 5830,
+        "sha256": "3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/3d3ef55f98ad31332b90c20f31789b5f7978918cacf7831a2cacf9b2811b2ac3.gz"
+      },
+      "pythonPRE": {
+        "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "bytes": 30894944,
+        "sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7.gz"
+      },
+      "RLIMIT_FSIZE": null
+    },
+    {
+      "name": "FD-path-replacement-leaf-index.json",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/workspace/Project-Cortex/work/resume/task04-c2-byte-backing-ancestry-c2-fresh-review/FD-path-replacement-leaf-index.json.py",
+        "--index",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/FD-path-replacement-leaf-index.json/index.json",
+        "--index-sha256",
+        "283ed98b8944a20267aa2e88bc051e92d543a6f4dbba92afcb10252e3f697003",
+        "--destination",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/FD-path-replacement-leaf-index.json-dst"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:54:31.055923+00:00",
+      "endUTC": "2026-10-04T16:54:31.095659+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "outcomeMatched": true,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "0f52e152040a35d5343737e46cfcf5d9a0a7a1439f7fe2a365acbd3dbb56f4ea",
+      "toolPRE": {
+        "path": "/workspace/Project-Cortex/work/resume/task04-c2-byte-backing-ancestry-c2-fresh-review/FD-path-replacement-leaf-index.json.py",
+        "bytes": 916,
+        "sha256": "b04e1a4c74dddb2d2ac890c809c9cbf9e96add78330abfa75a85d959df87a503",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/b04e1a4c74dddb2d2ac890c809c9cbf9e96add78330abfa75a85d959df87a503.gz"
+      },
+      "pythonPRE": {
+        "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "bytes": 30894944,
+        "sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7.gz"
+      },
+      "RLIMIT_FSIZE": null
+    },
+    {
+      "name": "FD-path-replacement-ancestor-index.json",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/workspace/Project-Cortex/work/resume/task04-c2-byte-backing-ancestry-c2-fresh-review/FD-path-replacement-ancestor-index.json.py",
+        "--index",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/FD-path-replacement-ancestor-index.json/index.json",
+        "--index-sha256",
+        "283ed98b8944a20267aa2e88bc051e92d543a6f4dbba92afcb10252e3f697003",
+        "--destination",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/FD-path-replacement-ancestor-index.json-dst"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:54:31.280564+00:00",
+      "endUTC": "2026-10-04T16:54:31.320805+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "outcomeMatched": true,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "499323de309972575a5794ca2391eb902d8aea0c7db693a467d321c226b701ac",
+      "toolPRE": {
+        "path": "/workspace/Project-Cortex/work/resume/task04-c2-byte-backing-ancestry-c2-fresh-review/FD-path-replacement-ancestor-index.json.py",
+        "bytes": 903,
+        "sha256": "505831f48c792ec45a2de96b5581336413ae279d8a0110e135d64718f8ccb2de",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/505831f48c792ec45a2de96b5581336413ae279d8a0110e135d64718f8ccb2de.gz"
+      },
+      "pythonPRE": {
+        "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "bytes": 30894944,
+        "sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7.gz"
+      },
+      "RLIMIT_FSIZE": null
+    },
+    {
+      "name": "FD-path-replacement-leaf-objects.part-0000",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/workspace/Project-Cortex/work/resume/task04-c2-byte-backing-ancestry-c2-fresh-review/FD-path-replacement-leaf-objects.part-0000.py",
+        "--index",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/FD-path-replacement-leaf-objects.part-0000/index.json",
+        "--index-sha256",
+        "283ed98b8944a20267aa2e88bc051e92d543a6f4dbba92afcb10252e3f697003",
+        "--destination",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/FD-path-replacement-leaf-objects.part-0000-dst"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:54:31.503690+00:00",
+      "endUTC": "2026-10-04T16:54:31.543998+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "outcomeMatched": true,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "c9e07b05eb3b3ef05adafa853cc799a8bf6a9aeb6f24c7aa1098d1013905cbe7",
+      "toolPRE": {
+        "path": "/workspace/Project-Cortex/work/resume/task04-c2-byte-backing-ancestry-c2-fresh-review/FD-path-replacement-leaf-objects.part-0000.py",
+        "bytes": 944,
+        "sha256": "4aa45afbe767187428c0d01e299e67ab1a47c0e6b9491e8ebc986e798e28fce8",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/4aa45afbe767187428c0d01e299e67ab1a47c0e6b9491e8ebc986e798e28fce8.gz"
+      },
+      "pythonPRE": {
+        "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "bytes": 30894944,
+        "sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7.gz"
+      },
+      "RLIMIT_FSIZE": null
+    },
+    {
+      "name": "FD-path-replacement-ancestor-objects.part-0000",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "/workspace/Project-Cortex/work/resume/task04-c2-byte-backing-ancestry-c2-fresh-review/FD-path-replacement-ancestor-objects.part-0000.py",
+        "--index",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/FD-path-replacement-ancestor-objects.part-0000/index.json",
+        "--index-sha256",
+        "283ed98b8944a20267aa2e88bc051e92d543a6f4dbba92afcb10252e3f697003",
+        "--destination",
+        "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/FD-path-replacement-ancestor-objects.part-0000-dst"
+      ],
+      "cwd": "/workspace/Project-Cortex",
+      "startUTC": "2026-10-04T16:54:31.729367+00:00",
+      "endUTC": "2026-10-04T16:54:31.769600+00:00",
+      "exit": 1,
+      "expectedExit": 1,
+      "outcomeMatched": true,
+      "stdoutSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSHA256": "199dfe86eebf17a26f74e549b4401a865e7fc9c82e07a22313fe445f76f58ef1",
+      "toolPRE": {
+        "path": "/workspace/Project-Cortex/work/resume/task04-c2-byte-backing-ancestry-c2-fresh-review/FD-path-replacement-ancestor-objects.part-0000.py",
+        "bytes": 924,
+        "sha256": "23e841c112652ec5d3256c137a13088d5040f8944375c18131e22bc7bb0e8a17",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/23e841c112652ec5d3256c137a13088d5040f8944375c18131e22bc7bb0e8a17.gz"
+      },
+      "pythonPRE": {
+        "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "bytes": 30894944,
+        "sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+        "beforeArchive": "/tmp/cortex-c2-backing-ancestry-c2-fresh-review/source-before/fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7.gz"
+      },
+      "RLIMIT_FSIZE": null
+    }
+  ],
+  "runs": 53,
+  "requiredPriorControls": 42,
+  "historicalObservationPreservedUnchanged": true,
+  "objects": 156,
+  "references": 301,
+  "rawObjectBytes": 68361292,
+  "sourcePinsUnchanged": true,
+  "all122": "HELD"
+}

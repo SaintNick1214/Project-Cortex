@@ -1,0 +1,458 @@
+{
+  "utc": "2026-10-05T05:33:45Z",
+  "head": "bd0b4dd71787faf4144023d7ded9afc077d59188",
+  "runs": {
+    "workflow_runs": [
+      {
+        "id": 37264615564,
+        "name": "PR Checks",
+        "status": "completed",
+        "conclusion": "success",
+        "run_number": 384,
+        "jobs_url": "https://api.github.com/repos/SaintNick1214/Project-Cortex/actions/runs/37264615564/jobs",
+        "logs_url": "https://api.github.com/repos/SaintNick1214/Project-Cortex/actions/runs/37264615564/logs",
+        "workflow_id": 208281348
+      },
+      {
+        "id": 37264615561,
+        "name": "Security Scans",
+        "status": "in_progress",
+        "conclusion": null,
+        "run_number": 702,
+        "jobs_url": "https://api.github.com/repos/SaintNick1214/Project-Cortex/actions/runs/37264615561/jobs",
+        "logs_url": "https://api.github.com/repos/SaintNick1214/Project-Cortex/actions/runs/37264615561/logs",
+        "workflow_id": 209496276
+      }
+    ]
+  },
+  "jobs": {
+    "jobs": [
+      {
+        "id": 111618673390,
+        "name": "Dependency Vulnerability Scan",
+        "status": "completed",
+        "conclusion": "success",
+        "run_id": 37264615561,
+        "logs_url": null,
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1
+          },
+          {
+            "name": "Checkout code",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2
+          },
+          {
+            "name": "Run Trivy vulnerability scanner",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3
+          },
+          {
+            "name": "Upload Trivy results to GitHub Security tab",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 4
+          },
+          {
+            "name": "Post Upload Trivy results to GitHub Security tab",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 6
+          },
+          {
+            "name": "Post Run Trivy vulnerability scanner",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 7
+          },
+          {
+            "name": "Post Checkout code",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 8
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 9
+          }
+        ]
+      },
+      {
+        "id": 111618673470,
+        "name": "Secret Scanning",
+        "status": "completed",
+        "conclusion": "success",
+        "run_id": 37264615561,
+        "logs_url": null,
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1
+          },
+          {
+            "name": "Checkout code",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2
+          },
+          {
+            "name": "Run Gitleaks",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3
+          },
+          {
+            "name": "Post Checkout code",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 6
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 7
+          }
+        ]
+      },
+      {
+        "id": 111618673472,
+        "name": "OpenAPI Security Audit",
+        "status": "completed",
+        "conclusion": "success",
+        "run_id": 37264615561,
+        "logs_url": null,
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1
+          },
+          {
+            "name": "Build 42Crunch/api-security-audit-action@v4",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2
+          },
+          {
+            "name": "Checkout code",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3
+          },
+          {
+            "name": "Check for OpenAPI specs",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 4
+          },
+          {
+            "name": "Run 42Crunch API Security Audit",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 5
+          },
+          {
+            "name": "Post Checkout code",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 10
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 11
+          }
+        ]
+      },
+      {
+        "id": 111618673521,
+        "name": "Dependency Review",
+        "status": "completed",
+        "conclusion": "success",
+        "run_id": 37264615561,
+        "logs_url": null,
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1
+          },
+          {
+            "name": "Checkout code",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2
+          },
+          {
+            "name": "Dependency Review",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3
+          },
+          {
+            "name": "Post Checkout code",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 6
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 7
+          }
+        ]
+      },
+      {
+        "id": 111618673560,
+        "name": "CodeQL Analysis (javascript-typescript)",
+        "status": "in_progress",
+        "conclusion": null,
+        "run_id": 37264615561,
+        "logs_url": null,
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1
+          },
+          {
+            "name": "Checkout repository",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2
+          },
+          {
+            "name": "Initialize CodeQL",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3
+          },
+          {
+            "name": "Setup Node.js (for JS/TS)",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 4
+          },
+          {
+            "name": "Install dependencies (for JS/TS)",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 5
+          },
+          {
+            "name": "Autobuild",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 6
+          },
+          {
+            "name": "Perform CodeQL Analysis",
+            "status": "in_progress",
+            "conclusion": null,
+            "number": 7
+          },
+          {
+            "name": "Post Perform CodeQL Analysis",
+            "status": "pending",
+            "conclusion": null,
+            "number": 11
+          },
+          {
+            "name": "Post Setup Node.js (for JS/TS)",
+            "status": "pending",
+            "conclusion": null,
+            "number": 12
+          },
+          {
+            "name": "Post Initialize CodeQL",
+            "status": "pending",
+            "conclusion": null,
+            "number": 13
+          },
+          {
+            "name": "Post Checkout repository",
+            "status": "pending",
+            "conclusion": null,
+            "number": 14
+          }
+        ]
+      },
+      {
+        "id": 111618673581,
+        "name": "License Compliance",
+        "status": "completed",
+        "conclusion": "success",
+        "run_id": 37264615561,
+        "logs_url": null,
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1
+          },
+          {
+            "name": "Checkout code",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2
+          },
+          {
+            "name": "Setup Node.js",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3
+          },
+          {
+            "name": "Install dependencies",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 4
+          },
+          {
+            "name": "Check licenses",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 5
+          },
+          {
+            "name": "Post Setup Node.js",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 9
+          },
+          {
+            "name": "Post Checkout code",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 10
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 11
+          }
+        ]
+      },
+      {
+        "id": 111618673585,
+        "name": "Commit Signature Verification",
+        "status": "completed",
+        "conclusion": "failure",
+        "run_id": 37264615561,
+        "logs_url": null,
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1
+          },
+          {
+            "name": "Checkout code",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2
+          },
+          {
+            "name": "Verify commit signatures",
+            "status": "completed",
+            "conclusion": "failure",
+            "number": 3
+          },
+          {
+            "name": "Post Checkout code",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 6
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 7
+          }
+        ]
+      },
+      {
+        "id": 111618673590,
+        "name": "API Security Scan (Semgrep)",
+        "status": "completed",
+        "conclusion": "success",
+        "run_id": 37264615561,
+        "logs_url": null,
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1
+          },
+          {
+            "name": "Pull returntocorp/semgrep-agent:v1",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2
+          },
+          {
+            "name": "Checkout code",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3
+          },
+          {
+            "name": "Run Semgrep",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 4
+          },
+          {
+            "name": "Upload SARIF file",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 5
+          },
+          {
+            "name": "Post Checkout code",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 10
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 11
+          }
+        ]
+      },
+      {
+        "id": 111618674271,
+        "name": "Supply Chain Security (Scorecard)",
+        "status": "completed",
+        "conclusion": "skipped",
+        "run_id": 37264615561,
+        "logs_url": null,
+        "steps": null
+      }
+    ]
+  },
+  "limits": "PR Checks selected coverage only; previously recorded skipped jobs remain incomplete. Security CodeQL in progress; signature failure; OpenAPI audit, Scorecard and SARIF upload skipped."
+}

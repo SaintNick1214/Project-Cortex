@@ -1,0 +1,315 @@
+   1: import { describe, expect, it, jest } from "@jest/globals";
+   2: import * as immutable from "../../../convex-dev/immutable";
+   3: import * as mutable from "../../../convex-dev/mutable";
+   4: import * as users from "../../../convex-dev/users";
+   5: import * as sessions from "../../../convex-dev/sessions";
+   6: import { sourceId } from "../../../convex-dev/runtimeMetadataAuth";
+   7: import { fixture } from "./fixture";
+   8: 
+   9: type F = ReturnType<typeof fixture>;
+  10: const cases: Array<{ path: string; registration: unknown; args: Record<string, unknown>; assert(f: F, result: any): void }> = [
+  11:   { path: "immutable:store", registration: immutable.store, args: { type: "note", id: "one", data: { secret: "new" } }, assert: (f, r) => { expect(r.data).toEqual({ secret: "new" }); expect(r.previousVersions[0].data).toEqual({ secret: "old" }); expect(f.db.table("immutable")[0]!.version).toBe(2); } },
+  12:   { path: "immutable:purge", registration: immutable.purge, args: { type: "note", id: "one" }, assert: (f, r) => { expect(r).toMatchObject({ deleted: true, id: "one", versionsDeleted: 1 }); expect(f.db.table("runtimeAuthTombstones")).toHaveLength(1); } },
+  13:   { path: "immutable:get", registration: immutable.get, args: { type: "note", id: "one" }, assert: (_f, r) => expect(r.data).toEqual({ secret: "old" }) },
+  14:   { path: "immutable:getVersion", registration: immutable.getVersion, args: { type: "note", id: "one", version: 1 }, assert: (_f, r) => expect(r).toMatchObject({ version: 1, data: { secret: "old" } }) },
+  15:   { path: "immutable:getHistory", registration: immutable.getHistory, args: { type: "note", id: "one" }, assert: (_f, r) => expect(r.map((v: any) => v.version)).toEqual([1]) },
+  16:   { path: "immutable:list", registration: immutable.list, args: {}, assert: (_f, r) => { expect(r.total).toBe(2); expect(r.entries.map((v: any) => v.id)).toEqual(["one", "alice"]); } },
+  17:   { path: "immutable:search", registration: immutable.search, args: { query: "old" }, assert: (_f, r) => { expect(r).toHaveLength(1); expect(r[0].entry.id).toBe("one"); expect(r[0].highlights).toEqual(["old"]); } },
+  18:   { path: "immutable:count", registration: immutable.count, args: {}, assert: (_f, r) => expect(r).toBe(2) },
+  19:   { path: "immutable:getAtTimestamp", registration: immutable.getAtTimestamp, args: { type: "note", id: "one", timestamp: 1000 }, assert: (_f, r) => expect(r.data).toEqual({ secret: "old" }) },
+  20:   { path: "immutable:purgeMany", registration: immutable.purgeMany, args: { type: "note" }, assert: (f, r) => { expect(r.deleted).toBe(1); expect(f.db.table("immutable")[1]!.tombstonedAt).toBeUndefined(); } },
+  21:   { path: "immutable:purgeVersions", registration: immutable.purgeVersions, args: { type: "note", id: "one", keepLatest: 1 }, assert: (f, r) => { expect(r).toEqual({ versionsPurged: 0, versionsRemaining: 1 }); expect(f.db.table("immutable")[0]!.previousVersions).toEqual([]); } },
+  22:   { path: "mutable:set", registration: mutable.set, args: { namespace: "counter", key: "one", value: 10 }, assert: (f, r) => { expect(r.value).toBe(10); expect(f.db.table("mutable")[0]!.value).toBe(10); } },
+  23:   { path: "mutable:update", registration: mutable.update, args: { namespace: "counter", key: "one", operation: "increment", operand: 0 }, assert: (f, r) => { expect(r.value).toBe(5); expect(f.db.table("mutable")[0]!.value).toBe(5); } },
+  24:   { path: "mutable:deleteKey", registration: mutable.deleteKey, args: { namespace: "counter", key: "one" }, assert: (f, r) => { expect(r).toEqual({ deleted: true, namespace: "counter", key: "one" }); expect(f.db.table("mutable")[0]!.tombstonedAt).toEqual(expect.any(Number)); } },
+  25:   { path: "mutable:purgeNamespace", registration: mutable.purgeNamespace, args: { namespace: "counter", dryRun: true }, assert: (f, r) => { expect(r).toEqual({ deleted: 1, namespace: "counter", keys: ["one"], dryRun: true }); expect(f.db.table("mutable")[0]!.tombstonedAt).toBeUndefined(); } },
+  26:   { path: "mutable:transaction", registration: mutable.transaction, args: { operations: [{ op: "increment", namespace: "counter", key: "one", amount: 2 }, { op: "decrement", namespace: "counter", key: "one", amount: 1 }] }, assert: (f, r) => { expect(r.operationsExecuted).toBe(2); expect(f.db.table("mutable")[0]!.value).toBe(6); expect(r.results.map((x: any) => x.value)).toEqual([7, 6]); } },
+  27:   { path: "mutable:purgeMany", registration: mutable.purgeMany, args: { namespace: "counter" }, assert: (f, r) => { expect(r.keys).toEqual(["one"]); expect(f.db.table("mutable")[0]!.tombstonedAt).toEqual(expect.any(Number)); } },
+  28:   { path: "mutable:get", registration: mutable.get, args: { namespace: "counter", key: "one" }, assert: (_f, r) => expect(r.value).toBe(5) },
+  29:   { path: "mutable:exists", registration: mutable.exists, args: { namespace: "counter", key: "one" }, assert: (_f, r) => expect(r).toBe(true) },
+  30:   { path: "mutable:list", registration: mutable.list, args: { namespace: "counter" }, assert: (_f, r) => expect(r.map((x: any) => x.key)).toEqual(["one"]) },
+  31:   { path: "mutable:count", registration: mutable.count, args: { namespace: "counter" }, assert: (_f, r) => expect(r).toBe(1) },
+  32:   { path: "users:get", registration: users.get, args: { userId: "alice" }, assert: (_f, r) => expect(r.data).toEqual({ name: "Alice" }) },
+  33:   { path: "users:list", registration: users.list, args: {}, assert: (_f, r) => expect(r.map((x: any) => x.id)).toEqual(["alice"]) },
+  34:   { path: "users:count", registration: users.count, args: {}, assert: (_f, r) => expect(r).toBe(1) },
+  35:   { path: "users:getVersion", registration: users.getVersion, args: { userId: "alice", version: 1 }, assert: (_f, r) => expect(r).toEqual({ version: 1, data: { name: "Alice" }, timestamp: 1000 }) },
+  36:   { path: "users:getHistory", registration: users.getHistory, args: { userId: "alice" }, assert: (_f, r) => expect(r.map((x: any) => x.data)).toEqual([{ name: "Alice" }]) },
+  37:   { path: "users:getAtTimestamp", registration: users.getAtTimestamp, args: { userId: "alice", timestamp: 1000 }, assert: (_f, r) => expect(r).toMatchObject({ data: { name: "Alice" } }) },
+  38:   { path: "users:deleteUserProfile", registration: users.deleteUserProfile, args: { userId: "alice" }, assert: (f, r) => { expect(r).toEqual({ deleted: true }); expect(f.db.table("immutable")[0]!.tombstonedAt).toBeUndefined(); expect(f.db.table("immutable")[1]!.tombstonedAt).toEqual(expect.any(Number)); } },
+  39:   { path: "users:exists", registration: users.exists, args: { userId: "alice" }, assert: (_f, r) => expect(r).toBe(true) },
+  40:   { path: "sessions:create", registration: sessions.create, args: { sessionId: "two", userId: "alice", startedAt: 1000 }, assert: (f, r) => { expect(r.sessionId).toBe("two"); expect(r.authorityReference).toBeUndefined(); expect(f.db.table("sessions")[1]!.authorityReference).toEqual(f.reference); } },
+  41:   { path: "sessions:get", registration: sessions.get, args: { sessionId: "one" }, assert: (_f, r) => { expect(r.sessionId).toBe("one"); expect(r.authorityReference).toBeUndefined(); } },
+  42:   { path: "sessions:touch", registration: sessions.touch, args: { sessionId: "one" }, assert: (f, r) => { expect(r).toBeUndefined(); expect(f.db.table("sessions")[0]!.lastActiveAt).toBeGreaterThan(1000); } },
+  43:   { path: "sessions:end", registration: sessions.end, args: { sessionId: "one" }, assert: (f, r) => { expect(r).toBeUndefined(); expect(f.db.table("sessions")[0]!.status).toBe("ended"); expect(f.grant.revokedAt).toBeUndefined(); } },
+  44:   { path: "sessions:endAll", registration: sessions.endAll, args: { userId: "alice" }, assert: (f, r) => { expect(r).toEqual({ ended: 1, sessionIds: ["one"] }); expect(f.db.table("sessions")[0]!.status).toBe("ended"); } },
+  45:   { path: "sessions:list", registration: sessions.list, args: {}, assert: (_f, r) => { expect(r.map((x: any) => x.sessionId)).toEqual(["one"]); expect(r[0].authorityReference).toBeUndefined(); } },
+  46:   { path: "sessions:count", registration: sessions.count, args: {}, assert: (_f, r) => expect(r).toBe(1) },
+  47: ];
+  48: function seeded(options: Parameters<typeof fixture>[0] = {}) { const f = fixture(options); f.seedImmutable(); f.seedImmutable({ type: "user", id: "alice", data: { name: "Alice" } }); f.seedMutable(); f.seedSession(); return f; }
+  49: describe("36 registered modern public handlers", () => {
+  50:   it.each(cases)("$path authorized outcomes", async ({ registration, args, assert }) => { const f = seeded(); assert(f, await f.run(registration, args)); });
+  51:   it.each(cases)("$path rejects missing verified identity without writes", async ({ registration, args }) => {
+  52:     const f = seeded(); f.ctx.auth.getUserIdentity = async () => null; const before = structuredClone(f.db.rows);
+  53:     await expect(f.run(registration, args)).rejects.toThrow(); expect(f.db.rows).toEqual(before); expect(f.db.writes).toBe(0);
+  54:   });
+  55:   it.each(cases)("$path rejects forged tenant without writes", async ({ registration, args }) => {
+  56:     const f = seeded(); const before = structuredClone(f.db.rows); await expect(f.run(registration, { ...args, tenantId: "tenant-foreign" })).rejects.toThrow(); expect(f.db.rows).toEqual(before);
+  57:   });
+  58: });
+  59: describe("isolation, receipts, fences and transaction outcomes", () => {
+  60:   it("foreign duplicate first cannot shadow exact scoped lookup", async () => {
+  61:     const f = fixture(); f.seedImmutable({ tenantId: "tenant-foreign", data: { secret: "foreign" } }); f.seedImmutable();
+  62:     expect(await f.run(immutable.get, { type: "note", id: "one" })).toMatchObject({ data: { secret: "old" } });
+  63:     f.db.table("immutable").push({ ...f.db.table("immutable")[1]!, _id: "immutable:duplicate" });
+  64:     await expect(f.run(immutable.get, { type: "note", id: "one" })).rejects.toHaveProperty("data", { code: "FORBIDDEN", message: "Access denied" });
+  65:     expect(f.db.attemptedWrites).toBe(0); expect(f.db.writes).toBe(0);
+  66:   });
+  67:   it("same scoped composite key with a foreign owner duplicate denies even when own row exists", async () => {
+  68:     const f = fixture(); f.seedMutable({ ownerPrincipalId: "runtimeAuthPrincipals:foreign" }); f.seedMutable();
+  69:     await expect(f.run(mutable.get, { namespace: "counter", key: "one" })).rejects.toThrow();
+  70:     await expect(f.run(mutable.set, { namespace: "counter", key: "one", value: 10 })).rejects.toThrow(); expect(f.db.writes).toBe(0);
+  71:   });
+  72:   it("owner and trusted scope selection precede pagination/count/search", async () => {
+  73:     const f = fixture(); f.seedImmutable({ ownerPrincipalId: "runtimeAuthPrincipals:foreign", id: "foreign" }); f.seedImmutable({ tenantId: "tenant-foreign", id: "foreign-tenant" }); f.seedImmutable();
+  74:     expect(await f.run(immutable.list, { limit: 1 })).toMatchObject({ total: 1, entries: [{ id: "one" }] });
+  75:     expect(await f.run(immutable.count)).toBe(1); expect(await f.run(immutable.search, { query: "old" })).toHaveLength(1);
+  76:     await expect(f.run(immutable.store, { type: "note", id: "foreign", data: "stolen" })).rejects.toThrow(); expect(f.db.writes).toBe(0);
+  77:   });
+  78:   it("omitted selectors deny multiple trusted tenants and exact issuer mismatch", async () => {
+  79:     const f = fixture(); f.seedImmutable(); const membership = f.db.seed("runtimeAuthMemberships", { principalId: f.principal._id, tenantId: "tenant-b", version: 1 });
+  80:     f.db.seed("runtimeAuthScopes", { tenantId: "tenant-b", epoch: 1 }); f.db.seed("runtimeAuthGrants", { ...f.grant, _id: "runtimeAuthGrants:other", membershipId: membership._id, tenantId: "tenant-b" });
+  81:     await expect(f.run(immutable.get, { type: "note", id: "one" })).rejects.toThrow();
+  82:     expect(await f.run(immutable.get, { type: "note", id: "one", tenantId: "tenant-a" })).toMatchObject({ id: "one" });
+  83:     f.ctx.auth.getUserIdentity = async () => ({ issuer: "https://host.test/", subject: "user-a" } as any); await expect(f.run(immutable.count, { tenantId: "tenant-a" })).rejects.toThrow();
+  84:   });
+  85:   it("canonical owner is required even for tenant access; caller metadata never grants privilege", async () => {
+  86:     const f = fixture({ access: "tenant" }); f.seedMutable({ ownerPrincipalId: undefined }); await expect(f.run(mutable.get, { namespace: "counter", key: "one" })).rejects.toThrow();
+  87:     expect(await f.run(mutable.count, { namespace: "counter" })).toBe(0); expect(f.db.table("runtimeAuthGrants")).toHaveLength(1);
+  88:   });
+  89:   it("user binding blocks arbitrary own profiles and forged actor labels", async () => {
+  90:     const f = fixture(); await expect(f.run(immutable.store, { type: "user", id: "mallory", data: { admin: true } })).rejects.toThrow();
+  91:     await expect(f.run(immutable.store, { type: "note", id: "two", data: "x", userId: "mallory" })).rejects.toThrow();
+  92:     await expect(f.run(mutable.set, { namespace: "n", key: "k", value: 1, userId: "mallory" })).rejects.toThrow();
+  93:     await expect(f.run(sessions.create, { sessionId: "s", userId: "mallory", startedAt: 1 })).rejects.toThrow(); expect(f.db.writes).toBe(0);
+  94:     await f.run(immutable.store, { type: "user", id: "alice", data: { admin: true, tenantId: "evil" } });
+  95:     expect(f.db.table("runtimeAuthGrants")).toHaveLength(1); expect(f.db.table("runtimeAuthPrincipals")[0]!.metadataUserId).toBe("alice");
+  96:   });
+  97:   it("explicit space/tenant access permits cross-principal profile metadata", async () => {
+  98:     const f = fixture({ access: "space", space: "space-a" }); f.seedImmutable({ type: "user", id: "bob", ownerPrincipalId: "runtimeAuthPrincipals:bob" });
+  99:     expect(await f.run(users.get, { userId: "bob" })).toMatchObject({ id: "bob" });
+ 100:     await f.run(immutable.store, { type: "user", id: "bob", data: "updated" }); expect(f.db.table("immutable")[0]!.data).toBe("updated");
+ 101:   });
+ 102:   it("tenant-wide undefined-space and explicit concrete-space records stay separate", async () => {
+ 103:     const f = fixture({ access: "tenant" }); f.db.seed("runtimeAuthScopes", { tenantId: "tenant-a", memorySpaceId: "space-a", epoch: 1 });
+ 104:     await f.run(mutable.set, { namespace: "n", key: "same", value: "tenant" }); await f.run(mutable.set, { namespace: "n", key: "same", value: "space", memorySpaceId: "space-a" });
+ 105:     expect(await f.run(mutable.get, { namespace: "n", key: "same" })).toMatchObject({ value: "tenant", memorySpaceId: undefined });
+ 106:     expect(await f.run(mutable.get, { namespace: "n", key: "same", memorySpaceId: "space-a" })).toMatchObject({ value: "space", memorySpaceId: "space-a" });
+ 107:     expect(await f.run(mutable.count, { namespace: "n" })).toBe(1);
+ 108:   });
+ 109:   it("write-only updates/store/transactions never return old values/history/unsupplied IDs", async () => {
+ 110:     const f = seeded({ capabilities: ["write"] });
+ 111:     const store = await f.run(immutable.store, { type: "note", id: "one", data: "new" }); expect(store).toEqual({ updated: true, type: "note", id: "one", tenantId: "tenant-a", memorySpaceId: undefined });
+ 112:     expect(await f.run(mutable.update, { namespace: "counter", key: "one", operation: "increment" })).toEqual({ updated: true, namespace: "counter", key: "one" });
+ 113:     expect(await f.run(mutable.transaction, { operations: [{ op: "increment", namespace: "counter", key: "one" }] })).toMatchObject({ results: [{ updated: true, namespace: "counter", key: "one" }] });
+ 114:     expect(await f.run(sessions.endAll, { userId: "alice" })).toEqual({ ended: 1 });
+ 115:     expect(await f.run(immutable.purgeMany, { type: "note" })).toEqual({ deleted: 1 });
+ 116:     await expect(f.run(mutable.get, { namespace: "counter", key: "one" })).rejects.toThrow();
+ 117:   });
+ 118:   it("authorized mutable metadata can explicitly clear to null", async () => {
+ 119:     const f = fixture(); f.seedMutable({ metadata: { previous: true } });
+ 120:     expect(await f.run(mutable.set, { namespace: "counter", key: "one", value: 9, metadata: null })).toMatchObject({ value: 9, metadata: null }); expect(f.db.table("mutable")[0]!.metadata).toBeNull();
+ 121:   });
+ 122:   it("admin alone does not imply read/write", async () => { const f = seeded({ capabilities: ["admin"] }); await expect(f.run(immutable.count)).rejects.toThrow(); await expect(f.run(mutable.set, { namespace: "counter", key: "one", value: 2 })).rejects.toThrow(); expect(f.db.writes).toBe(0); });
+ 123:   it("batch authorization and numeric validation preflight later operations with rollback", async () => {
+ 124:     const f = fixture(); f.seedMutable(); f.seedMutable({ key: "foreign", ownerPrincipalId: "runtimeAuthPrincipals:foreign" });
+ 125:     const first = { op: "increment", namespace: "counter", key: "one", amount: 1 };
+ 126:     await expect(f.run(mutable.transaction, { operations: [first, { ...first, key: "foreign" }] })).rejects.toThrow(); expect(f.db.writes).toBe(0); expect(f.db.table("mutable")[0]!.value).toBe(5);
+ 127:     await expect(f.run(mutable.transaction, { operations: [first, { op: "set", namespace: "n", key: "bad" }] })).rejects.toThrow(); expect(f.db.writes).toBe(0);
+ 128:     await expect(f.run(mutable.update, { namespace: "counter", key: "one", operation: "increment", operand: "2" })).rejects.toThrow(); expect(f.db.writes).toBe(0);
+ 129:   });
+ 130:   it("late lifecycle failure rolls back all writes", async () => {
+ 131:     const f = fixture(); f.seedMutable(); f.db.afterWrite = () => { f.grant.revokedAt = Date.now(); };
+ 132:     await expect(f.run(mutable.transaction, { operations: [{ op: "increment", namespace: "counter", key: "one" }, { op: "set", namespace: "n", key: "two", value: 1 }] })).rejects.toThrow();
+ 133:     expect(f.db.writes).toBe(0); expect(f.db.table("mutable")[0]!.value).toBe(5); expect(f.db.table("mutable")).toHaveLength(1);
+ 134:   });
+ 135:   it("distinct tenant READ and space WRITE final READ revocation fails without receipt downgrade", async () => {
+ 136:     const f = fixture({ capabilities: ["write"], space: "space-a" }); f.seedMutable();
+ 137:     const read = f.db.seed("runtimeAuthGrants", { ...f.grant, _id: "runtimeAuthGrants:reader", memorySpaceId: undefined, memorySpaceEpoch: undefined, capabilities: ["read"], resourceAccess: "tenant" });
+ 138:     expect(await f.run(mutable.update, { namespace: "counter", key: "one", operation: "increment" })).toMatchObject({ value: 6 });
+ 139:     f.db.afterWrite = () => { read.revokedAt = Date.now(); };
+ 140:     await expect(f.run(mutable.update, { namespace: "counter", key: "one", operation: "increment" })).rejects.toThrow(); expect(f.db.table("mutable")[0]!.value).toBe(6);
+ 141:   });
+ 142:   it("cross-principal space WRITE does not require unavailable own READ", async () => {
+ 143:     const f = fixture({ capabilities: ["write"], space: "space-a", access: "space" }); f.seedMutable({ ownerPrincipalId: "runtimeAuthPrincipals:other" });
+ 144:     f.db.seed("runtimeAuthGrants", { ...f.grant, _id: "runtimeAuthGrants:own-reader", memorySpaceId: undefined, memorySpaceEpoch: undefined, capabilities: ["read"], resourceAccess: "own" });
+ 145:     expect(await f.run(mutable.update, { namespace: "counter", key: "one", operation: "increment" })).toEqual({ updated: true, namespace: "counter", key: "one" }); expect(f.db.table("mutable")[0]!.value).toBe(6);
+ 146:   });
+ 147:   it("already expired independent READ stays unavailable at initial WRITE admission", async () => {
+ 148:     const f = fixture({ capabilities: ["write"], space: "space-a" }); f.seedMutable();
+ 149:     f.db.seed("runtimeAuthGrants", { ...f.grant, _id: "runtimeAuthGrants:expired-reader", memorySpaceId: undefined, memorySpaceEpoch: undefined, capabilities: ["read"], resourceAccess: "tenant", expiresAt: 1 });
+ 150:     expect(await f.run(mutable.update, { namespace: "counter", key: "one", operation: "increment" })).toEqual({ updated: true, namespace: "counter", key: "one" }); expect(f.db.table("mutable")[0]!.value).toBe(6);
+ 151:   });
+ 152:   it.each(["read", "write"])("%s expiry during final READ control lookup fails joint barrier and rolls back", async (expires) => {
+ 153:     const f = fixture({ capabilities: ["write"], space: "space-a" }); f.seedMutable();
+ 154:     const read = f.db.seed("runtimeAuthGrants", { ...f.grant, _id: "runtimeAuthGrants:deadline-reader", memorySpaceId: undefined, memorySpaceEpoch: undefined, capabilities: ["read"], resourceAccess: "tenant" });
+ 155:     const now = Date.now(); const target = expires === "read" ? read : f.grant; target.expiresAt = now + 1000;
+ 156:     const originalGet = f.db.get.bind(f.db); let armed = false; let finalReadGets = 0;
+ 157:     f.db.afterWrite = () => { armed = true; };
+ 158:     const clock = jest.spyOn(Date, "now").mockReturnValue(now);
+ 159:     f.db.get = async (table, id) => { const row = await originalGet(table, id); if (armed && table === "runtimeAuthGrants" && id === read._id && ++finalReadGets === 2) clock.mockReturnValue(now + 1001); return row; };
+ 160:     try { await expect(f.run(mutable.update, { namespace: "counter", key: "one", operation: "increment" })).rejects.toThrow(); expect(f.db.table("mutable")[0]!.value).toBe(5); expect(f.db.writes).toBe(0); } finally { clock.mockRestore(); }
+ 161:   });
+ 162:   it("authorized history retention removes only requested old versions and rejects invalid keep", async () => {
+ 163:     const f = fixture(); f.seedImmutable({ version: 3, previousVersions: [{ version: 1, data: "oldest", timestamp: 1 }, { version: 2, data: "older", timestamp: 2 }] });
+ 164:     expect(await f.run(immutable.purgeVersions, { type: "note", id: "one", keepLatest: 2 })).toEqual({ versionsPurged: 1, versionsRemaining: 2 });
+ 165:     expect((await f.run(immutable.getHistory, { type: "note", id: "one" }) as any[]).map((v) => v.version)).toEqual([2, 3]);
+ 166:     await expect(f.run(immutable.purgeVersions, { type: "note", id: "one", keepLatest: 0 })).rejects.toThrow(); expect(f.db.table("immutable")[0]!.version).toBe(3);
+ 167:   });
+ 168:   it("tombstoning colliding historical colon keys fences only the exact composite source", async () => {
+ 169:     const f = fixture(); await f.run(immutable.store, { type: "a:b", id: "c", data: "first" }); await f.run(immutable.store, { type: "a", id: "b:c", data: "second" });
+ 170:     await f.run(immutable.purge, { type: "a:b", id: "c" }); expect(await f.run(immutable.get, { type: "a", id: "b:c" })).toMatchObject({ data: "second" });
+ 171:     expect(f.db.table("runtimeAuthTombstones")[0]!.resourceId).toBe('immutable:["a:b","c"]');
+ 172:   });
+ 173:   it("retained row/control tombstones block recreation and exclude lists/counts", async () => {
+ 174:     const f = fixture(); f.seedImmutable(); f.seedMutable(); await f.run(immutable.purge, { type: "note", id: "one" }); await f.run(mutable.deleteKey, { namespace: "counter", key: "one" });
+ 175:     expect(await f.run(immutable.count)).toBe(0); expect(await f.run(mutable.count, { namespace: "counter" })).toBe(0);
+ 176:     await expect(f.run(immutable.store, { type: "note", id: "one", data: "revive" })).rejects.toThrow(); await expect(f.run(mutable.set, { namespace: "counter", key: "one", value: 1 })).rejects.toThrow();
+ 177:     expect(f.db.table("runtimeAuthTombstones")).toHaveLength(2); expect(f.db.table("immutable")).toHaveLength(1);
+ 178:   });
+ 179:   it("deleted scope/expired grants/current corrupt duplicates deny", async () => {
+ 180:     for (const alter of [(f: F) => { f.db.table("runtimeAuthScopes")[0]!.deletedAt = 1; }, (f: F) => { f.grant.expiresAt = 1; }, (f: F) => { f.db.seed("runtimeAuthGrants", { ...f.grant, _id: "runtimeAuthGrants:dupe", capabilities: ["admin"] }); }]) {
+ 181:       const f = seeded(); alter(f); await expect(f.run(immutable.getHistory, { type: "note", id: "one" })).rejects.toThrow(); await expect(f.run(mutable.set, { namespace: "n", key: "k", value: 2 })).rejects.toThrow(); expect(f.db.writes).toBe(0);
+ 182:     }
+ 183:   });
+ 184:   it("collision-safe composite source IDs distinguish colon, percent and unicode pairs", () => {
+ 185:     expect(sourceId("immutable", "a:b", "c")).not.toBe(sourceId("immutable", "a", "b:c"));
+ 186:     expect(sourceId("mutable", "n:k", "z")).not.toBe(sourceId("mutable", "n", "k:z"));
+ 187:     expect(sourceId("immutable", "a", "雪%:")).toBe('immutable:["a","雪%:"]');
+ 188:   });
+ 189:   it("session uniqueness/end/expiry never restores ended application sessions or revokes grants", async () => {
+ 190:     const f = seeded(); await expect(f.run(sessions.create, { sessionId: "one", userId: "alice", startedAt: 1000 })).rejects.toThrow();
+ 191:     await f.run(sessions.end, { sessionId: "one" }); await expect(f.run(sessions.touch, { sessionId: "one" })).rejects.toThrow(); expect(f.grant.revokedAt).toBeUndefined();
+ 192:     f.seedSession({ sessionId: "expired", expiresAt: 1 }); await expect(f.run(sessions.touch, { sessionId: "expired" })).rejects.toThrow();
+ 193:   });
+ 194: });
+ 195: describe("five actual internal registrations", () => {
+ 196:   it.each([["immutable", immutable.purgeAll], ["mutable", mutable.purgeAll]])("%s operator purge preserves control/tombstone rows", async (module, registration) => {
+ 197:     const f = seeded(); const controls = structuredClone(f.db.table("runtimeAuthGrants")); const r = await f.run(registration);
+ 198:     expect(r).toEqual({ deleted: module === "immutable" ? 2 : 1 }); expect(f.db.table("runtimeAuthGrants")).toEqual(controls); expect(f.db.table("runtimeAuthTombstones")).toHaveLength(module === "immutable" ? 2 : 1);
+ 199:   });
+ 200:   it.each([[sessions.incrementMessageCount, "messageCount"], [sessions.incrementMemoryCount, "memoryCount"]])("background counter %s uses stored current reference", async (registration, column) => {
+ 201:     const f = seeded(); await f.run(registration, { sessionId: "one", reference: f.reference }); expect(f.db.table("sessions")[0]![column as string]).toBe(1);
+ 202:     f.grant.expiresAt = 1; await expect(f.run(registration, { sessionId: "one", reference: f.reference })).rejects.toThrow(); expect(f.db.table("sessions")[0]![column as string]).toBe(1);
+ 203:   });
+ 204:   it("idle expiry checks every pinned target before effects and after commits", async () => {
+ 205:     const f = seeded(); f.seedSession({ sessionId: "bad", authorityReference: { ...f.reference, grantVersion: 9 } });
+ 206:     await expect(f.run(sessions.expireIdle, { reference: f.reference, idleTimeout: 0 })).rejects.toThrow(); expect(f.db.writes).toBe(0); expect(f.db.table("sessions")[0]!.status).toBe("active");
+ 207:     f.db.table("sessions").pop(); expect(await f.run(sessions.expireIdle, { reference: f.reference, idleTimeout: 0 })).toEqual({ expired: 1 }); expect(f.db.table("sessions")[0]!.status).toBe("ended");
+ 208:   });
+ 209: });
+ 210: 
+ 211: 
+ 212: describe("cycle2 independent-review regressions", () => {
+ 213:   it.each([false, true])("own READ cannot hydrate another user profile after explicit space WRITE; existing=%s", async (existing) => {
+ 214:     const f = fixture({ space: "space-a", access: "space", capabilities: ["write"] });
+ 215:     if (existing) await f.run(immutable.store, { type: "user", id: "bob", data: { secret: "Bob prior secret" } });
+ 216:     f.db.seed("runtimeAuthGrants", { ...f.grant, _id: "runtimeAuthGrants:own-profile-reader", memorySpaceId: undefined, memorySpaceEpoch: undefined, capabilities: ["read"], resourceAccess: "own" });
+ 217:     const result = await f.run(immutable.store, { type: "user", id: "bob", data: { secret: "Bob current secret" } });
+ 218:     expect(result).toMatchObject({ updated: true, type: "user", id: "bob" });
+ 219:     expect(result).not.toHaveProperty("data"); expect(result).not.toHaveProperty("previousVersions");
+ 220:     await expect(f.run(users.get, { userId: "bob", memorySpaceId: "space-a" })).rejects.toThrow();
+ 221:     expect(f.db.table("immutable")[0]!.data).toEqual({ secret: "Bob current secret" });
+ 222:   });
+ 223:   it("own READ filters cross-profile metadata before candidate hydration", async () => {
+ 224:     const f = fixture({ space: "space-a", access: "space", capabilities: ["write"] });
+ 225:     f.seedImmutable({ type: "user", id: "bob", data: { secret: "Bob" } }); f.seedImmutable({ type: "user", id: "alice", data: { name: "Alice" } });
+ 226:     f.db.seed("runtimeAuthGrants", { ...f.grant, _id: "runtimeAuthGrants:own-profile-list-reader", memorySpaceId: undefined, memorySpaceEpoch: undefined, capabilities: ["read"], resourceAccess: "own" });
+ 227:     const hydrated: unknown[] = []; const originalQuery = f.db.query.bind(f.db);
+ 228:     f.db.query = (table) => { const query = originalQuery(table); const collect = query.collect.bind(query);
+ 229:       query.collect = async () => { const rows = await collect(); if (table === "immutable") hydrated.push(...rows.map((row) => row.id)); return rows; }; return query; };
+ 230:     expect(await f.run(users.list, { memorySpaceId: "space-a" })).toEqual([{ id: "alice", data: { name: "Alice" }, version: 1, createdAt: 1000, updatedAt: 1000 }]); expect(hydrated).toEqual(["alice"]);
+ 231:   });
+ 232:   it("independent explicit tenant READ may hydrate cross-principal profile permitted by space WRITE", async () => {
+ 233:     const f = fixture({ space: "space-a", access: "space", capabilities: ["write"] });
+ 234:     f.db.seed("runtimeAuthGrants", { ...f.grant, _id: "runtimeAuthGrants:tenant-profile-reader", memorySpaceId: undefined, memorySpaceEpoch: undefined, capabilities: ["read"], resourceAccess: "tenant" });
+ 235:     expect(await f.run(immutable.store, { type: "user", id: "bob", data: { name: "Bob" } })).toMatchObject({ data: { name: "Bob" }, id: "bob" });
+ 236:   });
+ 237:   const bulks = [
+ 238:     { path: "immutable:purgeMany", registration: immutable.purgeMany, table: "immutable", args: { type: "note" }, seed: (f: F, row: Record<string, unknown> = {}) => f.seedImmutable(row) },
+ 239:     { path: "mutable:purgeMany", registration: mutable.purgeMany, table: "mutable", args: { namespace: "counter" }, seed: (f: F, row: Record<string, unknown> = {}) => f.seedMutable(row) },
+ 240:     { path: "mutable:purgeNamespace", registration: mutable.purgeNamespace, table: "mutable", args: { namespace: "counter" }, seed: (f: F, row: Record<string, unknown> = {}) => f.seedMutable(row) },
+ 241:     { path: "sessions:endAll", registration: sessions.endAll, table: "sessions", args: { userId: "alice" }, seed: (f: F, row: Record<string, unknown> = {}) => f.seedSession(row) },
+ 242:     { path: "sessions:expireIdle", registration: sessions.expireIdle, table: "sessions", args: { idleTimeout: 0 }, seed: (f: F, row: Record<string, unknown> = {}) => f.seedSession(row) },
+ 243:   ];
+ 244:   it.each(bulks.flatMap((bulk) => ["own", "foreign", "missing-owner"].map((conflict) => ({ ...bulk, conflict }))))("$path rejects $conflict duplicate before any effect", async ({ path, registration, table, args, seed, conflict }) => {
+ 245:     const f = fixture(); seed(f); seed(f, conflict === "foreign" ? { ownerPrincipalId: "runtimeAuthPrincipals:foreign" } : conflict === "missing-owner" ? { ownerPrincipalId: undefined } : {});
+ 246:     const before = structuredClone(f.db.rows);
+ 247:     await expect(f.run(registration, { ...args, ...(path === "sessions:expireIdle" ? { reference: f.reference } : {}) })).rejects.toThrow();
+ 248:     expect(f.db.attemptedWrites).toBe(0); expect(f.db.writes).toBe(0); expect(f.db.rows).toEqual(before); expect(f.db.table(table)).toHaveLength(2); expect(f.db.table("runtimeAuthTombstones")).toEqual([]);
+ 249:   });
+ 250:   const reactive = [
+ 251:     { path: "sessions:touch", registration: sessions.touch, internal: false, beforeEffectGrantGet: 3 },
+ 252:     { path: "sessions:incrementMessageCount", registration: sessions.incrementMessageCount, internal: true, beforeEffectGrantGet: 6 },
+ 253:     { path: "sessions:incrementMemoryCount", registration: sessions.incrementMemoryCount, internal: true, beforeEffectGrantGet: 6 },
+ 254:   ];
+ 255:   it.each(reactive.flatMap((item) => ["before-effect", "after-effect"].map((phase) => ({ ...item, phase }))))("$path rejects session expiry $phase across awaited controls", async ({ registration, internal, beforeEffectGrantGet, phase }) => {
+ 256:     const f = fixture(); const now = 10000; const clock = jest.spyOn(Date, "now").mockReturnValue(now); f.seedSession({ expiresAt: now + 100, status: "idle" });
+ 257:     let grantGets = 0; let armed = false;
+ 258:     if (phase === "before-effect") {
+ 259:       const originalQuery = f.db.query.bind(f.db); f.db.query = (table) => { const query = originalQuery(table); const take = query.take.bind(query);
+ 260:         query.take = async (limit) => { const rows = await take(limit); if (table === "sessions") { expect(limit).toBe(2); armed = true; } return rows; }; return query; };
+ 261:       const originalGet = f.db.get.bind(f.db); f.db.get = async (table, id) => { const row = await originalGet(table, id);
+ 262:         if (armed && table === "runtimeAuthGrants" && ++grantGets === beforeEffectGrantGet) clock.mockReturnValue(now + 101); return row; };
+ 263:     } else f.db.afterWrite = () => { clock.mockReturnValue(now + 101); };
+ 264:     try {
+ 265:       await expect(f.run(registration, { sessionId: "one", ...(internal ? { reference: f.reference } : {}) })).rejects.toThrow();
+ 266:       expect(f.db.writes).toBe(0); expect(f.db.attemptedWrites).toBe(phase === "before-effect" ? 0 : 1);
+ 267:       expect(f.db.table("sessions")[0]).toMatchObject({ status: "idle", lastActiveAt: 1000, messageCount: 0, memoryCount: 0 });
+ 268:       if (phase === "before-effect") { expect(armed).toBe(true); expect(grantGets).toBeGreaterThanOrEqual(beforeEffectGrantGet); }
+ 269:     } finally { clock.mockRestore(); }
+ 270:   });
+ 271:   it.each(["before-effect", "after-effect"])("session create rejects supplied expiry %s across awaited controls", async (phase) => {
+ 272:     const f = fixture(); const now = 10000; const clock = jest.spyOn(Date, "now").mockReturnValue(now);
+ 273:     if (phase === "before-effect") { const originalGet = f.db.get.bind(f.db); let gets = 0;
+ 274:       f.db.get = async (table, id) => { const row = await originalGet(table, id); if (table === "runtimeAuthGrants" && ++gets === 1) clock.mockReturnValue(now + 101); return row; };
+ 275:     } else f.db.afterWrite = () => { clock.mockReturnValue(now + 101); };
+ 276:     try {
+ 277:       await expect(f.run(sessions.create, { sessionId: "new", userId: "alice", startedAt: 1000, expiresAt: now + 100 })).rejects.toThrow();
+ 278:       expect(f.db.writes).toBe(0); expect(f.db.attemptedWrites).toBe(phase === "before-effect" ? 0 : 1); expect(f.db.table("sessions")).toEqual([]);
+ 279:     } finally { clock.mockRestore(); }
+ 280:   });
+ 281:   const maintenance = [
+ 282:     { path: "message", registration: sessions.incrementMessageCount, args: { sessionId: "one" } },
+ 283:     { path: "memory", registration: sessions.incrementMemoryCount, args: { sessionId: "one" } },
+ 284:     { path: "expiry", registration: sessions.expireIdle, args: { idleTimeout: 0 } },
+ 285:   ];
+ 286:   it.each(maintenance.flatMap((item) => ["owner", "user", "both"].map((malformed) => ({ ...item, malformed }))))("background $path rejects mismatched canonical $malformed with broad space grant", async ({ registration, args, malformed }) => {
+ 287:     const f = fixture({ space: "space-a", access: "space" });
+ 288:     f.seedSession({ ...(malformed === "owner" || malformed === "both" ? { ownerPrincipalId: "runtimeAuthPrincipals:bob" } : {}), ...(malformed === "user" || malformed === "both" ? { userId: "bob" } : {}) });
+ 289:     const before = structuredClone(f.db.rows); await expect(f.run(registration, { ...args, reference: f.reference })).rejects.toThrow();
+ 290:     expect(f.db.attemptedWrites).toBe(0); expect(f.db.rows).toEqual(before);
+ 291:   });
+ 292:   it.each(maintenance)("background $path allows exact creator/user/reference with broad space grant", async ({ path, registration, args }) => {
+ 293:     const f = fixture({ space: "space-a", access: "space" }); f.seedSession(); const result = await f.run(registration, { ...args, reference: f.reference });
+ 294:     if (path === "expiry") { expect(result).toEqual({ expired: 1 }); expect(f.db.table("sessions")[0]!.status).toBe("ended"); }
+ 295:     else expect(f.db.table("sessions")[0]![path === "message" ? "messageCount" : "memoryCount"]).toBe(1);
+ 296:   });
+ 297:   it.each(["increment", "decrement"])("explicit null %s operand is invalid before writes; omitted operand defaults", async (operation) => {
+ 298:     const f = fixture(); f.seedMutable(); await expect(f.run(mutable.update, { namespace: "counter", key: "one", operation, operand: null })).rejects.toThrow("INVALID_INPUT");
+ 299:     expect(f.db.attemptedWrites).toBe(0); expect(f.db.table("mutable")[0]!.value).toBe(5);
+ 300:     expect(await f.run(mutable.update, { namespace: "counter", key: "one", operation })).toMatchObject({ value: operation === "increment" ? 6 : 4 });
+ 301:   });
+ 302:   it("explicit null later transaction amount fails before all writes", async () => {
+ 303:     const f = fixture(); f.seedMutable(); await expect(f.run(mutable.transaction, { operations: [{ op: "increment", namespace: "counter", key: "one" }, { op: "increment", namespace: "counter", key: "one", amount: null }] })).rejects.toThrow("INVALID_INPUT");
+ 304:     expect(f.db.attemptedWrites).toBe(0); expect(f.db.table("mutable")[0]!.value).toBe(5);
+ 305:   });
+ 306:   it.each([Number.MAX_SAFE_INTEGER, Number.MAX_SAFE_INTEGER + 1, 0, -1, 1.5, NaN, Infinity])("immutable stored version %s rejects before version writes", async (version) => {
+ 307:     const f = fixture(); f.seedImmutable({ version }); const before = structuredClone(f.db.rows);
+ 308:     await expect(f.run(immutable.store, { type: "note", id: "one", data: "replacement" })).rejects.toThrow("INVALID_INPUT");
+ 309:     expect(f.db.attemptedWrites).toBe(0); expect(f.db.rows).toEqual(before);
+ 310:   });
+ 311:   it("last safe immutable version increment remains precise", async () => {
+ 312:     const f = fixture(); f.seedImmutable({ version: Number.MAX_SAFE_INTEGER - 1 }); expect(await f.run(immutable.store, { type: "note", id: "one", data: "replacement" })).toMatchObject({ version: Number.MAX_SAFE_INTEGER });
+ 313:     expect(Number.isSafeInteger(f.db.table("immutable")[0]!.version)).toBe(true);
+ 314:   });
+ 315: });

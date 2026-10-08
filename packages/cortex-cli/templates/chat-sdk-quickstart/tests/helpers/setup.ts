@@ -5,7 +5,7 @@
  * This file runs before all tests.
  */
 
-import { vi, beforeEach, afterEach } from "vitest";
+import { afterEach, beforeEach, vi } from "vitest";
 
 // Store original env
 const originalEnv = { ...process.env };

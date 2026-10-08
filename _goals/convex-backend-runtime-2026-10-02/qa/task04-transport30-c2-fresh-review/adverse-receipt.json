@@ -1,0 +1,215 @@
+{
+  "argv": [
+    "/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-transport30-c2-fresh-review/adverse-independent.py"
+  ],
+  "utcPre": "2026-10-04T13:41:52.764260+00:00",
+  "expectedRejections": [
+    {
+      "name": "single-backslash-precreation",
+      "inputCodepoints": [
+        109,
+        105,
+        115,
+        115,
+        105,
+        110,
+        103,
+        47,
+        110,
+        97,
+        109,
+        101,
+        92,
+        115,
+        117,
+        102,
+        102,
+        105,
+        120
+      ],
+      "utcPre": "2026-10-04T13:41:52.764270+00:00",
+      "utcPost": "2026-10-04T13:41:52.764378+00:00",
+      "type": "ValueError",
+      "message": "unsafe path",
+      "safeDenied": true,
+      "createDeniedBeforeTargetCreation": true
+    },
+    {
+      "name": "NUL-precreation",
+      "inputCodepoints": [
+        109,
+        105,
+        115,
+        115,
+        105,
+        110,
+        103,
+        47,
+        110,
+        97,
+        109,
+        101,
+        0,
+        115,
+        117,
+        102,
+        102,
+        105,
+        120
+      ],
+      "utcPre": "2026-10-04T13:41:52.764385+00:00",
+      "utcPost": "2026-10-04T13:41:52.764422+00:00",
+      "type": "ValueError",
+      "message": "unsafe path",
+      "safeDenied": true,
+      "createDeniedBeforeTargetCreation": true
+    },
+    {
+      "name": "unsafe:../outside",
+      "utcPre": "2026-10-04T13:41:52.764427+00:00",
+      "utcPost": "2026-10-04T13:41:52.764434+00:00",
+      "type": "ValueError",
+      "message": "unsafe path"
+    },
+    {
+      "name": "unsafe:/absolute",
+      "utcPre": "2026-10-04T13:41:52.764438+00:00",
+      "utcPost": "2026-10-04T13:41:52.764442+00:00",
+      "type": "ValueError",
+      "message": "unsafe path"
+    },
+    {
+      "name": "unsafe:a/../b",
+      "utcPre": "2026-10-04T13:41:52.764445+00:00",
+      "utcPost": "2026-10-04T13:41:52.764449+00:00",
+      "type": "ValueError",
+      "message": "unsafe path"
+    },
+    {
+      "name": "unsafe:a//b",
+      "utcPre": "2026-10-04T13:41:52.764451+00:00",
+      "utcPost": "2026-10-04T13:41:52.764455+00:00",
+      "type": "ValueError",
+      "message": "unsafe path"
+    },
+    {
+      "name": "unsafe:a\\b",
+      "utcPre": "2026-10-04T13:41:52.764457+00:00",
+      "utcPost": "2026-10-04T13:41:52.764459+00:00",
+      "type": "ValueError",
+      "message": "unsafe path"
+    },
+    {
+      "name": "unsafe:a/./b",
+      "utcPre": "2026-10-04T13:41:52.764461+00:00",
+      "utcPost": "2026-10-04T13:41:52.764464+00:00",
+      "type": "ValueError",
+      "message": "unsafe path"
+    },
+    {
+      "name": "exclusive-create-existing-same-content",
+      "utcPre": "2026-10-04T13:41:52.764682+00:00",
+      "utcPost": "2026-10-04T13:41:52.764760+00:00",
+      "type": "FileExistsError",
+      "message": "[Errno 17] File exists: 'present'"
+    },
+    {
+      "name": "existing-content-mismatch",
+      "utcPre": "2026-10-04T13:41:52.764795+00:00",
+      "utcPost": "2026-10-04T13:41:52.764856+00:00",
+      "type": "ValueError",
+      "message": "existing original mismatch: present"
+    },
+    {
+      "name": "symlink-ancestor",
+      "utcPre": "2026-10-04T13:41:52.765025+00:00",
+      "utcPost": "2026-10-04T13:41:52.765104+00:00",
+      "type": "NotADirectoryError",
+      "message": "[Errno 20] Not a directory: 'link'"
+    },
+    {
+      "name": "symlink-file",
+      "utcPre": "2026-10-04T13:41:52.765180+00:00",
+      "utcPost": "2026-10-04T13:41:52.765236+00:00",
+      "type": "OSError",
+      "message": "[Errno 40] Too many levels of symbolic links: 'filelink'"
+    },
+    {
+      "name": "unknown-entry",
+      "utcPre": "2026-10-04T13:41:52.765599+00:00",
+      "utcPost": "2026-10-04T13:41:52.765808+00:00",
+      "type": "ValueError",
+      "message": "unknown or duplicate archive entry"
+    },
+    {
+      "name": "duplicate-entry",
+      "utcPre": "2026-10-04T13:41:52.766129+00:00",
+      "utcPost": "2026-10-04T13:41:52.766385+00:00",
+      "type": "ValueError",
+      "message": "unknown or duplicate archive entry"
+    },
+    {
+      "name": "hash-mismatch",
+      "utcPre": "2026-10-04T13:41:52.766642+00:00",
+      "utcPost": "2026-10-04T13:41:52.766811+00:00",
+      "type": "ValueError",
+      "message": "archive content mismatch"
+    },
+    {
+      "name": "symlink-entry",
+      "utcPre": "2026-10-04T13:41:52.767038+00:00",
+      "utcPost": "2026-10-04T13:41:52.767184+00:00",
+      "type": "ValueError",
+      "message": "nonregular archive entry"
+    },
+    {
+      "name": "missing-entry",
+      "utcPre": "2026-10-04T13:41:52.767390+00:00",
+      "utcPost": "2026-10-04T13:41:52.767514+00:00",
+      "type": "ValueError",
+      "message": "archive entry set mismatch"
+    },
+    {
+      "name": "oversize-existing-before-buffer",
+      "utcPre": "2026-10-04T13:41:52.767634+00:00",
+      "utcPost": "2026-10-04T13:41:52.767703+00:00",
+      "type": "ValueError",
+      "message": "input exceeds trusted byte bound"
+    },
+    {
+      "name": "oversize-chunk-precreation",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+        "-B",
+        "/workspace/Project-Cortex/work/resume/task04-transport30-c2-fresh-review/adverse/oversize-chunk-precreation/materialize.py",
+        "--target",
+        "/workspace/Project-Cortex/work/resume/task04-transport30-c2-fresh-review/adverse/denied-restore/oversize-chunk-precreation",
+        "--materialize"
+      ],
+      "utcPre": "2026-10-04T13:41:52.849435+00:00",
+      "utcPost": "2026-10-04T13:41:53.280744+00:00",
+      "exitCode": 1,
+      "message": "input exceeds trusted byte bound",
+      "originalRootAbsentAfter": true
+    },
+    {
+      "name": "oversize-map-precreation",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+        "-B",
+        "/workspace/Project-Cortex/work/resume/task04-transport30-c2-fresh-review/adverse/oversize-map-precreation/materialize.py",
+        "--target",
+        "/workspace/Project-Cortex/work/resume/task04-transport30-c2-fresh-review/adverse/denied-restore/oversize-map-precreation",
+        "--materialize"
+      ],
+      "utcPre": "2026-10-04T13:41:53.281931+00:00",
+      "utcPost": "2026-10-04T13:41:53.316554+00:00",
+      "exitCode": 1,
+      "message": "input exceeds trusted byte bound",
+      "originalRootAbsentAfter": true
+    }
+  ],
+  "unexpectedFailures": [],
+  "exitCode": 0,
+  "utcPost": "2026-10-04T13:41:53.316561+00:00"
+}

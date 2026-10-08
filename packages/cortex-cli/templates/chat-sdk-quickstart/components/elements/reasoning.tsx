@@ -1,7 +1,7 @@
 "use client";
 
 import { useControllableState } from "@radix-ui/react-use-controllable-state";
-import { BrainIcon, ChevronDownIcon, DatabaseIcon, SaveIcon } from "lucide-react";
+import { BrainIcon, ChevronDownIcon } from "lucide-react";
 import type { ComponentProps } from "react";
 import { createContext, memo, useContext, useEffect, useState } from "react";
 import {
@@ -52,13 +52,13 @@ export const Reasoning = memo(
     ...props
   }: ReasoningProps) => {
     const [isOpen, setIsOpen] = useControllableState({
-      prop: open,
       defaultProp: defaultOpen,
       onChange: onOpenChange,
+      prop: open,
     });
     const [duration, setDuration] = useControllableState({
-      prop: durationProp,
       defaultProp: 0,
+      prop: durationProp,
     });
 
     const [hasAutoClosedRef, setHasAutoClosedRef] = useState(false);
@@ -95,7 +95,7 @@ export const Reasoning = memo(
 
     return (
       <ReasoningContext.Provider
-        value={{ isStreaming, isOpen, setIsOpen, duration }}
+        value={{ duration, isOpen, isStreaming, setIsOpen }}
       >
         <Collapsible
           className={cn("not-prose", className)}
@@ -110,13 +110,21 @@ export const Reasoning = memo(
   }
 );
 
-export type ReasoningTriggerProps = ComponentProps<typeof CollapsibleTrigger> & {
+export type ReasoningTriggerProps = ComponentProps<
+  typeof CollapsibleTrigger
+> & {
   icon?: React.ComponentType<{ className?: string }>;
   label?: string;
 };
 
 export const ReasoningTrigger = memo(
-  ({ className, children, icon: Icon = BrainIcon, label = "Thinking", ...props }: ReasoningTriggerProps) => {
+  ({
+    className,
+    children,
+    icon: Icon = BrainIcon,
+    label = "Thinking",
+    ...props
+  }: ReasoningTriggerProps) => {
     const { isStreaming, isOpen, duration } = useReasoning();
 
     return (

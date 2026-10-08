@@ -8,8 +8,9 @@ import type { GraphSyncPolicy } from "../graph/types";
  * Hive/Collaboration Mode management
  */
 
+import { isRegistryStatisticsUnavailable } from "../agents/statistics";
 import { ConvexClient } from "convex/browser";
-import { api } from "../../convex-dev/_generated/api";
+import { api } from "../common/backendApi";
 import type {
   MemorySpace,
   MemorySpaceStats,
@@ -563,22 +564,20 @@ export class MemorySpacesAPI {
       validateTimeWindow(options.timeWindow);
     }
 
+    const tenantId = resolveDomainScope(this.authContext?.tenantId, options?.tenantId);
     try {
-      const tenantId = resolveDomainScope(this.authContext?.tenantId, undefined);
-
-    const result = await this.executeWithResilience(
-        () =>
-          this.client.query(api.memorySpaces.getStats, {
-          tenantId,
-            memorySpaceId,
-            timeWindow: options?.timeWindow,
-            includeParticipants: options?.includeParticipants,
-          }),
-        "memorySpaces:getStats",
-      );
-
-      return result as MemorySpaceStats;
+      const result = await this.executeWithResilience(async () => {
+        try { return { stats: await this.client.query(api.memorySpaces.getStats, {
+          memorySpaceId, tenantId, timeWindow: options?.timeWindow, includeParticipants: options?.includeParticipants,
+        }) }; } catch (error) {
+          if (isRegistryStatisticsUnavailable(error)) return { unavailable: error };
+          throw error;
+        }
+      }, "memorySpaces:getStats");
+      if (result.unavailable) throw result.unavailable;
+      return result.stats as MemorySpaceStats;
     } catch (error) {
+      if (isRegistryStatisticsUnavailable(error)) throw error;
       this.handleConvexError(error);
     }
   }

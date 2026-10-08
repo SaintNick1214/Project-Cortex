@@ -1,0 +1,24 @@
+import { spawn } from "node:child_process";
+import { resolve } from "node:path";
+import { randomUUID } from "node:crypto";
+import { livePreflight, fixture, repo, writeEvidence } from "./guard.mjs";
+const mode = process.argv[2];
+if (!["deploy", "codegen"].includes(mode)) throw new Error("Select deploy or codegen.");
+const name = `${mode}-${randomUUID()}.json`;
+const { target, envFile, env } = livePreflight(name);
+// The current CLI's standalone codegen has no --env-file. dev --once enables
+// authentic fixture codegen while remaining on the same guarded dev deployment.
+const args = [resolve(repo, "node_modules/convex/bin/main.js"), "dev", "--once", "--codegen", mode === "codegen" ? "enable" : "disable", "--typecheck", "enable", "--tail-logs", "disable", "--env-file", envFile];
+const startedAt = new Date().toISOString();
+const code = await new Promise((done) => {
+  const child = spawn(process.execPath, args, { cwd: fixture, env, stdio: ["ignore", "pipe", "pipe"] });
+  // Raw diagnostics can include private data. Keep only exit status; parent may
+  // independently inspect deployment state with its trusted service tools.
+  child.stdout.on("data", () => {}); child.stderr.on("data", () => {});
+  const timer = setTimeout(() => child.kill("SIGKILL"), 120_000);
+  child.once("error", () => { clearTimeout(timer); done(-1); });
+  child.once("close", (status) => { clearTimeout(timer); done(status ?? -1); });
+});
+writeEvidence(name, { mode, startedAt, completedAt: new Date().toISOString(), deploymentName: target.deploymentName, exitCode: code, rawDiagnostics: "discarded for privacy" });
+process.stdout.write(JSON.stringify({ mode, exitCode: code }) + "\n");
+process.exitCode = code === 0 ? 0 : 1;

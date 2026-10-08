@@ -11,7 +11,9 @@
 function secureRandomString(length: number): string {
   const array = new Uint8Array(length);
   crypto.getRandomValues(array);
-  return Array.from(array, (byte) => byte.toString(16).padStart(2, "0")).join("").slice(0, length);
+  return Array.from(array, (byte) => byte.toString(16).padStart(2, "0"))
+    .join("")
+    .slice(0, length);
 }
 
 /**
@@ -22,7 +24,7 @@ function secureRandomString(length: number): string {
 export function generateDummyPassword(): string {
   // Use cryptographically secure random for guest account passwords
   // In production, this should be replaced with proper authentication
-  return "guest-password-" + secureRandomString(16);
+  return `guest-password-${secureRandomString(16)}`;
 }
 
 /**

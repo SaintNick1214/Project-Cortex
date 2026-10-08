@@ -1,0 +1,57 @@
+(node:40117) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeMemory/public-boundary.test.ts
+PASS tests/unit/runtimeMemory/public-closure.test.ts
+PASS tests/unit/runtimeUnavailableAuth/closure.test.ts
+PASS tests/unit/runtimeAuth/inventory.test.ts
+PASS tests/unit/auth/credentials.test.ts
+PASS tests/unit/runtimeAssetUnavailableAuth/closure.test.ts
+PASS tests/unit/runtimeArtifactAuth/inventory.test.ts
+PASS tests/unit/runtimeRegistryAuth/closureRepair.test.ts
+PASS tests/unit/runtimeRegistryAuth/adversarial.test.ts
+PASS tests/unit/runtimeMemory/repository.test.ts
+PASS tests/unit/runtimeMemory/services.test.ts
+PASS tests/unit/runtimeWorkerAuth/admin-catalog.test.ts
+PASS tests/unit/runtimeRegistryAuth/catalog.test.ts
+PASS tests/unit/runtimeRegistryAuth/failureBoundary.test.ts
+PASS tests/unit/runtimeWorkerAuth/graph.test.ts
+PASS tests/unit/runtimeRegistryAuth/registered.test.ts
+PASS tests/unit/runtimeEndpointAuth/facts.test.ts
+PASS tests/unit/runtimeEndpointAuth/optionalReadFailures.test.ts
+PASS tests/unit/runtimeMetadataAuth/registrations.test.ts
+PASS tests/unit/runtimeEndpointAuth/memory.test.ts
+PASS tests/unit/runtimeArtifactAuth/handlers.test.ts
+PASS tests/unit/runtimeRegistryAuth/admissionBoundary.test.ts
+PASS tests/unit/runtimeRegistryAuth/admissionFailure.test.ts
+PASS tests/unit/runtimeMetadataAuth/handlers.test.ts
+PASS tests/unit/runtimeRegistryAuth/controlAmbiguity.test.ts
+PASS tests/unit/runtimeMetadataAuth/native-errors.test.ts
+PASS tests/unit/runtimeRegistryClient/stats-client-bridge.test.ts
+PASS tests/unit/runtimeRegistryAuth/controlReadBoundary.test.ts
+PASS tests/unit/runtimeArtifactAuth/admission-errors.test.ts
+PASS tests/unit/runtimeRegistryAuth/identityReadBoundary.test.ts
+PASS tests/unit/runtimeMetadataAuth/scope-ambiguity.test.ts
+PASS tests/unit/runtimeWorkerClient/metadata-consumers.test.ts
+PASS tests/unit/runtimeHistoryClient/operator-bridge.test.ts
+PASS tests/unit/runtimeEndpointAuth/retainedWitnesses.test.ts
+PASS tests/unit/runtimeRegistryClient/registry-bridge.test.ts
+PASS tests/unit/runtimeRegistryStats/registered.test.ts
+PASS tests/unit/runtimeWorkerClient/governance.test.ts
+PASS tests/unit/runtimeAssetClient/asset-capability-bridge.test.ts
+PASS tests/unit/domain/sources.test.ts
+PASS tests/unit/runtimeWorkerClient/sessions-maintenance.test.ts
+PASS tests/unit/runtimeWorkerAuth/governance.test.ts
+PASS tests/unit/runtimeAuth/authority.test.ts
+PASS tests/unit/runtimeAuth/provisioning.test.ts
+PASS tests/unit/auth/validators.test.ts
+PASS tests/unit/domain/outcomes.test.ts
+PASS tests/unit/auth/context.test.ts
+PASS tests/unit/domain/profile.test.ts
+
+Test Suites: 47 passed, 47 total
+Tests:       4820 passed, 4820 total
+Snapshots:   0 total
+Time:        24.57 s, estimated 39 s
+Ran all test suites.
+Test results written to: work/resume/domain-c2-integration.tests.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

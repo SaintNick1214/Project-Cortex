@@ -1,792 +1,454 @@
-import { reconcileRow, markDeletedRow } from "./lib/referenceLifecycle";
-/** Durable fact audit. Public namespaced scope selection is not user authentication. */
+import { runtimeUnavailable, internalUnavailable } from "./runtimeUnavailableAuth";
+/**
+ * Cortex SDK - Fact History API
+ *
+ * Audit trail for belief revision operations.
+ * Records CREATE, UPDATE, SUPERSEDE, and DELETE actions on facts.
+ */
+
 import { v } from "convex/values";
-import { paginationOptsValidator } from "convex/server";
-import { internalMutation, mutation, query } from "./_generated/server";
-import type { MutationCtx, QueryCtx } from "./_generated/server";
-import type { Doc, Id, TableNames } from "./_generated/dataModel";
-import {
-  actionValidator,
-  provenanceFields,
-  richFields,
-  pendingValidator,
-  CaptureBudget,
-  sourceFact,
-  capture,
-  canonical,
-  clean,
-  digest,
-  fail,
-  operationEvents,
-  eventReceipt,
-  byteSize,
-} from "./lib/factHistoryProvenance";
+import { query, internalMutation } from "./_generated/server";
 
-const scopeArgs = {
-  tenantId: v.optional(v.string()),
-  memorySpaceId: v.optional(v.string()),
-};
-const selectorArgs = {
-  ...scopeArgs,
-  factId: v.optional(v.string()),
-  sourceFactId: v.optional(v.id("facts")),
-  sourceMemorySpaceId: v.optional(v.id("memorySpaces")),
-  incomingFactId: v.optional(v.id("facts")),
-  userId: v.optional(v.string()),
-  ownerUserId: v.optional(v.string()),
-  after: v.optional(v.number()),
-  before: v.optional(v.number()),
-  action: v.optional(actionValidator),
-};
-type Selector = {
-  tenantId?: string;
-  memorySpaceId?: string;
-  factId?: string;
-  sourceFactId?: Doc<"facts">["_id"];
-  sourceMemorySpaceId?: Doc<"memorySpaces">["_id"];
-  incomingFactId?: Doc<"facts">["_id"];
-  userId?: string;
-  ownerUserId?: string;
-  after?: number;
-  before?: number;
-  /** Private purge predicate; never accepted as a public selector. */
-  beforeExclusive?: boolean;
-  action?: Doc<"factHistory">["action"];
-};
-/** One existence proof covers every unresolved legacy candidate; no collect/slice. */
-async function preflightLegacy(ctx: QueryCtx | MutationCtx, args: Selector) {
-  let rows;
-  if (args.factId)
-    rows = await ctx.db
-      .query("factHistory")
-      .withIndex("by_history_legacy_fact", (q) =>
-        q.eq("scopeVersion", undefined).eq("factId", args.factId!),
-      )
-      .take(1);
-  else if (args.userId)
-    rows = await ctx.db
-      .query("factHistory")
-      .withIndex("by_history_legacy_actor", (q) =>
-        q.eq("scopeVersion", undefined).eq("userId", args.userId!),
-      )
-      .take(1);
-  else if (args.memorySpaceId)
-    rows = await ctx.db
-      .query("factHistory")
-      .withIndex("by_history_legacy_space", (q) =>
-        q
-          .eq("scopeVersion", undefined)
-          .eq("memorySpaceId", args.memorySpaceId!),
-      )
-      .take(1);
-  else
-    rows = await ctx.db
-      .query("factHistory")
-      .withIndex("by_history_scope", (q) => q.eq("scopeVersion", undefined))
-      .take(1);
-  if (rows.length) fail("FACT_HISTORY_PROVENANCE_UNRESOLVED");
-}
-function selection(ctx: QueryCtx | MutationCtx, args: Selector) {
-  if (args.incomingFactId)
-    return ctx.db
-      .query("factHistory")
-      .withIndex("by_history_incoming", (q) =>
-        q
-          .eq("scopeVersion", 1)
-          .eq("tenantId", args.tenantId)
-          .eq("supersededByEndpoint.factDocumentId", args.incomingFactId!),
-      );
-  if (args.sourceFactId)
-    return ctx.db
-      .query("factHistory")
-      .withIndex("by_history_source", (q) =>
-        q
-          .eq("scopeVersion", 1)
-          .eq("tenantId", args.tenantId)
-          .eq("sourceFactId", args.sourceFactId!),
-      );
-  if (args.sourceMemorySpaceId)
-    return ctx.db
-      .query("factHistory")
-      .withIndex("by_history_source_space", (q) =>
-        q
-          .eq("scopeVersion", 1)
-          .eq("tenantId", args.tenantId)
-          .eq("sourceMemorySpaceId", args.sourceMemorySpaceId!),
-      );
-  if (args.factId)
-    return ctx.db
-      .query("factHistory")
-      .withIndex("by_history_fact", (q) =>
-        q
-          .eq("scopeVersion", 1)
-          .eq("tenantId", args.tenantId)
-          .eq("factId", args.factId!),
-      );
-  if (args.ownerUserId)
-    return ctx.db
-      .query("factHistory")
-      .withIndex("by_history_owner", (q) =>
-        q
-          .eq("scopeVersion", 1)
-          .eq("tenantId", args.tenantId)
-          .eq("ownerUserId", args.ownerUserId!),
-      );
-  if (args.userId)
-    return ctx.db
-      .query("factHistory")
-      .withIndex("by_history_actor", (q) =>
-        q
-          .eq("scopeVersion", 1)
-          .eq("tenantId", args.tenantId)
-          .eq("userId", args.userId!),
-      );
-  if (args.memorySpaceId)
-    return ctx.db
-      .query("factHistory")
-      .withIndex("by_history_space", (q) =>
-        q
-          .eq("scopeVersion", 1)
-          .eq("tenantId", args.tenantId)
-          .eq("memorySpaceId", args.memorySpaceId!),
-      );
-  return ctx.db
-    .query("factHistory")
-    .withIndex("by_history_scope", (q) =>
-      q.eq("scopeVersion", 1).eq("tenantId", args.tenantId),
-    );
-}
-function matches(e: Doc<"factHistory">, a: Selector) {
-  return (
-    (a.sourceFactId === undefined || e.sourceFactId === a.sourceFactId) &&
-    (a.incomingFactId === undefined ||
-      e.supersededByEndpoint?.factDocumentId === a.incomingFactId) &&
-    (a.sourceMemorySpaceId === undefined ||
-      e.sourceMemorySpaceId === a.sourceMemorySpaceId) &&
-    (a.memorySpaceId === undefined || e.memorySpaceId === a.memorySpaceId) &&
-    (a.factId === undefined || e.factId === a.factId) &&
-    (a.userId === undefined || e.userId === a.userId) &&
-    (a.ownerUserId === undefined || e.ownerUserId === a.ownerUserId) &&
-    (a.after === undefined || e.timestamp >= a.after) &&
-    (a.before === undefined ||
-      (a.beforeExclusive ? e.timestamp < a.before : e.timestamp <= a.before)) &&
-    (a.action === undefined || e.action === a.action)
-  );
-}
-function validateTimeRange(args: Pick<Selector, "after" | "before">) {
-  for (const value of [args.after, args.before])
-    if (
-      value !== undefined &&
-      (typeof value !== "number" || !Number.isFinite(value))
-    )
-      fail("FACT_HISTORY_INVALID_TIME_RANGE");
-  if (
-    args.after !== undefined &&
-    args.before !== undefined &&
-    args.after > args.before
-  )
-    fail("FACT_HISTORY_INVALID_TIME_RANGE");
-}
-function validatePageSize(size: number) {
-  if (!Number.isInteger(size) || size < 1 || size > 256)
-    fail("FACT_HISTORY_INVALID_PAGE_SIZE");
-}
-function batchHint(limit?: number) {
-  if (limit !== undefined && (!Number.isInteger(limit) || limit < 1))
-    fail("FACT_HISTORY_INVALID_PAGE_SIZE");
-  return Math.min(limit ?? 256, 256);
-}
-async function boundedPage(
-  ctx: QueryCtx | MutationCtx,
-  args: Selector,
-  opts: { numItems: number; cursor: string | null; endCursor?: string | null },
-) {
-  validatePageSize(opts.numItems);
-  validateTimeRange(args);
-  await preflightLegacy(ctx, args);
-  const result = await selection(ctx, args)
-    .order("desc")
-    .paginate({ ...opts, maximumRowsRead: 256, maximumBytesRead: 1024 * 1024 });
-  const native = await ctx.meta.getTransactionMetrics();
-  if (
-    native.bytesRead.used > 2 * 1024 * 1024 ||
-    native.documentsRead.used > 256
-  )
-    fail("FACT_HISTORY_BUDGET_EXCEEDED");
-  const page = result.page.filter((e) => matches(e, args));
-  if (byteSize(page) > 8 * 1024 * 1024) fail("FACT_HISTORY_BUDGET_EXCEEDED");
-  return { ...result, page };
-}
-export const page = query({
-  args: { ...selectorArgs, paginationOpts: paginationOptsValidator },
-  handler: (ctx, args) => boundedPage(ctx, args, args.paginationOpts),
-});
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Mutations (Write Operations)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-export const logEvent = mutation({
+/**
+ * Log a fact change event
+ */
+export const logEvent = internalMutation({
   args: {
-    ...scopeArgs,
-    memorySpaceId: v.string(),
     factId: v.string(),
-    sourceFactId: v.optional(v.id("facts")),
-    action: actionValidator,
-    ...richFields,
-    supersedes: v.optional(v.string()),
+    memorySpaceId: v.string(),
+    action: v.union(
+      v.literal("CREATE"),
+      v.literal("UPDATE"),
+      v.literal("SUPERSEDE"),
+      v.literal("DELETE"),
+    ),
+    oldValue: v.optional(v.string()),
+    newValue: v.optional(v.string()),
     supersededBy: v.optional(v.string()),
-    operationId: v.optional(v.string()),
+    supersedes: v.optional(v.string()),
+    reason: v.optional(v.string()),
+    confidence: v.optional(v.number()),
+    pipeline: v.optional(
+      v.object({
+        slotMatching: v.optional(v.boolean()),
+        semanticMatching: v.optional(v.boolean()),
+        llmResolution: v.optional(v.boolean()),
+      }),
+    ),
+    userId: v.optional(v.string()),
+    participantId: v.optional(v.string()),
+    conversationId: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    const budget = new CaptureBudget();
-    const intent = {
-      operationId: args.operationId ?? crypto.randomUUID(),
-      phase: "log",
+    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
+    await internalUnavailable();
+
+    const now = Date.now();
+    const eventId = `fh-${now}-${Math.random().toString(36).substring(2, 11)}`;
+
+    const _id = await ctx.db.insert("factHistory", {
+      eventId,
+      factId: args.factId,
+      memorySpaceId: args.memorySpaceId,
+      action: args.action,
+      oldValue: args.oldValue,
+      newValue: args.newValue,
+      supersededBy: args.supersededBy,
+      supersedes: args.supersedes,
       reason: args.reason,
       confidence: args.confidence,
       pipeline: args.pipeline,
       userId: args.userId,
       participantId: args.participantId,
       conversationId: args.conversationId,
-    };
-    const existing = await operationEvents(
-      ctx,
-      args,
-      intent.operationId,
-      intent.phase,
-      budget,
-    );
-    if (existing.length) {
-      if (existing.some((e) => e.requestDigest !== digest(args)))
-        fail("FACT_HISTORY_OPERATION_CONFLICT");
-      return budget.finish(ctx, {
-        eventId: existing[0].eventId,
-        _id: existing[0]._id,
-        receipt: eventReceipt(existing),
-      });
-    }
-    const fact = await sourceFact(
-      ctx,
-      args,
-      args.factId,
-      budget,
-      args.sourceFactId,
-    );
-    if (
-      (args.supersedes !== undefined && args.supersedes !== fact.supersedes) ||
-      (args.supersededBy !== undefined &&
-        args.supersededBy !== fact.supersededBy)
-    )
-      fail("FACT_HISTORY_RELATIONSHIP_CONFLICT");
-    const event = await capture(
-      ctx,
-      fact,
-      {
-        action: args.action,
-        oldValue: args.oldValue,
-        newValue: args.newValue,
-        intent,
-        role: "source",
-        kind: "log",
-        request: args,
-        affected: [fact._id],
-      },
-      budget,
-    );
-    return budget.finish(ctx, {
-      eventId: event.eventId,
-      _id: event._id,
-      receipt: eventReceipt([event]),
+      timestamp: now,
     });
+
+    return { eventId, _id };
   },
 });
-export const getOperationReceipt = query({
+
+/**
+ * Delete history events for a fact (GDPR cascade)
+ */
+export const deleteByFactId = internalMutation({
   args: {
-    tenantId: v.optional(v.string()),
-    memorySpaceId: v.string(),
-    operationId: v.string(),
-    phase: v.string(),
+    factId: v.string(),
   },
   handler: async (ctx, args) => {
-    const budget = new CaptureBudget(4);
-    budget.result(args);
-    const events = await operationEvents(
-      ctx,
-      args,
-      args.operationId,
-      args.phase,
-      budget,
-    );
-    return budget.finish(ctx, events.length ? eventReceipt(events) : null);
+    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
+    await internalUnavailable();
+
+    const events = await ctx.db
+      .query("factHistory")
+      .withIndex("by_factId", (q) => q.eq("factId", args.factId))
+      .collect();
+
+    for (const event of events) {
+      await ctx.db.delete(event._id);
+    }
+
+    return { deleted: events.length };
   },
 });
-export const publishPendingEvent = mutation({
+
+/**
+ * Delete history events for a user (GDPR cascade)
+ */
+export const deleteByUserId = internalMutation({
   args: {
-    tenantId: v.optional(v.string()),
-    memorySpaceId: v.string(),
-    operationId: v.string(),
-    phase: v.string(),
-    eventRole: v.string(),
-    eventId: v.string(),
-    pending: pendingValidator,
+    userId: v.string(),
   },
   handler: async (ctx, args) => {
-    const budget = new CaptureBudget(4);
-    budget.result(args);
-    const events = await operationEvents(
-      ctx,
-      args,
-      args.operationId,
-      args.phase,
-      budget,
-    );
-    const event = events.find(
-      (e) => e.eventRole === args.eventRole && e.eventId === args.eventId,
-    );
-    if (!event?.pendingRichEvent) fail("FACT_HISTORY_PENDING_EVENT_UNRESOLVED");
-    if (
-      canonical(event.pendingRichEvent) !== canonical(args.pending) ||
-      digest(args.pending.payload) !== args.pending.payloadDigest
-    )
-      fail("FACT_HISTORY_OPERATION_CONFLICT");
-    const fields: Record<string, unknown> = { publicationState: "complete" };
-    for (const key of Object.keys(richFields)) {
-      const name = key as keyof typeof richFields;
-      const expected = args.pending.payload[name];
-      const current = event[name];
-      if (expected === undefined) {
-        if (current !== undefined) fail("FACT_HISTORY_OPERATION_CONFLICT");
-      } else if (
-        current !== undefined &&
-        canonical(current) !== canonical(expected)
+    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
+    await internalUnavailable();
+
+    const events = await ctx.db
+      .query("factHistory")
+      .withIndex("by_userId", (q) => q.eq("userId", args.userId))
+      .collect();
+
+    for (const event of events) {
+      await ctx.db.delete(event._id);
+    }
+
+    return { deleted: events.length };
+  },
+});
+
+/**
+ * Delete history events by memory space
+ */
+export const deleteByMemorySpace = internalMutation({
+  args: {
+    memorySpaceId: v.string(),
+  },
+  handler: async (ctx, args) => {
+    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
+    await internalUnavailable();
+
+    const events = await ctx.db
+      .query("factHistory")
+      .withIndex("by_memorySpace", (q) =>
+        q.eq("memorySpaceId", args.memorySpaceId),
       )
-        fail("FACT_HISTORY_OPERATION_CONFLICT");
-      else fields[key] = expected;
+      .collect();
+
+    for (const event of events) {
+      await ctx.db.delete(event._id);
     }
-    budget.write({ ...event, ...fields });
-    if (event.publicationState !== "complete")
-      await reconcileRow(ctx, event._id, fields);
-    return budget.finish(ctx, {
-      eventId: event.eventId,
-      _id: event._id,
-      publicationState: "complete" as const,
-    });
+
+    return { deleted: events.length };
   },
 });
-async function legacyArray(
-  ctx: QueryCtx,
-  args: Selector,
-  limit = 100,
-  offset = 0,
-) {
-  if (!Number.isInteger(limit) || limit < 1 || limit > 256 || offset !== 0)
-    fail("FACT_HISTORY_PAGING_REQUIRED");
-  const result = await boundedPage(ctx, args, {
-    numItems: limit,
-    cursor: null,
-  });
-  if (
-    result.pageStatus === "SplitRequired" ||
-    (result.page.length < limit && !result.isDone)
-  )
-    fail("FACT_HISTORY_PAGING_REQUIRED");
-  return result.page;
-}
+
+/**
+ * Purge old history events (retention policy)
+ */
+export const purgeOldEvents = internalMutation({
+  args: {
+    memorySpaceId: v.optional(v.string()),
+    olderThan: v.number(), // Timestamp - delete events before this
+    limit: v.optional(v.number()), // Max events to delete per call
+  },
+  handler: async (ctx, args) => {
+    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
+    await internalUnavailable();
+
+    // Filter by memory space if provided
+    const events = args.memorySpaceId
+      ? await ctx.db
+          .query("factHistory")
+          .withIndex("by_memorySpace_timestamp", (q) =>
+            q
+              .eq("memorySpaceId", args.memorySpaceId!)
+              .lt("timestamp", args.olderThan),
+          )
+          .collect()
+      : await ctx.db
+          .query("factHistory")
+          .withIndex("by_timestamp", (q) => q.lt("timestamp", args.olderThan))
+          .collect();
+
+    const limit = args.limit ?? 1000;
+    const toDelete = events.slice(0, limit);
+
+    for (const event of toDelete) {
+      await ctx.db.delete(event._id);
+    }
+
+    return {
+      deleted: toDelete.length,
+      remaining: events.length - toDelete.length,
+    };
+  },
+});
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Queries (Read Operations)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+/**
+ * Get history for a specific fact
+ */
 export const getHistory = query({
   args: {
-    ...scopeArgs,
+    tenantId: v.optional(v.string()),
+    memorySpaceId: v.optional(v.string()),
     factId: v.string(),
-    sourceFactId: v.optional(v.id("facts")),
     limit: v.optional(v.number()),
   },
-  handler: (ctx, args) => legacyArray(ctx, args, args.limit),
-});
-export const getEvent = query({
-  args: { tenantId: v.optional(v.string()), eventId: v.string() },
   handler: async (ctx, args) => {
-    const rows = await ctx.db
+    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
+    await runtimeUnavailable(ctx, "read", args);
+
+    const historyQuery = ctx.db
       .query("factHistory")
-      .withIndex("by_eventId", (q) => q.eq("eventId", args.eventId))
-      .take(2);
-    if (rows.length > 1) fail("FACT_HISTORY_SOURCE_AMBIGUOUS");
-    const e = rows[0];
-    if (e && e.scopeVersion !== 1) fail("FACT_HISTORY_PROVENANCE_UNRESOLVED");
-    return e?.tenantId === args.tenantId ? e : null;
+      .withIndex("by_factId", (q) => q.eq("factId", args.factId))
+      .order("desc"); // Most recent first
+
+    const events = await historyQuery.collect();
+
+    // Apply limit if provided
+    const limit = args.limit ?? 100;
+    return events.slice(0, limit);
   },
 });
+
+/**
+ * Get history event by ID
+ */
+export const getEvent = query({
+  args: {
+    tenantId: v.optional(v.string()),
+    memorySpaceId: v.optional(v.string()),
+    eventId: v.string(),
+  },
+  handler: async (ctx, args) => {
+    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
+    await runtimeUnavailable(ctx, "read", args);
+
+    const event = await ctx.db
+      .query("factHistory")
+      .withIndex("by_eventId", (q) => q.eq("eventId", args.eventId))
+      .first();
+
+    return event;
+  },
+});
+
+/**
+ * Get changes in a time range
+ */
 export const getChangesByTimeRange = query({
   args: {
-    ...scopeArgs,
+    tenantId: v.optional(v.string()),
     memorySpaceId: v.string(),
     after: v.optional(v.number()),
     before: v.optional(v.number()),
-    action: v.optional(actionValidator),
+    action: v.optional(
+      v.union(
+        v.literal("CREATE"),
+        v.literal("UPDATE"),
+        v.literal("SUPERSEDE"),
+        v.literal("DELETE"),
+      ),
+    ),
     limit: v.optional(v.number()),
     offset: v.optional(v.number()),
   },
-  handler: (ctx, args) => legacyArray(ctx, args, args.limit, args.offset),
+  handler: async (ctx, args) => {
+    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
+    await runtimeUnavailable(ctx, "read", args);
+
+    let events = await ctx.db
+      .query("factHistory")
+      .withIndex("by_memorySpace", (q) =>
+        q.eq("memorySpaceId", args.memorySpaceId),
+      )
+      .order("desc")
+      .collect();
+
+    // Apply time filters
+    if (args.after !== undefined) {
+      events = events.filter((e) => e.timestamp >= args.after!);
+    }
+    if (args.before !== undefined) {
+      events = events.filter((e) => e.timestamp <= args.before!);
+    }
+
+    // Filter by action type
+    if (args.action !== undefined) {
+      events = events.filter((e) => e.action === args.action);
+    }
+
+    // Apply pagination
+    const offset = args.offset ?? 0;
+    const limit = args.limit ?? 100;
+    events = events.slice(offset, offset + limit);
+
+    return events;
+  },
 });
-function counts(events: Doc<"factHistory">[]) {
-  const result = {
-    CREATE: 0,
-    UPDATE: 0,
-    SUPERSEDE: 0,
-    DELETE: 0,
-    total: events.length,
-  };
-  for (const event of events) result[event.action]++;
-  return result;
-}
+
+/**
+ * Count changes by action type
+ */
 export const countByAction = query({
   args: {
-    ...scopeArgs,
+    tenantId: v.optional(v.string()),
     memorySpaceId: v.string(),
     after: v.optional(v.number()),
     before: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
-    const p = await boundedPage(ctx, args, { numItems: 256, cursor: null });
-    if (!p.isDone) fail("FACT_HISTORY_PAGING_REQUIRED");
-    return counts(p.page);
+    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
+    await runtimeUnavailable(ctx, "read", args);
+
+    let events = await ctx.db
+      .query("factHistory")
+      .withIndex("by_memorySpace", (q) =>
+        q.eq("memorySpaceId", args.memorySpaceId),
+      )
+      .collect();
+
+    // Apply time filters
+    if (args.after !== undefined) {
+      events = events.filter((e) => e.timestamp >= args.after!);
+    }
+    if (args.before !== undefined) {
+      events = events.filter((e) => e.timestamp <= args.before!);
+    }
+
+    // Count by action
+    const counts = {
+      CREATE: 0,
+      UPDATE: 0,
+      SUPERSEDE: 0,
+      DELETE: 0,
+      total: events.length,
+    };
+
+    for (const event of events) {
+      counts[event.action]++;
+    }
+
+    return counts;
   },
 });
-export const getActivitySummary = query({
+
+/**
+ * Get supersession chain for a fact
+ * Returns the chain of facts that led to the current state
+ */
+export const getSupersessionChain = query({
   args: {
-    ...scopeArgs,
-    memorySpaceId: v.string(),
-    hours: v.optional(v.number()),
+    tenantId: v.optional(v.string()),
+    memorySpaceId: v.optional(v.string()),
+    factId: v.string(),
   },
   handler: async (ctx, args) => {
+    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
+    await runtimeUnavailable(ctx, "read", args);
+
+    const chain: any[] = [];
+    let currentFactId: string | undefined = args.factId;
+
+    // Go backward through supersedes relationships
+    while (currentFactId) {
+      const event = await ctx.db
+        .query("factHistory")
+        .withIndex("by_factId", (q) => q.eq("factId", currentFactId!))
+        .filter((q) => q.eq(q.field("action"), "SUPERSEDE"))
+        .first();
+
+      if (event && event.supersedes) {
+        chain.unshift({
+          factId: event.supersedes,
+          supersededBy: currentFactId,
+          timestamp: event.timestamp,
+          reason: event.reason,
+        });
+        currentFactId = event.supersedes;
+      } else {
+        break;
+      }
+    }
+
+    // Add the current fact
+    chain.push({
+      factId: args.factId,
+      supersededBy: null,
+      timestamp: Date.now(),
+      reason: "Current version",
+    });
+
+    return chain;
+  },
+});
+
+/**
+ * Get recent activity summary
+ */
+export const getActivitySummary = query({
+  args: {
+    tenantId: v.optional(v.string()),
+    memorySpaceId: v.string(),
+    hours: v.optional(v.number()), // Default 24 hours
+  },
+  handler: async (ctx, args) => {
+    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
+    await runtimeUnavailable(ctx, "read", args);
+
     const hours = args.hours ?? 24;
-    if (!Number.isFinite(hours) || hours <= 0)
-      fail("FACT_HISTORY_INVALID_TIME_RANGE");
-    const now = Date.now();
-    const since = now - hours * 3600000;
-    if (!Number.isFinite(since) || !Number.isFinite(new Date(since).getTime()))
-      fail("FACT_HISTORY_INVALID_TIME_RANGE");
-    const sinceISO = new Date(since).toISOString();
-    const p = await boundedPage(
-      ctx,
-      { ...args, after: since, before: now },
-      { numItems: 256, cursor: null },
-    );
-    if (!p.isDone) fail("FACT_HISTORY_PAGING_REQUIRED");
-    const { total, ...actionCounts } = counts(p.page);
+    const since = Date.now() - hours * 60 * 60 * 1000;
+
+    const events = await ctx.db
+      .query("factHistory")
+      .withIndex("by_memorySpace_timestamp", (q) =>
+        q.eq("memorySpaceId", args.memorySpaceId).gte("timestamp", since),
+      )
+      .collect();
+
+    // Count by action
+    const actionCounts = {
+      CREATE: 0,
+      UPDATE: 0,
+      SUPERSEDE: 0,
+      DELETE: 0,
+    };
+
+    // Track unique facts modified
+    const factsModified = new Set<string>();
+
+    // Track participants
+    const participants = new Set<string>();
+
+    for (const event of events) {
+      actionCounts[event.action]++;
+      factsModified.add(event.factId);
+      if (event.participantId) {
+        participants.add(event.participantId);
+      }
+      if (event.userId) {
+        participants.add(event.userId);
+      }
+    }
+
     return {
       timeRange: {
         hours,
-        since: sinceISO,
-        until: new Date(now).toISOString(),
+        since: new Date(since).toISOString(),
+        until: new Date().toISOString(),
       },
-      totalEvents: total,
+      totalEvents: events.length,
       actionCounts,
-      uniqueFactsModified: new Set(p.page.map((e) => e.sourceFactId)).size,
-      activeParticipants: new Set(
-        p.page.flatMap((e) => [e.userId, e.participantId].filter(Boolean)),
-      ).size,
+      uniqueFactsModified: factsModified.size,
+      activeParticipants: participants.size,
     };
-  },
-});
-const deleteArgs = {
-  ...selectorArgs,
-  paginationOpts: v.optional(paginationOptsValidator),
-};
-async function deletePage(
-  ctx: MutationCtx,
-  args: Selector & {
-    paginationOpts?: {
-      numItems: number;
-      cursor: string | null;
-      endCursor?: string | null;
-    };
-  },
-) {
-  const p = await boundedPage(
-    ctx,
-    args,
-    args.paginationOpts ?? { numItems: 256, cursor: null },
-  );
-  if (p.pageStatus === "SplitRequired")
-    return { ...p, page: [], deleted: 0, remaining: null };
-  for (const e of p.page) await markDeletedRow(ctx, e._id);
-  return {
-    ...p,
-    page: [],
-    deleted: p.page.length,
-    remaining: p.isDone ? 0 : null,
-  };
-}
-export const deleteByFactId = mutation({
-  args: { ...deleteArgs, factId: v.string() },
-  handler: deletePage,
-});
-export const deleteByUserId = mutation({
-  args: { ...deleteArgs, userId: v.string() },
-  handler: deletePage,
-});
-export const deleteByMemorySpace = mutation({
-  args: { ...deleteArgs, memorySpaceId: v.string() },
-  handler: deletePage,
-});
-export const deleteByOwner = mutation({
-  args: { ...deleteArgs, ownerUserId: v.string() },
-  handler: deletePage,
-});
-export const purgeOldEvents = mutation({
-  args: {
-    ...scopeArgs,
-    olderThan: v.number(),
-    limit: v.optional(v.number()),
-    paginationOpts: v.optional(paginationOptsValidator),
-  },
-  handler: (ctx, args) => {
-    if (!Number.isFinite(args.olderThan))
-      fail("FACT_HISTORY_INVALID_TIME_RANGE");
-    const hint = batchHint(args.limit);
-    if (args.paginationOpts) validatePageSize(args.paginationOpts.numItems);
-    const opts = args.paginationOpts ?? { numItems: hint, cursor: null };
-    return deletePage(ctx, {
-      ...args,
-      before: args.olderThan,
-      beforeExclusive: true,
-      paginationOpts: { ...opts, numItems: Math.min(opts.numItems, hint) },
-    });
-  },
-});
-/** Single physical vertex; consumers own visited-ID/cursor graph traversal. */
-export const chainPage = query({
-  args: {
-    tenantId: v.optional(v.string()),
-    sourceFactId: v.id("facts"),
-    paginationOpts: paginationOptsValidator,
-  },
-  handler: async (ctx, args) => {
-    const p = await boundedPage(
-      ctx,
-      { tenantId: args.tenantId, sourceFactId: args.sourceFactId },
-      args.paginationOpts,
-    );
-    for (const e of p.page)
-      for (const ep of [e.supersedesEndpoint, e.supersededByEndpoint])
-        if (ep?.state === "unknown")
-          fail("FACT_HISTORY_RELATIONSHIP_UNRESOLVED");
-    return p;
-  },
-});
-export const getSupersessionChain = query({
-  args: { ...scopeArgs, factId: v.string() },
-  handler: async (ctx, args) => {
-    const rows = await legacyArray(ctx, args, 256);
-    const sources = new Set(rows.map((e) => e.sourceFactId));
-    if (sources.size > 1) fail("FACT_HISTORY_SOURCE_AMBIGUOUS");
-    if (
-      rows.some(
-        (e) =>
-          e.supersedesEndpoint?.state !== "absent" ||
-          e.supersededByEndpoint?.state !== "absent",
-      )
-    )
-      fail("FACT_HISTORY_PAGING_REQUIRED");
-    return rows.length
-      ? [
-          {
-            factId: args.factId,
-            supersededBy: null,
-            timestamp: rows[0].timestamp,
-            reason: rows[0].reason,
-          },
-        ]
-      : [];
-  },
-});
-/** External contemporaneous evidence is administrator authority, never current uniqueness. */
-export const migrateEvidence = internalMutation({
-  args: {
-    eventDocumentId: v.id("factHistory"),
-    dryRun: v.boolean(),
-    snapshot: v.object(provenanceFields),
-  },
-  handler: async (ctx, args) => {
-    const budget = new CaptureBudget();
-    budget.result(args);
-    budget.reserve(1);
-    const e = await ctx.db.get(args.eventDocumentId);
-    budget.account([e]);
-    if (!e) fail("FACT_HISTORY_SOURCE_REQUIRED");
-    const p = args.snapshot;
-    if (
-      p.scopeVersion !== 1 ||
-      !p.sourceFactId ||
-      p.ownerKnown !== true ||
-      p.evidence?.kind !== "verified-migration" ||
-      !p.evidence.reference ||
-      !p.evidence.hash
-    )
-      fail("FACT_HISTORY_MIGRATION_EVIDENCE_REQUIRED");
-    // Physical IDs are exact ledger witnesses. Missing originals remain attested by
-    // externally verified contemporaneous evidence; never query today's logical ID.
-    const witnesses = new Map<string, unknown>();
-    async function readWitness<T extends TableNames>(
-      id: Id<T>,
-    ): Promise<Doc<T> | null> {
-      if (witnesses.has(id)) return witnesses.get(id) as Doc<T> | null;
-      budget.reserve(1);
-      const document = await ctx.db.get(id);
-      budget.account([document]);
-      witnesses.set(id, document);
-      return document;
-    }
-    function conflict(condition: boolean) {
-      if (condition) fail("FACT_HISTORY_MIGRATION_CONFLICT");
-    }
-    conflict(e.tenantId !== undefined && e.tenantId !== p.tenantId);
-    for (const key of [
-      "sourceFactId",
-      "sourceMemorySpaceId",
-      "sourceMemoryId",
-      "sourceConversationId",
-      "sourceRef",
-      "ownerKnown",
-      "ownerUserId",
-      "associationKnown",
-      "associatedUserIds",
-    ] as const)
-      conflict(
-        e[key] !== undefined && canonical(e[key]) !== canonical(p[key] ?? null),
-      );
-    for (const [direction, endpoint] of [
-      ["supersedes", p.supersedesEndpoint],
-      ["supersededBy", p.supersededByEndpoint],
-    ] as const) {
-      const logical = e[direction];
-      if (
-        !endpoint ||
-        (logical !== undefined
-          ? !logical ||
-            endpoint.state !== "known" ||
-            endpoint.logicalFactId !== logical ||
-            !endpoint.factDocumentId ||
-            endpoint.scopeVersion !== 1 ||
-            endpoint.tenantId !== p.tenantId ||
-            endpoint.memorySpaceId !== e.memorySpaceId ||
-            endpoint.factDocumentId === p.sourceFactId ||
-            endpoint.logicalFactId === e.factId
-          : endpoint.state !== "absent" ||
-            Object.keys(endpoint).some(
-              (key) =>
-                key !== "state" &&
-                endpoint[key as keyof typeof endpoint] !== undefined,
-            ))
-      )
-        fail("FACT_HISTORY_RELATIONSHIP_UNRESOLVED");
-      if (endpoint.state === "known" && endpoint.factDocumentId) {
-        const target = await readWitness(endpoint.factDocumentId);
-        conflict(
-          !!target &&
-            (target.factId !== endpoint.logicalFactId ||
-              target.memorySpaceId !== e.memorySpaceId ||
-              target.tenantId !== p.tenantId),
-        );
-      }
-    }
-    const source = await readWitness(p.sourceFactId);
-    conflict(
-      !!source &&
-        (source.factId !== e.factId ||
-          source.memorySpaceId !== e.memorySpaceId ||
-          source.tenantId !== p.tenantId ||
-          source.userId !== p.ownerUserId ||
-          canonical(source.sourceRef ?? null) !==
-            canonical(p.sourceRef ?? null)),
-    );
-    const space = p.sourceMemorySpaceId
-      ? await readWitness(p.sourceMemorySpaceId)
-      : null;
-    conflict(
-      !!space &&
-        (space.memorySpaceId !== e.memorySpaceId ||
-          space.tenantId !== p.tenantId),
-    );
-    const memory = p.sourceMemoryId
-      ? await readWitness(p.sourceMemoryId)
-      : null;
-    conflict(!!p.sourceMemoryId && !p.sourceRef?.memoryId);
-    conflict(
-      !!memory &&
-        (memory.memorySpaceId !== e.memorySpaceId ||
-          memory.tenantId !== p.tenantId ||
-          memory.memoryId !== p.sourceRef?.memoryId),
-    );
-    const conversation = p.sourceConversationId
-      ? await readWitness(p.sourceConversationId)
-      : null;
-    const conversationLogical =
-      p.sourceRef?.conversationId ??
-      (memory?.userId === undefined
-        ? memory?.conversationRef?.conversationId
-        : undefined);
-    // Match capture's nullish direct selector and strict memory-owner rule.
-    // A missing original memory can be attested by the trusted original ledger;
-    // a surviving original with a known absent/ineligible edge cannot.
-    if (p.sourceConversationId) {
-      if (p.sourceRef?.conversationId !== undefined) {
-        conflict(!p.sourceRef.conversationId);
-      } else {
-        conflict(!p.sourceMemoryId);
-        conflict(
-          !!memory &&
-            (memory.userId !== undefined ||
-              !memory.conversationRef?.conversationId),
-        );
-      }
-    }
-    conflict(
-      !!conversation &&
-        (conversation.memorySpaceId !== e.memorySpaceId ||
-          conversation.tenantId !== p.tenantId ||
-          (conversationLogical !== undefined &&
-            conversation.conversationId !== conversationLogical)),
-    );
-    const participants = conversation
-      ? [
-          conversation.participants.userId,
-          ...(conversation.participants.userIds ?? []),
-        ].filter((id): id is string => !!id)
-      : [];
-    const memoryOwner = memory?.userId ?? memory?.sourceUserId;
-    const associated = p.ownerUserId
-      ? []
-      : Array.from(
-          new Set([...participants, ...(memoryOwner ? [memoryOwner] : [])]),
-        ).sort();
-    const allAssociationWitnessesSurvive =
-      (!p.sourceMemoryId || !!memory) &&
-      (!p.sourceConversationId || !!conversation);
-    if (p.associatedUserIds !== undefined) {
-      conflict(
-        new Set(p.associatedUserIds).size !== p.associatedUserIds.length ||
-          associated.some((id) => !p.associatedUserIds!.includes(id)),
-      );
-      if (p.ownerUserId || allAssociationWitnessesSurvive)
-        conflict(
-          canonical([...p.associatedUserIds].sort()) !== canonical(associated),
-        );
-    }
-    if (p.associationKnown !== undefined)
-      conflict(
-        p.associationKnown !==
-          !!(p.ownerUserId || p.sourceMemoryId || p.sourceConversationId),
-      );
-    if (e.scopeVersion === 1) {
-      const existing = Object.fromEntries(
-        Object.keys(provenanceFields).map((k) => [
-          k,
-          e[k as keyof typeof provenanceFields],
-        ]),
-      );
-      if (canonical(existing) !== canonical(p))
-        fail("FACT_HISTORY_MIGRATION_CONFLICT");
-      return budget.finish(ctx, { changed: false, dryRun: args.dryRun });
-    }
-    budget.write({ ...e, ...p });
-    if (!args.dryRun) await reconcileRow(ctx, e._id, clean(p));
-    return budget.finish(ctx, { changed: !args.dryRun, dryRun: args.dryRun });
   },
 });

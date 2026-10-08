@@ -32,7 +32,7 @@ if (scenario === "inherited") Object.setPrototypeOf(tables, { owned: table });
 export default defineSchema(tables, { schemaValidation: true });
 `);
       fs.writeFileSync(path.join(root, "tsconfig.json"), JSON.stringify({ compilerOptions: {
-        target: "ES2021", lib: ["ES2021", "DOM"], module: "CommonJS", moduleResolution: "Node", strict: true,
+        target: "ES2021", lib: ["ES2021", "DOM"], module: "Node16", moduleResolution: "Node16", types: ["node"], strict: true,
         esModuleInterop: true, skipLibCheck: true, outDir: "out", typeRoots: [path.dirname(path.dirname(require.resolve("@types/node/package.json")))],
       }, include: ["*.ts"] }));
       const compile = () => spawnSync(process.execPath, [require.resolve("typescript/bin/tsc"), "--project", path.join(root, "tsconfig.json")], { cwd: root, encoding: "utf8", timeout: 30000 });

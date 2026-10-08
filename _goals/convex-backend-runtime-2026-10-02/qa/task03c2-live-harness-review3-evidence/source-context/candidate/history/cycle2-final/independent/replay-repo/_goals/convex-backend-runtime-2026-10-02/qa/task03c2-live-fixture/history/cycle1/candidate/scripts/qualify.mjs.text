@@ -1,0 +1,29 @@
+import { spawn } from "node:child_process";
+import { resolve } from "node:path";
+import { livePreflight, repo, root, receiptFile, envFile } from "./guard.mjs";
+const { env } = livePreflight();
+const sdkEnv = { ...env };
+delete sdkEnv.CONVEX_DEPLOY_KEY;
+const code = await new Promise((done) => {
+  const child = spawn(process.execPath, ["--import", resolve(repo, "node_modules/tsx/dist/loader.mjs"), resolve(root, "scripts/client.ts")], {
+    cwd: repo,
+    env: { ...sdkEnv, CORTEX_QUALIFICATION_TARGET_RECEIPT: receiptFile, CORTEX_QUALIFICATION_DEPLOY_ENV: envFile },
+    stdio: ["ignore", "pipe", "ignore"],
+  });
+  // Child emits one summary composed only of counts/status. Limit output size.
+  let summary = "";
+  child.stdout.on("data", (chunk) => { if (summary.length + chunk.length < 4096) summary += chunk; });
+  const timer = setTimeout(() => child.kill("SIGKILL"), 600_000);
+  child.once("error", () => { clearTimeout(timer); done(-1); });
+  child.once("close", (status) => {
+    clearTimeout(timer);
+    try {
+      const result = JSON.parse(summary);
+      if (["PASS", "FAIL", "INCOMPLETE"].includes(result.status) && Number.isSafeInteger(result.discovered) && Number.isSafeInteger(result.passed)) {
+        process.stdout.write(JSON.stringify({ status: result.status, discovered: result.discovered, passed: result.passed }) + "\n");
+      }
+    } catch { /* No raw child output is relayed. */ }
+    done(status ?? -1);
+  });
+});
+process.exitCode = code === 0 ? 0 : 1;

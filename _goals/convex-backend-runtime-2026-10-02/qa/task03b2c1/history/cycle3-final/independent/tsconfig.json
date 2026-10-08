@@ -1,0 +1,23 @@
+{
+  "extends": "/workspace/Project-Cortex/work/backend-runtime/task03b2c1-checkout/convex-dev/tsconfig.json",
+  "compilerOptions": {
+    "target": "ES2021",
+    "lib": [
+      "ES2021",
+      "dom"
+    ],
+    "types": [
+      "node",
+      "jest"
+    ],
+    "typeRoots": [
+      "/workspace/Project-Cortex/work/backend-runtime/task03b2c1-checkout/node_modules/@types"
+    ]
+  },
+  "include": [
+    "/workspace/Project-Cortex/work/backend-runtime/task03b2c1-checkout/convex-dev/artifacts.ts",
+    "/workspace/Project-Cortex/work/backend-runtime/task03b2c1-checkout/convex-dev/runtimeArtifactAuth.ts",
+    "/workspace/Project-Cortex/work/backend-runtime/task03b2c1-checkout/tests/unit/runtimeArtifactAuth/**/*.ts"
+  ],
+  "exclude": []
+}

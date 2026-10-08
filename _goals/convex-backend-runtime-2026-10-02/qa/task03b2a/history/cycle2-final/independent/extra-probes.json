@@ -1,0 +1,320 @@
+[
+  {
+    "name": "transaction complete preflight foreign",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"FORBIDDEN\",\"message\":\"Access denied\"}"
+  },
+  {
+    "name": "transaction complete preflight missing-owner",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"FORBIDDEN\",\"message\":\"Access denied\"}"
+  },
+  {
+    "name": "transaction complete preflight own-duplicate",
+    "pass": true,
+    "accepted": false,
+    "error": "Error: Nonunique canonical index"
+  },
+  {
+    "name": "transaction complete preflight foreign-duplicate",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"FORBIDDEN\",\"message\":\"Access denied\"}"
+  },
+  {
+    "name": "transaction complete preflight missing-target",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: MUTABLE_KEY_NOT_FOUND"
+  },
+  {
+    "name": "transaction complete preflight tombstone",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"FORBIDDEN\",\"message\":\"Access denied\"}"
+  },
+  {
+    "name": "transaction complete preflight numeric-null",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"INVALID_INPUT\",\"message\":\"Invalid metadata input\"}"
+  },
+  {
+    "name": "transaction complete preflight delete-recreate",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"code\":\"INVALID_INPUT\",\"message\":\"Invalid metadata input\"}"
+  },
+  {
+    "name": "scope and owner constrained before immutable hydration",
+    "pass": true,
+    "accepted": true,
+    "result": {
+      "entries": [
+        {
+          "tenantId": "tenant-a",
+          "memorySpaceId": "space-a",
+          "ownerPrincipalId": "runtimeAuthPrincipals:1",
+          "type": "note",
+          "id": "one",
+          "userId": "alice",
+          "data": {
+            "secret": "old"
+          },
+          "version": 1,
+          "previousVersions": [],
+          "createdAt": 1000,
+          "updatedAt": 1000,
+          "_id": "immutable:10",
+          "_creationTime": 1000
+        }
+      ],
+      "total": 1,
+      "limit": 50,
+      "offset": 0,
+      "hasMore": false
+    },
+    "materialized": [
+      "immutable:10"
+    ]
+  },
+  {
+    "name": "scope and owner constrained before immutableCount hydration",
+    "pass": true,
+    "accepted": true,
+    "result": 1,
+    "materialized": [
+      "immutable:10"
+    ]
+  },
+  {
+    "name": "scope and owner constrained before immutableSearch hydration",
+    "pass": true,
+    "accepted": true,
+    "result": [
+      {
+        "entry": {
+          "tenantId": "tenant-a",
+          "memorySpaceId": "space-a",
+          "ownerPrincipalId": "runtimeAuthPrincipals:1",
+          "type": "note",
+          "id": "one",
+          "userId": "alice",
+          "data": {
+            "secret": "old"
+          },
+          "version": 1,
+          "previousVersions": [],
+          "createdAt": 1000,
+          "updatedAt": 1000,
+          "_id": "immutable:10",
+          "_creationTime": 1000
+        },
+        "score": 1,
+        "highlights": [
+          "old"
+        ]
+      }
+    ],
+    "materialized": [
+      "immutable:10"
+    ]
+  },
+  {
+    "name": "scope and owner constrained before mutable hydration",
+    "pass": true,
+    "accepted": true,
+    "result": [
+      {
+        "tenantId": "tenant-a",
+        "memorySpaceId": "space-a",
+        "ownerPrincipalId": "runtimeAuthPrincipals:1",
+        "namespace": "counter",
+        "key": "one",
+        "userId": "alice",
+        "value": 5,
+        "createdAt": 1000,
+        "updatedAt": 1000,
+        "_id": "mutable:10",
+        "_creationTime": 1000
+      }
+    ],
+    "materialized": [
+      "mutable:10"
+    ]
+  },
+  {
+    "name": "scope and owner constrained before mutableCount hydration",
+    "pass": true,
+    "accepted": true,
+    "result": 1,
+    "materialized": [
+      "mutable:10"
+    ]
+  },
+  {
+    "name": "scope and owner constrained before sessions hydration",
+    "pass": true,
+    "accepted": true,
+    "result": [
+      {
+        "tenantId": "tenant-a",
+        "memorySpaceId": "space-a",
+        "ownerPrincipalId": "runtimeAuthPrincipals:1",
+        "sessionId": "one",
+        "userId": "alice",
+        "status": "active",
+        "startedAt": 1000,
+        "lastActiveAt": 1000,
+        "messageCount": 0,
+        "memoryCount": 0,
+        "_id": "sessions:10",
+        "_creationTime": 1000
+      }
+    ],
+    "materialized": [
+      "sessions:10"
+    ]
+  },
+  {
+    "name": "scope and owner constrained before sessionsCount hydration",
+    "pass": true,
+    "accepted": true,
+    "result": 1,
+    "materialized": [
+      "sessions:10"
+    ]
+  },
+  {
+    "name": "scope and owner constrained before profiles hydration",
+    "pass": true,
+    "accepted": true,
+    "result": [
+      {
+        "id": "alice",
+        "data": {
+          "secret": "old"
+        },
+        "version": 1,
+        "createdAt": 1000,
+        "updatedAt": 1000
+      }
+    ],
+    "materialized": [
+      "immutable:10",
+      "immutable:12"
+    ]
+  },
+  {
+    "name": "internal immutable purge retains all controls and fences",
+    "pass": true,
+    "accepted": true,
+    "result": {
+      "deleted": 2
+    },
+    "controls": 5,
+    "tombstones": 2
+  },
+  {
+    "name": "internal mutable purge retains all controls and fences",
+    "pass": true,
+    "accepted": true,
+    "result": {
+      "deleted": 2
+    },
+    "controls": 5,
+    "tombstones": 2
+  },
+  {
+    "name": "internal message late grant rollback",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}"
+  },
+  {
+    "name": "internal message late principal rollback",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}"
+  },
+  {
+    "name": "internal message late membership rollback",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}"
+  },
+  {
+    "name": "internal message late scope rollback",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}"
+  },
+  {
+    "name": "internal message late resource rollback",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}"
+  },
+  {
+    "name": "internal memory late grant rollback",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}"
+  },
+  {
+    "name": "internal memory late principal rollback",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}"
+  },
+  {
+    "name": "internal memory late membership rollback",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}"
+  },
+  {
+    "name": "internal memory late scope rollback",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}"
+  },
+  {
+    "name": "internal memory late resource rollback",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}"
+  },
+  {
+    "name": "internal expiry late grant rollback",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}"
+  },
+  {
+    "name": "internal expiry late principal rollback",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}"
+  },
+  {
+    "name": "internal expiry late membership rollback",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}"
+  },
+  {
+    "name": "internal expiry late scope rollback",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}"
+  },
+  {
+    "name": "internal expiry late resource rollback",
+    "pass": true,
+    "accepted": false,
+    "error": "ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}"
+  }
+]

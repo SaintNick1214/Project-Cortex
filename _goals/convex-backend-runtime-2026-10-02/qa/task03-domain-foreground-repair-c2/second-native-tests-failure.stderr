@@ -1,0 +1,85 @@
+(node:39591) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeMemory/public-boundary.test.ts (9.227 s)
+  ● native remember control boundary › proxy descriptor failure at runtimeAuth:authorize stays opaque without diagnostic getters
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: 1
+
+      109 |         ownKeys: () => { throw new Error("PRIVATE_PROXY"); }, get: () => { reads++; throw new Error("PRIVATE_GETTER"); },
+      110 |       }) : result);
+    > 111 |       expect(await outcome(f, operation)).toEqual(opaque); expect(reads).toBe(0); zero(f);
+          |                                                                          ^
+      112 |     });
+      113 |     it.each([undefined, null, "PRIVATE_SCALAR", 9, { private: "PRIVATE_STRUCTURED" }, new Error("PRIVATE_CLASS"), new ConvexError({ code: "UNKNOWN_BACKEND_FAILURE", message: "PRIVATE_DIAGNOSTIC", privateControl: "PRIVATE_CONTROL" })])(`unknown ${location} fault is opaque (%p)`, async (value) => {
+      114 |       const f = setup(); f.fault((name) => { if (name === location) throw value; });
+
+      at Object.<anonymous> (tests/unit/runtimeMemory/public-boundary.test.ts:111:74)
+
+  ● native remember control boundary › proxy descriptor failure at runtimeMemory:checkAuthority stays opaque without diagnostic getters
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: 1
+
+      109 |         ownKeys: () => { throw new Error("PRIVATE_PROXY"); }, get: () => { reads++; throw new Error("PRIVATE_GETTER"); },
+      110 |       }) : result);
+    > 111 |       expect(await outcome(f, operation)).toEqual(opaque); expect(reads).toBe(0); zero(f);
+          |                                                                          ^
+      112 |     });
+      113 |     it.each([undefined, null, "PRIVATE_SCALAR", 9, { private: "PRIVATE_STRUCTURED" }, new Error("PRIVATE_CLASS"), new ConvexError({ code: "UNKNOWN_BACKEND_FAILURE", message: "PRIVATE_DIAGNOSTIC", privateControl: "PRIVATE_CONTROL" })])(`unknown ${location} fault is opaque (%p)`, async (value) => {
+      114 |       const f = setup(); f.fault((name) => { if (name === location) throw value; });
+
+      at Object.<anonymous> (tests/unit/runtimeMemory/public-boundary.test.ts:111:74)
+
+  ● native recall control boundary › proxy descriptor failure at runtimeAuth:authorize stays opaque without diagnostic getters
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: 1
+
+      109 |         ownKeys: () => { throw new Error("PRIVATE_PROXY"); }, get: () => { reads++; throw new Error("PRIVATE_GETTER"); },
+      110 |       }) : result);
+    > 111 |       expect(await outcome(f, operation)).toEqual(opaque); expect(reads).toBe(0); zero(f);
+          |                                                                          ^
+      112 |     });
+      113 |     it.each([undefined, null, "PRIVATE_SCALAR", 9, { private: "PRIVATE_STRUCTURED" }, new Error("PRIVATE_CLASS"), new ConvexError({ code: "UNKNOWN_BACKEND_FAILURE", message: "PRIVATE_DIAGNOSTIC", privateControl: "PRIVATE_CONTROL" })])(`unknown ${location} fault is opaque (%p)`, async (value) => {
+      114 |       const f = setup(); f.fault((name) => { if (name === location) throw value; });
+
+      at Object.<anonymous> (tests/unit/runtimeMemory/public-boundary.test.ts:111:74)
+
+  ● native recall control boundary › proxy descriptor failure at runtimeMemory:checkAuthority stays opaque without diagnostic getters
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: 1
+
+      109 |         ownKeys: () => { throw new Error("PRIVATE_PROXY"); }, get: () => { reads++; throw new Error("PRIVATE_GETTER"); },
+      110 |       }) : result);
+    > 111 |       expect(await outcome(f, operation)).toEqual(opaque); expect(reads).toBe(0); zero(f);
+          |                                                                          ^
+      112 |     });
+      113 |     it.each([undefined, null, "PRIVATE_SCALAR", 9, { private: "PRIVATE_STRUCTURED" }, new Error("PRIVATE_CLASS"), new ConvexError({ code: "UNKNOWN_BACKEND_FAILURE", message: "PRIVATE_DIAGNOSTIC", privateControl: "PRIVATE_CONTROL" })])(`unknown ${location} fault is opaque (%p)`, async (value) => {
+      114 |       const f = setup(); f.fault((name) => { if (name === location) throw value; });
+
+      at Object.<anonymous> (tests/unit/runtimeMemory/public-boundary.test.ts:111:74)
+
+PASS tests/unit/runtimeMemory/services.test.ts
+PASS tests/unit/runtimeMemory/public-closure.test.ts
+PASS tests/unit/runtimeMemory/repository.test.ts
+PASS tests/unit/domain/sources.test.ts
+PASS tests/unit/domain/outcomes.test.ts
+PASS tests/unit/domain/profile.test.ts
+
+Test Suites: 1 failed, 6 passed, 7 total
+Tests:       4 failed, 260 passed, 264 total
+Snapshots:   0 total
+Time:        15.015 s, estimated 19 s
+Ran all test suites matching tests/unit/(runtimeMemory|domain).
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/task03-domain-foreground-repair-c2/native-tests.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

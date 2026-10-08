@@ -1,9 +1,10 @@
+import { enableDeploymentOperator } from "../../src/common/deploymentOperator";
 import { FactsAPI } from "../../src/facts";
 import { createHash } from "node:crypto";
 import type { ConvexClient } from "convex/browser";
 import { getFunctionName } from "convex/server";
-import * as backend from "../../convex-dev/factHistory";
-import * as facts from "../../convex-dev/facts";
+import * as backend from "../../convex-dev/cliOperator/factHistory";
+import * as facts from "../../convex-dev/cliOperator/facts";
 import {
   canonical,
   digest,
@@ -30,7 +31,7 @@ function exportArgs(registration: unknown): string {
   return (registration.exportArgs as () => string)();
 }
 
-describe("durable fact provenance and public history", () => {
+describe("durable fact provenance and internal deployment-operator history", () => {
   it("canonicalizes official Convex values and SHA256 without collapsing absence/null/bytes", () => {
     const value = {
       z: undefined,
@@ -53,7 +54,7 @@ describe("durable fact provenance and public history", () => {
   it("keeps migration internal, fixed candidate page and legacy array query registrations", () => {
     expect(backend.migrateEvidence.isInternal).toBe(true);
     expect(backend.migrateEvidence).not.toHaveProperty("isPublic");
-    expect(facts.candidatePage.isPublic).toBe(true);
+    expect(facts.candidatePage.isInternal).toBe(true);
     const args = JSON.parse(exportArgs(facts.candidatePage));
     expect(
       args.value.operation.fieldType.value.map(
@@ -161,6 +162,7 @@ describe("durable fact provenance and public history", () => {
         };
       },
     } as unknown as ConvexClient;
+    enableDeploymentOperator(client);
     const history = new FactHistoryService(client, undefined, {
       userId: "actor",
       tenantId: "A",
@@ -190,6 +192,7 @@ describe("durable fact provenance and public history", () => {
         return { eventId: args.eventId };
       },
     } as unknown as ConvexClient;
+    enableDeploymentOperator(client);
     const history = new FactHistoryService(client, undefined, {
       userId: "actor",
       tenantId: "A",
@@ -223,8 +226,8 @@ describe("durable fact provenance and public history", () => {
       eventIds: ["event"],
     });
     expect(seen).toEqual([
-      "factHistory:publishPendingEvent",
-      "factHistory:publishPendingEvent",
+      "cliOperator/factHistory:publishPendingEvent",
+      "cliOperator/factHistory:publishPendingEvent",
     ]);
     await expect(
       history.retryHistory({
@@ -241,6 +244,7 @@ describe("durable fact provenance and public history", () => {
         return { page: [], deleted: 4, continueCursor: "next", isDone: false };
       },
     } as unknown as ConvexClient;
+    enableDeploymentOperator(client);
     await expect(
       new FactHistoryService(client).deleteByMemorySpace("space"),
     ).rejects.toMatchObject({ name: "HistoryDeletePartialError", deleted: 4 });
@@ -255,7 +259,7 @@ describe("physical fact deletion partial receipts", () => {
     const deleteIntents = documents.map(row => ({physicalId: row._id, operationId: `delete-${row._id}`, requestDigest: "a".repeat(64), request: {selectedPhysicalId: row._id}}));
     const client = {
       query: async (reference: Parameters<ConvexClient["query"]>[0]) => {
-        if (getFunctionName(reference) === "factHistory:getOperationReceipt") return null;
+        if (getFunctionName(reference) === "cliOperator/factHistory:getOperationReceipt") return null;
         return {page: documents, fingerprints: Object.fromEntries(documents.map(row => [row._id, "b".repeat(64)])), deleteIntents, continueCursor: "", isDone: true};
       },
       mutation: async (_reference: unknown, args: {selectedPhysicalId: string}) => {
@@ -264,6 +268,7 @@ describe("physical fact deletion partial receipts", () => {
         return {deleted: 1};
       },
     } as unknown as ConvexClient;
+    enableDeploymentOperator(client);
     await expect(new FactsAPI(client).deleteMany({memorySpaceId: "space"})).rejects.toMatchObject({
       name: "DomainOperationPartialError",
       partial: {confirmedCount: 1, possibleCount: 2, confirmedPhysicalIds: ["first"], unknownPhysicalIds: ["second"], unstartedPhysicalIds: ["third"]},
@@ -353,6 +358,7 @@ describe("acknowledged commitment with unresolved secondary receipt", () => {
           return null;
         },
       } as unknown as ConvexClient;
+    enableDeploymentOperator(client);
       const api = new FactsAPI(client);
       let caught: unknown;
       try {
@@ -403,6 +409,7 @@ describe("history time and purge batch validation before transport", () => {
         throw new Error("mutation forbidden");
       },
     } as unknown as ConvexClient;
+    enableDeploymentOperator(client);
     const h = new FactHistoryService(client);
     for (const value of [NaN, Infinity, -Infinity, true, "1", null]) {
       await expect(
@@ -462,6 +469,7 @@ describe("history time and purge batch validation before transport", () => {
         };
       },
     } as unknown as ConvexClient;
+    enableDeploymentOperator(client);
     expect(
       await new FactHistoryService(client).purgeOldEvents(
         new Date(100),

@@ -1,7 +1,7 @@
 /** Progressive native storage owns a captured physical handle, distinct from the final remember record. */
 import type {ConvexClient} from "convex/browser";
 import {ConvexError} from "convex/values";
-import {api} from "../../../convex-dev/_generated/api";
+import {api} from "../../common/backendApi";
 import type {Id} from "../../../convex-dev/_generated/dataModel";
 import type {PartialUpdate,PartialSourceEvidence} from "../../types/streaming";
 import type {GraphAdapter,GraphSyncPolicy,GraphJobReceipt} from "../../graph/types";

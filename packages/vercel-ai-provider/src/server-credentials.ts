@@ -15,7 +15,7 @@ export function serverRuntimeOptions(credentials?: CortexServerCredentials): Cor
   } catch {
     throw new Error("Cortex server credentials require a nonempty deployment key.");
   }
-  return { initializeTransport(client) {
+  return { deploymentOperator: true, initializeTransport(client) {
     try {
       const setter = (client as unknown as { setAdminAuth?: (key: string) => void }).setAdminAuth;
       if (typeof setter !== "function") throw new Error("Missing native admin transport.");

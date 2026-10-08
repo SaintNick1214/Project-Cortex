@@ -1,0 +1,28 @@
+"""Compare exact pinned a2c982 checkout root diagnostics in an owned disposable tree."""
+import datetime
+import io
+import json
+import pathlib
+import subprocess
+import tarfile
+import tempfile
+ROOT = pathlib.Path(__file__).resolve().parents[5]
+QA = ROOT / '_goals/convex-backend-runtime-2026-10-02/qa/task03b2b1/checks'
+PREFIX = ['npx', '--cache', '/workspace/Project-Cortex/work/backend-runtime/npm12-cache', '--yes', '--package=npm@12.2.0', '--', 'npm']
+base = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip()
+receipts=[]
+with tempfile.TemporaryDirectory(prefix='.pinned-base-', dir=QA) as temp:
+ destination=pathlib.Path(temp)
+ archive=subprocess.check_output(['git', 'archive', base], cwd=ROOT)
+ with tarfile.open(fileobj=io.BytesIO(archive), mode='r:') as exported: exported.extractall(destination, filter='data')
+ (destination/'node_modules').symlink_to(ROOT/'node_modules', target_is_directory=True)
+ for name, flags in [('baseline-root-types',['--noEmit']), ('baseline-root-lint-types',['--project','tsconfig.lint.json','--noEmit'])]:
+  command=PREFIX+['exec','--','tsc']+flags
+  started=datetime.datetime.now(datetime.timezone.utc).isoformat()
+  result=subprocess.run(command,cwd=destination,text=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+  ended=datetime.datetime.now(datetime.timezone.utc).isoformat()
+  (QA/(name+'.stdout.txt')).write_text(result.stdout);(QA/(name+'.stderr.txt')).write_text(result.stderr)
+  receipts.append({'name':name,'base':base,'command':command,'cwd':str(destination),'utcStart':started,'utcEnd':ended,'exitCode':result.returncode,'stdout':name+'.stdout.txt','stderr':name+'.stderr.txt'})
+  print(json.dumps({'name':name,'exitCode':result.returncode}),flush=True)
+receipts.append({'temporaryTreeRemoved':not destination.exists(),'scope':'owned QA temp tree; exact pinned Git archive; existing node_modules symlink; no source overlay, installs, builds, deployment or paid calls'})
+(QA/'baseline-commands.json').write_text(json.dumps(receipts,indent=2)+'\n')

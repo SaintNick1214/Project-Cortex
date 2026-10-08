@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../src/cli/project.ts"],
+  "sourcesContent": ["import { Command } from \"@commander-js/extra-typings\";\nimport { projectCreate } from \"./projectCreate.js\";\n\nexport const project = new Command(\"project\")\n  .summary(\"Manage projects\")\n  .description(\"Manage projects in your team.\")\n  .addCommand(projectCreate);\n"],
+  "mappings": ";AAAA,SAAS,eAAe;AACxB,SAAS,qBAAqB;AAEvB,aAAM,UAAU,IAAI,QAAQ,SAAS,EACzC,QAAQ,iBAAiB,EACzB,YAAY,+BAA+B,EAC3C,WAAW,aAAa;",
+  "names": []
+}

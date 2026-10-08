@@ -1,0 +1,20 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: complete real closed-resolver money branch is unreachable: nominations always have empty categories
++ actual - expected
+
++ 'unknown'
+- 'validated-whole-invocation-usd'
+
+    at file:///workspace/Project-Cortex/work/resume/task04-default-native-driver-implementation-c1-review/fixture/checks/independent-money.mjs:11:343 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 'unknown',
+  expected: 'validated-whole-invocation-usd',
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

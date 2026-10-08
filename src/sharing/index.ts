@@ -103,7 +103,7 @@ export function extractShareId(
       // Query style
       const paramName = config.paramName || "id";
       const value = urlObj.searchParams.get(paramName);
-      return value ? decodeURIComponent(value) : null;
+      return value || null;
     }
   } catch {
     return null;

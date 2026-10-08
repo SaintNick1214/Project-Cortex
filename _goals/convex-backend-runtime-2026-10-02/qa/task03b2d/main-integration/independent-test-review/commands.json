@@ -1,0 +1,154 @@
+[
+  {
+    "name": "catalog",
+    "argv": [
+      "node",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03b2d/inventory.mjs",
+      "/tmp/task03b2d-test-review1-tnnqnwac/catalog"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-03T10:35:13.986455+00:00",
+    "completedAt": "2026-10-03T10:35:14.745597+00:00",
+    "elapsedSeconds": 0.7591529429992079,
+    "exitCode": 0,
+    "stdout": "/tmp/task03b2d-test-review1-tnnqnwac/catalog.stdout.log",
+    "stderr": "/tmp/task03b2d-test-review1-tnnqnwac/catalog.stderr.log"
+  },
+  {
+    "name": "cleanup-probes",
+    "argv": [
+      "node",
+      "/tmp/task03b2d-test-review1-tnnqnwac/cleanup-probes.cjs"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-03T10:35:57.949026+00:00",
+    "completedAt": "2026-10-03T10:35:58.225055+00:00",
+    "elapsedSeconds": 0.2759986429991841,
+    "exitCode": 0,
+    "stdout": "/tmp/task03b2d-test-review1-tnnqnwac/cleanup-probes.stdout.log",
+    "stderr": "/tmp/task03b2d-test-review1-tnnqnwac/cleanup-probes.stderr.log"
+  },
+  {
+    "name": "contract-probes",
+    "argv": [
+      "node",
+      "/tmp/task03b2d-test-review1-tnnqnwac/contract-probes.cjs"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-03T10:36:57.188232+00:00",
+    "completedAt": "2026-10-03T10:36:57.463734+00:00",
+    "elapsedSeconds": 0.2755072009986179,
+    "exitCode": 0,
+    "stdout": "/tmp/task03b2d-test-review1-tnnqnwac/contract-probes.stdout.log",
+    "stderr": "/tmp/task03b2d-test-review1-tnnqnwac/contract-probes.stderr.log"
+  },
+  {
+    "name": "contract-probes",
+    "argv": [
+      "node",
+      "/tmp/task03b2d-test-review1-tnnqnwac/contract-probes.cjs"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-03T10:36:39.990832+00:00",
+    "completedAt": "2026-10-03T10:36:40.236011+00:00",
+    "elapsedSeconds": 0.24518600500050525,
+    "exitCode": 1,
+    "stdout": "/tmp/task03b2d-test-review1-tnnqnwac/contract-probes.stdout.log",
+    "stderr": "/tmp/task03b2d-test-review1-tnnqnwac/contract-probes.stderr.log"
+  },
+  {
+    "name": "diff-check",
+    "argv": [
+      "git",
+      "diff",
+      "--check",
+      "--",
+      "tests/unit/runtimeWorkerAuth/admin-catalog.test.ts"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-03T10:35:13.985968+00:00",
+    "completedAt": "2026-10-03T10:35:13.994375+00:00",
+    "elapsedSeconds": 0.0084068890009803,
+    "exitCode": 0,
+    "stdout": "/tmp/task03b2d-test-review1-tnnqnwac/diff-check.stdout.log",
+    "stderr": "/tmp/task03b2d-test-review1-tnnqnwac/diff-check.stderr.log"
+  },
+  {
+    "name": "discovery",
+    "argv": [
+      "node",
+      "--experimental-vm-modules",
+      "node_modules/jest/bin/jest.js",
+      "--config",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03b2d/jest.scoped.cjs",
+      "--listTests",
+      "--runInBand",
+      "--no-cache"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-03T10:35:13.974284+00:00",
+    "completedAt": "2026-10-03T10:35:14.209970+00:00",
+    "elapsedSeconds": 0.23569164800028375,
+    "exitCode": 0,
+    "stdout": "/tmp/task03b2d-test-review1-tnnqnwac/discovery.stdout.log",
+    "stderr": "/tmp/task03b2d-test-review1-tnnqnwac/discovery.stderr.log"
+  },
+  {
+    "name": "lint",
+    "argv": [
+      "node",
+      "node_modules/eslint/bin/eslint.js",
+      "tests/unit/runtimeWorkerAuth/admin-catalog.test.ts",
+      "--report-unused-disable-directives"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-03T10:35:13.967120+00:00",
+    "completedAt": "2026-10-03T10:35:19.389922+00:00",
+    "elapsedSeconds": 5.422809245999815,
+    "exitCode": 0,
+    "stdout": "/tmp/task03b2d-test-review1-tnnqnwac/lint.stdout.log",
+    "stderr": "/tmp/task03b2d-test-review1-tnnqnwac/lint.stderr.log"
+  },
+  {
+    "name": "tests",
+    "argv": [
+      "node",
+      "--experimental-vm-modules",
+      "node_modules/jest/bin/jest.js",
+      "--config",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03b2d/jest.scoped.cjs",
+      "--runInBand",
+      "--no-cache",
+      "--json",
+      "--outputFile",
+      "/tmp/task03b2d-test-review1-tnnqnwac/tests.json"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-03T10:35:14.010423+00:00",
+    "completedAt": "2026-10-03T10:35:22.819956+00:00",
+    "elapsedSeconds": 8.809539646001213,
+    "exitCode": 0,
+    "stdout": "/tmp/task03b2d-test-review1-tnnqnwac/tests.stdout.log",
+    "stderr": "/tmp/task03b2d-test-review1-tnnqnwac/tests.stderr.log"
+  },
+  {
+    "name": "types",
+    "argv": [
+      "node",
+      "node_modules/typescript/bin/tsc",
+      "-p",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03b2d/tsconfig.scoped.json",
+      "--pretty",
+      "false",
+      "--incremental",
+      "false"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "startedAt": "2026-10-03T10:35:14.013369+00:00",
+    "completedAt": "2026-10-03T10:35:18.246278+00:00",
+    "elapsedSeconds": 4.232921918001011,
+    "exitCode": 0,
+    "stdout": "/tmp/task03b2d-test-review1-tnnqnwac/types.stdout.log",
+    "stderr": "/tmp/task03b2d-test-review1-tnnqnwac/types.stderr.log"
+  }
+]

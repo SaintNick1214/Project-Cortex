@@ -1,0 +1,54 @@
+{
+  "version": 1,
+  "corePins": [
+    {
+      "name": "ai",
+      "before": "7.0.127",
+      "after": "7.0.127"
+    },
+    {
+      "name": "convex",
+      "before": "1.46.0",
+      "after": "1.46.0"
+    },
+    {
+      "name": "@convex-dev/agent",
+      "before": "0.7.3",
+      "after": "0.7.3"
+    },
+    {
+      "name": "@convex-dev/ai-sdk-provider",
+      "before": "0.2.1",
+      "after": "0.2.1"
+    },
+    {
+      "name": "@convex-dev/workflow",
+      "before": "0.4.8",
+      "after": "0.4.8"
+    },
+    {
+      "name": "@convex-dev/workpool",
+      "before": "0.4.13",
+      "after": "0.4.13"
+    }
+  ],
+  "ws": {
+    "before": "8.18.3",
+    "after": "8.21.0"
+  },
+  "changedLockEntries": [
+    "",
+    "node_modules/convex/node_modules/ws",
+    "node_modules/ws"
+  ],
+  "transitiveEffect": "Convex ws8.21.0 deduplicates to patched direct ws8.21.0; no other version changes",
+  "auditAfter": {
+    "info": 0,
+    "low": 0,
+    "moderate": 0,
+    "high": 0,
+    "critical": 0,
+    "total": 0
+  },
+  "currentLockSha256": "2e1066ce717e161979294f981c9ed2a4960f0cb98c7ec0d0e030f181ac49ef69"
+}

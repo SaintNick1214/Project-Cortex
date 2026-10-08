@@ -271,7 +271,7 @@ export async function sourceFact(
   budget.reserve(2);
   const rows = await ctx.db
     .query("facts")
-    .withIndex("by_history_scope_fact", (q) =>
+    .withIndex("by_runtime_scope_factId", (q) =>
       q
         .eq("tenantId", scope.tenantId)
         .eq("memorySpaceId", scope.memorySpaceId)
@@ -385,7 +385,7 @@ export async function provenance(
       budget.reserve(2);
       rows = await ctx.db
         .query("memories")
-        .withIndex("by_history_scope_memory", (q) =>
+        .withIndex("by_runtime_scope_memoryId", (q) =>
           q
             .eq("tenantId", fact.tenantId)
             .eq("memorySpaceId", fact.memorySpaceId)

@@ -1,0 +1,5 @@
+# Fixed14 underlying-adapter wire transform check
+
+PASS_OFFLINE_UNDERLYING_ADAPTER_TRANSFORM_ONLY. All14 approved native identities and expected wire body hashes/bytes match the actual installed compatible adapter with its supported fake-fetch seam; exactly14 synthetic requests, zero real HTTP/provider/paid calls or Convex service tokens. Request canonicals and any mismatch bodies remain restricted scratch, never public evidence.
+
+Source-derived body settings match the official Gateway underlying constructor; its private factory/token path was not executed. Fake responses supply no serving, currency, cost completeness, decoder, native transaction, managed retrieval or default-driver readiness proof. Fresh driver preparation review must inspect this supplemental packet before citing bounded transform coverage. Original14manifest/native/wire/model/order/scope unchanged. Node24 direct-native methods have no high-level retry. Source pins remain stable. Complete raw UTC/argv/results/recipe retained.

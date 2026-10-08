@@ -1,0 +1,31 @@
+import hashlib
+import json
+import re
+from pathlib import Path
+
+source = Path('work/backend-runtime/task04-native-admission-c6')
+primary = Path('_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-c6-execution')
+output = Path('_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-c6-execution-supplement')
+output.mkdir()
+physical = set(json.loads((source / 'historical-native-locators.json').read_text())['ids'].values())
+for path in source.glob('owned-*.json'):
+    record = json.loads(path.read_text())
+    if 'table' in record and 'id' in record:
+        physical.add(record['id'])
+rows = []
+for record in json.loads((primary / 'private-artifact-retention.json').read_text())['blockedPublicCopies']:
+    path = Path(record['source'])
+    data = path.read_bytes()
+    assert hashlib.sha256(data).hexdigest() == record['sha256']
+    assert not any(value.encode() in data for value in physical)
+    assert not re.search(rb'dev:[a-z0-9-]+\|[^\s"\']+', data)
+    assert not re.search(rb'[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}', data)
+    assert b'-----BEGIN PRIVATE KEY-----' not in data
+    (output / path.name).open('xb').write(data)
+    rows.append({'path': path.name, 'bytes': len(data), 'sha256': record['sha256']})
+correction = {'classification': 'PUBLIC_METADATA_SOURCE_BYTES_RETAINED', 'reason': 'Initial conservative recursive string filter treated the frozen operation UUID as a physical document ID. Exact original 21 files are safe after actual table/id locator scan and credential pattern scan.', 'primaryImmutable': True, 'retainedFiles': len(rows), 'physicalLocatorCountChecked': len(physical), 'credentialRemovalBeforeSupplement': True, 'nativeOutcome': 'FAIL_NOT_PASS'}
+(output / 'correction.json').open('x').write(json.dumps(correction, indent=2) + '\n')
+(output / (Path(__file__).name + '.text')).open('x').write(Path(__file__).read_text())
+files = [{'path': str(path.relative_to(output)), 'bytes': path.stat().st_size, 'sha256': hashlib.sha256(path.read_bytes()).hexdigest()} for path in sorted(output.rglob('*')) if path.is_file()]
+(output / 'qa-manifest.json').open('x').write(json.dumps({'selfExcluded': True, 'files': files}, indent=2) + '\n')
+print(json.dumps({'preservedExactFiles': len(rows), 'physicalLocatorCountChecked': len(physical), 'supplementFiles': len(files) + 1}))

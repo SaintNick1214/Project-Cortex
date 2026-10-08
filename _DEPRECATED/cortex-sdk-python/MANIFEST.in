@@ -1,0 +1,22 @@
+# Include documentation
+include README.md
+include LICENSE.md
+include CHANGELOG.md
+
+# Include type stubs if generated
+recursive-include cortex *.pyi
+
+# Exclude tests and examples from distribution
+recursive-exclude tests *
+recursive-exclude examples *
+recursive-exclude docs *
+
+# Exclude development files
+exclude .gitignore
+exclude .pytest_cache
+exclude .mypy_cache
+exclude .ruff_cache
+
+# Include package data
+recursive-include cortex py.typed
+

@@ -1,0 +1,46 @@
+from pathlib import Path
+import sys, os, json, hashlib, datetime, collections
+r=Path(__file__).parent
+started=datetime.datetime.now(datetime.timezone.utc).isoformat()
+assert Path.cwd()==Path('/workspace/Project-Cortex')
+report=r/'report.md'
+assert report.is_file()
+after=json.loads((r/'freeze-after.json').read_text())
+extra=json.loads((r/'extra-preservation-after.json').read_text())
+assert not after['changed'] and not any(not x['match'] for x in after['checks'])
+assert not extra['extraMismatches'] and not extra['contextMismatches']
+offline=[json.loads((r/('native-'+m+'.json')).read_text()) for m in ['required-assertion','deferred','immediate']]
+assert sum(x['executed'] for x in offline)==31 and sum(x['failed'] for x in offline)==1
+assert all(x['closed'] and x['networkAttempts']==0 and x['unhandled']==[] for x in offline)
+assert json.loads((r/'commands/offline-required-assertion.json').read_text())['exit']==1
+assert report.read_text().count('| Original case |')==0
+for x in json.loads((r/'integrity-extra.json').read_text())['serviceCases']['orderedNames']:
+ assert '| '+x+' |' in report.read_text()
+phase_stream='Final bookkeeping verified original41 scope, unchanged source/provenance freezes, three terminal offline processes, and preserved one nonzero reproduction. Manifest sealing follows; this stream is the pre-seal phase, not a product test.\n'
+(r/'commands/manifest-finalization.stdout').write_text(phase_stream)
+(r/'commands/manifest-finalization.stderr').write_text('')
+(r/'commands/manifest-finalization.json').write_text(json.dumps({'argv':[sys.executable,str(Path(__file__).resolve())],'cwd':str(Path.cwd()),'startUtc':started,'endUtcOfRecordedPreSealPhase':datetime.datetime.now(datetime.timezone.utc).isoformat(),'exit':0,'rawStreamScope':'Only pre-seal bookkeeping phase is recorded. Terminal manifest/hash display omitted from recursive self-binding, as disclosed in omissions.json.','noSubprocesses':True},indent=2)+'\n')
+summary=json.loads((r/'execution-summary.json').read_text())
+all_commands=[{'label':f.stem,**json.loads(f.read_text())} for f in sorted((r/'commands').glob('*.json'))]
+summary['finalRecordedCommandCount']=len(all_commands)
+summary['finalRecordedCommandExitCounts']=dict(collections.Counter(x['exit'] for x in all_commands))
+summary['finalRecordedCommands']=all_commands
+(r/'execution-summary.json').write_text(json.dumps(summary,indent=2)+'\n')
+for f in r.rglob('*'):
+ if f.is_dir():os.chmod(f,0o700)
+ elif f.is_file():os.chmod(f,0o600)
+os.chmod(r,0o700)
+manifest=r/'preservation-manifest.json';detached=r/'preservation-manifest.sha256'
+rows=[]
+for f in sorted(r.rglob('*')):
+ if not f.is_file() or f in [manifest,detached]:continue
+ assert not f.is_symlink()
+ b=f.read_bytes();rows.append({'file':str(f.relative_to(r)),'sha256':hashlib.sha256(b).hexdigest(),'bytes':len(b),'mode':oct(f.stat().st_mode & 0o777)})
+payload={'phase':'FINAL independent read-only first ACTUAL service review','verdict':'REJECT','scores':{'requirementFulfillment':2,'codeQuality':4,'testQuality':3,'patternAdherence':4,'completeness':2},'average':3.0,'sealedUtc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'root':str(r),'report':'report.md','reportSha256':hashlib.sha256(report.read_bytes()).hexdigest(),'canonicalActualManifestSha256':'8659d4de0a9c8929e3fefd4065944026decc54cd07e9683eeb8d4b6b6038014d','records':rows,'explicitOmissionsFile':'omissions.json','selfExclusions':['preservation-manifest.json','preservation-manifest.sha256'],'privateLedgerPayloadCopied':False,'allCommandsFinishedBeforeNativeFinal':True,'terminalHashDisplay':'Bookkeeping display only; no additional product execution or source mutation.'}
+manifest.write_text(json.dumps(payload,indent=2)+'\n');os.chmod(manifest,0o600)
+manifest_sha=hashlib.sha256(manifest.read_bytes()).hexdigest()
+detached.write_text(manifest_sha+'  preservation-manifest.json\n');os.chmod(detached,0o600)
+# Verify the just-sealed bytes before returning; all writes above stay in own /tmp.
+for row in rows:
+ f=r/row['file'];b=f.read_bytes();assert hashlib.sha256(b).hexdigest()==row['sha256'] and len(b)==row['bytes']
+print(json.dumps({'verdict':'FINAL REJECT','scores':[2,4,3,4,2],'average':3.0,'report':str(report),'reportSha256':payload['reportSha256'],'manifest':str(manifest),'manifestSha256':manifest_sha,'manifestRecords':len(rows),'recordedCommandCount':len(all_commands),'recordedCommandExitCounts':summary['finalRecordedCommandExitCounts'],'actual':'41 discovered / 40 executed / 39 PASS / 1 FAIL / 1 BLOCKED / 0 todos','ownOffline':'3 processes / 31 named executions / 30 PASS / 1 preserved FAIL / 0 skips / 0 todos / 15 unique fullNames','sourceChanges':0,'networkAttempts':0,'allOwnClientsClosed':True,'reviewerLiveReplays':0},indent=2))

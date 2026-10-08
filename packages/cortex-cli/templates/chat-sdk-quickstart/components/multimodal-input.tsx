@@ -148,19 +148,19 @@ function PureMultimodalInput({
     window.history.pushState({}, "", `/chat/${chatId}`);
 
     sendMessage({
-      role: "user",
       parts: [
         ...attachments.map((attachment) => ({
+          mediaType: attachment.contentType,
+          name: attachment.name,
           type: "file" as const,
           url: attachment.url,
-          name: attachment.name,
-          mediaType: attachment.contentType,
         })),
         {
-          type: "text",
           text: input,
+          type: "text",
         },
       ],
+      role: "user",
     });
 
     setAttachments([]);
@@ -189,8 +189,8 @@ function PureMultimodalInput({
 
     try {
       const response = await fetch("/api/files/upload", {
-        method: "POST",
         body: formData,
+        method: "POST",
       });
 
       if (response.ok) {
@@ -198,14 +198,14 @@ function PureMultimodalInput({
         const { url, pathname, contentType } = data;
 
         return {
-          url,
-          name: pathname,
           contentType,
+          name: pathname,
+          url,
         };
       }
       const { error } = await response.json();
       toast.error(error);
-    } catch (_error) {
+    } catch {
       toast.error("Failed to upload file, please try again!");
     }
   }, []);
@@ -323,10 +323,10 @@ function PureMultimodalInput({
           if (!input.trim() && attachments.length === 0) {
             return;
           }
-          if (status !== "ready") {
-            toast.error("Please wait for the model to finish its response!");
-          } else {
+          if (status === "ready") {
             submitForm();
+          } else {
+            toast.error("Please wait for the model to finish its response!");
           }
         }}
       >
@@ -353,9 +353,9 @@ function PureMultimodalInput({
             {uploadQueue.map((filename) => (
               <PreviewAttachment
                 attachment={{
-                  url: "",
-                  name: filename,
                   contentType: "",
+                  name: filename,
+                  url: "",
                 }}
                 isUploading={true}
                 key={filename}
@@ -454,7 +454,7 @@ function PureAttachmentsButton({
       }}
       variant="ghost"
     >
-      <PaperclipIcon size={14} style={{ width: 14, height: 14 }} />
+      <PaperclipIcon size={14} style={{ height: 14, width: 14 }} />
     </Button>
   );
 }
@@ -479,17 +479,17 @@ function PureModelSelectorCompact({
   // Provider display names
   const providerNames: Record<string, string> = {
     anthropic: "Anthropic",
-    openai: "OpenAI",
     google: "Google",
-    xai: "xAI",
+    openai: "OpenAI",
     reasoning: "Reasoning",
+    xai: "xAI",
   };
 
   return (
     <ModelSelector onOpenChange={setOpen} open={open}>
       <ModelSelectorTrigger asChild>
         <Button className="h-8 w-[200px] justify-between px-2" variant="ghost">
-          {provider && <ModelSelectorLogo provider={provider} />}
+          {!!provider && <ModelSelectorLogo provider={provider} />}
           <ModelSelectorName>{selectedModel.name}</ModelSelectorName>
         </Button>
       </ModelSelectorTrigger>

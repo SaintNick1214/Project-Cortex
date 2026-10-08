@@ -1,0 +1,696 @@
+{
+  "contract": "_goals/convex-backend-runtime-2026-10-02/qa/task03a/contracts.md",
+  "original133OutcomeNamesRetained": [
+    {
+      "name": "verified principal and grant authority derives exact trusted scope and immutable versions from verified issuer/subject, including omitted selectors",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/authority.test.ts"
+    },
+    {
+      "name": "verified principal and grant authority rejects missing identity and never turns metadata into a membership",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/authority.test.ts"
+    },
+    {
+      "name": "verified principal and grant authority denies revoked principal before a sensitive read",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/authority.test.ts"
+    },
+    {
+      "name": "verified principal and grant authority denies deleted principal before a sensitive read",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/authority.test.ts"
+    },
+    {
+      "name": "verified principal and grant authority denies revoked membership before a sensitive read",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/authority.test.ts"
+    },
+    {
+      "name": "verified principal and grant authority denies deleted membership before a sensitive read",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/authority.test.ts"
+    },
+    {
+      "name": "verified principal and grant authority denies revoked grant before a sensitive read",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/authority.test.ts"
+    },
+    {
+      "name": "verified principal and grant authority denies deleted grant before a sensitive read",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/authority.test.ts"
+    },
+    {
+      "name": "verified principal and grant authority denies expired grant before a sensitive read",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/authority.test.ts"
+    },
+    {
+      "name": "verified principal and grant authority denies missing read capability before a sensitive read",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/authority.test.ts"
+    },
+    {
+      "name": "verified principal and grant authority denies mismatched grant tenant before a sensitive read",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/authority.test.ts"
+    },
+    {
+      "name": "verified principal and grant authority denies mismatched grant principal before a sensitive read",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/authority.test.ts"
+    },
+    {
+      "name": "verified principal and grant authority denies invalid grant version before a sensitive read",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/authority.test.ts"
+    },
+    {
+      "name": "verified principal and grant authority denies stale tenant epoch before a sensitive read",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/authority.test.ts"
+    },
+    {
+      "name": "verified principal and grant authority denies stale memory space epoch before a sensitive read",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/authority.test.ts"
+    },
+    {
+      "name": "verified principal and grant authority denies deleted tenant before a sensitive read",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/authority.test.ts"
+    },
+    {
+      "name": "verified principal and grant authority denies deleted memory space before a sensitive read",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/authority.test.ts"
+    },
+    {
+      "name": "verified principal and grant authority denies missing tenant before a sensitive read",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/authority.test.ts"
+    },
+    {
+      "name": "verified principal and grant authority denies tenant tombstone before a sensitive read",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/authority.test.ts"
+    },
+    {
+      "name": "verified principal and grant authority denies space tombstone before a sensitive read",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/authority.test.ts"
+    },
+    {
+      "name": "verified principal and grant authority rejects tenant/space mismatch, resource mismatch and an unscoped canonical resource",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/authority.test.ts"
+    },
+    {
+      "name": "verified principal and grant authority denies omitted selectors when eligible grants span tenants or memory spaces",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/authority.test.ts"
+    },
+    {
+      "name": "verified principal and grant authority fails closed on duplicate active grants rather than picking a permissive version",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/authority.test.ts"
+    },
+    {
+      "name": "verified principal and grant authority rejects same-scope active read/write grants before capability pruning",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/authority.test.ts"
+    },
+    {
+      "name": "verified principal and grant authority rejects same-scope own/space read grants before an ownership denial discards one",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/authority.test.ts"
+    },
+    {
+      "name": "verified principal and grant authority excludes a retained revokedAt generation without granting its capabilities/access",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/authority.test.ts"
+    },
+    {
+      "name": "verified principal and grant authority excludes a retained deletedAt generation without granting its capabilities/access",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/authority.test.ts"
+    },
+    {
+      "name": "verified principal and grant authority does not let expiry/currentness pruning repair duplicate unrevoked generations",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/authority.test.ts"
+    },
+    {
+      "name": "verified principal and grant authority does not let a malformed version or stale epoch hide duplicate unrevoked generations",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/authority.test.ts"
+    },
+    {
+      "name": "verified principal and grant authority keeps other registered raw spaces independent even when one contains corrupt duplicates",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/authority.test.ts"
+    },
+    {
+      "name": "verified principal and grant authority keeps other tenant memberships independent of the selected trusted tenant",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/authority.test.ts"
+    },
+    {
+      "name": "verified principal and grant authority groups tenant-wide and space-specific grants by raw scope before narrowing, preserving exact capabilities",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/authority.test.ts"
+    },
+    {
+      "name": "verified principal and grant authority requires explicit cross-principal access within the same tenant",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/authority.test.ts"
+    },
+    {
+      "name": "verified principal and grant authority allows a tenant-wide grant to narrow to an existing space while preserving its epoch",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/authority.test.ts"
+    },
+    {
+      "name": "verified principal and grant authority separates explicit service/tool capabilities from caller claimed service roles",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/authority.test.ts"
+    },
+    {
+      "name": "verified principal and grant authority authorizes each private storage capability independently of read/run/admin",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/authority.test.ts"
+    },
+    {
+      "name": "background rechecks and deletion fences detects different-capability duplicate introduced after pinned admission",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/authority.test.ts"
+    },
+    {
+      "name": "background rechecks and deletion fences detects foreign-owner duplicate introduced after pinned admission",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/authority.test.ts"
+    },
+    {
+      "name": "background rechecks and deletion fences detects a duplicate tenant-wide raw grant after its reference was narrowed to a concrete space",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/authority.test.ts"
+    },
+    {
+      "name": "background rechecks and deletion fences requires the pinned grant to remain present in its trusted raw membership/scope group",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/authority.test.ts"
+    },
+    {
+      "name": "background rechecks and deletion fences a lone grant permits work before expiry and rejects both admission and pinned work at expiry",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/authority.test.ts"
+    },
+    {
+      "name": "background rechecks and deletion fences continues after ordinary observer logout and stops on subsequent grant revocation",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/authority.test.ts"
+    },
+    {
+      "name": "background rechecks and deletion fences rejects a changed or forged pinned principalVersion",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/authority.test.ts"
+    },
+    {
+      "name": "background rechecks and deletion fences rejects a changed or forged pinned membershipVersion",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/authority.test.ts"
+    },
+    {
+      "name": "background rechecks and deletion fences rejects a changed or forged pinned grantVersion",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/authority.test.ts"
+    },
+    {
+      "name": "background rechecks and deletion fences rejects a changed or forged pinned tenantEpoch",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/authority.test.ts"
+    },
+    {
+      "name": "background rechecks and deletion fences rejects a changed or forged pinned memorySpaceEpoch",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/authority.test.ts"
+    },
+    {
+      "name": "background rechecks and deletion fences rejects identity/scope substitution and cannot widen a pinned space grant",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/authority.test.ts"
+    },
+    {
+      "name": "background rechecks and deletion fences requires admission to pin the concrete space before tenant-wide background work reads that space",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/authority.test.ts"
+    },
+    {
+      "name": "background rechecks and deletion fences stops a later sensitive read after a resource tombstone without relying on a session",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/authority.test.ts"
+    },
+    {
+      "name": "background rechecks and deletion fences stops a later sensitive effect after a resource tombstone without relying on a session",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/authority.test.ts"
+    },
+    {
+      "name": "background rechecks and deletion fences stops a later sensitive commit after a resource tombstone without relying on a session",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/authority.test.ts"
+    },
+    {
+      "name": "background rechecks and deletion fences rejects tenant-wide resource tombstones and deletion even if a row was physically recreated",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/authority.test.ts"
+    },
+    {
+      "name": "background rechecks and deletion fences checks ownership synchronously without accepting missing owner/tenant fields",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/authority.test.ts"
+    },
+    {
+      "name": "internal bootstrap and trusted control table adapters exposes no public provisioning, revocation, deletion, or action authority resolver",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/provisioning.test.ts"
+    },
+    {
+      "name": "internal bootstrap and trusted control table adapters provisions only trusted control records, returns immutable references and is idempotent",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/provisioning.test.ts"
+    },
+    {
+      "name": "internal bootstrap and trusted control table adapters resolves public identity through Convex auth and never uses tokenIdentifier or admin metadata",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/provisioning.test.ts"
+    },
+    {
+      "name": "internal bootstrap and trusted control table adapters returns UNAUTHENTICATED for missing auth without self-provisioning",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/provisioning.test.ts"
+    },
+    {
+      "name": "internal bootstrap and trusted control table adapters adapts internal action authorization and sessionless background rechecks without mutating authority",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/provisioning.test.ts"
+    },
+    {
+      "name": "internal bootstrap and trusted control table adapters replaces changed capabilities with a new grant generation and invalidates pending old work",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/provisioning.test.ts"
+    },
+    {
+      "name": "internal bootstrap and trusted control table adapters revokes an exact grant permanently; only an explicit trusted new generation can issue later authority",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/provisioning.test.ts"
+    },
+    {
+      "name": "internal bootstrap and trusted control table adapters retains membership revocation fences and refuses to re-provision the same membership",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/provisioning.test.ts"
+    },
+    {
+      "name": "internal bootstrap and trusted control table adapters retains principal deletion fences and refuses issuer/subject recreation",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/provisioning.test.ts"
+    },
+    {
+      "name": "internal bootstrap and trusted control table adapters fences deleted scope undefined and prevents bootstrap recreation",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/provisioning.test.ts"
+    },
+    {
+      "name": "internal bootstrap and trusted control table adapters fences deleted scope space-a and prevents bootstrap recreation",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/provisioning.test.ts"
+    },
+    {
+      "name": "internal bootstrap and trusted control table adapters records deletion even before a scope is provisioned, preventing later resurrection",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/provisioning.test.ts"
+    },
+    {
+      "name": "internal bootstrap and trusted control table adapters tombstones a resource idempotently and rejects its delayed read/commit",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/provisioning.test.ts"
+    },
+    {
+      "name": "internal bootstrap and trusted control table adapters rejects invalid provisioning, actor rebinding and metadata-user rebinding",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/provisioning.test.ts"
+    },
+    {
+      "name": "internal bootstrap and trusted control table adapters uses table-specific ID normalization and rejects duplicate exact issuer/subject records",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/provisioning.test.ts"
+    },
+    {
+      "name": "portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs facts:fetchFactsByIds remains a scoped internal read helper",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/inventory.test.ts"
+    },
+    {
+      "name": "portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs memories:fetchMemoriesByIds remains a scoped internal read helper",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/inventory.test.ts"
+    },
+    {
+      "name": "portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs memories:keywordSearchMemories remains a scoped internal read helper",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/inventory.test.ts"
+    },
+    {
+      "name": "portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs admin:listTable requires operator maintenance without a target runtime grant",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/inventory.test.ts"
+    },
+    {
+      "name": "portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs admin:deleteRecord requires operator maintenance without a target runtime grant",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/inventory.test.ts"
+    },
+    {
+      "name": "portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs admin:clearTable requires operator maintenance without a target runtime grant",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/inventory.test.ts"
+    },
+    {
+      "name": "portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs admin:countTable requires operator maintenance without a target runtime grant",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/inventory.test.ts"
+    },
+    {
+      "name": "portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs admin:getAllCounts requires operator maintenance without a target runtime grant",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/inventory.test.ts"
+    },
+    {
+      "name": "portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs agents:purgeAll requires operator maintenance without a target runtime grant",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/inventory.test.ts"
+    },
+    {
+      "name": "portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs artifacts:purgeAll requires operator maintenance without a target runtime grant",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/inventory.test.ts"
+    },
+    {
+      "name": "portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs attachments:purgeAll requires operator maintenance without a target runtime grant",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/inventory.test.ts"
+    },
+    {
+      "name": "portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs contexts:purgeAll requires operator maintenance without a target runtime grant",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/inventory.test.ts"
+    },
+    {
+      "name": "portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs conversations:purgeAll requires operator maintenance without a target runtime grant",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/inventory.test.ts"
+    },
+    {
+      "name": "portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs facts:purgeAll requires operator maintenance without a target runtime grant",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/inventory.test.ts"
+    },
+    {
+      "name": "portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs graphSync:purgeAll requires operator maintenance without a target runtime grant",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/inventory.test.ts"
+    },
+    {
+      "name": "portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs immutable:purgeAll requires operator maintenance without a target runtime grant",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/inventory.test.ts"
+    },
+    {
+      "name": "portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs memories:purgeAll requires operator maintenance without a target runtime grant",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/inventory.test.ts"
+    },
+    {
+      "name": "portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs memorySpaces:purgeAll requires operator maintenance without a target runtime grant",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/inventory.test.ts"
+    },
+    {
+      "name": "portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs mutable:purgeAll requires operator maintenance without a target runtime grant",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/inventory.test.ts"
+    },
+    {
+      "name": "portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs governance:purgeAllPolicies requires operator maintenance without a target runtime grant",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/inventory.test.ts"
+    },
+    {
+      "name": "portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs governance:purgeAllEnforcement requires operator maintenance without a target runtime grant",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/inventory.test.ts"
+    },
+    {
+      "name": "portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs authorize uses requested capability and inherited verified issuer/subject",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/inventory.test.ts"
+    },
+    {
+      "name": "portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs recheck uses requested capability and exact persisted versions/epochs/optional scope",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/inventory.test.ts"
+    },
+    {
+      "name": "portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs runtimeAuth:provision is a deployment operator control",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/inventory.test.ts"
+    },
+    {
+      "name": "portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs runtimeAuth:revokeGrant is a deployment operator control",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/inventory.test.ts"
+    },
+    {
+      "name": "portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs runtimeAuth:revokeMembership is a deployment operator control",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/inventory.test.ts"
+    },
+    {
+      "name": "portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs runtimeAuth:deletePrincipal is a deployment operator control",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/inventory.test.ts"
+    },
+    {
+      "name": "portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs runtimeAuth:deleteScope is a deployment operator control",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/inventory.test.ts"
+    },
+    {
+      "name": "portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs runtimeAuth:tombstoneResource is a deployment operator control",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/inventory.test.ts"
+    },
+    {
+      "name": "portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs keeps ordinary facts:get available through scoped read grants",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/inventory.test.ts"
+    },
+    {
+      "name": "portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs keeps ordinary memories:store available through scoped write grants",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/inventory.test.ts"
+    },
+    {
+      "name": "portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs accepts changed source bytes and an additional registration without coupling policy to frozen production hashes/counts",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/inventory.test.ts"
+    },
+    {
+      "name": "portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs facts:fetchFactsByIds remains a scoped internal read helper",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/inventory.test.ts"
+    },
+    {
+      "name": "portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs memories:fetchMemoriesByIds remains a scoped internal read helper",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/inventory.test.ts"
+    },
+    {
+      "name": "portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs memories:keywordSearchMemories remains a scoped internal read helper",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/inventory.test.ts"
+    },
+    {
+      "name": "portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs admin:listTable requires operator maintenance without a target runtime grant",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/inventory.test.ts"
+    },
+    {
+      "name": "portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs admin:deleteRecord requires operator maintenance without a target runtime grant",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/inventory.test.ts"
+    },
+    {
+      "name": "portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs admin:clearTable requires operator maintenance without a target runtime grant",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/inventory.test.ts"
+    },
+    {
+      "name": "portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs admin:countTable requires operator maintenance without a target runtime grant",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/inventory.test.ts"
+    },
+    {
+      "name": "portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs admin:getAllCounts requires operator maintenance without a target runtime grant",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/inventory.test.ts"
+    },
+    {
+      "name": "portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs agents:purgeAll requires operator maintenance without a target runtime grant",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/inventory.test.ts"
+    },
+    {
+      "name": "portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs artifacts:purgeAll requires operator maintenance without a target runtime grant",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/inventory.test.ts"
+    },
+    {
+      "name": "portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs attachments:purgeAll requires operator maintenance without a target runtime grant",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/inventory.test.ts"
+    },
+    {
+      "name": "portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs contexts:purgeAll requires operator maintenance without a target runtime grant",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/inventory.test.ts"
+    },
+    {
+      "name": "portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs conversations:purgeAll requires operator maintenance without a target runtime grant",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/inventory.test.ts"
+    },
+    {
+      "name": "portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs facts:purgeAll requires operator maintenance without a target runtime grant",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/inventory.test.ts"
+    },
+    {
+      "name": "portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs graphSync:purgeAll requires operator maintenance without a target runtime grant",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/inventory.test.ts"
+    },
+    {
+      "name": "portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs immutable:purgeAll requires operator maintenance without a target runtime grant",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/inventory.test.ts"
+    },
+    {
+      "name": "portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs memories:purgeAll requires operator maintenance without a target runtime grant",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/inventory.test.ts"
+    },
+    {
+      "name": "portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs memorySpaces:purgeAll requires operator maintenance without a target runtime grant",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/inventory.test.ts"
+    },
+    {
+      "name": "portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs mutable:purgeAll requires operator maintenance without a target runtime grant",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/inventory.test.ts"
+    },
+    {
+      "name": "portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs governance:purgeAllPolicies requires operator maintenance without a target runtime grant",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/inventory.test.ts"
+    },
+    {
+      "name": "portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs governance:purgeAllEnforcement requires operator maintenance without a target runtime grant",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/inventory.test.ts"
+    },
+    {
+      "name": "portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs authorize uses requested capability and inherited verified issuer/subject",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/inventory.test.ts"
+    },
+    {
+      "name": "portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs recheck uses requested capability and exact persisted versions/epochs/optional scope",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/inventory.test.ts"
+    },
+    {
+      "name": "portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs runtimeAuth:provision is a deployment operator control",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/inventory.test.ts"
+    },
+    {
+      "name": "portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs runtimeAuth:revokeGrant is a deployment operator control",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/inventory.test.ts"
+    },
+    {
+      "name": "portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs runtimeAuth:revokeMembership is a deployment operator control",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/inventory.test.ts"
+    },
+    {
+      "name": "portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs runtimeAuth:deletePrincipal is a deployment operator control",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/inventory.test.ts"
+    },
+    {
+      "name": "portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs runtimeAuth:deleteScope is a deployment operator control",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/inventory.test.ts"
+    },
+    {
+      "name": "portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs runtimeAuth:tombstoneResource is a deployment operator control",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/inventory.test.ts"
+    },
+    {
+      "name": "portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs keeps ordinary facts:get available through scoped read grants",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/inventory.test.ts"
+    },
+    {
+      "name": "portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs keeps ordinary memories:store available through scoped write grants",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/inventory.test.ts"
+    },
+    {
+      "name": "portable generated inventory policies: /workspace/Project-Cortex/work/backend-runtime/task03-metadata-native-errors-checkout/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs accepts changed source bytes and an additional registration without coupling policy to frozen production hashes/counts",
+      "status": "passed",
+      "file": "tests/unit/runtimeAuth/inventory.test.ts"
+    }
+  ],
+  "requirements": [
+    {
+      "requirement": "verified issuer/subject, normalized provisioned identity, trusted operator and grant eligibility",
+      "evidence": "authority54/provisioning15 unchanged outcome names; new static duplicate principal error; native-errors42"
+    },
+    {
+      "requirement": "exact scope derivation and ordinary revoked/expired/missing/deleted/single-tombstone grant pruning",
+      "evidence": "authority54 original policy; scope-ambiguity24 positives plus4 healthy two-scope denials"
+    },
+    {
+      "requirement": "corrupt principal/scope/tombstone cannot be pruned into another permitted scope",
+      "evidence": "native-errors42 plus scope-ambiguity16 omitted/8 explicit denies; current original18 comparison"
+    },
+    {
+      "requirement": "pinned references, final epochs/grants/fences/lifetime cannot fallback or return failed receipt",
+      "evidence": "original metadata189/151 and worker185; scope-ambiguity12 final/pinned rollback; native infrastructure15 plus scope infrastructure8"
+    },
+    {
+      "requirement": "no accidental public registration; validators/41 metadata catalog and64 original inventory assertions preserved",
+      "evidence": "inventory64, original metadata registrations2, current exact41 native and AST byte equality"
+    },
+    {
+      "requirement": "unknown infrastructure exceptions propagate as identical objects without policy/success conversion",
+      "evidence": "native-errors15 and scope-ambiguity8 identity/reached/zero effects; all resolver/pruning bytes unchanged"
+    }
+  ]
+}

@@ -1707,6 +1707,7 @@ export interface DeleteMemorySpaceResult {
 }
 
 export interface GetMemorySpaceStatsOptions {
+  tenantId?: string;
   timeWindow?: "24h" | "7d" | "30d" | "90d" | "all";
   includeParticipants?: boolean;
 }
@@ -1718,6 +1719,7 @@ export interface UpdateMemorySpaceOptions extends GraphSyncOption {}
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 export interface AgentRegistration {
+  memorySpaceId?: string; // Caller-selected scope; verified by the backend
   id: string;
   tenantId?: string; // Multi-tenancy: SaaS platform isolation
   name: string;
@@ -1727,6 +1729,7 @@ export interface AgentRegistration {
 }
 
 export interface RegisteredAgent {
+  memorySpaceId?: string; // Caller-selected scope; verified by the backend
   id: string;
   tenantId?: string; // Multi-tenancy: SaaS platform isolation
   name: string;
@@ -1766,6 +1769,7 @@ export interface AgentStats {
  * 2. Fetch all results without `offset` and paginate client-side
  */
 export interface AgentFilters {
+  memorySpaceId?: string; // Caller-selected scope; verified by the backend
   /** Filter by tenant ID (database-level filter - safe to use with offset/limit) */
   tenantId?: string;
   /** Filter by metadata key-value pairs (client-side filter - see pagination limitation) */
@@ -3146,7 +3150,7 @@ export type {
   FactCandidate,
   DuplicateResult,
   StoreWithDedupResult,
-} from "../facts/deduplication";
+} from "../domain/deduplication";
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Orchestration Observer Types (Integration-Agnostic Monitoring)

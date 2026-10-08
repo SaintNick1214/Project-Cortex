@@ -4,7 +4,7 @@
 import { ConvexHttpClient } from "convex/browser";
 import type { Id } from "../../convex-dev/_generated/dataModel";
 import { convexToJson, jsonToConvex, type Value } from "convex/values";
-import { createHash } from "crypto";
+import { createSha256, bytesToBase64 } from "../common/crypto";
 
 export const USER_EXPORT_DOMAINS = [
   "immutable",
@@ -1251,9 +1251,9 @@ function checkedRecord(
     throw new UserExportTransportError("EXPORT_CHANGED", "readNode");
   if (
     response.disposition === "record" &&
-    createHash("sha256")
+    createSha256()
       .update(JSON.stringify(canonicalUserExportValue(response.record)))
-      .digest("hex") !== request.expectedFingerprint
+      .digestHex() !== request.expectedFingerprint
   )
     throw new UserExportTransportError("EXPORT_CHANGED", "readNode");
   return response;
@@ -1306,7 +1306,7 @@ async function* streamFile(
       (!/^\d+$/.test(length) || Number(length) !== file.size)
     )
       throw new UserExportTransportError("EXPORT_FILE_METADATA", "resolveFile");
-    const hash = createHash("sha256");
+    const hash = createSha256();
     let size = 0,
       buffered = 0;
     let buffer = new Uint8Array(65536);
@@ -1336,7 +1336,7 @@ async function* streamFile(
         }
       }
     }
-    if (size !== file.size || hash.digest("hex") !== file.sha256)
+    if (size !== file.size || hash.digestHex() !== file.sha256)
       throw new UserExportTransportError("EXPORT_FILE_METADATA", "resolveFile");
     if (buffered) yield buffer.subarray(0, buffered);
   } catch (error) {
@@ -1501,7 +1501,7 @@ export async function* exportUserData(
         storageId: blob.storageId,
         sequence: sequence++,
         byteLength: chunk.byteLength,
-        data: Buffer.from(chunk).toString("base64"),
+        data: bytesToBase64(chunk),
       };
     yield {
       type: "blobEnd",

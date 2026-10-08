@@ -1,0 +1,43 @@
+import datetime, json, pathlib, subprocess, sys
+repo = pathlib.Path('/workspace/Project-Cortex')
+root = repo / '_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture'
+scope = str(root.relative_to(repo))
+phase = sys.argv[1]
+checks = [
+ ('classifier', ['node', f'{scope}/scripts/classifier-check.mjs']),
+ ('driver', ['node', f'{scope}/scripts/driver-check.mjs']),
+ ('bounds', ['node', f'{scope}/scripts/bounds-check.mjs']),
+ ('packed-prep', ['node', f'{scope}/scripts/packed-prep.mjs']),
+]
+if phase != 'initial':
+ checks += [
+  ('guards', ['node', f'{scope}/scripts/guard-check.mjs']),
+  ('entrypoints', ['node', f'{scope}/scripts/entrypoint-check.mjs']),
+  ('key-match', ['node', f'{scope}/scripts/key-check.mjs']),
+  ('client-prep', ['node', '--import', './node_modules/tsx/dist/loader.mjs', f'{scope}/scripts/client-prep.ts']),
+  ('backend-types', ['node', 'node_modules/typescript/bin/tsc', '--noEmit', '--project', f'{scope}/fixture/convex/tsconfig.json']),
+  ('client-types', ['node', 'node_modules/typescript/bin/tsc', '--noEmit', '--project', f'{scope}/client-tsconfig.json']),
+ ]
+ files = sorted(str(p.relative_to(repo)) for tree in [root/'scripts', root/'fixture'] for p in tree.rglob('*') if p.suffix in ['.ts', '.mjs'] and not p.name.endswith('.d.ts') and '_generated' not in p.parts)
+ checks += [
+  ('house-lint', ['node', 'node_modules/eslint/bin/eslint.js', '--no-ignore', '--format', 'json', *files]),
+  ('backend-policy-lint', ['node', 'node_modules/eslint/bin/eslint.js', '--config', 'work/backend-runtime/task03c2-live-fixture/eslint.config.mjs', '--no-ignore', '--format', 'json', *files]),
+  ('node', ['node', '--version']),
+  ('npm12', ['node', 'work/backend-runtime/npm12-cache/_npx/1106a35d869e25fb/node_modules/npm/bin/npm-cli.js', '--version']),
+ ]
+dest = root / 'evidence/cycle2'
+dest.mkdir(exist_ok=True)
+records = []
+for name, argv in checks:
+ started = datetime.datetime.now(datetime.timezone.utc).isoformat()
+ try:
+  result = subprocess.run(argv, cwd=repo, capture_output=True, timeout=90)
+  data, code = result.stdout + result.stderr, result.returncode
+ except subprocess.TimeoutExpired as error:
+  data, code = (error.stdout or b'') + (error.stderr or b'') + b'CHECK_CEILING_TIMEOUT\n', -1
+ path = dest / f'{phase}-{name}.txt'
+ with path.open('xb') as handle: handle.write(data)
+ records.append(dict(name=name, argv=argv, cwd=str(repo), startedAt=started, completedAt=datetime.datetime.now(datetime.timezone.utc).isoformat(), exitCode=code, evidence=str(path.relative_to(root))))
+ print(json.dumps(dict(name=name, exitCode=code, outputBytes=len(data))), flush=True)
+with (dest/f'commands-{phase}.json').open('x') as handle: json.dump(records, handle, indent=2)
+sys.exit(1 if any(row['exitCode'] != 0 for row in records) else 0)

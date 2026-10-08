@@ -1,0 +1,25 @@
+{
+  "scope": "EARLY_OWNED_PREPARATION_HARNESS_ONLY_NO_NATIVE",
+  "utc": "NOT_CAPTURED",
+  "failures": [
+    {
+      "argv": [
+        "python",
+        "work/resume/task04-model-drift-native-preparation-c2/extra-controls.py"
+      ],
+      "exitCode": 1,
+      "error": "ValueError: substring not found: guessed async function deny marker absent; actual const setupNames marker used; subject/assertions unchanged"
+    },
+    {
+      "argv": [
+        "node",
+        "--experimental-vm-modules",
+        "work/resume/task04-model-drift-native-preparation-c2/same-source-review-denial.mjs",
+        "extension"
+      ],
+      "exitCode": 1,
+      "error": "ENOENT mkdir own source-review-proof/runtime-proof parent not yet created; parent created within own scratch; no guard/native execution"
+    }
+  ],
+  "limits": "Early command stdout/stderr tool records retained in conversation; no complete file-backed raw or UTC claimed for these2 setup invocations. All final source-bound executions have full raw receipts."
+}

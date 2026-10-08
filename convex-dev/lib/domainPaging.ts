@@ -81,7 +81,7 @@ export function domainPageOptions(opts: {numItems: number; cursor: string | null
 export async function scopedMemory(ctx: Pick<QueryCtx, "db">, args: {tenantId?: string; memorySpaceId: string; memoryId: string}) {
   validateDomainSelection(args);
   validateDomainScope(args.tenantId);
-  const rows = await ctx.db.query("memories").withIndex("by_history_scope_memory", q =>
+  const rows = await ctx.db.query("memories").withIndex("by_runtime_scope_memoryId", q =>
     q.eq("tenantId", args.tenantId).eq("memorySpaceId", args.memorySpaceId).eq("memoryId", args.memoryId)).take(2);
   if (rows.length > 1) throw new ConvexError("DOMAIN_SCOPE_AMBIGUOUS");
   return rows[0] ?? null;

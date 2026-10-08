@@ -1,0 +1,29 @@
+--- /workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c2/scripts/provision.mjs	2026-10-04 07:21:37.149802570 +0000
++++ /workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c3/scripts/provision.mjs	2026-10-04 07:43:27.968446806 +0000
+@@ -16,7 +16,7 @@
+   canonical(scratch, scratch);
+   if (lstatSync(path, { throwIfNoEntry: false })) throw new Error("Owned provisioning path already exists");
+ }
+-if (request.purpose !== "task04-terminal-capture-native-extension-c2" || request.deploymentType !== "dev"
++if (request.purpose !== "task04-terminal-capture-native-extension-c3" || request.deploymentType !== "dev"
+   || request.kind !== "cloud" || request.productionDeployment !== false
+   || request.sharedCiTarget !== false) throw new Error("Invalid disposable target request");
+ let calls=0;const deadline=Date.now()+150000;
+@@ -57,7 +57,7 @@
+ if (!Array.isArray(deployments) || deployments.length !== 1 || deployments[0].name !== deployment.name || deployments[0].projectId !== project.id || deployments[0].deploymentType !== 'dev') throw new Error("Created project is not a sole verified development deployment");
+ if(keyMatch.authConfigSha256!==sha256(readFileSync(resolve(fixture,'convex/auth.config.ts'))))throw new Error("Auth configuration drift");
+ const key = await api(`/deployments/${encodeURIComponent(deployment.name)}/create_deploy_key`, "POST", {
+-  name: "cortex-task04-terminal-capture-native-extension-c2", expiresAt: Date.now() + 3 * 24 * 60 * 60 * 1000,
++  name: "cortex-task04-terminal-capture-native-extension-c3", expiresAt: Date.now() + 3 * 24 * 60 * 60 * 1000,
+ });
+ const values = {
+   CONVEX_DEPLOY_KEY: key.deployKey,
+@@ -69,7 +69,7 @@
+   deploymentUrl: deployment.deploymentUrl,
+   active: true, retired: false, deleted: false, isolationVerified: true,
+   createdAt: startedAt, userAuthorization: "authorized nonpaid fixture only",
+-  privateEnvironmentFile: "work/backend-runtime/task04-terminal-capture-native-extension-c2/deploy.env",
++  privateEnvironmentFile: "work/backend-runtime/task04-terminal-capture-native-extension-c3/deploy.env",
+ };
+ validateTarget(target, request, values, process.env);
+ writeFileSync(envFile, Object.entries(values).map(([name, value]) => `${name}=${value}`).join("\n") + "\n", { flag: "wx", mode: 0o600 });

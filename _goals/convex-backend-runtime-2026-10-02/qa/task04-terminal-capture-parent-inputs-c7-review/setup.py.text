@@ -1,0 +1,27 @@
+from pathlib import Path
+import json,hashlib,datetime,subprocess
+R=Path.cwd(); Q=R/'_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c7-preparation'; O=Q.with_name('task04-terminal-capture-parent-inputs-c7-review'); W=R/'work/resume/task04-terminal-capture-parent-inputs-c7-review'
+h=lambda b:hashlib.sha256(b).hexdigest()
+rows=json.loads((Q/'qa-manifest.json').read_text())['files']; out=[]
+for x in rows:
+ b=(Q/x['path']).read_bytes();out.append({'path':x['path'],'bytes':len(b),'sha256':h(b),'match':len(b)==x['bytes'] and h(b)==x['sha256']})
+(O/'subject-pre.json').write_text(json.dumps({'utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'files':out},indent=2)+'\n')
+for profile in ['extension','regression']:
+ s=(Q/f'offline-{profile}.mjs.text').read_text();s=s.replace("work/resume/task04-terminal-capture-parent-inputs-c7-preparation/"+profile,"work/resume/task04-terminal-capture-parent-inputs-c7-review/"+profile)
+ s=s.replace("path.join(qa,'results-"+profile+".json')","path.resolve('_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c7-review/results-"+profile+".json')")
+ (W/profile).mkdir(exist_ok=True);(W/f'offline-{profile}.mjs').write_text(s)
+ # Retain only inert VM fixture environment definitions, independently add effect-boundary counterexamples.
+ p=s[:s.index('async function watcherProbe')]
+ p=p.replace("createPublicKey:()=>({export:()=>({...expected,n:change.publicMismatch?'other':expected.n})})","createPublicKey:()=>({export:()=>{if(change.expireAfterKey)clock+=120001;return {...expected,n:change.publicMismatch?'other':expected.n};}})")
+ p=p.replace("writes.push(path.basename(p));","writes.push(path.basename(p));if(change.expireAfterProof&&writes.length===1)clock+=120001;")
+ p+='''
+const failures=[];
+for(const [name,change] of [['expiry-after-key-before-first-sign',{expireAfterKey:true}],['expiry-after-first-proof-before-other-outputs',{expireAfterProof:true}]]){
+const e=await environment(change);let error;try{await e.parent.namespace.main();}catch(caught){error=caught;}
+const stats=e.stats;const violated=name.includes('first-sign')?stats.signatures>0:stats.writes.length>1;
+assert.equal(violated,true,'hostile boundary must reproduce missing gate');assert.equal(stats.network,0);
+failures.push({name,violationConfirmed:violated,error:error?.message,...stats,realSigning:0,realNetwork:0,realPrivateReads:0});}
+console.log(JSON.stringify({profile:PROFILE,failures,tests:failures.length,skipped:0},null,2));
+'''.replace('PROFILE',json.dumps(profile))
+ (W/f'hostile-{profile}.mjs').write_text(p)
+ (O/f'offline-{profile}.mjs.text').write_text(s);(O/f'hostile-{profile}.mjs.text').write_text(p)

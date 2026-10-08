@@ -1,0 +1,41 @@
+{
+  "operation": "b232e951-277c-41a8-be45-0e2208d5ef19",
+  "phase": "empty",
+  "stageLink": {
+    "path": "node_modules",
+    "target": "repository-existing-node_modules",
+    "use": "compiler/module resolution only; no install/package writes",
+    "installedToolchainSha256": "97e81d4dfb2e1fbfc7ae6cc598e863ad98fcd88ff57fe6f765e972b0558dd5b9"
+  },
+  "prerequisites": {
+    "officialConvexDependency": "PASS",
+    "officialProjectConfig": "PASS",
+    "officialCompilerPath": "node_modules/typescript/bin/tsc",
+    "compilerMode": "tsc",
+    "packageManager": "npm@12.2.0",
+    "actualNativeDeploy": "NOT_RUN"
+  },
+  "httpRouter": {
+    "basis": "actual official HttpRouter.getRoutes over exact stage bytes; not actual server API wire",
+    "routes": [
+      {
+        "path": "/qa/task04-peer/effect",
+        "method": "POST",
+        "handler": "qualificationPeer:effect",
+        "handlerExportIdentityMatched": true
+      }
+    ],
+    "sourceHashes": [
+      {
+        "path": "convex/http.ts",
+        "sha256": "748953da774f9819fb4a21d579e10e3b9b5eddefd057f6bbde06d7dbf2186ac2"
+      },
+      {
+        "path": "convex/qualificationPeer.ts",
+        "sha256": "d9fd0234e064ef859d4e8908a67a9f6db4425769bda25234fac28314e5a66a22"
+      }
+    ],
+    "nativePeerBehavior": "NOT_RUN"
+  },
+  "freezeSha256": "f39f5f95f389e9e1e5f59a9d2dfaa5491dd444098ee39c9d9d839ab60483e68c"
+}

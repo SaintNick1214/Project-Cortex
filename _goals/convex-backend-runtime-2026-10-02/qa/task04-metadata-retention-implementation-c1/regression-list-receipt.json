@@ -1,0 +1,11 @@
+{
+  "argv": [
+    "python3",
+    "-c",
+    "from pathlib import Path;b=Path(\"_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2\");print(\"regression\",[str(p.relative_to(b)) for p in (b/\"regression\").rglob(\"*\") if p.is_file()]);print(\"scripts\",[str(p.relative_to(b)) for p in (b/\"scripts\").iterdir() if p.is_file()])"
+  ],
+  "cwd": "/workspace/Project-Cortex",
+  "startUtc": "2026-10-04T14:23:07.157356+00:00",
+  "endUtc": "2026-10-04T14:23:07.194404+00:00",
+  "exit": 0
+}

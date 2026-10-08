@@ -1,0 +1,63 @@
+from pathlib import Path
+r=Path('/workspace/Project-Cortex');q=r/'_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c7-preparation';w=r/'work/resume/task04-terminal-capture-parent-inputs-c7-preparation'; base=(q/'accepted-c6-offline.mjs.text').read_text()
+for name in ['extension','regression']:
+ s=base.replace("import {argumentsFor} from '../../../../_goals/convex-backend-runtime-2026-10-02/qa/task04-native-admission-fixture-c8/scripts/arguments.mjs';", "import {argumentsFor} from '../../../_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c2/"+('regression/' if name=='regression' else '')+"scripts/arguments.mjs';")
+ s=s.replace("qa/task04-parent-native-inputs-c6-preparation'","qa/task04-terminal-capture-parent-inputs-c7-preparation'").replace("work/resume/task04-native-admission-fixture-c8/parent-c6'", "work/resume/task04-terminal-capture-parent-inputs-c7-preparation/"+name+"'").replace("qa/task04-native-admission-fixture-c8'","qa/task04-terminal-capture-native-extension-preparation-c2"+('/regression' if name=='regression' else '')+"'")
+ s=s.replace("path.resolve('work/resume/task04-native-c8-parent-inputs.mjs')", "path.join(qa,'parent-inputs-"+name+".mjs')").replace("path.resolve('work/resume/task04-native-current-inputs-c6.mjs')", "path.join(qa,'current-inputs-"+name+".mjs')")
+ s=s.replace("path.join(qa,'prior-review-results.json')", "path.join(qa,'accepted-c6-prior-review-results.json')")
+ s=s.replace("const root=path.join(area,'packet'),scratch=path.join(area,'work/backend-runtime/task04-native-admission-c8');", "const root=path.join(area,path.relative(repo,candidate)),scratch=path.join(area,'work/backend-runtime/task04-terminal-capture-native-"+name+"-c2');")
+ s=s.replace("fs.mkdirSync(root,{mode:0o700})", "fs.mkdirSync(root,{recursive:true,mode:0o700})")
+ # Public data-only dummy historical corpus. The actual runtime historical constants are unchanged.
+ needle="const mapHistorical=p=>p.startsWith(historyVirtual+path.sep)?path.join(oldDir,path.basename(p)):p;"
+ replacement="""const dummyIds=Object.fromEntries(['_storage','facts','governancePolicies','graphSyncQueue','memories','runtimeAuthGrants','runtimeAuthMemberships','runtimeAuthPrincipals','runtimeMemoryVectors'].map(t=>[t,'DUMMY-'+t]));const dummyRun='DUMMY-HISTORICAL-RUN';const dummyCorpus={
+ 'owned-foundation-29178d862bcf4a31926b4530c322efd4.json':JSON.stringify({run:dummyRun,files:[{id:dummyIds._storage},{id:'DUMMY-unused-storage'}],refs:Object.entries(dummyIds).filter(([t])=>t!=='_storage').map(([table,id])=>({table,id}))})+'\\n',
+ 'owned-journal-foundation-29178d862bcf4a31926b4530c322efd4.jsonl':Object.entries(dummyIds).map(([table,id])=>JSON.stringify({run:dummyRun,...(table==='_storage'?{files:[{id}]}:{refs:[{table,id}]})})+'\\n').join(''),
+ 'qualify-325ff9b9-223e-47c5-b245-f50e5162b0cc.json':JSON.stringify({status:'PASS',cleanupComplete:true,counts:{failed:0,skipped:0,blocked:0}})+'\\n',
+ 'target-retirement.json':JSON.stringify({status:'PASS',deletionHttpStatus:200,absentProjectHttpStatus:404,projectId:3138249,verifiedOnlyDevelopmentCloudDeployment:true,managementCalls:5})+'\\n'};
+ const dummySources=Object.fromEntries(Object.entries(dummyCorpus).map(([n,b])=>[n,{sha256:hash(b),bytes:Buffer.byteLength(b)}]));for(const[n,b]of Object.entries(dummyCorpus))write(path.join(historyVirtual,n),b);
+ const mapHistorical=p=>p;const runtimeParentSource=fs.readFileSync(parentPath,'utf8');let vmParentSource=runtimeParentSource.replace(/export const historicalSources=Object.freeze\\(\\{[\\s\\S]*?\\}\\);/,'export const historicalSources=Object.freeze('+JSON.stringify(dummySources)+');').replace(/export const historicalLocatorHashes=Object.freeze\\(\\{[\\s\\S]*?\\}\\);/,'export const historicalLocatorHashes=Object.freeze('+JSON.stringify(Object.fromEntries(Object.entries(dummyIds).map(([t,id])=>[t,hash(id)])))+');');
+ assert.notEqual(vmParentSource,runtimeParentSource);fs.writeFileSync(path.join(area,'vm-parent-DUMMY-source.mjs'),vmParentSource);fs.writeFileSync(path.join(area,'DUMMY-source-substitution.json'),JSON.stringify({boundary:'VM_ONLY_DUMMY_SOURCE_CONSTANTS; ACTUAL_RUNTIME_SOURCE_UNCHANGED',runtimeSourceSHA256:hash(runtimeParentSource),vmSourceSHA256:hash(vmParentSource),sources:dummySources},null,2)+'\\n');"""
+ assert needle in s;s=s.replace(needle,replacement)
+ s=s.replace("if(p.startsWith(historyVirtual+path.sep))return actualCanonical(mapHistorical(p),oldDir,priv);", "if(p.startsWith(historyVirtual+path.sep))return actualCanonical(p,historyVirtual,priv);")
+ s=s.replace("const mapped=mapHistorical(p);", "const publicRel=path.relative(area,p);const mapped=p.startsWith(area+path.sep)&&!p.startsWith(root+path.sep)&&!p.startsWith(historyVirtual+path.sep)&&!p.startsWith(scratch+path.sep)&&p!==key&&fs.existsSync(path.join(repo,publicRel))?path.join(repo,publicRel):mapHistorical(p);")
+ s=s.replace("if(mapped.startsWith(oldDir+path.sep))assert.ok", "if(mapped.startsWith(historyVirtual+path.sep))assert.ok")
+ s=s.replace("new vm.SourceTextModule(fs.readFileSync(parentPath,'utf8')", "new vm.SourceTextModule(vmParentSource")
+ s=s.replace("spec.endsWith('task04-native-c8-parent-inputs.mjs')", "spec.endsWith('parent-inputs-"+name+".mjs')")
+ s=s.replace("spec.endsWith('/guard.mjs')", "spec.endsWith('/guard.mjs')").replace("spec.endsWith('/arguments.mjs')", "spec.endsWith('/arguments.mjs')")
+ # Test preservation failure and deadline injected at exact scanner callbacks.
+ s=s.replace("preservationPreflight:()=>({offlineBoundary:true})", "preservationPreflight:()=>{if(change.scanError)throw Error('DUMMY_SCAN_ERROR');if(change.entryScanExpiry&&!writes.length)clock+=120001;if(change.finalScanExpiry&&writes.length===0&&preflightCalls>=3)clock+=120001;return {offlineBoundary:true};}")
+ s=s.replace("if(change.initialTarget)change.initialTarget(target);", "if(change.initialTarget)change.initialTarget(target);if(change.requestMutate){const altered={...request};change.requestMutate(altered);write(path.join(root,'project-request.json'),altered);}if(change.corruptAccepted)change.corruptAcceptedPath=path.join(area,change.corruptAccepted);")
+ s=s.replace("const bytes=fs.readFileSync(mapped,...args);", "const bytes=fs.readFileSync(mapped,...args);if(change.corruptAcceptedPath===p)return Buffer.concat([Buffer.from(bytes),Buffer.from(' ')]);")
+ # An original complete expected-source adaptation assertion is preserved verbatim, checking unchanged accepted source bytes.
+ begin=s.index("for(const[oldName,newName]of [[")
+ end=s.index("await watcherProbe('old-C5",begin)
+ original=s[begin:end]
+ original=original.replace("fs.readFileSync(path.resolve('work/resume',newName),'utf8')", "fs.readFileSync(path.join(qa,newName==='task04-native-c8-parent-inputs.mjs'?'accepted-c6-parent-inputs.mjs.text':'accepted-c6-current-inputs.mjs.text'),'utf8')")
+ s=s[:begin]+original+s[end:]
+ s=s.replace("originalReview.sourceVerification", "originalReview.sourceVerification")
+ # canonical mapped public accepted sources must use their actual public base.
+ s=s.replace("return actualCanonical(p,b,priv);", "const publicRel=path.relative(area,p);if(p.startsWith(area+path.sep)&&!p.startsWith(root+path.sep)&&!p.startsWith(historyVirtual+path.sep)&&!p.startsWith(scratch+path.sep)&&p!==key&&fs.existsSync(path.join(repo,publicRel)))return p;return actualCanonical(p,b,priv);")
+ # Source hashes remain runtime-real, while historical hashes are DUMMY expected only.
+ s=s.replace("const final={utc:", """await watcherProbe('cross-profile-scratch-denied',{guardScratch:true});
+await watcherProbe('cross-profile-root-path-denied',{guardRoot:true});
+await watcherProbe('entry-scan-deadline-before-scanner-output',{entryScanExpiry:true});
+await watcherProbe('final-scan-deadline-before-exclusive-output',{finalScanExpiry:true});
+await watcherProbe('preservation-scan-error-no-output',{scanError:true});
+await setupProbe('setup-entry-scan-deadline-no-keyread',{entryScanExpiry:true});
+await setupProbe('setup-preservation-error-no-keyread',{scanError:true});
+for(const field of ['purpose','operation','runId','projectSlug','privateEnvironmentFile'])await watcherProbe('exact-request-'+field+'-mutation',{requestMutate:r=>r[field]='DUMMY-CROSS-PROFILE'});
+for(const field of ['purpose','projectSlug','privateEnvironmentFile'])await watcherProbe('cross-target-'+field,{initialTarget:t=>t[field]='DUMMY-CROSS-PROFILE'});
+await watcherProbe('shared-prod-target-denied',{initialTarget:t=>t.sharedCiTarget=true});
+await watcherProbe('production-target-denied',{initialTarget:t=>t.productionDeployment=true});
+await watcherProbe('retired-C8-project-denied',{initialTarget:t=>t.projectId=3139649});
+await watcherProbe('retired-C8-deployment-denied',{initialTarget:t=>t.deploymentName='exciting-snake-863'});
+await watcherProbe('product-source-hash-drift',{corruptAccepted:'convex-dev/runtimeModelPolicy.ts'});
+await watcherProbe('forged-historical-cleanup-proof',{},(e,{proof})=>e.put('initial-physical-id-provenance.json',{...proof,historicalOwnedCleanup:false}));
+await watcherProbe('forged-current-source-receipt',{},e=>{dropRows(e);e.putRow({...e.currentRows()[0],provenance:'native-issued'});});
+assert.equal(checks.slice(0,62).length,62);assert.deepEqual(checks.slice(0,62).map(r=>[r.name,r.outcome]),JSON.parse(fs.readFileSync(path.join(qa,'accepted-c6-results-final02.json'))).checks.map(r=>[r.name,r.outcome]));
+const final={utc:""")
+ s=s.replace("actual canonical/file metadata on isolated dummy600/700 files; four allowed actual C11 metadata sources and9 native locator witnesses verified", "actual canonical/file metadata on isolated dummy600/700 files; clearly DUMMY historical source bodies and expected constants substituted ONLY in VM; no actual C11 payload reads")
+ s=s.replace("path.join(qa,'results-final02.json')", "path.join(qa,'results-"+name+".json')")
+ s=s.replace("assert.equal(proof.runId,e.request.runId);}checks.push","assert.equal(proof.runId,e.request.runId);const scope=JSON.parse(fs.readFileSync(path.join(e.scratch,'argument-scope.json'))),bundle=JSON.parse(fs.readFileSync(path.join(e.scratch,'public-arguments.json'))),inventory=JSON.parse(fs.readFileSync(path.join(e.root,'registration-inventory.json')));assert.equal(scope.runId,e.request.runId);assert.equal(scope.operation,e.request.operation);assert.equal(Object.keys(bundle.arguments).length,200);assert.equal(Object.keys(bundle.internalArguments).length,87);for(const row of inventory.registrations)assert.deepEqual((row.visibility==='public'?bundle.arguments:bundle.internalArguments)[row.path],argumentsFor(row,scope));for(const table of ['runtimeModelOperations','runtimeModelAttempts'])assert.equal(proof.currentCoreOwnership[table].operation,e.request.operation);}checks.push")
+ (w/f'offline-{name}.mjs').write_text(s)
+ (w/name).mkdir(exist_ok=True)

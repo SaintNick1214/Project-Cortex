@@ -1,0 +1,95 @@
+{
+  "ghsa_id": "GHSA-58qx-3vcg-4xpx",
+  "cve_id": "CVE-2026-45736",
+  "url": "https://api.github.com/advisories/GHSA-58qx-3vcg-4xpx",
+  "html_url": "https://github.com/advisories/GHSA-58qx-3vcg-4xpx",
+  "summary": "ws: Uninitialized memory disclosure",
+  "description": "### Impact\n\nThe `websocket.close()` implementation is vulnerable to uninitialized memory disclosure when a `TypedArray` is passed as the reason argument.\n\n### Proof of concept\n\n```js\nimport { deepStrictEqual } from 'node:assert';\nimport { WebSocket, WebSocketServer } from 'ws';\n\nconst wss = new WebSocketServer(\n  { port: 0, skipUTF8Validation: true },\n  function () {\n    const { port } = wss.address();\n    const ws = new WebSocket(`ws://localhost:${port}`, {\n      skipUTF8Validation: true\n    });\n\n    ws.on('close', function (code, reason) {\n      deepStrictEqual(reason, Buffer.alloc(80));\n    });\n  }\n);\n\nwss.on('connection', function (ws) {\n  ws.close(1000, new Float32Array(20));\n});\n```\n\n### Patches\n\nThe vulnerability was fixed in ws@8.20.1 (https://github.com/websockets/ws/commit/c0327ec15a54d701eb6ccefaa8bef328cfc03086).\n\n### Credits\n\nCredit for the private and responsible disclosure of this issue goes to [Nikita Skovoroda](https://github.com/ChALkeR).\n\n### Remarks\n\nAlthough the calculated CVSS severity is medium, the actual severity is believed to be low, as the flaw is only exploitable through misuse that is unlikely in practice.\n\n### Resources\n\n- https://github.com/advisories/GHSA-58qx-3vcg-4xpx\n- https://www.cve.org/CVERecord?id=CVE-2026-45736",
+  "type": "reviewed",
+  "severity": "medium",
+  "repository_advisory_url": "https://api.github.com/repos/websockets/ws/security-advisories/GHSA-58qx-3vcg-4xpx",
+  "source_code_location": "https://github.com/websockets/ws",
+  "identifiers": [
+    {
+      "value": "GHSA-58qx-3vcg-4xpx",
+      "type": "GHSA"
+    },
+    {
+      "value": "CVE-2026-45736",
+      "type": "CVE"
+    }
+  ],
+  "references": [
+    "https://github.com/websockets/ws/security/advisories/GHSA-58qx-3vcg-4xpx",
+    "https://nvd.nist.gov/vuln/detail/CVE-2026-45736",
+    "https://github.com/websockets/ws/commit/c0327ec15a54d701eb6ccefaa8bef328cfc03086",
+    "https://github.com/advisories/GHSA-58qx-3vcg-4xpx"
+  ],
+  "published_at": "2026-05-18T19:02:40Z",
+  "updated_at": "2026-05-18T19:02:42Z",
+  "github_reviewed_at": "2026-05-18T19:02:40Z",
+  "nvd_published_at": "2026-05-15T15:16:54Z",
+  "withdrawn_at": null,
+  "vulnerabilities": [
+    {
+      "package": {
+        "ecosystem": "npm",
+        "name": "ws"
+      },
+      "vulnerable_version_range": ">= 8.0.0, < 8.20.1",
+      "first_patched_version": "8.20.1",
+      "vulnerable_functions": []
+    }
+  ],
+  "cvss_severities": {
+    "cvss_v3": {
+      "vector_string": "CVSS:3.1/AV:N/AC:H/PR:H/UI:N/S:U/C:H/I:N/A:N",
+      "score": 4.4
+    },
+    "cvss_v4": {
+      "vector_string": null,
+      "score": 0.0
+    }
+  },
+  "cwes": [
+    {
+      "cwe_id": "CWE-908",
+      "name": "Use of Uninitialized Resource"
+    }
+  ],
+  "credits": [
+    {
+      "user": {
+        "login": "ChALkeR",
+        "id": 291301,
+        "node_id": "MDQ6VXNlcjI5MTMwMQ==",
+        "avatar_url": "https://avatars.githubusercontent.com/u/291301?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/ChALkeR",
+        "html_url": "https://github.com/ChALkeR",
+        "followers_url": "https://api.github.com/users/ChALkeR/followers",
+        "following_url": "https://api.github.com/users/ChALkeR/following{/other_user}",
+        "gists_url": "https://api.github.com/users/ChALkeR/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/ChALkeR/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/ChALkeR/subscriptions",
+        "organizations_url": "https://api.github.com/users/ChALkeR/orgs",
+        "repos_url": "https://api.github.com/users/ChALkeR/repos",
+        "events_url": "https://api.github.com/users/ChALkeR/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/ChALkeR/received_events",
+        "type": "User",
+        "user_view_type": "public",
+        "site_admin": false
+      },
+      "type": "reporter"
+    }
+  ],
+  "comments": 1,
+  "cvss": {
+    "vector_string": "CVSS:3.1/AV:N/AC:H/PR:H/UI:N/S:U/C:H/I:N/A:N",
+    "score": 4.4
+  },
+  "epss": {
+    "percentage": 0.00675,
+    "percentile": 0.50072
+  }
+}

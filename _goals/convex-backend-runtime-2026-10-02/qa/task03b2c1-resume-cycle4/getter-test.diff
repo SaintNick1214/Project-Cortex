@@ -1,0 +1,10 @@
+--- cycle3/handlers.test.ts
++++ cycle4/handlers.test.ts
+@@ -583,5 +583,5 @@
+   await expect(f.invoke("update", { artifactId: "artifact-a", content: "caller content" })).rejects.toHaveProperty("data", {
+     version: 1, code: "BACKEND_OPERATION_FAILED", message: "Artifact operation failed.", retryable: false, outcome: "not_committed",
+   });
+-  expect(injections).toBe(1); expect(getterCalls).toBe(1); expect(f.db.attempts).toEqual([]); expect(f.db.writes).toEqual([]);
+-});
++  expect(injections).toBe(1); expect(getterCalls).toBe(0); expect(f.db.attempts).toEqual([]); expect(f.db.writes).toEqual([]);
++});

@@ -1,0 +1,7 @@
+export default {
+ rootDir: '/workspace/Project-Cortex', preset: 'ts-jest/presets/default-esm', testEnvironment: 'node',
+ roots:['<rootDir>/tests/unit/runtimeEndpointAuth','<rootDir>/tests/streaming'], testMatch: ['<rootDir>/tests/unit/runtimeEndpointAuth/*.test.ts','<rootDir>/tests/streaming/progressiveStorage.test.ts'], extensionsToTreatAsEsm: ['.ts'],
+ moduleNameMapper: {'^(\\.{1,2}/.*)\\.js$': '$1'},
+ transform: {'^.+\\.(ts|tsx|js)$': ['ts-jest', {useESM: true, tsconfig: {allowJs: true, module: 'ESNext', moduleResolution: 'bundler'}}]},
+ transformIgnorePatterns: ['node_modules/(?!(convex|openai))'], reporters: ['default'], testTimeout: 60000
+};

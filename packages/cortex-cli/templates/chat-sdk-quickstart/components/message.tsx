@@ -1,8 +1,7 @@
 "use client";
 import type { UseChatHelpers } from "@ai-sdk/react";
 import { useState } from "react";
-import type { Vote } from "@/lib/types";
-import type { ChatMessage } from "@/lib/types";
+import type { ChatMessage, Vote } from "@/lib/types";
 import { cn, sanitizeText } from "@/lib/utils";
 import { useDataStream } from "./data-stream-provider";
 import { DocumentToolResult } from "./document";
@@ -25,10 +24,18 @@ import { Weather } from "./weather";
 
 function getReasoningType(part: unknown): ReasoningType {
   // Check providerMetadata.cortex.memoryPhase which is passed from the server
-  const providerMetadata = (part as { providerMetadata?: Record<string, unknown> })?.providerMetadata;
-  const cortexMeta = providerMetadata?.cortex as { memoryPhase?: string } | undefined;
-  if (cortexMeta?.memoryPhase === "recall") return "memory-recall";
-  if (cortexMeta?.memoryPhase === "storage") return "memory-storage";
+  const providerMetadata = (
+    part as { providerMetadata?: Record<string, unknown> }
+  )?.providerMetadata;
+  const cortexMeta = providerMetadata?.cortex as
+    | { memoryPhase?: string }
+    | undefined;
+  if (cortexMeta?.memoryPhase === "recall") {
+    return "memory-recall";
+  }
+  if (cortexMeta?.memoryPhase === "storage") {
+    return "memory-storage";
+  }
   return "llm";
 }
 
@@ -37,7 +44,7 @@ function getReasoningType(part: unknown): ReasoningType {
  * 1. Memory recall reasoning (before LLM response)
  * 2. Text and other content (LLM response)
  * 3. Memory storage reasoning (after LLM response)
- * 
+ *
  * This fixes the issue where AI SDK orders parts by stream completion time,
  * which can cause recall to appear after text if recall finishes late.
  */
@@ -46,8 +53,12 @@ function sortMessageParts<T extends { type: string }>(parts: T[]): T[] {
     const getOrder = (part: T): number => {
       if (part.type === "reasoning") {
         const reasoningType = getReasoningType(part);
-        if (reasoningType === "memory-recall") return 0; // First
-        if (reasoningType === "memory-storage") return 2; // Last
+        if (reasoningType === "memory-recall") {
+          return 0; // First
+        }
+        if (reasoningType === "memory-storage") {
+          return 2; // Last
+        }
         return 1; // LLM reasoning in middle with text
       }
       return 1; // Text, tools, files, etc. in middle
@@ -108,6 +119,8 @@ const PurePreviewMessage = ({
             "gap-2 md:gap-4": message.parts?.some(
               (p) => p.type === "text" && p.text?.trim()
             ),
+            "max-w-[calc(100%-2.5rem)] sm:max-w-[min(fit-content,80%)]":
+              message.role === "user" && mode !== "edit",
             "w-full":
               (message.role === "assistant" &&
                 (message.parts?.some(
@@ -115,8 +128,6 @@ const PurePreviewMessage = ({
                 ) ||
                   message.parts?.some((p) => p.type.startsWith("tool-")))) ||
               mode === "edit",
-            "max-w-[calc(100%-2.5rem)] sm:max-w-[min(fit-content,80%)]":
-              message.role === "user" && mode !== "edit",
           })}
         >
           {attachmentsFromMessage.length > 0 && (
@@ -127,8 +138,8 @@ const PurePreviewMessage = ({
               {attachmentsFromMessage.map((attachment) => (
                 <PreviewAttachment
                   attachment={{
-                    name: attachment.filename ?? "file",
                     contentType: attachment.mediaType,
+                    name: attachment.filename ?? "file",
                     url: attachment.url,
                   }}
                   key={attachment.url}
@@ -162,10 +173,10 @@ const PurePreviewMessage = ({
                   <div key={key}>
                     <MessageContent
                       className={cn({
-                        "wrap-break-word w-fit rounded-2xl px-3 py-2 text-right text-white":
-                          message.role === "user",
                         "bg-transparent px-0 py-0 text-left":
                           message.role === "assistant",
+                        "wrap-break-word w-fit rounded-2xl px-3 py-2 text-right text-white":
+                          message.role === "user",
                       })}
                       data-testid="message-content"
                       style={
@@ -266,8 +277,8 @@ const PurePreviewMessage = ({
                             className="rounded-md px-3 py-1.5 text-muted-foreground text-sm transition-colors hover:bg-muted hover:text-foreground"
                             onClick={() => {
                               addToolApprovalResponse({
-                                id: approvalId,
                                 approved: false,
+                                id: approvalId,
                                 reason: "User denied weather lookup",
                               });
                             }}
@@ -279,8 +290,8 @@ const PurePreviewMessage = ({
                             className="rounded-md bg-primary px-3 py-1.5 text-primary-foreground text-sm transition-colors hover:bg-primary/90"
                             onClick={() => {
                               addToolApprovalResponse({
-                                id: approvalId,
                                 approved: true,
+                                id: approvalId,
                               });
                             }}
                             type="button"
@@ -397,31 +408,29 @@ const PurePreviewMessage = ({
 
 export const PreviewMessage = PurePreviewMessage;
 
-export const ThinkingMessage = () => {
-  return (
-    <div
-      className="group/message fade-in w-full animate-in duration-300"
-      data-role="assistant"
-      data-testid="message-assistant-loading"
-    >
-      <div className="flex items-start justify-start gap-3">
-        <div className="-mt-1 flex size-8 shrink-0 items-center justify-center rounded-full bg-background ring-1 ring-border">
-          <div className="animate-pulse">
-            <SparklesIcon size={14} />
-          </div>
+export const ThinkingMessage = () => (
+  <div
+    className="group/message fade-in w-full animate-in duration-300"
+    data-role="assistant"
+    data-testid="message-assistant-loading"
+  >
+    <div className="flex items-start justify-start gap-3">
+      <div className="-mt-1 flex size-8 shrink-0 items-center justify-center rounded-full bg-background ring-1 ring-border">
+        <div className="animate-pulse">
+          <SparklesIcon size={14} />
         </div>
+      </div>
 
-        <div className="flex w-full flex-col gap-2 md:gap-4">
-          <div className="flex items-center gap-1 p-0 text-muted-foreground text-sm">
-            <span className="animate-pulse">Thinking</span>
-            <span className="inline-flex">
-              <span className="animate-bounce [animation-delay:0ms]">.</span>
-              <span className="animate-bounce [animation-delay:150ms]">.</span>
-              <span className="animate-bounce [animation-delay:300ms]">.</span>
-            </span>
-          </div>
+      <div className="flex w-full flex-col gap-2 md:gap-4">
+        <div className="flex items-center gap-1 p-0 text-muted-foreground text-sm">
+          <span className="animate-pulse">Thinking</span>
+          <span className="inline-flex">
+            <span className="animate-bounce [animation-delay:0ms]">.</span>
+            <span className="animate-bounce [animation-delay:150ms]">.</span>
+            <span className="animate-bounce [animation-delay:300ms]">.</span>
+          </span>
         </div>
       </div>
     </div>
-  );
-};
+  </div>
+);

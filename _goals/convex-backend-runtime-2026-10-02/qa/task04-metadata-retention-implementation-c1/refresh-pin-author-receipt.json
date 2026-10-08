@@ -1,0 +1,11 @@
+{
+  "argv": [
+    "python3",
+    "-c",
+    "from pathlib import Path\np=Path('work/resume/task04-metadata-retention-implementation-c1/pin-candidate.py');s=p.read_text();old=\"shutil.copy2(Path('_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture-vm/convex')/name,vm/'convex'/name)\";new=\"source=Path('work/resume/task04-metadata-retention-implementation-c1/dummy-port.mjs') if name=='dummy-port.mjs' else Path('_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture-vm/convex')/name\\n shutil.copy2(source,vm/'convex'/name)\";assert old in s;s=s.replace(old,new);p.write_text(s)"
+  ],
+  "cwd": "/workspace/Project-Cortex",
+  "startUtc": "2026-10-04T14:31:31.971495+00:00",
+  "endUtc": "2026-10-04T14:31:32.004944+00:00",
+  "exit": 0
+}

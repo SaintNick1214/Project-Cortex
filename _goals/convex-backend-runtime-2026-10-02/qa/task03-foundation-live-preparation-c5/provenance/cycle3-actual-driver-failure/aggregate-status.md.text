@@ -1,0 +1,9 @@
+# Aggregate foundation cycle4 — review in progress
+
+No aggregate verdict is issued. Current live execution, full actual per-case outcomes, official generated binding hashes, strict post-CLI preflight, owned cleanup, terminal process groups and physical retirement remain required.
+
+Independent read-only checks confirm the exact db0d0e879c96c5108018f881ce14d43ec16938ef222680136a8e93a7fec1d044 freeze and all233 operational hashes, plus four accepted product-source bindings. Reviewed the original Task03 requirement/acceptance lists, named foundation and later functional gates, original-criteria coverage, runbook/bounds, native publication exactness, complete fixed policy errors, family controls, six domain internal references and current SDK lifecycle cases. The ledger reconciles259 rows/200public/59internal/34modules/0HTTP, with67 uniformly unavailable intermediary paths including2statistics. No historical or offline receipt is treated as current service coverage; sixteen conditional rows without source-fault assertions are not fault coverage.
+
+Original foreground/private-work,14-to10native-reference/unknown-forwarded-error, and duplicate artifact-index official deployment failures remain retained. Accepted source repairs and strict original356artifact/390asset assertion composition are bounded offline evidence. All original functional03 allocations through05–16/03-final remain incomplete; unavailable safety cannot satisfy final functionality.
+
+Reviewer scope exception: a context concatenation wrote public repository Markdown to /tmp/c4-context-read.txt, outside assigned reviewer roots. No product/private/Git/network/service/key mutation occurred. The exception was reported immediately to the parent; subsequent reviewer writes are confined to this new QA directory and work/resume/foundation-aggregate-c4-review. That temporary file is not operational evidence and is not claimed compliant.

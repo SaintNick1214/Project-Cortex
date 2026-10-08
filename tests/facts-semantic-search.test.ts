@@ -15,6 +15,7 @@
 
 import { describe, it, expect, beforeAll, afterAll } from "@jest/globals";
 import { Cortex } from "../src";
+import type { StoreFactParams, UpdateFactInput, SemanticSearchFactsOptions } from "../src";
 import { ConvexClient } from "convex/browser";
 import { createNamedTestRunContext, ScopedCleanup } from "./helpers";
 
@@ -66,7 +67,7 @@ describe("Semantic Search for Facts", () => {
     it("StoreFactParams should accept embedding field (type check)", () => {
       // This test verifies the type system accepts embedding
       // Actual storage tests require schema migration to be deployed
-      const storeParams = {
+      const storeParams: StoreFactParams = {
         memorySpaceId: "test-space",
         fact: "User likes purple",
         factType: "preference" as const,
@@ -86,7 +87,7 @@ describe("Semantic Search for Facts", () => {
 
     it("UpdateFactInput should accept embedding field (type check)", () => {
       // This test verifies the type system accepts embedding
-      const updateInput = {
+      const updateInput: UpdateFactInput = {
         confidence: 85,
         embedding: [0.1, 0.2, 0.3], // New field
       };
@@ -114,7 +115,7 @@ describe("Semantic Search for Facts", () => {
 
     it("should accept SemanticSearchFactsOptions (type check)", () => {
       // This test verifies the options type is correctly defined
-      const options = {
+      const options: SemanticSearchFactsOptions = {
         tenantId: "tenant-123",
         userId: "user-123",
         minConfidence: 80,

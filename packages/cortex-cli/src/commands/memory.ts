@@ -153,6 +153,7 @@ async function writePrivateExport(
       throw new AggregateError(
         errors,
         "Export failed and staging cleanup reported an error",
+        { cause: error },
       );
     throw error;
   }
@@ -454,11 +455,11 @@ export function registerMemoryCommands(
         if (![total, conversation, system, tool, a2a, extraction].every(
           (count) => Number.isSafeInteger(count) && count >= 0,
         )) throw new Error("Memory counts changed or are invalid; retry statistics");
-        const recent = await c.memory.list({ memorySpaceId: space, limit: 5 });
+        const recent = await c.memory.list({ memorySpaceId: space, limit: 5, enrichFacts: false });
         const lastActivity = recent.length
           ? Math.max(
               ...recent.map(
-                (entry) => ("memory" in entry ? entry.memory : entry).createdAt,
+                (entry) => entry.createdAt,
               ),
             )
           : null;

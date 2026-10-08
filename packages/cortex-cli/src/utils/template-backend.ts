@@ -37,12 +37,12 @@ interface SourceContract {
 // Changed candidate bytes require review/reconciliation, not self-asserted contract metadata.
 const SDK_CONTRACT: Record<string, SourceContract> = {
   "a2a.ts": {
-    "hash": "33319d245a65c5021545a41739cdbd1c7324c7c21511aa38f15fbe5b2dccd941",
+    "hash": "d5f3c93db358f10635bb451f69dae779fd1eb11e1d52aa0a16912dbfc405f7c1",
     "imports": [
       {
         "statement": "import { mutation, query } from \"./_generated/server\";",
-        "start": 655,
-        "end": 709,
+        "start": 591,
+        "end": 645,
         "typeOnly": false,
         "origin": "./_generated/server"
       }
@@ -67,12 +67,12 @@ const SDK_CONTRACT: Record<string, SourceContract> = {
     ]
   },
   "admin.ts": {
-    "hash": "e99cb954e5f805feb42e5f19e43f9b9eeb312263de1b3a3b42aba92f66b9ee6c",
+    "hash": "8b2eb63eaf6ff4fc41cdb64085840ad70f49bf377f394afd194f7ab08d450345",
     "imports": [
       {
         "statement": "import { internalMutation, internalQuery } from \"./_generated/server\";",
-        "start": 401,
-        "end": 471,
+        "start": 98,
+        "end": 168,
         "typeOnly": false,
         "origin": "./_generated/server"
       }
@@ -101,12 +101,12 @@ const SDK_CONTRACT: Record<string, SourceContract> = {
     ]
   },
   "agents.ts": {
-    "hash": "1c91db820f7a2903b4b4716cb0aa0e07614ad9d9b421a66381ff0f10bf3802b9",
+    "hash": "2f62a62e8ae23e84542324fc2201335eb99ca36ae7ed7c9a3173c352e3e3e17d",
     "imports": [
       {
-        "statement": "import { mutation, query } from \"./_generated/server\";",
-        "start": 204,
-        "end": 258,
+        "statement": "import { internalMutation, mutation, query } from \"./_generated/server\";",
+        "start": 86,
+        "end": 158,
         "typeOnly": false,
         "origin": "./_generated/server"
       }
@@ -117,19 +117,15 @@ const SDK_CONTRACT: Record<string, SourceContract> = {
         "builder": "query"
       },
       {
+        "name": "exists",
+        "builder": "query"
+      },
+      {
         "name": "list",
         "builder": "query"
       },
       {
         "name": "count",
-        "builder": "query"
-      },
-      {
-        "name": "exists",
-        "builder": "query"
-      },
-      {
-        "name": "computeStats",
         "builder": "query"
       },
       {
@@ -154,17 +150,21 @@ const SDK_CONTRACT: Record<string, SourceContract> = {
       },
       {
         "name": "purgeAll",
-        "builder": "mutation"
+        "builder": "internalMutation"
+      },
+      {
+        "name": "computeStats",
+        "builder": "query"
       }
     ]
   },
   "artifacts.ts": {
-    "hash": "9cbd95674342a9f83b7cd979a80a442aa1d8ce21fded63f4fdca379143b616fe",
+    "hash": "3252eb473cd80c9fe222a21322cb55e321704635dfd17596c319183fb9bcc2a3",
     "imports": [
       {
-        "statement": "import { query } from \"./_generated/server\";",
-        "start": 637,
-        "end": 681,
+        "statement": "import { internalMutation, internalQuery, mutation, query } from \"./_generated/server\";",
+        "start": 422,
+        "end": 509,
         "typeOnly": false,
         "origin": "./_generated/server"
       }
@@ -196,7 +196,7 @@ const SDK_CONTRACT: Record<string, SourceContract> = {
       },
       {
         "name": "setFileRef",
-        "builder": "mutation"
+        "builder": "internalMutation"
       },
       {
         "name": "purgeVersions",
@@ -204,7 +204,7 @@ const SDK_CONTRACT: Record<string, SourceContract> = {
       },
       {
         "name": "purgeAll",
-        "builder": "mutation"
+        "builder": "internalMutation"
       },
       {
         "name": "get",
@@ -264,7 +264,7 @@ const SDK_CONTRACT: Record<string, SourceContract> = {
       },
       {
         "name": "generateArtifactUploadUrl",
-        "builder": "mutation"
+        "builder": "internalMutation"
       },
       {
         "name": "completeArtifactUpload",
@@ -272,7 +272,7 @@ const SDK_CONTRACT: Record<string, SourceContract> = {
       },
       {
         "name": "getArtifactFileUrl",
-        "builder": "query"
+        "builder": "internalQuery"
       },
       {
         "name": "detachFile",
@@ -281,16 +281,260 @@ const SDK_CONTRACT: Record<string, SourceContract> = {
     ]
   },
   "attachments.ts": {
-    "hash": "6296ca35a2123796feade05e1d64618bf5e1aea6e9523abb798d8013a7bfca12",
+    "hash": "d76ae987e6f778023c95231dd4b92d19f02232c694128a4f46bbef825fb921f3",
     "imports": [
       {
-        "statement": "import { mutation, query } from \"./_generated/server\";",
-        "start": 595,
-        "end": 649,
+        "statement": "import { internalMutation, internalQuery, mutation, query } from \"./_generated/server\";",
+        "start": 517,
+        "end": 604,
         "typeOnly": false,
         "origin": "./_generated/server"
       }
     ],
+    "operations": [
+      {
+        "name": "generateUploadUrl",
+        "builder": "internalMutation"
+      },
+      {
+        "name": "attach",
+        "builder": "mutation"
+      },
+      {
+        "name": "remove",
+        "builder": "mutation"
+      },
+      {
+        "name": "removeMany",
+        "builder": "mutation"
+      },
+      {
+        "name": "purgeAll",
+        "builder": "internalMutation"
+      },
+      {
+        "name": "get",
+        "builder": "query"
+      },
+      {
+        "name": "getUrl",
+        "builder": "internalQuery"
+      },
+      {
+        "name": "list",
+        "builder": "query"
+      },
+      {
+        "name": "count",
+        "builder": "query"
+      },
+      {
+        "name": "getByIds",
+        "builder": "query"
+      },
+      {
+        "name": "getByConversation",
+        "builder": "query"
+      },
+      {
+        "name": "getByMessage",
+        "builder": "query"
+      }
+    ]
+  },
+  "cliOperator/admin.ts": {
+    "hash": "5f33f4ba0cd799a187686954181644ce0544d6f9cfb4acf1d1735c89b857e0b2",
+    "imports": [],
+    "operations": [
+      {
+        "name": "listTable",
+        "builder": "internalQuery"
+      },
+      {
+        "name": "deleteRecord",
+        "builder": "internalMutation"
+      },
+      {
+        "name": "clearTable",
+        "builder": "internalMutation"
+      },
+      {
+        "name": "countTable",
+        "builder": "internalQuery"
+      },
+      {
+        "name": "getAllCounts",
+        "builder": "internalQuery"
+      }
+    ]
+  },
+  "cliOperator/agents.ts": {
+    "hash": "c2b362176aa397fec8d945d996e4782543d578b02754f079ed46d154bae34dbd",
+    "imports": [],
+    "operations": [
+      {
+        "name": "get",
+        "builder": "query"
+      },
+      {
+        "name": "list",
+        "builder": "query"
+      },
+      {
+        "name": "count",
+        "builder": "query"
+      },
+      {
+        "name": "exists",
+        "builder": "query"
+      },
+      {
+        "name": "computeStats",
+        "builder": "query"
+      },
+      {
+        "name": "register",
+        "builder": "mutation"
+      },
+      {
+        "name": "update",
+        "builder": "mutation"
+      },
+      {
+        "name": "updateMany",
+        "builder": "mutation"
+      },
+      {
+        "name": "unregister",
+        "builder": "mutation"
+      },
+      {
+        "name": "unregisterMany",
+        "builder": "mutation"
+      },
+      {
+        "name": "purgeAll",
+        "builder": "mutation"
+      }
+    ]
+  },
+  "cliOperator/artifacts.ts": {
+    "hash": "fb4bcab50d6e465328d02a90965186ee33ca771110b59aee49005b5f8e30f833",
+    "imports": [],
+    "operations": [
+      {
+        "name": "create",
+        "builder": "graphMutation"
+      },
+      {
+        "name": "update",
+        "builder": "graphMutation"
+      },
+      {
+        "name": "deleteArtifact",
+        "builder": "graphMutation"
+      },
+      {
+        "name": "undo",
+        "builder": "graphMutation"
+      },
+      {
+        "name": "redo",
+        "builder": "graphMutation"
+      },
+      {
+        "name": "setStreamingState",
+        "builder": "graphMutation"
+      },
+      {
+        "name": "setFileRef",
+        "builder": "graphMutation"
+      },
+      {
+        "name": "purgeVersions",
+        "builder": "graphMutation"
+      },
+      {
+        "name": "purgeAll",
+        "builder": "graphMutation"
+      },
+      {
+        "name": "get",
+        "builder": "query"
+      },
+      {
+        "name": "getByConversation",
+        "builder": "query"
+      },
+      {
+        "name": "list",
+        "builder": "query"
+      },
+      {
+        "name": "count",
+        "builder": "query"
+      },
+      {
+        "name": "getVersion",
+        "builder": "query"
+      },
+      {
+        "name": "getHistory",
+        "builder": "query"
+      },
+      {
+        "name": "startStreaming",
+        "builder": "graphMutation"
+      },
+      {
+        "name": "appendContent",
+        "builder": "graphMutation"
+      },
+      {
+        "name": "pauseStreaming",
+        "builder": "graphMutation"
+      },
+      {
+        "name": "resumeStreaming",
+        "builder": "graphMutation"
+      },
+      {
+        "name": "cancelStreaming",
+        "builder": "graphMutation"
+      },
+      {
+        "name": "finalizeStreaming",
+        "builder": "graphMutation"
+      },
+      {
+        "name": "setStreamingError",
+        "builder": "graphMutation"
+      },
+      {
+        "name": "retryFromError",
+        "builder": "graphMutation"
+      },
+      {
+        "name": "generateArtifactUploadUrl",
+        "builder": "graphMutation"
+      },
+      {
+        "name": "completeArtifactUpload",
+        "builder": "graphMutation"
+      },
+      {
+        "name": "getArtifactFileUrl",
+        "builder": "query"
+      },
+      {
+        "name": "detachFile",
+        "builder": "graphMutation"
+      }
+    ]
+  },
+  "cliOperator/attachments.ts": {
+    "hash": "e9404d8aa635233d192df9c3a6ddbabaf59ee1ea858ea5721392f13cfd364aff",
+    "imports": [],
     "operations": [
       {
         "name": "generateUploadUrl",
@@ -342,131 +586,21 @@ const SDK_CONTRACT: Record<string, SourceContract> = {
       }
     ]
   },
-  "contexts.ts": {
-    "hash": "daaf3ac1d8eeb153517f42f7b018fa4b83eb649f2d472816166100c1e643784b",
-    "imports": [
-      {
-        "statement": "import { query } from \"./_generated/server\";",
-        "start": 326,
-        "end": 370,
-        "typeOnly": false,
-        "origin": "./_generated/server"
-      }
-    ],
+  "cliOperator/conversations.ts": {
+    "hash": "ef6f29f835f292287b3d1eca746cbaaf6b5d5733891c6eca9e7aa52fdd9c69ec",
+    "imports": [],
     "operations": [
       {
         "name": "create",
-        "builder": "mutation"
-      },
-      {
-        "name": "update",
-        "builder": "mutation"
-      },
-      {
-        "name": "deleteContext",
-        "builder": "mutation"
-      },
-      {
-        "name": "addParticipant",
-        "builder": "mutation"
-      },
-      {
-        "name": "grantAccess",
-        "builder": "mutation"
-      },
-      {
-        "name": "get",
-        "builder": "query"
-      },
-      {
-        "name": "list",
-        "builder": "query"
-      },
-      {
-        "name": "count",
-        "builder": "query"
-      },
-      {
-        "name": "getChain",
-        "builder": "query"
-      },
-      {
-        "name": "getRoot",
-        "builder": "query"
-      },
-      {
-        "name": "getChildren",
-        "builder": "query"
-      },
-      {
-        "name": "search",
-        "builder": "query"
-      },
-      {
-        "name": "updateMany",
-        "builder": "mutation"
-      },
-      {
-        "name": "deleteMany",
-        "builder": "mutation"
-      },
-      {
-        "name": "removeParticipant",
-        "builder": "mutation"
-      },
-      {
-        "name": "getByConversation",
-        "builder": "query"
-      },
-      {
-        "name": "findOrphaned",
-        "builder": "query"
-      },
-      {
-        "name": "getVersion",
-        "builder": "query"
-      },
-      {
-        "name": "getHistory",
-        "builder": "query"
-      },
-      {
-        "name": "getAtTimestamp",
-        "builder": "query"
-      },
-      {
-        "name": "exportContexts",
-        "builder": "query"
-      },
-      {
-        "name": "purgeAll",
-        "builder": "mutation"
-      }
-    ]
-  },
-  "conversations.ts": {
-    "hash": "aac7aac5e45cc5dff1e5f44dcb337b8e4511fe78f71c5264ad6088f3acb51a89",
-    "imports": [
-      {
-        "statement": "import { query } from \"./_generated/server\";",
-        "start": 852,
-        "end": 896,
-        "typeOnly": false,
-        "origin": "./_generated/server"
-      }
-    ],
-    "operations": [
-      {
-        "name": "create",
-        "builder": "mutation"
+        "builder": "graphMutation"
       },
       {
         "name": "setVisibility",
-        "builder": "mutation"
+        "builder": "graphMutation"
       },
       {
         "name": "setMetadata",
-        "builder": "mutation"
+        "builder": "graphMutation"
       },
       {
         "name": "checkAccess",
@@ -474,31 +608,31 @@ const SDK_CONTRACT: Record<string, SourceContract> = {
       },
       {
         "name": "addMessage",
-        "builder": "mutation"
+        "builder": "graphMutation"
       },
       {
         "name": "approveMessage",
-        "builder": "mutation"
+        "builder": "graphMutation"
       },
       {
         "name": "rejectMessage",
-        "builder": "mutation"
+        "builder": "graphMutation"
       },
       {
         "name": "deleteConversation",
-        "builder": "mutation"
+        "builder": "graphMutation"
       },
       {
         "name": "deleteMany",
-        "builder": "mutation"
+        "builder": "graphMutation"
       },
       {
         "name": "deleteByIds",
-        "builder": "mutation"
+        "builder": "graphMutation"
       },
       {
         "name": "purgeAll",
-        "builder": "mutation"
+        "builder": "graphMutation"
       },
       {
         "name": "getMessage",
@@ -510,7 +644,7 @@ const SDK_CONTRACT: Record<string, SourceContract> = {
       },
       {
         "name": "getOrCreate",
-        "builder": "mutation"
+        "builder": "graphMutation"
       },
       {
         "name": "findConversation",
@@ -546,144 +680,19 @@ const SDK_CONTRACT: Record<string, SourceContract> = {
       },
       {
         "name": "eraseSelected",
-        "builder": "mutation"
+        "builder": "graphMutation"
       }
     ]
   },
-  "conversationShares.ts": {
-    "hash": "8bb508d14cf61ce85c9e4b9f5b83c3270875b974efda3a0bf33fe75a9f4341c2",
+  "cliOperator/factHistory.ts": {
+    "hash": "95835cb9d140a1a83cf57fe8adafb0a043e684a52bcf440912b405376b8f3599",
     "imports": [
       {
-        "statement": "import { mutation, query } from \"./_generated/server\";",
-        "start": 277,
-        "end": 331,
-        "typeOnly": false,
-        "origin": "./_generated/server"
-      }
-    ],
-    "operations": [
-      {
-        "name": "create",
-        "builder": "mutation"
-      },
-      {
-        "name": "revoke",
-        "builder": "mutation"
-      },
-      {
-        "name": "incrementViewCount",
-        "builder": "mutation"
-      },
-      {
-        "name": "get",
-        "builder": "query"
-      },
-      {
-        "name": "listByConversation",
-        "builder": "query"
-      },
-      {
-        "name": "listByGranter",
-        "builder": "query"
-      },
-      {
-        "name": "checkAccess",
-        "builder": "query"
-      }
-    ]
-  },
-  "conversationSnapshots.ts": {
-    "hash": "c2121d598367fcce917237832efc103d7ddf53f762af7401fa5e8481003bc890",
-    "imports": [
-      {
-        "statement": "import { mutation, query } from \"./_generated/server\";",
-        "start": 305,
-        "end": 359,
-        "typeOnly": false,
-        "origin": "./_generated/server"
-      }
-    ],
-    "operations": [
-      {
-        "name": "create",
-        "builder": "mutation"
-      },
-      {
-        "name": "deleteSnapshot",
-        "builder": "mutation"
-      },
-      {
-        "name": "get",
-        "builder": "query"
-      },
-      {
-        "name": "listByConversation",
-        "builder": "query"
-      },
-      {
-        "name": "listByUser",
-        "builder": "query"
-      }
-    ]
-  },
-  "domainErasure.ts": {
-    "hash": "c54a56843be91579b7716f0ca1eb22e5cb3a7a84493429a59d4bf9b18debb78a",
-    "imports": [
-      {
-        "statement": "import { internalQuery, internalMutation, type QueryCtx, type MutationCtx } from \"./_generated/server\";",
-        "start": 97,
-        "end": 200,
-        "typeOnly": false,
-        "origin": "./_generated/server"
-      }
-    ],
-    "operations": [
-      {
-        "name": "discoverPage",
-        "builder": "internalQuery"
-      },
-      {
-        "name": "verifyPage",
-        "builder": "internalQuery"
-      },
-      {
-        "name": "checkRecord",
-        "builder": "internalQuery"
-      },
-      {
-        "name": "checkBinaryReferences",
-        "builder": "internalQuery"
-      },
-      {
-        "name": "getReceiptPage",
-        "builder": "internalQuery"
-      },
-      {
-        "name": "eraseRecord",
-        "builder": "internalMutation"
-      },
-      {
-        "name": "purgeExpiredReceiptsPage",
-        "builder": "internalMutation"
-      }
-    ]
-  },
-  "factHistory.ts": {
-    "hash": "ed0e6f9bbc0346e39fdb6a014d69a021ddaef7d7647743ddc513519341810190",
-    "imports": [
-      {
-        "statement": "import { internalMutation, mutation, query } from \"./_generated/server\";",
-        "start": 254,
-        "end": 326,
-        "typeOnly": false,
-        "origin": "./_generated/server"
-      },
-      {
-        "statement": "import type { MutationCtx, QueryCtx } from \"./_generated/server\";",
-        "start": 327,
-        "end": 392,
+        "statement": "import type { MutationCtx, QueryCtx } from \"../_generated/server\";",
+        "start": 479,
+        "end": 545,
         "typeOnly": true,
-        "origin": "./_generated/server"
+        "origin": "../_generated/server"
       }
     ],
     "operations": [
@@ -757,13 +766,841 @@ const SDK_CONTRACT: Record<string, SourceContract> = {
       }
     ]
   },
-  "facts.ts": {
-    "hash": "3b31d062c8570ef347864d30fac36d39b40432501aa858e4ae5f83d3b32d2028",
+  "cliOperator/facts.ts": {
+    "hash": "3449ae3dec3d06d9f8d6bcbbc696ee662817664c4bafc15770f410f0a06f5d31",
     "imports": [
       {
-        "statement": "import {\n  action,\n  internalQuery,\n \n  query,\n  type QueryCtx,\n} from \"./_generated/server\";",
-        "start": 578,
-        "end": 671,
+        "statement": "import {\n  type QueryCtx,\n} from \"../_generated/server\";",
+        "start": 695,
+        "end": 751,
+        "typeOnly": false,
+        "origin": "../_generated/server"
+      }
+    ],
+    "operations": [
+      {
+        "name": "store",
+        "builder": "graphMutation"
+      },
+      {
+        "name": "update",
+        "builder": "graphMutation"
+      },
+      {
+        "name": "deleteFact",
+        "builder": "graphMutation"
+      },
+      {
+        "name": "supersede",
+        "builder": "graphMutation"
+      },
+      {
+        "name": "updateInPlace",
+        "builder": "graphMutation"
+      },
+      {
+        "name": "deleteMany",
+        "builder": "graphMutation"
+      },
+      {
+        "name": "get",
+        "builder": "query"
+      },
+      {
+        "name": "list",
+        "builder": "query"
+      },
+      {
+        "name": "count",
+        "builder": "query"
+      },
+      {
+        "name": "search",
+        "builder": "query"
+      },
+      {
+        "name": "fetchFactsByIds",
+        "builder": "internalQuery"
+      },
+      {
+        "name": "semanticSearch",
+        "builder": "action"
+      },
+      {
+        "name": "getHistory",
+        "builder": "query"
+      },
+      {
+        "name": "queryBySubject",
+        "builder": "query"
+      },
+      {
+        "name": "queryByRelationship",
+        "builder": "query"
+      },
+      {
+        "name": "exportFacts",
+        "builder": "query"
+      },
+      {
+        "name": "consolidate",
+        "builder": "graphMutation"
+      },
+      {
+        "name": "findByStructure",
+        "builder": "query"
+      },
+      {
+        "name": "deleteByIds",
+        "builder": "graphMutation"
+      },
+      {
+        "name": "purgeAll",
+        "builder": "graphMutation"
+      },
+      {
+        "name": "candidatePage",
+        "builder": "query"
+      }
+    ]
+  },
+  "cliOperator/graphSync.ts": {
+    "hash": "8e5aa790043ea2e48561905324fb90734f64d04faf0fde3dc225172b5ad47dae",
+    "imports": [
+      {
+        "statement": "import {type MutationCtx,type QueryCtx} from \"../_generated/server\";",
+        "start": 290,
+        "end": 358,
+        "typeOnly": false,
+        "origin": "../_generated/server"
+      }
+    ],
+    "operations": [
+      {
+        "name": "getGraphJob",
+        "builder": "query"
+      },
+      {
+        "name": "queueForSync",
+        "builder": "mutation"
+      },
+      {
+        "name": "markSynced",
+        "builder": "mutation"
+      },
+      {
+        "name": "suppressJob",
+        "builder": "mutation"
+      },
+      {
+        "name": "markFailed",
+        "builder": "mutation"
+      },
+      {
+        "name": "getUnsyncedItems",
+        "builder": "query"
+      },
+      {
+        "name": "getHighPriorityItems",
+        "builder": "query"
+      },
+      {
+        "name": "getFailedItems",
+        "builder": "query"
+      },
+      {
+        "name": "getSyncStats",
+        "builder": "query"
+      },
+      {
+        "name": "deleteSyncItem",
+        "builder": "mutation"
+      },
+      {
+        "name": "purgeAll",
+        "builder": "mutation"
+      },
+      {
+        "name": "clearSyncedItems",
+        "builder": "internalMutation"
+      },
+      {
+        "name": "rebuildSourcePage",
+        "builder": "internalQuery"
+      },
+      {
+        "name": "rebuildEdgePage",
+        "builder": "internalQuery"
+      }
+    ]
+  },
+  "cliOperator/immutable.ts": {
+    "hash": "0a4c7deed818eeaf4fe6b7c77002ae51880e26602d391f2c2c49b09aeda90823",
+    "imports": [],
+    "operations": [
+      {
+        "name": "store",
+        "builder": "graphMutation"
+      },
+      {
+        "name": "purge",
+        "builder": "graphMutation"
+      },
+      {
+        "name": "get",
+        "builder": "query"
+      },
+      {
+        "name": "getVersion",
+        "builder": "query"
+      },
+      {
+        "name": "getHistory",
+        "builder": "query"
+      },
+      {
+        "name": "list",
+        "builder": "query"
+      },
+      {
+        "name": "search",
+        "builder": "query"
+      },
+      {
+        "name": "count",
+        "builder": "query"
+      },
+      {
+        "name": "getAtTimestamp",
+        "builder": "query"
+      },
+      {
+        "name": "purgeMany",
+        "builder": "graphMutation"
+      },
+      {
+        "name": "purgeVersions",
+        "builder": "graphMutation"
+      },
+      {
+        "name": "purgeAll",
+        "builder": "graphMutation"
+      }
+    ]
+  },
+  "cliOperator/memories.ts": {
+    "hash": "dcd0411a51d3bb9b1859fb83e6916a0ee831e68ef24c98a541e7c94c0a878e50",
+    "imports": [
+      {
+        "statement": "import { type MutationCtx } from \"../_generated/server\";",
+        "start": 1029,
+        "end": 1085,
+        "typeOnly": false,
+        "origin": "../_generated/server"
+      }
+    ],
+    "operations": [
+      {
+        "name": "store",
+        "builder": "graphMutation"
+      },
+      {
+        "name": "storePartialMemory",
+        "builder": "graphMutation"
+      },
+      {
+        "name": "updatePartialMemory",
+        "builder": "graphMutation"
+      },
+      {
+        "name": "finalizePartialMemory",
+        "builder": "graphMutation"
+      },
+      {
+        "name": "deleteMemory",
+        "builder": "graphMutation"
+      },
+      {
+        "name": "get",
+        "builder": "query"
+      },
+      {
+        "name": "fetchMemoriesByIds",
+        "builder": "internalQuery"
+      },
+      {
+        "name": "keywordSearchMemories",
+        "builder": "internalQuery"
+      },
+      {
+        "name": "vectorReadiness",
+        "builder": "internalQuery"
+      },
+      {
+        "name": "search",
+        "builder": "action"
+      },
+      {
+        "name": "list",
+        "builder": "query"
+      },
+      {
+        "name": "count",
+        "builder": "query"
+      },
+      {
+        "name": "update",
+        "builder": "graphMutation"
+      },
+      {
+        "name": "getVersion",
+        "builder": "query"
+      },
+      {
+        "name": "getHistory",
+        "builder": "query"
+      },
+      {
+        "name": "deleteMany",
+        "builder": "graphMutation"
+      },
+      {
+        "name": "deleteByIds",
+        "builder": "graphMutation"
+      },
+      {
+        "name": "purgeAll",
+        "builder": "graphMutation"
+      },
+      {
+        "name": "exportMemories",
+        "builder": "query"
+      },
+      {
+        "name": "updateMany",
+        "builder": "graphMutation"
+      },
+      {
+        "name": "archive",
+        "builder": "graphMutation"
+      },
+      {
+        "name": "restoreFromArchive",
+        "builder": "graphMutation"
+      },
+      {
+        "name": "getAtTimestamp",
+        "builder": "query"
+      },
+      {
+        "name": "domainPage",
+        "builder": "query"
+      },
+      {
+        "name": "eraseSelected",
+        "builder": "graphMutation"
+      }
+    ]
+  },
+  "cliOperator/memorySpaces.ts": {
+    "hash": "29f90287caa3f1e77a6b7d34bd290e3a2440c28bb57f563bd173421c8be4fa9e",
+    "imports": [],
+    "operations": [
+      {
+        "name": "register",
+        "builder": "graphMutation"
+      },
+      {
+        "name": "update",
+        "builder": "graphMutation"
+      },
+      {
+        "name": "addParticipant",
+        "builder": "graphMutation"
+      },
+      {
+        "name": "removeParticipant",
+        "builder": "graphMutation"
+      },
+      {
+        "name": "archive",
+        "builder": "graphMutation"
+      },
+      {
+        "name": "reactivate",
+        "builder": "graphMutation"
+      },
+      {
+        "name": "deleteSpace",
+        "builder": "graphMutation"
+      },
+      {
+        "name": "get",
+        "builder": "query"
+      },
+      {
+        "name": "list",
+        "builder": "query"
+      },
+      {
+        "name": "count",
+        "builder": "query"
+      },
+      {
+        "name": "getStats",
+        "builder": "query"
+      },
+      {
+        "name": "findByParticipant",
+        "builder": "query"
+      },
+      {
+        "name": "search",
+        "builder": "query"
+      },
+      {
+        "name": "updateParticipants",
+        "builder": "graphMutation"
+      },
+      {
+        "name": "purgeAll",
+        "builder": "graphMutation"
+      }
+    ]
+  },
+  "cliOperator/mutable.ts": {
+    "hash": "8c04b86ad53e0773a3460126e1ed33b634a3e596bcb864b2a0e7f11c79a117d4",
+    "imports": [],
+    "operations": [
+      {
+        "name": "set",
+        "builder": "graphMutation"
+      },
+      {
+        "name": "update",
+        "builder": "graphMutation"
+      },
+      {
+        "name": "deleteKey",
+        "builder": "graphMutation"
+      },
+      {
+        "name": "purgeNamespace",
+        "builder": "graphMutation"
+      },
+      {
+        "name": "transaction",
+        "builder": "graphMutation"
+      },
+      {
+        "name": "purgeMany",
+        "builder": "graphMutation"
+      },
+      {
+        "name": "get",
+        "builder": "query"
+      },
+      {
+        "name": "exists",
+        "builder": "query"
+      },
+      {
+        "name": "list",
+        "builder": "query"
+      },
+      {
+        "name": "count",
+        "builder": "query"
+      },
+      {
+        "name": "purgeAll",
+        "builder": "graphMutation"
+      }
+    ]
+  },
+  "contexts.ts": {
+    "hash": "facb2f35168ab2243d59b88cc39ac6bafba2044a3fafcbc751f4a323c47367e2",
+    "imports": [
+      {
+        "statement": "import { internalMutation, mutation, query, type MutationCtx } from \"./_generated/server\";",
+        "start": 134,
+        "end": 224,
+        "typeOnly": false,
+        "origin": "./_generated/server"
+      }
+    ],
+    "operations": [
+      {
+        "name": "create",
+        "builder": "mutation"
+      },
+      {
+        "name": "update",
+        "builder": "mutation"
+      },
+      {
+        "name": "addParticipant",
+        "builder": "mutation"
+      },
+      {
+        "name": "removeParticipant",
+        "builder": "mutation"
+      },
+      {
+        "name": "grantAccess",
+        "builder": "mutation"
+      },
+      {
+        "name": "deleteContext",
+        "builder": "mutation"
+      },
+      {
+        "name": "updateMany",
+        "builder": "mutation"
+      },
+      {
+        "name": "deleteMany",
+        "builder": "mutation"
+      },
+      {
+        "name": "get",
+        "builder": "query"
+      },
+      {
+        "name": "list",
+        "builder": "query"
+      },
+      {
+        "name": "search",
+        "builder": "query"
+      },
+      {
+        "name": "count",
+        "builder": "query"
+      },
+      {
+        "name": "getChain",
+        "builder": "query"
+      },
+      {
+        "name": "getRoot",
+        "builder": "query"
+      },
+      {
+        "name": "getChildren",
+        "builder": "query"
+      },
+      {
+        "name": "getByConversation",
+        "builder": "query"
+      },
+      {
+        "name": "findOrphaned",
+        "builder": "query"
+      },
+      {
+        "name": "getVersion",
+        "builder": "query"
+      },
+      {
+        "name": "getHistory",
+        "builder": "query"
+      },
+      {
+        "name": "getAtTimestamp",
+        "builder": "query"
+      },
+      {
+        "name": "exportContexts",
+        "builder": "query"
+      },
+      {
+        "name": "purgeAll",
+        "builder": "internalMutation"
+      }
+    ]
+  },
+  "conversations.ts": {
+    "hash": "7718c76423d7f275faf51a534fb9ff3ef19eef3d05729028060487c59276e586",
+    "imports": [
+      {
+        "statement": "import { mutation, query, internalMutation } from \"./_generated/server\";",
+        "start": 359,
+        "end": 431,
+        "typeOnly": false,
+        "origin": "./_generated/server"
+      }
+    ],
+    "operations": [
+      {
+        "name": "create",
+        "builder": "mutation"
+      },
+      {
+        "name": "setVisibility",
+        "builder": "mutation"
+      },
+      {
+        "name": "setMetadata",
+        "builder": "mutation"
+      },
+      {
+        "name": "checkAccess",
+        "builder": "query"
+      },
+      {
+        "name": "addMessage",
+        "builder": "mutation"
+      },
+      {
+        "name": "approveMessage",
+        "builder": "mutation"
+      },
+      {
+        "name": "rejectMessage",
+        "builder": "mutation"
+      },
+      {
+        "name": "deleteConversation",
+        "builder": "mutation"
+      },
+      {
+        "name": "deleteMany",
+        "builder": "mutation"
+      },
+      {
+        "name": "deleteByIds",
+        "builder": "mutation"
+      },
+      {
+        "name": "purgeAll",
+        "builder": "internalMutation"
+      },
+      {
+        "name": "getMessage",
+        "builder": "query"
+      },
+      {
+        "name": "getMessagesByIds",
+        "builder": "query"
+      },
+      {
+        "name": "getOrCreate",
+        "builder": "mutation"
+      },
+      {
+        "name": "findConversation",
+        "builder": "query"
+      },
+      {
+        "name": "get",
+        "builder": "query"
+      },
+      {
+        "name": "list",
+        "builder": "query"
+      },
+      {
+        "name": "count",
+        "builder": "query"
+      },
+      {
+        "name": "getHistory",
+        "builder": "query"
+      },
+      {
+        "name": "search",
+        "builder": "query"
+      },
+      {
+        "name": "exportConversations",
+        "builder": "query"
+      }
+    ]
+  },
+  "conversationShares.ts": {
+    "hash": "17dfb3859fc6e3bd60fa9b4d11af984a252df18995257c28e40415fa1a05d4d1",
+    "imports": [
+      {
+        "statement": "import { mutation, query, internalMutation } from \"./_generated/server\";",
+        "start": 284,
+        "end": 356,
+        "typeOnly": false,
+        "origin": "./_generated/server"
+      }
+    ],
+    "operations": [
+      {
+        "name": "create",
+        "builder": "mutation"
+      },
+      {
+        "name": "revoke",
+        "builder": "mutation"
+      },
+      {
+        "name": "incrementViewCount",
+        "builder": "internalMutation"
+      },
+      {
+        "name": "get",
+        "builder": "query"
+      },
+      {
+        "name": "listByConversation",
+        "builder": "query"
+      },
+      {
+        "name": "listByGranter",
+        "builder": "query"
+      },
+      {
+        "name": "checkAccess",
+        "builder": "query"
+      }
+    ]
+  },
+  "conversationSnapshots.ts": {
+    "hash": "7af4e9ad27d7fd5e1883e57ed560fbc509c4c10d3454ee2fe578edc790e6c1ac",
+    "imports": [
+      {
+        "statement": "import { mutation, query } from \"./_generated/server\";",
+        "start": 291,
+        "end": 345,
+        "typeOnly": false,
+        "origin": "./_generated/server"
+      }
+    ],
+    "operations": [
+      {
+        "name": "create",
+        "builder": "mutation"
+      },
+      {
+        "name": "deleteSnapshot",
+        "builder": "mutation"
+      },
+      {
+        "name": "get",
+        "builder": "query"
+      },
+      {
+        "name": "listByConversation",
+        "builder": "query"
+      },
+      {
+        "name": "listByUser",
+        "builder": "query"
+      }
+    ]
+  },
+  "domainErasure.ts": {
+    "hash": "c54a56843be91579b7716f0ca1eb22e5cb3a7a84493429a59d4bf9b18debb78a",
+    "imports": [
+      {
+        "statement": "import { internalQuery, internalMutation, type QueryCtx, type MutationCtx } from \"./_generated/server\";",
+        "start": 97,
+        "end": 200,
+        "typeOnly": false,
+        "origin": "./_generated/server"
+      }
+    ],
+    "operations": [
+      {
+        "name": "discoverPage",
+        "builder": "internalQuery"
+      },
+      {
+        "name": "verifyPage",
+        "builder": "internalQuery"
+      },
+      {
+        "name": "checkRecord",
+        "builder": "internalQuery"
+      },
+      {
+        "name": "checkBinaryReferences",
+        "builder": "internalQuery"
+      },
+      {
+        "name": "getReceiptPage",
+        "builder": "internalQuery"
+      },
+      {
+        "name": "eraseRecord",
+        "builder": "internalMutation"
+      },
+      {
+        "name": "purgeExpiredReceiptsPage",
+        "builder": "internalMutation"
+      }
+    ]
+  },
+  "factHistory.ts": {
+    "hash": "b8734ec5ac5afc25eed9dc66fe27428fa078d3a9f3fb7ace37cbed5c0106e059",
+    "imports": [
+      {
+        "statement": "import { query, internalMutation } from \"./_generated/server\";",
+        "start": 278,
+        "end": 340,
+        "typeOnly": false,
+        "origin": "./_generated/server"
+      }
+    ],
+    "operations": [
+      {
+        "name": "logEvent",
+        "builder": "internalMutation"
+      },
+      {
+        "name": "deleteByFactId",
+        "builder": "internalMutation"
+      },
+      {
+        "name": "deleteByUserId",
+        "builder": "internalMutation"
+      },
+      {
+        "name": "deleteByMemorySpace",
+        "builder": "internalMutation"
+      },
+      {
+        "name": "purgeOldEvents",
+        "builder": "internalMutation"
+      },
+      {
+        "name": "getHistory",
+        "builder": "query"
+      },
+      {
+        "name": "getEvent",
+        "builder": "query"
+      },
+      {
+        "name": "getChangesByTimeRange",
+        "builder": "query"
+      },
+      {
+        "name": "countByAction",
+        "builder": "query"
+      },
+      {
+        "name": "getSupersessionChain",
+        "builder": "query"
+      },
+      {
+        "name": "getActivitySummary",
+        "builder": "query"
+      }
+    ]
+  },
+  "facts.ts": {
+    "hash": "4a3b972e97b42b7d5cd273adfe28db1ca3a390675424bad57463cafbe30d2b92",
+    "imports": [
+      {
+        "statement": "import { action, internalMutation, internalQuery, mutation, query } from \"./_generated/server\";",
+        "start": 199,
+        "end": 294,
         "typeOnly": false,
         "origin": "./_generated/server"
       }
@@ -847,21 +1684,17 @@ const SDK_CONTRACT: Record<string, SourceContract> = {
       },
       {
         "name": "purgeAll",
-        "builder": "mutation"
-      },
-      {
-        "name": "candidatePage",
-        "builder": "query"
+        "builder": "internalMutation"
       }
     ]
   },
   "governance.ts": {
-    "hash": "33d0ca51e043edf076c80fa054e2a3697d212d4f8fcc5982817931848630864a",
+    "hash": "ea81c7cc5d794a4d810086a2e539c309ec2712b6290b652efd12bda0493737ac",
     "imports": [
       {
-        "statement": "import { mutation, query } from \"./_generated/server\";",
+        "statement": "import { internalMutation, mutation, query, type QueryCtx } from \"./_generated/server\";",
         "start": 127,
-        "end": 181,
+        "end": 214,
         "typeOnly": false,
         "origin": "./_generated/server"
       }
@@ -873,10 +1706,6 @@ const SDK_CONTRACT: Record<string, SourceContract> = {
       },
       {
         "name": "setAgentOverride",
-        "builder": "mutation"
-      },
-      {
-        "name": "enforce",
         "builder": "mutation"
       },
       {
@@ -892,6 +1721,10 @@ const SDK_CONTRACT: Record<string, SourceContract> = {
         "builder": "query"
       },
       {
+        "name": "enforce",
+        "builder": "internalMutation"
+      },
+      {
         "name": "getComplianceReport",
         "builder": "query"
       },
@@ -901,91 +1734,75 @@ const SDK_CONTRACT: Record<string, SourceContract> = {
       },
       {
         "name": "purgeAllPolicies",
-        "builder": "mutation"
+        "builder": "internalMutation"
       },
       {
         "name": "purgeAllEnforcement",
-        "builder": "mutation"
+        "builder": "internalMutation"
       }
     ]
   },
   "graphSync.ts": {
-    "hash": "4e3719309246602599d89013307f0489c665c7dbf15de71b917b0ff0e1dd0609",
+    "hash": "32e6d13a9377be88f2098e86800235d7b76ed8e039a231fdac81c88e4f8c5b33",
     "imports": [
       {
-        "statement": "import {mutation,query,internalMutation,internalQuery,type MutationCtx,type QueryCtx} from \"./_generated/server\";",
-        "start": 200,
-        "end": 313,
+        "statement": "import { internalMutation, internalQuery, type QueryCtx } from \"./_generated/server\";",
+        "start": 124,
+        "end": 209,
         "typeOnly": false,
         "origin": "./_generated/server"
       }
     ],
     "operations": [
       {
-        "name": "getGraphJob",
-        "builder": "query"
-      },
-      {
         "name": "queueForSync",
-        "builder": "mutation"
+        "builder": "internalMutation"
       },
       {
         "name": "markSynced",
-        "builder": "mutation"
-      },
-      {
-        "name": "suppressJob",
-        "builder": "mutation"
+        "builder": "internalMutation"
       },
       {
         "name": "markFailed",
-        "builder": "mutation"
-      },
-      {
-        "name": "getUnsyncedItems",
-        "builder": "query"
-      },
-      {
-        "name": "getHighPriorityItems",
-        "builder": "query"
-      },
-      {
-        "name": "getFailedItems",
-        "builder": "query"
-      },
-      {
-        "name": "getSyncStats",
-        "builder": "query"
+        "builder": "internalMutation"
       },
       {
         "name": "deleteSyncItem",
-        "builder": "mutation"
+        "builder": "internalMutation"
       },
       {
-        "name": "purgeAll",
-        "builder": "mutation"
+        "name": "getUnsyncedItems",
+        "builder": "internalQuery"
+      },
+      {
+        "name": "getHighPriorityItems",
+        "builder": "internalQuery"
+      },
+      {
+        "name": "getFailedItems",
+        "builder": "internalQuery"
+      },
+      {
+        "name": "getSyncStats",
+        "builder": "internalQuery"
       },
       {
         "name": "clearSyncedItems",
         "builder": "internalMutation"
       },
       {
-        "name": "rebuildSourcePage",
-        "builder": "internalQuery"
-      },
-      {
-        "name": "rebuildEdgePage",
-        "builder": "internalQuery"
+        "name": "purgeAll",
+        "builder": "internalMutation"
       }
     ]
   },
   "immutable.ts": {
-    "hash": "a96cc6360b3012f0a0fb160f0b2cad435434dc6a4046b5bbb589df5500201ae2",
+    "hash": "1bbeca8ed71dd089a8804d34b016900a261a22a65ac70e08330b3a56a4fd0804",
     "imports": [
       {
-        "statement": "import { query } from \"./_generated/server\";",
-        "start": 373,
-        "end": 417,
+        "statement": "import { mutation, query, internalMutation } from \"./_generated/server\";",
+        "start": 141,
+        "end": 213,
         "typeOnly": false,
         "origin": "./_generated/server"
       }
@@ -993,10 +1810,6 @@ const SDK_CONTRACT: Record<string, SourceContract> = {
     "operations": [
       {
         "name": "store",
-        "builder": "mutation"
-      },
-      {
-        "name": "purge",
         "builder": "mutation"
       },
       {
@@ -1012,11 +1825,11 @@ const SDK_CONTRACT: Record<string, SourceContract> = {
         "builder": "query"
       },
       {
-        "name": "list",
+        "name": "getAtTimestamp",
         "builder": "query"
       },
       {
-        "name": "search",
+        "name": "list",
         "builder": "query"
       },
       {
@@ -1024,8 +1837,12 @@ const SDK_CONTRACT: Record<string, SourceContract> = {
         "builder": "query"
       },
       {
-        "name": "getAtTimestamp",
+        "name": "search",
         "builder": "query"
+      },
+      {
+        "name": "purge",
+        "builder": "mutation"
       },
       {
         "name": "purgeMany",
@@ -1037,12 +1854,12 @@ const SDK_CONTRACT: Record<string, SourceContract> = {
       },
       {
         "name": "purgeAll",
-        "builder": "mutation"
+        "builder": "internalMutation"
       }
     ]
   },
   "lib/domainErasureScope.ts": {
-    "hash": "63713a8f209b1c4bf90106afe3f950c91f07e9b6f93ecbf3666c3f689f8a53de",
+    "hash": "efd6bb252649ddfb0cde55544314e164dcadad11448338208e37de36ea608db4",
     "imports": [
       {
         "statement": "import type { QueryCtx, MutationCtx } from \"../_generated/server\";",
@@ -1055,7 +1872,7 @@ const SDK_CONTRACT: Record<string, SourceContract> = {
     "operations": []
   },
   "lib/domainPaging.ts": {
-    "hash": "82052782fc4f62ef7ead568859269cb7b1bcfd293e27f4c2eda4f444cf7e374d",
+    "hash": "a88e079d743b23deadef141923b83d77fe775f2dda45b3a73ae2e1f6b1f7a7ed",
     "imports": [
       {
         "statement": "import type { QueryCtx } from \"../_generated/server\";",
@@ -1081,7 +1898,7 @@ const SDK_CONTRACT: Record<string, SourceContract> = {
     "operations": []
   },
   "lib/factHistoryProvenance.ts": {
-    "hash": "615586cf7906b69bdd2540297e1e8aa1a58e3e20a32ea4f44722281d51b010bc",
+    "hash": "a0d72bb65534df966096414cbd9c9b343e39a6a92a008a9a7bcf04964668732f",
     "imports": [
       {
         "statement": "import type { MutationCtx, QueryCtx } from \"../_generated/server\";",
@@ -1094,12 +1911,12 @@ const SDK_CONTRACT: Record<string, SourceContract> = {
     "operations": []
   },
   "lib/graphSync.ts": {
-    "hash": "af7d2d48d40cb6f7a7c005ee016ca60df5b2af72e5b31b8d5bc802916ce18e99",
+    "hash": "a446aea0652e9daf517d1515017c4576ec6e085d35c557382ea5bf94b0405759",
     "imports": [
       {
-        "statement": "import {mutation, type MutationCtx, type QueryCtx} from \"../_generated/server\";",
+        "statement": "import {type MutationCtx, type QueryCtx} from \"../_generated/server\";",
         "start": 213,
-        "end": 292,
+        "end": 282,
         "typeOnly": false,
         "origin": "../_generated/server"
       }
@@ -1111,8 +1928,21 @@ const SDK_CONTRACT: Record<string, SourceContract> = {
     "imports": [],
     "operations": []
   },
+  "lib/operatorBoundary.ts": {
+    "hash": "e0dc1e12246da2b503f4841841179a88c8472a2df0e81f18208357e7b814b568",
+    "imports": [
+      {
+        "statement": "import { internalAction, internalMutation, internalQuery, type MutationCtx, type QueryCtx } from \"../_generated/server\";",
+        "start": 171,
+        "end": 291,
+        "typeOnly": false,
+        "origin": "../_generated/server"
+      }
+    ],
+    "operations": []
+  },
   "lib/referenceLifecycle.ts": {
-    "hash": "d9dc12c84750bac127ddfeda0fc699f54b9f3f04f37ec38cc0aabd01f6ff12c4",
+    "hash": "3d1ca1c74a91202ec0101284f5062798fc1c3cedfd714efed07e0bb8055cbf0c",
     "imports": [
       {
         "statement": "import type { MutationCtx, QueryCtx } from \"../_generated/server\";",
@@ -1124,18 +1954,88 @@ const SDK_CONTRACT: Record<string, SourceContract> = {
     ],
     "operations": []
   },
+  "lib/runtimeDomain/auth/types.ts": {
+    "hash": "162b985c1c28cf6c456e239881594c7f22d6745a2892aae41426cd0e3b394c66",
+    "imports": [],
+    "operations": []
+  },
+  "lib/runtimeDomain/auth/verified.ts": {
+    "hash": "d2e514b198dcccff783b67ee7c7a625f91bf7553a41342a02bea8fd23f6908b3",
+    "imports": [],
+    "operations": []
+  },
+  "lib/runtimeDomain/domain/clock.ts": {
+    "hash": "7d6124f71c561ba1ce2643600470f37318367084ca9c5a6f5cc2a8f9c9de6497",
+    "imports": [],
+    "operations": []
+  },
+  "lib/runtimeDomain/domain/conflicts.ts": {
+    "hash": "899bf06d6885fc0c3f909ac2cce6ea08196de76111059785133eb0ef57baa4d4",
+    "imports": [],
+    "operations": []
+  },
+  "lib/runtimeDomain/domain/contracts.ts": {
+    "hash": "a40ca52e4d9c1eef84847c86a0b3681a7a3389095817745f3682663260fdc87b",
+    "imports": [],
+    "operations": []
+  },
+  "lib/runtimeDomain/domain/deduplication.ts": {
+    "hash": "c99092d8d7ce015e0f13cbf33c1012fb2a2d7c7f41ee4479b6684a0501cc7698",
+    "imports": [],
+    "operations": []
+  },
+  "lib/runtimeDomain/domain/extraction.ts": {
+    "hash": "7324f700278531e30ae22d3eca29dd7bef2fbeae1d6aa7c7011ec9bcbb45fa5b",
+    "imports": [],
+    "operations": []
+  },
+  "lib/runtimeDomain/domain/modelPolicy.ts": {
+    "hash": "f43de8775880d1d4f6ddad90e527837d9ddb4ce58d00ea622aabc2609a1769da",
+    "imports": [],
+    "operations": []
+  },
+  "lib/runtimeDomain/domain/profile.ts": {
+    "hash": "6b098f33dcfe9fb3f70a44b2d6117884dbc0658142edd6499e79e2d03f7fd63b",
+    "imports": [],
+    "operations": []
+  },
+  "lib/runtimeDomain/domain/recall.ts": {
+    "hash": "77f024da7c4d1329cb639d618a7c05af59ac88d41abab4f9c8c29f906f7bdb9e",
+    "imports": [],
+    "operations": []
+  },
+  "lib/runtimeDomain/domain/sources.ts": {
+    "hash": "4015f729bd2dc5a01ea8c24fcd9e1a86ebcab536698affb043fdf287dea3c74e",
+    "imports": [],
+    "operations": []
+  },
+  "lib/runtimeDomain/sessions/types.ts": {
+    "hash": "324557fadfd8e33e58bf151ccc7fbce0401641ae90cc11d186733d3ee8be1fb5",
+    "imports": [],
+    "operations": []
+  },
+  "lib/runtimeDomain/types/index.ts": {
+    "hash": "46dce5f4e06cf9ced521bbead0258eedabb5211c98ffe2026e43e1909c6d8e1d",
+    "imports": [],
+    "operations": []
+  },
+  "lib/runtimeDomain/types/streaming.ts": {
+    "hash": "26f87063d3a94e249dec8b32a8f4d6e883032654baadedcc8c8de926dea22e17",
+    "imports": [],
+    "operations": []
+  },
   "lib/userDataScope.ts": {
-    "hash": "ed1007f71cd92cd72d933dacd040c10c458c8c5ca793a6f6fa66b3200d5a5a5a",
+    "hash": "01d03bdaca67e35f67c72e22448a3e6eb9477f862f578588d0e0d0ed6ea3a83f",
     "imports": [],
     "operations": []
   },
   "memories.ts": {
-    "hash": "4d053490ebb62d808b31d7797018f93ae2069d76aef2bb8e1df1d1863f574916",
+    "hash": "72cbaf6fceff8999ad3c289a645b2b19f605e05fdb79141fc05a2f9f911861a8",
     "imports": [
       {
-        "statement": "import { action, internalQuery, query, type MutationCtx } from \"./_generated/server\";",
-        "start": 931,
-        "end": 1016,
+        "statement": "import { action, internalMutation, internalQuery, mutation, query } from \"./_generated/server\";",
+        "start": 203,
+        "end": 298,
         "typeOnly": false,
         "origin": "./_generated/server"
       }
@@ -1174,10 +2074,6 @@ const SDK_CONTRACT: Record<string, SourceContract> = {
         "builder": "internalQuery"
       },
       {
-        "name": "vectorReadiness",
-        "builder": "internalQuery"
-      },
-      {
         "name": "search",
         "builder": "action"
       },
@@ -1211,7 +2107,7 @@ const SDK_CONTRACT: Record<string, SourceContract> = {
       },
       {
         "name": "purgeAll",
-        "builder": "mutation"
+        "builder": "internalMutation"
       },
       {
         "name": "exportMemories",
@@ -1232,24 +2128,16 @@ const SDK_CONTRACT: Record<string, SourceContract> = {
       {
         "name": "getAtTimestamp",
         "builder": "query"
-      },
-      {
-        "name": "domainPage",
-        "builder": "query"
-      },
-      {
-        "name": "eraseSelected",
-        "builder": "mutation"
       }
     ]
   },
   "memorySpaces.ts": {
-    "hash": "21473603c29c33ed0059015f87ba87f6c41226c5501ceec3104c8426a86c3c43",
+    "hash": "cabb138c578220ee3b4b56fd16bf466da9e92e9508f8485ce1582fd3b29eee2c",
     "imports": [
       {
-        "statement": "import { query } from \"./_generated/server\";",
-        "start": 332,
-        "end": 376,
+        "statement": "import { internalMutation, mutation, query, type MutationCtx } from \"./_generated/server\";",
+        "start": 135,
+        "end": 225,
         "typeOnly": false,
         "origin": "./_generated/server"
       }
@@ -1280,6 +2168,10 @@ const SDK_CONTRACT: Record<string, SourceContract> = {
         "builder": "mutation"
       },
       {
+        "name": "updateParticipants",
+        "builder": "mutation"
+      },
+      {
         "name": "deleteSpace",
         "builder": "mutation"
       },
@@ -1296,10 +2188,6 @@ const SDK_CONTRACT: Record<string, SourceContract> = {
         "builder": "query"
       },
       {
-        "name": "getStats",
-        "builder": "query"
-      },
-      {
         "name": "findByParticipant",
         "builder": "query"
       },
@@ -1308,22 +2196,22 @@ const SDK_CONTRACT: Record<string, SourceContract> = {
         "builder": "query"
       },
       {
-        "name": "updateParticipants",
-        "builder": "mutation"
+        "name": "purgeAll",
+        "builder": "internalMutation"
       },
       {
-        "name": "purgeAll",
-        "builder": "mutation"
+        "name": "getStats",
+        "builder": "query"
       }
     ]
   },
   "mutable.ts": {
-    "hash": "bfe9689a3abbfbd4f6649b1045e13a36bd56a50f81df5a1e71966c533b9cf8a6",
+    "hash": "14feb91094f31b9f72cdab9ecb6faa5025a27972f234b1129d4c77ee4ee037e5",
     "imports": [
       {
-        "statement": "import { query } from \"./_generated/server\";",
-        "start": 382,
-        "end": 426,
+        "statement": "import { mutation, query, internalMutation } from \"./_generated/server\";",
+        "start": 148,
+        "end": 220,
         "typeOnly": false,
         "origin": "./_generated/server"
       }
@@ -1335,22 +2223,6 @@ const SDK_CONTRACT: Record<string, SourceContract> = {
       },
       {
         "name": "update",
-        "builder": "mutation"
-      },
-      {
-        "name": "deleteKey",
-        "builder": "mutation"
-      },
-      {
-        "name": "purgeNamespace",
-        "builder": "mutation"
-      },
-      {
-        "name": "transaction",
-        "builder": "mutation"
-      },
-      {
-        "name": "purgeMany",
         "builder": "mutation"
       },
       {
@@ -1370,8 +2242,24 @@ const SDK_CONTRACT: Record<string, SourceContract> = {
         "builder": "query"
       },
       {
-        "name": "purgeAll",
+        "name": "deleteKey",
         "builder": "mutation"
+      },
+      {
+        "name": "purgeMany",
+        "builder": "mutation"
+      },
+      {
+        "name": "purgeNamespace",
+        "builder": "mutation"
+      },
+      {
+        "name": "transaction",
+        "builder": "mutation"
+      },
+      {
+        "name": "purgeAll",
+        "builder": "internalMutation"
       }
     ]
   },
@@ -1428,19 +2316,340 @@ const SDK_CONTRACT: Record<string, SourceContract> = {
       }
     ]
   },
+  "runtimeArtifactAuth.ts": {
+    "hash": "84d0c2c202fedf8b856b7a0a9c0990adc8f533fb8a55a4635bab6b98236e5d0f",
+    "imports": [
+      {
+        "statement": "import type { MutationCtx, QueryCtx } from \"./_generated/server\";",
+        "start": 524,
+        "end": 589,
+        "typeOnly": true,
+        "origin": "./_generated/server"
+      }
+    ],
+    "operations": []
+  },
+  "runtimeAssetUnavailableAuth.ts": {
+    "hash": "10678769db2fb6c04edeee6c904f31db4da0baca1ba03d1f81c951c3141f18d4",
+    "imports": [],
+    "operations": []
+  },
+  "runtimeAuth.ts": {
+    "hash": "cc130503bee2f6d2377f008047d683645fa512efc99a02a38c0f77a457d45283",
+    "imports": [
+      {
+        "statement": "import { internalMutation, internalQuery } from \"./_generated/server\";",
+        "start": 193,
+        "end": 263,
+        "typeOnly": false,
+        "origin": "./_generated/server"
+      },
+      {
+        "statement": "import type { MutationCtx, QueryCtx } from \"./_generated/server\";",
+        "start": 264,
+        "end": 329,
+        "typeOnly": true,
+        "origin": "./_generated/server"
+      }
+    ],
+    "operations": [
+      {
+        "name": "authorize",
+        "builder": "internalQuery"
+      },
+      {
+        "name": "recheck",
+        "builder": "internalQuery"
+      },
+      {
+        "name": "provision",
+        "builder": "internalMutation"
+      },
+      {
+        "name": "revokeGrant",
+        "builder": "internalMutation"
+      },
+      {
+        "name": "revokeMembership",
+        "builder": "internalMutation"
+      },
+      {
+        "name": "deletePrincipal",
+        "builder": "internalMutation"
+      },
+      {
+        "name": "deleteScope",
+        "builder": "internalMutation"
+      },
+      {
+        "name": "tombstoneResource",
+        "builder": "internalMutation"
+      }
+    ]
+  },
+  "runtimeAuthSchema.ts": {
+    "hash": "41859c943e06ed185d88bb4f0da21540e0999d9f736f933dfdcbd572ee9dd5d1",
+    "imports": [],
+    "operations": []
+  },
+  "runtimeDataAuth.ts": {
+    "hash": "e9e824c186f49eb0337f522f7c901be02be8925704ad1aa973407969654a9d10",
+    "imports": [
+      {
+        "statement": "import type { ActionCtx, MutationCtx, QueryCtx } from \"./_generated/server\";",
+        "start": 250,
+        "end": 326,
+        "typeOnly": true,
+        "origin": "./_generated/server"
+      }
+    ],
+    "operations": []
+  },
+  "runtimeGateway.ts": {
+    "hash": "ccfac62e789c8f10dea3c2ea53add7c07dedb78bd2060df7767484cc077d7830",
+    "imports": [],
+    "operations": []
+  },
+  "runtimeMemory.ts": {
+    "hash": "44dac14f1ec4e655ddd2983104364f8a35034c3953272068ff17f77da7206135",
+    "imports": [
+      {
+        "statement": "import { action, internalMutation, internalQuery } from \"./_generated/server\";",
+        "start": 246,
+        "end": 324,
+        "typeOnly": false,
+        "origin": "./_generated/server"
+      },
+      {
+        "statement": "import type { ActionCtx } from \"./_generated/server\";",
+        "start": 325,
+        "end": 378,
+        "typeOnly": true,
+        "origin": "./_generated/server"
+      }
+    ],
+    "operations": [
+      {
+        "name": "checkAuthority",
+        "builder": "internalQuery"
+      },
+      {
+        "name": "readSource",
+        "builder": "internalQuery"
+      },
+      {
+        "name": "writeSource",
+        "builder": "internalMutation"
+      },
+      {
+        "name": "writeDerived",
+        "builder": "internalMutation"
+      },
+      {
+        "name": "readFacts",
+        "builder": "internalQuery"
+      },
+      {
+        "name": "readVectorMatches",
+        "builder": "internalQuery"
+      },
+      {
+        "name": "remember",
+        "builder": "action"
+      },
+      {
+        "name": "recall",
+        "builder": "action"
+      }
+    ]
+  },
+  "runtimeMemoryRepository.ts": {
+    "hash": "ee6ef0714d2a3e1582dd4e61f43355ff937073a776f52496f3439110a629ee4a",
+    "imports": [
+      {
+        "statement": "import type { ActionCtx, MutationCtx, QueryCtx } from \"./_generated/server\";",
+        "start": 242,
+        "end": 318,
+        "typeOnly": true,
+        "origin": "./_generated/server"
+      }
+    ],
+    "operations": []
+  },
+  "runtimeMemorySchema.ts": {
+    "hash": "24abaebe350c4127c3b4b376b6749ef86ef6e4e1820b59b2d8a9538e7f257aba",
+    "imports": [],
+    "operations": []
+  },
+  "runtimeMemoryServices.ts": {
+    "hash": "7e511baa29e994bb4faf8ad8aa817c76b6fe9ff3da1f02c5814a6d89895df21e",
+    "imports": [],
+    "operations": []
+  },
+  "runtimeMetadataAuth.ts": {
+    "hash": "efcaaf5ec76803b9fa949b5fea4f1597780c7a907e77ca8db274694704238172",
+    "imports": [
+      {
+        "statement": "import type { MutationCtx, QueryCtx } from \"./_generated/server\";",
+        "start": 142,
+        "end": 207,
+        "typeOnly": true,
+        "origin": "./_generated/server"
+      }
+    ],
+    "operations": []
+  },
+  "runtimeModelPolicy.ts": {
+    "hash": "de98d04a1378dc0aeb9e2220896c3346b9fb30217494632e744b4310c9be2ed2",
+    "imports": [
+      {
+        "statement": "import { internalMutation, internalQuery } from \"./_generated/server\";",
+        "start": 213,
+        "end": 283,
+        "typeOnly": false,
+        "origin": "./_generated/server"
+      },
+      {
+        "statement": "import type { MutationCtx, QueryCtx } from \"./_generated/server\";",
+        "start": 284,
+        "end": 349,
+        "typeOnly": true,
+        "origin": "./_generated/server"
+      }
+    ],
+    "operations": [
+      {
+        "name": "ensureBudget",
+        "builder": "internalMutation"
+      },
+      {
+        "name": "installDeploymentPolicy",
+        "builder": "internalMutation"
+      },
+      {
+        "name": "provisionTenantPolicy",
+        "builder": "internalMutation"
+      },
+      {
+        "name": "resolve",
+        "builder": "internalQuery"
+      },
+      {
+        "name": "admit",
+        "builder": "internalMutation"
+      },
+      {
+        "name": "checkpoint",
+        "builder": "internalMutation"
+      },
+      {
+        "name": "markVisible",
+        "builder": "internalMutation"
+      },
+      {
+        "name": "captureTerminalEvidence",
+        "builder": "internalMutation"
+      },
+      {
+        "name": "attachTerminalResult",
+        "builder": "internalMutation"
+      },
+      {
+        "name": "reconcileDeploymentLiability",
+        "builder": "internalMutation"
+      },
+      {
+        "name": "settle",
+        "builder": "internalMutation"
+      },
+      {
+        "name": "recover",
+        "builder": "internalMutation"
+      },
+      {
+        "name": "releaseNotDispatched",
+        "builder": "internalMutation"
+      },
+      {
+        "name": "cancelBudget",
+        "builder": "internalMutation"
+      },
+      {
+        "name": "admitFallback",
+        "builder": "internalMutation"
+      },
+      {
+        "name": "checkFallback",
+        "builder": "internalQuery"
+      }
+    ]
+  },
+  "runtimeModelPolicyBootstrap.ts": {
+    "hash": "da18e1ac57bf2ca9a500ff382db212f9b19445a4ea59d79d33a94398966e1d06",
+    "imports": [],
+    "operations": []
+  },
+  "runtimePolicySchema.ts": {
+    "hash": "2f15fde0b30b224423c5cfdbc8833dc43cdb7ccfcecb76e4c2792de1883c1b9e",
+    "imports": [],
+    "operations": []
+  },
+  "runtimeRegistryAuth.ts": {
+    "hash": "670a9fef056c29bc43b081135fa05709511cd4886416ac25e3c078394f8d4454",
+    "imports": [
+      {
+        "statement": "import type { QueryCtx, MutationCtx } from \"./_generated/server\";",
+        "start": 203,
+        "end": 268,
+        "typeOnly": true,
+        "origin": "./_generated/server"
+      }
+    ],
+    "operations": []
+  },
+  "runtimeRegistryStats.ts": {
+    "hash": "ea2e7a99230a5fd33c2b445b099646c1015c98e873c1adfb30c01baed8cf49f6",
+    "imports": [],
+    "operations": []
+  },
+  "runtimeUnavailableAuth.ts": {
+    "hash": "c4c2467eb4bbed436bcc57eb9f74f55ebe31b9a54a0e94ace86c5d98528bb126",
+    "imports": [],
+    "operations": []
+  },
+  "runtimeWorkerAuth.ts": {
+    "hash": "41372d7913c78699bdcc14b86ba4591aa139667ad8f6e6e72348b34463333ba8",
+    "imports": [
+      {
+        "statement": "import type { MutationCtx, QueryCtx } from \"./_generated/server\";",
+        "start": 159,
+        "end": 224,
+        "typeOnly": true,
+        "origin": "./_generated/server"
+      }
+    ],
+    "operations": []
+  },
   "schema.ts": {
-    "hash": "b39ee8dac35dd1f4abe3a38994a2b60f727c4a3a465a40a2386fdbf166bc372d",
+    "hash": "4d4143f5ba3092627edc979117c35ecea1a7eff1836ae8e0c4bcd9a1fd1b95cd",
     "imports": [],
     "operations": []
   },
   "sessions.ts": {
-    "hash": "2250359f2ff633983a5652daff2e3b929bc5374ae0b01877efe71d3579cf0333",
+    "hash": "29e168cd02a4ba333120f347782173089e38a0df4cde92d1d204084e089246ef",
     "imports": [
       {
-        "statement": "import { mutation, query } from \"./_generated/server\";",
-        "start": 186,
-        "end": 240,
+        "statement": "import { mutation, query, internalMutation } from \"./_generated/server\";",
+        "start": 153,
+        "end": 225,
         "typeOnly": false,
+        "origin": "./_generated/server"
+      },
+      {
+        "statement": "import type { MutationCtx } from \"./_generated/server\";",
+        "start": 226,
+        "end": 281,
+        "typeOnly": true,
         "origin": "./_generated/server"
       }
     ],
@@ -1474,26 +2683,26 @@ const SDK_CONTRACT: Record<string, SourceContract> = {
         "builder": "query"
       },
       {
-        "name": "expireIdle",
-        "builder": "mutation"
-      },
-      {
         "name": "incrementMessageCount",
-        "builder": "mutation"
+        "builder": "internalMutation"
       },
       {
         "name": "incrementMemoryCount",
-        "builder": "mutation"
+        "builder": "internalMutation"
+      },
+      {
+        "name": "expireIdle",
+        "builder": "internalMutation"
       }
     ]
   },
   "tsconfig.json": {
-    "hash": "c03a297a5e103f330ca7c7abf2a453c8d87a8b32853ab2fe983b3fc6c5482d0f",
+    "hash": "6b077cd115f1e1a1cd41fe22824624d9ee39d89b2a53b016aaf59dd2981fdc17",
     "imports": [],
     "operations": []
   },
   "userExport.ts": {
-    "hash": "a29559bcb8a456bb9aee965cd369a146d4eb3ef412f31388c9a2c51c6bea3c1e",
+    "hash": "78686fe0dfc00e2cc8d7e9b8275919b83c4f8ea254463629716dfd55ccf654a1",
     "imports": [
       {
         "statement": "import { internalQuery } from \"./_generated/server\";",
@@ -1504,8 +2713,8 @@ const SDK_CONTRACT: Record<string, SourceContract> = {
       },
       {
         "statement": "import type { QueryCtx } from \"./_generated/server\";",
-        "start": 202,
-        "end": 254,
+        "start": 268,
+        "end": 320,
         "typeOnly": true,
         "origin": "./_generated/server"
       }
@@ -1534,12 +2743,12 @@ const SDK_CONTRACT: Record<string, SourceContract> = {
     ]
   },
   "users.ts": {
-    "hash": "5b65edd03080e5ec1b3c82bbf38256a985e0c234cbd9ad48316aa5d3a560d71a",
+    "hash": "733c926437533d4113feea633e6a1ff365a45803c1db0e63b42a8d2a25550f0f",
     "imports": [
       {
-        "statement": "import { mutation, query } from \"./_generated/server\";",
-        "start": 279,
-        "end": 333,
+        "statement": "import { query, mutation } from \"./_generated/server\";",
+        "start": 84,
+        "end": 138,
         "typeOnly": false,
         "origin": "./_generated/server"
       }
@@ -1570,12 +2779,12 @@ const SDK_CONTRACT: Record<string, SourceContract> = {
         "builder": "query"
       },
       {
-        "name": "deleteUserProfile",
-        "builder": "mutation"
-      },
-      {
         "name": "exists",
         "builder": "query"
+      },
+      {
+        "name": "deleteUserProfile",
+        "builder": "mutation"
       }
     ]
   }
@@ -1925,6 +3134,7 @@ export const TRANSFORM_CONTRACT_HASH = hashBytes(JSON.stringify(SDK_CONTRACT));
 export function isRecognizedTransformContractHash(value: unknown): boolean {
   return (
     value === TRANSFORM_CONTRACT_HASH ||
+    value === "148007af3ee17a2398a82a0a7a3a833b83f31effd5135780bc611c844eff8ea7" ||
     value === "fb9cfabf73451e3c4116724515ae2a7b319682acd761168b1d1abaa613bffc5d" ||
     value ===
       "c3f2c351ad8e8691254d804aec6ef872848f90d3dfbea058d4ded189b920783f" ||
@@ -1948,7 +3158,8 @@ export function isRecognizedAppContractHash(template: unknown, value: unknown): 
     "chat-sdk": "7220fc2a4de7fe4b05cef054588d92c036c0570b0abcdec6974b4e36f833bf30",
     "vercel-ai-quickstart": "eac517966add9aedc500747e239f6be2607003393e270ed7f8242575ba9c01d0",
   };
-  return value === appContractHash(template) || value === prior[template] ||
+  const integratedPrior = {"vercel-ai-quickstart":"da0d1ec39770761ed64fe3fea77625f0d411a81aa5b8ea7436069f3cfb95d1f4","chat-sdk":"157eeff2552b59a8a397dccd3f6852c721cefce7114a5a2867c5401b0c36ffd4"};
+  return value === appContractHash(template) || value === integratedPrior[template] || value === prior[template] ||
     (template === "chat-sdk" && value === "84b569cf43f082f128df8e4d548f68342f9a69094e8c89de3311fbcfbeb8b13e");
 }
 /** Narrow named-import grammar; rewrites only its module string. Never splits imports. */
@@ -1985,9 +3196,9 @@ export function rewriteRegistrationImport(
     if (locals.has(local)) throw new Error("Ambiguous registration alias");
     locals.add(local);
     const allowed = match[1]
-      ? ["QueryCtx", "MutationCtx"]
+      ? ["QueryCtx", "MutationCtx", "ActionCtx"]
       : typeOnly
-        ? ["QueryCtx", "MutationCtx"]
+        ? ["QueryCtx", "MutationCtx", "ActionCtx"]
         : [
             "query",
             "mutation",

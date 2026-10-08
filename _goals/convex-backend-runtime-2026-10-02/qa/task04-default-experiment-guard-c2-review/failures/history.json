@@ -1,0 +1,11 @@
+[
+  {
+    "type": "review-test expectation error",
+    "description": "Initial independent collision test accidentally supplied exact first historical receipt; exact replay correctly succeeds with zero writes. Corrected expectation to replay success unchanged, then differing unknown-money receipt collision. No implementation change or baseline/hostile assertion change.",
+    "utc": "exact initial run timestamps in initial-command-receipts.json"
+  },
+  {
+    "type": "exploratory read tooling",
+    "description": "Early read attempted guessed nonexistent Task09/14 filenames; cat exit1; no behavior checks/writes. Exact UTC not saved separately; no fabricated timestamp."
+  }
+]

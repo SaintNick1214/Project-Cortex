@@ -1,0 +1,18 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Identity adapter failures must remain infrastructure failures and never turn into successful receipts
+
+36 !== 0
+
+    at <anonymous> (/tmp/task03b2b1-review3-20261003/identity-required-outcomes.mts:34:8) {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 36,
+  expected: 0,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

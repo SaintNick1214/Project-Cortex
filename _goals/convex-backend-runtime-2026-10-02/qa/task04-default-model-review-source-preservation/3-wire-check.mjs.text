@@ -1,0 +1,37 @@
+import fs from 'node:fs';
+import crypto from 'node:crypto';
+import assert from 'node:assert/strict';
+import { createOpenAICompatible } from '@ai-sdk/openai-compatible';
+const root='/workspace/Project-Cortex';
+const base=root+'/_goals/convex-backend-runtime-2026-10-02/qa/';
+const manifest=JSON.parse(fs.readFileSync(base+'task04-default-model-qualification-preparation/manifest.json','utf8'));
+function canon(v){if(Array.isArray(v))return '['+v.map(canon).join(',')+']';if(v&&typeof v==='object')return '{'+Object.keys(v).sort().map(k=>JSON.stringify(k)+':'+canon(v[k])).join(',')+'}';return JSON.stringify(v);}
+const hash=v=>crypto.createHash('sha256').update(canon(v)).digest('hex');
+const results=[];
+for(const row of manifest.expectedCalls){
+ const privateCase=JSON.parse(fs.readFileSync(root+'/work/resume/task04-default-model-qualification-preparation/candidate-requests/'+row.scenarioId+'.json','utf8'));
+ const calls=[];
+ const provider=createOpenAICompatible({name:'convexGateway',baseURL:'https://offline.invalid/v1',supportsStructuredOutputs:true,fetch:async (url,init)=>{
+  calls.push(JSON.parse(init.body));
+  const body=row.method==='embed'?{data:[{embedding:Array(1536).fill(0.125),index:0}],usage:{prompt_tokens:1}}:{id:'offline',model:row.modelId,choices:[{index:0,message:{role:'assistant',content:'OK'},finish_reason:'stop'}],usage:{prompt_tokens:1,completion_tokens:1,total_tokens:2}};
+  if(row.method==='stream')return new Response('data: '+JSON.stringify({id:'offline',model:row.modelId,choices:[{index:0,delta:{content:'OK'},finish_reason:null}]})+'\n\ndata: '+JSON.stringify({id:'offline',model:row.modelId,choices:[{index:0,delta:{},finish_reason:'stop'}],usage:{prompt_tokens:1,completion_tokens:1,total_tokens:2}})+'\n\ndata: [DONE]\n\n',{headers:{'content-type':'text/event-stream'}});
+  return Response.json(body);
+ }});
+ assert.equal(hash({method:row.method,modelId:row.modelId,params:privateCase.native}),row.normalizedNativeRequestHash);
+ if(row.method==='embed')await provider.embeddingModel(row.modelId).doEmbed(privateCase.native);
+ else if(row.method==='generate')await provider(row.modelId).doGenerate(privateCase.native);
+ else {const {stream}=await provider(row.modelId).doStream({...privateCase.native,includeRawChunks:true});for await (const chunk of stream){} }
+ assert.equal(calls.length,1);
+ assert.equal(hash(calls[0]),row.expectedWireBodyHash);
+ assert.equal(Buffer.byteLength(canon(calls[0])),row.expectedWireBodyBytes);
+ assert.equal(canon(calls[0]),canon(privateCase.wireExpected));
+ if(row.method==='stream')assert.equal('stream_options' in calls[0],false);
+ results.push({scenarioId:row.scenarioId,nativeHashMatch:true,wireHashMatch:true,wireBytesMatch:true,offlineClosureCalls:calls.length});
+}
+// Adverse observation: caller providerOptions cannot activate the missing private factory usage switch.
+let observed;
+const p=createOpenAICompatible({name:'convexGateway',baseURL:'https://offline.invalid',fetch:async (u,i)=>{observed=JSON.parse(i.body);return new Response('data: [DONE]\n\n',{headers:{'content-type':'text/event-stream'}})}});
+const {stream}=await p('openai/gpt-4o-mini').doStream({prompt:[{role:'user',content:[{type:'text',text:'synthetic'}]}],maxOutputTokens:16,providerOptions:{convexGateway:{stream_options:{include_usage:true}}}});
+for await(const c of stream){}
+assert.equal('stream_options' in observed,false);
+console.log(JSON.stringify({scope:'OFFLINE official underlying compatible supported-fetch seam ONLY; no network/credentials/Gateway service token',cases:results,adverse:{providerOptionsCannotActivateFactoryIncludeUsage:true},modelQualification:'NOT_RUN'}));

@@ -17,8 +17,8 @@
 
 import { serve } from "@hono/node-server";
 import { Hono } from "hono";
-import { cors } from "hono/cors";
 import { logger } from "hono/logger";
+import { localRequest } from "./local-request.js";
 import { closeCortex, initCortex, CONFIG } from "./cortex.js";
 import { chat, generateConversationId } from "./chat.js";
 import { printWelcome, printInfo, printError, printSuccess } from "./display.js";
@@ -31,7 +31,8 @@ const app = new Hono();
 let server: ReturnType<typeof serve> | undefined;
 
 // Middleware
-app.use("*", cors());
+// This trusted example never exposes its deployment operator to another browser origin.
+app.use("*", localRequest);
 app.use("*", logger());
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -195,7 +196,7 @@ app.get("/history/:conversationId", async (c) => {
 app.get("/", (c) => {
   return c.json({
     name: "Cortex Memory - Basic Demo API",
-    version: "1.0.0",
+    version: "1.2.0",
     endpoints: {
       "POST /chat": {
         description: "Chat and store memory",
@@ -271,6 +272,7 @@ async function main(): Promise<void> {
   server = serve({
     fetch: app.fetch,
     port: PORT,
+    hostname: "127.0.0.1",
   });
 
   printInfo(`Server running on port ${PORT}`);

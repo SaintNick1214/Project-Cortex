@@ -1,0 +1,640 @@
+{
+  "utc": "2026-10-04T12:12:50.738176+00:00",
+  "sources": [
+    {
+      "path": ".agents/CODEX-RUNTIME.md",
+      "bytes": 5824,
+      "sha256": "8d60140b54b93fa29f388d9608c0b17d9993e1a48f7ec0788e993690ac456895"
+    },
+    {
+      "path": ".agents/PROJECT-PROFILE.md",
+      "bytes": 14706,
+      "sha256": "04ac20437bc36af9202ad748da57a07bfb824cdb92834fd365edfa5a00207a12"
+    },
+    {
+      "path": ".agents/roles/implementation-executor.md",
+      "bytes": 5881,
+      "sha256": "935934e4ae2df19e1b109cd797efa52567b88faf5099e0bfe96f0f403702babd"
+    },
+    {
+      "path": ".agents/skills/feature-orchestrator/SKILL.md",
+      "bytes": 3868,
+      "sha256": "dd08e0e3a828f152ad743e857297c5383741f413f7a3f0e87be04b69dbd5c8f5"
+    },
+    {
+      "path": "AGENTS.md",
+      "bytes": 4486,
+      "sha256": "4fbaf846434518261f72e3b1911e2146b508b736e7c46b76261fa8c6fd67724e"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/goal.md",
+      "bytes": 16007,
+      "sha256": "e54d694d7026ee3b58827dcc80a19156c8b0f141f613c569d3e3637698e1a655"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/implementation-prompt.md",
+      "bytes": 3682,
+      "sha256": "4667290be427310c4d6988c666925344b8f86b043c09db392542991de0ce0104"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-experiment-guard-c2-coordinator-acceptance.json",
+      "bytes": 831,
+      "sha256": "9240da800d14f90c6b31c637c3d0810ec8380e9cd43a5f1af1ba722fd571e74c"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-experiment-guard-c2-review/qa-manifest.json",
+      "bytes": 204515,
+      "sha256": "2f1d3d1fc7b11448e5508b13895a786ee04e0bf473c8da9b32f9b36662a13a4e"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-experiment-guard-c2-review/report.md",
+      "bytes": 12113,
+      "sha256": "b48001fcaf06e87dac05ca8b9cfd3d51973dcde51f69d72363faedef4c748094"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-experiment-guard-implementation-c2/fixture/convex/canonical.ts",
+      "bytes": 3206,
+      "sha256": "ac599b8b2bd1a917f1e9b5b8c6e90565fe4ddbc9d660d99c4b9faffa450fb8b6"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-experiment-guard-implementation-c2/fixture/convex/compiled.ts",
+      "bytes": 9400,
+      "sha256": "316e64e513049dd401758f2d74b61f7c7a09c5f50e24344438627178c5ccf354"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-experiment-guard-implementation-c2/fixture/convex/guard.ts",
+      "bytes": 13936,
+      "sha256": "5bcb1c1de8c449673cf5756bd6c8fb0acbae46fb187cb900b83779369059b979"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-experiment-guard-implementation-c2/fixture/convex/runner.ts",
+      "bytes": 4166,
+      "sha256": "b7dcf40969231afe4b813b93c3a8d35a0f5bbf15fd270bf27cc12c73ad30181b"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-experiment-guard-implementation-c2/fixture/convex/schema.ts",
+      "bytes": 340,
+      "sha256": "9708cf57a155968f185f044d13e0e822cb0a4fcbc4a52c20130eacbb5442d3ae"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-experiment-guard-implementation-c2/qa-manifest.json",
+      "bytes": 13669,
+      "sha256": "f77556b5b09cec5e6e49c90b7397cadf76cd10848fe3e0b3ef263ebd2a5fb5d2"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-experiment-guard-implementation-c2/report.md",
+      "bytes": 10847,
+      "sha256": "5d00a9c75b6fb5985beee57f61989f28636789b5815b40c6650b67daa4f8d978"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-model-qualification-preparation/manifest.json",
+      "bytes": 21298,
+      "sha256": "6588994a04a5d7a2ead13bf80c82b1e5b0a11c4bf44a5cc1f40d0b85cc16d1ae"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-model-qualification-preparation/report.md",
+      "bytes": 24264,
+      "sha256": "2216ac8dca8668c2d08d3f414865f37cfd9edb080be29799d4ffb7dd64a08018"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-model-qualification-preparation/source-evidence.json",
+      "bytes": 51064,
+      "sha256": "a13d9f705d211074a2ed6f2b6c05de39d6ecb54c968b3fe8eea01baaf0682d87"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-model-qualification-proposal-review/report.md",
+      "bytes": 11424,
+      "sha256": "6e54144f985215356c6117a6f2ab03517abbb135b909e95396d06645022d5619"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-design-c1-coordinator-rejection.json",
+      "bytes": 1133,
+      "sha256": "beb397f9639790f11b5340a9e5b156743a708a52f37c019a63ef9e52abb1c8d4"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-design-c1-review/qa-manifest.json",
+      "bytes": 13053,
+      "sha256": "d2edc528d9fdd9448cac23314590ced6c99de41f9452bdb09b4c2278e86d8872"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-design-c1-review/report.md",
+      "bytes": 14605,
+      "sha256": "fcd2644734edc35fe1538855d2591068eddcab00c62272acdb2eefbb4fc7bc7a"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-design-c2-coordinator-rejection.json",
+      "bytes": 954,
+      "sha256": "7c57c74f65e9d154bd20b6c6f40389a1255ab40df9ec6ec21c2af8f0e4a3eb54"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-design-c2-review/qa-manifest.json",
+      "bytes": 38665,
+      "sha256": "bc441fca9f661427cf98c1929380a68823ba27dea944668fd831ec9809b8bed6"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-design-c2-review/report.md",
+      "bytes": 11813,
+      "sha256": "bf01434eb3fb9a96d38008acce2aaecabe028cb47c65bfc79fe5fd3e8c201caf"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-design-c3-coordinator-rejection.json",
+      "bytes": 883,
+      "sha256": "41f56760d1f3bc2a7f74cc2ff6d568e3cdf8e1715d4e3d1c313f66b4d08a009f"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-design-c3-review/qa-manifest.json",
+      "bytes": 100008,
+      "sha256": "b9e5069ec4888ad58e3f8738a1fa501ff7225a143d79a009b91774985de88299"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-design-c3-review/report.md",
+      "bytes": 12280,
+      "sha256": "8d562bc189891bb9533dd5be300c8aac672812a171459afde6100905d533bac0"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/design-clarification-c3/dummy-model.mjs",
+      "bytes": 4968,
+      "sha256": "63efba9fff0ee602c2638f191c529ecb75ca965a2930331858bada922bee862e"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/design-clarification-c3/history/clarification-c2/history/proposal-v1.md",
+      "bytes": 3842,
+      "sha256": "bd6fb7d02141aae5d160399fefa5096a04a969da4938c6056037b783024a4f00"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/design-clarification-c3/history/clarification-c2/manifest.json",
+      "bytes": 571,
+      "sha256": "387dd064242a6d339a964730f2f75a84948f1e98ccf73220b6af2c122e01e935"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/design-clarification-c3/history/clarification-c2/money-domain.md",
+      "bytes": 2011,
+      "sha256": "9602d7813694b4db82e36be829a94978532cf68bf5587db564d285b619ece338"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/design-clarification-c3/history/clarification-c2/proposal.md",
+      "bytes": 10132,
+      "sha256": "e68c048bf5875d152340a5ee0c82c4ccdd0ba5152b6a51f40435f95e7f2aebb2"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/design-clarification-c3/history/fresh-c2-review/dummy-run.json",
+      "bytes": 380,
+      "sha256": "7cd220d5aab765b7c0d24702938af79709fc517174188996ce0239171f184d38"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/design-clarification-c3/history/fresh-c2-review/dummy-source-post.json",
+      "bytes": 187,
+      "sha256": "25aab90931c6618d56f0eb0afe0271add34e4a8a1476074f2f317082a030d0df"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/design-clarification-c3/history/fresh-c2-review/dummy-source-pre.json",
+      "bytes": 187,
+      "sha256": "25aab90931c6618d56f0eb0afe0271add34e4a8a1476074f2f317082a030d0df"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/design-clarification-c3/history/fresh-c2-review/dummy.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/design-clarification-c3/history/fresh-c2-review/dummy.stdout",
+      "bytes": 786,
+      "sha256": "f6cdf6871916cc81615e116d7f96a7ae693988ee0fc4c82b6c69d293d81b4745"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/design-clarification-c3/history/fresh-c2-review/manifest.json",
+      "bytes": 8240,
+      "sha256": "5f736974b9d7077371f97207f49ea8d1dff27483c2afb1bfb369b9398931d024"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/design-clarification-c3/history/fresh-c2-review/preimage-index.json",
+      "bytes": 6545,
+      "sha256": "d47ea4da2d2bd40621ab404034441e761f0046b34ae12cef55a32575b267efe2"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/design-clarification-c3/history/fresh-c2-review/preimages/04ac20437bc36af9202ad748da57a07bfb824cdb92834fd365edfa5a00207a12",
+      "bytes": 14706,
+      "sha256": "04ac20437bc36af9202ad748da57a07bfb824cdb92834fd365edfa5a00207a12"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/design-clarification-c3/history/fresh-c2-review/preimages/1ae90ff76ad25ce93e3a9d093d330e14bbe1a7419093b8d55cc5813ce85febb7",
+      "bytes": 3310,
+      "sha256": "1ae90ff76ad25ce93e3a9d093d330e14bbe1a7419093b8d55cc5813ce85febb7"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/design-clarification-c3/history/fresh-c2-review/preimages/1e12e1cc36f2446acabd6d3ff8464ebbd2a9d17582b17603aff8293ba48cdac4",
+      "bytes": 11937,
+      "sha256": "1e12e1cc36f2446acabd6d3ff8464ebbd2a9d17582b17603aff8293ba48cdac4"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/design-clarification-c3/history/fresh-c2-review/preimages/2522d7f180dec8492a698007a14b8e1259b4b237cbedba71144a8ad86469497d",
+      "bytes": 7742,
+      "sha256": "2522d7f180dec8492a698007a14b8e1259b4b237cbedba71144a8ad86469497d"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/design-clarification-c3/history/fresh-c2-review/preimages/387dd064242a6d339a964730f2f75a84948f1e98ccf73220b6af2c122e01e935",
+      "bytes": 571,
+      "sha256": "387dd064242a6d339a964730f2f75a84948f1e98ccf73220b6af2c122e01e935"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/design-clarification-c3/history/fresh-c2-review/preimages/401fa876a06bbfb5f6ae66a13702e13a5b4ce91488f9a5409680f6d4c852768e",
+      "bytes": 23744,
+      "sha256": "401fa876a06bbfb5f6ae66a13702e13a5b4ce91488f9a5409680f6d4c852768e"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/design-clarification-c3/history/fresh-c2-review/preimages/44777e644f835c759af09dfa8acefc7f37d29fac5152c8d34fd7b497e9858d74",
+      "bytes": 2759,
+      "sha256": "44777e644f835c759af09dfa8acefc7f37d29fac5152c8d34fd7b497e9858d74"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/design-clarification-c3/history/fresh-c2-review/preimages/4fbaf846434518261f72e3b1911e2146b508b736e7c46b76261fa8c6fd67724e",
+      "bytes": 4486,
+      "sha256": "4fbaf846434518261f72e3b1911e2146b508b736e7c46b76261fa8c6fd67724e"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/design-clarification-c3/history/fresh-c2-review/preimages/50cc9f2fc0b3425250864a99a25fb1157dd98fd4194ee7bdc56373a3328941a0",
+      "bytes": 3263,
+      "sha256": "50cc9f2fc0b3425250864a99a25fb1157dd98fd4194ee7bdc56373a3328941a0"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/design-clarification-c3/history/fresh-c2-review/preimages/557e94dc80e2621a9de797601d44b8ae5789adb64b94dbacb6e88935812372e7",
+      "bytes": 9758,
+      "sha256": "557e94dc80e2621a9de797601d44b8ae5789adb64b94dbacb6e88935812372e7"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/design-clarification-c3/history/fresh-c2-review/preimages/59f6b4b36cb0f82d88850f353e3017637e6446fad26369ae3eeb2282387a230a",
+      "bytes": 11124,
+      "sha256": "59f6b4b36cb0f82d88850f353e3017637e6446fad26369ae3eeb2282387a230a"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/design-clarification-c3/history/fresh-c2-review/preimages/5be46e7baf7906757e2655cfe55fc4226d75131e2c7686027ceaa30c3acbecff",
+      "bytes": 15762,
+      "sha256": "5be46e7baf7906757e2655cfe55fc4226d75131e2c7686027ceaa30c3acbecff"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/design-clarification-c3/history/fresh-c2-review/preimages/71e0e99d0709275056fbd15125eeffa71f6ed87d9a9114ea325e3c6efcf29f9a",
+      "bytes": 6919,
+      "sha256": "71e0e99d0709275056fbd15125eeffa71f6ed87d9a9114ea325e3c6efcf29f9a"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/design-clarification-c3/history/fresh-c2-review/preimages/72ada50f821b161c8ff4696805778a5b77be9693e897d906d9dc78ff74b8c4c9",
+      "bytes": 3718,
+      "sha256": "72ada50f821b161c8ff4696805778a5b77be9693e897d906d9dc78ff74b8c4c9"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/design-clarification-c3/history/fresh-c2-review/preimages/754a61642407a933f9c5cb91c17b947828fa251d1393d21cb4c764e349e4c939",
+      "bytes": 10746,
+      "sha256": "754a61642407a933f9c5cb91c17b947828fa251d1393d21cb4c764e349e4c939"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/design-clarification-c3/history/fresh-c2-review/preimages/80fad06678e9ddd0e2657672038f8cb9dadf57849edcf50884486edd0b092f4c",
+      "bytes": 2564,
+      "sha256": "80fad06678e9ddd0e2657672038f8cb9dadf57849edcf50884486edd0b092f4c"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/design-clarification-c3/history/fresh-c2-review/preimages/8bd31199f8b1d6f6682e8c983bbe267d77063169c827726b6351c4a83cf54a17",
+      "bytes": 1576,
+      "sha256": "8bd31199f8b1d6f6682e8c983bbe267d77063169c827726b6351c4a83cf54a17"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/design-clarification-c3/history/fresh-c2-review/preimages/8d60140b54b93fa29f388d9608c0b17d9993e1a48f7ec0788e993690ac456895",
+      "bytes": 5824,
+      "sha256": "8d60140b54b93fa29f388d9608c0b17d9993e1a48f7ec0788e993690ac456895"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/design-clarification-c3/history/fresh-c2-review/preimages/9602d7813694b4db82e36be829a94978532cf68bf5587db564d285b619ece338",
+      "bytes": 2011,
+      "sha256": "9602d7813694b4db82e36be829a94978532cf68bf5587db564d285b619ece338"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/design-clarification-c3/history/fresh-c2-review/preimages/991453d0beb60556fafec974f2ec34d23200520711fda9a1daa458f972eef87f",
+      "bytes": 8948,
+      "sha256": "991453d0beb60556fafec974f2ec34d23200520711fda9a1daa458f972eef87f"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/design-clarification-c3/history/fresh-c2-review/preimages/ac1230c0e892fbdc1a348ecd5abb481fda3c73f8a5158341b98c67a137302131",
+      "bytes": 9764,
+      "sha256": "ac1230c0e892fbdc1a348ecd5abb481fda3c73f8a5158341b98c67a137302131"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/design-clarification-c3/history/fresh-c2-review/preimages/b7d41108cc546ccfa0a1a1710b57d2c0b6f2f435fd67a21ae1b659fb4210c99a",
+      "bytes": 4082,
+      "sha256": "b7d41108cc546ccfa0a1a1710b57d2c0b6f2f435fd67a21ae1b659fb4210c99a"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/design-clarification-c3/history/fresh-c2-review/preimages/bd6fb7d02141aae5d160399fefa5096a04a969da4938c6056037b783024a4f00",
+      "bytes": 3842,
+      "sha256": "bd6fb7d02141aae5d160399fefa5096a04a969da4938c6056037b783024a4f00"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/design-clarification-c3/history/fresh-c2-review/preimages/c53a3731a9759f0403b4407f754ea3f3d82a240f5df1374397679f5ff1414529",
+      "bytes": 16943,
+      "sha256": "c53a3731a9759f0403b4407f754ea3f3d82a240f5df1374397679f5ff1414529"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/design-clarification-c3/history/fresh-c2-review/preimages/cf9e51d8c82dee8a708d6eea2b7e9b994be75a9fae7eaf0fa6e473a19a6393ce",
+      "bytes": 892,
+      "sha256": "cf9e51d8c82dee8a708d6eea2b7e9b994be75a9fae7eaf0fa6e473a19a6393ce"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/design-clarification-c3/history/fresh-c2-review/preimages/e54d694d7026ee3b58827dcc80a19156c8b0f141f613c569d3e3637698e1a655",
+      "bytes": 16007,
+      "sha256": "e54d694d7026ee3b58827dcc80a19156c8b0f141f613c569d3e3637698e1a655"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/design-clarification-c3/history/fresh-c2-review/preimages/e68c048bf5875d152340a5ee0c82c4ccdd0ba5152b6a51f40435f95e7f2aebb2",
+      "bytes": 10132,
+      "sha256": "e68c048bf5875d152340a5ee0c82c4ccdd0ba5152b6a51f40435f95e7f2aebb2"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/design-clarification-c3/history/fresh-c2-review/preimages/e992e414698203a03f7be107c97c4e066b872c80d717347d9bdf990927f86aa9",
+      "bytes": 4228,
+      "sha256": "e992e414698203a03f7be107c97c4e066b872c80d717347d9bdf990927f86aa9"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/design-clarification-c3/history/fresh-c2-review/preimages/f551c3f9f2c080a180bb77165ced012c7831f3295a7ac1999e6e51450896216f",
+      "bytes": 833,
+      "sha256": "f551c3f9f2c080a180bb77165ced012c7831f3295a7ac1999e6e51450896216f"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/design-clarification-c3/history/fresh-c2-review/preimages/fa966cb52b92aae915855f9caba4ec7451311d7924a998c6eec51e7062c4ca69",
+      "bytes": 15646,
+      "sha256": "fa966cb52b92aae915855f9caba4ec7451311d7924a998c6eec51e7062c4ca69"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/design-clarification-c3/history/fresh-c2-review/preimages/fc0bc8c9fb181451dfc132ae6f1bd84330b4c6fe088945110648e1b1e847cafd",
+      "bytes": 16427,
+      "sha256": "fc0bc8c9fb181451dfc132ae6f1bd84330b4c6fe088945110648e1b1e847cafd"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/design-clarification-c3/history/fresh-c2-review/report.md",
+      "bytes": 16897,
+      "sha256": "2a94fee6000a674d60d53284831f602895006cd108fee05908acde299c30f6ae"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/design-clarification-c3/history/fresh-c2-review/review-run.json",
+      "bytes": 546,
+      "sha256": "228d7ecfdc6a20e92efb7103682a1e8d16980e97762910228b8d847aae77863e"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/design-clarification-c3/history/fresh-c2-review/source-post.json",
+      "bytes": 6545,
+      "sha256": "d47ea4da2d2bd40621ab404034441e761f0046b34ae12cef55a32575b267efe2"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/design-clarification-c3/history/fresh-c2-review/source-pre.json",
+      "bytes": 6545,
+      "sha256": "d47ea4da2d2bd40621ab404034441e761f0046b34ae12cef55a32575b267efe2"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/design-clarification-c3/history/fresh-c2-review/subject-closure.json",
+      "bytes": 615,
+      "sha256": "94ed72cc9bf7b4a76d6e144eaf92a8a9aa92c17875819b1ace392a588d883235"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/design-clarification-c3/history/fresh-c2-review-scratch/dummy.mjs",
+      "bytes": 4228,
+      "sha256": "e992e414698203a03f7be107c97c4e066b872c80d717347d9bdf990927f86aa9"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/design-clarification-c3/history/fresh-c2-review-scratch/manifest.json",
+      "bytes": 389,
+      "sha256": "de2d0617bd6df012abce02d52a2fe61199e37eb09b96272452e13d98e236b7f0"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/design-clarification-c3/history/fresh-c2-review-scratch/review.py",
+      "bytes": 3981,
+      "sha256": "906b3ee71cedd732513dab4aad7327ed31e90be0b3d3a67b96e32830b2631bf1"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/design-clarification-c3/money-domain.md",
+      "bytes": 2011,
+      "sha256": "9602d7813694b4db82e36be829a94978532cf68bf5587db564d285b619ece338"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/design-clarification-c3/proposal.md",
+      "bytes": 17325,
+      "sha256": "f2651f8c7b16aecbaca497174dbfeb88e64c80e3eeb50bf8c69731a5f221e82d"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/design-clarification-c3/requirements-map.md",
+      "bytes": 3082,
+      "sha256": "471bbcde327569ed807f9d4027e38757748ba51ab5dc8b380dd5c056915675ff"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/design-clarification-c3/run.py",
+      "bytes": 1699,
+      "sha256": "3aeae3b4e59ba6478d40fa8e02da9d6a984202b9c2227205533008a4422119e8"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture/convex/canonical.ts",
+      "bytes": 3300,
+      "sha256": "7d2c124058ad1aba14a759e2b8bfdcfe112aa38f09f03928a6a795db85abf860"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture/convex/cases.ts",
+      "bytes": 9008,
+      "sha256": "be92628ebfcf6ee2231b5908b24694b857d7973812dc0514893fd2aeba82b248"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture/convex/contracts.ts",
+      "bytes": 3550,
+      "sha256": "f7a32d16f6c9e4e58ae058410b955abc1224168516ea84e5e4fd37a8f9b2a031"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture/convex/convex.config.ts",
+      "bytes": 148,
+      "sha256": "83c9c7c734f80af14ed4da6eab7669ffca5e87d436747db242d012954ab32d7b"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture/convex/guard.ts",
+      "bytes": 11821,
+      "sha256": "7e05564ae780ede69bacc31ae8f1ff123adb0dd9cb00d9c060f6db49ba7d2fb3"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture/convex/installed.ts",
+      "bytes": 2904,
+      "sha256": "693be35212a47b744a67ed65c99f0e0b72daa249d9e5f4b64fec80d198d1289b"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture/convex/lifecycle.ts",
+      "bytes": 27989,
+      "sha256": "0e915050f82a9a0e61ee93dfd5a6160b988a2abd1fe6a3a89fe266ba0894be84"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture/convex/managed.ts",
+      "bytes": 11065,
+      "sha256": "95fe12f58ca53bbb75d87d579b2673faea3d75145244412a061cf975abe6e106"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture/convex/observer.ts",
+      "bytes": 14737,
+      "sha256": "bbdde64b80ddc16fa621772513f99e928eac6402281afb86748109cfc560e215"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture/convex/proofs.ts",
+      "bytes": 9011,
+      "sha256": "7fbf0d2908a8f9bd9dd9024b502b196969dffe3212d3b1523fdbbc55473757d4"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture/convex/repository-codec.ts",
+      "bytes": 1196,
+      "sha256": "1f0453399bb4242d45425c8e9d28491f6f27a91c7842dfcaa076f2b5e3a65930"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture/convex/requests.ts",
+      "bytes": 37191,
+      "sha256": "24bb4bc60fc762e2277e41879458fae5eed55070a03936e712e944efea445b3f"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture/convex/runner.ts",
+      "bytes": 11012,
+      "sha256": "27a54e4f5bc7c034f5a4261c07fff9a0bdfd2aeb909e526bc7a9094477673e7b"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture/convex/schema.ts",
+      "bytes": 2901,
+      "sha256": "114f21dfa6f3b2a5cb2ba768fe300886659ad7ad3f2e34da9951f35f7f8ccbf7"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture/convex/store.ts",
+      "bytes": 5648,
+      "sha256": "af8eb4a6e06bc50780bc68e1eb44a1a573e3b05866d5f3c28b63c8b5172b40f8"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-default-native-driver-implementation-c2/fixture/convex/validate.ts",
+      "bytes": 14593,
+      "sha256": "b14ec5f7f1f4d03d37d57a85111cca853984ba1a219792ff3d4fb8f4ad197aab"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-charge-only-c1-coordinator-acceptance.json",
+      "bytes": 2575,
+      "sha256": "f47f15b61609035802f9ddef11ce9b6a3d701e940c7ac50cf7047cdf8cec9862"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/tasks/04-model-policy.md",
+      "bytes": 2759,
+      "sha256": "44777e644f835c759af09dfa8acefc7f37d29fac5152c8d34fd7b497e9858d74"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/tasks/08-memory-pipeline.md",
+      "bytes": 3992,
+      "sha256": "2f883577b0f3a43f969c5f7783803de0a4976a85e530ee7e34b6edfd4719cccf"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/tasks/09-text-client-slice.md",
+      "bytes": 3588,
+      "sha256": "dd483a6a14a266482b92d8c79a4943cff812544c3fed20b4ffde13c0fe738a6d"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/tasks/14-client-extensions.md",
+      "bytes": 2789,
+      "sha256": "cfe2c8020b31c4862cca2e09dcc490b037bac6b383114ebac7e710d966925ba9"
+    },
+    {
+      "path": "_research/convex-ai-gateway-2026-10-02/architecture.md",
+      "bytes": 30372,
+      "sha256": "d53e18355904cfd7d9db43951468bc4b0aca0de568008ac4c27d7fa783390c8e"
+    },
+    {
+      "path": "_research/convex-ai-gateway-2026-10-02/decision-gates.md",
+      "bytes": 11937,
+      "sha256": "1e12e1cc36f2446acabd6d3ff8464ebbd2a9d17582b17603aff8293ba48cdac4"
+    },
+    {
+      "path": "convex-dev/runtimeGateway.ts",
+      "bytes": 55759,
+      "sha256": "e796e43aafe70c37d8af7330a969e5b643eb58e86be7621cc7c08991ff1224be"
+    },
+    {
+      "path": "convex-dev/runtimeModelPolicy.ts",
+      "bytes": 88676,
+      "sha256": "c8279d4496eb9b6eb5763732dbb7e54cefe27e028f285fe3e31a639af1535710"
+    },
+    {
+      "path": "node_modules/@ai-sdk/openai-compatible/package.json",
+      "bytes": 2041,
+      "sha256": "53f8b9c6f892042380831ac67f4532301214141ed75f1f23014099fc11577c65"
+    },
+    {
+      "path": "node_modules/@ai-sdk/openai-compatible/src/chat/get-response-metadata.ts",
+      "bytes": 331,
+      "sha256": "a5a66da927824154483b5182f5a353631e51ad032a1fb28c8cb91895c5e0c57a"
+    },
+    {
+      "path": "node_modules/@ai-sdk/openai-compatible/src/chat/map-openai-compatible-finish-reason.ts",
+      "bytes": 487,
+      "sha256": "ad3d6446451c9b34e00ecf32dbde585241d25280e4be919c7540e448b9b2325e"
+    },
+    {
+      "path": "node_modules/@ai-sdk/openai-compatible/src/chat/openai-compatible-chat-language-model.ts",
+      "bytes": 26119,
+      "sha256": "8cedc84f1a015f63c5c0a76ddba664562a1301adb1ed0d8c858e0b740f65a79a"
+    },
+    {
+      "path": "node_modules/@ai-sdk/openai-compatible/src/embedding/openai-compatible-embedding-model-options.ts",
+      "bytes": 603,
+      "sha256": "0f32e2afa15a665af3e8891791ebb0e107aa07d33b5576bd1f1af4cc9d6e0a9b"
+    },
+    {
+      "path": "node_modules/@ai-sdk/openai-compatible/src/embedding/openai-compatible-embedding-model.ts",
+      "bytes": 5494,
+      "sha256": "24012af5f3fd8f93ec6c6d48690b40bbfc26f907afd4f6b21ee487c8dc225e36"
+    },
+    {
+      "path": "node_modules/@ai-sdk/provider/package.json",
+      "bytes": 1375,
+      "sha256": "900a8cfaddb8008b36b340e57c83b2e6a89c6dd4d0a0599147470a3cbe3943f8"
+    },
+    {
+      "path": "node_modules/@ai-sdk/provider/src/embedding-model/v4/embedding-model-v4-call-options.ts",
+      "bytes": 711,
+      "sha256": "30356bb94b5c9064bbe40dee42e31adb8a5e1e93f3b7ebc5fec1e3901dfca9af"
+    },
+    {
+      "path": "node_modules/@ai-sdk/provider/src/embedding-model/v4/embedding-model-v4-result.ts",
+      "bytes": 1108,
+      "sha256": "8e1ba99e5114047e4bbf2cbc3cafdfdef709f81362fba56d20306f830aaeff98"
+    },
+    {
+      "path": "node_modules/@ai-sdk/provider/src/embedding-model/v4/embedding-model-v4.ts",
+      "bytes": 1547,
+      "sha256": "c1a8c906ca3f181a8c7889342e898251f627108ab6df54204b85d115d491cc77"
+    },
+    {
+      "path": "node_modules/@ai-sdk/provider/src/language-model/v4/language-model-v4-finish-reason.ts",
+      "bytes": 1115,
+      "sha256": "db70dd3824233e22a128cebf6f53de34adf8c4b7e2110896f20bfbd6ad2b6e6e"
+    },
+    {
+      "path": "node_modules/@ai-sdk/provider/src/language-model/v4/language-model-v4-generate-result.ts",
+      "bytes": 1692,
+      "sha256": "1b3124cbee9f5cb48689915ca01598b0dd54f496ebf616db17be06fc33f0bd29"
+    },
+    {
+      "path": "node_modules/@ai-sdk/provider/src/language-model/v4/language-model-v4-stream-part.ts",
+      "bytes": 3268,
+      "sha256": "eb17a33d107c5f9c43113592da438e37d9a0728adeb02b8f10f87386d9fb383e"
+    },
+    {
+      "path": "node_modules/@ai-sdk/provider/src/language-model/v4/language-model-v4-stream-result.ts",
+      "bytes": 656,
+      "sha256": "666655282d858fe734e07bb0dc30600b35ecc2de4f3b8d693c79db9d4ddf969d"
+    },
+    {
+      "path": "node_modules/@ai-sdk/provider/src/language-model/v4/language-model-v4-usage.ts",
+      "bytes": 1277,
+      "sha256": "9ae326e89d75f4c7531e9e5560282121dcd964bc2ca343b28a92b150b60a747a"
+    },
+    {
+      "path": "node_modules/@convex-dev/ai-sdk-provider/package.json",
+      "bytes": 1763,
+      "sha256": "1067266430ffd373f4200d8cbfb4fce1586eca00642fcde9f3aa88de68c25c8e"
+    },
+    {
+      "path": "node_modules/@convex-dev/ai-sdk-provider/src/index.ts",
+      "bytes": 6787,
+      "sha256": "5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613"
+    }
+  ]
+}

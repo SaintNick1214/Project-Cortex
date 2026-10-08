@@ -55,7 +55,7 @@ export async function createScopedCortex(
         graphEnabled: graph,
         ...(adapter ? { graph: { adapter, autoSync: false } } : {}),
       },
-      { initializeTransport: initializePrivateTransport },
+      { deploymentOperator: true, initializeTransport: initializePrivateTransport },
     );
     if (adapter) {
       ownedGraphAdapters.set(cortex, adapter);

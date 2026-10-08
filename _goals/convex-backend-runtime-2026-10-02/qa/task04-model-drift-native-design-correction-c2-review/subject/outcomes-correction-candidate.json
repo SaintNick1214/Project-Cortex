@@ -1,0 +1,3552 @@
+{
+  "outcomes": [
+    {
+      "id": "known-drift-40",
+      "rpcIncludingThreePostCleanup": 30,
+      "created": 15,
+      "peak": 15,
+      "nested": 0,
+      "trace": [
+        {
+          "path": "qualificationOwned:seed",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:installDeploymentPolicy",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:ensureBudget",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:admit",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:checkpoint",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:captureTerminalEvidence",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:captureTerminalEvidence",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:attachTerminalResult",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:ensureBudget",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:admit",
+          "type": "mutation",
+          "status": "FAIL",
+          "code": "BUDGET_EXCEEDED"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:admit",
+          "type": "mutation",
+          "status": "FAIL",
+          "code": "BUDGET_EXCEEDED"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:admitFallback",
+          "type": "mutation",
+          "status": "FAIL",
+          "code": "POLICY_DENIED"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:checkpoint",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:cleanup",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        }
+      ],
+      "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+    },
+    {
+      "id": "known-drift-150",
+      "rpcIncludingThreePostCleanup": 30,
+      "created": 15,
+      "peak": 15,
+      "nested": 0,
+      "trace": [
+        {
+          "path": "qualificationOwned:seed",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:installDeploymentPolicy",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:ensureBudget",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:admit",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:checkpoint",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:captureTerminalEvidence",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:captureTerminalEvidence",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:attachTerminalResult",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:ensureBudget",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:admit",
+          "type": "mutation",
+          "status": "FAIL",
+          "code": "BUDGET_EXCEEDED"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:admit",
+          "type": "mutation",
+          "status": "FAIL",
+          "code": "BUDGET_EXCEEDED"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:admitFallback",
+          "type": "mutation",
+          "status": "FAIL",
+          "code": "POLICY_DENIED"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:checkpoint",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:cleanup",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        }
+      ],
+      "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+    },
+    {
+      "id": "unknown-drift-terminal",
+      "rpcIncludingThreePostCleanup": 20,
+      "created": 15,
+      "peak": 15,
+      "nested": 0,
+      "trace": [
+        {
+          "path": "qualificationOwned:seed",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:installDeploymentPolicy",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:ensureBudget",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:admit",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:checkpoint",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:captureTerminalEvidence",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:captureTerminalEvidence",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:captureTerminalEvidence",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:captureTerminalEvidence",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:attachTerminalResult",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:cleanup",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        }
+      ],
+      "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+    },
+    {
+      "id": "unknown-lifetime",
+      "rpcIncludingThreePostCleanup": 16,
+      "created": 15,
+      "peak": 15,
+      "nested": 0,
+      "trace": [
+        {
+          "path": "qualificationOwned:seed",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:installDeploymentPolicy",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:ensureBudget",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:admit",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:checkpoint",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:captureTerminalEvidence",
+          "type": "mutation",
+          "status": "FAIL",
+          "code": "INVALID_INPUT"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:recover",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:checkpoint",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:cleanup",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        }
+      ],
+      "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+    },
+    {
+      "id": "token-input-unknown",
+      "rpcIncludingThreePostCleanup": 20,
+      "created": 15,
+      "peak": 15,
+      "nested": 0,
+      "trace": [
+        {
+          "path": "qualificationOwned:seed",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:installDeploymentPolicy",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:ensureBudget",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:admit",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:checkpoint",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:captureTerminalEvidence",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:captureTerminalEvidence",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:captureTerminalEvidence",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:captureTerminalEvidence",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:attachTerminalResult",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:cleanup",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        }
+      ],
+      "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+    },
+    {
+      "id": "token-input-known40",
+      "rpcIncludingThreePostCleanup": 30,
+      "created": 15,
+      "peak": 15,
+      "nested": 0,
+      "trace": [
+        {
+          "path": "qualificationOwned:seed",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:installDeploymentPolicy",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:ensureBudget",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:admit",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:checkpoint",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:captureTerminalEvidence",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:captureTerminalEvidence",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:attachTerminalResult",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:ensureBudget",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:admit",
+          "type": "mutation",
+          "status": "FAIL",
+          "code": "BUDGET_EXCEEDED"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:admit",
+          "type": "mutation",
+          "status": "FAIL",
+          "code": "BUDGET_EXCEEDED"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:admitFallback",
+          "type": "mutation",
+          "status": "FAIL",
+          "code": "POLICY_DENIED"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:checkpoint",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:cleanup",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        }
+      ],
+      "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+    },
+    {
+      "id": "token-output-unknown",
+      "rpcIncludingThreePostCleanup": 20,
+      "created": 15,
+      "peak": 15,
+      "nested": 0,
+      "trace": [
+        {
+          "path": "qualificationOwned:seed",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:installDeploymentPolicy",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:ensureBudget",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:admit",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:checkpoint",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:captureTerminalEvidence",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:captureTerminalEvidence",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:captureTerminalEvidence",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:captureTerminalEvidence",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:attachTerminalResult",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:cleanup",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        }
+      ],
+      "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+    },
+    {
+      "id": "token-output-known40",
+      "rpcIncludingThreePostCleanup": 30,
+      "created": 15,
+      "peak": 15,
+      "nested": 0,
+      "trace": [
+        {
+          "path": "qualificationOwned:seed",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:installDeploymentPolicy",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:ensureBudget",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:admit",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:checkpoint",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:captureTerminalEvidence",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:captureTerminalEvidence",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:attachTerminalResult",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:ensureBudget",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:admit",
+          "type": "mutation",
+          "status": "FAIL",
+          "code": "BUDGET_EXCEEDED"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:admit",
+          "type": "mutation",
+          "status": "FAIL",
+          "code": "BUDGET_EXCEEDED"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:admitFallback",
+          "type": "mutation",
+          "status": "FAIL",
+          "code": "POLICY_DENIED"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:checkpoint",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:cleanup",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        }
+      ],
+      "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+    },
+    {
+      "id": "refinement-add-absent-model",
+      "rpcIncludingThreePostCleanup": 23,
+      "created": 15,
+      "peak": 15,
+      "nested": 0,
+      "trace": [
+        {
+          "path": "qualificationOwned:seed",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:installDeploymentPolicy",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:ensureBudget",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:admit",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:checkpoint",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:captureTerminalEvidence",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:captureTerminalEvidence",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:captureTerminalEvidence",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:captureTerminalEvidence",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:attachTerminalResult",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:captureTerminalEvidence",
+          "type": "mutation",
+          "status": "FAIL",
+          "code": "IDEMPOTENCY_CONFLICT"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:cleanup",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        }
+      ],
+      "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+    },
+    {
+      "id": "refinement-add-absent-tokens",
+      "rpcIncludingThreePostCleanup": 23,
+      "created": 15,
+      "peak": 15,
+      "nested": 0,
+      "trace": [
+        {
+          "path": "qualificationOwned:seed",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:installDeploymentPolicy",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:ensureBudget",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:admit",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:checkpoint",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:captureTerminalEvidence",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:captureTerminalEvidence",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:captureTerminalEvidence",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:captureTerminalEvidence",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:attachTerminalResult",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:captureTerminalEvidence",
+          "type": "mutation",
+          "status": "FAIL",
+          "code": "IDEMPOTENCY_CONFLICT"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:cleanup",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        }
+      ],
+      "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+    },
+    {
+      "id": "captured-parity-settle",
+      "rpcIncludingThreePostCleanup": 29,
+      "created": 15,
+      "peak": 15,
+      "nested": 0,
+      "trace": [
+        {
+          "path": "qualificationOwned:seed",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:installDeploymentPolicy",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:ensureBudget",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:admit",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:checkpoint",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:captureTerminalEvidence",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:settle",
+          "type": "mutation",
+          "status": "FAIL",
+          "code": "FORBIDDEN"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:settle",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:settle",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:settle",
+          "type": "mutation",
+          "status": "FAIL",
+          "code": "IDEMPOTENCY_CONFLICT"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:captureTerminalEvidence",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:captureTerminalEvidence",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:attachTerminalResult",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:cleanup",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        }
+      ],
+      "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+    },
+    {
+      "id": "captured-parity-recover",
+      "rpcIncludingThreePostCleanup": 29,
+      "created": 15,
+      "peak": 15,
+      "nested": 0,
+      "trace": [
+        {
+          "path": "qualificationOwned:seed",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:installDeploymentPolicy",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:ensureBudget",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:admit",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:checkpoint",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:captureTerminalEvidence",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:recover",
+          "type": "mutation",
+          "status": "FAIL",
+          "code": "FORBIDDEN"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:recover",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:recover",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:recover",
+          "type": "mutation",
+          "status": "FAIL",
+          "code": "IDEMPOTENCY_CONFLICT"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:captureTerminalEvidence",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:captureTerminalEvidence",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:attachTerminalResult",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:cleanup",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        }
+      ],
+      "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+    },
+    {
+      "id": "captured-parity-operator",
+      "rpcIncludingThreePostCleanup": 30,
+      "created": 16,
+      "peak": 16,
+      "nested": 0,
+      "trace": [
+        {
+          "path": "qualificationOwned:seed",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:installDeploymentPolicy",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:ensureBudget",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:admit",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:checkpoint",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:captureTerminalEvidence",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:reconcileDeploymentLiability",
+          "type": "mutation",
+          "status": "FAIL",
+          "code": "FORBIDDEN"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:change",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:reconcileDeploymentLiability",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:reconcileDeploymentLiability",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:reconcileDeploymentLiability",
+          "type": "mutation",
+          "status": "FAIL",
+          "code": "IDEMPOTENCY_CONFLICT"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:captureTerminalEvidence",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:captureTerminalEvidence",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:attachTerminalResult",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:cleanup",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        }
+      ],
+      "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+    },
+    {
+      "id": "defensive-initial-model-pending",
+      "rpcIncludingThreePostCleanup": 30,
+      "created": 15,
+      "peak": 15,
+      "nested": 0,
+      "trace": [
+        {
+          "path": "qualificationOwned:seed",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:installDeploymentPolicy",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:ensureBudget",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:admit",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:checkpoint",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:captureTerminalEvidence",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationCapture:partialMarker",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:attachTerminalResult",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:attachTerminalResult",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationCapture:partialMarker",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:attachTerminalResult",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:attachTerminalResult",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationCapture:renewOrigin",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:recover",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:attachTerminalResult",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:cleanup",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        }
+      ],
+      "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+    },
+    {
+      "id": "defensive-initial-model-attached",
+      "rpcIncludingThreePostCleanup": 30,
+      "created": 15,
+      "peak": 15,
+      "nested": 0,
+      "trace": [
+        {
+          "path": "qualificationOwned:seed",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:installDeploymentPolicy",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:ensureBudget",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:admit",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:checkpoint",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:captureTerminalEvidence",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationCapture:partialMarker",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:attachTerminalResult",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:attachTerminalResult",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationCapture:partialMarker",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:attachTerminalResult",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:attachTerminalResult",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationCapture:renewOrigin",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:recover",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:attachTerminalResult",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:cleanup",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        }
+      ],
+      "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+    },
+    {
+      "id": "defensive-initial-token-pending",
+      "rpcIncludingThreePostCleanup": 23,
+      "created": 15,
+      "peak": 15,
+      "nested": 0,
+      "trace": [
+        {
+          "path": "qualificationOwned:seed",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:installDeploymentPolicy",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:ensureBudget",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:admit",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:checkpoint",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:captureTerminalEvidence",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationCapture:partialMarker",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:attachTerminalResult",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:attachTerminalResult",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationCapture:renewOrigin",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:recover",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:attachTerminalResult",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:cleanup",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        }
+      ],
+      "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+    },
+    {
+      "id": "defensive-initial-token-attached",
+      "rpcIncludingThreePostCleanup": 23,
+      "created": 15,
+      "peak": 15,
+      "nested": 0,
+      "trace": [
+        {
+          "path": "qualificationOwned:seed",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:installDeploymentPolicy",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:ensureBudget",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:admit",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:checkpoint",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:captureTerminalEvidence",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationCapture:partialMarker",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:attachTerminalResult",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:attachTerminalResult",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationCapture:renewOrigin",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:recover",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:attachTerminalResult",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:cleanup",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        }
+      ],
+      "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+    },
+    {
+      "id": "defensive-final-model-pending",
+      "rpcIncludingThreePostCleanup": 30,
+      "created": 15,
+      "peak": 15,
+      "nested": 0,
+      "trace": [
+        {
+          "path": "qualificationOwned:seed",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:installDeploymentPolicy",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:ensureBudget",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:admit",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:checkpoint",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:captureTerminalEvidence",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationCapture:partialMarker",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:attachTerminalResult",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:attachTerminalResult",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationCapture:partialMarker",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:attachTerminalResult",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:attachTerminalResult",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationCapture:renewOrigin",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:recover",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:attachTerminalResult",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:cleanup",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        }
+      ],
+      "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+    },
+    {
+      "id": "defensive-final-model-attached",
+      "rpcIncludingThreePostCleanup": 30,
+      "created": 15,
+      "peak": 15,
+      "nested": 0,
+      "trace": [
+        {
+          "path": "qualificationOwned:seed",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:installDeploymentPolicy",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:ensureBudget",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:admit",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:checkpoint",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:captureTerminalEvidence",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationCapture:partialMarker",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:attachTerminalResult",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:attachTerminalResult",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationCapture:partialMarker",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:attachTerminalResult",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:attachTerminalResult",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationCapture:renewOrigin",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:recover",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:attachTerminalResult",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:cleanup",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        }
+      ],
+      "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+    },
+    {
+      "id": "defensive-final-token-pending",
+      "rpcIncludingThreePostCleanup": 23,
+      "created": 15,
+      "peak": 15,
+      "nested": 0,
+      "trace": [
+        {
+          "path": "qualificationOwned:seed",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:installDeploymentPolicy",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:ensureBudget",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:admit",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:checkpoint",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:captureTerminalEvidence",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationCapture:partialMarker",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:attachTerminalResult",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:attachTerminalResult",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationCapture:renewOrigin",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:recover",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:attachTerminalResult",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:cleanup",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        }
+      ],
+      "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+    },
+    {
+      "id": "defensive-final-token-attached",
+      "rpcIncludingThreePostCleanup": 23,
+      "created": 15,
+      "peak": 15,
+      "nested": 0,
+      "trace": [
+        {
+          "path": "qualificationOwned:seed",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:installDeploymentPolicy",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:ensureBudget",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:admit",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:checkpoint",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:captureTerminalEvidence",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationCapture:partialMarker",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:attachTerminalResult",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:attachTerminalResult",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationCapture:renewOrigin",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:recover",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:attachTerminalResult",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:cleanup",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        }
+      ],
+      "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+    },
+    {
+      "id": "gateway-native-drift-40",
+      "rpcIncludingThreePostCleanup": 20,
+      "created": 15,
+      "peak": 15,
+      "nested": 0,
+      "trace": [
+        {
+          "path": "qualificationOwned:seed",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:installDeploymentPolicy",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:ensureBudget",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:resolve",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:admit",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:checkpoint",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:captureTerminalEvidence",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:captureTerminalEvidence",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:admit",
+          "type": "mutation",
+          "status": "FAIL",
+          "code": "BUDGET_EXCEEDED"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:checkpoint",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:cleanup",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        }
+      ],
+      "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+    },
+    {
+      "id": "gateway-native-drift-150",
+      "rpcIncludingThreePostCleanup": 20,
+      "created": 15,
+      "peak": 15,
+      "nested": 0,
+      "trace": [
+        {
+          "path": "qualificationOwned:seed",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:installDeploymentPolicy",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:ensureBudget",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:resolve",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:admit",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:checkpoint",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:captureTerminalEvidence",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:captureTerminalEvidence",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:admit",
+          "type": "mutation",
+          "status": "FAIL",
+          "code": "BUDGET_EXCEEDED"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:checkpoint",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:cleanup",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        }
+      ],
+      "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+    },
+    {
+      "id": "gateway-native-healthy-attachment",
+      "rpcIncludingThreePostCleanup": 21,
+      "created": 15,
+      "peak": 15,
+      "nested": 0,
+      "trace": [
+        {
+          "path": "qualificationOwned:seed",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:installDeploymentPolicy",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:ensureBudget",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:resolve",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:admit",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:checkpoint",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:captureTerminalEvidence",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:attachTerminalResult",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:captureTerminalEvidence",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:attachTerminalResult",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:checkpoint",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:cleanup",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        }
+      ],
+      "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+    },
+    {
+      "id": "late-drift-refinement-revoked-cancelled",
+      "rpcIncludingThreePostCleanup": 23,
+      "created": 15,
+      "peak": 15,
+      "nested": 0,
+      "trace": [
+        {
+          "path": "qualificationOwned:seed",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:installDeploymentPolicy",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:ensureBudget",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:admit",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:checkpoint",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:captureTerminalEvidence",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationCapture:revokeOrigin",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:change",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:captureTerminalEvidence",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:captureTerminalEvidence",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:captureTerminalEvidence",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:attachTerminalResult",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:cleanup",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        }
+      ],
+      "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+    },
+    {
+      "id": "late-drift-refinement-original-window",
+      "rpcIncludingThreePostCleanup": 26,
+      "created": 15,
+      "peak": 15,
+      "nested": 0,
+      "trace": [
+        {
+          "path": "qualificationOwned:seed",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:installDeploymentPolicy",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:ensureBudget",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:admit",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:checkpoint",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:captureTerminalEvidence",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:ensureBudget",
+          "type": "mutation",
+          "status": "FAIL",
+          "code": "BUDGET_EXCEEDED"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:captureTerminalEvidence",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:captureTerminalEvidence",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:captureTerminalEvidence",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:attachTerminalResult",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "runtimeModelPolicy:ensureBudget",
+          "type": "mutation",
+          "status": "FAIL",
+          "code": "BUDGET_EXCEEDED"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:cleanup",
+          "type": "mutation",
+          "status": "PASS"
+        },
+        {
+          "path": "qualificationOwned:snapshot",
+          "type": "query",
+          "status": "PASS"
+        }
+      ],
+      "status": "PASS_OFFLINE_HANDLER_COMPOSITION_ONLY"
+    }
+  ],
+  "failures": [],
+  "sourceSha256": "6eea2e89d703dec580081be08dbac5ce04a956ca3a92621f8b4ee448a58939a1",
+  "native": "NOT_RUN"
+}

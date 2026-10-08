@@ -1,0 +1,242 @@
+[
+  {
+    "name": "backend-types",
+    "command": "node",
+    "args": [
+      "node_modules/typescript/bin/tsc",
+      "-p",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03b1-mf/tsconfig.backend.json",
+      "--pretty",
+      "false"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "environment": {},
+    "node": "v24.19.0",
+    "started": "2026-10-03T10:46:20.983Z",
+    "ended": "2026-10-03T10:46:25.087Z",
+    "exitCode": 0,
+    "signal": null,
+    "stdout": "backend-types.stdout.log",
+    "stderr": "backend-types.stderr.log"
+  },
+  {
+    "name": "root-scoped-types",
+    "command": "node",
+    "args": [
+      "node_modules/typescript/bin/tsc",
+      "-p",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03b1-mf/tsconfig.root.json",
+      "--pretty",
+      "false"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "environment": {},
+    "node": "v24.19.0",
+    "started": "2026-10-03T10:46:25.090Z",
+    "ended": "2026-10-03T10:46:29.763Z",
+    "exitCode": 0,
+    "signal": null,
+    "stdout": "root-scoped-types.stdout.log",
+    "stderr": "root-scoped-types.stderr.log"
+  },
+  {
+    "name": "affected-eslint",
+    "command": "node",
+    "args": [
+      "node_modules/eslint/bin/eslint.js",
+      "convex-dev/runtimeDataAuth.ts",
+      "convex-dev/memories.ts",
+      "convex-dev/facts.ts",
+      "convex-dev/schema.ts",
+      "tests/unit/runtimeEndpointAuth",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03b1-mf/closure.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03b1-mf/checks.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03b1-mf/archive-integrity.mjs",
+      "--report-unused-disable-directives"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "environment": {},
+    "node": "v24.19.0",
+    "started": "2026-10-03T10:46:29.763Z",
+    "ended": "2026-10-03T10:46:37.911Z",
+    "exitCode": 0,
+    "signal": null,
+    "stdout": "affected-eslint.stdout.log",
+    "stderr": "affected-eslint.stderr.log"
+  },
+  {
+    "name": "archive-integrity",
+    "command": "node",
+    "args": [
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03b1-mf/archive-integrity.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "environment": {},
+    "node": "v24.19.0",
+    "started": "2026-10-03T10:46:37.911Z",
+    "ended": "2026-10-03T10:46:37.954Z",
+    "exitCode": 0,
+    "signal": null,
+    "stdout": "archive-integrity.stdout.log",
+    "stderr": "archive-integrity.stderr.log"
+  },
+  {
+    "name": "closure",
+    "command": "node",
+    "args": [
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03b1-mf/closure.mjs"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "environment": {},
+    "node": "v24.19.0",
+    "started": "2026-10-03T10:46:37.954Z",
+    "ended": "2026-10-03T10:46:38.247Z",
+    "exitCode": 0,
+    "signal": null,
+    "stdout": "closure.stdout.log",
+    "stderr": "closure.stderr.log"
+  },
+  {
+    "name": "endpoint-and-authority-unit",
+    "command": "node",
+    "args": [
+      "--experimental-vm-modules",
+      "node_modules/jest/bin/jest.js",
+      "--testPathPatterns=tests/unit/(runtimeEndpointAuth|runtimeAuth)",
+      "--runInBand",
+      "--forceExit"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "environment": {
+      "CONVEX_URL": "http://127.0.0.1:1",
+      "CONVEX_TEST_MODE": "local"
+    },
+    "node": "v24.19.0",
+    "started": "2026-10-03T10:46:38.247Z",
+    "ended": "2026-10-03T10:46:46.488Z",
+    "exitCode": 0,
+    "signal": null,
+    "stdout": "endpoint-and-authority-unit.stdout.log",
+    "stderr": "endpoint-and-authority-unit.stderr.log"
+  },
+  {
+    "name": "probe-source-fences",
+    "command": "node_modules/.bin/tsx",
+    "args": [
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03b1-mf/checks/source-fence-probes.mts"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "environment": {},
+    "node": "v24.19.0",
+    "started": "2026-10-03T10:46:46.488Z",
+    "ended": "2026-10-03T10:46:46.782Z",
+    "exitCode": 0,
+    "signal": null,
+    "stdout": "probe-source-fences.stdout.log",
+    "stderr": "probe-source-fences.stderr.log",
+    "probeSha256": "2c63154c9c2c3238d6469c43d0f4dfb30ed2c470fa25abb32fed623b252feccf",
+    "provenance": "Executor replay of byte-identical preserved independent judge probe, not a fresh independent judgment"
+  },
+  {
+    "name": "probe-historical-source-fences",
+    "command": "node_modules/.bin/tsx",
+    "args": [
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03b1-mf/checks/historical-source-probes.mts"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "environment": {},
+    "node": "v24.19.0",
+    "started": "2026-10-03T10:46:46.782Z",
+    "ended": "2026-10-03T10:46:46.969Z",
+    "exitCode": 0,
+    "signal": null,
+    "stdout": "probe-historical-source-fences.stdout.log",
+    "stderr": "probe-historical-source-fences.stderr.log",
+    "probeSha256": "e64364d7288da3c451f8f8f19c5b08427aaed8aa6e1923c6976e358249b6c3fd",
+    "provenance": "Executor replay of byte-identical preserved independent judge probe, not a fresh independent judgment"
+  },
+  {
+    "name": "probe-independent-read-delivery",
+    "command": "node_modules/.bin/tsx",
+    "args": [
+      "_goals/convex-backend-runtime-2026-10-02/qa/task03b1-mf/checks/final-read-probes.mts"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "environment": {},
+    "node": "v24.19.0",
+    "started": "2026-10-03T10:46:46.970Z",
+    "ended": "2026-10-03T10:46:47.181Z",
+    "exitCode": 0,
+    "signal": null,
+    "stdout": "probe-independent-read-delivery.stdout.log",
+    "stderr": "probe-independent-read-delivery.stderr.log",
+    "probeSha256": "9c9aed98998a1c05ea48bdfbd5d9a0cecc684b484f93f8a913df2183cdd0c594",
+    "provenance": "Executor replay of byte-identical preserved independent judge probe, not a fresh independent judgment"
+  },
+  {
+    "name": "full-root-types-expected-consumer-errors",
+    "command": "node",
+    "args": [
+      "node_modules/typescript/bin/tsc",
+      "--noEmit",
+      "--pretty",
+      "false"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "environment": {},
+    "node": "v24.19.0",
+    "started": "2026-10-03T10:46:47.181Z",
+    "ended": "2026-10-03T10:46:58.456Z",
+    "exitCode": 2,
+    "signal": null,
+    "stdout": "full-root-types-expected-consumer-errors.stdout.log",
+    "stderr": "full-root-types-expected-consumer-errors.stderr.log",
+    "expectedIntegrationDiagnostics": [
+      {
+        "position": "src/governance/index.ts(380,28)",
+        "property": "enforce",
+        "provenance": "Parent-integrated independently FINAL PASS Task03B2-D internalized worker; Task03C consumer update pending"
+      },
+      {
+        "position": "tests/helpers/cleanup.ts(58,62)",
+        "property": "purgeAll",
+        "provenance": "MF approved operator-internal memory purge; Task03C consumer update pending"
+      },
+      {
+        "position": "tests/helpers/cleanup.ts(77,59)",
+        "property": "purgeAll",
+        "provenance": "MF approved operator-internal fact purge; Task03C consumer update pending"
+      },
+      {
+        "position": "tests/interactive-runner.ts(380,55)",
+        "property": "purgeAll",
+        "provenance": "MF approved operator-internal memory purge; Task03C consumer update pending"
+      }
+    ],
+    "fullRootStatus": "FAIL; four expected integration diagnostics are not a full-root PASS",
+    "expectedConsumerDiagnosticsOnly": true
+  },
+  {
+    "name": "whitespace",
+    "command": "git",
+    "args": [
+      "diff",
+      "--check",
+      "--",
+      "convex-dev/runtimeDataAuth.ts",
+      "convex-dev/memories.ts",
+      "convex-dev/facts.ts",
+      "convex-dev/schema.ts",
+      "tests/unit/runtimeEndpointAuth"
+    ],
+    "cwd": "/workspace/Project-Cortex",
+    "environment": {},
+    "node": "v24.19.0",
+    "started": "2026-10-03T10:46:58.457Z",
+    "ended": "2026-10-03T10:46:58.463Z",
+    "exitCode": 0,
+    "signal": null,
+    "stdout": "whitespace.stdout.log",
+    "stderr": "whitespace.stderr.log"
+  }
+]

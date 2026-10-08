@@ -19,7 +19,7 @@ jest.unstable_mockModule("os", () => ({
   ...realOs,
   homedir: () => process.env.HOME!,
 }));
-jest.unstable_mockModule("convex/browser", () => ({ ConvexHttpClient: jest.fn(() => ({setAdminAuth: admin, query: jest.fn(), mutation: jest.fn(), action: jest.fn()})) }));
+jest.unstable_mockModule("convex/browser", () => ({ ConvexHttpClient: jest.fn(() => ({setAdminAuth: admin, function: jest.fn(), query: jest.fn(), mutation: jest.fn(), action: jest.fn()})) }));
 jest.unstable_mockModule("@cortexmemory/sdk", () => ({ createAuthContext: (value: unknown) => value,
   Cortex: jest.fn((_options: unknown, runtime?: {initializeTransport?: (transport: unknown) => undefined}) => {
     const transport = {close, query: jest.fn(), mutation: jest.fn(), action: jest.fn(), setAdminAuth: admin};

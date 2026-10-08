@@ -10,6 +10,13 @@ export const operationalExportExclusions = {
   cortexErasureReceipts: "temporaryErasureReconciliation",
 } as const;
 
+/** Runtime data has no legacy export projection. Its tenant scope is refused before inspection. */
+export const runtimeExportUnsupported = [
+  "runtimeAuthPrincipals", "runtimeAuthMemberships", "runtimeAuthScopes", "runtimeAuthGrants", "runtimeAuthTombstones",
+  "runtimeMemorySources", "runtimeMemoryChunks", "runtimeMemoryVectors", "runtimeMemoryReceipts",
+  "runtimeModelPolicies", "runtimeModelQualifications", "runtimeBudgetAccounts", "runtimeModelOperations", "runtimeModelAttempts",
+] as const;
+
 export const exportDomains = [
   "immutable",
   "mutable",

@@ -14,8 +14,11 @@ import type { GraphSyncPolicy } from "../graph/types";
  * - Graph database integration
  */
 
+import { isDeploymentOperatorClient } from "../common/deploymentOperator";
+import { AssetCapabilityUnavailableError } from "../assets/errors";
+import { resolveTenantId } from "../auth/tenant";
 import type { ConvexClient } from "convex/browser";
-import { api } from "../../convex-dev/_generated/api";
+import { api } from "../common/backendApi";
 import type {
   Artifact,
   ArtifactVersion,
@@ -156,7 +159,7 @@ export class ArtifactsAPI {
           kind: options.kind ?? "text",
           streamingState: options.streamingState ?? "draft",
           artifactId: options.artifactId,
-          tenantId: options.tenantId ?? this.authContext?.tenantId,
+          tenantId: resolveTenantId(this.authContext?.tenantId, options.tenantId),
           userId: options.userId,
           participantId: options.participantId,
           description: options.description,
@@ -325,7 +328,7 @@ export class ArtifactsAPI {
       () =>
         this.client.query(api.artifacts.list, {
           memorySpaceId: filter.memorySpaceId,
-          tenantId: filter.tenantId ?? this.authContext?.tenantId,
+          tenantId: resolveTenantId(this.authContext?.tenantId, filter.tenantId),
           userId: filter.userId,
           participantId: filter.participantId,
           kind: filter.kind,
@@ -368,7 +371,7 @@ export class ArtifactsAPI {
       () =>
         this.client.query(api.artifacts.count, {
           memorySpaceId: filter.memorySpaceId,
-          tenantId: filter.tenantId ?? this.authContext?.tenantId,
+          tenantId: resolveTenantId(this.authContext?.tenantId, filter.tenantId),
           userId: filter.userId,
           kind: filter.kind,
           streamingState: filter.streamingState,
@@ -946,21 +949,12 @@ export class ArtifactsAPI {
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   /**
-   * Upload a file and attach it to an artifact
+   * Asset upload and delivery require a qualified authenticated backend capability.
+   * This intermediate SDK rejects with AssetCapabilityUnavailableError before
+   * transport or file processing; no bearer URL or upload result is returned.
+   * Future support uses bounded authenticated Convex upload and delivery.
    *
-   * Handles the full upload flow: generates upload URL, uploads file,
-   * and attaches the reference to the artifact.
-   *
-   * @example
-   * ```typescript
-   * const artifact = await cortex.artifacts.uploadFile({
-   *   artifactId: 'art-abc123',
-   *   file: imageBlob,
-   *   filename: 'diagram.png',
-   *   mimeType: 'image/png',
-   * });
-   * console.log(artifact.attachedFiles.length); // 1
-   * ```
+   * @throws AssetCapabilityUnavailableError with CAPABILITY_UNAVAILABLE
    */
   async uploadFile(params: {
     artifactId: string;
@@ -981,6 +975,7 @@ export class ArtifactsAPI {
     version: number;
     updatedAt: number;
   }> {
+    if (!isDeploymentOperatorClient(this.client)) throw new AssetCapabilityUnavailableError();
     // Client-side validation
     validateArtifactId(params.artifactId);
     validateArtifactIdFormat(params.artifactId);
@@ -1045,15 +1040,15 @@ export class ArtifactsAPI {
   }
 
   /**
-   * Get a signed URL for an attached file
+   * Asset upload and delivery require a qualified authenticated backend capability.
+   * This intermediate SDK rejects with AssetCapabilityUnavailableError before
+   * transport or file processing; no bearer URL or upload result is returned.
+   * Future support uses bounded authenticated Convex upload and delivery.
    *
-   * @example
-   * ```typescript
-   * const url = await cortex.artifacts.getFileUrl('art-abc123', 'file-xyz');
-   * // Use url to display or download the file
-   * ```
+   * @throws AssetCapabilityUnavailableError with CAPABILITY_UNAVAILABLE
    */
   async getFileUrl(artifactId: string): Promise<string | null> {
+    if (!isDeploymentOperatorClient(this.client)) throw new AssetCapabilityUnavailableError();
     // Client-side validation
     validateArtifactId(artifactId);
     validateArtifactIdFormat(artifactId);

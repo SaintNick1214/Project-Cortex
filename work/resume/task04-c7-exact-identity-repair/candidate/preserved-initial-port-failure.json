@@ -1,0 +1,8 @@
+{
+  "source": "../bridge-preload.cjs",
+  "recordedRun": "../runs/308a4b9768fc431192bb5e2fe5b205c9",
+  "status": "FAIL",
+  "primaryObserved": "restore attempted assignment to getter-only fs.Utf8Stream",
+  "controlResults": "NOT_CAPTURED: finally error prevented print; no PASS inferred",
+  "repair": "restore only actual patched writable properties; forked bridge preserves old source/raw"
+}

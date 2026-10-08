@@ -1,0 +1,185 @@
+SOURCE node_modules/@convex-dev/ai-sdk-provider/src/index.ts
+51: // The SDK's standard usage mapping omits the gateway's dollar costs.
+52: function convexGatewayUsageMetadata(
+53:   usage: unknown,
+54: ): ProviderMetadata | undefined {
+55:   if (!usage || typeof usage !== "object") return undefined;
+56:   const { cost, cost_details } = usage as ProviderMetadata[string];
+57:   const metadata: ProviderMetadata[string] = {};
+58:   if (typeof cost === "number") metadata.cost = cost;
+59:   if (cost_details && typeof cost_details === "object") {
+60:     metadata.costDetails = cost_details;
+61:   }
+62:   return Object.keys(metadata).length > 0
+63:     ? { convexGateway: metadata }
+64:     : undefined;
+65: }
+66: 
+67: const costMetadataExtractor: MetadataExtractor = {
+68:   extractMetadata: async ({ parsedBody }) =>
+69:     convexGatewayUsageMetadata(
+70:       (parsedBody as { usage?: unknown } | undefined)?.usage,
+71:     ),
+72:   createStreamExtractor: () => {
+73:     // Streamed responses deliver usage (incl. cost) on the final chunk.
+74:     let usage: unknown;
+75:     return {
+76:       processChunk(parsedChunk: unknown) {
+77:         const chunk = parsedChunk as { usage?: unknown } | undefined;
+78:         if (chunk?.usage) usage = chunk.usage;
+79:       },
+80:       buildMetadata: () => convexGatewayUsageMetadata(usage),
+81:     };
+82:   },
+83: };
+84: 
+85: function createGatewayProvider(): Provider {
+86:   return createOpenAICompatible({
+87:     name: "convexGateway",
+88:     baseURL: gatewayBaseURL(),
+89:     fetch: gatewayFetch,
+90:     metadataExtractor: costMetadataExtractor,
+91:     supportsStructuredOutputs: true,
+92:     supportedUrls: () => ({ "image/*": [/^https?:\/\/.*$/] }),
+93:   });
+94: }
+SOURCE node_modules/@ai-sdk/openai-compatible/src/chat/openai-compatible-chat-language-model.ts
+395:     const providerMetadata: SharedV4ProviderMetadata = {
+396:       [metadataKey]: {},
+397:       ...(await this.config.metadataExtractor?.extractMetadata?.({
+398:         parsedBody: rawResponse,
+399:       })),
+400:     };
+401:     const completionTokenDetails =
+402:       responseBody.usage?.completion_tokens_details;
+403:     if (completionTokenDetails?.accepted_prediction_tokens != null) {
+404:       providerMetadata[metadataKey].acceptedPredictionTokens =
+405:         completionTokenDetails?.accepted_prediction_tokens;
+406:     }
+407:     if (completionTokenDetails?.rejected_prediction_tokens != null) {
+408:       providerMetadata[metadataKey].rejectedPredictionTokens =
+409:         completionTokenDetails?.rejected_prediction_tokens;
+410:     }
+411: 
+412:     return {
+413:       content,
+414:       finishReason: {
+415:         unified: mapOpenAICompatibleFinishReason(choice.finish_reason),
+416:         raw: choice.finish_reason ?? undefined,
+417:       },
+418:       usage: this.convertUsage(responseBody.usage),
+419:       providerMetadata,
+420:       request: { body },
+421:       response: {
+422:         ...getResponseMetadata(responseBody),
+423:         headers: responseHeaders,
+424:         body: rawResponse,
+425:       },
+566:             // Emit raw chunk if requested (before anything else)
+567:             if (options.includeRawChunks) {
+568:               controller.enqueue({ type: 'raw', rawValue: chunk.rawValue });
+569:             }
+570: 
+571:             // handle failed chunk parsing / validation:
+572:             if (!chunk.success) {
+573:               finishReason = { unified: 'error', raw: undefined };
+574:               controller.enqueue({ type: 'error', error: chunk.error });
+575:               return;
+576:             }
+577: 
+578:             metadataExtractor?.processChunk(chunk.rawValue);
+701:             const providerMetadata: SharedV4ProviderMetadata = {
+702:               [providerOptionsName]: {},
+703:               ...metadataExtractor?.buildMetadata(),
+704:             };
+705:             if (
+706:               usage?.completion_tokens_details?.accepted_prediction_tokens !=
+707:               null
+708:             ) {
+709:               providerMetadata[providerOptionsName].acceptedPredictionTokens =
+710:                 usage?.completion_tokens_details?.accepted_prediction_tokens;
+711:             }
+712:             if (
+713:               usage?.completion_tokens_details?.rejected_prediction_tokens !=
+714:               null
+715:             ) {
+716:               providerMetadata[providerOptionsName].rejectedPredictionTokens =
+717:                 usage?.completion_tokens_details?.rejected_prediction_tokens;
+718:             }
+719: 
+720:             controller.enqueue({
+721:               type: 'finish',
+722:               finishReason,
+723:               usage: convertUsage(usage),
+724:               providerMetadata,
+725:             });
+SOURCE _goals/convex-backend-runtime-2026-10-02/qa/task04-convex-ai-budget-public-source-c3/client-index.ts
+237: // The AI Gateway reports the authoritative dollar cost of each request.
+238: // @convex-dev/ai-sdk-provider surfaces it at
+239: // `providerMetadata.convexGateway.cost` (USD); convert to nanodollars and pass
+240: // it through as authoritative (finishRequest prefers it over the token-based
+241: // estimate). No-op on older provider versions that don't surface it.
+242: function extractGatewayCostNanos(result: any): number | undefined {
+243:   const meta = result?.providerMetadata?.convexGateway;
+244:   const costUsd = meta?.cost;
+245:   if (typeof costUsd === "number" && Number.isFinite(costUsd) && costUsd >= 0) {
+246:     return Math.round(costUsd * NANOS_PER_DOLLAR);
+247:   }
+248:   // Back-compat: honor an explicitly nano-denominated field if ever present.
+249:   const costNanos = meta?.costNanos ?? result?.usage?.costNanos;
+250:   if (typeof costNanos === "number" && Number.isFinite(costNanos) && costNanos >= 0) {
+251:     return Math.round(costNanos);
+252:   }
+253:   return undefined;
+254: }
+255: 
+862:         wrapGenerate: async ({ doGenerate, params }: any) => {
+863:           const requestId = await begin(params);
+864:           const start = Date.now();
+865:           // Only a failure of the generation itself settles as an error.
+866:           let result: any;
+867:           try {
+868:             result = await doGenerate();
+869:           } catch (e) {
+870:             await finish(requestId, {
+871:               error: String(e),
+872:               latencyMs: Date.now() - start,
+873:             });
+874:             throw e;
+875:           }
+876:           // Generation succeeded (provider may have charged). Settle the real
+877:           // usage; a failure here rethrows rather than recording a false zero.
+878:           await finish(requestId, {
+879:             responseText: extractText(result),
+880:             ...extractUsage(result.usage),
+881:             costNanos: extractGatewayCostNanos(result),
+882:             latencyMs: Date.now() - start,
+883:           });
+898:             const settle = (error?: string) => (settlement ??= finish(requestId, {
+899:               responseText: text,
+900:               error: error ?? streamError,
+901:               ...extractUsage(usage),
+902:               costNanos: extractGatewayCostNanos({ providerMetadata }),
+903:               latencyMs: Date.now() - start,
+904:             }));
+905:             const reader = result.stream.getReader();
+906:             const tapped = new ReadableStream({
+907:               async pull(controller) {
+908:                 try {
+909:                   const { done, value: chunk } = await reader.read();
+910:                   if (done) {
+911:                     await settle();
+912:                     controller.close();
+913:                     reader.releaseLock();
+914:                     return;
+915:                   }
+916:                   if (chunk?.type === "text-delta") {
+917:                     text = capContent(text + (chunk.delta ?? chunk.textDelta ?? ""));
+918:                   }
+919:                   if (chunk?.type === "finish") {
+920:                     usage = chunk.usage;
+921:                     providerMetadata = chunk.providerMetadata ?? providerMetadata;
+922:                   }
+923:                   if (chunk?.type === "error") streamError = String(chunk.error);
+924:                   controller.enqueue(chunk);
+925:                   if (chunk?.type === "finish") await settle();

@@ -1,0 +1,33 @@
+{
+  "verifiedAtUtc": "2026-10-03T12:23:45.408621+00:00",
+  "archives": [
+    {
+      "archive": "cycle1",
+      "recordsVerified": 95,
+      "manifestSha256": "8fa8e0ba1d8aaaba78f6f0073216f4ceb66168b44c57f2a44ab28590fae19097"
+    },
+    {
+      "archive": "cycle2",
+      "recordsVerified": 313,
+      "manifestSha256": "344313d04cc4f15409341cb79828494dd58f587846ba9885e90ad8dfa7979ca0"
+    },
+    {
+      "archive": "cycle2-pre-codec",
+      "recordsVerified": 73,
+      "manifestSha256": "fe3cc4529e758ae16ef4569aaf593f9930c7e4dea607039838c19fc528da50c4"
+    },
+    {
+      "archive": "cycle3-pre-house-errors",
+      "recordsVerified": 8,
+      "manifestSha256": "a839a5a9a2639f5af4a8a0eb0cbd6fabf7c8fa8f6fa941bdf52acb48ce9ced90"
+    }
+  ],
+  "original133AssertionsByteIdenticalPrefix": true,
+  "schemaFixtureInventoryUnchangedFromCycle2": {
+    "convex-dev/schema.ts": true,
+    "tests/unit/runtimeArtifactAuth/fixture.ts": true,
+    "tests/unit/runtimeArtifactAuth/inventory.test.ts": true
+  },
+  "allTrackedBaseBlobsCompared": 1828,
+  "onlyAllowedTrackedSourceChanges": true
+}

@@ -116,6 +116,7 @@ export const ArtifactAction = ({
       variant={variant}
       {...props}
     >
+      {/* biome-ignore lint/suspicious/noLeakedRender: children is intentionally rendered as a ReactNode. */}
       {Icon ? <Icon className="size-4" /> : children}
       <span className="sr-only">{label || tooltip}</span>
     </Button>

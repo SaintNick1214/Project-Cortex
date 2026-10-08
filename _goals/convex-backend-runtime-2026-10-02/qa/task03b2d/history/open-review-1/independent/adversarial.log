@@ -1,0 +1,188 @@
+(node:23832) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL ../../../../../tmp/task03b2d-review1-eep4rgf8/tests/unit/runtimeWorkerAuth/judge-adversarial.test.ts (6.005 s)
+  ● independent pessimistic requirement probes › invalid persisted lifecycle validFrom=NaN cannot admit canonical fact
+
+    expect(received).rejects.toMatchObject()
+
+    Received promise resolved instead of rejected
+    Resolved to value: "graphSyncQueue:8"
+
+       8 |   it.each([["validFrom", NaN],["validFrom",-1],["validFrom",-Infinity],["validUntil",NaN],["validUntil",Infinity]])("invalid persisted lifecycle %s=%s cannot admit canonical fact",async(field,value)=>{
+       9 |     const f=fixture(); await seedFact(f,{[field as string]:value});
+    > 10 |     await expect(invoke(graph.queueForSync,f.anonymous,queueArgs(f))).rejects.toMatchObject({data:{code:"FORBIDDEN"}});
+         |           ^
+      11 |     expect(f.db.table("graphSyncQueue")).toHaveLength(0);
+      12 |   });
+      13 |   it.each([["validFrom", NaN],["validUntil",Infinity]])("invalidated lifecycle %s=%s cannot deliver or mark an existing job",async(field,value)=>{
+
+      at expect (../../../node_modules/expect/build/index.js:2116:15)
+      at ../../../../../tmp/task03b2d-review1-eep4rgf8/tests/unit/runtimeWorkerAuth/judge-adversarial.test.ts:10:11
+
+  ● independent pessimistic requirement probes › invalid persisted lifecycle validFrom=-1 cannot admit canonical fact
+
+    expect(received).rejects.toMatchObject()
+
+    Received promise resolved instead of rejected
+    Resolved to value: "graphSyncQueue:8"
+
+       8 |   it.each([["validFrom", NaN],["validFrom",-1],["validFrom",-Infinity],["validUntil",NaN],["validUntil",Infinity]])("invalid persisted lifecycle %s=%s cannot admit canonical fact",async(field,value)=>{
+       9 |     const f=fixture(); await seedFact(f,{[field as string]:value});
+    > 10 |     await expect(invoke(graph.queueForSync,f.anonymous,queueArgs(f))).rejects.toMatchObject({data:{code:"FORBIDDEN"}});
+         |           ^
+      11 |     expect(f.db.table("graphSyncQueue")).toHaveLength(0);
+      12 |   });
+      13 |   it.each([["validFrom", NaN],["validUntil",Infinity]])("invalidated lifecycle %s=%s cannot deliver or mark an existing job",async(field,value)=>{
+
+      at expect (../../../node_modules/expect/build/index.js:2116:15)
+      at ../../../../../tmp/task03b2d-review1-eep4rgf8/tests/unit/runtimeWorkerAuth/judge-adversarial.test.ts:10:11
+
+  ● independent pessimistic requirement probes › invalid persisted lifecycle validFrom=-Infinity cannot admit canonical fact
+
+    expect(received).rejects.toMatchObject()
+
+    Received promise resolved instead of rejected
+    Resolved to value: "graphSyncQueue:8"
+
+       8 |   it.each([["validFrom", NaN],["validFrom",-1],["validFrom",-Infinity],["validUntil",NaN],["validUntil",Infinity]])("invalid persisted lifecycle %s=%s cannot admit canonical fact",async(field,value)=>{
+       9 |     const f=fixture(); await seedFact(f,{[field as string]:value});
+    > 10 |     await expect(invoke(graph.queueForSync,f.anonymous,queueArgs(f))).rejects.toMatchObject({data:{code:"FORBIDDEN"}});
+         |           ^
+      11 |     expect(f.db.table("graphSyncQueue")).toHaveLength(0);
+      12 |   });
+      13 |   it.each([["validFrom", NaN],["validUntil",Infinity]])("invalidated lifecycle %s=%s cannot deliver or mark an existing job",async(field,value)=>{
+
+      at expect (../../../node_modules/expect/build/index.js:2116:15)
+      at ../../../../../tmp/task03b2d-review1-eep4rgf8/tests/unit/runtimeWorkerAuth/judge-adversarial.test.ts:10:11
+
+  ● independent pessimistic requirement probes › invalid persisted lifecycle validUntil=NaN cannot admit canonical fact
+
+    expect(received).rejects.toMatchObject()
+
+    Received promise resolved instead of rejected
+    Resolved to value: "graphSyncQueue:8"
+
+       8 |   it.each([["validFrom", NaN],["validFrom",-1],["validFrom",-Infinity],["validUntil",NaN],["validUntil",Infinity]])("invalid persisted lifecycle %s=%s cannot admit canonical fact",async(field,value)=>{
+       9 |     const f=fixture(); await seedFact(f,{[field as string]:value});
+    > 10 |     await expect(invoke(graph.queueForSync,f.anonymous,queueArgs(f))).rejects.toMatchObject({data:{code:"FORBIDDEN"}});
+         |           ^
+      11 |     expect(f.db.table("graphSyncQueue")).toHaveLength(0);
+      12 |   });
+      13 |   it.each([["validFrom", NaN],["validUntil",Infinity]])("invalidated lifecycle %s=%s cannot deliver or mark an existing job",async(field,value)=>{
+
+      at expect (../../../node_modules/expect/build/index.js:2116:15)
+      at ../../../../../tmp/task03b2d-review1-eep4rgf8/tests/unit/runtimeWorkerAuth/judge-adversarial.test.ts:10:11
+
+  ● independent pessimistic requirement probes › invalid persisted lifecycle validUntil=Infinity cannot admit canonical fact
+
+    expect(received).rejects.toMatchObject()
+
+    Received promise resolved instead of rejected
+    Resolved to value: "graphSyncQueue:8"
+
+       8 |   it.each([["validFrom", NaN],["validFrom",-1],["validFrom",-Infinity],["validUntil",NaN],["validUntil",Infinity]])("invalid persisted lifecycle %s=%s cannot admit canonical fact",async(field,value)=>{
+       9 |     const f=fixture(); await seedFact(f,{[field as string]:value});
+    > 10 |     await expect(invoke(graph.queueForSync,f.anonymous,queueArgs(f))).rejects.toMatchObject({data:{code:"FORBIDDEN"}});
+         |           ^
+      11 |     expect(f.db.table("graphSyncQueue")).toHaveLength(0);
+      12 |   });
+      13 |   it.each([["validFrom", NaN],["validUntil",Infinity]])("invalidated lifecycle %s=%s cannot deliver or mark an existing job",async(field,value)=>{
+
+      at expect (../../../node_modules/expect/build/index.js:2116:15)
+      at ../../../../../tmp/task03b2d-review1-eep4rgf8/tests/unit/runtimeWorkerAuth/judge-adversarial.test.ts:10:11
+
+  ● independent pessimistic requirement probes › invalidated lifecycle validFrom=NaN cannot deliver or mark an existing job
+
+    expect(received).rejects.toMatchObject()
+
+    Received promise resolved instead of rejected
+    Resolved to value: [{"_creationTime": 1000, "_id": "graphSyncQueue:8", "authority": {"grantId": "runtimeAuthGrants:5", "grantVersion": 1, "membershipId": "runtimeAuthMemberships:2", "membershipVersion": 1, "memorySpaceEpoch": 1, "memorySpaceId": "space-a", "principalId": "runtimeAuthPrincipals:1", "principalVersion": 1, "tenantEpoch": 1, "tenantId": "tenant-a"}, "createdAt": 1791022129586, "entity": {"confidence": 100, "fact": "User prefers tea", "factId": "fact-a", "factType": "preference", "lineage": {"role": "user", "sourceEventId": "event-a", "sourceId": "source-a", "sourceRevision": 1, "trust": "user_assertion"}, "memorySpaceId": "space-a", "ownerPrincipalId": "runtimeAuthPrincipals:1", "tags": [], "tenantId": "tenant-a", "version": 1}, "entityDocumentId": "facts:7", "entityId": "fact-a", "entityVersion": 1, "failedAttempts": 0, "memorySpaceId": "space-a", "operation": "insert", "ownerPrincipalId": "runtimeAuthPrincipals:1", "priority": "high", "sourceEventId": "event-a", "sourceId": "source-a", "sourceRevision": 1, "synced": false, "table": "facts", "tenantId": "tenant-a"}]
+
+      13 |   it.each([["validFrom", NaN],["validUntil",Infinity]])("invalidated lifecycle %s=%s cannot deliver or mark an existing job",async(field,value)=>{
+      14 |     const f=await prepared(); f.fact[field as string]=value;
+    > 15 |     await expect(invoke(graph.getUnsyncedItems,f.anonymous,{authority:f.reference,limit:1})).rejects.toMatchObject({data:{code:"FORBIDDEN"}});
+         |           ^
+      16 |     await expect(invoke(graph.markSynced,f.anonymous,{authority:f.reference,id:f.id})).rejects.toMatchObject({data:{code:"FORBIDDEN"}});
+      17 |     expect(f.db.table("graphSyncQueue")[0]?.synced).toBe(false);
+      18 |   });
+
+      at expect (../../../node_modules/expect/build/index.js:2116:15)
+      at ../../../../../tmp/task03b2d-review1-eep4rgf8/tests/unit/runtimeWorkerAuth/judge-adversarial.test.ts:15:11
+
+  ● independent pessimistic requirement probes › invalidated lifecycle validUntil=Infinity cannot deliver or mark an existing job
+
+    expect(received).rejects.toMatchObject()
+
+    Received promise resolved instead of rejected
+    Resolved to value: [{"_creationTime": 1000, "_id": "graphSyncQueue:8", "authority": {"grantId": "runtimeAuthGrants:5", "grantVersion": 1, "membershipId": "runtimeAuthMemberships:2", "membershipVersion": 1, "memorySpaceEpoch": 1, "memorySpaceId": "space-a", "principalId": "runtimeAuthPrincipals:1", "principalVersion": 1, "tenantEpoch": 1, "tenantId": "tenant-a"}, "createdAt": 1791022129589, "entity": {"confidence": 100, "fact": "User prefers tea", "factId": "fact-a", "factType": "preference", "lineage": {"role": "user", "sourceEventId": "event-a", "sourceId": "source-a", "sourceRevision": 1, "trust": "user_assertion"}, "memorySpaceId": "space-a", "ownerPrincipalId": "runtimeAuthPrincipals:1", "tags": [], "tenantId": "tenant-a", "version": 1}, "entityDocumentId": "facts:7", "entityId": "fact-a", "entityVersion": 1, "failedAttempts": 0, "memorySpaceId": "space-a", "operation": "insert", "ownerPrincipalId": "runtimeAuthPrincipals:1", "priority": "high", "sourceEventId": "event-a", "sourceId": "source-a", "sourceRevision": 1, "synced": false, "table": "facts", "tenantId": "tenant-a"}]
+
+      13 |   it.each([["validFrom", NaN],["validUntil",Infinity]])("invalidated lifecycle %s=%s cannot deliver or mark an existing job",async(field,value)=>{
+      14 |     const f=await prepared(); f.fact[field as string]=value;
+    > 15 |     await expect(invoke(graph.getUnsyncedItems,f.anonymous,{authority:f.reference,limit:1})).rejects.toMatchObject({data:{code:"FORBIDDEN"}});
+         |           ^
+      16 |     await expect(invoke(graph.markSynced,f.anonymous,{authority:f.reference,id:f.id})).rejects.toMatchObject({data:{code:"FORBIDDEN"}});
+      17 |     expect(f.db.table("graphSyncQueue")[0]?.synced).toBe(false);
+      18 |   });
+
+      at expect (../../../node_modules/expect/build/index.js:2116:15)
+      at ../../../../../tmp/task03b2d-review1-eep4rgf8/tests/unit/runtimeWorkerAuth/judge-adversarial.test.ts:15:11
+
+  ● independent pessimistic requirement probes › own owner restriction applies in queue DB selection before top K
+
+    expect(received).resolves.toEqual()
+
+    Received promise rejected instead of resolved
+    Rejected to value: [ConvexError: {"version":1,"code":"FORBIDDEN","message":"Access denied or invalid worker input","retryable":false,"outcome":"not_dispatched"}]
+
+      20 |     const f=await prepared(); const own=f.db.table("graphSyncQueue")[0]!;
+      21 |     const foreign=f.db.seed("graphSyncQueue",{...own,_id:"graphSyncQueue:foreign-own-selector",ownerPrincipalId:"foreign-owner"});
+    > 22 |     await expect(invoke(graph.getHighPriorityItems,f.anonymous,{authority:f.reference,limit:1})).resolves.toEqual([own]);
+         |           ^
+      23 |     expect(f.db.traces.filter(t=>t.table==="graphSyncQueue").every(t=>!t.returned.includes(foreign._id))).toBe(true);
+      24 |   });
+      25 |   it("own owner restriction applies before single queue ID hydration",async()=>{
+
+      at expect (../../../node_modules/expect/build/index.js:2116:15)
+      at Object.<anonymous> (../../../../../tmp/task03b2d-review1-eep4rgf8/tests/unit/runtimeWorkerAuth/judge-adversarial.test.ts:22:11)
+
+  ● independent pessimistic requirement probes › own owner restriction applies before single queue ID hydration
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      27 |     const foreign=f.db.seed("graphSyncQueue",{...own,_id:"graphSyncQueue:foreign-id-selector",ownerPrincipalId:"foreign-owner"});
+      28 |     await expect(invoke(graph.markSynced,f.anonymous,{authority:f.reference,id:foreign._id})).rejects.toMatchObject({data:{code:"FORBIDDEN"}});
+    > 29 |     expect(f.db.traces.filter(t=>t.table==="graphSyncQueue").every(t=>!t.returned.includes(foreign._id))).toBe(true);
+         |                                                                                                           ^
+      30 |   });
+      31 |   it("late source tombstone before final checkpoint cannot deliver canonical payload",async()=>{
+      32 |     const f=await prepared(); let sourceRead=false, afterSource=0;
+
+      at Object.<anonymous> (../../../../../tmp/task03b2d-review1-eep4rgf8/tests/unit/runtimeWorkerAuth/judge-adversarial.test.ts:29:107)
+
+  ● independent pessimistic requirement probes › late canonical source deletion before final checkpoint cannot mark job synced
+
+    expect(received).rejects.toMatchObject()
+
+    Received promise resolved instead of rejected
+    Resolved to value: undefined
+
+      40 |     f.db.beforeRead=(table)=>{if(table==="runtimeMemorySources"){sources++;afterSource=0;}
+      41 |       if(sources===2 && table==="runtimeAuthGrants" && ++afterSource===2) f.source.tombstonedAt=Date.now();};
+    > 42 |     await expect(f.db.transaction(()=>invoke(graph.markSynced,f.anonymous,{authority:f.reference,id:f.id}))).rejects.toMatchObject({data:{code:"FORBIDDEN"}});
+         |           ^
+      43 |     expect(f.db.table("graphSyncQueue")[0]?.synced).toBe(false);
+      44 |   });
+      45 |   it.each(["issuer","subject"])("only exact verified %s maps to authority",async(field)=>{
+
+      at expect (../../../node_modules/expect/build/index.js:2116:15)
+      at Object.<anonymous> (../../../../../tmp/task03b2d-review1-eep4rgf8/tests/unit/runtimeWorkerAuth/judge-adversarial.test.ts:42:11)
+
+Test Suites: 1 failed, 1 total
+Tests:       10 failed, 18 passed, 28 total
+Snapshots:   0 total
+Time:        6.21 s
+Ran all test suites.
+Test results written to: ../../../../../tmp/task03b2d-review1-eep4rgf8/adversarial.json

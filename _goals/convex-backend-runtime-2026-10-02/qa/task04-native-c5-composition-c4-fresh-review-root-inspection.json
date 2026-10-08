@@ -1,0 +1,61 @@
+{
+  "at": "2026-10-04T20:10:16.882337+00:00",
+  "reportReadFully": true,
+  "status": "ROOT_VERIFIED_FRESH_REVIEW_REJECT_3.0",
+  "checks": [
+    {
+      "scope": "QA",
+      "sealSHA256": "71f1f525169d1f079c63d4f7cfefc473701d9c59092cedc505c6f683836b4229",
+      "exactRows": 3,
+      "literalSymlinksNeverFollowed": 0,
+      "regularBytesVerified": 25014,
+      "recordedMetadataVerified": [
+        "mode",
+        "uid",
+        "dev",
+        "ino",
+        "nlink"
+      ],
+      "timestampsAndGidNotInSubjectSeal": "NOT_ASSERTED"
+    },
+    {
+      "scope": "work",
+      "sealSHA256": "d1926306059943c557d315c5bfe1f93a6e0c525bd28c9b75fab8814cd3b2b881",
+      "exactRows": 9,
+      "literalSymlinksNeverFollowed": 0,
+      "regularBytesVerified": 30768,
+      "recordedMetadataVerified": [
+        "mode",
+        "uid",
+        "dev",
+        "ino",
+        "nlink"
+      ],
+      "timestampsAndGidNotInSubjectSeal": "NOT_ASSERTED"
+    },
+    {
+      "scope": "tmp",
+      "sealSHA256": "ae486f5d737c9af4872393517c03030b648ceb0a0a5476f44602a7ee9c3916fc",
+      "exactRows": 6703,
+      "literalSymlinksNeverFollowed": 0,
+      "regularBytesVerified": 209093474,
+      "recordedMetadataVerified": [
+        "mode",
+        "uid",
+        "dev",
+        "ino",
+        "nlink"
+      ],
+      "timestampsAndGidNotInSubjectSeal": "NOT_ASSERTED"
+    }
+  ],
+  "original122": "HELD",
+  "confirmedBlockingIssues": [
+    "consumed generatedmetadata excluded fromcapturedclosure",
+    "historical FS reads admitted outsidecapture/sourceFence"
+  ],
+  "fixedSurrogateAndCleanupControls": "PASS_BOUNDED_ONLY",
+  "earlyReviewerFailures": "RETAINED_NOT_CANDIDATE_FAILURE_CLAIMS",
+  "ownedProcesses": "NO_LIVE_PROCESSES_TERMINAL_Z_RETAINED",
+  "sourceParentNativePrivatePaidTiming": "HELD"
+}

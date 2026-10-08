@@ -1,0 +1,11 @@
+# Cortex Chat integration
+
+Use the [application README](./README.md) for version 1.2.0 setup, supported features and updates. The recognized backend composes the current SDK schema with `convex/app.schema.ts`; app handlers remain in `convex/app/` and SDK paths retain their names through the trusted internal-registration shim. Genuine codegen supplies the combined model. Do not copy public SDK handlers over this backend.
+
+Normal Auth.js guest and credentials flows persist private `chatUsers`. `requireScope` in `lib/cortex.ts` obtains the verified session user, fixed server tenant and per-user memory space. `private-backend.ts` uses only fixed internal operations with the server deployment-admin transport. The request's user/tenant/space identifiers and SDK AuthContext cannot establish app authority. All private routes/actions/loaders verify owner scope; intended public sharing returns a minimal read-only text projection.
+
+The main chat route prepares durable active messages, calls the provider with verified scope and performs owned cleanup. `active-branch.ts` excludes discarded/foreign/unattributed context from edited recall; the provider context callback is a complete override, including an empty result. Stop/cancel and HTTP errors retain honest partial outcomes rather than reporting a completed write. Artifact save/version query helpers preserve legitimate empty content; suggestions can be applied or collapsed, without a persistent Reject/resolve promise.
+
+SDK/provider runtime credentials initialize transport before API/graph construction. Model keys, `AUTH_SECRET`, deployment-admin key, fixed tenant, `AUTH_URL` and app origin stay server-side. Use exactly the same localhost host/port locally. Optional Redis is needed only for resumable streams. Optional Neo4j/Memgraph use the shared resolver; graph off requires no Docker and borrowed adapters are explicitly disconnected by their owner.
+
+App/template updates are independent of SDK/backend updates. The recognized old shim without `MutationCtx` must receive the current template/app correction before SDK synchronization; conflicting or unrecorded app files require an explicit migration. The SDK channel cannot overwrite app handlers/shims.

@@ -1,0 +1,11 @@
+{
+  "argv": [
+    "python3",
+    "-c",
+    "import pathlib;[print(\"FILE\",f,\"\\n\",pathlib.Path(f).read_text()) for f in [\"node_modules/@ai-sdk/provider/src/shared/v4/shared-v4-provider-metadata.ts\",\"node_modules/@ai-sdk/provider/src/language-model/v4/language-model-v4-generate-result.ts\"]];p=pathlib.Path(\"node_modules/@ai-sdk/provider/src/language-model/v4/language-model-v4-stream-part.ts\");print(\"FINISH\",p.read_text()[p.read_text().find(\"type: 'finish'\")-20:]);p=pathlib.Path(\"node_modules/@ai-sdk/openai-compatible/src/embedding/openai-compatible-embedding-model.ts\");print(\"EMBED\",p.read_text()[p.read_text().find(\"providerMetadata: response.providerMetadata\")-180:p.read_text().find(\"providerMetadata: response.providerMetadata\")+180])"
+  ],
+  "cwd": "/workspace/Project-Cortex",
+  "startUtc": "2026-10-04T14:13:36.125027+00:00",
+  "endUtc": "2026-10-04T14:13:36.147671+00:00",
+  "exit": 0
+}

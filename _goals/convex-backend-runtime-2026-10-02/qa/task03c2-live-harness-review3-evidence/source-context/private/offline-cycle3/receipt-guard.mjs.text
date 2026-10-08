@@ -1,0 +1,20 @@
+import assert from "node:assert/strict";
+import { writeFileSync } from "node:fs";
+import { resolve } from "node:path";
+import * as actual from "../../../../_goals/convex-backend-runtime-2026-10-02/qa/task03c2-live-fixture/scripts/guard.mjs";
+import { state } from "./receipt-state.mjs";
+export const repo = actual.repo, fixture = actual.fixture, canonical = actual.canonical;
+export const scratch = resolve(actual.scratch, "offline-cycle3", process.env.OFFLINE_RUN_ID);
+export function livePreflight(name) {
+  state.preflightCalls++;
+  if (state.preflightCalls !== 1) throw new Error("OFFLINE_SECOND_PRIVATE_PREFLIGHT_UNAVAILABLE");
+  state.output = actual.localPreflight(name);
+  return { output: state.output, target: { deploymentName: "offline-initial-binding-123" }, envFile: "OFFLINE_SELECTOR_NOT_PRESENT", env: {} };
+}
+export function writeEvidence(name, value) { livePreflight(name); actual.writeInitialReceipt(state.output, value); }
+export function writeInitialReceipt(output, value) {
+  assert.equal(output, state.output); assert.equal(state.preflightCalls, 1); assert.equal(state.writes, 0);
+  state.writes++;
+  actual.writeInitialReceipt(output, { ...value, evidenceKind: "OFFLINE actual entrypoint initial-binding control only", privatePreflightCalls: state.preflightCalls, fakeCliCalls: state.cliCalls, fakeOperatorCalls: state.operatorCalls });
+  writeFileSync(process.env.OFFLINE_AUDIT_PATH, JSON.stringify({ ...state, output: output.split("/").at(-1) }), { flag: "wx", mode: 0o600 });
+}

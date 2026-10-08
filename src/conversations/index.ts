@@ -14,7 +14,7 @@ import { validateTenantId } from "../auth/validators";
  */
 
 import type { ConvexClient } from "convex/browser";
-import { api } from "../../convex-dev/_generated/api";
+import { api } from "../common/backendApi";
 import type {
   AddMessageInput,
   AddMessageOptions,
@@ -734,6 +734,7 @@ export class ConversationsAPI {
     const result = await this.executeWithResilience(
       () =>
         this.client.query(api.conversations.search, {
+          tenantId: this.authContext?.tenantId,
           query: input.query,
           type: input.filters?.type,
           userId: input.filters?.userId,

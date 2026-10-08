@@ -1,0 +1,11 @@
+--- /workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c2/regression/scripts/offline-actual-core.mjs	2026-10-04 07:28:00.671688789 +0000
++++ /workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-native-extension-preparation-c3/regression/scripts/offline-actual-core.mjs	2026-10-04 07:43:28.026947129 +0000
+@@ -3,7 +3,7 @@
+ import {readFileSync,writeFileSync,mkdirSync} from 'node:fs';import {resolve} from 'node:path';import {pathToFileURL} from 'node:url';import {randomUUID} from 'node:crypto';
+ import {SourceTextModule,SyntheticModule,createContext} from 'node:vm';import {build} from 'esbuild';import {getFunctionName} from 'convex/server';
+ import {root,repo,fixture,sha256} from './guard.mjs';
+-const work=resolve(repo,'work/resume/task04-terminal-capture-native-extension-preparation-c2/regression/actual-handlers-'+randomUUID());mkdirSync(work,{mode:0o700});
++const work=resolve(repo,'work/resume/task04-terminal-capture-native-extension-preparation-c3/regression/actual-handlers-'+randomUUID());mkdirSync(work,{mode:0o700});
+ const entry=resolve(work,'entry.ts'),out=resolve(work,'bundle.mjs');writeFileSync(entry,`export * as policy from ${JSON.stringify(resolve(fixture,'convex/runtimeModelPolicy.ts'))};export * as owned from ${JSON.stringify(resolve(fixture,'convex/qualificationOwned.ts'))};export * as capture from ${JSON.stringify(resolve(fixture,'convex/qualificationCapture.ts'))};export * as peer from ${JSON.stringify(resolve(fixture,'convex/qualificationPeer.ts'))};export {MemoryTestDb} from ${JSON.stringify(resolve(repo,'tests/unit/runtimeMemory/fixture.ts'))};`);
+ await build({entryPoints:[entry],outfile:out,bundle:true,platform:'node',format:'esm',packages:'external',logLevel:'silent'});const compiled=await import(pathToFileURL(out));
+ const plan=JSON.parse(readFileSync(resolve(root,'cases.json'))),inventory=JSON.parse(readFileSync(resolve(root,'registration-inventory.json')));

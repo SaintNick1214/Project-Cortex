@@ -1,0 +1,10 @@
+const fs=require('node:fs');const path=require('node:path');const crypto=require('node:crypto');
+const qa="/workspace/Project-Cortex/_goals/convex-backend-runtime-2026-10-02/qa/task04-gateway-terminal-composition-implementation-c1/historical";const work="/workspace/Project-Cortex/work/resume/task04-model-drift-charge-only-implementation-c1/historical";const freeze=JSON.parse(fs.readFileSync(path.join(qa,'freeze.json'),'utf8'));
+const hash=p=>crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex');
+if(hash(path.join(qa,'freeze.json'))!=="eab4b3bf55a6abf062c88d71298ec9cc1bf3623b4417e8b089368c2d64946a96")throw Error('FREEZE_CHANGED');
+const files=new Map([...freeze.local.map(r=>[path.join(qa,r.catalog),r.sha256]),...freeze.official.map(r=>[r.path,r.sha256])]);
+module.exports=(request,options)=>{const resolved=options.defaultResolver(request,options);
+ if(request.startsWith('node:'))return resolved;
+ const expected=files.get(resolved);if(!expected)throw Error('UNCATALOGED_MODULE_RESOLUTION:'+resolved);
+ const actual=hash(resolved);if(actual!==expected)throw Error('RESOLVED_MODULE_CHANGED:'+resolved);
+ fs.appendFileSync(path.join(work,'imports.ndjson'),JSON.stringify({request,basedir:options.basedir,resolved,sha256:actual,verified:true})+'\n');return resolved;};

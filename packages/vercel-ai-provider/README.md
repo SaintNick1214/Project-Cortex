@@ -26,7 +26,7 @@ Add long-term memory to any Vercel AI SDK application with a single import. Buil
 The best way to get started is with our interactive quickstart demo:
 
 ```bash
-cortex templates init demo --template vercel-ai-quickstart --template-version 1.1.0 --catalog-version 1.0.0 --yes --graph none
+cortex templates init demo --template vercel-ai-quickstart --template-version 1.2.0 --catalog-version 1.1.0 --yes --graph none
 cd demo
 # Configure private server values and native backend per the app README.
 npm run convex:dev
@@ -47,7 +47,7 @@ The quickstart demonstrates:
 ### Installation
 
 ```bash
-npm install @cortexmemory/vercel-ai-provider@0.37.0 @cortexmemory/sdk@0.37.0 ai convex
+npm install @cortexmemory/vercel-ai-provider@0.38.0 @cortexmemory/sdk@0.38.0 ai convex
 ```
 
 ### AI SDK v6 Compatibility
@@ -440,12 +440,12 @@ const config = cortexMemory.getConfig();
 ## Documentation
 
 - [Quickstart Demo](./quickstart/README.md) - Interactive demo with visualization
-- [Getting Started](../../Documentation/integrations/vercel-ai-sdk/getting-started.mdx) - Step-by-step tutorial
-- [API Reference](../../Documentation/integrations/vercel-ai-sdk/api-reference.mdx) - Complete API documentation
-- [Advanced Usage](../../Documentation/integrations/vercel-ai-sdk/advanced-usage.mdx) - Custom configurations
-- [Memory Spaces](../../Documentation/integrations/vercel-ai-sdk/memory-spaces.mdx) - Multi-tenancy guide
-- [Hive Mode](../../Documentation/integrations/vercel-ai-sdk/hive-mode.mdx) - Cross-application memory
-- [Troubleshooting](../../Documentation/integrations/vercel-ai-sdk/troubleshooting.mdx) - Common issues
+- [Getting Started](https://docs.cortexmemory.dev/integrations/vercel-ai-sdk/getting-started) - Step-by-step tutorial
+- [API Reference](https://docs.cortexmemory.dev/integrations/vercel-ai-sdk/api-reference) - Complete API documentation
+- [Advanced Usage](https://docs.cortexmemory.dev/integrations/vercel-ai-sdk/advanced-usage) - Custom configurations
+- [Memory Spaces](https://docs.cortexmemory.dev/integrations/vercel-ai-sdk/memory-spaces) - Multi-tenancy guide
+- [Hive Mode](https://docs.cortexmemory.dev/integrations/vercel-ai-sdk/hive-mode) - Cross-application memory
+- [Troubleshooting](https://docs.cortexmemory.dev/integrations/vercel-ai-sdk/troubleshooting) - Common issues
 
 ## FAQ
 
@@ -511,7 +511,7 @@ This is expected if:
 - Using keyword search without embeddings (set up `embeddingProvider`)
 - Running on local Convex (vector search not supported locally)
 
-For more troubleshooting help, see [Troubleshooting Guide](../../Documentation/integrations/vercel-ai-sdk/troubleshooting.mdx).
+For more troubleshooting help, see [Troubleshooting Guide](https://docs.cortexmemory.dev/integrations/vercel-ai-sdk/troubleshooting).
 
 ## Contributing
 

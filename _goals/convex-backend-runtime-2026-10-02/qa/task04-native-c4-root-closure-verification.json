@@ -1,0 +1,79 @@
+{
+  "start": "2026-10-04T14:52:45.686144+00:00",
+  "end": "2026-10-04T14:53:00.525567+00:00",
+  "status": "EXACT_CLOSURES_VERIFIED_NO_PREPARATION_ACCEPTANCE",
+  "checks": [
+    {
+      "root": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4",
+      "manifest": "qa-manifest.json",
+      "sha256": "5f68caca72ff8b5792efabe135d31430451cd4b9147fc672393a750bceddf53f",
+      "rows": 3853,
+      "bytesVerified": 536888830,
+      "literalLinks": 0,
+      "wholeSelfOnlyClosure": true,
+      "operativeLinkGuard": false
+    },
+    {
+      "root": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extension-preparation-c4",
+      "manifest": "runtime-freeze.json",
+      "sha256": "dad0677c535aaa56f7a52863e90f6baec8602585b99ed26d8832467ed082e683",
+      "rows": 210,
+      "bytesVerified": 4220062,
+      "literalLinks": 0,
+      "wholeSelfOnlyClosure": false,
+      "operativeLinkGuard": true
+    },
+    {
+      "root": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c4",
+      "manifest": "qa-manifest.json",
+      "sha256": "c7c6c1ace7b2df60ab29181dcf007ed0805956ed10282410d7598abc1447c552",
+      "rows": 2073,
+      "bytesVerified": 174611965,
+      "literalLinks": 0,
+      "wholeSelfOnlyClosure": true,
+      "operativeLinkGuard": false
+    },
+    {
+      "root": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-regression-preparation-c4",
+      "manifest": "runtime-freeze.json",
+      "sha256": "89dad16e23957a4e038e385d841e87ff73c5d891bbb31eb53ca52aedcbcf429f",
+      "rows": 207,
+      "bytesVerified": 4189502,
+      "literalLinks": 0,
+      "wholeSelfOnlyClosure": false,
+      "operativeLinkGuard": true
+    },
+    {
+      "root": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c4",
+      "manifest": "qa-manifest.json",
+      "sha256": "56cc58bf63375ef7913fe38ef59ecf19947dfeeb205983e0cb941b27efc19c8f",
+      "rows": 2322,
+      "bytesVerified": 185488886,
+      "literalLinks": 0,
+      "wholeSelfOnlyClosure": true,
+      "operativeLinkGuard": false
+    },
+    {
+      "root": "_goals/convex-backend-runtime-2026-10-02/qa/task04-model-drift-native-extra-preparation-c4",
+      "manifest": "runtime-freeze.json",
+      "sha256": "2103aa9d7337d009352962c96f5fe3be47e6c3eceda3ee52a4c61e6db74259db",
+      "rows": 318,
+      "bytesVerified": 8000403,
+      "literalLinks": 0,
+      "wholeSelfOnlyClosure": false,
+      "operativeLinkGuard": true
+    },
+    {
+      "root": "work/resume/task04-model-drift-native-preparation-c4",
+      "manifest": "work-manifest.json",
+      "sha256": "0e3575cdb2978556896a4fa41e78a370d417d2b3352367717ad0a274b81e1901",
+      "rows": 133251,
+      "bytesVerified": 2043566235,
+      "literalLinks": 30,
+      "wholeSelfOnlyClosure": true,
+      "operativeLinkGuard": false
+    }
+  ],
+  "reportReads": "All three full reports read separately; no source/native/pin/actual/timing acceptance.",
+  "limits": "Read-only byte/literal closure checks; no all-shared-tree inode/access-time preservation claim. Original sealed manifests are retained exact backing, not duplicated before images."
+}

@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "/workspace/Project-Cortex/work/resume/task04-transport30-fresh-review/main-negative2/main-map-corruption/materialize.py", line 116, in <module>
+    if __name__=='__main__':main()
+                            ^^^^^^
+  File "/workspace/Project-Cortex/work/resume/task04-transport30-fresh-review/main-negative2/main-map-corruption/materialize.py", line 93, in main
+    packed=read_at(base,'transport-map.json.gz');require(len(packed)<=LIMIT and digest(packed)==MAP_SHA256,'transport map changed')
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/Project-Cortex/work/resume/task04-transport30-fresh-review/main-negative2/main-map-corruption/materialize.py", line 10, in require
+    if not ok:raise ValueError(message)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: transport map changed

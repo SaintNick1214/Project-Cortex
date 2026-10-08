@@ -89,7 +89,7 @@ function sdk(root: string): void {
   fs.mkdirSync(path.join(dir, "convex-dev"), { recursive: true });
   fs.writeFileSync(
     path.join(dir, "package.json"),
-    '{"name":"@cortexmemory/sdk","version":"0.37.0"}',
+    '{"name":"@cortexmemory/sdk","version":"0.38.0"}',
   );
   fs.writeFileSync(
     path.join(dir, "convex-dev/schema.ts"),
@@ -475,7 +475,7 @@ describe("authority and real native registry", () => {
     const report = await diagnose(config, { graph: true });
     expect(report.ok).toBe(true);
     expect(report.node).toEqual({ version: process.version, supported: isSupportedNodeVersion(process.versions.node) });
-    expect(report.dependencies.sdk).toBe("0.37.0");
+    expect(report.dependencies.sdk).toBe("0.38.0");
     expect(report.dependencies.convex).toBe("1.46.0");
     expect(report.backend.compatibility).toBe("unknown");
     expect(report.graph.status).toBe("external-prerequisites");
@@ -494,7 +494,7 @@ describe("authority and real native registry", () => {
     const node = Object.getOwnPropertyDescriptor(process.versions, "node")!;
     const version = Object.getOwnPropertyDescriptor(process, "version")!;
     try {
-      for (const [value, supported] of [["20.20.2", false], ["22.15.99", false], ["22.16.0", true], ["24.0.0", true]] as const) {
+      for (const [value, supported] of [["20.20.2", false], ["22.15.99", false], ["24.14.99", false], ["24.15.0", true], ["26.0.0", true]] as const) {
         Object.defineProperty(process.versions, "node", { ...node, value });
         Object.defineProperty(process, "version", { ...version, value: `v${value}` });
         const report = await diagnose(config);
@@ -516,11 +516,11 @@ describe("authority and real native registry", () => {
     ).rejects.toThrow("exact versions");
     jest.spyOn(console, "log").mockImplementation(() => {});
     await updatePackages(config, { dryRun: true });
-    await updatePackages(config, { sdkVersion: "0.37.0", dryRun: true });
+    await updatePackages(config, { sdkVersion: "0.38.0", dryRun: true });
     expect(fs.existsSync(path.join(root, "convex"))).toBe(false);
     fs.writeFileSync(path.join(root, "yarn.lock"), "keep");
     await expect(
-      updatePackages(config, { sdkVersion: "0.37.0", dryRun: true }),
+      updatePackages(config, { sdkVersion: "0.38.0", dryRun: true }),
     ).rejects.toThrow("lockfile");
   });
 });
@@ -565,6 +565,20 @@ describe("native ZIP and lifecycle refusal", () => {
       }),
     ).rejects.toThrow("writer barrier");
   });
+  it.each(["cortexErasureReceipts", "runtimeAuthGrants", "runtimeMemorySources", "runtimeModelOperations"])(
+    "refuses protected runtime archive %s before native effects", async (table) => {
+      const { root, config } = fixture();
+      const zip = archive(root, table);
+      await expect(importSnapshot(config, zip, { deployment: "local", replaceAll: true, yes: true })).rejects.toThrow("writer barrier");
+    },
+  );
+  it("refuses composed protected runtime schemas before native effects", async () => {
+    const { root, config } = fixture();
+    const zip = archive(root);
+    fs.mkdirSync(path.join(root, "convex"), { recursive: true });
+    fs.writeFileSync(path.join(root, "convex/schema.ts"), "export default defineSchema({...runtimeAuthTables})");
+    await expect(importSnapshot(config, zip, { deployment: "local", append: true, yes: true })).rejects.toThrow("writer barrier");
+  });
   it("refuses lifecycle-capable deployed targets even when local schema/ZIP lack ledgers", async () => {
     const { root, config } = fixture("console.log('cortexReferenceState')");
     const zip = archive(root);
@@ -575,6 +589,11 @@ describe("native ZIP and lifecycle refusal", () => {
         yes: true,
       }),
     ).rejects.toThrow("Deployed reference lifecycle");
+  });
+  it("refuses deployed protected runtime even when archive and installed schema are old", async () => {
+    const { root, config } = fixture("console.log('runtimeModelOperations')");
+    const zip = archive(root);
+    await expect(importSnapshot(config, zip, { deployment: "local", append: true, yes: true })).rejects.toThrow("protected runtime");
   });
   it("exports only unoccupied ZIP paths and propagates failures", async () => {
     const { root, config } = fixture("process.exit(17)");

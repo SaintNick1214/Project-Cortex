@@ -1,0 +1,39 @@
+import { mkdirSync, readFileSync, realpathSync } from "node:fs";
+import { dirname, isAbsolute, resolve, sep } from "node:path";
+import { fileURLToPath } from "node:url";
+import { parseEnv } from "node:util";
+
+export const fixtureDirectory=resolve(dirname(fileURLToPath(import.meta.url)),"..");
+export const repo=resolve(fixtureDirectory,"../../../../..");
+const archivedEvidence=resolve(fixtureDirectory,"../evidence");
+export const evidenceDirectory=resolve(process.env.CORTEX_QUALIFICATION_EVIDENCE_DIR??resolve(fixtureDirectory,"../../task01-security/evidence"));
+if(evidenceDirectory===archivedEvidence||evidenceDirectory.startsWith(archivedEvidence+sep))throw new Error("Archived Task01 evidence is immutable; select a new CORTEX_QUALIFICATION_EVIDENCE_DIR.");
+
+export function evidenceFile(name){
+  if(typeof name!=="string"||name.includes("/")||name.includes("\\")||name==="."||name==="..")throw new Error("Evidence file name must be a basename.");
+  mkdirSync(evidenceDirectory,{recursive:true});
+  const actualDirectory=realpathSync(evidenceDirectory),actualArchive=realpathSync(archivedEvidence);
+  if(actualDirectory===actualArchive||actualDirectory.startsWith(actualArchive+sep))throw new Error("Archived Task01 evidence is immutable, including symlink aliases; choose a fresh evidence directory.");
+  return resolve(evidenceDirectory,name);
+}
+
+export function qualificationTarget(){
+  const receiptPath=process.env.CORTEX_QUALIFICATION_TARGET_RECEIPT;
+  if(!receiptPath||!isAbsolute(receiptPath))throw new Error("Set CORTEX_QUALIFICATION_TARGET_RECEIPT to an absolute verified qualification receipt path. Generic product target.json is never used; the original qualification deployment was retired.");
+  const target=JSON.parse(readFileSync(receiptPath,"utf8"));
+  if(target.operation!=="create-disposable-development-target"||!["qualification","qualification-security"].includes(target.purpose)||!/^cortex-runtime-disposable-qualification(?:-security)?-[a-f0-9]+$/.test(target.projectSlug??"")||!/^Cortex runtime disposable qualification(?: security)? [a-f0-9]+$/.test(target.projectName??"")||target.isolationVerified!==true||target.deploymentType!=="dev"||target.productionDeployment!==false||target.sharedCiTarget!==false||target.kind!=="cloud"||target.retired===true||target.deleted===true||!Number.isSafeInteger(target.projectId)||target.projectId<=0)throw new Error("Rejected target: fixture requires a verified, active, qualification-purpose disposable cloud development project; product integration/production/shared targets are forbidden.");
+  if(target.deploymentName==="efficient-ox-979")throw new Error("Original qualification deployment efficient-ox-979 was retired; provision a new qualification target.");
+  if(!/^[a-z0-9]+(?:-[a-z0-9]+)+$/.test(target.deploymentName??"")||target.deploymentUrl!==`https://${target.deploymentName}.convex.cloud`)throw new Error("Qualification deployment name and HTTPS URL do not agree.");
+  return target;
+}
+
+export function qualificationDeploymentEnvironment(target){
+  const envFile=process.env.CORTEX_QUALIFICATION_DEPLOY_ENV;
+  if(!envFile||!isAbsolute(envFile))throw new Error("Set CORTEX_QUALIFICATION_DEPLOY_ENV to the absolute private env file for this qualification target.");
+  if(typeof target.privateEnvironmentFile!=="string"||realpathSync(envFile)!==realpathSync(resolve(repo,target.privateEnvironmentFile)))throw new Error("Explicit deploy env path does not match the verified qualification receipt.");
+  const values=parseEnv(readFileSync(envFile,"utf8"));
+  if(!values.CONVEX_DEPLOY_KEY?.startsWith(`dev:${target.deploymentName}|`))throw new Error("Private development deploy key does not match the qualification deployment.");
+  if(values.CONVEX_DEPLOYMENT&&values.CONVEX_DEPLOYMENT!==`dev:${target.deploymentName}`)throw new Error("Private deployment selector does not match qualification receipt.");
+  if(values.CONVEX_URL&&values.CONVEX_URL!==target.deploymentUrl)throw new Error("Private URL selector does not match qualification receipt.");
+  return {envFile,env:{...process.env,...values}};
+}

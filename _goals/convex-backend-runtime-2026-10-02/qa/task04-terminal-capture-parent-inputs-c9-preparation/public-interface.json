@@ -1,0 +1,48 @@
+{
+  "authoritativeSources": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c9-preparation/current-inputs-extension.mjs",
+      "sha256": "e5713cdcdafe5a059edbab4f9f67f7bdec3d379ce1faaaf2fdc1c694c7e31ba1",
+      "bytes": 7097,
+      "imports": "Static exact C4 profile guard/arguments; current imports same-profile parent",
+      "entry": "main only root-authorized; strictProfile public validation",
+      "deadline": "fixed120000ms from entry shared with controlled exclusive beforeCreate/deadlineMs; no reset"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c9-preparation/current-inputs-regression.mjs",
+      "sha256": "ffdb4364b734873bc95cf051f2192ce12e9b0fa2b56a4951ea82891d3720722d",
+      "bytes": 7120,
+      "imports": "Static exact C4 profile guard/arguments; current imports same-profile parent",
+      "entry": "main only root-authorized; strictProfile public validation",
+      "deadline": "fixed120000ms from entry shared with controlled exclusive beforeCreate/deadlineMs; no reset"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c9-preparation/parent-inputs-extension.mjs",
+      "sha256": "f04a6235683612610dc1ee144d25ff589c0f98c0dd88a08a0aa59a88a0372dd2",
+      "bytes": 17432,
+      "imports": "Static exact C4 profile guard/arguments; current imports same-profile parent",
+      "entry": "main only root-authorized; strictProfile public validation",
+      "deadline": "fixed120000ms from entry shared with controlled exclusive beforeCreate/deadlineMs; no reset"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/task04-terminal-capture-parent-inputs-c9-preparation/parent-inputs-regression.mjs",
+      "sha256": "10cd4e624ef782d07a81adb62698bc1f9cd811e208ad97b58f613208ac5028ba",
+      "bytes": 17467,
+      "imports": "Static exact C4 profile guard/arguments; current imports same-profile parent",
+      "entry": "main only root-authorized; strictProfile public validation",
+      "deadline": "fixed120000ms from entry shared with controlled exclusive beforeCreate/deadlineMs; no reset"
+    }
+  ],
+  "exclusiveAPI": "exclusive(path,value,true,undefined,{deadlineMs,beforeCreate,observe})",
+  "observations": [
+    "created",
+    "written",
+    "durable",
+    "closed"
+  ],
+  "partialEvidence": [
+    "parentSetupEffects",
+    "parentCurrentInputEffects"
+  ],
+  "actualPrivateInvocation": "NOT_RUN"
+}

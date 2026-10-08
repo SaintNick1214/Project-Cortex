@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/workspace/Project-Cortex/work/resume/task04-terminal-capture-parent-inputs-c9-restoration-review/finalcheck-corrected.py", line 13, in <module>
+    g=json.loads((v/('shared-c9-'+profile+'.stdout')).read_bytes());r=json.loads((v/('shared-c8-'+profile+'.stdout')).read_bytes());assert g['expectedIdenticalRequirements']==10 and len(g['results'])==10 and len(g['failures'])==0;assert r['expectedIdenticalRequirements']==10 and len(r['failures'])==10;print(profile, 'GREEN10/RED10 immutable outcomes PASS')
+                                                                                                                                                                                                                    ~^^^^^^^^^^^^
+KeyError: 'failures'

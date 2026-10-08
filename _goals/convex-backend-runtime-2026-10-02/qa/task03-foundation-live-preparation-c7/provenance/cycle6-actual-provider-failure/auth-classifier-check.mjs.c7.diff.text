@@ -1,0 +1,33 @@
+--- immutable-c6/auth-classifier-check.mjs
++++ new-c7/auth-classifier-check.mjs
+@@ -37,4 +37,29 @@
+ assert.equal(rememberPlatformWire(401,collisionBody),true);authDenial(undefined,new Error(collisionBody));
+ assert.equal(rememberPlatformWire(403,collisionBody),false);assert.throws(()=>authDenial(undefined,new Error(collisionBody)));headerNegatives++;
+ assert.equal(rememberPlatformWire(401,collisionBody),true);authDenial(undefined,new Error(collisionBody));
+-console.log(JSON.stringify({scope:'OFFLINE_AUTH_CLASSIFIER',status:'PASS',originalNegativeControls:20+malformed,observedHeaderNegativeControls:headerNegatives,negativeControls:20+malformed+headerNegatives,observedHeaderPositiveControls:4,legacyStatusPositiveControls:legacyStatusPositives,current401Then560CollisionRejected:true,staleWireRejected:true,fresh401Recovery:true,arbitraryDeniedAccepted:false,privateDiagnosticAccepted:false,opaqueFailureIsAuthDenial:false,dispatches:0,signatures:0}));
++let providerNegatives=0;
++const providerBody=JSON.stringify({code:'NoAuthProvider',message:'Synthetic provider rejection'});
++assert.throws(()=>authDenial(undefined,new Error(providerBody)));providerNegatives++;
++assert.equal(rememberPlatformWire(401,providerBody),true);authDenial(undefined,new Error(providerBody));
++for(const status of [0,200,400,403,404,500,560]){const body=JSON.stringify({code:'NoAuthProvider',message:'Synthetic wrong status '+status});assert.equal(rememberPlatformWire(status,body),false);assert.throws(()=>authDenial(undefined,new Error(body)));providerNegatives++;}
++for(const value of [
++ {code:'NoAuthProvider',message:'Synthetic extra',private:'extra'},
++ {code:'NoAuthProvider'}, {message:'Synthetic missing code'},
++ {code:'NoAuthProvider',message:3}, {code:'NoAuthProvider',message:null},
++ {code:'UnknownProvider',message:'Synthetic unknown code'},
++ {code:3,message:'Synthetic code type'},
++ {code:'NoAuthProvider',message:'ArgumentValidationError synthetic'},
++ {code:'NoAuthProvider',message:'Could not find public function synthetic'},
++ {code:'NoAuthProvider',message:'Server Error synthetic'},
++ {code:'NoAuthProvider',message:'Uncaught synthetic'},
++]){const body=JSON.stringify(value);assert.equal(rememberPlatformWire(401,body),false);assert.throws(()=>authDenial(undefined,new Error(body)));providerNegatives++;}
++for(const text of ['NoAuthProvider','Synthetic arbitrary NoAuthProvider diagnostic','[CONVEX Q(a2a:send)] Server Error '+providerBody,providerBody+' extra']){assert.throws(()=>authDenial(undefined,new Error(text)));providerNegatives++;}
++const fakeProviderNative=new Error('Synthetic backend diagnostic');fakeProviderNative.data={code:'NoAuthProvider',message:'Synthetic provider rejection'};assert.throws(()=>authDenial(undefined,fakeProviderNative));providerNegatives++;
++const providerCollisionBody=JSON.stringify({code:'NoAuthProvider',message:'Synthetic current response collision'});
++assert.equal(rememberPlatformWire(401,providerCollisionBody),true);authDenial(undefined,new Error(providerCollisionBody));
++assert.equal(rememberPlatformWire(560,providerCollisionBody),false);assert.throws(()=>authDenial(undefined,new Error(providerCollisionBody)));providerNegatives++;
++assert.throws(()=>authDenial(undefined,new Error(providerCollisionBody)));providerNegatives++;
++assert.equal(rememberPlatformWire(401,providerCollisionBody),true);authDenial(undefined,new Error(providerCollisionBody));
++assert.equal(rememberPlatformWire(403,providerCollisionBody),false);assert.throws(()=>authDenial(undefined,new Error(providerCollisionBody)));providerNegatives++;
++assert.equal(rememberPlatformWire(401,providerCollisionBody),true);authDenial(undefined,new Error(providerCollisionBody));
++console.log(JSON.stringify({scope:'OFFLINE_AUTH_CLASSIFIER',status:'PASS',originalNegativeControls:20+malformed,observedHeaderNegativeControls:headerNegatives,cycle6NegativeControls:20+malformed+headerNegatives,observedProviderNegativeControls:providerNegatives,negativeControls:20+malformed+headerNegatives+providerNegatives,observedProviderPositiveControls:4,observedHeaderPositiveControls:4,legacyStatusPositiveControls:legacyStatusPositives,current401Then560CollisionRejected:true,staleWireRejected:true,fresh401Recovery:true,arbitraryDeniedAccepted:false,privateDiagnosticAccepted:false,opaqueFailureIsAuthDenial:false,dispatches:0,signatures:0}));

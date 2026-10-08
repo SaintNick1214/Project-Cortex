@@ -1,0 +1,313 @@
+   1: import { describe, expect, it } from "@jest/globals";
+   2: import {
+   3:   assertResourceScope, resolveAuthority, resolveAuthorityReference,
+   4:   type AuthorityReader, type GrantRecord, type MembershipRecord, type PrincipalRecord,
+   5:   type ScopeRecord, type TombstoneKey,
+   6: } from "../../../convex-dev/runtimeAuth";
+   7: import type { RuntimeAuthority, RuntimeAuthorityRequirement, RuntimeResource } from "../../../src/auth/verified";
+   8: 
+   9: const identity = { issuer: "https://host.test", subject: "alice" };
+  10: const request: RuntimeAuthorityRequirement = { capability: "read", tenantId: "tenant-a", memorySpaceId: "space-a" };
+  11: const resource: RuntimeResource = {
+  12:   resourceType: "memory", resourceId: "memory-a", tenantId: "tenant-a", memorySpaceId: "space-a", ownerPrincipalId: "principal-a",
+  13: };
+  14: 
+  15: function fixture() {
+  16:   const principal: PrincipalRecord = { _id: "principal-a", ...identity, actorKind: "user", version: 1, metadataUserId: "metadata-alice" };
+  17:   const membership: MembershipRecord = { _id: "membership-a", principalId: principal._id, tenantId: "tenant-a", version: 1 };
+  18:   const grant: GrantRecord = {
+  19:     _id: "grant-a", principalId: principal._id, membershipId: membership._id, tenantId: "tenant-a", memorySpaceId: "space-a",
+  20:     tenantEpoch: 1, memorySpaceEpoch: 1, capabilities: ["read", "write", "run", "tool", "storage:read", "storage:write"], resourceAccess: "own", version: 1,
+  21:   };
+  22:   const principals = [principal];
+  23:   const memberships = [membership];
+  24:   const grants = [grant];
+  25:   const scopes: ScopeRecord[] = [{ tenantId: "tenant-a", epoch: 1 }, { tenantId: "tenant-a", memorySpaceId: "space-a", epoch: 1 }];
+  26:   const tombstones: TombstoneKey[] = [];
+  27:   const reader: AuthorityReader = {
+  28:     findPrincipal: async (issuer, subject) => principals.find((record) => record.issuer === issuer && record.subject === subject) ?? null,
+  29:     getPrincipal: async (id) => principals.find((record) => record._id === id) ?? null,
+  30:     listMemberships: async (id) => memberships.filter((record) => record.principalId === id),
+  31:     getMembership: async (id) => memberships.find((record) => record._id === id) ?? null,
+  32:     listGrants: async (id) => grants.filter((record) => record.membershipId === id),
+  33:     getGrant: async (id) => grants.find((record) => record._id === id) ?? null,
+  34:     getScope: async (tenantId, memorySpaceId) => scopes.find((record) => record.tenantId === tenantId && record.memorySpaceId === memorySpaceId) ?? null,
+  35:     hasTombstone: async (key) => tombstones.some((record) => record.tenantId === key.tenantId && record.memorySpaceId === key.memorySpaceId
+  36:       && record.resourceType === key.resourceType && record.resourceId === key.resourceId),
+  37:   };
+  38:   return { reader, principal, membership, grant, principals, memberships, grants, scopes, tombstones };
+  39: }
+  40: type Fixture = ReturnType<typeof fixture>;
+  41: const forbidden = { data: { code: "FORBIDDEN", retryable: false, outcome: "not_dispatched" } };
+  42: 
+  43: describe("verified principal and grant authority", () => {
+  44:   it("derives exact trusted scope and immutable versions from verified issuer/subject, including omitted selectors", async () => {
+  45:     const f = fixture();
+  46:     const authority = await resolveAuthority(f.reader, identity, { capability: "read" }, 1000);
+  47:     expect(authority).toEqual({
+  48:       principalId: "principal-a", principalVersion: 1, membershipId: "membership-a", membershipVersion: 1,
+  49:       grantId: "grant-a", grantVersion: 1, tenantId: "tenant-a", tenantEpoch: 1, memorySpaceId: "space-a", memorySpaceEpoch: 1,
+  50:       actorKind: "user", userId: "metadata-alice", capabilities: f.grant.capabilities, resourceAccess: "own",
+  51:     });
+  52:     authority.capabilities.pop();
+  53:     expect(f.grant.capabilities).toHaveLength(6);
+  54:   });
+  55: 
+  56:   it("rejects missing identity and never turns metadata into a membership", async () => {
+  57:     const f = fixture();
+  58:     await expect(resolveAuthority(f.reader, null, request)).rejects.toMatchObject({ data: { code: "UNAUTHENTICATED" } });
+  59:     const forged = { issuer: identity.issuer, subject: "attacker", userId: "metadata-alice", tenantId: "tenant-a", claims: { roles: ["admin"] }, metadata: { grantId: "grant-a" } };
+  60:     await expect(resolveAuthority(f.reader, forged, request)).rejects.toMatchObject(forbidden);
+  61:     await expect(resolveAuthority(f.reader, { issuer: "https://other.test", subject: identity.subject }, request)).rejects.toMatchObject(forbidden);
+  62:     expect(f.principals).toHaveLength(1);
+  63:     expect(f.memberships).toHaveLength(1);
+  64:     expect(f.grants).toHaveLength(1);
+  65:   });
+  66: 
+  67:   const deniedStates: Array<[string, (f: Fixture) => void]> = [
+  68:     ["revoked principal", (f) => { f.principal.revokedAt = 0; }],
+  69:     ["deleted principal", (f) => { f.principal.deletedAt = 0; }],
+  70:     ["revoked membership", (f) => { f.membership.revokedAt = 0; }],
+  71:     ["deleted membership", (f) => { f.membership.deletedAt = 0; }],
+  72:     ["revoked grant", (f) => { f.grant.revokedAt = 0; }],
+  73:     ["deleted grant", (f) => { f.grant.deletedAt = 0; }],
+  74:     ["expired grant", (f) => { f.grant.expiresAt = 1000; }],
+  75:     ["missing read capability", (f) => { f.grant.capabilities = ["admin"]; }],
+  76:     ["mismatched grant tenant", (f) => { f.grant.tenantId = "tenant-b"; }],
+  77:     ["mismatched grant principal", (f) => { f.grant.principalId = "principal-b"; }],
+  78:     ["invalid grant version", (f) => { f.grant.version = 0; }],
+  79:     ["stale tenant epoch", (f) => { f.scopes[0]!.epoch = 2; }],
+  80:     ["stale memory space epoch", (f) => { f.scopes[1]!.epoch = 2; }],
+  81:     ["deleted tenant", (f) => { f.scopes[0]!.deletedAt = 0; }],
+  82:     ["deleted memory space", (f) => { f.scopes[1]!.deletedAt = 0; }],
+  83:     ["missing tenant", (f) => { f.scopes.shift(); }],
+  84:     ["tenant tombstone", (f) => { f.tombstones.push({ tenantId: "tenant-a", resourceType: "tenant", resourceId: "tenant-a" }); }],
+  85:     ["space tombstone", (f) => { f.tombstones.push({ tenantId: "tenant-a", memorySpaceId: "space-a", resourceType: "memorySpace", resourceId: "space-a" }); }],
+  86:   ];
+  87:   it.each(deniedStates)("denies %s before a sensitive read", async (_label, mutate) => {
+  88:     const f = fixture(); mutate(f);
+  89:     await expect(resolveAuthority(f.reader, identity, request, 1000)).rejects.toMatchObject(forbidden);
+  90:   });
+  91: 
+  92:   it("rejects tenant/space mismatch, resource mismatch and an unscoped canonical resource", async () => {
+  93:     const f = fixture();
+  94:     for (const requirement of [
+  95:       { ...request, tenantId: "tenant-b" }, { ...request, memorySpaceId: "space-b" },
+  96:       { ...request, resource: { ...resource, tenantId: "tenant-b" } },
+  97:       { ...request, resource: { ...resource, tenantId: undefined } },
+  98:     ]) await expect(resolveAuthority(f.reader, identity, requirement, 1000)).rejects.toMatchObject(forbidden);
+  99:   });
+ 100: 
+ 101:   it("denies omitted selectors when eligible grants span tenants or memory spaces", async () => {
+ 102:     const f = fixture();
+ 103:     f.scopes.push({ tenantId: "tenant-a", memorySpaceId: "space-b", epoch: 1 });
+ 104:     f.grants.push({ ...f.grant, _id: "grant-b", memorySpaceId: "space-b" });
+ 105:     await expect(resolveAuthority(f.reader, identity, { capability: "read" }, 1000)).rejects.toMatchObject(forbidden);
+ 106:     expect((await resolveAuthority(f.reader, identity, request, 1000)).grantId).toBe("grant-a");
+ 107:     f.grants.pop();
+ 108:     f.memberships.push({ ...f.membership, _id: "membership-b", tenantId: "tenant-b" });
+ 109:     f.grants.push({ ...f.grant, _id: "grant-b", membershipId: "membership-b", tenantId: "tenant-b" });
+ 110:     f.scopes.push({ tenantId: "tenant-b", epoch: 1 }, { tenantId: "tenant-b", memorySpaceId: "space-a", epoch: 1 });
+ 111:     await expect(resolveAuthority(f.reader, identity, { capability: "read", memorySpaceId: "space-a" }, 1000)).rejects.toMatchObject(forbidden);
+ 112:   });
+ 113: 
+ 114:   it("fails closed on duplicate active grants rather than picking a permissive version", async () => {
+ 115:     const f = fixture(); f.grants.push({ ...f.grant, _id: "grant-duplicate", version: 2, resourceAccess: "space" });
+ 116:     await expect(resolveAuthority(f.reader, identity, request, 1000)).rejects.toMatchObject(forbidden);
+ 117:   });
+ 118: 
+ 119:   it("rejects same-scope active read/write grants before capability pruning", async () => {
+ 120:     const f = fixture(); f.grant.capabilities = ["read"];
+ 121:     f.grants.push({ ...f.grant, _id: "grant-write", version: 2, capabilities: ["write"] });
+ 122:     await expect(resolveAuthority(f.reader, identity, request, 1000)).rejects.toMatchObject(forbidden);
+ 123:     await expect(resolveAuthority(f.reader, identity, { ...request, capability: "write" }, 1000)).rejects.toMatchObject(forbidden);
+ 124:   });
+ 125: 
+ 126:   it("rejects same-scope own/space read grants before an ownership denial discards one", async () => {
+ 127:     const f = fixture(); f.grant.capabilities = ["read"];
+ 128:     f.grants.push({ ...f.grant, _id: "grant-space", version: 2, resourceAccess: "space" });
+ 129:     await expect(resolveAuthority(f.reader, identity, { ...request, resource: { ...resource, ownerPrincipalId: "principal-b" } }, 1000)).rejects.toMatchObject(forbidden);
+ 130:   });
+ 131: 
+ 132:   it.each(["revokedAt", "deletedAt"] as const)("excludes a retained %s generation without granting its capabilities/access", async (field) => {
+ 133:     const f = fixture(); f.grant.capabilities = ["read"];
+ 134:     f.grants.push({ ...f.grant, _id: "grant-retired", version: 2, capabilities: ["write", "read"], resourceAccess: "space", [field]: 0 });
+ 135:     const authority = await resolveAuthority(f.reader, identity, request, 1000);
+ 136:     expect(authority).toMatchObject({ grantId: "grant-a", capabilities: ["read"], resourceAccess: "own" });
+ 137:     expect(await resolveAuthorityReference(f.reader, authority, request, 1001)).toEqual(authority);
+ 138:     await expect(resolveAuthority(f.reader, identity, { ...request, capability: "write" }, 1000)).rejects.toMatchObject(forbidden);
+ 139:     await expect(resolveAuthority(f.reader, identity, { ...request, resource: { ...resource, ownerPrincipalId: "principal-b" } }, 1000)).rejects.toMatchObject(forbidden);
+ 140:   });
+ 141: 
+ 142:   it("does not let expiry/currentness pruning repair duplicate unrevoked generations", async () => {
+ 143:     const f = fixture(); const reference = await resolveAuthority(f.reader, identity, request, 999);
+ 144:     f.grants.push({ ...f.grant, _id: "grant-expired", version: 2, capabilities: ["write"], expiresAt: 1000 });
+ 145:     await expect(resolveAuthority(f.reader, identity, request, 1001)).rejects.toMatchObject(forbidden);
+ 146:     await expect(resolveAuthorityReference(f.reader, reference, request, 1001)).rejects.toMatchObject(forbidden);
+ 147:     f.grants[1]!.revokedAt = 1001;
+ 148:     expect((await resolveAuthority(f.reader, identity, request, 1002)).grantId).toBe("grant-a");
+ 149:     expect(await resolveAuthorityReference(f.reader, reference, request, 1002)).toEqual(reference);
+ 150:   });
+ 151: 
+ 152:   it("does not let a malformed version or stale epoch hide duplicate unrevoked generations", async () => {
+ 153:     const f = fixture();
+ 154:     f.grants.push({ ...f.grant, _id: "grant-malformed", version: 0, tenantEpoch: 99, capabilities: ["write"] });
+ 155:     await expect(resolveAuthority(f.reader, identity, request, 1000)).rejects.toMatchObject(forbidden);
+ 156:   });
+ 157: 
+ 158:   it("keeps other registered raw spaces independent even when one contains corrupt duplicates", async () => {
+ 159:     const f = fixture(); const reference = await resolveAuthority(f.reader, identity, request, 1000);
+ 160:     f.scopes.push({ tenantId: "tenant-a", memorySpaceId: "space-b", epoch: 1 });
+ 161:     f.grants.push({ ...f.grant, _id: "grant-b-read", memorySpaceId: "space-b", capabilities: ["read"] },
+ 162:       { ...f.grant, _id: "grant-b-write", memorySpaceId: "space-b", version: 2, capabilities: ["write"] });
+ 163:     expect((await resolveAuthority(f.reader, identity, request, 1001)).grantId).toBe("grant-a");
+ 164:     expect(await resolveAuthorityReference(f.reader, reference, request, 1001)).toEqual(reference);
+ 165:     await expect(resolveAuthority(f.reader, identity, { ...request, memorySpaceId: "space-b" }, 1001)).rejects.toMatchObject(forbidden);
+ 166:     await expect(resolveAuthority(f.reader, identity, { capability: "read", tenantId: "tenant-a" }, 1001)).rejects.toMatchObject(forbidden);
+ 167:   });
+ 168: 
+ 169:   it("keeps other tenant memberships independent of the selected trusted tenant", async () => {
+ 170:     const f = fixture(); const reference = await resolveAuthority(f.reader, identity, request, 1000);
+ 171:     f.memberships.push({ ...f.membership, _id: "membership-b", tenantId: "tenant-b" });
+ 172:     f.scopes.push({ tenantId: "tenant-b", epoch: 1 }, { tenantId: "tenant-b", memorySpaceId: "space-a", epoch: 1 });
+ 173:     f.grants.push({ ...f.grant, _id: "grant-b-read", membershipId: "membership-b", tenantId: "tenant-b", capabilities: ["read"] },
+ 174:       { ...f.grant, _id: "grant-b-write", membershipId: "membership-b", tenantId: "tenant-b", version: 2, capabilities: ["write"] });
+ 175:     expect((await resolveAuthority(f.reader, identity, request, 1001)).grantId).toBe("grant-a");
+ 176:     expect(await resolveAuthorityReference(f.reader, reference, request, 1001)).toEqual(reference);
+ 177:     await expect(resolveAuthority(f.reader, identity, { ...request, tenantId: "tenant-b" }, 1001)).rejects.toMatchObject(forbidden);
+ 178:   });
+ 179: 
+ 180:   it("groups tenant-wide and space-specific grants by raw scope before narrowing, preserving exact capabilities", async () => {
+ 181:     const f = fixture(); f.grant.memorySpaceId = undefined; f.grant.memorySpaceEpoch = undefined;
+ 182:     f.grant.resourceAccess = "tenant"; f.grant.capabilities = ["read"];
+ 183:     f.grants.push({ ...f.grant, _id: "grant-space-write", memorySpaceId: "space-a", memorySpaceEpoch: 1, resourceAccess: "own", capabilities: ["write"] });
+ 184:     const reference = await resolveAuthority(f.reader, identity, request, 1000);
+ 185:     expect(reference).toMatchObject({ grantId: "grant-a", memorySpaceId: "space-a", capabilities: ["read"] });
+ 186:     expect((await resolveAuthority(f.reader, identity, { ...request, capability: "write" }, 1000)).grantId).toBe("grant-space-write");
+ 187:     expect(await resolveAuthorityReference(f.reader, reference, request, 1001)).toEqual(reference);
+ 188:     await expect(resolveAuthorityReference(f.reader, reference, { ...request, capability: "write" }, 1001)).rejects.toMatchObject(forbidden);
+ 189:     f.grants[1]!.capabilities = ["read"];
+ 190:     await expect(resolveAuthority(f.reader, identity, request, 1001)).rejects.toMatchObject(forbidden); // Two eligible references, not a raw-group duplicate.
+ 191:     expect(await resolveAuthorityReference(f.reader, reference, request, 1001)).toEqual(reference);
+ 192:   });
+ 193: 
+ 194:   it("requires explicit cross-principal access within the same tenant", async () => {
+ 195:     const f = fixture(); const otherOwner = { ...resource, ownerPrincipalId: "principal-b" };
+ 196:     await expect(resolveAuthority(f.reader, identity, { ...request, resource: otherOwner }, 1000)).rejects.toMatchObject(forbidden);
+ 197:     f.grant.resourceAccess = "space";
+ 198:     expect((await resolveAuthority(f.reader, identity, { ...request, resource: otherOwner }, 1000)).resourceAccess).toBe("space");
+ 199:     await expect(resolveAuthority(f.reader, identity, { ...request, resource: { ...otherOwner, memorySpaceId: "space-b" } }, 1000)).rejects.toMatchObject(forbidden);
+ 200:   });
+ 201: 
+ 202:   it("allows a tenant-wide grant to narrow to an existing space while preserving its epoch", async () => {
+ 203:     const f = fixture(); f.grant.memorySpaceId = undefined; f.grant.memorySpaceEpoch = undefined; f.grant.resourceAccess = "tenant";
+ 204:     const authority = await resolveAuthority(f.reader, identity, { ...request, resource: { ...resource, ownerPrincipalId: "principal-b" } }, 1000);
+ 205:     expect(authority).toMatchObject({ memorySpaceId: "space-a", memorySpaceEpoch: 1, grantId: "grant-a" });
+ 206:     await expect(resolveAuthority(f.reader, identity, { ...request, memorySpaceId: "unregistered-space" }, 1000)).rejects.toMatchObject(forbidden);
+ 207:   });
+ 208: 
+ 209:   it("separates explicit service/tool capabilities from caller claimed service roles", async () => {
+ 210:     const f = fixture();
+ 211:     await expect(resolveAuthority(f.reader, identity, { ...request, capability: "tool", actorKind: "service" }, 1000)).rejects.toMatchObject(forbidden);
+ 212:     f.principal.actorKind = "service";
+ 213:     expect((await resolveAuthority(f.reader, identity, { ...request, capability: "tool", actorKind: "service" }, 1000)).actorKind).toBe("service");
+ 214:     f.grant.capabilities = ["read"];
+ 215:     await expect(resolveAuthority(f.reader, identity, { ...request, capability: "tool" }, 1000)).rejects.toMatchObject(forbidden);
+ 216:   });
+ 217: 
+ 218:   it("authorizes each private storage capability independently of read/run/admin", async () => {
+ 219:     const f = fixture(); f.grant.capabilities = ["read", "admin", "run"];
+ 220:     for (const capability of ["storage:read", "storage:write", "tool"] as const) {
+ 221:       await expect(resolveAuthority(f.reader, identity, { ...request, capability }, 1000)).rejects.toMatchObject(forbidden);
+ 222:     }
+ 223:   });
+ 224: });
+ 225: 
+ 226: describe("background rechecks and deletion fences", () => {
+ 227:   it.each(["different-capability", "foreign-owner"])("detects %s duplicate introduced after pinned admission", async (variant) => {
+ 228:     const f = fixture(); f.grant.capabilities = ["read"];
+ 229:     if (variant === "foreign-owner") f.grant.resourceAccess = "space";
+ 230:     const requirement = variant === "foreign-owner" ? { ...request, resource: { ...resource, ownerPrincipalId: "principal-b" } } : request;
+ 231:     const reference = await resolveAuthority(f.reader, identity, requirement, 1000);
+ 232:     f.grants.push({ ...f.grant, _id: "grant-late", version: 2, capabilities: variant === "different-capability" ? ["write"] : ["read"], resourceAccess: "own" });
+ 233:     await expect(resolveAuthorityReference(f.reader, reference, requirement, 1001)).rejects.toMatchObject(forbidden);
+ 234:   });
+ 235: 
+ 236:   it("detects a duplicate tenant-wide raw grant after its reference was narrowed to a concrete space", async () => {
+ 237:     const f = fixture(); f.grant.memorySpaceId = undefined; f.grant.memorySpaceEpoch = undefined;
+ 238:     f.grant.resourceAccess = "tenant"; f.grant.capabilities = ["read"];
+ 239:     const reference = await resolveAuthority(f.reader, identity, request, 1000);
+ 240:     f.grants.push({ ...f.grant, _id: "grant-wide-late", version: 2, capabilities: ["write"] });
+ 241:     await expect(resolveAuthorityReference(f.reader, reference, request, 1001)).rejects.toMatchObject(forbidden);
+ 242:   });
+ 243: 
+ 244:   it("requires the pinned grant to remain present in its trusted raw membership/scope group", async () => {
+ 245:     const f = fixture(); const reference = await resolveAuthority(f.reader, identity, request, 1000);
+ 246:     f.reader.listGrants = async () => [];
+ 247:     await expect(resolveAuthorityReference(f.reader, reference, request, 1001)).rejects.toMatchObject(forbidden);
+ 248:   });
+ 249: 
+ 250:   it("a lone grant permits work before expiry and rejects both admission and pinned work at expiry", async () => {
+ 251:     const f = fixture(); f.grant.expiresAt = 1000;
+ 252:     const reference = await resolveAuthority(f.reader, identity, request, 999);
+ 253:     expect(await resolveAuthorityReference(f.reader, reference, request, 999)).toEqual(reference);
+ 254:     await expect(resolveAuthority(f.reader, identity, request, 1000)).rejects.toMatchObject(forbidden);
+ 255:     await expect(resolveAuthorityReference(f.reader, reference, request, 1000)).rejects.toMatchObject(forbidden);
+ 256:   });
+ 257: 
+ 258:   it("continues after ordinary observer logout and stops on subsequent grant revocation", async () => {
+ 259:     const f = fixture(); const reference = await resolveAuthority(f.reader, identity, request, 1000);
+ 260:     // Background execution reads its persisted reference and never asks for a session identity.
+ 261:     expect(await resolveAuthorityReference(f.reader, reference, request, 1001)).toEqual(reference);
+ 262:     f.grant.revokedAt = 1002;
+ 263:     await expect(resolveAuthorityReference(f.reader, reference, request, 1003)).rejects.toMatchObject(forbidden);
+ 264:   });
+ 265: 
+ 266:   it.each(["principalVersion", "membershipVersion", "grantVersion", "tenantEpoch", "memorySpaceEpoch"] as const)(
+ 267:     "rejects a changed or forged pinned %s", async (field) => {
+ 268:       const f = fixture(); const reference = await resolveAuthority(f.reader, identity, request, 1000);
+ 269:       await expect(resolveAuthorityReference(f.reader, { ...reference, [field]: reference[field]! + 1 }, request, 1001)).rejects.toMatchObject(forbidden);
+ 270:     },
+ 271:   );
+ 272: 
+ 273:   it("rejects identity/scope substitution and cannot widen a pinned space grant", async () => {
+ 274:     const f = fixture(); const reference = await resolveAuthority(f.reader, identity, request, 1000);
+ 275:     for (const override of [
+ 276:       { principalId: "principal-b" }, { membershipId: "membership-b" }, { grantId: "grant-b" },
+ 277:       { tenantId: "tenant-b" }, { memorySpaceId: "space-b" },
+ 278:     ]) await expect(resolveAuthorityReference(f.reader, { ...reference, ...override }, request, 1001)).rejects.toMatchObject(forbidden);
+ 279:     await expect(resolveAuthorityReference(f.reader, reference, { ...request, memorySpaceId: "space-b" }, 1001)).rejects.toMatchObject(forbidden);
+ 280:   });
+ 281: 
+ 282:   it("requires admission to pin the concrete space before tenant-wide background work reads that space", async () => {
+ 283:     const f = fixture(); f.grant.memorySpaceId = undefined; f.grant.memorySpaceEpoch = undefined; f.grant.resourceAccess = "tenant";
+ 284:     const tenantReference = await resolveAuthority(f.reader, identity, { capability: "read", tenantId: "tenant-a" }, 1000);
+ 285:     expect(tenantReference.memorySpaceId).toBeUndefined();
+ 286:     await expect(resolveAuthorityReference(f.reader, tenantReference, request, 1001)).rejects.toMatchObject(forbidden);
+ 287:     const spaceReference = await resolveAuthority(f.reader, identity, request, 1000);
+ 288:     expect(await resolveAuthorityReference(f.reader, spaceReference, request, 1001)).toEqual(spaceReference);
+ 289:   });
+ 290: 
+ 291:   it.each(["read", "effect", "commit"])("stops a later sensitive %s after a resource tombstone without relying on a session", async () => {
+ 292:     const f = fixture(); const scoped = { ...request, resource };
+ 293:     const reference = await resolveAuthority(f.reader, identity, scoped, 1000);
+ 294:     f.tombstones.push({ tenantId: "tenant-a", memorySpaceId: "space-a", resourceType: "memory", resourceId: "memory-a" });
+ 295:     await expect(resolveAuthorityReference(f.reader, reference, scoped, 1001)).rejects.toMatchObject(forbidden);
+ 296:   });
+ 297: 
+ 298:   it("rejects tenant-wide resource tombstones and deletion even if a row was physically recreated", async () => {
+ 299:     const f = fixture(); const reference = await resolveAuthority(f.reader, identity, request, 1000);
+ 300:     f.tombstones.push({ tenantId: "tenant-a", resourceType: "memory", resourceId: "memory-a" });
+ 301:     await expect(resolveAuthorityReference(f.reader, reference, { ...request, resource }, 1001)).rejects.toMatchObject(forbidden);
+ 302:     f.tombstones.length = 0; f.scopes[1]!.deletedAt = 1001; f.scopes[1]!.epoch = 2;
+ 303:     await expect(resolveAuthorityReference(f.reader, reference, request, 1002)).rejects.toMatchObject(forbidden);
+ 304:   });
+ 305: 
+ 306:   it("checks ownership synchronously without accepting missing owner/tenant fields", async () => {
+ 307:     const f = fixture(); const authority: RuntimeAuthority = await resolveAuthority(f.reader, identity, request, 1000);
+ 308:     expect(() => assertResourceScope(authority, resource)).not.toThrow();
+ 309:     for (const row of [{ ...resource, ownerPrincipalId: undefined }, { ...resource, tenantId: undefined }, { ...resource, memorySpaceId: "space-b" }]) {
+ 310:       expect(() => assertResourceScope(authority, row)).toThrow("Access denied");
+ 311:     }
+ 312:   });
+ 313: });

@@ -1,0 +1,127 @@
+{
+  "start": {
+    "current_time": "2026-10-04 13:36:51 UTC"
+  },
+  "end": {
+    "current_time": "2026-10-04 13:36:51 UTC"
+  },
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "Action completed."
+      }
+    ],
+    "structuredContent": {
+      "results": [
+        {
+          "url": "https://github.com/get-convex/ai-budget/blob/509977282bce11cc1ba41b9ca31897eb43124da8/README.md",
+          "path": "README.md",
+          "display_url": "https://github.com/get-convex/ai-budget/blob/509977282bce11cc1ba41b9ca31897eb43124da8/README.md",
+          "display_title": "README.md",
+          "text_matches": [
+            {
+              "property": "content",
+              "fragment": "\nThe component records the gateway's **real per-request dollar cost** when the\nprovider surfaces it (`@convex-dev/ai-sdk-provider ≥ 0.2.0-alpha.1`, via\n`providerMetadata.convexGateway.cost`) — cached and reasoning tokens included, so\nrecorded spend equals the actual bill. Without it, cost is computed from token\ncounts, discounting the cached slice (the gateway's real `cacheReadTokens`) at\n`cachedNanosPerMTok` (default 10% of input). Either way, an **unknown model is",
+              "matches": [
+                {
+                  "text": "cost",
+                  "indices": [
+                    63,
+                    67
+                  ]
+                },
+                {
+                  "text": "providerMetadata",
+                  "indices": [
+                    155,
+                    171
+                  ]
+                },
+                {
+                  "text": "cost",
+                  "indices": [
+                    186,
+                    190
+                  ]
+                },
+                {
+                  "text": "cost",
+                  "indices": [
+                    289,
+                    293
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "url": "https://github.com/get-convex/ai-budget/blob/509977282bce11cc1ba41b9ca31897eb43124da8/src/client/index.ts",
+          "path": "src/client/index.ts",
+          "display_url": "https://github.com/get-convex/ai-budget/blob/509977282bce11cc1ba41b9ca31897eb43124da8/src/client/index.ts",
+          "display_title": "src/client/index.ts",
+          "text_matches": [
+            {
+              "property": "content",
+              "fragment": "              responseText: text,\n              error: error ?? streamError,\n              ...extractUsage(usage),\n              costNanos: extractGatewayCostNanos({ providerMetadata }),\n              latencyMs: Date.now() - start,\n            }));\n            const reader = result.stream.getReader();",
+              "matches": [
+                {
+                  "text": "cost",
+                  "indices": [
+                    129,
+                    133
+                  ]
+                },
+                {
+                  "text": "Cost",
+                  "indices": [
+                    154,
+                    158
+                  ]
+                },
+                {
+                  "text": "providerMetadata",
+                  "indices": [
+                    166,
+                    182
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "url": "https://github.com/get-convex/ai-budget/blob/509977282bce11cc1ba41b9ca31897eb43124da8/src/client/security.test.ts",
+          "path": "src/client/security.test.ts",
+          "display_url": "https://github.com/get-convex/ai-budget/blob/509977282bce11cc1ba41b9ca31897eb43124da8/src/client/security.test.ts",
+          "display_title": "src/client/security.test.ts",
+          "text_matches": [
+            {
+              "property": "content",
+              "fragment": "        controller.enqueue({\n          type: \"finish\",\n          usage: { inputTokens: 10, outputTokens: 2 },\n          providerMetadata: { convexGateway: { cost: 0.1 } },\n        });\n        controller.close();\n      },",
+              "matches": [
+                {
+                  "text": "providerMetadata",
+                  "indices": [
+                    120,
+                    136
+                  ]
+                },
+                {
+                  "text": "cost",
+                  "indices": [
+                    157,
+                    161
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "isError": false
+  }
+}
+
