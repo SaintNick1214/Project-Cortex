@@ -1,0 +1,438 @@
+--- immutable-N2/source_adapters2.py
++++ NEW-N3/source_adapters3.py
+@@ -13,8 +13,10 @@
+ import stat
+ import time
+ from dataclasses import dataclass
+-
+-SCOPE = 'TASK03_OPERATIVE_SOURCE_ADAPTERS2_SOURCE_MEMBERS_ONLY'
++from collections.abc import Mapping, Sequence
++from types import MappingProxyType
++
++SCOPE = 'TASK03_OPERATIVE_SOURCE_ADAPTERS3_SOURCE_MEMBERS_ONLY'
+ FIELDS = ('dev','ino','mode','uid','gid','nlink','size','mtime_ns','ctime_ns')
+ CAPS = {'paths':4096,'bytes':67108864,'file':16777216,'MF':4194304,
+         'approval':1048576,'DATA':2097152}
+@@ -36,7 +38,146 @@
+     return hashlib.sha256(raw).hexdigest()
+ 
+ def encode(value):
+-    return (json.dumps(value,sort_keys=True,separators=(',',':'),allow_nan=False)+'\n').encode()
++    return (json.dumps(native(value),sort_keys=True,separators=(',',':'),allow_nan=False)+'\n').encode()
++
++class MutationJournal:
++    """Monotonic evidence of attempts against immutable owned bindings.
++
++    No recipe/row bytes change. A native detached deepcopy remains writable;
++    attempts on the actual owned view invalidate its authority before IO.
++    """
++    __slots__=('_version',)
++    def __init__(self):object.__setattr__(self,'_version',0)
++    @property
++    def version(self):return self._version
++    def note(self):object.__setattr__(self,'_version',self._version+1)
++    def __setattr__(self,*_):raise Denied('owned_mutation_journal_cannot_reset')
++
++class FrozenMap(Mapping):
++    __slots__=('_pairs','_index','_journal')
++    def __init__(self,value,journal):
++        object.__setattr__(self,'_pairs',tuple((key,freeze(item,journal))for key,item in value.items()))
++        # No mutable dictionary reference escapes this constructor. The
++        # built-in readonly index keeps exact lookup constant time.
++        object.__setattr__(self,'_index',MappingProxyType(dict(self._pairs)))
++        object.__setattr__(self,'_journal',journal)
++    def __getitem__(self,key):return self._index[key]
++    def __iter__(self):return iter(self._index)
++    def __len__(self):return len(self._pairs)
++    def __deepcopy__(self,memo):return {key:copy.deepcopy(value,memo)for key,value in self._pairs}
++    def __setattr__(self,*_):raise Denied('owned_immutable_mapping_attribute')
++    def __setitem__(self,*_):self._journal.note()
++    def __delitem__(self,*_):self._journal.note()
++    def clear(self):self._journal.note()
++    def update(self,*_args,**_kwargs):self._journal.note()
++    def pop(self,key,*default):
++        self._journal.note()
++        if key in self:return self[key]
++        if default:return default[0]
++        raise KeyError(key)
++    def popitem(self):
++        self._journal.note()
++        if not self._pairs:raise KeyError('empty immutable mapping')
++        return self._pairs[-1]
++    def setdefault(self,key,default=None):
++        self._journal.note();return self[key]if key in self else default
++
++class FrozenList(Sequence):
++    __slots__=('_items','_journal')
++    def __init__(self,value,journal):
++        object.__setattr__(self,'_items',tuple(freeze(item,journal)for item in value))
++        object.__setattr__(self,'_journal',journal)
++    def __getitem__(self,key):return self._items[key]
++    def __len__(self):return len(self._items)
++    def __deepcopy__(self,memo):return [copy.deepcopy(item,memo)for item in self._items]
++    def __setattr__(self,*_):raise Denied('owned_immutable_sequence_attribute')
++    def __setitem__(self,*_):self._journal.note()
++    def __delitem__(self,*_):self._journal.note()
++    def append(self,*_):self._journal.note()
++    def extend(self,*_):self._journal.note()
++    def insert(self,*_):self._journal.note()
++    def clear(self):self._journal.note()
++    def reverse(self):self._journal.note()
++    def sort(self,*_args,**_kwargs):self._journal.note()
++    def remove(self,*_):self._journal.note()
++    def pop(self,index=-1):self._journal.note();return self._items[index]
++
++class NativeFrozenRow(dict):
++    """Original dict-shaped row ABI; small row bytes are rechecked each time.
++
++    The large recipe uses Mapping/tuple backing. Literal source rows/nines
++    additionally keep the original native dict/json ABI for original callers.
++    Even a dict.__setitem__ bypass is detected by the fresh per-row seal.
++    """
++    def __init__(self,value,journal):
++        dict.__init__(self,value);object.__setattr__(self,'_journal',journal)
++    def __deepcopy__(self,memo):return {key:copy.deepcopy(value,memo)for key,value in self.items()}
++    def __setattr__(self,*_):raise Denied('owned_native_row_attribute')
++    def __setitem__(self,*_):self._journal.note()
++    def __delitem__(self,*_):self._journal.note()
++    def clear(self):self._journal.note()
++    def update(self,*_args,**_kwargs):self._journal.note()
++    def pop(self,key,*default):
++        self._journal.note()
++        if key in self:return self[key]
++        if default:return default[0]
++        raise KeyError(key)
++    def popitem(self):self._journal.note();return next(iter(self.items()))
++    def setdefault(self,key,default=None):self._journal.note();return self.get(key,default)
++
++def freeze_row(row,journal):
++    return NativeFrozenRow({key:NativeFrozenRow(value,journal)if key=='nine'
++                            else freeze(value,journal)for key,value in row.items()},journal)
++
++def freeze(value,journal):
++    if isinstance(value,(FrozenMap,FrozenList,NativeFrozenRow)):return value
++    if isinstance(value,dict):return FrozenMap(value,journal)
++    if isinstance(value,list):return FrozenList(value,journal)
++    if isinstance(value,tuple):return tuple(freeze(item,journal)for item in value)
++    return value
++
++def native(value):
++    if isinstance(value,FrozenMap):return {key:native(item)for key,item in value.items()}
++    if isinstance(value,FrozenList):return [native(item)for item in value]
++    if isinstance(value,dict):return {key:native(item)for key,item in value.items()}
++    if isinstance(value,(tuple,list)):return [native(item)for item in value]
++    return value
++
++def literal_equal(current,expected):
++    """Fresh typed comparison of small mutable rows, never a cached hash.
++
++    This avoids serializing/hashing all literal-row JSON at every nested IO
++    fence. Keys, scalar types, list order and every literal value stay exact.
++    The original ledger approval_binding/preflight still run each boundary.
++    """
++    if isinstance(expected,dict):
++        return (isinstance(current,(dict,FrozenMap)) and set(current)==set(expected)
++                and all(literal_equal(current[key],value)for key,value in expected.items()))
++    if isinstance(expected,list):
++        return (isinstance(current,(list,FrozenList))and len(current)==len(expected)
++                and all(literal_equal(a,b)for a,b in zip(current,expected)))
++    if isinstance(expected,tuple):
++        return (isinstance(current,tuple)and len(current)==len(expected)
++                and all(literal_equal(a,b)for a,b in zip(current,expected)))
++    return type(current)is type(expected)and current==expected
++
++class NativePhaseView:
++    """Explicit read-only row conversion, sharing the supplied API and ledger.
++
++    This facade supplies no ledger factory and mutates no module. Its small
++    row conversions preserve the exact original native validation/digest.
++    """
++    __slots__=('phase',)
++    def __init__(self,phase):object.__setattr__(self,'phase',phase)
++    def __setattr__(self,*_):raise Denied('phase_facade_replacement')
++    def __getattr__(self,name):
++        if name in ('CAPS','COUNTS','FIELDS','ASSERTIONS','Denied','OPS'):return getattr(self.phase,name)
++        raise AttributeError(name)
++    def valid_row(self,row):return self.phase.valid_row(native(row))
++    def admission_id(self,row):return self.phase.admission_id(native(row))
++    def validate_contract(self,recipe):return self.phase.validate_contract(native(recipe))
++    def digest(self,value):return self.phase.digest(native(value))
++    def encode(self,value):return self.phase.encode(native(value))
+ 
+ def strict_json(raw):
+     def pairs(items):
+@@ -174,7 +315,7 @@
+             raise Denied('runtime_review_binding_not_native_or_exact')
+         if type(stop_ns) is not int or stop_ns<0 or len(adapter_sha256)!=64:
+             raise Denied('stop_or_adapter_binding')
+-        self.api=api;self.root=lexical_root;self.view=view;self.ledger=ledger
++        self.api=NativePhaseView(api);self.root=lexical_root;self.view=view;self.ledger=ledger
+         self.stop_ns=stop_ns;self.io=io;self.clock=clock;self.owned={};self.rows={}
+         self.events=[];self.failures=[];self.close_attempts=[];self.open_complete=False
+         self.closed=False;self.final_checked=False;self.bodies={}
+@@ -186,7 +327,28 @@
+             self.rows[path]=copy.deepcopy(row)
+         for row in self.rows.values(): ledger.admit(row,reason='exact_successor_SourceMember')
+         shared_admission(api,ledger,future_paths=[r['path'] for r in view.recipe['futureDATA']])
+-        self._source_seal=sha(encode(self._seal_value()))
++        self._journal=MutationJournal()
++        self.rows=FrozenMap({path:freeze_row(row,self._journal)for path,row in self.rows.items()},self._journal)
++        self.view=SourceView(freeze(self.view.recipe,self._journal),
++                 freeze(self.view.rows,self._journal),freeze(self.view.custody_rows,self._journal),
++                 self.view.view_sha256,self.view.phase_sha256,self.view.bootstrap_admissions,self.view.witness)
++        sealed_raw=encode(self._seal_value())
++        self._source_seal=sha(sealed_raw)
++        self._sealed_objects=(self.rows,self.view,self.view.recipe,self.view.rows,self.view.custody_rows,
++                              self._journal,self.api,self.ledger,self.root,self.io,self.clock)
++        self._sealed_scalars=(self.view.view_sha256,self.view.phase_sha256,self.view.bootstrap_admissions,
++                              self.stop_ns,adapter_sha256)
++        self._sealed_version=self._journal.version
++        self._failed=False
++        self._ledger_floor={key:copy.deepcopy(row)for key,row in self.ledger.rows.items()}
++        self._owned_row_floor={path:copy.deepcopy(row)for path,row in self.rows.items()}
++        self._debt_floor=set(self.ledger.read_debts)
++        # The owned entire binding is encoded/hash-sealed exactly once here.
++        # Subsequent checks use immutable backing + identity + monotonic
++        # mutation-attempt evidence, and freshly inspect the mutable ledger.
++        self.seal_bytes=len(sealed_raw)
++        self.seal_hash_computations=1
++        self.boundary_checks=0
+ 
+     def _seal_value(self):
+         return {'rows':self.rows,'recipe':self.view.recipe,'viewRows':self.view.rows,
+@@ -194,24 +356,59 @@
+                 'phaseSha256':self.view.phase_sha256,'bootstrap':self.view.bootstrap_admissions}
+ 
+     def _sealed(self):
+-        if sha(encode(self._seal_value()))!=self._source_seal:
++        objects=(self.rows,self.view,self.view.recipe,self.view.rows,self.view.custody_rows,
++                 self._journal,self.api,self.ledger,self.root,self.io,self.clock)
++        scalars=(self.view.view_sha256,self.view.phase_sha256,self.view.bootstrap_admissions,
++                 self.stop_ns,self._sealed_scalars[-1])
++        if (any(current is not original for current,original in zip(objects,self._sealed_objects))
++                or scalars!=self._sealed_scalars or self._journal.version!=self._sealed_version):
+             raise Denied('reviewed_Source_rows_edges_program_bindings_changed')
+ 
+     def _boundary(self):
+-        self._sealed()
+-        for path,(fd,row) in self.owned.items():
+-            if (path not in self.rows or self.api.admission_id(row)!=self.api.admission_id(self.rows[path])
+-                    or self.ledger.owned_fds.get(fd) is not self):
+-                raise Denied('held_Source_descriptor_or_row_not_owned_by_this_session')
+-        return shared_admission(self.api,self.ledger,
+-                         future_paths=[r['path'] for r in self.view.recipe['futureDATA']])
++        try:
++            self.boundary_checks+=1
++            self._sealed()
++            for path,original in self._owned_row_floor.items():
++                if not literal_equal(self.rows[path],original):
++                    raise Denied('owned_native_Source_row_changed_outside_immutable_interface')
++            for path,(fd,row) in self.owned.items():
++                if (path not in self.rows or row is not self.rows[path]
++                        or self.ledger.owned_fds.get(fd) is not self):
++                    raise Denied('held_Source_descriptor_or_row_not_owned_by_this_session')
++            if (not set(self._ledger_floor)<=set(self.ledger.rows)
++                    or not self._debt_floor<=self.ledger.read_debts):
++                raise Denied('cumulative_Source_admission_or_read_debt_removed')
++            for key,original in self._ledger_floor.items():
++                if not literal_equal(self.ledger.rows[key],original):
++                    raise Denied('literal_admitted_Source_row_roles_or_provenance_changed')
++            result=shared_admission(self.api,self.ledger,
++                             future_paths=[r['path'] for r in self.view.recipe['futureDATA']])
++            for key,row in self.ledger.rows.items():
++                if key not in self._ledger_floor:self._ledger_floor[key]=copy.deepcopy(row)
++            self._debt_floor.update(self.ledger.read_debts)
++            return result
++        except BaseException as error:
++            self._failure('Source_invariant_boundary',error)
++            raise
+ 
+     def _healthy(self):
+         self._boundary()
+-        if self.failures:raise Denied('prior_Source_failure_cannot_authorize_callback_or_compile')
++        if self._failed or self.failures:raise Denied('prior_Source_failure_cannot_authorize_callback_or_compile')
+ 
+     def _failure(self,stage,error):
++        self._failed=True
+         self.failures.append((stage,error))
++
++    def _io(self,method,*args):
++        """Every real owned Source IO error is sticky even when callers catch it."""
++        self._boundary()
++        try:
++            result=getattr(self.io,method)(*args)
++        except BaseException as error:
++            self._failure('Source_IO:'+method,error)
++            raise
++        self._boundary()
++        return result
+ 
+     def _path(self,relative):
+         self._boundary()
+@@ -225,22 +422,27 @@
+         components=list(reversed(self.root.parents))+[self.root]
+         for part in pure.parts:components.append(components[-1]/part)
+         for parent in components:
+-            self._boundary();observed=self.io.lstat(parent);self._boundary()
+-            if stat.S_ISLNK(observed.st_mode):raise Denied('symlink_component')
++            observed=self._io('lstat',parent)
++            if stat.S_ISLNK(observed.st_mode):
++                error=Denied('symlink_component');self._failure('Source_path_provenance',error);raise error
+         return path
+ 
+     def _fence(self,path,row,fd=None,mature=False):
+-        self._boundary();observed=self.io.lstat(path);self._boundary()
++        observed=self._io('lstat',path)
+         if (not stat.S_ISREG(observed.st_mode) or observed.st_nlink!=1
+                 or observed.st_uid!=501 or observed.st_gid!=20 or nine(observed)!=row['nine']):
+-            raise Denied('original_literal9_identity_mode_link_changed')
++            error=Denied('original_literal9_identity_mode_link_changed')
++            self._failure('Source_physical_provenance',error);raise error
+         if fd is not None:
+-            self._boundary();descriptor=self.io.fstat(fd);self._boundary()
+-            if nine(descriptor)!=row['nine']:raise Denied('original_literal9_descriptor_changed')
++            descriptor=self._io('fstat',fd)
++            if nine(descriptor)!=row['nine']:
++                error=Denied('original_literal9_descriptor_changed')
++                self._failure('Source_descriptor_provenance',error);raise error
+         if mature:
+             maximum=max(observed.st_mtime_ns,observed.st_ctime_ns)
+             if maximum>self.stop_ns or self.clock()-maximum<240000000000 or self.clock()-self.stop_ns<240000000000:
+-                raise Denied('SOURCE_not_stopped_and_currently240s_mature')
++                error=Denied('SOURCE_not_stopped_and_currently240s_mature')
++                self._failure('Source_stopped_maturity_provenance',error);raise error
+ 
+     def _register(self,path,fd,row):
+         try:
+@@ -265,15 +467,20 @@
+     def open_all(self,caller):
+         if self.closed or self.open_complete or self.owned: raise Denied('duplicate_open_lifetime')
+         try:
+-            self._boundary()
++            self._healthy()
+             for row in self.rows.values():
+-                self.ledger.authorize_use(row,caller,'read',self.view.recipe['bodyUseEdges'])
++                self.ledger.authorize_use(native(row),caller,'read',self.view.recipe['bodyUseEdges'])
+                 self._boundary()
+             for relative,row in self.rows.items():
+                 path=self._path(relative);self._fence(path,row,mature=True)
+                 self.ledger.can_open()
+                 self._boundary()
+-                fd=self.io.open(path,self.io.O_RDONLY|self.io.O_NOFOLLOW)
++                # Successful open is registered BEFORE any fallible post-IO
++                # invariant, fstat or metadata validation. Generic _io() would
++                # be too late to own a newly returned handle.
++                try:fd=self.io.open(path,self.io.O_RDONLY|self.io.O_NOFOLLOW)
++                except BaseException as error:
++                    self._failure('Source_IO:open',error);raise
+                 self._register(relative,fd,row) # BEFORE fstat/maturity/parser/body
+                 self._boundary()
+                 self._fence(path,row,fd,mature=True)
+@@ -284,22 +491,39 @@
+             self.close()
+ 
+     def read(self,caller,path,operation='read'):
++        self._healthy()
++        return self._read_owned(caller,path,operation)
++
++    def _read_owned(self,caller,path,operation='read'):
++        """Verification remains possible after failure; it grants no authority.
++
++        Only final() invokes this internal path without _healthy(). It retains
++        the exact authorization, debt, cap, EOF/hash/nine and ownership checks.
++        Safe rejected caller/path/operation validation precedes Source work.
++        """
+         self._boundary()
+         if self.closed or not self.open_complete or path not in self.owned:
+             raise Denied('undeclared_or_body_before_all_member_FDs')
+         row=self.rows[path]
+-        self.ledger.authorize_use(row,caller,operation,self.view.recipe['bodyUseEdges'])
++        self.ledger.authorize_use(native(row),caller,operation,self.view.recipe['bodyUseEdges'])
++        try:return self._read_body(caller,path,operation,row)
++        except BaseException as error:
++            self._failure('owned_Source_body:'+path,error);raise
++
++    def _read_body(self,caller,path,operation,row):
+         self._boundary()
+         fd,_=self.owned[path];chunks=[];offset=0
+         while True:
+             self._fence(self._path(path),row,fd,mature=True)
+-            self._boundary();chunk=self.io.pread(fd,65536,offset);self._boundary()
++            chunk=self._io('pread',fd,65536,offset)
+             if not chunk:break
+             offset+=len(chunk)
+-            if offset>row['bytes']:raise Denied('body_overdeclared_size')
++            if offset>row['bytes']:
++                error=Denied('body_overdeclared_size');self._failure('Source_body_provenance',error);raise error
+             chunks.append(chunk)
+         raw=b''.join(chunks)
+-        if len(raw)!=row['bytes'] or sha(raw)!=row['sha256']:raise Denied('fullEOF_hash_size_changed')
++        if len(raw)!=row['bytes'] or sha(raw)!=row['sha256']:
++            error=Denied('fullEOF_hash_size_changed');self._failure('Source_body_provenance',error);raise error
+         self._fence(self.root/path,row,fd)
+         self.bodies[path]={'fullEOF':True,'sha256':sha(raw),'bytes':len(raw),'POST9':copy.deepcopy(row['nine'])}
+         self.events.append({'event':'ACTUAL_SOURCE_BODY_USE','caller':caller,'path':path,'operation':operation})
+@@ -308,7 +532,7 @@
+ 
+     def check_current(self,caller=None):
+         """Actual held Source/control identity, before and after callbacks."""
+-        self._boundary()
++        self._healthy()
+         if self.closed or not self.open_complete:raise Denied('current_check_outside_held_lifetime')
+         for path,(fd,_row) in self.owned.items():
+             self._fence(self._path(path),self.rows[path],fd,mature=True)
+@@ -319,7 +543,7 @@
+         if self.closed or not self.open_complete:raise Denied('final_without_complete_held_lifetime')
+         errors=[]
+         for path in self.owned:
+-            try:self.read(caller,path,'hash')
++            try:self._read_owned(caller,path,'hash')
+             except BaseException as error:
+                 errors.append(error);self._failure('final_member:'+path,error)
+         if errors:raise Failures(tuple(('final_member',error) for error in errors))
+@@ -356,7 +580,7 @@
+             except BaseException as error:self._failure('final',error)
+             if publish is not None:
+                 try:
+-                    self.check_current();publish(result);self.check_current()
++                    self._healthy();self.check_current();publish(result);self.check_current();self._healthy()
+                 except BaseException as error:self._failure('publication',error)
+         except BaseException as error:
+             if not isinstance(error,Failures):self._failure('setup',error)
+@@ -453,7 +677,12 @@
+                 or row.get('POST9')!=original['nine'] or row.get('fullEOF') is not True):
+             raise Denied('G_original_Source_tuple_EOF_hash_changed')
+     session.check_current(caller);controls._owner.check_current(caller)
+-    accepted=external_approval_verifier(copy.deepcopy(docs),copy.deepcopy(session.view),session.ledger)
++    try:
++        accepted=external_approval_verifier(copy.deepcopy(docs),copy.deepcopy(session.view),session.ledger)
++    except BaseException as error:
++        session._failure('G_external_approval_callback',error)
++        controls._owner._failure('G_external_approval_callback',error)
++        raise
+     session.check_current(caller);controls._owner.check_current(caller)
+     session._healthy();controls._owner._healthy()
+     if accepted is not True:
+@@ -467,11 +696,17 @@
+     key=session.api.admission_id(row)
+     if session.view.recipe['programApprovals'].get(key)!=row['sha256']:
+         raise Denied('Root_program_not_independently_bound')
+-    raw=session.read(caller,path,'compile')
+-    session.check_current()
+-    code=compile(raw,path,'exec',dont_inherit=True)
+-    session.check_current()
+-    return code
++    # Safe unapproved-program denial above performs no unauthorized read or
++    # compile. Once approved owned Source work begins, even a caught compile
++    # failure poisons authority before the next work/callback boundary.
++    try:
++        raw=session.read(caller,path,'compile')
++        session.check_current()
++        code=compile(raw,path,'exec',dont_inherit=True)
++        session.check_current()
++        return code
++    except BaseException as error:
++        session._failure('Root_owned_Source_compile',error);raise
+ 
+ def protected_action(*_args,**_kwargs):
+     raise Denied('first_portion_has_no_actual_or_protected_effect_entry')

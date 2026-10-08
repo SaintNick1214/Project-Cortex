@@ -1,0 +1,51 @@
+{
+  "scope": "N3_NARROW_U3_ABI_SUCCESSOR_PROGRAM_STOP_NOT_AUTHORITY",
+  "stoppedUnixNs": 1791436276498806000,
+  "programs": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-operative-phase-source-adapters3/source_adapters3b.py",
+      "sha256": "b320b9bf8e1fa0419ca3d6de2e14dda6d582c20f4123950487c947e0743155a4",
+      "bytes": 37570,
+      "syntaxPASS": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-operative-phase-source-adapters3/source_compatibility_controls3b.py",
+      "sha256": "6c7b6a22e2e1b92f5e0fa4430568b3d7fd48d919ac98a227cca266cf2ec414f0",
+      "bytes": 2943,
+      "syntaxPASS": true
+    }
+  ],
+  "remainingSourceProgramWrites": [],
+  "originalStoppedPreimage": "source_adapters3.py",
+  "additionalConditions": 4,
+  "prestopCompatibilityResult": {
+    "scope": "AUTHOR_SOURCE_MOCK_CLOSED_U3_ABI_ONLY",
+    "conditions": [
+      {
+        "name": "actual_U3_port_and_runner_same_AST32_plus5_plus13_detached_native_list",
+        "PASS": true
+      },
+      {
+        "name": "concatenation_both_operands_deep_detached_from_owner_and_each_other",
+        "PASS": true
+      },
+      {
+        "name": "native_list_slice_and_reverse_concatenation_detached",
+        "PASS": true
+      },
+      {
+        "name": "original_list_equality_and_invalid_tuple_concat_safe_validation",
+        "PASS": true
+      }
+    ],
+    "PASS": 4,
+    "FAIL": 0,
+    "effects": 0,
+    "sourceEligibility": false
+  },
+  "remainingOutputs": [
+    "Source plan/stop",
+    "held replay",
+    "final publishers"
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "scope": "PRESERVED_AUTHOR_SETUP_AND_PRESTOP_FAILURES_ONLY",
+  "failures": [
+    {
+      "kind": "apply_patch_nonexistent_path",
+      "pathComponent": "convex-backend-runtime-completion-2026-10-02",
+      "effects": "tool denied before any edit; corrected actual goal path in next call"
+    },
+    {
+      "receipt": "prestop-original133-run1.json",
+      "original71PASS": 71,
+      "focused62PASS": 59,
+      "focused62FAIL": 3,
+      "cause": "immutable Mapping rows broke original native dict ABI; original oracles unchanged; successor retains dict-shaped ABI with fresh literal checks"
+    },
+    {
+      "receipt": "prestop-performance1-command-receipt.json",
+      "newPASS": 24,
+      "newFAIL": 1,
+      "cause": "collector timer120 fired in final member69; publication denied; all129 owned closes; not a deadline PASS"
+    }
+  ],
+  "historicalN2P4": "independent actual caught owned pread OSError failure remains preserved outside this namespace",
+  "sourceEligibility": false,
+  "effects": 0
+}

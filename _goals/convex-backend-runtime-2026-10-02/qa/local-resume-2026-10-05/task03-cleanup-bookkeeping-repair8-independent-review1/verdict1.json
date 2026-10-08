@@ -1,0 +1,111 @@
+{
+  "SourceEligibility": false,
+  "Task03": {
+    "acceptedCriteria": 0,
+    "allOriginalRequirementsOpen": 5,
+    "totalCriteria": 3
+  },
+  "average": 2.8,
+  "candidate": {
+    "bytes": 27682,
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-f2-cleanup-bookkeeping-fence-repair8/phase_partition6.py",
+    "sha256": "28df882bbf563f19d01fac3e0209e857d2f9decfae3564ac0dab48ef6ceb4c66"
+  },
+  "coverage": {
+    "author96PASS": 96,
+    "candidateFailures": 14,
+    "errorBuffer18": {
+      "failed": 14,
+      "passed": 4
+    },
+    "executed": 408,
+    "fresh129PASS": 129,
+    "original165PASS": 165,
+    "ownOracleFailures": 0,
+    "passed": 394,
+    "skipped": 0
+  },
+  "cumulativeDebtThroughRaw": 6206503,
+  "effects": 0,
+  "findings": [
+    {
+      "conditions": [
+        "error_buffer_physical_close_0_SOURCE",
+        "error_buffer_physical_close_0_SOURCE_APPROVED",
+        "error_buffer_physical_close_1_SOURCE",
+        "error_buffer_physical_close_1_SOURCE_APPROVED",
+        "error_buffer_physical_close_2_SOURCE",
+        "error_buffer_physical_close_2_SOURCE_APPROVED"
+      ],
+      "endLine": 485,
+      "evidence": "First/middle/last physical-close RuntimeError followed by local errors.append MemoryError leaves ledger.unknown_close false. Phase callbacks proceed to ACTUAL_READY before and after SOURCE_APPROVED. First/middle additionally skip later owner closes; last leaves the failed-close virtual handle/ledger owner.",
+      "failed": 6,
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-f2-cleanup-bookkeeping-fence-repair8/phase_partition6.py",
+      "id": "R8-P1-1",
+      "line": 484,
+      "priority": 1,
+      "remediation": "Latch unknown-close before all fallible error recording. Guard secondary error bookkeeping so it cannot interrupt later owned close attempts. Preserve the original exception chain and do not retry an unknown descriptor.",
+      "title": "Error-buffer failure precedes the unknown-close latch"
+    },
+    {
+      "conditions": [
+        "error_buffer_ledger_release_0_SOURCE",
+        "error_buffer_ledger_release_0_SOURCE_APPROVED",
+        "error_buffer_ledger_release_1_SOURCE",
+        "error_buffer_ledger_release_1_SOURCE_APPROVED",
+        "error_buffer_close_receipt_0_SOURCE",
+        "error_buffer_close_receipt_0_SOURCE_APPROVED",
+        "error_buffer_close_receipt_1_SOURCE",
+        "error_buffer_close_receipt_1_SOURCE_APPROVED"
+      ],
+      "endLine": 498,
+      "evidence": "First/middle release or receipt RuntimeError followed by local errors.append MemoryError interrupts the loop after one/two attempts. Later virtual descriptors remain unattempted. The latch is already sticky here and prevents callbacks, so this finding is incomplete cleanup rather than readiness bypass.",
+      "failed": 8,
+      "file": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-f2-cleanup-bookkeeping-fence-repair8/phase_partition6.py",
+      "id": "R8-P1-2",
+      "line": 492,
+      "priority": 1,
+      "remediation": "Continue every detached owner after any bookkeeping BaseException. Keep known successful physical closes distinct from unknown close state; attempt each owner exactly once and preserve error context.",
+      "title": "Secondary error-buffer failure abandons remaining owners"
+    }
+  ],
+  "fullF2BudgetFitProven": false,
+  "functionalAcceptance": false,
+  "nativeBootstrapSelfQualification": false,
+  "preservedSetupFailures": [
+    "prequalification one own discovery DOC ctime UNKNOWN; no member opens",
+    "document-epoch2 actual37 source closed once but cleanup control signature TypeError; controls incomplete; not candidate finding",
+    "successor preSTOP absolute-text binding check assertion; no Source acquisition or candidate controls"
+  ],
+  "priorVerdicts": {
+    "N1": "REJECT2.6",
+    "R6": "REJECT2.8",
+    "R7": "REJECT2.8"
+  },
+  "rawCustody": {
+    "bytes": 547280,
+    "closeErrors": 0,
+    "everyCloseOnce": 8,
+    "inputs": 8,
+    "minFirstCaptureAgeNs": "297759257826"
+  },
+  "remainingReservations": 7340032,
+  "reviewerAuthoredCandidate": false,
+  "scope": "INDEPENDENT_ROOT_R8_CODE_HOST_ONLY",
+  "scores": {
+    "codeQuality": 2,
+    "completeness": 2,
+    "patternAdherence": 3,
+    "requirementFulfillment": 3,
+    "testQuality": 4
+  },
+  "sourceCustody": {
+    "bytes": 579709,
+    "closeErrors": 0,
+    "everyCloseOnce": 50,
+    "inputs": 50,
+    "literalNineEOFHashSizeFinalExact": true,
+    "minFirstCaptureAgeNs": "298444073201"
+  },
+  "verdict": "REJECT"
+}

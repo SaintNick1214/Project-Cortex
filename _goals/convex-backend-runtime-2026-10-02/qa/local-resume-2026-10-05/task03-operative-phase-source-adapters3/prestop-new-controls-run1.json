@@ -1,0 +1,196 @@
+{
+  "scope": "AUTHOR_SOURCE_MOCK_N3_OPERATIONAL_AND_PERFORMANCE_ONLY",
+  "conditions": [
+    {
+      "name": "P4_pread_uncaught_no_compile_or_publication_all_final_checks",
+      "PASS": true,
+      "detail": {
+        "onceCloses": 3,
+        "stickyOperationalError": true,
+        "published": false
+      },
+      "elapsed": 0.029548333000000003
+    },
+    {
+      "name": "P4_pread_caught_no_compile_or_publication_all_final_checks",
+      "PASS": true,
+      "detail": {
+        "onceCloses": 3,
+        "stickyOperationalError": true,
+        "published": false
+      },
+      "elapsed": 0.030007583000000004
+    },
+    {
+      "name": "P4_lstat_uncaught_no_compile_or_publication_all_final_checks",
+      "PASS": true,
+      "detail": {
+        "onceCloses": 3,
+        "stickyOperationalError": true,
+        "published": false
+      },
+      "elapsed": 0.0279335
+    },
+    {
+      "name": "P4_lstat_caught_no_compile_or_publication_all_final_checks",
+      "PASS": true,
+      "detail": {
+        "onceCloses": 3,
+        "stickyOperationalError": true,
+        "published": false
+      },
+      "elapsed": 0.028927750000000002
+    },
+    {
+      "name": "P4_fstat_uncaught_no_compile_or_publication_all_final_checks",
+      "PASS": true,
+      "detail": {
+        "onceCloses": 3,
+        "stickyOperationalError": true,
+        "published": false
+      },
+      "elapsed": 0.030089417000000007
+    },
+    {
+      "name": "P4_fstat_caught_no_compile_or_publication_all_final_checks",
+      "PASS": true,
+      "detail": {
+        "onceCloses": 3,
+        "stickyOperationalError": true,
+        "published": false
+      },
+      "elapsed": 0.028404290999999998
+    },
+    {
+      "name": "owned_compile_SyntaxError_uncaught_sticky_no_later_compile",
+      "PASS": true,
+      "detail": {},
+      "elapsed": 0.036760707999999975
+    },
+    {
+      "name": "owned_compile_SyntaxError_caught_sticky_no_later_compile",
+      "PASS": true,
+      "detail": {},
+      "elapsed": 0.037286790999999986
+    },
+    {
+      "name": "owned_open_error_sticky_before_action",
+      "PASS": true,
+      "detail": {},
+      "elapsed": 0.002971916000000019
+    },
+    {
+      "name": "immutable_ownership_monotonic_row_denies_before_IO_compile",
+      "PASS": true,
+      "detail": {},
+      "elapsed": 0.012862541999999977
+    },
+    {
+      "name": "immutable_ownership_monotonic_view_denies_before_IO_compile",
+      "PASS": true,
+      "detail": {},
+      "elapsed": 0.012490166000000025
+    },
+    {
+      "name": "immutable_ownership_monotonic_recipe_denies_before_IO_compile",
+      "PASS": true,
+      "detail": {},
+      "elapsed": 0.012798874999999987
+    },
+    {
+      "name": "immutable_ownership_monotonic_edge_denies_before_IO_compile",
+      "PASS": true,
+      "detail": {},
+      "elapsed": 0.012571249999999978
+    },
+    {
+      "name": "immutable_ownership_monotonic_program_denies_before_IO_compile",
+      "PASS": true,
+      "detail": {},
+      "elapsed": 0.012716625000000037
+    },
+    {
+      "name": "immutable_ownership_monotonic_row_dict_bypass_denies_before_IO_compile",
+      "PASS": true,
+      "detail": {},
+      "elapsed": 0.012797457999999984
+    },
+    {
+      "name": "immutable_ownership_monotonic_nine_dict_bypass_denies_before_IO_compile",
+      "PASS": true,
+      "detail": {},
+      "elapsed": 0.012703874999999976
+    },
+    {
+      "name": "immutable_ownership_monotonic_ledger_role_denies_before_IO_compile",
+      "PASS": true,
+      "detail": {},
+      "elapsed": 0.012829416999999954
+    },
+    {
+      "name": "immutable_ownership_monotonic_debt_removed_denies_before_IO_compile",
+      "PASS": true,
+      "detail": {},
+      "elapsed": 0.012702916000000009
+    },
+    {
+      "name": "immutable_ownership_monotonic_ledger_removed_denies_before_IO_compile",
+      "PASS": true,
+      "detail": {},
+      "elapsed": 0.012756375000000042
+    },
+    {
+      "name": "immutable_ownership_monotonic_row_map_replaced_denies_before_IO_compile",
+      "PASS": true,
+      "detail": {},
+      "elapsed": 0.01267245899999997
+    },
+    {
+      "name": "immutable_ownership_monotonic_version_reset_denies_before_IO_compile",
+      "PASS": true,
+      "detail": {},
+      "elapsed": 0.012742832999999953
+    },
+    {
+      "name": "G_actual_qualified_callback_error_poison_both_owners_not_safe_validation",
+      "PASS": true,
+      "detail": {},
+      "elapsed": 0.27140591700000005
+    },
+    {
+      "name": "original_safe_rejected_borrow_validation_healthy_final_cleanup",
+      "PASS": true,
+      "detail": {},
+      "elapsed": 0.023947625000000028
+    },
+    {
+      "name": "bounded_concrete1907_shape_collector_one_seal_fresh_ledger_IO_final_cleanup",
+      "PASS": false,
+      "error": "Failures('Source_invariant_boundary:TimeoutError:SOURCE_MOCK_120s_1907_shape_deadline; owned_Source_body:member/69:TimeoutError:SOURCE_MOCK_120s_1907_shape_deadline; final_member:member/69:TimeoutError:SOURCE_MOCK_120s_1907_shape_deadline; final:Failures:final_member:TimeoutError:SOURCE_MOCK_120s_1907_shape_deadline; publication:Denied:prior_Source_failure_cannot_authorize_callback_or_compile')",
+      "elapsed": 133.58239362499998
+    },
+    {
+      "name": "bounded_concrete1907_shape_compile-borrow_one_seal_fresh_ledger_IO_final_cleanup",
+      "PASS": true,
+      "detail": {
+        "recipeMembers": 1907,
+        "SourceMembers": 129,
+        "actualCustodySubjectsNotExecuted": 1914,
+        "fullOwnedBindingHashComputations": 1,
+        "ownedBindingEncodedBytes": 1233632,
+        "boundaryChecks": 17252,
+        "SourceIOEvents": 7901,
+        "ownedFDPeak": 129,
+        "onceCloses": 129,
+        "deadlineSeconds": 120,
+        "elapsed": 106.080621167,
+        "originalActualDeadlinesUnchanged": true
+      },
+      "elapsed": 106.216194041
+    }
+  ],
+  "PASS": 24,
+  "FAIL": 1,
+  "effects": 0,
+  "sourceEligibility": false
+}

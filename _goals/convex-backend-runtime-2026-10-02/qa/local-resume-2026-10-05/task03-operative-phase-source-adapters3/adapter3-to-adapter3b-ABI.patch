@@ -1,0 +1,20 @@
+--- immutable-stopped/source_adapters3.py
++++ NEW/source_adapters3b.py
+@@ -87,7 +87,16 @@
+     def __init__(self,value,journal):
+         object.__setattr__(self,'_items',tuple(freeze(item,journal)for item in value))
+         object.__setattr__(self,'_journal',journal)
+-    def __getitem__(self,key):return self._items[key]
++    def __getitem__(self,key):
++        return native(self._items[key]) if isinstance(key,slice) else self._items[key]
++    def __add__(self,other):
++        if not isinstance(other,(list,FrozenList)):return NotImplemented
++        return native(self)+native(other)
++    def __radd__(self,other):
++        if not isinstance(other,list):return NotImplemented
++        return native(other)+native(self)
++    def __eq__(self,other):
++        return isinstance(other,(list,FrozenList)) and native(self)==native(other)
+     def __len__(self):return len(self._items)
+     def __deepcopy__(self,memo):return [copy.deepcopy(item,memo)for item in self._items]
+     def __setattr__(self,*_):raise Denied('owned_immutable_sequence_attribute')
