@@ -1,5 +1,7 @@
 import { getFunctionName } from "convex/server";
+import { ConvexError } from "convex/values";
 import type { ActionCtx, MutationCtx } from "../../../convex-dev/_generated/server";
+import type { BackendGatewayBudget, BackendGatewayBudgetArgs } from "../../../convex-dev/runtimeGatewayBackend";
 import type { RuntimeAuthorityReference } from "../../../src/auth/verified";
 import * as memory from "../../../convex-dev/runtimeMemory";
 import * as auth from "../../../convex-dev/runtimeAuth";
@@ -54,7 +56,7 @@ export class MemoryTestDb {
     try { return await run(); } catch (error) { this.rows = before; this.writes = writes; this.sequence = sequence; throw error; }
   }
 }
-export function memoryFixture() {
+export function memoryFixture(options: { budget?: (args: BackendGatewayBudgetArgs) => Promise<BackendGatewayBudget> } = {}) {
   const db = new MemoryTestDb();
   const principal = db.seed("runtimeAuthPrincipals", { issuer: "https://host.test", subject: "user-a", actorKind: "user", version: 1, createdAt: 1000 });
   const membership = db.seed("runtimeAuthMemberships", { principalId: principal._id, tenantId: "tenant-a", version: 1, createdAt: 1000 });
@@ -68,6 +70,7 @@ export function memoryFixture() {
     tenantId: "tenant-a", tenantEpoch: 1, memorySpaceId: "space-a", memorySpaceEpoch: 1 };
   const ctx = { db, auth: { getUserIdentity: async () => ({ issuer: "https://host.test", subject: "user-a" }) } } as unknown as MutationCtx;
   const searches: { table: string; index: string; filter: { key: string; value: unknown }; vector: number[] }[] = [];
+  const policyRequests: BackendGatewayBudgetArgs[] = [];
   const actionCtx = {
     runQuery: async (ref: unknown, args: unknown) => {
       const name = getFunctionName(ref as Parameters<typeof getFunctionName>[0]);
@@ -76,8 +79,16 @@ export function memoryFixture() {
       return await registeredHandler<unknown, unknown>(registration[key!]!)(ctx, args);
     },
     runMutation: async (ref: unknown, args: unknown) => {
-      const key = getFunctionName(ref as Parameters<typeof getFunctionName>[0]).split(":")[1]!;
-      return await db.transaction(async () => await registeredHandler<unknown, unknown>((memory as unknown as Record<string, unknown>)[key]!)(ctx, args));
+      const [module, key] = getFunctionName(ref as Parameters<typeof getFunctionName>[0]).split(":");
+      if (module === "runtimeModelPolicy" && key === "ensureBudget") {
+        const input = args as BackendGatewayBudgetArgs;
+        policyRequests.push(input);
+        if (options.budget) return await options.budget(input);
+        throw new ConvexError({ version: 1, code: "CAPABILITY_UNAVAILABLE", message: "Memory capability unavailable.",
+          retryable: false, outcome: "not_dispatched" });
+      }
+      if (module !== "runtimeMemory") throw new Error("Unsupported fixture mutation");
+      return await db.transaction(async () => await registeredHandler<unknown, unknown>((memory as unknown as Record<string, unknown>)[key!]!)(ctx, args));
     },
     vectorSearch: async (table: string, index: string, query: { vector: number[]; limit: number; filter(q: unknown): unknown }) => {
       const filter = query.filter({ eq: (key: string, value: unknown) => ({ key, value }) }) as { key: string; value: unknown };
@@ -85,5 +96,5 @@ export function memoryFixture() {
       return db.table(table).filter((row) => row[filter.key] === filter.value).slice(0, query.limit).map((row) => ({ _id: row._id, _score: 0.9 }));
     },
   } as unknown as ActionCtx;
-  return { db, ctx, actionCtx, reference, principal, membership, grant, searches };
+  return { db, ctx, actionCtx, reference, principal, membership, grant, searches, policyRequests };
 }

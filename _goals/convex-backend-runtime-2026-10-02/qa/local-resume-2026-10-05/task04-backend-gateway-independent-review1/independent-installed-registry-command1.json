@@ -1,0 +1,49 @@
+{
+  "scope": "INDEPENDENT_OFFLINE_CURRENT_INSTALLED_REGISTRY",
+  "command": [
+    "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+    "node_modules/jest/bin/jest.js",
+    "--config",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-backend-gateway-independent-review1/offline-jest.config.mjs",
+    "--runInBand",
+    "--runTestsByPath",
+    "tests/unit/runtime/gateway-qualification-registry.test.ts",
+    "--json",
+    "--outputFile",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-backend-gateway-independent-review1/independent-installed-registry-results1.json"
+  ],
+  "exitCode": 0,
+  "timedOut": false,
+  "elapsedSeconds": 3.194650499994168,
+  "pid": 67893,
+  "childReaped": true,
+  "before": [
+    {
+      "path": "convex-dev/runtimeGatewayQualifications.ts",
+      "sha256": "6d2b0e1e8c214102793334286cd224fe865723ce35d638172b1b3191a95a07b0"
+    },
+    {
+      "path": "convex-dev/runtimeModelPolicyBootstrap.ts",
+      "sha256": "22d71a35914ff19d4baf1fccc4900b5ef25315e2ced1a39e7b1d317dd6d9c5d9"
+    },
+    {
+      "path": "tests/unit/runtime/gateway-qualification-registry.test.ts",
+      "sha256": "206a8bd194de4ab040a3a6ce28654e3b9f44272ab47422bcf706a1e1bfd6b118"
+    }
+  ],
+  "after": [
+    {
+      "path": "convex-dev/runtimeGatewayQualifications.ts",
+      "sha256": "6d2b0e1e8c214102793334286cd224fe865723ce35d638172b1b3191a95a07b0"
+    },
+    {
+      "path": "convex-dev/runtimeModelPolicyBootstrap.ts",
+      "sha256": "22d71a35914ff19d4baf1fccc4900b5ef25315e2ced1a39e7b1d317dd6d9c5d9"
+    },
+    {
+      "path": "tests/unit/runtime/gateway-qualification-registry.test.ts",
+      "sha256": "206a8bd194de4ab040a3a6ce28654e3b9f44272ab47422bcf706a1e1bfd6b118"
+    }
+  ],
+  "closedAt": "2026-10-08T09:27:20.145223+00:00"
+}

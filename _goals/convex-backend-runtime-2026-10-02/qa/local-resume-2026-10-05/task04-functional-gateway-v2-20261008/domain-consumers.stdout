@@ -1,0 +1,92 @@
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     1.1s | 12/12 passed | /tests/unit/domain/sources.test.ts
+  ✅     0.2s | 25/25 passed | /tests/unit/model-resolution.test.ts
+  ✅     0.2s | 5/5 passed | /tests/unit/domain/outcomes.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.01s ( 0.8%) - attributed source domain rejects malformed matching vector/source/chunk identities instead of reporting currentness
+    /tests/unit/domain/sources.test.ts
+
+ 2. [32m✓[0m    0.01s ( 0.7%) - Model Resolution Configuration MODEL_DEFAULTS has correct defaults for OpenAI fact extraction
+    /tests/unit/model-resolution.test.ts
+
+ 3. [32m✓[0m    0.01s ( 0.6%) - attributed source domain prepares independent logical source/chunks with stable Unicode normalization and revision IDs
+    /tests/unit/domain/sources.test.ts
+
+ 4. [32m✓[0m    0.01s ( 0.4%) - attributed source domain rejects invalid modern source metadata at prompt, parsing and dispatch with zero model calls
+    /tests/unit/domain/sources.test.ts
+
+ 5. [32m✓[0m    0.00s ( 0.2%) - attributed source domain rejects incomplete trusted scope and invalid preparation clocks
+    /tests/unit/domain/sources.test.ts
+
+ 6. [32m✓[0m    0.00s ( 0.2%) - reused memory outcomes preserves slot, subject, predicate and exact dedup normalization outcomes
+    /tests/unit/domain/outcomes.test.ts
+
+ 7. [32m✓[0m    0.00s ( 0.1%) - attributed source domain rejects malformed structured output and attempted model source attribution
+    /tests/unit/domain/sources.test.ts
+
+ 8. [32m✓[0m    0.00s ( 0.1%) - attributed source domain rejects sparse arrays in every strict structured-output collection
+    /tests/unit/domain/sources.test.ts
+
+ 9. [32m✓[0m    0.00s ( 0.1%) - attributed source domain rejects revoked/deleted or changed authority, including deletion generations
+    /tests/unit/domain/sources.test.ts
+
+10. [32m✓[0m    0.00s ( 0.1%) - attributed source domain filters cross-scope, stale, wrong-chunk and tombstoned search results
+    /tests/unit/domain/sources.test.ts
+
+11. [32m✓[0m    0.00s ( 0.1%) - attributed source domain validates model response profile, batch count and vector shape
+    /tests/unit/domain/sources.test.ts
+
+12. [32m✓[0m    0.00s ( 0.1%) - attributed source domain pins stage identity to event/revision/policy, rather than changing timestamps
+    /tests/unit/domain/sources.test.ts
+
+13. [32m✓[0m    0.00s ( 0.1%) - attributed source domain rejects invalid lineage and distinguishes user, verified tool and assistant sources
+    /tests/unit/domain/sources.test.ts
+
+14. [32m✓[0m    0.00s ( 0.1%) - attributed source domain uses only the internal model operation and assigns trusted lineage outside the model
+    /tests/unit/domain/sources.test.ts
+
+15. [32m✓[0m    0.00s ( 0.1%) - Model Resolution Configuration resolveFactExtractionModel returns configModel when provided
+    /tests/unit/model-resolution.test.ts
+
+16. [32m✓[0m    0.00s ( 0.1%) - Model Resolution Configuration resolveFactExtractionModel returns OpenAI default when no config or env var
+    /tests/unit/model-resolution.test.ts
+
+17. [32m✓[0m    0.00s ( 0.1%) - Model Resolution Configuration resolveFactExtractionModel defaults to OpenAI when provider not specified
+    /tests/unit/model-resolution.test.ts
+
+18. [32m✓[0m    0.00s ( 0.1%) - Model Resolution Configuration resolveConflictResolutionModel returns CORTEX_CONFLICT_RESOLUTION_MODEL env var when set
+    /tests/unit/model-resolution.test.ts
+
+19. [32m✓[0m    0.00s ( 0.1%) - Model Resolution Configuration resolveConflictResolutionModel returns Anthropic default when no config or env vars
+    /tests/unit/model-resolution.test.ts
+
+20. [32m✓[0m    0.00s ( 0.1%) - Model Resolution Configuration resolveEmbeddingModel returns configModel when provided
+    /tests/unit/model-resolution.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.07s (4.0% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      1.71s
+  Test suites:        3
+  Individual tests:   25
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 3
+════════════════════════════════════════════════════════════════════════════════
+

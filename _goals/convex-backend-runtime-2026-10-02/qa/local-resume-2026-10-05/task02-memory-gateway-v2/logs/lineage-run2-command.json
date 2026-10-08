@@ -1,0 +1,26 @@
+{
+  "command": [
+    "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+    "--experimental-vm-modules",
+    "node_modules/jest/bin/jest.js",
+    "--runTestsByPath",
+    "tests/unit/runtime/memory-gateway.test.ts",
+    "--runInBand",
+    "--forceExit",
+    "--no-cache",
+    "--json",
+    "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-memory-gateway-v2/logs/lineage-run2-results.json"
+  ],
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "environmentOverrides": {
+    "CONVEX_URL": "http://127.0.0.1:1",
+    "LOCAL_CONVEX_URL": "http://127.0.0.1:1",
+    "CONVEX_TEST_MODE": "local",
+    "GRAPH_TESTING_ENABLED": "false"
+  },
+  "startUnix": 1791449133.895218,
+  "elapsedSeconds": 17.986057996749878,
+  "exitCode": 1,
+  "candidateSha256": "43bc507fb58385f1c4de818f0558ae42a3ee6663d02ae503826de6d5dbd12004",
+  "testSha256": "7d7aedf948c07e2cf716b706f0c1dfdb79039a927d13d080e08efa854e7bf2ef"
+}

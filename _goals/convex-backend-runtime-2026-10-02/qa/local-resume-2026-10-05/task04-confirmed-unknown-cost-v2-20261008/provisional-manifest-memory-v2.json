@@ -1,0 +1,249 @@
+{
+  "manifestId": "task04-confirmed-unknown-5bfe0c22-fed2-40d9-bf87-48203296262f-memory-v2",
+  "revision": 1,
+  "artifactRevision": "memory-schema-prompt-v2",
+  "evidenceHash": "cd1d1897380273728e11c1efcdb311ea6675677cf583ae5b9d1f8a5798ba8eaf",
+  "acceptanceHash": "cd3a6aa7ef679ab4be210faa6f8d9dd4052bc4bfcc5a3bfd33aca18dbcf0f699",
+  "classification": "fixture-synthetic",
+  "budgetWindowMs": 86400000,
+  "policies": [
+    {
+      "policyId": "fixture-default",
+      "version": 1,
+      "scope": "deployment",
+      "rules": {
+        "allowedModels": [
+          "openai/gpt-4o-mini",
+          "openai/gpt-4o",
+          "openai/text-embedding-3-small"
+        ],
+        "interfaces": [
+          "chat",
+          "embedding"
+        ],
+        "capabilities": [
+          "text",
+          "structured",
+          "embedding"
+        ],
+        "allowedOptions": [],
+        "allowedTools": [],
+        "fallbackModels": [],
+        "limits": {
+          "inputTokens": 8192,
+          "contextTokens": 16384,
+          "outputTokens": 512,
+          "toolSteps": 0,
+          "timeoutMs": 60000,
+          "operationBudgetUnits": 200000,
+          "runBudgetUnits": 2000000,
+          "tenantBudgetUnits": 10000000,
+          "concurrency": 2
+        },
+        "pins": {
+          "promptVersion": "memory-schema-prompt-v2",
+          "schemaVersion": "facts-v1",
+          "extractionVersion": "task04-qualification-e1",
+          "toolRegistryVersion": "none-v1",
+          "priceRevision": "openrouter-2026-10-08-candidate",
+          "boundRevision": "text-8192-512-schema-v2"
+        }
+      }
+    },
+    {
+      "policyId": "fixture-title",
+      "version": 1,
+      "scope": "deployment",
+      "operationKey": "conversation.title",
+      "rules": {
+        "modelId": "openai/gpt-4o",
+        "nativeInterface": "chat"
+      }
+    },
+    {
+      "policyId": "fixture-facts-resolve",
+      "version": 1,
+      "scope": "deployment",
+      "operationKey": "facts.resolve",
+      "rules": {
+        "pins": {
+          "schemaVersion": "conflicts-v1",
+          "promptVersion": "memory-schema-prompt-v2",
+          "boundRevision": "text-8192-512-schema-v2"
+        }
+      }
+    }
+  ],
+  "qualifications": [
+    {
+      "receiptId": "provisional-5bfe0c22-fed2-40d9-bf87-48203296262f-0-memory-v2",
+      "modelId": "openai/gpt-4o-mini",
+      "nativeInterface": "chat",
+      "capabilities": [
+        "text",
+        "structured"
+      ],
+      "allowedOptions": [],
+      "limits": {
+        "inputTokens": 8192,
+        "contextTokens": 16384,
+        "outputTokens": 512,
+        "toolSteps": 0,
+        "timeoutMs": 60000,
+        "operationBudgetUnits": 200000,
+        "runBudgetUnits": 2000000,
+        "tenantBudgetUnits": 10000000,
+        "concurrency": 2
+      },
+      "costBound": {
+        "kind": "qualified-call-ceiling",
+        "maximumCostUnits": 100000,
+        "provenance": "Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras",
+        "coversAllProviderCharges": true
+      },
+      "priceRevision": "openrouter-2026-10-08-candidate",
+      "boundRevision": "text-8192-512-schema-v2"
+    },
+    {
+      "receiptId": "provisional-5bfe0c22-fed2-40d9-bf87-48203296262f-1-memory-v2",
+      "modelId": "openai/gpt-4o",
+      "nativeInterface": "chat",
+      "capabilities": [
+        "text",
+        "structured"
+      ],
+      "allowedOptions": [],
+      "limits": {
+        "inputTokens": 8192,
+        "contextTokens": 16384,
+        "outputTokens": 512,
+        "toolSteps": 0,
+        "timeoutMs": 60000,
+        "operationBudgetUnits": 200000,
+        "runBudgetUnits": 2000000,
+        "tenantBudgetUnits": 10000000,
+        "concurrency": 2
+      },
+      "costBound": {
+        "kind": "qualified-call-ceiling",
+        "maximumCostUnits": 100000,
+        "provenance": "Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras",
+        "coversAllProviderCharges": true
+      },
+      "priceRevision": "openrouter-2026-10-08-candidate",
+      "boundRevision": "text-8192-512-schema-v2"
+    },
+    {
+      "receiptId": "provisional-5bfe0c22-fed2-40d9-bf87-48203296262f-2-memory-v2",
+      "modelId": "openai/text-embedding-3-small",
+      "nativeInterface": "embedding",
+      "capabilities": [
+        "embedding"
+      ],
+      "allowedOptions": [],
+      "limits": {
+        "inputTokens": 8192,
+        "contextTokens": 16384,
+        "outputTokens": 512,
+        "toolSteps": 0,
+        "timeoutMs": 60000,
+        "operationBudgetUnits": 200000,
+        "runBudgetUnits": 2000000,
+        "tenantBudgetUnits": 10000000,
+        "concurrency": 2
+      },
+      "costBound": {
+        "kind": "qualified-call-ceiling",
+        "maximumCostUnits": 100000,
+        "provenance": "Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras",
+        "coversAllProviderCharges": true
+      },
+      "priceRevision": "openrouter-2026-10-08-candidate",
+      "boundRevision": "text-8192-512-schema-v2"
+    }
+  ],
+  "dispatchEvidence": [
+    {
+      "receiptId": "provisional-5bfe0c22-fed2-40d9-bf87-48203296262f-0-memory-v2",
+      "modelId": "openai/gpt-4o-mini",
+      "nativeInterface": "chat",
+      "evidenceHash": "cd1d1897380273728e11c1efcdb311ea6675677cf583ae5b9d1f8a5798ba8eaf",
+      "providerVersion": "0.2.1",
+      "priceRevision": "openrouter-2026-10-08-candidate",
+      "boundRevision": "text-8192-512-schema-v2",
+      "checkedAt": 1791449412383,
+      "expiresAt": 1791535812383,
+      "terminalCost": "unavailable",
+      "terminalProof": "provider-terminal-v1",
+      "inputBound": {
+        "ruleId": "plain-chat-cookbook-utf8-v1",
+        "featureEnvelope": "plain-chat-v1",
+        "revision": 1,
+        "proofHash": "cd1d1897380273728e11c1efcdb311ea6675677cf583ae5b9d1f8a5798ba8eaf",
+        "documentHash": "cd1d1897380273728e11c1efcdb311ea6675677cf583ae5b9d1f8a5798ba8eaf",
+        "nativeTransformHash": "5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613"
+      },
+      "resultBound": {
+        "maximumPrivateResultBytes": 60000,
+        "maximumOutputTokens": 512,
+        "maximumEmbeddingValues": 1,
+        "proofHash": "cd1d1897380273728e11c1efcdb311ea6675677cf583ae5b9d1f8a5798ba8eaf"
+      }
+    },
+    {
+      "receiptId": "provisional-5bfe0c22-fed2-40d9-bf87-48203296262f-1-memory-v2",
+      "modelId": "openai/gpt-4o",
+      "nativeInterface": "chat",
+      "evidenceHash": "cd1d1897380273728e11c1efcdb311ea6675677cf583ae5b9d1f8a5798ba8eaf",
+      "providerVersion": "0.2.1",
+      "priceRevision": "openrouter-2026-10-08-candidate",
+      "boundRevision": "text-8192-512-schema-v2",
+      "checkedAt": 1791449412383,
+      "expiresAt": 1791535812383,
+      "terminalCost": "unavailable",
+      "terminalProof": "provider-terminal-v1",
+      "inputBound": {
+        "ruleId": "plain-chat-cookbook-utf8-v1",
+        "featureEnvelope": "plain-chat-v1",
+        "revision": 1,
+        "proofHash": "cd1d1897380273728e11c1efcdb311ea6675677cf583ae5b9d1f8a5798ba8eaf",
+        "documentHash": "cd1d1897380273728e11c1efcdb311ea6675677cf583ae5b9d1f8a5798ba8eaf",
+        "nativeTransformHash": "5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613"
+      },
+      "resultBound": {
+        "maximumPrivateResultBytes": 60000,
+        "maximumOutputTokens": 512,
+        "maximumEmbeddingValues": 1,
+        "proofHash": "cd1d1897380273728e11c1efcdb311ea6675677cf583ae5b9d1f8a5798ba8eaf"
+      }
+    },
+    {
+      "receiptId": "provisional-5bfe0c22-fed2-40d9-bf87-48203296262f-2-memory-v2",
+      "modelId": "openai/text-embedding-3-small",
+      "nativeInterface": "embedding",
+      "evidenceHash": "cd1d1897380273728e11c1efcdb311ea6675677cf583ae5b9d1f8a5798ba8eaf",
+      "providerVersion": "0.2.1",
+      "priceRevision": "openrouter-2026-10-08-candidate",
+      "boundRevision": "text-8192-512-schema-v2",
+      "checkedAt": 1791449412383,
+      "expiresAt": 1791535812383,
+      "terminalCost": "unavailable",
+      "terminalProof": "provider-terminal-v1",
+      "inputBound": {
+        "ruleId": "default-embedding-utf8-v1",
+        "featureEnvelope": "default-embedding-v1",
+        "revision": 1,
+        "proofHash": "cd1d1897380273728e11c1efcdb311ea6675677cf583ae5b9d1f8a5798ba8eaf",
+        "documentHash": "cd1d1897380273728e11c1efcdb311ea6675677cf583ae5b9d1f8a5798ba8eaf",
+        "nativeTransformHash": "5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613"
+      },
+      "resultBound": {
+        "maximumPrivateResultBytes": 60000,
+        "maximumOutputTokens": 0,
+        "maximumEmbeddingValues": 1,
+        "proofHash": "cd1d1897380273728e11c1efcdb311ea6675677cf583ae5b9d1f8a5798ba8eaf"
+      },
+      "terminalModelId": "text-embedding-3-small"
+    }
+  ]
+}

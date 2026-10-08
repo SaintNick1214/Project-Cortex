@@ -1,0 +1,95 @@
+{
+  "schema": "cortex.independent-product-verdict.v2",
+  "verdict": "PASS",
+  "overallScore": 4.0,
+  "scores": {
+    "requirementFulfillment": 4,
+    "testQuality": 4,
+    "completeness": 4,
+    "codeQuality": 4,
+    "patternAdherence": 4
+  },
+  "policy": "_goals/convex-backend-runtime-2026-10-02/acceptance-policy.md v2",
+  "acceptedTasks": [
+    "02-domain-services",
+    "04-model-policy"
+  ],
+  "criteria": {
+    "task02Requirements": 4,
+    "task02AcceptanceCriteria": 3,
+    "task04Requirements": 3,
+    "task04AcceptanceCriteria": 3,
+    "allWithinAcceptedC2C3Boundaries": true
+  },
+  "candidateDigest": "f5f2d3589e47ffa7147c294978286e4705146f0466d1de26f19fbdac90379e43",
+  "productionReachableBreakingFindings": [],
+  "independentOffline": {
+    "currentBatchPassed": 128,
+    "newInstalledRegistryPassed": 3,
+    "distinctLatestChecks": 131,
+    "failed": 0,
+    "skipped": 0
+  },
+  "reviewedAuthorAffectedTests": {
+    "passed": 389,
+    "failed": 0,
+    "skipped": 0,
+    "notAddedToIndependentTotal": true
+  },
+  "independentReadOnlyAssertions": {
+    "priorCurrentPassed": 30,
+    "finalInstalledPassed": 53,
+    "notNewActualExecutions": true
+  },
+  "installedActual": {
+    "conditionsPassed": 9,
+    "conditionsFailed": 0,
+    "paidAttempts": 3,
+    "retainedLiabilityMicroUsd": 300000,
+    "replayAdditionalPaidAttempts": 0,
+    "replayDerivedChanges": 0,
+    "sourceCopiesMatching": 7
+  },
+  "qualificationDisposition": "ACCEPTED_CURRENT_RESTRICTED_PLAIN_TEXT_AND_DEFAULT1536_EMBEDDING_ENVELOPE",
+  "qualificationLimits": {
+    "inputTokens": 8192,
+    "chatOutputTokens": 512,
+    "retainedCallCeilingMicroUsd": 100000,
+    "concurrency": 2,
+    "evidenceExpiry": "2026-10-09T08:50:12.383Z",
+    "terminalCost": "unavailable",
+    "aggregateInvoiceCompletenessClaimed": false,
+    "fallbackEnabled": false,
+    "nativeResponseFormatQualified": false
+  },
+  "retirement": {
+    "projectId": 3171182,
+    "deployment": "groovy-bird-988",
+    "deleteStatus": 200,
+    "readbackStatus": 404,
+    "retired": true,
+    "productionMutations": 0
+  },
+  "notAcceptedByThisVerdict": [
+    "fullTask03",
+    "Task05 executable Agent definitions/runtime",
+    "Task06 additive host installation",
+    "Task07 Workflow runtime",
+    "additional profiles/stream/tools/media qualification",
+    "full seventeen-task Goal"
+  ],
+  "productionDeployment": false,
+  "packageRelease": false,
+  "reviewerCandidateAuthorship": false,
+  "remainingOwnedReviewerProcesses": [],
+  "historicalFailuresPreserved": true,
+  "report": "report1.md",
+  "rawReferences": [
+    "independent-current-units-results3.json",
+    "independent-installed-registry-results1.json",
+    "independent-actual-current-check4.json",
+    "independent-installed-final-check2.json",
+    "independent-installed-oracle-correction1.json"
+  ],
+  "closedAt": "2026-10-08T09:32:40.489317+00:00"
+}

@@ -9,7 +9,8 @@ import { DEFAULT_EMBEDDING_PROFILE, semanticHash } from "../../../src/domain/pro
 import { memoryFixture } from "../runtimeMemory/fixture";
 
 const lookup = jest.fn<(id: string, revision: number) => DeploymentPolicyManifest | undefined>();
-jest.unstable_mockModule("../../../convex-dev/runtimeModelPolicyBootstrap", () => ({ lookupDeploymentManifest: lookup, isTrustedDeploymentManifest: (entry: DeploymentPolicyManifest) => entry === root && entry.classification === "fixture-synthetic" }));
+const trustedBootstrap = await import("../../../convex-dev/runtimeModelPolicyBootstrap");
+jest.unstable_mockModule("../../../convex-dev/runtimeModelPolicyBootstrap", () => ({ qualifiedTerminalModelId: trustedBootstrap.qualifiedTerminalModelId, lookupDeploymentManifest: lookup, isTrustedDeploymentManifest: (entry: DeploymentPolicyManifest) => entry === root && entry.classification === "fixture-synthetic" }));
 const ledger = await import("../../../convex-dev/runtimeModelPolicy");
 const hash = "a".repeat(64);
 const clock = 1_000_000;

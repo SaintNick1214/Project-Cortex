@@ -1,0 +1,232 @@
+{
+  "accounts": [
+    {
+      "_id": "ms79m7s4tyxjh0t4f0ksw5etvh8fxa5m",
+      "activeConcurrency": 0,
+      "cancelled": false,
+      "concurrencyLimit": 2,
+      "kind": "tenant",
+      "limitUnits": 10000000,
+      "overrun": false,
+      "reservedUnits": 0,
+      "settledUnits": 0,
+      "uncertainUnits": 200000
+    },
+    {
+      "_id": "ms70pqmfb4fqa1haz54hpb4zfs8fxzbd",
+      "activeConcurrency": 0,
+      "cancelled": false,
+      "concurrencyLimit": 2,
+      "kind": "run",
+      "limitUnits": 2000000,
+      "overrun": false,
+      "reservedUnits": 0,
+      "runBudgetId": "e8d3475556f90fc36dcc01ac296dc7fffef505187838134ff90fd021fd5e366e",
+      "settledUnits": 0,
+      "uncertainUnits": 100000
+    },
+    {
+      "_id": "ms7edts5a5pjkda5n9jvxww1j98fxv0y",
+      "activeConcurrency": 0,
+      "cancelled": false,
+      "concurrencyLimit": 2,
+      "kind": "run",
+      "limitUnits": 2000000,
+      "overrun": false,
+      "reservedUnits": 0,
+      "runBudgetId": "021f744ba7b7adfbe311734aa13e0e621b017c499aea8be115434e8f2a983ec3",
+      "settledUnits": 0,
+      "uncertainUnits": 100000
+    }
+  ],
+  "attempts": [
+    {
+      "_id": "nd7brz5vhqy959bzh6hq1m2wb58fx6h0",
+      "checkpointAt": 1791448941758,
+      "dispatchIdentity": "ed6b9779e58f536f69236c338ff2200fdf0e075d485d902fdfe42a4bcd40b82d",
+      "operationDocumentId": "nh7ebs8ahavy788nc5kjf6r1vh8fwqfb",
+      "ordinal": 0,
+      "privateResultBytes": 351,
+      "receipt": null,
+      "reservationUnits": 100000,
+      "resultWithheld": false,
+      "slotReleased": true,
+      "state": "uncertain"
+    },
+    {
+      "_id": "nd73zr847gkkq36132js4gnpyh8fx4c0",
+      "checkpointAt": 1791448947137,
+      "dispatchIdentity": "0ed925b77b9f847af46c50eb1ad72a70904c504d2e801f4146598e362930706b",
+      "operationDocumentId": "nh7c6repyggg0k4gqs3f8g82k98fw20w",
+      "ordinal": 0,
+      "privateResultBytes": 29743,
+      "receipt": null,
+      "reservationUnits": 100000,
+      "resultWithheld": false,
+      "slotReleased": true,
+      "state": "uncertain"
+    }
+  ],
+  "operations": [
+    {
+      "_id": "nh7ebs8ahavy788nc5kjf6r1vh8fwqfb",
+      "operationKey": "memory.extract",
+      "reservedUnits": 0,
+      "semanticId": "004a2ce53b2a142638ba7571cb417d2400d4901cafcd279063510cfffbb0fe20",
+      "settledUnits": 0,
+      "snapshot": {
+        "allowedModels": [
+          "openai/gpt-4o-mini",
+          "openai/gpt-4o",
+          "openai/text-embedding-3-small"
+        ],
+        "allowedOptions": [],
+        "allowedTools": [],
+        "capabilities": [
+          "text",
+          "structured"
+        ],
+        "costBound": {
+          "coversAllProviderCharges": true,
+          "kind": "qualified-call-ceiling",
+          "maximumCostUnits": 100000,
+          "provenance": "Published OpenRouter rates, allowed plain text/embedding 4096 input and 512 output envelope; $0.10 conservative ceiling; qualification-only unreviewed proposal"
+        },
+        "currency": "USD",
+        "fallbackCandidates": [],
+        "limits": {
+          "concurrency": 2,
+          "contextTokens": 8192,
+          "inputTokens": 4096,
+          "operationBudgetUnits": 200000,
+          "outputTokens": 512,
+          "runBudgetUnits": 2000000,
+          "tenantBudgetUnits": 10000000,
+          "timeoutMs": 60000,
+          "toolSteps": 0
+        },
+        "modelId": "openai/gpt-4o-mini",
+        "monetaryUnit": "micro-USD",
+        "nativeInterface": "chat",
+        "operationKey": "memory.extract",
+        "pins": {
+          "boundRevision": "provisional-4096-512-v1",
+          "extractionVersion": "task04-qualification-e1",
+          "priceRevision": "openrouter-2026-10-08-candidate",
+          "promptVersion": "task04-qualification-p1",
+          "schemaVersion": "facts-v1",
+          "toolRegistryVersion": "none-v1"
+        },
+        "policyVersions": [
+          {
+            "policyId": "fixture-default",
+            "version": 1
+          }
+        ],
+        "qualificationReceiptId": "provisional-5bfe0c22-fed2-40d9-bf87-48203296262f-0",
+        "requestedModelId": "openai/gpt-4o-mini",
+        "runBudgetId": "e8d3475556f90fc36dcc01ac296dc7fffef505187838134ff90fd021fd5e366e",
+        "scope": {
+          "grantId": "m5703xd4s1q21yx7v9ecyxfq818fx07h",
+          "grantVersion": 1,
+          "membershipId": "m974bgd5sakvwv0w2ar5jmabms8fxzbj",
+          "membershipVersion": 1,
+          "memorySpaceEpoch": 1,
+          "memorySpaceId": "qualification",
+          "principalId": "md7afkv0ghq6pqh3rjqfq6tt7x8fx52z",
+          "principalVersion": 1,
+          "tenantEpoch": 1,
+          "tenantId": "task04-memory2-5bfe0c22"
+        },
+        "source": {
+          "sourceEventId": "explicit:[\"task04-memory2-5bfe0c22\",\"qualification\",\"md7afkv0ghq6pqh3rjqfq6tt7x8fx52z\",\"remember-jasmine-v1\"]",
+          "sourceId": "explicit:[\"task04-memory2-5bfe0c22\",\"qualification\",\"md7afkv0ghq6pqh3rjqfq6tt7x8fx52z\",\"remember-jasmine-v1\"]",
+          "sourceRevision": 1
+        },
+        "version": 1
+      },
+      "uncertainUnits": 100000
+    },
+    {
+      "_id": "nh7c6repyggg0k4gqs3f8g82k98fw20w",
+      "operationKey": "embedding.query",
+      "reservedUnits": 0,
+      "semanticId": "cec598c9147d90049613e768a88cd787156a23be5fd81779308719a38b40ed9e",
+      "settledUnits": 0,
+      "snapshot": {
+        "allowedModels": [
+          "openai/gpt-4o-mini",
+          "openai/gpt-4o",
+          "openai/text-embedding-3-small"
+        ],
+        "allowedOptions": [],
+        "allowedTools": [],
+        "capabilities": [
+          "embedding"
+        ],
+        "costBound": {
+          "coversAllProviderCharges": true,
+          "kind": "qualified-call-ceiling",
+          "maximumCostUnits": 100000,
+          "provenance": "Published OpenRouter rates, allowed plain text/embedding 4096 input and 512 output envelope; $0.10 conservative ceiling; qualification-only unreviewed proposal"
+        },
+        "currency": "USD",
+        "fallbackCandidates": [],
+        "limits": {
+          "concurrency": 2,
+          "contextTokens": 8192,
+          "inputTokens": 4096,
+          "operationBudgetUnits": 200000,
+          "outputTokens": 512,
+          "runBudgetUnits": 2000000,
+          "tenantBudgetUnits": 10000000,
+          "timeoutMs": 60000,
+          "toolSteps": 0
+        },
+        "modelId": "openai/text-embedding-3-small",
+        "monetaryUnit": "micro-USD",
+        "nativeInterface": "embedding",
+        "operationKey": "embedding.query",
+        "pins": {
+          "boundRevision": "provisional-4096-512-v1",
+          "extractionVersion": "task04-qualification-e1",
+          "priceRevision": "openrouter-2026-10-08-candidate",
+          "promptVersion": "task04-qualification-p1",
+          "schemaVersion": "facts-v1",
+          "toolRegistryVersion": "none-v1"
+        },
+        "policyVersions": [
+          {
+            "policyId": "fixture-default",
+            "version": 1
+          }
+        ],
+        "qualificationReceiptId": "provisional-5bfe0c22-fed2-40d9-bf87-48203296262f-2",
+        "requestedModelId": "openai/text-embedding-3-small",
+        "runBudgetId": "021f744ba7b7adfbe311734aa13e0e621b017c499aea8be115434e8f2a983ec3",
+        "scope": {
+          "grantId": "m5703xd4s1q21yx7v9ecyxfq818fx07h",
+          "grantVersion": 1,
+          "membershipId": "m974bgd5sakvwv0w2ar5jmabms8fxzbj",
+          "membershipVersion": 1,
+          "memorySpaceEpoch": 1,
+          "memorySpaceId": "qualification",
+          "principalId": "md7afkv0ghq6pqh3rjqfq6tt7x8fx52z",
+          "principalVersion": 1,
+          "tenantEpoch": 1,
+          "tenantId": "task04-memory2-5bfe0c22"
+        },
+        "semanticProfile": {
+          "chunking": "codepoint-1600-overlap-200-v1",
+          "dimensions": 1536,
+          "indexName": "by_default_embedding_v1",
+          "modelId": "openai/text-embedding-3-small",
+          "normalization": "text-nfc-lf-v1",
+          "profileId": "cortex-text-small-1536-v1"
+        },
+        "version": 1
+      },
+      "uncertainUnits": 100000
+    }
+  ]
+}

@@ -1,0 +1,118 @@
+{
+  "scope": "INTERMEDIATE_INDEPENDENT_INSPECTION_OF_CLOSED_OFFLINE_GATEWAY_BATCH",
+  "recordedAt": "2026-10-08T07:50:33.061117+00:00",
+  "reviewer": "task03_linux_source_adapter_judge1",
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "candidate": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeGatewayBackend.ts",
+      "bytes": 4492,
+      "sha256": "53f21893a8584c2703d9713e135f8d7eb90621c3e5f9deb5fc93a7ea2062fd99",
+      "currentBytes": 4492,
+      "currentSHA256": "53f21893a8584c2703d9713e135f8d7eb90621c3e5f9deb5fc93a7ea2062fd99",
+      "matchesClosedOfflineBatch": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeGateway.ts",
+      "bytes": 55895,
+      "sha256": "e12554ee9c0322f8622053bd384d647e31ee0b549de7188e276e9ce9a81d7e9d",
+      "currentBytes": 55895,
+      "currentSHA256": "e12554ee9c0322f8622053bd384d647e31ee0b549de7188e276e9ce9a81d7e9d",
+      "matchesClosedOfflineBatch": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicy.ts",
+      "bytes": 88940,
+      "sha256": "52e5fc5229ba837f90ffeb5449ede298ed445569d67266fa38c1abddd769dbe6",
+      "currentBytes": 88940,
+      "currentSHA256": "52e5fc5229ba837f90ffeb5449ede298ed445569d67266fa38c1abddd769dbe6",
+      "matchesClosedOfflineBatch": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/gateway-backend.test.ts",
+      "bytes": 24108,
+      "sha256": "19915307317ea0b7f5977e24f78031edbacec6b7f7a97430e6b352b30fa5a820",
+      "currentBytes": 24108,
+      "currentSHA256": "19915307317ea0b7f5977e24f78031edbacec6b7f7a97430e6b352b30fa5a820",
+      "matchesClosedOfflineBatch": true
+    }
+  ],
+  "authorRawChecksIndependentlyParsed": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-backend-gateway-adapter1/affected-final.json",
+      "success": true,
+      "passed": 366,
+      "failed": 0,
+      "pending": 0,
+      "suites": [
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/gateway-backend.test.ts",
+          "count": 16,
+          "status": "passed"
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/gateway-terminal-composition.test.ts",
+          "count": 160,
+          "status": "passed"
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/model-policy-admission.test.ts",
+          "count": 133,
+          "status": "passed"
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/model-policy-model-drift.test.ts",
+          "count": 57,
+          "status": "passed"
+        }
+      ],
+      "failedAssertions": []
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-backend-gateway-adapter1/affected-before-child-fix.json",
+      "success": false,
+      "passed": 363,
+      "failed": 1,
+      "pending": 0,
+      "suites": [
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/gateway-backend.test.ts",
+          "count": 14,
+          "status": "failed"
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/model-policy-admission.test.ts",
+          "count": 133,
+          "status": "passed"
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/gateway-terminal-composition.test.ts",
+          "count": 160,
+          "status": "passed"
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/model-policy-model-drift.test.ts",
+          "count": 57,
+          "status": "passed"
+        }
+      ],
+      "failedAssertions": [
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/gateway-backend.test.ts",
+          "name": "backend ActionCtx Gateway adapter \u2014 offline native composition uses a distinct secondary function policy and parent identity while sharing the trusted run quota",
+          "messages": [
+            "GatewayDispatchError: Governed model call did not complete for delivery.\n    at fail (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeGateway.ts:72:44)\n    at Object.admit (/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeGateway.ts:435:158)\n    at /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeGateway.ts:487:59"
+          ]
+        }
+      ]
+    }
+  ],
+  "independentTestExecutionYet": false,
+  "verdict": "PENDING_CURRENT_ACTUAL_REPAIR_BATCH",
+  "reason": "Parent reported actual embedding terminal bare-name mismatch; final current-source verdict held for closed alias/schema repair and actual receipts.",
+  "fullTask04Accepted": false,
+  "goalAccepted": false,
+  "serviceEffectsByReviewer": 0,
+  "ownedProcesses": [],
+  "policy": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/acceptance-policy.md"
+}

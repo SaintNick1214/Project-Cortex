@@ -1,0 +1,623 @@
+{
+  "scope": "OFFLINE_PUBLIC_MEMORY_WIRING_TESTS_ONLY",
+  "status": "PASS",
+  "closedUnixNs": 1791448057514243000,
+  "toolchain": {
+    "node": "24.15.0",
+    "npm": "12.2.0",
+    "nodePath": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+    "npmPath": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/npm"
+  },
+  "uniqueOutcomeCount": 321,
+  "uniquePassed": 321,
+  "uniqueFailed": 0,
+  "newFunctionalCount": 25,
+  "deduplication": "run2 repeats the same25 functional conditions after test-only typing fixes; not added to321",
+  "suites": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeMemory/repository.test.ts",
+      "passed": 36,
+      "conditions": [
+        "scoped Convex memory persistence selects actual canonical source in trusted tenant/space despite a foreign duplicate ID inserted first",
+        "scoped Convex memory persistence checks actual normalized content SHA-256 rather than trusting supplied same-hash metadata",
+        "scoped Convex memory persistence rejects same-event aliases and cannot overwrite a canonical source on content hash collision",
+        "scoped Convex memory persistence rejects source tenantId forgery before writes",
+        "scoped Convex memory persistence rejects source memorySpaceId forgery before writes",
+        "scoped Convex memory persistence rejects source ownerPrincipalId forgery before writes",
+        "scoped Convex memory persistence commits source-derived chunk/vector/fact and one receipt atomically and idempotently",
+        "scoped Convex memory persistence compares receipt canonical payload on reuse instead of accepting just its hash",
+        "scoped Convex memory persistence rejects canonical identity collision when distinct source IDs share the receipt digest tuple",
+        "scoped Convex memory persistence rejects changed sourceRevision on a delayed commit",
+        "scoped Convex memory persistence rejects changed sourceEventId on a delayed commit",
+        "scoped Convex memory persistence fences source row deletion before reads and commits",
+        "scoped Convex memory persistence fences source scoped-control deletion before reads and commits",
+        "scoped Convex memory persistence fences source tenant-control deletion before reads and commits",
+        "scoped Convex memory persistence checks every conflict candidate CAS and rolls back the full registered mutation on mismatch",
+        "scoped Convex memory persistence requires expected version for new and updated facts",
+        "scoped Convex memory persistence rejects noncanonical chunk window before writes",
+        "scoped Convex memory persistence rejects noncanonical chunk hash before writes",
+        "scoped Convex memory persistence rejects noncanonical chunk profile before writes",
+        "scoped Convex memory persistence rejects noncanonical chunk duplicate before writes",
+        "scoped Convex memory persistence rejects assistant-derived facts regardless of supplied fact role/trust",
+        "scoped Convex memory persistence reads current facts from the authoritative store and excludes other owners/missing lineage/stale source",
+        "scoped Convex memory persistence excludes a tombstoned fact from derived recall",
+        "scoped Convex memory persistence excludes a tombstoned source from derived recall",
+        "scoped Convex memory persistence uses injected clock for temporal validity",
+        "scoped Convex memory persistence post-filters actual vector candidate with invalid revision",
+        "scoped Convex memory persistence post-filters actual vector candidate with invalid profile",
+        "scoped Convex memory persistence post-filters actual vector candidate with invalid owner",
+        "scoped Convex memory persistence post-filters actual vector candidate with invalid tenant",
+        "scoped Convex memory persistence post-filters actual vector candidate with invalid space",
+        "scoped Convex memory persistence post-filters actual vector candidate with invalid missing-receipt",
+        "scoped Convex memory persistence exact vector prefilter prevents foreign tenant/profile/owner candidates consuming top-k slots",
+        "scoped Convex memory persistence space-sharing uses exact scope/profile prefilter while retaining explicit owner checks",
+        "scoped Convex memory persistence rejects incompatible queries before search and revoked refs before any result",
+        "memory capability separation and bounded selection does not grant list/search read permission to a write-only repository",
+        "memory capability separation and bounded selection filters actual owner/subject/type before bounded take so unrelated rows cannot starve a narrow read"
+      ]
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeMemory/public-functional.test.ts",
+      "passed": 25,
+      "conditions": [
+        "functional public memory wiring with an offline model preflights exact trusted request before writing, then remembers and recalls real scoped data",
+        "functional public memory wiring with an offline model reuses normalized request account and derived receipt without duplicate persistent data",
+        "functional public memory wiring with an offline model rejects changed remember input before persistence or a second model invocation",
+        "functional public memory wiring with an offline model rejects changed recall input before persistence or a second model invocation",
+        "functional public memory wiring with an offline model binds recall limit in the exact request before model dispatch",
+        "functional public memory wiring with an offline model unconfigured remember policy performs no source/fact/vector writes or model construction",
+        "functional public memory wiring with an offline model unconfigured recall policy performs no source/fact/vector writes or model construction",
+        "functional public memory wiring with an offline model ready policy cannot bypass missing identity",
+        "functional public memory wiring with an offline model ready policy cannot bypass revoked",
+        "functional public memory wiring with an offline model ready policy cannot bypass foreign scope",
+        "functional public memory wiring with an offline model ready policy cannot bypass missing capability",
+        "functional public memory wiring with an offline model invalid request ID stops before budget and persistence after authority",
+        "functional public memory wiring with an offline model invalid text stops before budget and persistence after authority",
+        "functional public memory wiring with an offline model invalid recall limit 0 stops before budget or query model",
+        "functional public memory wiring with an offline model invalid recall limit 101 stops before budget or query model",
+        "functional public memory wiring with an offline model invalid recall limit 1.5 stops before budget or query model",
+        "functional public memory wiring with an offline model invalid recall limit NaN stops before budget or query model",
+        "functional public memory wiring with an offline model late revocation after preflight denies source persistence with the functional uncertain envelope",
+        "functional public memory wiring with an offline model revocation after extraction prevents embedding and derived commit without a false no-dispatch claim",
+        "functional public memory wiring with an offline model post-model provider error stays opaque and uncertain with no derived commit",
+        "functional public memory wiring with an offline model post-model diagnostic getters stays opaque and uncertain with no derived commit",
+        "functional public memory wiring with an offline model post-model malformed extraction stays opaque and uncertain with no derived commit",
+        "functional public memory wiring with an offline model post-model invalid vector stays opaque and uncertain with no derived commit",
+        "functional public memory wiring with an offline model source revision race at actual commit remains opaque/uncertain and commits no derived rows",
+        "functional public memory wiring with an offline model post-query-model failure does not return a partial recall or leak provider diagnostics"
+      ]
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeMemory/public-boundary.test.ts",
+      "passed": 176,
+      "conditions": [
+        "native remember control boundary projects the actual14-field native auth result to frozen10-field reference",
+        "native remember control boundary preserves concrete-scope denial when optional native reference keys are omitted",
+        "native remember control boundary preserves the late principal generation fence across native RPC",
+        "native remember control boundary preserves the late membership generation fence across native RPC",
+        "native remember control boundary preserves the late grant generation fence across native RPC",
+        "native remember control boundary preserves actual static authority-lookup ambiguity without native diagnostics",
+        "native remember control boundary malformed runtimeAuth:authorize result is opaque (null)",
+        "native remember control boundary malformed runtimeAuth:authorize result is opaque (3)",
+        "native remember control boundary malformed runtimeAuth:authorize result is opaque (\"PRIVATE_RESULT\")",
+        "native remember control boundary malformed runtimeAuth:authorize result is opaque ([])",
+        "native remember control boundary malformed runtimeAuth:authorize result is opaque (1970-01-01T00:00:00.000Z)",
+        "native remember control boundary malformed runtimeAuth:authorize result is opaque ({})",
+        "native remember control boundary invalid runtimeAuth:authorize field principalId stays opaque",
+        "native remember control boundary invalid runtimeAuth:authorize field principalVersion stays opaque",
+        "native remember control boundary invalid runtimeAuth:authorize field grantVersion stays opaque",
+        "native remember control boundary invalid runtimeAuth:authorize field membershipVersion stays opaque",
+        "native remember control boundary invalid runtimeAuth:authorize field tenantEpoch stays opaque",
+        "native remember control boundary invalid runtimeAuth:authorize field memorySpaceEpoch stays opaque",
+        "native remember control boundary invalid runtimeAuth:authorize field actorKind stays opaque",
+        "native remember control boundary invalid runtimeAuth:authorize field resourceAccess stays opaque",
+        "native remember control boundary invalid runtimeAuth:authorize field userId stays opaque",
+        "native remember control boundary invalid runtimeAuth:authorize field capabilities stays opaque",
+        "native remember control boundary invalid runtimeAuth:authorize field PRIVATE_EXTRA stays opaque",
+        "native remember control boundary capability accessor at runtimeAuth:authorize is never invoked",
+        "native remember control boundary authority field getter at runtimeAuth:authorize is never invoked",
+        "native remember control boundary proxy descriptor failure at runtimeAuth:authorize stays opaque without diagnostic getters",
+        "native remember control boundary unknown runtimeAuth:authorize fault is opaque (undefined)",
+        "native remember control boundary unknown runtimeAuth:authorize fault is opaque (null)",
+        "native remember control boundary unknown runtimeAuth:authorize fault is opaque (\"PRIVATE_SCALAR\")",
+        "native remember control boundary unknown runtimeAuth:authorize fault is opaque (9)",
+        "native remember control boundary unknown runtimeAuth:authorize fault is opaque ({\"private\": \"PRIVATE_STRUCTURED\"})",
+        "native remember control boundary unknown runtimeAuth:authorize fault is opaque ([Error: PRIVATE_CLASS])",
+        "native remember control boundary unknown runtimeAuth:authorize fault is opaque ([ConvexError: {\"code\":\"UNKNOWN_BACKEND_FAILURE\",\"message\":\"PRIVATE_DIAGNOSTIC\",\"privateControl\":\"PRIVATE_CONTROL\"}])",
+        "native remember control boundary error/data/message getters at runtimeAuth:authorize are never invoked",
+        "native remember control boundary safe-looking data with a getter at runtimeAuth:authorize is opaque",
+        "native remember control boundary nonexact runtimeAuth:authorize envelope is opaque ({\"code\": \"CAPABILITY_UNAVAILABLE\", \"message\": \"Memory capability unavailable.\", \"outcome\": \"not_dispatched\", \"private\": \"PRIVATE_EXTRA\", \"retryable\": false, \"version\": 1})",
+        "native remember control boundary nonexact runtimeAuth:authorize envelope is opaque ({\"code\": \"CAPABILITY_UNAVAILABLE\", \"message\": \"Memory capability unavailable.\", \"outcome\": \"confirmed\", \"retryable\": false, \"version\": 1})",
+        "native remember control boundary nonexact runtimeAuth:authorize envelope is opaque ({\"code\": \"CAPABILITY_UNAVAILABLE\", \"message\": \"PRIVATE_MESSAGE\", \"outcome\": \"not_dispatched\", \"retryable\": false, \"version\": 1})",
+        "native remember control boundary nonexact runtimeAuth:authorize envelope is opaque ({\"code\": \"CAPABILITY_UNAVAILABLE\", \"message\": \"Memory capability unavailable.\", \"outcome\": \"not_dispatched\", \"retryable\": true, \"version\": 1})",
+        "native remember control boundary nonexact runtimeAuth:authorize envelope is opaque ({\"code\": \"CAPABILITY_UNAVAILABLE\", \"message\": \"Memory capability unavailable.\", \"outcome\": \"not_dispatched\", \"retryable\": false, \"version\": 2})",
+        "native remember control boundary nonexact runtimeAuth:authorize envelope is opaque ({\"code\": \"UNKNOWN\", \"message\": \"Memory capability unavailable.\", \"outcome\": \"not_dispatched\", \"retryable\": false, \"version\": 1})",
+        "native remember control boundary whole static runtimeAuth:authorize envelope remains distinct ({\"code\": \"UNAUTHENTICATED\", \"message\": \"Verified identity required\"})",
+        "native remember control boundary whole static runtimeAuth:authorize envelope remains distinct ({\"code\": \"FORBIDDEN\", \"message\": \"Access denied\"})",
+        "native remember control boundary whole static runtimeAuth:authorize envelope remains distinct ({\"code\": \"FORBIDDEN\", \"message\": \"A concrete authorized memory space is required\"})",
+        "native remember control boundary whole static runtimeAuth:authorize envelope remains distinct ({\"code\": \"INVALID_INPUT\", \"message\": \"Invalid authority configuration\"})",
+        "native remember control boundary whole static runtimeAuth:authorize envelope remains distinct ({\"code\": \"AUTHORITY_LOOKUP_AMBIGUOUS\", \"message\": \"Authority lookup is ambiguous\"})",
+        "native remember control boundary whole static runtimeAuth:authorize envelope remains distinct ({\"code\": \"CAPABILITY_UNAVAILABLE\", \"message\": \"Memory capability unavailable.\"})",
+        "native remember control boundary malformed runtimeMemory:checkAuthority result is opaque (null)",
+        "native remember control boundary malformed runtimeMemory:checkAuthority result is opaque (3)",
+        "native remember control boundary malformed runtimeMemory:checkAuthority result is opaque (\"PRIVATE_RESULT\")",
+        "native remember control boundary malformed runtimeMemory:checkAuthority result is opaque ([])",
+        "native remember control boundary malformed runtimeMemory:checkAuthority result is opaque (1970-01-01T00:00:00.000Z)",
+        "native remember control boundary malformed runtimeMemory:checkAuthority result is opaque ({})",
+        "native remember control boundary invalid runtimeMemory:checkAuthority field principalId stays opaque",
+        "native remember control boundary invalid runtimeMemory:checkAuthority field principalVersion stays opaque",
+        "native remember control boundary invalid runtimeMemory:checkAuthority field grantVersion stays opaque",
+        "native remember control boundary invalid runtimeMemory:checkAuthority field membershipVersion stays opaque",
+        "native remember control boundary invalid runtimeMemory:checkAuthority field tenantEpoch stays opaque",
+        "native remember control boundary invalid runtimeMemory:checkAuthority field memorySpaceEpoch stays opaque",
+        "native remember control boundary invalid runtimeMemory:checkAuthority field actorKind stays opaque",
+        "native remember control boundary invalid runtimeMemory:checkAuthority field resourceAccess stays opaque",
+        "native remember control boundary invalid runtimeMemory:checkAuthority field userId stays opaque",
+        "native remember control boundary invalid runtimeMemory:checkAuthority field capabilities stays opaque",
+        "native remember control boundary invalid runtimeMemory:checkAuthority field PRIVATE_EXTRA stays opaque",
+        "native remember control boundary capability accessor at runtimeMemory:checkAuthority is never invoked",
+        "native remember control boundary authority field getter at runtimeMemory:checkAuthority is never invoked",
+        "native remember control boundary proxy descriptor failure at runtimeMemory:checkAuthority stays opaque without diagnostic getters",
+        "native remember control boundary unknown runtimeMemory:checkAuthority fault is opaque (undefined)",
+        "native remember control boundary unknown runtimeMemory:checkAuthority fault is opaque (null)",
+        "native remember control boundary unknown runtimeMemory:checkAuthority fault is opaque (\"PRIVATE_SCALAR\")",
+        "native remember control boundary unknown runtimeMemory:checkAuthority fault is opaque (9)",
+        "native remember control boundary unknown runtimeMemory:checkAuthority fault is opaque ({\"private\": \"PRIVATE_STRUCTURED\"})",
+        "native remember control boundary unknown runtimeMemory:checkAuthority fault is opaque ([Error: PRIVATE_CLASS])",
+        "native remember control boundary unknown runtimeMemory:checkAuthority fault is opaque ([ConvexError: {\"code\":\"UNKNOWN_BACKEND_FAILURE\",\"message\":\"PRIVATE_DIAGNOSTIC\",\"privateControl\":\"PRIVATE_CONTROL\"}])",
+        "native remember control boundary error/data/message getters at runtimeMemory:checkAuthority are never invoked",
+        "native remember control boundary safe-looking data with a getter at runtimeMemory:checkAuthority is opaque",
+        "native remember control boundary nonexact runtimeMemory:checkAuthority envelope is opaque ({\"code\": \"CAPABILITY_UNAVAILABLE\", \"message\": \"Memory capability unavailable.\", \"outcome\": \"not_dispatched\", \"private\": \"PRIVATE_EXTRA\", \"retryable\": false, \"version\": 1})",
+        "native remember control boundary nonexact runtimeMemory:checkAuthority envelope is opaque ({\"code\": \"CAPABILITY_UNAVAILABLE\", \"message\": \"Memory capability unavailable.\", \"outcome\": \"confirmed\", \"retryable\": false, \"version\": 1})",
+        "native remember control boundary nonexact runtimeMemory:checkAuthority envelope is opaque ({\"code\": \"CAPABILITY_UNAVAILABLE\", \"message\": \"PRIVATE_MESSAGE\", \"outcome\": \"not_dispatched\", \"retryable\": false, \"version\": 1})",
+        "native remember control boundary nonexact runtimeMemory:checkAuthority envelope is opaque ({\"code\": \"CAPABILITY_UNAVAILABLE\", \"message\": \"Memory capability unavailable.\", \"outcome\": \"not_dispatched\", \"retryable\": true, \"version\": 1})",
+        "native remember control boundary nonexact runtimeMemory:checkAuthority envelope is opaque ({\"code\": \"CAPABILITY_UNAVAILABLE\", \"message\": \"Memory capability unavailable.\", \"outcome\": \"not_dispatched\", \"retryable\": false, \"version\": 2})",
+        "native remember control boundary nonexact runtimeMemory:checkAuthority envelope is opaque ({\"code\": \"UNKNOWN\", \"message\": \"Memory capability unavailable.\", \"outcome\": \"not_dispatched\", \"retryable\": false, \"version\": 1})",
+        "native remember control boundary whole static runtimeMemory:checkAuthority envelope remains distinct ({\"code\": \"UNAUTHENTICATED\", \"message\": \"Verified identity required\"})",
+        "native remember control boundary whole static runtimeMemory:checkAuthority envelope remains distinct ({\"code\": \"FORBIDDEN\", \"message\": \"Access denied\"})",
+        "native remember control boundary whole static runtimeMemory:checkAuthority envelope remains distinct ({\"code\": \"FORBIDDEN\", \"message\": \"A concrete authorized memory space is required\"})",
+        "native remember control boundary whole static runtimeMemory:checkAuthority envelope remains distinct ({\"code\": \"INVALID_INPUT\", \"message\": \"Invalid authority configuration\"})",
+        "native remember control boundary whole static runtimeMemory:checkAuthority envelope remains distinct ({\"code\": \"AUTHORITY_LOOKUP_AMBIGUOUS\", \"message\": \"Authority lookup is ambiguous\"})",
+        "native remember control boundary whole static runtimeMemory:checkAuthority envelope remains distinct ({\"code\": \"CAPABILITY_UNAVAILABLE\", \"message\": \"Memory capability unavailable.\"})",
+        "native recall control boundary projects the actual14-field native auth result to frozen10-field reference",
+        "native recall control boundary preserves concrete-scope denial when optional native reference keys are omitted",
+        "native recall control boundary preserves the late principal generation fence across native RPC",
+        "native recall control boundary preserves the late membership generation fence across native RPC",
+        "native recall control boundary preserves the late grant generation fence across native RPC",
+        "native recall control boundary preserves actual static authority-lookup ambiguity without native diagnostics",
+        "native recall control boundary malformed runtimeAuth:authorize result is opaque (null)",
+        "native recall control boundary malformed runtimeAuth:authorize result is opaque (3)",
+        "native recall control boundary malformed runtimeAuth:authorize result is opaque (\"PRIVATE_RESULT\")",
+        "native recall control boundary malformed runtimeAuth:authorize result is opaque ([])",
+        "native recall control boundary malformed runtimeAuth:authorize result is opaque (1970-01-01T00:00:00.000Z)",
+        "native recall control boundary malformed runtimeAuth:authorize result is opaque ({})",
+        "native recall control boundary invalid runtimeAuth:authorize field principalId stays opaque",
+        "native recall control boundary invalid runtimeAuth:authorize field principalVersion stays opaque",
+        "native recall control boundary invalid runtimeAuth:authorize field grantVersion stays opaque",
+        "native recall control boundary invalid runtimeAuth:authorize field membershipVersion stays opaque",
+        "native recall control boundary invalid runtimeAuth:authorize field tenantEpoch stays opaque",
+        "native recall control boundary invalid runtimeAuth:authorize field memorySpaceEpoch stays opaque",
+        "native recall control boundary invalid runtimeAuth:authorize field actorKind stays opaque",
+        "native recall control boundary invalid runtimeAuth:authorize field resourceAccess stays opaque",
+        "native recall control boundary invalid runtimeAuth:authorize field userId stays opaque",
+        "native recall control boundary invalid runtimeAuth:authorize field capabilities stays opaque",
+        "native recall control boundary invalid runtimeAuth:authorize field PRIVATE_EXTRA stays opaque",
+        "native recall control boundary capability accessor at runtimeAuth:authorize is never invoked",
+        "native recall control boundary authority field getter at runtimeAuth:authorize is never invoked",
+        "native recall control boundary proxy descriptor failure at runtimeAuth:authorize stays opaque without diagnostic getters",
+        "native recall control boundary unknown runtimeAuth:authorize fault is opaque (undefined)",
+        "native recall control boundary unknown runtimeAuth:authorize fault is opaque (null)",
+        "native recall control boundary unknown runtimeAuth:authorize fault is opaque (\"PRIVATE_SCALAR\")",
+        "native recall control boundary unknown runtimeAuth:authorize fault is opaque (9)",
+        "native recall control boundary unknown runtimeAuth:authorize fault is opaque ({\"private\": \"PRIVATE_STRUCTURED\"})",
+        "native recall control boundary unknown runtimeAuth:authorize fault is opaque ([Error: PRIVATE_CLASS])",
+        "native recall control boundary unknown runtimeAuth:authorize fault is opaque ([ConvexError: {\"code\":\"UNKNOWN_BACKEND_FAILURE\",\"message\":\"PRIVATE_DIAGNOSTIC\",\"privateControl\":\"PRIVATE_CONTROL\"}])",
+        "native recall control boundary error/data/message getters at runtimeAuth:authorize are never invoked",
+        "native recall control boundary safe-looking data with a getter at runtimeAuth:authorize is opaque",
+        "native recall control boundary nonexact runtimeAuth:authorize envelope is opaque ({\"code\": \"CAPABILITY_UNAVAILABLE\", \"message\": \"Memory capability unavailable.\", \"outcome\": \"not_dispatched\", \"private\": \"PRIVATE_EXTRA\", \"retryable\": false, \"version\": 1})",
+        "native recall control boundary nonexact runtimeAuth:authorize envelope is opaque ({\"code\": \"CAPABILITY_UNAVAILABLE\", \"message\": \"Memory capability unavailable.\", \"outcome\": \"confirmed\", \"retryable\": false, \"version\": 1})",
+        "native recall control boundary nonexact runtimeAuth:authorize envelope is opaque ({\"code\": \"CAPABILITY_UNAVAILABLE\", \"message\": \"PRIVATE_MESSAGE\", \"outcome\": \"not_dispatched\", \"retryable\": false, \"version\": 1})",
+        "native recall control boundary nonexact runtimeAuth:authorize envelope is opaque ({\"code\": \"CAPABILITY_UNAVAILABLE\", \"message\": \"Memory capability unavailable.\", \"outcome\": \"not_dispatched\", \"retryable\": true, \"version\": 1})",
+        "native recall control boundary nonexact runtimeAuth:authorize envelope is opaque ({\"code\": \"CAPABILITY_UNAVAILABLE\", \"message\": \"Memory capability unavailable.\", \"outcome\": \"not_dispatched\", \"retryable\": false, \"version\": 2})",
+        "native recall control boundary nonexact runtimeAuth:authorize envelope is opaque ({\"code\": \"UNKNOWN\", \"message\": \"Memory capability unavailable.\", \"outcome\": \"not_dispatched\", \"retryable\": false, \"version\": 1})",
+        "native recall control boundary whole static runtimeAuth:authorize envelope remains distinct ({\"code\": \"UNAUTHENTICATED\", \"message\": \"Verified identity required\"})",
+        "native recall control boundary whole static runtimeAuth:authorize envelope remains distinct ({\"code\": \"FORBIDDEN\", \"message\": \"Access denied\"})",
+        "native recall control boundary whole static runtimeAuth:authorize envelope remains distinct ({\"code\": \"FORBIDDEN\", \"message\": \"A concrete authorized memory space is required\"})",
+        "native recall control boundary whole static runtimeAuth:authorize envelope remains distinct ({\"code\": \"INVALID_INPUT\", \"message\": \"Invalid authority configuration\"})",
+        "native recall control boundary whole static runtimeAuth:authorize envelope remains distinct ({\"code\": \"AUTHORITY_LOOKUP_AMBIGUOUS\", \"message\": \"Authority lookup is ambiguous\"})",
+        "native recall control boundary whole static runtimeAuth:authorize envelope remains distinct ({\"code\": \"CAPABILITY_UNAVAILABLE\", \"message\": \"Memory capability unavailable.\"})",
+        "native recall control boundary malformed runtimeMemory:checkAuthority result is opaque (null)",
+        "native recall control boundary malformed runtimeMemory:checkAuthority result is opaque (3)",
+        "native recall control boundary malformed runtimeMemory:checkAuthority result is opaque (\"PRIVATE_RESULT\")",
+        "native recall control boundary malformed runtimeMemory:checkAuthority result is opaque ([])",
+        "native recall control boundary malformed runtimeMemory:checkAuthority result is opaque (1970-01-01T00:00:00.000Z)",
+        "native recall control boundary malformed runtimeMemory:checkAuthority result is opaque ({})",
+        "native recall control boundary invalid runtimeMemory:checkAuthority field principalId stays opaque",
+        "native recall control boundary invalid runtimeMemory:checkAuthority field principalVersion stays opaque",
+        "native recall control boundary invalid runtimeMemory:checkAuthority field grantVersion stays opaque",
+        "native recall control boundary invalid runtimeMemory:checkAuthority field membershipVersion stays opaque",
+        "native recall control boundary invalid runtimeMemory:checkAuthority field tenantEpoch stays opaque",
+        "native recall control boundary invalid runtimeMemory:checkAuthority field memorySpaceEpoch stays opaque",
+        "native recall control boundary invalid runtimeMemory:checkAuthority field actorKind stays opaque",
+        "native recall control boundary invalid runtimeMemory:checkAuthority field resourceAccess stays opaque",
+        "native recall control boundary invalid runtimeMemory:checkAuthority field userId stays opaque",
+        "native recall control boundary invalid runtimeMemory:checkAuthority field capabilities stays opaque",
+        "native recall control boundary invalid runtimeMemory:checkAuthority field PRIVATE_EXTRA stays opaque",
+        "native recall control boundary capability accessor at runtimeMemory:checkAuthority is never invoked",
+        "native recall control boundary authority field getter at runtimeMemory:checkAuthority is never invoked",
+        "native recall control boundary proxy descriptor failure at runtimeMemory:checkAuthority stays opaque without diagnostic getters",
+        "native recall control boundary unknown runtimeMemory:checkAuthority fault is opaque (undefined)",
+        "native recall control boundary unknown runtimeMemory:checkAuthority fault is opaque (null)",
+        "native recall control boundary unknown runtimeMemory:checkAuthority fault is opaque (\"PRIVATE_SCALAR\")",
+        "native recall control boundary unknown runtimeMemory:checkAuthority fault is opaque (9)",
+        "native recall control boundary unknown runtimeMemory:checkAuthority fault is opaque ({\"private\": \"PRIVATE_STRUCTURED\"})",
+        "native recall control boundary unknown runtimeMemory:checkAuthority fault is opaque ([Error: PRIVATE_CLASS])",
+        "native recall control boundary unknown runtimeMemory:checkAuthority fault is opaque ([ConvexError: {\"code\":\"UNKNOWN_BACKEND_FAILURE\",\"message\":\"PRIVATE_DIAGNOSTIC\",\"privateControl\":\"PRIVATE_CONTROL\"}])",
+        "native recall control boundary error/data/message getters at runtimeMemory:checkAuthority are never invoked",
+        "native recall control boundary safe-looking data with a getter at runtimeMemory:checkAuthority is opaque",
+        "native recall control boundary nonexact runtimeMemory:checkAuthority envelope is opaque ({\"code\": \"CAPABILITY_UNAVAILABLE\", \"message\": \"Memory capability unavailable.\", \"outcome\": \"not_dispatched\", \"private\": \"PRIVATE_EXTRA\", \"retryable\": false, \"version\": 1})",
+        "native recall control boundary nonexact runtimeMemory:checkAuthority envelope is opaque ({\"code\": \"CAPABILITY_UNAVAILABLE\", \"message\": \"Memory capability unavailable.\", \"outcome\": \"confirmed\", \"retryable\": false, \"version\": 1})",
+        "native recall control boundary nonexact runtimeMemory:checkAuthority envelope is opaque ({\"code\": \"CAPABILITY_UNAVAILABLE\", \"message\": \"PRIVATE_MESSAGE\", \"outcome\": \"not_dispatched\", \"retryable\": false, \"version\": 1})",
+        "native recall control boundary nonexact runtimeMemory:checkAuthority envelope is opaque ({\"code\": \"CAPABILITY_UNAVAILABLE\", \"message\": \"Memory capability unavailable.\", \"outcome\": \"not_dispatched\", \"retryable\": true, \"version\": 1})",
+        "native recall control boundary nonexact runtimeMemory:checkAuthority envelope is opaque ({\"code\": \"CAPABILITY_UNAVAILABLE\", \"message\": \"Memory capability unavailable.\", \"outcome\": \"not_dispatched\", \"retryable\": false, \"version\": 2})",
+        "native recall control boundary nonexact runtimeMemory:checkAuthority envelope is opaque ({\"code\": \"UNKNOWN\", \"message\": \"Memory capability unavailable.\", \"outcome\": \"not_dispatched\", \"retryable\": false, \"version\": 1})",
+        "native recall control boundary whole static runtimeMemory:checkAuthority envelope remains distinct ({\"code\": \"UNAUTHENTICATED\", \"message\": \"Verified identity required\"})",
+        "native recall control boundary whole static runtimeMemory:checkAuthority envelope remains distinct ({\"code\": \"FORBIDDEN\", \"message\": \"Access denied\"})",
+        "native recall control boundary whole static runtimeMemory:checkAuthority envelope remains distinct ({\"code\": \"FORBIDDEN\", \"message\": \"A concrete authorized memory space is required\"})",
+        "native recall control boundary whole static runtimeMemory:checkAuthority envelope remains distinct ({\"code\": \"INVALID_INPUT\", \"message\": \"Invalid authority configuration\"})",
+        "native recall control boundary whole static runtimeMemory:checkAuthority envelope remains distinct ({\"code\": \"AUTHORITY_LOOKUP_AMBIGUOUS\", \"message\": \"Authority lookup is ambiguous\"})",
+        "native recall control boundary whole static runtimeMemory:checkAuthority envelope remains distinct ({\"code\": \"CAPABILITY_UNAVAILABLE\", \"message\": \"Memory capability unavailable.\"})"
+      ]
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeMemory/services.test.ts",
+      "passed": 17,
+      "conditions": [
+        "modern backend memory services persists normalized source/chunks/vectors and authoritative facts with one confidence conversion",
+        "modern backend memory services replays identical normalized source/derived payload without duplicate facts or receipts",
+        "modern backend memory services rejects source key reuse with different normalized content before a second model call",
+        "modern backend memory services rejects revoked principal before inference or new data",
+        "modern backend memory services rejects revoked membership before inference or new data",
+        "modern backend memory services rejects revoked grant before inference or new data",
+        "modern backend memory services rechecks revocation after extraction and before the next billable dispatch",
+        "modern backend memory services rechecks source tombstone before the next model dispatch",
+        "modern backend memory services rejects revocation after embeddings without committing any derived data",
+        "modern backend memory services embeds attributed assistant context without extracting assistant claims as facts",
+        "modern backend memory services fails closed on incompatible model profile/dimensions before committing vectors",
+        "modern backend memory services uses actual scoped internal selection and shared ranking/context for recall",
+        "modern backend memory services registered public remember cannot invoke a provider without configured policy",
+        "modern backend memory services registered public recall cannot invoke a provider without configured policy",
+        "modern backend memory services unconfigured resolve also fails closed and cannot enter public orchestration",
+        "modern backend memory services query repository refuses writes even with a grant containing write",
+        "remember write permission write-only memory admission returns only this successful commit's facts without a general read query"
+      ]
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeMemory/public-closure.test.ts",
+      "passed": 67,
+      "conditions": [
+        "registered public remember foundation closure returns the exact readiness envelope after concrete authority and persisted recheck",
+        "registered public remember foundation closure validates semantic request and limit after auth but before policy or persistence",
+        "registered public remember foundation closure does not access semantic getters when verified identity is missing",
+        "registered public remember foundation closure denies an administrator lacking the required data capability",
+        "registered public remember foundation closure denies missing verified identity",
+        "registered public remember foundation closure denies a forged verified subject mapping",
+        "registered public remember foundation closure denies a grant whose trusted scope changes after admission",
+        "registered public remember foundation closure denies a scope epoch changed after admission",
+        "registered public remember foundation closure denies wrong tenantId",
+        "registered public remember foundation closure denies wrong memorySpaceId",
+        "registered public remember foundation closure denies an authorized tenant-wide grant lacking concrete memory scope",
+        "registered public remember foundation closure denies omitted selectors when trusted eligible scopes are ambiguous",
+        "registered public remember foundation closure accepts omitted selectors only when they resolve one concrete trusted scope",
+        "registered public remember foundation closure denies principal.revokedAt at initial control boundary",
+        "registered public remember foundation closure denies principal.revokedAt at late control boundary",
+        "registered public remember foundation closure denies principal.deletedAt at initial control boundary",
+        "registered public remember foundation closure denies principal.deletedAt at late control boundary",
+        "registered public remember foundation closure denies membership.revokedAt at initial control boundary",
+        "registered public remember foundation closure denies membership.revokedAt at late control boundary",
+        "registered public remember foundation closure denies membership.deletedAt at initial control boundary",
+        "registered public remember foundation closure denies membership.deletedAt at late control boundary",
+        "registered public remember foundation closure denies grant.revokedAt at initial control boundary",
+        "registered public remember foundation closure denies grant.revokedAt at late control boundary",
+        "registered public remember foundation closure denies grant.deletedAt at initial control boundary",
+        "registered public remember foundation closure denies grant.deletedAt at late control boundary",
+        "registered public remember foundation closure denies expired grant at initial boundary",
+        "registered public remember foundation closure denies expired grant at late boundary",
+        "registered public remember foundation closure denies late deleted tenant scope",
+        "registered public remember foundation closure denies late deleted space scope",
+        "registered public remember foundation closure same private IDs are unobservable when absent",
+        "registered public remember foundation closure same private IDs are unobservable when owned",
+        "registered public remember foundation closure same private IDs are unobservable when foreign",
+        "registered public remember foundation closure same private IDs are unobservable when tombstoned",
+        "registered public recall foundation closure returns the exact readiness envelope after concrete authority and persisted recheck",
+        "registered public recall foundation closure validates semantic request and limit after auth but before policy or persistence",
+        "registered public recall foundation closure does not access semantic getters when verified identity is missing",
+        "registered public recall foundation closure denies an administrator lacking the required data capability",
+        "registered public recall foundation closure denies missing verified identity",
+        "registered public recall foundation closure denies a forged verified subject mapping",
+        "registered public recall foundation closure denies a grant whose trusted scope changes after admission",
+        "registered public recall foundation closure denies a scope epoch changed after admission",
+        "registered public recall foundation closure denies wrong tenantId",
+        "registered public recall foundation closure denies wrong memorySpaceId",
+        "registered public recall foundation closure denies an authorized tenant-wide grant lacking concrete memory scope",
+        "registered public recall foundation closure denies omitted selectors when trusted eligible scopes are ambiguous",
+        "registered public recall foundation closure accepts omitted selectors only when they resolve one concrete trusted scope",
+        "registered public recall foundation closure denies principal.revokedAt at initial control boundary",
+        "registered public recall foundation closure denies principal.revokedAt at late control boundary",
+        "registered public recall foundation closure denies principal.deletedAt at initial control boundary",
+        "registered public recall foundation closure denies principal.deletedAt at late control boundary",
+        "registered public recall foundation closure denies membership.revokedAt at initial control boundary",
+        "registered public recall foundation closure denies membership.revokedAt at late control boundary",
+        "registered public recall foundation closure denies membership.deletedAt at initial control boundary",
+        "registered public recall foundation closure denies membership.deletedAt at late control boundary",
+        "registered public recall foundation closure denies grant.revokedAt at initial control boundary",
+        "registered public recall foundation closure denies grant.revokedAt at late control boundary",
+        "registered public recall foundation closure denies grant.deletedAt at initial control boundary",
+        "registered public recall foundation closure denies grant.deletedAt at late control boundary",
+        "registered public recall foundation closure denies expired grant at initial boundary",
+        "registered public recall foundation closure denies expired grant at late boundary",
+        "registered public recall foundation closure denies late deleted tenant scope",
+        "registered public recall foundation closure denies late deleted space scope",
+        "registered public recall foundation closure same private IDs are unobservable when absent",
+        "registered public recall foundation closure same private IDs are unobservable when owned",
+        "registered public recall foundation closure same private IDs are unobservable when foreign",
+        "registered public recall foundation closure same private IDs are unobservable when tombstoned",
+        "write-only authority receives unavailable for remember and cannot invoke recall"
+      ]
+    }
+  ],
+  "contractChanges": [
+    "Valid authorized requests now perform one runtimeModelPolicy:ensureBudget call after native authorize/checkAuthority, before business reads/writes or model construction. Default fixture policy denies with static CAPABILITY_UNAVAILABLE/not_dispatched.",
+    "Temporary assertions that semantic fields are ignored when policy is unavailable are replaced with auth-first semantic validation and denial-path getter opacity. No auth/control assertion was removed.",
+    "All176 native boundary cases retain exact exportArgs validation, tenfield frozen projection, generation fences, descriptor/getter opacity and static envelopes. All67 public closure cases retain no writes/business reads/vector/model effects on preflight failure."
+  ],
+  "functionalCoverage": [
+    "Real authenticated remember normalizes source, persists one source/chunk/vector/fact/receipt and returns authoritative confidence91/lineage; real recall applies owned scope/profile filtering and returns memory+fact context.",
+    "Exact trusted reference/canonical request budget preflight precedes source writes; normalized replay reuses controlled account and actual derived receipt without duplicate writes; changed text or recalllimit denies before second model.",
+    "Unconfigured policy and missing JWT/revoked/foreign/capability authority deny before source/facts/vectors/model; semantic request/limit invalidity precedes budget.",
+    "Revocation after preflight or extraction, actual source-revision race at writeDerived, provider diagnostics/getters, malformed extraction/invalid vector and postquery model failure produce exact static MEMORY_OPERATION_FAILED/uncertain and no derived commit/partial recall."
+  ],
+  "fixtureBoundaries": {
+    "policy": "controlled exact-request dedup port; no monetary/admission proof",
+    "model": "Jest module mock of createGatewayMemoryModel only in public-functional.test.ts",
+    "real": [
+      "registered public handlers",
+      "runtimeAuth handlers",
+      "MemoryServices",
+      "action repository",
+      "registered scoped internal read/write handlers",
+      "domain extraction/profile/ranking/context"
+    ],
+    "database": "transactional in-memory test repository",
+    "serviceCalls": 0,
+    "billableCalls": 0,
+    "liveDeployments": 0,
+    "pricesVerified": false
+  },
+  "initialFailure": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-memory-gateway-v2/logs/public-types1.stdout.log",
+    "classification": "OWN_TEST_TYPING_ONLY",
+    "details": [
+      "Array union made push require extraction fields for embedding requests. Replaced with shared purpose/operationId observation shape.",
+      "beforeEach expression returned Jest Mock; changed to explicit void block."
+    ],
+    "assertionsChangedForRepair": false
+  },
+  "checks": [
+    {
+      "name": "public-run1",
+      "commandReceipt": {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-memory-gateway-v2/logs/public-run1-command.json",
+        "bytes": 3306,
+        "sha256": "529dadd288d529ec58e1a9066d1db1184b10a9839221af860131bde5b6214a40"
+      },
+      "exitCode": 0,
+      "elapsedSeconds": 6.051311016082764,
+      "stdout": {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-memory-gateway-v2/logs/public-run1.stdout.log",
+        "bytes": 6721,
+        "sha256": "30bed9785a3373206d6224cfe345d4b768794540e04c5dea4d982ff68bef9853"
+      },
+      "stderr": {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-memory-gateway-v2/logs/public-run1.stderr.log",
+        "bytes": 11035,
+        "sha256": "bc4c98cc59b148651aae718096ebbd78f4d33d29ed3df3e9dc3201c2cc422812"
+      },
+      "result": {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-memory-gateway-v2/logs/public-run1-results.json",
+        "bytes": 158736,
+        "sha256": "714c8e19e4f729cc026a8cca814e74f374e675d1f48a455d9d65af886b17ac95"
+      },
+      "passed": 321,
+      "failed": 0,
+      "pending": 0,
+      "suites": 5
+    },
+    {
+      "name": "public-run2",
+      "commandReceipt": {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-memory-gateway-v2/logs/public-run2-command.json",
+        "bytes": 2547,
+        "sha256": "5c760bb3aa5caa66a77145b3c6c42d6912d1c254f1f52d2a2f23888218b41120"
+      },
+      "exitCode": 0,
+      "elapsedSeconds": 3.2432191371917725,
+      "stdout": {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-memory-gateway-v2/logs/public-run2.stdout.log",
+        "bytes": 4934,
+        "sha256": "810764fd97ef4d3ebc08c4ce1392c5aae5102471cf8b54849387444d135b9bdb"
+      },
+      "stderr": {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-memory-gateway-v2/logs/public-run2.stderr.log",
+        "bytes": 4653,
+        "sha256": "28035736c4317ac03ecba87be09b1c9c231e4f6b61b5e0ba568a35c0cda030ac"
+      },
+      "result": {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-memory-gateway-v2/logs/public-run2-results.json",
+        "bytes": 13339,
+        "sha256": "b55e004769a0376e7e233e42c8e513d312ccd55c2143c32994338b778a2a0460"
+      },
+      "passed": 25,
+      "failed": 0,
+      "pending": 0,
+      "suites": 1
+    },
+    {
+      "name": "public-types1",
+      "commandReceipt": {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-memory-gateway-v2/logs/public-types1-command.json",
+        "bytes": 338,
+        "sha256": "666b6147e478b8174710e1136b79e4d8c31a9d4dfe83ba8a04c1c88108baaa11"
+      },
+      "exitCode": 2,
+      "elapsedSeconds": 6.1504199504852295,
+      "stdout": {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-memory-gateway-v2/logs/public-types1.stdout.log",
+        "bytes": 3450,
+        "sha256": "00966175bf9c4da3e6cbb39aea4f6c9aacad2c19bac27313a56408618e1226f7"
+      },
+      "stderr": {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-memory-gateway-v2/logs/public-types1.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "public-types2",
+      "commandReceipt": {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-memory-gateway-v2/logs/public-types2-command.json",
+        "bytes": 337,
+        "sha256": "35f60c4cd01aa31dc2b4423f6cdc89f43a36045e8148420e4a659421ede38fc3"
+      },
+      "exitCode": 0,
+      "elapsedSeconds": 6.710294008255005,
+      "stdout": {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-memory-gateway-v2/logs/public-types2.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-memory-gateway-v2/logs/public-types2.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "public-lint1",
+      "commandReceipt": {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-memory-gateway-v2/logs/public-lint1-command.json",
+        "bytes": 549,
+        "sha256": "24ae5dc9472478f93f918160c095807ca2822714988ed0893982fef682edff20"
+      },
+      "exitCode": 0,
+      "elapsedSeconds": 2.5675840377807617,
+      "stdout": {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-memory-gateway-v2/logs/public-lint1.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-memory-gateway-v2/logs/public-lint1.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "public-lint2",
+      "commandReceipt": {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-memory-gateway-v2/logs/public-lint2-command.json",
+        "bytes": 549,
+        "sha256": "8d05e0ddbb9b38c2c1e75133b2d177c919bbb51ff8e53991f1a62995c1903751"
+      },
+      "exitCode": 0,
+      "elapsedSeconds": 2.8327291011810303,
+      "stdout": {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-memory-gateway-v2/logs/public-lint2.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-memory-gateway-v2/logs/public-lint2.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  ],
+  "ownedTestPins": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeMemory/fixture.ts",
+      "bytes": 7188,
+      "sha256": "7a6da377c5c1be51445dc1cc8561a005af5b882d7e870b039f8c509c47f430f7"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeMemory/public-boundary.test.ts",
+      "bytes": 12798,
+      "sha256": "3b1ca003ec8724e4d720fd20135068a735684b36fdf1eeacf6d09742665580bc"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeMemory/public-closure.test.ts",
+      "bytes": 10202,
+      "sha256": "065de39fed1f1d20617a23d7e8cc52dc66671e5fc9fdb57f9f0308518839debc"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeMemory/public-functional.test.ts",
+      "bytes": 15024,
+      "sha256": "f3f9376f90eb961eff7fa782f3c6d46d74155b248d84e1ea53b47642bad7ab26"
+    }
+  ],
+  "currentProductPinsObservedAfterChecks": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemory.ts",
+      "bytes": 14094,
+      "sha256": "628bab002d9f906710fd2f43ccd88129e9575bdfe53819a6e075d8671bab261a"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryServices.ts",
+      "bytes": 8399,
+      "sha256": "3abc22ad358d1e760e409bd05315e4677216b4f18fbcf43c7873862c05e2bcb8"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryRepository.ts",
+      "bytes": 24131,
+      "sha256": "74e3db54fa9f1e5794b38b2d25ae7bed06341bf06cf1ba438ca3424605e42833"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryGateway.ts",
+      "bytes": 8203,
+      "sha256": "b6fcfd133cc54139496977274cb491055e0b7ed378b4cd6a6ab91a28c4e525cc"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeGatewayBackend.ts",
+      "bytes": 4492,
+      "sha256": "53f21893a8584c2703d9713e135f8d7eb90621c3e5f9deb5fc93a7ea2062fd99"
+    }
+  ],
+  "preservedPriorReportPins": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-memory-gateway-v2/tests-report.json",
+      "bytes": 25815,
+      "sha256": "ab7a0edb2edd9519894cff94bc52d8d0a599df0171fe4fbc582579a53ce49184"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-memory-gateway-v2/tests-report.md",
+      "bytes": 4262,
+      "sha256": "1c9b553c3fcfcc8a7cd62e24b62105e95f56e43707e0a36e779983cd1dec1780"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-memory-gateway-v2/logs/followup-report1.json",
+      "bytes": 18542,
+      "sha256": "9dbb4270886842ae41c8bd7f3e89af9648023fe40b6dd365642c7660b443cfcc"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-memory-gateway-v2/logs/followup-report1.md",
+      "bytes": 2836,
+      "sha256": "8f1985b920896123b76199abe3b29570c0fffddfbd03d2f3bc51793cfdc1e858"
+    }
+  ],
+  "productEditsByThisTask": [],
+  "remainingLimitations": [
+    "Offline controlled model/policy is not actual Gateway/service/price or deployment acceptance.",
+    "Current-production trust root readiness and whole Task02/04/goal completion remain Root-owned separate evidence."
+  ],
+  "remainingWrites": []
+}

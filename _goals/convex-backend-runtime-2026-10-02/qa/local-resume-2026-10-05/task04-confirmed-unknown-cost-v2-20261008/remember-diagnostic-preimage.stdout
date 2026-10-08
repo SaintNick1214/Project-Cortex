@@ -1,0 +1,7 @@
+{
+  "error": {
+    "message": "ArgumentValidationError: Object contains extra field `role` that is not in the validator.\nPath: .source\nObject: {contentHash: \"82181612f14ed9b80934f575476412e58e7f2846580870375a9fc36fb6beed95\", role: \"user\", sourceEventId: \"explicit:[\\\"task04-diagnostic-5bfe0c22\\\",\\\"qualification\\\",\\\"md7355f0pj8v125110q33sn95x8fwa9d\\\",\\\"diagnostic-preimage\\\"]\", sourceId: \"explicit:[\\\"task04-diagnostic-5bfe0c22\\\",\\\"qualification\\\",\\\"md7355f0pj8v125110q33sn95x8fwa9d\\\",\\\"diagnostic-preimage\\\"]\", sourceRevision: 1.0, trust: \"user_assertion\"}\nValidator: v.object({contentHash: v.string(), sourceEventId: v.string(), sourceId: v.string(), sourceRevision: v.float64()})\n\n",
+    "name": "Error",
+    "stack": "    at async resolve [as resolve] (../../convex-dev/runtimeGatewayBackend.ts:49:10)\n    at async prepare (../../convex-dev/runtimeMemoryGateway.ts:71:11)\n    at async text (../../convex-dev/runtimeMemoryGateway.ts:75:8)\n    at async extract [as extract] (../../convex-dev/runtimeMemoryGateway.ts:101:10)\n    at async extractSourceFacts (../../src/domain/sources.ts:205:7)\n    at async rememberMemory (../../convex-dev/runtimeMemoryServices.ts:44:44)\n    at async handler (../convex-dev/qualification.ts:99:9)"
+  }
+}

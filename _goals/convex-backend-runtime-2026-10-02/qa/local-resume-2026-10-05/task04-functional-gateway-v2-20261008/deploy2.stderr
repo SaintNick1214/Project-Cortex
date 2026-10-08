@@ -1,0 +1,36 @@
+✔ Provisioned a dev deployment and saved its:
+    client URL as CONVEX_URL
+    HTTP actions URL as CONVEX_SITE_URL
+ to .env.local
+  Added ".env.local" to .gitignore
+
+Write your Convex functions in convex-dev/
+Give us feedback at https://convex.dev/community or support@convex.dev
+View the Convex dashboard at https://dashboard.convex.dev/d/fearless-ox-413
+
+▌ Developing against deployment:
+▌ [Development] nicholasgeil:cortex-gateway-v2-2c44fb8e29a8:dev/nicholasgeil (dev) (dashboard: https://dashboard.convex.dev/t/nicholasgeil/cortex-gateway-v2-2c44fb8e29a8/fearless-ox-413)
+▌ └─ https://fearless-ox-413.convex.cloud
+- Preparing Convex functions...
+
+Convex AI files are not installed. Run npx convex ai-files install to get started or npx convex ai-files disable to hide this message.
+✖ TypeScript typecheck via `tsc` failed.
+To ignore failing typecheck, use `--typecheck=disable`.
+- Collecting TypeScript errors
+
+[96mconvex-dev/qualification.ts[0m:[93m44[0m:[93m35[0m - [91merror[0m[90m TS2345: [0mArgument of type 'FunctionReference<FunctionType, "public", any, any, string | undefined>' is not assignable to parameter of type 'FunctionReference<"query", "public" | "internal"> | FunctionReference_future<"query", "public" | "internal">'.
+  Type 'FunctionReference<FunctionType, "public", any, any, string | undefined>' is not assignable to type 'FunctionReference<"query", "public" | "internal">'.
+    Type 'FunctionType' is not assignable to type '"query"'.
+      Type '"action"' is not assignable to type '"query"'.
+
+[7m44[0m   const before=await ctx.runQuery(fixtureRef('state'),{reference:args.reference});
+[7m  [0m [91m                                  ~~~~~~~~~~~~~~~~~~~[0m
+[96mconvex-dev/qualification.ts[0m:[93m62[0m:[93m34[0m - [91merror[0m[90m TS2345: [0mArgument of type 'FunctionReference<FunctionType, "public", any, any, string | undefined>' is not assignable to parameter of type 'FunctionReference<"query", "public" | "internal"> | FunctionReference_future<"query", "public" | "internal">'.
+  Type 'FunctionReference<FunctionType, "public", any, any, string | undefined>' is not assignable to type 'FunctionReference<"query", "public" | "internal">'.
+    Type 'FunctionType' is not assignable to type '"query"'.
+      Type '"action"' is not assignable to type '"query"'.
+
+[7m62[0m   const after=await ctx.runQuery(fixtureRef('state'),{reference:args.reference});
+[7m  [0m [91m                                 ~~~~~~~~~~~~~~~~~~~[0m
+
+Found 2 errors in the same file, starting at: convex-dev/qualification.ts[90m:44[0m

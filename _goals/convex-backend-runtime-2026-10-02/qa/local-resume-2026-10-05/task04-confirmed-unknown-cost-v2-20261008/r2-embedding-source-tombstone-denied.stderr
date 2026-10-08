@@ -1,0 +1,11 @@
+✖ Failed to run function "qualification:exercise":
+ConvexError: [Request ID: cbb9b39657929954] Server Error
+Uncaught ConvexError: {"version":1,"code":"FORBIDDEN","message":"Source was deleted","retryable":false,"outcome":"not_dispatched"}
+    at memoryError (../../convex-dev/runtimeMemoryRepository.ts:35:0)
+    at getSource [as getSource] (../../convex-dev/runtimeMemoryRepository.ts:99:2)
+    at async checkSource (../convex-dev/runtimeModelPolicy.ts:114:51)
+    at async handler (../convex-dev/runtimeModelPolicy.ts:422:4)
+
+    at async resolve [as resolve] (../../convex-dev/runtimeGatewayBackend.ts:49:10)
+    at async createGovernedGatewayModel (../../convex-dev/runtimeGateway.ts:282:184)
+    at async handler (../convex-dev/qualification.ts:57:5)

@@ -1,0 +1,304 @@
+{
+  "after": {
+    "accounts": [
+      {
+        "_id": "ms77ygar868t62x8976hmdb6fd8fxj08",
+        "activeConcurrency": 1,
+        "cancelled": false,
+        "concurrencyLimit": 2,
+        "kind": "tenant",
+        "limitUnits": 10000000,
+        "overrun": false,
+        "reservedUnits": 100000,
+        "settledUnits": 0,
+        "uncertainUnits": 0
+      },
+      {
+        "_id": "ms78gmw642j4y8tyhty5m7vt7s8fxckq",
+        "activeConcurrency": 1,
+        "cancelled": false,
+        "concurrencyLimit": 2,
+        "kind": "run",
+        "limitUnits": 2000000,
+        "overrun": false,
+        "reservedUnits": 100000,
+        "runBudgetId": "c436068011c83e54d0342f99cf198bf566e398dcb5706115754b6622a0f20b43",
+        "settledUnits": 0,
+        "uncertainUnits": 0
+      }
+    ],
+    "attempts": [
+      {
+        "_id": "nd7arj497krh70dcczt92dhnzx8fx1xg",
+        "dispatchIdentity": "1be5eec841bc2370cc22cac09a85ee51e259a9fcc77a4555925432ec832fcdc9",
+        "operationDocumentId": "nh7e0rwmxk0y9d177csemfee758fw9pa",
+        "ordinal": 0,
+        "privateResultBytes": 0,
+        "receipt": null,
+        "reservationUnits": 100000,
+        "resultWithheld": false,
+        "slotReleased": false,
+        "state": "reserved"
+      }
+    ],
+    "operations": [
+      {
+        "_id": "nh7e0rwmxk0y9d177csemfee758fw9pa",
+        "operationKey": "agent.respond",
+        "reservedUnits": 100000,
+        "semanticId": "fresh-dedup3",
+        "settledUnits": 0,
+        "snapshot": {
+          "allowedModels": [
+            "openai/gpt-4o-mini",
+            "openai/gpt-4o",
+            "openai/text-embedding-3-small"
+          ],
+          "allowedOptions": [],
+          "allowedTools": [],
+          "capabilities": [
+            "text",
+            "structured"
+          ],
+          "costBound": {
+            "coversAllProviderCharges": true,
+            "kind": "qualified-call-ceiling",
+            "maximumCostUnits": 100000,
+            "provenance": "provisional fixture ceiling $0.10 at 4096 input/512 output; not production attestation"
+          },
+          "currency": "USD",
+          "fallbackCandidates": [],
+          "limits": {
+            "concurrency": 2,
+            "contextTokens": 8192,
+            "inputTokens": 4096,
+            "operationBudgetUnits": 200000,
+            "outputTokens": 512,
+            "runBudgetUnits": 2000000,
+            "tenantBudgetUnits": 10000000,
+            "timeoutMs": 60000,
+            "toolSteps": 0
+          },
+          "modelId": "openai/gpt-4o-mini",
+          "monetaryUnit": "micro-USD",
+          "nativeInterface": "chat",
+          "operationKey": "agent.respond",
+          "pins": {
+            "boundRevision": "provisional-4096-512-v1",
+            "extractionVersion": "task04-qualification-e1",
+            "priceRevision": "openrouter-2026-10-08-candidate",
+            "promptVersion": "task04-qualification-p1",
+            "schemaVersion": "facts-v1",
+            "toolRegistryVersion": "none-v1"
+          },
+          "policyVersions": [
+            {
+              "policyId": "fixture-default",
+              "version": 2
+            }
+          ],
+          "qualificationReceiptId": "provisional-2c44fb8e-29a8-4168-b5ce-33f36eb1fdfc-0",
+          "requestedModelId": "openai/gpt-4o-mini",
+          "runBudgetId": "c436068011c83e54d0342f99cf198bf566e398dcb5706115754b6622a0f20b43",
+          "scope": {
+            "grantId": "m575hba0psghgn2spcv5vz18ps8fwzka",
+            "grantVersion": 1,
+            "membershipId": "m970nec7xxw2m29nk902eghwq18fx3nd",
+            "membershipVersion": 1,
+            "memorySpaceEpoch": 1,
+            "memorySpaceId": "qualification",
+            "principalId": "md70jgve20t4afvqyce14tktb98fx5vf",
+            "principalVersion": 1,
+            "tenantEpoch": 1,
+            "tenantId": "task04-2c44fb8e-29a8-4168-b5ce-33f36eb1fdfc-dedup3"
+          },
+          "version": 1
+        },
+        "uncertainUnits": 0
+      }
+    ]
+  },
+  "before": {
+    "accounts": [
+      {
+        "_id": "ms77ygar868t62x8976hmdb6fd8fxj08",
+        "activeConcurrency": 0,
+        "cancelled": false,
+        "concurrencyLimit": 2,
+        "kind": "tenant",
+        "limitUnits": 10000000,
+        "overrun": false,
+        "reservedUnits": 0,
+        "settledUnits": 0,
+        "uncertainUnits": 0
+      },
+      {
+        "_id": "ms78gmw642j4y8tyhty5m7vt7s8fxckq",
+        "activeConcurrency": 0,
+        "cancelled": false,
+        "concurrencyLimit": 2,
+        "kind": "run",
+        "limitUnits": 2000000,
+        "overrun": false,
+        "reservedUnits": 0,
+        "runBudgetId": "c436068011c83e54d0342f99cf198bf566e398dcb5706115754b6622a0f20b43",
+        "settledUnits": 0,
+        "uncertainUnits": 0
+      }
+    ],
+    "attempts": [],
+    "operations": []
+  },
+  "binding": {
+    "operationKey": "agent.respond",
+    "ordinal": 0,
+    "reference": {
+      "grantId": "m575hba0psghgn2spcv5vz18ps8fwzka",
+      "grantVersion": 1,
+      "membershipId": "m970nec7xxw2m29nk902eghwq18fx3nd",
+      "membershipVersion": 1,
+      "memorySpaceEpoch": 1,
+      "memorySpaceId": "qualification",
+      "principalId": "md70jgve20t4afvqyce14tktb98fx5vf",
+      "principalVersion": 1,
+      "tenantEpoch": 1,
+      "tenantId": "task04-2c44fb8e-29a8-4168-b5ce-33f36eb1fdfc-dedup3"
+    },
+    "runBudgetId": "c436068011c83e54d0342f99cf198bf566e398dcb5706115754b6622a0f20b43",
+    "semanticId": "fresh-dedup3"
+  },
+  "completionError": null,
+  "error": {
+    "code": "UNCERTAIN_OR_INFLIGHT",
+    "name": "GatewayDispatchError"
+  },
+  "events": [
+    {
+      "at": 1791446356430,
+      "phase": "admit",
+      "state": {
+        "accounts": [
+          {
+            "_id": "ms77ygar868t62x8976hmdb6fd8fxj08",
+            "activeConcurrency": 1,
+            "cancelled": false,
+            "concurrencyLimit": 2,
+            "kind": "tenant",
+            "limitUnits": 10000000,
+            "overrun": false,
+            "reservedUnits": 100000,
+            "settledUnits": 0,
+            "uncertainUnits": 0
+          },
+          {
+            "_id": "ms78gmw642j4y8tyhty5m7vt7s8fxckq",
+            "activeConcurrency": 1,
+            "cancelled": false,
+            "concurrencyLimit": 2,
+            "kind": "run",
+            "limitUnits": 2000000,
+            "overrun": false,
+            "reservedUnits": 100000,
+            "runBudgetId": "c436068011c83e54d0342f99cf198bf566e398dcb5706115754b6622a0f20b43",
+            "settledUnits": 0,
+            "uncertainUnits": 0
+          }
+        ],
+        "attempts": [
+          {
+            "_id": "nd7arj497krh70dcczt92dhnzx8fx1xg",
+            "dispatchIdentity": "1be5eec841bc2370cc22cac09a85ee51e259a9fcc77a4555925432ec832fcdc9",
+            "operationDocumentId": "nh7e0rwmxk0y9d177csemfee758fw9pa",
+            "ordinal": 0,
+            "privateResultBytes": 0,
+            "receipt": null,
+            "reservationUnits": 100000,
+            "resultWithheld": false,
+            "slotReleased": false,
+            "state": "reserved"
+          }
+        ],
+        "operations": [
+          {
+            "_id": "nh7e0rwmxk0y9d177csemfee758fw9pa",
+            "operationKey": "agent.respond",
+            "reservedUnits": 100000,
+            "semanticId": "fresh-dedup3",
+            "settledUnits": 0,
+            "snapshot": {
+              "allowedModels": [
+                "openai/gpt-4o-mini",
+                "openai/gpt-4o",
+                "openai/text-embedding-3-small"
+              ],
+              "allowedOptions": [],
+              "allowedTools": [],
+              "capabilities": [
+                "text",
+                "structured"
+              ],
+              "costBound": {
+                "coversAllProviderCharges": true,
+                "kind": "qualified-call-ceiling",
+                "maximumCostUnits": 100000,
+                "provenance": "provisional fixture ceiling $0.10 at 4096 input/512 output; not production attestation"
+              },
+              "currency": "USD",
+              "fallbackCandidates": [],
+              "limits": {
+                "concurrency": 2,
+                "contextTokens": 8192,
+                "inputTokens": 4096,
+                "operationBudgetUnits": 200000,
+                "outputTokens": 512,
+                "runBudgetUnits": 2000000,
+                "tenantBudgetUnits": 10000000,
+                "timeoutMs": 60000,
+                "toolSteps": 0
+              },
+              "modelId": "openai/gpt-4o-mini",
+              "monetaryUnit": "micro-USD",
+              "nativeInterface": "chat",
+              "operationKey": "agent.respond",
+              "pins": {
+                "boundRevision": "provisional-4096-512-v1",
+                "extractionVersion": "task04-qualification-e1",
+                "priceRevision": "openrouter-2026-10-08-candidate",
+                "promptVersion": "task04-qualification-p1",
+                "schemaVersion": "facts-v1",
+                "toolRegistryVersion": "none-v1"
+              },
+              "policyVersions": [
+                {
+                  "policyId": "fixture-default",
+                  "version": 2
+                }
+              ],
+              "qualificationReceiptId": "provisional-2c44fb8e-29a8-4168-b5ce-33f36eb1fdfc-0",
+              "requestedModelId": "openai/gpt-4o-mini",
+              "runBudgetId": "c436068011c83e54d0342f99cf198bf566e398dcb5706115754b6622a0f20b43",
+              "scope": {
+                "grantId": "m575hba0psghgn2spcv5vz18ps8fwzka",
+                "grantVersion": 1,
+                "membershipId": "m970nec7xxw2m29nk902eghwq18fx3nd",
+                "membershipVersion": 1,
+                "memorySpaceEpoch": 1,
+                "memorySpaceId": "qualification",
+                "principalId": "md70jgve20t4afvqyce14tktb98fx5vf",
+                "principalVersion": 1,
+                "tenantEpoch": 1,
+                "tenantId": "task04-2c44fb8e-29a8-4168-b5ce-33f36eb1fdfc-dedup3"
+              },
+              "version": 1
+            },
+            "uncertainUnits": 0
+          }
+        ]
+      },
+      "status": "inflight"
+    }
+  ],
+  "modelId": "openai/gpt-4o-mini",
+  "operationKey": "agent.respond",
+  "result": null
+}

@@ -1,0 +1,96 @@
+{
+  "label": "installed-recall-replay",
+  "fn": "runtimeMemory:recall",
+  "args": {
+    "tenantId": "task04-installed-5bfe0c22",
+    "memorySpaceId": "qualification",
+    "text": "What tea does the user prefer?",
+    "requestId": "installed-recall-v1",
+    "limit": 5
+  },
+  "result": {
+    "context": "## Relevant Context\n\n### Known Facts\n- User prefers jasmine tea. (confidence: 100%, recorded: just now)\n\n### Conversation History\n[user]: The user prefers jasmine tea.",
+    "items": [
+      {
+        "content": "User prefers jasmine tea.",
+        "fact": {
+          "_id": "k57dwy8cwp9st7mfavpsev6pg98fxy2k",
+          "confidence": 100,
+          "createdAt": 1791450997353,
+          "entities": [
+            {
+              "fullValue": "jasmine tea",
+              "name": "jasmine tea",
+              "type": "product"
+            }
+          ],
+          "extractionPolicyVersion": "source-attributed-facts-v1",
+          "fact": "User prefers jasmine tea.",
+          "factId": "ac279f2bcd9a4011012d0cd33ed6edc4a94b6246ef2a11125ad089e0a928982a",
+          "factType": "preference",
+          "lineage": {
+            "role": "user",
+            "sourceEventId": "explicit:[\"task04-installed-5bfe0c22\",\"qualification\",\"md71byca9hnyrjqsgpj0pqvn9x8fw570\",\"installed-jasmine-v1\"]",
+            "sourceId": "explicit:[\"task04-installed-5bfe0c22\",\"qualification\",\"md71byca9hnyrjqsgpj0pqvn9x8fw570\",\"installed-jasmine-v1\"]",
+            "sourceRevision": 1,
+            "trust": "user_assertion"
+          },
+          "memorySpaceId": "qualification",
+          "object": "jasmine tea",
+          "ownerPrincipalId": "md71byca9hnyrjqsgpj0pqvn9x8fw570",
+          "predicate": "prefers",
+          "sourceType": "manual",
+          "subject": "User",
+          "tags": [],
+          "tenantId": "task04-installed-5bfe0c22",
+          "updatedAt": 1791450997353,
+          "version": 1
+        },
+        "graphContext": {
+          "connectedEntities": [
+            "User",
+            "jasmine tea"
+          ]
+        },
+        "id": "ac279f2bcd9a4011012d0cd33ed6edc4a94b6246ef2a11125ad089e0a928982a",
+        "score": 0.8137232416707607,
+        "source": "facts",
+        "type": "fact"
+      },
+      {
+        "content": "The user prefers jasmine tea.",
+        "graphContext": {
+          "connectedEntities": []
+        },
+        "id": "db9861757c2e10befae342b8949bb379e88428ad90df7719e062b7cd7d14efb6",
+        "memory": {
+          "_id": "55fe60b443321350fb85d1372bf678f2eda9417b96fe2bf82706f47b1f3ca827",
+          "accessCount": 0,
+          "content": "The user prefers jasmine tea.",
+          "contentType": "raw",
+          "createdAt": 1791450997353,
+          "importance": 50,
+          "memoryId": "db9861757c2e10befae342b8949bb379e88428ad90df7719e062b7cd7d14efb6",
+          "memorySpaceId": "qualification",
+          "messageRole": "user",
+          "previousVersions": [],
+          "sourceTimestamp": 1791450997353,
+          "sourceType": "conversation",
+          "tags": [],
+          "tenantId": "task04-installed-5bfe0c22",
+          "updatedAt": 1791450997353,
+          "userId": "md71byca9hnyrjqsgpj0pqvn9x8fw570",
+          "version": 1
+        },
+        "score": 0.7068207108955862,
+        "source": "vector",
+        "type": "memory"
+      }
+    ],
+    "profileId": "cortex-text-small-1536-v1"
+  },
+  "error": null,
+  "elapsedMs": 376,
+  "target": "groovy-bird-988",
+  "actualJwt": true
+}

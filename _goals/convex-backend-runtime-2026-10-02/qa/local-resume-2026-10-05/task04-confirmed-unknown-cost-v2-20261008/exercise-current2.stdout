@@ -1,0 +1,22 @@
+{"label":"r2-authority-current","code":0,"signal":null,"timedOut":false,"elapsedMs":613,"stdoutBytes":554,"stderrBytes":0}
+{"label":"r2-catalog-current","code":0,"signal":null,"timedOut":false,"elapsedMs":1008,"stdoutBytes":324,"stderrBytes":0}
+{"label":"r2-chat-current","code":0,"signal":null,"timedOut":false,"elapsedMs":1907,"stdoutBytes":15967,"stderrBytes":0}
+{"label":"r2-chat-current-replay","code":0,"signal":null,"timedOut":false,"elapsedMs":863,"stdoutBytes":13666,"stderrBytes":0}
+{"label":"r2-title-current","code":0,"signal":null,"timedOut":false,"elapsedMs":2384,"stdoutBytes":30467,"stderrBytes":0}
+{"label":"r2-embedding-current","code":0,"signal":null,"timedOut":false,"elapsedMs":1845,"stdoutBytes":45562,"stderrBytes":0}
+{"label":"r2-embedding-current-replay","code":0,"signal":null,"timedOut":false,"elapsedMs":1162,"stdoutBytes":82437,"stderrBytes":0}
+{"label":"r2-embedding-source-current","code":0,"signal":null,"timedOut":false,"elapsedMs":1457,"stdoutBytes":61533,"stderrBytes":0}
+{"label":"r2-source-current-tombstone","code":0,"signal":null,"timedOut":false,"elapsedMs":755,"stdoutBytes":63,"stderrBytes":0}
+{"label":"r2-embedding-source-tombstone-denied","code":1,"signal":null,"timedOut":false,"elapsedMs":847,"stdoutBytes":0,"stderrBytes":758}
+✖ Failed to run function "qualification:exercise":
+ConvexError: [Request ID: cbb9b39657929954] Server Error
+Uncaught ConvexError: {"version":1,"code":"FORBIDDEN","message":"Source was deleted","retryable":false,"outcome":"not_dispatched"}
+    at memoryError (../../convex-dev/runtimeMemoryRepository.ts:35:0)
+    at getSource [as getSource] (../../convex-dev/runtimeMemoryRepository.ts:99:2)
+    at async checkSource (../convex-dev/runtimeModelPolicy.ts:114:51)
+    at async handler (../convex-dev/runtimeModelPolicy.ts:422:4)
+
+    at async resolve [as resolve] (../../convex-dev/runtimeGatewayBackend.ts:49:10)
+    at async createGovernedGatewayModel (../../convex-dev/runtimeGateway.ts:282:184)
+    at async handler (../convex-dev/qualification.ts:57:5)
+

@@ -1,0 +1,94 @@
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     3.0s | 36/36 passed | /tests/unit/runtimeMemory/repository.test.ts
+  ✅     0.8s | 176/176 passed | /tests/unit/runtimeMemory/public-boundary.test.ts
+  ✅     0.6s | 25/25 passed | /tests/unit/runtimeMemory/public-functional.test.ts
+  ✅     0.6s | 17/17 passed | /tests/unit/runtimeMemory/services.test.ts
+  ✅     0.6s | 67/67 passed | /tests/unit/runtimeMemory/public-closure.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.01s ( 0.1%) - functional public memory wiring with an offline model preflights exact trusted request before writing, then remembers and recalls real scoped data
+    /tests/unit/runtimeMemory/public-functional.test.ts
+
+ 2. [32m✓[0m    0.01s ( 0.1%) - native remember control boundary projects the actual14-field native auth result to frozen10-field reference
+    /tests/unit/runtimeMemory/public-boundary.test.ts
+
+ 3. [32m✓[0m    0.01s ( 0.1%) - native remember control boundary malformed runtimeAuth:authorize result is opaque ({})
+    /tests/unit/runtimeMemory/public-boundary.test.ts
+
+ 4. [32m✓[0m    0.01s ( 0.1%) - modern backend memory services persists normalized source/chunks/vectors and authoritative facts with one confidence conversion
+    /tests/unit/runtimeMemory/services.test.ts
+
+ 5. [32m✓[0m    0.00s ( 0.1%) - scoped Convex memory persistence selects actual canonical source in trusted tenant/space despite a foreign duplicate ID inserted first
+    /tests/unit/runtimeMemory/repository.test.ts
+
+ 6. [32m✓[0m    0.00s ( 0.1%) - scoped Convex memory persistence rejects incompatible queries before search and revoked refs before any result
+    /tests/unit/runtimeMemory/repository.test.ts
+
+ 7. [32m✓[0m    0.00s ( 0.1%) - functional public memory wiring with an offline model rejects changed remember input before persistence or a second model invocation
+    /tests/unit/runtimeMemory/public-functional.test.ts
+
+ 8. [32m✓[0m    0.00s ( 0.1%) - functional public memory wiring with an offline model revocation after extraction prevents embedding and derived commit without a false no-dispatch claim
+    /tests/unit/runtimeMemory/public-functional.test.ts
+
+ 9. [32m✓[0m    0.00s ( 0.1%) - registered public remember foundation closure denies membership.deletedAt at late control boundary
+    /tests/unit/runtimeMemory/public-closure.test.ts
+
+10. [32m✓[0m    0.00s ( 0.1%) - scoped Convex memory persistence checks every conflict candidate CAS and rolls back the full registered mutation on mismatch
+    /tests/unit/runtimeMemory/repository.test.ts
+
+11. [32m✓[0m    0.00s ( 0.1%) - functional public memory wiring with an offline model reuses normalized request account and derived receipt without duplicate persistent data
+    /tests/unit/runtimeMemory/public-functional.test.ts
+
+12. [32m✓[0m    0.00s ( 0.1%) - functional public memory wiring with an offline model post-query-model failure does not return a partial recall or leak provider diagnostics
+    /tests/unit/runtimeMemory/public-functional.test.ts
+
+13. [32m✓[0m    0.00s ( 0.1%) - modern backend memory services replays identical normalized source/derived payload without duplicate facts or receipts
+    /tests/unit/runtimeMemory/services.test.ts
+
+14. [32m✓[0m    0.00s ( 0.1%) - modern backend memory services uses actual scoped internal selection and shared ranking/context for recall
+    /tests/unit/runtimeMemory/services.test.ts
+
+15. [32m✓[0m    0.00s ( 0.0%) - scoped Convex memory persistence commits source-derived chunk/vector/fact and one receipt atomically and idempotently
+    /tests/unit/runtimeMemory/repository.test.ts
+
+16. [32m✓[0m    0.00s ( 0.0%) - scoped Convex memory persistence compares receipt canonical payload on reuse instead of accepting just its hash
+    /tests/unit/runtimeMemory/repository.test.ts
+
+17. [32m✓[0m    0.00s ( 0.0%) - scoped Convex memory persistence space-sharing uses exact scope/profile prefilter while retaining explicit owner checks
+    /tests/unit/runtimeMemory/repository.test.ts
+
+18. [32m✓[0m    0.00s ( 0.0%) - native remember control boundary preserves the late principal generation fence across native RPC
+    /tests/unit/runtimeMemory/public-boundary.test.ts
+
+19. [32m✓[0m    0.00s ( 0.0%) - native remember control boundary preserves the late membership generation fence across native RPC
+    /tests/unit/runtimeMemory/public-boundary.test.ts
+
+20. [32m✓[0m    0.00s ( 0.0%) - native remember control boundary preserves the late grant generation fence across native RPC
+    /tests/unit/runtimeMemory/public-boundary.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.07s (1.2% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      5.84s
+  Test suites:        5
+  Individual tests:   152
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 5
+════════════════════════════════════════════════════════════════════════════════
+

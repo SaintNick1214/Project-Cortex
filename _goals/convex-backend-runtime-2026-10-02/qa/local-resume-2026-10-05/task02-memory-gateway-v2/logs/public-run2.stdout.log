@@ -1,0 +1,66 @@
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     2.9s | 25/25 passed | /tests/unit/runtimeMemory/public-functional.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.01s ( 0.4%) - functional public memory wiring with an offline model preflights exact trusted request before writing, then remembers and recalls real scoped data
+    /tests/unit/runtimeMemory/public-functional.test.ts
+
+ 2. [32m✓[0m    0.01s ( 0.2%) - functional public memory wiring with an offline model invalid request ID stops before budget and persistence after authority
+    /tests/unit/runtimeMemory/public-functional.test.ts
+
+ 3. [32m✓[0m    0.00s ( 0.1%) - functional public memory wiring with an offline model rejects changed remember input before persistence or a second model invocation
+    /tests/unit/runtimeMemory/public-functional.test.ts
+
+ 4. [32m✓[0m    0.00s ( 0.1%) - functional public memory wiring with an offline model post-query-model failure does not return a partial recall or leak provider diagnostics
+    /tests/unit/runtimeMemory/public-functional.test.ts
+
+ 5. [32m✓[0m    0.00s ( 0.1%) - functional public memory wiring with an offline model reuses normalized request account and derived receipt without duplicate persistent data
+    /tests/unit/runtimeMemory/public-functional.test.ts
+
+ 6. [32m✓[0m    0.00s ( 0.1%) - functional public memory wiring with an offline model rejects changed recall input before persistence or a second model invocation
+    /tests/unit/runtimeMemory/public-functional.test.ts
+
+ 7. [32m✓[0m    0.00s ( 0.0%) - functional public memory wiring with an offline model binds recall limit in the exact request before model dispatch
+    /tests/unit/runtimeMemory/public-functional.test.ts
+
+ 8. [32m✓[0m    0.00s ( 0.0%) - functional public memory wiring with an offline model ready policy cannot bypass missing identity
+    /tests/unit/runtimeMemory/public-functional.test.ts
+
+ 9. [32m✓[0m    0.00s ( 0.0%) - functional public memory wiring with an offline model invalid recall limit 101 stops before budget or query model
+    /tests/unit/runtimeMemory/public-functional.test.ts
+
+10. [32m✓[0m    0.00s ( 0.0%) - functional public memory wiring with an offline model revocation after extraction prevents embedding and derived commit without a false no-dispatch claim
+    /tests/unit/runtimeMemory/public-functional.test.ts
+
+11. [32m✓[0m    0.00s ( 0.0%) - functional public memory wiring with an offline model post-model provider error stays opaque and uncertain with no derived commit
+    /tests/unit/runtimeMemory/public-functional.test.ts
+
+12. [32m✓[0m    0.00s ( 0.0%) - functional public memory wiring with an offline model post-model malformed extraction stays opaque and uncertain with no derived commit
+    /tests/unit/runtimeMemory/public-functional.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.04s (1.1% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      3.06s
+  Test suites:        1
+  Individual tests:   12
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+

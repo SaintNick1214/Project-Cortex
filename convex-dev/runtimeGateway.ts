@@ -10,6 +10,9 @@ import { canonicalModelJson, validateModelRequest } from "../src/domain/model-po
 import type { ModelCallRequest, ModelOperationKey, ModelPolicySnapshotV1 } from "../src/domain/model-policy";
 import { assertEmbeddingVector, assertProfileMatches, DEFAULT_EMBEDDING_PROFILE, normalizeSourceText } from "../src/domain/profile";
 import type { QualifiedDispatchEvidence } from "./runtimeModelPolicyBootstrap";
+import { qualifiedTerminalModelId } from "./runtimeModelPolicyBootstrap";
+import { FACTS_JSON_SCHEMA } from "../src/domain/extraction";
+import { CONFLICT_DECISION_JSON_SCHEMA } from "../src/domain/conflicts";
 import type { Id } from "./_generated/dataModel";
 
 type AttemptId = Id<"runtimeModelAttempts">;
@@ -27,7 +30,7 @@ type Reserved = { status: "reserved"; operationId: OperationId; attemptId: Attem
 export type GatewayAdmission = Reserved | { status: "replay"; operationId: OperationId; resultCanonical: string }
   | { status: "inflight" | "uncertain"; operationId: OperationId; attemptId: AttemptId; replayAllowed?: false };
 export interface GatewayLedgerPort {
-  resolve(args: Pick<GatewayBinding, "reference" | "operationKey" | "runBudgetId" | "source">): Promise<GatewayResolution>;
+  resolve(args: Pick<GatewayBinding, "reference" | "operationKey" | "runBudgetId" | "source" | "parentOperationId">): Promise<GatewayResolution>;
   admit(args: GatewayBinding & { requestCanonical: string }): Promise<GatewayAdmission>;
   checkpoint(args: { reference: RuntimeAuthorityReference; attemptId: AttemptId; requestCanonical: string }): Promise<
     { dispatchPermit: true; dispatchIdentity: string; snapshot: ModelPolicySnapshotV1; requestCanonical: string }
@@ -193,7 +196,7 @@ export function conservativeUsdDecimal(value: unknown): string | undefined {
 }
 function proofFor(resolution: GatewayResolution, now: number): void {
   const { snapshot: s, dispatchEvidence: p, storageLimits: limits } = resolution;
-  if (p.receiptId !== s.qualificationReceiptId || p.modelId !== s.modelId || p.nativeInterface !== s.nativeInterface
+  if (qualifiedTerminalModelId(p) === undefined || p.receiptId !== s.qualificationReceiptId || p.modelId !== s.modelId || p.nativeInterface !== s.nativeInterface
     || p.providerVersion !== "0.2.1" || p.priceRevision !== s.pins.priceRevision || p.boundRevision !== s.pins.boundRevision
     || p.checkedAt > now || p.expiresAt <= now || p.terminalProof !== "provider-terminal-v1"
     || ![p.evidenceHash, p.inputBound.nativeTransformHash, p.inputBound.documentHash, p.inputBound.proofHash, p.resultBound.proofHash].every((h) => /^[a-f0-9]{64}$/.test(h))
@@ -236,6 +239,14 @@ function languageParams(input: LanguageModelV4CallOptions, s: ModelPolicySnapsho
   const request = requestBase(s, binding); request.messages = messages; request.texts = messages.map((m) => m.parts[0]!.type === "text" ? m.parts[0]!.text : "");
   request.inputTokens = 3 + messages.reduce((n, m, index) => n + 3 + utf8(m.role) + utf8(request.texts[index]!), 0);
   request.outputTokens = native.maxOutputTokens;
+  // Semantic schemas come from the operation contract, never caller provider options.
+  if (s.operationKey === "memory.extract") {
+    if (s.pins.schemaVersion !== "facts-v1") fail("CAPABILITY_UNAVAILABLE");
+    request.outputSchema = detached(FACTS_JSON_SCHEMA);
+  } else if (s.operationKey === "facts.resolve") {
+    if (s.pins.schemaVersion !== "conflicts-v1") fail("CAPABILITY_UNAVAILABLE");
+    request.outputSchema = detached(CONFLICT_DECISION_JSON_SCHEMA);
+  }
   for (const key of ["temperature", "topP", "seed", "stopSequences"] as const) if (native[key] !== undefined) Object.assign(request.options, { [key]: detached(native[key]) });
   const checked = validateModelRequest(s, request).request;
   return { request: detached(checked), params: nativeLanguage(checked, signal) };
@@ -274,8 +285,9 @@ export async function createGovernedGatewayModel(composition: GatewayComposition
     ? governGatewayEmbeddingModel(convexGateway.embeddingModel(resolution.snapshot.modelId), composition, binding, resolution)
     : governGatewayLanguageModel(convexGateway(resolution.snapshot.modelId), composition, binding, resolution);
 }
-function resolveArgs(binding: GatewayBinding): Pick<GatewayBinding, "reference" | "operationKey" | "runBudgetId" | "source"> {
-  return { reference: binding.reference, operationKey: binding.operationKey, runBudgetId: binding.runBudgetId, ...(binding.source ? { source: binding.source } : {}) };
+function resolveArgs(binding: GatewayBinding): Pick<GatewayBinding, "reference" | "operationKey" | "runBudgetId" | "source" | "parentOperationId"> {
+  return { reference: binding.reference, operationKey: binding.operationKey, runBudgetId: binding.runBudgetId,
+    ...(binding.source ? { source: binding.source } : {}), ...(binding.parentOperationId ? { parentOperationId: binding.parentOperationId } : {}) };
 }
 function requireSink(composition: GatewayComposition): void {
   if (!composition.terminalSink || typeof composition.terminalSink.capture !== "function") fail("DURABLE_TERMINAL_SINK_REQUIRED");
@@ -449,7 +461,7 @@ function stateFor(composition: GatewayComposition, inputBinding: GatewayBinding,
     utf8(id); utf8(actual);
     const admitted = validateModelRequest(attempt.snapshot, exactJSON(attempt.requestCanonical, resolution.storageLimits.canonicalBytes)).request;
     const observed = usage ? usageOf(usage) : {};
-    const nativeBoundViolation = actual !== resolution.snapshot.modelId
+    const nativeBoundViolation = actual !== qualifiedTerminalModelId(resolution.dispatchEvidence)
       || (observed.inputTokens !== undefined && observed.inputTokens > admitted.inputTokens)
       || (observed.outputTokens !== undefined && observed.outputTokens > admitted.outputTokens);
     if (nativeBoundViolation || !canDeliver()) privateResult = undefined;
@@ -463,7 +475,12 @@ function stateFor(composition: GatewayComposition, inputBinding: GatewayBinding,
     const ack = capturedAcknowledgment!;
     if (nativeBoundViolation || ("overrun" in ack && ack.overrun)) fail("QUALIFICATION_OVERRUN");
     if (!canDeliver()) assertDelivery();
-    if (!privateResult || ("state" in ack && ack.state !== "settled")) fail("TERMINAL_RESULT_WITHHELD");
+    // A complete matching result may be retained while its FULL qualified ceiling
+    // stays uncertain. Native attachment independently validates the same proof,
+    // usage, current grant/source and payload; it never settles or refunds money.
+    const confirmedUnknown = resolution.dispatchEvidence.terminalCost === "unavailable"
+      && observed.inputTokens !== undefined && (resolution.snapshot.nativeInterface === "embedding" || observed.outputTokens !== undefined);
+    if (!privateResult || ("state" in ack && ack.state !== "settled" && !(ack.state === "uncertain" && confirmedUnknown))) fail("TERMINAL_RESULT_WITHHELD");
     // Retain private bytes only when attachment is actually issued within the ORIGINAL deadline.
     if (Date.now() >= deadline) fail("TERMINAL_RECONCILIATION_PENDING");
     pendingAttachment = detached({ reference: binding.reference, attemptId: attempt.attemptId, evidenceId: ack.evidenceId, privateResultCanonical: privateResult });

@@ -1,15 +1,16 @@
 {
   "schema": "cortex.completion-tracking-validation.v1",
-  "timestamp_utc": "2026-10-08T07:46:19.929302+00:00",
+  "timestamp_utc": "2026-10-08T09:34:58.523793+00:00",
   "status": "PASS",
-  "milestone_count": 125,
+  "milestone_count": 130,
   "task_count": 17,
   "criteria_count": 61,
-  "accepted_criteria_count": 3,
+  "accepted_criteria_count": 9,
   "checks": [
-    "17 tasks, 61 original criteria and 12 full outcomes unchanged",
-    "Unique append-only milestone IDs; bounded subgate fields do not alter full task denominator",
-    "02 architecture and 03-foundation accepted by non-author PASS4.0; full02/03 remain incomplete"
+    "17 tasks,61 original task criteria and12 full outcomes unchanged",
+    "Unique append-only milestone IDs; check counts are not completion percentages",
+    "01 bounded qualification plus original02/04 accepted by non-author;03-foundation accepted and full03-final remains open",
+    "Task02/04 source acceptance/checkmarks do not change original requirements; actual native and current source hashes/cleanup reviewed"
   ],
   "full_goal_complete": false,
   "acceptance_policy_version": 2

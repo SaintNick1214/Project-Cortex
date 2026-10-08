@@ -33,6 +33,20 @@ export interface ConflictDecision {
   confidence?: number;
 }
 
+/** Semantic schema for governed plain-JSON conflict calls; not a native provider
+ * response-format claim. The strict domain parser still validates returned text. */
+export const CONFLICT_DECISION_JSON_SCHEMA = Object.freeze({
+  type: "object", additionalProperties: false,
+  required: Object.freeze(["action", "targetFactId", "reason", "mergedFact"]),
+  properties: Object.freeze({
+    action: Object.freeze({ type: "string", enum: Object.freeze(["UPDATE", "SUPERSEDE", "NONE", "ADD"]) }),
+    targetFactId: Object.freeze({ type: Object.freeze(["string", "null"]) }),
+    reason: Object.freeze({ type: "string", minLength: 1 }),
+    mergedFact: Object.freeze({ type: Object.freeze(["string", "null"]) }),
+    confidence: Object.freeze({ type: "number", minimum: 0, maximum: 100 }),
+  }),
+});
+
 /**
  * Candidate fact for conflict resolution
  */

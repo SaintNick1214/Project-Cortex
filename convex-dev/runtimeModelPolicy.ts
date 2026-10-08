@@ -11,9 +11,11 @@ import { createAuthorityReader, recheckAuthority } from "./runtimeAuth";
 import { ConvexMemoryRepository, memoryScope } from "./runtimeMemoryRepository";
 import { sameAuthority } from "./runtimeWorkerAuth";
 import { assertEmbeddingVector, assertProfileMatches, DEFAULT_EMBEDDING_PROFILE, semanticHash } from "../src/domain/profile";
+import { FACTS_JSON_SCHEMA } from "../src/domain/extraction";
+import { CONFLICT_DECISION_JSON_SCHEMA } from "../src/domain/conflicts";
 import { assertModelRequestIdentity as pureAssertModelRequestIdentity, canonicalModelJson as pureCanonicalModelJson, canFallbackModel, MODEL_LIMIT_KEYS, resolveModelPolicy as pureResolveModelPolicy, validateModelRequest as pureValidateModelRequest } from "../src/domain/model-policy";
 import type { ModelOperationKey, ModelPolicySnapshotV1, TrustedModelPolicyRecord, TrustedModelPolicyContext } from "../src/domain/model-policy";
-import { isTrustedDeploymentManifest, lookupDeploymentManifest } from "./runtimeModelPolicyBootstrap";
+import { isTrustedDeploymentManifest, lookupDeploymentManifest, qualifiedTerminalModelId } from "./runtimeModelPolicyBootstrap";
 import type { DeploymentPolicyManifest, QualifiedDispatchEvidence } from "./runtimeModelPolicyBootstrap";
 import { modelOperationKey, modelSource, visibilityFields } from "./runtimePolicySchema";
 
@@ -121,7 +123,7 @@ function validManifest(manifest: DeploymentPolicyManifest | undefined): asserts 
     policy.scope !== "agent" || !policy.tenantId || !policy.agentId || !Number.isSafeInteger(policy.agentVersion) || policy.agentVersion! < 1))) fail("POLICY_DENIED");
   for (const qualification of manifest.qualifications) {
     const proof = single(manifest.dispatchEvidence.filter((entry) => entry.receiptId === qualification.receiptId));
-    if (!proof || !digest.test(proof.evidenceHash) || !digest.test(proof.inputBound.proofHash) || !proof.providerVersion
+    if (!proof || qualifiedTerminalModelId(proof) === undefined || !digest.test(proof.evidenceHash) || !digest.test(proof.inputBound.proofHash) || !proof.providerVersion
       || proof.modelId !== qualification.modelId || proof.nativeInterface !== qualification.nativeInterface
       || proof.priceRevision !== qualification.priceRevision || proof.boundRevision !== qualification.boundRevision
       || !digest.test(proof.inputBound.nativeTransformHash) || !digest.test(proof.inputBound.documentHash)
@@ -332,7 +334,27 @@ export async function bindTrustedBudget(ctx: WriteCtx, args: BindBudgetArgs): Pr
     limitUnits: resolved.snapshot.limits.runBudgetUnits, concurrencyLimit: resolved.snapshot.limits.concurrency });
   return { runBudgetId, runAccountId };
 }
-export const ensureBudget = internalMutation({ args: bindingArgs, handler: bindTrustedBudget });
+/** Foreground preflight before persisting a new source intent. Final admission
+ * still reserves atomically; a concurrent caller can consume capacity afterward.
+ * Existing exact requests retain read-only replay under their original liability. */
+export const ensureBudget = internalMutation({ args: bindingArgs, handler: async (ctx, args) => {
+  const key = canonical(["run", args.reference.tenantId, args.reference.memorySpaceId, args.reference.principalId, args.operationKey, args.requestId]);
+  const id = await semanticHash(key);
+  const existing = single(await ctx.db.query("runtimeBudgetAccounts").withIndex("by_run", (q) => q.eq("runBudgetId", id)).take(2));
+  const budget = await bindTrustedBudget(ctx, args);
+  if (existing) return budget;
+  const run = await ctx.db.get("runtimeBudgetAccounts", budget.runAccountId);
+  const tenant = single(await ctx.db.query("runtimeBudgetAccounts").withIndex("by_scope_current", (q) =>
+    q.eq("scopeKey", canonical(["tenant", args.reference.tenantId])).eq("current", true)).take(2));
+  if (!run || !tenant) fail("BUDGET_EXCEEDED");
+  const { snapshot } = await resolveCurrent(ctx, args.reference, args.operationKey, budget.runBudgetId, undefined, undefined,
+    args.agentId ? { agentId: args.agentId, version: args.agentVersion! } : undefined);
+  const ceiling = snapshot.costBound.maximumCostUnits;
+  if (ceiling > snapshot.limits.operationBudgetUnits) fail("BUDGET_EXCEEDED");
+  capacity(run, ceiling, snapshot.limits.runBudgetUnits, snapshot.limits.concurrency);
+  capacity(tenant, ceiling, snapshot.limits.tenantBudgetUnits, snapshot.limits.concurrency);
+  return budget;
+} });
 
 export const installDeploymentPolicy = internalMutation({ args: { manifestId: v.string(), expectedRevision: v.number() }, handler: async (ctx, args) => {
   text(args.manifestId); integer(args.expectedRevision, 1);
@@ -413,11 +435,16 @@ async function runAccount(ctx: ReadCtx, reference: RuntimeAuthorityReference, ru
   if (!run || run.kind !== "run" || !run.reference || !sameAuthority(run.reference, reference) || run.tenantId !== reference.tenantId) fail("FORBIDDEN");
   return run;
 }
-const resolveArgs = { reference: runtimeAuthorityReference, operationKey: modelOperationKey, runBudgetId: v.string(), source: v.optional(modelSource) };
+const resolveArgs = { reference: runtimeAuthorityReference, operationKey: modelOperationKey, runBudgetId: v.string(), source: v.optional(modelSource), parentOperationId: v.optional(v.id("runtimeModelOperations")) };
 export const resolve = internalQuery({ args: resolveArgs, handler: async (ctx, args) => {
   await currentAuthority(ctx, args.reference, args.operationKey); const run = await runAccount(ctx, args.reference, args.runBudgetId);
   await checkSource(ctx, args.reference, args.operationKey, args.source);
-  const resolved = await resolveCurrent(ctx, args.reference, args.operationKey, args.runBudgetId, args.source, undefined, run.agentId ? { agentId: run.agentId, version: run.agentVersion! } : undefined);
+  if (args.parentOperationId) {
+    const parent = await ctx.db.get("runtimeModelOperations", args.parentOperationId);
+    if (!parent || parent.runAccountId !== run._id) fail("FORBIDDEN");
+    await currentOperation(ctx, args.reference, parent);
+  }
+  const resolved = await resolveCurrent(ctx, args.reference, args.operationKey, args.runBudgetId, args.source, args.parentOperationId, run.agentId ? { agentId: run.agentId, version: run.agentVersion! } : undefined);
   return { snapshot: resolved.snapshot, dispatchEvidence: evidence(resolved.manifest, resolved.snapshot), storageLimits: MODEL_LEDGER_STORAGE_LIMITS };
 } });
 /** Full final request bytes, not caller estimates. Proof exists only in reviewed compiled root. */
@@ -434,7 +461,15 @@ export function deriveQualifiedInputBound(proof: QualifiedDispatchEvidence, requ
     return add(...counts);
   }
   if (proof.inputBound.ruleId !== "plain-chat-cookbook-utf8-v1" || proof.inputBound.featureEnvelope !== "plain-chat-v1" || proof.nativeInterface !== "chat"
-    || !request.messages || request.tools.length || request.outputSchema || request.options.providerOptions) fail("CAPABILITY_UNAVAILABLE");
+    || !request.messages || request.tools.length || request.options.providerOptions) fail("CAPABILITY_UNAVAILABLE");
+  // This envelope carries a semantic schema for strict backend parsing, not a
+  // provider response_format. Only the two fixed, versioned operation schemas
+  // are permitted; they are not sent to the native plain-chat endpoint.
+  if (request.outputSchema !== undefined) {
+    const expected = request.schemaVersion === "facts-v1" ? FACTS_JSON_SCHEMA
+      : request.schemaVersion === "conflicts-v1" ? CONFLICT_DECISION_JSON_SCHEMA : undefined;
+    if (!expected || canonical(request.outputSchema) !== canonical(expected)) fail("CAPABILITY_UNAVAILABLE");
+  }
   let bound = 3;
   for (const message of request.messages) {
     const part = message.parts[0];
@@ -443,7 +478,7 @@ export function deriveQualifiedInputBound(proof: QualifiedDispatchEvidence, requ
   }
   return integer(bound, 1);
 }
-const admitArgs = { ...resolveArgs, semanticId: v.string(), ordinal: v.number(), requestCanonical: v.string(), parentOperationId: v.optional(v.id("runtimeModelOperations")) };
+const admitArgs = { ...resolveArgs, semanticId: v.string(), ordinal: v.number(), requestCanonical: v.string() };
 const _admissionValidator = v.object(admitArgs);
 export type AdmitModelArgs = Infer<typeof _admissionValidator>;
 export const admit = internalMutation({ args: admitArgs, handler: async (ctx, args) => {
@@ -488,8 +523,9 @@ export const admit = internalMutation({ args: admitArgs, handler: async (ctx, ar
       const priorSnapshot = attemptSnapshot(existing, operation, manifest);
       const incoming = validateModelRequest(priorSnapshot, { ...validated.request, inputTokens: deriveQualifiedInputBound(evidence(manifest, priorSnapshot), validated.request), reservationUnits: priorSnapshot.costBound.maximumCostUnits });
       assertModelRequestIdentity({ canonical: existing.canonical, hash: existing.hash }, { canonical: incoming.canonical, hash: await semanticHash(incoming.canonical) });
-      if (existing.state === "settled" && existing.privateResultCanonical && !existing.resultWithheld
-        && !storedObservationViolation(existing, priorSnapshot)) return { status: "replay" as const, operationId: operation._id, resultCanonical: existing.privateResultCanonical };
+      if ((existing.state === "settled" || retainedConfirmedUnknown(existing, priorSnapshot, evidence(manifest, priorSnapshot)))
+        && existing.privateResultCanonical && !existing.resultWithheld
+        && !storedObservationViolation(existing, priorSnapshot, evidence(manifest, priorSnapshot))) return { status: "replay" as const, operationId: operation._id, resultCanonical: existing.privateResultCanonical };
       if (existing.state === "settled" || existing.state === "confirmed_rejected" || existing.state === "not_dispatched") fail("CAPABILITY_UNAVAILABLE");
       if (existing.state === "uncertain" || existing.state === "dispatch_pending") return { status: "uncertain" as const, operationId: operation._id, attemptId: existing._id, replayAllowed: false as const };
       return { status: "inflight" as const, operationId: operation._id, attemptId: existing._id };
@@ -623,7 +659,7 @@ async function writeUnknown(ctx: WriteCtx, state: Awaited<ReturnType<typeof atte
   const newlyUnknown = attempt.state !== "uncertain";
   const release = Boolean(terminalCanonical) && !attempt.slotReleased;
   const observation = terminalCanonical ? receiptSchema.safeParse(decode(terminalCanonical)) : undefined;
-  const overrun = observation?.success === true && observationViolation(attempt, state.snapshot, observation.data);
+  const overrun = observation?.success === true && observationViolation(attempt, state.snapshot, observation.data, state.proof);
   for (const account of [tenant, run]) await ctx.db.patch("runtimeBudgetAccounts", account._id, {
     reservedUnits: newlyUnknown ? subtract(account.reservedUnits, attempt.reservationUnits) : account.reservedUnits,
     uncertainUnits: newlyUnknown ? add(account.uncertainUnits, attempt.reservationUnits) : account.uncertainUnits,
@@ -665,9 +701,9 @@ function validatedPrivateResult(snapshot: ModelPolicySnapshotV1, attempt: Attemp
 type TerminalReceipt = z.infer<typeof receiptSchema>;
 type AttemptContext = Awaited<ReturnType<typeof attemptContext>>;
 /** Serving observations are qualification facts independently of monetary support. */
-function observationViolation(attempt: Attempt, snapshot: ModelPolicySnapshotV1, receipt: Pick<TerminalReceipt, "actualModel" | "usage">): boolean {
+function observationViolation(attempt: Attempt, snapshot: ModelPolicySnapshotV1, receipt: Pick<TerminalReceipt, "actualModel" | "usage">, proof: QualifiedDispatchEvidence): boolean {
   integer(attempt.measuredInputTokens, 1); integer(attempt.maximumOutputTokens);
-  return (receipt.actualModel !== undefined && receipt.actualModel !== snapshot.modelId)
+  return (receipt.actualModel !== undefined && receipt.actualModel !== qualifiedTerminalModelId(proof))
     || (receipt.usage?.inputTokens !== undefined && receipt.usage.inputTokens > attempt.measuredInputTokens)
     || (receipt.usage?.outputTokens !== undefined && receipt.usage.outputTokens > attempt.maximumOutputTokens);
 }
@@ -675,14 +711,14 @@ function observationViolation(attempt: Attempt, snapshot: ModelPolicySnapshotV1,
  * can hide initial/final serving observations. Corrupt evidence grants no privilege.
  * Inspection is local; unexpected authority/repository read errors still propagate.
  */
-function storedObservationViolation(attempt: Attempt, snapshot: ModelPolicySnapshotV1): boolean {
-  if (observationViolation(attempt, snapshot, { actualModel: attempt.actualModel })
+function storedObservationViolation(attempt: Attempt, snapshot: ModelPolicySnapshotV1, proof: QualifiedDispatchEvidence): boolean {
+  if (observationViolation(attempt, snapshot, { actualModel: attempt.actualModel }, proof)
     || (attempt.settledCostUnits !== undefined && attempt.settledCostUnits > attempt.reservationUnits)) return true;
   for (const encoded of [attempt.terminalEvidenceCanonical, attempt.receiptCanonical]) {
     if (encoded === undefined) continue;
     const parsed = receiptSchema.omit({ privateResultCanonical: true }).safeParse(decode(encoded));
     if (!parsed.success || parsed.data.dispatchIdentity !== attempt.dispatchIdentity || parsed.data.modelId !== snapshot.modelId
-      || parsed.data.nativeInterface !== snapshot.nativeInterface || observationViolation(attempt, snapshot, parsed.data)) return true;
+      || parsed.data.nativeInterface !== snapshot.nativeInterface || observationViolation(attempt, snapshot, parsed.data, proof)) return true;
   }
   return false;
 }
@@ -697,6 +733,24 @@ function capturedAttempt(attempt: Attempt): boolean {
 function knownCost(receipt: TerminalReceipt, proof: QualifiedDispatchEvidence): number | undefined {
   if (proof.terminalCost !== "gateway-aggregate-usd-v1" || receipt.costSource !== proof.terminalCost || receipt.aggregateCostUsd === undefined) return undefined;
   try { return costMicroUnits(receipt.aggregateCostUsd); } catch { return undefined; }
+}
+/** Complete serving evidence and unknown money are separate facts. Only a compiled
+ * intentionally unavailable-cost proof with a qualified full-call ceiling can
+ * retain output; a lost expected-known cost or ambiguous terminal cannot. */
+function confirmedUnknownResult(attempt: Attempt, snapshot: ModelPolicySnapshotV1, receipt: TerminalReceipt, proof: QualifiedDispatchEvidence): boolean {
+  return proof.terminalCost === "unavailable" && receipt.costSource === "unavailable" && receipt.aggregateCostUsd === undefined
+    && snapshot.costBound.coversAllProviderCharges && snapshot.costBound.maximumCostUnits === attempt.reservationUnits
+    && proof.checkedAt <= Date.now() && Date.now() < proof.expiresAt
+    && receipt.outcome === "confirmed" && receipt.proof === proof.terminalProof
+    && receipt.dispatchIdentity === attempt.dispatchIdentity && receipt.modelId === snapshot.modelId && receipt.nativeInterface === snapshot.nativeInterface
+    && receipt.actualModel === qualifiedTerminalModelId(proof) && receipt.usage?.inputTokens !== undefined
+    && (snapshot.nativeInterface === "embedding" || (snapshot.nativeInterface === "chat" && receipt.usage.outputTokens !== undefined))
+    && !observationViolation(attempt, snapshot, receipt, proof);
+}
+function retainedConfirmedUnknown(attempt: Attempt, snapshot: ModelPolicySnapshotV1, proof: QualifiedDispatchEvidence): boolean {
+  if (attempt.state !== "uncertain" || !attempt.slotReleased || !capturedAttempt(attempt)) return false;
+  const receipt = receiptSchema.omit({ privateResultCanonical: true }).safeParse(decode(attempt.terminalEvidenceCanonical!));
+  return receipt.success && confirmedUnknownResult(attempt, snapshot, receipt.data, proof);
 }
 function chargeOnly(receipt: TerminalReceipt): string {
   const { privateResultCanonical: _privateResult, ...charge } = receipt;
@@ -733,7 +787,7 @@ async function capturedDuplicate(attempt: Attempt, chargeCanonical: string, rece
 async function accountKnown(ctx: WriteCtx, state: AttemptContext, receipt: TerminalReceipt, chargeCanonical: string, receiptHash: string,
   cost: number, privateResult?: string) {
   const { attempt, operation, snapshot, proof, tenant, run } = state;
-  const overrun = cost > attempt.reservationUnits || observationViolation(attempt, snapshot, receipt);
+  const overrun = cost > attempt.reservationUnits || observationViolation(attempt, snapshot, receipt, proof);
   const deliverResult = privateResult !== undefined && !overrun && !operation.overrun && !tenant.overrun && !run.overrun;
   const fromUnknown = attempt.state === "uncertain";
   for (const account of [tenant, run]) await ctx.db.patch("runtimeBudgetAccounts", account._id, {
@@ -767,7 +821,7 @@ async function settleAttempt(ctx: WriteCtx, reference: RuntimeAuthorityReference
     || receipt.proof !== proof.terminalProof) fail("IDEMPOTENCY_CONFLICT", "uncertain");
   const chargeCanonical = chargeOnly(receipt); const receiptHash = await semanticHash(chargeCanonical);
   if (captured) {
-    if (await capturedDuplicate(attempt, chargeCanonical, receiptHash)) return { state: attempt.state, settledCostUnits: attempt.settledCostUnits, resultWithheld: attempt.resultWithheld || !canDeliver || storedObservationViolation(attempt, snapshot) };
+    if (await capturedDuplicate(attempt, chargeCanonical, receiptHash)) return { state: attempt.state, settledCostUnits: attempt.settledCostUnits, resultWithheld: attempt.resultWithheld || !canDeliver || storedObservationViolation(attempt, snapshot, proof) };
     if (attempt.state !== "uncertain") fail("IDEMPOTENCY_CONFLICT", "uncertain");
     compatibleRefinement(attempt.terminalEvidenceCanonical!, receipt, proof);
   } else if (attempt.receiptCanonical) {
@@ -802,7 +856,7 @@ function attachmentDenied(error: unknown): boolean {
 }
 async function permittedAttachment(ctx: ReadCtx, reference: RuntimeAuthorityReference, state: AttemptContext): Promise<boolean> {
   try {
-    if (storedObservationViolation(state.attempt, state.snapshot)) return false;
+    if (storedObservationViolation(state.attempt, state.snapshot, state.proof)) return false;
     const checked = await currentOperation(ctx, reference, state.operation);
     const current = checked.current.snapshot;
     if (state.proof.checkedAt > Date.now() || Date.now() >= state.proof.expiresAt) return false;
@@ -851,8 +905,9 @@ export const captureTerminalEvidence = internalMutation({ args: { attemptId: v.i
   }
   const cost = knownCost(receipt, proof);
   if (captured && cost === undefined) fail("IDEMPOTENCY_CONFLICT", "uncertain");
-  const deliverable = !captured && !attempt.terminalEvidenceCanonical && cost !== undefined && cost <= attempt.reservationUnits && receipt.outcome === "confirmed"
-    && !observationViolation(attempt, snapshot, receipt)
+  const deliverable = !captured && !attempt.terminalEvidenceCanonical
+    && ((cost !== undefined && cost <= attempt.reservationUnits && receipt.outcome === "confirmed") || confirmedUnknownResult(attempt, snapshot, receipt, proof))
+    && !observationViolation(attempt, snapshot, receipt, proof)
     && await permittedAttachment(ctx, operation.reference, state);
   const accounted = cost === undefined ? await writeUnknown(ctx, state, chargeCanonical)
     : await accountKnown(ctx, state, receipt, chargeCanonical, receiptHash, cost);
@@ -868,7 +923,8 @@ export const attachTerminalResult = internalMutation({ args: { ...attemptArgs, e
   if (!capturedAttempt(attempt)) return { attached: false, resultWithheld: true };
   if (args.evidenceId !== await captureIdentity(attempt)) fail("IDEMPOTENCY_CONFLICT", "uncertain");
   if (attempt.resultAttachmentState === "closed") return { attached: false, resultWithheld: true };
-  if (attempt.state !== "settled" || attempt.settledCostUnits === undefined || operation.overrun) return { attached: false, resultWithheld: true };
+  const settled = attempt.state === "settled" && attempt.settledCostUnits !== undefined;
+  if ((!settled && !retainedConfirmedUnknown(attempt, snapshot, state.proof)) || operation.overrun) return { attached: false, resultWithheld: true };
   if (!sameAuthority(args.reference, operation.reference)) return { attached: false, resultWithheld: true };
   if (!await permittedAttachment(ctx, args.reference, state)) {
     if (attempt.resultAttachmentState === "pending") await ctx.db.patch("runtimeModelAttempts", attempt._id, { resultAttachmentState: "closed", resultWithheld: true });

@@ -1,0 +1,206 @@
+{
+  "scope": "INDEPENDENT_READ_ONLY_RECHECK_OF_PRIOR_ACTUAL_GATEWAY_BATCH",
+  "recordedAt": "2026-10-08T08:22:10.662342+00:00",
+  "checks": [
+    {
+      "name": "chat2 bounded actual output/reservation/terminal",
+      "status": "PASS"
+    },
+    {
+      "name": "title2 bounded actual output/reservation/terminal",
+      "status": "PASS"
+    },
+    {
+      "name": "embedding2 bounded actual output/reservation/terminal",
+      "status": "PASS"
+    },
+    {
+      "name": "embedding-memory2 bounded actual output/reservation/terminal",
+      "status": "PASS"
+    },
+    {
+      "name": "extract2 bounded actual output/reservation/terminal",
+      "status": "PASS"
+    },
+    {
+      "name": "distinct models and same-run parent",
+      "status": "PASS"
+    },
+    {
+      "name": "embedding2 pinned profile and observed exact bare terminal",
+      "status": "PASS"
+    },
+    {
+      "name": "embedding-memory2 pinned profile and observed exact bare terminal",
+      "status": "PASS"
+    },
+    {
+      "name": "real extraction parsed source-bound tea fact",
+      "status": "PASS"
+    },
+    {
+      "name": "chat-replay2 no second dispatch/checkpoint",
+      "status": "PASS"
+    },
+    {
+      "name": "embedding-replay2 no second dispatch/checkpoint",
+      "status": "PASS"
+    },
+    {
+      "name": "historical expected-known lost-cost full retained liability",
+      "status": "PASS"
+    },
+    {
+      "name": "historical uncertain attempt cannot mint new paid retry",
+      "status": "PASS"
+    },
+    {
+      "name": "native OCC duplicate race one paid winner",
+      "status": "PASS"
+    },
+    {
+      "name": "native two-slot race stops third before checkpoint",
+      "status": "PASS"
+    },
+    {
+      "name": "duplicate terminal mutations settle once",
+      "status": "PASS"
+    },
+    {
+      "name": "exhausted quota creates no attempt or operation",
+      "status": "PASS"
+    },
+    {
+      "name": "original embedding mismatch remains failed and charged",
+      "status": "PASS"
+    },
+    {
+      "name": "owned cloud-dev target disposed",
+      "status": "PASS"
+    }
+  ],
+  "counts": {
+    "passed": 19,
+    "failed": 0
+  },
+  "inputs": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-functional-gateway-v2-20261008/chat2.stdout",
+      "bytes": 16500,
+      "sha256": "899d13387eae8915fd5a08114abadff0838cada7ea6f6bec93b2353fd6adb047"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-functional-gateway-v2-20261008/title2.stdout",
+      "bytes": 33662,
+      "sha256": "db1a9869f81b4c2d42050f765afc01fcbb120c787931604eb719bc9ea244461d"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-functional-gateway-v2-20261008/embedding2.stdout",
+      "bytes": 51357,
+      "sha256": "efed71a8e43432b5ce3bd2ef0f749cc7d2ba050b02ec54de37298826cb093af6"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-functional-gateway-v2-20261008/embedding-memory2.stdout",
+      "bytes": 69669,
+      "sha256": "489225023db71de8261b0bd26210c05e15e2db4c459be22185c004c45b4ac43c"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-functional-gateway-v2-20261008/extract2.stdout",
+      "bytes": 87185,
+      "sha256": "96a6d0d0cd40f04a91520bc4c1bfacc8e1441379dc0b8a028d6ec3a7c6b20500"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-functional-gateway-v2-20261008/chat-replay2.stdout",
+      "bytes": 15620,
+      "sha256": "5eba10e2dabbe56332f9a9db21b7283c562cc7ce32bb8d9cda997a85f0f7cab4"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-functional-gateway-v2-20261008/embedding-replay2.stdout",
+      "bytes": 88034,
+      "sha256": "ff8eb946043a67530cc1bfd29ed44bf4f3934c4d4d5068bf5ea22865ae4c1500"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-functional-gateway-v2-20261008/unknown-cost2.stdout",
+      "bytes": 102110,
+      "sha256": "b200a1b75ad790afb4a845df6ab24f45d9d79143d311fda0e816d5d998b23158"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-functional-gateway-v2-20261008/unknown-replay-denied2.stdout",
+      "bytes": 77232,
+      "sha256": "a199a5ec1b71c83a8e095fecd966460930a0c52df6f8d2523abf5ae2dcb958c4"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-functional-gateway-v2-20261008/dedup3-a.stdout",
+      "bytes": 10199,
+      "sha256": "acf69df16a69f5d740ba27969b80b7e0c0f111d108134b0be65ab25636facaee"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-functional-gateway-v2-20261008/dedup3-b.stdout",
+      "bytes": 16528,
+      "sha256": "7e0a2cf581fdb5ba0cde1df5a52da9bff239e837653c05dbf06910a9e7eb329a"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-functional-gateway-v2-20261008/dedup3-replay.stdout",
+      "bytes": 15648,
+      "sha256": "d07ea3a89a9572fe1f99acb2a5f3d63aef80ebcb89b47ee6495296f09fab685e"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-functional-gateway-v2-20261008/concurrency-a.stdout",
+      "bytes": 57942,
+      "sha256": "999e24362404bfd5a8a278bb7496c2295c75e1c77e474cc2ebfe55c29b3660a8"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-functional-gateway-v2-20261008/concurrency-b.stdout",
+      "bytes": 130770,
+      "sha256": "1073c2682bca2d022d0ea1967a5710419663054c156db3aec54394810ca5ef52"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-functional-gateway-v2-20261008/concurrency-c.stdout",
+      "bytes": 126656,
+      "sha256": "fa224cb817a07b3399e3d8a41988e30bc5c33fb64a2517addc91a454ba332156"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-functional-gateway-v2-20261008/quota-denied.stdout",
+      "bytes": 67143,
+      "sha256": "16fbcc7c8cf3a17bf4671a4363d712429fb025d1ca905427fb1ae1716193d100"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-functional-gateway-v2-20261008/embedding1.stdout",
+      "bytes": 22596,
+      "sha256": "7c7926dd20ca27ef12406a77a435724dce47900b5808aeb8f082e1c07a06b825"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-functional-gateway-v2-20261008/dedup3-before-terminal.stdout",
+      "bytes": 4424,
+      "sha256": "e1e60db81a67f8dd90ad40e67c2f7146b6858ad107f47e29cf67a8d5f08d1288"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-functional-gateway-v2-20261008/dedup3-after-terminal.stdout",
+      "bytes": 4424,
+      "sha256": "e1e60db81a67f8dd90ad40e67c2f7146b6858ad107f47e29cf67a8d5f08d1288"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-functional-gateway-v2-20261008/state-before-quota.stdout",
+      "bytes": 31275,
+      "sha256": "fb6d792dd12c0ba5c737c62fe991df7dd20db55d2eb68e469537febd5fbb5dd4"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-functional-gateway-v2-20261008/final-state2.stdout",
+      "bytes": 31250,
+      "sha256": "d8d99ef06a734599880770061f14fef892787d968d1ed5e3a2965b68ed1ac0e9"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-functional-gateway-v2-20261008/retirement-delete.json",
+      "bytes": 198,
+      "sha256": "0d251ce7d13f4fddb324bbc352fe8e92888bfb13e582af80130f74f2571c4e69"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-functional-gateway-v2-20261008/retirement.json",
+      "bytes": 284,
+      "sha256": "b8f0eb1c093740bdaae4d467e2243d58adffaa8b21c3173b34808250ade695da"
+    }
+  ],
+  "billingCompletenessEstablished": false,
+  "qualifier": "Native historical settled values are observed reported-cost accounting, not invoice/all-charge completeness. New confirmed-unknown-cost delivery and public memory wiring remain pending current-batch checks.",
+  "serviceEffectsByReviewer": 0
+}

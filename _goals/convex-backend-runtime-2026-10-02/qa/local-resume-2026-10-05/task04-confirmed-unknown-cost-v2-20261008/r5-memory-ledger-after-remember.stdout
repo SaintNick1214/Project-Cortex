@@ -1,0 +1,226 @@
+{
+  "accounts": [
+    {
+      "_id": "ms74hb50sch6g9r81wczqg17rs8fwang",
+      "activeConcurrency": 0,
+      "cancelled": false,
+      "concurrencyLimit": 2,
+      "kind": "tenant",
+      "limitUnits": 10000000,
+      "overrun": false,
+      "reservedUnits": 0,
+      "settledUnits": 0,
+      "uncertainUnits": 200000
+    },
+    {
+      "_id": "ms7b892aafej4mffb04x7xfwcn8fx02k",
+      "activeConcurrency": 0,
+      "cancelled": false,
+      "concurrencyLimit": 2,
+      "kind": "run",
+      "limitUnits": 2000000,
+      "overrun": false,
+      "reservedUnits": 0,
+      "runBudgetId": "0ac0d715932d7f05044087acafeaf7cc75ae20b77472e04b919f8f89d71340ff",
+      "settledUnits": 0,
+      "uncertainUnits": 200000
+    }
+  ],
+  "attempts": [
+    {
+      "_id": "nd7894b734c5t0kf8bypbt0gy18fwkm3",
+      "checkpointAt": 1791449527365,
+      "dispatchIdentity": "c607c11a1c84b1e3eba84c661a81572b93808b2a0ab99f2891a225b07e3bb209",
+      "operationDocumentId": "nh7fv52bk4c0qfh1ybhygcvhvh8fxz7s",
+      "ordinal": 0,
+      "privateResultBytes": 276,
+      "receipt": null,
+      "reservationUnits": 100000,
+      "resultWithheld": false,
+      "slotReleased": true,
+      "state": "uncertain"
+    },
+    {
+      "_id": "nd7at56a47f3ntxnev9j3d7mc18fw7d7",
+      "checkpointAt": 1791449529595,
+      "dispatchIdentity": "4c7ca1970622b518ea67adb5fca1426ddaa3d003e0edb0a7f20c1c40459b952f",
+      "operationDocumentId": "nh755cdxwgn5yj02mjjrry4kmx8fwhp0",
+      "ordinal": 0,
+      "privateResultBytes": 29828,
+      "receipt": null,
+      "reservationUnits": 100000,
+      "resultWithheld": false,
+      "slotReleased": true,
+      "state": "uncertain"
+    }
+  ],
+  "operations": [
+    {
+      "_id": "nh7fv52bk4c0qfh1ybhygcvhvh8fxz7s",
+      "operationKey": "memory.extract",
+      "reservedUnits": 0,
+      "semanticId": "424c8b3a60da8f4c527e27ce0d28603c44f8886ffbf12b743734bff7692db63f",
+      "settledUnits": 0,
+      "snapshot": {
+        "allowedModels": [
+          "openai/gpt-4o-mini",
+          "openai/gpt-4o",
+          "openai/text-embedding-3-small"
+        ],
+        "allowedOptions": [],
+        "allowedTools": [],
+        "capabilities": [
+          "text",
+          "structured"
+        ],
+        "costBound": {
+          "coversAllProviderCharges": true,
+          "kind": "qualified-call-ceiling",
+          "maximumCostUnits": 100000,
+          "provenance": "Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras"
+        },
+        "currency": "USD",
+        "fallbackCandidates": [],
+        "limits": {
+          "concurrency": 2,
+          "contextTokens": 16384,
+          "inputTokens": 8192,
+          "operationBudgetUnits": 200000,
+          "outputTokens": 512,
+          "runBudgetUnits": 2000000,
+          "tenantBudgetUnits": 10000000,
+          "timeoutMs": 60000,
+          "toolSteps": 0
+        },
+        "modelId": "openai/gpt-4o-mini",
+        "monetaryUnit": "micro-USD",
+        "nativeInterface": "chat",
+        "operationKey": "memory.extract",
+        "pins": {
+          "boundRevision": "text-8192-512-schema-v2",
+          "extractionVersion": "task04-qualification-e1",
+          "priceRevision": "openrouter-2026-10-08-candidate",
+          "promptVersion": "memory-schema-prompt-v2",
+          "schemaVersion": "facts-v1",
+          "toolRegistryVersion": "none-v1"
+        },
+        "policyVersions": [
+          {
+            "policyId": "fixture-default",
+            "version": 2
+          }
+        ],
+        "qualificationReceiptId": "provisional-5bfe0c22-fed2-40d9-bf87-48203296262f-0-memory-v2",
+        "requestedModelId": "openai/gpt-4o-mini",
+        "runBudgetId": "0ac0d715932d7f05044087acafeaf7cc75ae20b77472e04b919f8f89d71340ff",
+        "scope": {
+          "grantId": "m570pwf6awgswsray0bpewnbmn8fwnm2",
+          "grantVersion": 1,
+          "membershipId": "m972qgcwmngyfzp8t2jdqd6a018fwhjf",
+          "membershipVersion": 1,
+          "memorySpaceEpoch": 1,
+          "memorySpaceId": "qualification",
+          "principalId": "md732h89cf86g3hz5ck01xrmpn8fxdw1",
+          "principalVersion": 1,
+          "tenantEpoch": 1,
+          "tenantId": "task04-memory3-5bfe0c22"
+        },
+        "source": {
+          "sourceEventId": "explicit:[\"task04-memory3-5bfe0c22\",\"qualification\",\"md732h89cf86g3hz5ck01xrmpn8fxdw1\",\"remember-jasmine-v1\"]",
+          "sourceId": "explicit:[\"task04-memory3-5bfe0c22\",\"qualification\",\"md732h89cf86g3hz5ck01xrmpn8fxdw1\",\"remember-jasmine-v1\"]",
+          "sourceRevision": 1
+        },
+        "version": 1
+      },
+      "uncertainUnits": 100000
+    },
+    {
+      "_id": "nh755cdxwgn5yj02mjjrry4kmx8fwhp0",
+      "operationKey": "embedding.memory",
+      "parentOperationId": "nh7fv52bk4c0qfh1ybhygcvhvh8fxz7s",
+      "reservedUnits": 0,
+      "semanticId": "a6777025fb943ab1062c4491d70bba02dbc9f312a5a1fee6c96c40c912353d78",
+      "settledUnits": 0,
+      "snapshot": {
+        "allowedModels": [
+          "openai/gpt-4o-mini",
+          "openai/gpt-4o",
+          "openai/text-embedding-3-small"
+        ],
+        "allowedOptions": [],
+        "allowedTools": [],
+        "capabilities": [
+          "embedding"
+        ],
+        "costBound": {
+          "coversAllProviderCharges": true,
+          "kind": "qualified-call-ceiling",
+          "maximumCostUnits": 100000,
+          "provenance": "Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras"
+        },
+        "currency": "USD",
+        "fallbackCandidates": [],
+        "limits": {
+          "concurrency": 2,
+          "contextTokens": 16384,
+          "inputTokens": 8192,
+          "operationBudgetUnits": 200000,
+          "outputTokens": 512,
+          "runBudgetUnits": 2000000,
+          "tenantBudgetUnits": 10000000,
+          "timeoutMs": 60000,
+          "toolSteps": 0
+        },
+        "modelId": "openai/text-embedding-3-small",
+        "monetaryUnit": "micro-USD",
+        "nativeInterface": "embedding",
+        "operationKey": "embedding.memory",
+        "parentOperationId": "nh7fv52bk4c0qfh1ybhygcvhvh8fxz7s",
+        "pins": {
+          "boundRevision": "text-8192-512-schema-v2",
+          "extractionVersion": "task04-qualification-e1",
+          "priceRevision": "openrouter-2026-10-08-candidate",
+          "promptVersion": "memory-schema-prompt-v2",
+          "schemaVersion": "facts-v1",
+          "toolRegistryVersion": "none-v1"
+        },
+        "policyVersions": [
+          {
+            "policyId": "fixture-default",
+            "version": 2
+          }
+        ],
+        "qualificationReceiptId": "provisional-5bfe0c22-fed2-40d9-bf87-48203296262f-2-memory-v2",
+        "requestedModelId": "openai/text-embedding-3-small",
+        "runBudgetId": "0ac0d715932d7f05044087acafeaf7cc75ae20b77472e04b919f8f89d71340ff",
+        "scope": {
+          "grantId": "m570pwf6awgswsray0bpewnbmn8fwnm2",
+          "grantVersion": 1,
+          "membershipId": "m972qgcwmngyfzp8t2jdqd6a018fwhjf",
+          "membershipVersion": 1,
+          "memorySpaceEpoch": 1,
+          "memorySpaceId": "qualification",
+          "principalId": "md732h89cf86g3hz5ck01xrmpn8fxdw1",
+          "principalVersion": 1,
+          "tenantEpoch": 1,
+          "tenantId": "task04-memory3-5bfe0c22"
+        },
+        "semanticProfile": {
+          "chunking": "codepoint-1600-overlap-200-v1",
+          "dimensions": 1536,
+          "indexName": "by_default_embedding_v1",
+          "modelId": "openai/text-embedding-3-small",
+          "normalization": "text-nfc-lf-v1",
+          "profileId": "cortex-text-small-1536-v1"
+        },
+        "source": {
+          "sourceEventId": "explicit:[\"task04-memory3-5bfe0c22\",\"qualification\",\"md732h89cf86g3hz5ck01xrmpn8fxdw1\",\"remember-jasmine-v1\"]",
+          "sourceId": "explicit:[\"task04-memory3-5bfe0c22\",\"qualification\",\"md732h89cf86g3hz5ck01xrmpn8fxdw1\",\"remember-jasmine-v1\"]",
+          "sourceRevision": 1
+        },
+        "version": 1
+      },
+      "uncertainUnits": 100000
+    }
+  ]
+}

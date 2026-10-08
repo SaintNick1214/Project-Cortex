@@ -1,0 +1,80 @@
+{
+  "schema": "cortex.product-quality-receipt.v1",
+  "timestampUtc": "2026-10-08T08:09:02.698021+00:00",
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "node": "24.15.0",
+  "npm": "12.2.0",
+  "commands": [
+    {
+      "command": "npm run lint -- --ignore-pattern '.codex/**'",
+      "exitCode": 0,
+      "result": "0 errors; 115 existing warnings",
+      "logs": [
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/product-quality-v2-20261008/lint.stdout",
+          "bytes": 19028,
+          "sha256": "6df6d96bb28366f36b7ba1061a006310aef214a99a8c9cdafa2ec87bb2fdaccf"
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/product-quality-v2-20261008/lint.stderr",
+          "bytes": 176,
+          "sha256": "6911371f296c8df3635a8af3b6eb001305e687623dd24adb8ee4706462cbf44c"
+        }
+      ]
+    },
+    {
+      "command": "npx --no-install tsc --noEmit",
+      "exitCode": 0,
+      "result": "PASS",
+      "logs": [
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/product-quality-v2-20261008/typecheck.stdout",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/product-quality-v2-20261008/typecheck.stderr",
+          "bytes": 74,
+          "sha256": "b41eb607065a2edb9fbae0c5f5649cf2080ce645c7b4f8e15bb453226ed483bc"
+        }
+      ]
+    },
+    {
+      "command": "npm run build",
+      "exitCode": 0,
+      "result": "CJS, ESM and declarations PASS",
+      "logs": [
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/product-quality-v2-20261008/build.stdout",
+          "bytes": 1147,
+          "sha256": "c389aaf0d61341267ccf3f504596f578e18b9f05e64be8fcf96a2993e18990d2"
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/product-quality-v2-20261008/build.stderr",
+          "bytes": 110,
+          "sha256": "c9aea4aa1662b633dab4ac4e39707ab7b674cbd2102826478fb9035d1ac2a073"
+        }
+      ]
+    },
+    {
+      "command": "npm run test:contracts",
+      "exitCode": 0,
+      "result": "Packed ESM/CJS exports, consumer declarations, URL round trips and browser execution PASS",
+      "logs": [
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/product-quality-v2-20261008/contracts.stdout",
+          "bytes": 93,
+          "sha256": "53f758d02c5e084ed281c5c9c8d07def6439bb6ae283b29958633a37c58d61ed"
+        },
+        {
+          "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/product-quality-v2-20261008/contracts.stderr",
+          "bytes": 111,
+          "sha256": "3569dc96506483695e57b8b29a763b5efcfd6a94dffc105616beb8e267712a5d"
+        }
+      ]
+    }
+  ],
+  "lintDeviation": "Exclude private ephemeral .codex fixture trees only; product and tests retained.",
+  "coverage": "Offline product, build and installed consumer contracts. Does not assert live service qualification or full goal acceptance.",
+  "sourceCurrentness": "Gateway edits present for these commands; runtimeMemoryGateway parent correlation and paid-output-envelope repairs were made afterward and require affected checks."
+}

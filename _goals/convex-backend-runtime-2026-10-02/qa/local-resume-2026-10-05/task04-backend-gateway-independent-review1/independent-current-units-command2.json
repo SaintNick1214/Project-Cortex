@@ -1,0 +1,166 @@
+{
+  "version": 1,
+  "scope": "Independent current product source plus affected unit tests; controlled model/backend fixture only; no native service/inference",
+  "command": [
+    "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+    "--experimental-vm-modules",
+    "node_modules/jest/bin/jest.js",
+    "--config",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-backend-gateway-independent-review1/offline-jest.config.mjs",
+    "--runInBand",
+    "--runTestsByPath",
+    "tests/unit/runtime/gateway-backend.test.ts",
+    "tests/unit/runtime/memory-gateway.test.ts",
+    "tests/unit/runtimeMemory/public-functional.test.ts",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-backend-gateway-independent-review1/memory-parent-and-outcome-independent2.test.ts",
+    "--json",
+    "--outputFile",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-backend-gateway-independent-review1/independent-current-units-results2.json"
+  ],
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "node": "v24.15.0",
+  "startedAt": "2026-10-08T08:28:52.236938+00:00",
+  "elapsedSeconds": 5.747102624998661,
+  "exitCode": 0,
+  "before": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeGateway.ts",
+      "bytes": 57173,
+      "sha256": "9c8e901a07b102bf00596f34baeebaac8aa82fa58d164d867885ace811e03d6d"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicy.ts",
+      "bytes": 91836,
+      "sha256": "5303910aa255039157fc217d1e44c2f52252b15be1633b4ba3f1b444366d8bf7"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryGateway.ts",
+      "bytes": 8203,
+      "sha256": "b6fcfd133cc54139496977274cb491055e0b7ed378b4cd6a6ab91a28c4e525cc"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemory.ts",
+      "bytes": 14094,
+      "sha256": "628bab002d9f906710fd2f43ccd88129e9575bdfe53819a6e075d8671bab261a"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeDataAuth.ts",
+      "bytes": 56962,
+      "sha256": "781d35ff7b75dbd537ca0c410456a8dbdbf0c74e700e1c69ab79809b0c5fb94d"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeGatewayBackend.ts",
+      "bytes": 4492,
+      "sha256": "53f21893a8584c2703d9713e135f8d7eb90621c3e5f9deb5fc93a7ea2062fd99"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicyBootstrap.ts",
+      "bytes": 3393,
+      "sha256": "34553fc69008643c4dd18a2835e327519fc631dc01fe712bf9310dbae6fbcb68"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/src/domain/conflicts.ts",
+      "bytes": 24312,
+      "sha256": "81ee9fa901e821c58e76f22968dccab97619f3bc1e68c6e4bd99aa4187702135"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/gateway-backend.test.ts",
+      "bytes": 40999,
+      "sha256": "c41551304ddf7cd56c04f76e0669f0214b05d5b986aa80d4da56966850a5b0fd"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/memory-gateway.test.ts",
+      "bytes": 37848,
+      "sha256": "02ad012adce9748c1b85e01e46a7e760bd411737618ef4dbc4f2277885717bc2"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeMemory/public-functional.test.ts",
+      "bytes": 15024,
+      "sha256": "f3f9376f90eb961eff7fa782f3c6d46d74155b248d84e1ea53b47642bad7ab26"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-backend-gateway-independent-review1/memory-parent-and-outcome-independent2.test.ts",
+      "bytes": 16999,
+      "sha256": "081465d36e668c66cec11c143c68ac8a310d37a45c1f48035855f2bdd742e131"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-backend-gateway-independent-review1/offline-jest.config.mjs",
+      "bytes": 329,
+      "sha256": "1bfe4ea72ae96b11e5eb6573c80f8265f365515b4a69bec82df73e5f9bce7823"
+    }
+  ],
+  "after": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeGateway.ts",
+      "bytes": 57173,
+      "sha256": "9c8e901a07b102bf00596f34baeebaac8aa82fa58d164d867885ace811e03d6d"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicy.ts",
+      "bytes": 91836,
+      "sha256": "5303910aa255039157fc217d1e44c2f52252b15be1633b4ba3f1b444366d8bf7"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryGateway.ts",
+      "bytes": 8203,
+      "sha256": "b6fcfd133cc54139496977274cb491055e0b7ed378b4cd6a6ab91a28c4e525cc"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemory.ts",
+      "bytes": 14094,
+      "sha256": "628bab002d9f906710fd2f43ccd88129e9575bdfe53819a6e075d8671bab261a"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeDataAuth.ts",
+      "bytes": 56962,
+      "sha256": "781d35ff7b75dbd537ca0c410456a8dbdbf0c74e700e1c69ab79809b0c5fb94d"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeGatewayBackend.ts",
+      "bytes": 4492,
+      "sha256": "53f21893a8584c2703d9713e135f8d7eb90621c3e5f9deb5fc93a7ea2062fd99"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicyBootstrap.ts",
+      "bytes": 3393,
+      "sha256": "34553fc69008643c4dd18a2835e327519fc631dc01fe712bf9310dbae6fbcb68"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/src/domain/conflicts.ts",
+      "bytes": 24312,
+      "sha256": "81ee9fa901e821c58e76f22968dccab97619f3bc1e68c6e4bd99aa4187702135"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/gateway-backend.test.ts",
+      "bytes": 40999,
+      "sha256": "c41551304ddf7cd56c04f76e0669f0214b05d5b986aa80d4da56966850a5b0fd"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/memory-gateway.test.ts",
+      "bytes": 37848,
+      "sha256": "02ad012adce9748c1b85e01e46a7e760bd411737618ef4dbc4f2277885717bc2"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeMemory/public-functional.test.ts",
+      "bytes": 15024,
+      "sha256": "f3f9376f90eb961eff7fa782f3c6d46d74155b248d84e1ea53b47642bad7ab26"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-backend-gateway-independent-review1/memory-parent-and-outcome-independent2.test.ts",
+      "bytes": 16999,
+      "sha256": "081465d36e668c66cec11c143c68ac8a310d37a45c1f48035855f2bdd742e131"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-backend-gateway-independent-review1/offline-jest.config.mjs",
+      "bytes": 329,
+      "sha256": "1bfe4ea72ae96b11e5eb6573c80f8265f365515b4a69bec82df73e5f9bce7823"
+    }
+  ],
+  "inputsUnchanged": true,
+  "passed": 123,
+  "failed": 0,
+  "pending": 0,
+  "suites": 4,
+  "childReaped": true,
+  "ownedLiveProcesses": []
+}

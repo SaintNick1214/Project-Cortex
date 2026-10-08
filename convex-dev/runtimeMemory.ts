@@ -8,7 +8,11 @@ import type { RuntimeAuthority, RuntimeAuthorityReference, RuntimeAuthorityRequi
 import { runtimeAuthorityReference } from "./runtimeAuthSchema";
 import { commitDerivedInput, sourceContent } from "./runtimeMemorySchema";
 import { ConvexMemoryRepository, createActionMemoryRepository, memoryError, memoryScope } from "./runtimeMemoryRepository";
-import { explicitSourceLineage, recallMemory, rememberMemory, unconfiguredMemoryModel } from "./runtimeMemoryServices";
+import { assertMemoryRequestId, explicitSourceLineage, recallMemory, rememberMemory } from "./runtimeMemoryServices";
+import { normalizeSourceText } from "../src/domain/profile";
+import { canonicalModelJson } from "../src/domain/model-policy";
+import { createGatewayMemoryModel } from "./runtimeMemoryGateway";
+import { ensureBackendGatewayBudget } from "./runtimeGatewayBackend";
 
 const scopedArgs = { reference: runtimeAuthorityReference, capability: v.union(v.literal("read"), v.literal("write")) };
 export const checkAuthority = internalQuery({ args: scopedArgs,
@@ -112,7 +116,10 @@ function foregroundControlFailure(error: unknown): never {
           FORBIDDEN: ["Access denied", "A concrete authorized memory space is required"],
           INVALID_INPUT: ["Invalid authority configuration"],
           AUTHORITY_LOOKUP_AMBIGUOUS: ["Authority lookup is ambiguous"],
-          CAPABILITY_UNAVAILABLE: ["Memory capability unavailable."],
+          CAPABILITY_UNAVAILABLE: ["Memory capability unavailable.", "Model operation control failed."],
+          BUDGET_EXCEEDED: ["Model operation control failed."],
+          IDEMPOTENCY_CONFLICT: ["Model operation control failed."],
+          POLICY_DENIED: ["Model operation control failed."],
         };
         if (typeof fields.code === "string" && Object.prototype.hasOwnProperty.call(messages, fields.code)
           && typeof fields.message === "string" && messages[fields.code]!.includes(fields.message)) {
@@ -121,7 +128,7 @@ function foregroundControlFailure(error: unknown): never {
       }
     }
   } catch { /* Uninspectable control values stay opaque. */ }
-  if (known) return memoryError(known.code, known.message);
+  if (known) return memoryError(known.code, known.code === "CAPABILITY_UNAVAILABLE" ? "Memory capability unavailable." : known.message);
   return memoryError("INTERNAL_FAILURE", "Memory control failed.");
 }
 
@@ -145,18 +152,45 @@ async function memoryForegroundControl(ctx: Pick<ActionCtx, "runQuery" | "runMut
     };
     const repository = createActionMemoryRepository(controlCtx, reference, requirement.capability);
     await repository.recheckAuthority();
-    memoryError("CAPABILITY_UNAVAILABLE", "Memory capability unavailable.");
-    return { authority, repository };
+    // Subsequent functional reads return source/fact/vector values, not authority
+    // snapshots. Only the initial native control result crosses controlCtx.
+    return { reference, repository: createActionMemoryRepository(ctx, reference, requirement.capability) };
   } catch (error) { return foregroundControlFailure(error); }
 }
 const requestArgs = { tenantId: v.optional(v.string()), memorySpaceId: v.optional(v.string()), text: v.string(), requestId: v.string() };
+async function memoryBudget(ctx: Pick<ActionCtx, "runQuery" | "runMutation">,
+  reference: RuntimeAuthorityReference, operationKey: "memory.extract" | "embedding.query", requestId: string, request: unknown) {
+  try {
+    return await ensureBackendGatewayBudget(ctx, { reference, operationKey, requestId, requestCanonical: canonicalModelJson(request) });
+  } catch (error) { return foregroundControlFailure(error); }
+}
+/** The shared domain/repository can fail after earlier paid calls. Never convert
+ * a functional failure into an assertion that nothing was dispatched, or expose
+ * provider/domain diagnostics through the public action. */
+async function memoryOperation<Result>(call: () => Promise<Result>): Promise<Result> {
+  try { return await call(); }
+  catch {
+    throw new ConvexError({ version: 1, code: "MEMORY_OPERATION_FAILED", message: "Memory operation failed.",
+      retryable: false, outcome: "uncertain" });
+  }
+}
 export const remember = action({ args: requestArgs, handler: async (ctx, args) => {
-  const { authority, repository } = await memoryForegroundControl(ctx, { capability: "write", tenantId: args.tenantId, memorySpaceId: args.memorySpaceId });
-  return await rememberMemory({ repository, model: unconfiguredMemoryModel(), clock: { now: () => Date.now() } },
-    { text: args.text, lineage: explicitSourceLineage(memoryScope(authority), args.requestId) });
+  const { reference, repository } = await memoryForegroundControl(ctx, { capability: "write", tenantId: args.tenantId, memorySpaceId: args.memorySpaceId });
+  const lineage = explicitSourceLineage(memoryScope(reference), args.requestId);
+  const text = normalizeSourceText(args.text);
+  // Policy readiness and exact request reuse precede source persistence. The
+  // shared run account includes extraction and every chunk's secondary embedding.
+  const budget = await memoryBudget(ctx, reference, "memory.extract", args.requestId, { purpose: "remember", text, lineage });
+  return await memoryOperation(async () => await rememberMemory({ repository,
+    model: createGatewayMemoryModel(ctx, repository, budget), clock: { now: () => Date.now() } }, { text, lineage }));
 } });
 export const recall = action({ args: { ...requestArgs, limit: v.optional(v.number()) }, handler: async (ctx, args) => {
-  const { authority } = await memoryForegroundControl(ctx, { capability: "read", tenantId: args.tenantId, memorySpaceId: args.memorySpaceId });
-  return await recallMemory({ repository: createActionMemoryRepository(ctx, authority, "read"),
-    model: unconfiguredMemoryModel(), clock: { now: () => Date.now() } }, { text: args.text, requestId: args.requestId, limit: args.limit ?? 10 });
+  const { reference, repository } = await memoryForegroundControl(ctx, { capability: "read", tenantId: args.tenantId, memorySpaceId: args.memorySpaceId });
+  assertMemoryRequestId(args.requestId);
+  const text = normalizeSourceText(args.text); const limit = args.limit ?? 10;
+  if (!Number.isSafeInteger(limit) || limit < 1 || limit > 100) memoryError("INVALID_INPUT", "Limit must be between 1 and 100");
+  const budget = await memoryBudget(ctx, reference, "embedding.query", args.requestId, { purpose: "recall", text, limit });
+  return await memoryOperation(async () => await recallMemory({ repository,
+    model: createGatewayMemoryModel(ctx, repository, budget), clock: { now: () => Date.now() } },
+  { text, requestId: args.requestId, limit }));
 } });

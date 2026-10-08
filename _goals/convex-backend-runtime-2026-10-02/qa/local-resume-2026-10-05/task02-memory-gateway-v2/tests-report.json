@@ -1,0 +1,420 @@
+{
+  "scope": "TASK02_MEMORY_GATEWAY_OFFLINE_ADAPTER_TESTS_ONLY",
+  "status": "COMPLETE",
+  "qualityVerdict": "PASS",
+  "finishedUtc": "2026-10-08T07:58:04.771471+00:00",
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "writes": [
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/memory-gateway.test.ts",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-memory-gateway-v2"
+  ],
+  "productionSourceEditedByThisAgent": false,
+  "testFile": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/memory-gateway.test.ts",
+    "bytes": 31264,
+    "sha256": "36c86bd1c74ae30de8546f6dd681a56eb0e8336fd9f312ffcb12e3465b8bfb20"
+  },
+  "tools": {
+    "node": "24.15.0",
+    "npm": "12.2.0",
+    "declaredToolchain": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin",
+    "installedPackages": {
+      "typescript": "6.0.3",
+      "jest": "30.5.2",
+      "eslint": "10.11.0",
+      "convex": "1.46.0",
+      "@ai-sdk/provider": "4.0.21",
+      "@convex-dev/ai-sdk-provider": "0.2.1"
+    }
+  },
+  "finalChecks": [
+    {
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--experimental-vm-modules",
+        "node_modules/jest/bin/jest.js",
+        "--runTestsByPath",
+        "tests/unit/runtime/memory-gateway.test.ts",
+        "--runInBand",
+        "--forceExit",
+        "--no-cache",
+        "--json",
+        "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-memory-gateway-v2/logs/jest-run3-results.json"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "environmentOverrides": {
+        "PATH": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin:/usr/bin:/bin:/usr/sbin:/sbin",
+        "CONVEX_URL": "http://127.0.0.1:1",
+        "LOCAL_CONVEX_URL": "http://127.0.0.1:1",
+        "CONVEX_TEST_MODE": "local",
+        "GRAPH_TESTING_ENABLED": "false"
+      },
+      "startedUnix": 1791446093.0895538,
+      "elapsedSeconds": 3.6032283306121826,
+      "exitCode": 0,
+      "sourcePinsAtStart": [
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryGateway.ts",
+          "bytes": 7318,
+          "sha256": "48b6476651463b55cabbaefc395cb8d3c294b84113eaec28dbbb51677a1dd9de"
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeGateway.ts",
+          "bytes": 56644,
+          "sha256": "97694380529b263b27742d5f54ebd1c1e55ef95a60890049a9fb1775dc612281"
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeGatewayBackend.ts",
+          "bytes": 4492,
+          "sha256": "53f21893a8584c2703d9713e135f8d7eb90621c3e5f9deb5fc93a7ea2062fd99"
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicy.ts",
+          "bytes": 89866,
+          "sha256": "c4eb7e6d47849f7fa518c93ce3a16a134a3c0ce74674d0392eab7d39749ed29d"
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/src/domain/extraction.ts",
+          "bytes": 10991,
+          "sha256": "7324f700278531e30ae22d3eca29dd7bef2fbeae1d6aa7c7011ec9bcbb45fa5b"
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/src/domain/conflicts.ts",
+          "bytes": 24312,
+          "sha256": "81ee9fa901e821c58e76f22968dccab97619f3bc1e68c6e4bd99aa4187702135"
+        },
+        {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/memory-gateway.test.ts",
+          "bytes": 31264,
+          "sha256": "36c86bd1c74ae30de8546f6dd681a56eb0e8336fd9f312ffcb12e3465b8bfb20"
+        }
+      ]
+    },
+    {
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit",
+        "--pretty",
+        "false"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "startedUnix": 1791446146.067702,
+      "elapsedSeconds": 6.279069900512695,
+      "exitCode": 0
+    },
+    {
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/eslint/bin/eslint.js",
+        "tests/unit/runtime/memory-gateway.test.ts",
+        "--report-unused-disable-directives"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "startedUnix": 1791446146.067723,
+      "elapsedSeconds": 2.478969097137451,
+      "exitCode": 0
+    }
+  ],
+  "jest": {
+    "suitesPassed": 1,
+    "testsPassed": 47,
+    "testsFailed": 0,
+    "testsPending": 0,
+    "testsTodo": 0,
+    "assertionNames": [
+      "governed backend memory adapter (offline) constructs lazily, then passes only the trusted ten-field reference and current source witness",
+      "governed backend memory adapter (offline) routes extraction, conflict, memory and query embeddings through one budget with admitted parent and per-value ordinals",
+      "governed backend memory adapter (offline) reuses a server-issued run and parent without allocating a separate budget",
+      "governed backend memory adapter (offline) joins concurrent first uses of the same lazy run budget",
+      "governed backend memory adapter (offline) uses the smaller trusted policy/evidence output cap (32/64)",
+      "governed backend memory adapter (offline) uses the smaller trusted policy/evidence output cap (64/16)",
+      "governed backend memory adapter (offline) withholds a text call if the current factory resolution tightened the adapter's earlier cap",
+      "governed backend memory adapter (offline) rejects a schema change before authority, budget or model construction",
+      "governed backend memory adapter (offline) denies an automatic extract attempt before creating a new reservation",
+      "governed backend memory adapter (offline) denies an automatic resolve attempt before creating a new reservation",
+      "governed backend memory adapter (offline) denies an automatic embed attempt before creating a new reservation",
+      "governed backend memory adapter (offline) rejects a missing source witness before budget or dispatch",
+      "governed backend memory adapter (offline) rejects a event source witness before budget or dispatch",
+      "governed backend memory adapter (offline) rejects a revision source witness before budget or dispatch",
+      "governed backend memory adapter (offline) denies revoked authority before allocating a budget",
+      "governed backend memory adapter (offline) rechecks revocation before the second embedding value and stops with no second dispatch",
+      "governed backend memory adapter (offline) rechecks source-change before the second embedding value and stops with no second dispatch",
+      "governed backend memory adapter (offline) lets current native admission deny a grant revoked after the repository precheck",
+      "governed backend memory adapter (offline) does not retry a failed lazy budget allocation or fall back to a model",
+      "governed backend memory adapter (offline) joins lifecycle after an ambiguous extract failure without another native call or fallback",
+      "governed backend memory adapter (offline) joins lifecycle after an ambiguous embed failure without another native call or fallback",
+      "governed backend memory adapter (offline) does not automatically dispatch a policy-qualified fallback after ambiguous extraction",
+      "governed backend memory adapter (offline) rejects unusable extraction text \"not JSON\" after joining its lifecycle",
+      "governed backend memory adapter (offline) rejects unusable extraction text \"   \" after joining its lifecycle",
+      "governed backend memory adapter (offline) rejects an invalid conflict decision without treating it as a new fact",
+      "governed backend memory adapter (offline) joins a failed durable terminal capture and exposes no private result",
+      "governed backend memory adapter (offline) uses narrow authorized extraction replay and carries its admitted parent into embedding",
+      "governed backend memory adapter (offline) withholds previously saved text when the current replay authority check rejects",
+      "governed backend memory adapter (offline) rejects non-narrow text replay 0 without inference",
+      "governed backend memory adapter (offline) rejects non-narrow text replay 1 without inference",
+      "governed backend memory adapter (offline) rejects non-narrow text replay 2 without inference",
+      "governed backend memory adapter (offline) rejects invalid profile embedding replay without inference",
+      "governed backend memory adapter (offline) rejects invalid dimension embedding replay without inference",
+      "governed backend memory adapter (offline) rejects invalid nonnumeric embedding replay without inference",
+      "governed backend memory adapter (offline) rejects invalid extra-vector embedding replay without inference",
+      "governed backend memory adapter (offline) rejects invalid text embedding replay without inference",
+      "governed backend memory adapter (offline) denies mismatched requested profileId before budget/dispatch",
+      "governed backend memory adapter (offline) denies mismatched requested modelId before budget/dispatch",
+      "governed backend memory adapter (offline) denies mismatched requested dimensions before budget/dispatch",
+      "governed backend memory adapter (offline) denies mismatched requested normalization before budget/dispatch",
+      "governed backend memory adapter (offline) denies mismatched requested chunking before budget/dispatch",
+      "governed backend memory adapter (offline) denies mismatched requested indexName before budget/dispatch",
+      "governed backend memory adapter (offline) withholds invalid native dimension vectors, joins lifecycle and never dispatches a second value",
+      "governed backend memory adapter (offline) withholds invalid native nonfinite vectors, joins lifecycle and never dispatches a second value",
+      "governed backend memory adapter (offline) withholds invalid native empty vectors, joins lifecycle and never dispatches a second value",
+      "governed backend memory adapter (offline) withholds invalid native extra-vector vectors, joins lifecycle and never dispatches a second value",
+      "governed backend memory adapter (offline) rejects a factory model whose identity differs from the resolved policy before native dispatch"
+    ]
+  },
+  "coverage": [
+    "Lazy budget creation, concurrent common-budget join, reuse of server-issued run and parent",
+    "Trusted ten-field reference projection and current source content-hash witness",
+    "Extraction/conflict/query/memory operation routing; exact trusted semantic schemas with native plain-chat output",
+    "Admitted extraction parent (including replay), stable per-value embedding ordinals and one-value native calls",
+    "Minimum policy/evidence text cap and denial after current cap tightening",
+    "No automatic retry or policy-qualified fallback after ambiguous dispatch; no retry of denied lazy budget",
+    "Narrow text/embedding replay and current replay-authority rejection",
+    "Lifecycle completion once for every created handle on success/failure, with no pending middleware work at exit",
+    "Authority/source prechecks and changes between embedding values; current native admission revocation",
+    "Requested/replayed profile mismatch and invalid, empty, nonfinite or extra native vectors",
+    "Malformed extraction/conflict output, durable capture failure and factory model mismatch"
+  ],
+  "preservedFailures": [
+    {
+      "run": "jest-run1",
+      "passed": 32,
+      "failed": 12,
+      "total": 44,
+      "kind": "PRODUCT_SCHEMA_COMPOSITION_DEFECT",
+      "detail": "Structured memory.extract/facts.resolve omitted outputSchema in the native plain-chat request; failed before admission. Reported to Root, who delegated the trusted operation-key/schema source fix."
+    },
+    {
+      "run": "typecheck-run1",
+      "exitCode": 2,
+      "kind": "AUTHOR_TEST_FIXTURE_TYPING",
+      "detail": "Extra scope metadata literal needed a separately inferred value; mock account brand corrected from runtimeModelBudgetAccounts to actual runtimeBudgetAccounts."
+    },
+    {
+      "run": "jest-run2",
+      "passed": 30,
+      "failed": 17,
+      "total": 47,
+      "kind": "AUTHOR_POLICY_FIXTURE_MAPPING",
+      "detail": "Fake policy schema pin s1 was denied by the newly required facts-v1/conflicts-v1 guards. Only fixture schema pins corrected; assertions strengthened to require exact admitted schemas. Not a second product defect."
+    }
+  ],
+  "sourceAtFinalTestStart": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryGateway.ts",
+      "bytes": 7318,
+      "sha256": "48b6476651463b55cabbaefc395cb8d3c294b84113eaec28dbbb51677a1dd9de"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeGateway.ts",
+      "bytes": 56644,
+      "sha256": "97694380529b263b27742d5f54ebd1c1e55ef95a60890049a9fb1775dc612281"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeGatewayBackend.ts",
+      "bytes": 4492,
+      "sha256": "53f21893a8584c2703d9713e135f8d7eb90621c3e5f9deb5fc93a7ea2062fd99"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicy.ts",
+      "bytes": 89866,
+      "sha256": "c4eb7e6d47849f7fa518c93ce3a16a134a3c0ce74674d0392eab7d39749ed29d"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/src/domain/extraction.ts",
+      "bytes": 10991,
+      "sha256": "7324f700278531e30ae22d3eca29dd7bef2fbeae1d6aa7c7011ec9bcbb45fa5b"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/src/domain/conflicts.ts",
+      "bytes": 24312,
+      "sha256": "81ee9fa901e821c58e76f22968dccab97619f3bc1e68c6e4bd99aa4187702135"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/memory-gateway.test.ts",
+      "bytes": 31264,
+      "sha256": "36c86bd1c74ae30de8546f6dd681a56eb0e8336fd9f312ffcb12e3465b8bfb20"
+    }
+  ],
+  "evidenceLimits": {
+    "networkOrServiceCalls": false,
+    "realModelCalls": false,
+    "realPriceQualification": false,
+    "modelFactory": "Controlled @convex-dev/ai-sdk-provider factory identity; actual runtimeGateway middleware",
+    "backendRPCs": "Controlled backend composition/ledger ports",
+    "ledgerStorageAndOCCProven": false,
+    "publicMemoryWiringProven": false,
+    "fullTask02Complete": false,
+    "fullTask03Complete": false,
+    "fullGoalComplete": false,
+    "notes": "Separate native-ledger suites and live qualification belong to other task owners. The unreachable loopback URL satisfies existing test environment setup only; no Convex client is created by this batch."
+  },
+  "receipts": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-memory-gateway-v2/logs/jest-run1-command.json",
+      "bytes": 1029,
+      "sha256": "22c62c8f5bb21b67d79149e79790f7298eca7f0f390e7ac96eb5a568483f1bf6"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-memory-gateway-v2/logs/jest-run1-results.json",
+      "bytes": 63337,
+      "sha256": "34e28582236eef282e6c7ec0d32e32b38ca648f1614ce2b6102c9bd9999cfc81"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-memory-gateway-v2/logs/jest-run1.stderr.log",
+      "bytes": 20200,
+      "sha256": "80e68535f518f3f0ad0751a2d795d390d92d604ed7bebaa304a55e455d5e32f1"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-memory-gateway-v2/logs/jest-run1.stdout.log",
+      "bytes": 6349,
+      "sha256": "5117d0fc89afe9af05642d9031acd27d131f51a946cbf03ca9b89a6236e3a9af"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-memory-gateway-v2/logs/jest-run2-command.json",
+      "bytes": 2721,
+      "sha256": "9a1c7870f6e4097799c0834d7ddb511f94f92b433d28a3433bc0e991a716cd6c"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-memory-gateway-v2/logs/jest-run2-results.json",
+      "bytes": 81541,
+      "sha256": "e62107fdff8943e0b438474d94f440b59c7ac4e8d72a66688133f92425f05171"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-memory-gateway-v2/logs/jest-run2.stderr.log",
+      "bytes": 26289,
+      "sha256": "494b284a0e09ebadbb14c86d17a6c67e9610f9a22dbbf5cbefa68bcc2016fd52"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-memory-gateway-v2/logs/jest-run2.stdout.log",
+      "bytes": 6394,
+      "sha256": "c648f38053637c72f72b8fc8309d06dc1c086625c7632e55e46ae09c83dd7b32"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-memory-gateway-v2/logs/jest-run3-command.json",
+      "bytes": 2723,
+      "sha256": "3b9bb21feb560db0632d7c7681ebb64e5ed5ad230c1c97bbdc1d79ca87300626"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-memory-gateway-v2/logs/jest-run3-results.json",
+      "bytes": 23284,
+      "sha256": "282caf6b9581c08e79d91653593e44f52708c0090fd1c47696980bbd401f4b5e"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-memory-gateway-v2/logs/jest-run3.stderr.log",
+      "bytes": 6598,
+      "sha256": "544fc8fb4fe6bba3a44b08e0b435ae2b17c2fb9bcb66f01732d9a0b7ef2eec6f"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-memory-gateway-v2/logs/jest-run3.stdout.log",
+      "bytes": 6286,
+      "sha256": "c0c68848c462c0e5ab0dde4b5e5d3a6019f33855a98e1b9db3aa04242646991b"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-memory-gateway-v2/logs/lint-run1-command.json",
+      "bytes": 422,
+      "sha256": "311c8572b5c5615594ce543096b2bb585318362dcc9ea6b5fa413b7347798f28"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-memory-gateway-v2/logs/lint-run1.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-memory-gateway-v2/logs/lint-run1.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-memory-gateway-v2/logs/lint-run2-command.json",
+      "bytes": 422,
+      "sha256": "15f2e0c8270615df73f880bd300a95cdb16d624890e7ed12e89623de47cd54ea"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-memory-gateway-v2/logs/lint-run2.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-memory-gateway-v2/logs/lint-run2.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-memory-gateway-v2/logs/lint-run3-command.json",
+      "bytes": 421,
+      "sha256": "0e532ac19e4b62097595c04e5e5d37d97020c45c298c002e743d38d92146d8bd"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-memory-gateway-v2/logs/lint-run3.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-memory-gateway-v2/logs/lint-run3.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-memory-gateway-v2/logs/tool-versions.json",
+      "bytes": 782,
+      "sha256": "1a606928028bb12da50b1f734edc5fc6157c40bf0cc4a4f86a17011268ae3f47"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-memory-gateway-v2/logs/typecheck-run1-command.json",
+      "bytes": 373,
+      "sha256": "15a9c41ca8084111b9db2f0516bb83893bb82befe74ff8f74614bfd720e9e47e"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-memory-gateway-v2/logs/typecheck-run1.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-memory-gateway-v2/logs/typecheck-run1.stdout.log",
+      "bytes": 2104,
+      "sha256": "50fe24786ea07e2654c66d9c0b812de51260524918dd5275f939e38d8da2b32a"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-memory-gateway-v2/logs/typecheck-run2-command.json",
+      "bytes": 373,
+      "sha256": "bb334e52fa680cdb7efab9804b69a7487e06c267949c57fd52f053ac1f7adbc4"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-memory-gateway-v2/logs/typecheck-run2.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-memory-gateway-v2/logs/typecheck-run2.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-memory-gateway-v2/logs/typecheck-run3-command.json",
+      "bytes": 373,
+      "sha256": "ee555a2746b7216ee53124da6b2019381eff86abfad480a8650d99130765e818"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-memory-gateway-v2/logs/typecheck-run3.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-memory-gateway-v2/logs/typecheck-run3.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "remainingOwnWrites": []
+}

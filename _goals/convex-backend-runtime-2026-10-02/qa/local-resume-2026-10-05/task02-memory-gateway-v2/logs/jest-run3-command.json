@@ -1,0 +1,62 @@
+{
+  "command": [
+    "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+    "--experimental-vm-modules",
+    "node_modules/jest/bin/jest.js",
+    "--runTestsByPath",
+    "tests/unit/runtime/memory-gateway.test.ts",
+    "--runInBand",
+    "--forceExit",
+    "--no-cache",
+    "--json",
+    "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-memory-gateway-v2/logs/jest-run3-results.json"
+  ],
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "environmentOverrides": {
+    "PATH": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin:/usr/bin:/bin:/usr/sbin:/sbin",
+    "CONVEX_URL": "http://127.0.0.1:1",
+    "LOCAL_CONVEX_URL": "http://127.0.0.1:1",
+    "CONVEX_TEST_MODE": "local",
+    "GRAPH_TESTING_ENABLED": "false"
+  },
+  "startedUnix": 1791446093.0895538,
+  "elapsedSeconds": 3.6032283306121826,
+  "exitCode": 0,
+  "sourcePinsAtStart": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryGateway.ts",
+      "bytes": 7318,
+      "sha256": "48b6476651463b55cabbaefc395cb8d3c294b84113eaec28dbbb51677a1dd9de"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeGateway.ts",
+      "bytes": 56644,
+      "sha256": "97694380529b263b27742d5f54ebd1c1e55ef95a60890049a9fb1775dc612281"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeGatewayBackend.ts",
+      "bytes": 4492,
+      "sha256": "53f21893a8584c2703d9713e135f8d7eb90621c3e5f9deb5fc93a7ea2062fd99"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicy.ts",
+      "bytes": 89866,
+      "sha256": "c4eb7e6d47849f7fa518c93ce3a16a134a3c0ce74674d0392eab7d39749ed29d"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/src/domain/extraction.ts",
+      "bytes": 10991,
+      "sha256": "7324f700278531e30ae22d3eca29dd7bef2fbeae1d6aa7c7011ec9bcbb45fa5b"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/src/domain/conflicts.ts",
+      "bytes": 24312,
+      "sha256": "81ee9fa901e821c58e76f22968dccab97619f3bc1e68c6e4bd99aa4187702135"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/memory-gateway.test.ts",
+      "bytes": 31264,
+      "sha256": "36c86bd1c74ae30de8546f6dd681a56eb0e8336fd9f312ffcb12e3465b8bfb20"
+    }
+  ]
+}

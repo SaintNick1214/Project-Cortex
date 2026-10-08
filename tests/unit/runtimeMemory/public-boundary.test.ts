@@ -58,9 +58,10 @@ async function outcome(f: ReturnType<typeof setup>, operation: "remember" | "rec
     throw error;
   }
 }
-function zero(f: ReturnType<typeof setup>): void {
+function zero(f: ReturnType<typeof setup>, policyCount = 0): void {
   expect(f.db.writes).toBe(0); expect(f.businessReads).toEqual([]); expect(f.searches).toEqual([]);
   expect(f.payloads.every((payload) => ["runtimeAuth:authorize", "runtimeMemory:checkAuthority"].includes(payload.name))).toBe(true);
+  expect(f.policyRequests).toHaveLength(policyCount);
 }
 
 describe.each(["remember", "recall"] as const)("native %s control boundary", (operation) => {
@@ -76,7 +77,11 @@ describe.each(["remember", "recall"] as const)("native %s control boundary", (op
     expect(Object.isFrozen(raw.reference)).toBe(true);
     expect(Object.keys((sent.serialized as { reference: object }).reference).sort()).toEqual(keys);
     expect(raw.capability).toBe(operation === "remember" ? "write" : "read");
-    expect(raw.reference).toEqual(f.reference); zero(f);
+    expect(raw.reference).toEqual(f.reference);
+    expect(f.policyRequests[0]).toMatchObject({ reference: f.reference,
+      operationKey: operation === "remember" ? "memory.extract" : "embedding.query", requestId: args.requestId });
+    expect(Object.keys(f.policyRequests[0]!.reference).sort()).toEqual(keys);
+    zero(f, 1);
   });
   it("preserves concrete-scope denial when optional native reference keys are omitted", async () => {
     const f = setup();

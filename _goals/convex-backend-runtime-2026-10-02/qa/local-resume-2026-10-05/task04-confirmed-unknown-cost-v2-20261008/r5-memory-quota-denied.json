@@ -1,0 +1,25 @@
+{
+  "label": "r5-memory-quota-denied",
+  "fn": "runtimeMemory:remember",
+  "args": {
+    "tenantId": "task04-memory3-5bfe0c22",
+    "memorySpaceId": "qualification",
+    "text": "A quota-denied source must not persist.",
+    "requestId": "quota-new"
+  },
+  "result": null,
+  "error": {
+    "name": "ConvexError",
+    "data": {
+      "code": "BUDGET_EXCEEDED",
+      "message": "Model operation control failed.",
+      "outcome": "not_dispatched",
+      "retryable": false,
+      "version": 1
+    },
+    "message": "[Request ID: 72d056dabe850052] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"BUDGET_EXCEEDED\",\"message\":\"Model operation control failed.\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at memoryError (../../convex-dev/runtimeMemoryRepository.ts:35:0)\n    at foregroundControlFailure (../convex-dev/runtimeMemory.ts:132:0)\n    at memoryBudget (../convex-dev/runtimeMemory.ts:164:60)\n    at async handler (../convex-dev/runtimeMemory.ts:183:64)\n"
+  },
+  "elapsedMs": 185,
+  "target": "groovy-bird-988",
+  "actualJwt": true
+}

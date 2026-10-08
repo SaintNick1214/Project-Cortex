@@ -1,0 +1,45 @@
+{
+  "scope": "Independent revised-envelope arithmetic; no aggregate provider billing completeness claim",
+  "observedAt": "2026-10-08T09:05:48.162500+00:00",
+  "publishedPriceInput": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-functional-gateway-v2-20261008/actual-public-prices.json",
+    "bytes": 7208,
+    "sha256": "c22388356c09afb7c03d5444dccdd69f88110bef27b4da2ee8d3618bb0f8603c",
+    "capturedAt": "2026-10-08T07:45:19.781Z"
+  },
+  "proposalInput": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-confirmed-unknown-cost-v2-20261008/qualification-manifest-proposal-memory-v2.json",
+    "bytes": 21208,
+    "sha256": "ef0c8c6268d90386fedecd15a76c59bec42a11ebed44113ccd09c5e8169c9160"
+  },
+  "rows": [
+    {
+      "modelId": "openai/gpt-4o-mini",
+      "inputCeiling": 8192,
+      "outputCeiling": 512,
+      "roundedUpPublishedTokenCostMicroUsd": 1536,
+      "proposedFullCallCeilingMicroUsd": 100000,
+      "marginMultiple": "65.10416666666666666666666667"
+    },
+    {
+      "modelId": "openai/gpt-4o",
+      "inputCeiling": 8192,
+      "outputCeiling": 512,
+      "roundedUpPublishedTokenCostMicroUsd": 25600,
+      "proposedFullCallCeilingMicroUsd": 100000,
+      "marginMultiple": "3.90625"
+    },
+    {
+      "modelId": "openai/text-embedding-3-small",
+      "inputCeiling": 8192,
+      "outputCeiling": 0,
+      "roundedUpPublishedTokenCostMicroUsd": 164,
+      "proposedFullCallCeilingMicroUsd": 100000,
+      "marginMultiple": "609.7560975609756097560975610"
+    }
+  ],
+  "allWithin": true,
+  "highestMicroUsd": 25600,
+  "historicalEarlier4096RecordPreserved": true,
+  "limitation": "Supports only practical100000 ceiling over one narrow8192-input/512-chat-output plain call with no billable extras enabled, with expiry/revision/overrun fences. It is not a proof of undiscovered fees or known invoice cost. Full unknown liability retained; output requires exact complete serving evidence and fresh authorization. No installation approval gate or full-task verdict in this arithmetic receipt."
+}

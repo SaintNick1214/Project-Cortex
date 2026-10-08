@@ -1,0 +1,24 @@
+{
+  "scope": "Reviewer raw-outcome parser corrections only; original failed scripts/results preserved; no product or author test changes",
+  "at": "2026-10-08T09:11:20.314587+00:00",
+  "corrections": [
+    {
+      "from": "check2",
+      "finding": "conflict result is a decision envelope, not a direct action field",
+      "effect": "parse result.decision.action; exact NONE/full-liability assertion retained"
+    },
+    {
+      "from": "check3",
+      "finding": "source metadata id is Convex document ID, while vector/chunk/fact lineage join uses logical lineage.sourceId",
+      "effect": "compare exact logical sourceId through stored lineage, with owner/chunk/profile joins retained"
+    },
+    {
+      "from": "check3",
+      "finding": "public recall reruns temporal ranking against current clock over unchanged cached embedding; scores changed by about0.0000001 while stable items/context/profile and business/model snapshots stayed identical",
+      "effect": "compare exact stable item fields/context/profile plus finite bounded scores and unchanged data/attempt/account snapshots; do not require identical age-decay scores"
+    }
+  ],
+  "candidateFinding": false,
+  "oldFailedOutcomesRelabeled": false,
+  "noEffects": true
+}

@@ -1,0 +1,383 @@
+  console.error
+    ◇ injected env (0) from .env.test
+
+      13 | import dotenv from "dotenv";
+      14 | import { resolve } from "path";
+    > 15 |
+         | ^
+      16 | // Load .env.test first (test defaults)
+      17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+      18 |
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:15:8
+
+  console.error
+    ◇ injected env (0) from .env.local
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+  console.log
+    
+    🧪 Testing against LOCAL Convex: http://127.0.0.1:1
+
+      at tests/env.ts:35:13
+
+  console.log
+       Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:36:13
+
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:121:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:122:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:123:13
+
+(node:41598) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtime/memory-gateway.test.ts
+  governed backend memory adapter (offline)
+    ✕ constructs lazily, then passes only the trusted ten-field reference and current source witness (11 ms)
+    ✕ routes extraction, conflict, memory and query embeddings through one budget with admitted parent and per-value ordinals (3 ms)
+    ✕ reuses a server-issued run and parent without allocating a separate budget (1 ms)
+    ✓ joins concurrent first uses of the same lazy run budget (17 ms)
+    ✕ uses the smaller trusted policy/evidence output cap (32/64) (2 ms)
+    ✕ uses the smaller trusted policy/evidence output cap (64/16) (1 ms)
+    ✓ rejects a schema change before authority, budget or model construction (3 ms)
+    ✓ denies an automatic extract attempt before creating a new reservation (1 ms)
+    ✓ denies an automatic resolve attempt before creating a new reservation
+    ✓ denies an automatic embed attempt before creating a new reservation (1 ms)
+    ✓ rejects a missing source witness before budget or dispatch
+    ✓ rejects a event source witness before budget or dispatch
+    ✓ rejects a revision source witness before budget or dispatch (1 ms)
+    ✓ denies revoked authority before allocating a budget
+    ✓ rechecks revocation before the second embedding value and stops with no second dispatch (8 ms)
+    ✓ rechecks source-change before the second embedding value and stops with no second dispatch (8 ms)
+    ✕ lets current native admission deny a grant revoked after the repository precheck (8 ms)
+    ✓ does not retry a failed lazy budget allocation or fall back to a model
+    ✕ joins lifecycle after an ambiguous extract failure without another native call or fallback (3 ms)
+    ✓ joins lifecycle after an ambiguous embed failure without another native call or fallback (3 ms)
+    ✕ rejects unusable extraction text "not JSON" after joining its lifecycle (1 ms)
+    ✕ rejects unusable extraction text "   " after joining its lifecycle (2 ms)
+    ✕ rejects an invalid conflict decision without treating it as a new fact (1 ms)
+    ✕ joins a failed durable terminal capture and exposes no private result (2 ms)
+    ✕ uses narrow authorized extraction replay and carries its admitted parent into embedding (1 ms)
+    ✓ rejects non-narrow text replay 0 without inference (1 ms)
+    ✓ rejects non-narrow text replay 1 without inference (5 ms)
+    ✓ rejects non-narrow text replay 2 without inference (2 ms)
+    ✓ rejects invalid profile embedding replay without inference (5 ms)
+    ✓ rejects invalid dimension embedding replay without inference (2 ms)
+    ✓ rejects invalid nonfinite embedding replay without inference (2 ms)
+    ✓ rejects invalid extra-vector embedding replay without inference (8 ms)
+    ✓ rejects invalid text embedding replay without inference (2 ms)
+    ✓ denies mismatched requested profileId before budget/dispatch
+    ✓ denies mismatched requested modelId before budget/dispatch (1 ms)
+    ✓ denies mismatched requested dimensions before budget/dispatch
+    ✓ denies mismatched requested normalization before budget/dispatch
+    ✓ denies mismatched requested chunking before budget/dispatch (1 ms)
+    ✓ denies mismatched requested indexName before budget/dispatch
+    ✓ withholds invalid native dimension vectors, joins lifecycle and never dispatches a second value (3 ms)
+    ✓ withholds invalid native nonfinite vectors, joins lifecycle and never dispatches a second value (3 ms)
+    ✓ withholds invalid native empty vectors, joins lifecycle and never dispatches a second value (3 ms)
+    ✓ withholds invalid native extra-vector vectors, joins lifecycle and never dispatches a second value (4 ms)
+    ✓ rejects a factory model whose identity differs from the resolved policy before native dispatch (2 ms)
+
+  ● governed backend memory adapter (offline) › constructs lazily, then passes only the trusted ten-field reference and current source witness
+
+    POLICY_DENIED: operation schema mismatch
+
+      113 | }
+      114 |
+    > 115 | function deny(message: string): never { throw new Error(`POLICY_DENIED: ${message}`); }
+          |                                               ^
+      116 | function parse<T>(schema: z.ZodType<T>, input: unknown): T {
+      117 |   const result = schema.safeParse(input);
+      118 |   if (!result.success) throw new Error("INVALID_INPUT: invalid model policy contract");
+
+      at deny (src/domain/model-policy.ts:115:47)
+      at validateModelRequest (src/domain/model-policy.ts:333:60)
+      at languageParams (convex-dev/runtimeGateway.ts:240:19)
+      at transformParams (convex-dev/runtimeGateway.ts:485:71)
+      at doTransform (node_modules/ai/src/middleware/wrap-language-model.ts:70:15)
+      at Object.doGenerate (node_modules/ai/src/middleware/wrap-language-model.ts:84:39)
+      at text (convex-dev/runtimeMemoryGateway.ts:67:62)
+      at Object.extract (convex-dev/runtimeMemoryGateway.ts:89:23)
+      at Object.<anonymous> (tests/unit/runtime/memory-gateway.test.ts:161:12)
+
+  ● governed backend memory adapter (offline) › routes extraction, conflict, memory and query embeddings through one budget with admitted parent and per-value ordinals
+
+    POLICY_DENIED: operation schema mismatch
+
+      113 | }
+      114 |
+    > 115 | function deny(message: string): never { throw new Error(`POLICY_DENIED: ${message}`); }
+          |                                               ^
+      116 | function parse<T>(schema: z.ZodType<T>, input: unknown): T {
+      117 |   const result = schema.safeParse(input);
+      118 |   if (!result.success) throw new Error("INVALID_INPUT: invalid model policy contract");
+
+      at deny (src/domain/model-policy.ts:115:47)
+      at validateModelRequest (src/domain/model-policy.ts:333:60)
+      at languageParams (convex-dev/runtimeGateway.ts:240:19)
+      at transformParams (convex-dev/runtimeGateway.ts:485:71)
+      at doTransform (node_modules/ai/src/middleware/wrap-language-model.ts:70:15)
+      at Object.doGenerate (node_modules/ai/src/middleware/wrap-language-model.ts:84:39)
+      at text (convex-dev/runtimeMemoryGateway.ts:67:62)
+      at Object.extract (convex-dev/runtimeMemoryGateway.ts:89:23)
+      at Object.<anonymous> (tests/unit/runtime/memory-gateway.test.ts:174:5)
+
+  ● governed backend memory adapter (offline) › reuses a server-issued run and parent without allocating a separate budget
+
+    POLICY_DENIED: operation schema mismatch
+
+      113 | }
+      114 |
+    > 115 | function deny(message: string): never { throw new Error(`POLICY_DENIED: ${message}`); }
+          |                                               ^
+      116 | function parse<T>(schema: z.ZodType<T>, input: unknown): T {
+      117 |   const result = schema.safeParse(input);
+      118 |   if (!result.success) throw new Error("INVALID_INPUT: invalid model policy contract");
+
+      at deny (src/domain/model-policy.ts:115:47)
+      at validateModelRequest (src/domain/model-policy.ts:333:60)
+      at languageParams (convex-dev/runtimeGateway.ts:240:19)
+      at transformParams (convex-dev/runtimeGateway.ts:485:71)
+      at doTransform (node_modules/ai/src/middleware/wrap-language-model.ts:70:15)
+      at Object.doGenerate (node_modules/ai/src/middleware/wrap-language-model.ts:84:39)
+      at text (convex-dev/runtimeMemoryGateway.ts:67:62)
+      at Object.extract (convex-dev/runtimeMemoryGateway.ts:89:23)
+      at Object.<anonymous> (tests/unit/runtime/memory-gateway.test.ts:196:5)
+
+  ● governed backend memory adapter (offline) › uses the smaller trusted policy/evidence output cap (32/64)
+
+    POLICY_DENIED: operation schema mismatch
+
+      113 | }
+      114 |
+    > 115 | function deny(message: string): never { throw new Error(`POLICY_DENIED: ${message}`); }
+          |                                               ^
+      116 | function parse<T>(schema: z.ZodType<T>, input: unknown): T {
+      117 |   const result = schema.safeParse(input);
+      118 |   if (!result.success) throw new Error("INVALID_INPUT: invalid model policy contract");
+
+      at deny (src/domain/model-policy.ts:115:47)
+      at validateModelRequest (src/domain/model-policy.ts:333:60)
+      at languageParams (convex-dev/runtimeGateway.ts:240:19)
+      at transformParams (convex-dev/runtimeGateway.ts:485:71)
+      at doTransform (node_modules/ai/src/middleware/wrap-language-model.ts:70:15)
+      at Object.doGenerate (node_modules/ai/src/middleware/wrap-language-model.ts:84:39)
+      at text (convex-dev/runtimeMemoryGateway.ts:67:62)
+      at Object.extract (convex-dev/runtimeMemoryGateway.ts:89:23)
+      at tests/unit/runtime/memory-gateway.test.ts:216:52
+
+  ● governed backend memory adapter (offline) › uses the smaller trusted policy/evidence output cap (64/16)
+
+    POLICY_DENIED: operation schema mismatch
+
+      113 | }
+      114 |
+    > 115 | function deny(message: string): never { throw new Error(`POLICY_DENIED: ${message}`); }
+          |                                               ^
+      116 | function parse<T>(schema: z.ZodType<T>, input: unknown): T {
+      117 |   const result = schema.safeParse(input);
+      118 |   if (!result.success) throw new Error("INVALID_INPUT: invalid model policy contract");
+
+      at deny (src/domain/model-policy.ts:115:47)
+      at validateModelRequest (src/domain/model-policy.ts:333:60)
+      at languageParams (convex-dev/runtimeGateway.ts:240:19)
+      at transformParams (convex-dev/runtimeGateway.ts:485:71)
+      at doTransform (node_modules/ai/src/middleware/wrap-language-model.ts:70:15)
+      at Object.doGenerate (node_modules/ai/src/middleware/wrap-language-model.ts:84:39)
+      at text (convex-dev/runtimeMemoryGateway.ts:67:62)
+      at Object.extract (convex-dev/runtimeMemoryGateway.ts:89:23)
+      at tests/unit/runtime/memory-gateway.test.ts:216:52
+
+  ● governed backend memory adapter (offline) › lets current native admission deny a grant revoked after the repository precheck
+
+    expect(received).rejects.toThrow(expected)
+
+    Expected substring: "Authority revoked"
+    Received message:   "POLICY_DENIED: operation schema mismatch"
+
+          113 | }
+          114 |
+        > 115 | function deny(message: string): never { throw new Error(`POLICY_DENIED: ${message}`); }
+              |                                               ^
+          116 | function parse<T>(schema: z.ZodType<T>, input: unknown): T {
+          117 |   const result = schema.safeParse(input);
+          118 |   if (!result.success) throw new Error("INVALID_INPUT: invalid model policy contract");
+
+      at deny (src/domain/model-policy.ts:115:47)
+      at validateModelRequest (src/domain/model-policy.ts:333:60)
+      at languageParams (convex-dev/runtimeGateway.ts:240:19)
+      at transformParams (convex-dev/runtimeGateway.ts:485:71)
+      at doTransform (node_modules/ai/src/middleware/wrap-language-model.ts:70:15)
+      at Object.doGenerate (node_modules/ai/src/middleware/wrap-language-model.ts:84:39)
+      at text (convex-dev/runtimeMemoryGateway.ts:67:62)
+      at Object.extract (convex-dev/runtimeMemoryGateway.ts:89:23)
+      at Object.<anonymous> (tests/unit/runtime/memory-gateway.test.ts:262:5)
+      at Object.toThrow (node_modules/expect/build/index.js:2155:20)
+      at Object.<anonymous> (tests/unit/runtime/memory-gateway.test.ts:262:97)
+
+  ● governed backend memory adapter (offline) › joins lifecycle after an ambiguous extract failure without another native call or fallback
+
+    expect(received).rejects.toMatchObject(expected)
+
+    - Expected  - 3
+    + Received  + 1
+
+    - Object {
+    -   "code": "MODEL_INTERRUPTED",
+    - }
+    + [Error: POLICY_DENIED: operation schema mismatch]
+
+      275 |     const f = fixture(); f.failNative(); const model = createGatewayMemoryModel(ctx, f.repository);
+      276 |     await expect(method === "extract" ? model.extract(extractRequest()) : model.embed(embedRequest("embedding.memory", ["first", "second"])))
+    > 277 |       .rejects.toMatchObject({ code: "MODEL_INTERRUPTED" });
+          |                ^
+      278 |     expect(f.chatCalls.length + f.embeddingCalls.length).toBe(1); expect(f.admissions).toHaveLength(1);
+      279 |     expect(f.capture).not.toHaveBeenCalled(); expect(f.attach).not.toHaveBeenCalled();
+      280 |   });
+
+      at Object.toMatchObject (node_modules/expect/build/index.js:2155:20)
+      at tests/unit/runtime/memory-gateway.test.ts:277:16
+
+  ● governed backend memory adapter (offline) › rejects unusable extraction text "not JSON" after joining its lifecycle
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 1
+    Received length: 0
+    Received array:  []
+
+      283 |     const f = fixture(); f.text(text);
+      284 |     await expect(createGatewayMemoryModel(ctx, f.repository).extract(extractRequest())).rejects.toThrow();
+    > 285 |     expect(f.chatCalls).toHaveLength(1); expect(handles).toHaveLength(1);
+          |                         ^
+      286 |   });
+      287 |
+      288 |   it("rejects an invalid conflict decision without treating it as a new fact", async () => {
+
+      at tests/unit/runtime/memory-gateway.test.ts:285:25
+
+  ● governed backend memory adapter (offline) › rejects unusable extraction text "   " after joining its lifecycle
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 1
+    Received length: 0
+    Received array:  []
+
+      283 |     const f = fixture(); f.text(text);
+      284 |     await expect(createGatewayMemoryModel(ctx, f.repository).extract(extractRequest())).rejects.toThrow();
+    > 285 |     expect(f.chatCalls).toHaveLength(1); expect(handles).toHaveLength(1);
+          |                         ^
+      286 |   });
+      287 |
+      288 |   it("rejects an invalid conflict decision without treating it as a new fact", async () => {
+
+      at tests/unit/runtime/memory-gateway.test.ts:285:25
+
+  ● governed backend memory adapter (offline) › rejects an invalid conflict decision without treating it as a new fact
+
+    expect(received).rejects.toThrow(expected)
+
+    Expected substring: "Invalid action"
+    Received message:   "POLICY_DENIED: operation schema mismatch"
+
+          113 | }
+          114 |
+        > 115 | function deny(message: string): never { throw new Error(`POLICY_DENIED: ${message}`); }
+              |                                               ^
+          116 | function parse<T>(schema: z.ZodType<T>, input: unknown): T {
+          117 |   const result = schema.safeParse(input);
+          118 |   if (!result.success) throw new Error("INVALID_INPUT: invalid model policy contract");
+
+      at deny (src/domain/model-policy.ts:115:47)
+      at validateModelRequest (src/domain/model-policy.ts:333:60)
+      at languageParams (convex-dev/runtimeGateway.ts:240:19)
+      at transformParams (convex-dev/runtimeGateway.ts:485:71)
+      at doTransform (node_modules/ai/src/middleware/wrap-language-model.ts:70:15)
+      at Object.doGenerate (node_modules/ai/src/middleware/wrap-language-model.ts:84:39)
+      at text (convex-dev/runtimeMemoryGateway.ts:67:62)
+      at Object.resolve (convex-dev/runtimeMemoryGateway.ts:93:55)
+      at Object.<anonymous> (tests/unit/runtime/memory-gateway.test.ts:290:5)
+      at Object.toThrow (node_modules/expect/build/index.js:2155:20)
+      at Object.<anonymous> (tests/unit/runtime/memory-gateway.test.ts:290:97)
+
+  ● governed backend memory adapter (offline) › joins a failed durable terminal capture and exposes no private result
+
+    expect(received).rejects.toMatchObject(expected)
+
+    - Expected  - 3
+    + Received  + 1
+
+    - Object {
+    -   "code": "TERMINAL_CAPTURE_PENDING",
+    - }
+    + [Error: POLICY_DENIED: operation schema mismatch]
+
+      294 |   it("joins a failed durable terminal capture and exposes no private result", async () => {
+      295 |     const f = fixture(); f.capture.mockRejectedValue(new Error("sink unavailable"));
+    > 296 |     await expect(createGatewayMemoryModel(ctx, f.repository).extract(extractRequest())).rejects.toMatchObject({ code: "TERMINAL_CAPTURE_PENDING" });
+          |                                                                                                 ^
+      297 |     expect(f.chatCalls).toHaveLength(1); expect(f.capture).toHaveBeenCalledTimes(1); expect(f.attach).not.toHaveBeenCalled();
+      298 |   });
+      299 |
+
+      at Object.toMatchObject (node_modules/expect/build/index.js:2155:20)
+      at Object.<anonymous> (tests/unit/runtime/memory-gateway.test.ts:296:97)
+
+  ● governed backend memory adapter (offline) › uses narrow authorized extraction replay and carries its admitted parent into embedding
+
+    POLICY_DENIED: operation schema mismatch
+
+      113 | }
+      114 |
+    > 115 | function deny(message: string): never { throw new Error(`POLICY_DENIED: ${message}`); }
+          |                                               ^
+      116 | function parse<T>(schema: z.ZodType<T>, input: unknown): T {
+      117 |   const result = schema.safeParse(input);
+      118 |   if (!result.success) throw new Error("INVALID_INPUT: invalid model policy contract");
+
+      at deny (src/domain/model-policy.ts:115:47)
+      at validateModelRequest (src/domain/model-policy.ts:333:60)
+      at languageParams (convex-dev/runtimeGateway.ts:240:19)
+      at transformParams (convex-dev/runtimeGateway.ts:485:71)
+      at doTransform (node_modules/ai/src/middleware/wrap-language-model.ts:70:15)
+      at Object.doGenerate (node_modules/ai/src/middleware/wrap-language-model.ts:84:39)
+      at text (convex-dev/runtimeMemoryGateway.ts:67:62)
+      at Object.extract (convex-dev/runtimeMemoryGateway.ts:89:23)
+      at Object.<anonymous> (tests/unit/runtime/memory-gateway.test.ts:302:12)
+
+Test Suites: 1 failed, 1 total
+Tests:       12 failed, 32 passed, 44 total
+Snapshots:   0 total
+Time:        4.103 s
+Ran all test suites within paths "tests/unit/runtime/memory-gateway.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-memory-gateway-v2/logs/jest-run1-results.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

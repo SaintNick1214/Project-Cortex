@@ -1,0 +1,342 @@
+{
+  "scope": "TASK04_COHERENT_GATEWAY_BACKEND_ADAPTER_AND_ACTUAL_DISPOSABLE_QUALIFICATION_BATCH",
+  "status": "IMPLEMENTED_AND_EXECUTED_PENDING_NONAUTHOR_REVIEW_AND_INSTALLED_MANIFEST",
+  "closedAt": "2026-10-08T08:14:32.957Z",
+  "operation": "2c44fb8e-29a8-4168-b5ce-33f36eb1fdfc",
+  "candidateDigest": "dfe7874412d5c450fdc826fa4fb7f372dfa2bc01a7bc9312f31b7a8b11457c3a",
+  "candidate": [
+    {
+      "path": "convex-dev/runtimeGatewayBackend.ts",
+      "absolutePath": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeGatewayBackend.ts",
+      "bytes": 4492,
+      "sha256": "53f21893a8584c2703d9713e135f8d7eb90621c3e5f9deb5fc93a7ea2062fd99"
+    },
+    {
+      "path": "convex-dev/runtimeGateway.ts",
+      "absolutePath": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeGateway.ts",
+      "bytes": 56644,
+      "sha256": "97694380529b263b27742d5f54ebd1c1e55ef95a60890049a9fb1775dc612281"
+    },
+    {
+      "path": "convex-dev/runtimeModelPolicy.ts",
+      "absolutePath": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicy.ts",
+      "bytes": 89866,
+      "sha256": "c4eb7e6d47849f7fa518c93ce3a16a134a3c0ce74674d0392eab7d39749ed29d"
+    },
+    {
+      "path": "convex-dev/runtimeModelPolicyBootstrap.ts",
+      "absolutePath": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicyBootstrap.ts",
+      "bytes": 3393,
+      "sha256": "34553fc69008643c4dd18a2835e327519fc631dc01fe712bf9310dbae6fbcb68"
+    },
+    {
+      "path": "src/domain/conflicts.ts",
+      "absolutePath": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/src/domain/conflicts.ts",
+      "bytes": 24312,
+      "sha256": "81ee9fa901e821c58e76f22968dccab97619f3bc1e68c6e4bd99aa4187702135"
+    },
+    {
+      "path": "tests/unit/runtime/gateway-backend.test.ts",
+      "absolutePath": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/gateway-backend.test.ts",
+      "bytes": 30454,
+      "sha256": "9f8e8c5b3d650ce81217253c88023c53aa1c8434ce1226af545422b07e26d7c5"
+    },
+    {
+      "path": "tests/unit/runtime/model-policy-admission.test.ts",
+      "absolutePath": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/model-policy-admission.test.ts",
+      "bytes": 90229,
+      "sha256": "ed222f28a781ddb6c14b6db877a12a74cf7245d156d75556c9201aef7994faca"
+    },
+    {
+      "path": "tests/unit/runtime/model-policy-model-drift.test.ts",
+      "absolutePath": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/model-policy-model-drift.test.ts",
+      "bytes": 35159,
+      "sha256": "4f8bb8a8e26d4ebdd2b27bd0d9f5ebbb4ae5f59d8b8cd140c49250ab88d85c92"
+    }
+  ],
+  "toolchain": {
+    "node": "24.15.0",
+    "npm": "12.2.0",
+    "convex": "1.46.0",
+    "gateway": "0.2.1",
+    "ai": "7"
+  },
+  "productChanges": [
+    "ActionCtx-native ledger composition and official Gateway factory.",
+    "Parent operation is forwarded to resolve and rechecked for same run/current authority; admitted child snapshot matches.",
+    "Exact attested default embedding terminal wire identity is accepted; arbitrary aliases and omission continue deny, raw identity retained in terminal/replay fences.",
+    "Fixed versioned fact/conflict semantic schemas are attached before admission; no native responseFormat/provider routing override."
+  ],
+  "actual": {
+    "scope": "ACTUAL_DISPOSABLE_GATEWAY_AND_NATIVE_LEDGER_WITH_CONTROLLED_COST_LOSS",
+    "operation": "2c44fb8e-29a8-4168-b5ce-33f36eb1fdfc",
+    "cases": [
+      {
+        "name": "chat actual output",
+        "status": "PASS"
+      },
+      {
+        "name": "chat reservation/checkpoint before terminal",
+        "status": "PASS"
+      },
+      {
+        "name": "chat exact charge settlement/attachment",
+        "status": "PASS"
+      },
+      {
+        "name": "title actual output",
+        "status": "PASS"
+      },
+      {
+        "name": "title reservation/checkpoint before terminal",
+        "status": "PASS"
+      },
+      {
+        "name": "title exact charge settlement/attachment",
+        "status": "PASS"
+      },
+      {
+        "name": "query-embedding actual output",
+        "status": "PASS"
+      },
+      {
+        "name": "query-embedding reservation/checkpoint before terminal",
+        "status": "PASS"
+      },
+      {
+        "name": "query-embedding exact charge settlement/attachment",
+        "status": "PASS"
+      },
+      {
+        "name": "memory-embedding actual output",
+        "status": "PASS"
+      },
+      {
+        "name": "memory-embedding reservation/checkpoint before terminal",
+        "status": "PASS"
+      },
+      {
+        "name": "memory-embedding exact charge settlement/attachment",
+        "status": "PASS"
+      },
+      {
+        "name": "extraction actual output",
+        "status": "PASS"
+      },
+      {
+        "name": "extraction reservation/checkpoint before terminal",
+        "status": "PASS"
+      },
+      {
+        "name": "extraction exact charge settlement/attachment",
+        "status": "PASS"
+      },
+      {
+        "name": "default chat exact text/model",
+        "status": "PASS"
+      },
+      {
+        "name": "secondary policy/model/parent/common-run",
+        "status": "PASS"
+      },
+      {
+        "name": "query profile/vector proof",
+        "status": "PASS"
+      },
+      {
+        "name": "memory profile/vector proof",
+        "status": "PASS"
+      },
+      {
+        "name": "strict domain extraction output",
+        "status": "PASS"
+      },
+      {
+        "name": "text replay zero duplicate dispatch",
+        "status": "PASS"
+      },
+      {
+        "name": "vector replay same retained bytes/no dispatch",
+        "status": "PASS"
+      },
+      {
+        "name": "controlled paid cost-loss full liability/output withheld",
+        "status": "PASS"
+      },
+      {
+        "name": "ambiguous retry no new paid/visible result",
+        "status": "PASS"
+      },
+      {
+        "name": "native dedup OCC race one paid winner",
+        "status": "PASS"
+      },
+      {
+        "name": "native concurrency2 race admits2/denies1",
+        "status": "PASS"
+      },
+      {
+        "name": "duplicate terminal race settles once",
+        "status": "PASS"
+      },
+      {
+        "name": "exhausted quota fails before checkpoint/native dispatch",
+        "status": "PASS"
+      },
+      {
+        "name": "original unqualified embedding charged1/private withheld",
+        "status": "PASS"
+      },
+      {
+        "name": "sole disposable cloud-dev cleanup200/404",
+        "status": "PASS"
+      }
+    ],
+    "counts": {
+      "assertions": 30,
+      "passed": 30,
+      "failed": 0
+    },
+    "knownSettledMicroUsd": 159,
+    "uncertainLiabilityMicroUsd": 100000,
+    "productionRegistryInstalled": false,
+    "fullTask04Accepted": false,
+    "manifestClassification": "fixture-synthetic"
+  },
+  "quality": [
+    {
+      "name": "affected unit",
+      "result": "PASS",
+      "tests": 373,
+      "suites": 4,
+      "failed": 0,
+      "skipped": 0,
+      "receipt": "affected-after-repair1.json"
+    },
+    {
+      "name": "domain consumers",
+      "result": "PASS",
+      "tests": 42,
+      "suites": 3,
+      "failed": 0,
+      "skipped": 0,
+      "receipt": "domain-consumers.json"
+    },
+    {
+      "name": "root TypeScript",
+      "result": "PASS",
+      "exit": 0,
+      "receipt": "root-typecheck.stderr"
+    },
+    {
+      "name": "backend TypeScript",
+      "result": "PASS",
+      "exit": 0,
+      "receipt": "backend-typecheck.stderr"
+    },
+    {
+      "name": "affected eight-file ESLint",
+      "result": "PASS",
+      "exit": 0,
+      "receipt": "affected-lint.stderr"
+    },
+    {
+      "name": "owned tracked diff whitespace",
+      "result": "PASS",
+      "exit": 0,
+      "receipt": "diff-check.stderr"
+    },
+    {
+      "name": "actual CLI deployment/typecheck/codegen",
+      "result": "PASS",
+      "exit": 0,
+      "receipt": "deploy4.receipt.json"
+    }
+  ],
+  "peerSeparateOffline": {
+    "tests": 47,
+    "passed": 47,
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task02-memory-gateway-v2/logs/jest-run3-results.json",
+    "scope": "independent-authored memory unit suite; no service qualification"
+  },
+  "target": {
+    "teamId": 325340,
+    "projectId": 3170903,
+    "projectSlug": "cortex-gateway-v2-2c44fb8e29a8",
+    "deployment": "fearless-ox-413",
+    "kind": "sole fresh cloud-dev",
+    "production": false
+  },
+  "cleanup": {
+    "deletionHttpStatus": 200,
+    "readbackHttpStatus": 404,
+    "retired": true,
+    "pendingOwnedCommands": 0,
+    "credentialsPrinted": false,
+    "privateCredentialsRetainedMode600": true
+  },
+  "cost": {
+    "unit": "microUSD",
+    "originalScopeKnownSettled": 86,
+    "repairedScopeKnownSettled": 159,
+    "freshDedupScopeKnownSettled": 7,
+    "totalKnownLedgerSettled": 252,
+    "controlledUnknownRawObservedRoundedCost": 7,
+    "uncertainLiability": 100000,
+    "invoiceReconciled": false,
+    "qualifier": "Observed rounded terminal charges, not exact invoice; controlled terminal cost omission preserved entire ceiling."
+  },
+  "bounds": {
+    "chat": "Plain text system/user/assistant messages only; no tool/audio/image/provider-options/native response_format. Admission counts full UTF8 text bytes plus role bytes and 3-token per-message/terminal framing; malformed Unicode denies. Actual terminal usage over admitted bound withholds results.",
+    "embedding": "One string vector per billable call; UTF8-byte bound; pinned default1536 profile/index; no profile-switch fallback.",
+    "semanticSchema": "Only immutable facts-v1 or conflicts-v1 domain schemas, plain prompt JSON and strict backend parse; not native structured-output qualification."
+  },
+  "qualificationProposal": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task04-functional-gateway-v2-20261008/qualification-manifest-proposal.json",
+  "fullTask04Accepted": false,
+  "goalAccepted": false,
+  "productionRegistryInstalled": false,
+  "task04Criteria": [
+    {
+      "name": "register13 operations",
+      "state": "existing pure registry; media remains unavailable until13; no functional media qualification"
+    },
+    {
+      "name": "trusted versioned policy and validation",
+      "state": "implemented/affected units and real bounded interfaces; compiled production trust still empty"
+    },
+    {
+      "name": "atomic budget/concurrency/settlement",
+      "state": "actual reservation before checkpoint, races, settle-once, quota denial and controlled unknown liability covered"
+    },
+    {
+      "name": "different function models/correlated audit/no bypass",
+      "state": "actual default/secondary models and parent/common-run audit covered; production integration pending"
+    },
+    {
+      "name": "concurrent and secondary accounting",
+      "state": "actual concurrency/dedup/terminal race and parent-child covered; authority/revocation public-negative scope belongs03"
+    },
+    {
+      "name": "safe fallback and profile invariance",
+      "state": "explicit empty fallback actual proposal, existing offline negative/currentness/profile coverage; no paid automatic fallback"
+    }
+  ],
+  "remaining": [
+    "One coherent nonauthor review under acceptance-policy v2.",
+    "Independently accepted installed production qualification manifest/default integration; terminal cost completeness is not fabricated.",
+    "Actual authenticated public memory/chat integration after03-foundation; facts.resolve native plain JSON actual outcome still not run in this fixture.",
+    "Streaming/tools/media actual outcomes belong07/13/16 and cannot be inferred from plain doGenerate/doEmbed."
+  ],
+  "failures": [
+    "Initial manifest builder inline await inside a non-async map caused SyntaxError before writes; prepare-fixture then lacked manifest. Corrected saved build-manifest.mjs.",
+    "deploy1 used provisioning adminKey instead of scoped deployKey; denied before deploy. deploy2 fixture query generic TypeScript failed. deploy3/4 later completed with typecheck enabled.",
+    "chat-replay called consumeReplay before replay admission and returned an error; corrected replay2 did not repeat paid dispatch.",
+    "embedding1 observed unqualified exact wire model, charged1microUSD, withheld all private bytes and permanently marked its own budget overrun. Fresh repair2 authority did not reset it.",
+    "extract1 omitted fixed semantic output schema and denied before admission. Trusted operation/schema mapping repaired this actual path.",
+    "First dedup-a/b fixture reused a semanticId across runs and both returned IDEMPOTENCY_CONFLICT without effects. Fresh dedup3 scope showed one winner.",
+    "Initial duplicate-terminal inline Node TS import could not resolve profile.js before duplicate effects. Canonical JSON helper subsequently exercised two native terminal submissions.",
+    "verify-live first oracle assumed unknown attempts expose a receipt; actual persisted uncertain state has null receipt. Preserved29/30 result; corrected assertion2 checks actual operation/attempt/account state,30/30.",
+    "First closing-report inline builder repeated await/non-async-map SyntaxError before writes; corrected saved close-batch.mjs."
+  ],
+  "writers": "All owned service/tool commands exited; report publisher performs only bounded local evidence writes."
+}

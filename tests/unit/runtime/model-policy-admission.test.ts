@@ -11,7 +11,8 @@ import { DEFAULT_EMBEDDING_PROFILE, semanticHash } from "../../../src/domain/pro
 import { memoryFixture } from "../runtimeMemory/fixture";
 
 const lookup = jest.fn<(id: string, revision: number) => DeploymentPolicyManifest | undefined>();
-jest.unstable_mockModule("../../../convex-dev/runtimeModelPolicyBootstrap", () => ({ lookupDeploymentManifest: lookup, isTrustedDeploymentManifest: (entry: DeploymentPolicyManifest) => entry === root && entry.classification === "fixture-synthetic" }));
+const trustedBootstrap = await import("../../../convex-dev/runtimeModelPolicyBootstrap");
+jest.unstable_mockModule("../../../convex-dev/runtimeModelPolicyBootstrap", () => ({ qualifiedTerminalModelId: trustedBootstrap.qualifiedTerminalModelId, lookupDeploymentManifest: lookup, isTrustedDeploymentManifest: (entry: DeploymentPolicyManifest) => entry === root && entry.classification === "fixture-synthetic" }));
 const ledger = await import("../../../convex-dev/runtimeModelPolicy");
 const schema = (await import("../../../convex-dev/schema")).default;
 const hash = "a".repeat(64);
@@ -78,8 +79,8 @@ function fixture() {
 async function admitted() { const f = fixture(); await f.install(); const b = await f.bind(); const a = await f.admit(b); return { f, b, a }; }
 
 describe("native private policy ledger — offline logic only", () => {
-  it("production root is empty, and arbitrary operator manifest selectors cannot attest prices", async () => {
-    expect(readFileSync(resolve("convex-dev/runtimeModelPolicyBootstrap.ts"), "utf8")).toContain("Object.freeze([])");
+  it("only compiled roots are reachable, and arbitrary operator manifest selectors cannot attest prices", async () => {
+    expect(readFileSync(resolve("convex-dev/runtimeModelPolicyBootstrap.ts"), "utf8")).toContain("Object.freeze([DEFAULT_GATEWAY_POLICY_MANIFEST])");
     const f = fixture(); lookup.mockReturnValue(undefined);
     await expect(f.install()).rejects.toThrow(); expect(f.db.writes).toBe(0);
     await expect(f.bind()).rejects.toThrow(); expect(f.db.table("runtimeBudgetAccounts")).toHaveLength(0);
@@ -143,8 +144,12 @@ describe("native private policy ledger — offline logic only", () => {
     expect(f.db.table("runtimeModelAttempts")).toHaveLength(2);
   });
   it("different backend request accounts share one tenant quota and concurrency", async () => {
-    const { f } = await admitted(); const second = await f.bind("request2"); await f.admit(second, 0, "hello", { semanticId: "semantic-2" });
-    const third = await f.bind("request3"); const before = f.db.writes; await expect(f.admit(third, 0, "hello", { semanticId: "semantic-3" })).rejects.toThrow();
+    // Preflight succeeds before competitors consume capacity; admission must
+    // independently enforce the shared quota after their reservations race.
+    const f = fixture(); await f.install(); const first = await f.bind();
+    const second = await f.bind("request2"); const third = await f.bind("request3");
+    await f.admit(first); await f.admit(second, 0, "hello", { semanticId: "semantic-2" });
+    const before = f.db.writes; await expect(f.admit(third, 0, "hello", { semanticId: "semantic-3" })).rejects.toThrow();
     expect(f.db.writes).toBe(before); expect(f.account("tenant").activeConcurrency).toBe(2);
   });
   it("known cost settles exactly once and eligible result replay needs no new reservation", async () => {
@@ -281,12 +286,13 @@ describe("native private policy ledger — offline logic only", () => {
   });
   it("child operation inherits exact parent account and cancellation/current authority fences", async () => {
     const { f, b, a } = await admitted();
+    const foreign = await f.bind("another");
     const child = await f.invoke<Reserved>("admit", { reference: f.reference, operationKey: "artifact.text", runBudgetId: b.runBudgetId, semanticId: "secondary", ordinal: 0,
       requestCanonical: canonicalModelJson(request()), parentOperationId: a.operationId });
     const operation = f.db.table("runtimeModelOperations").find((row) => row._id === a.operationId)!; operation.cancelled = true;
     await expect(f.checkpoint(child)).rejects.toThrow(); expect(f.attempt(child.attemptId).state).toBe("reserved");
     expect(f.account("tenant").reservedUnits).toBe(200);
-    const foreign = await f.bind("another"); await expect(f.admit(foreign, 0, "hello", { semanticId: "foreignchild", parentOperationId: a.operationId })).rejects.toThrow();
+    await expect(f.admit(foreign, 0, "hello", { semanticId: "foreignchild", parentOperationId: a.operationId })).rejects.toThrow();
   });
   it("trusted compiled versioned agent specialization is consumed only by its matching tenant/version", async () => {
     root = { ...root, policies: [...root.policies, { policyId: "agent-policy", version: 1, scope: "agent", tenantId: "tenant-a", agentId: "agent", agentVersion: 7,

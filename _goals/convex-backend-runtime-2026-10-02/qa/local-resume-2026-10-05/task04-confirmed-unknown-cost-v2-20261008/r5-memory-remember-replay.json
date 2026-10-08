@@ -1,0 +1,53 @@
+{
+  "label": "r5-memory-remember-replay",
+  "fn": "runtimeMemory:remember",
+  "args": {
+    "tenantId": "task04-memory3-5bfe0c22",
+    "memorySpaceId": "qualification",
+    "text": "The user prefers jasmine tea.",
+    "requestId": "remember-jasmine-v1"
+  },
+  "result": {
+    "created": false,
+    "facts": [
+      {
+        "confidence": 100,
+        "createdAt": 1791449527083,
+        "entities": [
+          {
+            "name": "jasmine tea",
+            "type": "product"
+          }
+        ],
+        "extractionPolicyVersion": "source-attributed-facts-v1",
+        "fact": "User prefers jasmine tea.",
+        "factId": "21e4005bfc8f1c56fe4bf5f8a966c0423074826efdcc90d56a8b205feeba26be",
+        "factType": "preference",
+        "lineage": {
+          "role": "user",
+          "sourceEventId": "explicit:[\"task04-memory3-5bfe0c22\",\"qualification\",\"md732h89cf86g3hz5ck01xrmpn8fxdw1\",\"remember-jasmine-v1\"]",
+          "sourceId": "explicit:[\"task04-memory3-5bfe0c22\",\"qualification\",\"md732h89cf86g3hz5ck01xrmpn8fxdw1\",\"remember-jasmine-v1\"]",
+          "sourceRevision": 1,
+          "trust": "user_assertion"
+        },
+        "memorySpaceId": "qualification",
+        "object": "jasmine tea",
+        "ownerPrincipalId": "md732h89cf86g3hz5ck01xrmpn8fxdw1",
+        "predicate": "prefers",
+        "sourceType": "manual",
+        "subject": "User",
+        "tags": [],
+        "tenantId": "task04-memory3-5bfe0c22",
+        "updatedAt": 1791449527083,
+        "version": 1
+      }
+    ],
+    "receiptId": "6c7cee058eb566e268ae1b90949d7d67fa000f1c60bf827b7d3b07de25d492aa",
+    "sourceId": "explicit:[\"task04-memory3-5bfe0c22\",\"qualification\",\"md732h89cf86g3hz5ck01xrmpn8fxdw1\",\"remember-jasmine-v1\"]",
+    "sourceRevision": 1
+  },
+  "error": null,
+  "elapsedMs": 540,
+  "target": "groovy-bird-988",
+  "actualJwt": true
+}

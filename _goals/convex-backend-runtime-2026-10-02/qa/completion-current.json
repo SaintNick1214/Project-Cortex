@@ -1,10 +1,10 @@
 {
   "schema": "cortex.completion-current.v1",
-  "timestamp_utc": "2026-10-08T07:46:19.929302+00:00",
+  "timestamp_utc": "2026-10-08T09:34:58.523793+00:00",
   "assessment_basis": "Original product criteria plus functional non-author acceptance under user-approved policyv2; no Source/controller subgate or source/mock rate acceptance",
-  "goal_tasks_complete": 1,
+  "goal_tasks_complete": 3,
   "goal_tasks_total": 17,
-  "goal_task_percent_complete": 5.9,
+  "goal_task_percent_complete": 17.6,
   "goal_product_criteria_accepted": 0,
   "goal_product_criteria_total": 12,
   "goal_product_percent_complete": 0.0,
@@ -26,13 +26,16 @@
     },
     {
       "task_id": "02",
-      "percent_complete": 0.0,
-      "criteria_accepted": 0,
+      "percent_complete": 100.0,
+      "criteria_accepted": 3,
       "criteria_total": 3,
-      "accepted_scope": null,
-      "independent_acceptance_evidence": [],
+      "accepted_scope": "Original task requirements/criteria at accepted C2/C3 boundaries; downstream Agent/Workflow/interfaces and full goal remain separate",
+      "independent_acceptance_evidence": [
+        "qa/local-resume-2026-10-05/task04-backend-gateway-independent-review1/verdict1.json",
+        "qa/local-resume-2026-10-05/task04-backend-gateway-independent-review1/report1.md"
+      ],
       "original_task_file": "tasks/02-domain-services.md",
-      "task_file_sha256": "26aa4660f9c535e45cb93f3881c4c90e8097862b310ae96721a723ce27f76a76"
+      "task_file_sha256": "39c0490fb70da00a622c8565a24afa941aaa595d1c9a9cda18f4908f59a8e63e"
     },
     {
       "task_id": "03",
@@ -46,13 +49,16 @@
     },
     {
       "task_id": "04",
-      "percent_complete": 0.0,
-      "criteria_accepted": 0,
+      "percent_complete": 100.0,
+      "criteria_accepted": 3,
       "criteria_total": 3,
-      "accepted_scope": null,
-      "independent_acceptance_evidence": [],
+      "accepted_scope": "Original task requirements/criteria at accepted C2/C3 boundaries; downstream Agent/Workflow/interfaces and full goal remain separate",
+      "independent_acceptance_evidence": [
+        "qa/local-resume-2026-10-05/task04-backend-gateway-independent-review1/verdict1.json",
+        "qa/local-resume-2026-10-05/task04-backend-gateway-independent-review1/report1.md"
+      ],
       "original_task_file": "tasks/04-model-policy.md",
-      "task_file_sha256": "44777e644f835c759af09dfa8acefc7f37d29fac5152c8d34fd7b497e9858d74"
+      "task_file_sha256": "99ea1cdd52876697549e3b683abf4b081deb3730a0a9f75677a4e40f4d2bb959"
     },
     {
       "task_id": "05",
@@ -186,7 +192,7 @@
     }
   ],
   "milestone_history": "qa/completion-milestones.jsonl",
-  "latest_milestone_id": "functional_v2_task02_architecture_task03_foundation_independent_pass4",
+  "latest_milestone_id": "functional_v2_task02_task04_original_criteria_independent_pass4_complete",
   "acceptance_policy_version": 2,
   "acceptance_policy": "acceptance-policy.md",
   "assessment_basis_changed_without_denominator_change": true,
@@ -207,9 +213,10 @@
     },
     {
       "gate": "04-model-policy-functional",
-      "accepted": false,
-      "percent_complete": 0,
-      "full_task_complete": false
+      "accepted": true,
+      "percent_complete": 100,
+      "full_task_complete": true,
+      "evidence": "qa/local-resume-2026-10-05/task04-backend-gateway-independent-review1/verdict1.json"
     }
   ]
 }
