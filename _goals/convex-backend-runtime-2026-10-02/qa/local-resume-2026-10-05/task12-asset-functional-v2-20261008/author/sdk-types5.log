@@ -1,0 +1,4 @@
+npm notice run @cortexmemory/sdk@0.37.0 npx
+npm notice run 'tsc' --noEmit
+tests/unit/runtimeAssets/fixture.ts(20,61): error TS2353: Object literal may only specify known properties, and 'neq' does not exist in type '{ field(path: string): (row: Row) => unknown; eq(a: unknown, b: unknown): (row: Row) => boolean; gt(a: unknown, b: number): (row: Row) => boolean; and(...items: ((row: Row) => boolean)[]): (row: Row) => boolean; or(...items: ((row: Row) => boolean)[]): (row: Row) => boolean; }'.
+tests/unit/runtimeAssets/lifecycle.test.ts(9,54): error TS2322: Type 'Jest' is not assignable to type 'void | TestReturnValuePromise | TestReturnValueGenerator'.

@@ -384,7 +384,8 @@ export const deletePrincipal = internalMutation({
     const principal = await ctx.db.get("runtimeAuthPrincipals", args.principalId);
     if (principal && principal.deletedAt === undefined) await ctx.db.patch("runtimeAuthPrincipals", principal._id,
       { deletedAt: Date.now(), version: principal.version + 1 });
-    if (principal) await retireGraphAuthority(ctx, { principalId: String(principal._id) });
+    if (principal) { await retireGraphAuthority(ctx, { principalId: String(principal._id) });
+      await ctx.runMutation(makeFunctionReference<"mutation">("runtimeAssets:retireAuthority"), { principalId: String(principal._id) }); }
   },
 });
 export const deleteScope = internalMutation({
@@ -398,6 +399,7 @@ export const deleteScope = internalMutation({
       resourceId: args.memorySpaceId ?? args.tenantId };
     if (!await createAuthorityReader(ctx).hasTombstone(key)) await ctx.db.insert("runtimeAuthTombstones", { ...key, deletedAt: Date.now() });
     await retireGraphAuthority(ctx, args);
+    await ctx.runMutation(makeFunctionReference<"mutation">("runtimeAssets:retireAuthority"), args);
   },
 });
 export const tombstoneResource = internalMutation({

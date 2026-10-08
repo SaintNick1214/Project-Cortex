@@ -1,0 +1,36 @@
+{
+  "scope": "FIXED_OPERATOR_COMMISSIONING_NOT_ACTUAL_QUALIFICATION",
+  "projectId": 3174742,
+  "modelId": "google/veo-3.1",
+  "nativeInterface": "video",
+  "provider": "@convex-dev/ai-sdk-provider@0.2.1",
+  "operationKey": "media.video.generate",
+  "fixedDurationSeconds": 4,
+  "resolution": "720p",
+  "generateAudio": false,
+  "n": 1,
+  "maxRetries": 0,
+  "maxPromptUtf8": 1024,
+  "maxDecodedPng": 4096,
+  "maxCanonicalBodyBytes": 8192,
+  "ruleId": "private-frame-video-json-v1",
+  "featureEnvelope": "private-frame-video-v1",
+  "priceRevision": "convex-gateway-2026-10-08-veo31-noaudio",
+  "boundRevision": "private-frame-video-8192-4s720p-v1",
+  "maximumCostUnits": 2000000,
+  "pricing": {
+    "source": "https://openrouter.ai/google/veo-3.1",
+    "videoOnlyUsdPerSecond": "0.20",
+    "supportedClipSeconds": [
+      4,
+      6,
+      8
+    ],
+    "fixedPublishedEnvelopeUsd": "0.80",
+    "marginFactor": "2.5",
+    "wholeCeilingRetainedWhenUnknown": true
+  },
+  "actualEvidencePending": true,
+  "noIndependentAcceptanceClaimed": true,
+  "shippedQualificationUnchanged": true
+}

@@ -1,0 +1,64 @@
+{
+  "status": "ACTUAL_NATIVE_REQUEST_RECORDED_CAPABILITY_OR_TERMINAL_UNRESOLVED",
+  "groups": [
+    {
+      "name": "noJWT-admin-internal-commissioning-unreachable",
+      "status": "PASS",
+      "denial": {
+        "name": "Error",
+        "message": "[Request ID: 48c0cfd85c0613d6] Server Error\nCould not find public function for 'mediaProbe:start'.\n"
+      }
+    },
+    {
+      "name": "ordinaryBearer-admin-internal-commissioning-unreachable",
+      "status": "PASS",
+      "denial": {
+        "name": "Error",
+        "message": "[Request ID: 8baa10e9d59f699c] Server Error\nCould not find public function for 'mediaProbe:start'.\n"
+      }
+    },
+    {
+      "name": "actual-private-frame-exact-native-wire-reserved-before-single-start",
+      "status": "PASS",
+      "frameVersionId": "asset:216db556312b58b97e214a750a2f1350682f66356676438bf35c1e890ffd34ca:version:1",
+      "frameHash": "4640525b89e35129d3d00cf185097ae2730ec5c2f4822a5e118f7366592b1a2f",
+      "frameBytes": 1496,
+      "nativeBodyBytes": 2294,
+      "nativeHTTPStatus": 503,
+      "nativeStartRequests": 1,
+      "confirmedModelCalls": null,
+      "attemptId": "qd70b9bq7x251nw1522jyp606s8fxkc8",
+      "fullLiabilityUnits": 2000000,
+      "terminalOutputWithheld": true
+    },
+    {
+      "name": "same-request-unknown-or-inflight-not-resubmitted",
+      "status": "PASS",
+      "newNativeStartRequests": 0,
+      "sameAttemptCount": true,
+      "fullLiabilityRetained": true
+    }
+  ],
+  "result": {
+    "attemptId": "qd70b9bq7x251nw1522jyp606s8fxkc8",
+    "bodyBytes": 2294,
+    "confirmedModelCalls": null,
+    "errorCode": "Asynchronous video generation is not configured",
+    "fullLiabilityUnits": 2000000,
+    "key": "fixed-private-frame-9e4db003-a78b-4b11-af51-1d301d656649",
+    "nativeHTTPStatus": 503,
+    "nativeStartRequests": 1,
+    "neverRetryStart": true,
+    "resultWithheld": true,
+    "runBudgetId": "00e08bf18529637649ec5091956daa8e7a250a60fb5691fed5471f613434c868",
+    "status": "UNKNOWN_REQUIRES_RECONCILIATION"
+  },
+  "projectId": 3174742,
+  "commissioningTrust": "PRIVATE_EXACT_OBJECT_FIXTURE_SYNTHETIC",
+  "shippedVideoQualification": false,
+  "ordinaryTask13Jobs": false,
+  "terminalModelUnobserved": true,
+  "aggregateCostUnavailable": true,
+  "pendingOrUnknownLiabilityRetained": true,
+  "noStartRetry": true
+}

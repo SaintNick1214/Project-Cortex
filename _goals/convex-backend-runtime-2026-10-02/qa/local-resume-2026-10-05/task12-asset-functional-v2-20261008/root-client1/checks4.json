@@ -1,0 +1,85 @@
+{
+  "version": 1,
+  "timestampUtc": "2026-10-08T22:15:03.373Z",
+  "scope": "CONTROLLED_BROWSER_CLIENT_NO_SERVICE",
+  "node": "v24.15.0",
+  "sourceManifest": [
+    {
+      "path": "src/client-runtime/assets.ts",
+      "bytes": 6714,
+      "sha256": "5407cb729b98ad2628186a4eedf9f5d3880e6d357fc6aca681f6a9db3d87ebf8"
+    },
+    {
+      "path": "src/client-runtime/client.ts",
+      "bytes": 24943,
+      "sha256": "be0f3539c35b1bad8f8f64ceb1fc17dff49ebd6be1628051ea1e6e21c2cfb776"
+    },
+    {
+      "path": "src/client-runtime/types.ts",
+      "bytes": 4539,
+      "sha256": "bf2be0e9e8d5fcb4ad2f778044afaae51049cd33e85dbcc697071d71c5756e09"
+    },
+    {
+      "path": "src/client-runtime/index.ts",
+      "bytes": 488,
+      "sha256": "5fe2a3dc5e166f29e5124a512dfd1cc5a170eb6a9d7eec6bb06cc6d19ea24403"
+    },
+    {
+      "path": "tests/unit/client-runtime/assets.test.ts",
+      "bytes": 13034,
+      "sha256": "136feba3c61c5b0402a1956887d7a899c5739bf379e4046185ffa812a68d3b48"
+    }
+  ],
+  "results": [
+    {
+      "name": "client-tests4",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+        "--experimental-vm-modules",
+        "node_modules/jest/bin/jest.js",
+        "--config",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/root-client1/jest.config.mjs",
+        "--runInBand",
+        "--json",
+        "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/root-client1/unit-results4.json"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 4384,
+      "log": "client-tests4.log"
+    },
+    {
+      "name": "sdk-types4",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 9639,
+      "log": "sdk-types4.log"
+    },
+    {
+      "name": "client-lint4",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+        "node_modules/eslint/bin/eslint.js",
+        "src/client-runtime/assets.ts",
+        "src/client-runtime/client.ts",
+        "src/client-runtime/types.ts",
+        "src/client-runtime/index.ts",
+        "tests/unit/client-runtime/assets.test.ts",
+        "--report-unused-disable-directives"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "signal": null,
+      "durationMs": 3284,
+      "log": "client-lint4.log"
+    }
+  ],
+  "actualServiceQualification": false
+}

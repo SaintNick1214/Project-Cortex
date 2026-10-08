@@ -1,0 +1,700 @@
+275: 2026-10-08T22:11:20.1522507Z npm warn deprecated whatwg-encoding@3.1.1: Use @exodus/bytes instead for a more spec-conformant and faster implementation
+276: 2026-10-08T22:11:21.7552227Z npm warn deprecated glob@10.5.0: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+277: 2026-10-08T22:11:26.8463453Z 
+278: 2026-10-08T22:11:26.8466485Z added 567 packages, and audited 570 packages in 10s
+279: 2026-10-08T22:11:26.8467021Z 
+302: 2026-10-08T22:11:26.9719554Z env:
+303: 2026-10-08T22:11:26.9719987Z   CONVEX_URL: ***
+304: 2026-10-08T22:11:26.9720486Z   CONVEX_DEPLOY_KEY: ***
+305: 2026-10-08T22:11:26.9720737Z ##[endgroup]
+306: 2026-10-08T22:11:27.8280364Z Finding component definitions...
+307: 2026-10-08T22:11:27.8771557Z Generating server code...
+328: 2026-10-08T22:11:42.1459578Z env:
+329: 2026-10-08T22:11:42.1459940Z   CONVEX_URL: ***
+330: 2026-10-08T22:11:42.1460772Z   CONVEX_DEPLOY_KEY: ***
+331: 2026-10-08T22:11:42.1461681Z   OPENAI_API_KEY: [redacted]
+332: 2026-10-08T22:11:42.1461928Z   CONVEX_TEST_MODE: managed
+333: 2026-10-08T22:11:42.1462170Z ##[endgroup]
+334: 2026-10-08T22:11:59.3269449Z (node:2550) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+335: 2026-10-08T22:11:59.3290424Z (Use `node --trace-warnings ...` to show where the warning was created)
+463: 2026-10-08T22:12:09.6032228Z 
+464: 2026-10-08T22:36:57.2514905Z FAIL tests/vector.test.ts (1487.634 s)
+465: 2026-10-08T22:36:57.2827709Z   ● Console
+466: 2026-10-08T22:36:57.2828010Z 
+467: 2026-10-08T22:36:57.2828200Z     console.error
+1091: 2026-10-08T22:36:57.3284949Z 
+1092: 2026-10-08T22:36:57.3285524Z     ConvexError: [CONVEX M(memories:store)] [Request ID: 0ba05eead9fd93b3] Server Error
+1093: 2026-10-08T22:36:57.3286316Z       Called by client
+1094: 2026-10-08T22:36:57.3286568Z 
+1095: 2026-10-08T22:36:57.3287696Z       933 |   ): Promise<void> {
+1108: 2026-10-08T22:36:57.3300348Z 
+1109: 2026-10-08T22:36:57.3300937Z     ConvexError: [CONVEX M(memories:store)] [Request ID: 954551d5fe48be3b] Server Error
+1110: 2026-10-08T22:36:57.3301641Z       Called by client
+1111: 2026-10-08T22:36:57.3301894Z 
+1112: 2026-10-08T22:36:57.3302725Z       933 |   ): Promise<void> {
+1125: 2026-10-08T22:36:57.3314897Z 
+1126: 2026-10-08T22:36:57.3315400Z     ConvexError: [CONVEX M(memories:store)] [Request ID: a1ad0eb8002dd518] Server Error
+1127: 2026-10-08T22:36:57.3316157Z       Called by client
+1128: 2026-10-08T22:36:57.3316426Z 
+1129: 2026-10-08T22:36:57.3317014Z       933 |   ): Promise<void> {
+1142: 2026-10-08T22:36:57.3329830Z 
+1143: 2026-10-08T22:36:57.3330353Z     ConvexError: [CONVEX M(memories:store)] [Request ID: a1ad0eb8002dd518] Server Error
+1144: 2026-10-08T22:36:57.3331159Z       Called by client
+1145: 2026-10-08T22:36:57.3331599Z 
+1146: 2026-10-08T22:36:57.3332219Z       933 |   ): Promise<void> {
+1159: 2026-10-08T22:36:57.3345355Z 
+1160: 2026-10-08T22:36:57.3345876Z     ConvexError: [CONVEX M(memories:store)] [Request ID: a1ad0eb8002dd518] Server Error
+1161: 2026-10-08T22:36:57.3346880Z       Called by client
+1162: 2026-10-08T22:36:57.3347134Z 
+1163: 2026-10-08T22:36:57.3348252Z       933 |   ): Promise<void> {
+1176: 2026-10-08T22:36:57.3360680Z 
+1177: 2026-10-08T22:36:57.3361229Z     ConvexError: [CONVEX M(memories:store)] [Request ID: a98ab680f148e6d7] Server Error
+1178: 2026-10-08T22:36:57.3361999Z       Called by client
+1179: 2026-10-08T22:36:57.3362282Z 
+1180: 2026-10-08T22:36:57.3362910Z       933 |   ): Promise<void> {
+1193: 2026-10-08T22:36:57.3375159Z 
+1194: 2026-10-08T22:36:57.3375675Z     ConvexError: [CONVEX M(memories:store)] [Request ID: a98ab680f148e6d7] Server Error
+1195: 2026-10-08T22:36:57.3376465Z       Called by client
+1196: 2026-10-08T22:36:57.3376719Z 
+1197: 2026-10-08T22:36:57.3377565Z       933 |   ): Promise<void> {
+1210: 2026-10-08T22:36:57.3389963Z 
+1211: 2026-10-08T22:36:57.3390454Z     ConvexError: [CONVEX M(memories:store)] [Request ID: a98ab680f148e6d7] Server Error
+1212: 2026-10-08T22:36:57.3391244Z       Called by client
+1213: 2026-10-08T22:36:57.3391498Z 
+1214: 2026-10-08T22:36:57.3392211Z       933 |   ): Promise<void> {
+1227: 2026-10-08T22:36:57.3405189Z 
+1228: 2026-10-08T22:36:57.3405471Z     ConvexError: [CONVEX M(memories:store)] [Request ID: a98ab680f148e6d7] Server Error
+1229: 2026-10-08T22:36:57.3406482Z       Called by client
+1230: 2026-10-08T22:36:57.3406711Z 
+1231: 2026-10-08T22:36:57.3408573Z       933 |   ): Promise<void> {
+1244: 2026-10-08T22:36:57.3421897Z 
+1245: 2026-10-08T22:36:57.3422208Z     ConvexError: [CONVEX M(memories:store)] [Request ID: a98ab680f148e6d7] Server Error
+1246: 2026-10-08T22:36:57.3422651Z       Called by client
+1247: 2026-10-08T22:36:57.3422796Z 
+1248: 2026-10-08T22:36:57.3423128Z       933 |   ): Promise<void> {
+1261: 2026-10-08T22:36:57.3435758Z 
+1262: 2026-10-08T22:36:57.3436544Z     ConvexError: [CONVEX M(memories:store)] [Request ID: a98ab680f148e6d7] Server Error
+1263: 2026-10-08T22:36:57.3437309Z       Called by client
+1264: 2026-10-08T22:36:57.3438034Z 
+1265: 2026-10-08T22:36:57.3438597Z       933 |   ): Promise<void> {
+1278: 2026-10-08T22:36:57.3450556Z 
+1279: 2026-10-08T22:36:57.3451421Z     ConvexError: [CONVEX M(memories:store)] [Request ID: ac096e1374de69ed] Server Error
+1280: 2026-10-08T22:36:57.3452077Z       Called by client
+1281: 2026-10-08T22:36:57.3452224Z 
+1282: 2026-10-08T22:36:57.3452562Z       933 |   ): Promise<void> {
+1295: 2026-10-08T22:36:57.3458985Z 
+1296: 2026-10-08T22:36:57.3459256Z     ConvexError: [CONVEX M(memories:store)] [Request ID: ac096e1374de69ed] Server Error
+1297: 2026-10-08T22:36:57.3459673Z       Called by client
+1298: 2026-10-08T22:36:57.3459812Z 
+1299: 2026-10-08T22:36:57.3460134Z       933 |   ): Promise<void> {
+1312: 2026-10-08T22:36:57.3466158Z 
+1313: 2026-10-08T22:36:57.3466560Z     ConvexError: [CONVEX M(memories:store)] [Request ID: ac096e1374de69ed] Server Error
+1314: 2026-10-08T22:36:57.3466993Z       Called by client
+1315: 2026-10-08T22:36:57.3467127Z 
+1316: 2026-10-08T22:36:57.3467590Z       933 |   ): Promise<void> {
+1329: 2026-10-08T22:36:57.3473873Z 
+1330: 2026-10-08T22:36:57.3474150Z     ConvexError: [CONVEX M(memories:store)] [Request ID: 610a1d917ab945eb] Server Error
+1331: 2026-10-08T22:36:57.3474567Z       Called by client
+1332: 2026-10-08T22:36:57.3474705Z 
+1333: 2026-10-08T22:36:57.3475037Z       933 |   ): Promise<void> {
+1346: 2026-10-08T22:36:57.3481171Z 
+1347: 2026-10-08T22:36:57.3481440Z     ConvexError: [CONVEX M(memories:store)] [Request ID: 610a1d917ab945eb] Server Error
+1348: 2026-10-08T22:36:57.3481898Z       Called by client
+1349: 2026-10-08T22:36:57.3482037Z 
+1350: 2026-10-08T22:36:57.3482358Z       933 |   ): Promise<void> {
+1363: 2026-10-08T22:36:57.3488873Z 
+1364: 2026-10-08T22:36:57.3489157Z     ConvexError: [CONVEX M(memories:store)] [Request ID: 610a1d917ab945eb] Server Error
+1365: 2026-10-08T22:36:57.3489576Z       Called by client
+1366: 2026-10-08T22:36:57.3489710Z 
+1367: 2026-10-08T22:36:57.3490042Z       933 |   ): Promise<void> {
+1380: 2026-10-08T22:36:57.3496744Z 
+1381: 2026-10-08T22:36:57.3497028Z     ConvexError: [CONVEX M(memories:store)] [Request ID: 610a1d917ab945eb] Server Error
+1382: 2026-10-08T22:36:57.3497649Z       Called by client
+1383: 2026-10-08T22:36:57.3497799Z 
+1384: 2026-10-08T22:36:57.3498150Z       933 |   ): Promise<void> {
+1397: 2026-10-08T22:36:57.3505288Z 
+1398: 2026-10-08T22:36:57.3505573Z     ConvexError: [CONVEX M(memories:store)] [Request ID: 99d4fd08ff1b1167] Server Error
+1399: 2026-10-08T22:36:57.3506001Z       Called by client
+1400: 2026-10-08T22:36:57.3506141Z 
+1401: 2026-10-08T22:36:57.3506473Z       933 |   ): Promise<void> {
+1435: 2026-10-08T22:36:57.3521530Z 
+1436: 2026-10-08T22:36:57.3521807Z     ConvexError: [CONVEX M(memories:store)] [Request ID: acfa4fd97fe46649] Server Error
+1437: 2026-10-08T22:36:57.3522234Z       Called by client
+1438: 2026-10-08T22:36:57.3522374Z 
+1439: 2026-10-08T22:36:57.3522704Z       933 |   ): Promise<void> {
+1452: 2026-10-08T22:36:57.3529347Z 
+1453: 2026-10-08T22:36:57.3529634Z     ConvexError: [CONVEX M(memories:store)] [Request ID: d45f5b5fd9cda528] Server Error
+1454: 2026-10-08T22:36:57.3530067Z       Called by client
+1455: 2026-10-08T22:36:57.3530203Z 
+1456: 2026-10-08T22:36:57.3530536Z       933 |   ): Promise<void> {
+1469: 2026-10-08T22:36:57.3537872Z 
+1470: 2026-10-08T22:36:57.3538154Z     ConvexError: [CONVEX M(memories:store)] [Request ID: 2503361f9368ebf8] Server Error
+1471: 2026-10-08T22:36:57.3538576Z       Called by client
+1472: 2026-10-08T22:36:57.3538719Z 
+1473: 2026-10-08T22:36:57.3539056Z       933 |   ): Promise<void> {
+1486: 2026-10-08T22:36:57.3545458Z 
+1487: 2026-10-08T22:36:57.3545732Z     ConvexError: [CONVEX M(memories:store)] [Request ID: d1ce8dc6cb1720b2] Server Error
+1488: 2026-10-08T22:36:57.3546161Z       Called by client
+1489: 2026-10-08T22:36:57.3546304Z 
+1490: 2026-10-08T22:36:57.3546634Z       933 |   ): Promise<void> {
+1503: 2026-10-08T22:36:57.3554616Z 
+1504: 2026-10-08T22:36:57.3555138Z     ConvexError: [CONVEX M(memories:store)] [Request ID: d1ce8dc6cb1720b2] Server Error
+1505: 2026-10-08T22:36:57.3555909Z       Called by client
+1506: 2026-10-08T22:36:57.3556169Z 
+1507: 2026-10-08T22:36:57.3556848Z       933 |   ): Promise<void> {
+1520: 2026-10-08T22:36:57.3564945Z 
+1521: 2026-10-08T22:36:57.3565235Z     ConvexError: [CONVEX M(memories:store)] [Request ID: d1ce8dc6cb1720b2] Server Error
+1522: 2026-10-08T22:36:57.3565662Z       Called by client
+1523: 2026-10-08T22:36:57.3565806Z 
+1524: 2026-10-08T22:36:57.3566153Z       933 |   ): Promise<void> {
+1537: 2026-10-08T22:36:57.3572957Z 
+1538: 2026-10-08T22:36:57.3573244Z     ConvexError: [CONVEX M(memories:store)] [Request ID: d1ce8dc6cb1720b2] Server Error
+1539: 2026-10-08T22:36:57.3573667Z       Called by client
+1540: 2026-10-08T22:36:57.3573939Z 
+1541: 2026-10-08T22:36:57.3574280Z       933 |   ): Promise<void> {
+1554: 2026-10-08T22:36:57.3583936Z 
+1555: 2026-10-08T22:36:57.3584455Z     ConvexError: [CONVEX M(memories:store)] [Request ID: 36511d66ce29e44c] Server Error
+1556: 2026-10-08T22:36:57.3585474Z       Called by client
+1557: 2026-10-08T22:36:57.3585736Z 
+1558: 2026-10-08T22:36:57.3586390Z       933 |   ): Promise<void> {
+1571: 2026-10-08T22:36:57.3599920Z 
+1572: 2026-10-08T22:36:57.3600486Z     ConvexError: [CONVEX M(memories:store)] [Request ID: 36511d66ce29e44c] Server Error
+1573: 2026-10-08T22:36:57.3601328Z       Called by client
+1574: 2026-10-08T22:36:57.3601604Z 
+1575: 2026-10-08T22:36:57.3602289Z       933 |   ): Promise<void> {
+1588: 2026-10-08T22:36:57.3613329Z 
+1589: 2026-10-08T22:36:57.3613625Z     ConvexError: [CONVEX M(memories:store)] [Request ID: 36511d66ce29e44c] Server Error
+1590: 2026-10-08T22:36:57.3614068Z       Called by client
+1591: 2026-10-08T22:36:57.3614216Z 
+1592: 2026-10-08T22:36:57.3614558Z       933 |   ): Promise<void> {
+1605: 2026-10-08T22:36:57.3623202Z 
+1606: 2026-10-08T22:36:57.3623494Z     ConvexError: [CONVEX M(memories:store)] [Request ID: 36511d66ce29e44c] Server Error
+1607: 2026-10-08T22:36:57.3623929Z       Called by client
+1608: 2026-10-08T22:36:57.3624076Z 
+1609: 2026-10-08T22:36:57.3624418Z       933 |   ): Promise<void> {
+1622: 2026-10-08T22:36:57.3631385Z 
+1623: 2026-10-08T22:36:57.3631700Z     ConvexError: [CONVEX Q(memories:getHistory)] [Request ID: b373e896c23eb2bc] Server Error
+1624: 2026-10-08T22:36:57.3632147Z       Called by client
+1625: 2026-10-08T22:36:57.3632293Z 
+1626: 2026-10-08T22:36:57.3632731Z       at OptimisticQueryResults.queryResult (node_modules/convex/dist/esm/browser/sync/optimistic_updates_impl.js:146:11)
+1638: 2026-10-08T22:36:57.3647618Z 
+1639: 2026-10-08T22:36:57.3648195Z     ConvexError: [CONVEX M(memories:store)] [Request ID: fbf3f1b9601c2711] Server Error
+1640: 2026-10-08T22:36:57.3648681Z       Called by client
+1641: 2026-10-08T22:36:57.3648829Z 
+1642: 2026-10-08T22:36:57.3649232Z       933 |   ): Promise<void> {
+1655: 2026-10-08T22:36:57.3656070Z 
+1656: 2026-10-08T22:36:57.3656353Z     ConvexError: [CONVEX M(memories:store)] [Request ID: 392dd99aa4f7fa06] Server Error
+1657: 2026-10-08T22:36:57.3656776Z       Called by client
+1658: 2026-10-08T22:36:57.3656922Z 
+1659: 2026-10-08T22:36:57.3657587Z       933 |   ): Promise<void> {
+1672: 2026-10-08T22:36:57.3669897Z 
+1673: 2026-10-08T22:36:57.3670414Z     ConvexError: [CONVEX M(memories:store)] [Request ID: 27ceba0db2c45683] Server Error
+1674: 2026-10-08T22:36:57.3671182Z       Called by client
+1675: 2026-10-08T22:36:57.3671434Z 
+1676: 2026-10-08T22:36:57.3672065Z       933 |   ): Promise<void> {
+1689: 2026-10-08T22:36:57.3684387Z 
+1690: 2026-10-08T22:36:57.3684920Z     ConvexError: [CONVEX M(memories:store)] [Request ID: afb728e288879826] Server Error
+1691: 2026-10-08T22:36:57.3685703Z       Called by client
+1692: 2026-10-08T22:36:57.3685960Z 
+1693: 2026-10-08T22:36:57.3686607Z       933 |   ): Promise<void> {
+1706: 2026-10-08T22:36:57.3698852Z 
+1707: 2026-10-08T22:36:57.3699368Z     ConvexError: [CONVEX M(memories:store)] [Request ID: afb728e288879826] Server Error
+1708: 2026-10-08T22:36:57.3700119Z       Called by client
+1709: 2026-10-08T22:36:57.3700382Z 
+1710: 2026-10-08T22:36:57.3700999Z       933 |   ): Promise<void> {
+1723: 2026-10-08T22:36:57.3713322Z 
+1724: 2026-10-08T22:36:57.3713633Z     ConvexError: [CONVEX M(memories:store)] [Request ID: afb728e288879826] Server Error
+1725: 2026-10-08T22:36:57.3714076Z       Called by client
+1726: 2026-10-08T22:36:57.3714223Z 
+1727: 2026-10-08T22:36:57.3714595Z       933 |   ): Promise<void> {
+1740: 2026-10-08T22:36:57.3721706Z 
+1741: 2026-10-08T22:36:57.3721989Z     ConvexError: [CONVEX M(memories:store)] [Request ID: afb728e288879826] Server Error
+1742: 2026-10-08T22:36:57.3722435Z       Called by client
+1743: 2026-10-08T22:36:57.3722576Z 
+1744: 2026-10-08T22:36:57.3722905Z       933 |   ): Promise<void> {
+1757: 2026-10-08T22:36:57.3729484Z 
+1758: 2026-10-08T22:36:57.3729763Z     ConvexError: [CONVEX M(memories:store)] [Request ID: afb728e288879826] Server Error
+1759: 2026-10-08T22:36:57.3730328Z       Called by client
+1760: 2026-10-08T22:36:57.3730473Z 
+1761: 2026-10-08T22:36:57.3730818Z       933 |   ): Promise<void> {
+1774: 2026-10-08T22:36:57.3737108Z 
+1775: 2026-10-08T22:36:57.3737528Z     ConvexError: [CONVEX M(memories:store)] [Request ID: 76e1a2cb67c6bc69] Server Error
+1776: 2026-10-08T22:36:57.3738083Z       Called by client
+1777: 2026-10-08T22:36:57.3738225Z 
+1778: 2026-10-08T22:36:57.3738561Z       933 |   ): Promise<void> {
+1791: 2026-10-08T22:36:57.3742463Z 
+1792: 2026-10-08T22:36:57.3742740Z     ConvexError: [CONVEX M(memories:store)] [Request ID: 893a2ff38100fa60] Server Error
+1793: 2026-10-08T22:36:57.3742840Z       Called by client
+1794: 2026-10-08T22:36:57.3742853Z 
+1795: 2026-10-08T22:36:57.3743169Z       933 |   ): Promise<void> {
+1830: 2026-10-08T22:36:57.3752036Z 
+1831: 2026-10-08T22:36:57.3752386Z     ConvexError: [CONVEX M(memories:store)] [Request ID: 7522b24f7cb3ccd4] Server Error
+1832: 2026-10-08T22:36:57.3752561Z       Called by client
+1833: 2026-10-08T22:36:57.3752569Z 
+1834: 2026-10-08T22:36:57.3752970Z       933 |   ): Promise<void> {
+1847: 2026-10-08T22:36:57.3756962Z 
+1848: 2026-10-08T22:36:57.3757845Z     ConvexError: [CONVEX M(memories:store)] [Request ID: 716e2afd5f4b70d2] Server Error
+1849: 2026-10-08T22:36:57.3758057Z       Called by client
+1850: 2026-10-08T22:36:57.3758067Z 
+1851: 2026-10-08T22:36:57.3758501Z       933 |   ): Promise<void> {
+1864: 2026-10-08T22:36:57.3773057Z 
+1865: 2026-10-08T22:36:57.3773541Z     ConvexError: [CONVEX M(memories:store)] [Request ID: a052875db1eb6825] Server Error
+1866: 2026-10-08T22:36:57.3773648Z       Called by client
+1867: 2026-10-08T22:36:57.3773657Z 
+1868: 2026-10-08T22:36:57.3774010Z       933 |   ): Promise<void> {
+1881: 2026-10-08T22:36:57.3777465Z 
+1882: 2026-10-08T22:36:57.3777767Z     ConvexError: [CONVEX M(memories:store)] [Request ID: cf49c930f936b608] Server Error
+1883: 2026-10-08T22:36:57.3777879Z       Called by client
+1884: 2026-10-08T22:36:57.3777886Z 
+1885: 2026-10-08T22:36:57.3778232Z       933 |   ): Promise<void> {
+1898: 2026-10-08T22:36:57.3781663Z 
+1899: 2026-10-08T22:36:57.3781953Z     ConvexError: [CONVEX M(memories:store)] [Request ID: 7fdb96b1ae6b618c] Server Error
+1900: 2026-10-08T22:36:57.3782059Z       Called by client
+1901: 2026-10-08T22:36:57.3782066Z 
+1902: 2026-10-08T22:36:57.3782393Z       933 |   ): Promise<void> {
+1937: 2026-10-08T22:36:57.3790935Z 
+1938: 2026-10-08T22:36:57.3791222Z     ConvexError: [CONVEX M(memories:store)] [Request ID: 7513eaff9c139eff] Server Error
+1939: 2026-10-08T22:36:57.3791326Z       Called by client
+1940: 2026-10-08T22:36:57.3791332Z 
+1941: 2026-10-08T22:36:57.3791668Z       933 |   ): Promise<void> {
+1954: 2026-10-08T22:36:57.3794967Z 
+1955: 2026-10-08T22:36:57.3795248Z     ConvexError: [CONVEX M(memories:store)] [Request ID: cd2d1a9776603145] Server Error
+1956: 2026-10-08T22:36:57.3795352Z       Called by client
+1957: 2026-10-08T22:36:57.3795359Z 
+1958: 2026-10-08T22:36:57.3795690Z       933 |   ): Promise<void> {
+1971: 2026-10-08T22:36:57.3799876Z 
+1972: 2026-10-08T22:36:57.3800351Z     ConvexError: [CONVEX M(memories:store)] [Request ID: 6e6890f2b0cfd589] Server Error
+1973: 2026-10-08T22:36:57.3800524Z       Called by client
+1974: 2026-10-08T22:36:57.3800535Z 
+1975: 2026-10-08T22:36:57.3801090Z       933 |   ): Promise<void> {
+1988: 2026-10-08T22:36:57.3807028Z 
+1989: 2026-10-08T22:36:57.3807679Z     ConvexError: [CONVEX M(memories:store)] [Request ID: 97b0624112fe8ed7] Server Error
+1990: 2026-10-08T22:36:57.3807838Z       Called by client
+1991: 2026-10-08T22:36:57.3807849Z 
+1992: 2026-10-08T22:36:57.3808408Z       933 |   ): Promise<void> {
+2005: 2026-10-08T22:36:57.3813543Z 
+2006: 2026-10-08T22:36:57.3813857Z     ConvexError: [CONVEX M(memories:store)] [Request ID: 6cda869bd0395aa1] Server Error
+2007: 2026-10-08T22:36:57.3814031Z       Called by client
+2008: 2026-10-08T22:36:57.3814045Z 
+2009: 2026-10-08T22:36:57.3814541Z       933 |   ): Promise<void> {
+2022: 2026-10-08T22:36:57.3817930Z 
+2023: 2026-10-08T22:36:57.3818217Z     ConvexError: [CONVEX M(memories:store)] [Request ID: 840493f1fe121266] Server Error
+2024: 2026-10-08T22:36:57.3818322Z       Called by client
+2025: 2026-10-08T22:36:57.3818329Z 
+2026: 2026-10-08T22:36:57.3818832Z       933 |   ): Promise<void> {
+2039: 2026-10-08T22:36:57.3821945Z 
+2040: 2026-10-08T22:36:57.3822229Z     ConvexError: [CONVEX M(memories:store)] [Request ID: 4d81c1a97e424b1b] Server Error
+2041: 2026-10-08T22:36:57.3822334Z       Called by client
+2042: 2026-10-08T22:36:57.3822459Z 
+2043: 2026-10-08T22:36:57.3822791Z       933 |   ): Promise<void> {
+2056: 2026-10-08T22:36:57.3825875Z 
+2057: 2026-10-08T22:36:57.3826157Z     ConvexError: [CONVEX M(memories:store)] [Request ID: a2e9dcbdbefe57d8] Server Error
+2058: 2026-10-08T22:36:57.3826257Z       Called by client
+2059: 2026-10-08T22:36:57.3826269Z 
+2060: 2026-10-08T22:36:57.3826599Z       933 |   ): Promise<void> {
+2073: 2026-10-08T22:36:57.3829982Z 
+2074: 2026-10-08T22:36:57.3830268Z     ConvexError: [CONVEX M(memories:store)] [Request ID: eabe9cdb978743ce] Server Error
+2075: 2026-10-08T22:36:57.3830376Z       Called by client
+2076: 2026-10-08T22:36:57.3830382Z 
+2077: 2026-10-08T22:36:57.3830708Z       933 |   ): Promise<void> {
+2090: 2026-10-08T22:36:57.3833885Z 
+2091: 2026-10-08T22:36:57.3834162Z     ConvexError: [CONVEX M(memories:store)] [Request ID: a5fa180d34a6cf38] Server Error
+2092: 2026-10-08T22:36:57.3834259Z       Called by client
+2093: 2026-10-08T22:36:57.3834270Z 
+2094: 2026-10-08T22:36:57.3834587Z       933 |   ): Promise<void> {
+2107: 2026-10-08T22:36:57.3837995Z 
+2108: 2026-10-08T22:36:57.3838287Z     ConvexError: [CONVEX M(memories:store)] [Request ID: c534da07cc46312b] Server Error
+2109: 2026-10-08T22:36:57.3838400Z       Called by client
+2110: 2026-10-08T22:36:57.3838407Z 
+2111: 2026-10-08T22:36:57.3838740Z       933 |   ): Promise<void> {
+2124: 2026-10-08T22:36:57.3842136Z 
+2125: 2026-10-08T22:36:57.3842424Z     ConvexError: [CONVEX M(memories:store)] [Request ID: 0269ab4ade5ab197] Server Error
+2126: 2026-10-08T22:36:57.3842526Z       Called by client
+2127: 2026-10-08T22:36:57.3842532Z 
+2128: 2026-10-08T22:36:57.3842857Z       933 |   ): Promise<void> {
+2141: 2026-10-08T22:36:57.3846082Z 
+2142: 2026-10-08T22:36:57.3846363Z     ConvexError: [CONVEX M(memories:store)] [Request ID: 705cdebfc5f2b09e] Server Error
+2143: 2026-10-08T22:36:57.3846465Z       Called by client
+2144: 2026-10-08T22:36:57.3846472Z 
+2145: 2026-10-08T22:36:57.3846797Z       933 |   ): Promise<void> {
+2158: 2026-10-08T22:36:57.3850311Z 
+2159: 2026-10-08T22:36:57.3850734Z     ConvexError: [CONVEX M(memories:store)] [Request ID: 261be76636450c3e] Server Error
+2160: 2026-10-08T22:36:57.3850839Z       Called by client
+2161: 2026-10-08T22:36:57.3850846Z 
+2162: 2026-10-08T22:36:57.3851182Z       933 |   ): Promise<void> {
+2175: 2026-10-08T22:36:57.3854355Z 
+2176: 2026-10-08T22:36:57.3854638Z     ConvexError: [CONVEX M(memories:store)] [Request ID: 255bb59414ddcce4] Server Error
+2177: 2026-10-08T22:36:57.3854737Z       Called by client
+2178: 2026-10-08T22:36:57.3854744Z 
+2179: 2026-10-08T22:36:57.3855072Z       933 |   ): Promise<void> {
+2192: 2026-10-08T22:36:57.3859722Z 
+2193: 2026-10-08T22:36:57.3860242Z     ConvexError: [CONVEX Q(memories:count)] [Request ID: 06832ff9546176b2] Server Error
+2194: 2026-10-08T22:36:57.3860427Z       Called by client
+2195: 2026-10-08T22:36:57.3860442Z 
+2196: 2026-10-08T22:36:57.3861270Z       at OptimisticQueryResults.queryResult (node_modules/convex/dist/esm/browser/sync/optimistic_updates_impl.js:146:11)
+2208: 2026-10-08T22:36:57.3868937Z 
+2209: 2026-10-08T22:36:57.3869452Z     ConvexError: [CONVEX M(memories:store)] [Request ID: ad2ddf6fad2640ce] Server Error
+2210: 2026-10-08T22:36:57.3869624Z       Called by client
+2211: 2026-10-08T22:36:57.3869638Z 
+2212: 2026-10-08T22:36:57.3870275Z       933 |   ): Promise<void> {
+2225: 2026-10-08T22:36:57.3876360Z 
+2226: 2026-10-08T22:36:57.3876877Z     ConvexError: [CONVEX M(memories:store)] [Request ID: 8edda44844275f27] Server Error
+2227: 2026-10-08T22:36:57.3877068Z       Called by client
+2228: 2026-10-08T22:36:57.3877080Z 
+2229: 2026-10-08T22:36:57.3877940Z       933 |   ): Promise<void> {
+2242: 2026-10-08T22:36:57.3883892Z 
+2243: 2026-10-08T22:36:57.3884421Z     ConvexError: [CONVEX A(memories:search)] [Request ID: 3cd9759b93dc9a78] Server Error
+2244: 2026-10-08T22:36:57.3884798Z       Called by client
+2245: 2026-10-08T22:36:57.3884816Z 
+2246: 2026-10-08T22:36:57.3885440Z       933 |   ): Promise<void> {
+2259: 2026-10-08T22:36:57.3891655Z 
+2260: 2026-10-08T22:36:57.3892208Z     ConvexError: [CONVEX A(memories:search)] [Request ID: 03c3eb7228e4e027] Server Error
+2261: 2026-10-08T22:36:57.3892657Z       Called by client
+2262: 2026-10-08T22:36:57.3892674Z 
+2263: 2026-10-08T22:36:57.3893354Z       933 |   ): Promise<void> {
+2276: 2026-10-08T22:36:57.3899676Z 
+2277: 2026-10-08T22:36:57.3900281Z     ConvexError: [CONVEX Q(memories:getAtTimestamp)] [Request ID: eb5c85777cf50d95] Server Error
+2278: 2026-10-08T22:36:57.3900454Z       Called by client
+2279: 2026-10-08T22:36:57.3900465Z 
+2280: 2026-10-08T22:36:57.3901269Z       at OptimisticQueryResults.queryResult (node_modules/convex/dist/esm/browser/sync/optimistic_updates_impl.js:146:11)
+2292: 2026-10-08T22:36:57.3908076Z 
+2293: 2026-10-08T22:36:57.3908412Z     ConvexError: [CONVEX Q(memories:getAtTimestamp)] [Request ID: 0f74c82791133241] Server Error
+2294: 2026-10-08T22:36:57.3908521Z       Called by client
+2295: 2026-10-08T22:36:57.3908528Z 
+2296: 2026-10-08T22:36:57.3908987Z       at OptimisticQueryResults.queryResult (node_modules/convex/dist/esm/browser/sync/optimistic_updates_impl.js:146:11)
+2306: 2026-10-08T22:36:57.3913507Z 
+2307: 2026-10-08T22:38:46.9905411Z FAIL tests/immutable.test.ts (1623.976 s)
+2308: 2026-10-08T22:38:47.0254311Z   ● Console
+2309: 2026-10-08T22:38:47.0254742Z 
+2310: 2026-10-08T22:38:47.0254975Z     console.error
+3276: 2026-10-08T22:38:47.0804529Z 
+3277: 2026-10-08T22:38:47.0804811Z     ConvexError: [CONVEX Q(immutable:list)] [Request ID: 7996dd016563da2b] Server Error
+3278: 2026-10-08T22:38:47.0805226Z       Called by client
+3279: 2026-10-08T22:38:47.0805367Z 
+3280: 2026-10-08T22:38:47.0805807Z       at OptimisticQueryResults.queryResult (node_modules/convex/dist/esm/browser/sync/optimistic_updates_impl.js:146:11)
+3292: 2026-10-08T22:38:47.0814276Z 
+3293: 2026-10-08T22:38:47.0814559Z     ConvexError: [CONVEX Q(immutable:list)] [Request ID: 33db2518a30501f3] Server Error
+3294: 2026-10-08T22:38:47.0814980Z       Called by client
+3295: 2026-10-08T22:38:47.0815120Z 
+3296: 2026-10-08T22:38:47.0815555Z       at OptimisticQueryResults.queryResult (node_modules/convex/dist/esm/browser/sync/optimistic_updates_impl.js:146:11)
+3308: 2026-10-08T22:38:47.0824061Z 
+3309: 2026-10-08T22:38:47.0824344Z     ConvexError: [CONVEX Q(immutable:count)] [Request ID: 77319c6e83466f3f] Server Error
+3310: 2026-10-08T22:38:47.0824773Z       Called by client
+3311: 2026-10-08T22:38:47.0824915Z 
+3312: 2026-10-08T22:38:47.0825353Z       at OptimisticQueryResults.queryResult (node_modules/convex/dist/esm/browser/sync/optimistic_updates_impl.js:146:11)
+3324: 2026-10-08T22:38:47.0835860Z 
+3325: 2026-10-08T22:38:47.0836502Z     ConvexError: [CONVEX Q(immutable:getAtTimestamp)] [Request ID: 3ec1a1b5e6cf6c98] Server Error
+3326: 2026-10-08T22:38:47.0837665Z       Called by client
+3327: 2026-10-08T22:38:47.0837954Z 
+3328: 2026-10-08T22:38:47.0838816Z       at OptimisticQueryResults.queryResult (node_modules/convex/dist/esm/browser/sync/optimistic_updates_impl.js:146:11)
+3340: 2026-10-08T22:38:47.0853393Z 
+3341: 2026-10-08T22:38:47.0853735Z     ConvexError: [CONVEX Q(immutable:getAtTimestamp)] [Request ID: a0cdba86bbbcd62f] Server Error
+3342: 2026-10-08T22:38:47.0854233Z       Called by client
+3343: 2026-10-08T22:38:47.0854385Z 
+3344: 2026-10-08T22:38:47.0854834Z       at OptimisticQueryResults.queryResult (node_modules/convex/dist/esm/browser/sync/optimistic_updates_impl.js:146:11)
+3356: 2026-10-08T22:38:47.0863612Z 
+3357: 2026-10-08T22:38:47.0863928Z     ConvexError: [CONVEX M(immutable:purgeMany)] [Request ID: 75ab3fcd2bbf7f9f] Server Error
+3358: 2026-10-08T22:38:47.0864380Z       Called by client
+3359: 2026-10-08T22:38:47.0864517Z 
+3360: 2026-10-08T22:38:47.0865019Z       933 |   ): Promise<void> {
+3373: 2026-10-08T22:38:47.0871976Z 
+3374: 2026-10-08T22:38:47.0872280Z     ConvexError: [CONVEX M(immutable:purgeMany)] [Request ID: 8742b4a39e908f02] Server Error
+3375: 2026-10-08T22:38:47.0872714Z       Called by client
+3376: 2026-10-08T22:38:47.0873002Z 
+3377: 2026-10-08T22:38:47.0873336Z       933 |   ): Promise<void> {
+3390: 2026-10-08T22:38:47.0879769Z 
+3391: 2026-10-08T22:38:47.0880058Z     ConvexError: [CONVEX M(immutable:store)] [Request ID: 59bfb10f8320a658] Server Error
+3392: 2026-10-08T22:38:47.0880485Z       Called by client
+3393: 2026-10-08T22:38:47.0880629Z 
+3394: 2026-10-08T22:38:47.0880970Z       933 |   ): Promise<void> {
+3407: 2026-10-08T22:38:47.0887438Z 
+3408: 2026-10-08T22:38:47.0887720Z     ConvexError: [CONVEX M(immutable:store)] [Request ID: 731759d91274452d] Server Error
+3409: 2026-10-08T22:38:47.0888141Z       Called by client
+3410: 2026-10-08T22:38:47.0888287Z 
+3411: 2026-10-08T22:38:47.0888614Z       933 |   ): Promise<void> {
+3424: 2026-10-08T22:38:47.0910550Z 
+3425: 2026-10-08T22:38:47.0910863Z     ConvexError: [CONVEX M(immutable:store)] [Request ID: f1d4a093517da866] Server Error
+3426: 2026-10-08T22:38:47.0911310Z       Called by client
+3427: 2026-10-08T22:38:47.0911463Z 
+3428: 2026-10-08T22:38:47.0911823Z       933 |   ): Promise<void> {
+3441: 2026-10-08T22:38:47.0918445Z 
+3442: 2026-10-08T22:38:47.0918738Z     ConvexError: [CONVEX M(immutable:store)] [Request ID: c07b5ba6ff1b7046] Server Error
+3443: 2026-10-08T22:38:47.0919183Z       Called by client
+3444: 2026-10-08T22:38:47.0919337Z 
+3445: 2026-10-08T22:38:47.0919845Z       933 |   ): Promise<void> {
+3458: 2026-10-08T22:38:47.0930512Z 
+3459: 2026-10-08T22:38:47.0931042Z     ConvexError: [CONVEX M(immutable:store)] [Request ID: 5cacd9b8ce4917ac] Server Error
+3460: 2026-10-08T22:38:47.0931823Z       Called by client
+3461: 2026-10-08T22:38:47.0932066Z 
+3462: 2026-10-08T22:38:47.0932701Z       933 |   ): Promise<void> {
+3475: 2026-10-08T22:38:47.0944620Z 
+3476: 2026-10-08T22:38:47.0945150Z     ConvexError: [CONVEX Q(immutable:get)] [Request ID: 16f7c6d859d25fea] Server Error
+3477: 2026-10-08T22:38:47.0945946Z       Called by client
+3478: 2026-10-08T22:38:47.0946224Z 
+3479: 2026-10-08T22:38:47.0947052Z       at OptimisticQueryResults.queryResult (node_modules/convex/dist/esm/browser/sync/optimistic_updates_impl.js:146:11)
+3491: 2026-10-08T22:38:47.0962193Z 
+3492: 2026-10-08T22:38:47.0962944Z     ConvexError: [CONVEX M(immutable:store)] [Request ID: 1038e5e2d4bb3497] Server Error
+3493: 2026-10-08T22:38:47.0963725Z       Called by client
+3494: 2026-10-08T22:38:47.0963974Z 
+3495: 2026-10-08T22:38:47.0964618Z       933 |   ): Promise<void> {
+3508: 2026-10-08T22:38:47.0976595Z 
+3509: 2026-10-08T22:38:47.0977128Z     ConvexError: [CONVEX M(immutable:store)] [Request ID: f5a7849a8b70ab97] Server Error
+3510: 2026-10-08T22:38:47.0978154Z       Called by client
+3511: 2026-10-08T22:38:47.0978405Z 
+3512: 2026-10-08T22:38:47.0979031Z       933 |   ): Promise<void> {
+3525: 2026-10-08T22:38:47.0990508Z 
+3526: 2026-10-08T22:38:47.0991119Z     ConvexError: [CONVEX M(immutable:store)] [Request ID: f5a7849a8b70ab97] Server Error
+3527: 2026-10-08T22:38:47.0991895Z       Called by client
+3528: 2026-10-08T22:38:47.0992139Z 
+3529: 2026-10-08T22:38:47.0992781Z       933 |   ): Promise<void> {
+3542: 2026-10-08T22:38:47.1004571Z 
+3543: 2026-10-08T22:38:47.1005089Z     ConvexError: [CONVEX M(immutable:store)] [Request ID: f5a7849a8b70ab97] Server Error
+3544: 2026-10-08T22:38:47.1005843Z       Called by client
+3545: 2026-10-08T22:38:47.1006092Z 
+3546: 2026-10-08T22:38:47.1006715Z       933 |   ): Promise<void> {
+3559: 2026-10-08T22:38:47.1018868Z 
+3560: 2026-10-08T22:38:47.1019384Z     ConvexError: [CONVEX M(immutable:store)] [Request ID: f5a7849a8b70ab97] Server Error
+3561: 2026-10-08T22:38:47.1020152Z       Called by client
+3562: 2026-10-08T22:38:47.1020400Z 
+3563: 2026-10-08T22:38:47.1020994Z       933 |   ): Promise<void> {
+3576: 2026-10-08T22:38:47.1032584Z 
+3577: 2026-10-08T22:38:47.1033095Z     ConvexError: [CONVEX M(immutable:store)] [Request ID: f5a7849a8b70ab97] Server Error
+3578: 2026-10-08T22:38:47.1033858Z       Called by client
+3579: 2026-10-08T22:38:47.1034107Z 
+3580: 2026-10-08T22:38:47.1034703Z       933 |   ): Promise<void> {
+3593: 2026-10-08T22:38:47.1046520Z 
+3594: 2026-10-08T22:38:47.1047038Z     ConvexError: [CONVEX M(immutable:store)] [Request ID: 54a4c8925c120e57] Server Error
+3595: 2026-10-08T22:38:47.1047990Z       Called by client
+3596: 2026-10-08T22:38:47.1048235Z 
+3597: 2026-10-08T22:38:47.1048860Z       933 |   ): Promise<void> {
+3610: 2026-10-08T22:38:47.1059427Z 
+3611: 2026-10-08T22:38:47.1059936Z     ConvexError: [CONVEX M(immutable:store)] [Request ID: 54a4c8925c120e57] Server Error
+3612: 2026-10-08T22:38:47.1060107Z       Called by client
+3613: 2026-10-08T22:38:47.1060118Z 
+3614: 2026-10-08T22:38:47.1060715Z       933 |   ): Promise<void> {
+3627: 2026-10-08T22:38:47.1066507Z 
+3628: 2026-10-08T22:38:47.1067021Z     ConvexError: [CONVEX M(immutable:store)] [Request ID: 54a4c8925c120e57] Server Error
+3629: 2026-10-08T22:38:47.1067387Z       Called by client
+3630: 2026-10-08T22:38:47.1067401Z 
+3631: 2026-10-08T22:38:47.1068024Z       933 |   ): Promise<void> {
+3644: 2026-10-08T22:38:47.1073578Z 
+3645: 2026-10-08T22:38:47.1074115Z     ConvexError: [CONVEX M(immutable:store)] [Request ID: d1674410dd5f8288] Server Error
+3646: 2026-10-08T22:38:47.1074305Z       Called by client
+3647: 2026-10-08T22:38:47.1074319Z 
+3648: 2026-10-08T22:38:47.1074954Z       933 |   ): Promise<void> {
+3661: 2026-10-08T22:38:47.1080483Z 
+3662: 2026-10-08T22:38:47.1080984Z     ConvexError: [CONVEX M(immutable:store)] [Request ID: d1674410dd5f8288] Server Error
+3663: 2026-10-08T22:38:47.1081160Z       Called by client
+3664: 2026-10-08T22:38:47.1081171Z 
+3665: 2026-10-08T22:38:47.1081802Z       933 |   ): Promise<void> {
+3678: 2026-10-08T22:38:47.1087754Z 
+3679: 2026-10-08T22:38:47.1088302Z     ConvexError: [CONVEX M(immutable:store)] [Request ID: d1674410dd5f8288] Server Error
+3680: 2026-10-08T22:38:47.1088495Z       Called by client
+3681: 2026-10-08T22:38:47.1088508Z 
+3682: 2026-10-08T22:38:47.1089172Z       933 |   ): Promise<void> {
+3695: 2026-10-08T22:38:47.1095174Z 
+3696: 2026-10-08T22:38:47.1095716Z     ConvexError: [CONVEX M(immutable:store)] [Request ID: d1674410dd5f8288] Server Error
+3697: 2026-10-08T22:38:47.1095891Z       Called by client
+3698: 2026-10-08T22:38:47.1095905Z 
+3699: 2026-10-08T22:38:47.1096425Z       933 |   ): Promise<void> {
+3712: 2026-10-08T22:38:47.1101870Z 
+3713: 2026-10-08T22:38:47.1102402Z     ConvexError: [CONVEX M(immutable:store)] [Request ID: ec203929d1591e39] Server Error
+3714: 2026-10-08T22:38:47.1102589Z       Called by client
+3715: 2026-10-08T22:38:47.1102604Z 
+3716: 2026-10-08T22:38:47.1103257Z       933 |   ): Promise<void> {
+3729: 2026-10-08T22:38:47.1109410Z 
+3730: 2026-10-08T22:38:47.1109956Z     ConvexError: [CONVEX M(immutable:store)] [Request ID: ec203929d1591e39] Server Error
+3731: 2026-10-08T22:38:47.1110151Z       Called by client
+3732: 2026-10-08T22:38:47.1110166Z 
+3733: 2026-10-08T22:38:47.1110794Z       933 |   ): Promise<void> {
+3746: 2026-10-08T22:38:47.1116626Z 
+3747: 2026-10-08T22:38:47.1117155Z     ConvexError: [CONVEX M(immutable:store)] [Request ID: ec203929d1591e39] Server Error
+3748: 2026-10-08T22:38:47.1117589Z       Called by client
+3749: 2026-10-08T22:38:47.1117607Z 
+3750: 2026-10-08T22:38:47.1118273Z       933 |   ): Promise<void> {
+3763: 2026-10-08T22:38:47.1124051Z 
+3764: 2026-10-08T22:38:47.1124807Z     ConvexError: [CONVEX M(immutable:store)] [Request ID: ec203929d1591e39] Server Error
+3765: 2026-10-08T22:38:47.1125012Z       Called by client
+3766: 2026-10-08T22:38:47.1125035Z 
+3767: 2026-10-08T22:38:47.1125683Z       933 |   ): Promise<void> {
+3780: 2026-10-08T22:38:47.1131620Z 
+3781: 2026-10-08T22:38:47.1132383Z     ConvexError: [CONVEX M(immutable:store)] [Request ID: ec203929d1591e39] Server Error
+3782: 2026-10-08T22:38:47.1132574Z       Called by client
+3783: 2026-10-08T22:38:47.1132588Z 
+3784: 2026-10-08T22:38:47.1133238Z       933 |   ): Promise<void> {
+3797: 2026-10-08T22:38:47.1139149Z 
+3798: 2026-10-08T22:38:47.1139691Z     ConvexError: [CONVEX M(immutable:store)] [Request ID: 52c3d8b0e21b0c8a] Server Error
+3799: 2026-10-08T22:38:47.1139880Z       Called by client
+3800: 2026-10-08T22:38:47.1139893Z 
+3801: 2026-10-08T22:38:47.1140525Z       933 |   ): Promise<void> {
+3814: 2026-10-08T22:38:47.1146291Z 
+3815: 2026-10-08T22:38:47.1146850Z     ConvexError: [CONVEX M(immutable:store)] [Request ID: 52c3d8b0e21b0c8a] Server Error
+3816: 2026-10-08T22:38:47.1147052Z       Called by client
+3817: 2026-10-08T22:38:47.1147067Z 
+3818: 2026-10-08T22:38:47.1147942Z       933 |   ): Promise<void> {
+3831: 2026-10-08T22:38:47.1153709Z 
+3832: 2026-10-08T22:38:47.1154246Z     ConvexError: [CONVEX M(immutable:store)] [Request ID: 52c3d8b0e21b0c8a] Server Error
+3833: 2026-10-08T22:38:47.1154429Z       Called by client
+3834: 2026-10-08T22:38:47.1154443Z 
+3835: 2026-10-08T22:38:47.1155066Z       933 |   ): Promise<void> {
+3848: 2026-10-08T22:38:47.1161209Z 
+3849: 2026-10-08T22:38:47.1161734Z     ConvexError: [CONVEX M(immutable:store)] [Request ID: fec5651676429d38] Server Error
+3850: 2026-10-08T22:38:47.1161942Z       Called by client
+3851: 2026-10-08T22:38:47.1161957Z 
+3852: 2026-10-08T22:38:47.1162609Z       933 |   ): Promise<void> {
+3886: 2026-10-08T22:38:47.1176916Z 
+3887: 2026-10-08T22:38:47.1177713Z     ConvexError: [CONVEX M(immutable:store)] [Request ID: 7a2f9f6ed7cd79df] Server Error
+3888: 2026-10-08T22:38:47.1177921Z       Called by client
+3889: 2026-10-08T22:38:47.1177937Z 
+3890: 2026-10-08T22:38:47.1178583Z       933 |   ): Promise<void> {
+3903: 2026-10-08T22:38:47.1184608Z 
+3904: 2026-10-08T22:38:47.1185139Z     ConvexError: [CONVEX M(immutable:store)] [Request ID: 2a9e29f4febc0a83] Server Error
+3905: 2026-10-08T22:38:47.1185330Z       Called by client
+3906: 2026-10-08T22:38:47.1185343Z 
+3907: 2026-10-08T22:38:47.1185976Z       933 |   ): Promise<void> {
+3920: 2026-10-08T22:38:47.1192205Z 
+3921: 2026-10-08T22:38:47.1192616Z     ConvexError: [CONVEX M(immutable:store)] [Request ID: 6092791318a35985] Server Error
+3922: 2026-10-08T22:38:47.1192762Z       Called by client
+3923: 2026-10-08T22:38:47.1192771Z 
+3924: 2026-10-08T22:38:47.1193244Z       933 |   ): Promise<void> {
+3937: 2026-10-08T22:38:47.1198448Z 
+3938: 2026-10-08T22:38:47.1198928Z     ConvexError: [CONVEX M(immutable:store)] [Request ID: 1b00c35b24644c17] Server Error
+3939: 2026-10-08T22:38:47.1199124Z       Called by client
+3940: 2026-10-08T22:38:47.1199134Z 
+3941: 2026-10-08T22:38:47.1199705Z       933 |   ): Promise<void> {
+3954: 2026-10-08T22:38:47.1205022Z 
+3955: 2026-10-08T22:38:47.1205466Z     ConvexError: [CONVEX M(immutable:store)] [Request ID: 2abbf984ceb429a7] Server Error
+3956: 2026-10-08T22:38:47.1205625Z       Called by client
+3957: 2026-10-08T22:38:47.1205636Z 
+3958: 2026-10-08T22:38:47.1206217Z       933 |   ): Promise<void> {
+3971: 2026-10-08T22:38:47.1211908Z 
+3972: 2026-10-08T22:38:47.1212375Z     ConvexError: [CONVEX M(immutable:store)] [Request ID: 9c52c3ce84c976a3] Server Error
+3973: 2026-10-08T22:38:47.1212542Z       Called by client
+3974: 2026-10-08T22:38:47.1212558Z 
+3975: 2026-10-08T22:38:47.1213224Z       933 |   ): Promise<void> {
+3988: 2026-10-08T22:38:47.1219209Z 
+3989: 2026-10-08T22:38:47.1219728Z     ConvexError: [CONVEX M(immutable:store)] [Request ID: 998e7381fe69abca] Server Error
+3990: 2026-10-08T22:38:47.1219910Z       Called by client
+3991: 2026-10-08T22:38:47.1219923Z 
+3992: 2026-10-08T22:38:47.1220745Z       933 |   ): Promise<void> {
+4005: 2026-10-08T22:38:47.1226267Z 
+4006: 2026-10-08T22:38:47.1226723Z     ConvexError: [CONVEX M(immutable:store)] [Request ID: c6bdca7c3240ec97] Server Error
+4007: 2026-10-08T22:38:47.1226866Z       Called by client
+4008: 2026-10-08T22:38:47.1226876Z 
+4009: 2026-10-08T22:38:47.1227784Z       933 |   ): Promise<void> {
+4022: 2026-10-08T22:38:47.1233353Z 
+4023: 2026-10-08T22:38:47.1233874Z     ConvexError: [CONVEX M(immutable:store)] [Request ID: b068bff1d79e0f4c] Server Error
+4024: 2026-10-08T22:38:47.1234057Z       Called by client
+4025: 2026-10-08T22:38:47.1234071Z 
+4026: 2026-10-08T22:38:47.1234726Z       933 |   ): Promise<void> {
+4039: 2026-10-08T22:38:47.1240881Z 
+4040: 2026-10-08T22:38:47.1241415Z     ConvexError: [CONVEX M(immutable:store)] [Request ID: c1333abe4a1013ac] Server Error
+4041: 2026-10-08T22:38:47.1241604Z       Called by client
+4042: 2026-10-08T22:38:47.1241616Z 
+4043: 2026-10-08T22:38:47.1242249Z       933 |   ): Promise<void> {
+4056: 2026-10-08T22:38:47.1248542Z 
+4057: 2026-10-08T22:38:47.1249076Z     ConvexError: [CONVEX M(immutable:store)] [Request ID: 2acc5734629c2777] Server Error
+4058: 2026-10-08T22:38:47.1249259Z       Called by client
+4059: 2026-10-08T22:38:47.1249272Z 
+4060: 2026-10-08T22:38:47.1249914Z       933 |   ): Promise<void> {
+4073: 2026-10-08T22:38:47.1255531Z 
+4074: 2026-10-08T22:38:47.1256038Z     ConvexError: [CONVEX M(immutable:store)] [Request ID: 04dba1ecfa301b7b] Server Error
+4075: 2026-10-08T22:38:47.1256231Z       Called by client
+4076: 2026-10-08T22:38:47.1256258Z 
+4077: 2026-10-08T22:38:47.1256881Z       933 |   ): Promise<void> {
+4090: 2026-10-08T22:38:47.1263517Z 
+4091: 2026-10-08T22:38:47.1264051Z     ConvexError: [CONVEX M(immutable:store)] [Request ID: cc740d1f19e69f65] Server Error
+4092: 2026-10-08T22:38:47.1264222Z       Called by client
+4093: 2026-10-08T22:38:47.1264241Z 
+4094: 2026-10-08T22:38:47.1264892Z       933 |   ): Promise<void> {
+4107: 2026-10-08T22:38:47.1271511Z 
+4108: 2026-10-08T22:38:47.1272032Z     ConvexError: [CONVEX M(immutable:store)] [Request ID: be2913d7e1e23e1f] Server Error
+4109: 2026-10-08T22:38:47.1272234Z       Called by client
+4110: 2026-10-08T22:38:47.1272247Z 
+4111: 2026-10-08T22:38:47.1272886Z       933 |   ): Promise<void> {
+4124: 2026-10-08T22:38:47.1278357Z 
+4125: 2026-10-08T22:38:47.1278760Z     ConvexError: [CONVEX M(immutable:store)] [Request ID: 9a025f6447fd9575] Server Error
+4126: 2026-10-08T22:38:47.1279109Z       Called by client
+4127: 2026-10-08T22:38:47.1279122Z 
+4128: 2026-10-08T22:38:47.1279613Z       933 |   ): Promise<void> {
+4141: 2026-10-08T22:38:47.1285183Z 
+4142: 2026-10-08T22:38:47.1285688Z     ConvexError: [CONVEX M(immutable:store)] [Request ID: 1426b2350442e64d] Server Error
+4143: 2026-10-08T22:38:47.1286055Z       Called by client
+4144: 2026-10-08T22:38:47.1286068Z 
+4145: 2026-10-08T22:38:47.1286680Z       933 |   ): Promise<void> {
+4158: 2026-10-08T22:38:47.1292821Z 
+4159: 2026-10-08T22:38:47.1293334Z     ConvexError: [CONVEX M(immutable:store)] [Request ID: 1426b2350442e64d] Server Error
+4160: 2026-10-08T22:38:47.1293507Z       Called by client
+4161: 2026-10-08T22:38:47.1293519Z 
+4162: 2026-10-08T22:38:47.1294135Z       933 |   ): Promise<void> {
+4175: 2026-10-08T22:38:47.1300457Z 
+4176: 2026-10-08T22:38:47.1300973Z     ConvexError: [CONVEX M(immutable:store)] [Request ID: 1426b2350442e64d] Server Error
+4177: 2026-10-08T22:38:47.1301154Z       Called by client
+4178: 2026-10-08T22:38:47.1301167Z 
+4179: 2026-10-08T22:38:47.1301769Z       933 |   ): Promise<void> {
+4192: 2026-10-08T22:38:47.1307859Z 
+4193: 2026-10-08T22:38:47.1308189Z     ConvexError: [CONVEX M(immutable:store)] [Request ID: 1426b2350442e64d] Server Error
+4194: 2026-10-08T22:38:47.1308289Z       Called by client
+4195: 2026-10-08T22:38:47.1308295Z 
+4196: 2026-10-08T22:38:47.1308648Z       933 |   ): Promise<void> {
+4209: 2026-10-08T22:38:47.1311707Z 
+4210: 2026-10-08T22:38:47.1311985Z     ConvexError: [CONVEX M(immutable:store)] [Request ID: 747709c6a9266195] Server Error
+4211: 2026-10-08T22:38:47.1312083Z       Called by client
+4212: 2026-10-08T22:38:47.1312089Z 
+4213: 2026-10-08T22:38:47.1312417Z       933 |   ): Promise<void> {
+4226: 2026-10-08T22:38:47.1315583Z 
+4227: 2026-10-08T22:38:47.1315871Z     ConvexError: [CONVEX M(immutable:store)] [Request ID: 747709c6a9266195] Server Error
+4228: 2026-10-08T22:38:47.1315970Z       Called by client
+4229: 2026-10-08T22:38:47.1315976Z 
+4230: 2026-10-08T22:38:47.1316305Z       933 |   ): Promise<void> {
+4243: 2026-10-08T22:38:47.1319877Z 
+4244: 2026-10-08T22:38:47.1320153Z     ConvexError: [CONVEX M(immutable:store)] [Request ID: 40b73e38728ca732] Server Error
+4245: 2026-10-08T22:38:47.1320253Z       Called by client
+4246: 2026-10-08T22:38:47.1320259Z 
+4247: 2026-10-08T22:38:47.1320582Z       933 |   ): Promise<void> {
+4260: 2026-10-08T22:38:47.1323797Z 
+4261: 2026-10-08T22:38:47.1324081Z     ConvexError: [CONVEX M(immutable:store)] [Request ID: 5f24702f0e587ea5] Server Error
+4262: 2026-10-08T22:38:47.1324179Z       Called by client
+4263: 2026-10-08T22:38:47.1324185Z 
+4264: 2026-10-08T22:38:47.1324506Z       933 |   ): Promise<void> {
+4298: 2026-10-08T22:38:47.1336812Z 
+4299: 2026-10-08T22:38:47.1337607Z     ConvexError: [CONVEX M(immutable:store)] [Request ID: 99f644b4e75a2bd5] Server Error
+4300: 2026-10-08T22:38:47.1337788Z       Called by client
+4301: 2026-10-08T22:38:47.1337800Z 
+4302: 2026-10-08T22:38:47.1338424Z       933 |   ): Promise<void> {
+4315: 2026-10-08T22:38:47.1343326Z 
+4316: 2026-10-08T22:38:47.1343622Z     ConvexError: [CONVEX M(immutable:store)] [Request ID: 7d8c002ed7e4bbe2] Server Error
+4317: 2026-10-08T22:38:47.1343725Z       Called by client
+4318: 2026-10-08T22:38:47.1343731Z 
+4319: 2026-10-08T22:38:47.1344068Z       933 |   ): Promise<void> {
+4332: 2026-10-08T22:38:47.1348084Z 
+4333: 2026-10-08T22:38:47.1348365Z     ConvexError: [CONVEX M(immutable:store)] [Request ID: 7d8c002ed7e4bbe2] Server Error
+4334: 2026-10-08T22:38:47.1348467Z       Called by client
+4335: 2026-10-08T22:38:47.1348473Z 
+4336: 2026-10-08T22:38:47.1348800Z       933 |   ): Promise<void> {
+4349: 2026-10-08T22:38:47.1351779Z 
+4350: 2026-10-08T22:38:47.1352212Z     ConvexError: [CONVEX M(immutable:store)] [Request ID: 7d8c002ed7e4bbe2] Server Error
+4351: 2026-10-08T22:38:47.1352320Z       Called by client
+4352: 2026-10-08T22:38:47.1352326Z 
+4353: 2026-10-08T22:38:47.1352653Z       933 |   ): Promise<void> {
+4366: 2026-10-08T22:38:47.1355846Z 
+4367: 2026-10-08T22:38:47.1356136Z     ConvexError: [CONVEX M(immutable:store)] [Request ID: 7d8c002ed7e4bbe2] Server Error
+4368: 2026-10-08T22:38:47.1356236Z       Called by client
+4369: 2026-10-08T22:38:47.1356243Z 
+4370: 2026-10-08T22:38:47.1356582Z       933 |   ): Promise<void> {
+4383: 2026-10-08T22:38:47.1360029Z 
+4384: 2026-10-08T22:38:47.1360312Z     ConvexError: [CONVEX M(immutable:store)] [Request ID: 7d8c002ed7e4bbe2] Server Error
+4385: 2026-10-08T22:38:47.1360415Z       Called by client
+4386: 2026-10-08T22:38:47.1360422Z 
+4387: 2026-10-08T22:38:47.1360755Z       933 |   ): Promise<void> {
+4400: 2026-10-08T22:38:47.1363930Z 
+4401: 2026-10-08T22:38:47.1364215Z     ConvexError: [CONVEX M(immutable:store)] [Request ID: f3fbd188ad26cd02] Server Error
+4402: 2026-10-08T22:38:47.1364316Z       Called by client
+4403: 2026-10-08T22:38:47.1364323Z 
+4404: 2026-10-08T22:38:47.1364756Z       933 |   ): Promise<void> {
+4417: 2026-10-08T22:38:47.1371333Z 
+4418: 2026-10-08T22:38:47.1371860Z     ConvexError: [CONVEX M(immutable:store)] [Request ID: f3fbd188ad26cd02] Server Error
+4419: 2026-10-08T22:38:47.1372037Z       Called by client
+4420: 2026-10-08T22:38:47.1372049Z 
+4421: 2026-10-08T22:38:47.1372671Z       933 |   ): Promise<void> {
+4434: 2026-10-08T22:38:47.1379107Z 

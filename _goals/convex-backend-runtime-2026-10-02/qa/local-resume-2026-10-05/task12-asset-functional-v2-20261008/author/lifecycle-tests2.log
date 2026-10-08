@@ -1,0 +1,257 @@
+  console.error
+    ◇ injected env (0) from .env.test
+
+      13 | import dotenv from "dotenv";
+      14 | import { resolve } from "path";
+    > 15 |
+         | ^
+      16 | // Load .env.test first (test defaults)
+      17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+      18 |
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:15:8
+
+  console.error
+    ◇ injected env (0) from .env.local
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+  console.log
+    
+    🧪 Testing against LOCAL Convex: http://127.0.0.1:1
+
+      at tests/env.ts:35:13
+
+  console.log
+       Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:36:13
+
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:121:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:122:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:123:13
+
+(node:56204) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeAssets/lifecycle.test.ts (8.727 s)
+  immutable private assets and reference ownership
+    ✓ actual bytes commit once, replay keeps exact metadata, no bearer URL (47 ms)
+    ✓ same request with a changed payload is a no-write idempotency conflict (29 ms)
+    ✓ a blob with the wrong hash cannot stage or become ready (9 ms)
+    ✓ late finalize after revoked cannot revive a reserved version (36 ms)
+    ✓ late finalize after deleted cannot revive a reserved version (26 ms)
+    ✓ late finalize after cancelled cannot revive a reserved version (10 ms)
+    ✓ lost ready acknowledgement cannot trigger deletion of committed referenced bytes (13 ms)
+    ✕ attachment removal preserves artifact history; last owner deletion cleans bytes (14 ms)
+    ✕ undo, redo and historical export identify the same immutable lineage (40 ms)
+    ✓ no-auth metadata delivery denies without row or byte effects (17 ms)
+    ✓ foreign metadata delivery denies without row or byte effects (13 ms)
+    ✓ revoked metadata delivery denies without row or byte effects (8 ms)
+    ✓ failed last-owner delete remains retryable and never reports physically deleted (9 ms)
+    ✓ orphan marker cannot match a predictable unrelated host blob (5 ms)
+    ✓ principal cascade retires owned edges and preserves unrelated host bytes (10 ms)
+    ✕ Agent file parts add independent ownership, and vacuum is not artifact ownership (26 ms)
+  actual application and private protocol byte bounds
+    ✓ exact 20,000,000 accepted and one byte above rejected (22 ms)
+    ✓ streamed overflow cancels before any storage acceptance (2 ms)
+    ✓ generated oversized bytes fail before job creation/store/ready (18 ms)
+    ✕ upload current storage grant is checked before reading body (20 ms)
+    ✓ HTTP delivers authorized catalog MIME/hash with no-store and rejects corrupted oversized storage (34 ms)
+    ✓ private provider materialization uses exact authorized bytes and full encoded bound (24 ms)
+
+  ● immutable private assets and reference ownership › attachment removal preserves artifact history; last owner deletion cleans bytes
+
+    ConvexError: {"code":"FORBIDDEN","message":"Artifact operation denied."}
+
+      131 |     try { safeData = safeArtifactErrorData(error); }
+      132 |     catch { /* Even malformed exception getters cannot expose backend diagnostics. */ }
+    > 133 |     if (safeData !== undefined) throw new ConvexError(safeData);
+          |                                       ^
+      134 |     // Every selected mutation propagates failure so Convex aborts the transaction;
+      135 |     // queries have no committed effects. No original diagnostic is retained.
+      136 |     throw backendFailure();
+
+      at artifactHandler (convex-dev/runtimeArtifactAuth.ts:133:39)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:133:10)
+      at tests/unit/runtimeTranscript/fixture.ts:197:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:193:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:197:77)
+      at Object.<anonymous> (tests/unit/runtimeAssets/lifecycle.test.ts:33:5)
+
+  ● immutable private assets and reference ownership › undo, redo and historical export identify the same immutable lineage
+
+    ConvexError: {"code":"FORBIDDEN","message":"Artifact operation denied."}
+
+      131 |     try { safeData = safeArtifactErrorData(error); }
+      132 |     catch { /* Even malformed exception getters cannot expose backend diagnostics. */ }
+    > 133 |     if (safeData !== undefined) throw new ConvexError(safeData);
+          |                                       ^
+      134 |     // Every selected mutation propagates failure so Convex aborts the transaction;
+      135 |     // queries have no committed effects. No original diagnostic is retained.
+      136 |     throw backendFailure();
+
+      at artifactHandler (convex-dev/runtimeArtifactAuth.ts:133:39)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:133:10)
+      at tests/unit/runtimeTranscript/fixture.ts:197:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:193:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:197:77)
+      at Object.<anonymous> (tests/unit/runtimeAssets/lifecycle.test.ts:40:5)
+
+  ● immutable private assets and reference ownership › Agent file parts add independent ownership, and vacuum is not artifact ownership
+
+    ConvexError: {"code":"FORBIDDEN","message":"Artifact operation denied."}
+
+      131 |     try { safeData = safeArtifactErrorData(error); }
+      132 |     catch { /* Even malformed exception getters cannot expose backend diagnostics. */ }
+    > 133 |     if (safeData !== undefined) throw new ConvexError(safeData);
+          |                                       ^
+      134 |     // Every selected mutation propagates failure so Convex aborts the transaction;
+      135 |     // queries have no committed effects. No original diagnostic is retained.
+      136 |     throw backendFailure();
+
+      at artifactHandler (convex-dev/runtimeArtifactAuth.ts:133:39)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:133:10)
+      at tests/unit/runtimeTranscript/fixture.ts:197:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:193:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:197:77)
+      at Object.<anonymous> (tests/unit/runtimeAssets/lifecycle.test.ts:55:5)
+
+  ● actual application and private protocol byte bounds › upload current storage grant is checked before reading body
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: 1
+
+      61 |   test("streamed overflow cancels before any storage acceptance", async () => { let cancelled = false; const stream = new ReadableStream<Uint8Array>({ start(controller) { controller.enqueue(new Uint8Array(ASSET_MAX_BYTES)); controller.enqueue(new Uint8Array(1)); }, cancel() { cancelled = true; } }); await expect(readBoundedAsset(stream)).rejects.toThrow("ASSET_TOO_LARGE"); expect(cancelled).toBe(true); });
+      62 |   test("generated oversized bytes fail before job creation/store/ready", async () => { const f = await assetFixture(); await expect(assets.storeGeneratedAsset(f.action, f.reference, { requestId: "generated", mimeType: "video/mp4", lineage: { kind: "generated", operationId: "paid-unknown", modelId: "model" } }, new Blob([new Uint8Array(ASSET_MAX_BYTES + 1)]))).rejects.toMatchObject({ data: { code: "ASSET_TOO_LARGE" } }); expect(f.stores).toBe(0); expect(f.db.table("runtimeAssetJobs")).toHaveLength(0); });
+    > 63 |   test("upload current storage grant is checked before reading body", async () => { const f = await assetFixture(); f.grant.capabilities = ["read"]; let reads = 0; const request = new Request("https://host/cortex/assets/upload?requestId=a", { method: "POST", headers: { "Content-Type": "text/plain" }, body: new ReadableStream({ pull(controller) { reads++; controller.enqueue(new Uint8Array([1])); controller.close(); } }), duplex: "half" } as RequestInit); const before = reads; const response = await invoke<Response>(http.uploadAsset, f.ctx, request); expect(response.status).toBe(403); expect(reads).toBe(before); expect(f.stores).toBe(0); });
+         |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             ^
+      64 |   test("HTTP delivers authorized catalog MIME/hash with no-store and rejects corrupted oversized storage", async () => { const f = await assetFixture(); const { asset } = await f.upload(); const url = `https://host/cortex/assets/download?assetId=${asset.assetId}&version=1`; const response = await invoke<Response>(http.downloadAsset, f.ctx, new Request(url)); expect(response.status).toBe(200); expect(await response.text()).toBe("private bytes"); expect(response.headers.get("Cache-Control")).toBe("no-store"); const id = f.db.table("runtimeAssetVersions")[0].storageId as string; f.blobs.set(id, new Blob([new Uint8Array(ASSET_MAX_BYTES + 1)])); const denied = await invoke<Response>(http.downloadAsset, f.ctx, new Request(url)); expect(denied.status).toBe(413); expect(await denied.json()).toEqual({ version: 1, code: "ASSET_TOO_LARGE" }); });
+      65 |   test("private provider materialization uses exact authorized bytes and full encoded bound", async () => { const f = await assetFixture(); const { asset } = await f.upload("png-input", "image", "image/png"); const input = await assets.readPrivateProviderAsset(f.action, f.reference, { assetId: asset.assetId, version: 1, protocol: "image-inline-v1" }); expect(input.envelope).toMatchObject({ image: "data:image/png;base64,cG5nLWlucHV0" }); expect(input.protocolBytes).toBe(new TextEncoder().encode(JSON.stringify(input.envelope)).byteLength); f.grant.revokedAt = Date.now(); await expect(assets.readPrivateProviderAsset(f.action, f.reference, { assetId: asset.assetId, version: 1, protocol: "image-inline-v1" })).rejects.toThrow(); });
+      66 | });
+
+      at Object.<anonymous> (tests/unit/runtimeAssets/lifecycle.test.ts:63:605)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     8.7s | 18/22 passed | /tests/unit/runtimeAssets/lifecycle.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.05s ( 0.5%) - immutable private assets and reference ownership actual bytes commit once, replay keeps exact metadata, no bearer URL
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+ 2. [31m✗[0m    0.04s ( 0.4%) - immutable private assets and reference ownership undo, redo and historical export identify the same immutable lineage
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+ 3. [32m✓[0m    0.04s ( 0.4%) - immutable private assets and reference ownership late finalize after revoked cannot revive a reserved version
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+ 4. [32m✓[0m    0.03s ( 0.4%) - actual application and private protocol byte bounds HTTP delivers authorized catalog MIME/hash with no-store and rejects corrupted oversized storage
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+ 5. [32m✓[0m    0.03s ( 0.3%) - immutable private assets and reference ownership same request with a changed payload is a no-write idempotency conflict
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+ 6. [32m✓[0m    0.03s ( 0.3%) - immutable private assets and reference ownership late finalize after deleted cannot revive a reserved version
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+ 7. [31m✗[0m    0.03s ( 0.3%) - immutable private assets and reference ownership Agent file parts add independent ownership, and vacuum is not artifact ownership
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+ 8. [32m✓[0m    0.02s ( 0.3%) - actual application and private protocol byte bounds private provider materialization uses exact authorized bytes and full encoded bound
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+ 9. [32m✓[0m    0.02s ( 0.2%) - actual application and private protocol byte bounds exact 20,000,000 accepted and one byte above rejected
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+10. [31m✗[0m    0.02s ( 0.2%) - actual application and private protocol byte bounds upload current storage grant is checked before reading body
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+11. [32m✓[0m    0.02s ( 0.2%) - actual application and private protocol byte bounds generated oversized bytes fail before job creation/store/ready
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+12. [32m✓[0m    0.02s ( 0.2%) - immutable private assets and reference ownership no-auth metadata delivery denies without row or byte effects
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+13. [31m✗[0m    0.01s ( 0.2%) - immutable private assets and reference ownership attachment removal preserves artifact history; last owner deletion cleans bytes
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+14. [32m✓[0m    0.01s ( 0.1%) - immutable private assets and reference ownership lost ready acknowledgement cannot trigger deletion of committed referenced bytes
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+15. [32m✓[0m    0.01s ( 0.1%) - immutable private assets and reference ownership foreign metadata delivery denies without row or byte effects
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+16. [32m✓[0m    0.01s ( 0.1%) - immutable private assets and reference ownership late finalize after cancelled cannot revive a reserved version
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+17. [32m✓[0m    0.01s ( 0.1%) - immutable private assets and reference ownership principal cascade retires owned edges and preserves unrelated host bytes
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+18. [32m✓[0m    0.01s ( 0.1%) - immutable private assets and reference ownership a blob with the wrong hash cannot stage or become ready
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+19. [32m✓[0m    0.01s ( 0.1%) - immutable private assets and reference ownership failed last-owner delete remains retryable and never reports physically deleted
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+20. [32m✓[0m    0.01s ( 0.1%) - immutable private assets and reference ownership revoked metadata delivery denies without row or byte effects
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.42s (4.8% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      8.94s
+  Test suites:        1
+  Individual tests:   22
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 failed, 1 total
+Tests:       4 failed, 18 passed, 22 total
+Snapshots:   0 total
+Time:        8.944 s, estimated 12 s
+Ran all test suites within paths "tests/unit/runtimeAssets/lifecycle.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/author/lifecycle-tests2.json

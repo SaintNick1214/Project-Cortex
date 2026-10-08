@@ -47,6 +47,7 @@ export const runtimeTranscriptTables = {
     sourceContentHash: v.string(), actorReference: runtimeAuthorityReference, approved: v.boolean(),
     legacyMessageId: v.optional(v.string()), legacyRequestCanonical: v.optional(v.string()),
     contextSourceWitnesses: v.optional(v.array(contextSourceWitness)),
+    assetVersionIds: v.optional(v.array(v.string())),
     runId: v.optional(v.string()), attemptNumber: v.optional(v.number()), createdAt: v.number(), updatedAt: v.number(),
     tombstonedAt: v.optional(v.number()),
   }).index("by_native", ["tenantId", "memorySpaceId", "nativeMessageId"])

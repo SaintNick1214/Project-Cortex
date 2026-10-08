@@ -1,0 +1,637 @@
+  console.error
+    ◇ injected env (0) from .env.test
+
+      13 | import dotenv from "dotenv";
+      14 | import { resolve } from "path";
+    > 15 |
+         | ^
+      16 | // Load .env.test first (test defaults)
+      17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+      18 |
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:15:8
+
+  console.error
+    ◇ injected env (0) from .env.local
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+  console.log
+    
+    🧪 Testing against LOCAL Convex: http://127.0.0.1:1
+
+      at tests/env.ts:35:13
+
+  console.log
+       Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:36:13
+
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:121:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:122:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:123:13
+
+(node:55445) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeAssets/lifecycle.test.ts (11.979 s)
+  immutable private assets and reference ownership
+    ✕ actual bytes commit once, replay keeps exact metadata, no bearer URL (4 ms)
+    ✕ same request with a changed payload is a no-write idempotency conflict (1 ms)
+    ✕ a blob with the wrong hash cannot stage or become ready (1 ms)
+    ✕ late finalize after revoked cannot revive a reserved version (1 ms)
+    ✕ late finalize after deleted cannot revive a reserved version (1 ms)
+    ✕ late finalize after cancelled cannot revive a reserved version (1 ms)
+    ✕ lost ready acknowledgement cannot trigger deletion of committed referenced bytes (3 ms)
+    ✕ attachment removal preserves artifact history; last owner deletion cleans bytes (2 ms)
+    ✕ undo, redo and historical export identify the same immutable lineage (1 ms)
+    ✕ no-auth metadata delivery denies without row or byte effects (1 ms)
+    ✕ foreign metadata delivery denies without row or byte effects
+    ✕ revoked metadata delivery denies without row or byte effects (1 ms)
+    ✕ failed last-owner delete remains retryable and never reports physically deleted
+    ✕ orphan marker cannot match a predictable unrelated host blob
+    ✕ principal cascade retires owned edges and preserves unrelated host bytes
+    ✕ Agent file parts add independent ownership, and vacuum is not artifact ownership (1 ms)
+  actual application and private protocol byte bounds
+    ✓ exact 20,000,000 accepted and one byte above rejected (27 ms)
+    ✓ streamed overflow cancels before any storage acceptance (9 ms)
+    ✕ generated oversized bytes fail before job creation/store/ready (2 ms)
+    ✕ upload current storage grant is checked before reading body (1 ms)
+    ✕ HTTP delivers authorized catalog MIME/hash with no-store and rejects corrupted oversized storage (1 ms)
+    ✕ private provider materialization uses exact authorized bytes and full encoded bound (1 ms)
+
+  ● immutable private assets and reference ownership › actual bytes commit once, replay keeps exact metadata, no bearer URL
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      38 | const digest = /^[a-f0-9]{64}$/;
+      39 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 40 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      41 | }
+      42 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      43 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:40:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:127:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:376:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:133:92)
+      at tests/unit/runtimeTranscript/fixture.ts:197:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:193:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:197:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:198:9)
+      at assetFixture (tests/unit/runtimeAssets/fixture.ts:14:19)
+      at Object.<anonymous> (tests/unit/runtimeAssets/lifecycle.test.ts:14:21)
+
+  ● immutable private assets and reference ownership › same request with a changed payload is a no-write idempotency conflict
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      38 | const digest = /^[a-f0-9]{64}$/;
+      39 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 40 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      41 | }
+      42 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      43 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:40:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:127:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:376:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:133:92)
+      at tests/unit/runtimeTranscript/fixture.ts:197:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:193:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:197:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:198:9)
+      at assetFixture (tests/unit/runtimeAssets/fixture.ts:14:19)
+      at Object.<anonymous> (tests/unit/runtimeAssets/lifecycle.test.ts:19:112)
+
+  ● immutable private assets and reference ownership › a blob with the wrong hash cannot stage or become ready
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      38 | const digest = /^[a-f0-9]{64}$/;
+      39 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 40 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      41 | }
+      42 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      43 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:40:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:127:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:376:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:133:92)
+      at tests/unit/runtimeTranscript/fixture.ts:197:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:193:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:197:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:198:9)
+      at assetFixture (tests/unit/runtimeAssets/fixture.ts:14:19)
+      at Object.<anonymous> (tests/unit/runtimeAssets/lifecycle.test.ts:20:97)
+
+  ● immutable private assets and reference ownership › late finalize after revoked cannot revive a reserved version
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      38 | const digest = /^[a-f0-9]{64}$/;
+      39 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 40 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      41 | }
+      42 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      43 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:40:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:127:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:376:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:133:92)
+      at tests/unit/runtimeTranscript/fixture.ts:197:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:193:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:197:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:198:9)
+      at assetFixture (tests/unit/runtimeAssets/fixture.ts:14:19)
+      at tests/unit/runtimeAssets/lifecycle.test.ts:22:21
+
+  ● immutable private assets and reference ownership › late finalize after deleted cannot revive a reserved version
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      38 | const digest = /^[a-f0-9]{64}$/;
+      39 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 40 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      41 | }
+      42 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      43 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:40:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:127:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:376:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:133:92)
+      at tests/unit/runtimeTranscript/fixture.ts:197:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:193:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:197:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:198:9)
+      at assetFixture (tests/unit/runtimeAssets/fixture.ts:14:19)
+      at tests/unit/runtimeAssets/lifecycle.test.ts:22:21
+
+  ● immutable private assets and reference ownership › late finalize after cancelled cannot revive a reserved version
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      38 | const digest = /^[a-f0-9]{64}$/;
+      39 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 40 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      41 | }
+      42 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      43 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:40:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:127:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:376:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:133:92)
+      at tests/unit/runtimeTranscript/fixture.ts:197:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:193:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:197:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:198:9)
+      at assetFixture (tests/unit/runtimeAssets/fixture.ts:14:19)
+      at tests/unit/runtimeAssets/lifecycle.test.ts:22:21
+
+  ● immutable private assets and reference ownership › lost ready acknowledgement cannot trigger deletion of committed referenced bytes
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      38 | const digest = /^[a-f0-9]{64}$/;
+      39 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 40 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      41 | }
+      42 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      43 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:40:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:127:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:376:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:133:92)
+      at tests/unit/runtimeTranscript/fixture.ts:197:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:193:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:197:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:198:9)
+      at assetFixture (tests/unit/runtimeAssets/fixture.ts:14:19)
+      at Object.<anonymous> (tests/unit/runtimeAssets/lifecycle.test.ts:28:21)
+
+  ● immutable private assets and reference ownership › attachment removal preserves artifact history; last owner deletion cleans bytes
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      38 | const digest = /^[a-f0-9]{64}$/;
+      39 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 40 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      41 | }
+      42 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      43 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:40:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:127:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:376:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:133:92)
+      at tests/unit/runtimeTranscript/fixture.ts:197:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:193:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:197:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:198:9)
+      at assetFixture (tests/unit/runtimeAssets/fixture.ts:14:19)
+      at Object.<anonymous> (tests/unit/runtimeAssets/lifecycle.test.ts:34:21)
+
+  ● immutable private assets and reference ownership › undo, redo and historical export identify the same immutable lineage
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      38 | const digest = /^[a-f0-9]{64}$/;
+      39 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 40 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      41 | }
+      42 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      43 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:40:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:127:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:376:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:133:92)
+      at tests/unit/runtimeTranscript/fixture.ts:197:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:193:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:197:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:198:9)
+      at assetFixture (tests/unit/runtimeAssets/fixture.ts:14:19)
+      at Object.<anonymous> (tests/unit/runtimeAssets/lifecycle.test.ts:41:21)
+
+  ● immutable private assets and reference ownership › no-auth metadata delivery denies without row or byte effects
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      38 | const digest = /^[a-f0-9]{64}$/;
+      39 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 40 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      41 | }
+      42 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      43 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:40:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:127:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:376:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:133:92)
+      at tests/unit/runtimeTranscript/fixture.ts:197:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:193:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:197:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:198:9)
+      at assetFixture (tests/unit/runtimeAssets/fixture.ts:14:19)
+      at tests/unit/runtimeAssets/lifecycle.test.ts:48:139
+
+  ● immutable private assets and reference ownership › foreign metadata delivery denies without row or byte effects
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      38 | const digest = /^[a-f0-9]{64}$/;
+      39 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 40 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      41 | }
+      42 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      43 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:40:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:127:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:376:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:133:92)
+      at tests/unit/runtimeTranscript/fixture.ts:197:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:193:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:197:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:198:9)
+      at assetFixture (tests/unit/runtimeAssets/fixture.ts:14:19)
+      at tests/unit/runtimeAssets/lifecycle.test.ts:48:139
+
+  ● immutable private assets and reference ownership › revoked metadata delivery denies without row or byte effects
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      38 | const digest = /^[a-f0-9]{64}$/;
+      39 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 40 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      41 | }
+      42 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      43 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:40:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:127:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:376:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:133:92)
+      at tests/unit/runtimeTranscript/fixture.ts:197:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:193:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:197:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:198:9)
+      at assetFixture (tests/unit/runtimeAssets/fixture.ts:14:19)
+      at tests/unit/runtimeAssets/lifecycle.test.ts:48:139
+
+  ● immutable private assets and reference ownership › failed last-owner delete remains retryable and never reports physically deleted
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      38 | const digest = /^[a-f0-9]{64}$/;
+      39 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 40 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      41 | }
+      42 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      43 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:40:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:127:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:376:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:133:92)
+      at tests/unit/runtimeTranscript/fixture.ts:197:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:193:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:197:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:198:9)
+      at assetFixture (tests/unit/runtimeAssets/fixture.ts:14:19)
+      at Object.<anonymous> (tests/unit/runtimeAssets/lifecycle.test.ts:49:121)
+
+  ● immutable private assets and reference ownership › orphan marker cannot match a predictable unrelated host blob
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      38 | const digest = /^[a-f0-9]{64}$/;
+      39 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 40 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      41 | }
+      42 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      43 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:40:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:127:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:376:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:133:92)
+      at tests/unit/runtimeTranscript/fixture.ts:197:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:193:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:197:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:198:9)
+      at assetFixture (tests/unit/runtimeAssets/fixture.ts:14:19)
+      at Object.<anonymous> (tests/unit/runtimeAssets/lifecycle.test.ts:50:102)
+
+  ● immutable private assets and reference ownership › principal cascade retires owned edges and preserves unrelated host bytes
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      38 | const digest = /^[a-f0-9]{64}$/;
+      39 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 40 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      41 | }
+      42 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      43 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:40:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:127:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:376:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:133:92)
+      at tests/unit/runtimeTranscript/fixture.ts:197:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:193:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:197:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:198:9)
+      at assetFixture (tests/unit/runtimeAssets/fixture.ts:14:19)
+      at Object.<anonymous> (tests/unit/runtimeAssets/lifecycle.test.ts:51:114)
+
+  ● immutable private assets and reference ownership › Agent file parts add independent ownership, and vacuum is not artifact ownership
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      38 | const digest = /^[a-f0-9]{64}$/;
+      39 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 40 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      41 | }
+      42 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      43 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:40:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:127:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:376:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:133:92)
+      at tests/unit/runtimeTranscript/fixture.ts:197:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:193:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:197:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:198:9)
+      at assetFixture (tests/unit/runtimeAssets/fixture.ts:14:19)
+      at Object.<anonymous> (tests/unit/runtimeAssets/lifecycle.test.ts:53:21)
+
+  ● actual application and private protocol byte bounds › generated oversized bytes fail before job creation/store/ready
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      38 | const digest = /^[a-f0-9]{64}$/;
+      39 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 40 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      41 | }
+      42 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      43 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:40:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:127:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:376:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:133:92)
+      at tests/unit/runtimeTranscript/fixture.ts:197:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:193:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:197:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:198:9)
+      at assetFixture (tests/unit/runtimeAssets/fixture.ts:14:19)
+      at Object.<anonymous> (tests/unit/runtimeAssets/lifecycle.test.ts:64:104)
+
+  ● actual application and private protocol byte bounds › upload current storage grant is checked before reading body
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      38 | const digest = /^[a-f0-9]{64}$/;
+      39 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 40 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      41 | }
+      42 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      43 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:40:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:127:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:376:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:133:92)
+      at tests/unit/runtimeTranscript/fixture.ts:197:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:193:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:197:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:198:9)
+      at assetFixture (tests/unit/runtimeAssets/fixture.ts:14:19)
+      at Object.<anonymous> (tests/unit/runtimeAssets/lifecycle.test.ts:65:101)
+
+  ● actual application and private protocol byte bounds › HTTP delivers authorized catalog MIME/hash with no-store and rejects corrupted oversized storage
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      38 | const digest = /^[a-f0-9]{64}$/;
+      39 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 40 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      41 | }
+      42 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      43 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:40:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:127:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:376:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:133:92)
+      at tests/unit/runtimeTranscript/fixture.ts:197:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:193:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:197:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:198:9)
+      at assetFixture (tests/unit/runtimeAssets/fixture.ts:14:19)
+      at Object.<anonymous> (tests/unit/runtimeAssets/lifecycle.test.ts:66:138)
+
+  ● actual application and private protocol byte bounds › private provider materialization uses exact authorized bytes and full encoded bound
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      38 | const digest = /^[a-f0-9]{64}$/;
+      39 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 40 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      41 | }
+      42 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      43 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:40:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:127:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:376:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:133:92)
+      at tests/unit/runtimeTranscript/fixture.ts:197:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:193:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:197:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:198:9)
+      at assetFixture (tests/unit/runtimeAssets/fixture.ts:14:19)
+      at Object.<anonymous> (tests/unit/runtimeAssets/lifecycle.test.ts:67:125)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌    12.0s | 2/22 passed | /tests/unit/runtimeAssets/lifecycle.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.03s ( 0.2%) - actual application and private protocol byte bounds exact 20,000,000 accepted and one byte above rejected
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+ 2. [32m✓[0m    0.01s ( 0.1%) - actual application and private protocol byte bounds streamed overflow cancels before any storage acceptance
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+ 3. [31m✗[0m    0.00s ( 0.0%) - immutable private assets and reference ownership actual bytes commit once, replay keeps exact metadata, no bearer URL
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+ 4. [31m✗[0m    0.00s ( 0.0%) - immutable private assets and reference ownership lost ready acknowledgement cannot trigger deletion of committed referenced bytes
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+ 5. [31m✗[0m    0.00s ( 0.0%) - immutable private assets and reference ownership attachment removal preserves artifact history; last owner deletion cleans bytes
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+ 6. [31m✗[0m    0.00s ( 0.0%) - actual application and private protocol byte bounds generated oversized bytes fail before job creation/store/ready
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+ 7. [31m✗[0m    0.00s ( 0.0%) - immutable private assets and reference ownership same request with a changed payload is a no-write idempotency conflict
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+ 8. [31m✗[0m    0.00s ( 0.0%) - immutable private assets and reference ownership a blob with the wrong hash cannot stage or become ready
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+ 9. [31m✗[0m    0.00s ( 0.0%) - immutable private assets and reference ownership late finalize after revoked cannot revive a reserved version
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+10. [31m✗[0m    0.00s ( 0.0%) - immutable private assets and reference ownership late finalize after deleted cannot revive a reserved version
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+11. [31m✗[0m    0.00s ( 0.0%) - immutable private assets and reference ownership late finalize after cancelled cannot revive a reserved version
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+12. [31m✗[0m    0.00s ( 0.0%) - immutable private assets and reference ownership undo, redo and historical export identify the same immutable lineage
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+13. [31m✗[0m    0.00s ( 0.0%) - immutable private assets and reference ownership no-auth metadata delivery denies without row or byte effects
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+14. [31m✗[0m    0.00s ( 0.0%) - immutable private assets and reference ownership revoked metadata delivery denies without row or byte effects
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+15. [31m✗[0m    0.00s ( 0.0%) - immutable private assets and reference ownership Agent file parts add independent ownership, and vacuum is not artifact ownership
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+16. [31m✗[0m    0.00s ( 0.0%) - actual application and private protocol byte bounds upload current storage grant is checked before reading body
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+17. [31m✗[0m    0.00s ( 0.0%) - actual application and private protocol byte bounds HTTP delivers authorized catalog MIME/hash with no-store and rejects corrupted oversized storage
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+18. [31m✗[0m    0.00s ( 0.0%) - actual application and private protocol byte bounds private provider materialization uses exact authorized bytes and full encoded bound
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.06s (0.5% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      12.24s
+  Test suites:        1
+  Individual tests:   18
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 failed, 1 total
+Tests:       20 failed, 2 passed, 22 total
+Snapshots:   0 total
+Time:        12.244 s
+Ran all test suites within paths "tests/unit/runtimeAssets/lifecycle.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/author/lifecycle-tests1.json

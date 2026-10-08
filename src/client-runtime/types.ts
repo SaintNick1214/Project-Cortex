@@ -54,3 +54,12 @@ export interface RuntimeConversation {
   manualWriteLocked: boolean; requireApproval: boolean; historyRevision: number; epoch: number;
   messageCount: number; participants: string[]; retentionUntil: number | null; createdAt: number; updatedAt: number;
 }
+
+/** Immutable version selectors carry no authority or storage URL. */
+export interface RuntimeAssetReference { assetId: string; version: number }
+export interface RuntimeAssetVersion {
+  readonly version: 1; readonly assetId: string; readonly versionId: string; readonly assetVersion: number;
+  readonly contentHash: string; readonly sizeBytes: number; readonly mimeType: string;
+  readonly mediaKind: "image" | "video" | "audio" | "document" | "binary"; readonly filename?: string;
+  readonly lineage: Readonly<{ kind: "upload"; requestId: string } | { kind: "generated"; operationId: string; modelId: string; sourceVersionIds?: readonly string[] }>;
+}

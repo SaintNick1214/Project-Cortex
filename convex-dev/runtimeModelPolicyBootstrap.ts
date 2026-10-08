@@ -13,8 +13,8 @@ export interface QualifiedDispatchEvidence {
    * artifact. Omission retains the canonical modelId fence. No general aliases. */
   readonly terminalModelId?: string;
   /** Reviewed guarantee over full serialized final request plus protocol overhead. Absent proof denies. */
-  readonly inputBound: { readonly ruleId: "plain-chat-cookbook-utf8-v1" | "default-embedding-utf8-v1" | "profile-embedding-utf8-v1" | "agent-tools-chat-utf8-v1"; readonly revision: number;
-    readonly featureEnvelope: "plain-chat-v1" | "default-embedding-v1" | "profile-embedding-v1" | "agent-tools-chat-v1"; readonly nativeTransformHash: string; readonly documentHash: string; readonly proofHash: string };
+  readonly inputBound: { readonly ruleId: "plain-chat-cookbook-utf8-v1" | "default-embedding-utf8-v1" | "profile-embedding-utf8-v1" | "agent-tools-chat-utf8-v1" | "private-frame-video-json-v1"; readonly revision: number;
+    readonly featureEnvelope: "plain-chat-v1" | "default-embedding-v1" | "profile-embedding-v1" | "agent-tools-chat-v1" | "private-frame-video-v1"; readonly nativeTransformHash: string; readonly documentHash: string; readonly proofHash: string };
   readonly embeddingProfile?: EmbeddingProfile;
   readonly supportsStream?: true;
   readonly toolContract?: { readonly registryVersion: string; readonly toolsCanonical: string; readonly maximumToolCalls: number };

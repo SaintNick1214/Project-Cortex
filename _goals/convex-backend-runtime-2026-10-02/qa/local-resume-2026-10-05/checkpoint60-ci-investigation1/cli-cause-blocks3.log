@@ -1,0 +1,143 @@
+2026-10-08T22:13:38.5934372Z FAIL e2e tests/e2e/memory-workflow.test.ts (27.558 s)
+2026-10-08T22:13:38.5935836Z   Memory Workflow E2E
+2026-10-08T22:13:38.5936331Z     Full Memory Lifecycle
+2026-10-08T22:13:38.5943241Z       ✕ should create a conversation for memory storage (2 ms)
+2026-10-08T22:13:38.5944038Z       ✕ should store memory via remember
+2026-10-08T22:13:38.5944549Z       ✕ should store memory via vector store
+2026-10-08T22:13:38.5945043Z       ✕ should list memories in space
+2026-10-08T22:13:38.5945671Z       ✕ should filter memories by user
+2026-10-08T22:13:38.5946165Z       ✕ should search memories by content
+2026-10-08T22:13:38.5946670Z       ✕ should get a specific memory
+2026-10-08T22:13:38.5947209Z       ✕ should return null for non-existent memory
+2026-10-08T22:13:38.5947753Z       ✕ should count memories in space
+2026-10-08T22:13:38.5948276Z       ✕ should export memories to JSON
+2026-10-08T22:13:38.5948789Z       ✕ should export memories to CSV
+2026-10-08T22:13:38.5949239Z       ✕ should archive a memory
+2026-10-08T22:13:38.5949732Z       ✕ should restore an archived memory
+2026-10-08T22:13:38.5950259Z       ✕ should delete a specific memory
+2026-10-08T22:13:38.5950827Z       ✕ should delete multiple memories by filter
+2026-10-08T22:13:38.5951307Z     Edge Cases
+2026-10-08T22:13:38.5951842Z       ✕ should handle empty search results
+2026-10-08T22:13:38.5952580Z       ✕ should handle search with special characters
+2026-10-08T22:13:38.5953183Z       ✕ should handle large content storage
+2026-10-08T22:13:38.5953498Z 
+2026-10-08T22:13:38.5954135Z   ● Memory Workflow E2E › Full Memory Lifecycle › should create a conversation for memory storage
+2026-10-08T22:13:38.5954714Z 
+2026-10-08T22:13:38.5955675Z     {"code":"UNAUTHENTICATED","message":"Access denied or invalid registry input","outcome":"not_dispatched","retryable":false,"version":1}
+2026-10-08T22:13:38.5956506Z 
+2026-10-08T22:13:38.5957044Z       23575 |         const convexError = error;
+2026-10-08T22:13:38.5959043Z       23576 |         const errorData = typeof convexError.data === "string" ? convexError.data : JSON.stringify(convexError.data);
+2026-10-08T22:13:38.5961218Z     > 23577 |         throw new Error(errorData);
+2026-10-08T22:13:38.5962112Z             |               ^
+2026-10-08T22:13:38.5962710Z       23578 |       }
+2026-10-08T22:13:38.5963341Z       23579 |       throw error;
+2026-10-08T22:13:38.5964046Z       23580 |     } finally {
+2026-10-08T22:13:38.5964422Z 
+2026-10-08T22:13:38.5964825Z       at ResilienceLayer._executeSingleAttempt (../../dist/index.js:23577:15)
+2026-10-08T22:13:38.5965984Z       at ResilienceLayer.execute (../../dist/index.js:23526:16)
+2026-10-08T22:13:38.5966706Z       at MemorySpacesAPI.register (../../dist/index.js:13456:16)
+2026-10-08T22:13:38.5967434Z       at Object.<anonymous> (tests/e2e/memory-workflow.test.ts:30:5)
+2026-10-08T22:13:38.5967852Z 
+2026-10-08T22:13:38.5968436Z   ● Memory Workflow E2E › Full Memory Lifecycle › should store memory via remember
+2026-10-08T22:13:38.5968916Z 
+2026-10-08T22:13:38.5969703Z     {"code":"UNAUTHENTICATED","message":"Access denied or invalid registry input","outcome":"not_dispatched","retryable":false,"version":1}
+2026-10-08T22:13:38.5970445Z 
+2026-10-08T22:13:38.5970945Z       23575 |         const convexError = error;
+
+2026-10-08T22:14:10.2787066Z FAIL e2e tests/e2e/conversations-workflow.test.ts (31.67 s)
+2026-10-08T22:14:10.2796419Z   Conversations Workflow E2E
+2026-10-08T22:14:10.2844500Z     Conversation CRUD Operations
+2026-10-08T22:14:10.2876584Z       ✕ should create a conversation
+2026-10-08T22:14:10.2896416Z       ✕ should get a conversation
+2026-10-08T22:14:10.2932315Z       ✕ should return null for non-existent conversation
+2026-10-08T22:14:10.2932817Z   console.error
+2026-10-08T22:14:10.2939587Z     ◇ injected env (0) from .env.local
+2026-10-08T22:14:10.2940445Z 
+2026-10-08T22:14:10.2941234Z       20 | // First, load CLI-specific env file to get CONVEX_URL_CLI
+2026-10-08T22:14:10.2942240Z       21 | // This must happen BEFORE we check CONVEX_URL_CLI
+2026-10-08T22:14:10.2943861Z     > 22 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: false });
+2026-10-08T22:14:10.2945148Z       ✕ should add messages via remember
+2026-10-08T22:14:10.2946303Z       ✕ should delete a conversation
+2026-10-08T22:14:10.2946820Z     Conversation Listing
+2026-10-08T22:14:10.2947325Z       ✕ should list conversations
+2026-10-08T22:14:10.2947772Z       ✕ should filter by space
+2026-10-08T22:14:10.2948182Z       ✕ should filter by user
+2026-10-08T22:14:10.2948597Z       ✕ should respect limit
+2026-10-08T22:14:10.2949054Z       ✕ should count conversations
+2026-10-08T22:14:10.2949509Z       ✕ should count by space
+2026-10-08T22:14:10.2949881Z     Conversation Types
+2026-10-08T22:14:10.2950347Z       ✕ should create user-agent conversation
+2026-10-08T22:14:10.2950633Z 
+2026-10-08T22:14:10.2951175Z   ● Conversations Workflow E2E › Conversation CRUD Operations › should create a conversation
+2026-10-08T22:14:10.2951698Z 
+2026-10-08T22:14:10.2952363Z     {"code":"UNAUTHENTICATED","message":"Access denied or invalid registry input","outcome":"not_dispatched","retryable":false,"version":1}
+2026-10-08T22:14:10.2953063Z 
+2026-10-08T22:14:10.2953529Z       23575 |         const convexError = error;
+2026-10-08T22:14:10.2954727Z       23576 |         const errorData = typeof convexError.data === "string" ? convexError.data : JSON.stringify(convexError.data);
+2026-10-08T22:14:10.2956253Z     > 23577 |         throw new Error(errorData);
+2026-10-08T22:14:10.2956803Z             |               ^
+2026-10-08T22:14:10.2957160Z       23578 |       }
+2026-10-08T22:14:10.2957559Z       23579 |       throw error;
+2026-10-08T22:14:10.2957992Z       23580 |     } finally {
+2026-10-08T22:14:10.2958205Z 
+2026-10-08T22:14:10.2958460Z       at ResilienceLayer._executeSingleAttempt (../../dist/index.js:23577:15)
+2026-10-08T22:14:10.2958962Z       at ResilienceLayer.execute (../../dist/index.js:23526:16)
+2026-10-08T22:14:10.2959410Z       at MemorySpacesAPI.register (../../dist/index.js:13456:16)
+2026-10-08T22:14:10.2959917Z       at Object.<anonymous> (tests/e2e/conversations-workflow.test.ts:28:5)
+2026-10-08T22:14:10.2960222Z 
+2026-10-08T22:14:10.2960582Z   ● Conversations Workflow E2E › Conversation CRUD Operations › should get a conversation
+2026-10-08T22:14:10.2960905Z 
+2026-10-08T22:14:10.2961355Z     {"code":"UNAUTHENTICATED","message":"Access denied or invalid registry input","outcome":"not_dispatched","retryable":false,"version":1}
+2026-10-08T22:14:10.2961811Z 
+
+2026-10-08T22:14:36.3216848Z FAIL e2e tests/e2e/facts-workflow.test.ts (26.027 s)
+2026-10-08T22:14:36.3276273Z   Facts Workflow E2E
+2026-10-08T22:14:36.3294633Z     Fact Extraction via Remember
+2026-10-08T22:14:36.3313998Z       ✕ should extract facts from conversation (1 ms)
+2026-10-08T22:14:36.3314494Z     Fact CRUD Operations
+2026-10-08T22:14:36.3315080Z       ✕ should list facts in a space (1 ms)
+2026-10-08T22:14:36.3315756Z       ✕ should search facts
+2026-10-08T22:14:36.3316280Z       ✕ should handle empty search results
+2026-10-08T22:14:36.3316735Z     Fact Filtering
+2026-10-08T22:14:36.3317208Z       ✕ should filter facts by type
+2026-10-08T22:14:36.3317527Z 
+2026-10-08T22:14:36.3318170Z   ● Facts Workflow E2E › Fact Extraction via Remember › should extract facts from conversation
+2026-10-08T22:14:36.3318711Z 
+2026-10-08T22:14:36.3319461Z     {"code":"UNAUTHENTICATED","message":"Access denied or invalid registry input","outcome":"not_dispatched","retryable":false,"version":1}
+2026-10-08T22:14:36.3320143Z 
+2026-10-08T22:14:36.3320567Z       23575 |         const convexError = error;
+2026-10-08T22:14:36.3322281Z       23576 |         const errorData = typeof convexError.data === "string" ? convexError.data : JSON.stringify(convexError.data);
+2026-10-08T22:14:36.3323915Z     > 23577 |         throw new Error(errorData);
+2026-10-08T22:14:36.3324665Z             |               ^
+2026-10-08T22:14:36.3325151Z       23578 |       }
+2026-10-08T22:14:36.3325841Z       23579 |       throw error;
+2026-10-08T22:14:36.3326429Z       23580 |     } finally {
+2026-10-08T22:14:36.3326724Z 
+2026-10-08T22:14:36.3327103Z       at ResilienceLayer._executeSingleAttempt (../../dist/index.js:23577:15)
+2026-10-08T22:14:36.3327811Z       at ResilienceLayer.execute (../../dist/index.js:23526:16)
+2026-10-08T22:14:36.3328454Z       at MemorySpacesAPI.register (../../dist/index.js:13456:16)
+2026-10-08T22:14:36.3329112Z       at Object.<anonymous> (tests/e2e/facts-workflow.test.ts:28:5)
+2026-10-08T22:14:36.3330006Z 
+2026-10-08T22:14:36.3330498Z   ● Facts Workflow E2E › Fact CRUD Operations › should list facts in a space
+2026-10-08T22:14:36.3330929Z 
+2026-10-08T22:14:36.3331624Z     {"code":"UNAUTHENTICATED","message":"Access denied or invalid registry input","outcome":"not_dispatched","retryable":false,"version":1}
+2026-10-08T22:14:36.3332321Z 
+2026-10-08T22:14:36.3332920Z       23575 |         const convexError = error;
+2026-10-08T22:14:36.3334821Z       23576 |         const errorData = typeof convexError.data === "string" ? convexError.data : JSON.stringify(convexError.data);
+2026-10-08T22:14:36.3336841Z     > 23577 |         throw new Error(errorData);
+2026-10-08T22:14:36.3337783Z             |               ^
+2026-10-08T22:14:36.3338431Z       23578 |       }
+2026-10-08T22:14:36.3339105Z       23579 |       throw error;
+2026-10-08T22:14:36.3339846Z       23580 |     } finally {
+2026-10-08T22:14:36.3340225Z 
+2026-10-08T22:14:36.3340674Z       at ResilienceLayer._executeSingleAttempt (../../dist/index.js:23577:15)
+2026-10-08T22:14:36.3341565Z       at ResilienceLayer.execute (../../dist/index.js:23526:16)
+2026-10-08T22:14:36.3342397Z       at MemorySpacesAPI.register (../../dist/index.js:13456:16)
+2026-10-08T22:14:36.3343339Z       at Object.<anonymous> (tests/e2e/facts-workflow.test.ts:28:5)
+2026-10-08T22:14:36.3343906Z 
+2026-10-08T22:13:10.0191694Z Test Suites: 10 passed, 10 total
+2026-10-08T22:13:10.0192292Z Tests:       216 passed, 216 total
+2026-10-08T22:13:10.0192744Z Snapshots:   0 total
+2026-10-08T22:18:35.4695965Z Test Suites: 5 failed, 5 total
+2026-10-08T22:18:35.4696619Z Tests:       67 failed, 4 skipped, 71 total
+2026-10-08T22:18:35.4697098Z Snapshots:   0 total

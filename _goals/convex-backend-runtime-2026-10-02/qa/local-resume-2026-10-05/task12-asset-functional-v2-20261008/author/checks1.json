@@ -1,0 +1,226 @@
+{
+  "version": 1,
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "versions": {
+    "node": "24.15.0",
+    "npm": "12.2.0"
+  },
+  "mode": "OFFLINE controlled domain/handler/component ports; :1 deliberately unreachable; no service/provider requests",
+  "candidateDigest": "aee3de994dec871f1f1903abf56317c8e7d1b57916d7e0860a280d776353fde5",
+  "checks": [
+    {
+      "name": "SDK types",
+      "command": "PATH=/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin:$PATH npx --no-install tsc --noEmit",
+      "exitCode": 0,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/author/sdk-types9.log"
+    },
+    {
+      "name": "Backend types",
+      "command": "PATH=/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin:$PATH npx --no-install tsc -p convex-dev/tsconfig.json --noEmit",
+      "exitCode": 0,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/author/backend-types8.log"
+    },
+    {
+      "name": "Lint typecheck",
+      "command": "PATH=/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin:$PATH npx --no-install tsc --project tsconfig.lint.json --noEmit",
+      "exitCode": 0,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/author/lint-types2.log"
+    },
+    {
+      "name": "Scoped source/test lint",
+      "exitCode": 0,
+      "logs": [
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/author/lint2.log",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/author/lint3.log"
+      ],
+      "warnings": "Zero errors; one while(true) warning in assets reader and existing unsafe-assignment warning in artifact validators. No suppression/typecheck disable."
+    },
+    {
+      "name": "Generator syntax",
+      "command": "PATH=/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin:$PATH node --check scripts/backend/build-distribution.mjs",
+      "exitCode": 0,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/author/generator-syntax1.log"
+    },
+    {
+      "name": "affected-tests1",
+      "command": "PATH=/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin:$PATH CONVEX_TEST_MODE=local LOCAL_CONVEX_URL=http://127.0.0.1:1 NODE_OPTIONS=--experimental-vm-modules node node_modules/jest/bin/jest.js --runInBand --forceExit=false --testPathPatterns='tests/unit/(runtimeTranscript|runtimeRuns|runtimeAgent|runtimeIngestion|runtimeMemory)/.*\\.test\\.ts$|tests/unit/runtime/model-policy-admission\\.test\\.ts$' --json --outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/author/affected-tests1.json",
+      "exitCode": 0,
+      "passed": 646,
+      "failed": 0,
+      "skipped": 0,
+      "receipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/author/affected-tests1.json",
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/author/affected-tests1.log"
+    },
+    {
+      "name": "lifecycle-tests9",
+      "command": "PATH=/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin:$PATH CONVEX_TEST_MODE=local LOCAL_CONVEX_URL=http://127.0.0.1:1 NODE_OPTIONS=--experimental-vm-modules node node_modules/jest/bin/jest.js --runInBand --forceExit=false --runTestsByPath tests/unit/runtimeAssets/lifecycle.test.ts --json --outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/author/lifecycle-tests9.json",
+      "exitCode": 0,
+      "passed": 28,
+      "failed": 0,
+      "skipped": 0,
+      "receipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/author/lifecycle-tests9.json",
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/author/lifecycle-tests9.log"
+    },
+    {
+      "name": "artifact-sdk-tests9",
+      "command": "PATH=/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin:$PATH CONVEX_TEST_MODE=local LOCAL_CONVEX_URL=http://127.0.0.1:1 NODE_OPTIONS=--experimental-vm-modules node node_modules/jest/bin/jest.js --runInBand --forceExit=false --runTestsByPath tests/unit/artifacts/sdk.test.ts --json --outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/author/artifact-sdk-tests9.json",
+      "exitCode": 0,
+      "passed": 47,
+      "failed": 0,
+      "skipped": 0,
+      "receipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/author/artifact-sdk-tests9.json",
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/author/artifact-sdk-tests9.log"
+    },
+    {
+      "name": "distribution-tests1",
+      "command": "PATH=/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin:$PATH CONVEX_TEST_MODE=local LOCAL_CONVEX_URL=http://127.0.0.1:1 NODE_OPTIONS=--experimental-vm-modules node node_modules/jest/bin/jest.js --runInBand --forceExit=false --runTestsByPath tests/unit/runtimeAssets/distribution.test.ts --json --outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/author/distribution-tests1.json",
+      "exitCode": 0,
+      "passed": 2,
+      "failed": 0,
+      "skipped": 0,
+      "receipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/author/distribution-tests1.json",
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/author/distribution-tests1.log"
+    }
+  ],
+  "selectedPassingSuites": [
+    {
+      "receipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/author/affected-tests1.json",
+      "suites": [
+        {
+          "suite": "tests/unit/runtimeAgent/execution.test.ts",
+          "passed": 60
+        },
+        {
+          "suite": "tests/unit/runtime/model-policy-admission.test.ts",
+          "passed": 134
+        },
+        {
+          "suite": "tests/unit/runtimeMemory/services.test.ts",
+          "passed": 17
+        },
+        {
+          "suite": "tests/unit/runtimeTranscript/managed.test.ts",
+          "passed": 15
+        },
+        {
+          "suite": "tests/unit/runtimeIngestion/context-permissions.test.ts",
+          "passed": 3
+        },
+        {
+          "suite": "tests/unit/runtimeIngestion/worker.test.ts",
+          "passed": 14
+        },
+        {
+          "suite": "tests/unit/runtimeIngestion/cached-compatibility.test.ts",
+          "passed": 1
+        },
+        {
+          "suite": "tests/unit/runtimeRuns/admission.test.ts",
+          "passed": 20
+        },
+        {
+          "suite": "tests/unit/runtimeMemory/public-boundary.test.ts",
+          "passed": 176
+        },
+        {
+          "suite": "tests/unit/runtimeMemory/public-functional.test.ts",
+          "passed": 27
+        },
+        {
+          "suite": "tests/unit/runtimeMemory/repository.test.ts",
+          "passed": 36
+        },
+        {
+          "suite": "tests/unit/runtimeAgent/model-owner.test.ts",
+          "passed": 6
+        },
+        {
+          "suite": "tests/unit/runtimeMemory/profiles.test.ts",
+          "passed": 14
+        },
+        {
+          "suite": "tests/unit/runtimeAgent/tool-context.test.ts",
+          "passed": 4
+        },
+        {
+          "suite": "tests/unit/runtimeIngestion/context.test.ts",
+          "passed": 8
+        },
+        {
+          "suite": "tests/unit/runtimeMemory/public-closure.test.ts",
+          "passed": 67
+        },
+        {
+          "suite": "tests/unit/runtimeIngestion/shared-edit.test.ts",
+          "passed": 2
+        },
+        {
+          "suite": "tests/unit/runtimeIngestion/stages.test.ts",
+          "passed": 11
+        },
+        {
+          "suite": "tests/unit/runtimeTranscript/contracts.test.ts",
+          "passed": 31
+        }
+      ]
+    },
+    {
+      "receipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/author/lifecycle-tests9.json",
+      "suites": [
+        {
+          "suite": "tests/unit/runtimeAssets/lifecycle.test.ts",
+          "passed": 28
+        }
+      ]
+    },
+    {
+      "receipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/author/artifact-sdk-tests9.json",
+      "suites": [
+        {
+          "suite": "tests/unit/artifacts/sdk.test.ts",
+          "passed": 47
+        }
+      ]
+    },
+    {
+      "receipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/author/lifecycle-tests8.json",
+      "suites": [
+        {
+          "suite": "tests/unit/artifacts/validators.test.ts",
+          "passed": 114
+        }
+      ]
+    },
+    {
+      "receipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/author/lifecycle-tests6.json",
+      "suites": [
+        {
+          "suite": "tests/unit/attachments/sdk.test.ts",
+          "passed": 64
+        }
+      ]
+    },
+    {
+      "receipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/author/lifecycle-tests6.json",
+      "suites": [
+        {
+          "suite": "tests/unit/runtimeAssetClient/asset-capability-bridge.test.ts",
+          "passed": 21
+        }
+      ]
+    },
+    {
+      "receipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/author/distribution-tests1.json",
+      "suites": [
+        {
+          "suite": "tests/unit/runtimeAssets/distribution.test.ts",
+          "passed": 2
+        }
+      ]
+    }
+  ],
+  "uniquePassedAssertionInstances": 922,
+  "failedCurrentAssertionInstances": 0,
+  "skippedCurrentAssertionInstances": 0,
+  "assertionIdentityReceipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/author/assertion-identities1.json"
+}

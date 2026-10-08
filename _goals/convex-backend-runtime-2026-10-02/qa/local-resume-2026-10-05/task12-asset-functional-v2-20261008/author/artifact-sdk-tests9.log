@@ -1,0 +1,226 @@
+  console.error
+    ◇ injected env (0) from .env.test
+
+      13 | import dotenv from "dotenv";
+      14 | import { resolve } from "path";
+    > 15 |
+         | ^
+      16 | // Load .env.test first (test defaults)
+      17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+      18 |
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:15:8
+
+  console.error
+    ◇ injected env (0) from .env.local
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+  console.log
+    
+    🧪 Testing against LOCAL Convex: http://127.0.0.1:1
+
+      at tests/env.ts:35:13
+
+  console.log
+       Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:36:13
+
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:121:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:122:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:123:13
+
+(node:67961) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/artifacts/sdk.test.ts
+  ArtifactsAPI
+    ✓ accepts first-class video artifacts through the typed SDK (1 ms)
+    create()
+      ✓ should create artifact with valid options (9 ms)
+      ✓ should throw validation error for empty title (75 ms)
+      ✓ should throw validation error for missing memorySpaceId (2 ms)
+      ✓ should sync to graph adapter when available (2 ms)
+      ✓ should use resilience layer when available (2 ms)
+      ✓ should include tenantId from auth context (2 ms)
+    get()
+      ✓ should return artifact when found (55 ms)
+      ✓ should return null when not found (1 ms)
+      ✓ should throw validation error for empty ID (3 ms)
+      ✓ should throw validation error for invalid ID format (4 ms)
+    update()
+      ✓ should update artifact content (1 ms)
+      ✓ should update with options (1 ms)
+      ✓ should throw validation error for empty artifactId (1 ms)
+      ✓ should update graph on success (1 ms)
+    delete()
+      ✓ should soft delete by default (1 ms)
+      ✓ should hard delete when specified
+      ✓ should throw validation error for empty ID
+    list()
+      ✓ should list artifacts with filter (3 ms)
+      ✓ should throw validation error for missing memorySpaceId (1 ms)
+      ✓ should throw validation error for invalid kind
+    count()
+      ✓ should return count
+      ✓ should throw validation error for missing memorySpaceId (1 ms)
+    undo()
+      ✓ should undo successfully
+      ✓ should throw validation error for empty ID (1 ms)
+      ✓ should propagate UNDO_NOT_AVAILABLE error (1 ms)
+    redo()
+      ✓ should redo successfully (2 ms)
+      ✓ should throw validation error for empty ID (1 ms)
+    getHistory()
+      ✓ should return version history (1 ms)
+      ✓ should throw validation error for empty ID
+    getVersion()
+      ✓ should return specific version (1 ms)
+      ✓ should return null for invalid version
+      ✓ should throw validation error for invalid version number (1 ms)
+    startStreaming()
+      ✓ should start streaming session (1 ms)
+      ✓ should throw validation error for empty artifactId (1 ms)
+    appendContent()
+      ✓ should append content chunk (1 ms)
+      ✓ should throw validation error for missing sessionId (1 ms)
+    pauseStreaming()
+      ✓ should pause streaming
+    resumeStreaming()
+      ✓ should resume streaming (1 ms)
+    cancelStreaming()
+      ✓ should cancel streaming
+    finalizeStreaming()
+      ✓ should finalize streaming and update graph
+    setStreamingState()
+      ✓ should set streaming state and update graph
+      ✓ should throw validation error for invalid state
+    getFileUrl()
+      ✓ direct bearer delivery is unavailable before transport (1 ms)
+      ✓ empty selectors retain the same unavailable boundary (1 ms)
+    detachFile()
+      ✓ should detach file from artifact (15 ms)
+      ✓ should throw validation error for empty artifactId (3 ms)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     4.8s | 47/47 passed | /tests/unit/artifacts/sdk.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.07s ( 1.5%) - ArtifactsAPI create() should throw validation error for empty title
+    /tests/unit/artifacts/sdk.test.ts
+
+ 2. [32m✓[0m    0.06s ( 1.1%) - ArtifactsAPI get() should return artifact when found
+    /tests/unit/artifacts/sdk.test.ts
+
+ 3. [32m✓[0m    0.01s ( 0.3%) - ArtifactsAPI detachFile() should detach file from artifact
+    /tests/unit/artifacts/sdk.test.ts
+
+ 4. [32m✓[0m    0.01s ( 0.2%) - ArtifactsAPI create() should create artifact with valid options
+    /tests/unit/artifacts/sdk.test.ts
+
+ 5. [32m✓[0m    0.00s ( 0.1%) - ArtifactsAPI get() should throw validation error for invalid ID format
+    /tests/unit/artifacts/sdk.test.ts
+
+ 6. [32m✓[0m    0.00s ( 0.1%) - ArtifactsAPI get() should throw validation error for empty ID
+    /tests/unit/artifacts/sdk.test.ts
+
+ 7. [32m✓[0m    0.00s ( 0.1%) - ArtifactsAPI list() should list artifacts with filter
+    /tests/unit/artifacts/sdk.test.ts
+
+ 8. [32m✓[0m    0.00s ( 0.1%) - ArtifactsAPI detachFile() should throw validation error for empty artifactId
+    /tests/unit/artifacts/sdk.test.ts
+
+ 9. [32m✓[0m    0.00s ( 0.0%) - ArtifactsAPI create() should throw validation error for missing memorySpaceId
+    /tests/unit/artifacts/sdk.test.ts
+
+10. [32m✓[0m    0.00s ( 0.0%) - ArtifactsAPI create() should sync to graph adapter when available
+    /tests/unit/artifacts/sdk.test.ts
+
+11. [32m✓[0m    0.00s ( 0.0%) - ArtifactsAPI create() should use resilience layer when available
+    /tests/unit/artifacts/sdk.test.ts
+
+12. [32m✓[0m    0.00s ( 0.0%) - ArtifactsAPI create() should include tenantId from auth context
+    /tests/unit/artifacts/sdk.test.ts
+
+13. [32m✓[0m    0.00s ( 0.0%) - ArtifactsAPI redo() should redo successfully
+    /tests/unit/artifacts/sdk.test.ts
+
+14. [32m✓[0m    0.00s ( 0.0%) - ArtifactsAPI get() should return null when not found
+    /tests/unit/artifacts/sdk.test.ts
+
+15. [32m✓[0m    0.00s ( 0.0%) - ArtifactsAPI update() should update artifact content
+    /tests/unit/artifacts/sdk.test.ts
+
+16. [32m✓[0m    0.00s ( 0.0%) - ArtifactsAPI update() should update with options
+    /tests/unit/artifacts/sdk.test.ts
+
+17. [32m✓[0m    0.00s ( 0.0%) - ArtifactsAPI update() should throw validation error for empty artifactId
+    /tests/unit/artifacts/sdk.test.ts
+
+18. [32m✓[0m    0.00s ( 0.0%) - ArtifactsAPI update() should update graph on success
+    /tests/unit/artifacts/sdk.test.ts
+
+19. [32m✓[0m    0.00s ( 0.0%) - ArtifactsAPI delete() should soft delete by default
+    /tests/unit/artifacts/sdk.test.ts
+
+20. [32m✓[0m    0.00s ( 0.0%) - ArtifactsAPI list() should throw validation error for missing memorySpaceId
+    /tests/unit/artifacts/sdk.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.18s (3.7% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      4.97s
+  Test suites:        1
+  Individual tests:   35
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 passed, 1 total
+Tests:       47 passed, 47 total
+Snapshots:   0 total
+Time:        4.978 s, estimated 11 s
+Ran all test suites within paths "tests/unit/artifacts/sdk.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/author/artifact-sdk-tests9.json

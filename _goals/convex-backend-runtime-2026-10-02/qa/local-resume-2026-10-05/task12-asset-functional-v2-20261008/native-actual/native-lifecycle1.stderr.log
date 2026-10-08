@@ -1,0 +1,30 @@
+[CONVEX M(runtimeAssets:get)] [Request ID: 04b2c18b63fdbd70] Server Error
+Uncaught ConvexError: {"version":1,"code":"ASSET_NOT_READY","message":"Asset operation denied.","retryable":false,"outcome":"not_dispatched"}
+    at assetDenied (../../custom/backend/runtimeAssetCatalog.ts:13:183)
+    at authorizeAsset (../../custom/backend/runtimeAssetCatalog.ts:66:6)
+    at async handler (../../custom/backend/runtimeAssets.ts:87:13)
+
+file:///Users/SaintNick/.codex/tmp/cortex-task10-embedding-native-fe3a2599d6fd/project/node_modules/convex/dist/esm/browser/http_client.js:294
+            new ConvexError(respJSON.errorMessage)
+            ^
+
+ConvexError: [Request ID: c61bee6ad7090ff6] Server Error
+Uncaught ConvexError: {"version":1,"code":"TRANSCRIPT_LOCKED","message":"Conversation operation denied.","retryable":false,"outcome":"not_dispatched"}
+    at transcriptDenied (../../custom/backend/runtimeTranscript.ts:34:0)
+    at deleteManagedConversation (../../custom/backend/runtimeTranscript.ts:463:23)
+    at async handler (../custom/backend/conversations.ts:192:35)
+
+    at ConvexHttpClient.mutationInner (file:///Users/SaintNick/.codex/tmp/cortex-task10-embedding-native-fe3a2599d6fd/project/node_modules/convex/dist/esm/browser/http_client.js:294:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async ConvexHttpClient.processMutationQueue (file:///Users/SaintNick/.codex/tmp/cortex-task10-embedding-native-fe3a2599d6fd/project/node_modules/convex/dist/esm/browser/http_client.js:310:24) {
+  data: {
+    code: 'TRANSCRIPT_LOCKED',
+    message: 'Conversation operation denied.',
+    outcome: 'not_dispatched',
+    retryable: false,
+    version: 1
+  },
+  Symbol(ConvexError): true
+}
+
+Node.js v24.15.0

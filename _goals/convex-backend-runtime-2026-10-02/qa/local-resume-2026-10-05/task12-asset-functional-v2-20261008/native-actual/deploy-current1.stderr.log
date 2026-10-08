@@ -1,0 +1,25 @@
+▌ Developing against deployment:
+▌ [Development] nicholasgeil:cortex-task10-embedding-v2-fe3a2599d6fd:dev/nicholasgeil (dev) (dashboard: https://dashboard.convex.dev/t/nicholasgeil/cortex-task10-embedding-v2-fe3a2599d6fd/formal-husky-914)
+▌ └─ https://formal-husky-914.convex.cloud
+- Preparing Convex functions...
+
+Convex AI files are not installed. Run npx convex ai-files install to get started or npx convex ai-files disable to hide this message.
+✔ Added table indexes:
+  [+] attachments.by_runtime_key   tenantId, memorySpaceId, attachmentId, _creationTime
+  [+] runtimeAssetJobs.by_job   jobId, _creationTime
+  [+] runtimeAssetJobs.by_owner   ownerPrincipalId, jobId, _creationTime
+  [+] runtimeAssetJobs.by_request   tenantId, memorySpaceId, ownerPrincipalId, requestId, _creationTime
+  [+] runtimeAssetJobs.by_scope   tenantId, memorySpaceId, jobId, _creationTime
+  [+] runtimeAssetReferences.by_conversation   tenantId, memorySpaceId, conversationId, ownerId, _creationTime
+  [+] runtimeAssetReferences.by_owner   tenantId, memorySpaceId, kind, ownerId, ownerVersion, _creationTime
+  [+] runtimeAssetReferences.by_principal   ownerPrincipalId, tenantId, memorySpaceId, ownerId, _creationTime
+  [+] runtimeAssetReferences.by_scope   tenantId, memorySpaceId, ownerId, _creationTime
+  [+] runtimeAssetReferences.by_version   tenantId, memorySpaceId, versionId, active, _creationTime
+  [+] runtimeAssetVersions.by_cleanup   state, createdAt, _creationTime
+  [+] runtimeAssetVersions.by_storage   storageId, _creationTime
+  [+] runtimeAssetVersions.by_version   tenantId, memorySpaceId, assetId, assetVersion, _creationTime
+  [+] runtimeAssetVersions.by_version_id   tenantId, memorySpaceId, versionId, _creationTime
+  [+] runtimeAssets.by_asset   tenantId, memorySpaceId, assetId, _creationTime
+  [+] runtimeAssets.by_owner   ownerPrincipalId, tenantId, memorySpaceId, assetId, _creationTime
+  [+] task12MediaProbes.by_key   key, _creationTime
+✔ 15:59:29 Convex functions ready! (11.89s)

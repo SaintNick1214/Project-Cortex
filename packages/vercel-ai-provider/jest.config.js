@@ -1,8 +1,9 @@
 /**
  * Jest Configuration for Vercel AI Provider
  *
- * Three test projects:
- * - unit: Fast unit tests with mocked dependencies
+ * Test projects:
+ * - unit / unit-react: CommonJS tests preserving hoisted dependency mocks
+ * - unit-remote: ESM tests using the actual AI SDK 7 stream parser
  * - integration: Integration tests with mocked SDK but real component interactions
  * - e2e: End-to-end tests with real Convex backend and LLM calls
  */
@@ -36,27 +37,51 @@ const baseConfig = {
   ],
 };
 
+// These suites use jest.mock hoisting. Enabling the VM ESM runtime for the
+// remote suite must not change their module or mock semantics.
+const commonJsConfig = {
+  ...baseConfig,
+  preset: "ts-jest",
+  extensionsToTreatAsEsm: [],
+  transform: {
+    "^.+\\.tsx?$": [
+      "ts-jest",
+      { useESM: false, tsconfig: "tsconfig.test.json" },
+    ],
+  },
+};
+
 export default {
   ...baseConfig,
   // Use projects for different test types
   projects: [
     {
-      ...baseConfig,
+      ...commonJsConfig,
       displayName: "unit",
       testMatch: ["<rootDir>/tests/unit/**/*.test.ts"],
+      testPathIgnorePatterns: ["<rootDir>/tests/unit/remote\\.test\\.ts$"],
       testTimeout: 10000,
       testEnvironmentOptions: {
         JEST_PROJECT: "unit",
       },
     },
     {
-      ...baseConfig,
+      ...commonJsConfig,
       displayName: "unit-react",
       testEnvironment: "jsdom",
       testMatch: ["<rootDir>/tests/unit/**/*.test.tsx"],
       testTimeout: 10000,
       testEnvironmentOptions: {
         JEST_PROJECT: "unit-react",
+      },
+    },
+    {
+      ...baseConfig,
+      displayName: "unit-remote",
+      testMatch: ["<rootDir>/tests/unit/remote.test.ts"],
+      testTimeout: 10000,
+      testEnvironmentOptions: {
+        JEST_PROJECT: "unit-remote",
       },
     },
     {

@@ -1,0 +1,17 @@
+npm notice run @cortexmemory/sdk@0.37.0 npx
+npm notice run 'eslint' convex-dev/runtimeAssetCatalog.ts convex-dev/runtimeAssets.ts convex-dev/runtimeAssetsHttp.ts convex-dev/runtimeAssetsSchema.ts convex-dev/http.ts convex-dev/runtimeArtifactAuth.ts convex-dev/artifacts.ts convex-dev/attachments.ts convex-dev/schema.ts convex-dev/runtimeAuth.ts convex-dev/runtimeTranscript.ts convex-dev/runtimeTranscriptSchema.ts src/domain/assets.ts src/domain/transcript.ts src/attachments/index.ts src/artifacts/index.ts scripts/backend/build-distribution.mjs tests/unit/runtimeAssets tests/unit/attachments/sdk.test.ts tests/unit/artifacts/sdk.test.ts tests/unit/runtimeAssetClient/asset-capability-bridge.test.ts tests/unit/runtime/model-policy-admission.test.ts tests/integration/artifacts/crud.test.ts
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/artifacts.ts
+  22:36  error  'runtimeAssetUnavailable' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/scripts/backend/build-distribution.mjs
+  0:0  warning  File ignored because of a matching ignore pattern. Use "--no-ignore" to disable file ignore settings or use "--no-warn-ignored" to suppress this warning
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/src/domain/assets.ts
+  29:12  warning  Unnecessary conditional, value is always truthy  @typescript-eslint/no-unnecessary-condition
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAssets/lifecycle.test.ts
+  116:154  error  'reads' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+✖ 4 problems (2 errors, 2 warnings)
+

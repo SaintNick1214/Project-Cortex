@@ -1,0 +1,107 @@
+{
+  "scope": "TASK12_CLI_HTTP_COMPOSITION_ONLY",
+  "status": "SOURCE_TESTS_PASS_NATIVE_INSTALLATION_PENDING",
+  "sourceFiles": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli/src/utils/init/additive-backend.ts",
+      "bytes": 33394,
+      "sha256": "be3e6ed520360363acb238f65908c9985166af29f06eded46ca6afae40101c3a"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+      "bytes": 34727,
+      "sha256": "c409e59dbae507bb5861f795ddd7f5e2eb3fd0350ad3baf0f3322b0211ae11cc"
+    }
+  ],
+  "tests": {
+    "pass": 52,
+    "fail": 0,
+    "skip": 0,
+    "originalCases": 29,
+    "newCases": 23
+  },
+  "checks": [
+    {
+      "name": "affected3",
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli",
+      "args": [
+        "--experimental-vm-modules",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/jest/bin/jest.js",
+        "--selectProjects",
+        "unit",
+        "--testPathPatterns=additive-backend.test.ts",
+        "--runInBand",
+        "--json",
+        "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/cli-http1/affected3-results.json"
+      ],
+      "node": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+      "pid": 45626,
+      "deadlineMs": 120000,
+      "timedOut": false,
+      "exitCode": 0,
+      "signal": null,
+      "elapsedMs": 2258.0843750000004,
+      "childClosed": true
+    },
+    {
+      "name": "types3",
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli",
+      "args": [
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "node": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+      "pid": 45625,
+      "deadlineMs": 120000,
+      "timedOut": false,
+      "exitCode": 0,
+      "signal": null,
+      "elapsedMs": 1557.075583,
+      "childClosed": true
+    },
+    {
+      "name": "lint3",
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli",
+      "args": [
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/eslint/bin/eslint.js",
+        "src/utils/init/additive-backend.ts",
+        "src/utils/__tests__/additive-backend.test.ts",
+        "--report-unused-disable-directives"
+      ],
+      "node": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+      "pid": 45627,
+      "deadlineMs": 120000,
+      "timedOut": false,
+      "exitCode": 0,
+      "signal": null,
+      "elapsedMs": 1158.3556250000001,
+      "childClosed": true
+    }
+  ],
+  "contract": {
+    "helper": "_cortex/http.ts",
+    "export": "registerCortexHttpRoutesV1",
+    "handlerModule": "../runtimeAssetsHttp",
+    "routes": [
+      "POST /cortex/assets/upload",
+      "GET /cortex/assets/download",
+      "OPTIONS /cortex/assets/upload",
+      "OPTIONS /cortex/assets/download"
+    ]
+  },
+  "verified": [
+    "real Convex router composition",
+    "host handler and source preservation",
+    "same path distinct method",
+    "exact/prefix conflicts before writes",
+    "dynamic/aliased/deferred router merge proposals",
+    "digest/static helper matches full manifest",
+    "zero-write retry",
+    "HTTP atomic failure cleanup and partial recovery",
+    "host preimage edit fence"
+  ],
+  "preservedFailure": "runner1-failure.json: QA-only unopened WriteStream stdio failure before any child/effect; distinct file-handle runner succeeded",
+  "nativeStorageOrHttpQualification": false,
+  "productionEffects": 0,
+  "gitEdits": 0
+}

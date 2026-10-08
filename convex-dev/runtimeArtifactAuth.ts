@@ -16,10 +16,15 @@ import type {
   RuntimeAuthority, RuntimeAuthorityRequirement, RuntimeResource, RuntimeResourceType,
 } from "../src/auth/verified";
 
+import { validateAssetFile, syncArtifactAssets } from "./runtimeAssetCatalog";
+import { verifyMessage, agentComponent } from "./runtimeTranscript";
+import { checkContextSourceWitnesses } from "./runtimeContextWitness";
+import { dataAuthorityReference, managedConversationAccess } from "./runtimeDataAuth";
+
 export type ArtifactRow = Doc<"artifacts">;
 type ArtifactState = Omit<ArtifactRow, "_id" | "_creationTime">;
 type Scope = { tenantId?: string; memorySpaceId?: string };
-type Context = Pick<QueryCtx, "db" | "auth">;
+type Context = Pick<QueryCtx, "db" | "auth" | "runQuery">;
 type TrustedSource = { ownerPrincipalId?: string; tombstonedAt?: number; isDeleted?: boolean; deletedAt?: number; version?: number };
 type LinkedRow = (Doc<"conversations"> | Doc<"memories">) & TrustedSource;
 interface SourceEdge {
@@ -72,6 +77,11 @@ function safeArtifactErrorData(error: unknown): Value | undefined {
       ? "Owned file and canonical source admission is pending." : "Artifact operation denied.")) {
     return { code, message: code === "CAPABILITY_NOT_READY"
       ? "Owned file and canonical source admission is pending." : "Artifact operation denied." };
+  }
+  const assetCodes = ["FORBIDDEN", "INVALID_ASSET_METADATA", "ASSET_REFERENCE_CONFLICT", "ASSET_REFERENCE_LIMIT", "ASSET_TOO_LARGE", "ASSET_NOT_READY", "ASSET_INTEGRITY_FAILED", "ASSET_IDEMPOTENCY_CONFLICT"];
+  if (keys === "code,message,outcome,retryable,version" && assetCodes.includes(code) && fields.message === "Asset operation denied."
+    && fields.version === 1 && fields.retryable === false && fields.outcome === "not_dispatched") {
+    return { version: 1, code, message: "Asset operation denied.", retryable: false, outcome: "not_dispatched" };
   }
   const message = AUTHORITY_ERROR_MESSAGES.get(code);
   if (keys === "code,message,outcome,retryable,version" && message !== undefined && fields.message === message
@@ -145,7 +155,7 @@ export function validateArtifact(row: ArtifactState): void {
   if (row.isDeleted || row.deletedAt !== undefined || row.tombstonedAt !== undefined) artifactDeny();
   // All retained file versions require Task12's ownership/reference catalog. Never
   // process or delete their bytes through this bounded text-only implementation.
-  if (row.fileRef || row.versionHistory.some((version) => version.fileRef)) artifactDeny("CAPABILITY_NOT_READY");
+  if ([row.fileRef, ...row.versionHistory.map(version => version.fileRef)].some(file => file && (!file.assetId || !file.versionId || !file.assetVersion))) artifactDeny("CAPABILITY_NOT_READY");
   safeInteger(row.version, 1); safeInteger(row.versionPointer, 1);
   if (row.versionPointer > row.version || row.versionHistory.length === 0) artifactDeny("INVALID_VERSION_STATE");
   let previous = 0;
@@ -245,6 +255,7 @@ export class ArtifactOperation<W extends boolean> {
   private readonly witnesses: Witness[] = [];
   private readonly rows = new Map<string, RowWitness>();
   private readonly artifacts = new Map<string, ArtifactRow>();
+  private readonly managedLinks = new Map<string, { conversation: Doc<"runtimeConversations">; authority: RuntimeAuthority; bridge?: Doc<"runtimeTranscriptMessages"> }>();
   private readonly intentionallyDeleted = new Set<string>();
   private readable = true;
   private effectsStarted = false;
@@ -323,6 +334,7 @@ export class ArtifactOperation<W extends boolean> {
     }
   }
   private async admitLinks(row: ArtifactState): Promise<void> {
+    for (const file of [row.fileRef, ...row.versionHistory.map(entry => entry.fileRef)]) if (file) await validateAssetFile(this.ctx, dataAuthorityReference(this.authority), file);
     if (row.conversationRef) await this.conversation(row.conversationRef);
     for (const reference of row.memoryRefs ?? []) await this.memory(reference.memoryId);
   }
@@ -379,6 +391,19 @@ export class ArtifactOperation<W extends boolean> {
     const authority = await artifactAuthority(this.ctx, { capability: "read", tenantId: this.authority.tenantId,
       memorySpaceId: this.authority.memorySpaceId });
     await this.requireLiveKey("conversation", reference.conversationId);
+    const managed = await this.ctx.db.query("runtimeConversations").withIndex("by_scoped_id", q => q.eq("tenantId", authority.tenantId).eq("memorySpaceId", this.authority.memorySpaceId).eq("conversationId", reference.conversationId)).unique();
+    if (managed) {
+      let bridge: Doc<"runtimeTranscriptMessages"> | undefined;
+      if (reference.messageId !== undefined) {
+        bridge = await this.ctx.db.query("runtimeTranscriptMessages").withIndex("by_native", q => q.eq("tenantId", managed.tenantId).eq("memorySpaceId", managed.memorySpaceId).eq("nativeMessageId", reference.messageId!)).unique() ?? undefined;
+        if (!bridge || bridge.conversationId !== managed.conversationId) artifactDeny();
+      }
+      const key = JSON.stringify([reference.conversationId, reference.messageId ?? null]);
+      const prior = this.managedLinks.get(key);
+      if (prior && (payloadWitness(prior.conversation) !== payloadWitness(managed) || payloadWitness(prior.bridge ?? null) !== payloadWitness(bridge ?? null))) artifactDeny();
+      this.managedLinks.set(key, { conversation: managed, authority, ...(bridge ? { bridge } : {}) });
+      await this.checkManagedLink(this.managedLinks.get(key)!); return;
+    }
     const rows = await this.ctx.db.query("conversations").withIndex("by_tenant_space", (q) =>
       q.eq("tenantId", authority.tenantId).eq("memorySpaceId", this.authority.memorySpaceId))
       .filter((q) => {
@@ -437,6 +462,19 @@ export class ArtifactOperation<W extends boolean> {
     if (authority.principalId !== this.authority.principalId) artifactDeny();
     this.witnesses.push({ authority, requirement, source });
   }
+  private async checkManagedLink(link: { conversation: Doc<"runtimeConversations">; authority: RuntimeAuthority; bridge?: Doc<"runtimeTranscriptMessages"> }): Promise<void> {
+    const row = await this.ctx.db.get("runtimeConversations", link.conversation._id);
+    if (!row || payloadWitness(row) !== payloadWitness(link.conversation)) artifactDeny();
+    await managedConversationAccess(this.ctx, dataAuthorityReference(link.authority), row, "read", "canExport");
+    if (this.write) await managedConversationAccess(this.ctx, dataAuthorityReference(this.authority), row, "write", "canContinue");
+    if (link.bridge) {
+      const bridge = await this.ctx.db.get("runtimeTranscriptMessages", link.bridge._id);
+      if (!bridge || payloadWitness(bridge) !== payloadWitness(link.bridge)) artifactDeny();
+      const native = await this.ctx.runQuery(agentComponent.messages.getMessagesByIds, { messageIds: [bridge.nativeMessageId] });
+      await verifyMessage(this.ctx, row, bridge, native[0]);
+      await checkContextSourceWitnesses(this.ctx, dataAuthorityReference(link.authority), bridge.contextSourceWitnesses ?? []);
+    }
+  }
   async checkpoint(): Promise<void> {
     // Compare complete canonical snapshots, including owner, version, links and
     // anchors; never adopt a changed row after awaiting later candidate controls.
@@ -446,6 +484,7 @@ export class ArtifactOperation<W extends boolean> {
     for (const witness of this.witnesses) {
       if (witness.source && this.rows.get(witness.source.rowId)?.snapshot !== witness.source.canonicalSnapshot) artifactDeny();
     }
+    for (const link of this.managedLinks.values()) await this.checkManagedLink(link);
     const witnesses = this.witnesses.map((witness) => this.intentionallyDeleted.has(witness.requirement.resource?.resourceId ?? "")
       && witness.requirement.resource?.resourceType === "artifact"
       ? { ...witness, requirement: { ...witness.requirement, resource: undefined } } : witness);
@@ -463,6 +502,7 @@ export class ArtifactOperation<W extends boolean> {
     await this.checkpoint();
     this.effectsStarted = true;
     await (this.ctx as MutationCtx).db.patch(id, { ...patch, lastActorPrincipalId: this.authority.principalId });
+    await syncArtifactAssets(this.ctx as MutationCtx, dataAuthorityReference(this.authority), updated);
     this.advanceExpectedArtifact(updated, expectedSnapshot);
   }
   async insert(row: ArtifactState): Promise<ArtifactRow> {
@@ -477,6 +517,7 @@ export class ArtifactOperation<W extends boolean> {
     const id = await (this.ctx as MutationCtx).db.insert("artifacts", row);
     const inserted = await this.ctx.db.get(id);
     if (!inserted || payloadWitness(Object.fromEntries(Object.entries(inserted).filter(([name]) => !["_id", "_creationTime"].includes(name)))) !== expectedSnapshot) artifactDeny();
+    await syncArtifactAssets(this.ctx as MutationCtx, dataAuthorityReference(this.authority), inserted);
     this.remember(inserted); this.artifacts.set(id, inserted); return inserted;
   }
   async tombstone(row: ArtifactRow): Promise<void> {

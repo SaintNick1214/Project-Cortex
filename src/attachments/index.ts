@@ -144,7 +144,7 @@ export class AttachmentsAPI {
         "attachments:attach",
       );
 
-      return result as Attachment;
+      return result;
     } catch (error) {
       this.handleConvexError(error);
     }
@@ -171,14 +171,14 @@ export class AttachmentsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.attachments.get, {
+        this.client.mutation(api.attachments.get, {
           attachmentId,
           tenantId: this.authContext?.tenantId,
         }),
       "attachments:get",
     );
 
-    return result as Attachment | null;
+    return result;
   }
 
   /**
@@ -224,7 +224,7 @@ export class AttachmentsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.attachments.list, {
+        this.client.mutation(api.attachments.list, {
           memorySpaceId: filter.memorySpaceId,
           tenantId: resolveTenantId(this.authContext?.tenantId, filter.tenantId),
           conversationId: filter.conversationId,
@@ -241,7 +241,7 @@ export class AttachmentsAPI {
       "attachments:list",
     );
 
-    return result as ListAttachmentsResult;
+    return result;
   }
 
   /**
@@ -259,7 +259,7 @@ export class AttachmentsAPI {
   ): Promise<Attachment[]> {
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.attachments.getByConversation, {
+        this.client.mutation(api.attachments.getByConversation, {
           conversationId,
           tenantId: this.authContext?.tenantId,
           type: options?.type,
@@ -268,7 +268,7 @@ export class AttachmentsAPI {
       "attachments:getByConversation",
     );
 
-    return result as Attachment[];
+    return result;
   }
 
   /**
@@ -285,14 +285,14 @@ export class AttachmentsAPI {
   async getByMessage(messageId: string): Promise<Attachment[]> {
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.attachments.getByMessage, {
+        this.client.mutation(api.attachments.getByMessage, {
           messageId,
           tenantId: this.authContext?.tenantId,
         }),
       "attachments:getByMessage",
     );
 
-    return result as Attachment[];
+    return result;
   }
 
   /**
@@ -320,7 +320,7 @@ export class AttachmentsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.attachments.count, {
+        this.client.mutation(api.attachments.count, {
           memorySpaceId: filter.memorySpaceId,
           tenantId: resolveTenantId(this.authContext?.tenantId, filter.tenantId),
           conversationId: filter.conversationId,

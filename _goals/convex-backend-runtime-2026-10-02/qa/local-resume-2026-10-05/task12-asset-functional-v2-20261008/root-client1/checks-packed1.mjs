@@ -1,0 +1,14 @@
+import {spawn} from "node:child_process";
+import {openSync,closeSync,writeFileSync} from "node:fs";
+import path from "node:path";
+const root="/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion";
+const here=path.dirname(new URL(import.meta.url).pathname);
+const toolchain="/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin";
+const start=Date.now(), fd=openSync(path.join(here,"packed-contracts1.log"),"w",0o600);
+const args=["run","test:contracts"];
+const child=spawn(path.join(toolchain,"npm"),args,{cwd:root,env:{...process.env,PATH:`${toolchain}:${process.env.PATH}`,NODE_OPTIONS:"--max-old-space-size=2048"},stdio:["ignore",fd,fd]});
+const timer=setTimeout(()=>child.kill("SIGTERM"),120000);
+const outcome=await new Promise((resolve,reject)=>{child.once("error",reject);child.once("exit",(exitCode,signal)=>resolve({exitCode,signal}));});
+clearTimeout(timer);closeSync(fd);
+const receipt={version:1,timestampUtc:new Date().toISOString(),scope:"PACKED_PUBLIC_ESM_CJS_DECLARATION_BROWSER_CONTRACT_NO_SERVICES",node:process.version,cwd:root,command:[path.join(toolchain,"npm"),...args],durationMs:Date.now()-start,...outcome,log:"packed-contracts1.log",sourcePacket:"../author/source-manifest1.json",packedCandidate:"../native-actual/packages-current1.json",actualServiceAcceptance:false};
+writeFileSync(path.join(here,"packed-contracts1.json"),JSON.stringify(receipt,null,2)+"\n");process.stdout.write(JSON.stringify(receipt)+"\n");if(outcome.exitCode!==0)process.exitCode=1;

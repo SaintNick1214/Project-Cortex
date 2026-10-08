@@ -1,0 +1,170 @@
+{
+  "version": 1,
+  "status": "SCOPED_RUNNER_REPAIR_PASS",
+  "capturedAt": "2026-10-08T23:17:17.849Z",
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "versions": {
+    "node": "v24.15.0",
+    "npm": "12.2.0"
+  },
+  "sourceFiles": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/package.json",
+      "relativePath": "packages/vercel-ai-provider/package.json",
+      "bytes": 3647,
+      "sha256": "0928597847d183cdad71764e6d00a637f7b5ce59b952b0441b93b8c19a31d0f3"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/jest.config.js",
+      "relativePath": "packages/vercel-ai-provider/jest.config.js",
+      "bytes": 3036,
+      "sha256": "80ce126ba5a24eee2a511f1c2ed0be8a916c0b544d3d8140ee892759241167fa"
+    }
+  ],
+  "original": {
+    "ciLog": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/checkpoint60-ci-investigation1/provider-cause-blocks3.log",
+    "localReceipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/provider-esm-ci-repair1/reproduction1.results.json",
+    "localLog": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/provider-esm-ci-repair1/reproduction1.log",
+    "exitCode": 1,
+    "passedSuites": 6,
+    "failedSuites": 1,
+    "passedTests": 202,
+    "error": "AI SDK7 ai/dist/index.js loaded through CommonJS before remote suite execution"
+  },
+  "change": "Legacy unit/unit-react explicitly compile CommonJS and retain hoisted mocks; the exact remote suite is a separate ESM unit-remote project. Declared test:unit enables VM modules and selects all three projects.",
+  "checks": [
+    {
+      "command": "env -u NODE_OPTIONS PATH=<declared-toolchain> npm run test:unit -- --runInBand --json --outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/provider-esm-ci-repair1/unit-current1.results.json",
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider",
+      "exitCode": 0,
+      "receipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/provider-esm-ci-repair1/unit-current1.results.json",
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/provider-esm-ci-repair1/unit-current1.log"
+    },
+    {
+      "command": "env -u NODE_OPTIONS PATH=<declared-toolchain> npm run test:unit",
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider",
+      "exitCode": 0,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/provider-esm-ci-repair1/declared-command-current2.log",
+      "passedSuites": 7,
+      "passedTests": 223,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "command": "env -u NODE_OPTIONS PATH=<declared-toolchain> npm run test:unit -- --listTests --json",
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider",
+      "exitCode": 0,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/provider-esm-ci-repair1/discovery-current2.log",
+      "discoveredSuites": 7,
+      "duplicates": 0
+    },
+    {
+      "command": "PATH=<declared-toolchain> node --check jest.config.js",
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider",
+      "exitCode": 0
+    }
+  ],
+  "suites": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/tests/unit/remote.test.ts",
+      "passed": 21,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/tests/unit/middleware.test.ts",
+      "passed": 55,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/tests/unit/useLayerTracking.test.tsx",
+      "passed": 37,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/tests/unit/provider.test.ts",
+      "passed": 33,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/tests/unit/index.test.ts",
+      "passed": 37,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/tests/unit/streaming.test.ts",
+      "passed": 23,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/tests/unit/streaming-helpers.test.ts",
+      "passed": 17,
+      "failed": 0,
+      "skipped": 0
+    }
+  ],
+  "uniqueCurrentTestCases": 223,
+  "legacyCasesPreserved": 202,
+  "actualRemoteCases": 21,
+  "allOriginalDiscoveredSuitePathsPreserved": true,
+  "allPreviouslyExecutedTestIdentitiesPreserved": true,
+  "projects": [
+    {
+      "name": "unit",
+      "testMatch": [
+        "<rootDir>/tests/unit/**/*.test.ts"
+      ],
+      "testTimeout": 10000,
+      "useESM": false
+    },
+    {
+      "name": "unit-react",
+      "testMatch": [
+        "<rootDir>/tests/unit/**/*.test.tsx"
+      ],
+      "testTimeout": 10000,
+      "useESM": false
+    },
+    {
+      "name": "unit-remote",
+      "testMatch": [
+        "<rootDir>/tests/unit/remote.test.ts"
+      ],
+      "testTimeout": 10000,
+      "useESM": true
+    },
+    {
+      "name": "integration",
+      "testMatch": [
+        "<rootDir>/tests/integration/**/*.test.ts"
+      ],
+      "testTimeout": 30000,
+      "useESM": true
+    },
+    {
+      "name": "e2e",
+      "testMatch": [
+        "<rootDir>/tests/e2e/**/*.test.ts"
+      ],
+      "testTimeout": 180000,
+      "useESM": true
+    }
+  ],
+  "safeguards": {
+    "testAssertionsChanged": false,
+    "testFilesChanged": false,
+    "declaredTimeoutsChanged": false,
+    "integrationAndE2eProjectConfigsChanged": false,
+    "dependenciesOrLockChanged": false,
+    "productRuntimeOrBackendChanged": false,
+    "buildInstallServiceOrInferenceCalls": 0,
+    "forceExit": false
+  },
+  "scope": "Unit runner/discovery/config syntax only; integration/e2e service execution and provider builds were not selected. This is not a claim of a new remote CI job pass.",
+  "cleanup": "All observed check children exited; no running check sessions remain."
+}

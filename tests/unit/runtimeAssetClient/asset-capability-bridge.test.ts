@@ -71,13 +71,15 @@ describe.each(["absent", "disabled", "enabled"] as const)("asset safety bridge r
   it("neighboring attachment and artifact get methods retain their public transport", async () => {
     client = new ConvexClient("https://example.convex.cloud", { disabled: true, logger: false });
     const query = jest.spyOn(client, "query").mockResolvedValue(null);
+    const mutation = jest.spyOn(client, "mutation").mockResolvedValue(null);
     resilience = new ResilienceLayer({ enabled: mode === "enabled" }); const execute = jest.spyOn(resilience, "execute");
     const layer = mode === "absent" ? undefined : resilience; const auth = { userId: "user-a", tenantId: "tenant-a" };
     await expect(new ArtifactsAPI(client, undefined, layer, auth).get("art-abc123")).resolves.toBeNull();
     await expect(new AttachmentsAPI(client, layer, auth).get("attach-abc123")).resolves.toBeNull();
-    expect(query).toHaveBeenCalledTimes(2);
-    expect(query).toHaveBeenNthCalledWith(1, api.artifacts.get, { artifactId: "art-abc123", tenantId: "tenant-a" });
-    expect(query).toHaveBeenNthCalledWith(2, api.attachments.get, { attachmentId: "attach-abc123", tenantId: "tenant-a" });
+    expect(query).not.toHaveBeenCalled();
+    expect(mutation).toHaveBeenCalledTimes(2);
+    expect(mutation).toHaveBeenNthCalledWith(1, api.artifacts.get, { artifactId: "art-abc123", tenantId: "tenant-a" });
+    expect(mutation).toHaveBeenNthCalledWith(2, api.attachments.get, { attachmentId: "attach-abc123", tenantId: "tenant-a" });
     expect(execute.mock.calls.map((call) => call[1])).toEqual(mode === "absent" ? [] : ["artifacts:get", "attachments:get"]);
   });
 });

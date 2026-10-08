@@ -122,8 +122,33 @@ export async function buildBackendDistribution({ sourceRoot, outputRoot }) {
   entries.set("_cortex/components.config.ts", `import type { AppDefinition } from "convex/server";\n${imports.join("\n")}\nexport function registerCortexComponentsV1(app: AppDefinition): void {\n${registrations.join("\n")}\n}\n`);
   origins.set("_cortex/components.config.ts", "convex-dev/convex.config.ts");
   sources.set("convex-dev/convex.config.ts", componentSource);
+  // HTTP routes are a digest-bound additive fragment; never replace a host router.
+  const httpRoutes = [];
+  let httpSource;
+  try { httpSource = await fs.readFile(path.join(root, "convex-dev/http.ts"), "utf8"); } catch (error) { if (error.code !== "ENOENT") throw error; }
+  if (httpSource !== undefined) {
+    const httpAst = parse("convex-dev/http.ts", httpSource);
+    const imported = httpAst.statements.filter(ts.isImportDeclaration).filter(node => node.moduleSpecifier.text === "./runtimeAssetsHttp");
+    if (imported.length !== 1) throw new Error("Asset HTTP routes require the fixed runtimeAssetsHttp module");
+    const routes = httpAst.statements.filter(ts.isExpressionStatement).filter(node => ts.isCallExpression(node.expression) && node.expression.expression.getText(httpAst) === "http.route");
+    if (routes.length !== 4) throw new Error("Expected four explicit private asset HTTP routes");
+    for (const route of routes) {
+      const call = route.expression;
+      if (call.arguments.length !== 1 || !ts.isObjectLiteralExpression(call.arguments[0])) throw new Error("Invalid HTTP route declaration");
+      const fields = new Map(call.arguments[0].properties.map(node => [node.name?.getText(httpAst), node.initializer]));
+      const routePath = fields.get("path"); const method = fields.get("method"); const handler = fields.get("handler");
+      if (fields.size !== 3 || !routePath || !method || !handler || !ts.isStringLiteral(routePath) || !ts.isStringLiteral(method) || !ts.isIdentifier(handler)) throw new Error("Invalid asset HTTP route fields");
+      const key = `${method.text} ${routePath.text}`;
+      if (httpRoutes.includes(key)) throw new Error("Duplicate asset HTTP route");
+      httpRoutes.push(key);
+    }
+    const expected = ["POST /cortex/assets/upload", "GET /cortex/assets/download", "OPTIONS /cortex/assets/upload", "OPTIONS /cortex/assets/download"];
+    if (expected.some(key => !httpRoutes.includes(key))) throw new Error("Unsupported asset HTTP route");
+    const helper = `import type { HttpRouter } from "convex/server";\n${imported[0].getText(httpAst).replace('"./runtimeAssetsHttp"', '"../runtimeAssetsHttp"')}\nexport function registerCortexHttpRoutesV1(http: HttpRouter): void {\n${routes.map(node => node.getText(httpAst)).join("\n")}\n}\n`;
+    entries.set("_cortex/http.ts", helper); origins.set("_cortex/http.ts", "convex-dev/http.ts"); sources.set("convex-dev/http.ts", httpSource);
+  }
   const pkg = JSON.parse(await fs.readFile(path.join(root, "package.json"), "utf8"));
-  const manifest = { formatVersion: 1, distributionId: `cortex-backend-v1-sdk-${pkg.version}`, sdkVersion: pkg.version, tables: [...tableNames].sort(), components: componentNames, httpRoutes: [], dependencies: { convex: pkg.peerDependencies.convex, ...pkg.dependencies }, files: [...entries].sort(([a], [b]) => a.localeCompare(b)).map(([name, text]) => ({ path: name, sha256: hash(text), sourcePath: origins.get(name), sourceSha256: hash(sources.get(origins.get(name))) })) };
+  const manifest = { formatVersion: 1, distributionId: `cortex-backend-v1-sdk-${pkg.version}`, sdkVersion: pkg.version, tables: [...tableNames].sort(), components: componentNames, httpRoutes: httpRoutes.sort(), dependencies: { convex: pkg.peerDependencies.convex, ...pkg.dependencies }, files: [...entries].sort(([a], [b]) => a.localeCompare(b)).map(([name, text]) => ({ path: name, sha256: hash(text), sourcePath: origins.get(name), sourceSha256: hash(sources.get(origins.get(name))) })) };
   await fs.rm(output, { recursive: true, force: true });
   for (const [name, text] of entries) { await fs.mkdir(path.dirname(path.join(output, name)), { recursive: true }); await fs.writeFile(path.join(output, name), text); }
   await fs.writeFile(path.join(output, "manifest.json"), JSON.stringify(manifest, null, 2) + "\n");

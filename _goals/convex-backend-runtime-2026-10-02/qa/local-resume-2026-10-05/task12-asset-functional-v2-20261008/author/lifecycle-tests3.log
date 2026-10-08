@@ -1,0 +1,916 @@
+(node:56628) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeAssets/lifecycle.test.ts (7.832 s)
+  ● Console
+
+    console.error
+      ◇ injected env (0) from .env.test
+
+      13 | import dotenv from "dotenv";
+      14 | import { resolve } from "path";
+    > 15 |
+         | ^
+      16 | // Load .env.test first (test defaults)
+      17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+      18 |
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:15:8
+
+    console.error
+      ◇ injected env (0) from .env.local
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+    console.log
+      
+      🧪 Testing against LOCAL Convex: http://127.0.0.1:1
+
+      at tests/env.ts:35:13
+
+    console.log
+         Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:36:13
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:121:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:122:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:123:13
+
+  ● immutable private assets and reference ownership › attachment removal preserves artifact history; last owner deletion cleans bytes
+
+    ConvexError: {"version":1,"code":"BACKEND_OPERATION_FAILED","message":"Artifact operation failed.","retryable":false,"outcome":"not_committed"}
+
+      85 | }
+      86 | function backendFailure(): ConvexError<Value> {
+    > 87 |   return new ConvexError({ version: 1, code: "BACKEND_OPERATION_FAILED", message: "Artifact operation failed.",
+         |          ^
+      88 |     retryable: false, outcome: "not_committed" });
+      89 | }
+      90 | function ordinaryAuthorityDenial(error: unknown): boolean {
+
+      at backendFailure (convex-dev/runtimeArtifactAuth.ts:87:10)
+      at artifactHandler (convex-dev/runtimeArtifactAuth.ts:136:11)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:133:10)
+      at tests/unit/runtimeTranscript/fixture.ts:197:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:193:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:197:77)
+      at Object.<anonymous> (tests/unit/runtimeAssets/lifecycle.test.ts:33:116)
+
+  ● immutable private assets and reference ownership › undo, redo and historical export identify the same immutable lineage
+
+    ConvexError: {"version":1,"code":"BACKEND_OPERATION_FAILED","message":"Artifact operation failed.","retryable":false,"outcome":"not_committed"}
+
+      85 | }
+      86 | function backendFailure(): ConvexError<Value> {
+    > 87 |   return new ConvexError({ version: 1, code: "BACKEND_OPERATION_FAILED", message: "Artifact operation failed.",
+         |          ^
+      88 |     retryable: false, outcome: "not_committed" });
+      89 | }
+      90 | function ordinaryAuthorityDenial(error: unknown): boolean {
+
+      at backendFailure (convex-dev/runtimeArtifactAuth.ts:87:10)
+      at artifactHandler (convex-dev/runtimeArtifactAuth.ts:136:11)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:133:10)
+      at tests/unit/runtimeTranscript/fixture.ts:197:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:193:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:197:77)
+      at Object.<anonymous> (tests/unit/runtimeAssets/lifecycle.test.ts:40:95)
+
+  ● immutable private assets and reference ownership › Agent file parts add independent ownership, and vacuum is not artifact ownership
+
+    ConvexError: {"version":1,"code":"BACKEND_OPERATION_FAILED","message":"Artifact operation failed.","retryable":false,"outcome":"not_committed"}
+
+      85 | }
+      86 | function backendFailure(): ConvexError<Value> {
+    > 87 |   return new ConvexError({ version: 1, code: "BACKEND_OPERATION_FAILED", message: "Artifact operation failed.",
+         |          ^
+      88 |     retryable: false, outcome: "not_committed" });
+      89 | }
+      90 | function ordinaryAuthorityDenial(error: unknown): boolean {
+
+      at backendFailure (convex-dev/runtimeArtifactAuth.ts:87:10)
+      at artifactHandler (convex-dev/runtimeArtifactAuth.ts:136:11)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:133:10)
+      at tests/unit/runtimeTranscript/fixture.ts:197:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:193:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:197:77)
+      at Object.<anonymous> (tests/unit/runtimeAssets/lifecycle.test.ts:55:98)
+
+FAIL tests/unit/attachments/sdk.test.ts (6.197 s)
+  ● Console
+
+    console.error
+      ◇ injected env (0) from .env.test
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+    console.error
+      ◇ injected env (0) from .env.local
+
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+    > 20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+         |        ^
+      21 |
+      22 | // Determine which Convex deployment to test against
+      23 | // Note: In auto mode, the test-runner.mjs script handles detection and orchestration
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:20:8
+
+    console.log
+      
+      🧪 Testing against LOCAL Convex: http://127.0.0.1:1
+
+      at tests/env.ts:44:11
+
+    console.log
+         Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:45:11
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:147:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:150:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:151:11
+
+  ● AttachmentsAPI.generateUploadUrl › should generate upload URL successfully
+
+    AssetCapabilityUnavailableError: Authenticated asset upload and delivery are unavailable in this SDK deployment.
+
+       95 |    */
+       96 |   async generateUploadUrl(): Promise<UploadUrlResult> {
+    >  97 |     throw new AssetCapabilityUnavailableError();
+          |           ^
+       98 |   }
+       99 |
+      100 |   /**
+
+      at AttachmentsAPI.generateUploadUrl (src/attachments/index.ts:97:11)
+      at Object.<anonymous> (tests/unit/attachments/sdk.test.ts:143:30)
+
+  ● AttachmentsAPI.generateUploadUrl › should pass tenant ID when auth context provided
+
+    AssetCapabilityUnavailableError: Authenticated asset upload and delivery are unavailable in this SDK deployment.
+
+       95 |    */
+       96 |   async generateUploadUrl(): Promise<UploadUrlResult> {
+    >  97 |     throw new AssetCapabilityUnavailableError();
+          |           ^
+       98 |   }
+       99 |
+      100 |   /**
+
+      at AttachmentsAPI.generateUploadUrl (src/attachments/index.ts:97:11)
+      at Object.<anonymous> (tests/unit/attachments/sdk.test.ts:158:21)
+
+  ● AttachmentsAPI.generateUploadUrl › should use resilience layer when available
+
+    AssetCapabilityUnavailableError: Authenticated asset upload and delivery are unavailable in this SDK deployment.
+
+       95 |    */
+       96 |   async generateUploadUrl(): Promise<UploadUrlResult> {
+    >  97 |     throw new AssetCapabilityUnavailableError();
+          |           ^
+       98 |   }
+       99 |
+      100 |   /**
+
+      at AttachmentsAPI.generateUploadUrl (src/attachments/index.ts:97:11)
+      at Object.<anonymous> (tests/unit/attachments/sdk.test.ts:167:15)
+
+  ● AttachmentsAPI.get › should retrieve attachment by ID
+
+    expect(received).toEqual(expected) // deep equality
+
+    Expected: {"_id": "doc_123", "attachmentId": "attach-abc123", "createdAt": 1791498688608, "filename": "test.png", "memorySpaceId": "space-123", "mimeType": "image/png", "size": 1024, "storageId": "storage-789", "type": "image", "updatedAt": 1791498688608, "userId": "user-456"}
+    Received: undefined
+
+      399 |     const result = await api.get("attach-abc123");
+      400 |
+    > 401 |     expect(result).toEqual(mockAttachment);
+          |                    ^
+      402 |     expect(client.query).toHaveBeenCalledWith(
+      403 |       expect.anything(),
+      404 |       expect.objectContaining({ attachmentId: "attach-abc123" })
+
+      at Object.<anonymous> (tests/unit/attachments/sdk.test.ts:401:20)
+
+  ● AttachmentsAPI.get › should return null for non-existent attachment
+
+    expect(received).toBeNull()
+
+    Received: undefined
+
+      411 |     const result = await api.get("non-existent");
+      412 |
+    > 413 |     expect(result).toBeNull();
+          |                    ^
+      414 |   });
+      415 |
+      416 |   // Test retrieval of each modality
+
+      at Object.<anonymous> (tests/unit/attachments/sdk.test.ts:413:20)
+
+  ● AttachmentsAPI.get › should correctly parse image attachment
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "image"
+    Received: undefined
+
+      424 |       const result = await api.get("attach-123");
+      425 |
+    > 426 |       expect(result?.type).toBe(modality);
+          |                            ^
+      427 |       if (modality === "image" || modality === "video") {
+      428 |         expect(result?.dimensions).toBeDefined();
+      429 |       }
+
+      at Object.<anonymous> (tests/unit/attachments/sdk.test.ts:426:28)
+
+  ● AttachmentsAPI.get › should correctly parse audio attachment
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "audio"
+    Received: undefined
+
+      424 |       const result = await api.get("attach-123");
+      425 |
+    > 426 |       expect(result?.type).toBe(modality);
+          |                            ^
+      427 |       if (modality === "image" || modality === "video") {
+      428 |         expect(result?.dimensions).toBeDefined();
+      429 |       }
+
+      at Object.<anonymous> (tests/unit/attachments/sdk.test.ts:426:28)
+
+  ● AttachmentsAPI.get › should correctly parse video attachment
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "video"
+    Received: undefined
+
+      424 |       const result = await api.get("attach-123");
+      425 |
+    > 426 |       expect(result?.type).toBe(modality);
+          |                            ^
+      427 |       if (modality === "image" || modality === "video") {
+      428 |         expect(result?.dimensions).toBeDefined();
+      429 |       }
+
+      at Object.<anonymous> (tests/unit/attachments/sdk.test.ts:426:28)
+
+  ● AttachmentsAPI.get › should correctly parse pdf attachment
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "pdf"
+    Received: undefined
+
+      424 |       const result = await api.get("attach-123");
+      425 |
+    > 426 |       expect(result?.type).toBe(modality);
+          |                            ^
+      427 |       if (modality === "image" || modality === "video") {
+      428 |         expect(result?.dimensions).toBeDefined();
+      429 |       }
+
+      at Object.<anonymous> (tests/unit/attachments/sdk.test.ts:426:28)
+
+  ● AttachmentsAPI.get › should correctly parse file attachment
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "file"
+    Received: undefined
+
+      424 |       const result = await api.get("attach-123");
+      425 |
+    > 426 |       expect(result?.type).toBe(modality);
+          |                            ^
+      427 |       if (modality === "image" || modality === "video") {
+      428 |         expect(result?.dimensions).toBeDefined();
+      429 |       }
+
+      at Object.<anonymous> (tests/unit/attachments/sdk.test.ts:426:28)
+
+  ● AttachmentsAPI.getUrl › should return signed download URL
+
+    AssetCapabilityUnavailableError: Authenticated asset upload and delivery are unavailable in this SDK deployment.
+
+      192 |   async getUrl(attachmentId: string): Promise<string | null> {
+      193 |     void attachmentId;
+    > 194 |     throw new AssetCapabilityUnavailableError();
+          |           ^
+      195 |   }
+      196 |
+      197 |   /**
+
+      at AttachmentsAPI.getUrl (src/attachments/index.ts:194:11)
+      at Object.<anonymous> (tests/unit/attachments/sdk.test.ts:456:30)
+
+  ● AttachmentsAPI.getUrl › should return null for non-existent attachment
+
+    AssetCapabilityUnavailableError: Authenticated asset upload and delivery are unavailable in this SDK deployment.
+
+      192 |   async getUrl(attachmentId: string): Promise<string | null> {
+      193 |     void attachmentId;
+    > 194 |     throw new AssetCapabilityUnavailableError();
+          |           ^
+      195 |   }
+      196 |
+      197 |   /**
+
+      at AttachmentsAPI.getUrl (src/attachments/index.ts:194:11)
+      at Object.<anonymous> (tests/unit/attachments/sdk.test.ts:468:30)
+
+  ● AttachmentsAPI.list › should list all attachments in memory space
+
+    TypeError: Cannot read properties of undefined (reading 'attachments')
+
+      498 |     const result = await api.list(filter);
+      499 |
+    > 500 |     expect(result.attachments).toHaveLength(2);
+          |                   ^
+      501 |     expect(result.total).toBe(2);
+      502 |     expect(result.hasMore).toBe(false);
+      503 |   });
+
+      at Object.<anonymous> (tests/unit/attachments/sdk.test.ts:500:19)
+
+  ● AttachmentsAPI.list › should filter by image type
+
+    TypeError: Cannot read properties of undefined (reading 'attachments')
+
+      522 |       const result = await api.list(filter);
+      523 |
+    > 524 |       expect(result.attachments[0].type).toBe(modality);
+          |                     ^
+      525 |       expect(client.query).toHaveBeenCalledWith(
+      526 |         expect.anything(),
+      527 |         expect.objectContaining({ type: modality })
+
+      at Object.<anonymous> (tests/unit/attachments/sdk.test.ts:524:21)
+
+  ● AttachmentsAPI.list › should filter by audio type
+
+    TypeError: Cannot read properties of undefined (reading 'attachments')
+
+      522 |       const result = await api.list(filter);
+      523 |
+    > 524 |       expect(result.attachments[0].type).toBe(modality);
+          |                     ^
+      525 |       expect(client.query).toHaveBeenCalledWith(
+      526 |         expect.anything(),
+      527 |         expect.objectContaining({ type: modality })
+
+      at Object.<anonymous> (tests/unit/attachments/sdk.test.ts:524:21)
+
+  ● AttachmentsAPI.list › should filter by video type
+
+    TypeError: Cannot read properties of undefined (reading 'attachments')
+
+      522 |       const result = await api.list(filter);
+      523 |
+    > 524 |       expect(result.attachments[0].type).toBe(modality);
+          |                     ^
+      525 |       expect(client.query).toHaveBeenCalledWith(
+      526 |         expect.anything(),
+      527 |         expect.objectContaining({ type: modality })
+
+      at Object.<anonymous> (tests/unit/attachments/sdk.test.ts:524:21)
+
+  ● AttachmentsAPI.list › should filter by pdf type
+
+    TypeError: Cannot read properties of undefined (reading 'attachments')
+
+      522 |       const result = await api.list(filter);
+      523 |
+    > 524 |       expect(result.attachments[0].type).toBe(modality);
+          |                     ^
+      525 |       expect(client.query).toHaveBeenCalledWith(
+      526 |         expect.anything(),
+      527 |         expect.objectContaining({ type: modality })
+
+      at Object.<anonymous> (tests/unit/attachments/sdk.test.ts:524:21)
+
+  ● AttachmentsAPI.list › should filter by file type
+
+    TypeError: Cannot read properties of undefined (reading 'attachments')
+
+      522 |       const result = await api.list(filter);
+      523 |
+    > 524 |       expect(result.attachments[0].type).toBe(modality);
+          |                     ^
+      525 |       expect(client.query).toHaveBeenCalledWith(
+      526 |         expect.anything(),
+      527 |         expect.objectContaining({ type: modality })
+
+      at Object.<anonymous> (tests/unit/attachments/sdk.test.ts:524:21)
+
+  ● AttachmentsAPI.list › should filter by conversation
+
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+
+    Expected: Anything, ObjectContaining {"conversationId": "conv-123"}
+
+    Number of calls: 0
+
+      544 |     await api.list(filter);
+      545 |
+    > 546 |     expect(client.query).toHaveBeenCalledWith(
+          |                          ^
+      547 |       expect.anything(),
+      548 |       expect.objectContaining({ conversationId: "conv-123" })
+      549 |     );
+
+      at Object.<anonymous> (tests/unit/attachments/sdk.test.ts:546:26)
+
+  ● AttachmentsAPI.list › should filter by message
+
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+
+    Expected: Anything, ObjectContaining {"messageId": "msg-456"}
+
+    Number of calls: 0
+
+      564 |     await api.list(filter);
+      565 |
+    > 566 |     expect(client.query).toHaveBeenCalledWith(
+          |                          ^
+      567 |       expect.anything(),
+      568 |       expect.objectContaining({ messageId: "msg-456" })
+      569 |     );
+
+      at Object.<anonymous> (tests/unit/attachments/sdk.test.ts:566:26)
+
+  ● AttachmentsAPI.list › should paginate results with cursor
+
+    TypeError: Cannot read properties of undefined (reading 'hasMore')
+
+      585 |     const result = await api.list(filter);
+      586 |
+    > 587 |     expect(result.hasMore).toBe(true);
+          |                   ^
+      588 |     expect(result.cursor).toBe("cursor-page2");
+      589 |   });
+      590 |
+
+      at Object.<anonymous> (tests/unit/attachments/sdk.test.ts:587:19)
+
+  ● AttachmentsAPI.list › should sort by createdAt ascending
+
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+
+    Expected: Anything, ObjectContaining {"sortBy": "createdAt", "sortOrder": "asc"}
+
+    Number of calls: 0
+
+      600 |     await api.list(filter);
+      601 |
+    > 602 |     expect(client.query).toHaveBeenCalledWith(
+          |                          ^
+      603 |       expect.anything(),
+      604 |       expect.objectContaining({ sortBy: "createdAt", sortOrder: "asc" })
+      605 |     );
+
+      at Object.<anonymous> (tests/unit/attachments/sdk.test.ts:602:26)
+
+  ● AttachmentsAPI.getByConversation › should get all attachments for a conversation
+
+    TypeError: expect(received).toHaveLength(expected)
+
+    Matcher error: received value must have a length property whose value must be a number
+
+    Received has value: undefined
+
+      629 |     const result = await api.getByConversation("conv-123");
+      630 |
+    > 631 |     expect(result).toHaveLength(2);
+          |                    ^
+      632 |     expect(result[0].conversationId).toBe("conv-123");
+      633 |   });
+      634 | });
+
+      at Object.<anonymous> (tests/unit/attachments/sdk.test.ts:631:20)
+
+  ● AttachmentsAPI.getByMessage › should get all attachments for a message
+
+    TypeError: expect(received).toHaveLength(expected)
+
+    Matcher error: received value must have a length property whose value must be a number
+
+    Received has value: undefined
+
+      651 |     const result = await api.getByMessage("msg-456");
+      652 |
+    > 653 |     expect(result).toHaveLength(1);
+          |                    ^
+      654 |     expect(result[0].messageId).toBe("msg-456");
+      655 |   });
+      656 | });
+
+      at Object.<anonymous> (tests/unit/attachments/sdk.test.ts:653:20)
+
+  ● AttachmentsAPI.count › should count all attachments in memory space
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 42
+    Received: undefined
+
+      675 |     const result = await api.count({ memorySpaceId: "space-123" });
+      676 |
+    > 677 |     expect(result).toBe(42);
+          |                    ^
+      678 |   });
+      679 |
+      680 |   // Test counting by each modality
+
+      at Object.<anonymous> (tests/unit/attachments/sdk.test.ts:677:20)
+
+  ● AttachmentsAPI.count › should count image attachments
+
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+
+    Expected: Anything, ObjectContaining {"type": "image"}
+
+    Number of calls: 0
+
+      687 |       await api.count({ memorySpaceId: "space-123", type: modality });
+      688 |
+    > 689 |       expect(client.query).toHaveBeenCalledWith(
+          |                            ^
+      690 |         expect.anything(),
+      691 |         expect.objectContaining({ type: modality })
+      692 |       );
+
+      at Object.<anonymous> (tests/unit/attachments/sdk.test.ts:689:28)
+
+  ● AttachmentsAPI.count › should count audio attachments
+
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+
+    Expected: Anything, ObjectContaining {"type": "audio"}
+
+    Number of calls: 0
+
+      687 |       await api.count({ memorySpaceId: "space-123", type: modality });
+      688 |
+    > 689 |       expect(client.query).toHaveBeenCalledWith(
+          |                            ^
+      690 |         expect.anything(),
+      691 |         expect.objectContaining({ type: modality })
+      692 |       );
+
+      at Object.<anonymous> (tests/unit/attachments/sdk.test.ts:689:28)
+
+  ● AttachmentsAPI.count › should count video attachments
+
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+
+    Expected: Anything, ObjectContaining {"type": "video"}
+
+    Number of calls: 0
+
+      687 |       await api.count({ memorySpaceId: "space-123", type: modality });
+      688 |
+    > 689 |       expect(client.query).toHaveBeenCalledWith(
+          |                            ^
+      690 |         expect.anything(),
+      691 |         expect.objectContaining({ type: modality })
+      692 |       );
+
+      at Object.<anonymous> (tests/unit/attachments/sdk.test.ts:689:28)
+
+  ● AttachmentsAPI.count › should count pdf attachments
+
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+
+    Expected: Anything, ObjectContaining {"type": "pdf"}
+
+    Number of calls: 0
+
+      687 |       await api.count({ memorySpaceId: "space-123", type: modality });
+      688 |
+    > 689 |       expect(client.query).toHaveBeenCalledWith(
+          |                            ^
+      690 |         expect.anything(),
+      691 |         expect.objectContaining({ type: modality })
+      692 |       );
+
+      at Object.<anonymous> (tests/unit/attachments/sdk.test.ts:689:28)
+
+  ● AttachmentsAPI.count › should count file attachments
+
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+
+    Expected: Anything, ObjectContaining {"type": "file"}
+
+    Number of calls: 0
+
+      687 |       await api.count({ memorySpaceId: "space-123", type: modality });
+      688 |
+    > 689 |       expect(client.query).toHaveBeenCalledWith(
+          |                            ^
+      690 |         expect.anything(),
+      691 |         expect.objectContaining({ type: modality })
+      692 |       );
+
+      at Object.<anonymous> (tests/unit/attachments/sdk.test.ts:689:28)
+
+  ● AttachmentsAPI Multi-Tenancy › should include tenantId in all operations
+
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+
+    Expected: Anything, ObjectContaining {"tenantId": "tenant-xyz"}
+
+    Number of calls: 0
+
+      806 |     client.query.mockResolvedValue(createMockAttachment());
+      807 |     await tenantApi.get("attach-123");
+    > 808 |     expect(client.query).toHaveBeenCalledWith(
+          |                          ^
+      809 |       expect.anything(),
+      810 |       expect.objectContaining({ tenantId: "tenant-xyz" })
+      811 |     );
+
+      at Object.<anonymous> (tests/unit/attachments/sdk.test.ts:808:26)
+
+PASS tests/unit/runtimeAssetClient/asset-capability-bridge.test.ts (5.563 s)
+  ● Console
+
+    console.error
+      ◇ injected env (0) from .env.test
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+    console.error
+      ◇ injected env (0) from .env.local
+
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+    > 20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+         |        ^
+      21 |
+      22 | // Determine which Convex deployment to test against
+      23 | // Note: In auto mode, the test-runner.mjs script handles detection and orchestration
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:20:8
+
+    console.log
+      
+      🧪 Testing against LOCAL Convex: http://127.0.0.1:1
+
+      at tests/env.ts:44:11
+
+    console.log
+         Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:45:11
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:147:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:150:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:151:11
+
+PASS tests/unit/runtime/model-policy-admission.test.ts
+  ● Console
+
+    console.error
+      ◇ injected env (0) from .env.test
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+    console.error
+      ◇ injected env (0) from .env.local
+
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+    > 20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+         |        ^
+      21 |
+      22 | // Determine which Convex deployment to test against
+      23 | // Note: In auto mode, the test-runner.mjs script handles detection and orchestration
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:20:8
+
+    console.log
+      
+      🧪 Testing against LOCAL Convex: http://127.0.0.1:1
+
+      at tests/env.ts:44:11
+
+    console.log
+         Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:45:11
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:147:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:150:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:151:11
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     7.8s | 19/22 passed | /tests/unit/runtimeAssets/lifecycle.test.ts
+  ❌     6.2s | 33/64 passed | /tests/unit/attachments/sdk.test.ts
+  ✅     5.6s | 21/21 passed | /tests/unit/runtimeAssetClient/asset-capability-bridge.test.ts
+  ✅     4.4s | 134/134 passed | /tests/unit/runtime/model-policy-admission.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.06s ( 0.2%) - actual application and private protocol byte bounds private provider materialization uses exact authorized bytes and full encoded bound
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+ 2. [32m✓[0m    0.06s ( 0.2%) - terminal embedding result profile fence known embedding capture accepts only one current matching profile vector, with zero attachment charge delta
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+ 3. [32m✓[0m    0.06s ( 0.2%) - native private policy ledger — offline logic only same child canonical replay does not reserve again; changed text/hash collision rejects
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+ 4. [32m✓[0m    0.06s ( 0.2%) - immutable private assets and reference ownership actual bytes commit once, replay keeps exact metadata, no bearer URL
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+ 5. [32m✓[0m    0.04s ( 0.2%) - actual application and private protocol byte bounds HTTP delivers authorized catalog MIME/hash with no-store and rejects corrupted oversized storage
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+ 6. [32m✓[0m    0.04s ( 0.2%) - native private policy ledger — offline logic only binds one backend account per exact trusted request and rejects changed request/owner
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+ 7. [32m✓[0m    0.04s ( 0.2%) - trusted terminal capture and current private attachment healthy charge capture and attachment are separate, monetary once, exact-current retries zero writes
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+ 8. [32m✓[0m    0.04s ( 0.1%) - native private policy ledger — offline logic only explicit compatible safe fallback reserves once with pinned candidate and no lost prior spend
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+ 9. [32m✓[0m    0.04s ( 0.1%) - current policy narrowing at fallback and dispatch boundaries fresh fallback includes prior known spend under current narrowed operation ceiling
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+10. [32m✓[0m    0.03s ( 0.1%) - trusted terminal capture and current private attachment forced digest equality never admits conflicting final canonical bytes
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+11. [32m✓[0m    0.03s ( 0.1%) - immutable private assets and reference ownership late finalize after revoked cannot revive a reserved version
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+12. [31m✗[0m    0.03s ( 0.1%) - immutable private assets and reference ownership Agent file parts add independent ownership, and vacuum is not artifact ownership
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+13. [32m✓[0m    0.03s ( 0.1%) - current policy narrowing at fallback and dispatch boundaries compatible fallback at exact narrowed cumulative ceiling remains permitted
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+14. [32m✓[0m    0.03s ( 0.1%) - native private policy ledger — offline logic only known cost settles exactly once and eligible result replay needs no new reservation
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+15. [32m✓[0m    0.03s ( 0.1%) - current policy narrowing at fallback and dispatch boundaries fallback permission revoked after valid reservation denies checkpoint with zero effects
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+16. [32m✓[0m    0.03s ( 0.1%) - terminal attachment closure and strict monetary truth pending attachment revoked closes permanently before renewal with zero monetary delta
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+17. [32m✓[0m    0.03s ( 0.1%) - terminal attachment closure and strict monetary truth known usage additions are allowed only with complete money and absent facts never erase existing known values
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+18. [32m✓[0m    0.03s ( 0.1%) - native private policy ledger — offline logic only one checkpoint winner returns a permit and subsequent attempts cannot dispatch
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+19. [32m✓[0m    0.03s ( 0.1%) - current policy narrowing at fallback and dispatch boundaries operation narrowing after valid fallback reserve preserves full original liability and denies permit
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+20. [32m✓[0m    0.03s ( 0.1%) - terminal attachment closure and strict monetary truth forced initial hash equality cannot replace immutable initial nonmoney facts
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.76s (3.1% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      24.34s
+  Test suites:        4
+  Individual tests:   178
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 4
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 2 failed, 2 passed, 4 total
+Tests:       34 failed, 207 passed, 241 total
+Snapshots:   0 total
+Time:        24.344 s
+Ran all test suites within paths "tests/unit/runtimeAssets/lifecycle.test.ts", "tests/unit/attachments/sdk.test.ts", "tests/unit/runtimeAssetClient/asset-capability-bridge.test.ts", "tests/unit/runtime/model-policy-admission.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/author/lifecycle-tests3.json

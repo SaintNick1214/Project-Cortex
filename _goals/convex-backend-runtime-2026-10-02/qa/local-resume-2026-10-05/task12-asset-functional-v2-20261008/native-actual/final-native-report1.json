@@ -1,0 +1,595 @@
+{
+  "schemaVersion": 1,
+  "status": "ORIGINAL_TASK12_NATIVE_OUTCOMES_CLOSED_FOR_SINGLE_INDEPENDENT_REVIEW",
+  "scope": "Installed packed SDK/browser binary entry, additive HTTP installer and Convex private catalog/lifecycle; private native provider input commissioning only. Ordinary media jobs and generic video terminal/accounting remain Task13.",
+  "closedAt": "2026-10-08T23:22:18.301Z",
+  "projectId": 3174742,
+  "deploymentName": "formal-husky-914",
+  "packages": {
+    "directory": "/Users/SaintNick/.codex/tmp/cortex-task12-pack-bb5d3b2c-9ede-4280-a0fe-c161fdde453d",
+    "sdk": {
+      "file": "/Users/SaintNick/.codex/tmp/cortex-task12-pack-bb5d3b2c-9ede-4280-a0fe-c161fdde453d/cortexmemory-sdk-0.37.0.tgz",
+      "bytes": 972601,
+      "sha256": "786083bec56a987630e7fce1050c4462d375a49f788dbdf735bdc4e18fb68a78",
+      "package": "@cortexmemory/sdk",
+      "version": "0.37.0",
+      "unpackedBackend": "/Users/SaintNick/.codex/tmp/cortex-task12-pack-bb5d3b2c-9ede-4280-a0fe-c161fdde453d/unpacked/package/dist/backend/v1",
+      "manifestSha256": "f3bf932386ece08b0071b47c1a60d5f92bb72a6fa522136b52f5e70a9381fb3c"
+    },
+    "cli": {
+      "file": "/Users/SaintNick/.codex/tmp/cortex-task12-pack-bb5d3b2c-9ede-4280-a0fe-c161fdde453d/cortexmemory-cli-0.37.0.tgz",
+      "bytes": 927900,
+      "sha256": "4d773e039f2f519b1f45c47daa5d86965dd01d121600d3ef47d331f01ba602ab",
+      "package": "@cortexmemory/cli",
+      "version": "0.37.0"
+    },
+    "sourceFileCount": 90,
+    "tableCount": 65,
+    "components": [
+      "agent",
+      "workflow"
+    ],
+    "httpRoutes": [
+      "GET /cortex/assets/download",
+      "OPTIONS /cortex/assets/download",
+      "OPTIONS /cortex/assets/upload",
+      "POST /cortex/assets/upload"
+    ],
+    "packIgnoredScripts": true,
+    "noTargetEffects": true
+  },
+  "installed": {
+    "manifestSha256": "f3bf932386ece08b0071b47c1a60d5f92bb72a6fa522136b52f5e70a9381fb3c",
+    "sourceFiles": 90,
+    "tableCount": 65,
+    "httpRoutes": [
+      "GET /cortex/assets/download",
+      "OPTIONS /cortex/assets/download",
+      "OPTIONS /cortex/assets/upload",
+      "POST /cortex/assets/upload"
+    ],
+    "unrelatedHostPreimages": 7,
+    "retryWrites": 0,
+    "hostUnrelatedPreserved": true,
+    "normalConflictBehaviorPreserved": true,
+    "fixtureOnlyOwnedRemoval": "Only exact digest-proven old installed distribution files were removed under delegated disposable-fixture authorization. Product installer continued to reject changed-owned files before writes.",
+    "privateQAOverlays": [
+      "media-fixture-source-manifest1.json",
+      "sync-fixture-source-manifest1.json"
+    ],
+    "shippedRegistryChanged": false
+  },
+  "meaningfulGroups": {
+    "storageDeliveryAndLifecycle": 14,
+    "privateAccessAndEncodedProtocolCap": 2,
+    "asyncGuardAndNoRepeat": 4,
+    "syncReachabilityAndRealMaterialization": 3,
+    "groupSumming": "These are distinct named scopes; the first lifecycle1 receipt remains FAIL_OR_UNKNOWN after its four successful groups, and lifecycle2 covers four later groups without duplicating them."
+  },
+  "groups": [
+    {
+      "phase": "native-delivery1",
+      "status": "ACTUAL_PASS",
+      "groups": [
+        {
+          "name": "installed-helper-private-PNG-delivery-and-local-preview",
+          "status": "PASS"
+        },
+        {
+          "name": "same-request-ready-replay-and-changed-input-conflict",
+          "status": "PASS"
+        },
+        {
+          "name": "no-JWT-own-only-peer-and-foreign-byte-denials",
+          "status": "PASS"
+        },
+        {
+          "name": "current-grant-revocation-byte-denial",
+          "status": "PASS"
+        }
+      ]
+    },
+    {
+      "phase": "native-boundary1",
+      "status": "ACTUAL_PASS",
+      "groups": [
+        {
+          "name": "actual-exact-application-cap-upload-and-download",
+          "status": "PASS"
+        },
+        {
+          "name": "SDK-streamed-HTTP-and-generated-byte-over-cap-denied-before-ready",
+          "status": "PASS"
+        }
+      ]
+    },
+    {
+      "phase": "native-lifecycle1",
+      "status": "FAIL_OR_UNKNOWN",
+      "groups": [
+        {
+          "name": "attachment-removal-cannot-delete-retained-artifact-version",
+          "status": "PASS"
+        },
+        {
+          "name": "undo-redo-exact-version-hash-MIME-lineage-retention",
+          "status": "PASS"
+        },
+        {
+          "name": "same-arguments-artifact-version-metadata-fresh-time-only-grant-expiry",
+          "status": "PASS"
+        },
+        {
+          "name": "final-owner-deletion-removes-native-storage",
+          "status": "PASS"
+        }
+      ]
+    },
+    {
+      "phase": "native-lifecycle2",
+      "status": "ACTUAL_PASS",
+      "groups": [
+        {
+          "name": "real-Agent-file-owner-retains-bytes-until-authorized-unlocked-conversation-deletion",
+          "status": "PASS"
+        },
+        {
+          "name": "delayed-native-ready-commit-denies-deletion-tombstone-and-cleans-storage",
+          "status": "PASS"
+        },
+        {
+          "name": "crash-between-store-and-stage-owned-marker-orphan-cleanup",
+          "status": "PASS"
+        },
+        {
+          "name": "cancelled-native-staged-job-never-ready-and-removes-bytes",
+          "status": "PASS"
+        }
+      ]
+    },
+    {
+      "phase": "native-private-input1",
+      "status": "ACTUAL_PRIVATE_MATERIALIZATION_PASS_NOT_PROVIDER_DISPATCH_QUALIFICATION",
+      "groups": [
+        {
+          "name": "exact-private-PNG-frame-bytes-and-current-scope-materialization",
+          "status": "PASS"
+        },
+        {
+          "name": "delivery-eligible-image-denied-by-separate-encoded-provider-cap",
+          "status": "PASS"
+        }
+      ]
+    },
+    {
+      "phase": "native-media-commission1",
+      "status": "ACTUAL_NATIVE_REQUEST_RECORDED_CAPABILITY_OR_TERMINAL_UNRESOLVED",
+      "groups": [
+        {
+          "name": "noJWT-admin-internal-commissioning-unreachable",
+          "status": "PASS"
+        },
+        {
+          "name": "ordinaryBearer-admin-internal-commissioning-unreachable",
+          "status": "PASS"
+        },
+        {
+          "name": "actual-private-frame-exact-native-wire-reserved-before-single-start",
+          "status": "PASS"
+        },
+        {
+          "name": "same-request-unknown-or-inflight-not-resubmitted",
+          "status": "PASS"
+        }
+      ]
+    },
+    {
+      "phase": "native-media-sync1",
+      "status": "ACTUAL_R6_SYNC_PRIVATE_PROVIDER_MATERIALIZATION_PASS",
+      "groups": [
+        {
+          "name": "noJWT-sync-admin-internal-denied",
+          "status": "PASS"
+        },
+        {
+          "name": "ordinaryBearer-sync-admin-internal-denied",
+          "status": "PASS"
+        },
+        {
+          "name": "genuine-sync-private-input-video-product-store-and-authorized-hash-MIME-delivery",
+          "status": "PASS"
+        }
+      ]
+    }
+  ],
+  "requirements": [
+    {
+      "number": 1,
+      "evidence": [
+        "native-lifecycle1-outcomes.json",
+        "native-lifecycle2-outcomes.json",
+        "native-media-sync1-outcomes.json"
+      ],
+      "observed": "Versioned artifact/attachment/real Agent file ownership; first-class331153B video catalog metadata/provenance; retained versions survive independent attachment removal."
+    },
+    {
+      "number": 2,
+      "evidence": [
+        "native-boundary1-outcomes.json"
+      ],
+      "observed": "Real20000000B upload/download;20000001B SDK preflight and chunked HTTP413; generated oversize rejected before ready. No external fallback."
+    },
+    {
+      "number": 3,
+      "evidence": [
+        "native-delivery1-outcomes.json",
+        "native-media-sync1-outcomes.json"
+      ],
+      "observed": "Installed runtime helper uses authenticated HTTP and bounded local blobs. NoJWT401/own-only peer403/foreign403; current revoked viewer403; no bearer storage URL."
+    },
+    {
+      "number": 4,
+      "evidence": [
+        "native-delivery1-outcomes.json",
+        "native-lifecycle1-outcomes.json",
+        "native-lifecycle2-outcomes.json",
+        "cleanup12-outcomes.json"
+      ],
+      "observed": "Same-key ready replay preserves IDs/counts; changed body conflicts. History/undo references retained; final-owner and Agent deletion remove bytes; delayed tombstone/cancel/orphan jobs clean up. Final asset bytes0/jobs0."
+    },
+    {
+      "number": 5,
+      "evidence": [
+        "native-lifecycle1-outcomes.json",
+        "native-media-sync1-outcomes.json"
+      ],
+      "observed": "Exact versionId/contentHash/MIME/size and original sourceVersionIds retained in metadata. Actual undo/redo/history/getVersion fileRefs match immutable versions. No OCR/caption/visual embedding implementation."
+    },
+    {
+      "number": 6,
+      "evidence": [
+        "native-private-input1-outcomes.json",
+        "native-media-commission1-outcomes.json",
+        "native-media-sync1-outcomes.json"
+      ],
+      "observed": "Private PNG1496B current access/materialization and separate16MiB encoded input cap qualified; one async request503 not configured; a distinct sync request returned genuine MP4, stored once and privately delivered with exact hash/MIME/revocation."
+    }
+  ],
+  "privateInput": {
+    "trust": "Private exact-object fixture-synthetic operator qualification allowance, not installed production trust",
+    "requestedModelId": "google/veo-3.1",
+    "servingModelObserved": false,
+    "aggregateCostAvailable": false,
+    "firstFrameBytes": 1496,
+    "firstFrameHash": "4640525b89e35129d3d00cf185097ae2730ec5c2f4822a5e118f7366592b1a2f",
+    "async": {
+      "nativeRequests": 1,
+      "status": 503,
+      "error": "Asynchronous video generation is not configured",
+      "operationHandle": false,
+      "confirmedModelCalls": null,
+      "fullUnknownUnits": 2000000,
+      "sameIdentityNewRequests": 0
+    },
+    "sync": {
+      "distinctSemanticKey": true,
+      "nativeRequests": 1,
+      "confirmedModelCalls": 1,
+      "status": 200,
+      "bodyBytes": 2317,
+      "admittedTimeoutMs": 180000,
+      "controllerDeadlineMs": 200000,
+      "maximumStreamedNativeEncodedResponseBytes": 28000000,
+      "maximumDecodedAssetBytes": 20000000,
+      "privateLedgerSummaryCapBytes": 60000,
+      "videoBytes": 331153,
+      "videoHash": "f06a405fdb7f3b750c6ec4408781f7a29d87bbc13b73abc2a437bf20eedf6bbb",
+      "mimeType": "video/mp4",
+      "generatedAsset": {
+        "assetId": "asset:274a35a0407b040f3a8cd07ff873f7358a5ca029bfda6a61c90a541450be9483",
+        "assetVersion": 1,
+        "contentHash": "f06a405fdb7f3b750c6ec4408781f7a29d87bbc13b73abc2a437bf20eedf6bbb",
+        "lineage": {
+          "kind": "generated",
+          "modelId": "google/veo-3.1",
+          "operationId": "e3fed732db186f536e9b9205c75eff2ce40cb99b0c972dd6f0fb0e31d95c7c0d",
+          "sourceVersionIds": [
+            "asset:b3fad60f0975caf1420fe9615586f34481e1c0e8ef6923c49d3de3899cb335ad:version:1"
+          ]
+        },
+        "mediaKind": "video",
+        "mimeType": "video/mp4",
+        "sizeBytes": 331153,
+        "version": 1,
+        "versionId": "asset:274a35a0407b040f3a8cd07ff873f7358a5ca029bfda6a61c90a541450be9483:version:1"
+      },
+      "sameIdentityNewRequests": 0,
+      "fullUnknownUnits": 2000000
+    },
+    "genericLedgerVideoResult": false,
+    "ledgerByteReplay": false,
+    "shippedVideoQualification": false,
+    "Task13AsyncAvailability": false
+  },
+  "financialCleanup": {
+    "totalRetainedUnits": 4500000,
+    "priorTask10Units": 500000,
+    "financialHeldSlots": 2,
+    "slotsReleased": false,
+    "genuineTerminalEvidenceRequiredForRelease": true,
+    "scopeRestored": false,
+    "refundOrReset": false,
+    "recoveryReceipt": "retired-liability-recovery1-outcomes.json",
+    "recoveryInterpretation": "recovery-interpretation1.json"
+  },
+  "cleanup": {
+    "receipt": "cleanup12-outcomes.json",
+    "command": "cleanup12-command.json",
+    "assetStorageRemaining": 0,
+    "activeAssetJobs": 0,
+    "retiredScopeCount": 3,
+    "deletedPrincipalCount": 5,
+    "ownedClientsAndProcessesClosed": true,
+    "hostPreserved": true,
+    "targetRetired": false,
+    "retainedFor": "Task13/final",
+    "handoff": "retained-for-task13-handoff1.json"
+  },
+  "commands": [
+    {
+      "file": "build-cli-current1.json",
+      "pid": 70378,
+      "exitCode": 0,
+      "signal": null,
+      "elapsedMs": 2626,
+      "deadlineMs": 120000,
+      "cleanupReserveMs": null,
+      "timedOut": false,
+      "childClosed": true
+    },
+    {
+      "file": "build-sdk-current1.json",
+      "pid": 70199,
+      "exitCode": 0,
+      "signal": null,
+      "elapsedMs": 19918,
+      "deadlineMs": 120000,
+      "cleanupReserveMs": null,
+      "timedOut": false,
+      "childClosed": true
+    },
+    {
+      "file": "cleanup12-command.json",
+      "pid": 79261,
+      "exitCode": 0,
+      "signal": null,
+      "elapsedMs": 5077,
+      "deadlineMs": 120000,
+      "cleanupReserveMs": 5000,
+      "timedOut": false,
+      "childClosed": true
+    },
+    {
+      "file": "deploy-current1.json",
+      "pid": 71882,
+      "exitCode": 0,
+      "signal": null,
+      "elapsedMs": 12776,
+      "deadlineMs": 120000,
+      "cleanupReserveMs": null,
+      "timedOut": false,
+      "childClosed": true
+    },
+    {
+      "file": "deploy-sync1.json",
+      "pid": 76919,
+      "exitCode": 0,
+      "signal": null,
+      "elapsedMs": 10472,
+      "deadlineMs": 120000,
+      "cleanupReserveMs": null,
+      "timedOut": false,
+      "childClosed": true
+    },
+    {
+      "file": "install-packages-current1.json",
+      "pid": 71709,
+      "exitCode": 0,
+      "signal": null,
+      "elapsedMs": 1827,
+      "deadlineMs": 120000,
+      "cleanupReserveMs": null,
+      "timedOut": false,
+      "childClosed": true
+    },
+    {
+      "file": "native-boundary1-command.json",
+      "pid": 72549,
+      "exitCode": 0,
+      "signal": null,
+      "elapsedMs": 7929,
+      "deadlineMs": 300000,
+      "cleanupReserveMs": 5000,
+      "timedOut": false,
+      "childClosed": true
+    },
+    {
+      "file": "native-delivery1-command.json",
+      "pid": 72336,
+      "exitCode": 0,
+      "signal": null,
+      "elapsedMs": 7027,
+      "deadlineMs": 180000,
+      "cleanupReserveMs": 5000,
+      "timedOut": false,
+      "childClosed": true
+    },
+    {
+      "file": "native-lifecycle1-command.json",
+      "pid": 72717,
+      "exitCode": 1,
+      "signal": null,
+      "elapsedMs": 17317,
+      "deadlineMs": 180000,
+      "cleanupReserveMs": 5000,
+      "timedOut": false,
+      "childClosed": true
+    },
+    {
+      "file": "native-lifecycle2-command.json",
+      "pid": 73458,
+      "exitCode": 0,
+      "signal": null,
+      "elapsedMs": 5801,
+      "deadlineMs": 180000,
+      "cleanupReserveMs": 5000,
+      "timedOut": false,
+      "childClosed": true
+    },
+    {
+      "file": "native-media-commission1-command.json",
+      "pid": 74054,
+      "exitCode": 0,
+      "signal": null,
+      "elapsedMs": 3655,
+      "deadlineMs": 180000,
+      "cleanupReserveMs": 5000,
+      "timedOut": false,
+      "childClosed": true
+    },
+    {
+      "file": "native-media-metadata1-command.json",
+      "pid": 72265,
+      "exitCode": 0,
+      "signal": null,
+      "elapsedMs": 708,
+      "deadlineMs": 60000,
+      "cleanupReserveMs": 5000,
+      "timedOut": false,
+      "childClosed": true
+    },
+    {
+      "file": "native-media-sync1-command.json",
+      "pid": 77449,
+      "exitCode": 0,
+      "signal": null,
+      "elapsedMs": 70469,
+      "deadlineMs": 200000,
+      "cleanupReserveMs": 5000,
+      "timedOut": false,
+      "childClosed": true
+    },
+    {
+      "file": "native-private-input1-command.json",
+      "pid": 73709,
+      "exitCode": 0,
+      "signal": null,
+      "elapsedMs": 5757,
+      "deadlineMs": 180000,
+      "cleanupReserveMs": 5000,
+      "timedOut": false,
+      "childClosed": true
+    },
+    {
+      "file": "pack-cli-current1.json",
+      "pid": 70510,
+      "exitCode": 0,
+      "signal": null,
+      "elapsedMs": 839,
+      "deadlineMs": 120000,
+      "cleanupReserveMs": null,
+      "timedOut": false,
+      "childClosed": true
+    },
+    {
+      "file": "pack-sdk-current1.json",
+      "pid": 70461,
+      "exitCode": 0,
+      "signal": null,
+      "elapsedMs": 1081,
+      "deadlineMs": 120000,
+      "cleanupReserveMs": null,
+      "timedOut": false,
+      "childClosed": true
+    },
+    {
+      "file": "provider-types-current1.json",
+      "pid": 70346,
+      "exitCode": 0,
+      "signal": null,
+      "elapsedMs": 1407,
+      "deadlineMs": 120000,
+      "cleanupReserveMs": null,
+      "timedOut": false,
+      "childClosed": true
+    },
+    {
+      "file": "retired-liability-recovery1-command.json",
+      "pid": 81897,
+      "exitCode": 0,
+      "signal": null,
+      "elapsedMs": 1677,
+      "deadlineMs": 60000,
+      "cleanupReserveMs": 5000,
+      "timedOut": false,
+      "childClosed": true
+    },
+    {
+      "file": "setup-scopes1-command.json",
+      "pid": 72178,
+      "exitCode": 0,
+      "signal": null,
+      "elapsedMs": 1543,
+      "deadlineMs": 120000,
+      "cleanupReserveMs": 5000,
+      "timedOut": false,
+      "childClosed": true
+    },
+    {
+      "file": "unpack-sdk-current1.json",
+      "pid": 70516,
+      "exitCode": 0,
+      "signal": null,
+      "elapsedMs": 46,
+      "deadlineMs": 120000,
+      "cleanupReserveMs": null,
+      "timedOut": false,
+      "childClosed": true
+    }
+  ],
+  "preservedFailures": [
+    {
+      "file": "closure-writer-preparation-failure1.json",
+      "scope": "Local report projection corrected the recorded closed field spelling; no native effects."
+    },
+    {
+      "file": "../cli-http1/runner1-failure.json",
+      "scope": "Early tooling runner failure before target effects."
+    },
+    {
+      "file": "media-manifest-preparation-failure1.json",
+      "scope": "Local assumption of standalone registry literal failed before effects; successor imported exact packed pure registry."
+    },
+    {
+      "file": "native-lifecycle1-outcomes.json",
+      "scope": "Four completed real positives then TRANSCRIPT_LOCKED from default manual-write policy. Successor explicitly unlocked the same owned conversation before deletion, no product change."
+    },
+    {
+      "file": "native-media-commission1-outcomes.json",
+      "scope": "Official async503; unknown attempt never resubmitted. Sync is distinct semantic/input deadline, not retry/relabel."
+    }
+  ],
+  "controlledEvidence": [
+    "../author/report1.json",
+    "../cli-http1/source-report1.json",
+    "../root-client1/checks4.json",
+    "../root-media-admission1/source-ready1.json",
+    "../root-client1/packed-contracts1.json"
+  ],
+  "limits": [
+    "No independent original-task acceptance is fabricated by this executor report.",
+    "No serving-model or aggregate USD charge is inferred from the requested constructor model or successful response.",
+    "No generic accepted video settlement, replayable ledger video bytes, production qualification or Task13 async availability is claimed.",
+    "Retained financial slots and target are explicit outstanding lifecycle resources; final goal retirement remains required."
+  ]
+}

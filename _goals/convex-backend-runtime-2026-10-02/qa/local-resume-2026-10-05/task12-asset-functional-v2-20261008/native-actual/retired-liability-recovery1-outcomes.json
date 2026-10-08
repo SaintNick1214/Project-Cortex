@@ -1,0 +1,32 @@
+{
+  "status": "ACTUAL_EXISTING_RECOVERY_UNREACHABLE_AFTER_SCOPE_RETIREMENT",
+  "groups": [
+    {
+      "tenantId": "task12-9e4db003a78b",
+      "attemptId": "qd70b9bq7x251nw1522jyp606s8fxkc8",
+      "actuallyExpired": true,
+      "code": "FORBIDDEN",
+      "activeConcurrency": 1,
+      "uncertainUnits": 2000000,
+      "slotReleased": false
+    },
+    {
+      "tenantId": "task12-9e4db003a78b-sync",
+      "attemptId": "qd7fw10wfg59e0vtzbq05mz3dh8fw6wc",
+      "actuallyExpired": true,
+      "code": "FORBIDDEN",
+      "activeConcurrency": 1,
+      "uncertainUnits": 2000000,
+      "slotReleased": false
+    }
+  ],
+  "modelCalls": 0,
+  "scopeRestored": false,
+  "noInventedTerminal": true,
+  "heldFinancialSlots": 2,
+  "mediaLiabilityUnits": 4000000,
+  "priorTask10LiabilityUnits": 500000,
+  "totalRetainedUnits": 4500000,
+  "currentSourceBehavior": "recover requires current admin authority; absent a genuine receipt, a checkpointed uncertain attempt is writeUnknown without slot release. No deadline branch exists.",
+  "supportedLaterRecovery": "Deployment-only reconcileDeploymentLiability accepts genuine terminal receiptCanonical for immutable original operation/window; Task13 must extend typed media terminal/accounting or add a reviewed cleanup-only deadline fence before these slots can be reclaimed."
+}

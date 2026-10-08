@@ -26,7 +26,7 @@ export interface CutoffV1 {
 }
 export interface PublicTranscriptMessage extends TranscriptPosition {
   id: string; role: "user" | "assistant" | "tool"; parts: { type: "text"; text: string }[];
-  status: "pending" | "success" | "failed"; revision: number;
+  status: "pending" | "success" | "failed"; revision: number; assets?: import("./assets.js").RuntimeAssetVersion[];
 }
 
 function invalid(): never { throw new Error("INVALID_INPUT: invalid text submission"); }

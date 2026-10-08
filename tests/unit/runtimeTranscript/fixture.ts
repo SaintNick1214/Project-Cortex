@@ -94,7 +94,8 @@ export class TranscriptDb {
           gt: (key: string, value: number | string) => { filters.push(row => (field(row, key) as typeof value) > value); return q; },
           lte: (key: string, value: number) => { filters.push(row => (field(row, key) as number) <= value); return q; } };
         callback(q);
-        keys = table === "runtimeGraphDependencies" && name === "by_upstream" ? ["dependentSourceId"]
+        keys = table === "runtimeAssetReferences" && name === "by_owner" ? ["ownerVersion"]
+          : table === "runtimeGraphDependencies" && name === "by_upstream" ? ["dependentSourceId"]
           : table === "runtimeGraphSources" ? name === "by_tenant_source" ? ["memorySpaceId"] : ["tenantId", "memorySpaceId", "sourceId"]
           : name === "by_scope_revision" ? ["revision"] : name === "by_queue" ? ["revision", "createdAt"] : name === "by_scope_sequence" || name === "by_owner_sequence" ? ["sequence"] : name === "by_scoped_version" ? ["version"] : name === "by_conversation_status" || name === "by_conversation_queue" || name === "by_conversation" ? ["queueSequence", "sequence"] : name === "by_conversation_position" ? ["order", "stepOrder"] : [];
         return builder;

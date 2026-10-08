@@ -7,6 +7,7 @@ import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import ts from "typescript";
+import { httpActionGeneric, httpRouter, type HttpRouter } from "convex/server";
 import { applyAdditiveBackendInstallation, BackendMergeRequiredError, installAdditiveBackend, planAdditiveBackendInstallation } from "../init/additive-backend.js";
 import { createConvexJson } from "../init/file-operations.js";
 
@@ -33,6 +34,30 @@ beforeEach(async () => {
 afterEach(async () => { jest.restoreAllMocks(); await fs.remove(root); });
 async function put(name: string, text: string) { await fs.outputFile(path.join(host, name), text); }
 async function read(name: string) { return fs.readFile(path.join(host, name), "utf8"); }
+const assetRouteNames = ["POST /cortex/assets/upload", "GET /cortex/assets/download", "OPTIONS /cortex/assets/upload", "OPTIONS /cortex/assets/download"];
+async function addHttpDistribution(routeNames = assetRouteNames, helperText?: string) {
+  const helper = helperText ?? 'import type { HttpRouter } from "convex/server"; import { upload, download, preflight } from "../runtimeAssetsHttp";\nexport function registerCortexHttpRoutesV1(router: HttpRouter) {\n' + assetRouteNames.map(key => {
+    const [method, routePath] = key.split(" ");
+    return `router.route({ method: ${JSON.stringify(method)}, path: ${JSON.stringify(routePath)}, handler: ${method === "OPTIONS" ? "preflight" : method === "POST" ? "upload" : "download"} });\n`;
+  }).join("") + "}\n";
+  await fs.outputFile(path.join(sdk, "dist/backend/v1/_cortex/http.ts"), helper);
+  const manifest = await fs.readJson(path.join(sdk, "dist/backend/v1/manifest.json"));
+  manifest.files.push({ path: "_cortex/http.ts", sha256: hash(helper) }); manifest.httpRoutes = routeNames;
+  await fs.writeJson(path.join(sdk, "dist/backend/v1/manifest.json"), manifest);
+}
+/** Execute the installed composition against Convex's real router, without a deployment. */
+async function installedHttpRouter(relative = "convex/http.ts"): Promise<HttpRouter> {
+  const handler = httpActionGeneric(async () => new Response("fixture"));
+  const evaluate = (text: string, required: (name: string) => unknown): Record<string, unknown> => {
+    const output = ts.transpileModule(text, { compilerOptions: { module: ts.ModuleKind.CommonJS } }).outputText;
+    const exports: Record<string, unknown> = {};
+    new Function("require", "exports", output)(required, exports);
+    return exports;
+  };
+  const helper = evaluate(await fs.readFile(path.join(sdk, "dist/backend/v1/_cortex/http.ts"), "utf8"), () => ({ upload: handler, download: handler, preflight: handler }));
+  const exports = evaluate(await read(relative), name => name === "convex/server" ? { httpRouter, httpActionGeneric } : helper);
+  return exports.default as HttpRouter;
+}
 describe("additive backend installation", () => {
   it("registers a fresh host with explicit verified JWT settings and keeps runtime directives", async () => {
     const result = await installAdditiveBackend(host, sdk, { trustedJwtProvider: provider });
@@ -206,6 +231,110 @@ describe("additive backend installation", () => {
     const value = '{ "functions": "custom/", "node": { "externalPackages": ["host"] } }\n';
     await put("convex.json", value); await createConvexJson(host);
     expect(await read("convex.json")).toBe(value);
+  });
+});
+describe("additive authenticated HTTP routes", () => {
+  it("installs a fresh real Convex router and retries without duplicate routes or writes", async () => {
+    await addHttpDistribution();
+    const first = await installAdditiveBackend(host, sdk);
+    expect(first.installed).toContain("convex/http.ts");
+    const router = await installedHttpRouter();
+    expect(router.getRoutes().map(([routePath, method]) => `${method} ${routePath}`).sort()).toEqual([...assetRouteNames].sort());
+    const original = await read("convex/http.ts");
+    expect((await installAdditiveBackend(host, sdk)).installed).toEqual([]);
+    expect(await read("convex/http.ts")).toBe(original);
+  });
+  it("preserves custom host HTTP handlers and permits a different method on the same path", async () => {
+    await addHttpDistribution();
+    await put("convex.json", '{"functions":"custom/backend/"}\n');
+    const original = 'import { httpRouter as makeRouter, httpActionGeneric } from "convex/server";\nconst hostHttp = makeRouter();\n// host route and handler remain owned by the host\nhostHttp.route({ path: "/host-health", method: "GET", handler: httpActionGeneric(async () => new Response("host-preserved")) });\nhostHttp.route({ path: "/cortex/assets/download", method: "POST", handler: httpActionGeneric(async () => new Response("host-post")) });\nexport default hostHttp;\n';
+    await put("custom/backend/http.ts", original);
+    const plan = await planAdditiveBackendInstallation(host, sdk);
+    expect(plan.conflicts).toEqual([]);
+    await applyAdditiveBackendInstallation(plan);
+    const installed = await read("custom/backend/http.ts");
+    expect(installed.replace('import { registerCortexHttpRoutesV1 } from "./_cortex/http";\n', "").replace("registerCortexHttpRoutesV1(hostHttp);\n", "")).toBe(original);
+    expect(await read(`custom/backend/http.ts.cortex-v1-before-${hash(original)}.txt`)).toBe(original);
+    const router = await installedHttpRouter("custom/backend/http.ts");
+    expect(router.getRoutes().map(([routePath, method]) => `${method} ${routePath}`).sort()).toEqual([...assetRouteNames, "GET /host-health", "POST /cortex/assets/download"].sort());
+    expect((await installAdditiveBackend(host, sdk)).installed).toEqual([]);
+  });
+  it.each([
+    ['http.route({ path: "/cortex/assets/download", method: "GET", handler: host });', "conflicts"],
+    ['http.route({ pathPrefix: "/cortex/", method: "GET", handler: host });', "conflicts"],
+    ['http.route({ pathPrefix: "/", method: "OPTIONS", handler: host });', "conflicts"],
+    ['http.route({ path: hostPath, method: "GET", handler: host });', "literal"],
+    ['http.route({ path: "/host", method: hostMethod, handler: host });', "literal"],
+    ['http.route({ ...hostRoute });', "Dynamic"],
+    ['const alias = http; alias.route({ path: "/host", method: "GET", handler: host });', "Aliased"],
+    ['auth.addHttpRoutes(http);', "Aliased"],
+    ['if (enabled) http.route({ path: "/host", method: "GET", handler: host });', "Nested"],
+    ['const registerCortexHttpRoutesV1 = () => {};', "Host binding"],
+  ])("refuses ambiguous or overlapping host HTTP before any installation write", async (route, reason) => {
+    await addHttpDistribution();
+    const original = `import { httpRouter } from "convex/server"; const http = httpRouter(); ${route}\nexport default http;\n`;
+    await put("convex/http.ts", original);
+    const plan = await planAdditiveBackendInstallation(host, sdk);
+    expect(plan.conflicts).toContainEqual(expect.objectContaining({ path: "convex/http.ts", reason: expect.stringContaining(reason), currentContent: original }));
+    await expect(applyAdditiveBackendInstallation(plan)).rejects.toBeInstanceOf(BackendMergeRequiredError);
+    expect(await read("convex/http.ts")).toBe(original);
+    expect(await fs.pathExists(path.join(host, "convex/_cortex/http.ts"))).toBe(false);
+    expect(await fs.pathExists(path.join(host, "convex/runs.ts"))).toBe(false);
+  });
+  it.each([
+    'import { registerCortexHttpRoutesV1 } from "./foreign"; registerCortexHttpRoutesV1(http);',
+    'import { registerCortexHttpRoutesV1 } from "./_cortex/http"; registerCortexHttpRoutesV1(http); registerCortexHttpRoutesV1(http);',
+    'import { registerCortexHttpRoutesV1 } from "./_cortex/http"; function later() { registerCortexHttpRoutesV1(http); }',
+  ])("rejects wrong, duplicate or deferred managed registration without adopting it", async registration => {
+    await addHttpDistribution();
+    const original = `import { httpRouter } from "convex/server"; const http = httpRouter();\n${registration}\nexport default http;\n`;
+    await put("convex/http.ts", original);
+    await expect(installAdditiveBackend(host, sdk)).rejects.toBeInstanceOf(BackendMergeRequiredError);
+    expect(await read("convex/http.ts")).toBe(original);
+  });
+  it.each([
+    [assetRouteNames.slice(1), undefined],
+    [[], undefined],
+    [[...assetRouteNames, assetRouteNames[0]], undefined],
+    [assetRouteNames, 'export function registerCortexHttpRoutesV1(router: unknown) { registerDynamic(router); }'],
+  ])("requires the digest-checked static helper to match every manifest route before writes", async (names, helper) => {
+    await addHttpDistribution(names, helper);
+    await expect(installAdditiveBackend(host, sdk)).rejects.toThrow(/HTTP/);
+    expect(await fs.pathExists(path.join(host, "convex"))).toBe(false);
+  });
+  it("rejects computed helper handlers instead of executing arbitrary router mutations", async () => {
+    const helper = 'export function registerCortexHttpRoutesV1(router: unknown) { router.route({path:"/cortex/assets/upload",method:"POST",handler:mutate(router)}); }';
+    await addHttpDistribution([assetRouteNames[0]], helper);
+    await expect(installAdditiveBackend(host, sdk)).rejects.toThrow("direct static runtimeAssetsHttp imports");
+    expect(await fs.pathExists(path.join(host, "convex"))).toBe(false);
+  });
+  it("retains host HTTP after atomic write failure and recovers a partial install once", async () => {
+    await addHttpDistribution();
+    const original = 'import { httpRouter } from "convex/server"; const http = httpRouter(); export default http;\n';
+    await put("convex/http.ts", original);
+    const write = fs.writeFile.bind(fs);
+    const failure = jest.spyOn(fs, "writeFile").mockImplementation(async (...args: Parameters<typeof fs.writeFile>) => {
+      if (String(args[0]).includes("http.ts.cortex-v1-") && String(args[0]).endsWith(".tmp")) throw new Error("injected HTTP write failure");
+      return write(...args);
+    });
+    await expect(installAdditiveBackend(host, sdk)).rejects.toThrow("injected HTTP write failure");
+    expect(await read("convex/http.ts")).toBe(original);
+    expect((await fs.readdir(path.join(host, "convex"))).some(name => name.endsWith(".tmp"))).toBe(false);
+    failure.mockRestore();
+    const retry = await installAdditiveBackend(host, sdk);
+    expect(retry.unchanged).toContain("convex/_cortex/http.ts");
+    expect(retry.installed).toContain("convex/http.ts");
+    expect((await installedHttpRouter()).getRoutes()).toHaveLength(4);
+    expect((await installAdditiveBackend(host, sdk)).installed).toEqual([]);
+  });
+  it("checks the host HTTP preimage before installing any source", async () => {
+    await addHttpDistribution();
+    await put("convex/http.ts", 'import { httpRouter } from "convex/server"; const http = httpRouter(); export default http;');
+    const plan = await planAdditiveBackendInstallation(host, sdk);
+    await put("convex/http.ts", "// changed by host after planning\n");
+    await expect(applyAdditiveBackendInstallation(plan)).rejects.toThrow("changed after installation planning");
+    expect(await fs.pathExists(path.join(host, "convex/_cortex/http.ts"))).toBe(false);
+    expect(await read("convex/http.ts")).toBe("// changed by host after planning\n");
   });
 });
 

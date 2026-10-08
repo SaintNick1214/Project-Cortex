@@ -1,3 +1,4 @@
+import type { RuntimeAssetVersion } from "../domain/assets";
 /**
  * Cortex SDK - TypeScript Types
  */
@@ -3306,6 +3307,7 @@ export type ArtifactKind =
   | "text" // Plain text, markdown, prose documents
   | "code" // Source code with syntax highlighting
   | "sheet" // Tabular/spreadsheet data (JSON array format)
+  | "video" // Generated video backed by an immutable private asset
   | "image" // Generated/edited images (stored in file storage)
   | "diagram" // Mermaid, SVG, or structured diagrams
   | "html" // Interactive HTML/React components
@@ -3348,6 +3350,10 @@ export interface FileReference {
  * Reference to file stored in Convex storage
  */
 export interface ArtifactFileRef {
+  /** Exact immutable catalog selectors for private byte delivery. */
+  assetId?: string;
+  versionId?: string;
+  assetVersion?: number;
   /** Convex storage ID */
   storageId: string;
   /** Content MIME type */
@@ -3823,6 +3829,8 @@ export interface AttachmentDimensions {
  * Attachment record representing a stored file
  */
 export interface Attachment {
+  /** Catalog metadata; storage IDs never confer private byte access. */
+  asset?: RuntimeAssetVersion;
   /** Internal Convex document ID */
   _id: string;
   /** Unique attachment identifier */

@@ -1,0 +1,12 @@
+{
+  "status": "LOCAL_PREPARATION_FAILED",
+  "command": "build-media-manifest1.mjs",
+  "exitCode": 1,
+  "nodeVersion": "24.15.0",
+  "error": "AssertionError: Compiled manifest must remain literal",
+  "cause": "The current accepted revision9 is a pure compiled composition of V5, including spread and map expressions, rather than a standalone literal.",
+  "sourcePreserved": "build-media-manifest1.mjs",
+  "targetEffects": 0,
+  "modelCalls": 0,
+  "successor": "build-media-manifest2.mjs"
+}

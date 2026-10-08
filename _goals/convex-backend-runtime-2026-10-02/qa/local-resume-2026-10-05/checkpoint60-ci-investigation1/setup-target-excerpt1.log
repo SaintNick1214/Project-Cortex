@@ -1,0 +1,32 @@
+2026-10-08T22:07:34.4949224Z Complete job name: Deploy & Purge Database
+2026-10-08T22:08:52.1023762Z Cache restored successfully
+2026-10-08T22:09:03.4267271Z ##[group]Run npx convex deploy --yes
+2026-10-08T22:09:03.4267683Z npx convex deploy --yes
+2026-10-08T22:09:06.9556081Z ▌ Deploying code to deployment:
+2026-10-08T22:09:06.9557961Z ▌ [Production] nicholasgeil:ts-sdk-tests:production (prod) (dashboard: https://dashboard.convex.dev/t/nicholasgeil/ts-sdk-tests/stoic-octopus-477)
+2026-10-08T22:09:06.9636366Z - Deploying to ***...
+2026-10-08T22:09:21.9736265Z Pushing code to your Convex deployment...
+2026-10-08T22:09:22.8361467Z ✔ Deployed Convex functions to ***
+2026-10-08T22:09:24.7606893Z Downloading current deployment state...
+2026-10-08T22:09:38.4072468Z ##[group]Run echo "🧹 Purging all test data before parallel test execution..."
+2026-10-08T22:09:38.4073092Z echo "🧹 Purging all test data before parallel test execution..."
+2026-10-08T22:09:38.4073544Z npx tsx scripts/cleanup-test-data.ts
+2026-10-08T22:09:38.4226018Z 🧹 Purging all test data before parallel test execution...
+2026-10-08T22:09:38.9165823Z 🧹 Cleaning up test data from: ***
+2026-10-08T22:09:38.9461167Z 🧹 Starting comprehensive cleanup using admin:clearTable...
+2026-10-08T22:09:45.9866396Z ##[group]Run npx convex deploy --yes
+2026-10-08T22:09:45.9866761Z npx convex deploy --yes
+2026-10-08T22:09:46.9296358Z ▌ Deploying code to deployment:
+2026-10-08T22:09:46.9298225Z ▌ [Production] nicholasgeil:cli-tests:production (prod) (dashboard: https://dashboard.convex.dev/t/nicholasgeil/cli-tests/neat-mammoth-788)
+2026-10-08T22:09:46.9380044Z - Deploying to ***...
+2026-10-08T22:10:01.7233920Z Pushing code to your Convex deployment...
+2026-10-08T22:10:02.5599906Z ✔ Deployed Convex functions to ***
+2026-10-08T22:10:02.5885753Z ##[group]Run echo "🧹 Purging CLI test database..."
+2026-10-08T22:10:02.5886247Z echo "🧹 Purging CLI test database..."
+2026-10-08T22:10:02.5886630Z npx tsx scripts/cleanup-test-data.ts
+2026-10-08T22:10:02.6031166Z 🧹 Purging CLI test database...
+2026-10-08T22:10:03.0291180Z 🧹 Cleaning up test data from: ***
+2026-10-08T22:10:03.0595857Z 🧹 Starting comprehensive cleanup using admin:clearTable...
+2026-10-08T22:10:09.4324974Z Post job cleanup.
+2026-10-08T22:10:09.5639068Z Post job cleanup.
+2026-10-08T22:10:09.8928797Z Cleaning up orphan processes

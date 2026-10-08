@@ -1,0 +1,94 @@
+{
+  "status": "PASS",
+  "effects": false,
+  "manifestSha256": "c5ee6ca36821e995913937b600a9d0e502a70107c2b598c953d0418a0948c935",
+  "sourcePins": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/src/domain/profile.ts",
+      "bytes": 4266,
+      "sha256": "45691e76e6f6727874b7f6285aa173b28059acf9ffaf7dc360360a72778f6972"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/src/domain/model-policy.ts",
+      "bytes": 28804,
+      "sha256": "7930cafb7b6f287c5a343c144c058b922a740ae42a1dc913f56066aa47407900"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/src/domain/media-input.ts",
+      "bytes": 2319,
+      "sha256": "0760135622b42e28fba2b18e544729278ffba838558c955842bb69879a61490e"
+    }
+  ],
+  "frameBytes": 1496,
+  "frameSha256": "4640525b89e35129d3d00cf185097ae2730ec5c2f4822a5e118f7366592b1a2f",
+  "nativeBodyBytes": 2294,
+  "nativeBodySha256": "388aa65955ec76ff67cbf79f9e05ad55c7b935c81d59f3125783855aab0f3981",
+  "scope": "PROVISIONAL_FIXED_OPERATOR_NOT_ACTUAL_QUALIFICATION",
+  "selected": {
+    "version": 1,
+    "operationKey": "media.video.generate",
+    "requestedModelId": "google/veo-3.1",
+    "modelId": "google/veo-3.1",
+    "nativeInterface": "video",
+    "capabilities": [
+      "video"
+    ],
+    "allowedModels": [
+      "google/veo-3.1"
+    ],
+    "allowedOptions": [],
+    "allowedTools": [],
+    "limits": {
+      "inputTokens": 8192,
+      "contextTokens": 16384,
+      "outputTokens": 1,
+      "toolSteps": 0,
+      "timeoutMs": 60000,
+      "operationBudgetUnits": 2000000,
+      "runBudgetUnits": 2000000,
+      "tenantBudgetUnits": 10000000,
+      "concurrency": 2
+    },
+    "pins": {
+      "promptVersion": "memory-schema-prompt-v2",
+      "schemaVersion": "facts-v1",
+      "extractionVersion": "task04-qualification-e1",
+      "toolRegistryVersion": "none-v1",
+      "priceRevision": "convex-gateway-2026-10-08-veo31-noaudio",
+      "boundRevision": "private-frame-video-8192-4s720p-v1"
+    },
+    "policyVersions": [
+      {
+        "policyId": "cortex-model-defaults-v9-task12-operator",
+        "version": 10
+      },
+      {
+        "policyId": "task12-operator-media-video",
+        "version": 10
+      }
+    ],
+    "qualificationReceiptId": "PROVISIONAL-task12-private-frame-9e4db003-a78b-4b11-af51-1d301d656649",
+    "costBound": {
+      "kind": "qualified-call-ceiling",
+      "maximumCostUnits": 2000000,
+      "provenance": "Fixed4s720p/no-audio/n1/private-first-frame; published video-only0.20USD/sec gives0.80USD;2USD conservative ceiling, no retries/fallback/other provider options",
+      "coversAllProviderCharges": true
+    },
+    "scope": {
+      "tenantId": "local-operator-validation",
+      "tenantEpoch": 1,
+      "memorySpaceId": "local-assets-validation",
+      "memorySpaceEpoch": 1,
+      "principalId": "local-fixed-operator",
+      "principalVersion": 1,
+      "membershipId": "local-membership",
+      "membershipVersion": 1,
+      "grantId": "local-grant",
+      "grantVersion": 1
+    },
+    "runBudgetId": "local-commission",
+    "fallbackCandidates": [],
+    "currency": "USD",
+    "monetaryUnit": "micro-USD"
+  }
+}

@@ -136,41 +136,18 @@ describe("AttachmentsAPI.generateUploadUrl", () => {
     api = new AttachmentsAPI(client as unknown as never, resilience as never);
   });
 
-  it("should generate upload URL successfully", async () => {
-    const mockUrl = "https://convex.cloud/upload/abc123";
-    client.mutation.mockResolvedValue({ uploadUrl: mockUrl });
-
-    const result = await api.generateUploadUrl();
-
-    expect(result.uploadUrl).toBe(mockUrl);
-    expect(client.mutation).toHaveBeenCalledTimes(1);
+  it("requires the private HTTP upload API before transport", async () => {
+    await expect(api.generateUploadUrl()).rejects.toMatchObject({ code: "CAPABILITY_UNAVAILABLE" });
+    expect(client.mutation).not.toHaveBeenCalled(); expect(resilience.execute).not.toHaveBeenCalled();
   });
-
-  it("should pass tenant ID when auth context provided", async () => {
-    const authContext = { tenantId: "tenant-abc" };
-    const tenantApi = new AttachmentsAPI(
-      client as unknown as never,
-      resilience as never,
-      authContext as never
-    );
-    client.mutation.mockResolvedValue({ uploadUrl: "https://example.com" });
-
-    await tenantApi.generateUploadUrl();
-
-    const callArgs = client.mutation.mock.calls[0][1];
-    expect(callArgs.tenantId).toBe("tenant-abc");
+  it("tenant labels cannot enable a bearer upload URL", async () => {
+    const tenantApi = new AttachmentsAPI(client as unknown as never, resilience as never, { tenantId: "tenant-abc" } as never);
+    await expect(tenantApi.generateUploadUrl()).rejects.toMatchObject({ code: "CAPABILITY_UNAVAILABLE" });
+    expect(client.mutation).not.toHaveBeenCalled();
   });
-
-  it("should use resilience layer when available", async () => {
-    client.mutation.mockResolvedValue({ uploadUrl: "https://example.com" });
-
-    await api.generateUploadUrl();
-
-    expect(resilience.execute).toHaveBeenCalledTimes(1);
-    expect(resilience.execute).toHaveBeenCalledWith(
-      expect.any(Function),
-      "attachments:generateUploadUrl"
-    );
+  it("unavailable legacy URL never retries through resilience", async () => {
+    await expect(api.generateUploadUrl()).rejects.toMatchObject({ code: "CAPABILITY_UNAVAILABLE" });
+    expect(resilience.execute).not.toHaveBeenCalled();
   });
 });
 
@@ -394,19 +371,19 @@ describe("AttachmentsAPI.get", () => {
 
   it("should retrieve attachment by ID", async () => {
     const mockAttachment = createMockAttachment();
-    client.query.mockResolvedValue(mockAttachment);
+    client.mutation.mockResolvedValue(mockAttachment);
 
     const result = await api.get("attach-abc123");
 
     expect(result).toEqual(mockAttachment);
-    expect(client.query).toHaveBeenCalledWith(
+    expect(client.mutation).toHaveBeenCalledWith(
       expect.anything(),
       expect.objectContaining({ attachmentId: "attach-abc123" })
     );
   });
 
   it("should return null for non-existent attachment", async () => {
-    client.query.mockResolvedValue(null);
+    client.mutation.mockResolvedValue(null);
 
     const result = await api.get("non-existent");
 
@@ -419,7 +396,7 @@ describe("AttachmentsAPI.get", () => {
   modalities.forEach((modality) => {
     it(`should correctly parse ${modality} attachment`, async () => {
       const mockAttachment = createMockAttachment(MODALITY_TEST_DATA[modality]);
-      client.query.mockResolvedValue(mockAttachment);
+      client.mutation.mockResolvedValue(mockAttachment);
 
       const result = await api.get("attach-123");
 
@@ -449,25 +426,13 @@ describe("AttachmentsAPI.getUrl", () => {
     api = new AttachmentsAPI(client as unknown as never, resilience as never);
   });
 
-  it("should return signed download URL", async () => {
-    const mockUrl = "https://convex.cloud/download/signed-url-abc123";
-    client.query.mockResolvedValue({ url: mockUrl });
-
-    const result = await api.getUrl("attach-abc123");
-
-    expect(result).toBe(mockUrl);
-    expect(client.query).toHaveBeenCalledWith(
-      expect.anything(),
-      expect.objectContaining({ attachmentId: "attach-abc123" })
-    );
+  it("requires authenticated bounded bytes instead of a bearer URL", async () => {
+    await expect(api.getUrl("attach-abc123")).rejects.toMatchObject({ code: "CAPABILITY_UNAVAILABLE" });
+    expect(client.mutation).not.toHaveBeenCalled(); expect(resilience.execute).not.toHaveBeenCalled();
   });
-
-  it("should return null for non-existent attachment", async () => {
-    client.query.mockResolvedValue(null);
-
-    const result = await api.getUrl("non-existent");
-
-    expect(result).toBeNull();
+  it("unknown IDs cannot bypass the private delivery boundary", async () => {
+    await expect(api.getUrl("non-existent")).rejects.toMatchObject({ code: "CAPABILITY_UNAVAILABLE" });
+    expect(client.mutation).not.toHaveBeenCalled();
   });
 });
 
@@ -492,7 +457,7 @@ describe("AttachmentsAPI.list", () => {
       total: 2,
       hasMore: false,
     };
-    client.query.mockResolvedValue(mockResponse);
+    client.mutation.mockResolvedValue(mockResponse);
 
     const filter: ListAttachmentsFilter = { memorySpaceId: "space-123" };
     const result = await api.list(filter);
@@ -513,7 +478,7 @@ describe("AttachmentsAPI.list", () => {
         total: 1,
         hasMore: false,
       };
-      client.query.mockResolvedValue(mockResponse);
+      client.mutation.mockResolvedValue(mockResponse);
 
       const filter: ListAttachmentsFilter = {
         memorySpaceId: "space-123",
@@ -522,7 +487,7 @@ describe("AttachmentsAPI.list", () => {
       const result = await api.list(filter);
 
       expect(result.attachments[0].type).toBe(modality);
-      expect(client.query).toHaveBeenCalledWith(
+      expect(client.mutation).toHaveBeenCalledWith(
         expect.anything(),
         expect.objectContaining({ type: modality })
       );
@@ -535,7 +500,7 @@ describe("AttachmentsAPI.list", () => {
       total: 1,
       hasMore: false,
     };
-    client.query.mockResolvedValue(mockResponse);
+    client.mutation.mockResolvedValue(mockResponse);
 
     const filter: ListAttachmentsFilter = {
       memorySpaceId: "space-123",
@@ -543,7 +508,7 @@ describe("AttachmentsAPI.list", () => {
     };
     await api.list(filter);
 
-    expect(client.query).toHaveBeenCalledWith(
+    expect(client.mutation).toHaveBeenCalledWith(
       expect.anything(),
       expect.objectContaining({ conversationId: "conv-123" })
     );
@@ -555,7 +520,7 @@ describe("AttachmentsAPI.list", () => {
       total: 1,
       hasMore: false,
     };
-    client.query.mockResolvedValue(mockResponse);
+    client.mutation.mockResolvedValue(mockResponse);
 
     const filter: ListAttachmentsFilter = {
       memorySpaceId: "space-123",
@@ -563,7 +528,7 @@ describe("AttachmentsAPI.list", () => {
     };
     await api.list(filter);
 
-    expect(client.query).toHaveBeenCalledWith(
+    expect(client.mutation).toHaveBeenCalledWith(
       expect.anything(),
       expect.objectContaining({ messageId: "msg-456" })
     );
@@ -576,7 +541,7 @@ describe("AttachmentsAPI.list", () => {
       hasMore: true,
       cursor: "cursor-page2",
     };
-    client.query.mockResolvedValue(mockResponse);
+    client.mutation.mockResolvedValue(mockResponse);
 
     const filter: ListAttachmentsFilter = {
       memorySpaceId: "space-123",
@@ -590,7 +555,7 @@ describe("AttachmentsAPI.list", () => {
 
   it("should sort by createdAt ascending", async () => {
     const mockResponse = { attachments: [], total: 0, hasMore: false };
-    client.query.mockResolvedValue(mockResponse);
+    client.mutation.mockResolvedValue(mockResponse);
 
     const filter: ListAttachmentsFilter = {
       memorySpaceId: "space-123",
@@ -599,7 +564,7 @@ describe("AttachmentsAPI.list", () => {
     };
     await api.list(filter);
 
-    expect(client.query).toHaveBeenCalledWith(
+    expect(client.mutation).toHaveBeenCalledWith(
       expect.anything(),
       expect.objectContaining({ sortBy: "createdAt", sortOrder: "asc" })
     );
@@ -624,7 +589,7 @@ describe("AttachmentsAPI.getByConversation", () => {
       createMockAttachment({ conversationId: "conv-123", type: "image" }),
       createMockAttachment({ conversationId: "conv-123", type: "pdf", attachmentId: "attach-2" }),
     ];
-    client.query.mockResolvedValue(mockAttachments);
+    client.mutation.mockResolvedValue(mockAttachments);
 
     const result = await api.getByConversation("conv-123");
 
@@ -646,7 +611,7 @@ describe("AttachmentsAPI.getByMessage", () => {
     const mockAttachments = [
       createMockAttachment({ messageId: "msg-456", type: "image" }),
     ];
-    client.query.mockResolvedValue(mockAttachments);
+    client.mutation.mockResolvedValue(mockAttachments);
 
     const result = await api.getByMessage("msg-456");
 
@@ -670,7 +635,7 @@ describe("AttachmentsAPI.count", () => {
 
   it("should count all attachments in memory space", async () => {
     // Convex backend returns raw number
-    client.query.mockResolvedValue(42);
+    client.mutation.mockResolvedValue(42);
 
     const result = await api.count({ memorySpaceId: "space-123" });
 
@@ -682,11 +647,11 @@ describe("AttachmentsAPI.count", () => {
 
   modalities.forEach((modality) => {
     it(`should count ${modality} attachments`, async () => {
-      client.query.mockResolvedValue(10);
+      client.mutation.mockResolvedValue(10);
 
       await api.count({ memorySpaceId: "space-123", type: modality });
 
-      expect(client.query).toHaveBeenCalledWith(
+      expect(client.mutation).toHaveBeenCalledWith(
         expect.anything(),
         expect.objectContaining({ type: modality })
       );
@@ -803,17 +768,17 @@ describe("AttachmentsAPI Multi-Tenancy", () => {
     );
 
     // Test get
-    client.query.mockResolvedValue(createMockAttachment());
+    client.mutation.mockResolvedValue(createMockAttachment());
     await tenantApi.get("attach-123");
-    expect(client.query).toHaveBeenCalledWith(
+    expect(client.mutation).toHaveBeenCalledWith(
       expect.anything(),
       expect.objectContaining({ tenantId: "tenant-xyz" })
     );
 
     // Test list
-    client.query.mockResolvedValue({ attachments: [], total: 0, hasMore: false });
+    client.mutation.mockResolvedValue({ attachments: [], total: 0, hasMore: false });
     await tenantApi.list({ memorySpaceId: "space-1" });
-    expect(client.query).toHaveBeenCalledWith(
+    expect(client.mutation).toHaveBeenCalledWith(
       expect.anything(),
       expect.objectContaining({ tenantId: "tenant-xyz" })
     );

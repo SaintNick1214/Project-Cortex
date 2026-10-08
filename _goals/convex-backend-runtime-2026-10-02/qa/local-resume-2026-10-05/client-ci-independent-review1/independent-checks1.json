@@ -1,0 +1,116 @@
+{
+  "version": 1,
+  "scope": "BOUNDED_CLIENT_CI_WIRING_ONLY",
+  "node": "v24.15.0",
+  "sourceBefore": [
+    {
+      "path": "packages/vercel-ai-provider/package.json",
+      "bytes": 3647,
+      "sha256": "0928597847d183cdad71764e6d00a637f7b5ce59b952b0441b93b8c19a31d0f3"
+    },
+    {
+      "path": "packages/vercel-ai-provider/jest.config.js",
+      "bytes": 3036,
+      "sha256": "80ce126ba5a24eee2a511f1c2ed0be8a916c0b544d3d8140ee892759241167fa"
+    },
+    {
+      "path": "scripts/ci/verify-disposable-targets.mjs",
+      "bytes": 1807,
+      "sha256": "44b6f0d45b0a91d9b0134aaaacda7b680c0d05379b7843cccf9c4aa59f96d3b8"
+    },
+    {
+      "path": "scripts/ci/verify-disposable-targets.test.mjs",
+      "bytes": 2628,
+      "sha256": "5f74c63167b8a43445024e995a041a6a95f6e845b6a3ef9c556c801dfe9c597c"
+    },
+    {
+      "path": ".github/workflows/pr-checks.yml",
+      "bytes": 30725,
+      "sha256": "305b1cf741375f5f6e5bfa6a4f358830a01fe0b572afc19b71201aae7bc27007"
+    },
+    {
+      "path": ".github/workflows/security.yml",
+      "bytes": 9582,
+      "sha256": "a938597322dcb18eb329445934fb4f3eb16c6fedbf6b48c618e0505dbd6440ac"
+    },
+    {
+      "path": ".github/workflows/publish.yml",
+      "bytes": 3384,
+      "sha256": "eb125fccbfc4580673117b33ef21fed726c9c491e005b1f03dab0ae98f29a23d"
+    }
+  ],
+  "sourceAfter": [
+    {
+      "path": "packages/vercel-ai-provider/package.json",
+      "bytes": 3647,
+      "sha256": "0928597847d183cdad71764e6d00a637f7b5ce59b952b0441b93b8c19a31d0f3"
+    },
+    {
+      "path": "packages/vercel-ai-provider/jest.config.js",
+      "bytes": 3036,
+      "sha256": "80ce126ba5a24eee2a511f1c2ed0be8a916c0b544d3d8140ee892759241167fa"
+    },
+    {
+      "path": "scripts/ci/verify-disposable-targets.mjs",
+      "bytes": 1807,
+      "sha256": "44b6f0d45b0a91d9b0134aaaacda7b680c0d05379b7843cccf9c4aa59f96d3b8"
+    },
+    {
+      "path": "scripts/ci/verify-disposable-targets.test.mjs",
+      "bytes": 2628,
+      "sha256": "5f74c63167b8a43445024e995a041a6a95f6e845b6a3ef9c556c801dfe9c597c"
+    },
+    {
+      "path": ".github/workflows/pr-checks.yml",
+      "bytes": 30725,
+      "sha256": "305b1cf741375f5f6e5bfa6a4f358830a01fe0b572afc19b71201aae7bc27007"
+    },
+    {
+      "path": ".github/workflows/security.yml",
+      "bytes": 9582,
+      "sha256": "a938597322dcb18eb329445934fb4f3eb16c6fedbf6b48c618e0505dbd6440ac"
+    },
+    {
+      "path": ".github/workflows/publish.yml",
+      "bytes": 3384,
+      "sha256": "eb125fccbfc4580673117b33ef21fed726c9c491e005b1f03dab0ae98f29a23d"
+    }
+  ],
+  "sourceUnchanged": true,
+  "checks": [
+    {
+      "name": "guard-tests",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+        "--test",
+        "scripts/ci/verify-disposable-targets.test.mjs"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "code": 0,
+      "timedOut": false,
+      "elapsedMs": 395,
+      "stdout": "\u2714 accepts separately approved development selectors without returning keys (3.9765ms)\n\u2714 rejects unsafe deployment key class prod (0.492084ms)\n\u2714 rejects unsafe deployment key class preview (0.166542ms)\n\u2714 rejects unsafe deployment key class project (0.0915ms)\n\u2714 rejects unsafe deployment key class untyped-legacy-secret (0.096167ms)\n\u2714 rejects unsafe deployment key class dev (0.190791ms)\n\u2714 rejects unsafe deployment key class dev (0.118125ms)\n\u2714 rejects either production target before any SDK deployment can begin (0.2725ms)\n\u2714 requires an explicit administrator supplied disposable allowlist (0.140333ms)\n\u2714 rejects a valid dev key for another target (0.182292ms)\n\u2714 rejects target URL substitution (0.105416ms)\n\u2714 requires isolated SDK and CLI targets (0.095875ms)\n\u2139 tests 12\n\u2139 suites 0\n\u2139 pass 12\n\u2139 fail 0\n\u2139 cancelled 0\n\u2139 skipped 0\n\u2139 todo 0\n\u2139 duration_ms 159.933709\n",
+      "stderr": "",
+      "childClosed": true
+    },
+    {
+      "name": "workflow-order",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+        "--input-type=module",
+        "-e",
+        "import fs from 'node:fs'; import assert from 'node:assert/strict'; import yaml from 'js-yaml';\nconst paths=['.github/workflows/pr-checks.yml','.github/workflows/security.yml','.github/workflows/publish.yml']; const parsed=paths.map(path=>({path,doc:yaml.load(fs.readFileSync(path,'utf8'))}));\nconst steps=parsed[0].doc.jobs['setup-and-purge'].steps; const gi=steps.findIndex(s=>s.run==='node scripts/ci/verify-disposable-targets.mjs'); assert(gi>=0); const guard=steps[gi]; assert(!guard.if && !guard['continue-on-error']); for(const k of ['CORTEX_CI_DISPOSABLE_DEPLOYMENTS','CONVEX_URL','CONVEX_DEPLOY_KEY','CONVEX_URL_CLI','CONVEX_DEPLOY_KEY_CLI']) assert(guard.env[k]);\nconst effects=steps.flatMap((s,i)=> /convex deploy|cleanup-test-data/.test(s.run??'') ? [{i,name:s.name}] : []); assert.equal(effects.length,4); assert(effects.every(e=>e.i>gi));\nfor(const {doc} of parsed)for(const job of Object.values(doc.jobs))for(const s of job.steps??[])if(s.uses?.startsWith('actions/setup-node@'))assert.equal(s.with['node-version'],'24.15.0');\nfor(const {doc} of parsed)for(const job of Object.values(doc.jobs))for(const [i,s]of (job.steps??[]).entries())if(/npm ci/.test(s.run??'')){ const prefix=job.steps.slice(0,i+1).map(s=>s.run??'').join('\\n');assert(prefix.includes('npm install --global npm@12.2.0')); }\nconsole.log(JSON.stringify({yamlFiles:3,mandatoryGuardBeforeAllFourEffects:true,nodePins:'24.15.0',npmPins:'12.2.0',effects,liveServiceQualification:false}));"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "code": 0,
+      "timedOut": false,
+      "elapsedMs": 158,
+      "stdout": "{\"yamlFiles\":3,\"mandatoryGuardBeforeAllFourEffects\":true,\"nodePins\":\"24.15.0\",\"npmPins\":\"12.2.0\",\"effects\":[{\"i\":4,\"name\":\"Deploy Convex backend\"},{\"i\":6,\"name\":\"Purge test database\"},{\"i\":7,\"name\":\"Deploy CLI Convex backend\"},{\"i\":8,\"name\":\"Purge CLI test database\"}],\"liveServiceQualification\":false}\n",
+      "stderr": "",
+      "childClosed": true
+    }
+  ],
+  "serviceCalls": 0,
+  "buildInstallCalls": 0,
+  "createdAtUtc": "2026-10-08T23:24:00.280236+00:00"
+}

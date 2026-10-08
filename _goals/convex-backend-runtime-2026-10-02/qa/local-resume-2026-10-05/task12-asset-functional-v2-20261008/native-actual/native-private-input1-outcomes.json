@@ -1,0 +1,131 @@
+{
+  "status": "ACTUAL_PRIVATE_MATERIALIZATION_PASS_NOT_PROVIDER_DISPATCH_QUALIFICATION",
+  "groups": [
+    {
+      "name": "exact-private-PNG-frame-bytes-and-current-scope-materialization",
+      "status": "PASS",
+      "asset": {
+        "version": 1,
+        "assetId": "asset:216db556312b58b97e214a750a2f1350682f66356676438bf35c1e890ffd34ca",
+        "versionId": "asset:216db556312b58b97e214a750a2f1350682f66356676438bf35c1e890ffd34ca:version:1",
+        "assetVersion": 1,
+        "contentHash": "4640525b89e35129d3d00cf185097ae2730ec5c2f4822a5e118f7366592b1a2f",
+        "sizeBytes": 1496,
+        "mimeType": "image/png",
+        "mediaKind": "image",
+        "filename": "private-first-frame.png",
+        "lineage": {
+          "kind": "upload",
+          "requestId": "fixed-private-first-frame-9e4db003-a78b-4b11-af51-1d301d656649"
+        }
+      },
+      "protocol": "image-inline-v1",
+      "protocolBytes": 2071,
+      "privateEnvelopeSha256": "bae0251f1635cbab8617ba398da357714a0a9b5c4d9720299e3321747b1e012f",
+      "dataUriContainsNoUrl": true,
+      "ownPeer": {
+        "name": "ConvexError",
+        "message": "[Request ID: b047f23121af5d10] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Asset operation denied.\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at assetDenied (../../custom/backend/runtimeAssetCatalog.ts:13:183)\n    at authorizeAsset (../../custom/backend/runtimeAssetCatalog.ts:75:0)\n    at async handler (../../custom/backend/runtimeAssets.ts:151:13)\n\n    at async readPrivateProviderAsset (../../custom/backend/runtimeAssets.ts:142:50)\n",
+        "data": {
+          "code": "FORBIDDEN",
+          "message": "Asset operation denied.",
+          "outcome": "not_dispatched",
+          "retryable": false,
+          "version": 1
+        }
+      },
+      "foreign": {
+        "name": "ConvexError",
+        "message": "[Request ID: f63ed6a9961f444a] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Asset operation denied.\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at assetDenied (../../custom/backend/runtimeAssetCatalog.ts:13:183)\n    at handler (../../custom/backend/runtimeAssets.ts:150:417)\n\n    at async readPrivateProviderAsset (../../custom/backend/runtimeAssets.ts:142:50)\n",
+        "data": {
+          "code": "FORBIDDEN",
+          "message": "Asset operation denied.",
+          "outcome": "not_dispatched",
+          "retryable": false,
+          "version": 1
+        }
+      },
+      "wrongProtocol": {
+        "name": "ConvexError",
+        "message": "[Request ID: 7515a3d2acf764df] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"PROVIDER_INPUT_UNSUPPORTED\",\"message\":\"Asset operation denied.\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at assetDenied (../../custom/backend/runtimeAssetCatalog.ts:13:183)\n    at readPrivateProviderAsset (../../custom/backend/runtimeAssets.ts:143:51)\n",
+        "data": {
+          "code": "PROVIDER_INPUT_UNSUPPORTED",
+          "message": "Asset operation denied.",
+          "outcome": "not_dispatched",
+          "retryable": false,
+          "version": 1
+        }
+      },
+      "modelCalls": 0
+    },
+    {
+      "name": "delivery-eligible-image-denied-by-separate-encoded-provider-cap",
+      "status": "PASS",
+      "asset": {
+        "version": 1,
+        "assetId": "asset:68e50d9bff5176a707262c20664438bebd5bd4f9cc198fa21d242094fd13d88a",
+        "versionId": "asset:68e50d9bff5176a707262c20664438bebd5bd4f9cc198fa21d242094fd13d88a:version:1",
+        "assetVersion": 1,
+        "contentHash": "2aeaba68aedee429822e2690afd34395e44e86f3607b43e2a255611cea41a2c7",
+        "sizeBytes": 13001520,
+        "mimeType": "image/png",
+        "mediaKind": "image",
+        "filename": "protocol-boundary.png",
+        "lineage": {
+          "kind": "upload",
+          "requestId": "private-protocol-over-cap-9e4db003-a78b-4b11-af51-1d301d656649"
+        }
+      },
+      "decodedBytes": 13001520,
+      "base64Bytes": 17335360,
+      "providerCap": 16777216,
+      "applicationCap": 20000000,
+      "denial": {
+        "name": "ConvexError",
+        "message": "[Request ID: 58000806c8ad833e] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"PROVIDER_INPUT_TOO_LARGE\",\"message\":\"Asset operation denied.\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at assetDenied (../../custom/backend/runtimeAssetCatalog.ts:13:183)\n    at readPrivateProviderAsset (../../custom/backend/runtimeAssets.ts:144:55)\n",
+        "data": {
+          "code": "PROVIDER_INPUT_TOO_LARGE",
+          "message": "Asset operation denied.",
+          "outcome": "not_dispatched",
+          "retryable": false,
+          "version": 1
+        }
+      },
+      "providerCalls": 0,
+      "noLargeMediaFallback": true
+    }
+  ],
+  "projectId": 3174742,
+  "frameAsset": {
+    "version": 1,
+    "assetId": "asset:216db556312b58b97e214a750a2f1350682f66356676438bf35c1e890ffd34ca",
+    "versionId": "asset:216db556312b58b97e214a750a2f1350682f66356676438bf35c1e890ffd34ca:version:1",
+    "assetVersion": 1,
+    "contentHash": "4640525b89e35129d3d00cf185097ae2730ec5c2f4822a5e118f7366592b1a2f",
+    "sizeBytes": 1496,
+    "mimeType": "image/png",
+    "mediaKind": "image",
+    "filename": "private-first-frame.png",
+    "lineage": {
+      "kind": "upload",
+      "requestId": "fixed-private-first-frame-9e4db003-a78b-4b11-af51-1d301d656649"
+    }
+  },
+  "oversizedProtocolAsset": {
+    "version": 1,
+    "assetId": "asset:68e50d9bff5176a707262c20664438bebd5bd4f9cc198fa21d242094fd13d88a",
+    "versionId": "asset:68e50d9bff5176a707262c20664438bebd5bd4f9cc198fa21d242094fd13d88a:version:1",
+    "assetVersion": 1,
+    "contentHash": "2aeaba68aedee429822e2690afd34395e44e86f3607b43e2a255611cea41a2c7",
+    "sizeBytes": 13001520,
+    "mimeType": "image/png",
+    "mediaKind": "image",
+    "filename": "protocol-boundary.png",
+    "lineage": {
+      "kind": "upload",
+      "requestId": "private-protocol-over-cap-9e4db003-a78b-4b11-af51-1d301d656649"
+    }
+  },
+  "modelCalls": 0,
+  "paidCommissionPending": true
+}

@@ -1,0 +1,84 @@
+{
+  "version": 1,
+  "status": "SOURCE_READY_FOR_NATIVE_QUALIFICATION",
+  "taskAcceptance": "NOT_CLAIMED; actual native storage/HTTP/provider qualification and one coherent independent final review remain mandatory",
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "sourceManifest": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/author/source-manifest1.json",
+  "candidateDigest": "aee3de994dec871f1f1903abf56317c8e7d1b57916d7e0860a280d776353fde5",
+  "checks": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/author/checks1.json",
+  "uniqueControlledAssertionInstances": 922,
+  "requirements": [
+    {
+      "id": "R1",
+      "implemented": "Immutable catalog/head/version/job/reference tables; typed video and binary metadata/provenance; independent upload/artifact-history/attachment/Agent ownership."
+    },
+    {
+      "id": "R2",
+      "implemented": "Actual byte stream and generated Blob caps 20,000,000 before acceptance/readiness/delivery; exact hash/size checks and fixed errors."
+    },
+    {
+      "id": "R3",
+      "implemented": "Private POST/GET/OPTIONS HTTP, fresh metadata mutations and scope/resource/grant/share checks before/after awaits; digest-bound additive router helper; no bearer storage URLs."
+    },
+    {
+      "id": "R4",
+      "implemented": "Canonical idempotency, lost-ready-ack safety, random orphan marker, finite cleanup retry, final-owner cleanup, user/scope cascade and native vacuum reconciliation; indexed owner cleanup pages re-derive CURRENT retained versions."
+    },
+    {
+      "id": "R5",
+      "implemented": "Undo/redo/history/export exact immutable file selectors and generated input lineage/currentness; canonical managed conversation links pin canExport/canContinue and optional exact native message witness; no OCR or media processing."
+    },
+    {
+      "id": "R6",
+      "implemented": "Internal exact-owner provider input materialization with full encoded image/video-inline envelope <=16MiB; separate Root governed narrow commissioning admission.",
+      "actual": "REQUIRED_PENDING: genuine private provider input commission, not satisfied by metadata-only discovery or offline mocks."
+    }
+  ],
+  "acceptanceCriteria": {
+    "A1": "actual authorized HTTP/cap outcomes pending",
+    "A2": "retained version/final-owner/cleanup controls green; actual storage pending",
+    "A3": "auth/foreign/revoked/time-only expiry/delayed tombstone controlled green; actual pending",
+    "A4": "immutable undo/redo/export lineage controlled green; actual pending"
+  },
+  "interfaces": {
+    "http": [
+      "POST /cortex/assets/upload",
+      "GET /cortex/assets/download",
+      "OPTIONS /cortex/assets/upload",
+      "OPTIONS /cortex/assets/download"
+    ],
+    "helper": "_cortex/http.ts#registerCortexHttpRoutesV1",
+    "freshMutations": [
+      "runtimeAssets:get",
+      "attachments:get/list/count/getByConversation/getByMessage/getByIds",
+      "artifacts:get/getByConversation/list/count/getVersion/getHistory"
+    ],
+    "referenceAPIs": [
+      "artifacts:attachAsset/undo/redo/getVersion/getHistory/detachFile/deleteArtifact",
+      "attachments:create/attach/remove",
+      "runtimeAssets:remove/cancel/status/retryCleanup"
+    ],
+    "internal": [
+      "runtimeAssets:beginUpload/stageStorage/finalize",
+      "runtimeAssets:beginGenerated (storeGeneratedAsset exported Action helper)",
+      "runtimeAssets:readProviderInput: image-inline-v1 materializes PNG first-frame input for video requests",
+      "runtimeAssets:reconcileOwnerReferences/cleanupVersion/cleanupJob/abandonJob/retireAuthority"
+    ]
+  },
+  "relatedSourceReadyReceipts": [
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/root-client1/source-ready1.json",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/root-media-admission1/source-ready1.json",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/cli-http1/source-report1.json"
+  ],
+  "preservedFailures": [
+    "lifecycle-tests1/2 import/native DB operator fixture setup",
+    "lifecycle-tests3/4 former bearer URL/query oracles and missing getVersion fileRef",
+    "lifecycle-tests6/7 canonical conversation setup and former SDK URL oracle",
+    "lifecycle-tests8 long-history current-edge conflict; SDK video fixture missing title; exact successors pass",
+    "sdk-types5/6/8 callback typing, fresh mutation integration fixture, pool/title typing",
+    "lint1 unused import/local errors",
+    "report identity projection setup, corrected occurrence keys",
+    "independent reference-cap red and long-history conflict/runner-bound raws remain reviewer-owned untouched"
+  ],
+  "cleanup": "All author check processes exited; isolated generator fixtures removed. No Git mutation/build/deployment/asset service/paid call performed. Product writer quiet for exclusive native copy."
+}

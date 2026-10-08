@@ -1,0 +1,132 @@
+{
+  "version": 1,
+  "status": "PASS",
+  "meanScore": 4.0,
+  "scores": {
+    "requirementFulfillment": 4,
+    "testQuality": 4,
+    "completeness": 4,
+    "codeQuality": 4,
+    "patternAdherence": 4
+  },
+  "scope": "Bounded provider unit runner/discovery and CI disposable-selector guard/toolchain wiring only. Suitable for committing this wiring; no whole task, media, final audit or remote CI acceptance.",
+  "reviewer": "/root/task03_linux_source_adapter_judge1",
+  "authoredProduct": false,
+  "knownReachableBreakingFindingsWithinScope": [],
+  "checks": {
+    "providerSavedCurrentPassedCases": 223,
+    "providerLegacyPassedIdentitiesRetained": 202,
+    "providerRealEsmRemoteCases": 21,
+    "providerExactOriginalSuitePaths": 7,
+    "providerDiscoveryDuplicates": 0,
+    "providerPendingCases": 0,
+    "providerTestsRerunByReviewer": false,
+    "independentGuardCases": 12,
+    "independentWorkflowYamlFilesParsed": 3,
+    "guardBeforeBothDeploysAndBothPurges": true,
+    "allTargetsCheckedBeforeEitherEffect": true,
+    "sourceUnchangedDuringIndependentChecks": true,
+    "node": "v24.15.0",
+    "npmWorkflowPin": "12.2.0"
+  },
+  "source": [
+    {
+      "path": "packages/vercel-ai-provider/package.json",
+      "bytes": 3647,
+      "sha256": "0928597847d183cdad71764e6d00a637f7b5ce59b952b0441b93b8c19a31d0f3"
+    },
+    {
+      "path": "packages/vercel-ai-provider/jest.config.js",
+      "bytes": 3036,
+      "sha256": "80ce126ba5a24eee2a511f1c2ed0be8a916c0b544d3d8140ee892759241167fa"
+    },
+    {
+      "path": "scripts/ci/verify-disposable-targets.mjs",
+      "bytes": 1807,
+      "sha256": "44b6f0d45b0a91d9b0134aaaacda7b680c0d05379b7843cccf9c4aa59f96d3b8"
+    },
+    {
+      "path": "scripts/ci/verify-disposable-targets.test.mjs",
+      "bytes": 2628,
+      "sha256": "5f74c63167b8a43445024e995a041a6a95f6e845b6a3ef9c556c801dfe9c597c"
+    },
+    {
+      "path": ".github/workflows/pr-checks.yml",
+      "bytes": 30725,
+      "sha256": "305b1cf741375f5f6e5bfa6a4f358830a01fe0b572afc19b71201aae7bc27007"
+    },
+    {
+      "path": ".github/workflows/security.yml",
+      "bytes": 9582,
+      "sha256": "a938597322dcb18eb329445934fb4f3eb16c6fedbf6b48c618e0505dbd6440ac"
+    },
+    {
+      "path": ".github/workflows/publish.yml",
+      "bytes": 3384,
+      "sha256": "eb125fccbfc4580673117b33ef21fed726c9c491e005b1f03dab0ae98f29a23d"
+    }
+  ],
+  "findings": [],
+  "securitySemantics": [
+    "Requires administrator-supplied bounded unique disposable deployment allowlist.",
+    "Rejects prod/preview/project/untyped/malformed keys, unlisted deployments, substituted URLs and same SDK/CLI target.",
+    "Validates both exact dev-key/name/URL selectors before returning approval.",
+    "Mandatory guard runs before either SDK/CLI deployment or purge; no continue-on-error or conditional bypass.",
+    "Errors contain constant codes and success returns only deployment names/kinds; no key values are printed."
+  ],
+  "limitations": [
+    "The guard validates exact development selectors and administrator allowlist; it does not claim authenticated live project/service qualification.",
+    "Existing production-type secrets or absent allowlist intentionally fail before effects. Approved disposable configuration and authenticated legacy fixture modernization remain Task16/final work.",
+    "Checkpoint60 historical CI deployed and purged production-type SDK/CLI test targets. The original setup excerpt is preserved; no rollback or new production mutation is claimed.",
+    "Provider integration/e2e service execution, a new GitHub run pass, package publication and full-goal acceptance are outside this verdict.",
+    "Inherited repeated setup job boolean predicates are harmless readability debt."
+  ],
+  "taskDenominatorChanges": false,
+  "reviewerServiceCalls": 0,
+  "reviewerBuildInstallCalls": 0,
+  "reviewerProductWrites": 0,
+  "reviewerOwnedProcessesRemaining": 0,
+  "evidence": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/client-ci-independent-review1/independent-checks1.json",
+      "bytes": 6395,
+      "sha256": "fc9100393bbcc9fcb219696152a5c93c985b4c898c723118eaf4c369ead7109c"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/provider-esm-ci-repair1/report1.json",
+      "bytes": 7278,
+      "sha256": "6ebf78793365b91f9f7a754fb9d691cce81221fdcba828e36d5d8bbb62e67157"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/provider-esm-ci-repair1/unit-current1.results.json",
+      "bytes": 94547,
+      "sha256": "cebb3b0a0532418c1191fca6bd8c0dddb0c69fbd188f25c2dca5f5229cb41996"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/provider-esm-ci-repair1/declared-command-current2.log",
+      "bytes": 549,
+      "sha256": "40475f7c477683c353c426d24c50fa70ada36c8dae4c444c6038373864bede25"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/provider-esm-ci-repair1/discovery-current2.log",
+      "bytes": 1172,
+      "sha256": "6ffcf99b5c7bc3ca3c1c2048f9e13da22479765f3db0e3ec1145a04bac3500a6"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/provider-esm-ci-repair1/reproduction1.results.json",
+      "bytes": 86359,
+      "sha256": "b7fe8d7e52723f168d79d32a195234eaf54701693c41630bab3b4ba5987bcdb9"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/checkpoint60-ci-investigation1/guard-checks1.json",
+      "bytes": 618,
+      "sha256": "ee16ba3ef41af2b5ac9aff3f6bee2ec310a9640a08bd022fed5beac2d1a87004"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/checkpoint60-ci-investigation1/setup-target-excerpt1.log",
+      "bytes": 2398,
+      "sha256": "a1246797202b4a37a08ca6e19b04dca9071c8d87bbebb76a15ce99ef134d5eb4"
+    }
+  ],
+  "createdAtUtc": "2026-10-08T23:26:08.842656+00:00"
+}

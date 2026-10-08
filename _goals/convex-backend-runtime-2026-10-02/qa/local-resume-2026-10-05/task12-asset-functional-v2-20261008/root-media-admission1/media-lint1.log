@@ -1,0 +1,107 @@
+
+<--- Last few GCs --->
+
+[54981:0xa1440c000]    17587 ms: Scavenge (interleaved) 1015.4 (1025.2) -> 1014.3 (1029.7) MB, pooled: 0 MB, 6.75 / 0.00 ms  (average mu = 0.259, current mu = 0.217) allocation failure; 
+[54981:0xa1440c000]    18199 ms: Mark-Compact (reduce) 1018.2 (1030.2) -> 1016.7 (1025.9) MB, pooled: 0 MB, 515.00 / 0.00 ms  (+ 47.1 ms in 57 steps since start of marking, biggest step 9.9 ms, walltime since start of marking 611 ms) (average mu = 0.233, 
+FATAL ERROR: Reached heap limit Allocation failed - JavaScript heap out of memory
+----- Native stack trace -----
+
+ 1: 0x100c31aec node::OOMErrorHandler(char const*, v8::OOMDetails const&) [/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node]
+ 2: 0x100e84314 v8::internal::V8::FatalProcessOutOfMemory(v8::internal::Isolate*, char const*, v8::OOMDetails const&) [/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node]
+ 3: 0x1010e3700 v8::internal::Heap::stack() [/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node]
+ 4: 0x1010e15e8 v8::internal::Heap::CollectGarbage(v8::internal::AllocationSpace, v8::internal::GarbageCollectionReason, v8::GCCallbackFlags) [/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node]
+ 5: 0x1010d6110 v8::internal::HeapAllocator::AllocateRawWithRetryOrFailSlowPath(int, v8::internal::AllocationType, v8::internal::AllocationOrigin, v8::internal::AllocationAlignment) [/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node]
+ 6: 0x1010b77f0 v8::internal::Factory::NewFillerObject(int, v8::internal::AllocationAlignment, v8::internal::AllocationType, v8::internal::AllocationOrigin) [/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node]
+ 7: 0x101547434 v8::internal::Runtime_AllocateInYoungGeneration(int, unsigned long*, v8::internal::Isolate*) [/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node]
+ 8: 0x101b9e234 Builtins_CEntry_Return1_ArgvOnStack_NoBuiltinExit [/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node]
+ 9: 0x101b3a5a4 Builtins_ArrayPrototypePush [/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node]
+10: 0x12535e694 
+11: 0x125221734 
+12: 0x1254cc2d0 
+13: 0x12538e460 
+14: 0x1254ed1b8 
+15: 0x1254f384c 
+16: 0x12593d3d0 
+17: 0x1254c0544 
+18: 0x125558e60 
+19: 0x125557484 
+20: 0x1254dab54 
+21: 0x1254fd1c4 
+22: 0x124bc31e4 
+23: 0x1254cb33c 
+24: 0x1254d3634 
+25: 0x1254f1078 
+26: 0x124d7a3a4 
+27: 0x1253864b4 
+28: 0x125559104 
+29: 0x125557484 
+30: 0x125a272fc 
+31: 0x125322218 
+32: 0x125558ed4 
+33: 0x125557484 
+34: 0x125a272fc 
+35: 0x124baa6bc 
+36: 0x12550686c 
+37: 0x125390950 
+38: 0x12552a4cc 
+39: 0x1252f7c00 
+40: 0x125782750 
+41: 0x124b80098 
+42: 0x1254cf114 
+43: 0x125558940 
+44: 0x125557484 
+45: 0x1251d4e6c 
+46: 0x124d1a944 
+47: 0x125540eec 
+48: 0x124b98fb4 
+49: 0x1257aeb14 
+50: 0x1258c62ec 
+51: 0x125524910 
+52: 0x125541940 
+53: 0x124b98fb4 
+54: 0x1254d7dd0 
+55: 0x1253f2c0c 
+56: 0x125878f68 
+57: 0x1258c5b10 
+58: 0x125524910 
+59: 0x125541940 
+60: 0x124b98fb4 
+61: 0x125abaedc 
+62: 0x124cbe5b4 
+63: 0x1258f3ba4 
+64: 0x125371534 
+65: 0x1251d0a14 
+66: 0x1257ba9f4 
+67: 0x1252bf660 
+68: 0x1252bc478 
+69: 0x12539fe44 
+70: 0x101b00bec Builtins_InterpreterEntryTrampoline [/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node]
+71: 0x101b00bec Builtins_InterpreterEntryTrampoline [/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node]
+72: 0x101b00bec Builtins_InterpreterEntryTrampoline [/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node]
+73: 0x101b00bec Builtins_InterpreterEntryTrampoline [/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node]
+74: 0x101b00bec Builtins_InterpreterEntryTrampoline [/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node]
+75: 0x101b00bec Builtins_InterpreterEntryTrampoline [/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node]
+76: 0x101b00bec Builtins_InterpreterEntryTrampoline [/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node]
+77: 0x101b00bec Builtins_InterpreterEntryTrampoline [/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node]
+78: 0x101b3f7e8 Builtins_AsyncFunctionAwaitResolveClosure [/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node]
+79: 0x101c14e58 Builtins_PromiseFulfillReactionJob [/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node]
+80: 0x101b2ebd0 Builtins_RunMicrotasks [/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node]
+81: 0x101afe7b0 Builtins_JSRunMicrotasksEntry [/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node]
+82: 0x1010278a8 v8::internal::(anonymous namespace)::Invoke(v8::internal::Isolate*, v8::internal::(anonymous namespace)::InvokeParams const&) [/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node]
+83: 0x10102811c v8::internal::(anonymous namespace)::InvokeWithTryCatch(v8::internal::Isolate*, v8::internal::(anonymous namespace)::InvokeParams const&) [/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node]
+84: 0x101028258 v8::internal::Execution::TryRunMicrotasks(v8::internal::Isolate*, v8::internal::MicrotaskQueue*) [/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node]
+85: 0x10105702c v8::internal::MicrotaskQueue::RunMicrotasks(v8::internal::Isolate*) [/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node]
+86: 0x10105798c v8::internal::MicrotaskQueue::PerformCheckpoint(v8::Isolate*) [/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node]
+87: 0x100b130b8 node::InternalCallbackScope::Close() [/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node]
+88: 0x100b12a90 node::InternalCallbackScope::~InternalCallbackScope() [/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node]
+89: 0x100c37000 node::fs::FileHandle::CloseReq::Resolve() [/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node]
+90: 0x100c526a8 node::fs::FileHandle::ClosePromise()::$_0::__invoke(uv_fs_s*) [/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node]
+91: 0x100c27550 node::MakeLibuvRequestCallback<uv_fs_s, void (*)(uv_fs_s*)>::Wrapper(uv_fs_s*) [/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node]
+92: 0x101ad9394 uv__work_done [/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node]
+93: 0x101add0c4 uv__async_io [/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node]
+94: 0x101af145c uv__io_poll [/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node]
+95: 0x101add62c uv_run [/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node]
+96: 0x100b146a8 node::SpinEventLoopInternal(node::Environment*) [/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node]
+97: 0x100c8a9c4 node::NodeMainInstance::Run() [/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node]
+98: 0x100bdebb4 node::Start(int, char**) [/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node]
+99: 0x18113c4e4 start [/usr/lib/dyld]

@@ -1,0 +1,62 @@
+{
+  "version": 1,
+  "timestampUtc": "2026-10-08T22:34:09.240281+00:00",
+  "scope": "ROOT_NARROW_VIDEO_ADMISSION_SOURCE_READY_NO_PROVIDER_QUALIFICATION",
+  "sourceManifest": [
+    {
+      "path": "src/domain/media-input.ts",
+      "bytes": 2319,
+      "sha256": "0760135622b42e28fba2b18e544729278ffba838558c955842bb69879a61490e"
+    },
+    {
+      "path": "src/domain/model-policy.ts",
+      "bytes": 28804,
+      "sha256": "7930cafb7b6f287c5a343c144c058b922a740ae42a1dc913f56066aa47407900"
+    },
+    {
+      "path": "convex-dev/runtimeModelPolicyBootstrap.ts",
+      "bytes": 4462,
+      "sha256": "705b47c090bbf9d29a6018608841b3ba4bb9e6f393716eb09181342c64df82e0"
+    },
+    {
+      "path": "convex-dev/runtimeModelPolicy.ts",
+      "bytes": 101521,
+      "sha256": "2b718a3323eeda8aa1e1646259fbadb1098680a2285bc79102916db58dab2f7f"
+    },
+    {
+      "path": "tests/unit/domain/media-input.test.ts",
+      "bytes": 7621,
+      "sha256": "9ec21d9ec827663bd1a51967bba80df435e0ac5ab94fe07957a56ef2e9fa3204"
+    }
+  ],
+  "checks": {
+    "controlledCases": 196,
+    "backendTypesExit": 0,
+    "scopedLintExit": 0,
+    "sdkTypes": "checks1 failure confined to concurrent attachment SDK bridge; author is repairing; no package/build claim"
+  },
+  "constraints": {
+    "operationKey": "media.video.generate",
+    "modelId": "google/veo-3.1",
+    "nativeInterface": "video",
+    "durationSeconds": 4,
+    "resolution": "720p",
+    "audio": false,
+    "firstFramePngMaximumDecodedBytes": 4096,
+    "completeNativeJsonMaximumBytes": 8192,
+    "promptMaximumUtf8Bytes": 1024,
+    "maxRetries": 0,
+    "callerReservationRequired": true,
+    "compiledQualificationRequired": true,
+    "productionQualificationAdded": false,
+    "unknownCostReleaseAdded": false,
+    "terminalPayloadReplayAdded": false
+  },
+  "preservedFailureReceipts": [
+    "checks1.json",
+    "media-lint1.log",
+    "sdk-types1.log"
+  ],
+  "resourceCorrection": "Scoped lint2 used 2GiB heap after the explicit 1GiB failure; 196 passed tests and backend types were not repeated.",
+  "handoff": "Native QA-only commissioning may use exact source and an operator-owned prospective manifest under existing authorization. No shipped registry or actual media acceptance is asserted."
+}

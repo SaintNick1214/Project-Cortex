@@ -1,0 +1,32 @@
+{
+  "version": 1,
+  "timestampUtc": "2026-10-08T23:09:45.238Z",
+  "scope": "READ_ONLY_CHECKPOINT60_CI_FAILURE_DIAGNOSIS_NOT_CURRENT_TASK12_ACCEPTANCE",
+  "head": "14d1b6d73fa32268802425084d290f9f1016c559",
+  "results": [
+    {
+      "name": "cli",
+      "jobId": 113566034622,
+      "status": "READ_FAILED",
+      "code": 1,
+      "message": "Error: Command failed: gh api repos/SaintNick1214/Project-Cortex/actions/jobs/113566034622/logs\nthe response contains terminal escape sequences; pass --allow-escape-sequences to output it anyway\n"
+    },
+    {
+      "name": "provider",
+      "jobId": 113566034774,
+      "status": "READ_FAILED",
+      "code": 1,
+      "message": "Error: Command failed: gh api repos/SaintNick1214/Project-Cortex/actions/jobs/113566034774/logs\nthe response contains terminal escape sequences; pass --allow-escape-sequences to output it anyway\n"
+    },
+    {
+      "name": "sdk-shard1",
+      "jobId": 113566035043,
+      "status": "READ_FAILED",
+      "code": 1,
+      "message": "Error: Command failed: gh api repos/SaintNick1214/Project-Cortex/actions/jobs/113566035043/logs\nthe response contains terminal escape sequences; pass --allow-escape-sequences to output it anyway\n"
+    }
+  ],
+  "rawPrivateDirectory": "/Users/SaintNick/.codex/tmp/cortex-runtime-ci-failures-WG3SuF",
+  "noTestsRerun": true,
+  "noTargetEffects": true
+}

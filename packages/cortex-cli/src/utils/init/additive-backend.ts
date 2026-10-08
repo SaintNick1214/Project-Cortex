@@ -142,6 +142,99 @@ function addComponents(text: string, components: ComponentRegistration[]): strin
   const registrations = missing.map(component => `${app}.use(${componentBinding(component.name)}, { name: ${JSON.stringify(component.name)} });\n`).join("");
   return addedImports + text.slice(0, exported[0].getStart(ast)) + registrations + text.slice(exported[0].getStart(ast));
 }
+type HttpRoute = { method: string; path: string; prefix: boolean };
+const httpHelper = "registerCortexHttpRoutesV1";
+const httpMethods = new Set(["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"]);
+function httpRoute(call: ts.CallExpression): HttpRoute {
+  if (call.arguments.length !== 1 || !ts.isObjectLiteralExpression(call.arguments[0])) throw new Error("HTTP routes require explicit static method/path declarations; review the merge.");
+  const fields = new Map<string, ts.Expression>();
+  for (const field of call.arguments[0].properties) {
+    if (!ts.isPropertyAssignment(field) || !(ts.isIdentifier(field.name) || ts.isStringLiteral(field.name)) || fields.has(field.name.text)) throw new Error("Dynamic or duplicate HTTP route fields require a reviewed merge.");
+    fields.set(field.name.text, field.initializer);
+  }
+  const method = fields.get("method"), exact = fields.get("path"), prefix = fields.get("pathPrefix"), routePath = exact ?? prefix;
+  if (fields.size !== 3 || !fields.has("handler") || Boolean(exact) === Boolean(prefix) || !method || !ts.isStringLiteral(method) || !httpMethods.has(method.text)
+    || !routePath || !ts.isStringLiteral(routePath) || !routePath.text.startsWith("/") || (prefix && !routePath.text.endsWith("/"))) throw new Error("HTTP routes require supported literal method/path/handler fields; review the merge.");
+  return { method: method.text, path: routePath.text, prefix: Boolean(prefix) };
+}
+function overlappingHttpRoute(left: HttpRoute, right: HttpRoute): boolean {
+  return left.method === right.method && (left.path === right.path || (left.prefix && right.path.startsWith(left.path)) || (right.prefix && left.path.startsWith(right.path)));
+}
+/** The exact routes come from the digest-checked helper, never a caller-selected handler. */
+function httpRegistrations(text: string, names: string[]): HttpRoute[] {
+  if (names.some(name => typeof name !== "string" || !/^(GET|POST|PUT|DELETE|OPTIONS|PATCH) \/[^\s?#]*$/.test(name)) || new Set(names).size !== names.length) throw new Error("Backend HTTP manifest requires unique exact METHOD /path entries.");
+  const ast = parse("_cortex/http.ts", text);
+  const handlers = new Set<string>();
+  for (const statement of ast.statements) {
+    if (!ts.isImportDeclaration(statement) || !ts.isStringLiteral(statement.moduleSpecifier) || !/^\.\.\/runtimeAssetsHttp(?:\.js)?$/.test(statement.moduleSpecifier.text) || statement.importClause?.isTypeOnly) continue;
+    const bindings = statement.importClause?.namedBindings;
+    if (bindings && ts.isNamedImports(bindings)) for (const binding of bindings.elements) if (!binding.isTypeOnly) handlers.add(binding.name.text);
+  }
+  const helpers = ast.statements.filter((statement): statement is ts.FunctionDeclaration => ts.isFunctionDeclaration(statement) && statement.name?.text === httpHelper);
+  const helper = helpers[0];
+  if (helpers.length !== 1 || !helper?.body || !helper.modifiers?.some(modifier => modifier.kind === ts.SyntaxKind.ExportKeyword)
+    || helper.parameters.length !== 1 || !ts.isIdentifier(helper.parameters[0].name)) throw new Error("Backend HTTP helper requires one exported static router registration.");
+  const router = helper.parameters[0].name.text, result: HttpRoute[] = [];
+  for (const statement of helper.body.statements) {
+    if (!ts.isExpressionStatement(statement) || !ts.isCallExpression(statement.expression)) throw new Error("Dynamic backend HTTP registration requires a reviewed merge.");
+    const call = statement.expression;
+    if (!ts.isPropertyAccessExpression(call.expression) || !ts.isIdentifier(call.expression.expression) || call.expression.expression.text !== router || call.expression.name.text !== "route") throw new Error("Backend HTTP registration must be a static router.route().");
+    const route = httpRoute(call);
+    const handler = (call.arguments[0] as ts.ObjectLiteralExpression).properties.find(field => ts.isPropertyAssignment(field) && (ts.isIdentifier(field.name) || ts.isStringLiteral(field.name)) && field.name.text === "handler");
+    if (!handler || !ts.isPropertyAssignment(handler) || !ts.isIdentifier(handler.initializer) || !handlers.has(handler.initializer.text)) throw new Error("Backend HTTP handlers must be direct static runtimeAssetsHttp imports.");
+    if (route.prefix || result.some(prior => overlappingHttpRoute(prior, route))) throw new Error("Backend HTTP helper requires unique exact routes.");
+    result.push(route);
+  }
+  if (result.length !== names.length || result.some(route => !names.includes(`${route.method} ${route.path}`))) throw new Error("Backend HTTP registrations differ from the versioned manifest.");
+  return result;
+}
+function addHttpRoutes(text: string, routes: HttpRoute[]): string {
+  const ast = parse("http.ts", text), exported = ast.statements.filter(ts.isExportAssignment);
+  if (exported.length !== 1 || exported[0].isExportEquals || !ts.isIdentifier(exported[0].expression)) throw new Error("HTTP configuration must default-export a named httpRouter() instance; review the proposed merge.");
+  const router = exported[0].expression.text;
+  const factories = new Set<string>();
+  let managedImport = false;
+  for (const statement of ast.statements) {
+    if (!ts.isImportDeclaration(statement) || !ts.isStringLiteral(statement.moduleSpecifier) || statement.importClause?.isTypeOnly) continue;
+    const bindings = statement.importClause?.namedBindings;
+    if (!bindings || !ts.isNamedImports(bindings)) continue;
+    for (const binding of bindings.elements) {
+      if (binding.isTypeOnly) continue;
+      if (statement.moduleSpecifier.text === "convex/server" && (binding.propertyName ?? binding.name).text === "httpRouter") factories.add(binding.name.text);
+      if (binding.name.text === httpHelper && (binding.propertyName ?? binding.name).text === httpHelper && statement.moduleSpecifier.text === "./_cortex/http") managedImport = true;
+    }
+  }
+  const declarations = ast.statements.filter(ts.isVariableStatement).flatMap(statement => [...statement.declarationList.declarations]).filter(entry => ts.isIdentifier(entry.name) && entry.name.text === router);
+  const declaration = declarations[0];
+  if (declarations.length !== 1 || !declaration?.initializer || !ts.isCallExpression(declaration.initializer) || declaration.initializer.arguments.length !== 0
+    || !ts.isIdentifier(declaration.initializer.expression) || !factories.has(declaration.initializer.expression.text)
+    || !(declaration.parent.flags & ts.NodeFlags.Const)) throw new Error("Cannot identify the host's immutable official httpRouter() instance; review the merge.");
+  const allowed = new Set<ts.Node>([declaration.name, exported[0].expression]);
+  let managedCalls = 0;
+  const visit = (node: ts.Node) => {
+    if (ts.isCallExpression(node) && ts.isIdentifier(node.expression) && node.expression.text === httpHelper) {
+      if (!managedImport || node.arguments.length !== 1 || !ts.isIdentifier(node.arguments[0]) || node.arguments[0].text !== router
+        || !ts.isExpressionStatement(node.parent) || node.parent.parent !== ast || ++managedCalls !== 1) throw new Error("Cortex HTTP registration must be one direct top-level call on the exported router.");
+      allowed.add(node.arguments[0]);
+    }
+    if (ts.isCallExpression(node) && ts.isPropertyAccessExpression(node.expression) && ts.isIdentifier(node.expression.expression) && node.expression.expression.text === router && node.expression.name.text === "route") {
+      if (!ts.isExpressionStatement(node.parent) || node.parent.parent !== ast) throw new Error("Nested HTTP route registration requires a reviewed merge.");
+      allowed.add(node.expression.expression);
+      const route = httpRoute(node);
+      if (routes.some(cortex => overlappingHttpRoute(route, cortex))) throw new Error(`Host HTTP route ${route.method} ${route.path}${route.prefix ? "*" : ""} conflicts with Cortex registration.`);
+    }
+    ts.forEachChild(node, visit);
+  };
+  visit(ast);
+  const checkUses = (node: ts.Node) => {
+    if (ts.isIdentifier(node) && node.text === router && !allowed.has(node)) throw new Error("Aliased or dynamic host HTTP router use requires a reviewed merge.");
+    ts.forEachChild(node, checkUses);
+  };
+  checkUses(ast);
+  if (managedCalls) return text;
+  if (!managedImport && !bindingAvailable(ast, httpHelper)) throw new Error("Host binding registerCortexHttpRoutesV1 conflicts with the additive HTTP import.");
+  return (managedImport ? "" : `import { ${httpHelper} } from "./_cortex/http";\n`) + text.slice(0, exported[0].getStart(ast)) + `${httpHelper}(${router});\n` + text.slice(exported[0].getStart(ast));
+}
 function validateProvider(provider: TrustedJwtProvider): void {
   if (provider.type !== "customJwt" || !["RS256", "ES256"].includes(provider.algorithm) || !provider.issuer || !provider.jwks) throw new Error("Explicit issuer, JWKS and asymmetric algorithm are required for trusted JWT integration.");
   const issuer = new URL(provider.issuer);
@@ -196,7 +289,7 @@ export async function planAdditiveBackendInstallation(projectPath: string, sdkPa
   const sdk = path.resolve(sdkPath);
   const distribution = path.join(sdk, "dist/backend/v1");
   const manifest: BackendDistributionManifest = await fs.readJson(path.join(distribution, "manifest.json"));
-  if (manifest.formatVersion !== 1 || !Array.isArray(manifest.files) || !Array.isArray(manifest.tables) || !Array.isArray(manifest.components) || !manifest.dependencies || !manifest.distributionId) throw new Error("Unsupported or incomplete Cortex backend distribution; rebuild/install the SDK package.");
+  if (manifest.formatVersion !== 1 || !Array.isArray(manifest.files) || !Array.isArray(manifest.tables) || !Array.isArray(manifest.components) || !Array.isArray(manifest.httpRoutes) || !manifest.dependencies || !manifest.distributionId) throw new Error("Unsupported or incomplete Cortex backend distribution; rebuild/install the SDK package.");
   const configText = await readOptional(path.join(project, "convex.json"));
   const config: Record<string, unknown> = configText === null ? {} : JSON.parse(configText);
   if (!config || Array.isArray(config) || typeof config !== "object" || (config.functions !== undefined && typeof config.functions !== "string")) throw new Error("Invalid host convex.json; repair it before additive installation.");
@@ -217,6 +310,7 @@ export async function planAdditiveBackendInstallation(projectPath: string, sdkPa
   }
   const seen = new Set<string>();
   let componentSource = "";
+  let httpSource = "";
   for (const entry of manifest.files) {
     if (!safeRelative(entry.path) || seen.has(entry.path) || !/^[a-f0-9]{64}$/.test(entry.sha256)) throw new Error("Unsafe or duplicate backend distribution path.");
     seen.add(entry.path);
@@ -224,12 +318,21 @@ export async function planAdditiveBackendInstallation(projectPath: string, sdkPa
     const content = await fs.readFile(path.join(distribution, entry.path), "utf8");
     if (digest(content) !== entry.sha256) throw new Error(`Backend distribution digest mismatch: ${entry.path}`);
     if (entry.path === "_cortex/components.config.ts") componentSource = content;
+    if (entry.path === "_cortex/http.ts") httpSource = content;
     await proposed(path.join(normalized, entry.path), content, "versioned Cortex backend source");
   }
   if (!seen.has("_cortex/schema.ts") || !seen.has("_cortex/components.config.ts")) throw new Error("Backend distribution lacks additive schema/component helpers.");
   const registrations = componentRegistrations(componentSource, manifest.components);
   await proposed(path.join(normalized, "schema.ts"), 'import { defineSchema } from "convex/server";\nimport { cortexTablesV1 } from "./_cortex/schema";\nexport default defineSchema({ ...cortexTablesV1 });\n', "add Cortex table map while preserving host tables and options", (current) => addSchema(current, manifest.tables));
   await proposed(path.join(normalized, "convex.config.ts"), addComponents('import { defineApp } from "convex/server";\nconst app = defineApp();\nexport default app;\n', registrations), "register qualified Cortex components with direct root imports alongside host components", (current) => addComponents(current, registrations));
+  if (manifest.httpRoutes.length && !seen.has("_cortex/http.ts")) throw new Error("Backend distribution lacks the digest-bound HTTP helper.");
+  if (seen.has("_cortex/http.ts")) {
+    const routes = httpRegistrations(httpSource, manifest.httpRoutes);
+    if (routes.length) {
+      const fresh = 'import { httpRouter } from "convex/server";\nconst http = httpRouter();\nexport default http;\n';
+      await proposed(path.join(normalized, "http.ts"), addHttpRoutes(fresh, routes), "register authenticated Cortex HTTP routes while preserving host routes", current => addHttpRoutes(current, routes));
+    }
+  }
   if (configText === null) await proposed("convex.json", JSON.stringify({ functions }, null, 2) + "\n", "initialize absent functions configuration");
   const authPath = path.join(normalized, "auth.config.ts");
   if (options.trustedJwtProvider) {
@@ -237,7 +340,7 @@ export async function planAdditiveBackendInstallation(projectPath: string, sdkPa
     await proposed(authPath, `import type { AuthConfig } from "convex/server";\nexport default { providers: [${JSON.stringify(options.trustedJwtProvider)}] } satisfies AuthConfig;\n`, "integrate explicitly selected verified JWT provider", (current) => addAuth(current, options.trustedJwtProvider!));
     plan.capabilities.authConfigured = !plan.conflicts.some((entry) => entry.path === authPath);
   } else plan.capabilities.authConfigured = (await readOptional(path.join(target, "auth.config.ts"))) !== null;
-  // Core has no HTTP routes. Existing HTTP/auth routers and deployment config are host-owned.
+  // An empty route manifest retains the historical no-HTTP installation behavior.
   return plan;
 }
 export class BackendMergeRequiredError extends Error {

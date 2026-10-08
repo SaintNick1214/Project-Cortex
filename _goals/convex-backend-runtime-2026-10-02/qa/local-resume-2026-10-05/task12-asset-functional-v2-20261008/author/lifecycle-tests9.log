@@ -1,0 +1,189 @@
+  console.error
+    ◇ injected env (0) from .env.test
+
+      13 | import dotenv from "dotenv";
+      14 | import { resolve } from "path";
+    > 15 |
+         | ^
+      16 | // Load .env.test first (test defaults)
+      17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+      18 |
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:15:8
+
+  console.error
+    ◇ injected env (0) from .env.local
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+  console.log
+    
+    🧪 Testing against LOCAL Convex: http://127.0.0.1:1
+
+      at tests/env.ts:35:13
+
+  console.log
+       Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:36:13
+
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:121:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:122:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:123:13
+
+(node:67535) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeAssets/lifecycle.test.ts (24.113 s)
+  immutable private assets and reference ownership
+    ✓ actual bytes commit once, replay keeps exact metadata, no bearer URL (70 ms)
+    ✓ same request with a changed payload is a no-write idempotency conflict (17 ms)
+    ✓ the 100th owner stays readable and idempotent; a 101st join rolls back (30 ms)
+    ✓ catalog-backed legacy attachment preserves validated caller metadata without relabeling bytes (20 ms)
+    ✓ a blob with the wrong hash cannot stage or become ready (23 ms)
+    ✓ late finalize after revoked cannot revive a reserved version (30 ms)
+    ✓ late finalize after deleted cannot revive a reserved version (29 ms)
+    ✓ late finalize after cancelled cannot revive a reserved version (14 ms)
+    ✓ lost ready acknowledgement cannot trigger deletion of committed referenced bytes (20 ms)
+    ✓ attachment removal preserves artifact history; last owner deletion cleans bytes (38 ms)
+    ✓ undo, redo and historical export identify the same immutable lineage (43 ms)
+    ✓ a retained 257-edge artifact can be deleted in bounded pages without losing the last owner (2157 ms)
+    ✓ an old cleanup continuation preserves a currently retained replacement version (33 ms)
+    ✓ artifact metadata reads are fresh and deny time-only expiry with unchanged arguments (84 ms)
+    ✓ no-auth metadata delivery denies without row or byte effects (16 ms)
+    ✓ foreign metadata delivery denies without row or byte effects (21 ms)
+    ✓ revoked metadata delivery denies without row or byte effects (18 ms)
+    ✓ failed last-owner delete remains retryable and never reports physically deleted (27 ms)
+    ✓ orphan marker cannot match a predictable unrelated host blob (19 ms)
+    ✓ principal cascade retires owned edges and preserves unrelated host bytes (52 ms)
+    ✓ Agent file parts add independent ownership, and vacuum is not artifact ownership (100 ms)
+    ✓ generated output cannot become ready after its exact input version loses its last owner (15 ms)
+  actual application and private protocol byte bounds
+    ✓ exact 20,000,000 accepted and one byte above rejected (30 ms)
+    ✓ streamed overflow cancels before any storage acceptance (2 ms)
+    ✓ generated oversized bytes fail before job creation/store/ready (19 ms)
+    ✓ upload current storage grant is checked before reading body (19 ms)
+    ✓ HTTP delivers authorized catalog MIME/hash with no-store and rejects corrupted oversized storage (45 ms)
+    ✓ private provider materialization uses exact authorized bytes and full encoded bound (38 ms)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅    24.1s | 28/28 passed | /tests/unit/runtimeAssets/lifecycle.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    2.16s ( 8.8%) - immutable private assets and reference ownership a retained 257-edge artifact can be deleted in bounded pages without losing the last owner
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+ 2. [32m✓[0m    0.10s ( 0.4%) - immutable private assets and reference ownership Agent file parts add independent ownership, and vacuum is not artifact ownership
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+ 3. [32m✓[0m    0.08s ( 0.3%) - immutable private assets and reference ownership artifact metadata reads are fresh and deny time-only expiry with unchanged arguments
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+ 4. [32m✓[0m    0.07s ( 0.3%) - immutable private assets and reference ownership actual bytes commit once, replay keeps exact metadata, no bearer URL
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+ 5. [32m✓[0m    0.05s ( 0.2%) - immutable private assets and reference ownership principal cascade retires owned edges and preserves unrelated host bytes
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+ 6. [32m✓[0m    0.04s ( 0.2%) - actual application and private protocol byte bounds HTTP delivers authorized catalog MIME/hash with no-store and rejects corrupted oversized storage
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+ 7. [32m✓[0m    0.04s ( 0.2%) - immutable private assets and reference ownership undo, redo and historical export identify the same immutable lineage
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+ 8. [32m✓[0m    0.04s ( 0.2%) - immutable private assets and reference ownership attachment removal preserves artifact history; last owner deletion cleans bytes
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+ 9. [32m✓[0m    0.04s ( 0.2%) - actual application and private protocol byte bounds private provider materialization uses exact authorized bytes and full encoded bound
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+10. [32m✓[0m    0.03s ( 0.1%) - immutable private assets and reference ownership an old cleanup continuation preserves a currently retained replacement version
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+11. [32m✓[0m    0.03s ( 0.1%) - immutable private assets and reference ownership the 100th owner stays readable and idempotent; a 101st join rolls back
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+12. [32m✓[0m    0.03s ( 0.1%) - immutable private assets and reference ownership late finalize after revoked cannot revive a reserved version
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+13. [32m✓[0m    0.03s ( 0.1%) - actual application and private protocol byte bounds exact 20,000,000 accepted and one byte above rejected
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+14. [32m✓[0m    0.03s ( 0.1%) - immutable private assets and reference ownership late finalize after deleted cannot revive a reserved version
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+15. [32m✓[0m    0.03s ( 0.1%) - immutable private assets and reference ownership failed last-owner delete remains retryable and never reports physically deleted
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+16. [32m✓[0m    0.02s ( 0.1%) - immutable private assets and reference ownership a blob with the wrong hash cannot stage or become ready
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+17. [32m✓[0m    0.02s ( 0.1%) - immutable private assets and reference ownership foreign metadata delivery denies without row or byte effects
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+18. [32m✓[0m    0.02s ( 0.1%) - immutable private assets and reference ownership catalog-backed legacy attachment preserves validated caller metadata without relabeling bytes
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+19. [32m✓[0m    0.02s ( 0.1%) - immutable private assets and reference ownership lost ready acknowledgement cannot trigger deletion of committed referenced bytes
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+20. [32m✓[0m    0.02s ( 0.1%) - immutable private assets and reference ownership orphan marker cannot match a predictable unrelated host blob
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 2.91s (11.9% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      24.49s
+  Test suites:        1
+  Individual tests:   28
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 passed, 1 total
+Tests:       28 passed, 28 total
+Snapshots:   0 total
+Time:        24.487 s
+Ran all test suites within paths "tests/unit/runtimeAssets/lifecycle.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/author/lifecycle-tests9.json

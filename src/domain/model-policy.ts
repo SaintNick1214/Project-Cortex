@@ -16,7 +16,7 @@ export const MODEL_OPERATION_REGISTRY = Object.freeze(Object.fromEntries(MODEL_O
   key,
   capability: key.startsWith("embedding.") ? "embedding" : key.startsWith("media.image") ? "image" : key.startsWith("media.video") ? "video" : key === "memory.extract" || key === "facts.resolve" ? "structured" : "text",
   interfaces: Object.freeze(key.startsWith("embedding.") ? ["embedding"] : key.startsWith("media.image") ? ["image"] : key.startsWith("media.video") ? ["video"] : ["chat", "responses"]),
-  availableInThisPacket: !key.startsWith("media."),
+  availableInThisPacket: key !== "media.image.generate",
 })])) as Readonly<Record<ModelOperationKey, { readonly key: ModelOperationKey; readonly capability: ModelCapability; readonly interfaces: readonly string[]; readonly availableInThisPacket: boolean }>>);
 
 const nonempty = z.string().min(1).max(256).refine((value) => value.trim() === value && value.trim().length > 0);
@@ -143,7 +143,10 @@ export function resolveModelPolicy(input: unknown): ModelPolicySnapshotV1 {
   canonicalModelJson(input);
   const { context, policies, qualifications } = parse(resolutionSchema, input);
   const operation = MODEL_OPERATION_REGISTRY[context.operationKey];
-  if (!operation.availableInThisPacket) throw new Error("CAPABILITY_UNAVAILABLE: media qualification belongs to its service gate");
+  if (!operation.availableInThisPacket || context.operationKey === "media.video.generate" && !qualifications.some(receipt =>
+    receipt.nativeInterface === "video" && receipt.capabilities.includes("video"))) {
+    throw new Error("CAPABILITY_UNAVAILABLE: media qualification belongs to its service gate");
+  }
   const seen = new Set<string>();
   for (const policy of policies) {
     const target = `${policy.scope}:${policy.operationKey ?? "*"}`;

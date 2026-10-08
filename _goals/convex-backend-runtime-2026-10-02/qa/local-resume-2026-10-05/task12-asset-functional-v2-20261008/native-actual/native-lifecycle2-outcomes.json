@@ -1,0 +1,81 @@
+{
+  "status": "ACTUAL_PASS",
+  "groups": [
+    {
+      "name": "real-Agent-file-owner-retains-bytes-until-authorized-unlocked-conversation-deletion",
+      "status": "PASS",
+      "conversationId": "conversation:2b8adcc2755036a4590c7fcbbd057787ed212f2abff38630efd0d7da598d12f9",
+      "nativeMessageId": "kx713kxsq9e6z12qqx91nkef698fwbdc",
+      "assetVersionId": "asset:01d4d4addbccdf8846284bf257faac762b6eb2c360fc9959913d55b66fcfe333:version:1",
+      "publicAssetHash": "ad76ffed555bbbdb2187e7a3e3e2cda1221dfdef130f60786b9df7f08fd4b6fc",
+      "finalStorage": null,
+      "unlocked": {
+        "historyRevision": 2,
+        "updated": true
+      },
+      "deletion": {
+        "cleanup": "scheduled",
+        "conversationId": "conversation:2b8adcc2755036a4590c7fcbbd057787ed212f2abff38630efd0d7da598d12f9",
+        "deleted": true,
+        "deletedAt": 1791500577054,
+        "hiddenMessageCount": 1,
+        "messagesDeleted": 0,
+        "restorable": false
+      },
+      "fixtureCorrection": "The default manual lock must be explicitly unlocked by its current admin before deletion.",
+      "preservedLockedDenial": true,
+      "textBytes": 0,
+      "modelCalls": 0
+    },
+    {
+      "name": "delayed-native-ready-commit-denies-deletion-tombstone-and-cleans-storage",
+      "status": "PASS",
+      "jobId": "asset:d68f577d09a119ab7acc8de50dc09c0a391b914386a097f0d755c288f2a9809a",
+      "late": {
+        "name": "ConvexError",
+        "message": "[Request ID: ec81eb0f1e007853] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../custom/backend/runtimeAuth.ts:46:26)\n    at materialize (../../custom/backend/runtimeAuth.ts:150:2)\n    at async resolveAuthorityReference (../../custom/backend/runtimeAuth.ts:203:0)\n    at async recheckAuthority (../../custom/backend/runtimeAuth.ts:257:0)\n    at async jobCurrent (../../custom/backend/runtimeAssets.ts:40:99)\n    at async handler (../../custom/backend/runtimeAssets.ts:80:2)\n",
+        "data": {
+          "code": "FORBIDDEN",
+          "message": "Access denied",
+          "outcome": "not_dispatched",
+          "retryable": false,
+          "version": 1
+        }
+      },
+      "readyVersionCount": 0,
+      "physicalStorage": null
+    },
+    {
+      "name": "crash-between-store-and-stage-owned-marker-orphan-cleanup",
+      "status": "PASS",
+      "jobId": "asset:10e8628463adcf126c5bdc3685e069fa143b4d125c37f6eff3939d1a01e0747f",
+      "storedIdKnownOnlyToInternalQA": true,
+      "physicalStorage": null
+    },
+    {
+      "name": "cancelled-native-staged-job-never-ready-and-removes-bytes",
+      "status": "PASS",
+      "jobId": "asset:9c979b9b944cf07b9b8bb7f81ccac8a5e88117e2d130075f272e8092a13ed907",
+      "cancellation": {
+        "cancelled": true
+      },
+      "denial": {
+        "name": "ConvexError",
+        "message": "[Request ID: 1a4a486e8aa12a8f] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"ASSET_UPLOAD_EXPIRED\",\"message\":\"Asset operation denied.\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at assetDenied (../../custom/backend/runtimeAssetCatalog.ts:13:183)\n    at jobCurrent (../../custom/backend/runtimeAssets.ts:40:73)\n    at handler (../../custom/backend/runtimeAssets.ts:80:8)\n",
+        "data": {
+          "code": "ASSET_UPLOAD_EXPIRED",
+          "message": "Asset operation denied.",
+          "outcome": "not_dispatched",
+          "retryable": false,
+          "version": 1
+        }
+      },
+      "physicalStorage": null
+    }
+  ],
+  "previousCompletedGroupsFile": "native-lifecycle1-outcomes.json",
+  "previousCompletedGroups": 4,
+  "modelCalls": 0,
+  "projectId": 3174742,
+  "QAByteGeneratedIsNotProviderEvidence": true
+}

@@ -1,0 +1,10 @@
+{
+  "scope": "QA_RUNNER_SETUP_ONLY",
+  "exitCode": 1,
+  "code": "ERR_INVALID_ARG_VALUE",
+  "reason": "WriteStream fd was not opened before passing spawn stdio",
+  "testChildrenStarted": 0,
+  "productEffects": 0,
+  "preservedRunner": "run-checks1.mjs",
+  "correction": "run-checks2.mjs uses awaited file handles before spawn"
+}

@@ -246,7 +246,7 @@ export class ArtifactsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.artifacts.get, {
+        this.client.mutation(api.artifacts.get, {
           artifactId,
           tenantId: this.authContext?.tenantId,
         }),
@@ -377,7 +377,7 @@ export class ArtifactsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.artifacts.list, {
+        this.client.mutation(api.artifacts.list, {
           memorySpaceId: filter.memorySpaceId,
           tenantId: resolveTenantId(this.authContext?.tenantId, filter.tenantId),
           userId: filter.userId,
@@ -420,7 +420,7 @@ export class ArtifactsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.artifacts.count, {
+        this.client.mutation(api.artifacts.count, {
           memorySpaceId: filter.memorySpaceId,
           tenantId: resolveTenantId(this.authContext?.tenantId, filter.tenantId),
           userId: filter.userId,
@@ -571,7 +571,7 @@ export class ArtifactsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.artifacts.getHistory, {
+        this.client.mutation(api.artifacts.getHistory, {
           artifactId,
           tenantId: this.authContext?.tenantId,
           limit: options?.limit,
@@ -605,7 +605,7 @@ export class ArtifactsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.artifacts.getVersion, {
+        this.client.mutation(api.artifacts.getVersion, {
           artifactId,
           version,
           tenantId: this.authContext?.tenantId,

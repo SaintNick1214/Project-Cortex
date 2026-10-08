@@ -1,0 +1,10 @@
+{
+  "status": "LOCAL_REPORT_WRITER_FAILED_BEFORE_PUBLICATION",
+  "exitCode": 1,
+  "origin": "AssertionError at close-native-report1.mjs:17",
+  "cause": "Report writer assumed every closed-child receipt used childClosed; the existing successful install-packages receipt uses closed:true.",
+  "effects": 0,
+  "providerCalls": 0,
+  "sourceOrAssertionChange": false,
+  "correction": "Explicitly project childClosed ?? closed from the existing receipt without altering it."
+}

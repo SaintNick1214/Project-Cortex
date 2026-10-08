@@ -399,16 +399,17 @@ describe("native private policy ledger — offline logic only", () => {
       expect(reg.exportArgs?.()).not.toContain('"type":"any"');
     }
   });
-  it("preserves all original native, transcript, Agent, ingestion and profile tables with nine graph tables and unique indexes", () => {
+  it("preserves all original native, transcript, Agent, ingestion and profile tables with nine graph tables, four asset tables and unique indexes", () => {
     const original = ["conversations", "conversationShares", "conversationSnapshots", "immutable", "mutable", "memories", "facts", "factHistory", "memorySpaces", "contexts", "agents", "sessions", "governancePolicies", "governanceEnforcement", "graphSyncQueue", "artifacts", "attachments",
       "runtimeAuthPrincipals", "runtimeAuthMemberships", "runtimeAuthScopes", "runtimeAuthGrants", "runtimeAuthTombstones", "runtimeMemorySources", "runtimeMemoryChunks", "runtimeMemoryVectors", "runtimeMemoryReceipts",
       "runtimeModelPolicies", "runtimeModelQualifications", "runtimeBudgetAccounts", "runtimeModelOperations", "runtimeModelAttempts"];
     const added = ["runtimeAgentDefinitions", "runtimeConversations", "runtimeConversationShares", "runtimeConversationSnapshots", "runtimeTranscriptMessages", "runtimeRuns", "runtimeRunOutbox", "runtimeRunAttempts", "runtimeTranscriptOutbox"];
     const execution = ["runtimeAgentExecutions", "runtimeAgentOutput", "runtimeAgentOperations", "runtimeAgentIngestion"];
     const ingestion = ["runtimeIngestionScopes", "runtimeIngestionEvents", "runtimeIngestionStages", "runtimeIngestionJobs", "runtimeBeliefHeads", "runtimeBeliefHistory", "runtimeBeliefOutbox"];
+    const assets = ["runtimeAssets", "runtimeAssetVersions", "runtimeAssetReferences", "runtimeAssetJobs"];
     const graph = ["runtimeGraphConnectors", "runtimeGraphScopes", "runtimeGraphRevisions", "runtimeGraphSources", "runtimeGraphPayloads", "runtimeGraphOutbox", "runtimeGraphReceipts", "runtimeGraphReads", "runtimeGraphDependencies"];
-    expect(Object.keys(schema.tables).sort()).toEqual([...original, ...added, ...execution, ...ingestion, "runtimeMemoryVectorGenerations", ...graph].sort());
-    const required = { runtimeMemoryVectorGenerations: ["by_scope", "by_owner", "by_scope_profile_source"], runtimeAgentExecutions: ["by_attempt"], runtimeAgentOutput: ["by_sequence", "by_delivery"], runtimeAgentOperations: ["by_operation", "by_attempt"], runtimeAgentIngestion: ["by_run"],
+    expect(Object.keys(schema.tables).sort()).toEqual([...original, ...added, ...execution, ...ingestion, "runtimeMemoryVectorGenerations", ...graph, ...assets].sort());
+    const required = { runtimeAssets: ["by_asset", "by_owner"], runtimeAssetVersions: ["by_version", "by_version_id", "by_storage", "by_cleanup"], runtimeAssetReferences: ["by_version", "by_owner", "by_principal", "by_scope", "by_conversation"], runtimeAssetJobs: ["by_request", "by_job", "by_owner", "by_scope"], runtimeMemoryVectorGenerations: ["by_scope", "by_owner", "by_scope_profile_source"], runtimeAgentExecutions: ["by_attempt"], runtimeAgentOutput: ["by_sequence", "by_delivery"], runtimeAgentOperations: ["by_operation", "by_attempt"], runtimeAgentIngestion: ["by_run"],
       runtimeIngestionScopes: ["by_scope"], runtimeIngestionEvents: ["by_event", "by_scope_sequence", "by_owner_sequence", "by_source", "by_source_eligibility", "by_conversation_sequence"],
       runtimeIngestionStages: ["by_event_stage"], runtimeIngestionJobs: ["by_event", "by_budget", "by_account"],
       runtimeBeliefHeads: ["by_slot"], runtimeBeliefHistory: ["by_fact", "by_event"], runtimeBeliefOutbox: ["by_event"],

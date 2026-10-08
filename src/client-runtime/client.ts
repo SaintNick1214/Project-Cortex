@@ -3,11 +3,18 @@ import type { AuthTokenFetcher } from "convex/browser";
 import { makeFunctionReference } from "convex/server";
 import type { RuntimeConversation, RuntimeDefinition, RuntimeEmbeddingProfile, RuntimeObservation, RuntimeRecallResult, RuntimeRun,
   RuntimeRunHandle, RuntimeScope, RuntimeSession, RuntimeToolApproval, RuntimeTranscriptPage, RuntimeOutputCursor, TextSubmitV1 } from "./types.js";
+import type { RuntimeAssetReference, RuntimeAssetVersion } from "./types.js";
+import { assetDigest, assetHttpBase, assetHttpError, assetMime, assetFilename, assetRequestId, assetReference, assetVersion, boundedAssetBody, RUNTIME_ASSET_MAX_BYTES } from "./assets.js";
+import type { RuntimeAssetIoOptions, RuntimeAssetUploadOptions, RuntimeAssetPreview } from "./assets.js";
 import { CortexRuntimeError, identifier, invalid, natural, observation, run, runtimeError, sameScope, session, textSubmit } from "./validation.js";
 
 export type RuntimeClientPort = Pick<ConvexClient, "setAuth" | "query" | "mutation" | "action" | "onUpdate" | "close">;
 export interface CortexRuntimeClientOptions {
   deploymentUrl: string; fetchToken: AuthTokenFetcher; scope?: Partial<RuntimeScope>;
+  /** Explicit owned HTTP-action origin. Tokens are never forwarded to redirects or storage URLs. */
+  assetHttpUrl?: string;
+  /** Optional standard fetch port for hosts/tests; defaults to the browser implementation. */
+  fetch?: typeof globalThis.fetch;
   onAuthChange?: (authenticated: boolean) => void;
   /** An existing official client can be shared; close() then leaves its ownership with the caller. */
   client?: RuntimeClientPort;
@@ -18,13 +25,15 @@ const action = (name: string) => makeFunctionReference<"action", Record<string, 
 const refs = { session: query("runtimeClient:session"), submit: mutation("runs:submit"), get: query("runs:get"), start: mutation("runtimeAgent:start"),
   observe: query("runtimeAgent:observe"), cancel: mutation("runtimeAgent:cancel"), approve: mutation("runs:approve"), tool: mutation("runtimeAgent:approveTool"),
   definition: query("agentDefinitions:get"), messages: query("runtimeTranscript:messages"), conversations: query("runtimeTranscript:list"),
-  profile: query("runtimeMemory:defaultProfile"), recall: action("runtimeMemory:recall") };
+  profile: query("runtimeMemory:defaultProfile"), recall: action("runtimeMemory:recall"), asset: mutation("runtimeAssets:get") };
 
 /** One authenticated Convex connection. JWTs stay inside the host's official fetchToken callback. */
 export class CortexRuntimeClient {
   private readonly port: RuntimeClientPort;
   private readonly scope: Partial<RuntimeScope>;
   private readonly watchers = new Set<(error: CortexRuntimeError) => void>();
+  private readonly assetRequests = new Set<AbortController>();
+  private readonly assetPreviews = new Set<() => void>();
   private closed = false;
   private generation = 0;
   private authenticated = false;
@@ -49,7 +58,7 @@ export class CortexRuntimeClient {
       this.authenticated = authenticated;
       if (authenticated) ready();
       else {
-        const error = new CortexRuntimeError("UNAUTHENTICATED"); denied(error);
+        const error = new CortexRuntimeError("UNAUTHENTICATED"); denied(error); this.abortAssets(error);
         for (const fail of [...this.watchers]) fail(error);
       }
       this.options.onAuthChange?.(authenticated);
@@ -57,7 +66,7 @@ export class CortexRuntimeClient {
   }
   /** Reinstall the official callback; Convex requests and verifies a fresh token. No local token cache. */
   async refreshAuth(fetchToken?: AuthTokenFetcher): Promise<void> {
-    this.check(); this.rejectAuth?.(new CortexRuntimeError("AUTH_REFRESHED")); this.generation++;
+    this.check(); this.abortAssets(new CortexRuntimeError("SESSION_CHANGED", "uncertain")); this.rejectAuth?.(new CortexRuntimeError("AUTH_REFRESHED")); this.generation++;
     if (fetchToken) this.fetchToken = fetchToken; this.installAuth(); await this.authReady;
   }
   private check() { if (this.closed) invalid("CLIENT_CLOSED"); }
@@ -186,5 +195,108 @@ export class CortexRuntimeClient {
     const { result } = await this.inSession(current => this.port.action(refs.recall, { tenantId: current.tenantId, memorySpaceId: current.memorySpaceId,
       text: input.text, requestId: identifier(input.requestId, 512), ...(input.limit === undefined ? {} : { limit: input.limit }) })); return result as RuntimeRecallResult;
   }
-  async close(): Promise<void> { if (this.closed) return; this.closed = true; const error = new CortexRuntimeError("CLIENT_CLOSED"); this.rejectAuth?.(error); for (const fail of [...this.watchers]) fail(error); if (!this.options.client) await this.port.close(); }
+  private abortAssets(error: CortexRuntimeError) {
+    for (const controller of this.assetRequests) controller.abort(error);
+    for (const revoke of [...this.assetPreviews]) revoke();
+  }
+  private async assetIo<T>(options: RuntimeAssetIoOptions, invoke: (current: RuntimeSession, signal: AbortSignal, base: URL) => Promise<T>): Promise<T> {
+    this.check(); const base = assetHttpBase(this.options.assetHttpUrl), epoch = this.generation;
+    const timeout = options.timeoutMs ?? 60_000;
+    if (!Number.isSafeInteger(timeout) || timeout < 1000 || timeout > 120_000) invalid();
+    const controller = new AbortController(); this.assetRequests.add(controller);
+    const cancel = () => controller.abort(new CortexRuntimeError("ASSET_CANCELLED", "uncertain"));
+    options.signal?.addEventListener("abort", cancel, { once: true }); if (options.signal?.aborted) cancel();
+    const timer = setTimeout(() => controller.abort(new CortexRuntimeError("ASSET_TIMEOUT", "uncertain")), timeout);
+    let rejectAbort = (_error: unknown) => {};
+    const aborted = new Promise<never>((_resolve, reject) => { rejectAbort = reject; });
+    const abort = () => rejectAbort(controller.signal.reason);
+    controller.signal.addEventListener("abort", abort, { once: true }); if (controller.signal.aborted) abort();
+    const check = () => {
+      if (controller.signal.aborted) throw controller.signal.reason;
+      this.check(); if (epoch !== this.generation || !this.authenticated) invalid("SESSION_CHANGED");
+    };
+    const task = async () => {
+      const current = await this.session(); check();
+      const result = await invoke(current, controller.signal, base); check();
+      const after = await this.session(); check();
+      if (!sameScope(current, after) || current.principalId !== after.principalId) invalid("SESSION_CHANGED");
+      return result;
+    };
+    try { return await Promise.race([task(), aborted]); }
+    catch (error) { throw new CortexRuntimeError(runtimeError(error).code, "uncertain"); }
+    finally {
+      clearTimeout(timer); options.signal?.removeEventListener("abort", cancel);
+      controller.signal.removeEventListener("abort", abort); this.assetRequests.delete(controller);
+    }
+  }
+  private async assetFetch(base: URL, path: string, current: RuntimeSession, selectors: Record<string, string>, signal: AbortSignal, body?: Blob): Promise<Response> {
+    const token = await this.fetchToken({ forceRefreshToken: true });
+    if (signal.aborted) throw signal.reason;
+    if (!token || !this.authenticated || this.closed) invalid("UNAUTHENTICATED");
+    const url = new URL(path, base);
+    for (const [key, value] of Object.entries({ tenantId: current.tenantId, memorySpaceId: current.memorySpaceId, ...selectors })) url.searchParams.set(key, value);
+    const headers = new Headers({ Authorization: `Bearer ${token}` });
+    if (body) headers.set("Content-Type", body.type);
+    return (this.options.fetch ?? globalThis.fetch)(url, { method: body ? "POST" : "GET", headers, ...(body ? { body } : {}),
+      signal, redirect: "error", cache: "no-store", credentials: "omit" });
+  }
+  private async currentAsset(current: RuntimeSession, reference: RuntimeAssetReference): Promise<RuntimeAssetVersion> {
+    const result = assetVersion(await this.port.mutation(refs.asset, { tenantId: current.tenantId, memorySpaceId: current.memorySpaceId, ...reference }));
+    if (result.assetId !== reference.assetId || result.assetVersion !== reference.version) invalid("ASSET_VERSION_CHANGED");
+    return result;
+  }
+  /** Metadata is freshly authorized by a mutation; its immutable IDs grant no byte access. */
+  async getAsset(reference: RuntimeAssetReference): Promise<RuntimeAssetVersion> {
+    const normalized = assetReference(reference);
+    const { result } = await this.inSession(current => this.currentAsset(current, normalized)); return result;
+  }
+  /** Direct bounded raw-byte upload. No client-side storage or presigned URL. */
+  async uploadAsset(input: Uint8Array | Blob, options: RuntimeAssetUploadOptions): Promise<RuntimeAssetVersion> {
+    const requestId = assetRequestId(options.requestId), mimeType = assetMime(options.mimeType);
+    const filename = options.filename === undefined ? undefined : assetFilename(options.filename);
+    const size = input instanceof Blob ? input.size : input instanceof Uint8Array ? input.byteLength : invalid();
+    if (size < 1) invalid("INVALID_ASSET_METADATA");
+    if (size > RUNTIME_ASSET_MAX_BYTES) invalid("ASSET_TOO_LARGE");
+    const body = input instanceof Blob ? input.slice(0, size, mimeType) : new Blob([new Uint8Array(input)], { type: mimeType });
+    return this.assetIo(options, async (current, signal, base) => {
+      const response = await this.assetFetch(base, "/cortex/assets/upload", current, { requestId, ...(filename === undefined ? {} : { filename }) }, signal, body);
+      if (!response.ok) return assetHttpError(response, signal);
+      const bytes = await boundedAssetBody(response, 65_536, signal, "INVALID_RESPONSE");
+      let parsed: unknown; try { parsed = JSON.parse(new TextDecoder().decode(bytes)); } catch { return invalid("INVALID_RESPONSE"); }
+      const value = assetVersion(parsed);
+      const digest = await assetDigest(new Uint8Array(await body.arrayBuffer()));
+      if (signal.aborted) throw signal.reason;
+      if (value.sizeBytes !== size || value.mimeType !== mimeType || value.contentHash !== digest || value.filename !== filename) invalid("ASSET_VERSION_CHANGED");
+      return value;
+    });
+  }
+  /** Authenticated bytes, verified against the exact current immutable version, suitable for a bounded Blob URL in the UI. */
+  async fetchAsset(reference: RuntimeAssetReference, options: RuntimeAssetIoOptions = {}): Promise<Blob> {
+    const normalized = assetReference(reference);
+    return this.assetIo(options, async (current, signal, base) => {
+      const expected = await this.currentAsset(current, normalized);
+      if (signal.aborted) throw signal.reason;
+      const response = await this.assetFetch(base, "/cortex/assets/download", current, { assetId: normalized.assetId, version: String(normalized.version) }, signal);
+      if (!response.ok) return assetHttpError(response, signal);
+      const bytes = await boundedAssetBody(response, RUNTIME_ASSET_MAX_BYTES, signal);
+      const mimeType = response.headers.get("content-type")?.split(";", 1)[0]?.trim();
+      if (bytes.byteLength !== expected.sizeBytes || mimeType !== expected.mimeType || await assetDigest(bytes) !== expected.contentHash) invalid("ASSET_CONTENT_MISMATCH");
+      if (signal.aborted) throw signal.reason;
+      const after = await this.currentAsset(current, normalized);
+      if (JSON.stringify(after) !== JSON.stringify(expected)) invalid("ASSET_VERSION_CHANGED");
+      if (signal.aborted) throw signal.reason;
+      return new Blob([bytes], { type: expected.mimeType });
+    });
+  }
+  /** Local bounded Blob URL for image/video/download rendering. Revoke on unmount; auth changes and close also revoke. */
+  async createAssetUrl(reference: RuntimeAssetReference, options: RuntimeAssetIoOptions = {}): Promise<RuntimeAssetPreview> {
+    const epoch = this.generation, blob = await this.fetchAsset(reference, options);
+    this.check(); if (epoch !== this.generation || !this.authenticated) invalid("SESSION_CHANGED");
+    if (typeof URL.createObjectURL !== "function" || typeof URL.revokeObjectURL !== "function") invalid("ASSET_PREVIEW_UNAVAILABLE");
+    const url = URL.createObjectURL(blob); let active = true;
+    const revoke = () => { if (!active) return; active = false; URL.revokeObjectURL(url); this.assetPreviews.delete(revoke); };
+    this.assetPreviews.add(revoke);
+    return Object.freeze({ url, mimeType: blob.type, sizeBytes: blob.size, revoke });
+  }
+  async close(): Promise<void> { if (this.closed) return; this.closed = true; const error = new CortexRuntimeError("CLIENT_CLOSED"); this.abortAssets(error); this.rejectAuth?.(error); for (const fail of [...this.watchers]) fail(error); if (!this.options.client) await this.port.close(); }
 }

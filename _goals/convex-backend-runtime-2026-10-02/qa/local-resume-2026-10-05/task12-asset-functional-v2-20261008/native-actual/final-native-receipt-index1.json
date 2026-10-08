@@ -1,0 +1,857 @@
+{
+  "schemaVersion": 1,
+  "scope": "Finite existing public native receipts/source/commands and related closed product checks; ordinary evidence index, no controller/custody or acceptance authority.",
+  "report": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/final-native-report1.json",
+  "references": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/build-cli-current1.json",
+      "bytes": 491,
+      "sha256": "1f4402885ad86c9d7d7077176457cf6469a5a28d66ee62072325ed37208400cc"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/build-cli-current1.stderr.log",
+      "bytes": 196,
+      "sha256": "285b773fe061f7073f14b8134c008d987eea1565f14e60d1dea544edeb33c9ae"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/build-cli-current1.stdout.log",
+      "bytes": 335,
+      "sha256": "0aebfab69826779336731f1787457cc5bb791455b403515ffbc9d1c748002c41"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/build-media-manifest1.mjs",
+      "bytes": 7127,
+      "sha256": "6164be089873f2c09d9a0ccf6d96925ffcae81cdaff9dc81306e3c32d153a020"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/build-media-manifest2.mjs",
+      "bytes": 6533,
+      "sha256": "117d481c358e2231ae60879ae42cc3221bff71f9562e2ec13811b1bd239dc541"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/build-package1.mjs",
+      "bytes": 4014,
+      "sha256": "0bce16dd0ed3dfd2a43ae15f8ed1da9d8871b90113b97a474f8aa5450ec2b8be"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/build-sdk-current1.json",
+      "bytes": 472,
+      "sha256": "ef4ef31024d76e475e827a58cf29010a5dd63392e79f005850987ebaecd6f05a"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/build-sdk-current1.stderr.log",
+      "bytes": 333,
+      "sha256": "6a1a7884452b5cb1d30e789ae652ef774de3e96a9f5686c2116a8f50a01b22cf"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/build-sdk-current1.stdout.log",
+      "bytes": 2112,
+      "sha256": "cd66625dca5f353a4425828d69ac5284e1c0880629936b6334899ac5b798a920"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/cleanup12-before.json",
+      "bytes": 48317,
+      "sha256": "2e07bf8819eabab97daa8c05a9caed0d4e91b8aa02c9ddb412c792fbd83e4259"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/cleanup12-command.json",
+      "bytes": 690,
+      "sha256": "6c0104b988b527b60d46fa4f093598d4bf202d9e59c241acff1bc9ef2699cc92"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/cleanup12-outcomes.json",
+      "bytes": 62748,
+      "sha256": "3cb820d1beb70d39496a42962459a9524219793a366beedc85bab98171bff71d"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/cleanup12-target-verified.json",
+      "bytes": 288,
+      "sha256": "d457c65f6e507c75daf5bffcdf75108b25ea81876f914b74ca67fcea9175c91d"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/cleanup12.mjs",
+      "bytes": 6008,
+      "sha256": "f367b7d5cff14cfadafeacfd74c1b4610b68697e3570a7279961b8ccc48a6dbe"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/cleanup12.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/cleanup12.stdout.log",
+      "bytes": 133,
+      "sha256": "7042bda4c76d1d89eb6d162d0b09e263289e05234e2c4fe1940adc0f7d841af9"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/close-native-report1.mjs",
+      "bytes": 17079,
+      "sha256": "e7624c344235aef46982470da29713a3c1b60396df6f200b65d8a332a8a91ff2"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/closure-writer-preparation-failure1.json",
+      "bytes": 471,
+      "sha256": "b8771ebd0f709b454f1032d42e8227c71e9ffe13623bfeadab5eb9ce31195d08"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/commission-only-lineage1.json",
+      "bytes": 756,
+      "sha256": "414aea474ba6faa7c115a379222e2169214e847c6a0bc15b606e810b40259517"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/commission-only-manifest1.json",
+      "bytes": 18638,
+      "sha256": "c5ee6ca36821e995913937b600a9d0e502a70107c2b598c953d0418a0948c935"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/commissioning-path1.json",
+      "bytes": 1082,
+      "sha256": "57b9a1fdf7a53c5ef7b9d759d4372484dce09621270ca16bf87182956b04f114"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/common.mjs",
+      "bytes": 6388,
+      "sha256": "e14693fd570a04b0b82bd3d449d28d6187bfd401e0c121bef96c05092723a23c"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/deploy-current1-target-verified.json",
+      "bytes": 288,
+      "sha256": "360ffdb17155a6f8a274be61c19127ff29551ca0aa75af5c18333e7bc63e0b1b"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/deploy-current1.json",
+      "bytes": 644,
+      "sha256": "f0ec478c1beca671738a42d5069f468f29380574af9c3d3a4220392c574edc5e"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/deploy-current1.stderr.log",
+      "bytes": 2006,
+      "sha256": "fc1d56653ce1ab53cd3e4d6b9b1e891a4780080a127bafbcfbf276f591d99716"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/deploy-current1.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/deploy-fixture.mjs",
+      "bytes": 2459,
+      "sha256": "88ed74cae4f070a37fc1c7bcd7e8f73c597c0a9ce1e1255852dbc6dc2ba5b3b6"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/deploy-sync1-target-verified.json",
+      "bytes": 288,
+      "sha256": "520c28e280db5239ad0ca084222153c0d3b8a9a5dea9dde12aa1c1ef788a8f3d"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/deploy-sync1.json",
+      "bytes": 644,
+      "sha256": "e7ef8b2d5ef60d7ab8b772707fc1e1001e699113a7700f46d013450628685843"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/deploy-sync1.stderr.log",
+      "bytes": 505,
+      "sha256": "3e5e2e2b50082bd6d06ed4af358db05be0269b4a34f96a94bd259a59973acf5d"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/deploy-sync1.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/final-native-report1.json",
+      "bytes": 19084,
+      "sha256": "58715b817fe566e4252d0a00c4bc5aee0e897a4f142e37a572b688b3d1f93f0b"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/final-native-report1.md",
+      "bytes": 3926,
+      "sha256": "d8bd11c28b1f3ab3f9d3e5a80eacd6bc6455bde98e904687c09227fa7d123d59"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/fixture-pointer.json",
+      "bytes": 548,
+      "sha256": "7e6f538af6da035b9cbeb698db8ec012fddee6d1663028fe68c48a95ad38a353"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/install-current1-owned-preimages.json",
+      "bytes": 534707,
+      "sha256": "8374200ad4ed034d9ea1460be4ddcab653505f76397158e47dcd5301cbbf5b60"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/install-current1-target-verified.json",
+      "bytes": 288,
+      "sha256": "8188c90a148c96c4d3d461466e5e4e86b2017d291d3474deec2eaa1f543dd430"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/install-current1.mjs",
+      "bytes": 7339,
+      "sha256": "b71dc676248fd180d1ce94305aae6bdd1ad430f6d75a6b18bc06616449d453c0"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/install-media-fixture1-preimages.json",
+      "bytes": 5634,
+      "sha256": "41f45d69eddc105b9c29eebc57b539e68fd1a6563cca7dfbb2b557c5ee3d0c62"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/install-media-fixture1-target-verified.json",
+      "bytes": 288,
+      "sha256": "f362ed6de872649cacf0d82462b7ac5434fd24ca7553ee71c0974dcf70f34207"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/install-media-fixture1.mjs",
+      "bytes": 4735,
+      "sha256": "8d728fbe04af98ef14ea812b679a785561deab5a6a792245976ae8c759e4828e"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/install-packages-current1.json",
+      "bytes": 563,
+      "sha256": "67b8559d54c65fb4dc76d46f7512f999cb4a986d0b630a8e9c38b3ff230c3181"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/install-packages-current1.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/install-packages-current1.stdout.log",
+      "bytes": 26,
+      "sha256": "b12b4a46b7edac5e31a56978fa0573f71f0dc707053247fc8e0cba278676aef2"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/installed-current1-source-manifest.json",
+      "bytes": 22308,
+      "sha256": "4a9911bdf6f5cfc9bb55c006cef4a5d32e2f2f2608dfc2b3bab2a356b395e32e"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/media-fixture-source-manifest1.json",
+      "bytes": 1524,
+      "sha256": "8bd893e6928e08159dece66f03badf7657751d5028c34bb1a997ecc969785b56"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/media-manifest-preparation-failure1.json",
+      "bytes": 488,
+      "sha256": "a3cdb9d45fbf397690c85da0110ba1091e7eedce4f0d1bcb06645c26e53f613d"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/media-prepared-input-validation1.json",
+      "bytes": 3228,
+      "sha256": "6f0a148a324acf198d43da21d0a7e659493c373669d8c52c3b5e56d258c052eb"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/media-provisional-activation1.json",
+      "bytes": 374,
+      "sha256": "dbf6c6a8a39fb4d1709d674eb8b01f5ae6b57d70e007ebc7181de152e802305f"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/mediaMetadata.fixture.ts",
+      "bytes": 1763,
+      "sha256": "c5a5587fec97c2a5150f8ad10e897f20964933cb93290f3709b60778ca6aef02"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/mediaProbe.fixture.ts",
+      "bytes": 15048,
+      "sha256": "caa8fe240c211b2502a70dc57cb2d82d7050e65a674007f9a3d32514344d0273"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/mediaProbeSchema.fixture.ts",
+      "bytes": 925,
+      "sha256": "e1119e9a019d05525ed270c3ab3e078d82377b2808f6f8f619fe3c97496555ec"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/mediaSyncProbe.fixture.ts",
+      "bytes": 10494,
+      "sha256": "0d06b57a8ef42477d87b4f80419265fe3413f637d5a561c15fa718e2ed5b886a"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/native-boundary1-command.json",
+      "bytes": 704,
+      "sha256": "e05430be27209a5c861bdd151f25b5f7d4dac44bf97dd32aa8a7350e2b996c9c"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/native-boundary1-outcomes.json",
+      "bytes": 2586,
+      "sha256": "04a991bba916ea680d17d2bb102c7b8bb63b243e8e60ff136c0b83a7b839943f"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/native-boundary1-target-verified.json",
+      "bytes": 288,
+      "sha256": "2bfffc745c2ab50aa09f05204bf267a5929424e6311191d1eeb1cc19d256dcd2"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/native-boundary1.mjs",
+      "bytes": 3745,
+      "sha256": "7a78d22fcebba5f75e80c4b2d52f39e31bfc2c304c965d885f1ec27abbc80cf4"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/native-boundary1.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/native-boundary1.stdout.log",
+      "bytes": 51,
+      "sha256": "9677b0c6f3b01bb1b8ab12b54e47414a872f88136b27c637c11c2977c3cb4383"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/native-delivery1-command.json",
+      "bytes": 704,
+      "sha256": "f7553b283b33d6f8a8cd7679e5a79139e948f6be5757755be3508e068dfc9010"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/native-delivery1-outcomes.json",
+      "bytes": 2541,
+      "sha256": "588115fc7f096571d736164c9eafe70f26dfa91c293130ad351ce89e1bdd7175"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/native-delivery1-target-verified.json",
+      "bytes": 288,
+      "sha256": "8dbdd3d1b6643cafaa79e2650d0773ce2bfeb4d8b44b0110c137a54fcfd4438f"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/native-delivery1.mjs",
+      "bytes": 5617,
+      "sha256": "f74afd9b0e81d5ae12314609d2c691d40afbf206380ea9c3a625ea4183eeefe3"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/native-delivery1.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/native-delivery1.stdout.log",
+      "bytes": 51,
+      "sha256": "f740bbfe06a4ce3207728fb46a5a382ea8bda0aa0adb80b62f0b4f3fc3e78136"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/native-lifecycle1-command.json",
+      "bytes": 707,
+      "sha256": "1218b4ee221f89620d1864406831070d3be55aec7c7a65e0c9b2f897a94eeaa4"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/native-lifecycle1-outcomes.json",
+      "bytes": 6531,
+      "sha256": "ca2fe565d36b9ea44e16543b0186f43f943c804f4a677519a94c005b8987abcf"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/native-lifecycle1-target-verified.json",
+      "bytes": 288,
+      "sha256": "a308adb067d94fc4a6319030e69456da85ff49c38a23099385f21abb9b35e7b2"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/native-lifecycle1.mjs",
+      "bytes": 11988,
+      "sha256": "09dbe8c580c03f8405bead01ab1a1ae398ba1785d0eeecf009a333ef27fe4eba"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/native-lifecycle1.stderr.log",
+      "bytes": 1748,
+      "sha256": "7e8ff1bf06e2751e853d4add4ff31d221083ce215f1aca4ca745b8c0a62fd60e"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/native-lifecycle1.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/native-lifecycle2-before.json",
+      "bytes": 3885,
+      "sha256": "ce64efb7ef24bc11d18de1f8c7b4c907f15a7b206d38f12048f0f418b289add2"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/native-lifecycle2-command.json",
+      "bytes": 706,
+      "sha256": "d764707c958a99212c886f8d702968f8b88d73bc0fafa303bf37ca9946a950f5"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/native-lifecycle2-outcomes.json",
+      "bytes": 3791,
+      "sha256": "f9823bd1377caae7251983981a9adefbbbb7be43701326c97d7430cbad9eda02"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/native-lifecycle2-target-verified.json",
+      "bytes": 288,
+      "sha256": "5ad9c09bbccfb4adaa281d213bb7ae582e7e6fe1fed212d5bcea611c2e832c1d"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/native-lifecycle2.mjs",
+      "bytes": 6844,
+      "sha256": "8448063049e691b4ecd1fea0abe35d71575c187bb0a5fea007e5317a5e73bfb8"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/native-lifecycle2.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/native-lifecycle2.stdout.log",
+      "bytes": 70,
+      "sha256": "aefcbc9557658becba78959904d173f3a4c2906a6a715e0388422e27b86de7e9"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/native-media-commission1-after.json",
+      "bytes": 38302,
+      "sha256": "2343531b6f48b5b3f5b7afb5d0269fcbff2ac1a1559e7ac7cd7c06a3f0b9e17c"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/native-media-commission1-before.json",
+      "bytes": 75,
+      "sha256": "dd44f879d65c89913795d30e1f829054d12f2b10ac4c976b40d0f785fca1313a"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/native-media-commission1-call.json",
+      "bytes": 514,
+      "sha256": "989dc285a4bc161b06d4c260e822659a4636896d0eacf77f10f3cdb5d5e74162"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/native-media-commission1-command.json",
+      "bytes": 720,
+      "sha256": "0e75a74b6bb7d6dcd522b8da7a9d10b1df1c09560bd134d29ed66ceae0c4a867"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/native-media-commission1-outcomes.json",
+      "bytes": 2319,
+      "sha256": "9eeff5cbb0120fca912f255af4bde89eb2f321ec189cd33468c0742081e6720b"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/native-media-commission1-repeat.json",
+      "bytes": 38946,
+      "sha256": "1c55de38db34652735ce0ea982c1e2ffe498afd189d9edb74fdbd27f74375b0e"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/native-media-commission1-target-verified.json",
+      "bytes": 288,
+      "sha256": "6e552213a2f4624ff828b4c460f9ac8bb01eb5db1e84506c1596969299438b24"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/native-media-commission1.mjs",
+      "bytes": 5920,
+      "sha256": "33246913b9970e9cdbc2d16cf8e820d45459b51235937a6bafdfafed7e7773ac"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/native-media-commission1.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/native-media-commission1.stdout.log",
+      "bytes": 140,
+      "sha256": "90f96aeef83bb4aca997a85aa4a5ab3db067390d9c788a40e5006d4195dd50d2"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/native-media-metadata1-command.json",
+      "bytes": 714,
+      "sha256": "4b4f5dff9b0d87b94bc2d008f2ac6fd0ff6f2606e4002b30012beb7801447fae"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/native-media-metadata1-outcomes.json",
+      "bytes": 304,
+      "sha256": "649665f22de896c95acda9cf1e0dd9759ba893dbf97971bbe3c74cfb9527a859"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/native-media-metadata1-target-verified.json",
+      "bytes": 288,
+      "sha256": "5eaf527035430e777ecdb2de9277f70c001c558523e9648480e1eeb805bf8565"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/native-media-metadata1.mjs",
+      "bytes": 891,
+      "sha256": "ae1ee07b5e92bd280de8d681d2685d273d094103ea63430d959272445a2bc5e3"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/native-media-metadata1.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/native-media-metadata1.stdout.log",
+      "bytes": 63,
+      "sha256": "081ca48a6a199c3eac920948456b6797b182e06fb680af9ac80df3dc6eb13a7e"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/native-media-sync1-after.json",
+      "bytes": 40049,
+      "sha256": "2ce4f95a6d280234d8896eac12a5192476d96a546adeebc8229df25e79108841"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/native-media-sync1-before.json",
+      "bytes": 75,
+      "sha256": "dd44f879d65c89913795d30e1f829054d12f2b10ac4c976b40d0f785fca1313a"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/native-media-sync1-call.json",
+      "bytes": 1656,
+      "sha256": "3429ba4888ad93dcf156ca81582a9fd1251ceb1a9830f01845df820248a8ebd4"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/native-media-sync1-command.json",
+      "bytes": 709,
+      "sha256": "74cae761ca593e3e7136bb246e7b7d10e846cfd3178803f2ebd41d152fa7dea1"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/native-media-sync1-final.json",
+      "bytes": 40049,
+      "sha256": "2ce4f95a6d280234d8896eac12a5192476d96a546adeebc8229df25e79108841"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/native-media-sync1-old-async-after.json",
+      "bytes": 38302,
+      "sha256": "2343531b6f48b5b3f5b7afb5d0269fcbff2ac1a1559e7ac7cd7c06a3f0b9e17c"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/native-media-sync1-old-async-before.json",
+      "bytes": 38302,
+      "sha256": "2343531b6f48b5b3f5b7afb5d0269fcbff2ac1a1559e7ac7cd7c06a3f0b9e17c"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/native-media-sync1-outcomes.json",
+      "bytes": 5049,
+      "sha256": "7588cee2722796508dec69e2244b78f8751dde8c3fefa27e9f2cbb66698ab67b"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/native-media-sync1-repeat.json",
+      "bytes": 266,
+      "sha256": "250bec7536813b512eaea8338bf52551bd3aa16d505425b7cff41741a7b0fe1d"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/native-media-sync1-setup.json",
+      "bytes": 1152,
+      "sha256": "2a2953f2a761f62047375e97f9437928f41527e9cf5544ad6e61f3d2b4ed7dfc"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/native-media-sync1-target-verified.json",
+      "bytes": 288,
+      "sha256": "e378d83559f59922dc1e311d2f22c5a53727978213d1254a79247e8f1eabf36b"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/native-media-sync1.mjs",
+      "bytes": 7274,
+      "sha256": "7b5fe555388a081d3b67e390d81422c8d1cf7277bdaae869967692ceea608587"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/native-media-sync1.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/native-media-sync1.stdout.log",
+      "bytes": 132,
+      "sha256": "a49e9bcefb54d8814ed64672ba7b2f5a1f8fbaf347262e8f24f0986ed0c0c87f"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/native-private-input1-command.json",
+      "bytes": 714,
+      "sha256": "4245a7183b83591c3add5ac716e1148af8036dfaa55b6f874d5b466a3a7501ff"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/native-private-input1-outcomes.json",
+      "bytes": 6150,
+      "sha256": "4c7d9fb6b912cf3e9f99ca2ae4951f78a990461535532f029a9a15cbfdb4a014"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/native-private-input1-target-verified.json",
+      "bytes": 288,
+      "sha256": "5319dd6db8ab19b11194d113b5b09b57d9607859837da649c553f54a23c2fff5"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/native-private-input1.mjs",
+      "bytes": 4681,
+      "sha256": "13793f937e33071f99ef52badf7fcc9f7c111dcb89b81d7619de8bf684491056"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/native-private-input1.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/native-private-input1.stdout.log",
+      "bytes": 68,
+      "sha256": "79f2652cbdd20de4fca58bbcc24e5865c97237952077aa00dbd3ed6a73a1c49b"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/pack-cli-current1.json",
+      "bytes": 633,
+      "sha256": "a85ff22f1b48b0104dc699f783ec34d22feede1fcbac08f8baf5352a2687869e"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/pack-cli-current1.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/pack-cli-current1.stdout.log",
+      "bytes": 60431,
+      "sha256": "3c372d5da0e75ec2f61c77f86bce0d872351e649d2e88c332248882e5faddf68"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/pack-sdk-current1.json",
+      "bytes": 614,
+      "sha256": "d2765cf8214e4f3eb893faec7e0653df5943c094d6edb5a8eecfc21db875ac72"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/pack-sdk-current1.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/pack-sdk-current1.stdout.log",
+      "bytes": 22069,
+      "sha256": "d2a97ca9e44e1184934530e3edd24e6eb0fd59f411d57a94dd00ce110cb1bce8"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/packages-current1.json",
+      "bytes": 1270,
+      "sha256": "9b8a1ab98cbe985cd8112e0df19402065845a8057a7e784998b55db46dab0668"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/prepare-local1.mjs",
+      "bytes": 1803,
+      "sha256": "4d95f5747d458f1d0b747af889db1ec85a2998487646175fdd168dd5f6b9e90b"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/prepare-sync1-target-verified.json",
+      "bytes": 288,
+      "sha256": "b34ece4e38cc1efc57761add2282a5eadc0cf29548399b9133eee368fb8f1a57"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/prepare-sync1.mjs",
+      "bytes": 5214,
+      "sha256": "de04e218930458333fd2ea62fc85e977a0ed070f158af6bd0304afba8c522aa6"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/prior-financial1.json",
+      "bytes": 120469,
+      "sha256": "b3bb61ab96f4f5eafa6bb3190950ccf6dd2209c91236fb873c10b4e17bcc7301"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/prior-financial1.mjs",
+      "bytes": 1141,
+      "sha256": "87e65f15da3a715ca788b76ca7134ac0aee004e09b9cfa73af3bfa0106a8c074"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/private-frame.mjs",
+      "bytes": 1187,
+      "sha256": "5e4bffd082a957624e3bd46259d92699572209f922ad803accc94514e73b26a1"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/provider-types-current1.json",
+      "bytes": 498,
+      "sha256": "c8781282e307ca9dd24dc1d57b054e9d30c6a8691a84260fbe87140f59165fe8"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/provider-types-current1.stderr.log",
+      "bytes": 88,
+      "sha256": "b79ee9af4885eb27348ff04b294bfe7a62161a2772c996d18c4f30c462307e5c"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/provider-types-current1.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/recovery-interpretation1.json",
+      "bytes": 1107,
+      "sha256": "5f26102ce66f8a7e76b3a0b0caaa641da0f59cb95cb871aae9fc0e6fdf20fd8c"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/retained-for-task13-handoff1.json",
+      "bytes": 8574,
+      "sha256": "533db1a94b39b1fb13724c4efcdda4c0c93da802b9746dcfd4d837b81076a46d"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/retired-liability-recovery1-async.json",
+      "bytes": 78623,
+      "sha256": "fe2fc32f029f0408ed50395f441ef60980a7c78f7266f3bc7bf13c35bfdde086"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/retired-liability-recovery1-command.json",
+      "bytes": 725,
+      "sha256": "808f78895780273ec355716fa7297c43b97e9d3df96854ca8df3b056cf23ac3a"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/retired-liability-recovery1-outcomes.json",
+      "bytes": 1314,
+      "sha256": "de62bdb6b5c663a1d40b46022c140bbf7716149a19e02047b9aa80f33ba0857d"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/retired-liability-recovery1-sync.json",
+      "bytes": 82259,
+      "sha256": "2df80b4494fe1f035b309b8dc569083a52e0bdb6e26c637cab4d6ff8e4723d8a"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/retired-liability-recovery1-target-verified.json",
+      "bytes": 288,
+      "sha256": "b9a2fd6544ff45a18de51d8852681358079672dd0df8dd5686184456645cb2bd"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/retired-liability-recovery1.mjs",
+      "bytes": 3249,
+      "sha256": "1f8f3a360f031cad77c2421b86125936d999679e0916fbb44a3962bfe1762942"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/retired-liability-recovery1.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/retired-liability-recovery1.stdout.log",
+      "bytes": 86,
+      "sha256": "49b7ff2ee3dd316665f43eaab004c48398b11257fa80b0e201ea4ca2de001e04"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/run-native.mjs",
+      "bytes": 2827,
+      "sha256": "c620749f50545ac75b8f4d487e5e4d5dfe1b389618f532e80c28c295ff8deab1"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/setup-scopes1-command.json",
+      "bytes": 698,
+      "sha256": "59af4a9eb8eca6a0e52de293b281becc166bb3797573e70c3472b50201695fba"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/setup-scopes1-foreign.json",
+      "bytes": 709,
+      "sha256": "c26d226de4e57f12c1f7e60cfe93894f544e46afa956e44b9e68ea7357cc05c8"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/setup-scopes1-operator.json",
+      "bytes": 694,
+      "sha256": "02294891fac8d596fc54a173237ac7f190fc9cb897691ab69cc7dc9867d550bd"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/setup-scopes1-owner.json",
+      "bytes": 697,
+      "sha256": "588fe39fabd6c29282a7433422505b38bc859a218930d42852df4483cc69e0ad"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/setup-scopes1-reader.json",
+      "bytes": 641,
+      "sha256": "f297846addd65236c3fd193651043671beca9c9b1ecf185dbe520677432b423f"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/setup-scopes1-target-verified.json",
+      "bytes": 288,
+      "sha256": "52275ae90dcde5f72f1e879081ad3882fe59856b24df372209ff0992f603ded6"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/setup-scopes1.json",
+      "bytes": 3229,
+      "sha256": "c9d0e7c82f7457f498f9229aa50fd1ada7fe7e45b99cfe6a7e9443f72b9f1746"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/setup-scopes1.mjs",
+      "bytes": 2536,
+      "sha256": "5a23afd9a601302c283311ecc336cf3a2480536f88e2054c2b0c1a3a62d63dee"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/setup-scopes1.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/setup-scopes1.stdout.log",
+      "bytes": 61,
+      "sha256": "277b8319cafb594bd7fcfc983064a015298ddfafdd196788229cc645453872d2"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/sync-commission-contract1.json",
+      "bytes": 557,
+      "sha256": "065fde00a9ff258189e77a52026ae9e7e5f563f6389ae1dafe517b1c360862ae"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/sync-commission-manifest1.json",
+      "bytes": 18705,
+      "sha256": "4b1d728fe0c09d14053d799c2bf4ef4f9be0136173531d9ce4ac639a0cd57e65"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/sync-fixture-preimages1.json",
+      "bytes": 4995,
+      "sha256": "b9595cd27eff26c260a44f8357949900c659a3d6fb39abc378e0155a18ddf62e"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/sync-fixture-source-manifest1.json",
+      "bytes": 1097,
+      "sha256": "6769021bcac6adeb9ccab8b86f0c14107bfac1ae71d859c017f67eedd1019b0b"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/task12Native.fixture.ts",
+      "bytes": 5444,
+      "sha256": "4cace2a48ad2e716e57fc839bfca4b4a09110e9e99c9cdd3bf669fc79870f3dc"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/unpack-sdk-current1.json",
+      "bytes": 509,
+      "sha256": "bab23ef68f0c001e9069fe69bd834473d5a7b052e04ff81aaf243912f0730849"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/unpack-sdk-current1.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/unpack-sdk-current1.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/validate-media-input1.mjs",
+      "bytes": 3952,
+      "sha256": "0c8d4e140c89ffdd1cdea91ad2f8f9b0f315f99d2edfb319c282fa8987117ae7"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/author/source-manifest1.json",
+      "bytes": 9362,
+      "sha256": "852a1bd62405959e6b35ce6f1ee2d7e6b0d4fd153d51f94249392822cf3e37dc"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/author/checks1.json",
+      "bytes": 12496,
+      "sha256": "f7e0e4eefdba3d5ff49e6fb2f241fa8f86a1c9e9608ffa4567208c53577e18cd"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/author/report1.json",
+      "bytes": 5449,
+      "sha256": "de9e8bb2b5e985c3f9e11c438176a6ad463ddc945f6054efaf23de609e1f2c02"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/author/report1.md",
+      "bytes": 1340,
+      "sha256": "15fd01d2660dbd6bea0cd699720fedf58f2a53757d08645f262a5b0bc95e34ae"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/cli-http1/source-report1.json",
+      "bytes": 4025,
+      "sha256": "f66a28f1b7c7889cbe064c0ffe0b7df04fb76a31eff25c8259f847b0d315a8a8"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/cli-http1/checks3.json",
+      "bytes": 2333,
+      "sha256": "0edb8622939985ed32a5680f4abb88badc25cb346dfa04bd85dd5a9fc0700587"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/root-client1/source-ready1.json",
+      "bytes": 2099,
+      "sha256": "30dd1192bd3040fe7979fcc43c8223326658341db2c56c8298632281e6f7ec8c"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/root-client1/checks4.json",
+      "bytes": 3069,
+      "sha256": "01f31250d758555358b95a95f29db982b06a054cfea80dac0fe3da3c71ffdb36"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/root-client1/packed-contracts1.json",
+      "bytes": 634,
+      "sha256": "6f7aa4a0a36d24fd15b367ffc4691ed254f18751cc3d3a8336e5182302b0e7fd"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/root-media-admission1/source-ready1.json",
+      "bytes": 2239,
+      "sha256": "85efa43745f89660e6674803ef31ce9a02543648af2166862492cec5ff53db0f"
+    }
+  ],
+  "totalReferences": 169,
+  "totalBytes": 1635059,
+  "effects": 0,
+  "privateCredentialBodiesIncluded": false,
+  "closedAt": "2026-10-08T23:22:18.340Z"
+}

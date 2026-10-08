@@ -20,6 +20,7 @@ import type { DeploymentPolicyManifest, QualifiedDispatchEvidence } from "./runt
 import { modelOperationKey, modelSource, visibilityFields } from "./runtimePolicySchema";
 import { readCurrentExecutableDefinition } from "./agentDefinitions";
 import { AGENT_NATIVE_TOOLS, AGENT_TOOL_REGISTRY_VERSION, agentToolsInputBound } from "../src/domain/agent-tools";
+import { privateFrameVideoInputBound } from "../src/domain/media-input";
 import { parseAgentLanguageResult } from "../src/domain/agent-language";
 import { guardAgentRunBudget } from "./runtimeAgentFence";
 import { currentControlRun } from "./runs";
@@ -500,6 +501,15 @@ export const resolve = internalQuery({ args: resolveArgs, handler: async (ctx, a
 /** Full final request bytes, not caller estimates. Proof exists only in reviewed compiled root. */
 export function deriveQualifiedInputBound(proof: QualifiedDispatchEvidence, request: ReturnType<typeof validateModelRequest>["request"]): number {
   if (request.outputTokens > proof.resultBound.maximumOutputTokens || (proof.nativeInterface === "embedding" && request.texts.length > proof.resultBound.maximumEmbeddingValues)) fail("POLICY_DENIED");
+  if (proof.nativeInterface === "video" && proof.inputBound.ruleId === "private-frame-video-json-v1"
+    && proof.inputBound.featureEnvelope === "private-frame-video-v1" && proof.inputBound.revision === 1) {
+    if (request.texts.length !== 1 || request.messages?.length !== 1 || request.messages[0].role !== "user"
+      || request.messages[0].parts.length !== 1 || request.messages[0].parts[0].type !== "text"
+      || request.messages[0].parts[0].text !== request.texts[0] || request.outputTokens || request.toolSteps
+      || request.tools.length || request.toolChoice || request.outputSchema || request.profile || request.batch
+      || canonical(request.options) !== canonical({ maxRetries: 0 })) fail("POLICY_DENIED");
+    return domainControl(() => privateFrameVideoInputBound(request.texts[0], proof.modelId));
+  }
   const bytes = (value: string): number => {
     for (const point of value) { const code = point.codePointAt(0)!; if (code >= 0xd800 && code <= 0xdfff) fail("INVALID_INPUT"); }
     return new TextEncoder().encode(value).length;

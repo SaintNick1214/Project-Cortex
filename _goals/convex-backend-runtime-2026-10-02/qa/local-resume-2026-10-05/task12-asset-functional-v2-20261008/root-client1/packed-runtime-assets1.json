@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "timestampUtc": "2026-10-08T23:05:18.301Z",
+  "scope": "PACKED_RUNTIME_ASSET_PUBLIC_BROWSER_CONTRACT_NO_SERVICES",
+  "node": "v24.15.0",
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "command": [
+    "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/root-client1/packed-runtime-assets1.mjs"
+  ],
+  "durationMs": 451,
+  "packedCandidate": "786083bec56a987630e7fce1050c4462d375a49f788dbdf735bdc4e18fb68a78",
+  "status": "PASS",
+  "assertions": [
+    "Exact native packed candidate digest",
+    "Public runtime ESM/CJS asset exports",
+    "Installed asset consumer declarations",
+    "Browser runtime bundle without graph/backend dependencies or Node globals",
+    "Caller-owned client closes without service effects"
+  ],
+  "browserInputCount": 64,
+  "temporaryConsumerRemoved": true,
+  "actualServiceAcceptance": false
+}

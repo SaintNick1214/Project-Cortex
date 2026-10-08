@@ -568,3 +568,56 @@ Accepted tasks **9/17 (52.9%)**; original task criteria **32/61 (52.5%)**; full-
 Original Task11 accepted by one nonauthor PASS4.0: all4 requirements/3criteria; installed Node worker and actual Neo4j/Memgraph ordered retry/dedup, stale revision/source/profile/expiry/revocation/tombstone fences, transitive dependency retirement, real network timeout recovery, explicit exhausted strict failure and app-independent execution. Author369, Root26 and independent16 controlled cases are separate scopes. Cleanup leaves content0/12tombstone fences/11scopes retired; prior5attempts/full500000 uncertain liability unchanged, slots0. Dev3174742 and2graphs explicitly retained for later qualification/final retirement. Historical failures preserved; no12+/03-final/full-goal acceptance.
 
 Completion: **10/17 tasks (58.8%)**, **35/61 original task criteria (57.4%)**, **0/12 full goal outcomes** independently accepted. Tasks12–17,03-final, aggregate qualification and final audit remain open. See [independent review](local-resume-2026-10-05/task11-product-independent-review1/report1.md) and [final native outcomes](local-resume-2026-10-05/task11-graph-functional-v2-20261008/native-actual/final-native-report1.json).
+
+
+### Milestone162 — Task12 source client/HTTP integration, 2026-10-08T22:16:45.718170+00:00
+
+Root browserclient source-ready:64 controlled cases (34newasset+30existingclient), SDKtypes/scopedlint0; boundedstream/SHA/MIME/immutablemetadata/freshJWT/authgeneration/timeout/cancel/BlobURLrevocation. SeparateCLI HTTP52 controlled cases/types/lint0 preservecustomhandlers/methods/backup/conflict-before-write/idempotence/partialfailure. These are CODE-only scopes, not summed or actualasset/service/Task12 acceptance. Native target3174742 read-onlyverification and exactConvex/OpenRoutermedia/protocollookup are separate; privateproviderinput and actual20M storage/HTTP qualification pending. Historical setup/typefailures preserved. Original12 remains0/4;10/17,35/61,0/12 unchanged.
+
+Completion remains **10/17 tasks (58.8%)**, **35/61 criteria (57.4%)**, **0/12 full outcomes**; original12 and final audit remain open.
+
+
+### Milestone163 — Task12 governed private-frame admission source, 2026-10-08T22:35:32.890816+00:00
+
+Narrow private-frame video admission source-ready:196 controlled cases/backendtypes0/scopedlint0. Complete fixed canonical video JSON binds real media.video.generate/interfacevideo,4096 decoded PNG/8192 protocol JSON,4s720p/noaudio/maxRetries0 and full qualified reservation. No shipped media qualification, provider dispatch, terminal replay or unknown-cost release added. Original1GiB lint exhaustion preserved; concrete2GiB successor lint passed without repeating196 tests. Concurrent attachment SDK mutation adapter repair and observed100-owner admission mismatch are in the same author/reviewer batch; actual storage/provider checks remain pending. No Task12 criterion accepted.
+
+Completion remains **10/17 tasks (58.8%)**, **35/61 criteria (57.4%)**, **0/12 full outcomes**; original12 and final audit remain open.
+
+
+### Milestone164 — coherent Task12 source released, 2026-10-08T22:56:16.636560+00:00
+
+Coherent Task12 author source released at candidate aee3de994dec871f1f1903abf56317c8e7d1b57916d7e0860a280d776353fde5 (28 files):922 distinct selected controlled cases, SDK/backend/lint types0, scoped lint0errors and generator2PASS. Same reviewer8 distinct controlled cases pass. Concrete100-owner admission, attachment metadata loss, historical file export, fresh metadata expiry, managed conversation linkage and paged large-history/current-edge repair are covered. These counts remain separate from overlapping Root196 and Root64/CLI52 scopes; no total is promoted to runtime acceptance. All prior failures remain. Exclusive native package build is active; actual storage/privateHTTP/provider input and cleanup/final review remain required. Original12 stays0/4,10/17=58.8%,35/61=57.4%,0/12 outcomes.
+
+Completion remains **10/17 tasks (58.8%)**, **35/61 criteria (57.4%)**, **0/12 full outcomes**.
+
+
+### Milestone165 — actual Task12 storage and lifecycle progress, 2026-10-08T23:04:32.189Z
+
+Installed Task12 candidate passes actual private PNG upload/fetch/local preview, identical request replay with no new version, changed-input conflict, no-JWT/peer/foreign/revoked byte denial, exact 20,000,000-byte hash round trip and 20,000,001-byte SDK/streamed HTTP/generated rejection before ready. Native lifecycle reports artifact history/undo and current expiry plus retained-reference, staged/tombstone/orphan/cancel groups; its initial default transcript-lock setup denial is preserved and corrected by an authorized unlock on the same conversation. Package main ESM/CJS/declarations/browser contract passes separately with no services. Private provider input and final cleanup/non-author acceptance remain pending; catalog discovery is not async capability acceptance. Original Task12 stays 0/4; completion denominators and accepted rates remain unchanged.
+
+Completion remains **10/17 tasks (58.8%)**, **35/61 criteria (57.4%)**, **0/12 full goal outcomes**.
+
+
+### Milestone166 — actual async service blocker, 2026-10-08T23:08:18.604Z
+
+Actual private input materialization/current authority and encoded protocol limit checks pass. One governed async native request returned HTTP503 Asynchronous video generation is not configured; no operation/terminal/model/cost confirmed. Full 2000000 uncertain liability plus previous500000 retained; same request issues zero additional starts. Official docs require Convex support enablement, requested from user. A distinct prospective synchronous private-input qualification is authorized with new semantic identity/prompt/180s media deadline and unchanged cost/currentness/no-retry guards; not async retry or Task13 acceptance. Exact packed runtime asset ESM/CJS/types/browser contract also passes with no services and temporary cleanup. Task12 original0/4,10/17=58.8%,35/61=57.4%,0/12 unchanged; cleanup and genuine provider consumption/final review pending.
+
+Completion remains **10/17 tasks (58.8%)**, **35/61 criteria (57.4%)**, **0/12 full goal outcomes**. See [exact service blocker](local-resume-2026-10-05/task12-asset-functional-v2-20261008/async-service-blocker1.md).
+
+
+### Milestone167 — original Task12 accepted, 2026-10-08T23:26:04.890Z
+
+All original Task12 six requirements/four criteria, one non-author PASS4.0: real authenticated storage/HTTP and 20M boundary, immutable artifact/attachment/Agent owners and tracked history/export, deletion/revocation/tombstone/orphan/cancellation cleanup, genuine governed private-frame synchronous MP4 input/output materialization and matching SDK byte delivery. Asset bytes/jobs0 and clients/processes closed. Two media financial slots/full4m plus prior500k uncertainty remain conservatively retained in retired scopes; no refund/result/retry. Development target3174742 and prior graphs retained13/final. Async503 remains an external13 capability blocker; historical failures/C7 missing backing unchanged. No13+/03-final/full-goal acceptance.
+
+Completion: **11/17 tasks (64.7%)**, **39/61 original criteria (63.9%)**, **0/12 full goal outcomes**. Task13–17,03-final and final audit remain open. See [independent review](local-resume-2026-10-05/task12-product-independent-review1/report1.md) and [actual closure](local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/final-native-report1.md).
+
+
+### Milestone168 — client/CI wiring accepted, 2026-10-08T23:27:14.156Z
+
+One non-author PASS4.0 accepts the bounded client/CI wiring batch. Declared provider unit command now discovers unchanged seven files once and executes202 legacy CJS plus21 real-ESM remote cases,223PASS/0skip; original load failure preserved. Independent12 guard controls and workflow YAML/order checks pass: exact24.15.0/npm12.2.0, both administrator-allowlisted isolated development selectors required before any deployment/purge, no credential output. Checkpoint60 existing setup actually deployed production-type SDK/CLI test targets; own still-running CI was cancelled after discovery. New guard blocks that path; no rollback or additional production mutation. Current production secrets/absent allowlist and unauthenticated legacy CI fixtures remain external/configuration and16/final work, not skipped tests counted as live success. No task criteria added;11/17=64.7%,39/61=63.9%,0/12 unchanged.
+
+Completion remains **11/17 tasks (64.7%)**, **39/61 criteria (63.9%)**, **0/12 full goal outcomes**.
+
+### 2026-10-08T23:31:14.813Z — Checkpoint61 status correction
+
+Checkpoint61 status correction: the cancellation request for run37851250623 was submitted, but fresh readback still says in_progress. Milestone168 wording was premature; cancellation completion is unverified. CI guard is independently accepted and blocks production-type keys before deployment/purge. Task12 accepted scope remains current; 11/17 tasks64.7%,39/61 criteria63.9%,0/12 full outcomes, full goal open.

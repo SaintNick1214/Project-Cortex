@@ -1,3 +1,4 @@
+import { bindNativeAssetReferences, publicMessageAssets, releaseAssetReferences } from "./runtimeAssetCatalog";
 /** One private Agent store, with scoped Cortex metadata and current source fences. */
 import { makeFunctionReference } from "convex/server";
 import type { FunctionReference } from "convex/server";
@@ -188,7 +189,9 @@ export async function registerMessages(ctx: MutationCtx, conversation: ManagedCo
       actorReference: reference, approved: options.approved ?? true,
       ...(options.contextSourceWitnesses?.length ? { contextSourceWitnesses: options.contextSourceWitnesses } : {}),
       ...(options.runId === undefined ? {} : { runId: options.runId }), ...(options.attemptNumber === undefined ? {} : { attemptNumber: options.attemptNumber }), createdAt: now, updatedAt: now };
-    await ctx.db.insert("runtimeTranscriptMessages", bridge); await sourceWrite(ctx, conversation, bridge, text);
+    const bridgeId = await ctx.db.insert("runtimeTranscriptMessages", bridge);
+    await bindNativeAssetReferences(ctx, reference, (await ctx.db.get("runtimeTranscriptMessages", bridgeId))!, message);
+    await sourceWrite(ctx, conversation, bridge, text);
     await messageOutbox(ctx, conversation, bridge, bridge.approved ? "registered" : "pending", options.queueSequence);
     pins.push({ nativeMessageId: message._id, order: message.order, stepOrder: message.stepOrder, sourceEventId: event, sourceRevision: 1, contentHash: hash });
   }
@@ -241,7 +244,7 @@ export async function readTranscriptPage(ctx: ReadCtx, conversation: ManagedConv
     await currentPrivateSources(ctx, reference, bridge.contextSourceWitnesses ?? []);
     const typed = content(native);
     page.push({ id: native._id, order: native.order, stepOrder: native.stepOrder, role: typed.role, parts: typed.parts,
-      status: !bridge.approved ? "pending" : native.status, revision: bridge.revision });
+      status: !bridge.approved ? "pending" : native.status, revision: bridge.revision, ...(bridge.assetVersionIds?.length ? { assets: await publicMessageAssets(ctx, reference, bridge) } : {}) });
   }
   return { page, isDone: result.isDone, continueCursor: result.isDone ? null : canonicalModelJson({ conversationId: conversation.conversationId,
     epoch: conversation.epoch, revision: conversation.historyRevision, nativeCursor: result.continueCursor }) };
@@ -432,6 +435,7 @@ export async function reviseMessage(ctx: MutationCtx, args: { conversationId: st
   if (native.message?.role === "assistant" && Array.isArray(native.message.content)
     && native.message.content.some(part => part.type === "tool-call")) transcriptDenied("TOOL_HISTORY_EDIT_DENIED");
   const now = Date.now(); const revision = bridge.revision + 1;
+  await releaseAssetReferences(ctx, { tenantId: conversation.tenantId, memorySpaceId: conversation.memorySpaceId }, "agent", bridge.nativeMessageId);
   if (remove) {
     await ctx.runMutation(agentComponent.messages.deleteByIds, { messageIds: [args.messageId] });
     await ctx.db.patch("runtimeTranscriptMessages", bridge._id, { tombstonedAt: now, revision, actorReference: reference, updatedAt: now });
@@ -442,7 +446,7 @@ export async function reviseMessage(ctx: MutationCtx, args: { conversationId: st
     const parts = normalizeTextSubmit({ version: 1, agentId: "manual", agentVersion: 1, clientRequestId: "manual", parts: args.parts }).userInput.parts;
     const changed = await ctx.runMutation(agentComponent.messages.updateMessage, { messageId: args.messageId, patch: { message: { role: bridge.role, content: parts } } });
     const hash = await contentHash(changed); const sourceHash = await semanticHash(normalizeSourceText(parts.map(part => part.text).join("\n")));
-    await ctx.db.patch("runtimeTranscriptMessages", bridge._id, { revision, contentHash: hash, sourceContentHash: sourceHash, contextSourceWitnesses: undefined, actorReference: reference, updatedAt: now });
+    await ctx.db.patch("runtimeTranscriptMessages", bridge._id, { revision, contentHash: hash, sourceContentHash: sourceHash, contextSourceWitnesses: undefined, assetVersionIds: undefined, actorReference: reference, updatedAt: now });
     await sourceWrite(ctx, conversation, { ...bridge, revision, sourceContentHash: sourceHash }, parts.map(part => part.text).join("\n"));
   }
   await messageOutbox(ctx, conversation, bridge, "tombstoned");
@@ -483,6 +487,7 @@ export const cleanupDeleted = internalMutation({ args: { reference: runtimeAutho
       .eq("memorySpaceId", conversation.memorySpaceId).eq("conversationId", conversation.conversationId)).paginate({ cursor: args.cursor, numItems: 100 });
     for (const bridge of page.page) {
       if (bridge.tombstonedAt !== undefined) continue;
+      await releaseAssetReferences(ctx, { tenantId: conversation.tenantId, memorySpaceId: conversation.memorySpaceId }, "agent", bridge.nativeMessageId);
       await ctx.db.patch("runtimeTranscriptMessages", bridge._id, { tombstonedAt: now, revision: bridge.revision + 1, updatedAt: now });
       const source = singleTranscript(await ctx.db.query("runtimeMemorySources").withIndex("by_scope_source", q => q.eq("tenantId", conversation.tenantId)
         .eq("memorySpaceId", conversation.memorySpaceId).eq("lineage.sourceId", bridge.sourceId)).take(2));
