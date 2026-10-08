@@ -31,11 +31,13 @@ import { v } from "convex/values";
 import { runtimeAuthorityReference, runtimeAuthTables } from "./runtimeAuthSchema";
 import { runtimeMemoryTables, sourceLineage } from "./runtimeMemorySchema";
 import { runtimePolicyTables } from "./runtimePolicySchema";
+import { runtimeTranscriptTables } from "./runtimeTranscriptSchema";
 
 export default defineSchema({
   ...runtimeAuthTables,
   ...runtimeMemoryTables,
   ...runtimePolicyTables,
+  ...runtimeTranscriptTables,
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // Layer 1a: Conversations (ACID, Immutable)
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

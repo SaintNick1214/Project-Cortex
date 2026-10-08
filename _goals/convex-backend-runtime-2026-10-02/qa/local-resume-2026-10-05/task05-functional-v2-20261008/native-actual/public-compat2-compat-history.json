@@ -1,0 +1,29 @@
+{
+  "label": "compat-history",
+  "kind": "query",
+  "fn": "conversations:getHistory",
+  "args": {
+    "tenantId": "task05-native-0af668c7",
+    "memorySpaceId": "qualification",
+    "conversationId": "task05-legacy-compat-v1"
+  },
+  "result": {
+    "conversationId": "conversation:ff971fe1ed730d9facca83c153638f963a8887263b045ddca03aabd802529b44",
+    "hasMore": false,
+    "messages": [
+      {
+        "approvalStatus": "approved",
+        "content": "original canonical compatibility",
+        "id": "legacy-msg1",
+        "revision": 1,
+        "role": "user",
+        "timestamp": 1791455462232
+      }
+    ],
+    "total": 1
+  },
+  "error": null,
+  "elapsedMs": 165,
+  "target": "festive-cheetah-250",
+  "actualJwt": true
+}

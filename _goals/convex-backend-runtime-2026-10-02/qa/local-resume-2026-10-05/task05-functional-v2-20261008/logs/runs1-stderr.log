@@ -1,0 +1,27 @@
+(node:82173) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeRuns/admission.test.ts
+  durable scoped admissions and serialized recovery (controlled handlers)
+    ✓ same exact request returns one run/event/budget/outbox; changed request cannot reuse identity (32 ms)
+    ✓ a parent fault rolls back component, ledger, projection, queue and scheduled work in the controlled transaction (11 ms)
+    ✓ different request keys on one conversation have ordered immutable inputs and one active head (9 ms)
+    ✓ cancel queued retires queue/attempt and obsolete attempt cannot attach output (8 ms)
+    ✓ cancel running retires queue/attempt and obsolete attempt cannot attach output (13 ms)
+    ✓ expired claimed work is terminal reconciliation-required, cannot retry/output, and releases the queue head (11 ms)
+    ✓ removal retires active outbox/attempt while lock protects the same canonical record (6 ms)
+    ✓ approval materializes exact current source before a waiting input becomes claimable (7 ms)
+    ✓ retained completed history does not increase queue-head reads (29 ms)
+    ✓ context-bound overflow is observable failure, not forever queued work (5 ms)
+    ✓ denies admission no-jwt before native/budget/queue writes (4 ms)
+    ✓ denies admission read-only before native/budget/queue writes (2 ms)
+    ✓ denies admission foreign-space before native/budget/queue writes (1 ms)
+    ✓ denies admission revoked before native/budget/queue writes (2 ms)
+    ✓ denies admission definition-revoked before native/budget/queue writes (2 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       15 passed, 15 total
+Snapshots:   0 total
+Time:        2.745 s
+Ran all test suites within paths "tests/unit/runtimeRuns/admission.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task05-functional-v2-20261008/logs/runs1-results.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

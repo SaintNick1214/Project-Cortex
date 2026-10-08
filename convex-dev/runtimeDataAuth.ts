@@ -107,6 +107,7 @@ function linkedDataBinding(row: DataRow): string {
 }
 const operationLinks = new WeakMap<CanonicalSourceWitness[], LinkedWitness[]>();
 const sourceLinks = new WeakMap<CanonicalSourceWitness, LinkedWitness[]>();
+const sourcePermissions = new WeakMap<CanonicalSourceWitness, ConversationPermission>();
 function retainedLinks(witnesses: CanonicalSourceWitness[]): LinkedWitness[] {
   let links = operationLinks.get(witnesses);
   if (!links) { links = []; operationLinks.set(witnesses, links); }
@@ -157,6 +158,52 @@ async function reloadLinkedWitnesses(ctx: ReadCtx, authority: ScopedDataAuthorit
     if (await reader.hasTombstone(key) || await reader.hasTombstone({ ...key, memorySpaceId: undefined })) dataDenied();
   }
 }
+export type ConversationPermission = keyof Doc<"runtimeConversationShares">["permissions"];
+/** Sharing narrows current authenticated scope permissions; it never supplies a grant or bypasses resource ownership. */
+export async function managedConversationAccess(ctx: ReadCtx, reference: RuntimeAuthorityReference,
+  conversation: Doc<"runtimeConversations">, capability: RuntimeCapability, permission?: ConversationPermission): Promise<void> {
+  if (conversation.tenantId !== reference.tenantId || conversation.memorySpaceId !== reference.memorySpaceId
+    || conversation.tombstonedAt !== undefined || (conversation.retentionUntil !== undefined && Date.now() >= conversation.retentionUntil)) dataDenied();
+  const actor = await recheckAuthority(ctx, reference, { capability, resource: { resourceType: "conversation", resourceId: conversation.conversationId,
+    tenantId: conversation.tenantId, memorySpaceId: conversation.memorySpaceId, ownerPrincipalId: conversation.ownerPrincipalId } });
+  if (actor.principalId === conversation.ownerPrincipalId || conversation.participants.includes(actor.principalId)) return;
+  if (capability === "admin") dataDenied();
+  if (capability === "read" && conversation.visibility === "space") return;
+  const shares = await ctx.db.query("runtimeConversationShares").withIndex("by_conversation_state", q => q.eq("tenantId", conversation.tenantId)
+    .eq("memorySpaceId", conversation.memorySpaceId).eq("conversationId", conversation.conversationId).eq("state", "active")).take(65);
+  if (shares.length > 64) dataDenied("QUERY_TOO_BROAD");
+  const needed = permission ?? (capability === "read" ? "canView" : "canContinue");
+  const active = shares.some(share => share.revokedAt === undefined && (share.expiresAt === undefined || Date.now() < share.expiresAt)
+    && (share.maxViews === undefined || share.viewCount < share.maxViews) && share.permissions[needed]
+    && (share.grantType === "user" ? share.grantedTo === actor.principalId || share.grantedTo === actor.userId : share.grantedTo === actor.memorySpaceId));
+  if (!active && !(capability === "read" && conversation.visibility === "space" && needed === "canView")) dataDenied();
+}
+/** Shared immediate eligibility fence for canonical transcript sources, including direct fact/vector paths.
+ * Return false for retired evidence; current access is still rechecked and never obtained from a share token alone. */
+export async function managedSourceIsCurrent(ctx: ReadCtx, reference: RuntimeAuthorityReference,
+  source: Doc<"runtimeMemorySources">, capability: "read" | "write", permission?: ConversationPermission): Promise<boolean> {
+  const origin = source.transcriptOrigin; if (!origin) return true;
+  const conversations = await ctx.db.query("runtimeConversations").withIndex("by_scoped_id", q => q.eq("tenantId", source.tenantId)
+    .eq("memorySpaceId", source.memorySpaceId).eq("conversationId", origin.conversationId)).take(2);
+  const conversation = conversations.length === 1 ? conversations[0] : undefined;
+  if (!conversation || conversation.tombstonedAt !== undefined || conversation.epoch !== origin.conversationEpoch
+    || (conversation.retentionUntil !== undefined && Date.now() >= conversation.retentionUntil)) return false;
+  const bridges = await ctx.db.query("runtimeTranscriptMessages").withIndex("by_native", q => q.eq("tenantId", source.tenantId)
+    .eq("memorySpaceId", source.memorySpaceId).eq("nativeMessageId", origin.nativeMessageId)).take(2);
+  const bridge = bridges.length === 1 ? bridges[0] : undefined;
+  if (!bridge || bridge.tombstonedAt !== undefined || !bridge.approved || bridge.conversationId !== conversation.conversationId
+    || bridge.ownerPrincipalId !== source.ownerPrincipalId || bridge.sourceId !== source.lineage.sourceId
+    || bridge.sourceEventId !== source.lineage.sourceEventId || bridge.revision !== source.lineage.sourceRevision
+    || bridge.role !== source.lineage.role || bridge.sourceContentHash !== source.contentHash) return false;
+  if (bridge.runId) {
+    const runs = await ctx.db.query("runtimeRuns").withIndex("by_scoped_id", q => q.eq("tenantId", source.tenantId)
+      .eq("memorySpaceId", source.memorySpaceId).eq("runId", bridge.runId!)).take(2);
+    if (runs.length !== 1 || runs[0].tombstonedAt !== undefined || runs[0].conversationEpoch !== conversation.epoch) return false;
+  }
+  await managedConversationAccess(ctx, reference, conversation, capability);
+  if (capability === "read" && permission) await managedConversationAccess(ctx, reference, conversation, capability, permission);
+  return true;
+}
 function sourceWitness(source: Doc<"runtimeMemorySources">): CanonicalSourceWitness {
   return Object.freeze({ ...source, lineage: Object.freeze({ ...source.lineage }) });
 }
@@ -164,7 +211,10 @@ function sameSource(a: CanonicalSourceWitness, b: CanonicalSourceWitness): boole
   return a._id === b._id && a._creationTime === b._creationTime && a.tenantId === b.tenantId
     && a.memorySpaceId === b.memorySpaceId && a.ownerPrincipalId === b.ownerPrincipalId
     && sameLineage(a.lineage, b.lineage) && a.content === b.content && a.contentHash === b.contentHash
-    && a.createdAt === b.createdAt && a.tombstonedAt === b.tombstonedAt;
+    && a.createdAt === b.createdAt && a.tombstonedAt === b.tombstonedAt
+    && a.transcriptOrigin?.conversationId === b.transcriptOrigin?.conversationId
+    && a.transcriptOrigin?.conversationEpoch === b.transcriptOrigin?.conversationEpoch
+    && a.transcriptOrigin?.nativeMessageId === b.transcriptOrigin?.nativeMessageId;
 }
 function sourceResource(source: CanonicalSourceWitness): RuntimeResource {
   return { resourceType: "source", resourceId: source.lineage.sourceId, tenantId: source.tenantId,
@@ -199,7 +249,8 @@ async function reloadSourceWitnesses(ctx: ReadCtx, authority: ScopedDataAuthorit
   }));
   for (const { witness, current, scopedDeletion, tenantDeletion } of selected) {
     if (scopedDeletion || tenantDeletion) dataDenied();
-    if (!current || current.tombstonedAt !== undefined || !sameSource(witness, current)) dataDenied("STALE_SOURCE", "Canonical source changed after hashing");
+    if (!current || current.tombstonedAt !== undefined || !sameSource(witness, current)
+      || !await managedSourceIsCurrent(ctx, authority, current, "read", sourcePermissions.get(witness))) dataDenied("STALE_SOURCE", "Canonical source changed after hashing");
   }
 }
 export async function recheckSourceWitnesses(ctx: ReadCtx, authority: ScopedDataAuthority, capability: Capability,
@@ -249,6 +300,7 @@ async function sourceIsCurrent(ctx: ReadCtx, authority: ScopedDataAuthority, cap
   if (!source || source.tombstonedAt !== undefined || source.ownerPrincipalId !== row.ownerPrincipalId
     || !sameLineage(source.lineage, row.lineage)) return undefined;
   const witness = sourceWitness(source);
+  sourcePermissions.set(witness, "factId" in row ? "canViewFacts" : "canViewMemories");
   await assertOwnedResource(ctx, authority, capability, sourceResource(witness));
   if (!await canonicalSource(witness)) return undefined;
   await recheckSourceWitnesses(ctx, authority, capability, [witness]);

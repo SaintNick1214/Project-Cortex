@@ -1,7 +1,7 @@
 /**
  * File operations for init wizard
  *
- * Handles copying templates and deploying Cortex backend functions.
+ * Handles templates and additive local backend installation.
  */
 
 import fs from "fs-extra";
@@ -10,13 +10,14 @@ import { fileURLToPath } from "url";
 import { dirname } from "path";
 import { getSDKPath } from "../shell.js";
 import pc from "picocolors";
+import { installAdditiveBackend } from "./additive-backend.js";
 
 // ES module equivalents of __dirname
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 /**
- * Copy Cortex backend functions from SDK to user project
+ * Add the versioned Cortex backend to a host project without deploying it
  */
 export async function deployCortexBackend(projectPath: string): Promise<void> {
   // Look for SDK in the newly created project's node_modules
@@ -38,64 +39,12 @@ export async function deployCortexBackend(projectPath: string): Promise<void> {
     );
   }
 
-  const convexDevPath = path.join(sdkPath, "convex-dev");
-  const targetConvexPath = path.join(projectPath, "convex");
-
-  // Check if convex-dev exists in SDK
-  if (!fs.existsSync(convexDevPath)) {
-    throw new Error(
-      `Convex backend functions not found at ${convexDevPath}. ` +
-        "Please ensure you are using @cortexmemory/sdk v0.8.1 or later.",
-    );
+  const result = await installAdditiveBackend(projectPath, sdkPath);
+  console.log(pc.green(`   Added ${result.installed.length} Cortex backend files; retained ${result.unchanged.length} identical files`));
+  if (!result.capabilities.authConfigured) {
+    console.log(pc.yellow("   Configure a trusted Convex JWT provider and operator-provisioned grants before using the backend."));
   }
 
-  // Backup existing convex/ folder if it exists
-  try {
-    const backupPath = path.join(projectPath, `convex.backup.${Date.now()}`);
-    await fs.move(targetConvexPath, backupPath);
-    console.log(pc.yellow("   Existing convex/ folder backed up"));
-    console.log(pc.dim(`   Backed up to ${path.basename(backupPath)}`));
-  } catch (error: unknown) {
-    const err = error as { code?: string };
-    if (err.code !== "ENOENT") {
-      throw error;
-    }
-  }
-
-  // Copy all files from convex-dev to convex
-  console.log(pc.dim("   Copying Cortex backend functions..."));
-  await fs.copy(convexDevPath, targetConvexPath, {
-    overwrite: true,
-    errorOnExist: false,
-  });
-
-  // List of critical files to verify
-  const criticalFiles = [
-    "schema.ts",
-    "conversations.ts",
-    "immutable.ts",
-    "mutable.ts",
-    "memories.ts",
-    "facts.ts",
-    "contexts.ts",
-    "memorySpaces.ts",
-    "users.ts",
-    "agents.ts",
-    "graphSync.ts",
-  ];
-
-  // Verify all critical files were copied
-  const missingFiles = criticalFiles.filter(
-    (file) => !fs.existsSync(path.join(targetConvexPath, file)),
-  );
-
-  if (missingFiles.length > 0) {
-    throw new Error(
-      `Failed to copy some backend functions: ${missingFiles.join(", ")}`,
-    );
-  }
-
-  console.log(pc.green(`   Copied ${criticalFiles.length} backend functions`));
 }
 
 /**
@@ -104,12 +53,17 @@ export async function deployCortexBackend(projectPath: string): Promise<void> {
 export async function createConvexJson(projectPath: string): Promise<void> {
   const convexJsonPath = path.join(projectPath, "convex.json");
 
-  const convexConfig = {
-    functions: "convex/",
-  };
-
-  await fs.writeJson(convexJsonPath, convexConfig, { spaces: 2 });
-  console.log(pc.dim("   Created convex.json"));
+  if (await fs.pathExists(convexJsonPath)) {
+    const current = await fs.readJson(convexJsonPath);
+    if (!current || typeof current !== "object" || Array.isArray(current) ||
+      (current.functions !== undefined && typeof current.functions !== "string")) {
+      throw new Error("Invalid host convex.json; repair it before installing Cortex.");
+    }
+    console.log(pc.dim("   Preserved existing convex.json"));
+    return;
+  }
+  await fs.writeFile(convexJsonPath, JSON.stringify({ functions: "convex/" }, null, 2) + "\n", { flag: "wx" });
+  console.log(pc.dim("   Created absent convex.json"));
 }
 
 /**

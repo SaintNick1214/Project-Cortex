@@ -1,0 +1,44 @@
+{
+  "label": "definition-revoke-submit",
+  "kind": "mutation",
+  "fn": "runs:submit",
+  "args": {
+    "request": {
+      "version": 1,
+      "agentId": "agent:db6d6307a281c1ec4ec9a226b5d87f5c0b47d7060fbbcb559d61e17bc51e9778",
+      "agentVersion": 1,
+      "clientRequestId": "definition-revoke",
+      "conversationId": "conversation:80864d49e4989fe6cc64747f16dd73dfb57c9235d88dc6b47834d6b9fa41e064",
+      "parts": [
+        {
+          "type": "text",
+          "text": "short"
+        }
+      ]
+    }
+  },
+  "result": {
+    "agentId": "agent:db6d6307a281c1ec4ec9a226b5d87f5c0b47d7060fbbcb559d61e17bc51e9778",
+    "agentVersion": 1,
+    "attemptNumber": 0,
+    "cancellationRequested": false,
+    "conversationId": "conversation:80864d49e4989fe6cc64747f16dd73dfb57c9235d88dc6b47834d6b9fa41e064",
+    "createdAt": 1791455142847,
+    "failureCode": null,
+    "graphStatus": "not_requested",
+    "inputMessageIds": [
+      "kx7bh1jq3wwnet02yc0b3h08758fx4mh"
+    ],
+    "memoryStatus": "pending",
+    "outputMessageIds": [],
+    "queueSequence": 1,
+    "responseStatus": "queued",
+    "runId": "run:e1d67b57da7cadf4a10aeab5104e9eeb12bfe8c3a597a17b96cb806b72ac1035",
+    "updatedAt": 1791455142847,
+    "version": 1
+  },
+  "error": null,
+  "elapsedMs": 309,
+  "target": "festive-cheetah-250",
+  "actualJwt": true
+}

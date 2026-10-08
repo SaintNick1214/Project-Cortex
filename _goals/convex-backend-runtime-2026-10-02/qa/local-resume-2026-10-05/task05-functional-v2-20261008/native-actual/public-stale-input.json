@@ -1,0 +1,44 @@
+{
+  "label": "stale-input",
+  "kind": "mutation",
+  "fn": "runs:submit",
+  "args": {
+    "request": {
+      "version": 1,
+      "agentId": "agent:a2e7811addc2f85c0f099287969c020a76a8157aec6416ac1e9fc6a4e5667178",
+      "agentVersion": 1,
+      "clientRequestId": "stale-input-v2",
+      "conversationId": "conversation:c9f940320357d8d80001b64f51fee2d11615858443ee75155cbdf416f59d4538",
+      "parts": [
+        {
+          "type": "text",
+          "text": "queued native input"
+        }
+      ]
+    }
+  },
+  "result": {
+    "agentId": "agent:a2e7811addc2f85c0f099287969c020a76a8157aec6416ac1e9fc6a4e5667178",
+    "agentVersion": 1,
+    "attemptNumber": 0,
+    "cancellationRequested": false,
+    "conversationId": "conversation:c9f940320357d8d80001b64f51fee2d11615858443ee75155cbdf416f59d4538",
+    "createdAt": 1791456140299,
+    "failureCode": null,
+    "graphStatus": "not_requested",
+    "inputMessageIds": [
+      "kx7600whwk28mssvcyxvgz5x658fwhvr"
+    ],
+    "memoryStatus": "pending",
+    "outputMessageIds": [],
+    "queueSequence": 1,
+    "responseStatus": "queued",
+    "runId": "run:c6ecb755f98a53998e444c34b74e724056bb4015e0f4ea777e341fc03d5f973f",
+    "updatedAt": 1791456140299,
+    "version": 1
+  },
+  "error": null,
+  "elapsedMs": 261,
+  "target": "festive-cheetah-250",
+  "actualJwt": true
+}

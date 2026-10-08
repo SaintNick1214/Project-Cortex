@@ -14,6 +14,7 @@ const lookup = jest.fn<(id: string, revision: number) => DeploymentPolicyManifes
 const trustedBootstrap = await import("../../../convex-dev/runtimeModelPolicyBootstrap");
 jest.unstable_mockModule("../../../convex-dev/runtimeModelPolicyBootstrap", () => ({ qualifiedTerminalModelId: trustedBootstrap.qualifiedTerminalModelId, lookupDeploymentManifest: lookup, isTrustedDeploymentManifest: (entry: DeploymentPolicyManifest) => entry === root && entry.classification === "fixture-synthetic" }));
 const ledger = await import("../../../convex-dev/runtimeModelPolicy");
+const definitions = await import("../../../convex-dev/agentDefinitions");
 const schema = (await import("../../../convex-dev/schema")).default;
 const hash = "a".repeat(64);
 const clock = 1_000_000;
@@ -294,13 +295,21 @@ describe("native private policy ledger — offline logic only", () => {
     expect(f.account("tenant").reservedUnits).toBe(200);
     await expect(f.admit(foreign, 0, "hello", { semanticId: "foreignchild", parentOperationId: a.operationId })).rejects.toThrow();
   });
-  it("trusted compiled versioned agent specialization is consumed only by its matching tenant/version", async () => {
-    root = { ...root, policies: [...root.policies, { policyId: "agent-policy", version: 1, scope: "agent", tenantId: "tenant-a", agentId: "agent", agentVersion: 7,
-      rules: { limits: { outputTokens: 100 } } }] };
+  it("validated owned executable specialization is consumed only by its current matching tenant/version", async () => {
     const f = fixture(); await f.install();
+    const definitionCanonical = canonicalModelJson({ version: 1, agentId: "agent", agentVersion: 7, tenantId: "tenant-a", memorySpaceId: "space-a", ownerPrincipalId: f.reference.principalId,
+      instructions: { text: "trusted server instruction", promptVersion: "prompt-1" }, tools: [],
+      context: { handlerId: "cortex.transcript", handlerVersion: 1, registryHash: await definitions.executableRegistryHash(), memoryMode: "indexed-plus-pending", requiredStages: [], maxContextTokens: 1000 },
+      policies: [{ policyId: "agent-policy", version: 1, scope: "agent", tenantId: "tenant-a", agentId: "agent", agentVersion: 7, rules: { limits: { outputTokens: 100, toolSteps: 0 } } }] });
+    const definition = f.db.seed("runtimeAgentDefinitions", { tenantId: "tenant-a", memorySpaceId: "space-a", ownerPrincipalId: f.reference.principalId,
+      agentId: "agent", version: 7, definitionCanonical, definitionHash: await semanticHash(definitionCanonical), authorReference: f.reference, createdAt: clock,
+      publishPrincipalId: f.reference.principalId, publishIdentityCanonical: "fixture-owned-definition", publishIdentityHash: hash, publishRequestCanonical: definitionCanonical });
+    expect(await definitions.readCurrentExecutableDefinition(f.ctx, f.reference, { agentId: "agent", version: 7 }, { capability: "run" })).toMatchObject({ definitionHash: definition.definitionHash });
     const binding = await f.invoke<Bound>("ensureBudget", { reference: f.reference, operationKey: "agent.respond", requestId: "agent-request", requestCanonical: canonicalModelJson({ text: "hello" }), agentId: "agent", agentVersion: 7 });
     expect(await f.invoke("resolve", { reference: f.reference, operationKey: "agent.respond", runBudgetId: binding.runBudgetId })).toMatchObject({ snapshot: { agent: { agentId: "agent", version: 7 }, limits: { outputTokens: 100 } } });
     await expect(f.invoke("ensureBudget", { reference: f.reference, operationKey: "agent.respond", requestId: "invalid-version", requestCanonical: canonicalModelJson({ text: "hello" }), agentId: "agent", agentVersion: 8 })).rejects.toThrow();
+    definition.revokedAt = clock;
+    await expect(f.invoke("resolve", { reference: f.reference, operationKey: "agent.respond", runBudgetId: binding.runBudgetId })).rejects.toThrow();
   });
   it("native bound rejects malformed Unicode, tool/schema shapes and part arrays without calling a provider", () => {
     const proof = root.dispatchEvidence[0]!;
@@ -392,8 +401,12 @@ describe("native private policy ledger — offline logic only", () => {
       expect(reg.exportArgs?.()).not.toContain('"type":"any"');
     }
   });
-  it("all five additive native tables have unique index field configurations", () => {
-    expect(Object.keys(schema.tables)).toHaveLength(31);
+  it("preserves all original native tables and adds exactly nine transcript tables with unique indexes", () => {
+    const original = ["conversations", "conversationShares", "conversationSnapshots", "immutable", "mutable", "memories", "facts", "factHistory", "memorySpaces", "contexts", "agents", "sessions", "governancePolicies", "governanceEnforcement", "graphSyncQueue", "artifacts", "attachments",
+      "runtimeAuthPrincipals", "runtimeAuthMemberships", "runtimeAuthScopes", "runtimeAuthGrants", "runtimeAuthTombstones", "runtimeMemorySources", "runtimeMemoryChunks", "runtimeMemoryVectors", "runtimeMemoryReceipts",
+      "runtimeModelPolicies", "runtimeModelQualifications", "runtimeBudgetAccounts", "runtimeModelOperations", "runtimeModelAttempts"];
+    const added = ["runtimeAgentDefinitions", "runtimeConversations", "runtimeConversationShares", "runtimeConversationSnapshots", "runtimeTranscriptMessages", "runtimeRuns", "runtimeRunOutbox", "runtimeRunAttempts", "runtimeTranscriptOutbox"];
+    expect(Object.keys(schema.tables).sort()).toEqual([...original, ...added].sort());
     for (const definition of Object.values(schema.tables)) {
       const configurations = definition[" indexes"]().map((index) => JSON.stringify(index.fields));
       expect(new Set(configurations).size).toBe(configurations.length);

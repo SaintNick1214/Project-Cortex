@@ -1,0 +1,29 @@
+{
+  "label": "public-internal-denied",
+  "kind": "mutation",
+  "fn": "runs:claimNext",
+  "args": {
+    "reference": {
+      "principalId": "mh7ems3w408qmheaxk94f63zs98fxah8",
+      "principalVersion": 1,
+      "membershipId": "md78satxrk69dgjtjd7c8s32wn8fwsae",
+      "membershipVersion": 1,
+      "grantId": "m9728y8n57gahttfjrvj888g458fw7p0",
+      "grantVersion": 1,
+      "tenantId": "task05-native-0af668c7",
+      "tenantEpoch": 1,
+      "memorySpaceId": "qualification",
+      "memorySpaceEpoch": 1
+    },
+    "conversationId": "conversation:265829d631f7d1c6f8c1cd2eccf62c15c3ba79e3b3690c7e619dfddb70939eeb"
+  },
+  "result": null,
+  "error": {
+    "name": "Error",
+    "data": null,
+    "message": "[Request ID: 2e9d71b7f25a23c4] Server Error\nCould not find public function for 'runs:claimNext'.\n"
+  },
+  "elapsedMs": 93,
+  "target": "festive-cheetah-250",
+  "actualJwt": true
+}

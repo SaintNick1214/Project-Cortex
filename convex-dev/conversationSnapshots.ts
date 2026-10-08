@@ -1,78 +1,45 @@
-import { runtimeUnavailable } from "./runtimeUnavailableAuth";
-/**
- * Cortex SDK - Conversation Snapshots API
- *
- * Shareable Chats Phase 3: Immutable Snapshots
- * Creates point-in-time copies of conversations with optional PII redaction
- */
-
-import { ConvexError, v } from "convex/values";
+/** Metadata-only native transcript snapshots. No second executable history is persisted. */
+import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
+import type { QueryCtx } from "./_generated/server";
+import type { Doc } from "./_generated/dataModel";
+import type { RuntimeAuthorityReference } from "../src/auth/verified";
+import { publicTextParts } from "../src/domain/transcript";
+import type { MessagePin } from "../src/domain/transcript";
+import { bindDataActor, dataAuthorityReference, managedConversationAccess, requireDataAuthority } from "./runtimeDataAuth";
+import { agentComponent, bridgeFor, checkConversation, conversationById, readTranscriptPage, requireConversation, singleTranscript, transcriptDenied, verifyMessage } from "./runtimeTranscript";
 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// Helper Functions
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-/**
- * Generate a unique snapshot ID
- */
-function generateSnapshotId(): string {
-  const timestamp = Date.now().toString(36);
-  const randomPart = Math.random().toString(36).substring(2, 15);
-  return `snap-${timestamp}-${randomPart}`;
+async function snapshotById(ctx: Pick<QueryCtx, "db">, reference: RuntimeAuthorityReference, snapshotId: string) {
+  return singleTranscript(await ctx.db.query("runtimeConversationSnapshots").withIndex("by_scoped_id", q => q.eq("tenantId", reference.tenantId).eq("memorySpaceId", reference.memorySpaceId!).eq("snapshotId", snapshotId)).take(2));
 }
-
-/**
- * PII patterns for redaction
- */
-const PII_PATTERNS = [
-  // Email addresses
-  { pattern: /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g, replacement: "[EMAIL]" },
-  // Phone numbers (various formats)
-  { pattern: /(\+?1[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}/g, replacement: "[PHONE]" },
-  // SSN
-  { pattern: /\d{3}[-.\s]?\d{2}[-.\s]?\d{4}/g, replacement: "[SSN]" },
-  // Credit card numbers
-  { pattern: /\d{4}[-.\s]?\d{4}[-.\s]?\d{4}[-.\s]?\d{4}/g, replacement: "[CREDIT_CARD]" },
-  // IP addresses
-  { pattern: /\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/g, replacement: "[IP_ADDRESS]" },
-];
-
-/**
- * Redact PII from text
- */
-function redactPII(text: string, customRedactions?: { pattern: string; replacement: string }[]): string {
-  let result = text;
-  
-  // Apply standard PII patterns
-  for (const { pattern, replacement } of PII_PATTERNS) {
-    result = result.replace(pattern, replacement);
-  }
-  
-  // Apply custom redactions
-  if (customRedactions) {
-    for (const { pattern, replacement } of customRedactions) {
-      try {
-        const regex = new RegExp(pattern, "g");
-        result = result.replace(regex, replacement);
-      } catch {
-        // Skip invalid patterns
-      }
+function metadata(row: Doc<"runtimeConversationSnapshots">) { return { _id: row._id, snapshotId: row.snapshotId, conversationId: row.conversationId, createdAt: row.createdAt, messageCount: row.pins.length, historyRevision: row.historyRevision, messages: [] as { id: string; role: "user" | "agent"; content: string; timestamp: number }[],
+  memorySpaceId: row.memorySpaceId, tenantId: row.tenantId, createdBy: row.ownerPrincipalId, conversationType: "user-agent" as const, participants: {}, includedContent: { messages: true, facts: false, memories: false }, redaction: { piiRedacted: row.redactPII, messagesRedactedBefore: row.redactBefore }, status: "active" as const, snapshotOf: row.createdAt }; }
+function redact(text: string) { return text.replace(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi, "[EMAIL]").replace(/\b\d{3}-\d{2}-\d{4}\b/g, "[SSN]"); }
+async function hydrate(ctx: Pick<QueryCtx, "db" | "runQuery">, reference: RuntimeAuthorityReference, row: Doc<"runtimeConversationSnapshots">) {
+  if (row.tombstonedAt !== undefined) transcriptDenied();
+  const conversation = await conversationById(ctx, reference, row.conversationId); if (!conversation) transcriptDenied();
+  await managedConversationAccess(ctx, reference, conversation, "read", "canExport");
+  if (conversation.epoch !== row.conversationEpoch) transcriptDenied("STALE_TRANSCRIPT");
+  const messages = [];
+  for (let offset = 0; offset < row.pins.length; offset += 100) {
+    const pins = row.pins.slice(offset, offset + 100);
+    const natives = await ctx.runQuery(agentComponent.messages.getMessagesByIds, { messageIds: pins.map(p => p.nativeMessageId) });
+    for (let i = 0; i < pins.length; i++) {
+      const pin = pins[i]; const bridge = await bridgeFor(ctx, conversation, pin.nativeMessageId);
+      if (!bridge || !bridge.approved || bridge.revision !== pin.sourceRevision || bridge.sourceEventId !== pin.sourceEventId
+        || bridge.contentHash !== pin.contentHash || bridge.order !== pin.order || bridge.stepOrder !== pin.stepOrder) transcriptDenied("STALE_TRANSCRIPT");
+      await verifyMessage(ctx, conversation, bridge, natives[i]);
+      if (row.redactBefore !== undefined && bridge.createdAt < row.redactBefore) continue;
+      const parts = publicTextParts(natives[i]!.message!.content);
+      const visible = parts.map(p => ({ type: "text" as const, text: row.redactPII ? redact(p.text) : p.text }));
+      messages.push({ id: bridge.nativeMessageId, role: bridge.role === "assistant" ? "agent" as const : "user" as const, content: visible.map(p => p.text).join("\n"), timestamp: bridge.createdAt, order: bridge.order, stepOrder: bridge.stepOrder,
+        parts: visible, status: natives[i]!.status, revision: bridge.revision });
     }
   }
-  
-  return result;
+  return { ...metadata(row), messages };
 }
 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// Mutations
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-/**
- * Create a snapshot of a conversation
- */
-export const create = mutation({
-  args: {
+export const create = mutation({ args: {
     memorySpaceId: v.optional(v.string()),
     conversationId: v.string(),
     createdBy: v.string(),
@@ -91,203 +58,61 @@ export const create = mutation({
     
     // Multi-tenancy
     tenantId: v.optional(v.string()),
-  },
-  handler: async (ctx, args) => {
-    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
-    await runtimeUnavailable(ctx, "write", args);
+  }, handler: async (ctx, args) => {
+  const { actor, reference, conversation } = await requireConversation(ctx, args, args.conversationId, "write"); bindDataActor(actor, args.createdBy);
+  await managedConversationAccess(ctx, reference, conversation, "read", "canExport");
+  if (args.includeFacts || args.includeMemories || args.customRedactions?.length) transcriptDenied("CAPABILITY_UNAVAILABLE");
+  if (args.redactBefore !== undefined && !Number.isSafeInteger(args.redactBefore)) transcriptDenied("INVALID_INPUT");
+  const pins: MessagePin[] = []; let cursor: string | null = null;
+  do { const page = await readTranscriptPage(ctx, conversation, cursor, 100); for (const message of page.page) {
+      if (message.status !== "success") continue; const bridge = await bridgeFor(ctx, conversation, message.id); if (!bridge) transcriptDenied("STALE_TRANSCRIPT");
+      pins.push({ nativeMessageId: message.id, order: message.order, stepOrder: message.stepOrder, sourceEventId: bridge.sourceEventId, sourceRevision: bridge.revision, contentHash: bridge.contentHash });
+    } if (pins.length > 1000) transcriptDenied("QUERY_TOO_BROAD"); cursor = page.continueCursor;
+  } while (cursor !== null);
+  const snapshotId = `snapshot:${crypto.randomUUID()}`; const id = await ctx.db.insert("runtimeConversationSnapshots", { tenantId: actor.tenantId, memorySpaceId: actor.memorySpaceId,
+    ownerPrincipalId: actor.principalId, snapshotId, conversationId: conversation.conversationId, conversationEpoch: conversation.epoch, historyRevision: conversation.historyRevision,
+    pins, redactPII: args.redactPII ?? false, ...(args.redactBefore === undefined ? {} : { redactBefore: args.redactBefore }), actorReference: reference, createdAt: Date.now() });
+  return metadata((await ctx.db.get("runtimeConversationSnapshots", id))!);
+} });
 
-    // Get the source conversation
-    const conversation = await ctx.db
-      .query("conversations")
-      .withIndex("by_conversationId", (q) =>
-        q.eq("conversationId", args.conversationId)
-      )
-      .first();
-
-    if (!conversation) {
-      throw new ConvexError("CONVERSATION_NOT_FOUND");
-    }
-
-    const now = Date.now();
-    const snapshotId = generateSnapshotId();
-    
-    // Process messages with optional redaction
-    let messages = conversation.messages.map(msg => ({
-      id: msg.id,
-      role: msg.role,
-      content: msg.content,
-      timestamp: msg.timestamp,
-      participantId: msg.participantId,
-    }));
-    
-    // Filter messages before timestamp
-    if (args.redactBefore) {
-      messages = messages.filter(m => m.timestamp >= args.redactBefore!);
-    }
-    
-    // Apply PII redaction if requested
-    if (args.redactPII) {
-      messages = messages.map(msg => ({
-        ...msg,
-        content: redactPII(msg.content, args.customRedactions),
-      }));
-    }
-    
-    // Get facts if requested (placeholder - would need facts API integration)
-    let facts: { factId: string; fact: string; factType: string; confidence: number }[] | undefined;
-    if (args.includeFacts) {
-      // This would integrate with the facts API
-      facts = [];
-    }
-
-    const id = await ctx.db.insert("conversationSnapshots", {
-      snapshotId,
-      conversationId: args.conversationId,
-      messages,
-      conversationType: conversation.type,
-      participants: conversation.participants,
-      messageCount: messages.length,
-      includedContent: {
-        messages: true,
-        facts: args.includeFacts ?? false,
-        memories: args.includeMemories ?? false,
-      },
-      redaction: {
-        piiRedacted: args.redactPII ?? false,
-        messagesRedactedBefore: args.redactBefore,
-        customRedactions: args.customRedactions,
-      },
-      facts,
-      createdBy: args.createdBy,
-      memorySpaceId: conversation.memorySpaceId,
-      tenantId: args.tenantId,
-      status: "active",
-      createdAt: now,
-      snapshotOf: conversation.updatedAt,
-    });
-
-    return await ctx.db.get(id);
-  },
-});
-
-/**
- * Delete a snapshot (soft delete)
- */
-export const deleteSnapshot = mutation({
-  args: {
+export const deleteSnapshot = mutation({ args: {
     tenantId: v.optional(v.string()),
     memorySpaceId: v.optional(v.string()),
     snapshotId: v.string(),
     userId: v.optional(v.string()),
-  },
-  handler: async (ctx, args) => {
-    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
-    await runtimeUnavailable(ctx, "write", args);
+  }, handler: async (ctx, args) => {
+  const actor = await requireDataAuthority(ctx, args, "write"); bindDataActor(actor, args.userId); const reference = dataAuthorityReference(actor);
+  const row = await snapshotById(ctx, reference, args.snapshotId); if (!row || row.ownerPrincipalId !== actor.principalId) transcriptDenied();
+  const conversation = await conversationById(ctx, reference, row.conversationId); if (!conversation) transcriptDenied(); await checkConversation(ctx, reference, conversation, "write");
+  if (row.tombstonedAt === undefined) await ctx.db.patch("runtimeConversationSnapshots", row._id, { tombstonedAt: Date.now() }); return { deleted: true as const };
+} });
 
-    const snapshot = await ctx.db
-      .query("conversationSnapshots")
-      .withIndex("by_snapshotId", (q) => q.eq("snapshotId", args.snapshotId))
-      .first();
-
-    if (!snapshot) {
-      throw new ConvexError("SNAPSHOT_NOT_FOUND");
-    }
-
-    // Optional: verify ownership
-    if (args.userId && snapshot.createdBy !== args.userId) {
-      throw new ConvexError("DELETE_NOT_AUTHORIZED");
-    }
-
-    await ctx.db.patch(snapshot._id, {
-      status: "deleted",
-    });
-
-    return { deleted: true, snapshotId: args.snapshotId };
-  },
-});
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// Queries
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-/**
- * Get a snapshot by ID
- */
-export const get = query({
-  args: {
+export const get = query({ args: {
     tenantId: v.optional(v.string()),
     memorySpaceId: v.optional(v.string()),
     snapshotId: v.string(),
-  },
-  handler: async (ctx, args) => {
-    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
-    await runtimeUnavailable(ctx, "read", args);
+  }, handler: async (ctx, args) => {
+  const actor = await requireDataAuthority(ctx, args, "read"); const reference = dataAuthorityReference(actor);
+  const row = await snapshotById(ctx, reference, args.snapshotId); if (!row) return null; return await hydrate(ctx, reference, row);
+} });
 
-    const snapshot = await ctx.db
-      .query("conversationSnapshots")
-      .withIndex("by_snapshotId", (q) => q.eq("snapshotId", args.snapshotId))
-      .first();
-
-    if (!snapshot || snapshot.status === "deleted") {
-      return null;
-    }
-
-    return snapshot;
-  },
-});
-
-/**
- * List snapshots for a conversation
- */
-export const listByConversation = query({
-  args: {
+export const listByConversation = query({ args: {
     tenantId: v.optional(v.string()),
     memorySpaceId: v.optional(v.string()),
     conversationId: v.string(),
     includeArchived: v.optional(v.boolean()),
-  },
-  handler: async (ctx, args) => {
-    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
-    await runtimeUnavailable(ctx, "read", args);
+  }, handler: async (ctx, args) => {
+  const { conversation, reference } = await requireConversation(ctx, args, args.conversationId, "read");
+  return (await ctx.db.query("runtimeConversationSnapshots").withIndex("by_conversation", q => q.eq("tenantId", reference.tenantId).eq("memorySpaceId", reference.memorySpaceId!).eq("conversationId", conversation.conversationId)).take(100)).filter(row => row.tombstonedAt === undefined).map(metadata);
+} });
 
-    const snapshots = await ctx.db
-      .query("conversationSnapshots")
-      .withIndex("by_conversation", (q) =>
-        q.eq("conversationId", args.conversationId)
-      )
-      .collect();
-
-    return snapshots.filter(s => {
-      if (s.status === "deleted") return false;
-      if (!args.includeArchived && s.status === "archived") return false;
-      return true;
-    });
-  },
-});
-
-/**
- * List snapshots created by a user
- */
-export const listByUser = query({
-  args: {
+export const listByUser = query({ args: {
     tenantId: v.optional(v.string()),
     memorySpaceId: v.optional(v.string()),
     userId: v.string(),
     includeArchived: v.optional(v.boolean()),
-  },
-  handler: async (ctx, args) => {
-    // SAFETYONLY: Task05/07/08 restore canonical behavior; this never resolves.
-    await runtimeUnavailable(ctx, "read", args);
-
-    const snapshots = await ctx.db
-      .query("conversationSnapshots")
-      .withIndex("by_createdBy", (q) => q.eq("createdBy", args.userId))
-      .collect();
-
-    return snapshots.filter(s => {
-      if (s.status === "deleted") return false;
-      if (!args.includeArchived && s.status === "archived") return false;
-      return true;
-    });
-  },
-});
+  }, handler: async (ctx, args) => {
+  const actor = await requireDataAuthority(ctx, args, "read"); bindDataActor(actor, args.userId); const reference = dataAuthorityReference(actor);
+  const rows = await ctx.db.query("runtimeConversationSnapshots").withIndex("by_owner", q => q.eq("tenantId", actor.tenantId).eq("memorySpaceId", actor.memorySpaceId).eq("ownerPrincipalId", actor.principalId)).take(100);
+  const result = []; for (const row of rows) { if (row.tombstonedAt !== undefined) continue; const conversation = await conversationById(ctx, reference, row.conversationId); if (!conversation || conversation.tombstonedAt !== undefined) continue; await checkConversation(ctx, reference, conversation, "read"); result.push(metadata(row)); } return result;
+} });

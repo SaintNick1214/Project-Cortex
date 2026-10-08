@@ -1,0 +1,44 @@
+{
+  "label": "cutoff-submit",
+  "kind": "mutation",
+  "fn": "runs:submit",
+  "args": {
+    "request": {
+      "version": 1,
+      "agentId": "agent:a2e7811addc2f85c0f099287969c020a76a8157aec6416ac1e9fc6a4e5667178",
+      "agentVersion": 1,
+      "conversationId": "conversation:705cb6175a72d8a37e2000ba844e36dbbf7f414e0ed0673b1dbca1a4a9b70365",
+      "clientRequestId": "cutoff-v1",
+      "parts": [
+        {
+          "type": "text",
+          "text": "new cutoff input"
+        }
+      ]
+    }
+  },
+  "result": {
+    "agentId": "agent:a2e7811addc2f85c0f099287969c020a76a8157aec6416ac1e9fc6a4e5667178",
+    "agentVersion": 1,
+    "attemptNumber": 0,
+    "cancellationRequested": false,
+    "conversationId": "conversation:705cb6175a72d8a37e2000ba844e36dbbf7f414e0ed0673b1dbca1a4a9b70365",
+    "createdAt": 1791455006666,
+    "failureCode": null,
+    "graphStatus": "not_requested",
+    "inputMessageIds": [
+      "kx725fnqja1wyshfzkzdqhrje98fwty9"
+    ],
+    "memoryStatus": "pending",
+    "outputMessageIds": [],
+    "queueSequence": 1,
+    "responseStatus": "queued",
+    "runId": "run:da6afa655364070135b8e190e3f1982b8d0a98a85175607250a1c8b50975426c",
+    "updatedAt": 1791455006666,
+    "version": 1
+  },
+  "error": null,
+  "elapsedMs": 275,
+  "target": "festive-cheetah-250",
+  "actualJwt": true
+}

@@ -1,0 +1,21 @@
+{
+  "scope": "ACTUAL_NATIVE_AGENT_AND_AUTHENTICATED_TASK05_NO_INFERENCE",
+  "operation": "0af668c7-565e-4b27-8516-fbce5a3432b7",
+  "checks": [
+    {
+      "name": "running first cutoff survives later queued input and second run includes completed first response",
+      "status": "PASS"
+    },
+    {
+      "name": "approving future queued input while first runs preserves only first cutoff and pins both approved revisions",
+      "status": "PASS"
+    },
+    {
+      "name": "manual edit of selected running input still rejects the captured executable cutoff",
+      "status": "PASS"
+    }
+  ],
+  "pass": 3,
+  "fail": 0,
+  "at": "2026-10-08T10:42:22.442Z"
+}

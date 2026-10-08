@@ -16,6 +16,7 @@ export const sourceContent = v.object({
   tenantId: v.string(), memorySpaceId: v.string(), ownerPrincipalId: v.string(),
   lineage: sourceLineage, content: v.string(), contentHash: v.string(), createdAt: v.number(),
   tombstonedAt: v.optional(v.number()),
+  transcriptOrigin: v.optional(v.object({ conversationId: v.string(), conversationEpoch: v.number(), nativeMessageId: v.string() })),
 });
 export const sourceChunk = v.object({
   ...sourceReference, chunkId: v.string(), tenantId: v.string(), memorySpaceId: v.string(),

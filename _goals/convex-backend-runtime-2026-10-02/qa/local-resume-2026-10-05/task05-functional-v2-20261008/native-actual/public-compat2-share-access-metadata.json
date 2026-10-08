@@ -1,0 +1,28 @@
+{
+  "label": "share-access-metadata",
+  "kind": "query",
+  "fn": "conversationShares:checkAccess",
+  "args": {
+    "tenantId": "task05-native-0af668c7",
+    "memorySpaceId": "qualification",
+    "conversationId": "task05-legacy-compat-v1",
+    "userId": "mh7ay8zn26y7pys493fgcdvz598fxyy9"
+  },
+  "result": {
+    "hasAccess": true,
+    "permissions": {
+      "canContinue": false,
+      "canExport": false,
+      "canFork": false,
+      "canView": true,
+      "canViewFacts": false,
+      "canViewMemories": false
+    },
+    "reason": "CURRENT_AUTHORITY",
+    "share": null
+  },
+  "error": null,
+  "elapsedMs": 223,
+  "target": "festive-cheetah-250",
+  "actualJwt": true
+}

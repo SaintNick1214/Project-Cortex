@@ -1,0 +1,44 @@
+{
+  "label": "approval-race-later",
+  "kind": "mutation",
+  "fn": "runs:submit",
+  "args": {
+    "request": {
+      "version": 1,
+      "agentId": "agent:a2e7811addc2f85c0f099287969c020a76a8157aec6416ac1e9fc6a4e5667178",
+      "agentVersion": 1,
+      "clientRequestId": "approval-race-later-v2",
+      "conversationId": "conversation:42ef7ce4988608bb55377793848df533c099b2328fbb16397be400b886a82296",
+      "parts": [
+        {
+          "type": "text",
+          "text": "approved future queued input"
+        }
+      ]
+    }
+  },
+  "result": {
+    "agentId": "agent:a2e7811addc2f85c0f099287969c020a76a8157aec6416ac1e9fc6a4e5667178",
+    "agentVersion": 1,
+    "attemptNumber": 0,
+    "cancellationRequested": false,
+    "conversationId": "conversation:42ef7ce4988608bb55377793848df533c099b2328fbb16397be400b886a82296",
+    "createdAt": 1791456136798,
+    "failureCode": null,
+    "graphStatus": "not_requested",
+    "inputMessageIds": [
+      "kx72fm606ctkyh86xkz9y9yv298fx09v"
+    ],
+    "memoryStatus": "pending",
+    "outputMessageIds": [],
+    "queueSequence": 2,
+    "responseStatus": "waiting_approval",
+    "runId": "run:a58f99ecdf20530c8a53647325d3942d2368ce8e3b2a5b5b55f4d31e3b6f0035",
+    "updatedAt": 1791456136798,
+    "version": 1
+  },
+  "error": null,
+  "elapsedMs": 303,
+  "target": "festive-cheetah-250",
+  "actualJwt": true
+}

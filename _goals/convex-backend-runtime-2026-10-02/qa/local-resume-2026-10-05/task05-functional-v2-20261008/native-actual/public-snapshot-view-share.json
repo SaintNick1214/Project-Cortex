@@ -1,0 +1,47 @@
+{
+  "label": "snapshot-view-share",
+  "kind": "mutation",
+  "fn": "conversationShares:create",
+  "args": {
+    "tenantId": "task05-native-0af668c7",
+    "memorySpaceId": "qualification",
+    "conversationId": "conversation:06226b216f60259b58e3926c09013ecb03f2727c308c5ca39c449993a542d02e",
+    "grantedBy": "mh7ems3w408qmheaxk94f63zs98fxah8",
+    "grantType": "user",
+    "grantedTo": "mh7ay8zn26y7pys493fgcdvz598fxyy9",
+    "permissions": {
+      "canView": true,
+      "canViewFacts": false,
+      "canViewMemories": false,
+      "canContinue": false,
+      "canFork": false,
+      "canExport": false
+    }
+  },
+  "result": {
+    "_id": "n178mts2xey8jzw5fdb2wjhpy18fxzg2",
+    "conversationId": "conversation:06226b216f60259b58e3926c09013ecb03f2727c308c5ca39c449993a542d02e",
+    "createdAt": 1791456411858,
+    "grantType": "user",
+    "grantedBy": "mh7ems3w408qmheaxk94f63zs98fxah8",
+    "grantedTo": "mh7ay8zn26y7pys493fgcdvz598fxyy9",
+    "permissions": {
+      "canContinue": false,
+      "canExport": false,
+      "canFork": false,
+      "canView": true,
+      "canViewFacts": false,
+      "canViewMemories": false
+    },
+    "redactSensitive": false,
+    "shareId": "share:2d7520bb-17e9-478e-bf3f-fc86cdcc7b60",
+    "sourceMemorySpaceId": "qualification",
+    "status": "active",
+    "tenantId": "task05-native-0af668c7",
+    "viewCount": 0
+  },
+  "error": null,
+  "elapsedMs": 184,
+  "target": "festive-cheetah-250",
+  "actualJwt": true
+}

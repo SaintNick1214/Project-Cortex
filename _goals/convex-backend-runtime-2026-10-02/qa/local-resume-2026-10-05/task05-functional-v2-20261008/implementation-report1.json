@@ -1,0 +1,2522 @@
+{
+  "schemaVersion": 1,
+  "scope": "TASK05_FUNCTIONAL_IMPLEMENTATION_UNDER_ACCEPTANCE_POLICY_V2",
+  "status": "IMPLEMENTATION_COMPLETE_PENDING_NON_AUTHOR_ACCEPTANCE",
+  "closedAt": "2026-10-08T10:54:54.776Z",
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "versions": {
+    "node": "v24.15.0",
+    "npm": "12.2.0",
+    "convex": "1.46.0",
+    "agent": "0.7.3"
+  },
+  "source": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/src/domain/transcript.ts",
+      "bytes": 6636,
+      "sha256": "40f983a4b2a389c9a17412b069d350b1dea74a3685453eeca0e07005cd40009b"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeTranscript.ts",
+      "bytes": 42820,
+      "sha256": "bc926db41ff277ac5775fa07bed7664ea54e60b6db7309e340c48a0af508855e"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeTranscriptSchema.ts",
+      "bytes": 8058,
+      "sha256": "4fed7d4f288117298d3ee08c9f64ef025a5ed198bf2897efc3ff38df9f053e6c"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/agentDefinitions.ts",
+      "bytes": 16159,
+      "sha256": "36de71153b558f3ba594336fe30446a794bfff9a822f2219b80382169cab1988"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runs.ts",
+      "bytes": 25229,
+      "sha256": "771d23455abcc517afac97018dc65b48e2982004aff823667668a281fb94b8a3"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/convex.config.ts",
+      "bytes": 177,
+      "sha256": "35f872240bc81987c06b834b6118fe4435714d68131816dbf1a80f30e882f784"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/schema.ts",
+      "bytes": 54680,
+      "sha256": "4583253d91e631e68edbf140e4079ef1dd4aca4d7ed4280044de586786476e8d"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/conversations.ts",
+      "bytes": 29212,
+      "sha256": "d58a123e562a6d197617c852fe5b47e5c9490df96e4beb3becf0c940d6cfc72e"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/conversationShares.ts",
+      "bytes": 10453,
+      "sha256": "75ee646a87a4cd494752f6c5bb185cdb3ddd5a853ecbea2d89c70798a6ce778e"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/conversationSnapshots.ts",
+      "bytes": 9230,
+      "sha256": "c4df79a8b4dce5aacec7fa9ff58124f99463c0e6612713dc8b3bbadfcc43c90b"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeDataAuth.ts",
+      "bytes": 62064,
+      "sha256": "634a1783c15fe104f76a8a74b41e886d88f6041343ed34bebfe7c659a4a449bb"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryRepository.ts",
+      "bytes": 24458,
+      "sha256": "36c09be4de3c17780eb126bc645e0210cf7e6be70ca76e7a052a967702f36974"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemorySchema.ts",
+      "bytes": 4764,
+      "sha256": "4a106aaa5d54cb0d6ce3e7efd88f35b8389685fc7e2b690d7af90ba570afbe20"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicy.ts",
+      "bytes": 92474,
+      "sha256": "9b6b4f79d24ab7055d1ff50d30e8d5f9ca5f2c1cd2e0b63e4b04cbd39a244ed4"
+    }
+  ],
+  "tests": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeTranscript/contracts.test.ts",
+      "bytes": 6272,
+      "sha256": "63aeedeab027cf77794910c75697dc38816d12e2dff2a833869e5d1ef70d1a8b"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeTranscript/managed.test.ts",
+      "bytes": 16382,
+      "sha256": "c7fa49f10c1cf49c42fb6a9c0c003c18a24565204ff9cab4890d06a5624c4645"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeTranscript/fixture.ts",
+      "bytes": 15967,
+      "sha256": "e7a4fb298c488d8be8bb5c93834a0e5b2c2ff9d7210302f05738151a74e084e5"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeRuns/admission.test.ts",
+      "bytes": 14193,
+      "sha256": "dfb62c5e01d814b3a10f21563870b68da1d3d6a3259962a24ed23c5262167358"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/agentDefinitions/definitions.test.ts",
+      "bytes": 7384,
+      "sha256": "e137b4c59f08efc90ec7141e1d01da2b57bff377ee3540be5fb3b2f5352abf16"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/model-policy-admission.test.ts",
+      "bytes": 92871,
+      "sha256": "c889116ef7c530ec8c3f688ef4ad425d7721364a8fb3dfc1c0828a676051c7b6"
+    }
+  ],
+  "contractNotes": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task05-functional-v2-20261008/contract-notes1.md",
+    "bytes": 8056,
+    "sha256": "28351a2abea4ea0af3b21e1ababc304c456b0be6b8dbf21087cd6bbe93dad677"
+  },
+  "requirements": [
+    {
+      "requirement": "Stable scoped canonical Agent transcript with access/share/retention and typed adapter",
+      "implemented": true,
+      "evidence": [
+        "runtimeTranscript/conversations/conversationShares/conversationSnapshots",
+        "native history8/final compatibility6/current snapshot1 and paged deletion1"
+      ]
+    },
+    {
+      "requirement": "Versioned executable owned definitions separate from discovery, registered tools/context/model policy/budgets",
+      "implemented": true,
+      "evidence": [
+        "agentDefinitions/readTrustedAgentPolicyVersion",
+        "definitions21 controlled cases; current native definition/revocation/approval and budget composition"
+      ]
+    },
+    {
+      "requirement": "Atomic exact-key input dedup, native user save/budget/outbox/enqueue, default serialized queue and explicit fork",
+      "implemented": true,
+      "evidence": [
+        "runs.submit/claimNext/recoverQueue",
+        "native real skipQueue OCC, rollback and crash; current ordinary/approval queue races3; full105-message fork"
+      ]
+    },
+    {
+      "requirement": "Typed statuses/attempts/cancel/approval/output/export/delete and admin lock with tracked same-store edits/stale derived invalidation",
+      "implemented": true,
+      "evidence": [
+        "runs lifecycle/runtimeTranscript managed write and source-origin fences",
+        "native current journal1/page1/final rollback1; cancellation/expiry/retention/revoke/current legacy compatibility"
+      ]
+    }
+  ],
+  "criteria": [
+    {
+      "criterion": "Same key returns one run, changed reuse conflicts, concurrent input deterministic and explicit fork",
+      "implemented": true,
+      "evidence": [
+        "native core-outcomes.json/history-outcomes.json/queue-race2-outcomes.json"
+      ]
+    },
+    {
+      "criterion": "Locked writes deny, authorized reads work; unlocked same-store edits track actor/revision and exclude stale facts/vectors",
+      "implemented": true,
+      "evidence": [
+        "native history-outcomes.json/lifecycle2-outcomes.json/journal2-outcomes.json"
+      ]
+    },
+    {
+      "criterion": "Crash leaves durable recoverable accepted work, metadata projection rebuilds, hidden context/credentials excluded",
+      "implemented": true,
+      "evidence": [
+        "native crash-outcomes.json/history-outcomes.json/final-check-outcomes.json"
+      ]
+    }
+  ],
+  "controlled": {
+    "runs": [
+      {
+        "receipt": {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task05-functional-v2-20261008/logs/units7-results.json",
+          "bytes": 112625,
+          "sha256": "d7488087aaf7aeccb08cae2859447f64219f4a3adab29d983467c4bf0f076bf0"
+        },
+        "passed": 220,
+        "failed": 0,
+        "skipped": 0,
+        "suites": 5,
+        "identities": [
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only only compiled roots are reachable, and arbitrary operator manifest selectors cannot attest prices::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only installs the exact compiled root idempotently and refuses mutated same-version evidence::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only rejects an invalid root classification before accounts/dispatch::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only rejects an invalid root acceptance before accounts/dispatch::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only rejects an invalid root expiry before accounts/dispatch::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only rejects an invalid root model before accounts/dispatch::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only rejects an invalid root proof before accounts/dispatch::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only binds one backend account per exact trusted request and rejects changed request/owner::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only forced account-key hash collisions compare the complete trusted binding tuple::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only derives actual normalized input and full trusted ceiling, overriding untrusted estimates::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only same child canonical replay does not reserve again; changed text/hash collision rejects::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only one checkpoint winner returns a permit and subsequent attempts cannot dispatch::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only changed final native request/proof and expired qualifications deny checkpoint::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only last operation/concurrency capacity applies across distinct children without partial rejection writes::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only different backend request accounts share one tenant quota and concurrency::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only known cost settles exactly once and eligible result replay needs no new reservation::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only invalid private results are withheld without erasing a known complete charge::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only overrun accounts full spend and blocks further admission without rollback of charge::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only malformed/missing cost remains unknown liability; qualified terminal proof releases slot only::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only postcheckpoint crash recovery cannot claim no dispatch or zero cost::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only proved precheckpoint refusal releases balances and slots exactly once::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only current admin may release proved precheckpoint liability after origin revocation without delivery::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only unknown liability blocks rollover; late receipt charges original immutable window::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only revoked originating grant requires current admin liability-only recovery::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only monotone visibility flags and cancellation prevent later dispatch and safe fallback::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only space admin cannot change global/root policy or install own tenant-wide constraints::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only healthy tenant admin may narrow own rules but cannot forge prices or broaden caps::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only trusted own tenant override is backend-versioned and never broadens deployment hard bounds::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only a current source tombstone blocks replay/delivery but retains already incurred charge::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only source revision changes before checkpoint cannot dispatch or recreate source::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only child operation inherits exact parent account and cancellation/current authority fences::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only validated owned executable specialization is consumed only by its current matching tenant/version::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only native bound rejects malformed Unicode, tool/schema shapes and part arrays without calling a provider::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only embedding bound treats per-value and aggregate caps separately and counts normalized UTF8::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only invalid terminal cost overflow remains unknown without refund or invented zero::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only post-admission source/account corruption fails closed before checkpoint::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only explicit compatible safe fallback reserves once with pinned candidate and no lost prior spend::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only visible output, unknown outcome and unqualified candidates deny fallback reservation::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only storage bounds deny multi-vector calls and unbounded output before reservation::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only usage exceeding trusted input/output caps fully charges and blocks the faulty qualification::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only retired tenant blocks scoped actors while operator records full private overrun exactly once::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only retired memorySpace blocks scoped actors while operator records full private overrun exactly once::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only deployment liability route refuses live scopes and preserves retired unknown charge liability::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only all registrations are internal and their native argument schemas have no arbitrary payload escape::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only preserves all original native tables and adds exactly nine transcript tables with unique indexes::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only rounds authoritative 0 USD upward to 0 microUSD::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only rounds authoritative 0.0000001 USD upward to 1 microUSD::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only rounds authoritative 0.000001 USD upward to 1 microUSD::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only rounds authoritative 1.23456789 USD upward to 1234568 microUSD::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only rejects invalid or overflowing money NaN::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only rejects invalid or overflowing money Infinity::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only rejects invalid or overflowing money -1::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only rejects invalid or overflowing money 1e4::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only rejects invalid or overflowing money 9007199254740992::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::current policy narrowing at fallback and dispatch boundaries fresh fallback includes prior known spend under current narrowed operation ceiling::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::current policy narrowing at fallback and dispatch boundaries current fallback revocation denies fresh reservation and query even with generally allowed model::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::current policy narrowing at fallback and dispatch boundaries checkpoint preserves liabilities and denies narrowed current operation aggregate::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::current policy narrowing at fallback and dispatch boundaries checkpoint preserves liabilities and denies narrowed current run aggregate::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::current policy narrowing at fallback and dispatch boundaries checkpoint preserves liabilities and denies narrowed current tenant aggregate::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::current policy narrowing at fallback and dispatch boundaries checkpoint preserves liabilities and denies narrowed current concurrency aggregate::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::current policy narrowing at fallback and dispatch boundaries fallback permission revoked after valid reservation denies checkpoint with zero effects::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::current policy narrowing at fallback and dispatch boundaries operation narrowing after valid fallback reserve preserves full original liability and denies permit::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::current policy narrowing at fallback and dispatch boundaries aggregate at exact current caps permits held reservation without charging it twice::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::current policy narrowing at fallback and dispatch boundaries compatible fallback at exact narrowed cumulative ceiling remains permitted::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native structured PURE denial boundary changed existing admitted canonical is a structured identity denial with exact unchanged ledger::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native structured PURE denial boundary forced equal hash cannot hide changed canonical or change original reservation::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native structured PURE denial boundary request contract denial INVALID_INPUT preserves all original accounts and attempts::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native structured PURE denial boundary request contract denial POLICY_DENIED preserves all original accounts and attempts::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native structured PURE denial boundary request contract denial POLICY_DENIED preserves all original accounts and attempts::occurrence=1",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native structured PURE denial boundary request contract denial POLICY_DENIED preserves all original accounts and attempts::occurrence=2",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native structured PURE denial boundary malformed resolver contract preserves its source-defined code before installation writes::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native structured PURE denial boundary resolver retains exact CAPABILITY_UNSUPPORTED without installation effects::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native structured PURE denial boundary resolver retains exact CAPABILITY_UNAVAILABLE without installation effects::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native structured PURE denial boundary checkpoint changed canonical emits identity code without permit or ledger effects::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native structured PURE denial boundary conflicting settled receipt preserves incurred money and returns conservative outcome::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native structured PURE denial boundary installed serializer emits genuine Convex errorData for the actual registered handler denial::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::trusted terminal capture and current private attachment healthy charge capture and attachment are separate, monetary once, exact-current retries zero writes::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::trusted terminal capture and current private attachment live revoked origin unknown100 refines full150 once without admin, slot decrement or reopened attachment::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::trusted terminal capture and current private attachment settle compatible refinement preserves immutable closed capture and discards receipt private payload::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::trusted terminal capture and current private attachment recover compatible refinement preserves immutable closed capture and discards receipt private payload::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::trusted terminal capture and current private attachment reconcileDeploymentLiability compatible refinement preserves immutable closed capture and discards receipt private payload::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::trusted terminal capture and current private attachment writeUnknown/recover cannot overwrite initial unknown or downgrade captured known liability::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::trusted terminal capture and current private attachment rejects incompatible receiptId with zero ledger effects::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::trusted terminal capture and current private attachment rejects incompatible outcome with zero ledger effects::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::trusted terminal capture and current private attachment rejects incompatible actualModel with zero ledger effects::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::trusted terminal capture and current private attachment rejects incompatible usageChanged with zero ledger effects::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::trusted terminal capture and current private attachment rejects incompatible usageRemoved with zero ledger effects::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::trusted terminal capture and current private attachment rejects incompatible unknownVariant with zero ledger effects::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::trusted terminal capture and current private attachment invalid first capture private cannot create terminal proof or release slot::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::trusted terminal capture and current private attachment invalid first capture raw cannot create terminal proof or release slot::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::trusted terminal capture and current private attachment invalid first capture proof cannot create terminal proof or release slot::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::trusted terminal capture and current private attachment invalid first capture identity cannot create terminal proof or release slot::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::trusted terminal capture and current private attachment invalid first capture usage cannot create terminal proof or release slot::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::trusted terminal capture and current private attachment invalid first capture noncanonical cannot create terminal proof or release slot::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::trusted terminal capture and current private attachment invalid first capture oversized cannot create terminal proof or release slot::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::trusted terminal capture and current private attachment no checkpoint, no-dispatch and wrong producer dispatch identity deny with zero writes::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::trusted terminal capture and current private attachment first charge after tenant closes attachment while accounting full original-window cost::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::trusted terminal capture and current private attachment first charge after memorySpace closes attachment while accounting full original-window cost::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::trusted terminal capture and current private attachment first charge after cancelled closes attachment while accounting full original-window cost::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::trusted terminal capture and current private attachment first charge after revoked closes attachment while accounting full original-window cost::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::trusted terminal capture and current private attachment source deletion after healthy capture withholds attachment and money is retained::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::trusted terminal capture and current private attachment legacy terminal private result survives exact capture acknowledgment without new attachment privilege::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::trusted terminal capture and current private attachment partial marker hashOnly fails closed on capture, attachment, ordinary settle and recovery::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::trusted terminal capture and current private attachment partial marker stateOnly fails closed on capture, attachment, ordinary settle and recovery::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::trusted terminal capture and current private attachment legacy unknown terminal evidence cannot receive pending result privilege::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::trusted terminal capture and current private attachment invalid result/current reference/evidence cannot attach and never writes money::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::trusted terminal capture and current private attachment rejected terminal captures close attachment and known charge remains exact::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::trusted terminal capture and current private attachment offline parent fault rolls back refinement; exact lost-response retry has one delta::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::trusted terminal capture and current private attachment offline serialized equal/conflicting candidates account once (not native OCC)::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::trusted terminal capture and current private attachment forced digest equality never admits conflicting final canonical bytes::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::trusted terminal capture and current private attachment only two new registrations are internal and the ledger still has exactly five tables/eleven indexes::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::terminal attachment closure and strict monetary truth pending attachment revoked closes permanently before renewal with zero monetary delta::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::terminal attachment closure and strict monetary truth pending attachment cancelled closes permanently before renewal with zero monetary delta::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::terminal attachment closure and strict monetary truth pending attachment retired closes permanently before renewal with zero monetary delta::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::terminal attachment closure and strict monetary truth pending attachment policyNarrowed closes permanently before renewal with zero monetary delta::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::terminal attachment closure and strict monetary truth forced initial hash equality cannot replace immutable initial nonmoney facts::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::terminal attachment closure and strict monetary truth known usage additions are allowed only with complete money and absent facts never erase existing known values::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::terminal attachment closure and strict monetary truth historical root without complete monetary support cannot be upgraded by producer claims::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::terminal attachment closure and strict monetary truth bounded but overflowing terminal money conservatively retains uncertain reserve and releases one genuine slot::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::terminal root delivery bounds immutable root result byte ceiling is enforced independently from the storage maximum::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::terminal root delivery bounds expired current qualification closes pending attachment while preserving historical incurred charge::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::terminal embedding result profile fence known embedding capture accepts only one current matching profile vector, with zero attachment charge delta::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::terminal eligibility unexpected errors preserve exact persistence retry faulted pending attachment preserves all rows and original error/cause; exact retry attaches once after read recovery::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::terminal eligibility unexpected errors preserve exact persistence retry faulted first known capture has zero writes/charge/marker/closure; same receipt retry settles full cost once pending::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::terminal eligibility unexpected errors preserve exact persistence retry unexpected domainMessage propagates exact identity without getter calls or state change::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::terminal eligibility unexpected errors preserve exact persistence retry unexpected structuredLookingPlainObject propagates exact identity without getter calls or state change::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::terminal eligibility unexpected errors preserve exact persistence retry unexpected unknownConvexCode propagates exact identity without getter calls or state change::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::terminal eligibility unexpected errors preserve exact persistence retry unexpected malformedConvexData propagates exact identity without getter calls or state change::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::terminal eligibility unexpected errors preserve exact persistence retry unexpected dataAccessor propagates exact identity without getter calls or state change::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::terminal eligibility unexpected errors preserve exact persistence retry unexpected codeAccessor propagates exact identity without getter calls or state change::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::terminal eligibility unexpected errors preserve exact persistence retry unexpected messageAccessor propagates exact identity without getter calls or state change::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::terminal eligibility unexpected errors preserve exact persistence retry unexpected inspectionFailure propagates exact identity without getter calls or state change::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::terminal eligibility unexpected errors preserve exact persistence retry recognized native policy denial closes pending and preserves monetary accounts without message matching::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtimeTranscript/managed.test.ts::canonical transcript lifetime/compatibility/privacy lock denies every manual legacy/current write while authorized read remains available::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtimeTranscript/managed.test.ts::canonical transcript lifetime/compatibility/privacy legacy aliases/read/count/export append the same native store once and reject changed ID reuse::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtimeTranscript/managed.test.ts::canonical transcript lifetime/compatibility/privacy unlocked edit preserves native ID, records actor/revision, and immediately invalidates facts/vectors/witnesses::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtimeTranscript/managed.test.ts::canonical transcript lifetime/compatibility/privacy origin fence immediately excludes conversation-delete without waiting cleanup::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtimeTranscript/managed.test.ts::canonical transcript lifetime/compatibility/privacy origin fence immediately excludes retention without waiting cleanup::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtimeTranscript/managed.test.ts::canonical transcript lifetime/compatibility/privacy origin fence immediately excludes bridge-delete without waiting cleanup::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtimeTranscript/managed.test.ts::canonical transcript lifetime/compatibility/privacy origin fence immediately excludes bridge-revision without waiting cleanup::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtimeTranscript/managed.test.ts::canonical transcript lifetime/compatibility/privacy origin fence immediately excludes run-delete without waiting cleanup::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtimeTranscript/managed.test.ts::canonical transcript lifetime/compatibility/privacy 105 canonical messages cross every page; rebuild repairs outbox holes and explicit fork gets a distinct store::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtimeTranscript/managed.test.ts::canonical transcript lifetime/compatibility/privacy stored cutoff excludes later same-order native steps and missing exact input anchor never broadens::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtimeTranscript/managed.test.ts::canonical transcript lifetime/compatibility/privacy only allowlisted text/status/parts escape native hidden reasoning/provider metadata::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtimeTranscript/managed.test.ts::canonical transcript lifetime/compatibility/privacy metadata-only snapshots pin full history and become stale on tracked edit rather than serving old text::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtimeTranscript/managed.test.ts::canonical transcript lifetime/compatibility/privacy deleted conversation has immediate source denial and paged metadata cleanup survives original grant revocation::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtimeTranscript/managed.test.ts::canonical transcript lifetime/compatibility/privacy shares require existing JWT/scope, honor revoked permission, and cannot unlock managed writes::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtimeTranscript/managed.test.ts::canonical transcript lifetime/compatibility/privacy unsupported view limits deny before a share is persisted::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtimeRuns/admission.test.ts::durable scoped admissions and serialized recovery (controlled handlers) same exact request returns one run/event/budget/outbox; changed request cannot reuse identity::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtimeRuns/admission.test.ts::durable scoped admissions and serialized recovery (controlled handlers) a parent fault rolls back component, ledger, projection, queue and scheduled work in the controlled transaction::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtimeRuns/admission.test.ts::durable scoped admissions and serialized recovery (controlled handlers) different request keys on one conversation have ordered immutable inputs and one active head::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtimeRuns/admission.test.ts::durable scoped admissions and serialized recovery (controlled handlers) later queued input/approval preserves the running exact prefix (approval=false)::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtimeRuns/admission.test.ts::durable scoped admissions and serialized recovery (controlled handlers) later queued input/approval preserves the running exact prefix (approval=true)::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtimeRuns/admission.test.ts::durable scoped admissions and serialized recovery (controlled handlers) running prefix still denies selected-edit::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtimeRuns/admission.test.ts::durable scoped admissions and serialized recovery (controlled handlers) running prefix still denies policy-change::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtimeRuns/admission.test.ts::durable scoped admissions and serialized recovery (controlled handlers) running prefix still denies selected-revision::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtimeRuns/admission.test.ts::durable scoped admissions and serialized recovery (controlled handlers) cancel queued retires queue/attempt and obsolete attempt cannot attach output::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtimeRuns/admission.test.ts::durable scoped admissions and serialized recovery (controlled handlers) cancel running retires queue/attempt and obsolete attempt cannot attach output::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtimeRuns/admission.test.ts::durable scoped admissions and serialized recovery (controlled handlers) expired claimed work is terminal reconciliation-required, cannot retry/output, and releases the queue head::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtimeRuns/admission.test.ts::durable scoped admissions and serialized recovery (controlled handlers) removal retires active outbox/attempt while lock protects the same canonical record::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtimeRuns/admission.test.ts::durable scoped admissions and serialized recovery (controlled handlers) approval materializes exact current source before a waiting input becomes claimable::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtimeRuns/admission.test.ts::durable scoped admissions and serialized recovery (controlled handlers) retained completed history does not increase queue-head reads::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtimeRuns/admission.test.ts::durable scoped admissions and serialized recovery (controlled handlers) context-bound overflow is observable failure, not forever queued work::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtimeRuns/admission.test.ts::durable scoped admissions and serialized recovery (controlled handlers) denies admission no-jwt before native/budget/queue writes::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtimeRuns/admission.test.ts::durable scoped admissions and serialized recovery (controlled handlers) denies admission read-only before native/budget/queue writes::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtimeRuns/admission.test.ts::durable scoped admissions and serialized recovery (controlled handlers) denies admission foreign-space before native/budget/queue writes::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtimeRuns/admission.test.ts::durable scoped admissions and serialized recovery (controlled handlers) denies admission revoked before native/budget/queue writes::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtimeRuns/admission.test.ts::durable scoped admissions and serialized recovery (controlled handlers) denies admission definition-revoked before native/budget/queue writes::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/agentDefinitions/definitions.test.ts::owned executable agent versions (offline native handlers) publishes explicit zero-toolSteps policy and returns only safe discovery metadata::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/agentDefinitions/definitions.test.ts::owned executable agent versions (offline native handlers) same publish key/payload reuses exact version; changes conflict without writes::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/agentDefinitions/definitions.test.ts::owned executable agent versions (offline native handlers) immutable older exact versions remain usable; successor OCC rejects divergent expected version::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/agentDefinitions/definitions.test.ts::owned executable agent versions (offline native handlers) rejects untrusted/widening definition scope::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/agentDefinitions/definitions.test.ts::owned executable agent versions (offline native handlers) rejects untrusted/widening definition owner::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/agentDefinitions/definitions.test.ts::owned executable agent versions (offline native handlers) rejects untrusted/widening definition tools::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/agentDefinitions/definitions.test.ts::owned executable agent versions (offline native handlers) rejects untrusted/widening definition credentials::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/agentDefinitions/definitions.test.ts::owned executable agent versions (offline native handlers) rejects untrusted/widening definition override::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/agentDefinitions/definitions.test.ts::owned executable agent versions (offline native handlers) rejects untrusted/widening definition negative-tools::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/agentDefinitions/definitions.test.ts::owned executable agent versions (offline native handlers) rejects untrusted/widening definition unknown-rule::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/agentDefinitions/definitions.test.ts::owned executable agent versions (offline native handlers) requires installed context registry registryHash::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/agentDefinitions/definitions.test.ts::owned executable agent versions (offline native handlers) requires installed context registry handlerVersion::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/agentDefinitions/definitions.test.ts::owned executable agent versions (offline native handlers) requires installed context registry handlerId::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/agentDefinitions/definitions.test.ts::owned executable agent versions (offline native handlers) discovery registry does not satisfy an executable selector::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/agentDefinitions/definitions.test.ts::owned executable agent versions (offline native handlers) fails closed on persisted hash corruption::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/agentDefinitions/definitions.test.ts::owned executable agent versions (offline native handlers) fails closed on persisted canonical corruption::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/agentDefinitions/definitions.test.ts::owned executable agent versions (offline native handlers) fails closed on persisted scope corruption::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/agentDefinitions/definitions.test.ts::owned executable agent versions (offline native handlers) fails closed on persisted owner corruption::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/agentDefinitions/definitions.test.ts::owned executable agent versions (offline native handlers) fails closed on persisted duplicate corruption::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/agentDefinitions/definitions.test.ts::owned executable agent versions (offline native handlers) revocation is monotone and immediately fences admission without rewriting definition payload::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/agentDefinitions/definitions.test.ts::owned executable agent versions (offline native handlers) no JWT/non-admin/foreign selectors cannot publish::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtimeTranscript/contracts.test.ts::strict frozen TextSubmitV1 retains exact whitespace, empty individual parts, order and boundaries on detached graph::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtimeTranscript/contracts.test.ts::strict frozen TextSubmitV1 rejects undeclared reference without getter execution::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtimeTranscript/contracts.test.ts::strict frozen TextSubmitV1 rejects undeclared scope without getter execution::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtimeTranscript/contracts.test.ts::strict frozen TextSubmitV1 rejects undeclared model without getter execution::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtimeTranscript/contracts.test.ts::strict frozen TextSubmitV1 rejects undeclared branch without getter execution::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtimeTranscript/contracts.test.ts::strict frozen TextSubmitV1 rejects undeclared messages without getter execution::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtimeTranscript/contracts.test.ts::strict frozen TextSubmitV1 rejects undeclared instructions without getter execution::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtimeTranscript/contracts.test.ts::strict frozen TextSubmitV1 rejects undeclared options without getter execution::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtimeTranscript/contracts.test.ts::strict frozen TextSubmitV1 rejects undeclared conversation without getter execution::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtimeTranscript/contracts.test.ts::strict frozen TextSubmitV1 rejects undeclared agent without getter execution::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtimeTranscript/contracts.test.ts::strict frozen TextSubmitV1 rejects undeclared visibility without getter execution::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtimeTranscript/contracts.test.ts::strict frozen TextSubmitV1 rejects present invalid conversation selector null::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtimeTranscript/contracts.test.ts::strict frozen TextSubmitV1 rejects present invalid conversation selector ::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtimeTranscript/contracts.test.ts::strict frozen TextSubmitV1 rejects present invalid conversation selector  ::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtimeTranscript/contracts.test.ts::strict frozen TextSubmitV1 rejects present invalid conversation selector 1::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtimeTranscript/contracts.test.ts::strict frozen TextSubmitV1 rejects present invalid conversation selector false::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtimeTranscript/contracts.test.ts::strict frozen TextSubmitV1 rejects invalid agent version 0::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtimeTranscript/contracts.test.ts::strict frozen TextSubmitV1 rejects invalid agent version -1::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtimeTranscript/contracts.test.ts::strict frozen TextSubmitV1 rejects invalid agent version 1.5::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtimeTranscript/contracts.test.ts::strict frozen TextSubmitV1 rejects invalid agent version Infinity::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtimeTranscript/contracts.test.ts::strict frozen TextSubmitV1 rejects invalid agent version NaN::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtimeTranscript/contracts.test.ts::strict frozen TextSubmitV1 rejects invalid agent version true::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtimeTranscript/contracts.test.ts::strict frozen TextSubmitV1 rejects invalid agent version 9007199254740992::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtimeTranscript/contracts.test.ts::strict frozen TextSubmitV1 rejects malformed Unicode::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtimeTranscript/contracts.test.ts::strict frozen TextSubmitV1 rejects malformed Unicode::occurrence=1",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtimeTranscript/contracts.test.ts::strict frozen TextSubmitV1 rejects malformed Unicode::occurrence=2",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtimeTranscript/contracts.test.ts::strict frozen TextSubmitV1 rejects sparse/accessor/extra-property/foreign-prototype/nonenumerable graphs before map/getter::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtimeTranscript/contracts.test.ts::strict frozen TextSubmitV1 enforces part, text byte and client scalar limits without collapsing input::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtimeTranscript/contracts.test.ts::strict frozen TextSubmitV1 uses input-independent scoped create identity, preserving exact canonical payload conflicts::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtimeTranscript/contracts.test.ts::strict frozen TextSubmitV1 checks exact 180000 wrapper bytes, including escaped text and trusted scope, before binding::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtimeTranscript/contracts.test.ts::strict frozen TextSubmitV1 orders exact steps lexicographically and rejects invalid positions::occurrence=0",
+            "status": "passed"
+          }
+        ]
+      },
+      {
+        "receipt": {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task05-functional-v2-20261008/logs/affected3-results.json",
+          "bytes": 154074,
+          "sha256": "e107ec21b0c604c3d8faab07f8327df9c66783b2ae155ce4984c02636660cc8c"
+        },
+        "passed": 299,
+        "failed": 0,
+        "skipped": 0,
+        "suites": 5,
+        "identities": [
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only only compiled roots are reachable, and arbitrary operator manifest selectors cannot attest prices::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only installs the exact compiled root idempotently and refuses mutated same-version evidence::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only rejects an invalid root classification before accounts/dispatch::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only rejects an invalid root acceptance before accounts/dispatch::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only rejects an invalid root expiry before accounts/dispatch::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only rejects an invalid root model before accounts/dispatch::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only rejects an invalid root proof before accounts/dispatch::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only binds one backend account per exact trusted request and rejects changed request/owner::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only forced account-key hash collisions compare the complete trusted binding tuple::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only derives actual normalized input and full trusted ceiling, overriding untrusted estimates::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only same child canonical replay does not reserve again; changed text/hash collision rejects::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only one checkpoint winner returns a permit and subsequent attempts cannot dispatch::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only changed final native request/proof and expired qualifications deny checkpoint::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only last operation/concurrency capacity applies across distinct children without partial rejection writes::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only different backend request accounts share one tenant quota and concurrency::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only known cost settles exactly once and eligible result replay needs no new reservation::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only invalid private results are withheld without erasing a known complete charge::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only overrun accounts full spend and blocks further admission without rollback of charge::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only malformed/missing cost remains unknown liability; qualified terminal proof releases slot only::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only postcheckpoint crash recovery cannot claim no dispatch or zero cost::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only proved precheckpoint refusal releases balances and slots exactly once::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only current admin may release proved precheckpoint liability after origin revocation without delivery::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only unknown liability blocks rollover; late receipt charges original immutable window::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only revoked originating grant requires current admin liability-only recovery::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only monotone visibility flags and cancellation prevent later dispatch and safe fallback::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only space admin cannot change global/root policy or install own tenant-wide constraints::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only healthy tenant admin may narrow own rules but cannot forge prices or broaden caps::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only trusted own tenant override is backend-versioned and never broadens deployment hard bounds::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only a current source tombstone blocks replay/delivery but retains already incurred charge::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only source revision changes before checkpoint cannot dispatch or recreate source::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only child operation inherits exact parent account and cancellation/current authority fences::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only validated owned executable specialization is consumed only by its current matching tenant/version::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only native bound rejects malformed Unicode, tool/schema shapes and part arrays without calling a provider::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only embedding bound treats per-value and aggregate caps separately and counts normalized UTF8::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only invalid terminal cost overflow remains unknown without refund or invented zero::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only post-admission source/account corruption fails closed before checkpoint::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only explicit compatible safe fallback reserves once with pinned candidate and no lost prior spend::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only visible output, unknown outcome and unqualified candidates deny fallback reservation::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only storage bounds deny multi-vector calls and unbounded output before reservation::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only usage exceeding trusted input/output caps fully charges and blocks the faulty qualification::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only retired tenant blocks scoped actors while operator records full private overrun exactly once::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only retired memorySpace blocks scoped actors while operator records full private overrun exactly once::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only deployment liability route refuses live scopes and preserves retired unknown charge liability::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only all registrations are internal and their native argument schemas have no arbitrary payload escape::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only preserves all original native tables and adds exactly nine transcript tables with unique indexes::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only rounds authoritative 0 USD upward to 0 microUSD::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only rounds authoritative 0.0000001 USD upward to 1 microUSD::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only rounds authoritative 0.000001 USD upward to 1 microUSD::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only rounds authoritative 1.23456789 USD upward to 1234568 microUSD::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only rejects invalid or overflowing money NaN::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only rejects invalid or overflowing money Infinity::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only rejects invalid or overflowing money -1::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only rejects invalid or overflowing money 1e4::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native private policy ledger — offline logic only rejects invalid or overflowing money 9007199254740992::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::current policy narrowing at fallback and dispatch boundaries fresh fallback includes prior known spend under current narrowed operation ceiling::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::current policy narrowing at fallback and dispatch boundaries current fallback revocation denies fresh reservation and query even with generally allowed model::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::current policy narrowing at fallback and dispatch boundaries checkpoint preserves liabilities and denies narrowed current operation aggregate::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::current policy narrowing at fallback and dispatch boundaries checkpoint preserves liabilities and denies narrowed current run aggregate::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::current policy narrowing at fallback and dispatch boundaries checkpoint preserves liabilities and denies narrowed current tenant aggregate::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::current policy narrowing at fallback and dispatch boundaries checkpoint preserves liabilities and denies narrowed current concurrency aggregate::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::current policy narrowing at fallback and dispatch boundaries fallback permission revoked after valid reservation denies checkpoint with zero effects::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::current policy narrowing at fallback and dispatch boundaries operation narrowing after valid fallback reserve preserves full original liability and denies permit::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::current policy narrowing at fallback and dispatch boundaries aggregate at exact current caps permits held reservation without charging it twice::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::current policy narrowing at fallback and dispatch boundaries compatible fallback at exact narrowed cumulative ceiling remains permitted::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native structured PURE denial boundary changed existing admitted canonical is a structured identity denial with exact unchanged ledger::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native structured PURE denial boundary forced equal hash cannot hide changed canonical or change original reservation::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native structured PURE denial boundary request contract denial INVALID_INPUT preserves all original accounts and attempts::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native structured PURE denial boundary request contract denial POLICY_DENIED preserves all original accounts and attempts::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native structured PURE denial boundary request contract denial POLICY_DENIED preserves all original accounts and attempts::occurrence=1",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native structured PURE denial boundary request contract denial POLICY_DENIED preserves all original accounts and attempts::occurrence=2",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native structured PURE denial boundary malformed resolver contract preserves its source-defined code before installation writes::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native structured PURE denial boundary resolver retains exact CAPABILITY_UNSUPPORTED without installation effects::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native structured PURE denial boundary resolver retains exact CAPABILITY_UNAVAILABLE without installation effects::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native structured PURE denial boundary checkpoint changed canonical emits identity code without permit or ledger effects::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native structured PURE denial boundary conflicting settled receipt preserves incurred money and returns conservative outcome::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::native structured PURE denial boundary installed serializer emits genuine Convex errorData for the actual registered handler denial::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::trusted terminal capture and current private attachment healthy charge capture and attachment are separate, monetary once, exact-current retries zero writes::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::trusted terminal capture and current private attachment live revoked origin unknown100 refines full150 once without admin, slot decrement or reopened attachment::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::trusted terminal capture and current private attachment settle compatible refinement preserves immutable closed capture and discards receipt private payload::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::trusted terminal capture and current private attachment recover compatible refinement preserves immutable closed capture and discards receipt private payload::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::trusted terminal capture and current private attachment reconcileDeploymentLiability compatible refinement preserves immutable closed capture and discards receipt private payload::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::trusted terminal capture and current private attachment writeUnknown/recover cannot overwrite initial unknown or downgrade captured known liability::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::trusted terminal capture and current private attachment rejects incompatible receiptId with zero ledger effects::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::trusted terminal capture and current private attachment rejects incompatible outcome with zero ledger effects::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::trusted terminal capture and current private attachment rejects incompatible actualModel with zero ledger effects::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::trusted terminal capture and current private attachment rejects incompatible usageChanged with zero ledger effects::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::trusted terminal capture and current private attachment rejects incompatible usageRemoved with zero ledger effects::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::trusted terminal capture and current private attachment rejects incompatible unknownVariant with zero ledger effects::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::trusted terminal capture and current private attachment invalid first capture private cannot create terminal proof or release slot::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::trusted terminal capture and current private attachment invalid first capture raw cannot create terminal proof or release slot::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::trusted terminal capture and current private attachment invalid first capture proof cannot create terminal proof or release slot::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::trusted terminal capture and current private attachment invalid first capture identity cannot create terminal proof or release slot::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::trusted terminal capture and current private attachment invalid first capture usage cannot create terminal proof or release slot::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::trusted terminal capture and current private attachment invalid first capture noncanonical cannot create terminal proof or release slot::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::trusted terminal capture and current private attachment invalid first capture oversized cannot create terminal proof or release slot::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::trusted terminal capture and current private attachment no checkpoint, no-dispatch and wrong producer dispatch identity deny with zero writes::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::trusted terminal capture and current private attachment first charge after tenant closes attachment while accounting full original-window cost::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::trusted terminal capture and current private attachment first charge after memorySpace closes attachment while accounting full original-window cost::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::trusted terminal capture and current private attachment first charge after cancelled closes attachment while accounting full original-window cost::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::trusted terminal capture and current private attachment first charge after revoked closes attachment while accounting full original-window cost::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::trusted terminal capture and current private attachment source deletion after healthy capture withholds attachment and money is retained::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::trusted terminal capture and current private attachment legacy terminal private result survives exact capture acknowledgment without new attachment privilege::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::trusted terminal capture and current private attachment partial marker hashOnly fails closed on capture, attachment, ordinary settle and recovery::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::trusted terminal capture and current private attachment partial marker stateOnly fails closed on capture, attachment, ordinary settle and recovery::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::trusted terminal capture and current private attachment legacy unknown terminal evidence cannot receive pending result privilege::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::trusted terminal capture and current private attachment invalid result/current reference/evidence cannot attach and never writes money::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::trusted terminal capture and current private attachment rejected terminal captures close attachment and known charge remains exact::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::trusted terminal capture and current private attachment offline parent fault rolls back refinement; exact lost-response retry has one delta::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::trusted terminal capture and current private attachment offline serialized equal/conflicting candidates account once (not native OCC)::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::trusted terminal capture and current private attachment forced digest equality never admits conflicting final canonical bytes::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::trusted terminal capture and current private attachment only two new registrations are internal and the ledger still has exactly five tables/eleven indexes::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::terminal attachment closure and strict monetary truth pending attachment revoked closes permanently before renewal with zero monetary delta::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::terminal attachment closure and strict monetary truth pending attachment cancelled closes permanently before renewal with zero monetary delta::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::terminal attachment closure and strict monetary truth pending attachment retired closes permanently before renewal with zero monetary delta::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::terminal attachment closure and strict monetary truth pending attachment policyNarrowed closes permanently before renewal with zero monetary delta::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::terminal attachment closure and strict monetary truth forced initial hash equality cannot replace immutable initial nonmoney facts::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::terminal attachment closure and strict monetary truth known usage additions are allowed only with complete money and absent facts never erase existing known values::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::terminal attachment closure and strict monetary truth historical root without complete monetary support cannot be upgraded by producer claims::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::terminal attachment closure and strict monetary truth bounded but overflowing terminal money conservatively retains uncertain reserve and releases one genuine slot::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::terminal root delivery bounds immutable root result byte ceiling is enforced independently from the storage maximum::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::terminal root delivery bounds expired current qualification closes pending attachment while preserving historical incurred charge::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::terminal embedding result profile fence known embedding capture accepts only one current matching profile vector, with zero attachment charge delta::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::terminal eligibility unexpected errors preserve exact persistence retry faulted pending attachment preserves all rows and original error/cause; exact retry attaches once after read recovery::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::terminal eligibility unexpected errors preserve exact persistence retry faulted first known capture has zero writes/charge/marker/closure; same receipt retry settles full cost once pending::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::terminal eligibility unexpected errors preserve exact persistence retry unexpected domainMessage propagates exact identity without getter calls or state change::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::terminal eligibility unexpected errors preserve exact persistence retry unexpected structuredLookingPlainObject propagates exact identity without getter calls or state change::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::terminal eligibility unexpected errors preserve exact persistence retry unexpected unknownConvexCode propagates exact identity without getter calls or state change::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::terminal eligibility unexpected errors preserve exact persistence retry unexpected malformedConvexData propagates exact identity without getter calls or state change::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::terminal eligibility unexpected errors preserve exact persistence retry unexpected dataAccessor propagates exact identity without getter calls or state change::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::terminal eligibility unexpected errors preserve exact persistence retry unexpected codeAccessor propagates exact identity without getter calls or state change::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::terminal eligibility unexpected errors preserve exact persistence retry unexpected messageAccessor propagates exact identity without getter calls or state change::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::terminal eligibility unexpected errors preserve exact persistence retry unexpected inspectionFailure propagates exact identity without getter calls or state change::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-admission.test.ts::terminal eligibility unexpected errors preserve exact persistence retry recognized native policy denial closes pending and preserves monetary accounts without message matching::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-model-drift.test.ts::truthful first model drift is charge only charges full synthetic 0.000040 independently of selected identity and closes output::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-model-drift.test.ts::truthful first model drift is charge only charges full synthetic 0.000150 independently of selected identity and closes output::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-model-drift.test.ts::truthful first model drift is charge only unknown model violation latches without money, then full refinement never clears it::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-model-drift.test.ts::truthful first model drift is charge only unknown input violation latches without money, then full refinement never clears it::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-model-drift.test.ts::truthful first model drift is charge only unknown output violation latches without money, then full refinement never clears it::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-model-drift.test.ts::truthful first model drift is charge only absent model fact introduced by known refinement closes/latches shared accounting::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-model-drift.test.ts::truthful first model drift is charge only absent input fact introduced by known refinement closes/latches shared accounting::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-model-drift.test.ts::truthful first model drift is charge only absent output fact introduced by known refinement closes/latches shared accounting::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-model-drift.test.ts::truthful first model drift is charge only unsupported aggregate source retains all U even with truthful claimed150 and drift::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-model-drift.test.ts::truthful first model drift is charge only missing genuine lifetime cannot release the slot or manufacture money::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-model-drift.test.ts::truthful first model drift is charge only late full refinement after revoked charges only original accounts and never reopens::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-model-drift.test.ts::truthful first model drift is charge only late full refinement after cancelled charges only original accounts and never reopens::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-model-drift.test.ts::truthful first model drift is charge only late full refinement after retired charges only original accounts and never reopens::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-model-drift.test.ts::truthful first model drift is charge only late full refinement after lateWindow charges only original accounts and never reopens::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-model-drift.test.ts::truthful first model drift is charge only original guarded successors, child and confirmed rejection fallback cannot launder model drift::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-model-drift.test.ts::immutable charge-only coexistence and defensive privacy settle recognizes drift originals/finals and compatible absent-fact refinement before selected-model comparison::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-model-drift.test.ts::immutable charge-only coexistence and defensive privacy recover recognizes drift originals/finals and compatible absent-fact refinement before selected-model comparison::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-model-drift.test.ts::immutable charge-only coexistence and defensive privacy reconcileDeploymentLiability recognizes drift originals/finals and compatible absent-fact refinement before selected-model comparison::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-model-drift.test.ts::immutable charge-only coexistence and defensive privacy settle existing drift first observation then known40 has parity and no result privilege::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-model-drift.test.ts::immutable charge-only coexistence and defensive privacy recover existing drift first observation then known40 has parity and no result privilege::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-model-drift.test.ts::immutable charge-only coexistence and defensive privacy reconcileDeploymentLiability existing drift first observation then known40 has parity and no result privilege::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-model-drift.test.ts::immutable charge-only coexistence and defensive privacy current distinct admin accounts revoked owner liability without authority to deliver; unowned admin/operator targets deny::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-model-drift.test.ts::immutable charge-only coexistence and defensive privacy immutable modelChanged rejection preserves original/final bytes and all counters::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-model-drift.test.ts::immutable charge-only coexistence and defensive privacy immutable modelRemoved rejection preserves original/final bytes and all counters::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-model-drift.test.ts::immutable charge-only coexistence and defensive privacy immutable inputChanged rejection preserves original/final bytes and all counters::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-model-drift.test.ts::immutable charge-only coexistence and defensive privacy immutable usageRemoved rejection preserves original/final bytes and all counters::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-model-drift.test.ts::immutable charge-only coexistence and defensive privacy immutable outputChanged rejection preserves original/final bytes and all counters::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-model-drift.test.ts::immutable charge-only coexistence and defensive privacy immutable receiptChanged rejection preserves original/final bytes and all counters::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-model-drift.test.ts::immutable charge-only coexistence and defensive privacy immutable costChanged rejection preserves original/final bytes and all counters::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-model-drift.test.ts::immutable charge-only coexistence and defensive privacy forced equal initial and final digests cannot mask differing canonical observations::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-model-drift.test.ts::immutable charge-only coexistence and defensive privacy inconsistent pending observations deny attachment/replay despite false flags; legacy private bytes survive::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-model-drift.test.ts::immutable charge-only coexistence and defensive privacy inconsistent attached observations deny attachment/replay despite false flags; legacy private bytes survive::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-model-drift.test.ts::immutable charge-only coexistence and defensive privacy shared uncaptured settle known violation charges full but never stores new private bytes::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-model-drift.test.ts::immutable charge-only coexistence and defensive privacy shared uncaptured recover known violation charges full but never stores new private bytes::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-model-drift.test.ts::immutable charge-only coexistence and defensive privacy shared uncaptured reconcileDeploymentLiability known violation charges full but never stores new private bytes::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-model-drift.test.ts::immutable charge-only coexistence and defensive privacy malformed observed model \"\" cannot change capture or counters::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-model-drift.test.ts::immutable charge-only coexistence and defensive privacy malformed observed model \" model\" cannot change capture or counters::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-model-drift.test.ts::immutable charge-only coexistence and defensive privacy malformed observed model \"model \" cannot change capture or counters::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-model-drift.test.ts::immutable charge-only coexistence and defensive privacy malformed observed model \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\" cannot change capture or counters::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-model-drift.test.ts::immutable charge-only coexistence and defensive privacy malformed observed model \"\\ud800\" cannot change capture or counters::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-model-drift.test.ts::immutable charge-only coexistence and defensive privacy exact valid256 Unicode observation remains truthful and unnormalized::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-model-drift.test.ts::immutable charge-only coexistence and defensive privacy invalid requestedModel is zero effects::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-model-drift.test.ts::immutable charge-only coexistence and defensive privacy invalid interface is zero effects::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-model-drift.test.ts::immutable charge-only coexistence and defensive privacy invalid dispatch is zero effects::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-model-drift.test.ts::immutable charge-only coexistence and defensive privacy invalid proof is zero effects::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-model-drift.test.ts::immutable charge-only coexistence and defensive privacy invalid receiptPrivate is zero effects::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-model-drift.test.ts::immutable charge-only coexistence and defensive privacy invalid unknownAttempt is zero effects::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-model-drift.test.ts::immutable charge-only coexistence and defensive privacy invalid noCheckpoint is zero effects::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-model-drift.test.ts::actual Gateway to REGISTERED capture accounts required synthetic known150 drift then QUALIFICATION_OVERRUN, no output/attachment::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-model-drift.test.ts::shared unknown observation transition and bounded receipt identities settle unknown model/token violations retain all liability, release genuine lifetime once and withhold::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-model-drift.test.ts::shared unknown observation transition and bounded receipt identities recover unknown model/token violations retain all liability, release genuine lifetime once and withhold::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-model-drift.test.ts::shared unknown observation transition and bounded receipt identities reconcileDeploymentLiability unknown model/token violations retain all liability, release genuine lifetime once and withhold::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-model-drift.test.ts::shared unknown observation transition and bounded receipt identities receipt ID \"\" cannot create accounting facts::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-model-drift.test.ts::shared unknown observation transition and bounded receipt identities receipt ID \" padded\" cannot create accounting facts::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-model-drift.test.ts::shared unknown observation transition and bounded receipt identities receipt ID \"trailing \" cannot create accounting facts::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-model-drift.test.ts::shared unknown observation transition and bounded receipt identities receipt ID \"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\" cannot create accounting facts::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/model-policy-model-drift.test.ts::shared unknown observation transition and bounded receipt identities receipt ID \"\\ud800\" cannot create accounting facts::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/memory-gateway.test.ts::governed backend memory adapter (offline) projects actual user extraction lineage through strict native resolve/admit and preserves embedding parent::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/memory-gateway.test.ts::governed backend memory adapter (offline) projects actual tool extraction lineage through strict native resolve/admit and preserves embedding parent::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/memory-gateway.test.ts::governed backend memory adapter (offline) constructs lazily, then passes only the trusted ten-field reference and current source witness::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/memory-gateway.test.ts::governed backend memory adapter (offline) routes extraction, conflict, memory and query embeddings through one budget with admitted parent and per-value ordinals::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/memory-gateway.test.ts::governed backend memory adapter (offline) charges the full trusted extract schema to preflight input limits before admission/dispatch::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/memory-gateway.test.ts::governed backend memory adapter (offline) charges the full trusted resolve schema to preflight input limits before admission/dispatch::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/memory-gateway.test.ts::governed backend memory adapter (offline) reuses a server-issued run and parent without allocating a separate budget::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/memory-gateway.test.ts::governed backend memory adapter (offline) correlates multiple fresh extractions with their own embedding and conflict parents::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/memory-gateway.test.ts::governed backend memory adapter (offline) correlates multiple replay extractions with their own embedding and conflict parents::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/memory-gateway.test.ts::governed backend memory adapter (offline) never borrows an unrelated extraction parent when only sourceId differs::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/memory-gateway.test.ts::governed backend memory adapter (offline) never borrows an unrelated extraction parent when only sourceEventId differs::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/memory-gateway.test.ts::governed backend memory adapter (offline) never borrows an unrelated extraction parent when only sourceRevision differs::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/memory-gateway.test.ts::governed backend memory adapter (offline) joins concurrent first uses of the same lazy run budget::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/memory-gateway.test.ts::governed backend memory adapter (offline) uses the smaller trusted policy/evidence output cap (32/64)::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/memory-gateway.test.ts::governed backend memory adapter (offline) uses the smaller trusted policy/evidence output cap (64/16)::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/memory-gateway.test.ts::governed backend memory adapter (offline) withholds a text call if the current factory resolution tightened the adapter's earlier cap::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/memory-gateway.test.ts::governed backend memory adapter (offline) rejects a schema change before authority, budget or model construction::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/memory-gateway.test.ts::governed backend memory adapter (offline) denies an automatic extract attempt before creating a new reservation::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/memory-gateway.test.ts::governed backend memory adapter (offline) denies an automatic resolve attempt before creating a new reservation::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/memory-gateway.test.ts::governed backend memory adapter (offline) denies an automatic embed attempt before creating a new reservation::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/memory-gateway.test.ts::governed backend memory adapter (offline) rejects a missing source witness before budget or dispatch::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/memory-gateway.test.ts::governed backend memory adapter (offline) rejects a event source witness before budget or dispatch::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/memory-gateway.test.ts::governed backend memory adapter (offline) rejects a revision source witness before budget or dispatch::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/memory-gateway.test.ts::governed backend memory adapter (offline) denies revoked authority before allocating a budget::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/memory-gateway.test.ts::governed backend memory adapter (offline) rechecks revocation before the second embedding value and stops with no second dispatch::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/memory-gateway.test.ts::governed backend memory adapter (offline) rechecks source-change before the second embedding value and stops with no second dispatch::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/memory-gateway.test.ts::governed backend memory adapter (offline) lets current native admission deny a grant revoked after the repository precheck::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/memory-gateway.test.ts::governed backend memory adapter (offline) does not retry a failed lazy budget allocation or fall back to a model::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/memory-gateway.test.ts::governed backend memory adapter (offline) joins lifecycle after an ambiguous extract failure without another native call or fallback::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/memory-gateway.test.ts::governed backend memory adapter (offline) joins lifecycle after an ambiguous embed failure without another native call or fallback::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/memory-gateway.test.ts::governed backend memory adapter (offline) does not automatically dispatch a policy-qualified fallback after ambiguous extraction::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/memory-gateway.test.ts::governed backend memory adapter (offline) rejects unusable extraction text \"not JSON\" with an honest post-dispatch outcome::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/memory-gateway.test.ts::governed backend memory adapter (offline) rejects unusable extraction text \"   \" with an honest post-dispatch outcome::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/memory-gateway.test.ts::governed backend memory adapter (offline) rejects an invalid conflict decision without treating it as a new fact::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/memory-gateway.test.ts::governed backend memory adapter (offline) validates delivered empty-text with a safe uncertain envelope after terminal capture::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/memory-gateway.test.ts::governed backend memory adapter (offline) validates delivered short-vector with a safe uncertain envelope after terminal capture::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/memory-gateway.test.ts::governed backend memory adapter (offline) validates delivered nonfinite-vector with a safe uncertain envelope after terminal capture::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/memory-gateway.test.ts::governed backend memory adapter (offline) retains not_dispatched for schema preflight rejection with no billable work::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/memory-gateway.test.ts::governed backend memory adapter (offline) retains not_dispatched for retry preflight rejection with no billable work::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/memory-gateway.test.ts::governed backend memory adapter (offline) retains not_dispatched for stale-source preflight rejection with no billable work::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/memory-gateway.test.ts::governed backend memory adapter (offline) joins a failed durable terminal capture and exposes no private result::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/memory-gateway.test.ts::governed backend memory adapter (offline) uses narrow authorized extraction replay and carries its admitted parent into embedding::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/memory-gateway.test.ts::governed backend memory adapter (offline) withholds previously saved text when the current replay authority check rejects::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/memory-gateway.test.ts::governed backend memory adapter (offline) rejects non-narrow text replay 0 without inference::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/memory-gateway.test.ts::governed backend memory adapter (offline) rejects non-narrow text replay 1 without inference::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/memory-gateway.test.ts::governed backend memory adapter (offline) rejects non-narrow text replay 2 without inference::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/memory-gateway.test.ts::governed backend memory adapter (offline) rejects invalid profile embedding replay without inference::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/memory-gateway.test.ts::governed backend memory adapter (offline) rejects invalid dimension embedding replay without inference::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/memory-gateway.test.ts::governed backend memory adapter (offline) rejects invalid nonnumeric embedding replay without inference::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/memory-gateway.test.ts::governed backend memory adapter (offline) rejects invalid extra-vector embedding replay without inference::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/memory-gateway.test.ts::governed backend memory adapter (offline) rejects invalid text embedding replay without inference::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/memory-gateway.test.ts::governed backend memory adapter (offline) denies mismatched requested profileId before budget/dispatch::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/memory-gateway.test.ts::governed backend memory adapter (offline) denies mismatched requested modelId before budget/dispatch::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/memory-gateway.test.ts::governed backend memory adapter (offline) denies mismatched requested dimensions before budget/dispatch::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/memory-gateway.test.ts::governed backend memory adapter (offline) denies mismatched requested normalization before budget/dispatch::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/memory-gateway.test.ts::governed backend memory adapter (offline) denies mismatched requested chunking before budget/dispatch::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/memory-gateway.test.ts::governed backend memory adapter (offline) denies mismatched requested indexName before budget/dispatch::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/memory-gateway.test.ts::governed backend memory adapter (offline) withholds invalid native dimension vectors, joins lifecycle and never dispatches a second value::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/memory-gateway.test.ts::governed backend memory adapter (offline) withholds invalid native nonfinite vectors, joins lifecycle and never dispatches a second value::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/memory-gateway.test.ts::governed backend memory adapter (offline) withholds invalid native empty vectors, joins lifecycle and never dispatches a second value::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/memory-gateway.test.ts::governed backend memory adapter (offline) withholds invalid native extra-vector vectors, joins lifecycle and never dispatches a second value::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/runtime/memory-gateway.test.ts::governed backend memory adapter (offline) rejects a factory model whose identity differs from the resolved policy before native dispatch::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/domain/model-policy.test.ts::trusted pure model policy registers every approved operation and leaves media unavailable::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/domain/model-policy.test.ts::trusted pure model policy defaults to qualified gpt-4o-mini Chat and requires explicit Responses receipt::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/domain/model-policy.test.ts::trusted pure model policy resolves ordered scope specialization independent of database arrival order::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/domain/model-policy.test.ts::trusted pure model policy selects distinct per-function models only from explicitly supplied qualified receipts::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/domain/model-policy.test.ts::trusted pure model policy intersects restrictions and never broadens deployment hard bounds::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/domain/model-policy.test.ts::trusted pure model policy allows only exact versioned authorized overrides within hard bounds::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/domain/model-policy.test.ts::trusted pure model policy fails ambiguous, incomplete, unknown, cross-scope and stale-agent records closed::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/domain/model-policy.test.ts::trusted pure model policy requires exact qualified capability/price/bound and rejects ambiguous receipts::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/domain/model-policy.test.ts::trusted pure model policy rejects invalid integer monetary bound NaN::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/domain/model-policy.test.ts::trusted pure model policy rejects invalid integer monetary bound Infinity::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/domain/model-policy.test.ts::trusted pure model policy rejects invalid integer monetary bound -1::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/domain/model-policy.test.ts::trusted pure model policy rejects invalid integer monetary bound 0.1::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/domain/model-policy.test.ts::trusted pure model policy rejects invalid integer monetary bound 9007199254740992::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/domain/model-policy.test.ts::trusted pure model policy rejects zero positive caps, inconsistent ceilings and unqualified model IDs::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/domain/model-policy.test.ts::trusted pure model policy pins and deeply freezes snapshots without freezing or retaining caller objects::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/domain/model-policy.test.ts::exact dispatch request identity normalizes text and hashes exact canonical scope/source/policy/request::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/domain/model-policy.test.ts::exact dispatch request identity rejects invalid options, retries, headers, versions, token/time/cost/tool caps::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/domain/model-policy.test.ts::exact dispatch request identity enforces combined context capacity independently of individual input/output ceilings::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/domain/model-policy.test.ts::exact dispatch request identity requires structured operation schema and validates tool definitions::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/domain/model-policy.test.ts::exact dispatch request identity canonicalizes key order but rejects coercion, cycles, sparse arrays and accessor values::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/domain/model-policy.test.ts::immutable default embedding policy requires actual qualified embedding receipt and every immutable profile field::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/domain/model-policy.test.ts::immutable default embedding policy pins batch ordinal/range and prohibits language/tool options or changed profiles::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/domain/model-policy.test.ts::conservative fallback eligibility permits only registered qualified candidates with positive predispatch/rejection proof::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/domain/model-policy.test.ts::conservative fallback eligibility forbids visible text/tools, committed effects, ambiguous paid/cancelled and unchecked replay::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/domain/model-policy.test.ts::detached canonical request data and effect-free fallback evidence detaches nested tool definition without changing or freezing caller-owned data::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/domain/model-policy.test.ts::detached canonical request data and effect-free fallback evidence detaches nested output schema without changing or freezing caller-owned data::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/domain/model-policy.test.ts::detached canonical request data and effect-free fallback evidence detaches nested tool call input without changing or freezing caller-owned data::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/domain/model-policy.test.ts::detached canonical request data and effect-free fallback evidence detaches nested tool result output without changing or freezing caller-owned data::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/domain/model-policy.test.ts::detached canonical request data and effect-free fallback evidence rejects fallback accessor evidence without evaluating counting or throwing getters::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/domain/model-policy.test.ts::detached canonical request data and effect-free fallback evidence rejects symbolic, nonplain, nonenumerable and iterator fallback evidence with zero effects::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/domain/model-policy.test.ts::lossless own JSON keys at arbitrary record boundaries preserves an own __proto__ key in tool definition and keeps its request identity distinct::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/domain/model-policy.test.ts::lossless own JSON keys at arbitrary record boundaries preserves an own __proto__ key in output schema and keeps its request identity distinct::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/domain/model-policy.test.ts::lossless own JSON keys at arbitrary record boundaries preserves an own __proto__ key in tool call input and keeps its request identity distinct::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/domain/model-policy.test.ts::lossless own JSON keys at arbitrary record boundaries preserves an own __proto__ key in tool result output and keeps its request identity distinct::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/domain/model-policy.test.ts::lossless own JSON keys at arbitrary record boundaries preserves hostile-looking own keys at multiple depths without prototype mutation or aliasing::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/domain/sources.test.ts::attributed source domain prepares independent logical source/chunks with stable Unicode normalization and revision IDs::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/domain/sources.test.ts::attributed source domain rejects incomplete trusted scope and invalid preparation clocks::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/domain/sources.test.ts::attributed source domain rejects invalid modern source metadata at prompt, parsing and dispatch with zero model calls::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/domain/sources.test.ts::attributed source domain pins stage identity to event/revision/policy, rather than changing timestamps::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/domain/sources.test.ts::attributed source domain rejects invalid lineage and distinguishes user, verified tool and assistant sources::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/domain/sources.test.ts::attributed source domain uses only the internal model operation and assigns trusted lineage outside the model::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/domain/sources.test.ts::attributed source domain rejects malformed structured output and attempted model source attribution::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/domain/sources.test.ts::attributed source domain rejects sparse arrays in every strict structured-output collection::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/domain/sources.test.ts::attributed source domain rejects revoked/deleted or changed authority, including deletion generations::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/domain/sources.test.ts::attributed source domain filters cross-scope, stale, wrong-chunk and tombstoned search results::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/domain/sources.test.ts::attributed source domain validates model response profile, batch count and vector shape::occurrence=0",
+            "status": "passed"
+          },
+          {
+            "identity": "tests/unit/domain/sources.test.ts::attributed source domain rejects malformed matching vector/source/chunk identities instead of reporting currentness::occurrence=0",
+            "status": "passed"
+          }
+        ]
+      }
+    ],
+    "uniqueCaseInstances": 386,
+    "uniqueDisplayKeys": 382,
+    "overlapCaseInstances": 133,
+    "identityRule": "file + fullName + deterministic occurrence ordinal for parameterized cases sharing a printed name; repeated ledger cases counted once",
+    "noInference": true
+  },
+  "ownQuality": [
+    {
+      "name": "root typecheck",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "exitCode": 0,
+      "stdout": {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task05-functional-v2-20261008/logs/types11.stdout",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task05-functional-v2-20261008/logs/types11.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "lint typecheck",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/typescript/bin/tsc",
+        "--project",
+        "tsconfig.lint.json",
+        "--noEmit"
+      ],
+      "exitCode": 0,
+      "stdout": {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task05-functional-v2-20261008/logs/lint-types1.stdout",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task05-functional-v2-20261008/logs/lint-types1.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "scoped ESLint",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/eslint/bin/eslint.js",
+        "src/domain/transcript.ts",
+        "convex-dev/runtimeTranscript.ts",
+        "convex-dev/runtimeTranscriptSchema.ts",
+        "convex-dev/agentDefinitions.ts",
+        "convex-dev/runs.ts",
+        "convex-dev/convex.config.ts",
+        "convex-dev/schema.ts",
+        "convex-dev/conversations.ts",
+        "convex-dev/conversationShares.ts",
+        "convex-dev/conversationSnapshots.ts",
+        "convex-dev/runtimeDataAuth.ts",
+        "convex-dev/runtimeMemoryRepository.ts",
+        "convex-dev/runtimeMemorySchema.ts",
+        "convex-dev/runtimeModelPolicy.ts",
+        "tests/unit/runtimeTranscript",
+        "tests/unit/runtimeRuns",
+        "tests/unit/agentDefinitions",
+        "tests/unit/runtime/model-policy-admission.test.ts"
+      ],
+      "exitCode": 0,
+      "warnings": 0,
+      "stdout": {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task05-functional-v2-20261008/logs/lint4.stdout",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task05-functional-v2-20261008/logs/lint4.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  ],
+  "rootProductQuality": {
+    "receipt": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task05-task06-product-quality-20261008/report2.json",
+      "bytes": 3290,
+      "sha256": "be072244a63378aa85dde83addb18b31e3b037b2854daf0cb04741726c3e64a6"
+    },
+    "overall": "PASS",
+    "checks": [
+      {
+        "name": "lint",
+        "command": [
+          "npm",
+          "run",
+          "lint",
+          "--",
+          "--ignore-pattern",
+          ".codex/**"
+        ],
+        "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+        "exitCode": 0,
+        "elapsedSeconds": 20.868,
+        "closed": true
+      },
+      {
+        "name": "typecheck",
+        "command": [
+          "npx",
+          "--no-install",
+          "tsc",
+          "--noEmit"
+        ],
+        "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+        "exitCode": 0,
+        "elapsedSeconds": 8.246,
+        "closed": true
+      },
+      {
+        "name": "build",
+        "command": [
+          "npm",
+          "run",
+          "build"
+        ],
+        "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+        "exitCode": 0,
+        "elapsedSeconds": 11.711,
+        "closed": true
+      },
+      {
+        "name": "contracts",
+        "command": [
+          "npm",
+          "run",
+          "test:contracts"
+        ],
+        "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+        "exitCode": 0,
+        "elapsedSeconds": 2.167,
+        "closed": true
+      }
+    ],
+    "sourceUnchanged": true
+  },
+  "native": {
+    "executorReceipt": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task05-functional-v2-20261008/native-actual/report.json",
+      "bytes": 19214,
+      "sha256": "1cfd9bc1a34a0173075e65cc173e77c6335460cb92a0ee38f0da4eaaf455a055"
+    },
+    "status": "EXECUTOR_COMPLETE_PENDING_NON_AUTHOR_JUDGMENT",
+    "scope": "TASK05_ACTUAL_NATIVE_PRODUCT_EVIDENCE_NO_INFERENCE",
+    "scopedPassingGroups": [
+      {
+        "source": "fixture-core3-manifest.json",
+        "scope": "earlier core native evidence",
+        "passingGroups": 26,
+        "retainedFixtureFailures": 1
+      },
+      {
+        "source": "fixture-final4-manifest.json",
+        "scope": "earlier compatibility source",
+        "passingGroups": 6,
+        "retainedFixtureFailures": 2
+      },
+      {
+        "source": "fixture-final5-manifest.json",
+        "scope": "current materially changed queue/share guards and focused final checks",
+        "passingGroups": 8,
+        "retainedFixtureFailures": 0
+      }
+    ],
+    "totalScopedGroups": 40,
+    "scopeConservation": "Earlier26 core3 and6 final4 groups remain tied to their exact copied sources; current final5 has8 focused groups. No duplicate assertion or generic acceptance sum.",
+    "sourceConservation": {
+      "manifest": "fixture-final5-manifest.json",
+      "files": 64,
+      "bytes": 1219674,
+      "sourceDigest": "faa8d2221763943662a272bc66261c0eeee2074ceb627a53d281f2904cd46a74",
+      "qualificationFixture": "qualification.ts",
+      "commentOnlyPostimage": {
+        "path": "convex-dev/runtimeModelPolicy.ts",
+        "tested": {
+          "bytes": 92760,
+          "sha256": "19f7bc115d85e4f50ea5bf02b0b587bb7b0bd4b6055deff81489d8cde44c589d"
+        },
+        "current": {
+          "bytes": 92474,
+          "sha256": "9b6b4f79d24ab7055d1ff50d30e8d5f9ca5f2c1cd2e0b63e4b04cbd39a244ed4"
+        },
+        "emittedCodeEqual": true,
+        "emittedCodeSha256": "e07cdebfb39be56c90df4b4edac637e6a11c4e4938999a51461d7cc77a41dfa1",
+        "compiler": "6.0.3",
+        "change": "post-deployment JSDoc only; executable body equal; tested private fixture untouched",
+        "testedSourceManifest": "fixture-final5-manifest.json"
+      }
+    },
+    "retirement": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task05-functional-v2-20261008/native-actual/retirement.json",
+      "bytes": 287,
+      "sha256": "fbf6e981b1dabc5fceb8765be52239bdc41c12a5a8373c9cab312836d3e3e02a"
+    },
+    "retirementDelete": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task05-functional-v2-20261008/native-actual/retirement-delete.json",
+      "bytes": 197,
+      "sha256": "33d9f1fdfae9168af9f641b96ae922e86d911f10c046aaf6120bbf3a5905762e"
+    },
+    "receiptIndex": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task05-functional-v2-20261008/native-actual/receipt-index.json",
+      "bytes": 91612,
+      "sha256": "ca569dbbbb766304b42f8120c78e7a906677797f83e898927fba114357368f50"
+    },
+    "disposableProjectDeletedHttp": 200,
+    "disposableProjectReadbackHttp": 404,
+    "productionMutations": 0,
+    "paidInference": 0
+  },
+  "preservedFailures": [
+    "Native original deploy-core1 ES2021 helper errors fixed narrowly without host configuration changes; deploy-core2 mismatched intermediate copied schema preserved",
+    "Actual queue-race-3-complete STALE_TRANSCRIPT confirmed old C3 global history fence unusable for future queued input; approved exact-prefix refinement preserves selected/manual controls",
+    "Independent snapshot-permission/view-limit reds preserved in task05-product-independent-review1; unchanged oracles now green",
+    "Author units1/units2 setup and units3 controlled clone failures; initial type/DTO fixtures and managed fixture actor/read-snapshot corrections remain raw",
+    "affected1 two legitimate obsolete fixtures repaired: current validated owned executable definition and exact original31 plus nine tables/index uniqueness",
+    "affected2 three nonexistent test paths preserved as setup failures; affected3 exact original path set passes299",
+    "Native array pin/ownerlabel/global native count/deleted-event extra-outbox oracle corrections preserved by executor; no product failures relabeled"
+  ],
+  "boundaries": [
+    "Task05 dispatches no models; Task07 owns execution and must preserve current internal lease/snapshot/cancellation and non-retryable ambiguous work semantics",
+    "Snapshots contain rebuildable native pins only, not copied executable messages",
+    "maxViews explicitly CAPABILITY_UNAVAILABLE before persistence; no view-limited sharing claimed",
+    "Anonymous link/domain/custom redaction and snapshot facts/memories remain explicit unavailable optional selectors",
+    "No Source/custody/controller certification, production deployment, package publication, migration, Python, or full-goal acceptance claimed",
+    "Separate non-author review and Root alone own final Task05 acceptance/completion trackers"
+  ]
+}

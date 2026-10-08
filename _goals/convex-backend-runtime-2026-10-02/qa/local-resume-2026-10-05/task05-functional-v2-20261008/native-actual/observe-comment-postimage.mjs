@@ -1,0 +1,14 @@
+import assert from 'node:assert/strict';
+import {readFile,writeFile} from 'node:fs/promises';
+import {dirname,join,resolve} from 'node:path';
+import {createHash} from 'node:crypto';
+import ts from 'typescript';
+const q=dirname(new URL(import.meta.url).pathname),root=resolve(q,'../../../../../..');
+const pointer=JSON.parse(await readFile(join(q,'fixture-pointer.json')));
+const path='convex-dev/runtimeModelPolicy.ts';
+const tested=await readFile(join(pointer.privateDirectory,'project',path)),current=await readFile(join(root,path));
+const sha=b=>createHash('sha256').update(b).digest('hex');
+const compile=raw=>ts.transpileModule(raw.toString('utf8'),{fileName:path,compilerOptions:{target:ts.ScriptTarget.ES2021,module:ts.ModuleKind.ESNext,removeComments:true}}).outputText;
+const emittedTested=compile(tested),emittedCurrent=compile(current);assert.equal(emittedTested,emittedCurrent);
+const result={path,tested:{bytes:tested.length,sha256:sha(tested)},current:{bytes:current.length,sha256:sha(current)},emittedCodeEqual:true,emittedCodeSha256:sha(emittedCurrent),compiler:ts.version,change:'post-deployment JSDoc only; executable body equal; tested private fixture untouched',testedSourceManifest:'fixture-final5-manifest.json'};
+await writeFile(join(q,'post-deployment-comment-only.json'),JSON.stringify(result,null,2));console.log(JSON.stringify(result));

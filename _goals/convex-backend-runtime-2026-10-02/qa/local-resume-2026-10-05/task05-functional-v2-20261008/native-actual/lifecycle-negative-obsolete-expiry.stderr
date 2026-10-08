@@ -1,0 +1,6 @@
+✖ Failed to run function "runs:complete":
+ConvexError: [Request ID: 80475d2f9abc0229] Server Error
+Uncaught ConvexError: {"version":1,"code":"INVALID_STATE","message":"Conversation operation denied.","retryable":false,"outcome":"not_dispatched"}
+    at transcriptDenied (../../convex-dev/runtimeTranscript.ts:26:0)
+    at activeAttempt (../../convex-dev/runs.ts:217:41)
+    at async handler (../../convex-dev/runs.ts:231:65)

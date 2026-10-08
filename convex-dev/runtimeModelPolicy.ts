@@ -18,6 +18,7 @@ import type { ModelOperationKey, ModelPolicySnapshotV1, TrustedModelPolicyRecord
 import { isTrustedDeploymentManifest, lookupDeploymentManifest, qualifiedTerminalModelId } from "./runtimeModelPolicyBootstrap";
 import type { DeploymentPolicyManifest, QualifiedDispatchEvidence } from "./runtimeModelPolicyBootstrap";
 import { modelOperationKey, modelSource, visibilityFields } from "./runtimePolicySchema";
+import { readCurrentExecutableDefinition } from "./agentDefinitions";
 
 type ReadCtx = Pick<QueryCtx, "db">;
 type WriteCtx = Pick<MutationCtx, "db">;
@@ -186,28 +187,17 @@ export interface TrustedAgentPolicyVersion {
   readonly policies: readonly TrustedModelPolicyRecord[];
 }
 /**
- * Task05 composition hook: selectors are never policy authority. Today executable definitions
- * do not exist, so only exact compiled/stored foundation entries are available. Task05 replaces
- * this bounded reader with its CURRENT owned immutable executable-definition/version lookup
- * (including scope/grant/revocation/source hash), and returns validated narrowed policies.
- * All resolve/admit/checkpoint paths use this hook. Scoped administrators register/update
- * owned definitions in Task05's native mutation; they cannot attest deployment prices/bounds.
- * The future lookup uses this same native db context, without a second run/transcript store.
+ * Selectors are never policy authority. This current owned immutable definition reader checks
+ * scope, grant, revocation and canonical hash before returning validated narrowed policies.
+ * Resolve/admit/checkpoint share this native context. Scoped administrators publish definitions
+ * through agentDefinitions; they cannot attest deployment prices or provider bounds.
  */
 export async function readTrustedAgentPolicyVersion(ctx: ReadCtx, reference: RuntimeAuthorityReference,
   agent: { agentId: string; version: number }): Promise<TrustedAgentPolicyVersion> {
   text(agent.agentId); integer(agent.version, 1);
   await currentAuthority(ctx, reference, "agent.respond");
-  const { manifest, root } = await activeRoot(ctx);
-  const selected = manifest.policies.filter((policy) => policy.scope === "agent" && policy.tenantId === reference.tenantId
-    && policy.agentId === agent.agentId && policy.agentVersion === agent.version);
-  if (!selected.length) fail("CAPABILITY_UNAVAILABLE");
-  for (const policy of selected) {
-    const row = single(await ctx.db.query("runtimeModelPolicies").withIndex("by_policy_version", (q) => q.eq("policyId", policy.policyId).eq("version", policy.version)).take(2));
-    if (!row || !row.active || row.revokedAt !== undefined || row.scope !== "agent" || row.tenantId !== reference.tenantId || row.agentId !== agent.agentId
-      || row.agentVersion !== agent.version || row.canonical !== canonical(policy) || canonical(row.root) !== canonical(root)) fail("POLICY_DENIED");
-  }
-  return { tenantId: reference.tenantId, agent, policies: selected };
+  const current = await readCurrentExecutableDefinition(ctx, reference, agent, { capability: "run", operationKey: "agent.respond" });
+  return { tenantId: current.tenantId, agent: current.agent, policies: current.policies };
 }
 async function policies(ctx: ReadCtx, manifest: DeploymentPolicyManifest, root: Root, reference: RuntimeAuthorityReference, key: ModelOperationKey, agent?: { agentId: string; version: number }): Promise<TrustedModelPolicyRecord[]> {
   const rows = await ctx.db.query("runtimeModelPolicies").withIndex("by_scope_active", (q) => q.eq("scope", "tenant").eq("tenantId", reference.tenantId).eq("active", true)).take(65);

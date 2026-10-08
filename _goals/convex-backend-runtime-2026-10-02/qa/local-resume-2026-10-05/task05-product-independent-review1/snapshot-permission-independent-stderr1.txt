@@ -1,0 +1,33 @@
+(node:87615) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task05-product-independent-review1/snapshot-permission-independent1.test.ts
+  independent registered snapshot export boundary
+    ✓ owner snapshot returns canonical text without hidden definition or provider fields (16 ms)
+    ✕ canView-only recipient can view current transcript but cannot download an existing snapshot (14 ms)
+
+  ● independent registered snapshot export boundary › canView-only recipient can view current transcript but cannot download an existing snapshot
+
+    expect(received).rejects.toThrow()
+
+    Received promise resolved instead of rejected
+    Resolved to value: {"_id": "runtimeConversationSnapshots:17", "conversationId": "conversation:fe05a2bf3816a53b575eb432d625ead6cc45533e9e885f7d9c0426aa57739f31", "conversationType": "user-agent", "createdAt": 1000000, "createdBy": "runtimeAuthPrincipals:1", "historyRevision": 1, "includedContent": {"facts": false, "memories": false, "messages": true}, "memorySpaceId": "space-a", "messageCount": 1, "messages": [{"content": "Hello·
+    world!", "id": "native:2", "order": 0, "parts": [{"text": "Hello ", "type": "text"}, {"text": "world!", "type": "text"}], "revision": 1, "role": "user", "status": "success", "stepOrder": 0, "timestamp": 1000000}], "participants": {}, "redaction": {"messagesRedactedBefore": undefined, "piiRedacted": false}, "snapshotId": "snapshot:3f6d2a5f-b8e9-4824-a87e-4dd972b09011", "snapshotOf": 1000000, "status": "active", "tenantId": "tenant-a"}
+
+      24 |     await expect(f.call(transcript.exportPage,{conversationId:run.conversationId})).rejects.toThrow();
+      25 |     const writes=f.db.writes;
+    > 26 |     await expect(f.call(snapshots.get,{snapshotId:saved.snapshotId})).rejects.toThrow();
+         |           ^
+      27 |     expect(f.db.writes).toBe(writes);
+      28 |   });
+      29 | });
+
+      at expect (node_modules/expect/build/index.js:2116:15)
+      at Object.<anonymous> (_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task05-product-independent-review1/snapshot-permission-independent1.test.ts:26:11)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 1 passed, 2 total
+Snapshots:   0 total
+Time:        4.089 s
+Ran all test suites within paths "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task05-product-independent-review1/snapshot-permission-independent1.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task05-product-independent-review1/snapshot-permission-independent-results1.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

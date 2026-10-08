@@ -10,6 +10,7 @@ import type { DomainClock } from "../src/domain/clock";
 import { DEFAULT_EMBEDDING_PROFILE, assertEmbeddingVector, assertProfileMatches, normalizeSourceText, semanticHash } from "../src/domain/profile";
 import { assertSourceLineage, isCurrentAuthorizedVector, prepareSourceContent, processingIdentityKey } from "../src/domain/sources";
 import { assertResourceScope, createAuthorityReader, recheckAuthority } from "./runtimeAuth";
+import { managedSourceIsCurrent } from "./runtimeDataAuth";
 
 export type DerivedCommit = Parameters<MemoryRepository["commitDerived"]>[0];
 export type FactQuery = Parameters<MemoryRepository["listFacts"]>[0];
@@ -95,7 +96,7 @@ export class ConvexMemoryRepository {
     if (!row) return null;
     const source = stripSystem(row);
     await this.authority(sourceResource(source));
-    if (source.tombstonedAt !== undefined) memoryError("FORBIDDEN", "Source was deleted");
+    if (source.tombstonedAt !== undefined || !await managedSourceIsCurrent(this.ctx, this.reference, row, this.capability)) memoryError("FORBIDDEN", "Source was deleted");
     return source;
   }
   async putSource(source: SourceContent): Promise<{ source: SourceContent; created: boolean }> {
@@ -223,13 +224,14 @@ export class ConvexMemoryRepository {
     return row ? stripSystem(row) : null;
   }
   /** Derived rows whose source was deleted/changed are excluded; grant denial still throws. */
-  private async visibleSource(sourceId: string, authority: RuntimeAuthority): Promise<SourceContent | null> {
+  private async visibleSource(sourceId: string, authority: RuntimeAuthority, permission: "canViewFacts" | "canViewMemories"): Promise<SourceContent | null> {
     const row = await this.ctx.db.query("runtimeMemorySources").withIndex("by_scope_source", (q) =>
       q.eq("tenantId", this.scope.tenantId).eq("memorySpaceId", this.scope.memorySpaceId).eq("lineage.sourceId", sourceId)).unique();
     if (!row || row.tombstonedAt !== undefined || (authority.resourceAccess === "own" && row.ownerPrincipalId !== authority.principalId)) return null;
     const reader = createAuthorityReader(this.ctx);
     if (await reader.hasTombstone({ tenantId: this.scope.tenantId, memorySpaceId: this.scope.memorySpaceId, resourceType: "source", resourceId: sourceId })
       || await reader.hasTombstone({ tenantId: this.scope.tenantId, resourceType: "source", resourceId: sourceId })) return null;
+    if (!await managedSourceIsCurrent(this.ctx, this.reference, row, "read", permission)) return null;
     const source = stripSystem(row);
     await this.authority(sourceResource(source), "read");
     return source;
@@ -257,7 +259,7 @@ export class ConvexMemoryRepository {
         memorySpaceId: row.memorySpaceId, ownerPrincipalId: row.ownerPrincipalId });
       if (await reader.hasTombstone({ tenantId: this.scope.tenantId, memorySpaceId: this.scope.memorySpaceId, resourceType: "fact", resourceId: row.factId })
         || await reader.hasTombstone({ tenantId: this.scope.tenantId, resourceType: "fact", resourceId: row.factId })) continue;
-      const source = await this.visibleSource(row.lineage.sourceId, authority);
+      const source = await this.visibleSource(row.lineage.sourceId, authority, "canViewFacts");
       if (!source || !sameReference(source.lineage, row.lineage) || source.ownerPrincipalId !== row.ownerPrincipalId
         || row.lineage.role === "assistant" || canonicalMemoryValue(row.lineage) !== canonicalMemoryValue(source.lineage)) continue;
       const { _creationTime: _creationTime, tombstonedAt: _tombstonedAt, processingReceiptId: _receipt,
@@ -282,7 +284,7 @@ export class ConvexMemoryRepository {
         q.eq("tenantId", this.scope.tenantId).eq("memorySpaceId", this.scope.memorySpaceId).eq("lineage.sourceId", row.sourceId)).unique();
       if (!sourceRow || sourceRow.tombstonedAt !== undefined || row.ownerPrincipalId !== sourceRow.ownerPrincipalId
         || (authority.resourceAccess === "own" && sourceRow.ownerPrincipalId !== authority.principalId)) continue;
-      const source = await this.visibleSource(row.sourceId, authority);
+      const source = await this.visibleSource(row.sourceId, authority, "canViewMemories");
       const chunk = await this.findChunk(row.chunkId);
       const vector = stripVector(row);
       const receipt = await this.ctx.db.query("runtimeMemoryReceipts").withIndex("by_scope_receipt", (q) =>

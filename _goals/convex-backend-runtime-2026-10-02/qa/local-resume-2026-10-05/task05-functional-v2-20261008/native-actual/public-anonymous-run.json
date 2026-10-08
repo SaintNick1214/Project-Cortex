@@ -1,0 +1,25 @@
+{
+  "label": "anonymous-run",
+  "kind": "query",
+  "fn": "runs:get",
+  "args": {
+    "tenantId": "task05-native-0af668c7",
+    "memorySpaceId": "qualification",
+    "runId": "run:265829d631f7d1c6f8c1cd2eccf62c15c3ba79e3b3690c7e619dfddb70939eeb"
+  },
+  "result": null,
+  "error": {
+    "name": "ConvexError",
+    "data": {
+      "code": "UNAUTHENTICATED",
+      "message": "Verified identity required",
+      "outcome": "not_dispatched",
+      "retryable": false,
+      "version": 1
+    },
+    "message": "[Request ID: 76f180607899e267] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"UNAUTHENTICATED\",\"message\":\"Verified identity required\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../convex-dev/runtimeAuth.ts:45:26)\n    at resolveAuthority (../../convex-dev/runtimeAuth.ts:160:47)\n    at requireAuthority (../../convex-dev/runtimeAuth.ts:250:0)\n    at async requireDataAuthority (../../convex-dev/runtimeDataAuth.ts:29:16)\n    at async handler (../../convex-dev/runs.ts:105:70)\n"
+  },
+  "elapsedMs": 116,
+  "target": "festive-cheetah-250",
+  "actualJwt": true
+}

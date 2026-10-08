@@ -1,19 +1,19 @@
 {
   "schema": "cortex.completion-current.v1",
-  "timestamp_utc": "2026-10-08T09:34:58.523793+00:00",
+  "timestamp_utc": "2026-10-08T10:58:46.817691+00:00",
   "assessment_basis": "Original product criteria plus functional non-author acceptance under user-approved policyv2; no Source/controller subgate or source/mock rate acceptance",
-  "goal_tasks_complete": 3,
+  "goal_tasks_complete": 4,
   "goal_tasks_total": 17,
-  "goal_task_percent_complete": 17.6,
+  "goal_task_percent_complete": 23.5,
   "goal_product_criteria_accepted": 0,
   "goal_product_criteria_total": 12,
-  "goal_product_percent_complete": 0.0,
+  "goal_product_percent_complete": 0,
   "full_goal_complete": false,
   "final_independent_audit_approved": false,
   "task_completion": [
     {
       "task_id": "01",
-      "percent_complete": 100.0,
+      "percent_complete": 100,
       "criteria_accepted": 3,
       "criteria_total": 3,
       "accepted_scope": "Bounded stack and execution-boundary qualification; no downstream functional acceptance",
@@ -26,7 +26,7 @@
     },
     {
       "task_id": "02",
-      "percent_complete": 100.0,
+      "percent_complete": 100,
       "criteria_accepted": 3,
       "criteria_total": 3,
       "accepted_scope": "Original task requirements/criteria at accepted C2/C3 boundaries; downstream Agent/Workflow/interfaces and full goal remain separate",
@@ -39,7 +39,7 @@
     },
     {
       "task_id": "03",
-      "percent_complete": 0.0,
+      "percent_complete": 0,
       "criteria_accepted": 0,
       "criteria_total": 3,
       "accepted_scope": null,
@@ -49,7 +49,7 @@
     },
     {
       "task_id": "04",
-      "percent_complete": 100.0,
+      "percent_complete": 100,
       "criteria_accepted": 3,
       "criteria_total": 3,
       "accepted_scope": "Original task requirements/criteria at accepted C2/C3 boundaries; downstream Agent/Workflow/interfaces and full goal remain separate",
@@ -62,17 +62,20 @@
     },
     {
       "task_id": "05",
-      "percent_complete": 0.0,
-      "criteria_accepted": 0,
+      "percent_complete": 100,
+      "criteria_accepted": 3,
       "criteria_total": 3,
-      "accepted_scope": null,
-      "independent_acceptance_evidence": [],
+      "accepted_scope": "All original Task05 requirements/criteria at C2/C3 boundaries with exact executionRevision refinement; no Task07 model/tool execution acceptance",
+      "independent_acceptance_evidence": [
+        "qa/local-resume-2026-10-05/task05-product-independent-review1/verdict1.json",
+        "qa/local-resume-2026-10-05/task05-product-independent-review1/report1.md"
+      ],
       "original_task_file": "tasks/05-transcripts-runs.md",
-      "task_file_sha256": "3e7745d7bd863cb6b417224e46dd1867637b1d28a30cc336071de21e5a723115"
+      "task_file_sha256": "9a1f2894dc729a2e9b621f6ffac8de14ccb1e6b7b77a208a5be51a2cff098fa2"
     },
     {
       "task_id": "06",
-      "percent_complete": 0.0,
+      "percent_complete": 0,
       "criteria_accepted": 0,
       "criteria_total": 3,
       "accepted_scope": null,
@@ -82,7 +85,7 @@
     },
     {
       "task_id": "07",
-      "percent_complete": 0.0,
+      "percent_complete": 0,
       "criteria_accepted": 0,
       "criteria_total": 4,
       "accepted_scope": null,
@@ -92,7 +95,7 @@
     },
     {
       "task_id": "08",
-      "percent_complete": 0.0,
+      "percent_complete": 0,
       "criteria_accepted": 0,
       "criteria_total": 4,
       "accepted_scope": null,
@@ -102,7 +105,7 @@
     },
     {
       "task_id": "09",
-      "percent_complete": 0.0,
+      "percent_complete": 0,
       "criteria_accepted": 0,
       "criteria_total": 5,
       "accepted_scope": null,
@@ -112,7 +115,7 @@
     },
     {
       "task_id": "10",
-      "percent_complete": 0.0,
+      "percent_complete": 0,
       "criteria_accepted": 0,
       "criteria_total": 4,
       "accepted_scope": null,
@@ -122,7 +125,7 @@
     },
     {
       "task_id": "11",
-      "percent_complete": 0.0,
+      "percent_complete": 0,
       "criteria_accepted": 0,
       "criteria_total": 3,
       "accepted_scope": null,
@@ -132,7 +135,7 @@
     },
     {
       "task_id": "12",
-      "percent_complete": 0.0,
+      "percent_complete": 0,
       "criteria_accepted": 0,
       "criteria_total": 4,
       "accepted_scope": null,
@@ -142,7 +145,7 @@
     },
     {
       "task_id": "13",
-      "percent_complete": 0.0,
+      "percent_complete": 0,
       "criteria_accepted": 0,
       "criteria_total": 4,
       "accepted_scope": null,
@@ -152,7 +155,7 @@
     },
     {
       "task_id": "14",
-      "percent_complete": 0.0,
+      "percent_complete": 0,
       "criteria_accepted": 0,
       "criteria_total": 4,
       "accepted_scope": null,
@@ -162,7 +165,7 @@
     },
     {
       "task_id": "15",
-      "percent_complete": 0.0,
+      "percent_complete": 0,
       "criteria_accepted": 0,
       "criteria_total": 4,
       "accepted_scope": null,
@@ -172,7 +175,7 @@
     },
     {
       "task_id": "16",
-      "percent_complete": 0.0,
+      "percent_complete": 0,
       "criteria_accepted": 0,
       "criteria_total": 4,
       "accepted_scope": null,
@@ -182,7 +185,7 @@
     },
     {
       "task_id": "17",
-      "percent_complete": 0.0,
+      "percent_complete": 0,
       "criteria_accepted": 0,
       "criteria_total": 3,
       "accepted_scope": null,
@@ -192,7 +195,7 @@
     }
   ],
   "milestone_history": "qa/completion-milestones.jsonl",
-  "latest_milestone_id": "functional_v2_task02_task04_original_criteria_independent_pass4_complete",
+  "latest_milestone_id": "functional_v2_task05_original_criteria_independent_pass4_complete",
   "acceptance_policy_version": 2,
   "acceptance_policy": "acceptance-policy.md",
   "assessment_basis_changed_without_denominator_change": true,
@@ -218,5 +221,9 @@
       "full_task_complete": true,
       "evidence": "qa/local-resume-2026-10-05/task04-backend-gateway-independent-review1/verdict1.json"
     }
-  ]
+  ],
+  "active_work": {
+    "task06": "Original Task05 accepted; actual freshly packed fresh/custom host install + development-target/auth/bootstrap/preservation/retry gate active",
+    "task07": "Pending original06 actual installed acceptance; new Agent/tools/streams qualification remains required"
+  }
 }

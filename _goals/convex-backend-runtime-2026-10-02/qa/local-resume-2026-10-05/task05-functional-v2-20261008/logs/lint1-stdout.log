@@ -1,0 +1,39 @@
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/conversationShares.ts
+  90:22  error  'ctx' is defined but never used. Allowed unused args must match /^_/u   @typescript-eslint/no-unused-vars
+  90:27  error  'args' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/conversations.ts
+    6:15  error  'RuntimeAuthorityReference' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  217:70  error  'ctx' is defined but never used. Allowed unused args must match /^_/u                        @typescript-eslint/no-unused-vars
+  217:75  error  'args' is defined but never used. Allowed unused args must match /^_/u                       @typescript-eslint/no-unused-vars
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/src/domain/transcript.ts
+   70:14  warning  Unsafe member access .type on an `any` value  @typescript-eslint/no-unsafe-member-access
+   70:45  warning  Unsafe member access .text on an `any` value  @typescript-eslint/no-unsafe-member-access
+   71:24  warning  Unsafe member access .text on an `any` value  @typescript-eslint/no-unsafe-member-access
+   71:55  warning  Unsafe member access .text on an `any` value  @typescript-eslint/no-unsafe-member-access
+   71:74  warning  Unsafe spread of an `any` value in an array   @typescript-eslint/no-unsafe-assignment
+   71:82  warning  Unsafe member access .text on an `any` value  @typescript-eslint/no-unsafe-member-access
+  102:40  warning  Unsafe member access .type on an `any` value  @typescript-eslint/no-unsafe-member-access
+  102:71  warning  Unsafe member access .text on an `any` value  @typescript-eslint/no-unsafe-member-access
+  103:27  warning  Unsafe member access .text on an `any` value  @typescript-eslint/no-unsafe-member-access
+  103:60  warning  Unsafe assignment of an `any` value           @typescript-eslint/no-unsafe-assignment
+  103:71  warning  Unsafe member access .text on an `any` value  @typescript-eslint/no-unsafe-member-access
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeTranscript/fixture.ts
+  106:13  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+  107:13  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+  119:13  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+  120:13  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+  131:13  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+  132:13  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+  133:13  warning  Unnecessary optional chain on a non-nullish value  @typescript-eslint/no-unnecessary-condition
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeTranscript/managed.test.ts
+   2:58  error  'runs' is defined but never used. Allowed unused vars must match /^_/u                    @typescript-eslint/no-unused-vars
+   4:10  error  'dataAuthorityReference' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  63:48  error  'run' is assigned a value but never used. Allowed unused vars must match /^_/u            @typescript-eslint/no-unused-vars
+
+✖ 26 problems (8 errors, 18 warnings)
+

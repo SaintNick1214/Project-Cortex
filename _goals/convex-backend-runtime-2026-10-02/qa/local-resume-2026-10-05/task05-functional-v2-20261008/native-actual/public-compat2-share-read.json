@@ -1,0 +1,49 @@
+{
+  "label": "share-read",
+  "kind": "query",
+  "fn": "runtimeTranscript:messages",
+  "args": {
+    "tenantId": "task05-native-0af668c7",
+    "memorySpaceId": "qualification",
+    "conversationId": "task05-legacy-compat-v1",
+    "limit": 10
+  },
+  "result": {
+    "continueCursor": null,
+    "isDone": true,
+    "page": [
+      {
+        "id": "kx74n0x6zrjj11qgpj0d3x3axx8fxea8",
+        "order": 0,
+        "parts": [
+          {
+            "text": "native journal revision2",
+            "type": "text"
+          }
+        ],
+        "revision": 2,
+        "role": "user",
+        "status": "success",
+        "stepOrder": 0
+      },
+      {
+        "id": "kx784yxvs0ehp27jxmd8mn1ka18fwne2",
+        "order": 1,
+        "parts": [
+          {
+            "text": "appended after fixed snapshot",
+            "type": "text"
+          }
+        ],
+        "revision": 1,
+        "role": "assistant",
+        "status": "success",
+        "stepOrder": 0
+      }
+    ]
+  },
+  "error": null,
+  "elapsedMs": 172,
+  "target": "festive-cheetah-250",
+  "actualJwt": true
+}

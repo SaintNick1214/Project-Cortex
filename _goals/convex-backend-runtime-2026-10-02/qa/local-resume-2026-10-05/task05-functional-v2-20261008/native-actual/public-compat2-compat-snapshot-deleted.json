@@ -1,0 +1,25 @@
+{
+  "label": "compat-snapshot-deleted",
+  "kind": "query",
+  "fn": "conversationSnapshots:get",
+  "args": {
+    "tenantId": "task05-native-0af668c7",
+    "memorySpaceId": "qualification",
+    "snapshotId": "snapshot:6fb2f2b6-06f0-44e1-8a15-7567015edf41"
+  },
+  "result": null,
+  "error": {
+    "name": "ConvexError",
+    "data": {
+      "code": "FORBIDDEN",
+      "message": "Conversation operation denied.",
+      "outcome": "not_dispatched",
+      "retryable": false,
+      "version": 1
+    },
+    "message": "[Request ID: 98f92af0ae4b6319] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Conversation operation denied.\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at transcriptDenied (../../convex-dev/runtimeTranscript.ts:26:0)\n    at hydrate (../convex-dev/conversationSnapshots.ts:19:66)\n    at handler (../convex-dev/conversationSnapshots.ts:98:13)\n"
+  },
+  "elapsedMs": 120,
+  "target": "festive-cheetah-250",
+  "actualJwt": true
+}

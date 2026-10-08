@@ -1,0 +1,84 @@
+{
+  "accounts": [
+    {
+      "activeConcurrency": 0,
+      "kind": "tenant",
+      "reservedUnits": 0,
+      "runBudgetId": null,
+      "settledUnits": 0,
+      "uncertainUnits": 0
+    },
+    {
+      "activeConcurrency": 0,
+      "kind": "run",
+      "reservedUnits": 0,
+      "runBudgetId": "b651ef126d5e84afbcfa9a84fbb672651106a0df96653ab3b418437c06fc11e6",
+      "settledUnits": 0,
+      "uncertainUnits": 0
+    }
+  ],
+  "bridges": [
+    {
+      "nativeMessageId": "kx71h5yqge0mwzmre2b8v1keth8fx110",
+      "revision": 1,
+      "sourceId": "transcript:conversation:265829d631f7d1c6f8c1cd2eccf62c15c3ba79e3b3690c7e619dfddb70939eeb:kx71h5yqge0mwzmre2b8v1keth8fx110",
+      "tombstonedAt": null
+    }
+  ],
+  "conversations": [
+    {
+      "conversationId": "conversation:265829d631f7d1c6f8c1cd2eccf62c15c3ba79e3b3690c7e619dfddb70939eeb",
+      "historyRevision": 1,
+      "manualWriteLocked": true,
+      "messageCount": 1,
+      "threadId": "m973f2wpb2gcb816fr21gb93q98fxf9n",
+      "tombstonedAt": null
+    }
+  ],
+  "counts": {
+    "accounts": 2,
+    "bridges": 1,
+    "conversations": 1,
+    "nativeMessages": 1,
+    "nativeThreads": 1,
+    "outbox": 1,
+    "projection": 1,
+    "runs": 1,
+    "sources": 1
+  },
+  "nativeMessages": [
+    {
+      "count": 1,
+      "positions": [
+        {
+          "id": "kx71h5yqge0mwzmre2b8v1keth8fx110",
+          "order": 0,
+          "stepOrder": 0
+        }
+      ],
+      "threadId": "m973f2wpb2gcb816fr21gb93q98fxf9n"
+    }
+  ],
+  "outbox": [
+    {
+      "leaseVersion": 0,
+      "runId": "run:265829d631f7d1c6f8c1cd2eccf62c15c3ba79e3b3690c7e619dfddb70939eeb",
+      "sequence": 1,
+      "state": "ready"
+    }
+  ],
+  "runs": [
+    {
+      "attemptNumber": 0,
+      "conversationId": "conversation:265829d631f7d1c6f8c1cd2eccf62c15c3ba79e3b3690c7e619dfddb70939eeb",
+      "inputMessageIds": [
+        "kx71h5yqge0mwzmre2b8v1keth8fx110"
+      ],
+      "queueSequence": 1,
+      "responseStatus": "queued",
+      "runBudgetId": "b651ef126d5e84afbcfa9a84fbb672651106a0df96653ab3b418437c06fc11e6",
+      "runId": "run:265829d631f7d1c6f8c1cd2eccf62c15c3ba79e3b3690c7e619dfddb70939eeb",
+      "snapshot": null
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "label": "compat-recreate-denied",
+  "kind": "mutation",
+  "fn": "conversations:create",
+  "args": {
+    "tenantId": "task05-native-0af668c7",
+    "memorySpaceId": "qualification",
+    "conversationId": "task05-legacy-compat-v1",
+    "type": "user-agent",
+    "participants": {
+      "userId": "mh7ems3w408qmheaxk94f63zs98fxah8",
+      "agentId": "discovery-label-only"
+    },
+    "metadata": {
+      "title": "Canonical compatibility"
+    }
+  },
+  "result": null,
+  "error": {
+    "name": "ConvexError",
+    "data": {
+      "code": "FORBIDDEN",
+      "message": "Access denied",
+      "outcome": "not_dispatched",
+      "retryable": false,
+      "version": 1
+    },
+    "message": "[Request ID: 6ff9975ca5d0fbda] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at dataDenied (../../convex-dev/runtimeDataAuth.ts:20:0)\n    at managedConversationAccess (../../convex-dev/runtimeDataAuth.ts:166:79)\n    at checkConversation (../../convex-dev/runtimeTranscript.ts:37:0)\n    at handler (../convex-dev/conversations.ts:87:46)\n"
+  },
+  "elapsedMs": 139,
+  "target": "festive-cheetah-250",
+  "actualJwt": true
+}

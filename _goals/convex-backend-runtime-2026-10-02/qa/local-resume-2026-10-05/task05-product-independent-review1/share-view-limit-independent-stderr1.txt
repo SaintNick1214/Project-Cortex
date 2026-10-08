@@ -1,0 +1,31 @@
+(node:89305) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task05-product-independent-review1/share-view-limit-independent1.test.ts
+  independent supported share-view cap
+    ✕ does not silently accept a maxViews limit that cannot be enforced (23 ms)
+
+  ● independent supported share-view cap › does not silently accept a maxViews limit that cannot be enforced
+
+    expect(received).rejects.toThrow()
+
+    Received promise resolved instead of rejected
+    Resolved to value: {"conversationId": "conversation:fe05a2bf3816a53b575eb432d625ead6cc45533e9e885f7d9c0426aa57739f31", "createdAt": 1000000, "epoch": 1, "historyRevision": 1, "manualWriteLocked": true, "messageCount": 1, "participants": ["runtimeAuthPrincipals:1"], "requireApproval": false, "retentionUntil": null, "type": "user-agent", "updatedAt": 1000000, "visibility": "private"}
+
+      16 |     f.identity({issuer:'https://host.test',subject:'view-limited-reader'});
+      17 |     expect(await f.call(transcript.get,{conversationId:run.conversationId})).toMatchObject({conversationId:run.conversationId});
+    > 18 |     await expect(f.call(transcript.get,{conversationId:run.conversationId})).rejects.toThrow();
+         |           ^
+      19 |   });
+      20 | });
+      21 |
+
+      at expect (node_modules/expect/build/index.js:2116:15)
+      at Object.<anonymous> (_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task05-product-independent-review1/share-view-limit-independent1.test.ts:18:11)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 1 total
+Snapshots:   0 total
+Time:        4.868 s
+Ran all test suites within paths "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task05-product-independent-review1/share-view-limit-independent1.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task05-product-independent-review1/share-view-limit-independent-results1.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

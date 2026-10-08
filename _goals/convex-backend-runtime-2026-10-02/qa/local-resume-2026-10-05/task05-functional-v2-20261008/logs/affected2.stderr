@@ -1,0 +1,33 @@
+FAIL tests/unit/runtime/model-policy.test.ts
+  ● Test suite failed to run
+
+    ENOENT: no such file or directory, open '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/model-policy.test.ts'
+
+      at runTestInternal (node_modules/jest-runner/build/index.js:129:27)
+
+FAIL tests/unit/runtimeMemory/domain.test.ts
+  ● Test suite failed to run
+
+    ENOENT: no such file or directory, open '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeMemory/domain.test.ts'
+
+      at runTestInternal (node_modules/jest-runner/build/index.js:129:27)
+
+FAIL tests/unit/runtime/model-policy-drift.test.ts
+  ● Test suite failed to run
+
+    ENOENT: no such file or directory, open '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/model-policy-drift.test.ts'
+
+      at runTestInternal (node_modules/jest-runner/build/index.js:129:27)
+
+(node:90514) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtime/model-policy-admission.test.ts
+PASS tests/unit/runtime/memory-gateway.test.ts
+
+Test Suites: 3 failed, 2 passed, 5 total
+Tests:       195 passed, 195 total
+Snapshots:   0 total
+Time:        3.295 s, estimated 5 s
+Ran all test suites within paths "tests/unit/runtime/model-policy-admission.test.ts", "tests/unit/runtime/memory-gateway.test.ts", "tests/unit/runtime/model-policy-drift.test.ts", "tests/unit/runtimeMemory/domain.test.ts", "tests/unit/runtime/model-policy.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task05-functional-v2-20261008/logs/affected2-results.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

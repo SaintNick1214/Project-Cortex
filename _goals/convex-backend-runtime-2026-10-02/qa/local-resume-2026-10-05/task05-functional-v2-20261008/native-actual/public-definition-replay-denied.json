@@ -1,0 +1,35 @@
+{
+  "label": "definition-replay-denied",
+  "kind": "mutation",
+  "fn": "runs:submit",
+  "args": {
+    "request": {
+      "version": 1,
+      "agentId": "agent:db6d6307a281c1ec4ec9a226b5d87f5c0b47d7060fbbcb559d61e17bc51e9778",
+      "agentVersion": 1,
+      "clientRequestId": "definition-revoke",
+      "conversationId": "conversation:80864d49e4989fe6cc64747f16dd73dfb57c9235d88dc6b47834d6b9fa41e064",
+      "parts": [
+        {
+          "type": "text",
+          "text": "short"
+        }
+      ]
+    }
+  },
+  "result": null,
+  "error": {
+    "name": "ConvexError",
+    "data": {
+      "code": "POLICY_DENIED",
+      "message": "Agent definition control failed.",
+      "outcome": "not_dispatched",
+      "retryable": false,
+      "version": 1
+    },
+    "message": "[Request ID: 7e7a6ab15c4aea5e] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"POLICY_DENIED\",\"message\":\"Agent definition control failed.\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at denied (../../convex-dev/agentDefinitions.ts:21:0)\n    at checkRow (../../convex-dev/agentDefinitions.ts:98:81)\n    at readCurrentExecutableDefinition (../../convex-dev/agentDefinitions.ts:120:23)\n    at async submitHandler (../../convex-dev/runs.ts:61:6)\n"
+  },
+  "elapsedMs": 137,
+  "target": "festive-cheetah-250",
+  "actualJwt": true
+}
