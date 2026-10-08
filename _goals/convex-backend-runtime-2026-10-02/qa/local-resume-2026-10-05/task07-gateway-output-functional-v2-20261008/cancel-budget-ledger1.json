@@ -1,0 +1,25 @@
+{
+  "command": [
+    "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+    "--experimental-vm-modules",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/jest/bin/jest.js",
+    "--config",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-gateway-output-functional-v2-20261008/registry-jest-controlled.config.mjs",
+    "--runInBand",
+    "--runTestsByPath",
+    "tests/unit/runtime/model-policy-admission.test.ts",
+    "--json",
+    "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-gateway-output-functional-v2-20261008/cancel-budget-ledger1.result.json"
+  ],
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "exitCode": 0,
+  "timedOut": false,
+  "deadlineMs": 90000,
+  "durationMs": 3553,
+  "actualService": false,
+  "sourceSha256": {
+    "convex-dev/runtimeModelPolicy.ts": "4791d25f1f4816056691b5d0aa55dc148751e2c10977ce28bfdca2d9cdad6a86",
+    "convex-dev/runs.ts": "b211dbfb6356f6613d68cc3a5b185259e1e3e819c6cfb0ebb1650c0a87b42b68",
+    "tests/unit/runtime/model-policy-admission.test.ts": "024893abcd3992668390c4c908021d3a5d07743a9b047e9cd45ee742d4f61bdb"
+  }
+}

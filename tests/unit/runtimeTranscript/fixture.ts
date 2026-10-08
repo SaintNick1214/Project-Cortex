@@ -6,6 +6,7 @@ import type { DeploymentPolicyManifest } from "../../../convex-dev/runtimeModelP
 import type { TrustedModelPolicyRecord } from "../../../src/domain/model-policy";
 import { canonicalModelJson } from "../../../src/domain/model-policy";
 import { semanticHash } from "../../../src/domain/profile";
+import { AGENT_NATIVE_TOOLS, AGENT_TOOL_REGISTRY_VERSION } from "../../../src/domain/agent-tools";
 
 const lookup = jest.fn<(id: string, revision: number) => DeploymentPolicyManifest | undefined>();
 const bootstrap = await import("../../../convex-dev/runtimeModelPolicyBootstrap");
@@ -22,14 +23,17 @@ const limits = { inputTokens: 160_000, contextTokens: 250_000, outputTokens: 200
 const pins = { promptVersion: "prompt-1", schemaVersion: "schema-1", extractionVersion: "extract-1", toolRegistryVersion: "tools-1", priceRevision: "price-1", boundRevision: "bound-1" };
 const policy: TrustedModelPolicyRecord = { policyId: "deployment", version: 1, scope: "deployment", rules: { modelId: "openai/gpt-4o-mini", nativeInterface: "chat",
   allowedModels: ["openai/gpt-4o-mini"], interfaces: ["chat"], capabilities: ["text"], allowedOptions: [], allowedTools: [], fallbackModels: [], limits, pins } };
-export function installMockRoot() {
+export function installMockRoot(options: { tools?: boolean } = {}) {
   const hash = "a".repeat(64);
+  const activePolicy: TrustedModelPolicyRecord = options.tools ? { ...policy, rules: { ...policy.rules, capabilities: ["text", "tools"],
+    allowedTools: ["memory_recall", "memory_remember"], limits: { ...limits, toolSteps: 4 }, pins: { ...pins, toolRegistryVersion: AGENT_TOOL_REGISTRY_VERSION } } } : policy;
   root = { manifestId: "transcript-offline-root", revision: 1, artifactRevision: "offline", evidenceHash: hash, acceptanceHash: hash,
-    classification: "fixture-synthetic", budgetWindowMs: 60_000, policies: [policy],
-    qualifications: [{ receiptId: "offline-chat", modelId: "openai/gpt-4o-mini", nativeInterface: "chat", capabilities: ["text"], allowedOptions: [], limits,
+    classification: "fixture-synthetic", budgetWindowMs: 60_000, policies: [activePolicy],
+    qualifications: [{ receiptId: "offline-chat", modelId: "openai/gpt-4o-mini", nativeInterface: "chat", capabilities: options.tools ? ["text", "tools"] : ["text"], allowedOptions: [], limits: activePolicy.rules.limits as typeof limits,
       costBound: { kind: "qualified-call-ceiling", maximumCostUnits: 100, provenance: "OFFLINE_ONLY", coversAllProviderCharges: true }, priceRevision: "price-1", boundRevision: "bound-1" }],
     dispatchEvidence: [{ receiptId: "offline-chat", evidenceHash: hash, providerVersion: "OFFLINE_ONLY", modelId: "openai/gpt-4o-mini", nativeInterface: "chat",
-      inputBound: { ruleId: "plain-chat-cookbook-utf8-v1", revision: 1, featureEnvelope: "plain-chat-v1", nativeTransformHash: hash, documentHash: hash, proofHash: hash },
+      inputBound: { ruleId: options.tools ? "agent-tools-chat-utf8-v1" : "plain-chat-cookbook-utf8-v1", revision: 1, featureEnvelope: options.tools ? "agent-tools-chat-v1" : "plain-chat-v1", nativeTransformHash: hash, documentHash: hash, proofHash: hash },
+      ...(options.tools ? { toolContract: { registryVersion: AGENT_TOOL_REGISTRY_VERSION, toolsCanonical: canonicalModelJson(AGENT_NATIVE_TOOLS), maximumToolCalls: 4 } } : {}),
       resultBound: { maximumPrivateResultBytes: 60_000, maximumOutputTokens: 2000, maximumEmbeddingValues: 1, proofHash: hash },
       checkedAt: clock - 1, expiresAt: clock + 100_000, terminalCost: "gateway-aggregate-usd-v1", terminalProof: "provider-terminal-v1", priceRevision: "price-1", boundRevision: "bound-1" }] };
   lookup.mockReset(); lookup.mockImplementation((id, revision) => id === root.manifestId && revision === root.revision ? root : undefined);
@@ -109,7 +113,7 @@ export async function transcriptFixture() {
       const pagination = args.paginationOpts as { cursor: string | null; numItems: number };
       const statuses = args.statuses as string[] | undefined;
       const all = [...native.messages.values()].filter(m => m.threadId === args.threadId && (!statuses || statuses.includes(m.status as string)) && (!anchor || (m.order as number) <= (anchor.order as number)))
-        .sort((a, b) => (a.order as number) - (b.order as number) || (a.stepOrder as number) - (b.stepOrder as number));
+        .sort((a, b) => (args.order === "desc" ? -1 : 1) * ((a.order as number) - (b.order as number) || (a.stepOrder as number) - (b.stepOrder as number)));
       const offset = Number(pagination.cursor ?? 0); return { page: all.slice(offset, offset + pagination.numItems), isDone: offset + pagination.numItems >= all.length, continueCursor: String(offset + pagination.numItems) };
     }
     throw new Error("Unexpected query " + path);
@@ -133,6 +137,7 @@ export async function transcriptFixture() {
     if (path?.endsWith("/deleteAllForThreadIdAsync")) { effects.deletes++; for (const [id, m] of native.messages) if (m.threadId === args.threadId) native.messages.delete(id); native.threads.delete(args.threadId as string); return null; }
     const name = getFunctionName(ref as Parameters<typeof getFunctionName>[0]);
     if (name === "runtimeModelPolicy:cancelBudget") return await invoke(ledger.cancelBudget, ctx, args);
+    if (name === "runtimeModelPolicy:cancelAgentBudget") return await invoke(ledger.cancelAgentBudget, ctx, args);
     throw new Error("Unexpected mutation " + name);
   } };
   const ctx = context as unknown as MutationCtx;

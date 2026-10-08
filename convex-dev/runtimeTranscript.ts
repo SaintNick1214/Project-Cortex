@@ -3,6 +3,7 @@ import { makeFunctionReference } from "convex/server";
 import type { FunctionReference } from "convex/server";
 import { createThread, saveMessages } from "@convex-dev/agent";
 import type { AgentComponent, MessageDoc } from "@convex-dev/agent";
+import type { ModelMessage } from "ai";
 import { ConvexError, v } from "convex/values";
 import { mutation, query, internalMutation } from "./_generated/server";
 import type { MutationCtx, QueryCtx } from "./_generated/server";
@@ -13,10 +14,11 @@ import { canonicalModelJson } from "../src/domain/model-policy";
 import { normalizeSourceText, semanticHash } from "../src/domain/profile";
 import { boundedIdentifier, clientRequestKey, comparePosition, normalizeTextSubmit, publicTextParts, utf8Bytes } from "../src/domain/transcript";
 import type { CutoffV1, MessagePin, PublicTranscriptMessage } from "../src/domain/transcript";
-import { dataAuthorityReference, managedConversationAccess, requireDataAuthority, recheckDataAuthority } from "./runtimeDataAuth";
+import { dataAuthorityReference, managedConversationAccess, managedSourceIsCurrent, requireDataAuthority, recheckDataAuthority } from "./runtimeDataAuth";
 import type { ScopedDataAuthority } from "./runtimeDataAuth";
 import { recheckAuthority } from "./runtimeAuth";
 import { runtimeAuthorityReference } from "./runtimeAuthSchema";
+import { ConvexMemoryRepository } from "./runtimeMemoryRepository";
 
 // Official generated component projection; this does not expose component functions publicly.
 export const agentComponent = (components as unknown as { agent: AgentComponent }).agent;
@@ -96,6 +98,18 @@ function content(message: MessageDoc) {
   return { role, parts };
 }
 async function contentHash(message: MessageDoc): Promise<string> { return await semanticHash(canonicalModelJson(content(message))); }
+/** Private model history is the canonical Agent message, never the public text projection. */
+export async function canonicalMessageHash(message: MessageDoc): Promise<string> {
+  if (!message.message) transcriptDenied("STALE_TRANSCRIPT");
+  return await semanticHash(canonicalModelJson(message.message));
+}
+export function privateModelMessage(message: MessageDoc): ModelMessage {
+  const native = message.message;
+  if (!native || !["user", "assistant", "tool"].includes(native.role)) transcriptDenied("TRANSCRIPT_CONFLICT");
+  // Agent validators and the governed native envelope independently validate the complete graph.
+  // Detach stored values; do not mutate canonical history or spread native provider metadata.
+  return JSON.parse(canonicalModelJson(native)) as ModelMessage;
+}
 export async function verifyMessage(ctx: ReadCtx, conversation: ManagedConversation, bridge: Doc<"runtimeTranscriptMessages">,
   native: MessageDoc | null): Promise<MessageDoc> {
   if (!native || bridge.tombstonedAt !== undefined || bridge.conversationId !== conversation.conversationId
@@ -106,7 +120,7 @@ export async function verifyMessage(ctx: ReadCtx, conversation: ManagedConversat
 }
 async function sourceWrite(ctx: MutationCtx, conversation: ManagedConversation, bridge: Pick<Doc<"runtimeTranscriptMessages">,
   "sourceId" | "sourceEventId" | "revision" | "role" | "ownerPrincipalId" | "sourceContentHash" | "approved" | "nativeMessageId">, text: string) {
-  if (!bridge.approved) return;
+  if (!bridge.approved || !text.trim()) return;
   // Public/manual tool text cannot gain verified_tool_evidence. Task07 must register trusted operation output separately.
   if (bridge.role === "tool") return;
   const lineage = bridge.role === "user" ? { sourceId: bridge.sourceId, sourceEventId: bridge.sourceEventId, sourceRevision: bridge.revision,
@@ -139,20 +153,22 @@ async function messageOutbox(ctx: MutationCtx, conversation: ManagedConversation
     sourceRevision: bridge.revision, canonicalIdentity, identityHash, state, createdAt: Date.now() });
 }
 export async function registerMessages(ctx: MutationCtx, conversation: ManagedConversation, reference: RuntimeAuthorityReference,
-  messages: MessageDoc[], options: { runId?: string; attemptNumber?: number; approved?: boolean; invalidateExecution?: boolean } = {}) {
+  messages: MessageDoc[], options: { runId?: string; attemptNumber?: number; approved?: boolean; invalidateExecution?: boolean; trustedToolMessages?: boolean;
+    contextSourceWitnesses?: { sourceId: string; sourceEventId: string; sourceRevision: number; contentHash: string }[] } = {}) {
   const pins: MessagePin[] = [];
   for (const message of messages) {
     if (message.threadId !== conversation.threadId || message.status !== "success") transcriptDenied("TRANSCRIPT_CONFLICT");
     if (await bridgeFor(ctx, conversation, message._id)) transcriptDenied("TRANSCRIPT_CONFLICT");
     const typed = content(message); const now = Date.now();
-    if (typed.role === "tool") transcriptDenied("TRANSCRIPT_CONFLICT");
+    if (typed.role === "tool" && !options.trustedToolMessages) transcriptDenied("TRANSCRIPT_CONFLICT");
     const event = `transcript:${conversation.conversationId}:${message._id}`;
     const text = typed.parts.map(part => part.text).join("\n");
-    const hash = await contentHash(message); const sourceHash = await semanticHash(normalizeSourceText(text));
+    const hash = await contentHash(message); const sourceHash = await semanticHash(text.trim() ? normalizeSourceText(text) : "");
     const bridge = { tenantId: conversation.tenantId, memorySpaceId: conversation.memorySpaceId, ownerPrincipalId: reference.principalId,
       conversationId: conversation.conversationId, nativeMessageId: message._id, order: message.order, stepOrder: message.stepOrder,
       role: typed.role, revision: 1, contentHash: hash, sourceEventId: event, sourceId: event, sourceContentHash: sourceHash,
       actorReference: reference, approved: options.approved ?? true,
+      ...(options.contextSourceWitnesses?.length ? { contextSourceWitnesses: options.contextSourceWitnesses } : {}),
       ...(options.runId === undefined ? {} : { runId: options.runId }), ...(options.attemptNumber === undefined ? {} : { attemptNumber: options.attemptNumber }), createdAt: now, updatedAt: now };
     await ctx.db.insert("runtimeTranscriptMessages", bridge); await sourceWrite(ctx, conversation, bridge, text);
     await messageOutbox(ctx, conversation, bridge, bridge.approved ? "registered" : "pending");
@@ -162,6 +178,21 @@ export async function registerMessages(ctx: MutationCtx, conversation: ManagedCo
     executionRevision: executionRevision(conversation) + (options.invalidateExecution === false ? 0 : 1),
     messageCount: conversation.messageCount + messages.length, updatedAt: Date.now() });
   return pins;
+}
+async function currentPrivateSources(ctx: ReadCtx, reference: RuntimeAuthorityReference,
+  witnesses: readonly { sourceId: string; sourceEventId: string; sourceRevision: number; contentHash: string }[]) {
+  const repository = new ConvexMemoryRepository(ctx, reference, "read");
+  for (const witness of witnesses) {
+    const source = await repository.getSource(witness.sourceId);
+    if (!source || source.lineage.sourceEventId !== witness.sourceEventId || source.lineage.sourceRevision !== witness.sourceRevision
+      || source.contentHash !== witness.contentHash) transcriptDenied("STALE_CONTEXT");
+    const original = singleTranscript(await ctx.db.query("runtimeMemorySources").withIndex("by_scope_source", q => q.eq("tenantId", reference.tenantId)
+      .eq("memorySpaceId", reference.memorySpaceId!).eq("lineage.sourceId", witness.sourceId)).take(2));
+    // Private cached context can include both facts and vector text. A transcript
+    // share that grants only message viewing cannot grant those separate rights.
+    if (!original || !await managedSourceIsCurrent(ctx, reference, original, "read", "canViewFacts")
+      || !await managedSourceIsCurrent(ctx, reference, original, "read", "canViewMemories")) transcriptDenied("STALE_CONTEXT");
+  }
 }
 export async function approveRegisteredMessage(ctx: MutationCtx, conversation: ManagedConversation,
   bridge: Doc<"runtimeTranscriptMessages">, actor: RuntimeAuthorityReference,
@@ -218,7 +249,8 @@ export async function captureCutoff(ctx: ReadCtx, conversation: ManagedConversat
     const native = await verifyMessage(ctx, conversation, bridge, input[i]);
     if (native.status !== "success") transcriptDenied("STALE_TRANSCRIPT");
     inputPins.push({ nativeMessageId: native._id, order: native.order, stepOrder: native.stepOrder,
-      sourceEventId: bridge.sourceEventId, sourceRevision: bridge.revision, contentHash: bridge.contentHash });
+      sourceEventId: bridge.sourceEventId, sourceRevision: bridge.revision, contentHash: bridge.contentHash,
+      canonicalContentHash: await canonicalMessageHash(native) });
   }
   inputPins.sort(comparePosition); const anchor = inputPins[inputPins.length - 1]!;
   let cursor: string | null = null; let scanned = 0; let bytes = 0; const pins: MessagePin[] = []; const positions = new Set<string>();
@@ -237,10 +269,11 @@ export async function captureCutoff(ctx: ReadCtx, conversation: ManagedConversat
       }
       await verifyMessage(ctx, conversation, bridge, native);
       const position = canonicalModelJson([native.order, native.stepOrder]); if (positions.has(position)) transcriptDenied("TRANSCRIPT_CONFLICT"); positions.add(position);
-      bytes += utf8Bytes(canonicalModelJson(content(native))); scanned++;
+      bytes += utf8Bytes(canonicalModelJson(native.message)); scanned++;
       if (bytes > maxContextTokens || scanned > 1000) { complete = false; break; }
       pins.push({ nativeMessageId: native._id, order: native.order, stepOrder: native.stepOrder,
-        sourceEventId: bridge.sourceEventId, sourceRevision: bridge.revision, contentHash: bridge.contentHash });
+        sourceEventId: bridge.sourceEventId, sourceRevision: bridge.revision, contentHash: bridge.contentHash,
+        canonicalContentHash: await canonicalMessageHash(native) });
     }
     if (!complete || result.isDone) break;
     if (!result.continueCursor || result.continueCursor === cursor) transcriptDenied("TRANSCRIPT_CONFLICT"); cursor = result.continueCursor;
@@ -269,7 +302,49 @@ export async function hydrateCutoff(ctx: ReadCtx, conversation: ManagedConversat
       const pin = chunk[i]; const bridge = await bridgeFor(ctx, conversation, pin.nativeMessageId);
       if (!bridge || !bridge.approved || bridge.sourceEventId !== pin.sourceEventId || bridge.revision !== pin.sourceRevision
         || bridge.contentHash !== pin.contentHash || comparePosition(bridge, pin) !== 0) transcriptDenied("STALE_TRANSCRIPT");
-      result.push(content(await verifyMessage(ctx, conversation, bridge, native[i])));
+      const checked = await verifyMessage(ctx, conversation, bridge, native[i]);
+      if (pin.canonicalContentHash !== undefined && await canonicalMessageHash(checked) !== pin.canonicalContentHash) transcriptDenied("STALE_TRANSCRIPT");
+      result.push(content(checked));
+    }
+  }
+  return result;
+}
+/** Same complete cutoff fence, with full private tool calls/results retained for model input. */
+export async function hydratePrivateCutoff(ctx: ReadCtx, conversation: ManagedConversation, run: Doc<"runtimeRuns">, snapshot: CutoffV1): Promise<ModelMessage[]> {
+  await hydrateCutoff(ctx, conversation, run, snapshot);
+  const result: ModelMessage[] = []; const checkedAttempts = new Set<string>();
+  for (let offset = 0; offset < snapshot.messages.length; offset += 100) {
+    const pins = snapshot.messages.slice(offset, offset + 100);
+    const messages = await nativeById(ctx, pins.map(pin => pin.nativeMessageId));
+    for (let i = 0; i < pins.length; i++) {
+      const message = messages[i];
+      if (!message || !pins[i].canonicalContentHash || await canonicalMessageHash(message) !== pins[i].canonicalContentHash) transcriptDenied("STALE_TRANSCRIPT");
+      // Private tool results remain native history, but their injected memory is
+      // source-attributed by the server execution that saved them. A later turn
+      // must not resurrect stale recalled context merely because its bytes match.
+      const bridge = await bridgeFor(ctx, conversation, message._id);
+      if (bridge?.contextSourceWitnesses?.length) await currentPrivateSources(ctx, run.authorityReference, bridge.contextSourceWitnesses);
+      const label = message.agentName?.match(/^cortex:(.+):([1-9]\d*):(\d+)$/);
+      const ownerRunId = bridge?.runId ?? label?.[1]; const ownerAttempt = bridge?.attemptNumber ?? (label ? Number(label[2]) : undefined);
+      if (ownerRunId && ownerAttempt !== undefined) {
+        const owner = singleTranscript(await ctx.db.query("runtimeAgentExecutions").withIndex("by_attempt", q => q.eq("tenantId", conversation.tenantId)
+          .eq("memorySpaceId", conversation.memorySpaceId).eq("runId", ownerRunId).eq("attemptNumber", ownerAttempt)).take(2));
+        // Task05 manual/non-Agent outputs have no private Agent context owner.
+        if (label && !owner) transcriptDenied("STALE_CONTEXT");
+        const manuallyRevised = bridge && bridge.revision > 1 && message.message?.role !== "tool"
+          && (typeof message.message?.content === "string" || message.message?.content.every(part => part.type === "text"));
+        if (owner && !manuallyRevised) {
+          const pin = owner.savedMessagePins?.find(item => item.id === message._id);
+          if (owner.state !== "complete" || !pin || pin.order !== message.order || pin.stepOrder !== message.stepOrder
+            || pin.canonicalContentHash !== pins[i].canonicalContentHash) transcriptDenied("STALE_CONTEXT");
+          const ownerKey = canonicalModelJson([ownerRunId, ownerAttempt]);
+          if (!checkedAttempts.has(ownerKey)) {
+            checkedAttempts.add(ownerKey);
+            await currentPrivateSources(ctx, run.authorityReference, owner.sourceWitnesses);
+          }
+        }
+      }
+      result.push(privateModelMessage(message));
     }
   }
   return result;
@@ -341,6 +416,10 @@ export async function reviseMessage(ctx: MutationCtx, args: { conversationId: st
   const bridge = await bridgeFor(ctx, conversation, args.messageId);
   if (!bridge || bridge.revision !== args.expectedMessageRevision || bridge.role === "tool") transcriptDenied("STALE_TRANSCRIPT");
   const native = await verifyMessage(ctx, conversation, bridge, (await nativeById(ctx, [args.messageId]))[0]);
+  // A text-only edit/removal cannot remove one half of canonical tool history.
+  // Fork or delete the conversation instead; paired tool payloads remain immutable.
+  if (native.message?.role === "assistant" && Array.isArray(native.message.content)
+    && native.message.content.some(part => part.type === "tool-call")) transcriptDenied("TOOL_HISTORY_EDIT_DENIED");
   const now = Date.now(); const revision = bridge.revision + 1;
   if (remove) {
     await ctx.runMutation(agentComponent.messages.deleteByIds, { messageIds: [args.messageId] });
@@ -352,7 +431,7 @@ export async function reviseMessage(ctx: MutationCtx, args: { conversationId: st
     const parts = normalizeTextSubmit({ version: 1, agentId: "manual", agentVersion: 1, clientRequestId: "manual", parts: args.parts }).userInput.parts;
     const changed = await ctx.runMutation(agentComponent.messages.updateMessage, { messageId: args.messageId, patch: { message: { role: bridge.role, content: parts } } });
     const hash = await contentHash(changed); const sourceHash = await semanticHash(normalizeSourceText(parts.map(part => part.text).join("\n")));
-    await ctx.db.patch("runtimeTranscriptMessages", bridge._id, { revision, contentHash: hash, sourceContentHash: sourceHash, actorReference: reference, updatedAt: now });
+    await ctx.db.patch("runtimeTranscriptMessages", bridge._id, { revision, contentHash: hash, sourceContentHash: sourceHash, contextSourceWitnesses: undefined, actorReference: reference, updatedAt: now });
     await sourceWrite(ctx, conversation, { ...bridge, revision, sourceContentHash: sourceHash }, parts.map(part => part.text).join("\n"));
   }
   await messageOutbox(ctx, conversation, bridge, "tombstoned");
@@ -437,10 +516,15 @@ export const fork = mutation({ args: { ...selector, clientRequestId: v.string(),
   do {
     const page = await readTranscriptPage(ctx, conversation, cursor, 100);
     for (const message of page.page) {
-      if (message.status !== "success" || message.role === "tool") continue;
+      if (message.status !== "success") continue;
+      const native = (await nativeById(ctx, [message.id]))[0];
+      const sourceBridge = await bridgeFor(ctx, conversation, message.id);
+      if (!sourceBridge || !native) transcriptDenied("STALE_TRANSCRIPT");
+      await verifyMessage(ctx, conversation, sourceBridge, native);
+      await currentPrivateSources(ctx, reference, sourceBridge.contextSourceWitnesses ?? []);
       const saved = await saveMessages(ctx, agentComponent, { threadId: target.threadId, userId: actor.principalId, order: "next",
-        messages: [{ role: message.role, content: message.parts }], failPendingSteps: false });
-      await registerMessages(ctx, target, reference, saved.messages); target = (await ctx.db.get("runtimeConversations", target._id))!;
+        messages: [privateModelMessage(native)], failPendingSteps: false });
+      await registerMessages(ctx, target, reference, saved.messages, { trustedToolMessages: true, contextSourceWitnesses: sourceBridge.contextSourceWitnesses }); target = (await ctx.db.get("runtimeConversations", target._id))!;
     }
     cursor = page.continueCursor;
   } while (cursor !== null);

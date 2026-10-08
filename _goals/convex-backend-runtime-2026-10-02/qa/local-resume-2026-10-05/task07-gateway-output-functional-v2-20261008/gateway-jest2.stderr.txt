@@ -1,0 +1,241 @@
+(node:25730) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtime/gateway-terminal-composition.test.ts
+  ● governed Agent tool/stream contract › admits the exact catalog and returns only canonical server tool input after durable capture/attachment
+
+    INVALID_INPUT: nonplain JSON
+
+      258 |       result = `[${entries.join(",")}]`;
+      259 |     } else {
+    > 260 |       if (Object.getPrototypeOf(value) !== Object.prototype && Object.getPrototypeOf(value) !== null) throw new Error("INVALID_INPUT: nonplain JSON");
+          |                                                                                                             ^
+      261 |       if (Object.getOwnPropertySymbols(value).length || Object.values(Object.getOwnPropertyDescriptors(value)).some((d) => !d.enumerable || !('value' in d))) throw new Error("INVALID_INPUT: noncanonical object");
+      262 |       const record = value as Record<string, unknown>;
+      263 |       result = `{${Object.keys(record).sort().map((key) => `${JSON.stringify(key)}:${visit(record[key])}`).join(",")}}`;
+
+      at visit (src/domain/model-policy.ts:260:109)
+      at src/domain/model-policy.ts:263:86
+          at Array.map (<anonymous>)
+      at visit (src/domain/model-policy.ts:263:47)
+      at canonicalModelJson (src/domain/model-policy.ts:268:10)
+      at detached (convex-dev/runtimeGateway.ts:174:55)
+      at checkedResolution (convex-dev/runtimeGateway.ts:125:10)
+      at stateFor (convex-dev/runtimeGateway.ts:381:95)
+      at governGatewayLanguageModel (convex-dev/runtimeGateway.ts:587:17)
+      at Object.<anonymous> (tests/unit/runtime/gateway-terminal-composition.test.ts:666:15)
+
+  ● governed Agent tool/stream contract › rejects modified tool schemas before admission
+
+    INVALID_INPUT: nonplain JSON
+
+      258 |       result = `[${entries.join(",")}]`;
+      259 |     } else {
+    > 260 |       if (Object.getPrototypeOf(value) !== Object.prototype && Object.getPrototypeOf(value) !== null) throw new Error("INVALID_INPUT: nonplain JSON");
+          |                                                                                                             ^
+      261 |       if (Object.getOwnPropertySymbols(value).length || Object.values(Object.getOwnPropertyDescriptors(value)).some((d) => !d.enumerable || !('value' in d))) throw new Error("INVALID_INPUT: noncanonical object");
+      262 |       const record = value as Record<string, unknown>;
+      263 |       result = `{${Object.keys(record).sort().map((key) => `${JSON.stringify(key)}:${visit(record[key])}`).join(",")}}`;
+
+      at visit (src/domain/model-policy.ts:260:109)
+      at src/domain/model-policy.ts:263:86
+          at Array.map (<anonymous>)
+      at visit (src/domain/model-policy.ts:263:47)
+      at canonicalModelJson (src/domain/model-policy.ts:268:10)
+      at detached (convex-dev/runtimeGateway.ts:174:55)
+      at checkedResolution (convex-dev/runtimeGateway.ts:125:10)
+      at stateFor (convex-dev/runtimeGateway.ts:381:95)
+      at governGatewayLanguageModel (convex-dev/runtimeGateway.ts:587:17)
+      at Object.<anonymous> (tests/unit/runtime/gateway-terminal-composition.test.ts:676:15)
+
+  ● governed Agent tool/stream contract › accounts complete terminal liability and withholds provider-executed output
+
+    INVALID_INPUT: nonplain JSON
+
+      258 |       result = `[${entries.join(",")}]`;
+      259 |     } else {
+    > 260 |       if (Object.getPrototypeOf(value) !== Object.prototype && Object.getPrototypeOf(value) !== null) throw new Error("INVALID_INPUT: nonplain JSON");
+          |                                                                                                             ^
+      261 |       if (Object.getOwnPropertySymbols(value).length || Object.values(Object.getOwnPropertyDescriptors(value)).some((d) => !d.enumerable || !('value' in d))) throw new Error("INVALID_INPUT: noncanonical object");
+      262 |       const record = value as Record<string, unknown>;
+      263 |       result = `{${Object.keys(record).sort().map((key) => `${JSON.stringify(key)}:${visit(record[key])}`).join(",")}}`;
+
+      at visit (src/domain/model-policy.ts:260:109)
+      at src/domain/model-policy.ts:263:86
+          at Array.map (<anonymous>)
+      at visit (src/domain/model-policy.ts:263:47)
+      at canonicalModelJson (src/domain/model-policy.ts:268:10)
+      at detached (convex-dev/runtimeGateway.ts:174:55)
+      at checkedResolution (convex-dev/runtimeGateway.ts:125:10)
+      at stateFor (convex-dev/runtimeGateway.ts:381:95)
+      at governGatewayLanguageModel (convex-dev/runtimeGateway.ts:587:17)
+      at tests/unit/runtime/gateway-terminal-composition.test.ts:687:15
+
+  ● governed Agent tool/stream contract › accounts complete terminal liability and withholds foreign-tool output
+
+    INVALID_INPUT: nonplain JSON
+
+      258 |       result = `[${entries.join(",")}]`;
+      259 |     } else {
+    > 260 |       if (Object.getPrototypeOf(value) !== Object.prototype && Object.getPrototypeOf(value) !== null) throw new Error("INVALID_INPUT: nonplain JSON");
+          |                                                                                                             ^
+      261 |       if (Object.getOwnPropertySymbols(value).length || Object.values(Object.getOwnPropertyDescriptors(value)).some((d) => !d.enumerable || !('value' in d))) throw new Error("INVALID_INPUT: noncanonical object");
+      262 |       const record = value as Record<string, unknown>;
+      263 |       result = `{${Object.keys(record).sort().map((key) => `${JSON.stringify(key)}:${visit(record[key])}`).join(",")}}`;
+
+      at visit (src/domain/model-policy.ts:260:109)
+      at src/domain/model-policy.ts:263:86
+          at Array.map (<anonymous>)
+      at visit (src/domain/model-policy.ts:263:47)
+      at canonicalModelJson (src/domain/model-policy.ts:268:10)
+      at detached (convex-dev/runtimeGateway.ts:174:55)
+      at checkedResolution (convex-dev/runtimeGateway.ts:125:10)
+      at stateFor (convex-dev/runtimeGateway.ts:381:95)
+      at governGatewayLanguageModel (convex-dev/runtimeGateway.ts:587:17)
+      at tests/unit/runtime/gateway-terminal-composition.test.ts:687:15
+
+  ● governed Agent tool/stream contract › accounts complete terminal liability and withholds wrong-choice output
+
+    INVALID_INPUT: nonplain JSON
+
+      258 |       result = `[${entries.join(",")}]`;
+      259 |     } else {
+    > 260 |       if (Object.getPrototypeOf(value) !== Object.prototype && Object.getPrototypeOf(value) !== null) throw new Error("INVALID_INPUT: nonplain JSON");
+          |                                                                                                             ^
+      261 |       if (Object.getOwnPropertySymbols(value).length || Object.values(Object.getOwnPropertyDescriptors(value)).some((d) => !d.enumerable || !('value' in d))) throw new Error("INVALID_INPUT: noncanonical object");
+      262 |       const record = value as Record<string, unknown>;
+      263 |       result = `{${Object.keys(record).sort().map((key) => `${JSON.stringify(key)}:${visit(record[key])}`).join(",")}}`;
+
+      at visit (src/domain/model-policy.ts:260:109)
+      at src/domain/model-policy.ts:263:86
+          at Array.map (<anonymous>)
+      at visit (src/domain/model-policy.ts:263:47)
+      at canonicalModelJson (src/domain/model-policy.ts:268:10)
+      at detached (convex-dev/runtimeGateway.ts:174:55)
+      at checkedResolution (convex-dev/runtimeGateway.ts:125:10)
+      at stateFor (convex-dev/runtimeGateway.ts:381:95)
+      at governGatewayLanguageModel (convex-dev/runtimeGateway.ts:587:17)
+      at tests/unit/runtime/gateway-terminal-composition.test.ts:687:15
+
+  ● governed Agent tool/stream contract › accounts complete terminal liability and withholds duplicate-call output
+
+    INVALID_INPUT: nonplain JSON
+
+      258 |       result = `[${entries.join(",")}]`;
+      259 |     } else {
+    > 260 |       if (Object.getPrototypeOf(value) !== Object.prototype && Object.getPrototypeOf(value) !== null) throw new Error("INVALID_INPUT: nonplain JSON");
+          |                                                                                                             ^
+      261 |       if (Object.getOwnPropertySymbols(value).length || Object.values(Object.getOwnPropertyDescriptors(value)).some((d) => !d.enumerable || !('value' in d))) throw new Error("INVALID_INPUT: noncanonical object");
+      262 |       const record = value as Record<string, unknown>;
+      263 |       result = `{${Object.keys(record).sort().map((key) => `${JSON.stringify(key)}:${visit(record[key])}`).join(",")}}`;
+
+      at visit (src/domain/model-policy.ts:260:109)
+      at src/domain/model-policy.ts:263:86
+          at Array.map (<anonymous>)
+      at visit (src/domain/model-policy.ts:263:47)
+      at canonicalModelJson (src/domain/model-policy.ts:268:10)
+      at detached (convex-dev/runtimeGateway.ts:174:55)
+      at checkedResolution (convex-dev/runtimeGateway.ts:125:10)
+      at stateFor (convex-dev/runtimeGateway.ts:381:95)
+      at governGatewayLanguageModel (convex-dev/runtimeGateway.ts:587:17)
+      at tests/unit/runtime/gateway-terminal-composition.test.ts:687:15
+
+  ● governed Agent tool/stream contract › accounts complete terminal liability and withholds invalid-json output
+
+    INVALID_INPUT: nonplain JSON
+
+      258 |       result = `[${entries.join(",")}]`;
+      259 |     } else {
+    > 260 |       if (Object.getPrototypeOf(value) !== Object.prototype && Object.getPrototypeOf(value) !== null) throw new Error("INVALID_INPUT: nonplain JSON");
+          |                                                                                                             ^
+      261 |       if (Object.getOwnPropertySymbols(value).length || Object.values(Object.getOwnPropertyDescriptors(value)).some((d) => !d.enumerable || !('value' in d))) throw new Error("INVALID_INPUT: noncanonical object");
+      262 |       const record = value as Record<string, unknown>;
+      263 |       result = `{${Object.keys(record).sort().map((key) => `${JSON.stringify(key)}:${visit(record[key])}`).join(",")}}`;
+
+      at visit (src/domain/model-policy.ts:260:109)
+      at src/domain/model-policy.ts:263:86
+          at Array.map (<anonymous>)
+      at visit (src/domain/model-policy.ts:263:47)
+      at canonicalModelJson (src/domain/model-policy.ts:268:10)
+      at detached (convex-dev/runtimeGateway.ts:174:55)
+      at checkedResolution (convex-dev/runtimeGateway.ts:125:10)
+      at stateFor (convex-dev/runtimeGateway.ts:381:95)
+      at governGatewayLanguageModel (convex-dev/runtimeGateway.ts:587:17)
+      at tests/unit/runtime/gateway-terminal-composition.test.ts:687:15
+
+  ● governed Agent tool/stream contract › streams bounded tool input privately, strips metadata and attaches only the completed tool call
+
+    INVALID_INPUT: nonplain JSON
+
+      258 |       result = `[${entries.join(",")}]`;
+      259 |     } else {
+    > 260 |       if (Object.getPrototypeOf(value) !== Object.prototype && Object.getPrototypeOf(value) !== null) throw new Error("INVALID_INPUT: nonplain JSON");
+          |                                                                                                             ^
+      261 |       if (Object.getOwnPropertySymbols(value).length || Object.values(Object.getOwnPropertyDescriptors(value)).some((d) => !d.enumerable || !('value' in d))) throw new Error("INVALID_INPUT: noncanonical object");
+      262 |       const record = value as Record<string, unknown>;
+      263 |       result = `{${Object.keys(record).sort().map((key) => `${JSON.stringify(key)}:${visit(record[key])}`).join(",")}}`;
+
+      at visit (src/domain/model-policy.ts:260:109)
+      at src/domain/model-policy.ts:263:86
+          at Array.map (<anonymous>)
+      at visit (src/domain/model-policy.ts:263:47)
+      at canonicalModelJson (src/domain/model-policy.ts:268:10)
+      at detached (convex-dev/runtimeGateway.ts:174:55)
+      at checkedResolution (convex-dev/runtimeGateway.ts:125:10)
+      at stateFor (convex-dev/runtimeGateway.ts:381:95)
+      at governGatewayLanguageModel (convex-dev/runtimeGateway.ts:587:17)
+      at Object.<anonymous> (tests/unit/runtime/gateway-terminal-composition.test.ts:699:15)
+
+  ● governed Agent tool/stream contract › rejects mismatched streamed arguments yet preserves observed terminal charge
+
+    INVALID_INPUT: nonplain JSON
+
+      258 |       result = `[${entries.join(",")}]`;
+      259 |     } else {
+    > 260 |       if (Object.getPrototypeOf(value) !== Object.prototype && Object.getPrototypeOf(value) !== null) throw new Error("INVALID_INPUT: nonplain JSON");
+          |                                                                                                             ^
+      261 |       if (Object.getOwnPropertySymbols(value).length || Object.values(Object.getOwnPropertyDescriptors(value)).some((d) => !d.enumerable || !('value' in d))) throw new Error("INVALID_INPUT: noncanonical object");
+      262 |       const record = value as Record<string, unknown>;
+      263 |       result = `{${Object.keys(record).sort().map((key) => `${JSON.stringify(key)}:${visit(record[key])}`).join(",")}}`;
+
+      at visit (src/domain/model-policy.ts:260:109)
+      at src/domain/model-policy.ts:263:86
+          at Array.map (<anonymous>)
+      at visit (src/domain/model-policy.ts:263:47)
+      at canonicalModelJson (src/domain/model-policy.ts:268:10)
+      at detached (convex-dev/runtimeGateway.ts:174:55)
+      at checkedResolution (convex-dev/runtimeGateway.ts:125:10)
+      at stateFor (convex-dev/runtimeGateway.ts:381:95)
+      at governGatewayLanguageModel (convex-dev/runtimeGateway.ts:587:17)
+      at Object.<anonymous> (tests/unit/runtime/gateway-terminal-composition.test.ts:709:15)
+
+  ● governed Agent tool/stream contract › requires resolved canonical tool history before another billable call
+
+    INVALID_INPUT: nonplain JSON
+
+      258 |       result = `[${entries.join(",")}]`;
+      259 |     } else {
+    > 260 |       if (Object.getPrototypeOf(value) !== Object.prototype && Object.getPrototypeOf(value) !== null) throw new Error("INVALID_INPUT: nonplain JSON");
+          |                                                                                                             ^
+      261 |       if (Object.getOwnPropertySymbols(value).length || Object.values(Object.getOwnPropertyDescriptors(value)).some((d) => !d.enumerable || !('value' in d))) throw new Error("INVALID_INPUT: noncanonical object");
+      262 |       const record = value as Record<string, unknown>;
+      263 |       result = `{${Object.keys(record).sort().map((key) => `${JSON.stringify(key)}:${visit(record[key])}`).join(",")}}`;
+
+      at visit (src/domain/model-policy.ts:260:109)
+      at src/domain/model-policy.ts:263:86
+          at Array.map (<anonymous>)
+      at visit (src/domain/model-policy.ts:263:47)
+      at canonicalModelJson (src/domain/model-policy.ts:268:10)
+      at detached (convex-dev/runtimeGateway.ts:174:55)
+      at checkedResolution (convex-dev/runtimeGateway.ts:125:10)
+      at stateFor (convex-dev/runtimeGateway.ts:381:95)
+      at governGatewayLanguageModel (convex-dev/runtimeGateway.ts:587:17)
+      at Object.<anonymous> (tests/unit/runtime/gateway-terminal-composition.test.ts:715:15)
+
+PASS tests/unit/runtime/output-projection.test.ts
+
+Test Suites: 1 failed, 1 passed, 2 total
+Tests:       10 failed, 171 passed, 181 total
+Snapshots:   0 total
+Time:        3.836 s, estimated 6 s
+Ran all test suites within paths "tests/unit/runtime/gateway-terminal-composition.test.ts", "tests/unit/runtime/output-projection.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-gateway-output-functional-v2-20261008/gateway-jest2.json

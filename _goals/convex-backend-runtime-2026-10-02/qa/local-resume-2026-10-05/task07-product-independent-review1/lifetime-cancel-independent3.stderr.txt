@@ -1,0 +1,19 @@
+(node:52390) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-product-independent-review1/lifetime-cancel-independent3.test.mjs
+  ✓ supported admin definition revoke must leave safe owner cancellation usable (21 ms)
+  ○ skipped unexpired explicit approval renews the admitted wait with current authority
+  ○ skipped expired explicit approval cannot resurrect or renew the old owned lease
+  ○ skipped expired active wait retires Workflow and releases the next queued request
+  ○ skipped attempt-zero pre-run approval remains an intentional unclaimed wait
+  ○ skipped valid owner cancellation retires an active owned Workflow
+  ○ skipped revoked definition permits scoped metadata but cannot resume paid operation admission
+  ○ skipped safe cancellation still denies current no-jwt caller before owned effects
+  ○ skipped safe cancellation still denies current foreign caller before owned effects
+
+Test Suites: 1 passed, 1 total
+Tests:       8 skipped, 1 passed, 9 total
+Snapshots:   0 total
+Time:        4.969 s
+Ran all test suites with tests matching "supported admin definition revoke".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-product-independent-review1/lifetime-cancel-independent3.results.json

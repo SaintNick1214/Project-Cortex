@@ -1,0 +1,44 @@
+{
+  "scope": "PROVISIONAL_FIXED_OPERATOR_QUALIFICATION_ONLY_NOT_ACTUAL_ACCEPTANCE",
+  "checkedAt": "2026-10-08T13:13:40.216Z",
+  "operation": "85063f0a-2166-4df9-9c57-8e842d62e89f",
+  "modelId": "openai/gpt-4o-mini",
+  "nativeInterface": "chat",
+  "featureEnvelope": "agent-tools-chat-v1",
+  "registryVersion": "cortex-memory-tools-v1",
+  "sourceUrls": [
+    "https://docs.convex.dev/ai-gateway/api",
+    "https://docs.convex.dev/ai-gateway/usage-and-billing",
+    "https://openrouter.ai/openai/gpt-4o-mini"
+  ],
+  "observedPrimaryFacts": {
+    "standardInputUsdPerMillion": "0.15",
+    "standardOutputUsdPerMillion": "0.60",
+    "highestDisplayedInputUsdPerMillion": "0.165",
+    "highestDisplayedOutputUsdPerMillion": "0.66",
+    "ordinaryChatToolsAndStreamForwarded": true,
+    "invoiceCurrency": "USD",
+    "providerRoutingControlledByConvex": true
+  },
+  "conservativePublishedEnvelopeMicroUsd": 5746,
+  "qualifiedCeilingMicroUsd": 100000,
+  "ceilingBasis": "32768 input *0.165 USD/M +512 output *0.66 USD/M =0.00574464 USD; ceiling0.10 USD >17x; only fixed text/function tools, no search/audio/image/reasoning/provider options; overrun fence and one-day expiry remain",
+  "terminalCost": "unavailable",
+  "aggregateCompletenessClaim": false,
+  "unknownCostRetention": "full100000 operation/run/tenant liability, no settlement discount, no paid retry/fallback",
+  "inputRule": "6*full canonical messages/tools/choice UTF8bytes +64*(messageCount+toolCount)+1024; native terminal observed usage must not exceed admitted bound",
+  "limits": {
+    "inputTokens": 32768,
+    "contextTokens": 65536,
+    "outputTokens": 512,
+    "toolSteps": 4,
+    "timeoutMs": 60000,
+    "operationBudgetUnits": 200000,
+    "runBudgetUnits": 2000000,
+    "tenantBudgetUnits": 10000000,
+    "concurrency": 2
+  },
+  "toolsCanonical": "[{\"description\":\"Recall authorized Cortex memory.\",\"inputSchema\":{\"additionalProperties\":false,\"properties\":{\"limit\":{\"maximum\":10,\"minimum\":1,\"type\":\"integer\"},\"text\":{\"maxLength\":4096,\"minLength\":1,\"type\":\"string\"}},\"required\":[\"text\",\"limit\"],\"type\":\"object\"},\"name\":\"memory_recall\",\"type\":\"function\"},{\"description\":\"Remember explicit information in authorized Cortex memory.\",\"inputSchema\":{\"additionalProperties\":false,\"properties\":{\"text\":{\"maxLength\":4096,\"minLength\":1,\"type\":\"string\"}},\"required\":[\"text\"],\"type\":\"object\"},\"name\":\"memory_remember\",\"type\":\"function\"}]",
+  "productionRegistryChanged": false,
+  "actualEvidenceStillRequired": true
+}

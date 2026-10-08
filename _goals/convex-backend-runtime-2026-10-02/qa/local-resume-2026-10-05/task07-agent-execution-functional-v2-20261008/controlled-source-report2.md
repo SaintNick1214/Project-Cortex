@@ -1,0 +1,5 @@
+The action now projects SDK chunks before the Convex RPC. This fixes the real paid-turn finish-step Date serialization failure while retaining text and safe tool phases through the existing current-authority mutation projection. Provider metadata, reasoning, raw tool inputs/results and unknown objects never cross the public output RPC.
+
+The affected five-suite batch passes 91/91 with zero skips. The new regression checks the actual registered RPC schemas plus Convex serialization with a Date-containing SDK finish-step, safe text/tool output and private sentinels. Backend and full SDK typechecks and scoped lint pass. Raw receipts are units13.json/log, types11.log, alltypes6.log and lint4.log.
+
+The original paid failure and report1 stay intact. The executor reports public reconciliation recovered the saved final twice with one canonical registration/ingestion and no extra paid attempt; its later stale-source hydration negative also passed. Current installed-copy verification and the one non-author Task07 verdict remain in progress. No full Task07 acceptance is claimed.

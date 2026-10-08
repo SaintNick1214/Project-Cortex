@@ -1,0 +1,178 @@
+{
+  "operation": "68281e87-1951-4b81-b111-c41b526ad548",
+  "records": [
+    {
+      "label": "definition",
+      "function": "agentDefinitions:publishVersion",
+      "status": "PASS",
+      "result": {
+        "agentId": "agent:a25827313b42df30a82a231e2c1c7392c5d329bee2b1eba3a5d30a4d9fd9ca95",
+        "definitionHash": "4928947103ad40a442f10d9892c0c4aa3dc8ddfd491310274dfb31a711b48b8a",
+        "version": 1
+      }
+    },
+    {
+      "label": "submit-A",
+      "function": "runs:submit",
+      "status": "PASS",
+      "result": {
+        "agentId": "agent:a25827313b42df30a82a231e2c1c7392c5d329bee2b1eba3a5d30a4d9fd9ca95",
+        "agentVersion": 1,
+        "attemptNumber": 0,
+        "cancellationRequested": false,
+        "conversationId": "conversation:de3870b2d8cedc8f125183ad68d81e52973e97f459e54cbdc0a273b63dcd88e9",
+        "createdAt": 1791469461305,
+        "failureCode": null,
+        "graphStatus": "not_requested",
+        "inputMessageIds": [
+          "kx72era84bk4rcvwv3swjqzdm58fx3xp"
+        ],
+        "memoryStatus": "pending",
+        "outputMessageIds": [],
+        "queueSequence": 1,
+        "responseStatus": "queued",
+        "runId": "run:de3870b2d8cedc8f125183ad68d81e52973e97f459e54cbdc0a273b63dcd88e9",
+        "updatedAt": 1791469461305,
+        "version": 1
+      }
+    },
+    {
+      "label": "claim-A",
+      "function": "agentQualification:armSaveGap",
+      "status": "PASS",
+      "result": {
+        "attemptNumber": 1,
+        "leaseVersion": 1,
+        "reference": {
+          "grantId": "md71kf97qydspxgejaga8rmknn8fwbe6",
+          "grantVersion": 1,
+          "membershipId": "mh796m2jn3mm0zwhwfapqemqas8fw830",
+          "membershipVersion": 1,
+          "memorySpaceEpoch": 1,
+          "memorySpaceId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space",
+          "principalId": "mn737zmpkce8jj4xk8fp5pv64s8fxbts",
+          "principalVersion": 1,
+          "tenantEpoch": 1,
+          "tenantId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b"
+        },
+        "runId": "run:de3870b2d8cedc8f125183ad68d81e52973e97f459e54cbdc0a273b63dcd88e9"
+      }
+    },
+    {
+      "label": "real-owned-workflow-waiter",
+      "function": "agentFenceQualification:attachOwnedWorkflow",
+      "status": "PASS",
+      "result": {
+        "fixtureOnly": true,
+        "noModelOrToolExecution": true,
+        "workflowId": "jd76a7zy1mptv336y1ea7pa4gs8fw70y"
+      }
+    },
+    {
+      "label": "native-tool-operation",
+      "function": "runtimeAgent:beginOperation",
+      "status": "PASS",
+      "result": {
+        "nativeMessageIds": [],
+        "operationId": "agent-op:b5449a898e50f3d02dbe57b54c5d071d575e5db4378812d3f2fe4788957b49f0",
+        "resultCanonical": null,
+        "semanticId": "b5449a898e50f3d02dbe57b54c5d071d575e5db4378812d3f2fe4788957b49f0",
+        "state": "waiting_approval"
+      }
+    },
+    {
+      "label": "native-wait-for-approval",
+      "function": "runtimeAgent:waitForApproval",
+      "status": "PASS",
+      "result": null
+    },
+    {
+      "label": "submit-B-behind-wait",
+      "function": "runs:submit",
+      "status": "PASS",
+      "result": {
+        "agentId": "agent:a25827313b42df30a82a231e2c1c7392c5d329bee2b1eba3a5d30a4d9fd9ca95",
+        "agentVersion": 1,
+        "attemptNumber": 0,
+        "cancellationRequested": false,
+        "conversationId": "conversation:de3870b2d8cedc8f125183ad68d81e52973e97f459e54cbdc0a273b63dcd88e9",
+        "createdAt": 1791469463678,
+        "failureCode": null,
+        "graphStatus": "not_requested",
+        "inputMessageIds": [
+          "kx7bh0pkwycdmqmgg45vgwrkzs8fwny1"
+        ],
+        "memoryStatus": "pending",
+        "outputMessageIds": [],
+        "queueSequence": 2,
+        "responseStatus": "queued",
+        "runId": "run:fbcd30f82e4f8872e65b7f22ffeb99fc22afd4f4de141f91629f04c6c7a8ced9",
+        "updatedAt": 1791469463678,
+        "version": 1
+      }
+    },
+    {
+      "label": "fixture-deadline-elapsed",
+      "function": "agentFenceQualification:expireFixtureLease",
+      "status": "PASS",
+      "result": {
+        "fixtureOnlyDeadlineAdjustment": true,
+        "leaseExpiresAt": 1791469464654,
+        "leaseVersion": 1,
+        "noInference": true,
+        "previous": 1791469761886,
+        "runId": "run:de3870b2d8cedc8f125183ad68d81e52973e97f459e54cbdc0a273b63dcd88e9"
+      }
+    },
+    {
+      "label": "native-owned-recovery",
+      "function": "runs:recoverQueue",
+      "status": "PASS",
+      "result": {
+        "readyRunId": "run:fbcd30f82e4f8872e65b7f22ffeb99fc22afd4f4de141f91629f04c6c7a8ced9"
+      }
+    },
+    {
+      "label": "claim-B-after-expiry",
+      "function": "agentQualification:armSaveGap",
+      "status": "PASS",
+      "result": {
+        "attemptNumber": 1,
+        "leaseVersion": 1,
+        "reference": {
+          "grantId": "md71kf97qydspxgejaga8rmknn8fwbe6",
+          "grantVersion": 1,
+          "membershipId": "mh796m2jn3mm0zwhwfapqemqas8fw830",
+          "membershipVersion": 1,
+          "memorySpaceEpoch": 1,
+          "memorySpaceId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space",
+          "principalId": "mn737zmpkce8jj4xk8fp5pv64s8fxbts",
+          "principalVersion": 1,
+          "tenantEpoch": 1,
+          "tenantId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b"
+        },
+        "runId": "run:fbcd30f82e4f8872e65b7f22ffeb99fc22afd4f4de141f91629f04c6c7a8ced9"
+      }
+    },
+    {
+      "label": "late-old-scheduled-callback",
+      "function": "runtimeAgent:expireApproval",
+      "status": "PASS",
+      "result": null
+    },
+    {
+      "label": "repeat-current-expired-callback",
+      "function": "runtimeAgent:expireApproval",
+      "status": "PASS",
+      "result": null
+    },
+    {
+      "label": "cancel-B-no-retry",
+      "function": "runtimeAgent:cancel",
+      "status": "PASS",
+      "result": {
+        "cancelled": true
+      }
+    }
+  ]
+}

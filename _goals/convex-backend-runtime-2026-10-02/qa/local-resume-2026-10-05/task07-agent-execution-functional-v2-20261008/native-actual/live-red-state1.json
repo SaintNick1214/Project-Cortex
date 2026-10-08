@@ -1,0 +1,323 @@
+{
+  "bridges": [
+    {
+      "_id": "px75g1pgavq8ypm0adbetfs35x8fwnb7",
+      "nativeMessageId": "kx72709grdywrex57bfm6e06nd8fwg57",
+      "sourceEventId": "transcript:conversation:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b:kx72709grdywrex57bfm6e06nd8fwg57",
+      "sourceRevision": 1
+    }
+  ],
+  "executions": [
+    {
+      "_creationTime": 1791466464392.9795,
+      "_id": "q9731nx12q0b1d8xrsj61gw5gx8fxbn3",
+      "attemptNumber": 1,
+      "contextCanonical": "## Relevant Context\n\n### Known Facts\n- User prefers jasmine tea. (confidence: 100%, recorded: just now)\n\n### Conversation History\n[user]: The user prefers jasmine tea.",
+      "contextState": "complete",
+      "createdAt": 1791466464392,
+      "failureCode": "INTERRUPTED_REQUIRES_RECONCILIATION",
+      "leaseVersion": 1,
+      "memorySpaceId": "task06-custom-space",
+      "nextModelStep": 1,
+      "nextOutputSequence": 19,
+      "reference": {
+        "grantId": "md72nepf0h1yrcs20vfy1sem6h8fwb5m",
+        "grantVersion": 1,
+        "membershipId": "mh7dw332vmxpbgnkbabw4w4k158fwfcb",
+        "membershipVersion": 1,
+        "memorySpaceEpoch": 1,
+        "memorySpaceId": "task06-custom-space",
+        "principalId": "mn7b7f8jrjpyc2eba0n1z5mp098fxde0",
+        "principalVersion": 1,
+        "tenantEpoch": 1,
+        "tenantId": "task06-custom"
+      },
+      "runId": "run:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b",
+      "savedMessageIds": [
+        "kx74q9fy77jtsdtrx6y0r620kx8fxam5",
+        "kx75g0959n8r1bmvf6n6jpfpss8fxjf6"
+      ],
+      "savedMessagePins": [
+        {
+          "canonicalContentHash": "3c9681f2143803ac2c851e06508e584e2ba4d43172ba0d2dadf80cc50b982353",
+          "id": "kx74q9fy77jtsdtrx6y0r620kx8fxam5",
+          "order": 0,
+          "stepOrder": 1
+        },
+        {
+          "canonicalContentHash": "2c65b17795cd4d3c46d6cbe52b80bba3c0ecda3c58e8cd0df150d733e9828d49",
+          "id": "kx75g0959n8r1bmvf6n6jpfpss8fxjf6",
+          "order": 0,
+          "stepOrder": 2
+        }
+      ],
+      "sourceWitnesses": [
+        {
+          "contentHash": "82181612f14ed9b80934f575476412e58e7f2846580870375a9fc36fb6beed95",
+          "sourceEventId": "explicit:[\"task06-custom\",\"task06-custom-space\",\"mn7b7f8jrjpyc2eba0n1z5mp098fxde0\",\"task07-seed-544bcc86-06e1-4990-9eb0-0af005af689e\"]",
+          "sourceId": "explicit:[\"task06-custom\",\"task06-custom-space\",\"mn7b7f8jrjpyc2eba0n1z5mp098fxde0\",\"task07-seed-544bcc86-06e1-4990-9eb0-0af005af689e\"]",
+          "sourceRevision": 1
+        }
+      ],
+      "state": "unknown",
+      "streaming": true,
+      "tenantId": "task06-custom",
+      "toolCount": 1,
+      "updatedAt": 1791466503071,
+      "workflowId": "jd74r12mt2v345me337wtc9g9d8fx3wv"
+    }
+  ],
+  "ingestion": [],
+  "modelAttempts": [
+    {
+      "_id": "p17eppamx3zj4pq0epayrbsq8s8fxj8x",
+      "dispatchIdentity": "016ae08dfd355e98e0287b7047fd8fd1ccb7480e0e5539bbab140faa67c35ec6",
+      "operationDocumentId": "p571k4g3bwacgarw15y4y7q7zd8fwm9m",
+      "reservationUnits": 100000,
+      "resultWithheld": false,
+      "slotReleased": true,
+      "state": "uncertain",
+      "terminalEvidenceCanonical": "{\"actualModel\":\"text-embedding-3-small\",\"costSource\":\"unavailable\",\"dispatchIdentity\":\"016ae08dfd355e98e0287b7047fd8fd1ccb7480e0e5539bbab140faa67c35ec6\",\"modelId\":\"openai/text-embedding-3-small\",\"nativeInterface\":\"embedding\",\"outcome\":\"confirmed\",\"proof\":\"provider-terminal-v1\",\"receiptId\":\"51381d95-429a-4781-956c-a58aab17d6cd\",\"usage\":{\"inputTokens\":14,\"totalTokens\":14},\"version\":1}"
+    },
+    {
+      "_id": "p176crzs3v6g2yz8yd53gjeb0s8fxv5k",
+      "dispatchIdentity": "b89a9994b79130b5ef154e14856cb512161dea12f525fee5a93b5fd35a8e3114",
+      "operationDocumentId": "p57dtaxmjdcs5bsps1jrq04es98fxz3b",
+      "reservationUnits": 100000,
+      "resultWithheld": false,
+      "slotReleased": true,
+      "state": "uncertain",
+      "terminalEvidenceCanonical": "{\"actualModel\":\"openai/gpt-4o-mini\",\"costSource\":\"unavailable\",\"dispatchIdentity\":\"b89a9994b79130b5ef154e14856cb512161dea12f525fee5a93b5fd35a8e3114\",\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"outcome\":\"confirmed\",\"proof\":\"provider-terminal-v1\",\"receiptId\":\"32e78752-181f-468b-8dd8-59dea5aad495\",\"usage\":{\"cachedInputTokens\":0,\"inputTokens\":177,\"outputTokens\":21,\"reasoningTokens\":0,\"totalTokens\":198},\"version\":1}"
+    },
+    {
+      "_id": "p173jfg09bbyf350k74wx6xwwh8fwrqq",
+      "dispatchIdentity": "712ed520620ff289261ca6c0ac5a12d67bbc79d7977defe0ec473f70e531a0ae",
+      "operationDocumentId": "p57df3n7d26apahjakrh2899m58fx5c2",
+      "reservationUnits": 100000,
+      "resultWithheld": false,
+      "slotReleased": true,
+      "state": "uncertain",
+      "terminalEvidenceCanonical": "{\"actualModel\":\"text-embedding-3-small\",\"costSource\":\"unavailable\",\"dispatchIdentity\":\"712ed520620ff289261ca6c0ac5a12d67bbc79d7977defe0ec473f70e531a0ae\",\"modelId\":\"openai/text-embedding-3-small\",\"nativeInterface\":\"embedding\",\"outcome\":\"confirmed\",\"proof\":\"provider-terminal-v1\",\"receiptId\":\"7623bf21-b20a-4175-b7a1-337708eab29b\",\"usage\":{\"inputTokens\":3,\"totalTokens\":3},\"version\":1}"
+    },
+    {
+      "_id": "p175emw61hgk0ep3er52x1ps3s8fwgca",
+      "dispatchIdentity": "044a3fe8f0e49a3a015001cf5ee19a8ecab82321bc9096d335fc49f52b4548f4",
+      "operationDocumentId": "p57bx7hd00mmm4d0t3w3c8r15n8fwj80",
+      "reservationUnits": 100000,
+      "resultWithheld": false,
+      "slotReleased": true,
+      "state": "uncertain",
+      "terminalEvidenceCanonical": "{\"actualModel\":\"openai/gpt-4o-mini\",\"costSource\":\"unavailable\",\"dispatchIdentity\":\"044a3fe8f0e49a3a015001cf5ee19a8ecab82321bc9096d335fc49f52b4548f4\",\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"outcome\":\"confirmed\",\"proof\":\"provider-terminal-v1\",\"receiptId\":\"e6c19491-9f67-4973-9878-a1396d219ab2\",\"usage\":{\"cachedInputTokens\":0,\"inputTokens\":250,\"outputTokens\":17,\"reasoningTokens\":0,\"totalTokens\":267},\"version\":1}"
+    }
+  ],
+  "modelOperations": [
+    {
+      "_id": "p571k4g3bwacgarw15y4y7q7zd8fwm9m",
+      "operationKey": "embedding.query",
+      "reservedUnits": 0,
+      "runBudgetId": "d2413c8d981d5a645c716f241eb5472df80a83454b394d3c8e8550b45afe3868",
+      "semanticId": "5593e18abdbdd59ea8739ab9e39c92288715edcccb48bcd3b0b82c8a629be5e9",
+      "settledUnits": 0,
+      "uncertainUnits": 100000
+    },
+    {
+      "_id": "p57dtaxmjdcs5bsps1jrq04es98fxz3b",
+      "operationKey": "agent.respond",
+      "reservedUnits": 0,
+      "runBudgetId": "d2413c8d981d5a645c716f241eb5472df80a83454b394d3c8e8550b45afe3868",
+      "semanticId": "f91910ab0fcba69f8ed354ee18a31e885aed7ef4c67c85642cf033c863a1124f",
+      "settledUnits": 0,
+      "uncertainUnits": 100000
+    },
+    {
+      "_id": "p57df3n7d26apahjakrh2899m58fx5c2",
+      "operationKey": "embedding.query",
+      "parentOperationId": "p57dtaxmjdcs5bsps1jrq04es98fxz3b",
+      "reservedUnits": 0,
+      "runBudgetId": "d2413c8d981d5a645c716f241eb5472df80a83454b394d3c8e8550b45afe3868",
+      "semanticId": "f0c629db351ae7337743637ea9d0b14072e2669ca8e19033cf33966591ca101a",
+      "settledUnits": 0,
+      "uncertainUnits": 100000
+    },
+    {
+      "_id": "p57bx7hd00mmm4d0t3w3c8r15n8fwj80",
+      "operationKey": "agent.respond",
+      "reservedUnits": 0,
+      "runBudgetId": "d2413c8d981d5a645c716f241eb5472df80a83454b394d3c8e8550b45afe3868",
+      "semanticId": "48b05249d8deb30c42a62dd1ae7a4afde11607341d2509cf8b73ce411c3acbd2",
+      "settledUnits": 0,
+      "uncertainUnits": 100000
+    }
+  ],
+  "native": [
+    {
+      "_id": "kx72709grdywrex57bfm6e06nd8fwg57",
+      "order": 0,
+      "role": "user",
+      "status": "success",
+      "stepOrder": 0
+    },
+    {
+      "_id": "kx74q9fy77jtsdtrx6y0r620kx8fxam5",
+      "agentName": "cortex:run:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b:1:0",
+      "order": 0,
+      "role": "assistant",
+      "status": "success",
+      "stepOrder": 1
+    },
+    {
+      "_id": "kx75g0959n8r1bmvf6n6jpfpss8fxjf6",
+      "agentName": "cortex:run:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b:1:0",
+      "order": 0,
+      "role": "tool",
+      "status": "success",
+      "stepOrder": 2
+    },
+    {
+      "_id": "kx76ajg7np6gr76md9yyd8a3vn8fxday",
+      "agentName": "cortex:run:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b:1:1",
+      "order": 0,
+      "role": "assistant",
+      "status": "success",
+      "stepOrder": 3
+    }
+  ],
+  "operations": [
+    {
+      "_creationTime": 1791466475064.668,
+      "_id": "qh7fb5k1pgkfb5hm0fmyck2rq98fw3bm",
+      "attemptNumber": 1,
+      "createdAt": 1791466475064,
+      "endedAt": 1791466482644,
+      "kind": "model",
+      "memorySpaceId": "task06-custom-space",
+      "nativeMessageIds": [
+        "kx74q9fy77jtsdtrx6y0r620kx8fxam5"
+      ],
+      "nativeModelOperationId": "p57dtaxmjdcs5bsps1jrq04es98fxz3b",
+      "operationId": "agent-op:f91910ab0fcba69f8ed354ee18a31e885aed7ef4c67c85642cf033c863a1124f",
+      "ordinal": 0,
+      "resultBytes": 212,
+      "runId": "run:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b",
+      "semanticId": "f91910ab0fcba69f8ed354ee18a31e885aed7ef4c67c85642cf033c863a1124f",
+      "startedAt": 1791466475312,
+      "state": "complete",
+      "tenantId": "task06-custom"
+    },
+    {
+      "_creationTime": 1791466483914.5713,
+      "_id": "qh74brv4jcgkr9trpnbcant0nx8fwtde",
+      "approvalActor": {
+        "grantId": "md72nepf0h1yrcs20vfy1sem6h8fwb5m",
+        "grantVersion": 1,
+        "membershipId": "mh7dw332vmxpbgnkbabw4w4k158fwfcb",
+        "membershipVersion": 1,
+        "memorySpaceEpoch": 1,
+        "memorySpaceId": "task06-custom-space",
+        "principalId": "mn7b7f8jrjpyc2eba0n1z5mp098fxde0",
+        "principalVersion": 1,
+        "tenantEpoch": 1,
+        "tenantId": "task06-custom"
+      },
+      "attemptNumber": 1,
+      "createdAt": 1791466483914,
+      "endedAt": 1791466492463,
+      "kind": "tool",
+      "memorySpaceId": "task06-custom-space",
+      "nativeMessageIds": [
+        "kx75g0959n8r1bmvf6n6jpfpss8fxjf6"
+      ],
+      "operationId": "agent-op:7225acb486491111d1b4ffdd12acdf1cf33b231f4667bc532fbd133a10416209",
+      "ordinal": 0,
+      "resultBytes": 160,
+      "runId": "run:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b",
+      "semanticId": "7225acb486491111d1b4ffdd12acdf1cf33b231f4667bc532fbd133a10416209",
+      "startedAt": 1791466488696,
+      "state": "complete",
+      "tenantId": "task06-custom",
+      "toolCallId": "call_bM1pXL5RWtEHD6DQXM928icl",
+      "toolName": "memory_recall"
+    },
+    {
+      "_creationTime": 1791466493761.0178,
+      "_id": "qh708aqwx5ahs6w343sjprbhgn8fx3rf",
+      "attemptNumber": 1,
+      "createdAt": 1791466493761,
+      "endedAt": 1791466503071,
+      "kind": "model",
+      "memorySpaceId": "task06-custom-space",
+      "nativeMessageIds": [],
+      "nativeModelOperationId": "p57bx7hd00mmm4d0t3w3c8r15n8fwj80",
+      "operationId": "agent-op:48b05249d8deb30c42a62dd1ae7a4afde11607341d2509cf8b73ce411c3acbd2",
+      "ordinal": 1,
+      "resultBytes": 0,
+      "runId": "run:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b",
+      "semanticId": "48b05249d8deb30c42a62dd1ae7a4afde11607341d2509cf8b73ce411c3acbd2",
+      "startedAt": 1791466494012,
+      "state": "unknown",
+      "tenantId": "task06-custom"
+    }
+  ],
+  "outbox": [
+    {
+      "_creationTime": 1791466463906.672,
+      "_id": "pn714wx015wvsew54fc2tt9n1s8fxj3c",
+      "conversationId": "conversation:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b",
+      "createdAt": 1791466463906,
+      "leaseExpiresAt": 1791466794012,
+      "leaseVersion": 1,
+      "memorySpaceId": "task06-custom-space",
+      "runId": "run:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b",
+      "sequence": 1,
+      "state": "complete",
+      "tenantId": "task06-custom",
+      "updatedAt": 1791466503071
+    }
+  ],
+  "run": {
+    "_creationTime": 1791466463906.6719,
+    "_id": "ps782dzavzerkthgnmdxq2ect58fw75a",
+    "agentId": "agent:35704f76ec8cce13e670ae86c0184e3ad7384bb7831260a3251529ee7fad50af",
+    "agentVersion": 1,
+    "attemptNumber": 1,
+    "authorityReference": {
+      "grantId": "md72nepf0h1yrcs20vfy1sem6h8fwb5m",
+      "grantVersion": 1,
+      "membershipId": "mh7dw332vmxpbgnkbabw4w4k158fwfcb",
+      "membershipVersion": 1,
+      "memorySpaceEpoch": 1,
+      "memorySpaceId": "task06-custom-space",
+      "principalId": "mn7b7f8jrjpyc2eba0n1z5mp098fxde0",
+      "principalVersion": 1,
+      "tenantEpoch": 1,
+      "tenantId": "task06-custom"
+    },
+    "conversationEpoch": 1,
+    "conversationId": "conversation:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b",
+    "createdAt": 1791466463906,
+    "definitionHash": "d95b1c10233f2592d755368634aad340b9c54f9caebde0b11bf17cac9757a898",
+    "executionRequested": true,
+    "failureCode": "INTERRUPTED_REQUIRES_RECONCILIATION",
+    "graphStatus": "not_requested",
+    "historyRevision": 0,
+    "inputMessageIds": [
+      "kx72709grdywrex57bfm6e06nd8fwg57"
+    ],
+    "memorySpaceId": "task06-custom-space",
+    "memoryStatus": "pending",
+    "outputMessageIds": [],
+    "ownerPrincipalId": "mn7b7f8jrjpyc2eba0n1z5mp098fxde0",
+    "queueSequence": 1,
+    "requestCanonical": "{\"identity\":[\"cortex.submit.v1\",\"task06-custom\",\"task06-custom-space\",\"mn7b7f8jrjpyc2eba0n1z5mp098fxde0\",[\"create\"],\"task07-544bcc86-06e1-4990-9eb0-0af005af689e\"],\"publicRequest\":{\"agentId\":\"agent:35704f76ec8cce13e670ae86c0184e3ad7384bb7831260a3251529ee7fad50af\",\"agentVersion\":1,\"clientRequestId\":\"task07-544bcc86-06e1-4990-9eb0-0af005af689e\",\"parts\":[{\"text\":\"Recall my tea preference with the memory_recall tool, then respond.\",\"type\":\"text\"}],\"version\":1},\"version\":1}",
+    "requestIdentityCanonical": "[\"cortex.submit.v1\",\"task06-custom\",\"task06-custom-space\",\"mn7b7f8jrjpyc2eba0n1z5mp098fxde0\",[\"create\"],\"task07-544bcc86-06e1-4990-9eb0-0af005af689e\"]",
+    "requestIdentityHash": "b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b",
+    "responseStatus": "failed",
+    "runAccountId": "n17bx027mwbv5bscbqgrnyygs58fww22",
+    "runBudgetId": "d2413c8d981d5a645c716f241eb5472df80a83454b394d3c8e8550b45afe3868",
+    "runId": "run:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b",
+    "snapshotCanonical": "{\"anchor\":{\"canonicalContentHash\":\"cc3a1ccff7ede73687348504e7c1dfa0c2666ac519608b0f41ac11659d64d485\",\"contentHash\":\"2105496516ee1ac04fba74b3a26de94ee9fc2a8abccff6c79ae7218c27269ccb\",\"nativeMessageId\":\"kx72709grdywrex57bfm6e06nd8fwg57\",\"order\":0,\"sourceEventId\":\"transcript:conversation:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b:kx72709grdywrex57bfm6e06nd8fwg57\",\"sourceRevision\":1,\"stepOrder\":0},\"attemptNumber\":1,\"capturedAuthorityReference\":{\"grantId\":\"md72nepf0h1yrcs20vfy1sem6h8fwb5m\",\"grantVersion\":1,\"membershipId\":\"mh7dw332vmxpbgnkbabw4w4k158fwfcb\",\"membershipVersion\":1,\"memorySpaceEpoch\":1,\"memorySpaceId\":\"task06-custom-space\",\"principalId\":\"mn7b7f8jrjpyc2eba0n1z5mp098fxde0\",\"principalVersion\":1,\"tenantEpoch\":1,\"tenantId\":\"task06-custom\"},\"completeness\":\"complete\",\"conversationEpoch\":1,\"conversationId\":\"conversation:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b\",\"definitionHash\":\"d95b1c10233f2592d755368634aad340b9c54f9caebde0b11bf17cac9757a898\",\"definitionVersion\":1,\"historyRevision\":0,\"ingestionCutoff\":{\"requiredStages\":[],\"scopeIdentity\":\"[\\\"task06-custom\\\",\\\"task06-custom-space\\\"]\",\"sequence\":1},\"messages\":[{\"canonicalContentHash\":\"cc3a1ccff7ede73687348504e7c1dfa0c2666ac519608b0f41ac11659d64d485\",\"contentHash\":\"2105496516ee1ac04fba74b3a26de94ee9fc2a8abccff6c79ae7218c27269ccb\",\"nativeMessageId\":\"kx72709grdywrex57bfm6e06nd8fwg57\",\"order\":0,\"sourceEventId\":\"transcript:conversation:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b:kx72709grdywrex57bfm6e06nd8fwg57\",\"sourceRevision\":1,\"stepOrder\":0}],\"queueSequence\":1,\"runDocId\":\"ps782dzavzerkthgnmdxq2ect58fw75a\",\"threadId\":\"m971085sp3681ewqje4z4mf6r58fwysy\",\"version\":1}",
+    "streamingRequested": true,
+    "tenantId": "task06-custom",
+    "updatedAt": 1791466503071
+  }
+}

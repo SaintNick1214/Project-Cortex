@@ -1,9 +1,10 @@
-/** Actual service qualification candidate, reviewed with the coherent product batch.
+/** Compiled actual disposable-service qualifications, reviewed in the coherent product batch.
  * acceptanceHash binds the truthful operator-authorized observed record in goal QA,
- * not an invented independent PASS. No production deployment/package release.
- * Unavailable terminal cost retains the full qualified ceiling; no discount/refund. */
-import type {DeploymentPolicyManifest} from "./runtimeModelPolicyBootstrap";
-export const DEFAULT_GATEWAY_POLICY_MANIFEST = {
+ * not an invented full-task independent PASS. Unknown cost retains its full ceiling.
+ * No production deployment or package release is implied by source registration. */
+import type { DeploymentPolicyManifest } from "./runtimeModelPolicyBootstrap";
+/** Preserve exact earlier root identity for retained policy/account provenance. */
+export const TEXT_GATEWAY_POLICY_MANIFEST_V3 = {
   "manifestId": "cortex-gateway-text-defaults-2026-10-08",
   "revision": 3,
   "artifactRevision": "b20624b8abde0e6eea12e66d906c107384db2344317dee19efc7a96427eb446b",
@@ -249,6 +250,336 @@ export const DEFAULT_GATEWAY_POLICY_MANIFEST = {
         "proofHash": "5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b"
       },
       "terminalModelId": "text-embedding-3-small"
+    }
+  ]
+} as const satisfies DeploymentPolicyManifest;
+
+export const DEFAULT_GATEWAY_POLICY_MANIFEST = {
+  "manifestId": "cortex-gateway-agent-defaults-2026-10-08",
+  "revision": 5,
+  "artifactRevision": "237ca57e5886fc7293aad968f787f1357d58f0a7c025d969561975edda219ccf",
+  "evidenceHash": "99154716ae1c4a9e69c299c9c60cdc7437ff129d2c11095767e5eb14f2076976",
+  "acceptanceHash": "99154716ae1c4a9e69c299c9c60cdc7437ff129d2c11095767e5eb14f2076976",
+  "classification": "reviewed-actual",
+  "budgetWindowMs": 86400000,
+  "policies": [
+    {
+      "policyId": "cortex-model-defaults-v5",
+      "version": 5,
+      "scope": "deployment",
+      "rules": {
+        "allowedModels": [
+          "openai/gpt-4o-mini",
+          "openai/gpt-4o",
+          "openai/text-embedding-3-small"
+        ],
+        "interfaces": [
+          "chat",
+          "embedding"
+        ],
+        "capabilities": [
+          "text",
+          "structured",
+          "embedding",
+          "tools"
+        ],
+        "allowedOptions": [],
+        "allowedTools": [
+          "memory_recall",
+          "memory_remember"
+        ],
+        "fallbackModels": [],
+        "limits": {
+          "inputTokens": 32768,
+          "contextTokens": 65536,
+          "outputTokens": 512,
+          "toolSteps": 4,
+          "timeoutMs": 60000,
+          "operationBudgetUnits": 200000,
+          "runBudgetUnits": 2000000,
+          "tenantBudgetUnits": 10000000,
+          "concurrency": 2
+        },
+        "pins": {
+          "promptVersion": "memory-schema-prompt-v2",
+          "schemaVersion": "facts-v1",
+          "extractionVersion": "task04-qualification-e1",
+          "toolRegistryVersion": "none-v1",
+          "priceRevision": "openrouter-2026-10-08-candidate",
+          "boundRevision": "text-8192-512-schema-v2"
+        }
+      }
+    },
+    {
+      "policyId": "cortex-conversation-title-v5",
+      "version": 5,
+      "scope": "deployment",
+      "operationKey": "conversation.title",
+      "rules": {
+        "modelId": "openai/gpt-4o",
+        "nativeInterface": "chat"
+      }
+    },
+    {
+      "policyId": "cortex-facts-resolution-v5",
+      "version": 5,
+      "scope": "deployment",
+      "operationKey": "facts.resolve",
+      "rules": {
+        "pins": {
+          "schemaVersion": "conflicts-v1",
+          "promptVersion": "memory-schema-prompt-v2",
+          "boundRevision": "text-8192-512-schema-v2"
+        }
+      }
+    },
+    {
+      "policyId": "cortex-agent-response-v5",
+      "version": 5,
+      "scope": "deployment",
+      "operationKey": "agent.respond",
+      "rules": {
+        "modelId": "openai/gpt-4o-mini",
+        "nativeInterface": "chat",
+        "pins": {
+          "boundRevision": "agent-tools-32768-512-v1",
+          "toolRegistryVersion": "cortex-memory-tools-v1"
+        }
+      }
+    }
+  ],
+  "qualifications": [
+    {
+      "receiptId": "gateway-gpt4omini-chat-20261008-v3",
+      "modelId": "openai/gpt-4o-mini",
+      "nativeInterface": "chat",
+      "capabilities": [
+        "text",
+        "structured"
+      ],
+      "allowedOptions": [],
+      "limits": {
+        "inputTokens": 8192,
+        "contextTokens": 16384,
+        "outputTokens": 512,
+        "toolSteps": 0,
+        "timeoutMs": 60000,
+        "operationBudgetUnits": 200000,
+        "runBudgetUnits": 2000000,
+        "tenantBudgetUnits": 10000000,
+        "concurrency": 2
+      },
+      "costBound": {
+        "kind": "qualified-call-ceiling",
+        "maximumCostUnits": 100000,
+        "provenance": "Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras",
+        "coversAllProviderCharges": true
+      },
+      "priceRevision": "openrouter-2026-10-08-candidate",
+      "boundRevision": "text-8192-512-schema-v2"
+    },
+    {
+      "receiptId": "gateway-gpt4o-chat-20261008-v3",
+      "modelId": "openai/gpt-4o",
+      "nativeInterface": "chat",
+      "capabilities": [
+        "text",
+        "structured"
+      ],
+      "allowedOptions": [],
+      "limits": {
+        "inputTokens": 8192,
+        "contextTokens": 16384,
+        "outputTokens": 512,
+        "toolSteps": 0,
+        "timeoutMs": 60000,
+        "operationBudgetUnits": 200000,
+        "runBudgetUnits": 2000000,
+        "tenantBudgetUnits": 10000000,
+        "concurrency": 2
+      },
+      "costBound": {
+        "kind": "qualified-call-ceiling",
+        "maximumCostUnits": 100000,
+        "provenance": "Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras",
+        "coversAllProviderCharges": true
+      },
+      "priceRevision": "openrouter-2026-10-08-candidate",
+      "boundRevision": "text-8192-512-schema-v2"
+    },
+    {
+      "receiptId": "gateway-text-embedding-small-20261008-v3",
+      "modelId": "openai/text-embedding-3-small",
+      "nativeInterface": "embedding",
+      "capabilities": [
+        "embedding"
+      ],
+      "allowedOptions": [],
+      "limits": {
+        "inputTokens": 8192,
+        "contextTokens": 16384,
+        "outputTokens": 512,
+        "toolSteps": 0,
+        "timeoutMs": 60000,
+        "operationBudgetUnits": 200000,
+        "runBudgetUnits": 2000000,
+        "tenantBudgetUnits": 10000000,
+        "concurrency": 2
+      },
+      "costBound": {
+        "kind": "qualified-call-ceiling",
+        "maximumCostUnits": 100000,
+        "provenance": "Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras",
+        "coversAllProviderCharges": true
+      },
+      "priceRevision": "openrouter-2026-10-08-candidate",
+      "boundRevision": "text-8192-512-schema-v2"
+    },
+    {
+      "receiptId": "gateway-gpt4omini-agent-tools-stream-20261008-v5",
+      "modelId": "openai/gpt-4o-mini",
+      "nativeInterface": "chat",
+      "capabilities": [
+        "text",
+        "tools"
+      ],
+      "allowedOptions": [],
+      "limits": {
+        "inputTokens": 32768,
+        "contextTokens": 65536,
+        "outputTokens": 512,
+        "toolSteps": 4,
+        "timeoutMs": 60000,
+        "operationBudgetUnits": 200000,
+        "runBudgetUnits": 2000000,
+        "tenantBudgetUnits": 10000000,
+        "concurrency": 2
+      },
+      "costBound": {
+        "kind": "qualified-call-ceiling",
+        "maximumCostUnits": 100000,
+        "coversAllProviderCharges": true,
+        "provenance": "Actual disposable generate/native tool-stream/final text-stream at fixed tools32768/512 envelope; published highest displayed0.165/0.66USD/M gives5746microUSD fullcap; retain100000 microUSD for unavailable aggregate charge; no enabled provider extras"
+      },
+      "priceRevision": "openrouter-2026-10-08-candidate",
+      "boundRevision": "agent-tools-32768-512-v1"
+    }
+  ],
+  "dispatchEvidence": [
+    {
+      "receiptId": "gateway-gpt4omini-chat-20261008-v3",
+      "modelId": "openai/gpt-4o-mini",
+      "nativeInterface": "chat",
+      "evidenceHash": "5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b",
+      "providerVersion": "0.2.1",
+      "priceRevision": "openrouter-2026-10-08-candidate",
+      "boundRevision": "text-8192-512-schema-v2",
+      "checkedAt": 1791449412383,
+      "expiresAt": 1791535812383,
+      "terminalCost": "unavailable",
+      "terminalProof": "provider-terminal-v1",
+      "inputBound": {
+        "ruleId": "plain-chat-cookbook-utf8-v1",
+        "featureEnvelope": "plain-chat-v1",
+        "revision": 1,
+        "proofHash": "5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b",
+        "documentHash": "cd1d1897380273728e11c1efcdb311ea6675677cf583ae5b9d1f8a5798ba8eaf",
+        "nativeTransformHash": "5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613"
+      },
+      "resultBound": {
+        "maximumPrivateResultBytes": 60000,
+        "maximumOutputTokens": 512,
+        "maximumEmbeddingValues": 1,
+        "proofHash": "5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b"
+      }
+    },
+    {
+      "receiptId": "gateway-gpt4o-chat-20261008-v3",
+      "modelId": "openai/gpt-4o",
+      "nativeInterface": "chat",
+      "evidenceHash": "5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b",
+      "providerVersion": "0.2.1",
+      "priceRevision": "openrouter-2026-10-08-candidate",
+      "boundRevision": "text-8192-512-schema-v2",
+      "checkedAt": 1791449412383,
+      "expiresAt": 1791535812383,
+      "terminalCost": "unavailable",
+      "terminalProof": "provider-terminal-v1",
+      "inputBound": {
+        "ruleId": "plain-chat-cookbook-utf8-v1",
+        "featureEnvelope": "plain-chat-v1",
+        "revision": 1,
+        "proofHash": "5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b",
+        "documentHash": "cd1d1897380273728e11c1efcdb311ea6675677cf583ae5b9d1f8a5798ba8eaf",
+        "nativeTransformHash": "5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613"
+      },
+      "resultBound": {
+        "maximumPrivateResultBytes": 60000,
+        "maximumOutputTokens": 512,
+        "maximumEmbeddingValues": 1,
+        "proofHash": "5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b"
+      }
+    },
+    {
+      "receiptId": "gateway-text-embedding-small-20261008-v3",
+      "modelId": "openai/text-embedding-3-small",
+      "nativeInterface": "embedding",
+      "evidenceHash": "5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b",
+      "providerVersion": "0.2.1",
+      "priceRevision": "openrouter-2026-10-08-candidate",
+      "boundRevision": "text-8192-512-schema-v2",
+      "checkedAt": 1791449412383,
+      "expiresAt": 1791535812383,
+      "terminalCost": "unavailable",
+      "terminalProof": "provider-terminal-v1",
+      "inputBound": {
+        "ruleId": "default-embedding-utf8-v1",
+        "featureEnvelope": "default-embedding-v1",
+        "revision": 1,
+        "proofHash": "5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b",
+        "documentHash": "cd1d1897380273728e11c1efcdb311ea6675677cf583ae5b9d1f8a5798ba8eaf",
+        "nativeTransformHash": "5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613"
+      },
+      "resultBound": {
+        "maximumPrivateResultBytes": 60000,
+        "maximumOutputTokens": 0,
+        "maximumEmbeddingValues": 1,
+        "proofHash": "5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b"
+      },
+      "terminalModelId": "text-embedding-3-small"
+    },
+    {
+      "receiptId": "gateway-gpt4omini-agent-tools-stream-20261008-v5",
+      "modelId": "openai/gpt-4o-mini",
+      "nativeInterface": "chat",
+      "evidenceHash": "99154716ae1c4a9e69c299c9c60cdc7437ff129d2c11095767e5eb14f2076976",
+      "providerVersion": "0.2.1",
+      "priceRevision": "openrouter-2026-10-08-candidate",
+      "boundRevision": "agent-tools-32768-512-v1",
+      "checkedAt": 1791466719260,
+      "expiresAt": 1791553119260,
+      "terminalCost": "unavailable",
+      "terminalProof": "provider-terminal-v1",
+      "supportsStream": true,
+      "toolContract": {
+        "registryVersion": "cortex-memory-tools-v1",
+        "toolsCanonical": "[{\"description\":\"Recall authorized Cortex memory.\",\"inputSchema\":{\"additionalProperties\":false,\"properties\":{\"limit\":{\"maximum\":10,\"minimum\":1,\"type\":\"integer\"},\"text\":{\"maxLength\":4096,\"minLength\":1,\"type\":\"string\"}},\"required\":[\"text\",\"limit\"],\"type\":\"object\"},\"name\":\"memory_recall\",\"type\":\"function\"},{\"description\":\"Remember explicit information in authorized Cortex memory.\",\"inputSchema\":{\"additionalProperties\":false,\"properties\":{\"text\":{\"maxLength\":4096,\"minLength\":1,\"type\":\"string\"}},\"required\":[\"text\"],\"type\":\"object\"},\"name\":\"memory_remember\",\"type\":\"function\"}]",
+        "maximumToolCalls": 4
+      },
+      "inputBound": {
+        "ruleId": "agent-tools-chat-utf8-v1",
+        "revision": 1,
+        "featureEnvelope": "agent-tools-chat-v1",
+        "proofHash": "99154716ae1c4a9e69c299c9c60cdc7437ff129d2c11095767e5eb14f2076976",
+        "documentHash": "305b8fa2b38d6a8a59fb7ef759711990d064ab9e03ca1c2da95b39006600f568",
+        "nativeTransformHash": "5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613"
+      },
+      "resultBound": {
+        "maximumPrivateResultBytes": 60000,
+        "maximumOutputTokens": 512,
+        "maximumEmbeddingValues": 1,
+        "proofHash": "99154716ae1c4a9e69c299c9c60cdc7437ff129d2c11095767e5eb14f2076976"
+      }
     }
   ]
 } as const satisfies DeploymentPolicyManifest;

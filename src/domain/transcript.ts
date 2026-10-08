@@ -14,7 +14,7 @@ export interface NormalizedAdmissionV1 {
 }
 export interface TranscriptPosition { order: number; stepOrder: number }
 export interface MessagePin extends TranscriptPosition {
-  nativeMessageId: string; sourceEventId: string; sourceRevision: number; contentHash: string;
+  nativeMessageId: string; sourceEventId: string; sourceRevision: number; contentHash: string; canonicalContentHash?: string;
 }
 export interface CutoffV1 {
   version: 1; conversationId: string; threadId: string; conversationEpoch: number;

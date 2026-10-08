@@ -1,0 +1,26 @@
+{
+  "function": "runtimeAuth:provision",
+  "kind": "mutation",
+  "args": {
+    "issuer": "https://cortex-task06-custom.example",
+    "subject": "task07-qualification-4aca7e82-34c9-4997-9d85-de367237bad4",
+    "actorKind": "user",
+    "tenantId": "task07-qualification-4aca7e82-34c9-4997-9d85-de367237bad4",
+    "memorySpaceId": "task07-qualification-4aca7e82-34c9-4997-9d85-de367237bad4-space",
+    "capabilities": [
+      "read",
+      "write",
+      "run",
+      "admin",
+      "tool",
+      "storage"
+    ],
+    "resourceAccess": "space"
+  },
+  "error": {
+    "name": "Error",
+    "message": "[Request ID: 3050b833f8f2e40c] Server Error\nArgumentValidationError: Value does not match validator.\nPath: .capabilities[5]\nValue: \"storage\"\nValidator: v.union(v.literal(\"read\"), v.literal(\"write\"), v.literal(\"run\"), v.literal(\"admin\"), v.literal(\"tool\"), v.literal(\"storage:read\"), v.literal(\"storage:write\"))\n\n"
+  },
+  "elapsedMs": 512,
+  "status": "FAIL"
+}

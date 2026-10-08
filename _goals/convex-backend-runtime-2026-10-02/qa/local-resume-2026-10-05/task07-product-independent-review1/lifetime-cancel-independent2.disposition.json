@@ -1,0 +1,9 @@
+{
+  "status": "OWN_ORACLE_CORRECTION",
+  "candidateBreakingFailure": false,
+  "originalSupportedRevocationRedRemains": "lifetime-cancel-independent1.results.json",
+  "secondExecution": "8PASS1 own-oracle FAIL",
+  "reason": "runtimeAgent.cancel returns {cancelled:true}; mistaken return state assertion was unreachable in original pre-repair red",
+  "correction": "exact documented envelope plus persisted cancelled run/execution/budget and Workflow close; other8 cases unchanged",
+  "candidateChangedForOracle": false
+}

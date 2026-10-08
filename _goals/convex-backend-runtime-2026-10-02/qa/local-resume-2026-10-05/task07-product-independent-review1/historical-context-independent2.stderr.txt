@@ -1,0 +1,66 @@
+(node:34885) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-product-independent-review1/historical-context-independent2.test.mjs (6.705 s)
+  ✓ original later-turn private tool context respects prior recalled source unchanged (42 ms)
+  ✓ original later-turn private tool context respects prior recalled source changed (24 ms)
+  ✕ original later-turn private tool context respects prior recalled source tombstoned (21 ms)
+  ✓ fork later-turn private tool context respects prior recalled source unchanged (27 ms)
+  ✓ fork later-turn private tool context respects prior recalled source changed (24 ms)
+  ✕ fork later-turn private tool context respects prior recalled source tombstoned (24 ms)
+  ✓ current completed-save gap recovers with 0 old failed native rows (15 ms)
+  ✓ current completed-save gap recovers with 1010 old failed native rows (42 ms)
+
+  ● original later-turn private tool context respects prior recalled source tombstoned
+
+    ConvexError: {"version":1,"code":"FORBIDDEN","message":"Source was deleted","retryable":false,"outcome":"not_dispatched"}
+
+      34 |
+      35 | export function memoryError(code: string, message: string): never {
+    > 36 |   throw new ConvexError({ version: 1, code, message, retryable: false, outcome: "not_dispatched" });
+         |         ^
+      37 | }
+      38 | export function memoryScope(reference: RuntimeAuthorityReference): TrustedMemoryScope {
+      39 |   if (!reference.memorySpaceId || !Number.isSafeInteger(reference.memorySpaceEpoch) || reference.memorySpaceEpoch! < 1) {
+
+      at memoryError (convex-dev/runtimeMemoryRepository.ts:36:9)
+      at ConvexMemoryRepository.getSource (convex-dev/runtimeMemoryRepository.ts:99:125)
+      at currentPrivateSources (convex-dev/runtimeTranscript.ts:186:20)
+      at hydratePrivateCutoff (convex-dev/runtimeTranscript.ts:326:51)
+      at executionContext (convex-dev/runtimeAgent.ts:103:20)
+      at Function.handler [as _handler] (convex-dev/runtimeAgent.ts:183:19)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:89:10)
+      at tests/unit/runtimeTranscript/fixture.ts:149:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:145:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:149:77)
+      at _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-product-independent-review1/historical-context-independent2.test.mjs:34:58
+
+  ● fork later-turn private tool context respects prior recalled source tombstoned
+
+    ConvexError: {"version":1,"code":"FORBIDDEN","message":"Source was deleted","retryable":false,"outcome":"not_dispatched"}
+
+      34 |
+      35 | export function memoryError(code: string, message: string): never {
+    > 36 |   throw new ConvexError({ version: 1, code, message, retryable: false, outcome: "not_dispatched" });
+         |         ^
+      37 | }
+      38 | export function memoryScope(reference: RuntimeAuthorityReference): TrustedMemoryScope {
+      39 |   if (!reference.memorySpaceId || !Number.isSafeInteger(reference.memorySpaceEpoch) || reference.memorySpaceEpoch! < 1) {
+
+      at memoryError (convex-dev/runtimeMemoryRepository.ts:36:9)
+      at ConvexMemoryRepository.getSource (convex-dev/runtimeMemoryRepository.ts:99:125)
+      at currentPrivateSources (convex-dev/runtimeTranscript.ts:186:20)
+      at hydratePrivateCutoff (convex-dev/runtimeTranscript.ts:326:51)
+      at executionContext (convex-dev/runtimeAgent.ts:103:20)
+      at Function.handler [as _handler] (convex-dev/runtimeAgent.ts:183:19)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:89:10)
+      at tests/unit/runtimeTranscript/fixture.ts:149:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:145:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:149:77)
+      at _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-product-independent-review1/historical-context-independent2.test.mjs:34:58
+
+Test Suites: 1 failed, 1 total
+Tests:       2 failed, 6 passed, 8 total
+Snapshots:   0 total
+Time:        6.852 s
+Ran all test suites.
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-product-independent-review1/historical-context-independent2.results.json

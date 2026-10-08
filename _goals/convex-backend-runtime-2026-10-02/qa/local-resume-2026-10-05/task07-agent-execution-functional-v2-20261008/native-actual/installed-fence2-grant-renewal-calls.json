@@ -1,0 +1,112 @@
+{
+  "operation": "66468eb7-3cbe-4d5a-8d1e-c5be442a2eb5",
+  "records": [
+    {
+      "label": "definition",
+      "function": "agentDefinitions:publishVersion",
+      "status": "PASS",
+      "result": {
+        "agentId": "agent:48460d7e77e562c8f734c8de86506d7791c22daf13b91d54e278a86b6f4ec9fe",
+        "definitionHash": "6712e65dcf4e807ef222bd226294292d01fa9da03a3b2541cc10614daf2ab8cc",
+        "version": 1
+      }
+    },
+    {
+      "label": "conversation",
+      "function": "runtimeTranscript:create",
+      "status": "PASS",
+      "result": {
+        "conversationId": "conversation:1f4e58b5e4fa0749886ea9e0b28fb486c5560974a9dfafaab5bf43e84002948a",
+        "createdAt": 1791469502069,
+        "epoch": 1,
+        "historyRevision": 0,
+        "manualWriteLocked": true,
+        "messageCount": 0,
+        "participants": [
+          "mn737zmpkce8jj4xk8fp5pv64s8fxbts"
+        ],
+        "requireApproval": false,
+        "retentionUntil": null,
+        "type": "user-agent",
+        "updatedAt": 1791469502069,
+        "visibility": "private"
+      }
+    },
+    {
+      "label": "submit",
+      "function": "runs:submit",
+      "status": "PASS",
+      "result": {
+        "agentId": "agent:48460d7e77e562c8f734c8de86506d7791c22daf13b91d54e278a86b6f4ec9fe",
+        "agentVersion": 1,
+        "attemptNumber": 0,
+        "cancellationRequested": false,
+        "conversationId": "conversation:1f4e58b5e4fa0749886ea9e0b28fb486c5560974a9dfafaab5bf43e84002948a",
+        "createdAt": 1791469502401,
+        "failureCode": null,
+        "graphStatus": "not_requested",
+        "inputMessageIds": [
+          "kx705teyda42bve83md2smyhc98fwedq"
+        ],
+        "memoryStatus": "pending",
+        "outputMessageIds": [],
+        "queueSequence": 1,
+        "responseStatus": "queued",
+        "runId": "run:469ae327a8b0dfa7c21e21a2d47131240065b8b354ee2047366005c8e279156d",
+        "updatedAt": 1791469502401,
+        "version": 1
+      }
+    },
+    {
+      "label": "native-claim",
+      "function": "agentQualification:armSaveGap",
+      "status": "PASS",
+      "result": {
+        "attemptNumber": 1,
+        "leaseVersion": 1,
+        "reference": {
+          "grantId": "md71kf97qydspxgejaga8rmknn8fwbe6",
+          "grantVersion": 1,
+          "membershipId": "mh796m2jn3mm0zwhwfapqemqas8fw830",
+          "membershipVersion": 1,
+          "memorySpaceEpoch": 1,
+          "memorySpaceId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space",
+          "principalId": "mn737zmpkce8jj4xk8fp5pv64s8fxbts",
+          "principalVersion": 1,
+          "tenantEpoch": 1,
+          "tenantId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b"
+        },
+        "runId": "run:469ae327a8b0dfa7c21e21a2d47131240065b8b354ee2047366005c8e279156d"
+      }
+    },
+    {
+      "label": "renew-real-current-grant",
+      "function": "runtimeAuth:provision",
+      "status": "PASS",
+      "result": {
+        "actorKind": "user",
+        "capabilities": [
+          "admin",
+          "read",
+          "run",
+          "storage:read",
+          "storage:write",
+          "tool",
+          "write"
+        ],
+        "grantId": "md7erwvqp8xb5es62573d8cxa58fxe67",
+        "grantVersion": 2,
+        "membershipId": "mh796m2jn3mm0zwhwfapqemqas8fw830",
+        "membershipVersion": 1,
+        "memorySpaceEpoch": 1,
+        "memorySpaceId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space",
+        "principalId": "mn737zmpkce8jj4xk8fp5pv64s8fxbts",
+        "principalVersion": 1,
+        "resourceAccess": "space",
+        "tenantEpoch": 1,
+        "tenantId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b",
+        "userId": "mn737zmpkce8jj4xk8fp5pv64s8fxbts"
+      }
+    }
+  ]
+}

@@ -1,0 +1,2017 @@
+{
+  "scope": "Installed shippedV5 current ordinary positive, not final successor expiry/cancellation or cleanup verdict",
+  "records": [
+    {
+      "file": "installed-live-outcomes.json",
+      "bytes": 1323,
+      "sha256": "addba483de27dcb47a4f85f1b81f1c3321996ed8c10b6bc5801320437dcf3d47",
+      "topKeys": [
+        "operation",
+        "projectId",
+        "sourceCandidate",
+        "outcomes"
+      ],
+      "outcomes": [
+        {
+          "name": "authenticated observers see the same durable tool approval and final-only withholds unfinished output",
+          "status": "PASS",
+          "evidence": {
+            "parts": 4,
+            "approval": {
+              "operationId": "agent-op:e90b64f4dbe91de96aec5c1c74ca1465c3a34b05163c5f5ad0807479bced2c54",
+              "requestHash": "797970ef7327e61c63785f42d7b583121eaba9b27b17a85d770d8aa7efd90c5d",
+              "toolName": "memory_recall"
+            },
+            "publicObservers": 2,
+            "finalOnlyWithheld": true,
+            "noAuthAndForeignDenied": true
+          }
+        },
+        {
+          "name": "server tool completes one canonical turn; reconnect and second observer converge on saved final output",
+          "status": "PASS",
+          "evidence": {
+            "ingestionReceiptId": "agent-ingestion:eabd7936aab489a9ede573df13024a7c2423eabb7cec777c650f02541cb3eb84",
+            "outputMessageIds": [
+              "kx7akzcj0kvevn3fcgpz30a2s18fxajs"
+            ],
+            "modelAttemptCount": 4,
+            "toolsExecuted": 1,
+            "sharedRunBudget": true,
+            "reconnectCursor": 4,
+            "finalOnlyConverged": true,
+            "publicProjectionRedacted": true
+          }
+        }
+      ]
+    },
+    {
+      "file": "installed-live-native-state.json",
+      "bytes": 20401,
+      "sha256": "b47aa75f29759e2bb9850bb127f42173e32f9e6d9b17b19767a474b7578b37e9",
+      "topKeys": [
+        "bridges",
+        "executions",
+        "ingestion",
+        "modelAttempts",
+        "modelOperations",
+        "native",
+        "operations",
+        "outbox",
+        "run"
+      ],
+      "executionStates": [
+        "complete"
+      ],
+      "ingestionCount": 1,
+      "canonicalRoles": [
+        "user",
+        "assistant",
+        "tool",
+        "assistant"
+      ],
+      "outboxStates": [
+        "complete"
+      ],
+      "runStatus": "complete",
+      "operationKeys": [
+        "embedding.query",
+        "agent.respond",
+        "embedding.query",
+        "agent.respond"
+      ],
+      "unknownLiabilitySum": 400000,
+      "allSlotsReleased": true,
+      "allTerminalProofsRetained": true,
+      "attemptCount": 4,
+      "recalledWitnessCount": 1
+    },
+    {
+      "file": "installed-live-observer-events.json",
+      "bytes": 48903,
+      "sha256": "e41375c46795e54c4016c3e741343ac0027dbd60d412da93caee7ec7aedafe44",
+      "topKeys": [
+        "first",
+        "second",
+        "resumed",
+        "finalOnly"
+      ],
+      "observerKeys": [
+        "first",
+        "second",
+        "resumed",
+        "finalOnly"
+      ],
+      "observerSequences": {
+        "first": {
+          "count": 7,
+          "first": {
+            "observedAt": 1791467696968,
+            "state": "not_started",
+            "cursor": 0,
+            "parts": [],
+            "approvals": []
+          },
+          "last": {
+            "observedAt": 1791467711890,
+            "state": "waiting_approval",
+            "cursor": 4,
+            "parts": [
+              {
+                "part": {
+                  "name": "memory_recall",
+                  "phase": "requested",
+                  "toolCallId": "call_3IawJfIDaJXc02Wza78GNd7X",
+                  "type": "tool"
+                },
+                "sequence": 1
+              },
+              {
+                "part": {
+                  "name": "memory_recall",
+                  "phase": "requested",
+                  "toolCallId": "call_3IawJfIDaJXc02Wza78GNd7X",
+                  "type": "tool"
+                },
+                "sequence": 2
+              },
+              {
+                "part": {
+                  "name": "memory_recall",
+                  "phase": "requested",
+                  "toolCallId": "call_3IawJfIDaJXc02Wza78GNd7X",
+                  "type": "tool"
+                },
+                "sequence": 3
+              },
+              {
+                "part": {
+                  "state": "waiting_approval",
+                  "type": "status"
+                },
+                "sequence": 4
+              }
+            ],
+            "approvals": [
+              {
+                "operationId": "agent-op:e90b64f4dbe91de96aec5c1c74ca1465c3a34b05163c5f5ad0807479bced2c54",
+                "requestHash": "797970ef7327e61c63785f42d7b583121eaba9b27b17a85d770d8aa7efd90c5d",
+                "toolName": "memory_recall"
+              }
+            ]
+          }
+        },
+        "second": {
+          "count": 16,
+          "first": {
+            "observedAt": 1791467696968,
+            "state": "not_started",
+            "cursor": 0,
+            "parts": [],
+            "approvals": []
+          },
+          "last": {
+            "observedAt": 1791467730382,
+            "state": "complete",
+            "cursor": 20,
+            "parts": [
+              {
+                "part": {
+                  "name": "memory_recall",
+                  "phase": "requested",
+                  "toolCallId": "call_3IawJfIDaJXc02Wza78GNd7X",
+                  "type": "tool"
+                },
+                "sequence": 1
+              },
+              {
+                "part": {
+                  "name": "memory_recall",
+                  "phase": "requested",
+                  "toolCallId": "call_3IawJfIDaJXc02Wza78GNd7X",
+                  "type": "tool"
+                },
+                "sequence": 2
+              },
+              {
+                "part": {
+                  "name": "memory_recall",
+                  "phase": "requested",
+                  "toolCallId": "call_3IawJfIDaJXc02Wza78GNd7X",
+                  "type": "tool"
+                },
+                "sequence": 3
+              },
+              {
+                "part": {
+                  "state": "waiting_approval",
+                  "type": "status"
+                },
+                "sequence": 4
+              },
+              {
+                "part": {
+                  "name": "memory_recall",
+                  "phase": "approved",
+                  "toolCallId": "call_3IawJfIDaJXc02Wza78GNd7X",
+                  "type": "tool"
+                },
+                "sequence": 5
+              },
+              {
+                "part": {
+                  "state": "running",
+                  "type": "status"
+                },
+                "sequence": 6
+              },
+              {
+                "part": {
+                  "name": "memory_recall",
+                  "phase": "running",
+                  "toolCallId": "call_3IawJfIDaJXc02Wza78GNd7X",
+                  "type": "tool"
+                },
+                "sequence": 7
+              },
+              {
+                "part": {
+                  "name": "memory_recall",
+                  "phase": "succeeded",
+                  "toolCallId": "call_3IawJfIDaJXc02Wza78GNd7X",
+                  "type": "tool"
+                },
+                "sequence": 8
+              },
+              {
+                "part": {
+                  "id": "governed-text",
+                  "type": "text-start"
+                },
+                "sequence": 9
+              },
+              {
+                "part": {
+                  "id": "governed-text",
+                  "text": "CORTEX_AGENT_TOOL_STREAM_OK. ",
+                  "type": "text-delta"
+                },
+                "sequence": 10
+              },
+              {
+                "part": {
+                  "id": "governed-text",
+                  "text": "Your ",
+                  "type": "text-delta"
+                },
+                "sequence": 11
+              },
+              {
+                "part": {
+                  "id": "governed-text",
+                  "text": "recalled ",
+                  "type": "text-delta"
+                },
+                "sequence": 12
+              },
+              {
+                "part": {
+                  "id": "governed-text",
+                  "text": "tea ",
+                  "type": "text-delta"
+                },
+                "sequence": 13
+              },
+              {
+                "part": {
+                  "id": "governed-text",
+                  "text": "preference ",
+                  "type": "text-delta"
+                },
+                "sequence": 14
+              },
+              {
+                "part": {
+                  "id": "governed-text",
+                  "text": "is ",
+                  "type": "text-delta"
+                },
+                "sequence": 15
+              },
+              {
+                "part": {
+                  "id": "governed-text",
+                  "text": "jasmine ",
+                  "type": "text-delta"
+                },
+                "sequence": 16
+              },
+              {
+                "part": {
+                  "id": "governed-text",
+                  "text": "tea.",
+                  "type": "text-delta"
+                },
+                "sequence": 17
+              },
+              {
+                "part": {
+                  "id": "governed-text",
+                  "type": "text-end"
+                },
+                "sequence": 18
+              },
+              {
+                "part": {
+                  "text": "CORTEX_AGENT_TOOL_STREAM_OK. Your recalled tea preference is jasmine tea.",
+                  "type": "text"
+                },
+                "sequence": 19
+              },
+              {
+                "part": {
+                  "state": "complete",
+                  "type": "status"
+                },
+                "sequence": 20
+              }
+            ],
+            "approvals": []
+          }
+        },
+        "resumed": {
+          "count": 10,
+          "first": {
+            "observedAt": 1791467713394,
+            "state": "waiting_approval",
+            "cursor": 4,
+            "parts": [],
+            "approvals": [
+              {
+                "operationId": "agent-op:e90b64f4dbe91de96aec5c1c74ca1465c3a34b05163c5f5ad0807479bced2c54",
+                "requestHash": "797970ef7327e61c63785f42d7b583121eaba9b27b17a85d770d8aa7efd90c5d",
+                "toolName": "memory_recall"
+              }
+            ]
+          },
+          "last": {
+            "observedAt": 1791467730258,
+            "state": "complete",
+            "cursor": 20,
+            "parts": [
+              {
+                "part": {
+                  "name": "memory_recall",
+                  "phase": "approved",
+                  "toolCallId": "call_3IawJfIDaJXc02Wza78GNd7X",
+                  "type": "tool"
+                },
+                "sequence": 5
+              },
+              {
+                "part": {
+                  "state": "running",
+                  "type": "status"
+                },
+                "sequence": 6
+              },
+              {
+                "part": {
+                  "name": "memory_recall",
+                  "phase": "running",
+                  "toolCallId": "call_3IawJfIDaJXc02Wza78GNd7X",
+                  "type": "tool"
+                },
+                "sequence": 7
+              },
+              {
+                "part": {
+                  "name": "memory_recall",
+                  "phase": "succeeded",
+                  "toolCallId": "call_3IawJfIDaJXc02Wza78GNd7X",
+                  "type": "tool"
+                },
+                "sequence": 8
+              },
+              {
+                "part": {
+                  "id": "governed-text",
+                  "type": "text-start"
+                },
+                "sequence": 9
+              },
+              {
+                "part": {
+                  "id": "governed-text",
+                  "text": "CORTEX_AGENT_TOOL_STREAM_OK. ",
+                  "type": "text-delta"
+                },
+                "sequence": 10
+              },
+              {
+                "part": {
+                  "id": "governed-text",
+                  "text": "Your ",
+                  "type": "text-delta"
+                },
+                "sequence": 11
+              },
+              {
+                "part": {
+                  "id": "governed-text",
+                  "text": "recalled ",
+                  "type": "text-delta"
+                },
+                "sequence": 12
+              },
+              {
+                "part": {
+                  "id": "governed-text",
+                  "text": "tea ",
+                  "type": "text-delta"
+                },
+                "sequence": 13
+              },
+              {
+                "part": {
+                  "id": "governed-text",
+                  "text": "preference ",
+                  "type": "text-delta"
+                },
+                "sequence": 14
+              },
+              {
+                "part": {
+                  "id": "governed-text",
+                  "text": "is ",
+                  "type": "text-delta"
+                },
+                "sequence": 15
+              },
+              {
+                "part": {
+                  "id": "governed-text",
+                  "text": "jasmine ",
+                  "type": "text-delta"
+                },
+                "sequence": 16
+              },
+              {
+                "part": {
+                  "id": "governed-text",
+                  "text": "tea.",
+                  "type": "text-delta"
+                },
+                "sequence": 17
+              },
+              {
+                "part": {
+                  "id": "governed-text",
+                  "type": "text-end"
+                },
+                "sequence": 18
+              },
+              {
+                "part": {
+                  "text": "CORTEX_AGENT_TOOL_STREAM_OK. Your recalled tea preference is jasmine tea.",
+                  "type": "text"
+                },
+                "sequence": 19
+              },
+              {
+                "part": {
+                  "state": "complete",
+                  "type": "status"
+                },
+                "sequence": 20
+              }
+            ],
+            "approvals": []
+          }
+        },
+        "finalOnly": {
+          "count": 6,
+          "first": {
+            "observedAt": 1791467697089,
+            "state": "not_started",
+            "cursor": 0,
+            "parts": [],
+            "approvals": []
+          },
+          "last": {
+            "observedAt": 1791467730258,
+            "state": "complete",
+            "cursor": 20,
+            "parts": [
+              {
+                "part": {
+                  "text": "CORTEX_AGENT_TOOL_STREAM_OK. Your recalled tea preference is jasmine tea.",
+                  "type": "text"
+                },
+                "sequence": 19
+              },
+              {
+                "part": {
+                  "state": "complete",
+                  "type": "status"
+                },
+                "sequence": 20
+              }
+            ],
+            "approvals": []
+          }
+        }
+      }
+    },
+    {
+      "file": "installed-live-reconcile-repeat.json",
+      "bytes": 409,
+      "sha256": "e085125a0782348ae7ca8354a0fa87a290a624b3fc9691c84c9d6757e8cb9dd8",
+      "topKeys": [
+        "function",
+        "kind",
+        "args",
+        "result",
+        "elapsedMs",
+        "status"
+      ],
+      "body": {
+        "function": "runtimeAgent:reconcile",
+        "kind": "mutation",
+        "args": {
+          "memorySpaceId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space",
+          "runId": "run:1a6b5876a205739510ac4c55dc0e589485c49aa1751e1062e61ca44cb711e0c5"
+        },
+        "result": {
+          "receiptId": "agent-ingestion:eabd7936aab489a9ede573df13024a7c2423eabb7cec777c650f02541cb3eb84"
+        },
+        "elapsedMs": 192,
+        "status": "PASS"
+      }
+    },
+    {
+      "file": "installed-live-client-cleanup.json",
+      "bytes": 69,
+      "sha256": "49a6cffa2eb28a62d04303297ceca3802cb450d0fdb11146aef4ed132c2b3369",
+      "topKeys": [
+        "ownedReactiveClients",
+        "closedAll",
+        "errors"
+      ],
+      "body": {
+        "ownedReactiveClients": 4,
+        "closedAll": true,
+        "errors": []
+      }
+    },
+    {
+      "file": "live-gap-recovery1.json",
+      "bytes": 58834,
+      "sha256": "a6ad5b99199a9fe53a028e1e85f2cf5ad00dc731189ae716c0d93a30c5a0074f",
+      "topKeys": [
+        "status",
+        "first",
+        "second",
+        "before",
+        "after",
+        "final",
+        "output",
+        "providerAttemptsUnchanged",
+        "paidRetry",
+        "triggeringProductFailure",
+        "claimsOriginalLiveRunGreen"
+      ],
+      "body": {
+        "status": "PASS",
+        "first": {
+          "receiptId": "agent-ingestion:b38b25fa9b99a77a54e5e9d66cc766244a54b68aa094ba7b8968ecf08f0f0810"
+        },
+        "second": {
+          "receiptId": "agent-ingestion:b38b25fa9b99a77a54e5e9d66cc766244a54b68aa094ba7b8968ecf08f0f0810"
+        },
+        "before": {
+          "bridges": [
+            {
+              "_id": "px75g1pgavq8ypm0adbetfs35x8fwnb7",
+              "nativeMessageId": "kx72709grdywrex57bfm6e06nd8fwg57",
+              "sourceEventId": "transcript:conversation:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b:kx72709grdywrex57bfm6e06nd8fwg57",
+              "sourceRevision": 1
+            }
+          ],
+          "executions": [
+            {
+              "_creationTime": 1791466464392.9795,
+              "_id": "q9731nx12q0b1d8xrsj61gw5gx8fxbn3",
+              "attemptNumber": 1,
+              "contextCanonical": "## Relevant Context\n\n### Known Facts\n- User prefers jasmine tea. (confidence: 100%, recorded: just now)\n\n### Conversation History\n[user]: The user prefers jasmine tea.",
+              "contextState": "complete",
+              "createdAt": 1791466464392,
+              "failureCode": "INTERRUPTED_REQUIRES_RECONCILIATION",
+              "leaseVersion": 1,
+              "memorySpaceId": "task06-custom-space",
+              "nextModelStep": 1,
+              "nextOutputSequence": 19,
+              "reference": {
+                "grantId": "md72nepf0h1yrcs20vfy1sem6h8fwb5m",
+                "grantVersion": 1,
+                "membershipId": "mh7dw332vmxpbgnkbabw4w4k158fwfcb",
+                "membershipVersion": 1,
+                "memorySpaceEpoch": 1,
+                "memorySpaceId": "task06-custom-space",
+                "principalId": "mn7b7f8jrjpyc2eba0n1z5mp098fxde0",
+                "principalVersion": 1,
+                "tenantEpoch": 1,
+                "tenantId": "task06-custom"
+              },
+              "runId": "run:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b",
+              "savedMessageIds": [
+                "kx74q9fy77jtsdtrx6y0r620kx8fxam5",
+                "kx75g0959n8r1bmvf6n6jpfpss8fxjf6"
+              ],
+              "savedMessagePins": [
+                {
+                  "canonicalContentHash": "3c9681f2143803ac2c851e06508e584e2ba4d43172ba0d2dadf80cc50b982353",
+                  "id": "kx74q9fy77jtsdtrx6y0r620kx8fxam5",
+                  "order": 0,
+                  "stepOrder": 1
+                },
+                {
+                  "canonicalContentHash": "2c65b17795cd4d3c46d6cbe52b80bba3c0ecda3c58e8cd0df150d733e9828d49",
+                  "id": "kx75g0959n8r1bmvf6n6jpfpss8fxjf6",
+                  "order": 0,
+                  "stepOrder": 2
+                }
+              ],
+              "sourceWitnesses": [
+                {
+                  "contentHash": "82181612f14ed9b80934f575476412e58e7f2846580870375a9fc36fb6beed95",
+                  "sourceEventId": "explicit:[\"task06-custom\",\"task06-custom-space\",\"mn7b7f8jrjpyc2eba0n1z5mp098fxde0\",\"task07-seed-544bcc86-06e1-4990-9eb0-0af005af689e\"]",
+                  "sourceId": "explicit:[\"task06-custom\",\"task06-custom-space\",\"mn7b7f8jrjpyc2eba0n1z5mp098fxde0\",\"task07-seed-544bcc86-06e1-4990-9eb0-0af005af689e\"]",
+                  "sourceRevision": 1
+                }
+              ],
+              "state": "unknown",
+              "streaming": true,
+              "tenantId": "task06-custom",
+              "toolCount": 1,
+              "updatedAt": 1791466503071,
+              "workflowId": "jd74r12mt2v345me337wtc9g9d8fx3wv"
+            }
+          ],
+          "ingestion": [],
+          "modelAttempts": [
+            {
+              "_id": "p17eppamx3zj4pq0epayrbsq8s8fxj8x",
+              "dispatchIdentity": "016ae08dfd355e98e0287b7047fd8fd1ccb7480e0e5539bbab140faa67c35ec6",
+              "operationDocumentId": "p571k4g3bwacgarw15y4y7q7zd8fwm9m",
+              "reservationUnits": 100000,
+              "resultWithheld": false,
+              "slotReleased": true,
+              "state": "uncertain",
+              "terminalEvidenceCanonical": "{\"actualModel\":\"text-embedding-3-small\",\"costSource\":\"unavailable\",\"dispatchIdentity\":\"016ae08dfd355e98e0287b7047fd8fd1ccb7480e0e5539bbab140faa67c35ec6\",\"modelId\":\"openai/text-embedding-3-small\",\"nativeInterface\":\"embedding\",\"outcome\":\"confirmed\",\"proof\":\"provider-terminal-v1\",\"receiptId\":\"51381d95-429a-4781-956c-a58aab17d6cd\",\"usage\":{\"inputTokens\":14,\"totalTokens\":14},\"version\":1}"
+            },
+            {
+              "_id": "p176crzs3v6g2yz8yd53gjeb0s8fxv5k",
+              "dispatchIdentity": "b89a9994b79130b5ef154e14856cb512161dea12f525fee5a93b5fd35a8e3114",
+              "operationDocumentId": "p57dtaxmjdcs5bsps1jrq04es98fxz3b",
+              "reservationUnits": 100000,
+              "resultWithheld": false,
+              "slotReleased": true,
+              "state": "uncertain",
+              "terminalEvidenceCanonical": "{\"actualModel\":\"openai/gpt-4o-mini\",\"costSource\":\"unavailable\",\"dispatchIdentity\":\"b89a9994b79130b5ef154e14856cb512161dea12f525fee5a93b5fd35a8e3114\",\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"outcome\":\"confirmed\",\"proof\":\"provider-terminal-v1\",\"receiptId\":\"32e78752-181f-468b-8dd8-59dea5aad495\",\"usage\":{\"cachedInputTokens\":0,\"inputTokens\":177,\"outputTokens\":21,\"reasoningTokens\":0,\"totalTokens\":198},\"version\":1}"
+            },
+            {
+              "_id": "p173jfg09bbyf350k74wx6xwwh8fwrqq",
+              "dispatchIdentity": "712ed520620ff289261ca6c0ac5a12d67bbc79d7977defe0ec473f70e531a0ae",
+              "operationDocumentId": "p57df3n7d26apahjakrh2899m58fx5c2",
+              "reservationUnits": 100000,
+              "resultWithheld": false,
+              "slotReleased": true,
+              "state": "uncertain",
+              "terminalEvidenceCanonical": "{\"actualModel\":\"text-embedding-3-small\",\"costSource\":\"unavailable\",\"dispatchIdentity\":\"712ed520620ff289261ca6c0ac5a12d67bbc79d7977defe0ec473f70e531a0ae\",\"modelId\":\"openai/text-embedding-3-small\",\"nativeInterface\":\"embedding\",\"outcome\":\"confirmed\",\"proof\":\"provider-terminal-v1\",\"receiptId\":\"7623bf21-b20a-4175-b7a1-337708eab29b\",\"usage\":{\"inputTokens\":3,\"totalTokens\":3},\"version\":1}"
+            },
+            {
+              "_id": "p175emw61hgk0ep3er52x1ps3s8fwgca",
+              "dispatchIdentity": "044a3fe8f0e49a3a015001cf5ee19a8ecab82321bc9096d335fc49f52b4548f4",
+              "operationDocumentId": "p57bx7hd00mmm4d0t3w3c8r15n8fwj80",
+              "reservationUnits": 100000,
+              "resultWithheld": false,
+              "slotReleased": true,
+              "state": "uncertain",
+              "terminalEvidenceCanonical": "{\"actualModel\":\"openai/gpt-4o-mini\",\"costSource\":\"unavailable\",\"dispatchIdentity\":\"044a3fe8f0e49a3a015001cf5ee19a8ecab82321bc9096d335fc49f52b4548f4\",\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"outcome\":\"confirmed\",\"proof\":\"provider-terminal-v1\",\"receiptId\":\"e6c19491-9f67-4973-9878-a1396d219ab2\",\"usage\":{\"cachedInputTokens\":0,\"inputTokens\":250,\"outputTokens\":17,\"reasoningTokens\":0,\"totalTokens\":267},\"version\":1}"
+            }
+          ],
+          "modelOperations": [
+            {
+              "_id": "p571k4g3bwacgarw15y4y7q7zd8fwm9m",
+              "operationKey": "embedding.query",
+              "reservedUnits": 0,
+              "runBudgetId": "d2413c8d981d5a645c716f241eb5472df80a83454b394d3c8e8550b45afe3868",
+              "semanticId": "5593e18abdbdd59ea8739ab9e39c92288715edcccb48bcd3b0b82c8a629be5e9",
+              "settledUnits": 0,
+              "uncertainUnits": 100000
+            },
+            {
+              "_id": "p57dtaxmjdcs5bsps1jrq04es98fxz3b",
+              "operationKey": "agent.respond",
+              "reservedUnits": 0,
+              "runBudgetId": "d2413c8d981d5a645c716f241eb5472df80a83454b394d3c8e8550b45afe3868",
+              "semanticId": "f91910ab0fcba69f8ed354ee18a31e885aed7ef4c67c85642cf033c863a1124f",
+              "settledUnits": 0,
+              "uncertainUnits": 100000
+            },
+            {
+              "_id": "p57df3n7d26apahjakrh2899m58fx5c2",
+              "operationKey": "embedding.query",
+              "parentOperationId": "p57dtaxmjdcs5bsps1jrq04es98fxz3b",
+              "reservedUnits": 0,
+              "runBudgetId": "d2413c8d981d5a645c716f241eb5472df80a83454b394d3c8e8550b45afe3868",
+              "semanticId": "f0c629db351ae7337743637ea9d0b14072e2669ca8e19033cf33966591ca101a",
+              "settledUnits": 0,
+              "uncertainUnits": 100000
+            },
+            {
+              "_id": "p57bx7hd00mmm4d0t3w3c8r15n8fwj80",
+              "operationKey": "agent.respond",
+              "reservedUnits": 0,
+              "runBudgetId": "d2413c8d981d5a645c716f241eb5472df80a83454b394d3c8e8550b45afe3868",
+              "semanticId": "48b05249d8deb30c42a62dd1ae7a4afde11607341d2509cf8b73ce411c3acbd2",
+              "settledUnits": 0,
+              "uncertainUnits": 100000
+            }
+          ],
+          "native": [
+            {
+              "_id": "kx72709grdywrex57bfm6e06nd8fwg57",
+              "order": 0,
+              "role": "user",
+              "status": "success",
+              "stepOrder": 0
+            },
+            {
+              "_id": "kx74q9fy77jtsdtrx6y0r620kx8fxam5",
+              "agentName": "cortex:run:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b:1:0",
+              "order": 0,
+              "role": "assistant",
+              "status": "success",
+              "stepOrder": 1
+            },
+            {
+              "_id": "kx75g0959n8r1bmvf6n6jpfpss8fxjf6",
+              "agentName": "cortex:run:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b:1:0",
+              "order": 0,
+              "role": "tool",
+              "status": "success",
+              "stepOrder": 2
+            },
+            {
+              "_id": "kx76ajg7np6gr76md9yyd8a3vn8fxday",
+              "agentName": "cortex:run:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b:1:1",
+              "order": 0,
+              "role": "assistant",
+              "status": "success",
+              "stepOrder": 3
+            }
+          ],
+          "operations": [
+            {
+              "_creationTime": 1791466475064.668,
+              "_id": "qh7fb5k1pgkfb5hm0fmyck2rq98fw3bm",
+              "attemptNumber": 1,
+              "createdAt": 1791466475064,
+              "endedAt": 1791466482644,
+              "kind": "model",
+              "memorySpaceId": "task06-custom-space",
+              "nativeMessageIds": [
+                "kx74q9fy77jtsdtrx6y0r620kx8fxam5"
+              ],
+              "nativeModelOperationId": "p57dtaxmjdcs5bsps1jrq04es98fxz3b",
+              "operationId": "agent-op:f91910ab0fcba69f8ed354ee18a31e885aed7ef4c67c85642cf033c863a1124f",
+              "ordinal": 0,
+              "resultBytes": 212,
+              "runId": "run:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b",
+              "semanticId": "f91910ab0fcba69f8ed354ee18a31e885aed7ef4c67c85642cf033c863a1124f",
+              "startedAt": 1791466475312,
+              "state": "complete",
+              "tenantId": "task06-custom"
+            },
+            {
+              "_creationTime": 1791466483914.5713,
+              "_id": "qh74brv4jcgkr9trpnbcant0nx8fwtde",
+              "approvalActor": {
+                "grantId": "md72nepf0h1yrcs20vfy1sem6h8fwb5m",
+                "grantVersion": 1,
+                "membershipId": "mh7dw332vmxpbgnkbabw4w4k158fwfcb",
+                "membershipVersion": 1,
+                "memorySpaceEpoch": 1,
+                "memorySpaceId": "task06-custom-space",
+                "principalId": "mn7b7f8jrjpyc2eba0n1z5mp098fxde0",
+                "principalVersion": 1,
+                "tenantEpoch": 1,
+                "tenantId": "task06-custom"
+              },
+              "attemptNumber": 1,
+              "createdAt": 1791466483914,
+              "endedAt": 1791466492463,
+              "kind": "tool",
+              "memorySpaceId": "task06-custom-space",
+              "nativeMessageIds": [
+                "kx75g0959n8r1bmvf6n6jpfpss8fxjf6"
+              ],
+              "operationId": "agent-op:7225acb486491111d1b4ffdd12acdf1cf33b231f4667bc532fbd133a10416209",
+              "ordinal": 0,
+              "resultBytes": 160,
+              "runId": "run:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b",
+              "semanticId": "7225acb486491111d1b4ffdd12acdf1cf33b231f4667bc532fbd133a10416209",
+              "startedAt": 1791466488696,
+              "state": "complete",
+              "tenantId": "task06-custom",
+              "toolCallId": "call_bM1pXL5RWtEHD6DQXM928icl",
+              "toolName": "memory_recall"
+            },
+            {
+              "_creationTime": 1791466493761.0178,
+              "_id": "qh708aqwx5ahs6w343sjprbhgn8fx3rf",
+              "attemptNumber": 1,
+              "createdAt": 1791466493761,
+              "endedAt": 1791466503071,
+              "kind": "model",
+              "memorySpaceId": "task06-custom-space",
+              "nativeMessageIds": [],
+              "nativeModelOperationId": "p57bx7hd00mmm4d0t3w3c8r15n8fwj80",
+              "operationId": "agent-op:48b05249d8deb30c42a62dd1ae7a4afde11607341d2509cf8b73ce411c3acbd2",
+              "ordinal": 1,
+              "resultBytes": 0,
+              "runId": "run:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b",
+              "semanticId": "48b05249d8deb30c42a62dd1ae7a4afde11607341d2509cf8b73ce411c3acbd2",
+              "startedAt": 1791466494012,
+              "state": "unknown",
+              "tenantId": "task06-custom"
+            }
+          ],
+          "outbox": [
+            {
+              "_creationTime": 1791466463906.672,
+              "_id": "pn714wx015wvsew54fc2tt9n1s8fxj3c",
+              "conversationId": "conversation:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b",
+              "createdAt": 1791466463906,
+              "leaseExpiresAt": 1791466794012,
+              "leaseVersion": 1,
+              "memorySpaceId": "task06-custom-space",
+              "runId": "run:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b",
+              "sequence": 1,
+              "state": "complete",
+              "tenantId": "task06-custom",
+              "updatedAt": 1791466503071
+            }
+          ],
+          "run": {
+            "_creationTime": 1791466463906.6719,
+            "_id": "ps782dzavzerkthgnmdxq2ect58fw75a",
+            "agentId": "agent:35704f76ec8cce13e670ae86c0184e3ad7384bb7831260a3251529ee7fad50af",
+            "agentVersion": 1,
+            "attemptNumber": 1,
+            "authorityReference": {
+              "grantId": "md72nepf0h1yrcs20vfy1sem6h8fwb5m",
+              "grantVersion": 1,
+              "membershipId": "mh7dw332vmxpbgnkbabw4w4k158fwfcb",
+              "membershipVersion": 1,
+              "memorySpaceEpoch": 1,
+              "memorySpaceId": "task06-custom-space",
+              "principalId": "mn7b7f8jrjpyc2eba0n1z5mp098fxde0",
+              "principalVersion": 1,
+              "tenantEpoch": 1,
+              "tenantId": "task06-custom"
+            },
+            "conversationEpoch": 1,
+            "conversationId": "conversation:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b",
+            "createdAt": 1791466463906,
+            "definitionHash": "d95b1c10233f2592d755368634aad340b9c54f9caebde0b11bf17cac9757a898",
+            "executionRequested": true,
+            "failureCode": "INTERRUPTED_REQUIRES_RECONCILIATION",
+            "graphStatus": "not_requested",
+            "historyRevision": 0,
+            "inputMessageIds": [
+              "kx72709grdywrex57bfm6e06nd8fwg57"
+            ],
+            "memorySpaceId": "task06-custom-space",
+            "memoryStatus": "pending",
+            "outputMessageIds": [],
+            "ownerPrincipalId": "mn7b7f8jrjpyc2eba0n1z5mp098fxde0",
+            "queueSequence": 1,
+            "requestCanonical": "{\"identity\":[\"cortex.submit.v1\",\"task06-custom\",\"task06-custom-space\",\"mn7b7f8jrjpyc2eba0n1z5mp098fxde0\",[\"create\"],\"task07-544bcc86-06e1-4990-9eb0-0af005af689e\"],\"publicRequest\":{\"agentId\":\"agent:35704f76ec8cce13e670ae86c0184e3ad7384bb7831260a3251529ee7fad50af\",\"agentVersion\":1,\"clientRequestId\":\"task07-544bcc86-06e1-4990-9eb0-0af005af689e\",\"parts\":[{\"text\":\"Recall my tea preference with the memory_recall tool, then respond.\",\"type\":\"text\"}],\"version\":1},\"version\":1}",
+            "requestIdentityCanonical": "[\"cortex.submit.v1\",\"task06-custom\",\"task06-custom-space\",\"mn7b7f8jrjpyc2eba0n1z5mp098fxde0\",[\"create\"],\"task07-544bcc86-06e1-4990-9eb0-0af005af689e\"]",
+            "requestIdentityHash": "b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b",
+            "responseStatus": "failed",
+            "runAccountId": "n17bx027mwbv5bscbqgrnyygs58fww22",
+            "runBudgetId": "d2413c8d981d5a645c716f241eb5472df80a83454b394d3c8e8550b45afe3868",
+            "runId": "run:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b",
+            "snapshotCanonical": "{\"anchor\":{\"canonicalContentHash\":\"cc3a1ccff7ede73687348504e7c1dfa0c2666ac519608b0f41ac11659d64d485\",\"contentHash\":\"2105496516ee1ac04fba74b3a26de94ee9fc2a8abccff6c79ae7218c27269ccb\",\"nativeMessageId\":\"kx72709grdywrex57bfm6e06nd8fwg57\",\"order\":0,\"sourceEventId\":\"transcript:conversation:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b:kx72709grdywrex57bfm6e06nd8fwg57\",\"sourceRevision\":1,\"stepOrder\":0},\"attemptNumber\":1,\"capturedAuthorityReference\":{\"grantId\":\"md72nepf0h1yrcs20vfy1sem6h8fwb5m\",\"grantVersion\":1,\"membershipId\":\"mh7dw332vmxpbgnkbabw4w4k158fwfcb\",\"membershipVersion\":1,\"memorySpaceEpoch\":1,\"memorySpaceId\":\"task06-custom-space\",\"principalId\":\"mn7b7f8jrjpyc2eba0n1z5mp098fxde0\",\"principalVersion\":1,\"tenantEpoch\":1,\"tenantId\":\"task06-custom\"},\"completeness\":\"complete\",\"conversationEpoch\":1,\"conversationId\":\"conversation:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b\",\"definitionHash\":\"d95b1c10233f2592d755368634aad340b9c54f9caebde0b11bf17cac9757a898\",\"definitionVersion\":1,\"historyRevision\":0,\"ingestionCutoff\":{\"requiredStages\":[],\"scopeIdentity\":\"[\\\"task06-custom\\\",\\\"task06-custom-space\\\"]\",\"sequence\":1},\"messages\":[{\"canonicalContentHash\":\"cc3a1ccff7ede73687348504e7c1dfa0c2666ac519608b0f41ac11659d64d485\",\"contentHash\":\"2105496516ee1ac04fba74b3a26de94ee9fc2a8abccff6c79ae7218c27269ccb\",\"nativeMessageId\":\"kx72709grdywrex57bfm6e06nd8fwg57\",\"order\":0,\"sourceEventId\":\"transcript:conversation:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b:kx72709grdywrex57bfm6e06nd8fwg57\",\"sourceRevision\":1,\"stepOrder\":0}],\"queueSequence\":1,\"runDocId\":\"ps782dzavzerkthgnmdxq2ect58fw75a\",\"threadId\":\"m971085sp3681ewqje4z4mf6r58fwysy\",\"version\":1}",
+            "streamingRequested": true,
+            "tenantId": "task06-custom",
+            "updatedAt": 1791466503071
+          }
+        },
+        "after": {
+          "bridges": [
+            {
+              "_id": "px75g1pgavq8ypm0adbetfs35x8fwnb7",
+              "nativeMessageId": "kx72709grdywrex57bfm6e06nd8fwg57",
+              "sourceEventId": "transcript:conversation:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b:kx72709grdywrex57bfm6e06nd8fwg57",
+              "sourceRevision": 1
+            },
+            {
+              "_id": "px7c70a38csercqhmgays6y0kh8fxyks",
+              "nativeMessageId": "kx74q9fy77jtsdtrx6y0r620kx8fxam5",
+              "sourceEventId": "transcript:conversation:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b:kx74q9fy77jtsdtrx6y0r620kx8fxam5",
+              "sourceRevision": 1
+            },
+            {
+              "_id": "px75vm4wsmmfmz5fyvcd8d28158fwq87",
+              "nativeMessageId": "kx75g0959n8r1bmvf6n6jpfpss8fxjf6",
+              "sourceEventId": "transcript:conversation:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b:kx75g0959n8r1bmvf6n6jpfpss8fxjf6",
+              "sourceRevision": 1
+            },
+            {
+              "_id": "px71pwx2twq0am85vpyqxgjhmx8fxdcy",
+              "nativeMessageId": "kx76ajg7np6gr76md9yyd8a3vn8fxday",
+              "sourceEventId": "transcript:conversation:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b:kx76ajg7np6gr76md9yyd8a3vn8fxday",
+              "sourceRevision": 1
+            }
+          ],
+          "executions": [
+            {
+              "_creationTime": 1791466464392.9795,
+              "_id": "q9731nx12q0b1d8xrsj61gw5gx8fxbn3",
+              "attemptNumber": 1,
+              "contextCanonical": "## Relevant Context\n\n### Known Facts\n- User prefers jasmine tea. (confidence: 100%, recorded: just now)\n\n### Conversation History\n[user]: The user prefers jasmine tea.",
+              "contextState": "complete",
+              "createdAt": 1791466464392,
+              "failureCode": "INTERRUPTED_REQUIRES_RECONCILIATION",
+              "finalMessageIds": [
+                "kx76ajg7np6gr76md9yyd8a3vn8fxday"
+              ],
+              "ingestionReceiptId": "agent-ingestion:b38b25fa9b99a77a54e5e9d66cc766244a54b68aa094ba7b8968ecf08f0f0810",
+              "leaseVersion": 1,
+              "memorySpaceId": "task06-custom-space",
+              "nextModelStep": 1,
+              "nextOutputSequence": 21,
+              "reference": {
+                "grantId": "md72nepf0h1yrcs20vfy1sem6h8fwb5m",
+                "grantVersion": 1,
+                "membershipId": "mh7dw332vmxpbgnkbabw4w4k158fwfcb",
+                "membershipVersion": 1,
+                "memorySpaceEpoch": 1,
+                "memorySpaceId": "task06-custom-space",
+                "principalId": "mn7b7f8jrjpyc2eba0n1z5mp098fxde0",
+                "principalVersion": 1,
+                "tenantEpoch": 1,
+                "tenantId": "task06-custom"
+              },
+              "runId": "run:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b",
+              "savedMessageIds": [
+                "kx74q9fy77jtsdtrx6y0r620kx8fxam5",
+                "kx75g0959n8r1bmvf6n6jpfpss8fxjf6",
+                "kx76ajg7np6gr76md9yyd8a3vn8fxday"
+              ],
+              "savedMessagePins": [
+                {
+                  "canonicalContentHash": "3c9681f2143803ac2c851e06508e584e2ba4d43172ba0d2dadf80cc50b982353",
+                  "id": "kx74q9fy77jtsdtrx6y0r620kx8fxam5",
+                  "order": 0,
+                  "stepOrder": 1
+                },
+                {
+                  "canonicalContentHash": "2c65b17795cd4d3c46d6cbe52b80bba3c0ecda3c58e8cd0df150d733e9828d49",
+                  "id": "kx75g0959n8r1bmvf6n6jpfpss8fxjf6",
+                  "order": 0,
+                  "stepOrder": 2
+                },
+                {
+                  "canonicalContentHash": "d2b545c8de2973802664fb95715844e0bc686429b3bae089fed97d7466ddd6f9",
+                  "id": "kx76ajg7np6gr76md9yyd8a3vn8fxday",
+                  "order": 0,
+                  "stepOrder": 3
+                }
+              ],
+              "sourceWitnesses": [
+                {
+                  "contentHash": "82181612f14ed9b80934f575476412e58e7f2846580870375a9fc36fb6beed95",
+                  "sourceEventId": "explicit:[\"task06-custom\",\"task06-custom-space\",\"mn7b7f8jrjpyc2eba0n1z5mp098fxde0\",\"task07-seed-544bcc86-06e1-4990-9eb0-0af005af689e\"]",
+                  "sourceId": "explicit:[\"task06-custom\",\"task06-custom-space\",\"mn7b7f8jrjpyc2eba0n1z5mp098fxde0\",\"task07-seed-544bcc86-06e1-4990-9eb0-0af005af689e\"]",
+                  "sourceRevision": 1
+                }
+              ],
+              "state": "complete",
+              "streaming": true,
+              "tenantId": "task06-custom",
+              "toolCount": 1,
+              "updatedAt": 1791466671033,
+              "workflowId": "jd74r12mt2v345me337wtc9g9d8fx3wv"
+            }
+          ],
+          "ingestion": [
+            {
+              "_creationTime": 1791466671033.1704,
+              "_id": "qd7ced6bpp8m5faqj0qx9m5mns8fwzkq",
+              "attemptNumber": 1,
+              "createdAt": 1791466671033,
+              "identityCanonical": "[\"run:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b\",1,[\"kx76ajg7np6gr76md9yyd8a3vn8fxday\"]]",
+              "memorySpaceId": "task06-custom-space",
+              "outputMessageIds": [
+                "kx76ajg7np6gr76md9yyd8a3vn8fxday"
+              ],
+              "receiptId": "agent-ingestion:b38b25fa9b99a77a54e5e9d66cc766244a54b68aa094ba7b8968ecf08f0f0810",
+              "runId": "run:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b",
+              "sourceEvents": [
+                {
+                  "sourceEventId": "transcript:conversation:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b:kx74q9fy77jtsdtrx6y0r620kx8fxam5",
+                  "sourceRevision": 1
+                },
+                {
+                  "sourceEventId": "transcript:conversation:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b:kx75g0959n8r1bmvf6n6jpfpss8fxjf6",
+                  "sourceRevision": 1
+                },
+                {
+                  "sourceEventId": "transcript:conversation:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b:kx76ajg7np6gr76md9yyd8a3vn8fxday",
+                  "sourceRevision": 1
+                }
+              ],
+              "state": "pending",
+              "tenantId": "task06-custom"
+            }
+          ],
+          "modelAttempts": [
+            {
+              "_id": "p17eppamx3zj4pq0epayrbsq8s8fxj8x",
+              "dispatchIdentity": "016ae08dfd355e98e0287b7047fd8fd1ccb7480e0e5539bbab140faa67c35ec6",
+              "operationDocumentId": "p571k4g3bwacgarw15y4y7q7zd8fwm9m",
+              "reservationUnits": 100000,
+              "resultWithheld": false,
+              "slotReleased": true,
+              "state": "uncertain",
+              "terminalEvidenceCanonical": "{\"actualModel\":\"text-embedding-3-small\",\"costSource\":\"unavailable\",\"dispatchIdentity\":\"016ae08dfd355e98e0287b7047fd8fd1ccb7480e0e5539bbab140faa67c35ec6\",\"modelId\":\"openai/text-embedding-3-small\",\"nativeInterface\":\"embedding\",\"outcome\":\"confirmed\",\"proof\":\"provider-terminal-v1\",\"receiptId\":\"51381d95-429a-4781-956c-a58aab17d6cd\",\"usage\":{\"inputTokens\":14,\"totalTokens\":14},\"version\":1}"
+            },
+            {
+              "_id": "p176crzs3v6g2yz8yd53gjeb0s8fxv5k",
+              "dispatchIdentity": "b89a9994b79130b5ef154e14856cb512161dea12f525fee5a93b5fd35a8e3114",
+              "operationDocumentId": "p57dtaxmjdcs5bsps1jrq04es98fxz3b",
+              "reservationUnits": 100000,
+              "resultWithheld": false,
+              "slotReleased": true,
+              "state": "uncertain",
+              "terminalEvidenceCanonical": "{\"actualModel\":\"openai/gpt-4o-mini\",\"costSource\":\"unavailable\",\"dispatchIdentity\":\"b89a9994b79130b5ef154e14856cb512161dea12f525fee5a93b5fd35a8e3114\",\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"outcome\":\"confirmed\",\"proof\":\"provider-terminal-v1\",\"receiptId\":\"32e78752-181f-468b-8dd8-59dea5aad495\",\"usage\":{\"cachedInputTokens\":0,\"inputTokens\":177,\"outputTokens\":21,\"reasoningTokens\":0,\"totalTokens\":198},\"version\":1}"
+            },
+            {
+              "_id": "p173jfg09bbyf350k74wx6xwwh8fwrqq",
+              "dispatchIdentity": "712ed520620ff289261ca6c0ac5a12d67bbc79d7977defe0ec473f70e531a0ae",
+              "operationDocumentId": "p57df3n7d26apahjakrh2899m58fx5c2",
+              "reservationUnits": 100000,
+              "resultWithheld": false,
+              "slotReleased": true,
+              "state": "uncertain",
+              "terminalEvidenceCanonical": "{\"actualModel\":\"text-embedding-3-small\",\"costSource\":\"unavailable\",\"dispatchIdentity\":\"712ed520620ff289261ca6c0ac5a12d67bbc79d7977defe0ec473f70e531a0ae\",\"modelId\":\"openai/text-embedding-3-small\",\"nativeInterface\":\"embedding\",\"outcome\":\"confirmed\",\"proof\":\"provider-terminal-v1\",\"receiptId\":\"7623bf21-b20a-4175-b7a1-337708eab29b\",\"usage\":{\"inputTokens\":3,\"totalTokens\":3},\"version\":1}"
+            },
+            {
+              "_id": "p175emw61hgk0ep3er52x1ps3s8fwgca",
+              "dispatchIdentity": "044a3fe8f0e49a3a015001cf5ee19a8ecab82321bc9096d335fc49f52b4548f4",
+              "operationDocumentId": "p57bx7hd00mmm4d0t3w3c8r15n8fwj80",
+              "reservationUnits": 100000,
+              "resultWithheld": false,
+              "slotReleased": true,
+              "state": "uncertain",
+              "terminalEvidenceCanonical": "{\"actualModel\":\"openai/gpt-4o-mini\",\"costSource\":\"unavailable\",\"dispatchIdentity\":\"044a3fe8f0e49a3a015001cf5ee19a8ecab82321bc9096d335fc49f52b4548f4\",\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"outcome\":\"confirmed\",\"proof\":\"provider-terminal-v1\",\"receiptId\":\"e6c19491-9f67-4973-9878-a1396d219ab2\",\"usage\":{\"cachedInputTokens\":0,\"inputTokens\":250,\"outputTokens\":17,\"reasoningTokens\":0,\"totalTokens\":267},\"version\":1}"
+            }
+          ],
+          "modelOperations": [
+            {
+              "_id": "p571k4g3bwacgarw15y4y7q7zd8fwm9m",
+              "operationKey": "embedding.query",
+              "reservedUnits": 0,
+              "runBudgetId": "d2413c8d981d5a645c716f241eb5472df80a83454b394d3c8e8550b45afe3868",
+              "semanticId": "5593e18abdbdd59ea8739ab9e39c92288715edcccb48bcd3b0b82c8a629be5e9",
+              "settledUnits": 0,
+              "uncertainUnits": 100000
+            },
+            {
+              "_id": "p57dtaxmjdcs5bsps1jrq04es98fxz3b",
+              "operationKey": "agent.respond",
+              "reservedUnits": 0,
+              "runBudgetId": "d2413c8d981d5a645c716f241eb5472df80a83454b394d3c8e8550b45afe3868",
+              "semanticId": "f91910ab0fcba69f8ed354ee18a31e885aed7ef4c67c85642cf033c863a1124f",
+              "settledUnits": 0,
+              "uncertainUnits": 100000
+            },
+            {
+              "_id": "p57df3n7d26apahjakrh2899m58fx5c2",
+              "operationKey": "embedding.query",
+              "parentOperationId": "p57dtaxmjdcs5bsps1jrq04es98fxz3b",
+              "reservedUnits": 0,
+              "runBudgetId": "d2413c8d981d5a645c716f241eb5472df80a83454b394d3c8e8550b45afe3868",
+              "semanticId": "f0c629db351ae7337743637ea9d0b14072e2669ca8e19033cf33966591ca101a",
+              "settledUnits": 0,
+              "uncertainUnits": 100000
+            },
+            {
+              "_id": "p57bx7hd00mmm4d0t3w3c8r15n8fwj80",
+              "operationKey": "agent.respond",
+              "reservedUnits": 0,
+              "runBudgetId": "d2413c8d981d5a645c716f241eb5472df80a83454b394d3c8e8550b45afe3868",
+              "semanticId": "48b05249d8deb30c42a62dd1ae7a4afde11607341d2509cf8b73ce411c3acbd2",
+              "settledUnits": 0,
+              "uncertainUnits": 100000
+            }
+          ],
+          "native": [
+            {
+              "_id": "kx72709grdywrex57bfm6e06nd8fwg57",
+              "order": 0,
+              "role": "user",
+              "status": "success",
+              "stepOrder": 0
+            },
+            {
+              "_id": "kx74q9fy77jtsdtrx6y0r620kx8fxam5",
+              "agentName": "cortex:run:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b:1:0",
+              "order": 0,
+              "role": "assistant",
+              "status": "success",
+              "stepOrder": 1
+            },
+            {
+              "_id": "kx75g0959n8r1bmvf6n6jpfpss8fxjf6",
+              "agentName": "cortex:run:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b:1:0",
+              "order": 0,
+              "role": "tool",
+              "status": "success",
+              "stepOrder": 2
+            },
+            {
+              "_id": "kx76ajg7np6gr76md9yyd8a3vn8fxday",
+              "agentName": "cortex:run:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b:1:1",
+              "order": 0,
+              "role": "assistant",
+              "status": "success",
+              "stepOrder": 3
+            }
+          ],
+          "operations": [
+            {
+              "_creationTime": 1791466475064.668,
+              "_id": "qh7fb5k1pgkfb5hm0fmyck2rq98fw3bm",
+              "attemptNumber": 1,
+              "createdAt": 1791466475064,
+              "endedAt": 1791466482644,
+              "kind": "model",
+              "memorySpaceId": "task06-custom-space",
+              "nativeMessageIds": [
+                "kx74q9fy77jtsdtrx6y0r620kx8fxam5"
+              ],
+              "nativeModelOperationId": "p57dtaxmjdcs5bsps1jrq04es98fxz3b",
+              "operationId": "agent-op:f91910ab0fcba69f8ed354ee18a31e885aed7ef4c67c85642cf033c863a1124f",
+              "ordinal": 0,
+              "resultBytes": 212,
+              "runId": "run:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b",
+              "semanticId": "f91910ab0fcba69f8ed354ee18a31e885aed7ef4c67c85642cf033c863a1124f",
+              "startedAt": 1791466475312,
+              "state": "complete",
+              "tenantId": "task06-custom"
+            },
+            {
+              "_creationTime": 1791466483914.5713,
+              "_id": "qh74brv4jcgkr9trpnbcant0nx8fwtde",
+              "approvalActor": {
+                "grantId": "md72nepf0h1yrcs20vfy1sem6h8fwb5m",
+                "grantVersion": 1,
+                "membershipId": "mh7dw332vmxpbgnkbabw4w4k158fwfcb",
+                "membershipVersion": 1,
+                "memorySpaceEpoch": 1,
+                "memorySpaceId": "task06-custom-space",
+                "principalId": "mn7b7f8jrjpyc2eba0n1z5mp098fxde0",
+                "principalVersion": 1,
+                "tenantEpoch": 1,
+                "tenantId": "task06-custom"
+              },
+              "attemptNumber": 1,
+              "createdAt": 1791466483914,
+              "endedAt": 1791466492463,
+              "kind": "tool",
+              "memorySpaceId": "task06-custom-space",
+              "nativeMessageIds": [
+                "kx75g0959n8r1bmvf6n6jpfpss8fxjf6"
+              ],
+              "operationId": "agent-op:7225acb486491111d1b4ffdd12acdf1cf33b231f4667bc532fbd133a10416209",
+              "ordinal": 0,
+              "resultBytes": 160,
+              "runId": "run:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b",
+              "semanticId": "7225acb486491111d1b4ffdd12acdf1cf33b231f4667bc532fbd133a10416209",
+              "startedAt": 1791466488696,
+              "state": "complete",
+              "tenantId": "task06-custom",
+              "toolCallId": "call_bM1pXL5RWtEHD6DQXM928icl",
+              "toolName": "memory_recall"
+            },
+            {
+              "_creationTime": 1791466493761.0178,
+              "_id": "qh708aqwx5ahs6w343sjprbhgn8fx3rf",
+              "attemptNumber": 1,
+              "createdAt": 1791466493761,
+              "endedAt": 1791466671033,
+              "kind": "model",
+              "memorySpaceId": "task06-custom-space",
+              "nativeMessageIds": [
+                "kx76ajg7np6gr76md9yyd8a3vn8fxday"
+              ],
+              "nativeModelOperationId": "p57bx7hd00mmm4d0t3w3c8r15n8fwj80",
+              "operationId": "agent-op:48b05249d8deb30c42a62dd1ae7a4afde11607341d2509cf8b73ce411c3acbd2",
+              "ordinal": 1,
+              "resultBytes": 0,
+              "runId": "run:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b",
+              "semanticId": "48b05249d8deb30c42a62dd1ae7a4afde11607341d2509cf8b73ce411c3acbd2",
+              "startedAt": 1791466494012,
+              "state": "complete",
+              "tenantId": "task06-custom"
+            }
+          ],
+          "outbox": [
+            {
+              "_creationTime": 1791466463906.672,
+              "_id": "pn714wx015wvsew54fc2tt9n1s8fxj3c",
+              "conversationId": "conversation:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b",
+              "createdAt": 1791466463906,
+              "leaseExpiresAt": 1791466794012,
+              "leaseVersion": 1,
+              "memorySpaceId": "task06-custom-space",
+              "runId": "run:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b",
+              "sequence": 1,
+              "state": "complete",
+              "tenantId": "task06-custom",
+              "updatedAt": 1791466671033
+            }
+          ],
+          "run": {
+            "_creationTime": 1791466463906.6719,
+            "_id": "ps782dzavzerkthgnmdxq2ect58fw75a",
+            "agentId": "agent:35704f76ec8cce13e670ae86c0184e3ad7384bb7831260a3251529ee7fad50af",
+            "agentVersion": 1,
+            "attemptNumber": 1,
+            "authorityReference": {
+              "grantId": "md72nepf0h1yrcs20vfy1sem6h8fwb5m",
+              "grantVersion": 1,
+              "membershipId": "mh7dw332vmxpbgnkbabw4w4k158fwfcb",
+              "membershipVersion": 1,
+              "memorySpaceEpoch": 1,
+              "memorySpaceId": "task06-custom-space",
+              "principalId": "mn7b7f8jrjpyc2eba0n1z5mp098fxde0",
+              "principalVersion": 1,
+              "tenantEpoch": 1,
+              "tenantId": "task06-custom"
+            },
+            "conversationEpoch": 1,
+            "conversationId": "conversation:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b",
+            "createdAt": 1791466463906,
+            "definitionHash": "d95b1c10233f2592d755368634aad340b9c54f9caebde0b11bf17cac9757a898",
+            "executionRequested": true,
+            "failureCode": "INTERRUPTED_REQUIRES_RECONCILIATION",
+            "graphStatus": "not_requested",
+            "historyRevision": 0,
+            "inputMessageIds": [
+              "kx72709grdywrex57bfm6e06nd8fwg57"
+            ],
+            "memorySpaceId": "task06-custom-space",
+            "memoryStatus": "pending",
+            "outputMessageIds": [
+              "kx76ajg7np6gr76md9yyd8a3vn8fxday"
+            ],
+            "ownerPrincipalId": "mn7b7f8jrjpyc2eba0n1z5mp098fxde0",
+            "queueSequence": 1,
+            "requestCanonical": "{\"identity\":[\"cortex.submit.v1\",\"task06-custom\",\"task06-custom-space\",\"mn7b7f8jrjpyc2eba0n1z5mp098fxde0\",[\"create\"],\"task07-544bcc86-06e1-4990-9eb0-0af005af689e\"],\"publicRequest\":{\"agentId\":\"agent:35704f76ec8cce13e670ae86c0184e3ad7384bb7831260a3251529ee7fad50af\",\"agentVersion\":1,\"clientRequestId\":\"task07-544bcc86-06e1-4990-9eb0-0af005af689e\",\"parts\":[{\"text\":\"Recall my tea preference with the memory_recall tool, then respond.\",\"type\":\"text\"}],\"version\":1},\"version\":1}",
+            "requestIdentityCanonical": "[\"cortex.submit.v1\",\"task06-custom\",\"task06-custom-space\",\"mn7b7f8jrjpyc2eba0n1z5mp098fxde0\",[\"create\"],\"task07-544bcc86-06e1-4990-9eb0-0af005af689e\"]",
+            "requestIdentityHash": "b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b",
+            "responseStatus": "complete",
+            "runAccountId": "n17bx027mwbv5bscbqgrnyygs58fww22",
+            "runBudgetId": "d2413c8d981d5a645c716f241eb5472df80a83454b394d3c8e8550b45afe3868",
+            "runId": "run:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b",
+            "snapshotCanonical": "{\"anchor\":{\"canonicalContentHash\":\"cc3a1ccff7ede73687348504e7c1dfa0c2666ac519608b0f41ac11659d64d485\",\"contentHash\":\"2105496516ee1ac04fba74b3a26de94ee9fc2a8abccff6c79ae7218c27269ccb\",\"nativeMessageId\":\"kx72709grdywrex57bfm6e06nd8fwg57\",\"order\":0,\"sourceEventId\":\"transcript:conversation:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b:kx72709grdywrex57bfm6e06nd8fwg57\",\"sourceRevision\":1,\"stepOrder\":0},\"attemptNumber\":1,\"capturedAuthorityReference\":{\"grantId\":\"md72nepf0h1yrcs20vfy1sem6h8fwb5m\",\"grantVersion\":1,\"membershipId\":\"mh7dw332vmxpbgnkbabw4w4k158fwfcb\",\"membershipVersion\":1,\"memorySpaceEpoch\":1,\"memorySpaceId\":\"task06-custom-space\",\"principalId\":\"mn7b7f8jrjpyc2eba0n1z5mp098fxde0\",\"principalVersion\":1,\"tenantEpoch\":1,\"tenantId\":\"task06-custom\"},\"completeness\":\"complete\",\"conversationEpoch\":1,\"conversationId\":\"conversation:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b\",\"definitionHash\":\"d95b1c10233f2592d755368634aad340b9c54f9caebde0b11bf17cac9757a898\",\"definitionVersion\":1,\"historyRevision\":0,\"ingestionCutoff\":{\"requiredStages\":[],\"scopeIdentity\":\"[\\\"task06-custom\\\",\\\"task06-custom-space\\\"]\",\"sequence\":1},\"messages\":[{\"canonicalContentHash\":\"cc3a1ccff7ede73687348504e7c1dfa0c2666ac519608b0f41ac11659d64d485\",\"contentHash\":\"2105496516ee1ac04fba74b3a26de94ee9fc2a8abccff6c79ae7218c27269ccb\",\"nativeMessageId\":\"kx72709grdywrex57bfm6e06nd8fwg57\",\"order\":0,\"sourceEventId\":\"transcript:conversation:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b:kx72709grdywrex57bfm6e06nd8fwg57\",\"sourceRevision\":1,\"stepOrder\":0}],\"queueSequence\":1,\"runDocId\":\"ps782dzavzerkthgnmdxq2ect58fw75a\",\"threadId\":\"m971085sp3681ewqje4z4mf6r58fwysy\",\"version\":1}",
+            "streamingRequested": true,
+            "tenantId": "task06-custom",
+            "updatedAt": 1791466671033
+          }
+        },
+        "final": {
+          "bridges": [
+            {
+              "_id": "px75g1pgavq8ypm0adbetfs35x8fwnb7",
+              "nativeMessageId": "kx72709grdywrex57bfm6e06nd8fwg57",
+              "sourceEventId": "transcript:conversation:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b:kx72709grdywrex57bfm6e06nd8fwg57",
+              "sourceRevision": 1
+            },
+            {
+              "_id": "px7c70a38csercqhmgays6y0kh8fxyks",
+              "nativeMessageId": "kx74q9fy77jtsdtrx6y0r620kx8fxam5",
+              "sourceEventId": "transcript:conversation:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b:kx74q9fy77jtsdtrx6y0r620kx8fxam5",
+              "sourceRevision": 1
+            },
+            {
+              "_id": "px75vm4wsmmfmz5fyvcd8d28158fwq87",
+              "nativeMessageId": "kx75g0959n8r1bmvf6n6jpfpss8fxjf6",
+              "sourceEventId": "transcript:conversation:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b:kx75g0959n8r1bmvf6n6jpfpss8fxjf6",
+              "sourceRevision": 1
+            },
+            {
+              "_id": "px71pwx2twq0am85vpyqxgjhmx8fxdcy",
+              "nativeMessageId": "kx76ajg7np6gr76md9yyd8a3vn8fxday",
+              "sourceEventId": "transcript:conversation:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b:kx76ajg7np6gr76md9yyd8a3vn8fxday",
+              "sourceRevision": 1
+            }
+          ],
+          "executions": [
+            {
+              "_creationTime": 1791466464392.9795,
+              "_id": "q9731nx12q0b1d8xrsj61gw5gx8fxbn3",
+              "attemptNumber": 1,
+              "contextCanonical": "## Relevant Context\n\n### Known Facts\n- User prefers jasmine tea. (confidence: 100%, recorded: just now)\n\n### Conversation History\n[user]: The user prefers jasmine tea.",
+              "contextState": "complete",
+              "createdAt": 1791466464392,
+              "failureCode": "INTERRUPTED_REQUIRES_RECONCILIATION",
+              "finalMessageIds": [
+                "kx76ajg7np6gr76md9yyd8a3vn8fxday"
+              ],
+              "ingestionReceiptId": "agent-ingestion:b38b25fa9b99a77a54e5e9d66cc766244a54b68aa094ba7b8968ecf08f0f0810",
+              "leaseVersion": 1,
+              "memorySpaceId": "task06-custom-space",
+              "nextModelStep": 1,
+              "nextOutputSequence": 21,
+              "reference": {
+                "grantId": "md72nepf0h1yrcs20vfy1sem6h8fwb5m",
+                "grantVersion": 1,
+                "membershipId": "mh7dw332vmxpbgnkbabw4w4k158fwfcb",
+                "membershipVersion": 1,
+                "memorySpaceEpoch": 1,
+                "memorySpaceId": "task06-custom-space",
+                "principalId": "mn7b7f8jrjpyc2eba0n1z5mp098fxde0",
+                "principalVersion": 1,
+                "tenantEpoch": 1,
+                "tenantId": "task06-custom"
+              },
+              "runId": "run:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b",
+              "savedMessageIds": [
+                "kx74q9fy77jtsdtrx6y0r620kx8fxam5",
+                "kx75g0959n8r1bmvf6n6jpfpss8fxjf6",
+                "kx76ajg7np6gr76md9yyd8a3vn8fxday"
+              ],
+              "savedMessagePins": [
+                {
+                  "canonicalContentHash": "3c9681f2143803ac2c851e06508e584e2ba4d43172ba0d2dadf80cc50b982353",
+                  "id": "kx74q9fy77jtsdtrx6y0r620kx8fxam5",
+                  "order": 0,
+                  "stepOrder": 1
+                },
+                {
+                  "canonicalContentHash": "2c65b17795cd4d3c46d6cbe52b80bba3c0ecda3c58e8cd0df150d733e9828d49",
+                  "id": "kx75g0959n8r1bmvf6n6jpfpss8fxjf6",
+                  "order": 0,
+                  "stepOrder": 2
+                },
+                {
+                  "canonicalContentHash": "d2b545c8de2973802664fb95715844e0bc686429b3bae089fed97d7466ddd6f9",
+                  "id": "kx76ajg7np6gr76md9yyd8a3vn8fxday",
+                  "order": 0,
+                  "stepOrder": 3
+                }
+              ],
+              "sourceWitnesses": [
+                {
+                  "contentHash": "82181612f14ed9b80934f575476412e58e7f2846580870375a9fc36fb6beed95",
+                  "sourceEventId": "explicit:[\"task06-custom\",\"task06-custom-space\",\"mn7b7f8jrjpyc2eba0n1z5mp098fxde0\",\"task07-seed-544bcc86-06e1-4990-9eb0-0af005af689e\"]",
+                  "sourceId": "explicit:[\"task06-custom\",\"task06-custom-space\",\"mn7b7f8jrjpyc2eba0n1z5mp098fxde0\",\"task07-seed-544bcc86-06e1-4990-9eb0-0af005af689e\"]",
+                  "sourceRevision": 1
+                }
+              ],
+              "state": "complete",
+              "streaming": true,
+              "tenantId": "task06-custom",
+              "toolCount": 1,
+              "updatedAt": 1791466671033,
+              "workflowId": "jd74r12mt2v345me337wtc9g9d8fx3wv"
+            }
+          ],
+          "ingestion": [
+            {
+              "_creationTime": 1791466671033.1704,
+              "_id": "qd7ced6bpp8m5faqj0qx9m5mns8fwzkq",
+              "attemptNumber": 1,
+              "createdAt": 1791466671033,
+              "identityCanonical": "[\"run:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b\",1,[\"kx76ajg7np6gr76md9yyd8a3vn8fxday\"]]",
+              "memorySpaceId": "task06-custom-space",
+              "outputMessageIds": [
+                "kx76ajg7np6gr76md9yyd8a3vn8fxday"
+              ],
+              "receiptId": "agent-ingestion:b38b25fa9b99a77a54e5e9d66cc766244a54b68aa094ba7b8968ecf08f0f0810",
+              "runId": "run:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b",
+              "sourceEvents": [
+                {
+                  "sourceEventId": "transcript:conversation:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b:kx74q9fy77jtsdtrx6y0r620kx8fxam5",
+                  "sourceRevision": 1
+                },
+                {
+                  "sourceEventId": "transcript:conversation:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b:kx75g0959n8r1bmvf6n6jpfpss8fxjf6",
+                  "sourceRevision": 1
+                },
+                {
+                  "sourceEventId": "transcript:conversation:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b:kx76ajg7np6gr76md9yyd8a3vn8fxday",
+                  "sourceRevision": 1
+                }
+              ],
+              "state": "pending",
+              "tenantId": "task06-custom"
+            }
+          ],
+          "modelAttempts": [
+            {
+              "_id": "p17eppamx3zj4pq0epayrbsq8s8fxj8x",
+              "dispatchIdentity": "016ae08dfd355e98e0287b7047fd8fd1ccb7480e0e5539bbab140faa67c35ec6",
+              "operationDocumentId": "p571k4g3bwacgarw15y4y7q7zd8fwm9m",
+              "reservationUnits": 100000,
+              "resultWithheld": false,
+              "slotReleased": true,
+              "state": "uncertain",
+              "terminalEvidenceCanonical": "{\"actualModel\":\"text-embedding-3-small\",\"costSource\":\"unavailable\",\"dispatchIdentity\":\"016ae08dfd355e98e0287b7047fd8fd1ccb7480e0e5539bbab140faa67c35ec6\",\"modelId\":\"openai/text-embedding-3-small\",\"nativeInterface\":\"embedding\",\"outcome\":\"confirmed\",\"proof\":\"provider-terminal-v1\",\"receiptId\":\"51381d95-429a-4781-956c-a58aab17d6cd\",\"usage\":{\"inputTokens\":14,\"totalTokens\":14},\"version\":1}"
+            },
+            {
+              "_id": "p176crzs3v6g2yz8yd53gjeb0s8fxv5k",
+              "dispatchIdentity": "b89a9994b79130b5ef154e14856cb512161dea12f525fee5a93b5fd35a8e3114",
+              "operationDocumentId": "p57dtaxmjdcs5bsps1jrq04es98fxz3b",
+              "reservationUnits": 100000,
+              "resultWithheld": false,
+              "slotReleased": true,
+              "state": "uncertain",
+              "terminalEvidenceCanonical": "{\"actualModel\":\"openai/gpt-4o-mini\",\"costSource\":\"unavailable\",\"dispatchIdentity\":\"b89a9994b79130b5ef154e14856cb512161dea12f525fee5a93b5fd35a8e3114\",\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"outcome\":\"confirmed\",\"proof\":\"provider-terminal-v1\",\"receiptId\":\"32e78752-181f-468b-8dd8-59dea5aad495\",\"usage\":{\"cachedInputTokens\":0,\"inputTokens\":177,\"outputTokens\":21,\"reasoningTokens\":0,\"totalTokens\":198},\"version\":1}"
+            },
+            {
+              "_id": "p173jfg09bbyf350k74wx6xwwh8fwrqq",
+              "dispatchIdentity": "712ed520620ff289261ca6c0ac5a12d67bbc79d7977defe0ec473f70e531a0ae",
+              "operationDocumentId": "p57df3n7d26apahjakrh2899m58fx5c2",
+              "reservationUnits": 100000,
+              "resultWithheld": false,
+              "slotReleased": true,
+              "state": "uncertain",
+              "terminalEvidenceCanonical": "{\"actualModel\":\"text-embedding-3-small\",\"costSource\":\"unavailable\",\"dispatchIdentity\":\"712ed520620ff289261ca6c0ac5a12d67bbc79d7977defe0ec473f70e531a0ae\",\"modelId\":\"openai/text-embedding-3-small\",\"nativeInterface\":\"embedding\",\"outcome\":\"confirmed\",\"proof\":\"provider-terminal-v1\",\"receiptId\":\"7623bf21-b20a-4175-b7a1-337708eab29b\",\"usage\":{\"inputTokens\":3,\"totalTokens\":3},\"version\":1}"
+            },
+            {
+              "_id": "p175emw61hgk0ep3er52x1ps3s8fwgca",
+              "dispatchIdentity": "044a3fe8f0e49a3a015001cf5ee19a8ecab82321bc9096d335fc49f52b4548f4",
+              "operationDocumentId": "p57bx7hd00mmm4d0t3w3c8r15n8fwj80",
+              "reservationUnits": 100000,
+              "resultWithheld": false,
+              "slotReleased": true,
+              "state": "uncertain",
+              "terminalEvidenceCanonical": "{\"actualModel\":\"openai/gpt-4o-mini\",\"costSource\":\"unavailable\",\"dispatchIdentity\":\"044a3fe8f0e49a3a015001cf5ee19a8ecab82321bc9096d335fc49f52b4548f4\",\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"outcome\":\"confirmed\",\"proof\":\"provider-terminal-v1\",\"receiptId\":\"e6c19491-9f67-4973-9878-a1396d219ab2\",\"usage\":{\"cachedInputTokens\":0,\"inputTokens\":250,\"outputTokens\":17,\"reasoningTokens\":0,\"totalTokens\":267},\"version\":1}"
+            }
+          ],
+          "modelOperations": [
+            {
+              "_id": "p571k4g3bwacgarw15y4y7q7zd8fwm9m",
+              "operationKey": "embedding.query",
+              "reservedUnits": 0,
+              "runBudgetId": "d2413c8d981d5a645c716f241eb5472df80a83454b394d3c8e8550b45afe3868",
+              "semanticId": "5593e18abdbdd59ea8739ab9e39c92288715edcccb48bcd3b0b82c8a629be5e9",
+              "settledUnits": 0,
+              "uncertainUnits": 100000
+            },
+            {
+              "_id": "p57dtaxmjdcs5bsps1jrq04es98fxz3b",
+              "operationKey": "agent.respond",
+              "reservedUnits": 0,
+              "runBudgetId": "d2413c8d981d5a645c716f241eb5472df80a83454b394d3c8e8550b45afe3868",
+              "semanticId": "f91910ab0fcba69f8ed354ee18a31e885aed7ef4c67c85642cf033c863a1124f",
+              "settledUnits": 0,
+              "uncertainUnits": 100000
+            },
+            {
+              "_id": "p57df3n7d26apahjakrh2899m58fx5c2",
+              "operationKey": "embedding.query",
+              "parentOperationId": "p57dtaxmjdcs5bsps1jrq04es98fxz3b",
+              "reservedUnits": 0,
+              "runBudgetId": "d2413c8d981d5a645c716f241eb5472df80a83454b394d3c8e8550b45afe3868",
+              "semanticId": "f0c629db351ae7337743637ea9d0b14072e2669ca8e19033cf33966591ca101a",
+              "settledUnits": 0,
+              "uncertainUnits": 100000
+            },
+            {
+              "_id": "p57bx7hd00mmm4d0t3w3c8r15n8fwj80",
+              "operationKey": "agent.respond",
+              "reservedUnits": 0,
+              "runBudgetId": "d2413c8d981d5a645c716f241eb5472df80a83454b394d3c8e8550b45afe3868",
+              "semanticId": "48b05249d8deb30c42a62dd1ae7a4afde11607341d2509cf8b73ce411c3acbd2",
+              "settledUnits": 0,
+              "uncertainUnits": 100000
+            }
+          ],
+          "native": [
+            {
+              "_id": "kx72709grdywrex57bfm6e06nd8fwg57",
+              "order": 0,
+              "role": "user",
+              "status": "success",
+              "stepOrder": 0
+            },
+            {
+              "_id": "kx74q9fy77jtsdtrx6y0r620kx8fxam5",
+              "agentName": "cortex:run:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b:1:0",
+              "order": 0,
+              "role": "assistant",
+              "status": "success",
+              "stepOrder": 1
+            },
+            {
+              "_id": "kx75g0959n8r1bmvf6n6jpfpss8fxjf6",
+              "agentName": "cortex:run:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b:1:0",
+              "order": 0,
+              "role": "tool",
+              "status": "success",
+              "stepOrder": 2
+            },
+            {
+              "_id": "kx76ajg7np6gr76md9yyd8a3vn8fxday",
+              "agentName": "cortex:run:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b:1:1",
+              "order": 0,
+              "role": "assistant",
+              "status": "success",
+              "stepOrder": 3
+            }
+          ],
+          "operations": [
+            {
+              "_creationTime": 1791466475064.668,
+              "_id": "qh7fb5k1pgkfb5hm0fmyck2rq98fw3bm",
+              "attemptNumber": 1,
+              "createdAt": 1791466475064,
+              "endedAt": 1791466482644,
+              "kind": "model",
+              "memorySpaceId": "task06-custom-space",
+              "nativeMessageIds": [
+                "kx74q9fy77jtsdtrx6y0r620kx8fxam5"
+              ],
+              "nativeModelOperationId": "p57dtaxmjdcs5bsps1jrq04es98fxz3b",
+              "operationId": "agent-op:f91910ab0fcba69f8ed354ee18a31e885aed7ef4c67c85642cf033c863a1124f",
+              "ordinal": 0,
+              "resultBytes": 212,
+              "runId": "run:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b",
+              "semanticId": "f91910ab0fcba69f8ed354ee18a31e885aed7ef4c67c85642cf033c863a1124f",
+              "startedAt": 1791466475312,
+              "state": "complete",
+              "tenantId": "task06-custom"
+            },
+            {
+              "_creationTime": 1791466483914.5713,
+              "_id": "qh74brv4jcgkr9trpnbcant0nx8fwtde",
+              "approvalActor": {
+                "grantId": "md72nepf0h1yrcs20vfy1sem6h8fwb5m",
+                "grantVersion": 1,
+                "membershipId": "mh7dw332vmxpbgnkbabw4w4k158fwfcb",
+                "membershipVersion": 1,
+                "memorySpaceEpoch": 1,
+                "memorySpaceId": "task06-custom-space",
+                "principalId": "mn7b7f8jrjpyc2eba0n1z5mp098fxde0",
+                "principalVersion": 1,
+                "tenantEpoch": 1,
+                "tenantId": "task06-custom"
+              },
+              "attemptNumber": 1,
+              "createdAt": 1791466483914,
+              "endedAt": 1791466492463,
+              "kind": "tool",
+              "memorySpaceId": "task06-custom-space",
+              "nativeMessageIds": [
+                "kx75g0959n8r1bmvf6n6jpfpss8fxjf6"
+              ],
+              "operationId": "agent-op:7225acb486491111d1b4ffdd12acdf1cf33b231f4667bc532fbd133a10416209",
+              "ordinal": 0,
+              "resultBytes": 160,
+              "runId": "run:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b",
+              "semanticId": "7225acb486491111d1b4ffdd12acdf1cf33b231f4667bc532fbd133a10416209",
+              "startedAt": 1791466488696,
+              "state": "complete",
+              "tenantId": "task06-custom",
+              "toolCallId": "call_bM1pXL5RWtEHD6DQXM928icl",
+              "toolName": "memory_recall"
+            },
+            {
+              "_creationTime": 1791466493761.0178,
+              "_id": "qh708aqwx5ahs6w343sjprbhgn8fx3rf",
+              "attemptNumber": 1,
+              "createdAt": 1791466493761,
+              "endedAt": 1791466671033,
+              "kind": "model",
+              "memorySpaceId": "task06-custom-space",
+              "nativeMessageIds": [
+                "kx76ajg7np6gr76md9yyd8a3vn8fxday"
+              ],
+              "nativeModelOperationId": "p57bx7hd00mmm4d0t3w3c8r15n8fwj80",
+              "operationId": "agent-op:48b05249d8deb30c42a62dd1ae7a4afde11607341d2509cf8b73ce411c3acbd2",
+              "ordinal": 1,
+              "resultBytes": 0,
+              "runId": "run:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b",
+              "semanticId": "48b05249d8deb30c42a62dd1ae7a4afde11607341d2509cf8b73ce411c3acbd2",
+              "startedAt": 1791466494012,
+              "state": "complete",
+              "tenantId": "task06-custom"
+            }
+          ],
+          "outbox": [
+            {
+              "_creationTime": 1791466463906.672,
+              "_id": "pn714wx015wvsew54fc2tt9n1s8fxj3c",
+              "conversationId": "conversation:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b",
+              "createdAt": 1791466463906,
+              "leaseExpiresAt": 1791466794012,
+              "leaseVersion": 1,
+              "memorySpaceId": "task06-custom-space",
+              "runId": "run:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b",
+              "sequence": 1,
+              "state": "complete",
+              "tenantId": "task06-custom",
+              "updatedAt": 1791466671033
+            }
+          ],
+          "run": {
+            "_creationTime": 1791466463906.6719,
+            "_id": "ps782dzavzerkthgnmdxq2ect58fw75a",
+            "agentId": "agent:35704f76ec8cce13e670ae86c0184e3ad7384bb7831260a3251529ee7fad50af",
+            "agentVersion": 1,
+            "attemptNumber": 1,
+            "authorityReference": {
+              "grantId": "md72nepf0h1yrcs20vfy1sem6h8fwb5m",
+              "grantVersion": 1,
+              "membershipId": "mh7dw332vmxpbgnkbabw4w4k158fwfcb",
+              "membershipVersion": 1,
+              "memorySpaceEpoch": 1,
+              "memorySpaceId": "task06-custom-space",
+              "principalId": "mn7b7f8jrjpyc2eba0n1z5mp098fxde0",
+              "principalVersion": 1,
+              "tenantEpoch": 1,
+              "tenantId": "task06-custom"
+            },
+            "conversationEpoch": 1,
+            "conversationId": "conversation:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b",
+            "createdAt": 1791466463906,
+            "definitionHash": "d95b1c10233f2592d755368634aad340b9c54f9caebde0b11bf17cac9757a898",
+            "executionRequested": true,
+            "failureCode": "INTERRUPTED_REQUIRES_RECONCILIATION",
+            "graphStatus": "not_requested",
+            "historyRevision": 0,
+            "inputMessageIds": [
+              "kx72709grdywrex57bfm6e06nd8fwg57"
+            ],
+            "memorySpaceId": "task06-custom-space",
+            "memoryStatus": "pending",
+            "outputMessageIds": [
+              "kx76ajg7np6gr76md9yyd8a3vn8fxday"
+            ],
+            "ownerPrincipalId": "mn7b7f8jrjpyc2eba0n1z5mp098fxde0",
+            "queueSequence": 1,
+            "requestCanonical": "{\"identity\":[\"cortex.submit.v1\",\"task06-custom\",\"task06-custom-space\",\"mn7b7f8jrjpyc2eba0n1z5mp098fxde0\",[\"create\"],\"task07-544bcc86-06e1-4990-9eb0-0af005af689e\"],\"publicRequest\":{\"agentId\":\"agent:35704f76ec8cce13e670ae86c0184e3ad7384bb7831260a3251529ee7fad50af\",\"agentVersion\":1,\"clientRequestId\":\"task07-544bcc86-06e1-4990-9eb0-0af005af689e\",\"parts\":[{\"text\":\"Recall my tea preference with the memory_recall tool, then respond.\",\"type\":\"text\"}],\"version\":1},\"version\":1}",
+            "requestIdentityCanonical": "[\"cortex.submit.v1\",\"task06-custom\",\"task06-custom-space\",\"mn7b7f8jrjpyc2eba0n1z5mp098fxde0\",[\"create\"],\"task07-544bcc86-06e1-4990-9eb0-0af005af689e\"]",
+            "requestIdentityHash": "b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b",
+            "responseStatus": "complete",
+            "runAccountId": "n17bx027mwbv5bscbqgrnyygs58fww22",
+            "runBudgetId": "d2413c8d981d5a645c716f241eb5472df80a83454b394d3c8e8550b45afe3868",
+            "runId": "run:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b",
+            "snapshotCanonical": "{\"anchor\":{\"canonicalContentHash\":\"cc3a1ccff7ede73687348504e7c1dfa0c2666ac519608b0f41ac11659d64d485\",\"contentHash\":\"2105496516ee1ac04fba74b3a26de94ee9fc2a8abccff6c79ae7218c27269ccb\",\"nativeMessageId\":\"kx72709grdywrex57bfm6e06nd8fwg57\",\"order\":0,\"sourceEventId\":\"transcript:conversation:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b:kx72709grdywrex57bfm6e06nd8fwg57\",\"sourceRevision\":1,\"stepOrder\":0},\"attemptNumber\":1,\"capturedAuthorityReference\":{\"grantId\":\"md72nepf0h1yrcs20vfy1sem6h8fwb5m\",\"grantVersion\":1,\"membershipId\":\"mh7dw332vmxpbgnkbabw4w4k158fwfcb\",\"membershipVersion\":1,\"memorySpaceEpoch\":1,\"memorySpaceId\":\"task06-custom-space\",\"principalId\":\"mn7b7f8jrjpyc2eba0n1z5mp098fxde0\",\"principalVersion\":1,\"tenantEpoch\":1,\"tenantId\":\"task06-custom\"},\"completeness\":\"complete\",\"conversationEpoch\":1,\"conversationId\":\"conversation:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b\",\"definitionHash\":\"d95b1c10233f2592d755368634aad340b9c54f9caebde0b11bf17cac9757a898\",\"definitionVersion\":1,\"historyRevision\":0,\"ingestionCutoff\":{\"requiredStages\":[],\"scopeIdentity\":\"[\\\"task06-custom\\\",\\\"task06-custom-space\\\"]\",\"sequence\":1},\"messages\":[{\"canonicalContentHash\":\"cc3a1ccff7ede73687348504e7c1dfa0c2666ac519608b0f41ac11659d64d485\",\"contentHash\":\"2105496516ee1ac04fba74b3a26de94ee9fc2a8abccff6c79ae7218c27269ccb\",\"nativeMessageId\":\"kx72709grdywrex57bfm6e06nd8fwg57\",\"order\":0,\"sourceEventId\":\"transcript:conversation:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b:kx72709grdywrex57bfm6e06nd8fwg57\",\"sourceRevision\":1,\"stepOrder\":0}],\"queueSequence\":1,\"runDocId\":\"ps782dzavzerkthgnmdxq2ect58fw75a\",\"threadId\":\"m971085sp3681ewqje4z4mf6r58fwysy\",\"version\":1}",
+            "streamingRequested": true,
+            "tenantId": "task06-custom",
+            "updatedAt": 1791466671033
+          }
+        },
+        "output": {
+          "approvals": [],
+          "cursor": 21,
+          "parts": [
+            {
+              "part": {
+                "text": "CORTEX_AGENT_TOOL_STREAM_OK  \nYour recalled tea preference is jasmine tea.",
+                "type": "text"
+              },
+              "sequence": 20
+            },
+            {
+              "part": {
+                "state": "complete",
+                "type": "status"
+              },
+              "sequence": 21
+            }
+          ],
+          "run": {
+            "agentId": "agent:35704f76ec8cce13e670ae86c0184e3ad7384bb7831260a3251529ee7fad50af",
+            "agentVersion": 1,
+            "attemptNumber": 1,
+            "cancellationRequested": false,
+            "conversationId": "conversation:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b",
+            "createdAt": 1791466463906,
+            "failureCode": "INTERRUPTED_REQUIRES_RECONCILIATION",
+            "graphStatus": "not_requested",
+            "inputMessageIds": [
+              "kx72709grdywrex57bfm6e06nd8fwg57"
+            ],
+            "memoryStatus": "pending",
+            "outputMessageIds": [
+              "kx76ajg7np6gr76md9yyd8a3vn8fxday"
+            ],
+            "queueSequence": 1,
+            "responseStatus": "complete",
+            "runId": "run:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b",
+            "updatedAt": 1791466671033,
+            "version": 1
+          },
+          "state": "complete"
+        },
+        "providerAttemptsUnchanged": true,
+        "paidRetry": false,
+        "triggeringProductFailure": "live-native-failure-logs1.json",
+        "claimsOriginalLiveRunGreen": false
+      }
+    },
+    {
+      "file": "history-currentness-outcome.json",
+      "bytes": 12779,
+      "sha256": "d16ed0dbcc5738b3e43c19d417ab4f827c1768990d8a395722685d3bbd994b8f",
+      "topKeys": [
+        "operation",
+        "status",
+        "sourceId",
+        "priorRunId",
+        "laterRunId",
+        "staleHistoryDeniedAt",
+        "error",
+        "after",
+        "noSubsequentPaidAttempt",
+        "completedPriorPaidAttemptCount",
+        "originalCompletedTurnPreserved",
+        "usesActualCachedToolPayload"
+      ],
+      "body": {
+        "operation": "90311bf1-e73f-4e20-a335-56736b6d324a",
+        "status": "PASS",
+        "sourceId": "explicit:[\"task06-custom\",\"task06-custom-space\",\"mn7b7f8jrjpyc2eba0n1z5mp098fxde0\",\"task07-seed-544bcc86-06e1-4990-9eb0-0af005af689e\"]",
+        "priorRunId": "run:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b",
+        "laterRunId": "run:360784ca7fea27fe715616fa41bcea1cc18605b6ab3e629f064f8971504407cf",
+        "staleHistoryDeniedAt": "private-hydrate",
+        "error": {
+          "name": "ConvexError",
+          "message": "[Request ID: ec00c523b27dbedb] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../custom/backend/runtimeAuth.ts:45:26)\n    at materialize (../../custom/backend/runtimeAuth.ts:149:2)\n    at async resolveAuthorityReference (../../custom/backend/runtimeAuth.ts:202:0)\n    at async recheckAuthority (../../custom/backend/runtimeAuth.ts:256:0)\n    at async authority [as authority] (../../custom/backend/runtimeMemoryRepository.ts:83:62)\n    at async getSource [as getSource] (../../custom/backend/runtimeMemoryRepository.ts:100:2)\n    at async currentPrivateSources (../../custom/backend/runtimeTranscript.ts:186:26)\n    at async hydratePrivateCutoff (../../custom/backend/runtimeTranscript.ts:326:45)\n    at async executionContext (../../custom/backend/runtimeAgent.ts:103:55)\n    at async handler (../../custom/backend/runtimeAgent.ts:130:56)\n",
+          "data": {
+            "code": "FORBIDDEN",
+            "message": "Access denied",
+            "outcome": "not_dispatched",
+            "retryable": false,
+            "version": 1
+          }
+        },
+        "after": {
+          "bridges": [
+            {
+              "_id": "px75g1pgavq8ypm0adbetfs35x8fwnb7",
+              "nativeMessageId": "kx72709grdywrex57bfm6e06nd8fwg57",
+              "sourceEventId": "transcript:conversation:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b:kx72709grdywrex57bfm6e06nd8fwg57",
+              "sourceRevision": 1
+            },
+            {
+              "_id": "px7c70a38csercqhmgays6y0kh8fxyks",
+              "nativeMessageId": "kx74q9fy77jtsdtrx6y0r620kx8fxam5",
+              "sourceEventId": "transcript:conversation:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b:kx74q9fy77jtsdtrx6y0r620kx8fxam5",
+              "sourceRevision": 1
+            },
+            {
+              "_id": "px75vm4wsmmfmz5fyvcd8d28158fwq87",
+              "nativeMessageId": "kx75g0959n8r1bmvf6n6jpfpss8fxjf6",
+              "sourceEventId": "transcript:conversation:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b:kx75g0959n8r1bmvf6n6jpfpss8fxjf6",
+              "sourceRevision": 1
+            },
+            {
+              "_id": "px71pwx2twq0am85vpyqxgjhmx8fxdcy",
+              "nativeMessageId": "kx76ajg7np6gr76md9yyd8a3vn8fxday",
+              "sourceEventId": "transcript:conversation:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b:kx76ajg7np6gr76md9yyd8a3vn8fxday",
+              "sourceRevision": 1
+            },
+            {
+              "_id": "px72kqmxbd8s2chjrry6vs9xkd8fxh6e",
+              "nativeMessageId": "kx7160cs8egb6nqsjm7033s9zh8fw9dz",
+              "sourceEventId": "transcript:conversation:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b:kx7160cs8egb6nqsjm7033s9zh8fw9dz",
+              "sourceRevision": 1
+            }
+          ],
+          "executions": [
+            {
+              "_creationTime": 1791466724397.5476,
+              "_id": "q978wwdt67jzbpd3rent52r7wx8fw7ws",
+              "attemptNumber": 1,
+              "createdAt": 1791466724397,
+              "leaseVersion": 1,
+              "memorySpaceId": "task06-custom-space",
+              "nextModelStep": 0,
+              "nextOutputSequence": 0,
+              "reference": {
+                "grantId": "md72nepf0h1yrcs20vfy1sem6h8fwb5m",
+                "grantVersion": 1,
+                "membershipId": "mh7dw332vmxpbgnkbabw4w4k158fwfcb",
+                "membershipVersion": 1,
+                "memorySpaceEpoch": 1,
+                "memorySpaceId": "task06-custom-space",
+                "principalId": "mn7b7f8jrjpyc2eba0n1z5mp098fxde0",
+                "principalVersion": 1,
+                "tenantEpoch": 1,
+                "tenantId": "task06-custom"
+              },
+              "runId": "run:360784ca7fea27fe715616fa41bcea1cc18605b6ab3e629f064f8971504407cf",
+              "savedMessageIds": [],
+              "savedMessagePins": [],
+              "sourceWitnesses": [],
+              "state": "ready",
+              "streaming": true,
+              "tenantId": "task06-custom",
+              "toolCount": 0,
+              "updatedAt": 1791466724397
+            }
+          ],
+          "ingestion": [],
+          "modelAttempts": [],
+          "modelOperations": [],
+          "native": [
+            {
+              "_id": "kx72709grdywrex57bfm6e06nd8fwg57",
+              "order": 0,
+              "role": "user",
+              "status": "success",
+              "stepOrder": 0
+            },
+            {
+              "_id": "kx74q9fy77jtsdtrx6y0r620kx8fxam5",
+              "agentName": "cortex:run:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b:1:0",
+              "order": 0,
+              "role": "assistant",
+              "status": "success",
+              "stepOrder": 1
+            },
+            {
+              "_id": "kx75g0959n8r1bmvf6n6jpfpss8fxjf6",
+              "agentName": "cortex:run:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b:1:0",
+              "order": 0,
+              "role": "tool",
+              "status": "success",
+              "stepOrder": 2
+            },
+            {
+              "_id": "kx76ajg7np6gr76md9yyd8a3vn8fxday",
+              "agentName": "cortex:run:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b:1:1",
+              "order": 0,
+              "role": "assistant",
+              "status": "success",
+              "stepOrder": 3
+            },
+            {
+              "_id": "kx7160cs8egb6nqsjm7033s9zh8fw9dz",
+              "order": 1,
+              "role": "user",
+              "status": "success",
+              "stepOrder": 0
+            }
+          ],
+          "operations": [],
+          "outbox": [
+            {
+              "_creationTime": 1791466723917.828,
+              "_id": "pn73chtv626c63r9t5qkhxapz98fwza1",
+              "conversationId": "conversation:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b",
+              "createdAt": 1791466723917,
+              "leaseExpiresAt": 1791467024397,
+              "leaseVersion": 1,
+              "memorySpaceId": "task06-custom-space",
+              "runId": "run:360784ca7fea27fe715616fa41bcea1cc18605b6ab3e629f064f8971504407cf",
+              "sequence": 2,
+              "state": "claimed",
+              "tenantId": "task06-custom",
+              "updatedAt": 1791466724397
+            }
+          ],
+          "run": {
+            "_creationTime": 1791466723917.8276,
+            "_id": "ps7f950vsfvre9qfbst1dey3w58fx6m7",
+            "agentId": "agent:35704f76ec8cce13e670ae86c0184e3ad7384bb7831260a3251529ee7fad50af",
+            "agentVersion": 1,
+            "attemptNumber": 1,
+            "authorityReference": {
+              "grantId": "md72nepf0h1yrcs20vfy1sem6h8fwb5m",
+              "grantVersion": 1,
+              "membershipId": "mh7dw332vmxpbgnkbabw4w4k158fwfcb",
+              "membershipVersion": 1,
+              "memorySpaceEpoch": 1,
+              "memorySpaceId": "task06-custom-space",
+              "principalId": "mn7b7f8jrjpyc2eba0n1z5mp098fxde0",
+              "principalVersion": 1,
+              "tenantEpoch": 1,
+              "tenantId": "task06-custom"
+            },
+            "conversationEpoch": 1,
+            "conversationId": "conversation:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b",
+            "createdAt": 1791466723917,
+            "definitionHash": "d95b1c10233f2592d755368634aad340b9c54f9caebde0b11bf17cac9757a898",
+            "executionRequested": true,
+            "graphStatus": "not_requested",
+            "historyRevision": 1,
+            "inputMessageIds": [
+              "kx7160cs8egb6nqsjm7033s9zh8fw9dz"
+            ],
+            "memorySpaceId": "task06-custom-space",
+            "memoryStatus": "pending",
+            "outputMessageIds": [],
+            "ownerPrincipalId": "mn7b7f8jrjpyc2eba0n1z5mp098fxde0",
+            "queueSequence": 2,
+            "requestCanonical": "{\"identity\":[\"cortex.submit.v1\",\"task06-custom\",\"task06-custom-space\",\"mn7b7f8jrjpyc2eba0n1z5mp098fxde0\",[\"existing\",\"conversation:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b\"],\"task07-later-90311bf1-e73f-4e20-a335-56736b6d324a\"],\"publicRequest\":{\"agentId\":\"agent:35704f76ec8cce13e670ae86c0184e3ad7384bb7831260a3251529ee7fad50af\",\"agentVersion\":1,\"clientRequestId\":\"task07-later-90311bf1-e73f-4e20-a335-56736b6d324a\",\"conversationId\":\"conversation:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b\",\"parts\":[{\"text\":\"Continue the same conversation.\",\"type\":\"text\"}],\"version\":1},\"version\":1}",
+            "requestIdentityCanonical": "[\"cortex.submit.v1\",\"task06-custom\",\"task06-custom-space\",\"mn7b7f8jrjpyc2eba0n1z5mp098fxde0\",[\"existing\",\"conversation:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b\"],\"task07-later-90311bf1-e73f-4e20-a335-56736b6d324a\"]",
+            "requestIdentityHash": "360784ca7fea27fe715616fa41bcea1cc18605b6ab3e629f064f8971504407cf",
+            "responseStatus": "running",
+            "runAccountId": "n176hfk3gqqm8ndg0jp7ccw8td8fwfhv",
+            "runBudgetId": "6776e79a4fdfa3f06a3e95d730f5d513e790fe54eb6a01ea986d936a674f66a8",
+            "runId": "run:360784ca7fea27fe715616fa41bcea1cc18605b6ab3e629f064f8971504407cf",
+            "snapshotCanonical": "{\"anchor\":{\"canonicalContentHash\":\"67d5205352c438dfbae122f67029f3b914b7ed17095ce329c94a85a6f758f3f9\",\"contentHash\":\"cd9ed947910d4061a33f0952c971715b8b9c2dc4220a343f40ff3af386a058f8\",\"nativeMessageId\":\"kx7160cs8egb6nqsjm7033s9zh8fw9dz\",\"order\":1,\"sourceEventId\":\"transcript:conversation:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b:kx7160cs8egb6nqsjm7033s9zh8fw9dz\",\"sourceRevision\":1,\"stepOrder\":0},\"attemptNumber\":1,\"capturedAuthorityReference\":{\"grantId\":\"md72nepf0h1yrcs20vfy1sem6h8fwb5m\",\"grantVersion\":1,\"membershipId\":\"mh7dw332vmxpbgnkbabw4w4k158fwfcb\",\"membershipVersion\":1,\"memorySpaceEpoch\":1,\"memorySpaceId\":\"task06-custom-space\",\"principalId\":\"mn7b7f8jrjpyc2eba0n1z5mp098fxde0\",\"principalVersion\":1,\"tenantEpoch\":1,\"tenantId\":\"task06-custom\"},\"completeness\":\"complete\",\"conversationEpoch\":1,\"conversationId\":\"conversation:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b\",\"definitionHash\":\"d95b1c10233f2592d755368634aad340b9c54f9caebde0b11bf17cac9757a898\",\"definitionVersion\":1,\"historyRevision\":1,\"ingestionCutoff\":{\"requiredStages\":[],\"scopeIdentity\":\"[\\\"task06-custom\\\",\\\"task06-custom-space\\\"]\",\"sequence\":2},\"messages\":[{\"canonicalContentHash\":\"cc3a1ccff7ede73687348504e7c1dfa0c2666ac519608b0f41ac11659d64d485\",\"contentHash\":\"2105496516ee1ac04fba74b3a26de94ee9fc2a8abccff6c79ae7218c27269ccb\",\"nativeMessageId\":\"kx72709grdywrex57bfm6e06nd8fwg57\",\"order\":0,\"sourceEventId\":\"transcript:conversation:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b:kx72709grdywrex57bfm6e06nd8fwg57\",\"sourceRevision\":1,\"stepOrder\":0},{\"canonicalContentHash\":\"3c9681f2143803ac2c851e06508e584e2ba4d43172ba0d2dadf80cc50b982353\",\"contentHash\":\"822aab69cd0fb2aaf8e31a0ca847b86cdba637df0e11e9a5465ea44f6ca3f615\",\"nativeMessageId\":\"kx74q9fy77jtsdtrx6y0r620kx8fxam5\",\"order\":0,\"sourceEventId\":\"transcript:conversation:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b:kx74q9fy77jtsdtrx6y0r620kx8fxam5\",\"sourceRevision\":1,\"stepOrder\":1},{\"canonicalContentHash\":\"2c65b17795cd4d3c46d6cbe52b80bba3c0ecda3c58e8cd0df150d733e9828d49\",\"contentHash\":\"69af1a4e36365eadd24dd1712298472ccc613e81d6152a1e01ab4312c9ecafd8\",\"nativeMessageId\":\"kx75g0959n8r1bmvf6n6jpfpss8fxjf6\",\"order\":0,\"sourceEventId\":\"transcript:conversation:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b:kx75g0959n8r1bmvf6n6jpfpss8fxjf6\",\"sourceRevision\":1,\"stepOrder\":2},{\"canonicalContentHash\":\"d2b545c8de2973802664fb95715844e0bc686429b3bae089fed97d7466ddd6f9\",\"contentHash\":\"e0be5cdbe50a5e2a088dce23c32895415db46d197907cbd109457ba4804374ef\",\"nativeMessageId\":\"kx76ajg7np6gr76md9yyd8a3vn8fxday\",\"order\":0,\"sourceEventId\":\"transcript:conversation:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b:kx76ajg7np6gr76md9yyd8a3vn8fxday\",\"sourceRevision\":1,\"stepOrder\":3},{\"canonicalContentHash\":\"67d5205352c438dfbae122f67029f3b914b7ed17095ce329c94a85a6f758f3f9\",\"contentHash\":\"cd9ed947910d4061a33f0952c971715b8b9c2dc4220a343f40ff3af386a058f8\",\"nativeMessageId\":\"kx7160cs8egb6nqsjm7033s9zh8fw9dz\",\"order\":1,\"sourceEventId\":\"transcript:conversation:b12ac76e0f84800f399c315f72fddc34d9204c89f41929ef6f8af05f01f7ec8b:kx7160cs8egb6nqsjm7033s9zh8fw9dz\",\"sourceRevision\":1,\"stepOrder\":0}],\"queueSequence\":2,\"runDocId\":\"ps7f950vsfvre9qfbst1dey3w58fx6m7\",\"threadId\":\"m971085sp3681ewqje4z4mf6r58fwysy\",\"version\":1}",
+            "streamingRequested": true,
+            "tenantId": "task06-custom",
+            "updatedAt": 1791466724397
+          }
+        },
+        "noSubsequentPaidAttempt": true,
+        "completedPriorPaidAttemptCount": 4,
+        "originalCompletedTurnPreserved": true,
+        "usesActualCachedToolPayload": true
+      }
+    },
+    {
+      "file": "installed-final3-source-manifest.json",
+      "bytes": 13631,
+      "sha256": "0de9db6d86fd745fee850bd30c53753c63b1ef084f4b91d43cfde8c3516c4ed4",
+      "topKeys": [
+        "target",
+        "manifestSha256",
+        "packed",
+        "files",
+        "preserved",
+        "rootConfigSha256",
+        "qualificationTrustExceptionRemoved",
+        "exactShippedRegistry",
+        "syntheticRootDefault",
+        "finalFunctionalAcceptancePending"
+      ],
+      "flags": {
+        "qualificationTrustExceptionRemoved": true,
+        "exactShippedRegistry": true,
+        "syntheticRootDefault": false,
+        "finalFunctionalAcceptancePending": true
+      }
+    },
+    {
+      "file": "deploy-installed-final3.json",
+      "bytes": 637,
+      "sha256": "5b43da0e4868a833966269dac0bbf20e7976b4a0f08407da44bfee1f6ff76f01",
+      "topKeys": [
+        "executable",
+        "args",
+        "cwd",
+        "pid",
+        "groupOwnedFromSpawn",
+        "code",
+        "signal",
+        "timedOut",
+        "deadlineMs",
+        "terminationCleanupMs",
+        "elapsedMs",
+        "signals",
+        "childClosed",
+        "credentialsPrinted"
+      ],
+      "body": {
+        "executable": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+        "args": [
+          "/Users/SaintNick/.codex/tmp/cortex-task06-custom-native-43a8bddd5e2a/project/node_modules/convex/bin/main.js",
+          "dev",
+          "--once",
+          "--typecheck",
+          "enable"
+        ],
+        "cwd": "/Users/SaintNick/.codex/tmp/cortex-task06-custom-native-43a8bddd5e2a/project",
+        "pid": 48243,
+        "groupOwnedFromSpawn": true,
+        "code": 0,
+        "signal": null,
+        "timedOut": false,
+        "deadlineMs": 120000,
+        "terminationCleanupMs": 5000,
+        "elapsedMs": 8891,
+        "signals": [],
+        "childClosed": true,
+        "credentialsPrinted": false
+      }
+    }
+  ]
+}

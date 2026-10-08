@@ -1,0 +1,454 @@
+[
+  {
+    "name": "unexpired-before",
+    "state": {
+      "runs": [
+        {
+          "runId": "run:099c32f32d5cf3998e141f1a7b60599654cc681ead27c2a4a7648365c1287850",
+          "responseStatus": "waiting_approval",
+          "attemptNumber": 1,
+          "failureCode": null
+        }
+      ],
+      "outboxes": [
+        {
+          "runId": "run:099c32f32d5cf3998e141f1a7b60599654cc681ead27c2a4a7648365c1287850",
+          "state": "claimed",
+          "leaseVersion": 1,
+          "leaseExpiresAt": 1300000
+        }
+      ],
+      "executions": [
+        {
+          "runId": "run:099c32f32d5cf3998e141f1a7b60599654cc681ead27c2a4a7648365c1287850",
+          "state": "waiting_approval",
+          "failureCode": null
+        }
+      ],
+      "budgets": [
+        {
+          "runBudgetId": "23df25f64f332543119449777e88c42f961be633b596e63e2e64c5576ac889af",
+          "cancelled": false,
+          "reservedUnits": 0,
+          "uncertainUnits": 0
+        }
+      ],
+      "paidOperations": 0,
+      "cancellations": []
+    }
+  },
+  {
+    "name": "unexpired-after",
+    "state": {
+      "runs": [
+        {
+          "runId": "run:099c32f32d5cf3998e141f1a7b60599654cc681ead27c2a4a7648365c1287850",
+          "responseStatus": "running",
+          "attemptNumber": 1,
+          "failureCode": null
+        }
+      ],
+      "outboxes": [
+        {
+          "runId": "run:099c32f32d5cf3998e141f1a7b60599654cc681ead27c2a4a7648365c1287850",
+          "state": "claimed",
+          "leaseVersion": 1,
+          "leaseExpiresAt": 1300000
+        }
+      ],
+      "executions": [
+        {
+          "runId": "run:099c32f32d5cf3998e141f1a7b60599654cc681ead27c2a4a7648365c1287850",
+          "state": "running",
+          "failureCode": null
+        }
+      ],
+      "budgets": [
+        {
+          "runBudgetId": "23df25f64f332543119449777e88c42f961be633b596e63e2e64c5576ac889af",
+          "cancelled": false,
+          "reservedUnits": 0,
+          "uncertainUnits": 0
+        }
+      ],
+      "paidOperations": 0,
+      "cancellations": []
+    }
+  },
+  {
+    "name": "expired-approval-denied",
+    "state": {
+      "runs": [
+        {
+          "runId": "run:099c32f32d5cf3998e141f1a7b60599654cc681ead27c2a4a7648365c1287850",
+          "responseStatus": "waiting_approval",
+          "attemptNumber": 1,
+          "failureCode": null
+        }
+      ],
+      "outboxes": [
+        {
+          "runId": "run:099c32f32d5cf3998e141f1a7b60599654cc681ead27c2a4a7648365c1287850",
+          "state": "claimed",
+          "leaseVersion": 1,
+          "leaseExpiresAt": 999999
+        }
+      ],
+      "executions": [
+        {
+          "runId": "run:099c32f32d5cf3998e141f1a7b60599654cc681ead27c2a4a7648365c1287850",
+          "state": "waiting_approval",
+          "failureCode": null
+        }
+      ],
+      "budgets": [
+        {
+          "runBudgetId": "23df25f64f332543119449777e88c42f961be633b596e63e2e64c5576ac889af",
+          "cancelled": false,
+          "reservedUnits": 0,
+          "uncertainUnits": 0
+        }
+      ],
+      "paidOperations": 0,
+      "cancellations": []
+    }
+  },
+  {
+    "name": "expired-recovery-before",
+    "state": {
+      "runs": [
+        {
+          "runId": "run:099c32f32d5cf3998e141f1a7b60599654cc681ead27c2a4a7648365c1287850",
+          "responseStatus": "waiting_approval",
+          "attemptNumber": 1,
+          "failureCode": null
+        },
+        {
+          "runId": "run:9d8fc1b156e7b9ba5444ecee61b8f5e799ceb469c36602c61f0cd9ff53f1500f",
+          "responseStatus": "queued",
+          "attemptNumber": 0,
+          "failureCode": null
+        }
+      ],
+      "outboxes": [
+        {
+          "runId": "run:099c32f32d5cf3998e141f1a7b60599654cc681ead27c2a4a7648365c1287850",
+          "state": "claimed",
+          "leaseVersion": 1,
+          "leaseExpiresAt": 999999
+        },
+        {
+          "runId": "run:9d8fc1b156e7b9ba5444ecee61b8f5e799ceb469c36602c61f0cd9ff53f1500f",
+          "state": "pending",
+          "leaseVersion": 0,
+          "leaseExpiresAt": null
+        }
+      ],
+      "executions": [
+        {
+          "runId": "run:099c32f32d5cf3998e141f1a7b60599654cc681ead27c2a4a7648365c1287850",
+          "state": "waiting_approval",
+          "failureCode": null
+        }
+      ],
+      "budgets": [
+        {
+          "runBudgetId": "23df25f64f332543119449777e88c42f961be633b596e63e2e64c5576ac889af",
+          "cancelled": false,
+          "reservedUnits": 0,
+          "uncertainUnits": 0
+        },
+        {
+          "runBudgetId": "8bdb4d71ae3454f1b2684d0964608059035fabf0aee09c449ffa08a083b609df",
+          "cancelled": false,
+          "reservedUnits": 0,
+          "uncertainUnits": 0
+        }
+      ],
+      "paidOperations": 0,
+      "cancellations": []
+    }
+  },
+  {
+    "name": "expired-recovery-after",
+    "state": {
+      "runs": [
+        {
+          "runId": "run:099c32f32d5cf3998e141f1a7b60599654cc681ead27c2a4a7648365c1287850",
+          "responseStatus": "cancelled",
+          "attemptNumber": 1,
+          "failureCode": "APPROVAL_EXPIRED"
+        },
+        {
+          "runId": "run:9d8fc1b156e7b9ba5444ecee61b8f5e799ceb469c36602c61f0cd9ff53f1500f",
+          "responseStatus": "queued",
+          "attemptNumber": 0,
+          "failureCode": null
+        }
+      ],
+      "outboxes": [
+        {
+          "runId": "run:099c32f32d5cf3998e141f1a7b60599654cc681ead27c2a4a7648365c1287850",
+          "state": "complete",
+          "leaseVersion": 1,
+          "leaseExpiresAt": 999999
+        },
+        {
+          "runId": "run:9d8fc1b156e7b9ba5444ecee61b8f5e799ceb469c36602c61f0cd9ff53f1500f",
+          "state": "ready",
+          "leaseVersion": 0,
+          "leaseExpiresAt": null
+        }
+      ],
+      "executions": [
+        {
+          "runId": "run:099c32f32d5cf3998e141f1a7b60599654cc681ead27c2a4a7648365c1287850",
+          "state": "cancelled",
+          "failureCode": "APPROVAL_EXPIRED"
+        }
+      ],
+      "budgets": [
+        {
+          "runBudgetId": "23df25f64f332543119449777e88c42f961be633b596e63e2e64c5576ac889af",
+          "cancelled": true,
+          "reservedUnits": 0,
+          "uncertainUnits": 0
+        },
+        {
+          "runBudgetId": "8bdb4d71ae3454f1b2684d0964608059035fabf0aee09c449ffa08a083b609df",
+          "cancelled": false,
+          "reservedUnits": 0,
+          "uncertainUnits": 0
+        }
+      ],
+      "paidOperations": 0,
+      "cancellations": [
+        "workflow:independent"
+      ]
+    }
+  },
+  {
+    "name": "intentional-prerun-wait",
+    "state": {
+      "runs": [
+        {
+          "runId": "run:d4e3f76cccc931a6f480177d40df6380ce5ca3509b47283b1a617ab95cfaaeef",
+          "responseStatus": "waiting_approval",
+          "attemptNumber": 0,
+          "failureCode": null
+        }
+      ],
+      "outboxes": [
+        {
+          "runId": "run:d4e3f76cccc931a6f480177d40df6380ce5ca3509b47283b1a617ab95cfaaeef",
+          "state": "pending",
+          "leaseVersion": 0,
+          "leaseExpiresAt": null
+        }
+      ],
+      "executions": [],
+      "budgets": [
+        {
+          "runBudgetId": "923e03d7a711e0d98d7555281e2869c421951b3eb8d39e7c1997154d188693a0",
+          "cancelled": false,
+          "reservedUnits": 0,
+          "uncertainUnits": 0
+        }
+      ],
+      "paidOperations": 0,
+      "cancellations": []
+    }
+  },
+  {
+    "name": "valid-owner-cancel",
+    "state": {
+      "runs": [
+        {
+          "runId": "run:8e042e26bcab0664e8ba2f3aa801bb1303da3312cc41c6a4bbad9b3df4d5b782",
+          "responseStatus": "cancelled",
+          "attemptNumber": 1,
+          "failureCode": "EXECUTION_FAILED"
+        }
+      ],
+      "outboxes": [
+        {
+          "runId": "run:8e042e26bcab0664e8ba2f3aa801bb1303da3312cc41c6a4bbad9b3df4d5b782",
+          "state": "complete",
+          "leaseVersion": 1,
+          "leaseExpiresAt": 1300000
+        }
+      ],
+      "executions": [
+        {
+          "runId": "run:8e042e26bcab0664e8ba2f3aa801bb1303da3312cc41c6a4bbad9b3df4d5b782",
+          "state": "cancelled",
+          "failureCode": "CANCELLED"
+        }
+      ],
+      "budgets": [
+        {
+          "runBudgetId": "44a487d6592e92322f770499c8ee169336ba8fc00fdd67705d3ab327b8fdb939",
+          "cancelled": true,
+          "reservedUnits": 0,
+          "uncertainUnits": 0
+        }
+      ],
+      "paidOperations": 0,
+      "cancellations": [
+        "workflow:independent"
+      ]
+    }
+  },
+  {
+    "name": "supported-revoke-before-cancel",
+    "state": {
+      "runs": [
+        {
+          "runId": "run:0f88e1b3fcba27860d540b7cadaff012b9dfc5c51085b797855d43bc1557f2ec",
+          "responseStatus": "running",
+          "attemptNumber": 1,
+          "failureCode": null
+        }
+      ],
+      "outboxes": [
+        {
+          "runId": "run:0f88e1b3fcba27860d540b7cadaff012b9dfc5c51085b797855d43bc1557f2ec",
+          "state": "claimed",
+          "leaseVersion": 1,
+          "leaseExpiresAt": 1300000
+        }
+      ],
+      "executions": [
+        {
+          "runId": "run:0f88e1b3fcba27860d540b7cadaff012b9dfc5c51085b797855d43bc1557f2ec",
+          "state": "ready",
+          "failureCode": null
+        }
+      ],
+      "budgets": [
+        {
+          "runBudgetId": "1e8e2ec29b5b6f2b1cd1cb3006cae7e221f539a4c705cd28db5df7ea3b2ca5e8",
+          "cancelled": false,
+          "reservedUnits": 0,
+          "uncertainUnits": 0
+        }
+      ],
+      "paidOperations": 0,
+      "cancellations": []
+    }
+  },
+  {
+    "name": "revoked-metadata-inference-fence",
+    "state": {
+      "runs": [
+        {
+          "runId": "run:5ac3c301532f900dbe03678d107e7454d57979281ac42095cbc1150a329149d8",
+          "responseStatus": "running",
+          "attemptNumber": 1,
+          "failureCode": null
+        }
+      ],
+      "outboxes": [
+        {
+          "runId": "run:5ac3c301532f900dbe03678d107e7454d57979281ac42095cbc1150a329149d8",
+          "state": "claimed",
+          "leaseVersion": 1,
+          "leaseExpiresAt": 1300000
+        }
+      ],
+      "executions": [
+        {
+          "runId": "run:5ac3c301532f900dbe03678d107e7454d57979281ac42095cbc1150a329149d8",
+          "state": "running",
+          "failureCode": null
+        }
+      ],
+      "budgets": [
+        {
+          "runBudgetId": "1e5791167991cbe032d582ae29d02cad75f8d8f28dbc895fe792136d4cee321d",
+          "cancelled": false,
+          "reservedUnits": 0,
+          "uncertainUnits": 0
+        }
+      ],
+      "paidOperations": 0,
+      "cancellations": []
+    }
+  },
+  {
+    "name": "cancel-current-no-jwt-denied",
+    "state": {
+      "runs": [
+        {
+          "runId": "run:9336977f131d6559d1ca6dc74759492cbd9cad7387462111ca3a4d10172a9560",
+          "responseStatus": "running",
+          "attemptNumber": 1,
+          "failureCode": null
+        }
+      ],
+      "outboxes": [
+        {
+          "runId": "run:9336977f131d6559d1ca6dc74759492cbd9cad7387462111ca3a4d10172a9560",
+          "state": "claimed",
+          "leaseVersion": 1,
+          "leaseExpiresAt": 1300000
+        }
+      ],
+      "executions": [
+        {
+          "runId": "run:9336977f131d6559d1ca6dc74759492cbd9cad7387462111ca3a4d10172a9560",
+          "state": "ready",
+          "failureCode": null
+        }
+      ],
+      "budgets": [
+        {
+          "runBudgetId": "98e4d843ee7b4bcc2e7941b23b3bda44c5540f8549d2734f304cb173af2a0c90",
+          "cancelled": false,
+          "reservedUnits": 0,
+          "uncertainUnits": 0
+        }
+      ],
+      "paidOperations": 0,
+      "cancellations": []
+    }
+  },
+  {
+    "name": "cancel-current-foreign-denied",
+    "state": {
+      "runs": [
+        {
+          "runId": "run:9336977f131d6559d1ca6dc74759492cbd9cad7387462111ca3a4d10172a9560",
+          "responseStatus": "running",
+          "attemptNumber": 1,
+          "failureCode": null
+        }
+      ],
+      "outboxes": [
+        {
+          "runId": "run:9336977f131d6559d1ca6dc74759492cbd9cad7387462111ca3a4d10172a9560",
+          "state": "claimed",
+          "leaseVersion": 1,
+          "leaseExpiresAt": 1300000
+        }
+      ],
+      "executions": [
+        {
+          "runId": "run:9336977f131d6559d1ca6dc74759492cbd9cad7387462111ca3a4d10172a9560",
+          "state": "ready",
+          "failureCode": null
+        }
+      ],
+      "budgets": [
+        {
+          "runBudgetId": "98e4d843ee7b4bcc2e7941b23b3bda44c5540f8549d2734f304cb173af2a0c90",
+          "cancelled": false,
+          "reservedUnits": 0,
+          "uncertainUnits": 0
+        }
+      ],
+      "paidOperations": 0,
+      "cancellations": []
+    }
+  }
+]

@@ -1,0 +1,21 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
++ actual - expected
+
++ 'md7erwvqp8xb5es62573d8cxa58fxe67'
+- 'md71kf97qydspxgejaga8rmknn8fwbe6'
+      ^
+
+    at file:///Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-agent-execution-functional-v2-20261008/native-actual/exercise-installed-fences4.mjs:41:11 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: 'md7erwvqp8xb5es62573d8cxa58fxe67',
+  expected: 'md71kf97qydspxgejaga8rmknn8fwbe6',
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.15.0

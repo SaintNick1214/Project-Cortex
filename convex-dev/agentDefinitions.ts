@@ -12,6 +12,7 @@ import { assertUnicode, boundedIdentifier, clientRequestKey, utf8Bytes } from ".
 import { requireDataAuthority, dataAuthorityReference } from "./runtimeDataAuth";
 import { recheckAuthority } from "./runtimeAuth";
 import { lookupDeploymentManifest } from "./runtimeModelPolicyBootstrap";
+import { NATIVE_TOOL_NAMES } from "../src/domain/agent-tools";
 
 export const EXECUTABLE_REGISTRY = Object.freeze({ version: 1,
   tools: Object.freeze({ "memory.remember": 1, "memory.recall": 1 }),
@@ -84,7 +85,7 @@ async function narrowPolicies(ctx: Pick<QueryCtx, "db">, reference: RuntimeAutho
     try {
       const resolved = resolveModelPolicy({ context: { scope: reference, agent: { agentId: definition.agentId, version: definition.agentVersion },
         operationKey: key, runBudgetId: "definition-validation", authorizedOverrides: [] }, policies, qualifications: manifest.qualifications });
-      if (definition.context.maxContextTokens > resolved.limits.contextTokens || definition.tools.some(t => !resolved.allowedTools.includes(t.toolId))) denied();
+      if (definition.context.maxContextTokens > resolved.limits.contextTokens || definition.tools.some(t => !resolved.allowedTools.includes(NATIVE_TOOL_NAMES[t.toolId as keyof typeof NATIVE_TOOL_NAMES]))) denied();
     } catch { denied(); }
   }
 }

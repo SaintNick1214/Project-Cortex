@@ -1,0 +1,8 @@
+{
+  "scope": "registered Core handler/native-peer controlled fixture; no service/provider",
+  "raw": "historical-context-independent2.results.json",
+  "result": "6 passed, 2 reviewer-oracle failures",
+  "tombstoneOutcomes": "Typed FORBIDDEN from ConvexMemoryRepository.getSource before private hydration; no model operation",
+  "correction": "Distinct reviewer test3 recognizes exact typed STALE_CONTEXT or tombstone-only FORBIDDEN and asserts no model operation; product unchanged",
+  "priorFixtureLimitation": "test1 manually seeded private tool context with default no-tools definition; test2/3 publish actual memory.recall definition."
+}

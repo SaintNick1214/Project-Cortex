@@ -1,0 +1,11 @@
+tests/unit/runtime/gateway-terminal-composition.test.ts(642,16): error TS2540: Cannot assign to 'capabilities' because it is a read-only property.
+tests/unit/runtime/gateway-terminal-composition.test.ts(643,16): error TS2540: Cannot assign to 'allowedTools' because it is a read-only property.
+tests/unit/runtime/gateway-terminal-composition.test.ts(644,21): error TS2540: Cannot assign to 'toolRegistryVersion' because it is a read-only property.
+tests/unit/runtime/gateway-terminal-composition.test.ts(645,24): error TS2540: Cannot assign to 'inputBound' because it is a read-only property.
+tests/unit/runtime/gateway-terminal-composition.test.ts(646,24): error TS2540: Cannot assign to 'toolContract' because it is a read-only property.
+tests/unit/runtime/gateway-terminal-composition.test.ts(659,33): error TS2704: The operand of a 'delete' operator cannot be a read-only property.
+tests/unit/runtime/gateway-terminal-composition.test.ts(675,107): error TS2322: Type '{ description: string; type: "function"; name: string; inputSchema: JSONSchema7; inputExamples?: { input: JSONObject; }[] | undefined; strict?: boolean | undefined; providerOptions?: SharedV4ProviderOptions | undefined; } | { ...; }' is not assignable to type 'LanguageModelV4FunctionTool | LanguageModelV4ProviderTool'.
+  Object literal may only specify known properties, and 'description' does not exist in type 'LanguageModelV4ProviderTool'.
+tests/unit/runtimeAgent/tool-context.test.ts(42,129): error TS2339: Property 'sourceId' does not exist on type '{ contentHash: unknown; }'.
+tests/unit/runtimeAgent/tool-context.test.ts(42,139): error TS2339: Property 'sourceEventId' does not exist on type '{ contentHash: unknown; }'.
+tests/unit/runtimeAgent/tool-context.test.ts(42,154): error TS2339: Property 'sourceRevision' does not exist on type '{ contentHash: unknown; }'.

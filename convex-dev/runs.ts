@@ -23,12 +23,16 @@ function internalMutationRef<Args extends Record<string, unknown>, Result>(name:
   return makeFunctionReference<"mutation", Args, Result>(name) as unknown as FunctionReference<"mutation", "internal", Args, Result>;
 }
 const recoverRef = internalMutationRef<{ reference: RuntimeAuthorityReference; conversationId: string }, { readyRunId: string | null }>("runs:recoverQueue");
+const recoverOwnedRef = internalMutationRef<{ reference: RuntimeAuthorityReference; conversationId: string }, { readyRunId: string | null }>("runs:recoverOwnedQueue");
 const cancelBudgetRef = internalMutationRef<{ reference: RuntimeAuthorityReference; runBudgetId: string }, unknown>("runtimeModelPolicy:cancelBudget");
+const cancelAgentBudgetRef = internalMutationRef<{ reference: RuntimeAuthorityReference; runId: string }, unknown>("runtimeModelPolicy:cancelAgentBudget");
 async function runById(ctx: Pick<QueryCtx, "db">, reference: RuntimeAuthorityReference, runId: string) {
   return singleTranscript(await ctx.db.query("runtimeRuns").withIndex("by_scoped_id", q => q.eq("tenantId", reference.tenantId)
     .eq("memorySpaceId", reference.memorySpaceId!).eq("runId", runId)).take(2));
 }
-async function currentRun(ctx: Pick<QueryCtx, "db">, reference: RuntimeAuthorityReference, runId: string, capability: "read" | "write" | "run") {
+/** Metadata access and safe retirement only; it grants no executable definition,
+ * model admission, continuation or output attachment. */
+export async function currentControlRun(ctx: Pick<QueryCtx, "db">, reference: RuntimeAuthorityReference, runId: string, capability: "read" | "write" | "run") {
   const row = await runById(ctx, reference, runId);
   if (!row || row.tombstonedAt !== undefined) transcriptDenied();
   await recheckAuthority(ctx, reference, { capability, resource: { resourceType: "run", resourceId: row.runId,
@@ -36,6 +40,10 @@ async function currentRun(ctx: Pick<QueryCtx, "db">, reference: RuntimeAuthority
   const conversation = await conversationById(ctx, reference, row.conversationId); if (!conversation) transcriptDenied();
   await checkConversation(ctx, reference, conversation, capability);
   if (row.conversationEpoch !== conversation.epoch) transcriptDenied("STALE_TRANSCRIPT");
+  return { row, conversation };
+}
+export async function currentRun(ctx: Pick<QueryCtx, "db">, reference: RuntimeAuthorityReference, runId: string, capability: "read" | "write" | "run") {
+  const { row, conversation } = await currentControlRun(ctx, reference, runId, capability);
   const definition = await readCurrentExecutableDefinition(ctx, row.authorityReference,
     { agentId: row.agentId, version: row.agentVersion }, { capability: "run", operationKey: "agent.respond" });
   if (definition.definitionHash !== row.definitionHash) transcriptDenied("POLICY_DENIED");
@@ -103,7 +111,7 @@ export async function submitHandler(ctx: MutationCtx, args: { request: unknown }
 export const submit = mutation({ args: { request: v.any() }, handler: submitHandler });
 const runSelector = { runId: v.string(), memorySpaceId: v.optional(v.string()), tenantId: v.optional(v.string()) };
 export const get = query({ args: runSelector, handler: async (ctx, args) => {
-  const actor = await requireDataAuthority(ctx, args, "read"); return publicRun((await currentRun(ctx, dataAuthorityReference(actor), args.runId, "read")).row);
+  const actor = await requireDataAuthority(ctx, args, "read"); return publicRun((await currentControlRun(ctx, dataAuthorityReference(actor), args.runId, "read")).row);
 } });
 export const list = query({ args: { conversationId: v.string(), memorySpaceId: v.optional(v.string()), tenantId: v.optional(v.string()),
   afterSequence: v.optional(v.number()), limit: v.optional(v.number()) }, handler: async (ctx, args) => {
@@ -112,22 +120,23 @@ export const list = query({ args: { conversationId: v.string(), memorySpaceId: v
   const rows = await ctx.db.query("runtimeRuns").withIndex("by_conversation_queue", q => q.eq("tenantId", reference.tenantId)
     .eq("memorySpaceId", reference.memorySpaceId!).eq("conversationId", args.conversationId).gt("queueSequence", args.afterSequence ?? 0)).take(limit);
   const result = [];
-  for (const row of rows) { if (row.tombstonedAt !== undefined) continue; await currentRun(ctx, reference, row.runId, "read"); result.push(publicRun(row)); }
+  for (const row of rows) { if (row.tombstonedAt !== undefined) continue; await currentControlRun(ctx, reference, row.runId, "read"); result.push(publicRun(row)); }
   return result;
 } });
 export const cancel = mutation({ args: runSelector, handler: async (ctx, args) => {
   const actor = await requireDataAuthority(ctx, args, "write"); const reference = dataAuthorityReference(actor);
-  const { row } = await currentRun(ctx, reference, args.runId, "write");
+  const { row } = await currentControlRun(ctx, reference, args.runId, "write");
   if (row.responseStatus === "complete" || row.responseStatus === "failed" || row.responseStatus === "cancelled") return publicRun(row);
-  const now = Date.now(); await ctx.runMutation(cancelBudgetRef, { reference: row.authorityReference, runBudgetId: row.runBudgetId });
+  const now = Date.now(); await ctx.runMutation(cancelAgentBudgetRef, { reference, runId: row.runId });
   await retireWork(ctx, row, "cancelled", "CANCELLED", now);
-  await ctx.scheduler.runAfter(0, recoverRef, { reference: row.authorityReference, conversationId: row.conversationId });
+  await ctx.scheduler.runAfter(0, recoverOwnedRef, { reference, conversationId: row.conversationId });
   return publicRun((await ctx.db.get("runtimeRuns", row._id))!);
 } });
 export const approve = mutation({ args: { ...runSelector, expectedDefinitionHash: v.string() }, handler: async (ctx, args) => {
   const actor = await requireDataAuthority(ctx, args, "admin"); const reference = dataAuthorityReference(actor);
   const { row, conversation } = await currentRun(ctx, reference, args.runId, "write"); await checkConversation(ctx, reference, conversation, "admin");
   if (row.definitionHash !== args.expectedDefinitionHash) transcriptDenied("POLICY_DENIED");
+  if (row.responseStatus === "waiting_approval" && row.attemptNumber > 0) transcriptDenied("USE_TOOL_APPROVAL");
   if (row.responseStatus !== "waiting_approval") { if (row.approvedAt !== undefined) return publicRun(row); transcriptDenied("INVALID_STATE"); }
   for (const id of row.inputMessageIds) {
     const bridge = await bridgeFor(ctx, conversation, id); if (!bridge || bridge.runId !== row.runId || bridge.tombstonedAt !== undefined) transcriptDenied("STALE_TRANSCRIPT");
@@ -166,6 +175,17 @@ async function queueHead(ctx: Pick<QueryCtx, "db">, conversation: Doc<"runtimeCo
 export const recoverQueue = internalMutation({ args: { reference: runtimeAuthorityReference, conversationId: v.string() }, handler: async (ctx, args) => {
   const conversation = await conversationById(ctx, args.reference, args.conversationId); if (!conversation) transcriptDenied();
   await checkConversation(ctx, args.reference, conversation, "run");
+  return await recoverCurrentQueue(ctx, args, conversation, recoverRef);
+} });
+/** Owned expiry cleanup may outlive its caller grant. Each pending row's own
+ * authority is still checked before it can be dispatched; this never retries
+ * the retired attempt or authorizes inference under the expired reference. */
+export const recoverOwnedQueue = internalMutation({ args: { reference: runtimeAuthorityReference, conversationId: v.string() }, handler: async (ctx, args) => {
+  const conversation = await conversationById(ctx, args.reference, args.conversationId); if (!conversation) return { readyRunId: null };
+  return await recoverCurrentQueue(ctx, args, conversation, recoverOwnedRef);
+} });
+async function recoverCurrentQueue(ctx: MutationCtx, args: { reference: RuntimeAuthorityReference; conversationId: string }, conversation: Doc<"runtimeConversations">,
+  continuation: typeof recoverRef): Promise<{ readyRunId: string | null }> {
   for (let reconciled = 0; reconciled < 20; reconciled++) {
     const row = await queueHead(ctx, conversation); if (!row) return { readyRunId: null };
     try { await currentRun(ctx, row.authorityReference, row.runId, "run"); }
@@ -173,9 +193,14 @@ export const recoverQueue = internalMutation({ args: { reference: runtimeAuthori
       if (!(error instanceof ConvexError) || !["FORBIDDEN", "POLICY_DENIED", "CAPABILITY_UNAVAILABLE"].includes(error.data.code as string)) throw error;
       await retireWork(ctx, row, "cancelled", "AUTHORITY_CHANGED", Date.now()); continue;
     }
-    if (row.responseStatus === "running") {
+    if (row.responseStatus === "running" || row.responseStatus === "waiting_approval" && row.attemptNumber > 0) {
       const outbox = await outboxFor(ctx, row);
       if (outbox.leaseExpiresAt !== undefined && Date.now() >= outbox.leaseExpiresAt) {
+        if (row.responseStatus === "waiting_approval") {
+          await ctx.runMutation(internalMutationRef<{ reference: RuntimeAuthorityReference; runId: string; attemptNumber: number; leaseVersion: number; leaseExpiresAt: number }, null>("runtimeAgent:expireApproval"),
+            { reference: row.authorityReference, runId: row.runId, attemptNumber: row.attemptNumber, leaseVersion: outbox.leaseVersion, leaseExpiresAt: outbox.leaseExpiresAt });
+          continue;
+        }
         await ctx.runMutation(cancelBudgetRef, { reference: row.authorityReference, runBudgetId: row.runBudgetId });
         await retireWork(ctx, row, "failed", "LEASE_EXPIRED_REQUIRES_RECONCILIATION", Date.now());
         continue; // No paid retry or release of ambiguous model liability.
@@ -184,11 +209,13 @@ export const recoverQueue = internalMutation({ args: { reference: runtimeAuthori
     if (row.responseStatus !== "queued") return { readyRunId: null };
     const outbox = await outboxFor(ctx, row);
     if (outbox.state === "pending") await ctx.db.patch("runtimeRunOutbox", outbox._id, { state: "ready", updatedAt: Date.now() });
+    if (row.executionRequested) await ctx.scheduler.runAfter(0, internalMutationRef<{ reference: RuntimeAuthorityReference; runId: string }, unknown>("runtimeAgent:dispatchReady"),
+      { reference: row.authorityReference, runId: row.runId });
     return { readyRunId: row.runId };
   }
-  await ctx.scheduler.runAfter(0, recoverRef, args);
+  await ctx.scheduler.runAfter(0, continuation, args);
   return { readyRunId: null };
-} });
+}
 export const claimNext = internalMutation({ args: { reference: runtimeAuthorityReference, conversationId: v.string(), leaseMs: v.optional(v.number()) }, handler: async (ctx, args) => {
   const conversation = await conversationById(ctx, args.reference, args.conversationId); if (!conversation) transcriptDenied();
   await checkConversation(ctx, args.reference, conversation, "run");
@@ -213,7 +240,7 @@ export const claimNext = internalMutation({ args: { reference: runtimeAuthorityR
   return { runId: row.runId, attemptNumber: attempt, leaseVersion, runBudgetId: row.runBudgetId, snapshot };
 } });
 const attemptArgs = { reference: runtimeAuthorityReference, runId: v.string(), attemptNumber: v.number(), leaseVersion: v.number() };
-async function activeAttempt(ctx: Pick<QueryCtx, "db">, args: { reference: RuntimeAuthorityReference; runId: string; attemptNumber: number; leaseVersion: number }) {
+export async function activeAttempt(ctx: Pick<QueryCtx, "db">, args: { reference: RuntimeAuthorityReference; runId: string; attemptNumber: number; leaseVersion: number }) {
   const current = await currentRun(ctx, args.reference, args.runId, "run"); const row = current.row;
   if (row.responseStatus !== "running" || row.cancellationRequestedAt !== undefined || row.attemptNumber !== args.attemptNumber
     || canonicalModelJson(row.authorityReference) !== canonicalModelJson(args.reference)) transcriptDenied("INVALID_STATE");
@@ -254,7 +281,7 @@ export const fail = internalMutation({ args: { ...attemptArgs, failureCode: v.un
   await ctx.scheduler.runAfter(0, recoverRef, { reference: row.authorityReference, conversationId: row.conversationId }); return { recorded: true as const };
 } });
 export const attempts = query({ args: runSelector, handler: async (ctx, args) => {
-  const actor = await requireDataAuthority(ctx, args, "read"); const { row } = await currentRun(ctx, dataAuthorityReference(actor), args.runId, "read");
+  const actor = await requireDataAuthority(ctx, args, "read"); const { row } = await currentControlRun(ctx, dataAuthorityReference(actor), args.runId, "read");
   return (await ctx.db.query("runtimeRunAttempts").withIndex("by_run_attempt", q => q.eq("tenantId", row.tenantId).eq("memorySpaceId", row.memorySpaceId).eq("runId", row.runId)).collect())
     .map(attempt => ({ attemptNumber: attempt.attemptNumber, status: attempt.status, startedAt: attempt.startedAt, endedAt: attempt.endedAt ?? null, failureCode: attempt.failureCode ?? null }));
 } });
@@ -266,11 +293,12 @@ export const setStages = internalMutation({ args: { reference: runtimeAuthorityR
 } });
 export const exportRecord = get;
 export const remove = mutation({ args: runSelector, handler: async (ctx, args) => {
-  const actor = await requireDataAuthority(ctx, args, "write"); const { row, conversation } = await currentRun(ctx, dataAuthorityReference(actor), args.runId, "write");
+  const actor = await requireDataAuthority(ctx, args, "write"); const reference = dataAuthorityReference(actor);
+  const { row, conversation } = await currentControlRun(ctx, reference, args.runId, "write");
   if (conversation.manualWriteLocked) transcriptDenied("TRANSCRIPT_LOCKED");
-  await ctx.runMutation(cancelBudgetRef, { reference: row.authorityReference, runBudgetId: row.runBudgetId });
+  await ctx.runMutation(cancelAgentBudgetRef, { reference, runId: row.runId });
   const now = Date.now(); await retireWork(ctx, row, "cancelled", "RUN_DELETED", now);
   await ctx.db.patch("runtimeRuns", row._id, { tombstonedAt: now });
-  await ctx.scheduler.runAfter(0, recoverRef, { reference: row.authorityReference, conversationId: row.conversationId });
+  await ctx.scheduler.runAfter(0, recoverOwnedRef, { reference, conversationId: row.conversationId });
   return { deleted: true as const };
 } });

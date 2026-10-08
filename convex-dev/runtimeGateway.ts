@@ -1,6 +1,6 @@
-/** Backend-only governed native middleware. No caller is wired and the actual trust root is empty.
- * Production composition MUST supply a private durable terminal sink; no missing RPC is invented.
- * Tools/schema/Responses and typed native replay remain later qualification gates. */
+/** Backend-only governed native middleware with compiled interface qualifications.
+ * Production composition supplies a durable terminal sink and current-authority ledger.
+ * A new tool/stream envelope remains unavailable until actual evidence is installed. */
 import { ConvexError } from "convex/values";
 import { convexGateway } from "@convex-dev/ai-sdk-provider";
 import { wrapEmbeddingModel, wrapLanguageModel } from "ai";
@@ -13,6 +13,9 @@ import type { QualifiedDispatchEvidence } from "./runtimeModelPolicyBootstrap";
 import { qualifiedTerminalModelId } from "./runtimeModelPolicyBootstrap";
 import { FACTS_JSON_SCHEMA } from "../src/domain/extraction";
 import { CONFLICT_DECISION_JSON_SCHEMA } from "../src/domain/conflicts";
+import { AGENT_NATIVE_TOOLS, AGENT_TOOL_REGISTRY_VERSION, agentToolsInputBound } from "../src/domain/agent-tools";
+import { parseAgentLanguageResult } from "../src/domain/agent-language";
+import type { AgentLanguageResultV1 } from "../src/domain/agent-language";
 import type { Id } from "./_generated/dataModel";
 
 type AttemptId = Id<"runtimeModelAttempts">;
@@ -41,7 +44,7 @@ export interface GatewayLedgerPort {
 }
 export interface TerminalAttachmentAcknowledgment { attached: boolean; resultWithheld: boolean }
 export type TerminalCaptureAcknowledgment = { evidenceId: string } | { evidenceId: string; state: "settled" | "confirmed_rejected" | "uncertain"; settledCostUnits?: number; overrun: boolean };
-/** Trusted server composition only, currently UNWIRED. Capture atomically records charge-only
+/** Trusted server composition only. Capture atomically records charge-only
  * evidence and accounts known/uncertain liability independently of delivery rights. It never
  * carries private output. Required current attachment atomically fences private result/visibility.
  * A minimum evidenceId acknowledgment is structural compatibility, never accounting truth. */
@@ -71,7 +74,7 @@ export interface GatewayLifecycle {
    * no new private payload, inference, token lookup or revival of failed output. */
   retryPendingTerminalAttachment(): Promise<TerminalAttachmentAcknowledgment | undefined>;
   /** Explicit narrow authorized replay payload; never a fabricated native provider result. */
-  consumeReplay(): Promise<{ text: string } | { profile: typeof DEFAULT_EMBEDDING_PROFILE; vectors: number[][] } | undefined>;
+  consumeReplay(): Promise<{ text: string } | AgentLanguageResultV1 | { profile: typeof DEFAULT_EMBEDDING_PROFILE; vectors: number[][] } | undefined>;
 }
 function fail(code: string): never { throw new GatewayDispatchError(code); }
 const utf8 = (text: string): number => {
@@ -204,7 +207,12 @@ function proofFor(resolution: GatewayResolution, now: number): void {
     || p.inputBound.revision !== 1 || !count(p.resultBound.maximumOutputTokens) || !count(p.resultBound.maximumPrivateResultBytes)
     || p.resultBound.maximumPrivateResultBytes < 1 || p.resultBound.maximumPrivateResultBytes > 60_000
     || !count(limits.canonicalBytes) || limits.canonicalBytes < 1 || !count(limits.privateResultBytes) || limits.privateResultBytes < 1 || limits.canonicalBytes > 180_000 || limits.privateResultBytes > 60_000 || limits.embeddingValuesPerCall !== 1 || p.resultBound.maximumEmbeddingValues !== 1) fail("CAPABILITY_UNAVAILABLE");
-  if (s.nativeInterface === "chat" && p.inputBound.ruleId === "plain-chat-cookbook-utf8-v1" && p.inputBound.featureEnvelope === "plain-chat-v1") return;
+  if (s.nativeInterface === "chat" && p.inputBound.ruleId === "plain-chat-cookbook-utf8-v1" && p.inputBound.featureEnvelope === "plain-chat-v1" && !s.capabilities.includes("tools")) return;
+  if (s.nativeInterface === "chat" && p.inputBound.ruleId === "agent-tools-chat-utf8-v1" && p.inputBound.featureEnvelope === "agent-tools-chat-v1"
+    && s.operationKey === "agent.respond" && s.capabilities.includes("tools") && s.pins.toolRegistryVersion === AGENT_TOOL_REGISTRY_VERSION
+    && p.toolContract?.registryVersion === AGENT_TOOL_REGISTRY_VERSION && p.toolContract.toolsCanonical === canonicalModelJson(AGENT_NATIVE_TOOLS)
+    && count(p.toolContract.maximumToolCalls) && p.toolContract.maximumToolCalls >= 1 && p.toolContract.maximumToolCalls <= 4
+    && s.limits.toolSteps <= p.toolContract.maximumToolCalls) return;
   if (s.nativeInterface === "embedding" && p.inputBound.ruleId === "default-embedding-utf8-v1" && p.inputBound.featureEnvelope === "default-embedding-v1") {
     assertProfileMatches(s.semanticProfile!); return;
   }
@@ -216,29 +224,94 @@ function requestBase(s: ModelPolicySnapshotV1, binding: GatewayBinding): ModelCa
     promptVersion: s.pins.promptVersion, schemaVersion: s.pins.schemaVersion, extractionVersion: s.pins.extractionVersion, toolRegistryVersion: s.pins.toolRegistryVersion };
 }
 const standardKeys = ["prompt", "maxOutputTokens", "temperature", "topP", "seed", "stopSequences", "topK", "presencePenalty", "frequencyPenalty", "responseFormat", "tools", "toolChoice", "headers", "providerOptions", "reasoning", "includeRawChunks", "abortSignal"];
+/** Trusted backend Agent composition only. Agent owns a DeltaStreamer controller;
+ * the ledger wrapper owns inference/drain. Join cancellation without admitting a
+ * caller-selected native controller into the governed provider itself. The owner
+ * disposes this bridge after lifecycle.complete(), including its error paths. */
+export function createAgentGatewayCancellationBridge(model: LanguageModelV4, lifecycle: GatewayLifecycle): { model: LanguageModelV4; dispose(): void } {
+  const listeners = new Map<AbortSignal, () => void>(); let disposed = false;
+  const adapt = (params: LanguageModelV4CallOptions): LanguageModelV4CallOptions => {
+    if (disposed) fail("RUN_CANCELLED");
+    const native = { ...record(params, standardKeys) }; const signal = native.abortSignal;
+    // AI SDK7 emits auto even when it advertises no tools. It carries no tool
+    // capability or selection in that exact empty case; other choices stay gated.
+    if (native.tools === undefined && native.toolChoice !== undefined
+      && canonicalModelJson(native.toolChoice) === '{"type":"auto"}') delete native.toolChoice;
+    if (signal !== undefined && signal !== lifecycle.signal) {
+      if (!(signal instanceof AbortSignal)) fail("UNTRUSTED_ABORT_SIGNAL");
+      if (!listeners.has(signal)) { const abort = () => lifecycle.cancel(); listeners.set(signal, abort); signal.addEventListener("abort", abort, { once: true }); }
+      if (signal.aborted) lifecycle.cancel();
+    }
+    return { ...native, abortSignal: lifecycle.signal } as unknown as LanguageModelV4CallOptions;
+  };
+  return { model: { specificationVersion: "v4", provider: model.provider, modelId: model.modelId, supportedUrls: model.supportedUrls,
+    doGenerate: async params => await model.doGenerate(adapt(params)), doStream: async params => await model.doStream(adapt(params)) },
+    dispose: () => { disposed = true; for (const [signal, listener] of listeners) signal.removeEventListener("abort", listener); listeners.clear(); } };
+}
 function languageParams(input: LanguageModelV4CallOptions, s: ModelPolicySnapshotV1, p: QualifiedDispatchEvidence, binding: GatewayBinding, signal: AbortSignal): { params: NativeLanguageParams; request: ModelCallRequest } {
   const native = record(input, standardKeys);
-  for (const key of ["topK", "presencePenalty", "frequencyPenalty", "tools", "toolChoice", "headers", "providerOptions", "reasoning", "includeRawChunks"]) if (key in native) fail("UNSUPPORTED_NATIVE_FIELD");
+  const agent = p.inputBound.featureEnvelope === "agent-tools-chat-v1";
+  for (const key of ["topK", "presencePenalty", "frequencyPenalty", "headers", "providerOptions", "reasoning", ...agent ? [] : ["tools", "toolChoice"]]) if (key in native) fail("UNSUPPORTED_NATIVE_FIELD");
+  // AI SDK7 always supplies false for ordinary streams. Only the governed
+  // wrapper may turn raw observation on; provider chunks never enter public DTOs.
+  if ("includeRawChunks" in native && native.includeRawChunks !== false) fail("UNSUPPORTED_NATIVE_FIELD");
   if (native.abortSignal !== undefined && native.abortSignal !== signal) fail("UNTRUSTED_ABORT_SIGNAL");
   if (native.responseFormat !== undefined && canonicalModelJson(native.responseFormat) !== '{"type":"text"}') fail("CAPABILITY_UNAVAILABLE");
   if (!Array.isArray(native.prompt)) fail("INVALID_NATIVE_REQUEST");
   // Canonical validation catches sparse/custom-iterator arrays BEFORE map/iteration.
   const messages: NonNullable<ModelCallRequest["messages"]> = arrayValues(native.prompt).map((message: unknown) => {
     const m = record(message, ["role", "content", "providerOptions"]); if ("providerOptions" in m) fail("UNSUPPORTED_NATIVE_FIELD");
-    if (!["system", "user", "assistant"].includes(m.role as string)) fail("CAPABILITY_UNAVAILABLE");
-    let text: unknown;
-    if (m.role === "system") text = m.content;
-    else {
-      const parts = arrayValues(m.content); if (parts.length !== 1) fail("CAPABILITY_UNAVAILABLE");
-      const part = record(parts[0], ["type", "text", "providerOptions"]);
-      if (part.type !== "text" || "providerOptions" in part) fail("CAPABILITY_UNAVAILABLE"); text = part.text;
+    if (!["system", "user", "assistant", ...agent ? ["tool"] : []].includes(m.role as string)) fail("CAPABILITY_UNAVAILABLE");
+    if (m.role === "system") {
+      if (typeof m.content !== "string") fail("INVALID_NATIVE_REQUEST"); utf8(m.content);
+      return { role: "system", parts: [{ type: "text", text: normalizeSourceText(m.content) }] };
     }
-    if (typeof text !== "string") fail("INVALID_NATIVE_REQUEST"); utf8(text);
-    return { role: m.role as "system" | "user" | "assistant", parts: [{ type: "text", text: normalizeSourceText(text) }] };
+    const values = arrayValues(m.content); if (!values.length || (!agent && values.length !== 1)) fail("CAPABILITY_UNAVAILABLE");
+    const parts = values.map((value): NonNullable<ModelCallRequest["messages"]>[number]["parts"][number] => {
+      const part = record(value, ["type", "text", "toolCallId", "toolName", "input", "output", "providerExecuted", "providerOptions"]);
+      if ("providerOptions" in part || (part.providerExecuted !== undefined && part.providerExecuted !== false)) fail("UNSUPPORTED_NATIVE_FIELD");
+      if (part.type === "text") {
+        if (Object.keys(part).some(key => !["type", "text"].includes(key)) || typeof part.text !== "string") fail("INVALID_NATIVE_REQUEST");
+        utf8(part.text); return { type: "text", text: normalizeSourceText(part.text) };
+      }
+      if (!agent || !stableId(part.toolCallId) || typeof part.toolName !== "string") fail("CAPABILITY_UNAVAILABLE");
+      if (part.type === "tool-call") {
+        if (Object.keys(part).some(key => !["type", "toolCallId", "toolName", "input", "providerExecuted"].includes(key))) fail("INVALID_NATIVE_REQUEST");
+        const input = detached(part.input); if (!input || typeof input !== "object" || Array.isArray(input)) fail("INVALID_NATIVE_REQUEST");
+        return { type: "tool-call", toolCallId: part.toolCallId, toolName: part.toolName, input: input as Record<string, unknown> };
+      }
+      if (part.type === "tool-result") {
+        if (Object.keys(part).some(key => !["type", "toolCallId", "toolName", "output"].includes(key))) fail("INVALID_NATIVE_REQUEST");
+        const output = record(part.output, ["type", "value", "reason"]);
+        if (output.type === "execution-denied") {
+          if (Object.keys(output).some(key => !["type", "reason"].includes(key)) || (output.reason !== undefined && typeof output.reason !== "string")) fail("INVALID_NATIVE_REQUEST");
+        } else if (!["text", "json", "error-text", "error-json"].includes(output.type as string) || !("value" in output) || "reason" in output
+          || (["text", "error-text"].includes(output.type as string) && typeof output.value !== "string")) fail("CAPABILITY_UNAVAILABLE");
+        return { type: "tool-result", toolCallId: part.toolCallId, toolName: part.toolName, output: detached(output) };
+      }
+      return fail("CAPABILITY_UNAVAILABLE");
+    });
+    return { role: m.role as "user" | "assistant" | "tool", parts };
   });
   if (!count(native.maxOutputTokens) || native.maxOutputTokens === 0 || native.maxOutputTokens > p.resultBound.maximumOutputTokens) fail("OUTPUT_BOUND_EXCEEDED");
-  const request = requestBase(s, binding); request.messages = messages; request.texts = messages.map((m) => m.parts[0]!.type === "text" ? m.parts[0]!.text : "");
-  request.inputTokens = 3 + messages.reduce((n, m, index) => n + 3 + utf8(m.role) + utf8(request.texts[index]!), 0);
+  const request = requestBase(s, binding); request.messages = messages; request.texts = messages.flatMap(m => m.parts.flatMap(part => part.type === "text" ? [part.text] : []));
+  if (agent) {
+    request.tools = native.tools === undefined ? [] : arrayValues(native.tools).map(value => {
+      const tool = record(value, ["type", "name", "description", "inputSchema", "strict", "inputExamples", "providerOptions"]);
+      const expected = AGENT_NATIVE_TOOLS.find(entry => entry.name === tool.name);
+      if (!expected || canonicalModelJson(tool) !== canonicalModelJson(expected)) fail("UNQUALIFIED_TOOL_DEFINITION");
+      return { name: expected.name, definition: detached({ description: expected.description, inputSchema: expected.inputSchema }) };
+    });
+    if (native.toolChoice !== undefined) request.toolChoice = detached(record(native.toolChoice, ["type", "toolName"])) as ModelCallRequest["toolChoice"];
+    request.toolSteps = request.tools.length ? s.limits.toolSteps : 0;
+    const calls = new Map<string, string>(), results = new Set<string>();
+    for (const message of messages) for (const part of message.parts) {
+      if (part.type === "tool-call") { if (calls.has(part.toolCallId)) fail("INVALID_TOOL_HISTORY"); calls.set(part.toolCallId, part.toolName); }
+      if (part.type === "tool-result") { if (calls.get(part.toolCallId) !== part.toolName || results.has(part.toolCallId)) fail("INVALID_TOOL_HISTORY"); results.add(part.toolCallId); }
+    }
+    if (calls.size !== results.size) fail("INVALID_TOOL_HISTORY");
+    request.inputTokens = agentToolsInputBound(canonicalModelJson({ messages, tools: request.tools, ...request.toolChoice ? { toolChoice: request.toolChoice } : {} }), messages.length, request.tools.length);
+  } else request.inputTokens = 3 + messages.reduce((n, m, index) => n + 3 + utf8(m.role) + utf8(request.texts[index]!), 0);
   request.outputTokens = native.maxOutputTokens;
   // Semantic schemas come from the operation contract, never caller provider options.
   if (s.operationKey === "memory.extract") {
@@ -253,8 +326,11 @@ function languageParams(input: LanguageModelV4CallOptions, s: ModelPolicySnapsho
   return { request: detached(checked), params: nativeLanguage(checked, signal) };
 }
 function nativeLanguage(request: Readonly<ModelCallRequest>, signal: AbortSignal): NativeLanguageParams {
-  return { prompt: request.messages!.map((m) => m.role === "system" ? { role: "system", content: (m.parts[0] as { text: string }).text }
-    : { role: m.role as "user" | "assistant", content: [{ type: "text", text: (m.parts[0] as { text: string }).text }] }),
+  // The closed catalogue and message validators establish these official V4 shapes.
+  const prompt = request.messages!.map(m => m.role === "system" ? { role: "system", content: (m.parts[0] as { text: string }).text }
+    : { role: m.role, content: m.parts.map(part => detached(part)) }) as LanguageModelV4CallOptions["prompt"];
+  const tools = request.tools.map(tool => ({ type: "function", name: tool.name, ...detached(tool.definition) })) as NonNullable<LanguageModelV4CallOptions["tools"]>;
+  return { prompt, ...tools.length ? { tools } : {}, ...request.toolChoice ? { toolChoice: detached(request.toolChoice) } : {},
   maxOutputTokens: request.outputTokens, ...request.options.temperature !== undefined ? { temperature: request.options.temperature } : {},
   ...request.options.topP !== undefined ? { topP: request.options.topP } : {}, ...request.options.seed !== undefined ? { seed: request.options.seed } : {},
   ...request.options.stopSequences ? { stopSequences: [...request.options.stopSequences] } : {}, abortSignal: signal };
@@ -273,6 +349,53 @@ function nativeUsage(raw: Record<string, unknown> | undefined): LanguageModelV4U
   return { inputTokens: { total: u.inputTokens, noCache: undefined, cacheRead: u.cachedInputTokens, cacheWrite: undefined }, outputTokens: { total: u.outputTokens, text: undefined, reasoning: u.reasoningTokens } };
 }
 const terminalReasons = ["stop", "length", "content_filter"];
+function finishReason(reason: string): AgentLanguageResultV1["finishReason"] {
+  return reason === "tool_calls" ? "tool-calls" : reason === "length" ? "length" : reason === "content_filter" ? "content-filter" : "stop";
+}
+function qualifiedReason(reason: unknown, resolution: GatewayResolution): reason is string {
+  return typeof reason === "string" && (terminalReasons.includes(reason)
+    || (reason === "tool_calls" && resolution.dispatchEvidence.inputBound.featureEnvelope === "agent-tools-chat-v1"));
+}
+function languageOutput(content: unknown, reason: string, request: ModelCallRequest, resolution: GatewayResolution):
+  { canonical: string; content: AgentLanguageResultV1["content"] } | undefined {
+  try {
+    const parts = arrayValues(content).flatMap((input): AgentLanguageResultV1["content"] => {
+      const part = detached(input) as Record<string, unknown>;
+      if (part.type === "reasoning") return [];
+      if (part.type === "text" && typeof part.text === "string") { utf8(part.text); return part.text ? [{ type: "text", text: part.text }] : []; }
+      if (part.type === "tool-call" && part.providerExecuted !== true && part.dynamic !== true
+        && typeof part.toolCallId === "string" && typeof part.toolName === "string" && typeof part.input === "string") {
+        return [{ type: "tool-call", toolCallId: part.toolCallId, toolName: part.toolName, input: part.input }];
+      }
+      fail("UNSUPPORTED_MODEL_OUTPUT");
+    });
+    const maximum = Math.min(resolution.storageLimits.privateResultBytes, resolution.dispatchEvidence.resultBound.maximumPrivateResultBytes);
+    if (resolution.dispatchEvidence.inputBound.featureEnvelope !== "agent-tools-chat-v1") {
+      if (!parts.length || parts.some(part => part.type !== "text") || reason === "tool_calls") return undefined;
+      const text = parts.map(part => part.type === "text" ? part.text : "").join("");
+      return { canonical: json({ text }, maximum), content: [{ type: "text", text }] };
+    }
+    const choice = request.toolChoice;
+    const allowed = choice?.type === "none" ? [] : request.tools.map(tool => tool.name);
+    const parsed = parseAgentLanguageResult({ version: 1, kind: "language", content: parts, finishReason: finishReason(reason) }, allowed, request.toolSteps);
+    if (!parsed || ((choice?.type === "required" || choice?.type === "tool") && parsed.finishReason !== "tool-calls")
+      || (choice?.type === "tool" && parsed.content.some(part => part.type === "tool-call" && part.toolName !== choice.toolName))) return undefined;
+    return { canonical: json(parsed, maximum), content: parsed.content };
+  } catch { return undefined; }
+}
+function matchingNativeToolCalls(content: AgentLanguageResultV1["content"], choice: unknown): boolean {
+  try {
+    const expected = content.filter(part => part.type === "tool-call");
+    const message = providerJSON(providerJSON(choice)?.message);
+    const wire = message?.tool_calls === undefined ? [] : arrayValues(message.tool_calls);
+    if (wire.length !== expected.length) return false;
+    return wire.every((input, index) => {
+      const call = providerJSON(input); const fn = providerJSON(call?.function); const part = expected[index]!;
+      return call?.type === "function" && call.id === part.toolCallId && fn?.name === part.toolName && typeof fn.arguments === "string"
+        && canonicalModelJson(JSON.parse(fn.arguments)) === part.input;
+    });
+  } catch { return false; }
+}
 /** Generated provider bodies are untrusted, descriptor-safe detached JSON before observation. */
 function providerJSON(input: unknown): Record<string, unknown> | undefined {
   try { const value: unknown = typeof input === "string" ? JSON.parse(input) : detached(input);
@@ -432,7 +555,13 @@ function stateFor(composition: GatewayComposition, inputBinding: GatewayBinding,
     if (!replay) return undefined; assertDelivery(); proofFor(checkedResolution(await authority(() => composition.ledger.resolve(resolveArgs(binding)))), (composition.now ?? Date.now)());
     const result = providerJSON(exactJSON(replay, resolution.storageLimits.privateResultBytes));
     if (!result) fail("INVALID_REPLAY");
-    if (resolution.snapshot.nativeInterface === "chat") { const item = record(result, ["text"]); if (typeof item.text !== "string" || !item.text) fail("INVALID_REPLAY"); utf8(item.text); assertDelivery(); return { text: item.text }; }
+    if (resolution.snapshot.nativeInterface === "chat") {
+      if (resolution.dispatchEvidence.inputBound.featureEnvelope === "agent-tools-chat-v1") {
+        const item = parseAgentLanguageResult(result, resolution.snapshot.allowedTools, resolution.snapshot.limits.toolSteps);
+        if (!item || canonicalModelJson(item) !== replay) fail("INVALID_REPLAY"); assertDelivery(); return item;
+      }
+      const item = record(result, ["text"]); if (typeof item.text !== "string" || !item.text) fail("INVALID_REPLAY"); utf8(item.text); assertDelivery(); return { text: item.text };
+    }
     const item = record(result, ["profile", "vectors"]); assertProfileMatches(item.profile as typeof DEFAULT_EMBEDDING_PROFILE);
     if (!Array.isArray(item.vectors) || item.vectors.length !== 1) fail("INVALID_REPLAY"); item.vectors.forEach((v: number[]) => assertEmbeddingVector(v));
     assertDelivery(); return { profile: DEFAULT_EMBEDDING_PROFILE, vectors: item.vectors as number[][] };
@@ -451,8 +580,8 @@ function stateFor(composition: GatewayComposition, inputBinding: GatewayBinding,
     if (permit.requestCanonical !== admitted.requestCanonical || canonicalModelJson(permit.snapshot) !== canonicalModelJson(admitted.snapshot)) fail("CHECKPOINT_MISMATCH");
     assertDelivery(); return { ...admitted, dispatchIdentity: permit.dispatchIdentity };
   }
-  const visible = async (attempt: Reserved, outputVisible = false, hardDeadline = Infinity) => {
-    assertDelivery(); const acknowledgment = record(await authority(() => composition.ledger.markVisible({ reference: binding.reference, attemptId: attempt.attemptId, outputVisible, toolInputVisible: false, toolResultVisible: false, toolEffectCommitted: false }), hardDeadline), ["recorded"]);
+  const visible = async (attempt: Reserved, outputVisible = false, hardDeadline = Infinity, toolInputVisible = false) => {
+    assertDelivery(); const acknowledgment = record(await authority(() => composition.ledger.markVisible({ reference: binding.reference, attemptId: attempt.attemptId, outputVisible, toolInputVisible, toolResultVisible: false, toolEffectCommitted: false }), hardDeadline), ["recorded"]);
     if (Object.keys(acknowledgment).length !== 1 || acknowledgment.recorded !== true) fail("DELIVERY_AUTHORITY_REVOKED"); assertDelivery();
   };
   async function terminal(attempt: Reserved & { dispatchIdentity: string }, raw: Record<string, unknown>, privateResult?: string): Promise<void> {
@@ -510,17 +639,18 @@ export function governGatewayLanguageModel(model: LanguageModelV4, composition: 
       try { result = await state.observe("native", doGenerate); } catch { state.endLifetime(); return fail("MODEL_INTERRUPTED"); }
       try {
       const raw = providerJSON(result.response?.body); const choices = raw?.choices;
-      if (!raw || !Array.isArray(choices) || choices.length !== 1 || !terminalReasons.includes((choices[0] as { finish_reason?: string }).finish_reason ?? "")) fail("UNQUALIFIED_TERMINAL");
-      let text = ""; let supported = false; let privateResult: string | undefined;
-      try { const content = detached(result.content); text = content.filter((part) => part.type === "text").map((part) => part.text).join(""); supported = content.every((part) => ["text", "reasoning"].includes(part.type)); if (text && supported) privateResult = json({ text }, Math.min(state.resolution.storageLimits.privateResultBytes, state.resolution.dispatchEvidence.resultBound.maximumPrivateResultBytes)); } catch { /* Capture observed charge even when output violated its bound. */ }
-      try { await state.terminal(attempt, raw, state.canDeliver() ? privateResult : undefined); } finally { state.endLifetime(); }
+      const reason = Array.isArray(choices) && choices.length === 1 ? (choices[0] as { finish_reason?: string }).finish_reason : undefined;
+      if (!raw || !qualifiedReason(reason, state.resolution)) fail("UNQUALIFIED_TERMINAL");
+      let output = languageOutput(result.content, reason, admitted, state.resolution);
+      if (output && !matchingNativeToolCalls(output.content, (choices as unknown[])[0])) output = undefined;
+      try { await state.terminal(attempt, raw, state.canDeliver() ? output?.canonical : undefined); } finally { state.endLifetime(); }
       state.assertDelivery();
-      if (!privateResult || state.controller.signal.aborted) fail("RESULT_BOUND_EXCEEDED");
-      if (!text || !supported) fail("UNSUPPORTED_MODEL_OUTPUT");
-      return { content: [{ type: "text", text }], finishReason: { unified: (choices[0] as { finish_reason: string }).finish_reason === "length" ? "length" : (choices[0] as { finish_reason: string }).finish_reason === "content_filter" ? "content-filter" : "stop", raw: (choices[0] as { finish_reason: string }).finish_reason }, usage: nativeUsage(providerJSON(raw.usage)), warnings: [] };
+      if (!output || state.controller.signal.aborted) fail("RESULT_BOUND_EXCEEDED");
+      return { content: output.content, finishReason: { unified: finishReason(reason), raw: reason }, usage: nativeUsage(providerJSON(raw.usage)), warnings: [] };
       } finally { state.endLifetime(); }
     }),
     wrapStream: ({ params, doStream }) => state.own(async () => {
+      if (state.resolution.dispatchEvidence.supportsStream !== true) fail("CAPABILITY_UNAVAILABLE");
       const attempt = await state.admit(input.get(params)!);
       const admitted = validateModelRequest(attempt.snapshot, exactJSON(attempt.requestCanonical, state.resolution.storageLimits.canonicalBytes)).request;
       if (nativeIdentity(params) !== nativeIdentity(nativeLanguage(admitted, state.controller.signal))) fail("ADMITTED_REQUEST_MISMATCH");
@@ -531,6 +661,8 @@ export function governGatewayLanguageModel(model: LanguageModelV4, composition: 
       let observer: ReadableStreamDefaultController<LanguageModelV4StreamPart>; let observerClosed = false;
       const output = new ReadableStream<LanguageModelV4StreamPart>({ start(c) { observer = c; }, cancel() { observerClosed = true; } }, { highWaterMark: 64 });
       let text = ""; let deliveryError: GatewayDispatchError | undefined; let terminalReason: string | undefined; let rawTerminal: Record<string, unknown> | undefined; let id: string | undefined; let actualModel: string | undefined; let textStarted = false; let terminalAttempted = false;
+      const toolInputs = new Map<string, { name: string; input: string; ended: boolean; complete: boolean }>();
+      const toolCalls: AgentLanguageResultV1["content"] = [];
       const drain = async (): Promise<void> => {
         const interrupted = () => { deliveryError ??= new GatewayDispatchError("STREAM_INTERRUPTED"); if (!observerClosed) { observerClosed = true; observer!.error(deliveryError); } };
         const emit = (part: LanguageModelV4StreamPart) => {
@@ -554,7 +686,7 @@ export function governGatewayLanguageModel(model: LanguageModelV4, composition: 
                   if (!observerClosed) { observerClosed = true; observer!.error(deliveryError); }
                 }
               }
-              const choices = raw.choices; if (Array.isArray(choices) && choices.length === 1 && terminalReasons.includes((choices[0] as { finish_reason?: string }).finish_reason ?? "")) terminalReason = (choices[0] as { finish_reason: string }).finish_reason;
+              const choices = raw.choices; if (Array.isArray(choices) && choices.length === 1 && qualifiedReason((choices[0] as { finish_reason?: string }).finish_reason, state.resolution)) terminalReason = (choices[0] as { finish_reason: string }).finish_reason;
               if (terminalReason || providerJSON(raw.usage)) rawTerminal = { id, model: actualModel, ...(rawTerminal?.usage ? { usage: rawTerminal.usage } : {}), ...(providerJSON(raw.usage) ? { usage: raw.usage } : {}) };
               continue;
             }
@@ -573,6 +705,45 @@ export function governGatewayLanguageModel(model: LanguageModelV4, composition: 
               }
               if (!state.canDeliver()) interrupted();
               if (!observerClosed && !deliveryError) { if (!textStarted) { emit({ type: "text-start", id: "governed-text" }); textStarted = true; } emit({ type: "text-delta", id: "governed-text", delta: part.delta }); }
+            } else if (["tool-input-start", "tool-input-delta", "tool-input-end", "tool-call"].includes(part.type)) {
+              if (deliveryError) continue;
+              try {
+                if (state.resolution.dispatchEvidence.inputBound.featureEnvelope !== "agent-tools-chat-v1") fail("UNSUPPORTED_MODEL_OUTPUT");
+                const value = detached(part) as Record<string, unknown>;
+                const callId = value.type === "tool-call" ? value.toolCallId : value.id;
+                if (!stableId(callId) || value.providerExecuted === true || value.dynamic === true) fail("UNSUPPORTED_MODEL_OUTPUT");
+                let safe: LanguageModelV4StreamPart;
+                if (value.type === "tool-input-start") {
+                  const name = value.toolName;
+                  if (typeof name !== "string" || !admitted.tools.some(tool => tool.name === name) || admitted.toolChoice?.type === "none"
+                    || (admitted.toolChoice?.type === "tool" && admitted.toolChoice.toolName !== name)
+                    || toolInputs.has(callId) || toolInputs.size >= admitted.toolSteps) fail("UNSUPPORTED_MODEL_OUTPUT");
+                  toolInputs.set(callId, { name, input: "", ended: false, complete: false });
+                  safe = { type: "tool-input-start", id: callId, toolName: name };
+                } else {
+                  const pending = toolInputs.get(callId); if (!pending || pending.complete) fail("UNSUPPORTED_MODEL_OUTPUT");
+                  if (value.type === "tool-input-delta") {
+                    if (pending.ended || typeof value.delta !== "string") fail("UNSUPPORTED_MODEL_OUTPUT");
+                    utf8(value.delta); pending.input += value.delta;
+                    safe = { type: "tool-input-delta", id: callId, delta: value.delta };
+                  } else if (value.type === "tool-input-end") {
+                    if (pending.ended) fail("UNSUPPORTED_MODEL_OUTPUT"); pending.ended = true;
+                    safe = { type: "tool-input-end", id: callId };
+                  } else {
+                    if (!pending.ended || value.toolName !== pending.name || typeof value.input !== "string") fail("UNSUPPORTED_MODEL_OUTPUT");
+                    const parsed = parseAgentLanguageResult({ version: 1, kind: "language", content: [{ type: "tool-call", toolCallId: callId, toolName: pending.name, input: value.input }], finishReason: "tool-calls" }, [pending.name], 1);
+                    if (!parsed || canonicalModelJson(JSON.parse(pending.input)) !== (parsed.content[0] as { input: string }).input) fail("UNSUPPORTED_MODEL_OUTPUT");
+                    pending.complete = true; const call = parsed.content[0]!;
+                    toolCalls.push(call); safe = call as LanguageModelV4StreamPart;
+                  }
+                }
+                if (utf8(text) + [...toolInputs.values()].reduce((bytes, tool) => bytes + utf8(tool.input), 0)
+                  > state.resolution.dispatchEvidence.resultBound.maximumPrivateResultBytes / 6) fail("RESULT_BOUND_EXCEEDED");
+                if (!deliveryError) { await state.visible(attempt, false, Infinity, !observerClosed); emit(safe); }
+              } catch (error) {
+                deliveryError ??= error instanceof GatewayDispatchError ? error : new GatewayDispatchError("DELIVERY_AUTHORITY_REVOKED");
+                if (!observerClosed) { observerClosed = true; observer!.error(deliveryError); }
+              }
             } else if (part.type === "finish") { /* Native EOF flush is NOT terminal proof. */ }
             else if (!["reasoning-start", "reasoning-delta", "reasoning-end", "text-start", "text-end", "response-metadata", "stream-start"].includes(part.type)) {
               deliveryError = new GatewayDispatchError("UNSUPPORTED_MODEL_OUTPUT");
@@ -581,10 +752,13 @@ export function governGatewayLanguageModel(model: LanguageModelV4, composition: 
           }
           if (!terminalReason || !rawTerminal) fail("UNQUALIFIED_TERMINAL");
           terminalAttempted = true;
-          await state.terminal(attempt, rawTerminal, text && !deliveryError && !state.controller.signal.aborted ? json({ text }, Math.min(state.resolution.storageLimits.privateResultBytes, state.resolution.dispatchEvidence.resultBound.maximumPrivateResultBytes)) : undefined);
+          const content: AgentLanguageResultV1["content"] = [...text ? [{ type: "text" as const, text }] : [], ...toolCalls];
+          const projected = languageOutput(content, terminalReason, admitted, state.resolution);
+          const completeTools = [...toolInputs.values()].every(tool => tool.complete);
+          await state.terminal(attempt, rawTerminal, projected && completeTools && !deliveryError && !state.controller.signal.aborted ? projected.canonical : undefined);
           if (deliveryError) throw deliveryError;
           if (!state.canDeliver()) interrupted();
-          if (!observerClosed && !deliveryError) { if (textStarted) emit({ type: "text-end", id: "governed-text" }); emit({ type: "finish", finishReason: { unified: terminalReason === "length" ? "length" : terminalReason === "content_filter" ? "content-filter" : "stop", raw: terminalReason }, usage: nativeUsage(providerJSON(rawTerminal.usage)) }); if (!observerClosed) { state.assertDelivery(); observer!.close(); observerClosed = true; } }
+          if (!observerClosed && !deliveryError) { if (textStarted) emit({ type: "text-end", id: "governed-text" }); emit({ type: "finish", finishReason: { unified: finishReason(terminalReason), raw: terminalReason }, usage: nativeUsage(providerJSON(rawTerminal.usage)) }); if (!observerClosed) { state.assertDelivery(); observer!.close(); observerClosed = true; } }
         } catch (error) {
           // Real terminal evidence may already be complete despite a later observer/authority failure.
           if (!terminalAttempted && terminalReason && rawTerminal) {

@@ -6,7 +6,7 @@ export const responseStatus = v.union(v.literal("queued"), v.literal("running"),
   v.literal("complete"), v.literal("failed"), v.literal("cancelled"));
 export const stageStatus = v.union(v.literal("pending"), v.literal("complete"), v.literal("failed"), v.literal("not_requested"));
 export const messagePin = v.object({ nativeMessageId: v.string(), order: v.number(), stepOrder: v.number(),
-  sourceEventId: v.string(), sourceRevision: v.number(), contentHash: v.string() });
+  sourceEventId: v.string(), sourceRevision: v.number(), contentHash: v.string(), canonicalContentHash: v.optional(v.string()) });
 const scope = { tenantId: v.string(), memorySpaceId: v.string(), ownerPrincipalId: v.string() };
 export const runtimeTranscriptTables = {
   runtimeAgentDefinitions: defineTable({ ...scope, agentId: v.string(), version: v.number(),
@@ -45,6 +45,7 @@ export const runtimeTranscriptTables = {
     revision: v.number(), contentHash: v.string(), sourceEventId: v.string(), sourceId: v.string(),
     sourceContentHash: v.string(), actorReference: runtimeAuthorityReference, approved: v.boolean(),
     legacyMessageId: v.optional(v.string()), legacyRequestCanonical: v.optional(v.string()),
+    contextSourceWitnesses: v.optional(v.array(v.object({ sourceId: v.string(), sourceEventId: v.string(), sourceRevision: v.number(), contentHash: v.string() }))),
     runId: v.optional(v.string()), attemptNumber: v.optional(v.number()), createdAt: v.number(), updatedAt: v.number(),
     tombstonedAt: v.optional(v.number()),
   }).index("by_native", ["tenantId", "memorySpaceId", "nativeMessageId"])
@@ -58,10 +59,11 @@ export const runtimeTranscriptTables = {
     memoryStatus: stageStatus, graphStatus: stageStatus, attemptNumber: v.number(),
     outputMessageIds: v.array(v.string()), approvedAt: v.optional(v.number()), approvalActor: v.optional(runtimeAuthorityReference),
     cancellationRequestedAt: v.optional(v.number()), cancelledAt: v.optional(v.number()),
-    failureCode: v.optional(v.string()), snapshotCanonical: v.optional(v.string()),
+    failureCode: v.optional(v.string()), snapshotCanonical: v.optional(v.string()), executionRequested: v.optional(v.boolean()), streamingRequested: v.optional(v.boolean()),
     createdAt: v.number(), updatedAt: v.number(), tombstonedAt: v.optional(v.number()),
   }).index("by_request", ["tenantId", "memorySpaceId", "ownerPrincipalId", "requestIdentityHash"])
     .index("by_scoped_id", ["tenantId", "memorySpaceId", "runId"])
+    .index("by_run_account", ["runAccountId"])
     .index("by_conversation_queue", ["tenantId", "memorySpaceId", "conversationId", "queueSequence"])
     .index("by_conversation_status", ["tenantId", "memorySpaceId", "conversationId", "responseStatus", "queueSequence"]),
   runtimeRunOutbox: defineTable({ tenantId: v.string(), memorySpaceId: v.string(), conversationId: v.string(), runId: v.string(),

@@ -1,0 +1,195 @@
+{
+  "operation": "e6de5721-a143-48cd-9514-5f1d70bea6d0",
+  "status": "PASS",
+  "sourceId": "explicit:[\"task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b\",\"task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space\",\"mn737zmpkce8jj4xk8fp5pv64s8fxbts\",\"task07-seed-b6e8d5a3-9f03-41cc-ab19-df9d4111149a\"]",
+  "priorRunId": "run:1a6b5876a205739510ac4c55dc0e589485c49aa1751e1062e61ca44cb711e0c5",
+  "laterRunId": "run:cd5fe6be5bae0e0a2a401c8623c8bd9416171821806d27c2bad1de552260a215",
+  "staleHistoryDeniedAt": "private-hydrate",
+  "error": {
+    "name": "ConvexError",
+    "message": "[Request ID: 146b111f505b5142] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../custom/backend/runtimeAuth.ts:45:26)\n    at materialize (../../custom/backend/runtimeAuth.ts:149:2)\n    at async resolveAuthorityReference (../../custom/backend/runtimeAuth.ts:202:0)\n    at async recheckAuthority (../../custom/backend/runtimeAuth.ts:256:0)\n    at async authority [as authority] (../../custom/backend/runtimeMemoryRepository.ts:83:62)\n    at async getSource [as getSource] (../../custom/backend/runtimeMemoryRepository.ts:100:2)\n    at async currentPrivateSources (../../custom/backend/runtimeTranscript.ts:186:26)\n    at async hydratePrivateCutoff (../../custom/backend/runtimeTranscript.ts:326:45)\n    at async executionContext (../../custom/backend/runtimeAgent.ts:103:55)\n    at async handler (../../custom/backend/runtimeAgent.ts:130:56)\n",
+    "data": {
+      "code": "FORBIDDEN",
+      "message": "Access denied",
+      "outcome": "not_dispatched",
+      "retryable": false,
+      "version": 1
+    }
+  },
+  "after": {
+    "bridges": [
+      {
+        "_id": "px73ade3ceyyrkgs1ccqhfv92d8fxjh2",
+        "nativeMessageId": "kx79dszzf6nq1cbdt9rskzrpw98fwf63",
+        "sourceEventId": "transcript:conversation:1a6b5876a205739510ac4c55dc0e589485c49aa1751e1062e61ca44cb711e0c5:kx79dszzf6nq1cbdt9rskzrpw98fwf63",
+        "sourceRevision": 1
+      },
+      {
+        "_id": "px7ecfv6gfbjgb4tdppzpz9dfs8fwrw8",
+        "nativeMessageId": "kx750txqdsfr999xx8xsaq3pes8fxrqz",
+        "sourceEventId": "transcript:conversation:1a6b5876a205739510ac4c55dc0e589485c49aa1751e1062e61ca44cb711e0c5:kx750txqdsfr999xx8xsaq3pes8fxrqz",
+        "sourceRevision": 1
+      },
+      {
+        "_id": "px755eqdg3mxems82werjp082s8fwep8",
+        "nativeMessageId": "kx7196qqk7q9kxvetdvxkf2gg98fw5h7",
+        "sourceEventId": "transcript:conversation:1a6b5876a205739510ac4c55dc0e589485c49aa1751e1062e61ca44cb711e0c5:kx7196qqk7q9kxvetdvxkf2gg98fw5h7",
+        "sourceRevision": 1
+      },
+      {
+        "_id": "px7dct9ptc86wvn1jnm1jsn1gs8fxjvn",
+        "nativeMessageId": "kx7akzcj0kvevn3fcgpz30a2s18fxajs",
+        "sourceEventId": "transcript:conversation:1a6b5876a205739510ac4c55dc0e589485c49aa1751e1062e61ca44cb711e0c5:kx7akzcj0kvevn3fcgpz30a2s18fxajs",
+        "sourceRevision": 1
+      },
+      {
+        "_id": "px7dtr58j8rhx4pet8261x1w8x8fw9nh",
+        "nativeMessageId": "kx79r9vk8k66r0d5t681q9d4wd8fwetr",
+        "sourceEventId": "transcript:conversation:1a6b5876a205739510ac4c55dc0e589485c49aa1751e1062e61ca44cb711e0c5:kx79r9vk8k66r0d5t681q9d4wd8fwetr",
+        "sourceRevision": 1
+      }
+    ],
+    "executions": [
+      {
+        "_creationTime": 1791467916392.965,
+        "_id": "q971f5f36zxk9kxna85qq29e158fwszj",
+        "attemptNumber": 1,
+        "createdAt": 1791467916392,
+        "leaseVersion": 1,
+        "memorySpaceId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space",
+        "nextModelStep": 0,
+        "nextOutputSequence": 0,
+        "reference": {
+          "grantId": "md71kf97qydspxgejaga8rmknn8fwbe6",
+          "grantVersion": 1,
+          "membershipId": "mh796m2jn3mm0zwhwfapqemqas8fw830",
+          "membershipVersion": 1,
+          "memorySpaceEpoch": 1,
+          "memorySpaceId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space",
+          "principalId": "mn737zmpkce8jj4xk8fp5pv64s8fxbts",
+          "principalVersion": 1,
+          "tenantEpoch": 1,
+          "tenantId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b"
+        },
+        "runId": "run:cd5fe6be5bae0e0a2a401c8623c8bd9416171821806d27c2bad1de552260a215",
+        "savedMessageIds": [],
+        "savedMessagePins": [],
+        "sourceWitnesses": [],
+        "state": "ready",
+        "streaming": true,
+        "tenantId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b",
+        "toolCount": 0,
+        "updatedAt": 1791467916392
+      }
+    ],
+    "ingestion": [],
+    "modelAttempts": [],
+    "modelOperations": [],
+    "native": [
+      {
+        "_id": "kx79dszzf6nq1cbdt9rskzrpw98fwf63",
+        "order": 0,
+        "role": "user",
+        "status": "success",
+        "stepOrder": 0
+      },
+      {
+        "_id": "kx750txqdsfr999xx8xsaq3pes8fxrqz",
+        "agentName": "cortex:run:1a6b5876a205739510ac4c55dc0e589485c49aa1751e1062e61ca44cb711e0c5:1:0",
+        "order": 0,
+        "role": "assistant",
+        "status": "success",
+        "stepOrder": 1
+      },
+      {
+        "_id": "kx7196qqk7q9kxvetdvxkf2gg98fw5h7",
+        "agentName": "cortex:run:1a6b5876a205739510ac4c55dc0e589485c49aa1751e1062e61ca44cb711e0c5:1:0",
+        "order": 0,
+        "role": "tool",
+        "status": "success",
+        "stepOrder": 2
+      },
+      {
+        "_id": "kx7akzcj0kvevn3fcgpz30a2s18fxajs",
+        "agentName": "cortex:run:1a6b5876a205739510ac4c55dc0e589485c49aa1751e1062e61ca44cb711e0c5:1:1",
+        "order": 0,
+        "role": "assistant",
+        "status": "success",
+        "stepOrder": 3
+      },
+      {
+        "_id": "kx79r9vk8k66r0d5t681q9d4wd8fwetr",
+        "order": 1,
+        "role": "user",
+        "status": "success",
+        "stepOrder": 0
+      }
+    ],
+    "operations": [],
+    "outbox": [
+      {
+        "_creationTime": 1791467916018.7292,
+        "_id": "pn7ekbz3jgnr7njjxven4d40vs8fxs9d",
+        "conversationId": "conversation:1a6b5876a205739510ac4c55dc0e589485c49aa1751e1062e61ca44cb711e0c5",
+        "createdAt": 1791467916018,
+        "leaseExpiresAt": 1791468216392,
+        "leaseVersion": 1,
+        "memorySpaceId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space",
+        "runId": "run:cd5fe6be5bae0e0a2a401c8623c8bd9416171821806d27c2bad1de552260a215",
+        "sequence": 2,
+        "state": "claimed",
+        "tenantId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b",
+        "updatedAt": 1791467916392
+      }
+    ],
+    "run": {
+      "_creationTime": 1791467916018.729,
+      "_id": "ps79gr2426xd9w8n7wkzfcqh9d8fwzht",
+      "agentId": "agent:2428beac2a157c40b067976173fe4162876a9820726ebae970694e9fda4e1ffb",
+      "agentVersion": 1,
+      "attemptNumber": 1,
+      "authorityReference": {
+        "grantId": "md71kf97qydspxgejaga8rmknn8fwbe6",
+        "grantVersion": 1,
+        "membershipId": "mh796m2jn3mm0zwhwfapqemqas8fw830",
+        "membershipVersion": 1,
+        "memorySpaceEpoch": 1,
+        "memorySpaceId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space",
+        "principalId": "mn737zmpkce8jj4xk8fp5pv64s8fxbts",
+        "principalVersion": 1,
+        "tenantEpoch": 1,
+        "tenantId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b"
+      },
+      "conversationEpoch": 1,
+      "conversationId": "conversation:1a6b5876a205739510ac4c55dc0e589485c49aa1751e1062e61ca44cb711e0c5",
+      "createdAt": 1791467916018,
+      "definitionHash": "eddfa63fe233e332437248398dbcb4823e9071e16fd814ee7f0853ac45091f79",
+      "executionRequested": true,
+      "graphStatus": "not_requested",
+      "historyRevision": 1,
+      "inputMessageIds": [
+        "kx79r9vk8k66r0d5t681q9d4wd8fwetr"
+      ],
+      "memorySpaceId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space",
+      "memoryStatus": "pending",
+      "outputMessageIds": [],
+      "ownerPrincipalId": "mn737zmpkce8jj4xk8fp5pv64s8fxbts",
+      "queueSequence": 2,
+      "requestCanonical": "{\"identity\":[\"cortex.submit.v1\",\"task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b\",\"task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space\",\"mn737zmpkce8jj4xk8fp5pv64s8fxbts\",[\"existing\",\"conversation:1a6b5876a205739510ac4c55dc0e589485c49aa1751e1062e61ca44cb711e0c5\"],\"task07-later-e6de5721-a143-48cd-9514-5f1d70bea6d0\"],\"publicRequest\":{\"agentId\":\"agent:2428beac2a157c40b067976173fe4162876a9820726ebae970694e9fda4e1ffb\",\"agentVersion\":1,\"clientRequestId\":\"task07-later-e6de5721-a143-48cd-9514-5f1d70bea6d0\",\"conversationId\":\"conversation:1a6b5876a205739510ac4c55dc0e589485c49aa1751e1062e61ca44cb711e0c5\",\"parts\":[{\"text\":\"Continue the same conversation.\",\"type\":\"text\"}],\"version\":1},\"version\":1}",
+      "requestIdentityCanonical": "[\"cortex.submit.v1\",\"task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b\",\"task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space\",\"mn737zmpkce8jj4xk8fp5pv64s8fxbts\",[\"existing\",\"conversation:1a6b5876a205739510ac4c55dc0e589485c49aa1751e1062e61ca44cb711e0c5\"],\"task07-later-e6de5721-a143-48cd-9514-5f1d70bea6d0\"]",
+      "requestIdentityHash": "cd5fe6be5bae0e0a2a401c8623c8bd9416171821806d27c2bad1de552260a215",
+      "responseStatus": "running",
+      "runAccountId": "n175ck5qhs04ptdr594thm9cxx8fxqj4",
+      "runBudgetId": "9206f79bceebb279d576b49e1ddf04aed749df4c7ff79f394c3a0774fe896939",
+      "runId": "run:cd5fe6be5bae0e0a2a401c8623c8bd9416171821806d27c2bad1de552260a215",
+      "snapshotCanonical": "{\"anchor\":{\"canonicalContentHash\":\"67d5205352c438dfbae122f67029f3b914b7ed17095ce329c94a85a6f758f3f9\",\"contentHash\":\"cd9ed947910d4061a33f0952c971715b8b9c2dc4220a343f40ff3af386a058f8\",\"nativeMessageId\":\"kx79r9vk8k66r0d5t681q9d4wd8fwetr\",\"order\":1,\"sourceEventId\":\"transcript:conversation:1a6b5876a205739510ac4c55dc0e589485c49aa1751e1062e61ca44cb711e0c5:kx79r9vk8k66r0d5t681q9d4wd8fwetr\",\"sourceRevision\":1,\"stepOrder\":0},\"attemptNumber\":1,\"capturedAuthorityReference\":{\"grantId\":\"md71kf97qydspxgejaga8rmknn8fwbe6\",\"grantVersion\":1,\"membershipId\":\"mh796m2jn3mm0zwhwfapqemqas8fw830\",\"membershipVersion\":1,\"memorySpaceEpoch\":1,\"memorySpaceId\":\"task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space\",\"principalId\":\"mn737zmpkce8jj4xk8fp5pv64s8fxbts\",\"principalVersion\":1,\"tenantEpoch\":1,\"tenantId\":\"task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b\"},\"completeness\":\"complete\",\"conversationEpoch\":1,\"conversationId\":\"conversation:1a6b5876a205739510ac4c55dc0e589485c49aa1751e1062e61ca44cb711e0c5\",\"definitionHash\":\"eddfa63fe233e332437248398dbcb4823e9071e16fd814ee7f0853ac45091f79\",\"definitionVersion\":1,\"historyRevision\":1,\"ingestionCutoff\":{\"requiredStages\":[],\"scopeIdentity\":\"[\\\"task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b\\\",\\\"task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space\\\"]\",\"sequence\":2},\"messages\":[{\"canonicalContentHash\":\"cc3a1ccff7ede73687348504e7c1dfa0c2666ac519608b0f41ac11659d64d485\",\"contentHash\":\"2105496516ee1ac04fba74b3a26de94ee9fc2a8abccff6c79ae7218c27269ccb\",\"nativeMessageId\":\"kx79dszzf6nq1cbdt9rskzrpw98fwf63\",\"order\":0,\"sourceEventId\":\"transcript:conversation:1a6b5876a205739510ac4c55dc0e589485c49aa1751e1062e61ca44cb711e0c5:kx79dszzf6nq1cbdt9rskzrpw98fwf63\",\"sourceRevision\":1,\"stepOrder\":0},{\"canonicalContentHash\":\"191f6e4b7c719b44fe2be99761debf0c8d8b3791ff7fbc1ea50f4c370a5d3f8e\",\"contentHash\":\"822aab69cd0fb2aaf8e31a0ca847b86cdba637df0e11e9a5465ea44f6ca3f615\",\"nativeMessageId\":\"kx750txqdsfr999xx8xsaq3pes8fxrqz\",\"order\":0,\"sourceEventId\":\"transcript:conversation:1a6b5876a205739510ac4c55dc0e589485c49aa1751e1062e61ca44cb711e0c5:kx750txqdsfr999xx8xsaq3pes8fxrqz\",\"sourceRevision\":1,\"stepOrder\":1},{\"canonicalContentHash\":\"a6618a13cba5a50c42002ce752555d2728bd35367cc9de64f5c08f76806bb050\",\"contentHash\":\"69af1a4e36365eadd24dd1712298472ccc613e81d6152a1e01ab4312c9ecafd8\",\"nativeMessageId\":\"kx7196qqk7q9kxvetdvxkf2gg98fw5h7\",\"order\":0,\"sourceEventId\":\"transcript:conversation:1a6b5876a205739510ac4c55dc0e589485c49aa1751e1062e61ca44cb711e0c5:kx7196qqk7q9kxvetdvxkf2gg98fw5h7\",\"sourceRevision\":1,\"stepOrder\":2},{\"canonicalContentHash\":\"3c075bb0d601d2fb371a1fa7108f7c98f5c3560eadec7297f61052e05cf4a098\",\"contentHash\":\"b51033976c18fdb393d1768856123a8d85c900003cbc8d0c96970e4939d4b0e7\",\"nativeMessageId\":\"kx7akzcj0kvevn3fcgpz30a2s18fxajs\",\"order\":0,\"sourceEventId\":\"transcript:conversation:1a6b5876a205739510ac4c55dc0e589485c49aa1751e1062e61ca44cb711e0c5:kx7akzcj0kvevn3fcgpz30a2s18fxajs\",\"sourceRevision\":1,\"stepOrder\":3},{\"canonicalContentHash\":\"67d5205352c438dfbae122f67029f3b914b7ed17095ce329c94a85a6f758f3f9\",\"contentHash\":\"cd9ed947910d4061a33f0952c971715b8b9c2dc4220a343f40ff3af386a058f8\",\"nativeMessageId\":\"kx79r9vk8k66r0d5t681q9d4wd8fwetr\",\"order\":1,\"sourceEventId\":\"transcript:conversation:1a6b5876a205739510ac4c55dc0e589485c49aa1751e1062e61ca44cb711e0c5:kx79r9vk8k66r0d5t681q9d4wd8fwetr\",\"sourceRevision\":1,\"stepOrder\":0}],\"queueSequence\":2,\"runDocId\":\"ps79gr2426xd9w8n7wkzfcqh9d8fwzht\",\"threadId\":\"m9735mjr6nqd1x578dk5j9qs118fxmag\",\"version\":1}",
+      "streamingRequested": true,
+      "tenantId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b",
+      "updatedAt": 1791467916392
+    }
+  },
+  "noSubsequentPaidAttempt": true,
+  "completedPriorPaidAttemptCount": 4,
+  "originalCompletedTurnPreserved": true,
+  "usesActualCachedToolPayload": true
+}

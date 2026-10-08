@@ -1,0 +1,168 @@
+{
+  "scope": "Task07 implementation and controlled verification; actual acceptance pending",
+  "capturedAt": "2026-10-08T13:11:10.239Z",
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "node": "v24.15.0",
+  "npm": "12.2.0",
+  "controlled": {
+    "passed": 90,
+    "failed": 0,
+    "skipped": 0,
+    "suites": 5,
+    "raw": "units12.json",
+    "log": "units12.log"
+  },
+  "checks": [
+    {
+      "command": "node node_modules/typescript/bin/tsc -p convex-dev/tsconfig.json --noEmit",
+      "exit": 0,
+      "log": "types10.log"
+    },
+    {
+      "command": "node node_modules/typescript/bin/tsc -p tsconfig.json --noEmit",
+      "exit": 0,
+      "log": "alltypes5.log"
+    },
+    {
+      "command": "node node_modules/eslint/bin/eslint.js [owned Agent/transcript/run files and controlled tests]",
+      "exit": 0,
+      "log": "lint3.log"
+    }
+  ],
+  "source": [
+    {
+      "path": "src/domain/transcript.ts",
+      "bytes": 6667,
+      "sha256": "1e6c30da65461b0c85e8a1ab073e8b912f38fce5a9d12078f1e57194e09c23a0"
+    },
+    {
+      "path": "convex-dev/runtimeTranscript.ts",
+      "bytes": 49431,
+      "sha256": "7b8c2e31fe2fbcf9d85e981a88722cdfbb83ae9c49b39c2f74955f075e607c92"
+    },
+    {
+      "path": "convex-dev/runtimeTranscriptSchema.ts",
+      "bytes": 8406,
+      "sha256": "f942c592cb57ebf3d76f8d5d68a1efc07cbf97c5679926b90cf80e738aca9e82"
+    },
+    {
+      "path": "convex-dev/runs.ts",
+      "bytes": 25601,
+      "sha256": "eef76c27717750d818f6ad563db7b7a5d8379af6ae5b1973e114d3415533fb78"
+    },
+    {
+      "path": "convex-dev/agentDefinitions.ts",
+      "bytes": 16275,
+      "sha256": "c7853ed40f6f4c12c61a369570c13111dab31cf9597917bc6cad41a5294e54b0"
+    },
+    {
+      "path": "convex-dev/convex.config.ts",
+      "bytes": 277,
+      "sha256": "b5634a88e2e31dc7fad0170151ae28c1cc0114fb5611f9cd9aad554fa2c74602"
+    },
+    {
+      "path": "convex-dev/schema.ts",
+      "bytes": 54764,
+      "sha256": "78817f4e6a8afdba8ca95edb6fc50c3342df72e2e4a0ca6af3b754239c6d2514"
+    },
+    {
+      "path": "convex-dev/runtimeAgent.ts",
+      "bytes": 61834,
+      "sha256": "b4789a22eb76f613a544c639786d87acd25a9cd046685176802cc980f6c977e1"
+    },
+    {
+      "path": "convex-dev/runtimeAgentFence.ts",
+      "bytes": 4506,
+      "sha256": "c0a52cdd373025ae98763e3034330a48463100e88192097fb744f928892fbe78"
+    },
+    {
+      "path": "convex-dev/runtimeAgentSchema.ts",
+      "bytes": 3289,
+      "sha256": "a0224393fa7e60be91f3de6bd1257bc275c566c96a101ce84bcb847c70f77be0"
+    },
+    {
+      "path": "convex-dev/runtimeAgentReferences.ts",
+      "bytes": 531,
+      "sha256": "47e0746cbe2e28b2e190285b840bd2637afc24f1b0decb8a4ced8e75950260a0"
+    },
+    {
+      "path": "convex-dev/runtimeAgentTools.ts",
+      "bytes": 7269,
+      "sha256": "f9b57f5c2d2e0c85e2b5370cc45b6a05c98696ab95db772af887f5c2689aad36"
+    },
+    {
+      "path": "tests/unit/runtimeAgent/execution.test.ts",
+      "bytes": 37827,
+      "sha256": "c619714a8ad3037a8fda554f5596fdd7b2e6a843998f25363b529241ccdac139"
+    },
+    {
+      "path": "tests/unit/runtimeAgent/tool-context.test.ts",
+      "bytes": 5509,
+      "sha256": "9e732be40f3463fe23546075aca0324a0e8476ff10a4eb36e1a282358eca95e5"
+    },
+    {
+      "path": "tests/unit/runtimeAgent/model-owner.test.ts",
+      "bytes": 9349,
+      "sha256": "54707adca6b7206048664bbe64d5b5573c0067fa44e029855d8945679f02e371"
+    },
+    {
+      "path": "tests/unit/runtimeAgent/native-arguments.ts",
+      "bytes": 2217,
+      "sha256": "ae15c27f13d4075661e16b15a182f1c999fc7980dd60d1aa21c638e36d0a641e"
+    },
+    {
+      "path": "tests/unit/runtimeTranscript/fixture.ts",
+      "bytes": 16796,
+      "sha256": "949e517cfd2aaeb8e01c4c2039ea556a0132daaf198f980bbab18af055dd7904"
+    }
+  ],
+  "requirements": [
+    {
+      "requirement": "Canonical history and bounded authorized Cortex context",
+      "implementation": "hydratePrivateCutoff exact private canonical messages, context hook, disabled Agent search/embedding, current source witnesses including historical and forked tool payloads",
+      "controlled": "PASS",
+      "actual": "PENDING"
+    },
+    {
+      "requirement": "Server tools, grants, operation identities and explicit approval/retry",
+      "implementation": "Closed memory tools; native operation parent/shared run budget; durable immutable receipts; atomic source writes; tool evidence lineage; explicit approvals and retry:false",
+      "controlled": "PASS",
+      "actual": "PENDING"
+    },
+    {
+      "requirement": "Durable typed output and authorized multiobservers",
+      "implementation": "Throttled redacted delta rows, scoped indexed cursors, final-only output, cancellation and approval continuations",
+      "controlled": "PASS",
+      "actual": "PENDING"
+    },
+    {
+      "requirement": "Interruption and exact finalization/reconciliation",
+      "implementation": "Started work becomes unknown without blind retry; exact native generation reconciliation; one canonical registration and ingestion identity",
+      "controlled": "PASS",
+      "actual": "PENDING"
+    },
+    {
+      "requirement": "Pinned revisions and current authority/source fences",
+      "implementation": "Manual edits, source changes, revoked grants, definition changes, expired leases and tombstones block delegated effects and delivery; paired tool history immutable",
+      "controlled": "PASS",
+      "actual": "PENDING"
+    }
+  ],
+  "remaining": [
+    "Actual tools/stream qualification with native Gateway terminal evidence before production registry promotion",
+    "Installed Agent+Workflow turn, current context, server tool, multiobserver/disconnect/approval/cancel",
+    "Paid save-gap recovery and one final/ingestion; real stale-source/edit/revocation negatives",
+    "One coherent independent non-author verdict; Task06 dependency closure"
+  ],
+  "preserved": [
+    "units1 configuration setup failure",
+    "units2 real empty tool message source normalization failure, fixed without creating tool factual sources",
+    "units5 synthetic proof fixture failure before current strict tool envelope wiring",
+    "units8 oversized-context test setup error; explicit governed low cap corrected",
+    "units10 selected4-suites68PASS due nonexistent run-suite name; corrected units11/12 select real admission.test.ts",
+    "Full type/lint setup and dependency failures retained in original logs; current selected checks pass",
+    "Independent historical context/gap reds remain reviewer-owned"
+  ],
+  "sourceEligibilityClaim": false,
+  "functionalAcceptanceClaim": false
+}

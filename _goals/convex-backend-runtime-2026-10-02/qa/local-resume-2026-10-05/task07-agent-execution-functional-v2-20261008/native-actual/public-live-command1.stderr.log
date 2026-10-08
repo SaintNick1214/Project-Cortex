@@ -1,0 +1,20 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
++ actual - expected
+
++ 'unknown'
+- 'complete'
+
+    at file:///Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-agent-execution-functional-v2-20261008/native-actual/exercise-public.mjs:43:59 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: 'unknown',
+  expected: 'complete',
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.15.0

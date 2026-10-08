@@ -1,0 +1,489 @@
+{
+  "status": "PASS",
+  "operation": "66468eb7-3cbe-4d5a-8d1e-c5be442a2eb5",
+  "scenario": "replacement-grant-renewal",
+  "priorStoppedOracle": "installed-grant-renewal-command1.stderr.log",
+  "sameAdmittedRun": true,
+  "noReprovision": true,
+  "attempt": {
+    "attemptNumber": 1,
+    "leaseVersion": 1,
+    "reference": {
+      "grantId": "md71kf97qydspxgejaga8rmknn8fwbe6",
+      "grantVersion": 1,
+      "membershipId": "mh796m2jn3mm0zwhwfapqemqas8fw830",
+      "membershipVersion": 1,
+      "memorySpaceEpoch": 1,
+      "memorySpaceId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space",
+      "principalId": "mn737zmpkce8jj4xk8fp5pv64s8fxbts",
+      "principalVersion": 1,
+      "tenantEpoch": 1,
+      "tenantId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b"
+    },
+    "runId": "run:469ae327a8b0dfa7c21e21a2d47131240065b8b354ee2047366005c8e279156d"
+  },
+  "current": {
+    "grantId": "md7erwvqp8xb5es62573d8cxa58fxe67",
+    "grantVersion": 2,
+    "membershipId": "mh796m2jn3mm0zwhwfapqemqas8fw830",
+    "membershipVersion": 1,
+    "memorySpaceEpoch": 1,
+    "memorySpaceId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space",
+    "principalId": "mn737zmpkce8jj4xk8fp5pv64s8fxbts",
+    "principalVersion": 1,
+    "tenantEpoch": 1,
+    "tenantId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b"
+  },
+  "renewed": {
+    "actorKind": "user",
+    "capabilities": [
+      "admin",
+      "read",
+      "run",
+      "storage:read",
+      "storage:write",
+      "tool",
+      "write"
+    ],
+    "grantId": "md7erwvqp8xb5es62573d8cxa58fxe67",
+    "grantVersion": 2,
+    "membershipId": "mh796m2jn3mm0zwhwfapqemqas8fw830",
+    "membershipVersion": 1,
+    "memorySpaceEpoch": 1,
+    "memorySpaceId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space",
+    "principalId": "mn737zmpkce8jj4xk8fp5pv64s8fxbts",
+    "principalVersion": 1,
+    "resourceAccess": "space",
+    "tenantEpoch": 1,
+    "tenantId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b",
+    "userId": "mn737zmpkce8jj4xk8fp5pv64s8fxbts"
+  },
+  "before": {
+    "bridges": [
+      {
+        "_id": "px76nkavbjr59f0raeqv4b7hcd8fwkan",
+        "nativeMessageId": "kx705teyda42bve83md2smyhc98fwedq",
+        "sourceEventId": "transcript:conversation:1f4e58b5e4fa0749886ea9e0b28fb486c5560974a9dfafaab5bf43e84002948a:kx705teyda42bve83md2smyhc98fwedq",
+        "sourceRevision": 1
+      }
+    ],
+    "executions": [
+      {
+        "_creationTime": 1791469503077.4624,
+        "_id": "q973bhwjnz4t40tqtrb8kc9nfh8fwbw4",
+        "attemptNumber": 1,
+        "createdAt": 1791469503077,
+        "leaseVersion": 1,
+        "memorySpaceId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space",
+        "nextModelStep": 0,
+        "nextOutputSequence": 0,
+        "reference": {
+          "grantId": "md71kf97qydspxgejaga8rmknn8fwbe6",
+          "grantVersion": 1,
+          "membershipId": "mh796m2jn3mm0zwhwfapqemqas8fw830",
+          "membershipVersion": 1,
+          "memorySpaceEpoch": 1,
+          "memorySpaceId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space",
+          "principalId": "mn737zmpkce8jj4xk8fp5pv64s8fxbts",
+          "principalVersion": 1,
+          "tenantEpoch": 1,
+          "tenantId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b"
+        },
+        "runId": "run:469ae327a8b0dfa7c21e21a2d47131240065b8b354ee2047366005c8e279156d",
+        "savedMessageIds": [],
+        "savedMessagePins": [],
+        "sourceWitnesses": [],
+        "state": "ready",
+        "streaming": true,
+        "tenantId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b",
+        "toolCount": 0,
+        "updatedAt": 1791469503077
+      }
+    ],
+    "ingestion": [],
+    "modelAttempts": [],
+    "modelOperations": [],
+    "native": [
+      {
+        "_id": "kx705teyda42bve83md2smyhc98fwedq",
+        "order": 0,
+        "role": "user",
+        "status": "success",
+        "stepOrder": 0
+      }
+    ],
+    "operations": [],
+    "outbox": [
+      {
+        "_creationTime": 1791469502401.7798,
+        "_id": "pn7axy6r52gq8s0c5a75jdpp6x8fxm7n",
+        "conversationId": "conversation:1f4e58b5e4fa0749886ea9e0b28fb486c5560974a9dfafaab5bf43e84002948a",
+        "createdAt": 1791469502401,
+        "leaseExpiresAt": 1791469803077,
+        "leaseVersion": 1,
+        "memorySpaceId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space",
+        "runId": "run:469ae327a8b0dfa7c21e21a2d47131240065b8b354ee2047366005c8e279156d",
+        "sequence": 1,
+        "state": "claimed",
+        "tenantId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b",
+        "updatedAt": 1791469503077
+      }
+    ],
+    "run": {
+      "_creationTime": 1791469502401.7795,
+      "_id": "ps74da5xn4s5m9cctzz27sf12n8fxdg7",
+      "agentId": "agent:48460d7e77e562c8f734c8de86506d7791c22daf13b91d54e278a86b6f4ec9fe",
+      "agentVersion": 1,
+      "attemptNumber": 1,
+      "authorityReference": {
+        "grantId": "md71kf97qydspxgejaga8rmknn8fwbe6",
+        "grantVersion": 1,
+        "membershipId": "mh796m2jn3mm0zwhwfapqemqas8fw830",
+        "membershipVersion": 1,
+        "memorySpaceEpoch": 1,
+        "memorySpaceId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space",
+        "principalId": "mn737zmpkce8jj4xk8fp5pv64s8fxbts",
+        "principalVersion": 1,
+        "tenantEpoch": 1,
+        "tenantId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b"
+      },
+      "conversationEpoch": 1,
+      "conversationId": "conversation:1f4e58b5e4fa0749886ea9e0b28fb486c5560974a9dfafaab5bf43e84002948a",
+      "createdAt": 1791469502401,
+      "definitionHash": "6712e65dcf4e807ef222bd226294292d01fa9da03a3b2541cc10614daf2ab8cc",
+      "executionRequested": true,
+      "graphStatus": "not_requested",
+      "historyRevision": 0,
+      "inputMessageIds": [
+        "kx705teyda42bve83md2smyhc98fwedq"
+      ],
+      "memorySpaceId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space",
+      "memoryStatus": "pending",
+      "outputMessageIds": [],
+      "ownerPrincipalId": "mn737zmpkce8jj4xk8fp5pv64s8fxbts",
+      "queueSequence": 1,
+      "requestCanonical": "{\"identity\":[\"cortex.submit.v1\",\"task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b\",\"task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space\",\"mn737zmpkce8jj4xk8fp5pv64s8fxbts\",[\"existing\",\"conversation:1f4e58b5e4fa0749886ea9e0b28fb486c5560974a9dfafaab5bf43e84002948a\"],\"task07-native-fence-66468eb7-3cbe-4d5a-8d1e-c5be442a2eb5\"],\"publicRequest\":{\"agentId\":\"agent:48460d7e77e562c8f734c8de86506d7791c22daf13b91d54e278a86b6f4ec9fe\",\"agentVersion\":1,\"clientRequestId\":\"task07-native-fence-66468eb7-3cbe-4d5a-8d1e-c5be442a2eb5\",\"conversationId\":\"conversation:1f4e58b5e4fa0749886ea9e0b28fb486c5560974a9dfafaab5bf43e84002948a\",\"parts\":[{\"text\":\"This exact selected input will be fenced before dispatch.\",\"type\":\"text\"}],\"version\":1},\"version\":1}",
+      "requestIdentityCanonical": "[\"cortex.submit.v1\",\"task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b\",\"task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space\",\"mn737zmpkce8jj4xk8fp5pv64s8fxbts\",[\"existing\",\"conversation:1f4e58b5e4fa0749886ea9e0b28fb486c5560974a9dfafaab5bf43e84002948a\"],\"task07-native-fence-66468eb7-3cbe-4d5a-8d1e-c5be442a2eb5\"]",
+      "requestIdentityHash": "469ae327a8b0dfa7c21e21a2d47131240065b8b354ee2047366005c8e279156d",
+      "responseStatus": "running",
+      "runAccountId": "n178wr3r7y1cx8ed45nxzbfxjd8fwkwd",
+      "runBudgetId": "ef52ed08c5e2e90c46d3f1c73d849460b87dc2c677da0c158bf200431291c1b8",
+      "runId": "run:469ae327a8b0dfa7c21e21a2d47131240065b8b354ee2047366005c8e279156d",
+      "snapshotCanonical": "{\"anchor\":{\"canonicalContentHash\":\"ee2a2d6894f163a85f41b18b008e4e44308c1dc3f5121d947696f610555c41b2\",\"contentHash\":\"d90cd3e1f1dc274c20fc6bea7ce980ec0f8e685c357170d0b07348d0a1a71818\",\"nativeMessageId\":\"kx705teyda42bve83md2smyhc98fwedq\",\"order\":0,\"sourceEventId\":\"transcript:conversation:1f4e58b5e4fa0749886ea9e0b28fb486c5560974a9dfafaab5bf43e84002948a:kx705teyda42bve83md2smyhc98fwedq\",\"sourceRevision\":1,\"stepOrder\":0},\"attemptNumber\":1,\"capturedAuthorityReference\":{\"grantId\":\"md71kf97qydspxgejaga8rmknn8fwbe6\",\"grantVersion\":1,\"membershipId\":\"mh796m2jn3mm0zwhwfapqemqas8fw830\",\"membershipVersion\":1,\"memorySpaceEpoch\":1,\"memorySpaceId\":\"task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space\",\"principalId\":\"mn737zmpkce8jj4xk8fp5pv64s8fxbts\",\"principalVersion\":1,\"tenantEpoch\":1,\"tenantId\":\"task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b\"},\"completeness\":\"complete\",\"conversationEpoch\":1,\"conversationId\":\"conversation:1f4e58b5e4fa0749886ea9e0b28fb486c5560974a9dfafaab5bf43e84002948a\",\"definitionHash\":\"6712e65dcf4e807ef222bd226294292d01fa9da03a3b2541cc10614daf2ab8cc\",\"definitionVersion\":1,\"historyRevision\":0,\"ingestionCutoff\":{\"requiredStages\":[],\"scopeIdentity\":\"[\\\"task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b\\\",\\\"task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space\\\"]\",\"sequence\":1},\"messages\":[{\"canonicalContentHash\":\"ee2a2d6894f163a85f41b18b008e4e44308c1dc3f5121d947696f610555c41b2\",\"contentHash\":\"d90cd3e1f1dc274c20fc6bea7ce980ec0f8e685c357170d0b07348d0a1a71818\",\"nativeMessageId\":\"kx705teyda42bve83md2smyhc98fwedq\",\"order\":0,\"sourceEventId\":\"transcript:conversation:1f4e58b5e4fa0749886ea9e0b28fb486c5560974a9dfafaab5bf43e84002948a:kx705teyda42bve83md2smyhc98fwedq\",\"sourceRevision\":1,\"stepOrder\":0}],\"queueSequence\":1,\"runDocId\":\"ps74da5xn4s5m9cctzz27sf12n8fxdg7\",\"threadId\":\"m977xc6nk5z85qrgatf44zat718fw3my\",\"version\":1}",
+      "streamingRequested": true,
+      "tenantId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b",
+      "updatedAt": 1791469503077
+    }
+  },
+  "budgetBefore": {
+    "run": {
+      "_id": "n178wr3r7y1cx8ed45nxzbfxjd8fwkwd",
+      "activeConcurrency": 0,
+      "cancelled": false,
+      "kind": "run",
+      "reference": {
+        "grantId": "md71kf97qydspxgejaga8rmknn8fwbe6",
+        "grantVersion": 1,
+        "membershipId": "mh796m2jn3mm0zwhwfapqemqas8fw830",
+        "membershipVersion": 1,
+        "memorySpaceEpoch": 1,
+        "memorySpaceId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space",
+        "principalId": "mn737zmpkce8jj4xk8fp5pv64s8fxbts",
+        "principalVersion": 1,
+        "tenantEpoch": 1,
+        "tenantId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b"
+      },
+      "reservedUnits": 0,
+      "root": {
+        "manifestId": "cortex-gateway-agent-defaults-2026-10-08",
+        "revision": 5
+      },
+      "runBudgetId": "ef52ed08c5e2e90c46d3f1c73d849460b87dc2c677da0c158bf200431291c1b8",
+      "settledUnits": 0,
+      "uncertainUnits": 0,
+      "version": 1
+    },
+    "tenants": [
+      {
+        "_id": "n179c0esqq685b7w1phj1edqpd8fwpkb",
+        "activeConcurrency": 0,
+        "cancelled": false,
+        "kind": "tenant",
+        "reservedUnits": 0,
+        "root": {
+          "manifestId": "cortex-gateway-agent-defaults-2026-10-08",
+          "revision": 5
+        },
+        "settledUnits": 0,
+        "uncertainUnits": 600000,
+        "version": 13
+      }
+    ]
+  },
+  "safeRead": {
+    "agentId": "agent:48460d7e77e562c8f734c8de86506d7791c22daf13b91d54e278a86b6f4ec9fe",
+    "agentVersion": 1,
+    "attemptNumber": 1,
+    "cancellationRequested": false,
+    "conversationId": "conversation:1f4e58b5e4fa0749886ea9e0b28fb486c5560974a9dfafaab5bf43e84002948a",
+    "createdAt": 1791469502401,
+    "failureCode": null,
+    "graphStatus": "not_requested",
+    "inputMessageIds": [
+      "kx705teyda42bve83md2smyhc98fwedq"
+    ],
+    "memoryStatus": "pending",
+    "outputMessageIds": [],
+    "queueSequence": 1,
+    "responseStatus": "running",
+    "runId": "run:469ae327a8b0dfa7c21e21a2d47131240065b8b354ee2047366005c8e279156d",
+    "updatedAt": 1791469503077,
+    "version": 1
+  },
+  "cancelled": {
+    "cancelled": true
+  },
+  "output": {
+    "approvals": [],
+    "cursor": 1,
+    "parts": [
+      {
+        "part": {
+          "state": "cancelled",
+          "type": "status"
+        },
+        "sequence": 1
+      }
+    ],
+    "run": {
+      "agentId": "agent:48460d7e77e562c8f734c8de86506d7791c22daf13b91d54e278a86b6f4ec9fe",
+      "agentVersion": 1,
+      "attemptNumber": 1,
+      "cancellationRequested": true,
+      "conversationId": "conversation:1f4e58b5e4fa0749886ea9e0b28fb486c5560974a9dfafaab5bf43e84002948a",
+      "createdAt": 1791469502401,
+      "failureCode": "EXECUTION_FAILED",
+      "graphStatus": "not_requested",
+      "inputMessageIds": [
+        "kx705teyda42bve83md2smyhc98fwedq"
+      ],
+      "memoryStatus": "pending",
+      "outputMessageIds": [],
+      "queueSequence": 1,
+      "responseStatus": "cancelled",
+      "runId": "run:469ae327a8b0dfa7c21e21a2d47131240065b8b354ee2047366005c8e279156d",
+      "updatedAt": 1791469645429,
+      "version": 1
+    },
+    "state": "cancelled"
+  },
+  "foreignDenial": {
+    "name": "ConvexError",
+    "message": "[Request ID: 9665b1253960a00c] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../custom/backend/runtimeAuth.ts:45:26)\n    at resolveAuthority (../../custom/backend/runtimeAuth.ts:184:0)\n    at async requireAuthority (../../custom/backend/runtimeAuth.ts:250:0)\n    at async requireDataAuthority (../../custom/backend/runtimeDataAuth.ts:29:16)\n    at async handler (../../custom/backend/runtimeAgent.ts:635:12)\n",
+    "data": {
+      "code": "FORBIDDEN",
+      "message": "Access denied",
+      "outcome": "not_dispatched",
+      "retryable": false,
+      "version": 1
+    }
+  },
+  "first": {
+    "denied": true,
+    "error": {
+      "data": {
+        "code": "FORBIDDEN",
+        "message": "Access denied",
+        "outcome": "not_dispatched",
+        "retryable": false,
+        "version": 1
+      },
+      "message": "Uncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../custom/backend/runtimeAuth.ts:45:26)\n    at materialize (../../custom/backend/runtimeAuth.ts:126:73)\n    at resolveAuthorityReference (../../custom/backend/runtimeAuth.ts:202:0)\n    at async recheckAuthority (../../custom/backend/runtimeAuth.ts:256:0)\n    at async currentControlRun (../../custom/backend/runs.ts:37:81)\n    at async currentRun (../../custom/backend/runs.ts:46:59)\n    at async activeAttempt (../../custom/backend/runs.ts:244:10)\n    at async executionContext (../../custom/backend/runtimeAgent.ts:99:54)\n    at async handler (../../custom/backend/runtimeAgent.ts:130:56)\n",
+      "name": "ConvexError"
+    }
+  },
+  "second": {
+    "denied": true,
+    "error": {
+      "data": {
+        "code": "FORBIDDEN",
+        "message": "Access denied",
+        "outcome": "not_dispatched",
+        "retryable": false,
+        "version": 1
+      },
+      "message": "Uncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../custom/backend/runtimeAuth.ts:45:26)\n    at materialize (../../custom/backend/runtimeAuth.ts:126:73)\n    at resolveAuthorityReference (../../custom/backend/runtimeAuth.ts:202:0)\n    at async recheckAuthority (../../custom/backend/runtimeAuth.ts:256:0)\n    at async currentControlRun (../../custom/backend/runs.ts:37:81)\n    at async currentRun (../../custom/backend/runs.ts:46:59)\n    at async activeAttempt (../../custom/backend/runs.ts:244:10)\n    at async executionContext (../../custom/backend/runtimeAgent.ts:99:54)\n    at async handler (../../custom/backend/runtimeAgent.ts:130:56)\n",
+      "name": "ConvexError"
+    }
+  },
+  "after": {
+    "bridges": [
+      {
+        "_id": "px76nkavbjr59f0raeqv4b7hcd8fwkan",
+        "nativeMessageId": "kx705teyda42bve83md2smyhc98fwedq",
+        "sourceEventId": "transcript:conversation:1f4e58b5e4fa0749886ea9e0b28fb486c5560974a9dfafaab5bf43e84002948a:kx705teyda42bve83md2smyhc98fwedq",
+        "sourceRevision": 1
+      }
+    ],
+    "executions": [
+      {
+        "_creationTime": 1791469503077.4624,
+        "_id": "q973bhwjnz4t40tqtrb8kc9nfh8fwbw4",
+        "attemptNumber": 1,
+        "createdAt": 1791469503077,
+        "failureCode": "CANCELLED",
+        "leaseVersion": 1,
+        "memorySpaceId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space",
+        "nextModelStep": 0,
+        "nextOutputSequence": 1,
+        "reference": {
+          "grantId": "md71kf97qydspxgejaga8rmknn8fwbe6",
+          "grantVersion": 1,
+          "membershipId": "mh796m2jn3mm0zwhwfapqemqas8fw830",
+          "membershipVersion": 1,
+          "memorySpaceEpoch": 1,
+          "memorySpaceId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space",
+          "principalId": "mn737zmpkce8jj4xk8fp5pv64s8fxbts",
+          "principalVersion": 1,
+          "tenantEpoch": 1,
+          "tenantId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b"
+        },
+        "runId": "run:469ae327a8b0dfa7c21e21a2d47131240065b8b354ee2047366005c8e279156d",
+        "savedMessageIds": [],
+        "savedMessagePins": [],
+        "sourceWitnesses": [],
+        "state": "cancelled",
+        "streaming": true,
+        "tenantId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b",
+        "toolCount": 0,
+        "updatedAt": 1791469645429
+      }
+    ],
+    "ingestion": [],
+    "modelAttempts": [],
+    "modelOperations": [],
+    "native": [
+      {
+        "_id": "kx705teyda42bve83md2smyhc98fwedq",
+        "order": 0,
+        "role": "user",
+        "status": "success",
+        "stepOrder": 0
+      }
+    ],
+    "operations": [],
+    "outbox": [
+      {
+        "_creationTime": 1791469502401.7798,
+        "_id": "pn7axy6r52gq8s0c5a75jdpp6x8fxm7n",
+        "conversationId": "conversation:1f4e58b5e4fa0749886ea9e0b28fb486c5560974a9dfafaab5bf43e84002948a",
+        "createdAt": 1791469502401,
+        "leaseExpiresAt": 1791469803077,
+        "leaseVersion": 1,
+        "memorySpaceId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space",
+        "runId": "run:469ae327a8b0dfa7c21e21a2d47131240065b8b354ee2047366005c8e279156d",
+        "sequence": 1,
+        "state": "complete",
+        "tenantId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b",
+        "updatedAt": 1791469645429
+      }
+    ],
+    "run": {
+      "_creationTime": 1791469502401.7795,
+      "_id": "ps74da5xn4s5m9cctzz27sf12n8fxdg7",
+      "agentId": "agent:48460d7e77e562c8f734c8de86506d7791c22daf13b91d54e278a86b6f4ec9fe",
+      "agentVersion": 1,
+      "attemptNumber": 1,
+      "authorityReference": {
+        "grantId": "md71kf97qydspxgejaga8rmknn8fwbe6",
+        "grantVersion": 1,
+        "membershipId": "mh796m2jn3mm0zwhwfapqemqas8fw830",
+        "membershipVersion": 1,
+        "memorySpaceEpoch": 1,
+        "memorySpaceId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space",
+        "principalId": "mn737zmpkce8jj4xk8fp5pv64s8fxbts",
+        "principalVersion": 1,
+        "tenantEpoch": 1,
+        "tenantId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b"
+      },
+      "cancellationRequestedAt": 1791469645429,
+      "cancelledAt": 1791469645429,
+      "conversationEpoch": 1,
+      "conversationId": "conversation:1f4e58b5e4fa0749886ea9e0b28fb486c5560974a9dfafaab5bf43e84002948a",
+      "createdAt": 1791469502401,
+      "definitionHash": "6712e65dcf4e807ef222bd226294292d01fa9da03a3b2541cc10614daf2ab8cc",
+      "executionRequested": true,
+      "failureCode": "EXECUTION_FAILED",
+      "graphStatus": "not_requested",
+      "historyRevision": 0,
+      "inputMessageIds": [
+        "kx705teyda42bve83md2smyhc98fwedq"
+      ],
+      "memorySpaceId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space",
+      "memoryStatus": "pending",
+      "outputMessageIds": [],
+      "ownerPrincipalId": "mn737zmpkce8jj4xk8fp5pv64s8fxbts",
+      "queueSequence": 1,
+      "requestCanonical": "{\"identity\":[\"cortex.submit.v1\",\"task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b\",\"task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space\",\"mn737zmpkce8jj4xk8fp5pv64s8fxbts\",[\"existing\",\"conversation:1f4e58b5e4fa0749886ea9e0b28fb486c5560974a9dfafaab5bf43e84002948a\"],\"task07-native-fence-66468eb7-3cbe-4d5a-8d1e-c5be442a2eb5\"],\"publicRequest\":{\"agentId\":\"agent:48460d7e77e562c8f734c8de86506d7791c22daf13b91d54e278a86b6f4ec9fe\",\"agentVersion\":1,\"clientRequestId\":\"task07-native-fence-66468eb7-3cbe-4d5a-8d1e-c5be442a2eb5\",\"conversationId\":\"conversation:1f4e58b5e4fa0749886ea9e0b28fb486c5560974a9dfafaab5bf43e84002948a\",\"parts\":[{\"text\":\"This exact selected input will be fenced before dispatch.\",\"type\":\"text\"}],\"version\":1},\"version\":1}",
+      "requestIdentityCanonical": "[\"cortex.submit.v1\",\"task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b\",\"task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space\",\"mn737zmpkce8jj4xk8fp5pv64s8fxbts\",[\"existing\",\"conversation:1f4e58b5e4fa0749886ea9e0b28fb486c5560974a9dfafaab5bf43e84002948a\"],\"task07-native-fence-66468eb7-3cbe-4d5a-8d1e-c5be442a2eb5\"]",
+      "requestIdentityHash": "469ae327a8b0dfa7c21e21a2d47131240065b8b354ee2047366005c8e279156d",
+      "responseStatus": "cancelled",
+      "runAccountId": "n178wr3r7y1cx8ed45nxzbfxjd8fwkwd",
+      "runBudgetId": "ef52ed08c5e2e90c46d3f1c73d849460b87dc2c677da0c158bf200431291c1b8",
+      "runId": "run:469ae327a8b0dfa7c21e21a2d47131240065b8b354ee2047366005c8e279156d",
+      "snapshotCanonical": "{\"anchor\":{\"canonicalContentHash\":\"ee2a2d6894f163a85f41b18b008e4e44308c1dc3f5121d947696f610555c41b2\",\"contentHash\":\"d90cd3e1f1dc274c20fc6bea7ce980ec0f8e685c357170d0b07348d0a1a71818\",\"nativeMessageId\":\"kx705teyda42bve83md2smyhc98fwedq\",\"order\":0,\"sourceEventId\":\"transcript:conversation:1f4e58b5e4fa0749886ea9e0b28fb486c5560974a9dfafaab5bf43e84002948a:kx705teyda42bve83md2smyhc98fwedq\",\"sourceRevision\":1,\"stepOrder\":0},\"attemptNumber\":1,\"capturedAuthorityReference\":{\"grantId\":\"md71kf97qydspxgejaga8rmknn8fwbe6\",\"grantVersion\":1,\"membershipId\":\"mh796m2jn3mm0zwhwfapqemqas8fw830\",\"membershipVersion\":1,\"memorySpaceEpoch\":1,\"memorySpaceId\":\"task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space\",\"principalId\":\"mn737zmpkce8jj4xk8fp5pv64s8fxbts\",\"principalVersion\":1,\"tenantEpoch\":1,\"tenantId\":\"task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b\"},\"completeness\":\"complete\",\"conversationEpoch\":1,\"conversationId\":\"conversation:1f4e58b5e4fa0749886ea9e0b28fb486c5560974a9dfafaab5bf43e84002948a\",\"definitionHash\":\"6712e65dcf4e807ef222bd226294292d01fa9da03a3b2541cc10614daf2ab8cc\",\"definitionVersion\":1,\"historyRevision\":0,\"ingestionCutoff\":{\"requiredStages\":[],\"scopeIdentity\":\"[\\\"task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b\\\",\\\"task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space\\\"]\",\"sequence\":1},\"messages\":[{\"canonicalContentHash\":\"ee2a2d6894f163a85f41b18b008e4e44308c1dc3f5121d947696f610555c41b2\",\"contentHash\":\"d90cd3e1f1dc274c20fc6bea7ce980ec0f8e685c357170d0b07348d0a1a71818\",\"nativeMessageId\":\"kx705teyda42bve83md2smyhc98fwedq\",\"order\":0,\"sourceEventId\":\"transcript:conversation:1f4e58b5e4fa0749886ea9e0b28fb486c5560974a9dfafaab5bf43e84002948a:kx705teyda42bve83md2smyhc98fwedq\",\"sourceRevision\":1,\"stepOrder\":0}],\"queueSequence\":1,\"runDocId\":\"ps74da5xn4s5m9cctzz27sf12n8fxdg7\",\"threadId\":\"m977xc6nk5z85qrgatf44zat718fw3my\",\"version\":1}",
+      "streamingRequested": true,
+      "tenantId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b",
+      "updatedAt": 1791469645429
+    }
+  },
+  "budgetAfter": {
+    "run": {
+      "_id": "n178wr3r7y1cx8ed45nxzbfxjd8fwkwd",
+      "activeConcurrency": 0,
+      "cancelled": true,
+      "kind": "run",
+      "reference": {
+        "grantId": "md71kf97qydspxgejaga8rmknn8fwbe6",
+        "grantVersion": 1,
+        "membershipId": "mh796m2jn3mm0zwhwfapqemqas8fw830",
+        "membershipVersion": 1,
+        "memorySpaceEpoch": 1,
+        "memorySpaceId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space",
+        "principalId": "mn737zmpkce8jj4xk8fp5pv64s8fxbts",
+        "principalVersion": 1,
+        "tenantEpoch": 1,
+        "tenantId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b"
+      },
+      "reservedUnits": 0,
+      "root": {
+        "manifestId": "cortex-gateway-agent-defaults-2026-10-08",
+        "revision": 5
+      },
+      "runBudgetId": "ef52ed08c5e2e90c46d3f1c73d849460b87dc2c677da0c158bf200431291c1b8",
+      "settledUnits": 0,
+      "uncertainUnits": 0,
+      "version": 2
+    },
+    "tenants": [
+      {
+        "_id": "n179c0esqq685b7w1phj1edqpd8fwpkb",
+        "activeConcurrency": 0,
+        "cancelled": false,
+        "kind": "tenant",
+        "reservedUnits": 0,
+        "root": {
+          "manifestId": "cortex-gateway-agent-defaults-2026-10-08",
+          "revision": 5
+        },
+        "settledUnits": 0,
+        "uncertainUnits": 600000,
+        "version": 13
+      }
+    ]
+  },
+  "capturedBudgetUnchanged": true,
+  "fullTenantLiabilityUnchanged": true,
+  "noPaidDispatch": true,
+  "sourceCandidate": "installed-final5-source-manifest.json"
+}

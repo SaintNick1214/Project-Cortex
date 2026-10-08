@@ -1,0 +1,122 @@
+(node:17840) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeAgent/execution.test.ts
+  durable Agent execution product boundaries
+    ✓ start claims/enqueues one Workflow atomically; duplicate start keeps same attempt and changed delivery contract denies (30 ms)
+    ✓ start rejects no-jwt before Workflow or model effects (7 ms)
+    ✓ start rejects revoked before Workflow or model effects (4 ms)
+    ✓ start rejects foreign before Workflow or model effects (4 ms)
+    ✓ start rejects definition-revoked before Workflow or model effects (6 ms)
+    ✓ start rejects conversation-tombstone before Workflow or model effects (5 ms)
+    ✓ future queued request remains durable and only dispatches after the current head retires (16 ms)
+    ✓ private selected canonical history retains typed calls/results, while public history omits private tool payloads (14 ms)
+    ✓ source/manual edits fence every delegated operation and finalization before effects (13 ms)
+    ✓ started/unknown paid work cannot be readmitted; completed exact replay is reusable and changed input denies (15 ms)
+    ✓ finalization registers canonical messages and one ingestion receipt atomically/idempotently (12 ms)
+    ✓ component-save gap recovers exact server generation without a model/tool retry; stale/cancelled gaps cannot attach (12 ms)
+    ✓ observers replay scoped saved deltas with independent cursors; final-only withholds until completion and strips secrets (17 ms)
+    ✓ cancel retires Workflow/budget/output delivery and obsolete attempts cannot finalize (14 ms)
+    ✓ strict context declares missing Task08 stages before dispatch instead of silently broadening (6 ms)
+  closed server tool contract
+    ✓ registered tools expose exact schemas and no SDK execute callback (1 ms)
+    ✓ tool input rejects malformed/extra/foreign control {} (1 ms)
+    ✓ tool input rejects malformed/extra/foreign control {"text": ""}
+    ✓ tool input rejects malformed/extra/foreign control {"limit": 11, "text": "ok"} (1 ms)
+    ✓ tool input rejects malformed/extra/foreign control {"limit": 1, "tenantId": "other", "text": "ok"}
+    ✓ tool input rejects malformed/extra/foreign control {"limit": true, "text": "ok"}
+    ✓ tool input rejects malformed/extra/foreign control {"limit": 1.5, "text": "ok"}
+    ✓ tool input rejects getters before invocation and unknown native names cannot select callbacks (1 ms)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     2.8s | 23/23 passed | /tests/unit/runtimeAgent/execution.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.03s ( 1.0%) - durable Agent execution product boundaries start claims/enqueues one Workflow atomically; duplicate start keeps same attempt and changed delivery contract denies
+    /tests/unit/runtimeAgent/execution.test.ts
+
+ 2. [32m✓[0m    0.02s ( 0.6%) - durable Agent execution product boundaries observers replay scoped saved deltas with independent cursors; final-only withholds until completion and strips secrets
+    /tests/unit/runtimeAgent/execution.test.ts
+
+ 3. [32m✓[0m    0.02s ( 0.6%) - durable Agent execution product boundaries future queued request remains durable and only dispatches after the current head retires
+    /tests/unit/runtimeAgent/execution.test.ts
+
+ 4. [32m✓[0m    0.01s ( 0.5%) - durable Agent execution product boundaries started/unknown paid work cannot be readmitted; completed exact replay is reusable and changed input denies
+    /tests/unit/runtimeAgent/execution.test.ts
+
+ 5. [32m✓[0m    0.01s ( 0.5%) - durable Agent execution product boundaries private selected canonical history retains typed calls/results, while public history omits private tool payloads
+    /tests/unit/runtimeAgent/execution.test.ts
+
+ 6. [32m✓[0m    0.01s ( 0.5%) - durable Agent execution product boundaries cancel retires Workflow/budget/output delivery and obsolete attempts cannot finalize
+    /tests/unit/runtimeAgent/execution.test.ts
+
+ 7. [32m✓[0m    0.01s ( 0.5%) - durable Agent execution product boundaries source/manual edits fence every delegated operation and finalization before effects
+    /tests/unit/runtimeAgent/execution.test.ts
+
+ 8. [32m✓[0m    0.01s ( 0.4%) - durable Agent execution product boundaries finalization registers canonical messages and one ingestion receipt atomically/idempotently
+    /tests/unit/runtimeAgent/execution.test.ts
+
+ 9. [32m✓[0m    0.01s ( 0.4%) - durable Agent execution product boundaries component-save gap recovers exact server generation without a model/tool retry; stale/cancelled gaps cannot attach
+    /tests/unit/runtimeAgent/execution.test.ts
+
+10. [32m✓[0m    0.01s ( 0.2%) - durable Agent execution product boundaries start rejects no-jwt before Workflow or model effects
+    /tests/unit/runtimeAgent/execution.test.ts
+
+11. [32m✓[0m    0.01s ( 0.2%) - durable Agent execution product boundaries start rejects definition-revoked before Workflow or model effects
+    /tests/unit/runtimeAgent/execution.test.ts
+
+12. [32m✓[0m    0.01s ( 0.2%) - durable Agent execution product boundaries strict context declares missing Task08 stages before dispatch instead of silently broadening
+    /tests/unit/runtimeAgent/execution.test.ts
+
+13. [32m✓[0m    0.01s ( 0.2%) - durable Agent execution product boundaries start rejects conversation-tombstone before Workflow or model effects
+    /tests/unit/runtimeAgent/execution.test.ts
+
+14. [32m✓[0m    0.00s ( 0.1%) - durable Agent execution product boundaries start rejects revoked before Workflow or model effects
+    /tests/unit/runtimeAgent/execution.test.ts
+
+15. [32m✓[0m    0.00s ( 0.1%) - durable Agent execution product boundaries start rejects foreign before Workflow or model effects
+    /tests/unit/runtimeAgent/execution.test.ts
+
+16. [32m✓[0m    0.00s ( 0.0%) - closed server tool contract registered tools expose exact schemas and no SDK execute callback
+    /tests/unit/runtimeAgent/execution.test.ts
+
+17. [32m✓[0m    0.00s ( 0.0%) - closed server tool contract tool input rejects malformed/extra/foreign control {}
+    /tests/unit/runtimeAgent/execution.test.ts
+
+18. [32m✓[0m    0.00s ( 0.0%) - closed server tool contract tool input rejects malformed/extra/foreign control {"limit": 11, "text": "ok"}
+    /tests/unit/runtimeAgent/execution.test.ts
+
+19. [32m✓[0m    0.00s ( 0.0%) - closed server tool contract tool input rejects getters before invocation and unknown native names cannot select callbacks
+    /tests/unit/runtimeAgent/execution.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.18s (6.2% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      2.89s
+  Test suites:        1
+  Individual tests:   19
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 passed, 1 total
+Tests:       23 passed, 23 total
+Snapshots:   0 total
+Time:        2.887 s
+Ran all test suites within paths "tests/unit/runtimeAgent/execution.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-agent-execution-functional-v2-20261008/units3.json

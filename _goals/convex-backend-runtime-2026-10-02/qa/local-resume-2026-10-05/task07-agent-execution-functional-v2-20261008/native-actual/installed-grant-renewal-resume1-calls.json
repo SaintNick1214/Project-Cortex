@@ -1,0 +1,115 @@
+{
+  "operation": "66468eb7-3cbe-4d5a-8d1e-c5be442a2eb5",
+  "records": [
+    {
+      "label": "safe-replacement-grant-get",
+      "function": "runs:get",
+      "status": "PASS",
+      "result": {
+        "agentId": "agent:48460d7e77e562c8f734c8de86506d7791c22daf13b91d54e278a86b6f4ec9fe",
+        "agentVersion": 1,
+        "attemptNumber": 1,
+        "cancellationRequested": false,
+        "conversationId": "conversation:1f4e58b5e4fa0749886ea9e0b28fb486c5560974a9dfafaab5bf43e84002948a",
+        "createdAt": 1791469502401,
+        "failureCode": null,
+        "graphStatus": "not_requested",
+        "inputMessageIds": [
+          "kx705teyda42bve83md2smyhc98fwedq"
+        ],
+        "memoryStatus": "pending",
+        "outputMessageIds": [],
+        "queueSequence": 1,
+        "responseStatus": "running",
+        "runId": "run:469ae327a8b0dfa7c21e21a2d47131240065b8b354ee2047366005c8e279156d",
+        "updatedAt": 1791469503077,
+        "version": 1
+      }
+    },
+    {
+      "label": "safe-replacement-grant-cancel",
+      "function": "runtimeAgent:cancel",
+      "status": "PASS",
+      "result": {
+        "cancelled": true
+      }
+    },
+    {
+      "label": "safe-replacement-grant-observe",
+      "function": "runtimeAgent:observe",
+      "status": "PASS",
+      "result": {
+        "approvals": [],
+        "cursor": 1,
+        "parts": [
+          {
+            "part": {
+              "state": "cancelled",
+              "type": "status"
+            },
+            "sequence": 1
+          }
+        ],
+        "run": {
+          "agentId": "agent:48460d7e77e562c8f734c8de86506d7791c22daf13b91d54e278a86b6f4ec9fe",
+          "agentVersion": 1,
+          "attemptNumber": 1,
+          "cancellationRequested": true,
+          "conversationId": "conversation:1f4e58b5e4fa0749886ea9e0b28fb486c5560974a9dfafaab5bf43e84002948a",
+          "createdAt": 1791469502401,
+          "failureCode": "EXECUTION_FAILED",
+          "graphStatus": "not_requested",
+          "inputMessageIds": [
+            "kx705teyda42bve83md2smyhc98fwedq"
+          ],
+          "memoryStatus": "pending",
+          "outputMessageIds": [],
+          "queueSequence": 1,
+          "responseStatus": "cancelled",
+          "runId": "run:469ae327a8b0dfa7c21e21a2d47131240065b8b354ee2047366005c8e279156d",
+          "updatedAt": 1791469645429,
+          "version": 1
+        },
+        "state": "cancelled"
+      }
+    },
+    {
+      "label": "old-captured-grant-model-denial",
+      "function": "agentFenceQualification:attemptModel",
+      "status": "PASS",
+      "result": {
+        "denied": true,
+        "error": {
+          "data": {
+            "code": "FORBIDDEN",
+            "message": "Access denied",
+            "outcome": "not_dispatched",
+            "retryable": false,
+            "version": 1
+          },
+          "message": "Uncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../custom/backend/runtimeAuth.ts:45:26)\n    at materialize (../../custom/backend/runtimeAuth.ts:126:73)\n    at resolveAuthorityReference (../../custom/backend/runtimeAuth.ts:202:0)\n    at async recheckAuthority (../../custom/backend/runtimeAuth.ts:256:0)\n    at async currentControlRun (../../custom/backend/runs.ts:37:81)\n    at async currentRun (../../custom/backend/runs.ts:46:59)\n    at async activeAttempt (../../custom/backend/runs.ts:244:10)\n    at async executionContext (../../custom/backend/runtimeAgent.ts:99:54)\n    at async handler (../../custom/backend/runtimeAgent.ts:130:56)\n",
+          "name": "ConvexError"
+        }
+      }
+    },
+    {
+      "label": "repeat-old-captured-grant-denial",
+      "function": "agentFenceQualification:attemptModel",
+      "status": "PASS",
+      "result": {
+        "denied": true,
+        "error": {
+          "data": {
+            "code": "FORBIDDEN",
+            "message": "Access denied",
+            "outcome": "not_dispatched",
+            "retryable": false,
+            "version": 1
+          },
+          "message": "Uncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../custom/backend/runtimeAuth.ts:45:26)\n    at materialize (../../custom/backend/runtimeAuth.ts:126:73)\n    at resolveAuthorityReference (../../custom/backend/runtimeAuth.ts:202:0)\n    at async recheckAuthority (../../custom/backend/runtimeAuth.ts:256:0)\n    at async currentControlRun (../../custom/backend/runs.ts:37:81)\n    at async currentRun (../../custom/backend/runs.ts:46:59)\n    at async activeAttempt (../../custom/backend/runs.ts:244:10)\n    at async executionContext (../../custom/backend/runtimeAgent.ts:99:54)\n    at async handler (../../custom/backend/runtimeAgent.ts:130:56)\n",
+          "name": "ConvexError"
+        }
+      }
+    }
+  ]
+}

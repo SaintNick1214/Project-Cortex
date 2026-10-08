@@ -1,0 +1,16 @@
+file:///Users/SaintNick/.codex/tmp/cortex-task06-custom-native-43a8bddd5e2a/project/node_modules/convex/dist/esm/browser/http_client.js:297
+        throw new Error(respJSON.errorMessage);
+              ^
+
+Error: [Request ID: 3050b833f8f2e40c] Server Error
+ArgumentValidationError: Value does not match validator.
+Path: .capabilities[5]
+Value: "storage"
+Validator: v.union(v.literal("read"), v.literal("write"), v.literal("run"), v.literal("admin"), v.literal("tool"), v.literal("storage:read"), v.literal("storage:write"))
+
+
+    at ConvexHttpClient.mutationInner (file:///Users/SaintNick/.codex/tmp/cortex-task06-custom-native-43a8bddd5e2a/project/node_modules/convex/dist/esm/browser/http_client.js:297:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async ConvexHttpClient.processMutationQueue (file:///Users/SaintNick/.codex/tmp/cortex-task06-custom-native-43a8bddd5e2a/project/node_modules/convex/dist/esm/browser/http_client.js:310:24)
+
+Node.js v24.15.0

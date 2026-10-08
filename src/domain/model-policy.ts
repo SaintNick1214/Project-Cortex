@@ -199,7 +199,7 @@ export function resolveModelPolicy(input: unknown): ModelPolicySnapshotV1 {
       !capabilities.includes(operation.capability)) throw new Error("CAPABILITY_UNSUPPORTED: selection violates operation policy");
   const qualificationKeys = new Set<string>();
   for (const receipt of qualifications) {
-    const key = `${receipt.modelId}:${receipt.nativeInterface}`;
+    const key = canonicalModelJson([receipt.modelId, receipt.nativeInterface, receipt.priceRevision, receipt.boundRevision]);
     if (qualificationKeys.has(key)) deny("ambiguous qualification");
     qualificationKeys.add(key); assertLimits(receipt.limits);
   }
@@ -288,6 +288,8 @@ const requestSchema = z.object({
   reservationUnits: positive, promptVersion: nonempty, schemaVersion: nonempty,
   extractionVersion: nonempty, toolRegistryVersion: nonempty,
   tools: z.array(z.object({ name: nonempty, definition: canonicalRecordSchema }).strict()),
+  toolChoice: z.discriminatedUnion("type", [z.object({ type: z.literal("auto") }).strict(), z.object({ type: z.literal("none") }).strict(),
+    z.object({ type: z.literal("required") }).strict(), z.object({ type: z.literal("tool"), toolName: nonempty }).strict()]).optional(),
   outputSchema: canonicalRecordSchema.optional(),
   options: z.object({ maxRetries: z.literal(0), temperature: z.number().finite().min(0).max(2).optional(),
     topP: z.number().finite().min(0).max(1).optional(), seed: integer.optional(),
@@ -323,6 +325,9 @@ export function validateModelRequest(snapshot: ModelPolicySnapshotV1, input: unk
     request.reservationUnits > snapshot.limits.operationBudgetUnits || request.reservationUnits < snapshot.costBound.maximumCostUnits) deny("request exceeds context or operation budget");
   if (request.tools.some((tool) => !snapshot.allowedTools.includes(tool.name)) || new Set(request.tools.map((t) => t.name)).size !== request.tools.length ||
     (request.tools.length > 0 && (!snapshot.capabilities.includes("tools") || request.toolSteps === 0))) deny("tools are not allowed");
+  const toolChoice = request.toolChoice;
+  if (toolChoice && (!snapshot.capabilities.includes("tools") || !request.tools.length
+    || (toolChoice.type === "tool" && !request.tools.some(tool => tool.name === toolChoice.toolName)))) deny("tool choice is not allowed");
   for (const key of Object.keys(request.options)) {
     if (key !== "maxRetries" && key !== "providerOptions" && !snapshot.allowedOptions.includes(key as ModelOptionKey)) deny("option is not allowed");
   }
@@ -334,7 +339,7 @@ export function validateModelRequest(snapshot: ModelPolicySnapshotV1, input: unk
   if (snapshot.semanticProfile) {
     if (!request.profile || !request.batch) throw new Error("PROFILE_NOT_READY: embedding profile and stable batch boundary required");
     assertProfileMatches(request.profile, snapshot.semanticProfile);
-    if (request.batch.end - request.batch.start !== request.texts.length || request.texts.length > 512 || request.outputTokens || request.toolSteps || request.tools.length || request.outputSchema || request.messages) deny("invalid embedding batch");
+    if (request.batch.end - request.batch.start !== request.texts.length || request.texts.length > 512 || request.outputTokens || request.toolSteps || request.tools.length || request.toolChoice || request.outputSchema || request.messages) deny("invalid embedding batch");
   } else if (request.profile || request.batch) deny("nonembedding request has embedding parameters");
   const texts = request.texts.map(normalizeSourceText);
   const messages = request.messages?.map((message) => ({ ...message, parts: message.parts.map((part) =>

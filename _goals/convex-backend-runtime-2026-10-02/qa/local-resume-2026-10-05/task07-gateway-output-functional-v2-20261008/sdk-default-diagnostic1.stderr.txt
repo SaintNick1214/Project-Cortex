@@ -1,0 +1,215 @@
+(node:35615) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtime/gateway-terminal-composition.test.ts
+  bounded governed Gateway middleware
+    ○ skipped requires a durable server sink before model construction/resolution
+    ○ skipped denies actual official Gateway quota before private token lookup
+    ○ skipped dispatches detached normalized values after exact admission+checkpoint; sanitizes reasoning
+    ○ skipped uncertain disposition makes zero native/token calls
+    ○ skipped inflight disposition makes zero native/token calls
+    ○ skipped replay disposition makes zero native/token calls
+    ○ skipped same wrapper invocation after ambiguous first failure cannot create a fresh ordinal/permit
+    ○ skipped admit tampering denies the native closure
+    ○ skipped checkpoint tampering denies the native closure
+    ○ skipped denies defined headers
+    ○ skipped denies defined providerOptions
+    ○ skipped denies defined tools
+    ○ skipped denies defined toolChoice
+    ○ skipped denies defined reasoning
+    ○ skipped denies defined topK
+    ○ skipped denies defined presencePenalty
+    ○ skipped denies defined frequencyPenalty
+    ○ skipped denies defined includeRawChunks
+    ○ skipped denies newer-provider reasoning max before generate admission, mint or native effect
+    ○ skipped denies newer-provider reasoning max before stream admission, mint or native effect
+    ○ skipped descriptor/native getter denial has no side effects
+    ○ skipped descriptor/native symbol denial has no side effects
+    ○ skipped descriptor/native nonenumerable denial has no side effects
+    ○ skipped descriptor/native sparse denial has no side effects
+    ○ skipped descriptor/native iterator denial has no side effects
+    ○ skipped descriptor/native surrogate denial has no side effects
+    ○ skipped descriptor/native partOptions denial has no side effects
+    ○ skipped descriptor/native schema denial has no side effects
+    ○ skipped descriptor/native multipart denial has no side effects
+    ○ skipped accepts SDK optional undefined fields but denies unknown own __proto__ before projection
+    ○ skipped supports allowed scalar settings while rejecting output/context bounds
+    ○ skipped unsupported Responses evidence, wrong profile, expired proof and alternate provider deny before closure
+    ○ skipped captures known charge durably before revocation withholds current attachment
+    ○ skipped missing durable capture withholds output, retains checkpoint and never assumes admin recovery
+    ○ skipped unqualified cost undefined is unavailable, never zero
+    ○ skipped unqualified cost -1 is unavailable, never zero
+    ○ skipped unqualified cost Infinity is unavailable, never zero
+    ○ skipped unqualified cost not-money is unavailable, never zero
+    ○ skipped root currency/aggregate rule unavailable retains cost even with a numeric field
+    ○ skipped decimal/outward IEEE conversion cannot underestimate or accept exponent/NaN
+    ○ skipped single owned stream drains raw terminal and strips raw/reasoning, visibility precedes delivery
+    ○ skipped synthetic finish/EOF without raw provider terminal never records a receipt
+    ○ skipped observer unsubscribe still drains and durably captures once
+    ○ skipped delivery revocation still drains to a known terminal and preserves charge
+    ○ skipped owner cancellation before call denies native dispatch
+    ○ skipped owned cancellation after connection has honest unknown liability without fake terminal
+    ○ skipped single embedding value preserves profile/range and rejects batch/options/dimensions before dispatch
+    ○ skipped official compatible provider injected-fetch fixture preserves admitted body and output limit
+    ○ skipped official Responses injected-fetch fixture documents separate store:false/output mapping without governed readiness
+    ○ skipped official compatible SSE terminal=true distinguishes genuine raw terminal from EOF flush
+    ○ skipped official compatible SSE terminal=false distinguishes genuine raw terminal from EOF flush
+    ○ skipped official compatible embedding transforms a single normalized default-profile child
+    ○ skipped stream terminal capture failure remains pending and cannot trigger another native invocation
+    ○ skipped native model qualification overrun preserves complete charge and withholds result
+    ○ skipped native input qualification overrun preserves complete charge and withholds result
+    ○ skipped native output qualification overrun preserves complete charge and withholds result
+    ○ skipped owner retries retained sanitized terminal persistence without inference or unauthorized settlement
+    ○ skipped owned stream deadline covers initial connection, not just reader draining
+  C2 owned cancellation and finite RPC lifetime
+    ○ skipped cancel during paused visibility suppresses every subsequent part while buffered terminal charge is captured
+    ○ skipped deadline bounds an unreleased authority RPC; late completion cannot reopen the observer
+  C2 finite terminal persistence and retained RPC outcomes
+    ○ skipped slow capture is bounded; persistence retry joins its original flight and a late ack causes no second capture or inference
+    ○ skipped late capture rejection is handled; exact idempotent retry does not duplicate persisted charge evidence
+    ○ skipped slow settlement is bounded after durable capture; late commit returns no output and is never automatically repeated
+    ○ skipped late settlement failure stays reconciliation pending with sanitized error and no unhandled rejection
+    ○ skipped cancel during capture retains full charge and never issues private attachment
+    ○ skipped cancel while settlement is paused fences final output even when the issued current-authority RPC later succeeds
+    ○ skipped observed genuine terminal is captured when EOF and native cancel never finish; cleanup remains finite
+    ○ skipped late authority rejection after its deadline remains handled and cannot reopen stream delivery
+    ○ skipped server timing cannot create an unbounded observation, persistence or cleanup phase
+  C2 initial native hook ownership
+    ○ skipped complete joins a native connection that ignores abort through its finite observation window
+    ○ skipped complete joins a drain added after an already-owned native connection resolves
+  original terminal capture and attachment share a single persistence deadline
+    ○ skipped capture consumes the budget and attachment receives only the remaining time
+  C2 replay and final stream output eligibility
+    ○ skipped local cancellation cannot revive a stored replay disposition
+    ○ skipped cancel during replay current-authority resolution suppresses late payload return
+    ○ skipped deadline during replay current-authority resolution suppresses late payload return
+    ○ skipped cancel during final settlement preserves earlier eligible text but suppresses text-end and finish
+  accepted 35 source boundary scenarios against current product
+    ○ skipped revision denied 0 before effects
+    ○ skipped revision denied 9007199254740992 before effects
+    ○ skipped revision denied -1 before effects
+    ○ skipped revision denied 1.5 before effects
+    ○ skipped revision denied NaN before effects
+    ○ skipped revision accepted 1 and retained in admission
+    ○ skipped revision accepted 9007199254740991 and retained in admission
+    ○ skipped current matching revision1 reaches attach with exact original reference and no fabricated source argument
+    ○ skipped sourceId rejects "" before effects
+    ○ skipped sourceId rejects " " before effects
+    ○ skipped sourceId rejects " source" before effects
+    ○ skipped sourceId rejects "source " before effects
+    ○ skipped sourceId rejects "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" before effects
+    ○ skipped sourceId rejects "�" before effects
+    ○ skipped sourceId accepts256 UTF16 codeunits
+    ○ skipped sourceEventId rejects "" before effects
+    ○ skipped sourceEventId rejects " " before effects
+    ○ skipped sourceEventId rejects " source" before effects
+    ○ skipped sourceEventId rejects "source " before effects
+    ○ skipped sourceEventId rejects "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" before effects
+    ○ skipped sourceEventId rejects "�" before effects
+    ○ skipped sourceEventId accepts256 UTF16 codeunits
+    ○ skipped getter denied without execution or effects
+    ○ skipped descriptor rejects symbol
+    ○ skipped descriptor rejects nonenumerable
+    ○ skipped descriptor rejects extra
+    ○ skipped descriptor rejects prototype
+    ○ skipped descriptor rejects null
+    ○ skipped descriptor rejects array
+    ○ skipped detachment preserves all identity after caller mutation
+    ○ skipped source absence stays omitted through resolution and admission
+    ○ skipped hash denied AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+    ○ skipped hash denied aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+    ○ skipped hash denied aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+    ○ skipped hash denied not-hash
+  strict capture/attachment acknowledgment boundaries and persisted states
+    ○ skipped required attach port fails before any resolve/native/token effect
+    ○ skipped rich capture settled never guesses eligibility
+    ○ skipped rich capture uncertain never guesses eligibility
+    ○ skipped rich capture confirmed_rejected never guesses eligibility
+    ○ skipped rich capture overrun never guesses eligibility
+    ○ skipped capture null is retained for exact capture-only retry
+    ○ skipped capture array is retained for exact capture-only retry
+    ○ skipped capture getter is retained for exact capture-only retry
+    ○ skipped capture nonenumerable is retained for exact capture-only retry
+    ○ skipped capture symbol is retained for exact capture-only retry
+    ○ skipped capture prototype is retained for exact capture-only retry
+    ○ skipped capture extra is retained for exact capture-only retry
+    ○ skipped capture unicode is retained for exact capture-only retry
+    ○ skipped capture overlength is retained for exact capture-only retry
+    ○ skipped capture empty is retained for exact capture-only retry
+    ○ skipped capture whitespace is retained for exact capture-only retry
+    ○ skipped capture wrongtype is retained for exact capture-only retry
+    ○ skipped capture union is retained for exact capture-only retry
+    ○ skipped capture cost is retained for exact capture-only retry
+    ○ skipped capture undefined is retained for exact capture-only retry
+    ○ skipped capture overrunType is retained for exact capture-only retry
+    ○ skipped attachment null remains exact retryable bookkeeping
+    ○ skipped attachment array remains exact retryable bookkeeping
+    ○ skipped attachment getter remains exact retryable bookkeeping
+    ○ skipped attachment nonenumerable remains exact retryable bookkeeping
+    ○ skipped attachment symbol remains exact retryable bookkeeping
+    ○ skipped attachment prototype remains exact retryable bookkeeping
+    ○ skipped attachment extra remains exact retryable bookkeeping
+    ○ skipped attachment wrongtype remains exact retryable bookkeeping
+    ○ skipped attachment missing remains exact retryable bookkeeping
+    ○ skipped attachment contradiction remains exact retryable bookkeeping
+    ○ skipped definitive withheld {"attached": false, "resultWithheld": true} permanently retires attachment retry
+    ○ skipped definitive withheld {"attached": true, "resultWithheld": true} permanently retires attachment retry
+  attachment owner retry, late outcomes and authoritative closure
+    ○ skipped concurrent explicit retries join outstanding attachment and cannot revive failed output
+    ○ skipped lost attachment response retries exact private bytes under current authority, then closes after revocation
+    ○ skipped definitive native attachment conflict is final and never retries
+    ○ skipped current source-deletion denial between capture and attach leaves accounting intact
+    ○ skipped current source-revision denial between capture and attach leaves accounting intact
+    ○ skipped current parent denial between capture and attach leaves accounting intact
+    ○ skipped current policy denial between capture and attach leaves accounting intact
+    ○ skipped current retirement denial between capture and attach leaves accounting intact
+    ○ skipped late hostile capture/attach acknowledgment never creates an unhandled rejection or output revival
+    ○ skipped genuine terminal without money captures uncertain liability once and withholds private output
+    ○ skipped attachment persistence rollback remains retryable while capture accounting remains committed
+  malformed current RPCs and private payloads fail closed
+    ○ skipped admission-status prohibits the native closure
+    ○ skipped checkpoint-truthy prohibits the native closure
+    ○ skipped checkpoint-extra prohibits the native closure
+    ○ skipped private content getter is rejected without execution while genuine charge is captured
+    ○ skipped invalid embedding dimension captures charge but never submits a private result
+    ○ skipped invalid embedding nonfinite captures charge but never submits a private result
+    ○ skipped invalid embedding sparse captures charge but never submits a private result
+  governed Agent tool/stream contract
+    ○ skipped denies unqualified streaming before ledger admission or native lookup
+    ○ skipped admits the exact catalog and returns only canonical server tool input after durable capture/attachment
+    ○ skipped rejects modified tool schemas before admission
+    ○ skipped accounts complete terminal liability and withholds provider-executed output
+    ○ skipped accounts complete terminal liability and withholds foreign-tool output
+    ○ skipped accounts complete terminal liability and withholds wrong-choice output
+    ○ skipped accounts complete terminal liability and withholds duplicate-call output
+    ○ skipped accounts complete terminal liability and withholds invalid-json output
+    ○ skipped streams bounded tool input privately, strips metadata and attaches only the completed tool call
+    ○ skipped rejects mismatched streamed arguments yet preserves observed terminal charge
+    ○ skipped requires resolved canonical tool history before another billable call
+    ○ skipped never accepts provider metadata or malformed replay envelopes as stored output
+  trusted Agent cancellation bridge
+    ✕ composes the actual AI SDK7 streamText defaults and private raw observation (12 ms)
+    ○ skipped forwards the exact governed signal and retires the Agent listener after owned completion
+    ○ skipped refuses an already aborted Agent stream before paid admission
+    ○ skipped keeps Agent cancellation wired through the owned stream drain and observed charges
+    ○ skipped does not accept a caller-shaped signal or weaken direct native identity enforcement
+
+  ● trusted Agent cancellation bridge › composes the actual AI SDK7 streamText defaults and private raw observation
+
+    AI SDK7 default request failed: [{"maxOutputTokens":16,"toolChoice":{"type":"auto"},"includeRawChunks":false},{"code":"UNSUPPORTED_NATIVE_FIELD","name":"GatewayDispatchError"}]
+
+      733 |     } };
+      734 |     const result = streamText({ model: observed, prompt: "hello", maxOutputTokens: 16, maxRetries: 0, onError: ({ error }) => { diagnostics.push(error); } });
+    > 735 |     let text: string; try { text = await result.text; } catch { throw new Error(`AI SDK7 default request failed: ${JSON.stringify(diagnostics)}`); }
+          |                                                                       ^
+      736 |     expect(text).toBe("answer"); await h.lifecycle.complete(); bridge.dispose();
+      737 |     expect(f.nativeCalls[0]!.includeRawChunks).toBe(true); expect(f.nativeCalls[0]!.abortSignal).toBe(h.lifecycle.signal);
+      738 |     expect(f.receipts).toHaveLength(1); expect(f.attachments).toHaveLength(1);
+
+      at Object.<anonymous> (tests/unit/runtime/gateway-terminal-composition.test.ts:735:71)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 178 skipped, 179 total
+Snapshots:   0 total
+Time:        2.357 s, estimated 5 s
+Ran all test suites within paths "tests/unit/runtime/gateway-terminal-composition.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-gateway-output-functional-v2-20261008/sdk-default-diagnostic1.json

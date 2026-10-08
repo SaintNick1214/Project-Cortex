@@ -43,6 +43,15 @@ const safe: ModelFallbackEvidence = { outcome: "not_dispatched", proof: "pre_dis
   priorAttemptAccounted: true, currentAuthorityChecked: true, currentSourceChecked: true, currentPolicyChecked: true };
 
 describe("trusted pure model policy", () => {
+  it("keeps distinct bound revisions for the same model/interface unambiguous", () => {
+    const input = base();
+    input.qualifications.push({ ...qualification, receiptId: "agent-tool-envelope", boundRevision: "agent-tools-v1" });
+    expect(resolveModelPolicy(input).qualificationReceiptId).toBe(qualification.receiptId);
+    input.policies[0].rules.pins = { ...pins, boundRevision: "agent-tools-v1" };
+    expect(resolveModelPolicy(input).qualificationReceiptId).toBe("agent-tool-envelope");
+    input.qualifications.push({ ...input.qualifications[1], receiptId: "duplicate-agent-tool-envelope" });
+    expect(() => resolveModelPolicy(input)).toThrow("ambiguous qualification");
+  });
   it("registers every approved operation and leaves media unavailable", () => {
     expect(MODEL_OPERATION_KEYS).toHaveLength(13);
     expect(MODEL_OPERATION_REGISTRY["artifact.suggestions"].capability).toBe("text");

@@ -117,8 +117,10 @@ export async function buildBackendDistribution({ sourceRoot, outputRoot }) {
   const registrations = componentAst.statements.filter(ts.isExpressionStatement).map((node) => node.getText(componentAst));
   const componentNames = registrations.map((registration) => /name:\s*["']([^"']+)["']/.exec(registration)?.[1]);
   if (componentNames.some((name) => !name)) throw new Error("Every Cortex component must have an explicit stable name");
-  entries.set("_cortex/components.ts", `import type { AppDefinition } from "convex/server";\n${imports.join("\n")}\nexport function registerCortexComponentsV1(app: AppDefinition): void {\n${registrations.join("\n")}\n}\n`);
-  origins.set("_cortex/components.ts", "convex-dev/convex.config.ts");
+  // Configuration metadata must not be analyzed as an ordinary Convex function module.
+  // The official CLI excludes multi-dot .config.ts files from those entry points.
+  entries.set("_cortex/components.config.ts", `import type { AppDefinition } from "convex/server";\n${imports.join("\n")}\nexport function registerCortexComponentsV1(app: AppDefinition): void {\n${registrations.join("\n")}\n}\n`);
+  origins.set("_cortex/components.config.ts", "convex-dev/convex.config.ts");
   sources.set("convex-dev/convex.config.ts", componentSource);
   const pkg = JSON.parse(await fs.readFile(path.join(root, "package.json"), "utf8"));
   const manifest = { formatVersion: 1, distributionId: `cortex-backend-v1-sdk-${pkg.version}`, sdkVersion: pkg.version, tables: [...tableNames].sort(), components: componentNames, httpRoutes: [], dependencies: { convex: pkg.peerDependencies.convex, ...pkg.dependencies }, files: [...entries].sort(([a], [b]) => a.localeCompare(b)).map(([name, text]) => ({ path: name, sha256: hash(text), sourcePath: origins.get(name), sourceSha256: hash(sources.get(origins.get(name))) })) };

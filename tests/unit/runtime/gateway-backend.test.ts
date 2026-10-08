@@ -46,7 +46,7 @@ function manifest(): DeploymentPolicyManifest {
     dispatchEvidence: qualifications.map((qualification) => ({
       receiptId: qualification.receiptId, modelId: qualification.modelId, nativeInterface: "chat", evidenceHash: hash, providerVersion: "0.2.1",
       priceRevision: pins.priceRevision, boundRevision: pins.boundRevision, checkedAt: clock - 1, expiresAt: clock + 1_000_000,
-      terminalCost: "gateway-aggregate-usd-v1", terminalProof: "provider-terminal-v1",
+      terminalCost: "gateway-aggregate-usd-v1", terminalProof: "provider-terminal-v1", supportsStream: true,
       inputBound: { ruleId: "plain-chat-cookbook-utf8-v1", featureEnvelope: "plain-chat-v1", revision: 1, proofHash: hash, documentHash: hash, nativeTransformHash: hash },
       resultBound: { maximumPrivateResultBytes: 60_000, maximumOutputTokens: 64, maximumEmbeddingValues: 1, proofHash: hash },
     })),

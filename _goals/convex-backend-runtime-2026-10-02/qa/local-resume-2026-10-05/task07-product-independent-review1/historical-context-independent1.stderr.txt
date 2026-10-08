@@ -1,0 +1,69 @@
+(node:30843) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-product-independent-review1/historical-context-independent1.test.mjs (5.386 s)
+  ✓ later-turn private tool context respects prior recalled source unchanged (36 ms)
+  ✕ later-turn private tool context respects prior recalled source changed (24 ms)
+  ✕ later-turn private tool context respects prior recalled source tombstoned (20 ms)
+  ✓ current completed-save gap recovers with 0 old failed native rows (14 ms)
+  ✕ current completed-save gap recovers with 1010 old failed native rows (41 ms)
+
+  ● later-turn private tool context respects prior recalled source changed
+
+    expect(received).not.toContain(expected) // indexOf
+
+    Expected substring: not "PRIVATE_RECALLED_X_SENTINEL"
+    Received string:        "[{\"content\":[{\"text\":\"Hello \",\"type\":\"text\"},{\"text\":\"world!\",\"type\":\"text\"}],\"role\":\"user\"},{\"content\":[{\"input\":{\"limit\":1,\"text\":\"x\"},\"toolCallId\":\"tc\",\"toolName\":\"memory_recall\",\"type\":\"tool-call\"}],\"role\":\"assistant\"},{\"content\":[{\"output\":{\"type\":\"json\",\"value\":{\"context\":\"PRIVATE_RECALLED_X_SENTINEL\"}},\"toolCallId\":\"tc\",\"toolName\":\"memory_recall\",\"type\":\"tool-result\"}],\"role\":\"tool\"},{\"content\":\"completed A\",\"role\":\"assistant\"},{\"content\":[{\"text\":\"Hello \",\"type\":\"text\"},{\"text\":\"world!\",\"type\":\"text\"}],\"role\":\"user\"}]"
+
+      32 |  let hydrated;try{hydrated=await f.call(runtime.hydrateExecution,b.args)}catch(e){if(kind!=="unchanged"&&String(e).includes("STALE_CONTEXT"))return;throw e}
+      33 |  if(kind==="unchanged")expect(JSON.stringify(hydrated.messages)).toContain("PRIVATE_RECALLED_X_SENTINEL");
+    > 34 |  else expect(JSON.stringify(hydrated.messages)).not.toContain("PRIVATE_RECALLED_X_SENTINEL");
+         |                                                     ^
+      35 |  expect(f.db.table("runtimeModelOperations")).toHaveLength(0);
+      36 | });
+      37 | it.each([0,1010])("current completed-save gap recovers with %i old failed native rows",async holes=>{
+
+      at _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-product-independent-review1/historical-context-independent1.test.mjs:34:53
+
+  ● later-turn private tool context respects prior recalled source tombstoned
+
+    expect(received).not.toContain(expected) // indexOf
+
+    Expected substring: not "PRIVATE_RECALLED_X_SENTINEL"
+    Received string:        "[{\"content\":[{\"text\":\"Hello \",\"type\":\"text\"},{\"text\":\"world!\",\"type\":\"text\"}],\"role\":\"user\"},{\"content\":[{\"input\":{\"limit\":1,\"text\":\"x\"},\"toolCallId\":\"tc\",\"toolName\":\"memory_recall\",\"type\":\"tool-call\"}],\"role\":\"assistant\"},{\"content\":[{\"output\":{\"type\":\"json\",\"value\":{\"context\":\"PRIVATE_RECALLED_X_SENTINEL\"}},\"toolCallId\":\"tc\",\"toolName\":\"memory_recall\",\"type\":\"tool-result\"}],\"role\":\"tool\"},{\"content\":\"completed A\",\"role\":\"assistant\"},{\"content\":[{\"text\":\"Hello \",\"type\":\"text\"},{\"text\":\"world!\",\"type\":\"text\"}],\"role\":\"user\"}]"
+
+      32 |  let hydrated;try{hydrated=await f.call(runtime.hydrateExecution,b.args)}catch(e){if(kind!=="unchanged"&&String(e).includes("STALE_CONTEXT"))return;throw e}
+      33 |  if(kind==="unchanged")expect(JSON.stringify(hydrated.messages)).toContain("PRIVATE_RECALLED_X_SENTINEL");
+    > 34 |  else expect(JSON.stringify(hydrated.messages)).not.toContain("PRIVATE_RECALLED_X_SENTINEL");
+         |                                                     ^
+      35 |  expect(f.db.table("runtimeModelOperations")).toHaveLength(0);
+      36 | });
+      37 | it.each([0,1010])("current completed-save gap recovers with %i old failed native rows",async holes=>{
+
+      at _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-product-independent-review1/historical-context-independent1.test.mjs:34:53
+
+  ● current completed-save gap recovers with 1010 old failed native rows
+
+    ConvexError: {"version":1,"code":"RECONCILIATION_INCOMPLETE","message":"Conversation operation denied.","retryable":false,"outcome":"not_dispatched"}
+
+      28 | export function executionRevision(conversation: ManagedConversation): number { return conversation.executionRevision ?? conversation.historyRevision; }
+      29 | export function transcriptDenied(code = "FORBIDDEN"): never {
+    > 30 |   throw new ConvexError({ version: 1, code, message: "Conversation operation denied.", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      31 | }
+      32 | export function singleTranscript<T>(rows: T[]): T | undefined { if (rows.length > 1) transcriptDenied("TRANSCRIPT_CONFLICT"); return rows[0]; }
+      33 | export async function conversationById(ctx: Pick<QueryCtx, "db">, reference: RuntimeAuthorityReference, conversationId: string) {
+
+      at transcriptDenied (convex-dev/runtimeTranscript.ts:30:9)
+      at Function.handler [as _handler] (convex-dev/runtimeAgent.ts:510:54)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:89:10)
+      at tests/unit/runtimeTranscript/fixture.ts:149:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:145:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:149:77)
+      at _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-product-independent-review1/historical-context-independent1.test.mjs:43:9
+
+Test Suites: 1 failed, 1 total
+Tests:       3 failed, 2 passed, 5 total
+Snapshots:   0 total
+Time:        5.509 s
+Ran all test suites.
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-product-independent-review1/historical-context-independent1.results.json

@@ -75,7 +75,7 @@ function addSchema(text: string, tables: string[]): string {
 type ComponentRegistration = { name: string; module: string };
 /** Convex1.46 discovers component edges between .config files, not through ordinary helpers. */
 function componentRegistrations(text: string, names: string[]): ComponentRegistration[] {
-  const ast = parse("components.ts", text);
+  const ast = parse("components.config.ts", text);
   const imports = new Map<string, string>();
   for (const statement of ast.statements) {
     if (ts.isImportDeclaration(statement) && ts.isStringLiteral(statement.moduleSpecifier) && statement.importClause?.name) {
@@ -223,10 +223,10 @@ export async function planAdditiveBackendInstallation(projectPath: string, sdkPa
     await rejectSymlinks(distribution, entry.path);
     const content = await fs.readFile(path.join(distribution, entry.path), "utf8");
     if (digest(content) !== entry.sha256) throw new Error(`Backend distribution digest mismatch: ${entry.path}`);
-    if (entry.path === "_cortex/components.ts") componentSource = content;
+    if (entry.path === "_cortex/components.config.ts") componentSource = content;
     await proposed(path.join(normalized, entry.path), content, "versioned Cortex backend source");
   }
-  if (!seen.has("_cortex/schema.ts") || !seen.has("_cortex/components.ts")) throw new Error("Backend distribution lacks additive schema/component helpers.");
+  if (!seen.has("_cortex/schema.ts") || !seen.has("_cortex/components.config.ts")) throw new Error("Backend distribution lacks additive schema/component helpers.");
   const registrations = componentRegistrations(componentSource, manifest.components);
   await proposed(path.join(normalized, "schema.ts"), 'import { defineSchema } from "convex/server";\nimport { cortexTablesV1 } from "./_cortex/schema";\nexport default defineSchema({ ...cortexTablesV1 });\n', "add Cortex table map while preserving host tables and options", (current) => addSchema(current, manifest.tables));
   await proposed(path.join(normalized, "convex.config.ts"), addComponents('import { defineApp } from "convex/server";\nconst app = defineApp();\nexport default app;\n', registrations), "register qualified Cortex components with direct root imports alongside host components", (current) => addComponents(current, registrations));

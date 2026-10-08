@@ -1,0 +1,118 @@
+{
+  "operation": "447a5194-e3cd-4463-94b8-8967f5e92e38",
+  "records": [
+    {
+      "label": "definition",
+      "function": "agentDefinitions:publishVersion",
+      "status": "PASS",
+      "result": {
+        "agentId": "agent:0fe41342cf6a78c0d7adae4b382eff2df32d2eec33cb0e4ce862f911777d21b0",
+        "definitionHash": "0f61390b7af489d1a57852ad9b0b082473a2aa5c77093fcbe5d605514fcce0e1",
+        "version": 1
+      }
+    },
+    {
+      "label": "submit-A",
+      "function": "runs:submit",
+      "status": "PASS",
+      "result": {
+        "agentId": "agent:0fe41342cf6a78c0d7adae4b382eff2df32d2eec33cb0e4ce862f911777d21b0",
+        "agentVersion": 1,
+        "attemptNumber": 0,
+        "cancellationRequested": false,
+        "conversationId": "conversation:4bded973caf71dfa107f90d8e6239479264951d91a1670f27cf0f6f8ae58bb39",
+        "createdAt": 1791468552957,
+        "failureCode": null,
+        "graphStatus": "not_requested",
+        "inputMessageIds": [
+          "kx7ayssrf4yf40dbnrpcssq9598fwyvq"
+        ],
+        "memoryStatus": "pending",
+        "outputMessageIds": [],
+        "queueSequence": 1,
+        "responseStatus": "queued",
+        "runId": "run:4bded973caf71dfa107f90d8e6239479264951d91a1670f27cf0f6f8ae58bb39",
+        "updatedAt": 1791468552957,
+        "version": 1
+      }
+    },
+    {
+      "label": "claim-A",
+      "function": "agentQualification:armSaveGap",
+      "status": "PASS",
+      "result": {
+        "attemptNumber": 1,
+        "leaseVersion": 1,
+        "reference": {
+          "grantId": "md71kf97qydspxgejaga8rmknn8fwbe6",
+          "grantVersion": 1,
+          "membershipId": "mh796m2jn3mm0zwhwfapqemqas8fw830",
+          "membershipVersion": 1,
+          "memorySpaceEpoch": 1,
+          "memorySpaceId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space",
+          "principalId": "mn737zmpkce8jj4xk8fp5pv64s8fxbts",
+          "principalVersion": 1,
+          "tenantEpoch": 1,
+          "tenantId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b"
+        },
+        "runId": "run:4bded973caf71dfa107f90d8e6239479264951d91a1670f27cf0f6f8ae58bb39"
+      }
+    },
+    {
+      "label": "native-tool-operation",
+      "function": "runtimeAgent:beginOperation",
+      "status": "PASS",
+      "result": {
+        "nativeMessageIds": [],
+        "operationId": "agent-op:f16118587b19cced119b5b245cf06aa8cad2b9c7fc7fb7c7cf8981544c02dfd5",
+        "resultCanonical": null,
+        "semanticId": "f16118587b19cced119b5b245cf06aa8cad2b9c7fc7fb7c7cf8981544c02dfd5",
+        "state": "waiting_approval"
+      }
+    },
+    {
+      "label": "native-wait-for-approval",
+      "function": "runtimeAgent:waitForApproval",
+      "status": "PASS",
+      "result": null
+    },
+    {
+      "label": "submit-B-behind-wait",
+      "function": "runs:submit",
+      "status": "PASS",
+      "result": {
+        "agentId": "agent:0fe41342cf6a78c0d7adae4b382eff2df32d2eec33cb0e4ce862f911777d21b0",
+        "agentVersion": 1,
+        "attemptNumber": 0,
+        "cancellationRequested": false,
+        "conversationId": "conversation:4bded973caf71dfa107f90d8e6239479264951d91a1670f27cf0f6f8ae58bb39",
+        "createdAt": 1791468554727,
+        "failureCode": null,
+        "graphStatus": "not_requested",
+        "inputMessageIds": [
+          "kx768kvtwgrq82njytpfkasr598fwnfr"
+        ],
+        "memoryStatus": "pending",
+        "outputMessageIds": [],
+        "queueSequence": 2,
+        "responseStatus": "queued",
+        "runId": "run:0984370010206e9b088a12e81812829239b802cec63857b8320516c494679469",
+        "updatedAt": 1791468554727,
+        "version": 1
+      }
+    },
+    {
+      "label": "fixture-deadline-elapsed",
+      "function": "agentFenceQualification:expireFixtureLease",
+      "status": "PASS",
+      "result": {
+        "fixtureOnlyDeadlineAdjustment": true,
+        "leaseExpiresAt": 1791468555504,
+        "leaseVersion": 1,
+        "noInference": true,
+        "previous": 1791468853504,
+        "runId": "run:4bded973caf71dfa107f90d8e6239479264951d91a1670f27cf0f6f8ae58bb39"
+      }
+    }
+  ]
+}

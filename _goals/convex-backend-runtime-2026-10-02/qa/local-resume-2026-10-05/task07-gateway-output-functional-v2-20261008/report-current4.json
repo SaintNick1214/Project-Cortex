@@ -1,0 +1,147 @@
+{
+  "version": 1,
+  "observedAt": "2026-10-08T14:17:32.764397+00:00",
+  "scope": "Current Task07 Root Gateway/native ledger/output/registry/helper contracts plus cleanup-only renewed-owner cancellation; actual final controls/cleanup and original acceptance pending",
+  "source": [
+    {
+      "path": "convex-dev/runtimeGateway.ts",
+      "sha256": "237ca57e5886fc7293aad968f787f1357d58f0a7c025d969561975edda219ccf"
+    },
+    {
+      "path": "convex-dev/runtimeModelPolicy.ts",
+      "sha256": "4791d25f1f4816056691b5d0aa55dc148751e2c10977ce28bfdca2d9cdad6a86"
+    },
+    {
+      "path": "convex-dev/runtimeModelPolicyBootstrap.ts",
+      "sha256": "dbdc63f53a5154492a702aad4dca9d1343fb018ce17ac99e1b8862c3ea18186e"
+    },
+    {
+      "path": "convex-dev/runtimeOutputProjection.ts",
+      "sha256": "8ab2817a40a1a6ca4be1741386762546fd927a414935c99fe805c4ea1fee7331"
+    },
+    {
+      "path": "src/domain/model-policy.ts",
+      "sha256": "435a8af15b0545041e97de7e218cd60ebd0ca2589e34ccad613e0ab955f0362b"
+    },
+    {
+      "path": "src/domain/agent-tools.ts",
+      "sha256": "f015e77b3f7150357f1069f976c3b6e18c437c8e37a6067fad064cb7ecf1a2d1"
+    },
+    {
+      "path": "src/domain/agent-language.ts",
+      "sha256": "a3b04238f93a7453f6eecfa360916ea04bda738ab79c8630c4d8faee57587c56"
+    },
+    {
+      "path": "tests/unit/runtime/gateway-terminal-composition.test.ts",
+      "sha256": "0f9c8315214d4bcba33431aa6dbc5b0950ee34b991357b06e61b1bf7a59a8159"
+    },
+    {
+      "path": "tests/unit/runtime/gateway-backend.test.ts",
+      "sha256": "65e075956ab1b02b95b827224e2a4c7de15a4cd86d5ef2d71bc6181f3cd8d648"
+    },
+    {
+      "path": "tests/unit/runtime/model-policy-admission.test.ts",
+      "sha256": "024893abcd3992668390c4c908021d3a5d07743a9b047e9cd45ee742d4f61bdb"
+    },
+    {
+      "path": "tests/unit/runtime/output-projection.test.ts",
+      "sha256": "212966c7c53cd664fd7e0cfd796e3e58287c152ef04397c4f5402f0778004d01"
+    },
+    {
+      "path": "tests/unit/domain/model-policy.test.ts",
+      "sha256": "a7067f0339df7812c5937aef73a386715fbf0e52555c165a604454ae14426b75"
+    },
+    {
+      "path": "scripts/backend/build-distribution.mjs",
+      "sha256": "e45cf53793dbd3414e394bce8e35383fa7410b0f081fd4bef56647ab8dfe3ece"
+    },
+    {
+      "path": "packages/cortex-cli/src/utils/init/additive-backend.ts",
+      "sha256": "5b146366bdcdb1bd8dcad3d7d5ef7acbabd4bcb9c08f4132107b3d63a9809117"
+    },
+    {
+      "path": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+      "sha256": "ec34466b2e11f9b22d10343210491d399b6c79338faf9313920c94dcd3b23097"
+    },
+    {
+      "path": "convex-dev/runtimeGatewayQualifications.ts",
+      "sha256": "7c6fe22156f0db7f0e58382dc10abbc156674ac073f1cf11a81b9d4f26624492"
+    },
+    {
+      "path": "tests/unit/runtime/gateway-qualification-registry.test.ts",
+      "sha256": "4287d3fa907b9618eb73bc6b76641649631a18f7bc2b29a2946e15c17f41f582"
+    }
+  ],
+  "controlled": {
+    "currentAffectedGatewayLedgerMemoryPolicyOutputRegistry": {
+      "passed": 515,
+      "failed": 0,
+      "skipped": 0,
+      "suites": 8,
+      "commandReceipt": "affected-jest3.json",
+      "outcomes": "affected-jest3.result.json",
+      "actualService": false
+    },
+    "currentHelperLayout": {
+      "passed": 30,
+      "failed": 0,
+      "skipped": 0,
+      "receipt": "helper-layout-jest1.result.json"
+    },
+    "previousSubsetCountsNotAdded": true,
+    "fullSdkTypes": {
+      "exitCode": 0,
+      "receipt": "registry-sdk-types1.json"
+    },
+    "helperCliTypes": {
+      "exitCode": 0,
+      "receipt": "helper-layout-types1.json"
+    },
+    "registryScopedLint": {
+      "exitCode": 0,
+      "warnings": 0,
+      "receipt": "registry-eslint1.json"
+    },
+    "nonbreakingPreviousLintLimitations": [
+      "one redundant diagnostic comparison in bridge test",
+      "builder excluded by repository ESLint config, executed generator controls instead"
+    ],
+    "renewedOwnerCancellationLedger": {
+      "passed": 134,
+      "failed": 0,
+      "skipped": 0,
+      "actualService": false,
+      "receipt": "cancel-budget-ledger1.json",
+      "outcomes": "cancel-budget-ledger1.result.json",
+      "overlapsPrior515AndAuthor235": true
+    }
+  },
+  "historicalFailuresPreserved": [
+    "gateway-jest1 frozen synthetic snapshot",
+    "gateway-jest2 structuredClone foreign-realm fixture",
+    "affected-jest1 old schema oracle and missing synthetic stream proof",
+    "sdk-types1 readonly schema fixture",
+    "bridge-jest2 actual AI SDK7 default empty-tools auto choice",
+    "bridge-jest3 nonconfigurable safe DTO deletion",
+    "sdk-default-diagnostic1 narrow default-call reproduction",
+    "native deploy-qualification1 InvalidModules scanned Workflow config helper; no inference",
+    "registry-jest1 required service environment exited before tests; offline fixture setup correction registry-jest2 preserved all assertions"
+  ],
+  "functionalTask07Accepted": false,
+  "productionRegistryToolStreamPromoted": true,
+  "implementation": [
+    "Exact fixed native tool catalog subsets and full canonical history input bound",
+    "Canonical private tool/text result replay, no fabricated provider usage",
+    "Guarded bounded tool-input streams and current ledger authority",
+    "Same-transaction Agent budget/cutoff/source/tool-approval guard",
+    "Charge-only terminal capture survives known Agent delivery fence denial and settles exactly once",
+    "Separate qualifications by model/interface/price/bound revisions",
+    "Trusted official Agent cancellation bridge with exact governed abort signal and disposed listeners",
+    "Official AI SDK7 includeRawChunks:false and empty-tools auto defaults normalized at trusted bridge only",
+    "Component metadata renamed to official non-entry configuration layout; direct root component discovery retained",
+    "Internal-only cleanup cancellation rechecks current run/conversation write authority, verifies exact captured run budget/account identity, and marks cancelled without settlement/refund/release; all paid exact-authority paths remain unchanged"
+  ],
+  "productionRegistryMeaning": "Compiled shipped source proof from actual disposable observations, no production deployment or package release; final installed ordinary Agent gate pending",
+  "observedQualification": "source-qualification-promotion1.json",
+  "continuedReview": "Same reused independent review replayed supported grant-renewal cancellation counterexample PASS; earlier actual-handler FORBIDDEN red preserved. Final installed actual negatives/retirement remain pending."
+}

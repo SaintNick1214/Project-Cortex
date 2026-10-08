@@ -1,0 +1,80 @@
+{
+  "version": 1,
+  "observedAt": "2026-10-08T12:48:40.471131+00:00",
+  "scope": "Task07 Root Gateway/ledger/output contracts, synthetic tests only; no functional acceptance",
+  "source": [
+    {
+      "path": "convex-dev/runtimeGateway.ts",
+      "sha256": "a0299169f55f2ea93dbfdf811d02f485f3fe05ae532425ae086d9b9e7364bd18"
+    },
+    {
+      "path": "convex-dev/runtimeModelPolicy.ts",
+      "sha256": "f980e0f9716f254b0cfd14c4be493abb6eee1d949f539ba18a161d4fc2815d59"
+    },
+    {
+      "path": "convex-dev/runtimeModelPolicyBootstrap.ts",
+      "sha256": "749d26e575a12dae5ac40e08578e6da5e7195e616cb653a74e1ba3be0e1e5312"
+    },
+    {
+      "path": "convex-dev/runtimeOutputProjection.ts",
+      "sha256": "8ab2817a40a1a6ca4be1741386762546fd927a414935c99fe805c4ea1fee7331"
+    },
+    {
+      "path": "src/domain/model-policy.ts",
+      "sha256": "435a8af15b0545041e97de7e218cd60ebd0ca2589e34ccad613e0ab955f0362b"
+    },
+    {
+      "path": "src/domain/agent-tools.ts",
+      "sha256": "f015e77b3f7150357f1069f976c3b6e18c437c8e37a6067fad064cb7ecf1a2d1"
+    },
+    {
+      "path": "src/domain/agent-language.ts",
+      "sha256": "a3b04238f93a7453f6eecfa360916ea04bda738ab79c8630c4d8faee57587c56"
+    },
+    {
+      "path": "tests/unit/runtime/gateway-terminal-composition.test.ts",
+      "sha256": "08f48da51ce881f9b9f428880a85a6408eb560bffba1cfe3634cdd59556200c3"
+    },
+    {
+      "path": "tests/unit/runtime/gateway-backend.test.ts",
+      "sha256": "65e075956ab1b02b95b827224e2a4c7de15a4cd86d5ef2d71bc6181f3cd8d648"
+    },
+    {
+      "path": "tests/unit/runtime/model-policy-admission.test.ts",
+      "sha256": "277e2cbc6ab64e31920fae69239d7017b20cfde3114ff85e968efc228d9b4f74"
+    },
+    {
+      "path": "tests/unit/runtime/output-projection.test.ts",
+      "sha256": "212966c7c53cd664fd7e0cfd796e3e58287c152ef04397c4f5402f0778004d01"
+    },
+    {
+      "path": "tests/unit/domain/model-policy.test.ts",
+      "sha256": "a7067f0339df7812c5937aef73a386715fbf0e52555c165a604454ae14426b75"
+    }
+  ],
+  "controlled": {
+    "currentAffectedPassed": 506,
+    "failed": 0,
+    "skipped": 0,
+    "earlierFocused181IsSubsetNotAdded": true,
+    "backendTypes2Pass": true,
+    "sdkTypes2Pass": true,
+    "scopedLint2Pass": true
+  },
+  "historicalFailuresPreserved": [
+    "gateway-jest1 frozen synthetic snapshot",
+    "gateway-jest2 structuredClone foreign-realm fixture",
+    "affected-jest1 old schema oracle and missing synthetic stream proof",
+    "sdk-types1 readonly schema fixture"
+  ],
+  "functionalTask07Accepted": false,
+  "productionRegistryToolStreamPromoted": false,
+  "implementation": [
+    "Exact fixed native tool catalog subsets and full canonical history input bound",
+    "Canonical private tool/text result replay, no fabricated provider usage",
+    "Guarded bounded tool-input streams and current ledger authority",
+    "Same-transaction Agent budget/cutoff/source/tool-approval guard",
+    "Charge-only terminal capture survives known Agent delivery fence denial and settles exactly once",
+    "Separate qualifications by model/interface/price/bound revisions"
+  ]
+}

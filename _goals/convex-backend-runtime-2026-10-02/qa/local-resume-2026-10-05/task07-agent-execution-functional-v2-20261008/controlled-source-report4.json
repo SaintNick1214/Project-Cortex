@@ -1,0 +1,170 @@
+{
+  "scope": "Task07 final renewed-owner safe cancellation repair and current controlled batch; final native/review pending",
+  "capturedAt": "2026-10-08T14:18:18.037363+00:00",
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "node": "v24.15.0",
+  "npm": "12.2.0",
+  "problem": "After legitimate runtimeAuth.provision renewal, current owner resource access succeeds but cancelling the formerly admitted run passed its captured obsolete grant to cancelBudget and failed FORBIDDEN.",
+  "change": "Root cleanup-only cancelAgentBudget checks CURRENT resource/conversation write authority, looks up exact captured budget/reference and requires account ID matches runAccountId. It idempotently changes cancellation/version only. runs.cancel/remove route current reference to it and schedule owned recovery so captured old authority cannot suppress valid queued work. Original cancelBudget, all paid sameAuthority checks and accounting unchanged.",
+  "controlled": {
+    "passed": 235,
+    "failed": 0,
+    "skipped": 0,
+    "suites": 6,
+    "raw": "units16.json",
+    "log": "units16.log",
+    "coreAgentTranscriptRun": 101,
+    "nativeModelAdmission": 134,
+    "command": "node --experimental-vm-modules node_modules/jest/bin/jest.js --config /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-agent-execution-functional-v2-20261008/jest.offline.config2.mjs --runInBand --runTestsByPath tests/unit/runtimeAgent/execution.test.ts tests/unit/runtimeAgent/model-owner.test.ts tests/unit/runtimeAgent/tool-context.test.ts tests/unit/runtimeTranscript/managed.test.ts tests/unit/runtimeRuns/admission.test.ts tests/unit/runtime/model-policy-admission.test.ts --json --outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-agent-execution-functional-v2-20261008/units16.json"
+  },
+  "checks": [
+    {
+      "command": "node node_modules/typescript/bin/tsc -p convex-dev/tsconfig.json --noEmit",
+      "exit": 0,
+      "log": "types14.log"
+    },
+    {
+      "command": "node node_modules/typescript/bin/tsc -p tsconfig.json --noEmit",
+      "exit": 0,
+      "log": "alltypes9.log"
+    },
+    {
+      "command": "node node_modules/eslint/bin/eslint.js convex-dev/runtimeAgent.ts convex-dev/runs.ts convex-dev/runtimeModelPolicy.ts tests/unit/runtimeAgent/execution.test.ts tests/unit/runtimeTranscript/fixture.ts",
+      "exit": 0,
+      "log": "lint7.log"
+    }
+  ],
+  "newTests": [
+    "durable Agent execution product boundaries a legitimately renewed owner grant cancels the captured budget without changing paid or uncertain accounting",
+    "durable Agent execution product boundaries renewed owner budget cancellation still denies no-jwt without accounting or Workflow effects",
+    "durable Agent execution product boundaries renewed owner budget cancellation still denies foreign-space without accounting or Workflow effects"
+  ],
+  "source": [
+    {
+      "path": "src/domain/transcript.ts",
+      "bytes": 6667,
+      "sha256": "1e6c30da65461b0c85e8a1ab073e8b912f38fce5a9d12078f1e57194e09c23a0",
+      "owner": "Task07 execution author"
+    },
+    {
+      "path": "convex-dev/runtimeTranscript.ts",
+      "bytes": 49431,
+      "sha256": "7b8c2e31fe2fbcf9d85e981a88722cdfbb83ae9c49b39c2f74955f075e607c92",
+      "owner": "Task07 execution author"
+    },
+    {
+      "path": "convex-dev/runtimeTranscriptSchema.ts",
+      "bytes": 8406,
+      "sha256": "f942c592cb57ebf3d76f8d5d68a1efc07cbf97c5679926b90cf80e738aca9e82",
+      "owner": "Task07 execution author"
+    },
+    {
+      "path": "convex-dev/runs.ts",
+      "bytes": 27806,
+      "sha256": "b211dbfb6356f6613d68cc3a5b185259e1e3e819c6cfb0ebb1650c0a87b42b68",
+      "owner": "Task07 execution author"
+    },
+    {
+      "path": "convex-dev/agentDefinitions.ts",
+      "bytes": 16275,
+      "sha256": "c7853ed40f6f4c12c61a369570c13111dab31cf9597917bc6cad41a5294e54b0",
+      "owner": "Task07 execution author"
+    },
+    {
+      "path": "convex-dev/convex.config.ts",
+      "bytes": 277,
+      "sha256": "b5634a88e2e31dc7fad0170151ae28c1cc0114fb5611f9cd9aad554fa2c74602",
+      "owner": "Task07 execution author"
+    },
+    {
+      "path": "convex-dev/schema.ts",
+      "bytes": 54764,
+      "sha256": "78817f4e6a8afdba8ca95edb6fc50c3342df72e2e4a0ca6af3b754239c6d2514",
+      "owner": "Task07 execution author"
+    },
+    {
+      "path": "convex-dev/runtimeAgent.ts",
+      "bytes": 67571,
+      "sha256": "e5211968091541fad2ebcea2bc803861214cfa881a42cc95d77f3d260ed79f83",
+      "owner": "Task07 execution author"
+    },
+    {
+      "path": "convex-dev/runtimeAgentFence.ts",
+      "bytes": 4506,
+      "sha256": "c0a52cdd373025ae98763e3034330a48463100e88192097fb744f928892fbe78",
+      "owner": "Task07 execution author"
+    },
+    {
+      "path": "convex-dev/runtimeAgentSchema.ts",
+      "bytes": 3289,
+      "sha256": "a0224393fa7e60be91f3de6bd1257bc275c566c96a101ce84bcb847c70f77be0",
+      "owner": "Task07 execution author"
+    },
+    {
+      "path": "convex-dev/runtimeAgentReferences.ts",
+      "bytes": 531,
+      "sha256": "47e0746cbe2e28b2e190285b840bd2637afc24f1b0decb8a4ced8e75950260a0",
+      "owner": "Task07 execution author"
+    },
+    {
+      "path": "convex-dev/runtimeAgentTools.ts",
+      "bytes": 7269,
+      "sha256": "f9b57f5c2d2e0c85e2b5370cc45b6a05c98696ab95db772af887f5c2689aad36",
+      "owner": "Task07 execution author"
+    },
+    {
+      "path": "tests/unit/runtimeAgent/execution.test.ts",
+      "bytes": 50165,
+      "sha256": "d9ef1e6024969fea5ffde11df5cc6b08841d400a40a2db21f7ed62cb4fad7389",
+      "owner": "Task07 execution author"
+    },
+    {
+      "path": "tests/unit/runtimeAgent/tool-context.test.ts",
+      "bytes": 5509,
+      "sha256": "9e732be40f3463fe23546075aca0324a0e8476ff10a4eb36e1a282358eca95e5",
+      "owner": "Task07 execution author"
+    },
+    {
+      "path": "tests/unit/runtimeAgent/model-owner.test.ts",
+      "bytes": 10931,
+      "sha256": "37ce0925f69ae2bda93e90ae107ca4140d73ab35f97d174553cbbf3d6ae03292",
+      "owner": "Task07 execution author"
+    },
+    {
+      "path": "tests/unit/runtimeAgent/native-arguments.ts",
+      "bytes": 2217,
+      "sha256": "ae15c27f13d4075661e16b15a182f1c999fc7980dd60d1aa21c638e36d0a641e",
+      "owner": "Task07 execution author"
+    },
+    {
+      "path": "tests/unit/runtimeTranscript/fixture.ts",
+      "bytes": 16911,
+      "sha256": "b4785afde16ba8a71749fbc36c465010924f21224bce52592a96a579cfc4d80a",
+      "owner": "Task07 execution author"
+    },
+    {
+      "path": "convex-dev/runtimeModelPolicy.ts",
+      "bytes": 96475,
+      "sha256": "4791d25f1f4816056691b5d0aa55dc148751e2c10977ce28bfdca2d9cdad6a86",
+      "owner": "Root"
+    },
+    {
+      "path": "tests/unit/runtime/model-policy-admission.test.ts",
+      "bytes": 95600,
+      "sha256": "024893abcd3992668390c4c908021d3a5d07743a9b047e9cd45ee742d4f61bdb",
+      "owner": "Root"
+    }
+  ],
+  "previousReports": [
+    "controlled-source-report1.json",
+    "controlled-source-report2.json",
+    "controlled-source-report3.json"
+  ],
+  "preserved": [
+    "Independent genuine grant-renewal cancellation red remains reviewer-owned",
+    "Original Date serialization red, live save-gap recovery and prior source-scoped live checks remain executor-owned and unchanged",
+    "Original lifetime/revoke and author missing-import failures retained"
+  ],
+  "actualRemaining": "One final current installed targeted expiry/renewed-grant/revoked-definition cleanup batch plus source-scoped native final outcomes and retirement; coherent non-author verdict follows. Earlier live V5 reported green, but it does not certify these later changed files.",
+  "functionalAcceptanceClaim": false
+}

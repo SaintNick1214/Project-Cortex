@@ -1,0 +1,25 @@
+(node:36483) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtime/gateway-terminal-composition.test.ts
+  ● trusted Agent cancellation bridge › composes the actual AI SDK7 streamText defaults and private raw observation
+
+    AI SDK7 default request failed: [{"maxOutputTokens":16,"toolChoice":{"type":"auto"},"includeRawChunks":false},{}]
+
+      733 |     } };
+      734 |     const result = streamText({ model: observed, prompt: "hello", maxOutputTokens: 16, maxRetries: 0, onError: ({ error }) => { diagnostics.push(error); } });
+    > 735 |     let text: string; try { text = await result.text; } catch { throw new Error(`AI SDK7 default request failed: ${JSON.stringify(diagnostics)}`); }
+          |                                                                       ^
+      736 |     expect(text).toBe("answer"); await h.lifecycle.complete(); bridge.dispose();
+      737 |     expect(f.nativeCalls[0]!.includeRawChunks).toBe(true); expect(f.nativeCalls[0]!.abortSignal).toBe(h.lifecycle.signal);
+      738 |     expect(f.receipts).toHaveLength(1); expect(f.attachments).toHaveLength(1);
+
+      at Object.<anonymous> (tests/unit/runtime/gateway-terminal-composition.test.ts:735:71)
+
+PASS tests/unit/runtimeAgent/model-owner.test.ts
+
+Test Suites: 1 failed, 1 passed, 2 total
+Tests:       1 failed, 174 skipped, 9 passed, 184 total
+Snapshots:   0 total
+Time:        6.381 s
+Ran all test suites within paths "tests/unit/runtimeAgent/model-owner.test.ts", "tests/unit/runtime/gateway-terminal-composition.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-product-independent-review1/bridge-handler-independent1.results.json

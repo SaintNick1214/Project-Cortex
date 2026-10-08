@@ -1,0 +1,63 @@
+{
+  "argv": [
+    "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+    "--experimental-vm-modules",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/jest/bin/jest.js",
+    "--config",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-product-independent-review1/independent-bridge-handler-jest1.config.mjs",
+    "--runInBand",
+    "--no-cache",
+    "--runTestsByPath",
+    "tests/unit/runtimeAgent/model-owner.test.ts",
+    "tests/unit/runtime/gateway-terminal-composition.test.ts",
+    "--testNamePattern",
+    "trusted Agent cancellation bridge|failure closes|whole model path|whole deferred tool path",
+    "--json",
+    "--outputFile",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-product-independent-review1/bridge-handler-independent1.results.json"
+  ],
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "pid": 36483,
+  "reaped": true,
+  "exitCode": 1,
+  "elapsedSeconds": 6.614256083994405,
+  "deadlineSeconds": 55,
+  "timedOut": false,
+  "sourceBefore": {
+    "convex-dev/runtimeAgent.ts": {
+      "bytes": 61834,
+      "sha256": "b4789a22eb76f613a544c639786d87acd25a9cd046685176802cc980f6c977e1"
+    },
+    "convex-dev/runtimeGateway.ts": {
+      "bytes": 71513,
+      "sha256": "bbf6946fb586930d262b76f007b91c100f4fbfbf8f3afafa832f839573ec8989"
+    },
+    "tests/unit/runtimeAgent/model-owner.test.ts": {
+      "bytes": 9349,
+      "sha256": "54707adca6b7206048664bbe64d5b5573c0067fa44e029855d8945679f02e371"
+    },
+    "tests/unit/runtime/gateway-terminal-composition.test.ts": {
+      "bytes": 88856,
+      "sha256": "0f9c8315214d4bcba33431aa6dbc5b0950ee34b991357b06e61b1bf7a59a8159"
+    }
+  },
+  "sourceAfter": {
+    "convex-dev/runtimeAgent.ts": {
+      "bytes": 61834,
+      "sha256": "b4789a22eb76f613a544c639786d87acd25a9cd046685176802cc980f6c977e1"
+    },
+    "convex-dev/runtimeGateway.ts": {
+      "bytes": 71513,
+      "sha256": "bbf6946fb586930d262b76f007b91c100f4fbfbf8f3afafa832f839573ec8989"
+    },
+    "tests/unit/runtimeAgent/model-owner.test.ts": {
+      "bytes": 9349,
+      "sha256": "54707adca6b7206048664bbe64d5b5573c0067fa44e029855d8945679f02e371"
+    },
+    "tests/unit/runtime/gateway-terminal-composition.test.ts": {
+      "bytes": 88856,
+      "sha256": "0f9c8315214d4bcba33431aa6dbc5b0950ee34b991357b06e61b1bf7a59a8159"
+    }
+  },
+  "scope": "Selected affected author tests independently executed; actual installed AI SDK stream wrapper/native args, controlled factory/ledger/component ports, no provider/service effects; nonselected cases intentionally omitted."
+}

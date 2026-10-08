@@ -1,0 +1,39 @@
+(node:50643) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-product-independent-review1/lifetime-cancel-independent1.test.mjs (5.178 s)
+  ✓ unexpired explicit approval renews the admitted wait with current authority (27 ms)
+  ✓ expired explicit approval cannot resurrect or renew the old owned lease (19 ms)
+  ✓ expired active wait retires Workflow and releases the next queued request (16 ms)
+  ✓ attempt-zero pre-run approval remains an intentional unclaimed wait (6 ms)
+  ✓ valid owner cancellation retires an active owned Workflow (11 ms)
+  ✕ supported admin definition revoke must leave safe owner cancellation usable (6 ms)
+
+  ● supported admin definition revoke must leave safe owner cancellation usable
+
+    ConvexError: {"version":1,"code":"POLICY_DENIED","message":"Agent definition control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      20 | export async function executableRegistryHash(): Promise<string> { return await semanticHash(canonicalModelJson(EXECUTABLE_REGISTRY)); }
+      21 | function denied(code = "POLICY_DENIED"): never {
+    > 22 |   throw new ConvexError({ version: 1, code, message: "Agent definition control failed.", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      23 | }
+      24 | function unicode(s: string): boolean { try { assertUnicode(s); return true; } catch { return false; } }
+      25 | const text = z.string().min(1).max(256).refine(s => s.trim() === s && unicode(s));
+
+      at denied (convex-dev/agentDefinitions.ts:22:9)
+      at checkRow (convex-dev/agentDefinitions.ts:99:56)
+      at readCurrentExecutableDefinition (convex-dev/agentDefinitions.ts:121:28)
+      at currentRun (convex-dev/runs.ts:40:22)
+      at Function.handler [as _handler] (convex-dev/runtimeAgent.ts:635:81)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:89:10)
+      at tests/unit/runtimeTranscript/fixture.ts:149:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:145:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:149:77)
+      at Object.<anonymous> (_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-product-independent-review1/lifetime-cancel-independent1.test.mjs:33:408)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 5 passed, 6 total
+Snapshots:   0 total
+Time:        5.304 s
+Ran all test suites.
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-product-independent-review1/lifetime-cancel-independent1.results.json

@@ -1,0 +1,258 @@
+{
+  "classification": "owned cleanup only; original missing-Workflow setup remainsFAIL",
+  "cancelled": {
+    "cancelled": true
+  },
+  "states": [
+    {
+      "bridges": [
+        {
+          "_id": "px7fz34kj54xe7mtpjjss3mc3s8fw1wf",
+          "nativeMessageId": "kx7ayssrf4yf40dbnrpcssq9598fwyvq",
+          "sourceEventId": "transcript:conversation:4bded973caf71dfa107f90d8e6239479264951d91a1670f27cf0f6f8ae58bb39:kx7ayssrf4yf40dbnrpcssq9598fwyvq",
+          "sourceRevision": 1
+        },
+        {
+          "_id": "px7b0mkrzmwfest96r72m8pse58fx0s4",
+          "nativeMessageId": "kx768kvtwgrq82njytpfkasr598fwnfr",
+          "sourceEventId": "transcript:conversation:4bded973caf71dfa107f90d8e6239479264951d91a1670f27cf0f6f8ae58bb39:kx768kvtwgrq82njytpfkasr598fwnfr",
+          "sourceRevision": 1
+        }
+      ],
+      "executions": [
+        {
+          "_creationTime": 1791468553504.7695,
+          "_id": "q97e44g48rt76w4a8may8jx2hn8fxv98",
+          "attemptNumber": 1,
+          "createdAt": 1791468553504,
+          "failureCode": "APPROVAL_EXPIRED",
+          "leaseVersion": 1,
+          "memorySpaceId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space",
+          "nextModelStep": 0,
+          "nextOutputSequence": 3,
+          "reference": {
+            "grantId": "md71kf97qydspxgejaga8rmknn8fwbe6",
+            "grantVersion": 1,
+            "membershipId": "mh796m2jn3mm0zwhwfapqemqas8fw830",
+            "membershipVersion": 1,
+            "memorySpaceEpoch": 1,
+            "memorySpaceId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space",
+            "principalId": "mn737zmpkce8jj4xk8fp5pv64s8fxbts",
+            "principalVersion": 1,
+            "tenantEpoch": 1,
+            "tenantId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b"
+          },
+          "runId": "run:4bded973caf71dfa107f90d8e6239479264951d91a1670f27cf0f6f8ae58bb39",
+          "savedMessageIds": [],
+          "savedMessagePins": [],
+          "sourceWitnesses": [],
+          "state": "cancelled",
+          "streaming": true,
+          "tenantId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b",
+          "toolCount": 1,
+          "updatedAt": 1791468770628
+        }
+      ],
+      "ingestion": [],
+      "modelAttempts": [],
+      "modelOperations": [],
+      "native": [
+        {
+          "_id": "kx7ayssrf4yf40dbnrpcssq9598fwyvq",
+          "order": 0,
+          "role": "user",
+          "status": "success",
+          "stepOrder": 0
+        },
+        {
+          "_id": "kx768kvtwgrq82njytpfkasr598fwnfr",
+          "order": 1,
+          "role": "user",
+          "status": "success",
+          "stepOrder": 0
+        }
+      ],
+      "operations": [
+        {
+          "_creationTime": 1791468553926.3296,
+          "_id": "qh78nmcp143w56m40ettr30js18fx0yd",
+          "attemptNumber": 1,
+          "createdAt": 1791468553926,
+          "kind": "tool",
+          "memorySpaceId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space",
+          "nativeMessageIds": [],
+          "operationId": "agent-op:f16118587b19cced119b5b245cf06aa8cad2b9c7fc7fb7c7cf8981544c02dfd5",
+          "ordinal": 0,
+          "resultBytes": 0,
+          "runId": "run:4bded973caf71dfa107f90d8e6239479264951d91a1670f27cf0f6f8ae58bb39",
+          "semanticId": "f16118587b19cced119b5b245cf06aa8cad2b9c7fc7fb7c7cf8981544c02dfd5",
+          "state": "waiting_approval",
+          "tenantId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b",
+          "toolCallId": "fixture-expiry-447a5194-e3cd-4463-94b8-8967f5e92e38",
+          "toolName": "memory_recall"
+        }
+      ],
+      "outbox": [
+        {
+          "_creationTime": 1791468552957.6826,
+          "_id": "pn71qz51qzaw1h3yj3cn7gntb98fwcfe",
+          "conversationId": "conversation:4bded973caf71dfa107f90d8e6239479264951d91a1670f27cf0f6f8ae58bb39",
+          "createdAt": 1791468552957,
+          "leaseExpiresAt": 1791468555504,
+          "leaseVersion": 1,
+          "memorySpaceId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space",
+          "runId": "run:4bded973caf71dfa107f90d8e6239479264951d91a1670f27cf0f6f8ae58bb39",
+          "sequence": 1,
+          "state": "complete",
+          "tenantId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b",
+          "updatedAt": 1791468770628
+        }
+      ],
+      "run": {
+        "_creationTime": 1791468552957.6824,
+        "_id": "ps762m5gqahqcqf3gg9yr572358fwp11",
+        "agentId": "agent:0fe41342cf6a78c0d7adae4b382eff2df32d2eec33cb0e4ce862f911777d21b0",
+        "agentVersion": 1,
+        "attemptNumber": 1,
+        "authorityReference": {
+          "grantId": "md71kf97qydspxgejaga8rmknn8fwbe6",
+          "grantVersion": 1,
+          "membershipId": "mh796m2jn3mm0zwhwfapqemqas8fw830",
+          "membershipVersion": 1,
+          "memorySpaceEpoch": 1,
+          "memorySpaceId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space",
+          "principalId": "mn737zmpkce8jj4xk8fp5pv64s8fxbts",
+          "principalVersion": 1,
+          "tenantEpoch": 1,
+          "tenantId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b"
+        },
+        "cancellationRequestedAt": 1791468770628,
+        "cancelledAt": 1791468770628,
+        "conversationEpoch": 1,
+        "conversationId": "conversation:4bded973caf71dfa107f90d8e6239479264951d91a1670f27cf0f6f8ae58bb39",
+        "createdAt": 1791468552957,
+        "definitionHash": "0f61390b7af489d1a57852ad9b0b082473a2aa5c77093fcbe5d605514fcce0e1",
+        "executionRequested": true,
+        "failureCode": "APPROVAL_EXPIRED",
+        "graphStatus": "not_requested",
+        "historyRevision": 0,
+        "inputMessageIds": [
+          "kx7ayssrf4yf40dbnrpcssq9598fwyvq"
+        ],
+        "memorySpaceId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space",
+        "memoryStatus": "pending",
+        "outputMessageIds": [],
+        "ownerPrincipalId": "mn737zmpkce8jj4xk8fp5pv64s8fxbts",
+        "queueSequence": 1,
+        "requestCanonical": "{\"identity\":[\"cortex.submit.v1\",\"task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b\",\"task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space\",\"mn737zmpkce8jj4xk8fp5pv64s8fxbts\",[\"create\"],\"task07-expiry-A-447a5194-e3cd-4463-94b8-8967f5e92e38\"],\"publicRequest\":{\"agentId\":\"agent:0fe41342cf6a78c0d7adae4b382eff2df32d2eec33cb0e4ce862f911777d21b0\",\"agentVersion\":1,\"clientRequestId\":\"task07-expiry-A-447a5194-e3cd-4463-94b8-8967f5e92e38\",\"parts\":[{\"text\":\"First owned waiting approval.\",\"type\":\"text\"}],\"version\":1},\"version\":1}",
+        "requestIdentityCanonical": "[\"cortex.submit.v1\",\"task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b\",\"task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space\",\"mn737zmpkce8jj4xk8fp5pv64s8fxbts\",[\"create\"],\"task07-expiry-A-447a5194-e3cd-4463-94b8-8967f5e92e38\"]",
+        "requestIdentityHash": "4bded973caf71dfa107f90d8e6239479264951d91a1670f27cf0f6f8ae58bb39",
+        "responseStatus": "cancelled",
+        "runAccountId": "n177ynt7d0t8vv8zvd8dbbfk2x8fwk8z",
+        "runBudgetId": "2992d514d48d55b3535cf9e7339be27f029d8ccdc14e4821df1cc17167c6bd21",
+        "runId": "run:4bded973caf71dfa107f90d8e6239479264951d91a1670f27cf0f6f8ae58bb39",
+        "snapshotCanonical": "{\"anchor\":{\"canonicalContentHash\":\"bbfeced74778af412c11382b315a7e7bfc57b1669bb3254e33ce0e6bd8913905\",\"contentHash\":\"49933230b08899881d1b70539a4da2b2d0ca351c10aed84a4e6baa3010605c4d\",\"nativeMessageId\":\"kx7ayssrf4yf40dbnrpcssq9598fwyvq\",\"order\":0,\"sourceEventId\":\"transcript:conversation:4bded973caf71dfa107f90d8e6239479264951d91a1670f27cf0f6f8ae58bb39:kx7ayssrf4yf40dbnrpcssq9598fwyvq\",\"sourceRevision\":1,\"stepOrder\":0},\"attemptNumber\":1,\"capturedAuthorityReference\":{\"grantId\":\"md71kf97qydspxgejaga8rmknn8fwbe6\",\"grantVersion\":1,\"membershipId\":\"mh796m2jn3mm0zwhwfapqemqas8fw830\",\"membershipVersion\":1,\"memorySpaceEpoch\":1,\"memorySpaceId\":\"task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space\",\"principalId\":\"mn737zmpkce8jj4xk8fp5pv64s8fxbts\",\"principalVersion\":1,\"tenantEpoch\":1,\"tenantId\":\"task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b\"},\"completeness\":\"complete\",\"conversationEpoch\":1,\"conversationId\":\"conversation:4bded973caf71dfa107f90d8e6239479264951d91a1670f27cf0f6f8ae58bb39\",\"definitionHash\":\"0f61390b7af489d1a57852ad9b0b082473a2aa5c77093fcbe5d605514fcce0e1\",\"definitionVersion\":1,\"historyRevision\":0,\"ingestionCutoff\":{\"requiredStages\":[],\"scopeIdentity\":\"[\\\"task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b\\\",\\\"task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space\\\"]\",\"sequence\":1},\"messages\":[{\"canonicalContentHash\":\"bbfeced74778af412c11382b315a7e7bfc57b1669bb3254e33ce0e6bd8913905\",\"contentHash\":\"49933230b08899881d1b70539a4da2b2d0ca351c10aed84a4e6baa3010605c4d\",\"nativeMessageId\":\"kx7ayssrf4yf40dbnrpcssq9598fwyvq\",\"order\":0,\"sourceEventId\":\"transcript:conversation:4bded973caf71dfa107f90d8e6239479264951d91a1670f27cf0f6f8ae58bb39:kx7ayssrf4yf40dbnrpcssq9598fwyvq\",\"sourceRevision\":1,\"stepOrder\":0}],\"queueSequence\":1,\"runDocId\":\"ps762m5gqahqcqf3gg9yr572358fwp11\",\"threadId\":\"m978rnjnk5vnxder02r6fmf4rs8fw0py\",\"version\":1}",
+        "streamingRequested": true,
+        "tenantId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b",
+        "updatedAt": 1791468770628
+      }
+    },
+    {
+      "bridges": [
+        {
+          "_id": "px7fz34kj54xe7mtpjjss3mc3s8fw1wf",
+          "nativeMessageId": "kx7ayssrf4yf40dbnrpcssq9598fwyvq",
+          "sourceEventId": "transcript:conversation:4bded973caf71dfa107f90d8e6239479264951d91a1670f27cf0f6f8ae58bb39:kx7ayssrf4yf40dbnrpcssq9598fwyvq",
+          "sourceRevision": 1
+        },
+        {
+          "_id": "px7b0mkrzmwfest96r72m8pse58fx0s4",
+          "nativeMessageId": "kx768kvtwgrq82njytpfkasr598fwnfr",
+          "sourceEventId": "transcript:conversation:4bded973caf71dfa107f90d8e6239479264951d91a1670f27cf0f6f8ae58bb39:kx768kvtwgrq82njytpfkasr598fwnfr",
+          "sourceRevision": 1
+        }
+      ],
+      "executions": [],
+      "ingestion": [],
+      "modelAttempts": [],
+      "modelOperations": [],
+      "native": [
+        {
+          "_id": "kx7ayssrf4yf40dbnrpcssq9598fwyvq",
+          "order": 0,
+          "role": "user",
+          "status": "success",
+          "stepOrder": 0
+        },
+        {
+          "_id": "kx768kvtwgrq82njytpfkasr598fwnfr",
+          "order": 1,
+          "role": "user",
+          "status": "success",
+          "stepOrder": 0
+        }
+      ],
+      "operations": [],
+      "outbox": [
+        {
+          "_creationTime": 1791468554727.343,
+          "_id": "pn7fshn4a3g4m0syhns55sr5kx8fwkp8",
+          "conversationId": "conversation:4bded973caf71dfa107f90d8e6239479264951d91a1670f27cf0f6f8ae58bb39",
+          "createdAt": 1791468554727,
+          "leaseVersion": 0,
+          "memorySpaceId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space",
+          "runId": "run:0984370010206e9b088a12e81812829239b802cec63857b8320516c494679469",
+          "sequence": 2,
+          "state": "complete",
+          "tenantId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b",
+          "updatedAt": 1791468771285
+        }
+      ],
+      "run": {
+        "_creationTime": 1791468554727.3428,
+        "_id": "ps763528z1vqxahe80as0kczkh8fxgf0",
+        "agentId": "agent:0fe41342cf6a78c0d7adae4b382eff2df32d2eec33cb0e4ce862f911777d21b0",
+        "agentVersion": 1,
+        "attemptNumber": 0,
+        "authorityReference": {
+          "grantId": "md71kf97qydspxgejaga8rmknn8fwbe6",
+          "grantVersion": 1,
+          "membershipId": "mh796m2jn3mm0zwhwfapqemqas8fw830",
+          "membershipVersion": 1,
+          "memorySpaceEpoch": 1,
+          "memorySpaceId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space",
+          "principalId": "mn737zmpkce8jj4xk8fp5pv64s8fxbts",
+          "principalVersion": 1,
+          "tenantEpoch": 1,
+          "tenantId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b"
+        },
+        "cancellationRequestedAt": 1791468771285,
+        "cancelledAt": 1791468771285,
+        "conversationEpoch": 1,
+        "conversationId": "conversation:4bded973caf71dfa107f90d8e6239479264951d91a1670f27cf0f6f8ae58bb39",
+        "createdAt": 1791468554727,
+        "definitionHash": "0f61390b7af489d1a57852ad9b0b082473a2aa5c77093fcbe5d605514fcce0e1",
+        "failureCode": "CANCELLED",
+        "graphStatus": "not_requested",
+        "historyRevision": 2,
+        "inputMessageIds": [
+          "kx768kvtwgrq82njytpfkasr598fwnfr"
+        ],
+        "memorySpaceId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space",
+        "memoryStatus": "pending",
+        "outputMessageIds": [],
+        "ownerPrincipalId": "mn737zmpkce8jj4xk8fp5pv64s8fxbts",
+        "queueSequence": 2,
+        "requestCanonical": "{\"identity\":[\"cortex.submit.v1\",\"task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b\",\"task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space\",\"mn737zmpkce8jj4xk8fp5pv64s8fxbts\",[\"existing\",\"conversation:4bded973caf71dfa107f90d8e6239479264951d91a1670f27cf0f6f8ae58bb39\"],\"task07-expiry-B-447a5194-e3cd-4463-94b8-8967f5e92e38\"],\"publicRequest\":{\"agentId\":\"agent:0fe41342cf6a78c0d7adae4b382eff2df32d2eec33cb0e4ce862f911777d21b0\",\"agentVersion\":1,\"clientRequestId\":\"task07-expiry-B-447a5194-e3cd-4463-94b8-8967f5e92e38\",\"conversationId\":\"conversation:4bded973caf71dfa107f90d8e6239479264951d91a1670f27cf0f6f8ae58bb39\",\"parts\":[{\"text\":\"Later owned queued input.\",\"type\":\"text\"}],\"version\":1},\"version\":1}",
+        "requestIdentityCanonical": "[\"cortex.submit.v1\",\"task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b\",\"task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space\",\"mn737zmpkce8jj4xk8fp5pv64s8fxbts\",[\"existing\",\"conversation:4bded973caf71dfa107f90d8e6239479264951d91a1670f27cf0f6f8ae58bb39\"],\"task07-expiry-B-447a5194-e3cd-4463-94b8-8967f5e92e38\"]",
+        "requestIdentityHash": "0984370010206e9b088a12e81812829239b802cec63857b8320516c494679469",
+        "responseStatus": "cancelled",
+        "runAccountId": "n17ehh4g5kny1a65zd1nn83x398fxcr0",
+        "runBudgetId": "f3415e81580ecfff208abd718501b33cf08249fb3185b67a51d65e4423c83c97",
+        "runId": "run:0984370010206e9b088a12e81812829239b802cec63857b8320516c494679469",
+        "tenantId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b",
+        "updatedAt": 1791468771285
+      }
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "sourceSha256": "5109caf0e9b3a82ea92e5becad399d2a685f45241841117bdf022db4f3d973e3",
+  "checks": [
+    {
+      "kind": "model",
+      "callee": "hydrateExecution",
+      "fields": [
+        "reference",
+        "runId",
+        "attemptNumber",
+        "leaseVersion"
+      ],
+      "actualKeys": [
+        "reference",
+        "runId",
+        "attemptNumber",
+        "leaseVersion"
+      ],
+      "extras": []
+    },
+    {
+      "kind": "model",
+      "denial": "POSITIVE_SHAPE_NO_HANDLER_EFFECT",
+      "reads": 1
+    },
+    {
+      "kind": "tool",
+      "callee": "hydrateExecution",
+      "fields": [
+        "reference",
+        "runId",
+        "attemptNumber",
+        "leaseVersion"
+      ],
+      "actualKeys": [
+        "reference",
+        "runId",
+        "attemptNumber",
+        "leaseVersion"
+      ],
+      "extras": []
+    },
+    {
+      "kind": "tool",
+      "denial": "POSITIVE_SHAPE_NO_HANDLER_EFFECT",
+      "reads": 1
+    },
+    {
+      "kind": "positive",
+      "exactAttemptKeys": [
+        "reference",
+        "runId",
+        "attemptNumber",
+        "leaseVersion"
+      ],
+      "extras": []
+    }
+  ],
+  "serviceCalls": 0,
+  "modelCalls": 0,
+  "ordinaryRuntimeImport": true
+}

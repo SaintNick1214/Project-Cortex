@@ -1,0 +1,47 @@
+{
+  "function": "runtimeAuth:provision",
+  "kind": "mutation",
+  "args": {
+    "issuer": "https://cortex-task06-custom.example",
+    "subject": "task07-qualification-2932a517-1e11-4143-bb09-1cb6dff8cff8",
+    "actorKind": "user",
+    "tenantId": "task07-qualification-2932a517-1e11-4143-bb09-1cb6dff8cff8",
+    "memorySpaceId": "task07-qualification-2932a517-1e11-4143-bb09-1cb6dff8cff8-space",
+    "capabilities": [
+      "read",
+      "write",
+      "run",
+      "admin",
+      "tool",
+      "storage:read",
+      "storage:write"
+    ],
+    "resourceAccess": "space"
+  },
+  "result": {
+    "actorKind": "user",
+    "capabilities": [
+      "admin",
+      "read",
+      "run",
+      "storage:read",
+      "storage:write",
+      "tool",
+      "write"
+    ],
+    "grantId": "md7b19vrkyfjmhsfv4st9pk4t98fxb5a",
+    "grantVersion": 1,
+    "membershipId": "mh7dqbwrcw3f8qc3aq1809csax8fwkz9",
+    "membershipVersion": 1,
+    "memorySpaceEpoch": 1,
+    "memorySpaceId": "task07-qualification-2932a517-1e11-4143-bb09-1cb6dff8cff8-space",
+    "principalId": "mn76fnm0bfzw0g9m93fmvj6m6d8fxm49",
+    "principalVersion": 1,
+    "resourceAccess": "space",
+    "tenantEpoch": 1,
+    "tenantId": "task07-qualification-2932a517-1e11-4143-bb09-1cb6dff8cff8",
+    "userId": "mn76fnm0bfzw0g9m93fmvj6m6d8fxm49"
+  },
+  "elapsedMs": 177,
+  "status": "PASS"
+}

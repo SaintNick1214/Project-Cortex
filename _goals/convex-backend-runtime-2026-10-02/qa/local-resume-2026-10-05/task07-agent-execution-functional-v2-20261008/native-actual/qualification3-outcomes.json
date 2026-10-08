@@ -1,0 +1,27 @@
+{
+  "operation": "2932a517-1e11-4143-bb09-1cb6dff8cff8",
+  "projectId": 3172114,
+  "tenantId": "task07-qualification-2932a517-1e11-4143-bb09-1cb6dff8cff8",
+  "memorySpaceId": "task07-qualification-2932a517-1e11-4143-bb09-1cb6dff8cff8-space",
+  "classification": "actual-service-observation-not-independent-acceptance",
+  "outcomes": [
+    {
+      "name": "native generate returns a qualified fixed tool call; replay adds no dispatch and retains full liability",
+      "status": "PASS"
+    },
+    {
+      "name": "native tool stream has bounded arguments and one complete terminal; replay adds no dispatch",
+      "status": "PASS"
+    },
+    {
+      "name": "tool-result prompt produces bounded final text and typed read-only replay under retained300000 liability",
+      "status": "PASS"
+    }
+  ],
+  "providerDispatches": 3,
+  "priorFirstGenerate": "qualification2-generate.json",
+  "sameOriginalBudgetPreserved": true,
+  "replayDispatches": 0,
+  "sourceCandidate": "deployment-source-manifest.json",
+  "originalQualificationsPreserved": true
+}

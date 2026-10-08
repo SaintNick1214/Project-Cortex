@@ -1,0 +1,28 @@
+{
+  "exitCode": 0,
+  "timedOut": false,
+  "command": [
+    "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+    "--experimental-vm-modules",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/jest/bin/jest.js",
+    "--config",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-gateway-output-functional-v2-20261008/registry-jest-controlled.config.mjs",
+    "--runInBand",
+    "--runTestsByPath",
+    "tests/unit/runtime/model-policy-admission.test.ts",
+    "tests/unit/runtime/gateway-backend.test.ts",
+    "tests/unit/runtime/gateway-terminal-composition.test.ts",
+    "tests/unit/runtime/model-policy-model-drift.test.ts",
+    "tests/unit/runtime/memory-gateway.test.ts",
+    "tests/unit/domain/model-policy.test.ts",
+    "tests/unit/runtime/output-projection.test.ts",
+    "tests/unit/runtime/gateway-qualification-registry.test.ts",
+    "--json",
+    "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-gateway-output-functional-v2-20261008/affected-jest3.result.json"
+  ],
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "durationMs": 9382,
+  "deadlineMs": 90000,
+  "actualService": false,
+  "reason": "Bridge/default-registry and Agent source changed since prior506 slice; affected current-source regression batch"
+}

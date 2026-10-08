@@ -32,12 +32,14 @@ import { runtimeAuthorityReference, runtimeAuthTables } from "./runtimeAuthSchem
 import { runtimeMemoryTables, sourceLineage } from "./runtimeMemorySchema";
 import { runtimePolicyTables } from "./runtimePolicySchema";
 import { runtimeTranscriptTables } from "./runtimeTranscriptSchema";
+import { runtimeAgentTables } from "./runtimeAgentSchema";
 
 export default defineSchema({
   ...runtimeAuthTables,
   ...runtimeMemoryTables,
   ...runtimePolicyTables,
   ...runtimeTranscriptTables,
+  ...runtimeAgentTables,
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // Layer 1a: Conversations (ACID, Immutable)
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

@@ -1,0 +1,163 @@
+{
+  "scope": "Task07 bounded approval-expiry and revoked-definition cleanup repair; installed successor verification pending",
+  "capturedAt": "2026-10-08T14:07:53.539235+00:00",
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "node": "v24.15.0",
+  "npm": "12.2.0",
+  "changes": [
+    "waitForApproval durably schedules exact admitted attempt/lease/deadline expiry. approveTool denies expired/current-mismatched attempts before renewal or Workflow event.",
+    "Expiry timer retires/cancels exact waiting run/outbox/attempt/execution once and cancels Workflow; obsolete owner authority cannot suppress retirement. Current queued rows retain their own authority/definition checks; no expired or potentially paid attempt is retried/refunded.",
+    "Explicit currentControlRun grants current resource/conversation metadata and safe cancellation/deletion access without requiring a still-executable definition. Default currentRun, admission, hydration, approval continuation, native paid guards and finalization/reconciliation retain strict definition checks."
+  ],
+  "controlled": {
+    "passed": 98,
+    "failed": 0,
+    "skipped": 0,
+    "suites": 5,
+    "raw": "units15.json",
+    "log": "units15.log",
+    "newTests": [
+      "durable Agent execution product boundaries expired active approval cannot renew, then its owned timer cancels once and makes the next queued run ready",
+      "durable Agent execution product boundaries current unexpired tool approval keeps its durable wait positive and a stale expiry callback cannot cancel renewed work",
+      "durable Agent execution product boundaries queue recovery retires an expired active approval but leaves intentional unclaimed input approval pending",
+      "durable Agent execution product boundaries expiry cleanup survives an obsolete owner grant and recovers a later queued row under its own current authority",
+      "durable Agent execution product boundaries current owner can read status and cancel after definition revocation while executable paths stay closed",
+      "durable Agent execution product boundaries definition-revoked metadata/cancellation still denies no-jwt without effects",
+      "durable Agent execution product boundaries definition-revoked metadata/cancellation still denies foreign-space without effects"
+    ],
+    "command": "node --experimental-vm-modules node_modules/jest/bin/jest.js --config /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-agent-execution-functional-v2-20261008/jest.offline.config2.mjs --runInBand --runTestsByPath tests/unit/runtimeAgent/execution.test.ts tests/unit/runtimeAgent/model-owner.test.ts tests/unit/runtimeAgent/tool-context.test.ts tests/unit/runtimeTranscript/managed.test.ts tests/unit/runtimeRuns/admission.test.ts --json --outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-agent-execution-functional-v2-20261008/units15.json"
+  },
+  "checks": [
+    {
+      "command": "node node_modules/typescript/bin/tsc -p convex-dev/tsconfig.json --noEmit",
+      "exit": 0,
+      "log": "types13.log"
+    },
+    {
+      "command": "node node_modules/typescript/bin/tsc -p tsconfig.json --noEmit",
+      "exit": 0,
+      "log": "alltypes8.log"
+    },
+    {
+      "command": "node node_modules/eslint/bin/eslint.js convex-dev/runtimeAgent.ts convex-dev/runs.ts tests/unit/runtimeAgent/execution.test.ts",
+      "exit": 0,
+      "log": "lint6.log"
+    }
+  ],
+  "source": [
+    {
+      "path": "src/domain/transcript.ts",
+      "bytes": 6667,
+      "sha256": "1e6c30da65461b0c85e8a1ab073e8b912f38fce5a9d12078f1e57194e09c23a0",
+      "unchangedSinceReport2": true
+    },
+    {
+      "path": "convex-dev/runtimeTranscript.ts",
+      "bytes": 49431,
+      "sha256": "7b8c2e31fe2fbcf9d85e981a88722cdfbb83ae9c49b39c2f74955f075e607c92",
+      "unchangedSinceReport2": true
+    },
+    {
+      "path": "convex-dev/runtimeTranscriptSchema.ts",
+      "bytes": 8406,
+      "sha256": "f942c592cb57ebf3d76f8d5d68a1efc07cbf97c5679926b90cf80e738aca9e82",
+      "unchangedSinceReport2": true
+    },
+    {
+      "path": "convex-dev/runs.ts",
+      "bytes": 27719,
+      "sha256": "4ea72d5daf8b35005a897ee99a5e363db5a5951cbf84dcb2bb8b480a9139e38e",
+      "unchangedSinceReport2": false
+    },
+    {
+      "path": "convex-dev/agentDefinitions.ts",
+      "bytes": 16275,
+      "sha256": "c7853ed40f6f4c12c61a369570c13111dab31cf9597917bc6cad41a5294e54b0",
+      "unchangedSinceReport2": true
+    },
+    {
+      "path": "convex-dev/convex.config.ts",
+      "bytes": 277,
+      "sha256": "b5634a88e2e31dc7fad0170151ae28c1cc0114fb5611f9cd9aad554fa2c74602",
+      "unchangedSinceReport2": true
+    },
+    {
+      "path": "convex-dev/schema.ts",
+      "bytes": 54764,
+      "sha256": "78817f4e6a8afdba8ca95edb6fc50c3342df72e2e4a0ca6af3b754239c6d2514",
+      "unchangedSinceReport2": true
+    },
+    {
+      "path": "convex-dev/runtimeAgent.ts",
+      "bytes": 67571,
+      "sha256": "e5211968091541fad2ebcea2bc803861214cfa881a42cc95d77f3d260ed79f83",
+      "unchangedSinceReport2": false
+    },
+    {
+      "path": "convex-dev/runtimeAgentFence.ts",
+      "bytes": 4506,
+      "sha256": "c0a52cdd373025ae98763e3034330a48463100e88192097fb744f928892fbe78",
+      "unchangedSinceReport2": true
+    },
+    {
+      "path": "convex-dev/runtimeAgentSchema.ts",
+      "bytes": 3289,
+      "sha256": "a0224393fa7e60be91f3de6bd1257bc275c566c96a101ce84bcb847c70f77be0",
+      "unchangedSinceReport2": true
+    },
+    {
+      "path": "convex-dev/runtimeAgentReferences.ts",
+      "bytes": 531,
+      "sha256": "47e0746cbe2e28b2e190285b840bd2637afc24f1b0decb8a4ced8e75950260a0",
+      "unchangedSinceReport2": true
+    },
+    {
+      "path": "convex-dev/runtimeAgentTools.ts",
+      "bytes": 7269,
+      "sha256": "f9b57f5c2d2e0c85e2b5370cc45b6a05c98696ab95db772af887f5c2689aad36",
+      "unchangedSinceReport2": true
+    },
+    {
+      "path": "tests/unit/runtimeAgent/execution.test.ts",
+      "bytes": 47395,
+      "sha256": "bfcbaae0ac3c6a60b2bf55d86ea2861ee6dec2ef398b550bab4d457c731b8cbd",
+      "unchangedSinceReport2": false
+    },
+    {
+      "path": "tests/unit/runtimeAgent/tool-context.test.ts",
+      "bytes": 5509,
+      "sha256": "9e732be40f3463fe23546075aca0324a0e8476ff10a4eb36e1a282358eca95e5",
+      "unchangedSinceReport2": true
+    },
+    {
+      "path": "tests/unit/runtimeAgent/model-owner.test.ts",
+      "bytes": 10931,
+      "sha256": "37ce0925f69ae2bda93e90ae107ca4140d73ab35f97d174553cbbf3d6ae03292",
+      "unchangedSinceReport2": true
+    },
+    {
+      "path": "tests/unit/runtimeAgent/native-arguments.ts",
+      "bytes": 2217,
+      "sha256": "ae15c27f13d4075661e16b15a182f1c999fc7980dd60d1aa21c638e36d0a641e",
+      "unchangedSinceReport2": true
+    },
+    {
+      "path": "tests/unit/runtimeTranscript/fixture.ts",
+      "bytes": 16796,
+      "sha256": "949e517cfd2aaeb8e01c4c2039ea556a0132daaf198f980bbab18af055dd7904",
+      "unchangedSinceReport2": true
+    }
+  ],
+  "newRegisteredInternalEndpoints": [
+    "runtimeAgent:expireApproval",
+    "runs:recoverOwnedQueue"
+  ],
+  "newInternalEndpointGuards": "Internal-only registered mutations; expiry validates exact persisted reference/run/attempt/lease/deadline. Owned queue recovery is cleanup-only, constant-sized status probes and <=20 reconciliation per mutation, and every pending row uses strict currentRun before dispatch with its own persisted current reference.",
+  "preserved": [
+    "controlled-source-report1/2 and all earlier raw runs unchanged",
+    "Independent reviewer active-approval lifetime/static finding and supported public definition-revoke cancellation red remain reviewer-owned",
+    "units14.json/log97PASS1FAIL/types12/alltypes7 failure: omitted ConvexError import in new stale-owner catch; corrected import only, rerun98PASS"
+  ],
+  "nativeRemaining": "Current successor installed no-paid expiry/revoked-definition cancellation checks, coherent source-scoped actual outcome accounting/cleanup and one final independent review. Executor owns actual receipts; no new qualification protocol.",
+  "functionalAcceptanceClaim": false
+}

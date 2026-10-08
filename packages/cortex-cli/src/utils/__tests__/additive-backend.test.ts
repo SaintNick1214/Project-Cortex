@@ -22,7 +22,7 @@ beforeEach(async () => {
   sdk = path.join(root, "sdk"); host = path.join(root, "host");
   const files = new Map([
     ["_cortex/schema.ts", 'import { defineTable } from "convex/server"; export const cortexTablesV1 = { runtimeRuns: defineTable({}) };\n'],
-    ["_cortex/components.ts", 'import type { AppDefinition } from "convex/server"; import agent from "@convex-dev/agent/convex.config";\nexport function registerCortexComponentsV1(app: AppDefinition) { app.use(agent, { name: "agent" }); }\n'],
+    ["_cortex/components.config.ts", 'import type { AppDefinition } from "convex/server"; import agent from "@convex-dev/agent/convex.config";\nexport function registerCortexComponentsV1(app: AppDefinition) { app.use(agent, { name: "agent" }); }\n'],
     ["runs.ts", '"use node";\nexport const qualifiedRun = true;\n'],
     ["_cortex/shared/domain/profile.ts", 'export const profile = "qualified";\n'],
   ]);
@@ -37,6 +37,8 @@ describe("additive backend installation", () => {
   it("registers a fresh host with explicit verified JWT settings and keeps runtime directives", async () => {
     const result = await installAdditiveBackend(host, sdk, { trustedJwtProvider: provider });
     expect(result.installed).toHaveLength(8);
+    expect(await fs.pathExists(path.join(host, "convex/_cortex/components.config.ts"))).toBe(true);
+    expect(await fs.pathExists(path.join(host, "convex/_cortex/components.ts"))).toBe(false);
     expect(await read("convex/schema.ts")).toContain("...cortexTablesV1");
     expect(await read("convex/convex.config.ts")).toContain('import _cortex_component_agent from "@convex-dev/agent/convex.config";');
     expect(await read("convex/convex.config.ts")).toContain('app.use(_cortex_component_agent, { name: "agent" });');
@@ -45,6 +47,15 @@ describe("additive backend installation", () => {
     expect(await read("convex/auth.config.ts")).toContain('"algorithm":"RS256"');
     expect(result.capabilities.authConfigured).toBe(true);
     expect(result.capabilities.execution).toBe("task07-required");
+  });
+  it("rejects an ordinary scanned component helper before host writes", async () => {
+    const manifest = await fs.readJson(path.join(sdk, "dist/backend/v1/manifest.json"));
+    const helper = manifest.files.find((entry: { path: string }) => entry.path === "_cortex/components.config.ts");
+    await fs.rename(path.join(sdk, "dist/backend/v1", helper.path), path.join(sdk, "dist/backend/v1/_cortex/components.ts"));
+    helper.path = "_cortex/components.ts";
+    await fs.writeJson(path.join(sdk, "dist/backend/v1/manifest.json"), manifest);
+    await expect(installAdditiveBackend(host, sdk)).rejects.toThrow("lacks additive schema/component helpers");
+    expect(await fs.pathExists(path.join(host, "convex"))).toBe(false);
   });
   it("preserves a custom directory, unrelated tables/indexes, schema options, functions, auth, HTTP and components", async () => {
     const config = '{ "functions": "services/backend/", "node": { "externalPackages": ["custom"] }, "codegen": { "staticApi": true } }\n';
@@ -76,10 +87,10 @@ describe("additive backend installation", () => {
   });
   it("imports every declared component directly from the root config, including Workflow", async () => {
     const fragment = 'import type { AppDefinition } from "convex/server"; import agent from "@convex-dev/agent/convex.config"; import workflow from "@convex-dev/workflow/convex.config";\nexport function registerCortexComponentsV1(app: AppDefinition) { app.use(agent, { name: "agent" }); app.use(workflow, { name: "workflow" }); }\n';
-    await fs.writeFile(path.join(sdk, "dist/backend/v1/_cortex/components.ts"), fragment);
+    await fs.writeFile(path.join(sdk, "dist/backend/v1/_cortex/components.config.ts"), fragment);
     const manifest = await fs.readJson(path.join(sdk, "dist/backend/v1/manifest.json"));
     manifest.components.push("workflow");
-    manifest.files.find((entry: { path: string }) => entry.path === "_cortex/components.ts").sha256 = hash(fragment);
+    manifest.files.find((entry: { path: string }) => entry.path === "_cortex/components.config.ts").sha256 = hash(fragment);
     await fs.writeJson(path.join(sdk, "dist/backend/v1/manifest.json"), manifest);
     await installAdditiveBackend(host, sdk);
     const config = await read("convex/convex.config.ts");
@@ -219,7 +230,7 @@ describe("generated Convex module layout", () => {
     const { source, output } = await buildFixture(entry, shared);
     await build(source, output);
     const manifest = await fs.readJson(path.join(output, "manifest.json")) as { files: { path: string; sha256: string; sourcePath: string; sourceSha256: string }[] };
-    expect(manifest.files.map(file => file.path)).toEqual(["_cortex/components.ts", "_cortex/schema.ts", "_cortex/shared/domain/model_policy.ts", "_cortex/shared/type_space/with__.ts", "runs.ts"]);
+    expect(manifest.files.map(file => file.path)).toEqual(["_cortex/components.config.ts", "_cortex/schema.ts", "_cortex/shared/domain/model_policy.ts", "_cortex/shared/type_space/with__.ts", "runs.ts"]);
     const compiled = path.join(root, "compiled");
     for (const file of manifest.files) {
       expect(file.path.split("/").every(piece => /^[A-Za-z0-9_.]+$/.test(piece))).toBe(true);

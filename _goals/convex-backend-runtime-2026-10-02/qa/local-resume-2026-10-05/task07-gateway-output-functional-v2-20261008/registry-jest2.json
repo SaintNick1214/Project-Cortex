@@ -1,0 +1,23 @@
+{
+  "exitCode": 0,
+  "timedOut": false,
+  "command": [
+    "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+    "--experimental-vm-modules",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/jest/bin/jest.js",
+    "--config",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-gateway-output-functional-v2-20261008/registry-jest-controlled.config.mjs",
+    "--runInBand",
+    "--runTestsByPath",
+    "tests/unit/runtime/gateway-qualification-registry.test.ts",
+    "tests/unit/runtime/model-policy-admission.test.ts",
+    "tests/unit/domain/model-policy.test.ts",
+    "--json",
+    "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-gateway-output-functional-v2-20261008/registry-jest2.result.json"
+  ],
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "durationMs": 6441,
+  "deadlineMs": 90000,
+  "priorCommandDisposition": "registry-jest1 exited before outcomes because repository service environment setup requires CONVEX_URL; this offline fixture config omits only service env/close hooks, preserves assertions and transforms",
+  "actualService": false
+}

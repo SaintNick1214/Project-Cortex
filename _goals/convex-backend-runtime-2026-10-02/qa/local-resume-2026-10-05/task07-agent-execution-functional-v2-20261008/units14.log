@@ -1,0 +1,127 @@
+(node:51171) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeAgent/execution.test.ts (5.759 s)
+  ● durable Agent execution product boundaries › expiry cleanup survives an obsolete owner grant and recovers a later queued row under its own current authority
+
+    ReferenceError: ConvexError is not defined
+
+      479 |     // Revocation already prevents new admissions. It must not prevent the owned
+      480 |     // timer from retiring the wait; terminal evidence can still settle liability.
+    > 481 |     if (!(error instanceof ConvexError) || !["FORBIDDEN", "POLICY_DENIED", "CAPABILITY_UNAVAILABLE"].includes(error.data.code as string)) throw error;
+          |                            ^
+      482 |   }
+      483 |   await ctx.db.patch("runtimeRuns", row._id, { responseStatus: "cancelled", failureCode: "APPROVAL_EXPIRED", cancellationRequestedAt: now, cancelledAt: now, updatedAt: now });
+      484 |   await ctx.db.patch("runtimeRunOutbox", outbox._id, { state: "complete", updatedAt: now });
+
+      at Function.handler [as _handler] (convex-dev/runtimeAgent.ts:481:28)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:89:10)
+      at tests/unit/runtimeTranscript/fixture.ts:149:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:145:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:149:77)
+      at Object.<anonymous> (tests/unit/runtimeAgent/execution.test.ts:329:5)
+
+PASS tests/unit/runtimeTranscript/managed.test.ts
+PASS tests/unit/runtimeAgent/model-owner.test.ts
+PASS tests/unit/runtimeRuns/admission.test.ts
+PASS tests/unit/runtimeAgent/tool-context.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     5.8s | 52/53 passed | /tests/unit/runtimeAgent/execution.test.ts
+  ✅     1.1s | 15/15 passed | /tests/unit/runtimeTranscript/managed.test.ts
+  ✅     0.8s | 6/6 passed | /tests/unit/runtimeAgent/model-owner.test.ts
+  ✅     0.8s | 20/20 passed | /tests/unit/runtimeRuns/admission.test.ts
+  ✅     0.7s | 4/4 passed | /tests/unit/runtimeAgent/tool-context.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.23s ( 2.5%) - canonical transcript lifetime/compatibility/privacy 105 canonical messages cross every page; rebuild repairs outbox holes and explicit fork gets a distinct store
+    /tests/unit/runtimeTranscript/managed.test.ts
+
+ 2. [32m✓[0m    0.05s ( 0.5%) - durable Agent execution product boundaries later private hydration retains source provenance (fork=true, changed)
+    /tests/unit/runtimeAgent/execution.test.ts
+
+ 3. [32m✓[0m    0.04s ( 0.5%) - durable Agent execution product boundaries later private hydration retains source provenance (fork=false, changed)
+    /tests/unit/runtimeAgent/execution.test.ts
+
+ 4. [32m✓[0m    0.04s ( 0.5%) - durable Agent execution product boundaries current-generation reconciliation ignores retained failed/unregistered holes and stops at older orders
+    /tests/unit/runtimeAgent/execution.test.ts
+
+ 5. [32m✓[0m    0.04s ( 0.5%) - durable Agent execution product boundaries later private hydration retains source provenance (fork=true, tombstoned)
+    /tests/unit/runtimeAgent/execution.test.ts
+
+ 6. [32m✓[0m    0.04s ( 0.5%) - durable Agent execution product boundaries start claims/enqueues one Workflow atomically; duplicate start keeps same attempt and changed delivery contract denies
+    /tests/unit/runtimeAgent/execution.test.ts
+
+ 7. [32m✓[0m    0.04s ( 0.4%) - durable Agent execution product boundaries queue recovery retires an expired active approval but leaves intentional unclaimed input approval pending
+    /tests/unit/runtimeAgent/execution.test.ts
+
+ 8. [32m✓[0m    0.03s ( 0.4%) - durable Agent execution product boundaries later private hydration retains source provenance (fork=false, tombstoned)
+    /tests/unit/runtimeAgent/execution.test.ts
+
+ 9. [32m✓[0m    0.03s ( 0.3%) - durable Agent execution product boundaries expired active approval cannot renew, then its owned timer cancels once and makes the next queued run ready
+    /tests/unit/runtimeAgent/execution.test.ts
+
+10. [32m✓[0m    0.03s ( 0.3%) - durable Agent execution product boundaries future queued request remains durable and only dispatches after the current head retires
+    /tests/unit/runtimeAgent/execution.test.ts
+
+11. [31m✗[0m    0.03s ( 0.3%) - durable Agent execution product boundaries expiry cleanup survives an obsolete owner grant and recovers a later queued row under its own current authority
+    /tests/unit/runtimeAgent/execution.test.ts
+
+12. [32m✓[0m    0.03s ( 0.3%) - durable scoped admissions and serialized recovery (controlled handlers) retained completed history does not increase queue-head reads
+    /tests/unit/runtimeRuns/admission.test.ts
+
+13. [32m✓[0m    0.03s ( 0.3%) - durable Agent execution product boundaries started/unknown paid work cannot be readmitted; completed exact replay is reusable and changed input denies
+    /tests/unit/runtimeAgent/execution.test.ts
+
+14. [32m✓[0m    0.03s ( 0.3%) - the identity failure closes the governed lifecycle once and does not publish a completed operation
+    /tests/unit/runtimeAgent/model-owner.test.ts
+
+15. [32m✓[0m    0.02s ( 0.3%) - durable Agent execution product boundaries explicit tool approval requires the current scoped admin, exact request hash and pinned history; resumes one durable event
+    /tests/unit/runtimeAgent/execution.test.ts
+
+16. [32m✓[0m    0.02s ( 0.2%) - durable Agent execution product boundaries observers replay scoped saved deltas with independent cursors; final-only withholds until completion and strips secrets
+    /tests/unit/runtimeAgent/execution.test.ts
+
+17. [32m✓[0m    0.02s ( 0.2%) - the whole deferred tool path keeps exact native schemas and its primary model parent; completed tool replay performs no second effect
+    /tests/unit/runtimeAgent/model-owner.test.ts
+
+18. [32m✓[0m    0.02s ( 0.2%) - durable Agent execution product boundaries source/manual edits fence every delegated operation and finalization before effects
+    /tests/unit/runtimeAgent/execution.test.ts
+
+19. [32m✓[0m    0.02s ( 0.2%) - durable Agent execution product boundaries cancel retires Workflow/budget/output delivery and obsolete attempts cannot finalize
+    /tests/unit/runtimeAgent/execution.test.ts
+
+20. [32m✓[0m    0.02s ( 0.2%) - durable Agent execution product boundaries finalization registers canonical messages and one ingestion receipt atomically/idempotently
+    /tests/unit/runtimeAgent/execution.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.83s (8.9% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      9.29s
+  Test suites:        5
+  Individual tests:   93
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 5
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 1 failed, 4 passed, 5 total
+Tests:       1 failed, 97 passed, 98 total
+Snapshots:   0 total
+Time:        9.289 s
+Ran all test suites within paths "tests/unit/runtimeAgent/execution.test.ts", "tests/unit/runtimeAgent/model-owner.test.ts", "tests/unit/runtimeAgent/tool-context.test.ts", "tests/unit/runtimeTranscript/managed.test.ts", "tests/unit/runtimeRuns/admission.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-agent-execution-functional-v2-20261008/units14.json

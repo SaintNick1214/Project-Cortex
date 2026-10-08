@@ -1,0 +1,22 @@
+{
+  "operation": "544bcc86-06e1-4990-9eb0-0af005af689e",
+  "projectId": 3172114,
+  "sourceCandidate": "deployment-source-manifest.json",
+  "outcomes": [
+    {
+      "name": "authenticated observers see the same durable tool approval and final-only withholds unfinished output",
+      "status": "PASS",
+      "evidence": {
+        "parts": 4,
+        "approval": {
+          "operationId": "agent-op:7225acb486491111d1b4ffdd12acdf1cf33b231f4667bc532fbd133a10416209",
+          "requestHash": "797970ef7327e61c63785f42d7b583121eaba9b27b17a85d770d8aa7efd90c5d",
+          "toolName": "memory_recall"
+        },
+        "publicObservers": 2,
+        "finalOnlyWithheld": true,
+        "noAuthAndForeignDenied": true
+      }
+    }
+  ]
+}

@@ -1,7 +1,5 @@
 /** Offline native-handler fixtures. This fake database does NOT prove Convex OCC/isolation/rollback. */
 import { beforeEach, describe, expect, it, jest } from "@jest/globals";
-import { readFileSync } from "node:fs";
-import { resolve } from "node:path";
 import type { MutationCtx } from "../../../convex-dev/_generated/server";
 import type { Doc, Id } from "../../../convex-dev/_generated/dataModel";
 import type { DeploymentPolicyManifest, QualifiedDispatchEvidence } from "../../../convex-dev/runtimeModelPolicyBootstrap";
@@ -81,7 +79,7 @@ async function admitted() { const f = fixture(); await f.install(); const b = aw
 
 describe("native private policy ledger — offline logic only", () => {
   it("only compiled roots are reachable, and arbitrary operator manifest selectors cannot attest prices", async () => {
-    expect(readFileSync(resolve("convex-dev/runtimeModelPolicyBootstrap.ts"), "utf8")).toContain("Object.freeze([DEFAULT_GATEWAY_POLICY_MANIFEST])");
+    expect(trustedBootstrap.lookupDeploymentManifest("caller-provided-policy", 1)).toBeUndefined();
     const f = fixture(); lookup.mockReturnValue(undefined);
     await expect(f.install()).rejects.toThrow(); expect(f.db.writes).toBe(0);
     await expect(f.bind()).rejects.toThrow(); expect(f.db.table("runtimeBudgetAccounts")).toHaveLength(0);
@@ -395,18 +393,23 @@ describe("native private policy ledger — offline logic only", () => {
     expect(f.account("tenant")).toMatchObject({ uncertainUnits: 100, activeConcurrency: 0 });
   });
   it("all registrations are internal and their native argument schemas have no arbitrary payload escape", () => {
-    const names = ["ensureBudget", "installDeploymentPolicy", "provisionTenantPolicy", "resolve", "admit", "checkpoint", "markVisible", "settle", "recover", "reconcileDeploymentLiability", "releaseNotDispatched", "cancelBudget", "checkFallback", "admitFallback"] as const;
+    const names = ["ensureBudget", "installDeploymentPolicy", "provisionTenantPolicy", "resolve", "admit", "checkpoint", "markVisible", "settle", "recover", "reconcileDeploymentLiability", "releaseNotDispatched", "cancelBudget", "cancelAgentBudget", "checkFallback", "admitFallback"] as const;
     for (const name of names) {
       const reg = ledger[name] as unknown as Registration; expect(reg.isInternal).toBe(true); expect(reg.isPublic).toBeUndefined();
       expect(reg.exportArgs?.()).not.toContain('"type":"any"');
     }
   });
-  it("preserves all original native tables and adds exactly nine transcript tables with unique indexes", () => {
+  it("preserves all original native and nine transcript tables, adding exactly four Agent execution tables with unique indexes", () => {
     const original = ["conversations", "conversationShares", "conversationSnapshots", "immutable", "mutable", "memories", "facts", "factHistory", "memorySpaces", "contexts", "agents", "sessions", "governancePolicies", "governanceEnforcement", "graphSyncQueue", "artifacts", "attachments",
       "runtimeAuthPrincipals", "runtimeAuthMemberships", "runtimeAuthScopes", "runtimeAuthGrants", "runtimeAuthTombstones", "runtimeMemorySources", "runtimeMemoryChunks", "runtimeMemoryVectors", "runtimeMemoryReceipts",
       "runtimeModelPolicies", "runtimeModelQualifications", "runtimeBudgetAccounts", "runtimeModelOperations", "runtimeModelAttempts"];
     const added = ["runtimeAgentDefinitions", "runtimeConversations", "runtimeConversationShares", "runtimeConversationSnapshots", "runtimeTranscriptMessages", "runtimeRuns", "runtimeRunOutbox", "runtimeRunAttempts", "runtimeTranscriptOutbox"];
-    expect(Object.keys(schema.tables).sort()).toEqual([...original, ...added].sort());
+    const execution = ["runtimeAgentExecutions", "runtimeAgentOutput", "runtimeAgentOperations", "runtimeAgentIngestion"];
+    expect(Object.keys(schema.tables).sort()).toEqual([...original, ...added, ...execution].sort());
+    const required = { runtimeAgentExecutions: ["by_attempt"], runtimeAgentOutput: ["by_sequence", "by_delivery"], runtimeAgentOperations: ["by_operation", "by_attempt"], runtimeAgentIngestion: ["by_run"] } as const;
+    for (const [name, indexes] of Object.entries(required)) {
+      expect(schema.tables[name as keyof typeof required][" indexes"]().map(index => index.indexDescriptor).sort()).toEqual([...indexes].sort());
+    }
     for (const definition of Object.values(schema.tables)) {
       const configurations = definition[" indexes"]().map((index) => JSON.stringify(index.fields));
       expect(new Set(configurations).size).toBe(configurations.length);
@@ -993,5 +996,29 @@ describe("terminal eligibility unexpected errors preserve exact persistence retr
     expect(f.attempt(a.attemptId).resultAttachmentState).toBe("closed"); spy.mockRestore(); const writes = f.db.writes;
     expect(await f.invoke("attachTerminalResult", attachArgs)).toEqual({ attached: false, resultWithheld: true });
     expect(f.db.writes).toBe(writes); expect(JSON.stringify(f.db.table("runtimeBudgetAccounts"))).toBe(money);
+  });
+});
+
+
+/** A synthetic current Agent fence denial cannot discard already-observed charges. */
+describe("Agent budget admission versus charge-only terminal capture", () => {
+  it("refuses current Agent admission and visibility, but accounts terminal evidence exactly once", async () => {
+    const { f, b, a } = await admitted(); await f.checkpoint(a);
+    f.db.seed("runtimeRuns", { runAccountId: b.runAccountId, executionRequested: true, tenantId: f.reference.tenantId,
+      memorySpaceId: f.reference.memorySpaceId, runId: "closed-agent-run", attemptNumber: 1, authorityReference: f.reference });
+    const before = f.db.writes;
+    await expect(f.invoke("resolve", { reference: f.reference, operationKey: "agent.respond", runBudgetId: b.runBudgetId })).rejects.toThrow("INVALID_STATE");
+    await expect(f.invoke("markVisible", { reference: f.reference, attemptId: a.attemptId, outputVisible: true,
+      toolInputVisible: false, toolResultVisible: false, toolEffectCommitted: false })).rejects.toThrow("INVALID_STATE");
+    expect(f.db.writes).toBe(before);
+    const charge = JSON.parse(f.receipt(a)) as Record<string, unknown>; delete charge.privateResultCanonical;
+    const args = { attemptId: a.attemptId, dispatchIdentity: f.attempt(a.attemptId).dispatchIdentity, receiptCanonical: canonicalModelJson(charge) };
+    const capture = await f.invoke<{ evidenceId: string; settledCostUnits: number }>("captureTerminalEvidence", args);
+    expect(capture.settledCostUnits).toBe(40); expect(f.attempt(a.attemptId)).toMatchObject({ state: "settled", resultAttachmentState: "closed", slotReleased: true });
+    expect(f.account("run")).toMatchObject({ activeConcurrency: 0, settledUnits: 40, reservedUnits: 0 });
+    expect(f.account("tenant")).toMatchObject({ activeConcurrency: 0, settledUnits: 40, reservedUnits: 0 });
+    expect(await f.invoke("attachTerminalResult", { reference: f.reference, attemptId: a.attemptId, evidenceId: capture.evidenceId,
+      privateResultCanonical: canonicalModelJson({ text: "withheld" }) })).toEqual({ attached: false, resultWithheld: true });
+    const settledWrites = f.db.writes; expect(await f.invoke("captureTerminalEvidence", args)).toEqual(capture); expect(f.db.writes).toBe(settledWrites);
   });
 });

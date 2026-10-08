@@ -1,0 +1,185 @@
+(node:25710) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeAgent/execution.test.ts
+  durable Agent execution product boundaries
+    ✓ start claims/enqueues one Workflow atomically; duplicate start keeps same attempt and changed delivery contract denies (73 ms)
+    ✓ start rejects no-jwt before Workflow or model effects (18 ms)
+    ✓ start rejects revoked before Workflow or model effects (6 ms)
+    ✓ start rejects foreign before Workflow or model effects (5 ms)
+    ✓ start rejects definition-revoked before Workflow or model effects (6 ms)
+    ✓ start rejects conversation-tombstone before Workflow or model effects (5 ms)
+    ✓ future queued request remains durable and only dispatches after the current head retires (15 ms)
+    ✓ private selected canonical history retains typed calls/results, while public history omits private tool payloads (10 ms)
+    ✓ source/manual edits fence every delegated operation and finalization before effects (14 ms)
+    ✓ started/unknown paid work cannot be readmitted; completed exact replay is reusable and changed input denies (16 ms)
+    ✓ finalization registers canonical messages and one ingestion receipt atomically/idempotently (15 ms)
+    ✓ component-save gap recovers exact server generation without a model/tool retry; stale/cancelled gaps cannot attach (14 ms)
+    ✓ observers replay scoped saved deltas with independent cursors; final-only withholds until completion and strips secrets (19 ms)
+    ✓ cancel retires Workflow/budget/output delivery and obsolete attempts cannot finalize (16 ms)
+    ✓ corrupted definition cannot enter context dispatch (6 ms)
+    ✓ a valid strict definition with missing Task08 stages fails before its embedding dispatch (8 ms)
+    ✕ explicit tool approval requires the current scoped admin, exact request hash and pinned history; resumes one durable event
+    ✓ dynamic tool-recalled source changed is denied before next paid admission and finalization (18 ms)
+    ✓ dynamic tool-recalled source tombstoned is denied before next paid admission and finalization (10 ms)
+    ✓ saved private tool/model body mutation cannot reach a later native admission (13 ms)
+    ✓ saved private tool/model position mutation cannot reach a later native admission (14 ms)
+    ✓ the ledger transaction rejects cancel after an earlier action-side hydration (9 ms)
+    ✓ the ledger transaction rejects edit after an earlier action-side hydration (13 ms)
+    ✓ the ledger transaction rejects revoke after an earlier action-side hydration (7 ms)
+    ✓ the ledger transaction rejects expired after an earlier action-side hydration (10 ms)
+    ✓ standalone model/memory budgets retain their original contract without transcript reads (1 ms)
+    ✓ duplicate completion callbacks keep one terminal output and gap reconciliation supplies final-only text (14 ms)
+    ✓ Workflow uses fresh immutable ordinals and never retries model, context or tool actions (1 ms)
+    ✕ tool source commits recheck cancellation in the effect transaction, after an earlier approved check
+  closed server tool contract
+    ✓ registered tools expose exact schemas and no SDK execute callback
+    ✓ tool input rejects malformed/extra/foreign control {} (1 ms)
+    ✓ tool input rejects malformed/extra/foreign control {"text": ""}
+    ✓ tool input rejects malformed/extra/foreign control {"limit": 11, "text": "ok"}
+    ✓ tool input rejects malformed/extra/foreign control {"limit": 1, "tenantId": "other", "text": "ok"}
+    ✓ tool input rejects malformed/extra/foreign control {"limit": true, "text": "ok"} (1 ms)
+    ✓ tool input rejects malformed/extra/foreign control {"limit": 1.5, "text": "ok"}
+    ✓ tool input rejects getters before invocation and unknown native names cannot select callbacks
+
+  ● durable Agent execution product boundaries › explicit tool approval requires the current scoped admin, exact request hash and pinned history; resumes one durable event
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      35 | const digest = /^[a-f0-9]{64}$/;
+      36 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 37 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      38 | }
+      39 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      40 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:37:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:145:84)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:361:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:87:92)
+      at tests/unit/runtimeTranscript/fixture.ts:147:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:143:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:147:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:148:9)
+      at fixture (tests/unit/runtimeAgent/execution.test.ts:25:19)
+      at Object.<anonymous> (tests/unit/runtimeAgent/execution.test.ts:172:55)
+
+  ● durable Agent execution product boundaries › tool source commits recheck cancellation in the effect transaction, after an earlier approved check
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      35 | const digest = /^[a-f0-9]{64}$/;
+      36 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 37 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      38 | }
+      39 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      40 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:37:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:145:84)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:361:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:87:92)
+      at tests/unit/runtimeTranscript/fixture.ts:147:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:143:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:147:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:148:9)
+      at fixture (tests/unit/runtimeAgent/execution.test.ts:25:19)
+      at Object.<anonymous> (tests/unit/runtimeAgent/execution.test.ts:254:55)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     4.2s | 35/37 passed | /tests/unit/runtimeAgent/execution.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.07s ( 1.7%) - durable Agent execution product boundaries start claims/enqueues one Workflow atomically; duplicate start keeps same attempt and changed delivery contract denies
+    /tests/unit/runtimeAgent/execution.test.ts
+
+ 2. [32m✓[0m    0.02s ( 0.4%) - durable Agent execution product boundaries observers replay scoped saved deltas with independent cursors; final-only withholds until completion and strips secrets
+    /tests/unit/runtimeAgent/execution.test.ts
+
+ 3. [32m✓[0m    0.02s ( 0.4%) - durable Agent execution product boundaries start rejects no-jwt before Workflow or model effects
+    /tests/unit/runtimeAgent/execution.test.ts
+
+ 4. [32m✓[0m    0.02s ( 0.4%) - durable Agent execution product boundaries dynamic tool-recalled source changed is denied before next paid admission and finalization
+    /tests/unit/runtimeAgent/execution.test.ts
+
+ 5. [32m✓[0m    0.02s ( 0.4%) - durable Agent execution product boundaries started/unknown paid work cannot be readmitted; completed exact replay is reusable and changed input denies
+    /tests/unit/runtimeAgent/execution.test.ts
+
+ 6. [32m✓[0m    0.02s ( 0.4%) - durable Agent execution product boundaries cancel retires Workflow/budget/output delivery and obsolete attempts cannot finalize
+    /tests/unit/runtimeAgent/execution.test.ts
+
+ 7. [32m✓[0m    0.01s ( 0.4%) - durable Agent execution product boundaries future queued request remains durable and only dispatches after the current head retires
+    /tests/unit/runtimeAgent/execution.test.ts
+
+ 8. [32m✓[0m    0.01s ( 0.4%) - durable Agent execution product boundaries finalization registers canonical messages and one ingestion receipt atomically/idempotently
+    /tests/unit/runtimeAgent/execution.test.ts
+
+ 9. [32m✓[0m    0.01s ( 0.3%) - durable Agent execution product boundaries source/manual edits fence every delegated operation and finalization before effects
+    /tests/unit/runtimeAgent/execution.test.ts
+
+10. [32m✓[0m    0.01s ( 0.3%) - durable Agent execution product boundaries component-save gap recovers exact server generation without a model/tool retry; stale/cancelled gaps cannot attach
+    /tests/unit/runtimeAgent/execution.test.ts
+
+11. [32m✓[0m    0.01s ( 0.3%) - durable Agent execution product boundaries saved private tool/model position mutation cannot reach a later native admission
+    /tests/unit/runtimeAgent/execution.test.ts
+
+12. [32m✓[0m    0.01s ( 0.3%) - durable Agent execution product boundaries duplicate completion callbacks keep one terminal output and gap reconciliation supplies final-only text
+    /tests/unit/runtimeAgent/execution.test.ts
+
+13. [32m✓[0m    0.01s ( 0.3%) - durable Agent execution product boundaries saved private tool/model body mutation cannot reach a later native admission
+    /tests/unit/runtimeAgent/execution.test.ts
+
+14. [32m✓[0m    0.01s ( 0.3%) - durable Agent execution product boundaries the ledger transaction rejects edit after an earlier action-side hydration
+    /tests/unit/runtimeAgent/execution.test.ts
+
+15. [32m✓[0m    0.01s ( 0.2%) - durable Agent execution product boundaries private selected canonical history retains typed calls/results, while public history omits private tool payloads
+    /tests/unit/runtimeAgent/execution.test.ts
+
+16. [32m✓[0m    0.01s ( 0.2%) - durable Agent execution product boundaries dynamic tool-recalled source tombstoned is denied before next paid admission and finalization
+    /tests/unit/runtimeAgent/execution.test.ts
+
+17. [32m✓[0m    0.01s ( 0.2%) - durable Agent execution product boundaries the ledger transaction rejects expired after an earlier action-side hydration
+    /tests/unit/runtimeAgent/execution.test.ts
+
+18. [32m✓[0m    0.01s ( 0.2%) - durable Agent execution product boundaries the ledger transaction rejects cancel after an earlier action-side hydration
+    /tests/unit/runtimeAgent/execution.test.ts
+
+19. [32m✓[0m    0.01s ( 0.2%) - durable Agent execution product boundaries a valid strict definition with missing Task08 stages fails before its embedding dispatch
+    /tests/unit/runtimeAgent/execution.test.ts
+
+20. [32m✓[0m    0.01s ( 0.2%) - durable Agent execution product boundaries the ledger transaction rejects revoke after an earlier action-side hydration
+    /tests/unit/runtimeAgent/execution.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.33s (7.6% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      4.28s
+  Test suites:        1
+  Individual tests:   29
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 failed, 1 total
+Tests:       2 failed, 35 passed, 37 total
+Snapshots:   0 total
+Time:        4.283 s, estimated 5 s
+Ran all test suites matching tests/unit/runtimeAgent/execution.test.ts.
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-agent-execution-functional-v2-20261008/units5.json

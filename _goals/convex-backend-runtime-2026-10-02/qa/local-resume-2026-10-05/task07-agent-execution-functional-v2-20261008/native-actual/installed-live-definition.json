@@ -1,0 +1,52 @@
+{
+  "function": "agentDefinitions:publishVersion",
+  "kind": "mutation",
+  "args": {
+    "memorySpaceId": "task07-installed-7a4bd3dd-e45f-4ff7-ad35-d9618de2fe4b-space",
+    "clientMutationId": "b6e8d5a3-9f03-41cc-ab19-df9d4111149a",
+    "expectedPreviousVersion": 0,
+    "definitionInput": {
+      "instructions": {
+        "text": "Invoke memory_recall exactly once with text jasmine tea and limit 1, then answer CORTEX_AGENT_TOOL_STREAM_OK and state the recalled tea preference. Do not repeat a tool invocation after its result.",
+        "promptVersion": "task07-functional-probe-v1"
+      },
+      "tools": [
+        {
+          "toolId": "memory.recall",
+          "toolVersion": 1,
+          "registryHash": "c41fb7c968b1321e952fdaa14e4a5de045ae3333de14641e4d640b3307a64754",
+          "requiredCapability": "tool",
+          "approval": "explicit"
+        }
+      ],
+      "context": {
+        "handlerId": "cortex.transcript",
+        "handlerVersion": 1,
+        "registryHash": "c41fb7c968b1321e952fdaa14e4a5de045ae3333de14641e4d640b3307a64754",
+        "memoryMode": "indexed-plus-pending",
+        "requiredStages": [],
+        "maxContextTokens": 4096
+      },
+      "policies": [
+        {
+          "policyId": "task07-bounded-probe",
+          "version": 1,
+          "operationKey": "agent.respond",
+          "rules": {
+            "limits": {
+              "outputTokens": 256,
+              "toolSteps": 1
+            }
+          }
+        }
+      ]
+    }
+  },
+  "result": {
+    "agentId": "agent:2428beac2a157c40b067976173fe4162876a9820726ebae970694e9fda4e1ffb",
+    "definitionHash": "eddfa63fe233e332437248398dbcb4823e9071e16fd814ee7f0853ac45091f79",
+    "version": 1
+  },
+  "elapsedMs": 218,
+  "status": "PASS"
+}

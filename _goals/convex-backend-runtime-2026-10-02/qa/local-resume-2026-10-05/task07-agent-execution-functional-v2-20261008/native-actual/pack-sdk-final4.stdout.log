@@ -1,0 +1,761 @@
+{
+  "@cortexmemory/sdk": {
+    "id": "@cortexmemory/sdk@0.37.0",
+    "name": "@cortexmemory/sdk",
+    "version": "0.37.0",
+    "size": 834312,
+    "unpackedSize": 4805842,
+    "shasum": "06fee0d0f2eb2c41288447a1bd27ec6e246b9615",
+    "integrity": "sha512-N2ez5KV6C4JZ6o7CsotgaOkkHPz9N3m1mY7d018/Ykekfj9EVr5uI/0RMlcbep1UIShqYquZgTqkmPbLIJkICw==",
+    "filename": "cortexmemory-sdk-0.37.0.tgz",
+    "files": [
+      {
+        "path": "LICENSE.md",
+        "size": 5901,
+        "mode": 420
+      },
+      {
+        "path": "README.md",
+        "size": 23916,
+        "mode": 420
+      },
+      {
+        "path": "convex-dev/_generated/api.d.ts",
+        "size": 2448,
+        "mode": 420
+      },
+      {
+        "path": "convex-dev/_generated/api.js",
+        "size": 480,
+        "mode": 420
+      },
+      {
+        "path": "convex-dev/_generated/dataModel.d.ts",
+        "size": 1736,
+        "mode": 420
+      },
+      {
+        "path": "convex-dev/_generated/server.d.ts",
+        "size": 6008,
+        "mode": 420
+      },
+      {
+        "path": "convex-dev/_generated/server.js",
+        "size": 3872,
+        "mode": 420
+      },
+      {
+        "path": "convex-dev/a2a.ts",
+        "size": 26571,
+        "mode": 420
+      },
+      {
+        "path": "convex-dev/admin.ts",
+        "size": 2259,
+        "mode": 420
+      },
+      {
+        "path": "convex-dev/agentDefinitions.ts",
+        "size": 16275,
+        "mode": 420
+      },
+      {
+        "path": "convex-dev/agents.ts",
+        "size": 9633,
+        "mode": 420
+      },
+      {
+        "path": "convex-dev/artifacts.ts",
+        "size": 60622,
+        "mode": 420
+      },
+      {
+        "path": "convex-dev/attachments.ts",
+        "size": 23062,
+        "mode": 420
+      },
+      {
+        "path": "convex-dev/contexts.ts",
+        "size": 23623,
+        "mode": 420
+      },
+      {
+        "path": "convex-dev/conversations.ts",
+        "size": 29212,
+        "mode": 420
+      },
+      {
+        "path": "convex-dev/conversationShares.ts",
+        "size": 10453,
+        "mode": 420
+      },
+      {
+        "path": "convex-dev/conversationSnapshots.ts",
+        "size": 9230,
+        "mode": 420
+      },
+      {
+        "path": "convex-dev/convex.config.ts",
+        "size": 277,
+        "mode": 420
+      },
+      {
+        "path": "convex-dev/factHistory.ts",
+        "size": 12510,
+        "mode": 420
+      },
+      {
+        "path": "convex-dev/facts.ts",
+        "size": 57517,
+        "mode": 420
+      },
+      {
+        "path": "convex-dev/governance.ts",
+        "size": 22321,
+        "mode": 420
+      },
+      {
+        "path": "convex-dev/graphSync.ts",
+        "size": 9108,
+        "mode": 420
+      },
+      {
+        "path": "convex-dev/immutable.ts",
+        "size": 9637,
+        "mode": 420
+      },
+      {
+        "path": "convex-dev/memories.ts",
+        "size": 33964,
+        "mode": 420
+      },
+      {
+        "path": "convex-dev/memorySpaces.ts",
+        "size": 12862,
+        "mode": 420
+      },
+      {
+        "path": "convex-dev/mutable.ts",
+        "size": 11904,
+        "mode": 420
+      },
+      {
+        "path": "convex-dev/README.md",
+        "size": 2536,
+        "mode": 420
+      },
+      {
+        "path": "convex-dev/runs.ts",
+        "size": 27719,
+        "mode": 420
+      },
+      {
+        "path": "convex-dev/runtimeAgent.ts",
+        "size": 67571,
+        "mode": 420
+      },
+      {
+        "path": "convex-dev/runtimeAgentFence.ts",
+        "size": 4506,
+        "mode": 420
+      },
+      {
+        "path": "convex-dev/runtimeAgentReferences.ts",
+        "size": 531,
+        "mode": 420
+      },
+      {
+        "path": "convex-dev/runtimeAgentSchema.ts",
+        "size": 3289,
+        "mode": 420
+      },
+      {
+        "path": "convex-dev/runtimeAgentTools.ts",
+        "size": 7269,
+        "mode": 420
+      },
+      {
+        "path": "convex-dev/runtimeArtifactAuth.ts",
+        "size": 30371,
+        "mode": 420
+      },
+      {
+        "path": "convex-dev/runtimeAssetUnavailableAuth.ts",
+        "size": 4669,
+        "mode": 420
+      },
+      {
+        "path": "convex-dev/runtimeAuth.ts",
+        "size": 23246,
+        "mode": 420
+      },
+      {
+        "path": "convex-dev/runtimeAuthSchema.ts",
+        "size": 3515,
+        "mode": 420
+      },
+      {
+        "path": "convex-dev/runtimeDataAuth.ts",
+        "size": 62064,
+        "mode": 420
+      },
+      {
+        "path": "convex-dev/runtimeGateway.ts",
+        "size": 71520,
+        "mode": 420
+      },
+      {
+        "path": "convex-dev/runtimeGatewayBackend.ts",
+        "size": 4492,
+        "mode": 420
+      },
+      {
+        "path": "convex-dev/runtimeGatewayQualifications.ts",
+        "size": 22153,
+        "mode": 420
+      },
+      {
+        "path": "convex-dev/runtimeMemory.ts",
+        "size": 14094,
+        "mode": 420
+      },
+      {
+        "path": "convex-dev/runtimeMemoryGateway.ts",
+        "size": 9034,
+        "mode": 420
+      },
+      {
+        "path": "convex-dev/runtimeMemoryRepository.ts",
+        "size": 24458,
+        "mode": 420
+      },
+      {
+        "path": "convex-dev/runtimeMemorySchema.ts",
+        "size": 4764,
+        "mode": 420
+      },
+      {
+        "path": "convex-dev/runtimeMemoryServices.ts",
+        "size": 8399,
+        "mode": 420
+      },
+      {
+        "path": "convex-dev/runtimeMetadataAuth.ts",
+        "size": 15064,
+        "mode": 420
+      },
+      {
+        "path": "convex-dev/runtimeModelPolicy.ts",
+        "size": 95712,
+        "mode": 420
+      },
+      {
+        "path": "convex-dev/runtimeModelPolicyBootstrap.ts",
+        "size": 3863,
+        "mode": 420
+      },
+      {
+        "path": "convex-dev/runtimeOutputProjection.ts",
+        "size": 3990,
+        "mode": 420
+      },
+      {
+        "path": "convex-dev/runtimePolicySchema.ts",
+        "size": 5313,
+        "mode": 420
+      },
+      {
+        "path": "convex-dev/runtimeRegistryAuth.ts",
+        "size": 35029,
+        "mode": 420
+      },
+      {
+        "path": "convex-dev/runtimeRegistryStats.ts",
+        "size": 767,
+        "mode": 420
+      },
+      {
+        "path": "convex-dev/runtimeTranscript.ts",
+        "size": 49431,
+        "mode": 420
+      },
+      {
+        "path": "convex-dev/runtimeTranscriptSchema.ts",
+        "size": 8406,
+        "mode": 420
+      },
+      {
+        "path": "convex-dev/runtimeUnavailableAuth.ts",
+        "size": 5536,
+        "mode": 420
+      },
+      {
+        "path": "convex-dev/runtimeWorkerAuth.ts",
+        "size": 13928,
+        "mode": 420
+      },
+      {
+        "path": "convex-dev/schema.ts",
+        "size": 54764,
+        "mode": 420
+      },
+      {
+        "path": "convex-dev/sessions.ts",
+        "size": 9886,
+        "mode": 420
+      },
+      {
+        "path": "convex-dev/tsconfig.json",
+        "size": 783,
+        "mode": 420
+      },
+      {
+        "path": "convex-dev/users.ts",
+        "size": 3230,
+        "mode": 420
+      },
+      {
+        "path": "dist/AdaptiveProcessor-SHAPUARM.js",
+        "size": 6810,
+        "mode": 420
+      },
+      {
+        "path": "dist/api-FDLQT46H.js",
+        "size": 145,
+        "mode": 420
+      },
+      {
+        "path": "dist/backend/v1/_cortex/components.config.ts",
+        "size": 313,
+        "mode": 420
+      },
+      {
+        "path": "dist/backend/v1/_cortex/schema.ts",
+        "size": 54756,
+        "mode": 420
+      },
+      {
+        "path": "dist/backend/v1/_cortex/shared/auth/types.ts",
+        "size": 5841,
+        "mode": 420
+      },
+      {
+        "path": "dist/backend/v1/_cortex/shared/auth/verified.ts",
+        "size": 1871,
+        "mode": 420
+      },
+      {
+        "path": "dist/backend/v1/_cortex/shared/domain/agent_language.ts",
+        "size": 1757,
+        "mode": 420
+      },
+      {
+        "path": "dist/backend/v1/_cortex/shared/domain/agent_tools.ts",
+        "size": 1958,
+        "mode": 420
+      },
+      {
+        "path": "dist/backend/v1/_cortex/shared/domain/clock.ts",
+        "size": 255,
+        "mode": 420
+      },
+      {
+        "path": "dist/backend/v1/_cortex/shared/domain/conflicts.ts",
+        "size": 24306,
+        "mode": 420
+      },
+      {
+        "path": "dist/backend/v1/_cortex/shared/domain/contracts.ts",
+        "size": 5420,
+        "mode": 420
+      },
+      {
+        "path": "dist/backend/v1/_cortex/shared/domain/deduplication.ts",
+        "size": 3792,
+        "mode": 420
+      },
+      {
+        "path": "dist/backend/v1/_cortex/shared/domain/extraction.ts",
+        "size": 10991,
+        "mode": 420
+      },
+      {
+        "path": "dist/backend/v1/_cortex/shared/domain/model_policy.ts",
+        "size": 28705,
+        "mode": 420
+      },
+      {
+        "path": "dist/backend/v1/_cortex/shared/domain/profile.ts",
+        "size": 3259,
+        "mode": 420
+      },
+      {
+        "path": "dist/backend/v1/_cortex/shared/domain/recall.ts",
+        "size": 16398,
+        "mode": 420
+      },
+      {
+        "path": "dist/backend/v1/_cortex/shared/domain/sources.ts",
+        "size": 13568,
+        "mode": 420
+      },
+      {
+        "path": "dist/backend/v1/_cortex/shared/domain/transcript.ts",
+        "size": 6658,
+        "mode": 420
+      },
+      {
+        "path": "dist/backend/v1/_cortex/shared/sessions/types.ts",
+        "size": 4029,
+        "mode": 420
+      },
+      {
+        "path": "dist/backend/v1/_cortex/shared/types/index.ts",
+        "size": 118808,
+        "mode": 420
+      },
+      {
+        "path": "dist/backend/v1/_cortex/shared/types/streaming.ts",
+        "size": 14722,
+        "mode": 420
+      },
+      {
+        "path": "dist/backend/v1/a2a.ts",
+        "size": 26571,
+        "mode": 420
+      },
+      {
+        "path": "dist/backend/v1/admin.ts",
+        "size": 2259,
+        "mode": 420
+      },
+      {
+        "path": "dist/backend/v1/agentDefinitions.ts",
+        "size": 16335,
+        "mode": 420
+      },
+      {
+        "path": "dist/backend/v1/agents.ts",
+        "size": 9633,
+        "mode": 420
+      },
+      {
+        "path": "dist/backend/v1/artifacts.ts",
+        "size": 60622,
+        "mode": 420
+      },
+      {
+        "path": "dist/backend/v1/attachments.ts",
+        "size": 23062,
+        "mode": 420
+      },
+      {
+        "path": "dist/backend/v1/contexts.ts",
+        "size": 23623,
+        "mode": 420
+      },
+      {
+        "path": "dist/backend/v1/conversations.ts",
+        "size": 29280,
+        "mode": 420
+      },
+      {
+        "path": "dist/backend/v1/conversationShares.ts",
+        "size": 10473,
+        "mode": 420
+      },
+      {
+        "path": "dist/backend/v1/conversationSnapshots.ts",
+        "size": 9260,
+        "mode": 420
+      },
+      {
+        "path": "dist/backend/v1/factHistory.ts",
+        "size": 12510,
+        "mode": 420
+      },
+      {
+        "path": "dist/backend/v1/facts.ts",
+        "size": 57517,
+        "mode": 420
+      },
+      {
+        "path": "dist/backend/v1/governance.ts",
+        "size": 22331,
+        "mode": 420
+      },
+      {
+        "path": "dist/backend/v1/graphSync.ts",
+        "size": 9118,
+        "mode": 420
+      },
+      {
+        "path": "dist/backend/v1/immutable.ts",
+        "size": 9637,
+        "mode": 420
+      },
+      {
+        "path": "dist/backend/v1/manifest.json",
+        "size": 20723,
+        "mode": 420
+      },
+      {
+        "path": "dist/backend/v1/memories.ts",
+        "size": 33974,
+        "mode": 420
+      },
+      {
+        "path": "dist/backend/v1/memorySpaces.ts",
+        "size": 12862,
+        "mode": 420
+      },
+      {
+        "path": "dist/backend/v1/mutable.ts",
+        "size": 11904,
+        "mode": 420
+      },
+      {
+        "path": "dist/backend/v1/runs.ts",
+        "size": 27759,
+        "mode": 420
+      },
+      {
+        "path": "dist/backend/v1/runtimeAgent.ts",
+        "size": 67671,
+        "mode": 420
+      },
+      {
+        "path": "dist/backend/v1/runtimeAgentFence.ts",
+        "size": 4546,
+        "mode": 420
+      },
+      {
+        "path": "dist/backend/v1/runtimeAgentReferences.ts",
+        "size": 531,
+        "mode": 420
+      },
+      {
+        "path": "dist/backend/v1/runtimeAgentSchema.ts",
+        "size": 3289,
+        "mode": 420
+      },
+      {
+        "path": "dist/backend/v1/runtimeAgentTools.ts",
+        "size": 7329,
+        "mode": 420
+      },
+      {
+        "path": "dist/backend/v1/runtimeArtifactAuth.ts",
+        "size": 30381,
+        "mode": 420
+      },
+      {
+        "path": "dist/backend/v1/runtimeAssetUnavailableAuth.ts",
+        "size": 4669,
+        "mode": 420
+      },
+      {
+        "path": "dist/backend/v1/runtimeAuth.ts",
+        "size": 23256,
+        "mode": 420
+      },
+      {
+        "path": "dist/backend/v1/runtimeAuthSchema.ts",
+        "size": 3515,
+        "mode": 420
+      },
+      {
+        "path": "dist/backend/v1/runtimeDataAuth.ts",
+        "size": 62104,
+        "mode": 420
+      },
+      {
+        "path": "dist/backend/v1/runtimeGateway.ts",
+        "size": 71610,
+        "mode": 420
+      },
+      {
+        "path": "dist/backend/v1/runtimeGatewayBackend.ts",
+        "size": 4492,
+        "mode": 420
+      },
+      {
+        "path": "dist/backend/v1/runtimeGatewayQualifications.ts",
+        "size": 22153,
+        "mode": 420
+      },
+      {
+        "path": "dist/backend/v1/runtimeMemory.ts",
+        "size": 14124,
+        "mode": 420
+      },
+      {
+        "path": "dist/backend/v1/runtimeMemoryGateway.ts",
+        "size": 9094,
+        "mode": 420
+      },
+      {
+        "path": "dist/backend/v1/runtimeMemoryRepository.ts",
+        "size": 24508,
+        "mode": 420
+      },
+      {
+        "path": "dist/backend/v1/runtimeMemorySchema.ts",
+        "size": 4764,
+        "mode": 420
+      },
+      {
+        "path": "dist/backend/v1/runtimeMemoryServices.ts",
+        "size": 8449,
+        "mode": 420
+      },
+      {
+        "path": "dist/backend/v1/runtimeMetadataAuth.ts",
+        "size": 15074,
+        "mode": 420
+      },
+      {
+        "path": "dist/backend/v1/runtimeModelPolicy.ts",
+        "size": 95792,
+        "mode": 420
+      },
+      {
+        "path": "dist/backend/v1/runtimeModelPolicyBootstrap.ts",
+        "size": 3873,
+        "mode": 420
+      },
+      {
+        "path": "dist/backend/v1/runtimeOutputProjection.ts",
+        "size": 3990,
+        "mode": 420
+      },
+      {
+        "path": "dist/backend/v1/runtimePolicySchema.ts",
+        "size": 5323,
+        "mode": 420
+      },
+      {
+        "path": "dist/backend/v1/runtimeRegistryAuth.ts",
+        "size": 35039,
+        "mode": 420
+      },
+      {
+        "path": "dist/backend/v1/runtimeRegistryStats.ts",
+        "size": 767,
+        "mode": 420
+      },
+      {
+        "path": "dist/backend/v1/runtimeTranscript.ts",
+        "size": 49481,
+        "mode": 420
+      },
+      {
+        "path": "dist/backend/v1/runtimeTranscriptSchema.ts",
+        "size": 8406,
+        "mode": 420
+      },
+      {
+        "path": "dist/backend/v1/runtimeUnavailableAuth.ts",
+        "size": 5536,
+        "mode": 420
+      },
+      {
+        "path": "dist/backend/v1/runtimeWorkerAuth.ts",
+        "size": 13958,
+        "mode": 420
+      },
+      {
+        "path": "dist/backend/v1/sessions.ts",
+        "size": 9896,
+        "mode": 420
+      },
+      {
+        "path": "dist/backend/v1/users.ts",
+        "size": 3230,
+        "mode": 420
+      },
+      {
+        "path": "dist/chunk-3RG5ZIWI.js",
+        "size": 390,
+        "mode": 420
+      },
+      {
+        "path": "dist/chunk-24X3JR4G.js",
+        "size": 215,
+        "mode": 420
+      },
+      {
+        "path": "dist/chunk-EOYUOIQS.js",
+        "size": 5966,
+        "mode": 420
+      },
+      {
+        "path": "dist/chunk-VEHCF6HD.js",
+        "size": 6429,
+        "mode": 420
+      },
+      {
+        "path": "dist/ChunkingStrategies-GIZC5TDJ.js",
+        "size": 8224,
+        "mode": 420
+      },
+      {
+        "path": "dist/ErrorRecovery-XMWRFTO3.js",
+        "size": 7540,
+        "mode": 420
+      },
+      {
+        "path": "dist/FactExtractor-F42FAMZE.js",
+        "size": 8167,
+        "mode": 420
+      },
+      {
+        "path": "dist/index.cjs",
+        "size": 821368,
+        "mode": 420
+      },
+      {
+        "path": "dist/index.d.cts",
+        "size": 340801,
+        "mode": 420
+      },
+      {
+        "path": "dist/index.d.ts",
+        "size": 340801,
+        "mode": 420
+      },
+      {
+        "path": "dist/index.js",
+        "size": 747452,
+        "mode": 420
+      },
+      {
+        "path": "dist/ProgressiveGraphSync-RKOWEMT5.js",
+        "size": 4451,
+        "mode": 420
+      },
+      {
+        "path": "dist/ProgressiveStorageHandler-KJ4VPM3O.js",
+        "size": 5349,
+        "mode": 420
+      },
+      {
+        "path": "dist/StreamMetrics-YNNJGIZN.js",
+        "size": 119,
+        "mode": 420
+      },
+      {
+        "path": "dist/StreamProcessor-NL3NUOFP.js",
+        "size": 5894,
+        "mode": 420
+      },
+      {
+        "path": "package.json",
+        "size": 4708,
+        "mode": 420
+      }
+    ],
+    "entryCount": 149,
+    "bundled": []
+  }
+}

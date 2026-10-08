@@ -19,9 +19,13 @@ import { isTrustedDeploymentManifest, lookupDeploymentManifest, qualifiedTermina
 import type { DeploymentPolicyManifest, QualifiedDispatchEvidence } from "./runtimeModelPolicyBootstrap";
 import { modelOperationKey, modelSource, visibilityFields } from "./runtimePolicySchema";
 import { readCurrentExecutableDefinition } from "./agentDefinitions";
+import { AGENT_NATIVE_TOOLS, AGENT_TOOL_REGISTRY_VERSION, agentToolsInputBound } from "../src/domain/agent-tools";
+import { parseAgentLanguageResult } from "../src/domain/agent-language";
+import { guardAgentRunBudget } from "./runtimeAgentFence";
+import { currentControlRun } from "./runs";
 
-type ReadCtx = Pick<QueryCtx, "db">;
-type WriteCtx = Pick<MutationCtx, "db">;
+type ReadCtx = Pick<QueryCtx, "db" | "runQuery">;
+type WriteCtx = Pick<MutationCtx, "db" | "runQuery">;
 type Account = Doc<"runtimeBudgetAccounts">;
 type Operation = Doc<"runtimeModelOperations">;
 type Attempt = Doc<"runtimeModelAttempts">;
@@ -134,6 +138,12 @@ function validManifest(manifest: DeploymentPolicyManifest | undefined): asserts 
     integer(proof.resultBound.maximumPrivateResultBytes, 1); integer(proof.resultBound.maximumOutputTokens);
     integer(proof.inputBound.revision, 1); integer(proof.checkedAt); integer(proof.expiresAt, 1);
     if (proof.checkedAt >= proof.expiresAt) fail("CAPABILITY_UNAVAILABLE");
+    if (proof.inputBound.featureEnvelope === "agent-tools-chat-v1") {
+      if (proof.nativeInterface !== "chat" || proof.inputBound.ruleId !== "agent-tools-chat-utf8-v1" || !qualification.capabilities.includes("tools")
+        || proof.toolContract?.registryVersion !== AGENT_TOOL_REGISTRY_VERSION || proof.toolContract.toolsCanonical !== canonical(AGENT_NATIVE_TOOLS)
+        || proof.toolContract.maximumToolCalls < 1 || proof.toolContract.maximumToolCalls > 4) fail("CAPABILITY_UNAVAILABLE");
+      integer(proof.toolContract.maximumToolCalls, 1);
+    } else if (proof.toolContract || qualification.capabilities.includes("tools")) fail("CAPABILITY_UNAVAILABLE");
   }
 }
 async function provenance(manifest: DeploymentPolicyManifest): Promise<Root> {
@@ -244,6 +254,7 @@ async function currentOperation(ctx: ReadCtx, reference: RuntimeAuthorityReferen
   if (operation.cancelled && !permitCancelled) fail("RUN_CANCELLED");
   const run = await ctx.db.get("runtimeBudgetAccounts", operation.runAccountId);
   if (!run || !run.reference || !sameAuthority(run.reference, reference) || run.tenantId !== reference.tenantId || (run.cancelled && !permitCancelled)) fail("FORBIDDEN");
+  if (!permitCancelled) await guardAgentRunBudget(ctx, reference, run._id);
   let parentId = operation.parentOperationId;
   const visited = new Set<string>([operation._id]);
   while (parentId) {
@@ -428,6 +439,7 @@ async function runAccount(ctx: ReadCtx, reference: RuntimeAuthorityReference, ru
 const resolveArgs = { reference: runtimeAuthorityReference, operationKey: modelOperationKey, runBudgetId: v.string(), source: v.optional(modelSource), parentOperationId: v.optional(v.id("runtimeModelOperations")) };
 export const resolve = internalQuery({ args: resolveArgs, handler: async (ctx, args) => {
   await currentAuthority(ctx, args.reference, args.operationKey); const run = await runAccount(ctx, args.reference, args.runBudgetId);
+  await guardAgentRunBudget(ctx, args.reference, run._id);
   await checkSource(ctx, args.reference, args.operationKey, args.source);
   if (args.parentOperationId) {
     const parent = await ctx.db.get("runtimeModelOperations", args.parentOperationId);
@@ -449,6 +461,16 @@ export function deriveQualifiedInputBound(proof: QualifiedDispatchEvidence, requ
     const counts = request.texts.map(bytes);
     if (counts.some((n) => n > 8192) || add(...counts) > 300_000) fail("POLICY_DENIED");
     return add(...counts);
+  }
+  if (proof.inputBound.ruleId === "agent-tools-chat-utf8-v1" && proof.inputBound.featureEnvelope === "agent-tools-chat-v1" && proof.nativeInterface === "chat") {
+    if (!request.messages || request.outputSchema || request.options.providerOptions || request.toolRegistryVersion !== AGENT_TOOL_REGISTRY_VERSION
+      || proof.toolContract?.registryVersion !== AGENT_TOOL_REGISTRY_VERSION || proof.toolContract.toolsCanonical !== canonical(AGENT_NATIVE_TOOLS)
+      || request.toolSteps > proof.toolContract.maximumToolCalls) fail("CAPABILITY_UNAVAILABLE");
+    for (const tool of request.tools) {
+      const expected = AGENT_NATIVE_TOOLS.find(entry => entry.name === tool.name);
+      if (!expected || canonical(tool.definition) !== canonical({ description: expected.description, inputSchema: expected.inputSchema })) fail("POLICY_DENIED");
+    }
+    return agentToolsInputBound(canonical({ messages: request.messages, tools: request.tools, ...request.toolChoice ? { toolChoice: request.toolChoice } : {} }), request.messages.length, request.tools.length);
   }
   if (proof.inputBound.ruleId !== "plain-chat-cookbook-utf8-v1" || proof.inputBound.featureEnvelope !== "plain-chat-v1" || proof.nativeInterface !== "chat"
     || !request.messages || request.tools.length || request.options.providerOptions) fail("CAPABILITY_UNAVAILABLE");
@@ -475,6 +497,7 @@ export const admit = internalMutation({ args: admitArgs, handler: async (ctx, ar
   await currentAuthority(ctx, args.reference, args.operationKey); integer(args.ordinal); text(args.semanticId);
   await checkSource(ctx, args.reference, args.operationKey, args.source);
   const run = await runAccount(ctx, args.reference, args.runBudgetId);
+  await guardAgentRunBudget(ctx, args.reference, run._id);
   if (args.parentOperationId) {
     const parent = await ctx.db.get("runtimeModelOperations", args.parentOperationId);
     if (!parent || parent.runAccountId !== run._id) fail("FORBIDDEN");
@@ -673,7 +696,16 @@ function validatedPrivateResult(snapshot: ModelPolicySnapshotV1, attempt: Attemp
   try {
     const result = decode(encoded);
     if (snapshot.nativeInterface === "chat" && !snapshot.semanticProfile) {
-      if (!z.object({ text: z.string().min(1) }).strict().safeParse(result).success) return undefined;
+      if (snapshot.capabilities.includes("tools")) {
+        const original = decode(attempt.canonical);
+        if (!original || typeof original !== "object" || Array.isArray(original)) return undefined;
+        const request = validateModelRequest(snapshot, (original as Record<string, unknown>).request).request;
+        const allowed = request.toolChoice?.type === "none" ? [] : request.tools.map(tool => tool.name);
+        const parsed = parseAgentLanguageResult(result, allowed, request.toolSteps);
+        const choice = request.toolChoice;
+        if (!parsed || canonical(parsed) !== encoded || ((request.toolChoice?.type === "required" || request.toolChoice?.type === "tool") && parsed.finishReason !== "tool-calls")
+          || (choice?.type === "tool" && parsed.content.some(part => part.type === "tool-call" && part.toolName !== choice.toolName))) return undefined;
+      } else if (!z.object({ text: z.string().min(1) }).strict().safeParse(result).success) return undefined;
     } else if (snapshot.nativeInterface === "embedding" && snapshot.semanticProfile) {
       const parsed = z.object({ profile: z.object({ profileId: z.string(), modelId: z.string(), dimensions: count, normalization: z.string(), chunking: z.string(), indexName: z.string() }).strict(),
         vectors: z.array(z.array(z.number().finite())) }).strict().safeParse(result);
@@ -841,7 +873,8 @@ function attachmentDenied(error: unknown): boolean {
       || (ownValue("outcome") !== "not_dispatched" && ownValue("outcome") !== "uncertain")) return false;
     const code = ownValue("code");
     return typeof code === "string" && ["FORBIDDEN", "UNAUTHENTICATED", "AUTHORITY_LOOKUP_AMBIGUOUS", "RUN_CANCELLED",
-      "INVALID_INPUT", "POLICY_DENIED", "CAPABILITY_UNAVAILABLE", "CAPABILITY_UNSUPPORTED", "PROFILE_NOT_READY", "IDEMPOTENCY_CONFLICT"].includes(code);
+      "INVALID_INPUT", "POLICY_DENIED", "CAPABILITY_UNAVAILABLE", "CAPABILITY_UNSUPPORTED", "PROFILE_NOT_READY", "IDEMPOTENCY_CONFLICT", "INVALID_STATE", "STALE_CONTEXT", "TOOL_STEP_LIMIT", "TOOL_DENIED",
+      "APPROVAL_REQUIRED", "STALE_TRANSCRIPT", "TRANSCRIPT_CONFLICT", "LEASE_EXPIRED"].includes(code);
   } catch { return false; }
 }
 async function permittedAttachment(ctx: ReadCtx, reference: RuntimeAuthorityReference, state: AttemptContext): Promise<boolean> {
@@ -979,6 +1012,15 @@ export const cancelBudget = internalMutation({ args: { reference: runtimeAuthori
   const run = await runAccount(ctx, args.reference, args.runBudgetId);
   await recheckAuthority(ctx, args.reference, { capability: "run", tenantId: run.tenantId, memorySpaceId: args.reference.memorySpaceId });
   await ctx.db.patch("runtimeBudgetAccounts", run._id, { cancelled: true, version: add(run.version, 1) });
+  return { cancelled: true };
+} });
+/** Current resource authority may retire an Agent budget after its execution grant
+ * changes. This grants no execution, settlement, refund or replacement budget. */
+export const cancelAgentBudget = internalMutation({ args: { reference: runtimeAuthorityReference, runId: v.string() }, handler: async (ctx, args) => {
+  const { row } = await currentControlRun(ctx, args.reference, args.runId, "write");
+  const account = await runAccount(ctx, row.authorityReference, row.runBudgetId);
+  if (account._id !== row.runAccountId) fail("FORBIDDEN");
+  if (!account.cancelled) await ctx.db.patch("runtimeBudgetAccounts", account._id, { cancelled: true, version: add(account.version, 1) });
   return { cancelled: true };
 } });
 function fallbackAllowed(attempt: Attempt, operation: Operation, snapshot: ModelPolicySnapshotV1, candidateModelId: string): boolean {

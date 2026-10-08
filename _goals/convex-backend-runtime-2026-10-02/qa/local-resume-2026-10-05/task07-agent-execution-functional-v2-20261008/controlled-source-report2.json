@@ -1,0 +1,152 @@
+{
+  "scope": "Task07 current Date-RPC repair and controlled verification; native acceptance in progress",
+  "capturedAt": "2026-10-08T13:47:00.633773+00:00",
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "node": "v24.15.0",
+  "npm": "12.2.0",
+  "problem": "Real SDK finish-step.response.timestamp Date was serialized into a Convex mutation before public projection, leaving a terminal-confirmed paid operation unknown after native final save.",
+  "change": "Action projects raw SDK chunks before RPC into allowlisted primitives. Normalized text/error are preserved through the existing mutation projection; safe model tool phases are re-encoded with only IDs/names so mutation retains current authority and server-approved phase checks.",
+  "controlled": {
+    "passed": 91,
+    "failed": 0,
+    "skipped": 0,
+    "suites": 5,
+    "raw": "units13.json",
+    "log": "units13.log",
+    "command": "node --experimental-vm-modules node_modules/jest/bin/jest.js --config /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-agent-execution-functional-v2-20261008/jest.offline.config2.mjs --runInBand --runTestsByPath tests/unit/runtimeAgent/execution.test.ts tests/unit/runtimeAgent/model-owner.test.ts tests/unit/runtimeAgent/tool-context.test.ts tests/unit/runtimeTranscript/managed.test.ts tests/unit/runtimeRuns/admission.test.ts --json --outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-agent-execution-functional-v2-20261008/units13.json"
+  },
+  "checks": [
+    {
+      "command": "node node_modules/typescript/bin/tsc -p convex-dev/tsconfig.json --noEmit",
+      "exit": 0,
+      "log": "types11.log"
+    },
+    {
+      "command": "node node_modules/typescript/bin/tsc -p tsconfig.json --noEmit",
+      "exit": 0,
+      "log": "alltypes6.log"
+    },
+    {
+      "command": "node node_modules/eslint/bin/eslint.js convex-dev/runtimeAgent.ts tests/unit/runtimeAgent/model-owner.test.ts",
+      "exit": 0,
+      "log": "lint4.log"
+    }
+  ],
+  "newRegression": "projects real SDK Date-containing finish-step parts before native RPC serialization, retaining safe text and tool phases",
+  "regressionBoundary": "Actual registered exportArgs schemas and convexToJson are applied to outgoing RPC arguments; Date-bearing finish-step and unknown/provider/reasoning sentinel chunks are removed, text/tool requested survives, lifecycle completes once and operation completes.",
+  "source": [
+    {
+      "path": "src/domain/transcript.ts",
+      "bytes": 6667,
+      "sha256": "1e6c30da65461b0c85e8a1ab073e8b912f38fce5a9d12078f1e57194e09c23a0",
+      "unchangedSinceReport1": true
+    },
+    {
+      "path": "convex-dev/runtimeTranscript.ts",
+      "bytes": 49431,
+      "sha256": "7b8c2e31fe2fbcf9d85e981a88722cdfbb83ae9c49b39c2f74955f075e607c92",
+      "unchangedSinceReport1": true
+    },
+    {
+      "path": "convex-dev/runtimeTranscriptSchema.ts",
+      "bytes": 8406,
+      "sha256": "f942c592cb57ebf3d76f8d5d68a1efc07cbf97c5679926b90cf80e738aca9e82",
+      "unchangedSinceReport1": true
+    },
+    {
+      "path": "convex-dev/runs.ts",
+      "bytes": 25601,
+      "sha256": "eef76c27717750d818f6ad563db7b7a5d8379af6ae5b1973e114d3415533fb78",
+      "unchangedSinceReport1": true
+    },
+    {
+      "path": "convex-dev/agentDefinitions.ts",
+      "bytes": 16275,
+      "sha256": "c7853ed40f6f4c12c61a369570c13111dab31cf9597917bc6cad41a5294e54b0",
+      "unchangedSinceReport1": true
+    },
+    {
+      "path": "convex-dev/convex.config.ts",
+      "bytes": 277,
+      "sha256": "b5634a88e2e31dc7fad0170151ae28c1cc0114fb5611f9cd9aad554fa2c74602",
+      "unchangedSinceReport1": true
+    },
+    {
+      "path": "convex-dev/schema.ts",
+      "bytes": 54764,
+      "sha256": "78817f4e6a8afdba8ca95edb6fc50c3342df72e2e4a0ca6af3b754239c6d2514",
+      "unchangedSinceReport1": true
+    },
+    {
+      "path": "convex-dev/runtimeAgent.ts",
+      "bytes": 63038,
+      "sha256": "0b2d81574121b8925847afd987c67cdecfd60b140604b91cb82ae47868b72108",
+      "unchangedSinceReport1": false
+    },
+    {
+      "path": "convex-dev/runtimeAgentFence.ts",
+      "bytes": 4506,
+      "sha256": "c0a52cdd373025ae98763e3034330a48463100e88192097fb744f928892fbe78",
+      "unchangedSinceReport1": true
+    },
+    {
+      "path": "convex-dev/runtimeAgentSchema.ts",
+      "bytes": 3289,
+      "sha256": "a0224393fa7e60be91f3de6bd1257bc275c566c96a101ce84bcb847c70f77be0",
+      "unchangedSinceReport1": true
+    },
+    {
+      "path": "convex-dev/runtimeAgentReferences.ts",
+      "bytes": 531,
+      "sha256": "47e0746cbe2e28b2e190285b840bd2637afc24f1b0decb8a4ced8e75950260a0",
+      "unchangedSinceReport1": true
+    },
+    {
+      "path": "convex-dev/runtimeAgentTools.ts",
+      "bytes": 7269,
+      "sha256": "f9b57f5c2d2e0c85e2b5370cc45b6a05c98696ab95db772af887f5c2689aad36",
+      "unchangedSinceReport1": true
+    },
+    {
+      "path": "tests/unit/runtimeAgent/execution.test.ts",
+      "bytes": 37827,
+      "sha256": "c619714a8ad3037a8fda554f5596fdd7b2e6a843998f25363b529241ccdac139",
+      "unchangedSinceReport1": true
+    },
+    {
+      "path": "tests/unit/runtimeAgent/tool-context.test.ts",
+      "bytes": 5509,
+      "sha256": "9e732be40f3463fe23546075aca0324a0e8476ff10a4eb36e1a282358eca95e5",
+      "unchangedSinceReport1": true
+    },
+    {
+      "path": "tests/unit/runtimeAgent/model-owner.test.ts",
+      "bytes": 10931,
+      "sha256": "37ce0925f69ae2bda93e90ae107ca4140d73ab35f97d174553cbbf3d6ae03292",
+      "unchangedSinceReport1": false
+    },
+    {
+      "path": "tests/unit/runtimeAgent/native-arguments.ts",
+      "bytes": 2217,
+      "sha256": "ae15c27f13d4075661e16b15a182f1c999fc7980dd60d1aa21c638e36d0a641e",
+      "unchangedSinceReport1": true
+    },
+    {
+      "path": "tests/unit/runtimeTranscript/fixture.ts",
+      "bytes": 16796,
+      "sha256": "949e517cfd2aaeb8e01c4c2039ea556a0132daaf198f980bbab18af055dd7904",
+      "unchangedSinceReport1": true
+    }
+  ],
+  "previousReport": "controlled-source-report1.json",
+  "preservedActualRed": [
+    "native-actual/live-native-failure-logs1.json",
+    "native-actual/live-red-state1.json"
+  ],
+  "actualRecoveryReportedByExecutor": [
+    "native-actual/live-gap-recovery1.json: repeated public reconcile yields one transcript/ingestion with unchanged paid attempts",
+    "native-actual/history-currentness-outcome.json: tombstoned completed-tool source denies later hydration before new paid work"
+  ],
+  "nativeRemaining": "Current repaired installed copy and remaining real Workflow/Agent/observer/approval/cancellation outcomes plus coherent non-author review are still in progress. Executor-owned receipts will establish exact source scope.",
+  "functionalAcceptanceClaim": false
+}

@@ -1,0 +1,54 @@
+{
+  "target": 3172114,
+  "oldHelper": {
+    "path": "_cortex/components.ts",
+    "sha256": "3ba091289f4c710d902538db88eb1ba01eec3872c7f1a05ab88e415909ccc808",
+    "sourcePath": "convex-dev/convex.config.ts",
+    "sourceSha256": "b5634a88e2e31dc7fad0170151ae28c1cc0114fb5611f9cd9aad554fa2c74602"
+  },
+  "newHelper": {
+    "path": "_cortex/components.config.ts",
+    "sha256": "3ba091289f4c710d902538db88eb1ba01eec3872c7f1a05ab88e415909ccc808",
+    "sourcePath": "convex-dev/convex.config.ts",
+    "sourceSha256": "b5634a88e2e31dc7fad0170151ae28c1cc0114fb5611f9cd9aad554fa2c74602"
+  },
+  "oldBytes": "import type { AppDefinition } from \"convex/server\";\nimport agent from \"@convex-dev/agent/convex.config\";\nimport workflow from \"@convex-dev/workflow/convex.config\";\nexport function registerCortexComponentsV1(app: AppDefinition): void {\napp.use(agent, { name: \"agent\" });\napp.use(workflow, { name: \"workflow\" });\n}\n",
+  "configSha256": "18053980c9684aa6598fa316271975b251cc0b4545f14d0a7bcebb72663d0c12",
+  "protectedFiles": [
+    {
+      "path": "convex.json",
+      "bytes": 81,
+      "sha256": "18eb075466081eb8e53c6159399069248417c45709d37775cfda3f6d4d3f31f4"
+    },
+    {
+      "path": "custom/backend/host.ts",
+      "bytes": 1168,
+      "sha256": "206c2c214bdb7d77b90d4256ae5fbddcb1abda51fa895314a8c7efa8f7a68f3e"
+    },
+    {
+      "path": "custom/backend/hostNode.ts",
+      "bytes": 405,
+      "sha256": "afef0949ad405817d966c3fbd745db065fdfe28afb3c073bd3872bda1866405c"
+    },
+    {
+      "path": "custom/backend/http.ts",
+      "bytes": 263,
+      "sha256": "d8e3aa1447c2c858291a9ee6c0565f0f149c736dcb19c2c859ed2b5b90694849"
+    },
+    {
+      "path": "custom/backend/auth.config.ts",
+      "bytes": 1586,
+      "sha256": "f0923ad25dad57779492aead1497ffde88a203d868cc810222820dd926e96b6b"
+    },
+    {
+      "path": "custom/backend/schema.ts",
+      "bytes": 303,
+      "sha256": "2fed716a8d7f9b22685b0196b4ecae0a57ac0cee02de0b35fe657b448ad98fd0"
+    }
+  ],
+  "all69OwnedHashesMatched": true,
+  "changedProductPaths": [
+    "_cortex/components.ts",
+    "_cortex/components.config.ts"
+  ]
+}

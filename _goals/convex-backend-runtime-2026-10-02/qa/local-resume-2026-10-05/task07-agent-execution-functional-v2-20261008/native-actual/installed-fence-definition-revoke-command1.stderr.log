@@ -1,0 +1,15 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: {"data":{"code":"POLICY_DENIED","message":"Agent definition control failed.","outcome":"not_dispatched","retryable":false,"version":1},"message":"Uncaught ConvexError: {\"version\":1,\"code\":\"POLICY_DENIED\",\"message\":\"Agent definition control failed.\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at denied (../../custom/backend/agentDefinitions.ts:22:0)\n    at checkRow (../../custom/backend/agentDefinitions.ts:99:81)\n    at readCurrentExecutableDefinition (../../custom/backend/agentDefinitions.ts:121:23)\n    at async currentRun (../../custom/backend/runs.ts:45:59)\n    at async activeAttempt (../../custom/backend/runs.ts:243:10)\n    at async executionContext (../../custom/backend/runtimeAgent.ts:99:54)\n    at async handler (../../custom/backend/runtimeAgent.ts:130:56)\n","name":"ConvexError"}
+    at file:///Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-agent-execution-functional-v2-20261008/native-actual/exercise-installed-fences2.mjs:58:41 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Node.js v24.15.0

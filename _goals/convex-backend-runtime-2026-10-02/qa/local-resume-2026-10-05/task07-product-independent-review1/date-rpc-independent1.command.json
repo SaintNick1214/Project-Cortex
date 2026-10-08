@@ -1,0 +1,54 @@
+{
+  "argv": [
+    "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+    "--experimental-vm-modules",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/jest/bin/jest.js",
+    "--config",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-product-independent-review1/independent-bridge-handler-jest1.config.mjs",
+    "--runInBand",
+    "--no-cache",
+    "--runTestsByPath",
+    "tests/unit/runtimeAgent/model-owner.test.ts",
+    "--testNamePattern",
+    "Date-containing|whole model path",
+    "--json",
+    "--outputFile",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task07-product-independent-review1/date-rpc-independent1.results.json"
+  ],
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "pid": 47121,
+  "reaped": true,
+  "exitCode": 0,
+  "elapsedSeconds": 5.179870791995199,
+  "deadlineSeconds": 55,
+  "timedOut": false,
+  "sourceBefore": {
+    "convex-dev/runtimeAgent.ts": {
+      "bytes": 63038,
+      "sha256": "0b2d81574121b8925847afd987c67cdecfd60b140604b91cb82ae47868b72108"
+    },
+    "convex-dev/runtimeOutputProjection.ts": {
+      "bytes": 3990,
+      "sha256": "8ab2817a40a1a6ca4be1741386762546fd927a414935c99fe805c4ea1fee7331"
+    },
+    "tests/unit/runtimeAgent/model-owner.test.ts": {
+      "bytes": 10931,
+      "sha256": "37ce0925f69ae2bda93e90ae107ca4140d73ab35f97d174553cbbf3d6ae03292"
+    }
+  },
+  "sourceAfter": {
+    "convex-dev/runtimeAgent.ts": {
+      "bytes": 63038,
+      "sha256": "0b2d81574121b8925847afd987c67cdecfd60b140604b91cb82ae47868b72108"
+    },
+    "convex-dev/runtimeOutputProjection.ts": {
+      "bytes": 3990,
+      "sha256": "8ab2817a40a1a6ca4be1741386762546fd927a414935c99fe805c4ea1fee7331"
+    },
+    "tests/unit/runtimeAgent/model-owner.test.ts": {
+      "bytes": 10931,
+      "sha256": "37ce0925f69ae2bda93e90ae107ca4140d73ab35f97d174553cbbf3d6ae03292"
+    }
+  },
+  "scope": "Independently executed affected author model-handler/RPC serialization tests; controlled model/native-peer ports; no provider/service effects; only two selected cases."
+}
