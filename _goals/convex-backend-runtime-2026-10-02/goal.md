@@ -1,7 +1,7 @@
 # Goal: Cortex-owned agent runs on Convex
 
 **Created:** 2026-10-02 (America/Los_Angeles)
-**Status:** Execution resumed — fresh independent resume goal review PASS4.6; authorization foundation repairs and actual41 auth QA correction active. User explicitly superseded numerical review-cycle limits; all independent acceptance gates and approved scope remain. [Current receipts](qa/execution-progress.md).
+**Status:** Execution authorized under [acceptance policy v2](acceptance-policy.md): functional product gates, proportionate independent reviews and no unresolved breaking findings. Recursive QA custody/controller gates are retired; all17 original product tasks remain. [Current receipts](qa/execution-progress.md).
 **Authorization:** The user sent the implementation prompt, authorizing implementation, incremental commits/pushes and a draft PR against dev. The user subsequently authorized a fresh disposable instance and inference without a spend cap. Historical planning-only statements record the artifacts' creation phase.
 **Cloud handoff:** [Copy-paste implementation prompt](implementation-prompt.md).
 **Research:** [Architecture and evidence](../../_research/convex-ai-gateway-2026-10-02/architecture.md)
@@ -111,7 +111,7 @@ The original task artifacts were written during planning and are flat under `tas
 
 Tasks 01–09 form the first complete vertical slice, independent of media/storage/graph service access. It proves an authenticated text turn, scoped recall, one backend tool, reconnect, immediate next-turn continuity and durable ingestion. Full media/vector/graph scope follows the same foundation. TypeScript/UI substeps may parallelize once the shared contract is stable; serialize overlapping provider/demo/CLI/mirror work and preserve unrelated local work. The handoff branch excludes the dirty local source work from other sessions.
 
-03 dependency edges in this table denote **03-foundation**, independently reviewed after exhaustive currentguard live qualification. Full03-final remains required for17 and is aggregated with16 outcomes. The row-level functional restoration map and exact prerequisites are in [authorization sequencing](qa/resume-dependency-refinement-c2/plan.md). No original acceptance criterion is removed; typed unavailability certifies safety only.
+03 dependency edges in this table denote **03-foundation**, independently reviewed with complete endpoint inventory and meaningful live product authorization outcomes under [acceptance policy v2](acceptance-policy.md). Full03-final remains required for17 and is aggregated with16 outcomes. The row-level functional restoration map and exact prerequisites are in [authorization sequencing](qa/resume-dependency-refinement-c2/plan.md). No original acceptance criterion is removed; typed unavailability certifies safety only.
 
 ## Open Gates and Definition of Done
 

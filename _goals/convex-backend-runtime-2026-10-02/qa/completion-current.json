@@ -1,7 +1,7 @@
 {
   "schema": "cortex.completion-current.v1",
-  "timestamp_utc": "2026-10-08T06:42:29.373405+00:00",
-  "assessment_basis": "Original criteria plus applicable independent acceptance, never source/mock/control pass rate",
+  "timestamp_utc": "2026-10-08T07:15:55.716079+00:00",
+  "assessment_basis": "Original product criteria plus functional non-author acceptance under user-approved policyv2; no Source/controller subgate or source/mock rate acceptance",
   "goal_tasks_complete": 1,
   "goal_tasks_total": 17,
   "goal_task_percent_complete": 5.9,
@@ -42,7 +42,7 @@
       "accepted_scope": null,
       "independent_acceptance_evidence": [],
       "original_task_file": "tasks/03-authorization.md",
-      "task_file_sha256": "3b6df253e472d466a656d46e366fd754038615081a73ee8d64508d842e231d58"
+      "task_file_sha256": "6799275e902a56c2b77a5217a78cff641911ad0a820a332697611b60719cb394"
     },
     {
       "task_id": "04",
@@ -186,5 +186,8 @@
     }
   ],
   "milestone_history": "qa/completion-milestones.jsonl",
-  "latest_milestone_id": "task03_g3_root_complete102_all_current_references_consumed"
+  "latest_milestone_id": "current_product_offline814_tests_pass",
+  "acceptance_policy_version": 2,
+  "acceptance_policy": "acceptance-policy.md",
+  "assessment_basis_changed_without_denominator_change": true
 }

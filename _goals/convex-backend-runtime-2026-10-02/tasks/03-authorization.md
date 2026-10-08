@@ -36,7 +36,7 @@ No implementation, installation, paid inference, deployment or application testi
 
 ## Authorization execution gates
 
-03-foundation closes every current registered bypass with verified guards, safe internalization or typed authorized unavailability before private hydration/effects, with exhaustive native/live currentguard negatives and fresh aggregate independent PASS before04. It does not complete this task.
+03-foundation closes every current registered bypass with verified guards, safe internalization or typed authorized unavailability before private hydration/effects, with complete current endpoint guard inventory, meaningful live positive/negative outcomes for distinct authorization/effect classes and one non-author product review before04, under [acceptance policy v2](../acceptance-policy.md). It does not complete this task.
 
 03-transcript completes05 single-Agent direct access, shares/redaction and tracked lock/unlock/revision;03-text-execution covers07/08/09 live tool/subscription/background/current source/derived repair;03-assets covers12/13/14 private bytes, storage ownership, media callbacks and client delivery.11 supplies actual graph late-write/deletion receipts. Each carries its original task criteria and fresh review.
 
