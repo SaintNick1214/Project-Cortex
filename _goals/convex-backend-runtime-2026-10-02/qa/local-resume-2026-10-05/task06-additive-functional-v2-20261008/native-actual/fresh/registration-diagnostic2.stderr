@@ -1,0 +1,862 @@
+▌ Developing against deployment:
+▌ [Development] nicholasgeil:cortex-task06-fresh-v2-1c9a5648e4a1:dev/nicholasgeil (dev) (dashboard: https://dashboard.convex.dev/t/nicholasgeil/cortex-task06-fresh-v2-1c9a5648e4a1/colorless-sturgeon-703)
+▌ └─ https://colorless-sturgeon-703.convex.cloud
+- Preparing Convex functions...
+
+esbuild resolving import: {
+  path: './convex/convex.config.ts',
+  importer: '',
+  namespace: 'file',
+  resolveDir: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project',
+  kind: 'entry-point',
+  pluginData: undefined,
+  with: {}
+}
+  -> Top-level entry-point.
+esbuild resolving import: {
+  path: '@convex-dev/agent/convex.config',
+  importer: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/convex/_cortex/components.ts',
+  namespace: 'file',
+  resolveDir: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/convex/_cortex',
+  kind: 'import-statement',
+  pluginData: undefined,
+  with: {}
+}
+esbuild resolving import: {
+  path: '@convex-dev/agent/convex.config',
+  importer: '',
+  namespace: '',
+  resolveDir: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/convex/_cortex',
+  kind: 'import-statement',
+  pluginData: undefined,
+  with: {}
+}
+  Not a file or virtual config.
+  -> Component import! Recording it. @convex-dev/agent/convex.config /Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/node_modules/@convex-dev/agent/dist/component/convex.config.js
+skipping initial codegen for installed package /Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/node_modules/@convex-dev/agent/dist/component
+esbuild resolving import: {
+  path: './convex/convex.config.ts',
+  importer: '',
+  namespace: 'file',
+  resolveDir: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project',
+  kind: 'entry-point',
+  pluginData: undefined,
+  with: {}
+}
+  -> Top-level entry-point.
+esbuild resolving import: {
+  path: './node_modules/@convex-dev/agent/dist/component/convex.config.js',
+  importer: '',
+  namespace: 'file',
+  resolveDir: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project',
+  kind: 'entry-point',
+  pluginData: undefined,
+  with: {}
+}
+  -> Top-level entry-point.
+esbuild resolving import: {
+  path: '@convex-dev/agent/convex.config',
+  importer: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/convex/_cortex/components.ts',
+  namespace: 'file',
+  resolveDir: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/convex/_cortex',
+  kind: 'import-statement',
+  pluginData: undefined,
+  with: {}
+}
+esbuild resolving import: {
+  path: '@convex-dev/agent/convex.config',
+  importer: '',
+  namespace: '',
+  resolveDir: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/convex/_cortex',
+  kind: 'import-statement',
+  pluginData: undefined,
+  with: {}
+}
+  Not a file or virtual config.
+  -> Component import! Recording it. @convex-dev/agent/convex.config /Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/node_modules/@convex-dev/agent/dist/component/convex.config.js
+Convex AI files are not installed. Run npx convex ai-files install to get started or npx convex ai-files disable to hide this message.
+- Bundling modules for Node.js runtime...
+
+✖ Error: Unable to start push to https://colorless-sturgeon-703.convex.cloud
+✖ Error fetching POST  https://colorless-sturgeon-703.convex.cloud/api/deploy2/start_push 500 Internal Server Error: InternalServerError: Your request couldn't be completed. Try again later.
+Failed due to network error, retrying in 735.37ms...
+- Preparing Convex functions...
+
+esbuild resolving import: {
+  path: './convex/convex.config.ts',
+  importer: '',
+  namespace: 'file',
+  resolveDir: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project',
+  kind: 'entry-point',
+  pluginData: undefined,
+  with: {}
+}
+  -> Top-level entry-point.
+esbuild resolving import: {
+  path: '@convex-dev/agent/convex.config',
+  importer: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/convex/_cortex/components.ts',
+  namespace: 'file',
+  resolveDir: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/convex/_cortex',
+  kind: 'import-statement',
+  pluginData: undefined,
+  with: {}
+}
+esbuild resolving import: {
+  path: '@convex-dev/agent/convex.config',
+  importer: '',
+  namespace: '',
+  resolveDir: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/convex/_cortex',
+  kind: 'import-statement',
+  pluginData: undefined,
+  with: {}
+}
+  Not a file or virtual config.
+  -> Component import! Recording it. @convex-dev/agent/convex.config /Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/node_modules/@convex-dev/agent/dist/component/convex.config.js
+skipping initial codegen for installed package /Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/node_modules/@convex-dev/agent/dist/component
+esbuild resolving import: {
+  path: './convex/convex.config.ts',
+  importer: '',
+  namespace: 'file',
+  resolveDir: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project',
+  kind: 'entry-point',
+  pluginData: undefined,
+  with: {}
+}
+  -> Top-level entry-point.
+esbuild resolving import: {
+  path: './node_modules/@convex-dev/agent/dist/component/convex.config.js',
+  importer: '',
+  namespace: 'file',
+  resolveDir: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project',
+  kind: 'entry-point',
+  pluginData: undefined,
+  with: {}
+}
+  -> Top-level entry-point.
+esbuild resolving import: {
+  path: '@convex-dev/agent/convex.config',
+  importer: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/convex/_cortex/components.ts',
+  namespace: 'file',
+  resolveDir: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/convex/_cortex',
+  kind: 'import-statement',
+  pluginData: undefined,
+  with: {}
+}
+esbuild resolving import: {
+  path: '@convex-dev/agent/convex.config',
+  importer: '',
+  namespace: '',
+  resolveDir: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/convex/_cortex',
+  kind: 'import-statement',
+  pluginData: undefined,
+  with: {}
+}
+  Not a file or virtual config.
+  -> Component import! Recording it. @convex-dev/agent/convex.config /Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/node_modules/@convex-dev/agent/dist/component/convex.config.js
+- Bundling modules for Node.js runtime...
+
+✖ Error: Unable to start push to https://colorless-sturgeon-703.convex.cloud
+✖ Error fetching POST  https://colorless-sturgeon-703.convex.cloud/api/deploy2/start_push 500 Internal Server Error: InternalServerError: Your request couldn't be completed. Try again later.
+Failed due to network error, retrying in 1.24s...
+- Preparing Convex functions...
+
+esbuild resolving import: {
+  path: './convex/convex.config.ts',
+  importer: '',
+  namespace: 'file',
+  resolveDir: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project',
+  kind: 'entry-point',
+  pluginData: undefined,
+  with: {}
+}
+  -> Top-level entry-point.
+esbuild resolving import: {
+  path: '@convex-dev/agent/convex.config',
+  importer: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/convex/_cortex/components.ts',
+  namespace: 'file',
+  resolveDir: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/convex/_cortex',
+  kind: 'import-statement',
+  pluginData: undefined,
+  with: {}
+}
+esbuild resolving import: {
+  path: '@convex-dev/agent/convex.config',
+  importer: '',
+  namespace: '',
+  resolveDir: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/convex/_cortex',
+  kind: 'import-statement',
+  pluginData: undefined,
+  with: {}
+}
+  Not a file or virtual config.
+  -> Component import! Recording it. @convex-dev/agent/convex.config /Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/node_modules/@convex-dev/agent/dist/component/convex.config.js
+skipping initial codegen for installed package /Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/node_modules/@convex-dev/agent/dist/component
+esbuild resolving import: {
+  path: './convex/convex.config.ts',
+  importer: '',
+  namespace: 'file',
+  resolveDir: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project',
+  kind: 'entry-point',
+  pluginData: undefined,
+  with: {}
+}
+  -> Top-level entry-point.
+esbuild resolving import: {
+  path: './node_modules/@convex-dev/agent/dist/component/convex.config.js',
+  importer: '',
+  namespace: 'file',
+  resolveDir: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project',
+  kind: 'entry-point',
+  pluginData: undefined,
+  with: {}
+}
+  -> Top-level entry-point.
+esbuild resolving import: {
+  path: '@convex-dev/agent/convex.config',
+  importer: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/convex/_cortex/components.ts',
+  namespace: 'file',
+  resolveDir: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/convex/_cortex',
+  kind: 'import-statement',
+  pluginData: undefined,
+  with: {}
+}
+esbuild resolving import: {
+  path: '@convex-dev/agent/convex.config',
+  importer: '',
+  namespace: '',
+  resolveDir: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/convex/_cortex',
+  kind: 'import-statement',
+  pluginData: undefined,
+  with: {}
+}
+  Not a file or virtual config.
+  -> Component import! Recording it. @convex-dev/agent/convex.config /Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/node_modules/@convex-dev/agent/dist/component/convex.config.js
+- Bundling modules for Node.js runtime...
+
+✖ Error: Unable to start push to https://colorless-sturgeon-703.convex.cloud
+✖ Error fetching POST  https://colorless-sturgeon-703.convex.cloud/api/deploy2/start_push 500 Internal Server Error: InternalServerError: Your request couldn't be completed. Try again later.
+Failed due to network error, retrying in 2.93s...
+- Preparing Convex functions...
+
+esbuild resolving import: {
+  path: './convex/convex.config.ts',
+  importer: '',
+  namespace: 'file',
+  resolveDir: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project',
+  kind: 'entry-point',
+  pluginData: undefined,
+  with: {}
+}
+  -> Top-level entry-point.
+esbuild resolving import: {
+  path: '@convex-dev/agent/convex.config',
+  importer: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/convex/_cortex/components.ts',
+  namespace: 'file',
+  resolveDir: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/convex/_cortex',
+  kind: 'import-statement',
+  pluginData: undefined,
+  with: {}
+}
+esbuild resolving import: {
+  path: '@convex-dev/agent/convex.config',
+  importer: '',
+  namespace: '',
+  resolveDir: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/convex/_cortex',
+  kind: 'import-statement',
+  pluginData: undefined,
+  with: {}
+}
+  Not a file or virtual config.
+  -> Component import! Recording it. @convex-dev/agent/convex.config /Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/node_modules/@convex-dev/agent/dist/component/convex.config.js
+skipping initial codegen for installed package /Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/node_modules/@convex-dev/agent/dist/component
+esbuild resolving import: {
+  path: './convex/convex.config.ts',
+  importer: '',
+  namespace: 'file',
+  resolveDir: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project',
+  kind: 'entry-point',
+  pluginData: undefined,
+  with: {}
+}
+  -> Top-level entry-point.
+esbuild resolving import: {
+  path: './node_modules/@convex-dev/agent/dist/component/convex.config.js',
+  importer: '',
+  namespace: 'file',
+  resolveDir: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project',
+  kind: 'entry-point',
+  pluginData: undefined,
+  with: {}
+}
+  -> Top-level entry-point.
+esbuild resolving import: {
+  path: '@convex-dev/agent/convex.config',
+  importer: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/convex/_cortex/components.ts',
+  namespace: 'file',
+  resolveDir: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/convex/_cortex',
+  kind: 'import-statement',
+  pluginData: undefined,
+  with: {}
+}
+esbuild resolving import: {
+  path: '@convex-dev/agent/convex.config',
+  importer: '',
+  namespace: '',
+  resolveDir: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/convex/_cortex',
+  kind: 'import-statement',
+  pluginData: undefined,
+  with: {}
+}
+  Not a file or virtual config.
+  -> Component import! Recording it. @convex-dev/agent/convex.config /Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/node_modules/@convex-dev/agent/dist/component/convex.config.js
+- Bundling modules for Node.js runtime...
+
+✖ Error: Unable to start push to https://colorless-sturgeon-703.convex.cloud
+✖ Error fetching POST  https://colorless-sturgeon-703.convex.cloud/api/deploy2/start_push 500 Internal Server Error: InternalServerError: Your request couldn't be completed. Try again later.
+Failed due to network error, retrying in 2.41s...
+- Preparing Convex functions...
+
+esbuild resolving import: {
+  path: './convex/convex.config.ts',
+  importer: '',
+  namespace: 'file',
+  resolveDir: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project',
+  kind: 'entry-point',
+  pluginData: undefined,
+  with: {}
+}
+  -> Top-level entry-point.
+esbuild resolving import: {
+  path: '@convex-dev/agent/convex.config',
+  importer: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/convex/_cortex/components.ts',
+  namespace: 'file',
+  resolveDir: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/convex/_cortex',
+  kind: 'import-statement',
+  pluginData: undefined,
+  with: {}
+}
+esbuild resolving import: {
+  path: '@convex-dev/agent/convex.config',
+  importer: '',
+  namespace: '',
+  resolveDir: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/convex/_cortex',
+  kind: 'import-statement',
+  pluginData: undefined,
+  with: {}
+}
+  Not a file or virtual config.
+  -> Component import! Recording it. @convex-dev/agent/convex.config /Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/node_modules/@convex-dev/agent/dist/component/convex.config.js
+skipping initial codegen for installed package /Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/node_modules/@convex-dev/agent/dist/component
+esbuild resolving import: {
+  path: './convex/convex.config.ts',
+  importer: '',
+  namespace: 'file',
+  resolveDir: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project',
+  kind: 'entry-point',
+  pluginData: undefined,
+  with: {}
+}
+  -> Top-level entry-point.
+esbuild resolving import: {
+  path: './node_modules/@convex-dev/agent/dist/component/convex.config.js',
+  importer: '',
+  namespace: 'file',
+  resolveDir: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project',
+  kind: 'entry-point',
+  pluginData: undefined,
+  with: {}
+}
+  -> Top-level entry-point.
+esbuild resolving import: {
+  path: '@convex-dev/agent/convex.config',
+  importer: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/convex/_cortex/components.ts',
+  namespace: 'file',
+  resolveDir: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/convex/_cortex',
+  kind: 'import-statement',
+  pluginData: undefined,
+  with: {}
+}
+esbuild resolving import: {
+  path: '@convex-dev/agent/convex.config',
+  importer: '',
+  namespace: '',
+  resolveDir: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/convex/_cortex',
+  kind: 'import-statement',
+  pluginData: undefined,
+  with: {}
+}
+  Not a file or virtual config.
+  -> Component import! Recording it. @convex-dev/agent/convex.config /Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/node_modules/@convex-dev/agent/dist/component/convex.config.js
+- Bundling modules for Node.js runtime...
+
+✖ Error: Unable to start push to https://colorless-sturgeon-703.convex.cloud
+✖ Error fetching POST  https://colorless-sturgeon-703.convex.cloud/api/deploy2/start_push 500 Internal Server Error: InternalServerError: Your request couldn't be completed. Try again later.
+Failed due to network error, retrying in 11.02s...
+- Preparing Convex functions...
+
+esbuild resolving import: {
+  path: './convex/convex.config.ts',
+  importer: '',
+  namespace: 'file',
+  resolveDir: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project',
+  kind: 'entry-point',
+  pluginData: undefined,
+  with: {}
+}
+  -> Top-level entry-point.
+esbuild resolving import: {
+  path: '@convex-dev/agent/convex.config',
+  importer: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/convex/_cortex/components.ts',
+  namespace: 'file',
+  resolveDir: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/convex/_cortex',
+  kind: 'import-statement',
+  pluginData: undefined,
+  with: {}
+}
+esbuild resolving import: {
+  path: '@convex-dev/agent/convex.config',
+  importer: '',
+  namespace: '',
+  resolveDir: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/convex/_cortex',
+  kind: 'import-statement',
+  pluginData: undefined,
+  with: {}
+}
+  Not a file or virtual config.
+  -> Component import! Recording it. @convex-dev/agent/convex.config /Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/node_modules/@convex-dev/agent/dist/component/convex.config.js
+skipping initial codegen for installed package /Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/node_modules/@convex-dev/agent/dist/component
+esbuild resolving import: {
+  path: './convex/convex.config.ts',
+  importer: '',
+  namespace: 'file',
+  resolveDir: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project',
+  kind: 'entry-point',
+  pluginData: undefined,
+  with: {}
+}
+  -> Top-level entry-point.
+esbuild resolving import: {
+  path: './node_modules/@convex-dev/agent/dist/component/convex.config.js',
+  importer: '',
+  namespace: 'file',
+  resolveDir: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project',
+  kind: 'entry-point',
+  pluginData: undefined,
+  with: {}
+}
+  -> Top-level entry-point.
+esbuild resolving import: {
+  path: '@convex-dev/agent/convex.config',
+  importer: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/convex/_cortex/components.ts',
+  namespace: 'file',
+  resolveDir: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/convex/_cortex',
+  kind: 'import-statement',
+  pluginData: undefined,
+  with: {}
+}
+esbuild resolving import: {
+  path: '@convex-dev/agent/convex.config',
+  importer: '',
+  namespace: '',
+  resolveDir: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/convex/_cortex',
+  kind: 'import-statement',
+  pluginData: undefined,
+  with: {}
+}
+  Not a file or virtual config.
+  -> Component import! Recording it. @convex-dev/agent/convex.config /Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/node_modules/@convex-dev/agent/dist/component/convex.config.js
+- Bundling modules for Node.js runtime...
+
+✖ Error: Unable to start push to https://colorless-sturgeon-703.convex.cloud
+✖ Error fetching POST  https://colorless-sturgeon-703.convex.cloud/api/deploy2/start_push 500 Internal Server Error: InternalServerError: Your request couldn't be completed. Try again later.
+Failed due to network error, retrying in 16.5s...
+- Preparing Convex functions...
+
+esbuild resolving import: {
+  path: './convex/convex.config.ts',
+  importer: '',
+  namespace: 'file',
+  resolveDir: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project',
+  kind: 'entry-point',
+  pluginData: undefined,
+  with: {}
+}
+  -> Top-level entry-point.
+esbuild resolving import: {
+  path: '@convex-dev/agent/convex.config',
+  importer: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/convex/_cortex/components.ts',
+  namespace: 'file',
+  resolveDir: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/convex/_cortex',
+  kind: 'import-statement',
+  pluginData: undefined,
+  with: {}
+}
+esbuild resolving import: {
+  path: '@convex-dev/agent/convex.config',
+  importer: '',
+  namespace: '',
+  resolveDir: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/convex/_cortex',
+  kind: 'import-statement',
+  pluginData: undefined,
+  with: {}
+}
+  Not a file or virtual config.
+  -> Component import! Recording it. @convex-dev/agent/convex.config /Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/node_modules/@convex-dev/agent/dist/component/convex.config.js
+skipping initial codegen for installed package /Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/node_modules/@convex-dev/agent/dist/component
+esbuild resolving import: {
+  path: './convex/convex.config.ts',
+  importer: '',
+  namespace: 'file',
+  resolveDir: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project',
+  kind: 'entry-point',
+  pluginData: undefined,
+  with: {}
+}
+  -> Top-level entry-point.
+esbuild resolving import: {
+  path: './node_modules/@convex-dev/agent/dist/component/convex.config.js',
+  importer: '',
+  namespace: 'file',
+  resolveDir: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project',
+  kind: 'entry-point',
+  pluginData: undefined,
+  with: {}
+}
+  -> Top-level entry-point.
+esbuild resolving import: {
+  path: '@convex-dev/agent/convex.config',
+  importer: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/convex/_cortex/components.ts',
+  namespace: 'file',
+  resolveDir: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/convex/_cortex',
+  kind: 'import-statement',
+  pluginData: undefined,
+  with: {}
+}
+esbuild resolving import: {
+  path: '@convex-dev/agent/convex.config',
+  importer: '',
+  namespace: '',
+  resolveDir: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/convex/_cortex',
+  kind: 'import-statement',
+  pluginData: undefined,
+  with: {}
+}
+  Not a file or virtual config.
+  -> Component import! Recording it. @convex-dev/agent/convex.config /Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/node_modules/@convex-dev/agent/dist/component/convex.config.js
+- Bundling modules for Node.js runtime...
+
+✖ Error: Unable to start push to https://colorless-sturgeon-703.convex.cloud
+✖ Error fetching POST  https://colorless-sturgeon-703.convex.cloud/api/deploy2/start_push 500 Internal Server Error: InternalServerError: Your request couldn't be completed. Try again later.
+Failed due to network error, retrying in 8.12s...
+- Preparing Convex functions...
+
+esbuild resolving import: {
+  path: './convex/convex.config.ts',
+  importer: '',
+  namespace: 'file',
+  resolveDir: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project',
+  kind: 'entry-point',
+  pluginData: undefined,
+  with: {}
+}
+  -> Top-level entry-point.
+esbuild resolving import: {
+  path: '@convex-dev/agent/convex.config',
+  importer: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/convex/_cortex/components.ts',
+  namespace: 'file',
+  resolveDir: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/convex/_cortex',
+  kind: 'import-statement',
+  pluginData: undefined,
+  with: {}
+}
+esbuild resolving import: {
+  path: '@convex-dev/agent/convex.config',
+  importer: '',
+  namespace: '',
+  resolveDir: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/convex/_cortex',
+  kind: 'import-statement',
+  pluginData: undefined,
+  with: {}
+}
+  Not a file or virtual config.
+  -> Component import! Recording it. @convex-dev/agent/convex.config /Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/node_modules/@convex-dev/agent/dist/component/convex.config.js
+skipping initial codegen for installed package /Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/node_modules/@convex-dev/agent/dist/component
+esbuild resolving import: {
+  path: './convex/convex.config.ts',
+  importer: '',
+  namespace: 'file',
+  resolveDir: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project',
+  kind: 'entry-point',
+  pluginData: undefined,
+  with: {}
+}
+  -> Top-level entry-point.
+esbuild resolving import: {
+  path: './node_modules/@convex-dev/agent/dist/component/convex.config.js',
+  importer: '',
+  namespace: 'file',
+  resolveDir: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project',
+  kind: 'entry-point',
+  pluginData: undefined,
+  with: {}
+}
+  -> Top-level entry-point.
+esbuild resolving import: {
+  path: '@convex-dev/agent/convex.config',
+  importer: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/convex/_cortex/components.ts',
+  namespace: 'file',
+  resolveDir: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/convex/_cortex',
+  kind: 'import-statement',
+  pluginData: undefined,
+  with: {}
+}
+esbuild resolving import: {
+  path: '@convex-dev/agent/convex.config',
+  importer: '',
+  namespace: '',
+  resolveDir: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/convex/_cortex',
+  kind: 'import-statement',
+  pluginData: undefined,
+  with: {}
+}
+  Not a file or virtual config.
+  -> Component import! Recording it. @convex-dev/agent/convex.config /Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/node_modules/@convex-dev/agent/dist/component/convex.config.js
+- Bundling modules for Node.js runtime...
+
+✖ Error: Unable to start push to https://colorless-sturgeon-703.convex.cloud
+✖ Error fetching POST  https://colorless-sturgeon-703.convex.cloud/api/deploy2/start_push 500 Internal Server Error: InternalServerError: Your request couldn't be completed. Try again later.
+Failed due to network error, retrying in 8.52s...
+- Preparing Convex functions...
+
+esbuild resolving import: {
+  path: './convex/convex.config.ts',
+  importer: '',
+  namespace: 'file',
+  resolveDir: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project',
+  kind: 'entry-point',
+  pluginData: undefined,
+  with: {}
+}
+  -> Top-level entry-point.
+esbuild resolving import: {
+  path: '@convex-dev/agent/convex.config',
+  importer: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/convex/_cortex/components.ts',
+  namespace: 'file',
+  resolveDir: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/convex/_cortex',
+  kind: 'import-statement',
+  pluginData: undefined,
+  with: {}
+}
+esbuild resolving import: {
+  path: '@convex-dev/agent/convex.config',
+  importer: '',
+  namespace: '',
+  resolveDir: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/convex/_cortex',
+  kind: 'import-statement',
+  pluginData: undefined,
+  with: {}
+}
+  Not a file or virtual config.
+  -> Component import! Recording it. @convex-dev/agent/convex.config /Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/node_modules/@convex-dev/agent/dist/component/convex.config.js
+skipping initial codegen for installed package /Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/node_modules/@convex-dev/agent/dist/component
+esbuild resolving import: {
+  path: './convex/convex.config.ts',
+  importer: '',
+  namespace: 'file',
+  resolveDir: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project',
+  kind: 'entry-point',
+  pluginData: undefined,
+  with: {}
+}
+  -> Top-level entry-point.
+esbuild resolving import: {
+  path: './node_modules/@convex-dev/agent/dist/component/convex.config.js',
+  importer: '',
+  namespace: 'file',
+  resolveDir: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project',
+  kind: 'entry-point',
+  pluginData: undefined,
+  with: {}
+}
+  -> Top-level entry-point.
+esbuild resolving import: {
+  path: '@convex-dev/agent/convex.config',
+  importer: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/convex/_cortex/components.ts',
+  namespace: 'file',
+  resolveDir: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/convex/_cortex',
+  kind: 'import-statement',
+  pluginData: undefined,
+  with: {}
+}
+esbuild resolving import: {
+  path: '@convex-dev/agent/convex.config',
+  importer: '',
+  namespace: '',
+  resolveDir: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/convex/_cortex',
+  kind: 'import-statement',
+  pluginData: undefined,
+  with: {}
+}
+  Not a file or virtual config.
+  -> Component import! Recording it. @convex-dev/agent/convex.config /Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/node_modules/@convex-dev/agent/dist/component/convex.config.js
+- Bundling modules for Node.js runtime...
+
+✖ Error: Unable to start push to https://colorless-sturgeon-703.convex.cloud
+✖ Error fetching POST  https://colorless-sturgeon-703.convex.cloud/api/deploy2/start_push 500 Internal Server Error: InternalServerError: Your request couldn't be completed. Try again later.
+Failed due to network error, retrying in 10s...
+- Preparing Convex functions...
+
+esbuild resolving import: {
+  path: './convex/convex.config.ts',
+  importer: '',
+  namespace: 'file',
+  resolveDir: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project',
+  kind: 'entry-point',
+  pluginData: undefined,
+  with: {}
+}
+  -> Top-level entry-point.
+esbuild resolving import: {
+  path: '@convex-dev/agent/convex.config',
+  importer: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/convex/_cortex/components.ts',
+  namespace: 'file',
+  resolveDir: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/convex/_cortex',
+  kind: 'import-statement',
+  pluginData: undefined,
+  with: {}
+}
+esbuild resolving import: {
+  path: '@convex-dev/agent/convex.config',
+  importer: '',
+  namespace: '',
+  resolveDir: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/convex/_cortex',
+  kind: 'import-statement',
+  pluginData: undefined,
+  with: {}
+}
+  Not a file or virtual config.
+  -> Component import! Recording it. @convex-dev/agent/convex.config /Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/node_modules/@convex-dev/agent/dist/component/convex.config.js
+skipping initial codegen for installed package /Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/node_modules/@convex-dev/agent/dist/component
+esbuild resolving import: {
+  path: './convex/convex.config.ts',
+  importer: '',
+  namespace: 'file',
+  resolveDir: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project',
+  kind: 'entry-point',
+  pluginData: undefined,
+  with: {}
+}
+  -> Top-level entry-point.
+esbuild resolving import: {
+  path: './node_modules/@convex-dev/agent/dist/component/convex.config.js',
+  importer: '',
+  namespace: 'file',
+  resolveDir: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project',
+  kind: 'entry-point',
+  pluginData: undefined,
+  with: {}
+}
+  -> Top-level entry-point.
+esbuild resolving import: {
+  path: '@convex-dev/agent/convex.config',
+  importer: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/convex/_cortex/components.ts',
+  namespace: 'file',
+  resolveDir: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/convex/_cortex',
+  kind: 'import-statement',
+  pluginData: undefined,
+  with: {}
+}
+esbuild resolving import: {
+  path: '@convex-dev/agent/convex.config',
+  importer: '',
+  namespace: '',
+  resolveDir: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/convex/_cortex',
+  kind: 'import-statement',
+  pluginData: undefined,
+  with: {}
+}
+  Not a file or virtual config.
+  -> Component import! Recording it. @convex-dev/agent/convex.config /Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/node_modules/@convex-dev/agent/dist/component/convex.config.js
+- Bundling modules for Node.js runtime...
+
+✖ Error: Unable to start push to https://colorless-sturgeon-703.convex.cloud
+✖ Error fetching POST  https://colorless-sturgeon-703.convex.cloud/api/deploy2/start_push 500 Internal Server Error: InternalServerError: Your request couldn't be completed. Try again later.
+Failed due to network error, retrying in 16.58s...
+- Preparing Convex functions...
+
+esbuild resolving import: {
+  path: './convex/convex.config.ts',
+  importer: '',
+  namespace: 'file',
+  resolveDir: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project',
+  kind: 'entry-point',
+  pluginData: undefined,
+  with: {}
+}
+  -> Top-level entry-point.
+esbuild resolving import: {
+  path: '@convex-dev/agent/convex.config',
+  importer: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/convex/_cortex/components.ts',
+  namespace: 'file',
+  resolveDir: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/convex/_cortex',
+  kind: 'import-statement',
+  pluginData: undefined,
+  with: {}
+}
+esbuild resolving import: {
+  path: '@convex-dev/agent/convex.config',
+  importer: '',
+  namespace: '',
+  resolveDir: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/convex/_cortex',
+  kind: 'import-statement',
+  pluginData: undefined,
+  with: {}
+}
+  Not a file or virtual config.
+  -> Component import! Recording it. @convex-dev/agent/convex.config /Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/node_modules/@convex-dev/agent/dist/component/convex.config.js
+skipping initial codegen for installed package /Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/node_modules/@convex-dev/agent/dist/component
+esbuild resolving import: {
+  path: './convex/convex.config.ts',
+  importer: '',
+  namespace: 'file',
+  resolveDir: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project',
+  kind: 'entry-point',
+  pluginData: undefined,
+  with: {}
+}
+  -> Top-level entry-point.
+esbuild resolving import: {
+  path: './node_modules/@convex-dev/agent/dist/component/convex.config.js',
+  importer: '',
+  namespace: 'file',
+  resolveDir: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project',
+  kind: 'entry-point',
+  pluginData: undefined,
+  with: {}
+}
+  -> Top-level entry-point.
+esbuild resolving import: {
+  path: '@convex-dev/agent/convex.config',
+  importer: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/convex/_cortex/components.ts',
+  namespace: 'file',
+  resolveDir: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/convex/_cortex',
+  kind: 'import-statement',
+  pluginData: undefined,
+  with: {}
+}
+esbuild resolving import: {
+  path: '@convex-dev/agent/convex.config',
+  importer: '',
+  namespace: '',
+  resolveDir: '/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/convex/_cortex',
+  kind: 'import-statement',
+  pluginData: undefined,
+  with: {}
+}
+  Not a file or virtual config.
+  -> Component import! Recording it. @convex-dev/agent/convex.config /Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/node_modules/@convex-dev/agent/dist/component/convex.config.js
+- Bundling modules for Node.js runtime...
+
+✖ Error: Unable to start push to https://colorless-sturgeon-703.convex.cloud
+✖ Error fetching POST  https://colorless-sturgeon-703.convex.cloud/api/deploy2/start_push 500 Internal Server Error: InternalServerError: Your request couldn't be completed. Try again later.
+Failed due to network error, retrying in 19.87s...

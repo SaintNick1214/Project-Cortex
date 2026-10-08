@@ -22,7 +22,7 @@ beforeEach(async () => {
   sdk = path.join(root, "sdk"); host = path.join(root, "host");
   const files = new Map([
     ["_cortex/schema.ts", 'import { defineTable } from "convex/server"; export const cortexTablesV1 = { runtimeRuns: defineTable({}) };\n'],
-    ["_cortex/components.ts", 'export function registerCortexComponentsV1(app: unknown) { void app; }\n'],
+    ["_cortex/components.ts", 'import type { AppDefinition } from "convex/server"; import agent from "@convex-dev/agent/convex.config";\nexport function registerCortexComponentsV1(app: AppDefinition) { app.use(agent, { name: "agent" }); }\n'],
     ["runs.ts", '"use node";\nexport const qualifiedRun = true;\n'],
     ["_cortex/shared/domain/profile.ts", 'export const profile = "qualified";\n'],
   ]);
@@ -38,7 +38,9 @@ describe("additive backend installation", () => {
     const result = await installAdditiveBackend(host, sdk, { trustedJwtProvider: provider });
     expect(result.installed).toHaveLength(8);
     expect(await read("convex/schema.ts")).toContain("...cortexTablesV1");
-    expect(await read("convex/convex.config.ts")).toContain("registerCortexComponentsV1(app)");
+    expect(await read("convex/convex.config.ts")).toContain('import _cortex_component_agent from "@convex-dev/agent/convex.config";');
+    expect(await read("convex/convex.config.ts")).toContain('app.use(_cortex_component_agent, { name: "agent" });');
+    expect(await read("convex/convex.config.ts")).not.toContain("registerCortexComponentsV1");
     expect((await read("convex/runs.ts")).startsWith('"use node"')).toBe(true);
     expect(await read("convex/auth.config.ts")).toContain('"algorithm":"RS256"');
     expect(result.capabilities.authConfigured).toBe(true);
@@ -58,7 +60,7 @@ describe("additive backend installation", () => {
     expect(await read("services/backend/schema.ts")).toContain(table);
     expect(await read("services/backend/schema.ts")).toContain("{ schemaValidation: true }");
     expect(await read("services/backend/convex.config.ts")).toContain('backend.use(custom, { name: "hostQueue" })');
-    expect(await read("services/backend/convex.config.ts")).toContain("registerCortexComponentsV1(backend)");
+    expect(await read("services/backend/convex.config.ts")).toContain('backend.use(_cortex_component_agent, { name: "agent" });');
     expect(await read("services/backend/auth.config.ts")).toContain('domain: "https://host.example"');
     expect(await read("services/backend/http.ts")).toBe(http);
     expect(await read("services/backend/hostFunctions.ts")).toBe("export const host = 42;\n");
@@ -70,6 +72,36 @@ describe("additive backend installation", () => {
     expect(result.installed).toEqual([]);
     expect((await read("convex/schema.ts")).match(/\.\.\.cortexTablesV1/g)).toHaveLength(1);
     expect((await read("convex/auth.config.ts")).match(/https:\/\/issuer.example\/jwks/g)).toHaveLength(1);
+    expect((await read("convex/convex.config.ts")).match(/app\.use\(_cortex_component_agent/g)).toHaveLength(1);
+  });
+  it("imports every declared component directly from the root config, including Workflow", async () => {
+    const fragment = 'import type { AppDefinition } from "convex/server"; import agent from "@convex-dev/agent/convex.config"; import workflow from "@convex-dev/workflow/convex.config";\nexport function registerCortexComponentsV1(app: AppDefinition) { app.use(agent, { name: "agent" }); app.use(workflow, { name: "workflow" }); }\n';
+    await fs.writeFile(path.join(sdk, "dist/backend/v1/_cortex/components.ts"), fragment);
+    const manifest = await fs.readJson(path.join(sdk, "dist/backend/v1/manifest.json"));
+    manifest.components.push("workflow");
+    manifest.files.find((entry: { path: string }) => entry.path === "_cortex/components.ts").sha256 = hash(fragment);
+    await fs.writeJson(path.join(sdk, "dist/backend/v1/manifest.json"), manifest);
+    await installAdditiveBackend(host, sdk);
+    const config = await read("convex/convex.config.ts");
+    const ast = ts.createSourceFile("convex.config.ts", config, ts.ScriptTarget.Latest, true);
+    const directConfigImports = ast.statements.filter(ts.isImportDeclaration).map(node => (node.moduleSpecifier as ts.StringLiteral).text).filter(specifier => specifier.includes(".config"));
+    expect(directConfigImports).toEqual(["@convex-dev/agent/convex.config", "@convex-dev/workflow/convex.config"]);
+    expect(config).toContain('app.use(_cortex_component_workflow, { name: "workflow" });');
+    expect(config).not.toContain("./_cortex/components");
+    expect((await installAdditiveBackend(host, sdk)).installed).toEqual([]);
+  });
+  it.each([
+    ['import { defineApp } from "convex/server"; import { registerCortexComponentsV1 } from "./_cortex/components"; const app = defineApp(); registerCortexComponentsV1(app); export default app;', "Indirect Cortex"],
+    ['import { defineApp } from "convex/server"; const _cortex_component_agent = "host"; const app = defineApp(); export default app;', "Host binding"],
+    ['import { defineApp } from "convex/server"; import _cortex_component_agent from "@convex-dev/agent/convex.config"; const app = defineApp(); function defer() { app.use(_cortex_component_agent, { name: "agent" }); } export default app;', "top level"],
+    ['import { defineApp } from "convex/server"; import _cortex_component_agent from "@convex-dev/agent/convex.config"; const app = defineApp(); app.use(_cortex_component_agent, { name: "agent", name: "host" }); export default app;', "Host component"],
+  ])("preserves an ambiguous component configuration and emits a concrete merge proposal", async (config, reason) => {
+    await put("convex/convex.config.ts", config);
+    const plan = await planAdditiveBackendInstallation(host, sdk);
+    expect(plan.conflicts).toContainEqual(expect.objectContaining({ path: "convex/convex.config.ts", reason: expect.stringContaining(reason), currentContent: config }));
+    await expect(applyAdditiveBackendInstallation(plan)).rejects.toBeInstanceOf(BackendMergeRequiredError);
+    expect(await read("convex/convex.config.ts")).toBe(config);
+    expect(await fs.pathExists(path.join(host, "convex/runs.ts"))).toBe(false);
   });
   it("an atomic schema-write failure retains the original host schema and supports partial retry", async () => {
     const original = 'import { defineSchema, defineTable } from "convex/server"; export default defineSchema({ hostTasks: defineTable({}) });';

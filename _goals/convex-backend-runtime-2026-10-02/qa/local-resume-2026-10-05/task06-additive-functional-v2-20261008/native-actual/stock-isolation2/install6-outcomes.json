@@ -1,0 +1,116 @@
+{
+  "kind": "fresh",
+  "stage": "install6",
+  "operation": "a8ef6f14-fcf7-41de-808f-75779b3340f9",
+  "projectId": 3172356,
+  "deploymentName": "groovy-hound-304",
+  "results": [
+    {
+      "name": "packed SDK additive plan and application preserve the selected host configuration",
+      "status": "PASS",
+      "elapsedMs": 40,
+      "evidence": {
+        "installed": 1,
+        "unchanged": 63,
+        "functionsDirectory": "convex/",
+        "capabilities": {
+          "authConfigured": true,
+          "bootstrap": "trusted-operator-required",
+          "execution": "task07-required"
+        }
+      }
+    },
+    {
+      "name": "real development helper verifies and registers only the selected cloud-dev target",
+      "status": "PASS",
+      "elapsedMs": 8123,
+      "evidence": {
+        "registered": true,
+        "verified": {
+          "teamId": 325340,
+          "projectId": 3172356,
+          "deploymentName": "groovy-hound-304",
+          "deploymentUrl": "https://groovy-hound-304.convex.cloud",
+          "disposable": true
+        }
+      }
+    },
+    {
+      "name": "installed Agent-backed core works through verified scoped JWT and exact replay",
+      "status": "PASS",
+      "elapsedMs": 881,
+      "evidence": {
+        "conversationId": "conversation:988bc8503bc7854689dc933c6565288d955b1da517affabc099b18af6971cd3b",
+        "oneCanonicalConversation": true,
+        "manualWriteLocked": true
+      }
+    },
+    {
+      "name": "noJWT, foreign identity and public internal-bootstrap attempts cause no core effects",
+      "status": "PASS",
+      "elapsedMs": 630,
+      "evidence": {
+        "errors": [
+          {
+            "name": "ConvexError",
+            "message": "[Request ID: fe936807ae1ce850] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"UNAUTHENTICATED\",\"message\":\"Verified identity required\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../convex/runtimeAuth.ts:45:26)\n    at resolveAuthority (../../convex/runtimeAuth.ts:160:47)\n    at requireAuthority (../../convex/runtimeAuth.ts:250:0)\n    at async requireDataAuthority (../../convex/runtimeDataAuth.ts:29:16)\n    at async requireConversation (../../convex/runtimeTranscript.ts:44:34)\n    at async handler (../../convex/runtimeTranscript.ts:289:30)\n",
+            "data": {
+              "code": "UNAUTHENTICATED",
+              "message": "Verified identity required",
+              "outcome": "not_dispatched",
+              "retryable": false,
+              "version": 1
+            }
+          },
+          {
+            "name": "ConvexError",
+            "message": "[Request ID: 6abdeb3dd1da0dc9] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../convex/runtimeAuth.ts:45:26)\n    at resolveAuthority (../../convex/runtimeAuth.ts:184:0)\n    at async requireAuthority (../../convex/runtimeAuth.ts:250:0)\n    at async requireDataAuthority (../../convex/runtimeDataAuth.ts:29:16)\n    at async requireConversation (../../convex/runtimeTranscript.ts:44:34)\n    at async handler (../../convex/runtimeTranscript.ts:289:30)\n",
+            "data": {
+              "code": "FORBIDDEN",
+              "message": "Access denied",
+              "outcome": "not_dispatched",
+              "retryable": false,
+              "version": 1
+            }
+          },
+          {
+            "name": "Error",
+            "message": "[Request ID: 11880b365e7df33d] Server Error\nCould not find public function for 'runtimeAuth:provision'.\n"
+          },
+          {
+            "name": "Error",
+            "message": "[Request ID: bde8e178097c90f4] Server Error\nCould not find public function for 'runtimeAuth:provision'.\n"
+          }
+        ],
+        "stateUnchanged": true,
+        "modelDispatches": 0
+      }
+    },
+    {
+      "name": "retry is a zero-write additive installation and helper re-registration preserves existing core",
+      "status": "PASS",
+      "elapsedMs": 7667,
+      "evidence": {
+        "writes": 0,
+        "unchanged": 64,
+        "coreStateUnchanged": true
+      }
+    },
+    {
+      "name": "stock query and Node/default runtime files remain unchanged after Cortex installation and retry",
+      "status": "PASS",
+      "elapsedMs": 491,
+      "evidence": {
+        "bytePreservedFiles": [
+          "convex.json",
+          "convex/stock.ts",
+          "convex/stockNode.ts"
+        ],
+        "functionsDirectory": "convex/",
+        "stockQueryPreserved": true,
+        "stockNodeActionPreserved": true
+      }
+    }
+  ],
+  "modelDispatches": 0
+}

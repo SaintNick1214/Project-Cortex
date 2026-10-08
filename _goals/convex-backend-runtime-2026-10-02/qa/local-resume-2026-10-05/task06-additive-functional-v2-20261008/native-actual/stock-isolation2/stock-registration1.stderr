@@ -1,0 +1,243 @@
+✔ Provisioned a dev deployment and saved its:
+    client URL as CONVEX_URL
+    HTTP actions URL as CONVEX_SITE_URL
+ to .env.local
+  Added ".env.local" to .gitignore
+
+Write your Convex functions in convex/
+Give us feedback at https://convex.dev/community or support@convex.dev
+View the Convex dashboard at https://dashboard.convex.dev/d/groovy-hound-304
+
+▌ Developing against deployment:
+▌ [Development] nicholasgeil:cortex-task06-stock-v2-a8ef6f14fcf7:dev/nicholasgeil (dev) (dashboard: https://dashboard.convex.dev/t/nicholasgeil/cortex-task06-stock-v2-a8ef6f14fcf7/groovy-hound-304)
+▌ └─ https://groovy-hound-304.convex.cloud
+- Preparing Convex functions...
+
+Convex AI files are not installed. Run npx convex ai-files install to get started or npx convex ai-files disable to hide this message.
+esbuild resolving import: {
+  path: './convex/convex.config.js',
+  importer: '',
+  namespace: '',
+  resolveDir: '/Users/SaintNick/.codex/tmp/cortex-task06-stock-native-a8ef6f14fcf7/project',
+  kind: 'entry-point',
+  pluginData: undefined,
+  with: {}
+}
+  Not a file or virtual config.
+- Bundling modules for Node.js runtime...
+
+startPush: {
+  "environmentVariables": {},
+  "externalDepsId": null,
+  "componentDefinitionPackages": {
+    "": {
+      "externalPackageId": null,
+      "nodeVersion": null,
+      "packageSize": {
+        "unzippedSizeBytes": {
+          "$integer": "YCAHAAAAAAA="
+        },
+        "zippedSizeBytes": {
+          "$integer": "2eIBAAAAAAA="
+        }
+      },
+      "sha256": {
+        "$bytes": "rKZNhtj4iaJXAHb7F/xEy1NZIKvAv0HURMMRq8PsQUQ="
+      },
+      "storageKey": "2481b651-2994-41fd-b442-81b5f0c996d2"
+    }
+  },
+  "appAuth": [],
+  "analysis": {
+    "": {
+      "definition": {
+        "path": "",
+        "definitionType": {
+          "type": "app"
+        },
+        "childComponents": [],
+        "httpMounts": {},
+        "exports": {
+          "type": "branch",
+          "branch": []
+        },
+        "envVars": null,
+        "httpPrefix": null
+      },
+      "schema": {
+        "tables": [],
+        "schemaValidation": true
+      },
+      "functions": {
+        "stock.js": {
+          "functions": [
+            {
+              "name": "metadata",
+              "pos": {
+                "path": "stock.js",
+                "start_lineno": 1,
+                "start_col": 92
+              },
+              "udfType": "Query",
+              "visibility": {
+                "kind": "public"
+              },
+              "args": "{\"type\":\"object\",\"value\":{}}",
+              "returns": "null"
+            }
+          ],
+          "httpRoutes": null,
+          "cronSpecs": null,
+          "sourceMapped": null
+        },
+        "stockNode.js": {
+          "functions": [
+            {
+              "name": "health",
+              "pos": {
+                "path": "stockNode.js",
+                "start_lineno": 3,
+                "start_col": 135
+              },
+              "udfType": "Action",
+              "visibility": {
+                "kind": "public"
+              },
+              "args": "{\"type\":\"object\",\"value\":{}}",
+              "returns": "null"
+            }
+          ],
+          "httpRoutes": null,
+          "cronSpecs": null,
+          "sourceMapped": null
+        }
+      },
+      "udfConfig": {
+        "serverVersion": "1.46.0",
+        "importPhaseRngSeed": {
+          "$bytes": "T7juOMuzozGJZYdL3P/whgHHfJlbsxonjCCyj8sR2tU="
+        },
+        "importPhaseUnixTimestamp": {
+          "$integer": "5uZ1LHWL3Bg="
+        }
+      }
+    }
+  },
+  "app": {
+    "definitionPath": "",
+    "componentPath": "",
+    "args": {},
+    "childComponents": {},
+    "httpRoutes": {
+      "httpModuleRoutes": null,
+      "mounts": []
+    },
+    "exports": {
+      "stock": {
+        "type": "branch",
+        "children": {
+          "metadata": {
+            "type": "leaf",
+            "resource": {
+              "type": "function",
+              "path": {
+                "component": "",
+                "udfPath": "stock.js:metadata"
+              }
+            }
+          }
+        }
+      },
+      "stockNode": {
+        "type": "branch",
+        "children": {
+          "health": {
+            "type": "leaf",
+            "resource": {
+              "type": "function",
+              "path": {
+                "component": "",
+                "udfPath": "stockNode.js:health"
+              }
+            }
+          }
+        }
+      }
+    },
+    "httpPrefix": null,
+    "env": {}
+  },
+  "schemaChange": {
+    "allocatedComponentIds": {
+      "": "m022gnzt7vje1px8yfaj03ckvh8fwn4z"
+    },
+    "schemaIds": {
+      "": "5aNFNTiDDtGbpxiw3PdQ_g|59-4qWgrBHNVcTIE8itQ_g"
+    },
+    "indexDiffs": {
+      "": {
+        "added_indexes": [],
+        "removed_indexes": [],
+        "enabled_indexes": [],
+        "disabled_indexes": []
+      }
+    }
+  }
+}
+- Bundling modules for Convex's runtime...
+
+Convex's runtime modules:  [ 'stock.js' ]
+- Bundling modules for Node.js runtime...
+
+Node.js runtime modules:  [ 'stockNode.js' ]
+✔ Remote config will be overwritten with the following changes:
+  Change the server's function version:
+  [+] 1.46.0
+  Change the server's version for Node.js actions:
+  
+Finalizing push...
+{
+  "authDiff": {
+    "added": [],
+    "removed": []
+  },
+  "definitionDiffs": {
+    "": {}
+  },
+  "componentDiffs": {
+    "": {
+      "diffType": {
+        "type": "create"
+      },
+      "moduleDiff": {
+        "added": [
+          "convex.config.js",
+          "schema.js",
+          "stock.js",
+          "stockNode.js"
+        ],
+        "removed": []
+      },
+      "udfConfigDiff": {
+        "previous_version": "Unspecified version",
+        "next_version": "1.46.0"
+      },
+      "cronDiff": {
+        "added": [],
+        "updated": [],
+        "deleted": []
+      },
+      "indexDiff": {
+        "added_indexes": [],
+        "removed_indexes": [],
+        "enabled_indexes": [],
+        "disabled_indexes": []
+      },
+      "schemaDiff": {
+        "previous_schema": null,
+        "next_schema": "{\"tables\":[],\"schemaValidation\":true}"
+      }
+    }
+  }
+}
+✔ 04:48:30 Convex functions ready! (24.66s)

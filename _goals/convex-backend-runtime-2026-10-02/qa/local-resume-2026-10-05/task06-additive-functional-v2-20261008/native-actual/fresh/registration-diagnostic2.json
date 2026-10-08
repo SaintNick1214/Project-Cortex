@@ -1,0 +1,57 @@
+{
+  "operation": "1c9a5648-e4a1-41ca-a3f7-bcf9782a1ed6",
+  "projectId": 3172211,
+  "deploymentName": "colorless-sturgeon-703",
+  "verifiedAt": "2026-10-08T11:37:24.814Z",
+  "args": [
+    "dev",
+    "--once",
+    "--typecheck",
+    "enable",
+    "--verbose",
+    "--env-file",
+    "[private temporary env file]"
+  ],
+  "cwd": "/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project",
+  "pid": 7031,
+  "code": null,
+  "signal": "SIGTERM",
+  "timedOut": true,
+  "elapsedMs": 120076,
+  "progress": [
+    {
+      "elapsedMs": 20006,
+      "pid": 7031,
+      "lastPhase": "✖ Error fetching POST  https://colorless-sturgeon-703.convex.cloud/api/deploy2/start_push 500 Internal Server Error: InternalServerError: Your request couldn't be completed. Try again later.\nFailed due to network error, retrying in 11.02s...\n"
+    },
+    {
+      "elapsedMs": 40008,
+      "pid": 7031,
+      "lastPhase": "✖ Error fetching POST  https://colorless-sturgeon-703.convex.cloud/api/deploy2/start_push 500 Internal Server Error: InternalServerError: Your request couldn't be completed. Try again later.\nFailed due to network error, retrying in 16.5s...\n"
+    },
+    {
+      "elapsedMs": 60011,
+      "pid": 7031,
+      "lastPhase": "✖ Error fetching POST  https://colorless-sturgeon-703.convex.cloud/api/deploy2/start_push 500 Internal Server Error: InternalServerError: Your request couldn't be completed. Try again later.\nFailed due to network error, retrying in 8.52s...\n"
+    },
+    {
+      "elapsedMs": 80012,
+      "pid": 7031,
+      "lastPhase": "  Not a file or virtual config.\n  -> Component import! Recording it. @convex-dev/agent/convex.config /Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/node_modules/@convex-dev/agent/dist/component/convex.config.js\n"
+    },
+    {
+      "elapsedMs": 100014,
+      "pid": 7031,
+      "lastPhase": "- Bundling modules for Node.js runtime...\n\n"
+    },
+    {
+      "elapsedMs": 120015,
+      "pid": 7031,
+      "lastPhase": "✖ Error fetching POST  https://colorless-sturgeon-703.convex.cloud/api/deploy2/start_push 500 Internal Server Error: InternalServerError: Your request couldn't be completed. Try again later.\nFailed due to network error, retrying in 19.87s...\n"
+    }
+  ],
+  "temporaryEnvRemoved": true,
+  "ownedFixtureProcessesRemaining": [],
+  "credentialsPrinted": false,
+  "priorTimeoutPreserved": true
+}

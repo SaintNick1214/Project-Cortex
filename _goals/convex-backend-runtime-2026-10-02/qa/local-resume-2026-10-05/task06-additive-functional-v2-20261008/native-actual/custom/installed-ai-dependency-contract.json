@@ -1,0 +1,39 @@
+{
+  "ai": {
+    "version": "7.0.127",
+    "dependencies": {
+      "@ai-sdk/gateway": "4.0.103",
+      "@ai-sdk/provider": "4.0.21",
+      "@ai-sdk/provider-utils": "5.0.53"
+    }
+  },
+  "@ai-sdk/provider": {
+    "version": "4.0.25",
+    "dependencies": {
+      "json-schema": "^0.4.0"
+    }
+  },
+  "@ai-sdk/gateway": {
+    "version": "4.0.103",
+    "dependencies": {
+      "@ai-sdk/provider": "4.0.21",
+      "@ai-sdk/provider-utils": "5.0.53",
+      "@vercel/oidc": "3.2.0"
+    }
+  },
+  "@ai-sdk/gateway/node_modules/@ai-sdk/provider": {
+    "version": "4.0.21",
+    "dependencies": {
+      "json-schema": "^0.4.0"
+    }
+  },
+  "@convex-dev/ai-sdk-provider": {
+    "version": "0.2.1",
+    "dependencies": {
+      "@ai-sdk/anthropic": "4.0.40",
+      "@ai-sdk/openai": "4.0.45",
+      "@ai-sdk/openai-compatible": "3.0.14",
+      "zod": "^4.3.6"
+    }
+  }
+}

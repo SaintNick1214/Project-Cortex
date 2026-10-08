@@ -1,0 +1,88 @@
+{
+  "operation": "a8ef6f14-fcf7-41de-808f-75779b3340f9",
+  "projectId": 3172356,
+  "deploymentName": "groovy-hound-304",
+  "readOnly": true,
+  "elapsedMs": 286,
+  "results": [
+    {
+      "credentialKind": "adminKey",
+      "httpStatus": 200,
+      "responseKeys": [
+        "config",
+        "moduleHashes",
+        "udfServerVersion",
+        "nodeVersion"
+      ],
+      "config": {
+        "functions": "convex/"
+      },
+      "moduleHashes": [
+        {
+          "path": "stockNode.js",
+          "hash": "4e5e5274bbf57005ad59d98a74ab12f7ba6235a070b433566e6fb4aa9c057c89",
+          "environment": "node"
+        },
+        {
+          "path": "stock.js",
+          "hash": "d080bada050bbd24a8b496163c04227a70e15a81bae9d3386531025d901add80",
+          "environment": "isolate"
+        },
+        {
+          "path": "convex.config.js",
+          "hash": "42ef9d916d08bcc79467ada7478c7594749e182ebc9b2eaed267ade157ece02d",
+          "environment": "isolate"
+        },
+        {
+          "path": "schema.js",
+          "hash": "ef5da9263a73a7a02af62b0046cbda1512c05c88e8ede49941116584bccd13e5",
+          "environment": "isolate"
+        }
+      ],
+      "nodeVersion": null,
+      "udfServerVersion": "1.46.0"
+    },
+    {
+      "credentialKind": "deployKey",
+      "httpStatus": 200,
+      "responseKeys": [
+        "config",
+        "moduleHashes",
+        "udfServerVersion",
+        "nodeVersion"
+      ],
+      "config": {
+        "functions": "convex/"
+      },
+      "moduleHashes": [
+        {
+          "path": "stockNode.js",
+          "hash": "4e5e5274bbf57005ad59d98a74ab12f7ba6235a070b433566e6fb4aa9c057c89",
+          "environment": "node"
+        },
+        {
+          "path": "stock.js",
+          "hash": "d080bada050bbd24a8b496163c04227a70e15a81bae9d3386531025d901add80",
+          "environment": "isolate"
+        },
+        {
+          "path": "convex.config.js",
+          "hash": "42ef9d916d08bcc79467ada7478c7594749e182ebc9b2eaed267ade157ece02d",
+          "environment": "isolate"
+        },
+        {
+          "path": "schema.js",
+          "hash": "ef5da9263a73a7a02af62b0046cbda1512c05c88e8ede49941116584bccd13e5",
+          "environment": "isolate"
+        }
+      ],
+      "nodeVersion": null,
+      "udfServerVersion": "1.46.0"
+    }
+  ],
+  "ownedFixtureProcessMatches": [],
+  "ownedDescendantsObserved": 0,
+  "noSignalsSent": true,
+  "originalHelperTimeoutMs": 120292,
+  "at": "2026-10-08T11:53:06.598Z"
+}

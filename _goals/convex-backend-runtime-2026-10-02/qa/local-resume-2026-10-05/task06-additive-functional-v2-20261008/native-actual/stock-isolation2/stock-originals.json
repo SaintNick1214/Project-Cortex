@@ -1,0 +1,18 @@
+{
+  "convex.json": {
+    "content": "{\n  \"functions\": \"convex/\"\n}\n",
+    "sha256": "1bb7e2dec7148da5d684477c6074ecc66e48505ab67ea0074086b998ec39eda7"
+  },
+  "convex/schema.ts": {
+    "content": "import {defineSchema} from \"convex/server\";\nexport default defineSchema({});\n",
+    "sha256": "a7dce92f84ae45e90e02c533e37d2be146ad3456056a6283b3e747f1489ea657"
+  },
+  "convex/stock.ts": {
+    "content": "import {query} from \"./_generated/server\";\nexport const metadata=query({args:{},handler:async()=>({sentinel:\"task06-stock\",version:1})});\n",
+    "sha256": "01f3fe3cc070af5f227c01e47d8e23991999d83a42b6a1b7b025546267952899"
+  },
+  "convex/stockNode.ts": {
+    "content": "\"use node\";\nimport {action} from \"./_generated/server\";\nimport {createHash} from \"node:crypto\";\nexport const health=action({args:{},handler:async()=>({runtime:\"node\",hash:createHash(\"sha256\").update(\"task06-stock\").digest(\"hex\")})});\n",
+    "sha256": "782b91201ed6e814c2b73533b808f416c285cfb972d108c8f9a6e9e8726488ce"
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "scope": "independent affected installer/generator offline regression; no service effects",
+  "command": [
+    "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+    "--experimental-vm-modules",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/jest/bin/jest.js",
+    "--config",
+    "jest.config.js",
+    "--selectProjects",
+    "unit",
+    "--runTestsByPath",
+    "src/utils/__tests__/additive-backend.test.ts",
+    "--runInBand",
+    "--no-cache",
+    "--json",
+    "--outputFile",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task06-product-independent-review1/affected-independent-results1.json"
+  ],
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli",
+  "ownedTemporaryRoot": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task06-product-independent-review1/controlled-test-tmp1",
+  "remainingTemporaryNamesBeforeRemoval": [
+    "jest_dx"
+  ],
+  "ownedTemporaryRootRemoved": true,
+  "before": [
+    {
+      "path": "scripts/backend/build-distribution.mjs",
+      "bytes": 10427,
+      "sha256": "cf6e1825886603198133cc3c622aea061d989890eee86be2bb6d28dcc04c66d2"
+    },
+    {
+      "path": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+      "bytes": 20101,
+      "sha256": "1cd3c2da398ad60471ee9c7aa5e35a3aa7de109066555a76a037c7a94ff6df0f"
+    },
+    {
+      "path": "packages/cortex-cli/src/utils/init/additive-backend.ts",
+      "bytes": 20424,
+      "sha256": "6a81c1bca2c8e3abc85108512fda08fea4c8eb3038293e54f01e7dd9bc24f922"
+    }
+  ],
+  "after": [
+    {
+      "path": "scripts/backend/build-distribution.mjs",
+      "bytes": 10427,
+      "sha256": "cf6e1825886603198133cc3c622aea061d989890eee86be2bb6d28dcc04c66d2"
+    },
+    {
+      "path": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+      "bytes": 20101,
+      "sha256": "1cd3c2da398ad60471ee9c7aa5e35a3aa7de109066555a76a037c7a94ff6df0f"
+    },
+    {
+      "path": "packages/cortex-cli/src/utils/init/additive-backend.ts",
+      "bytes": 20424,
+      "sha256": "6a81c1bca2c8e3abc85108512fda08fea4c8eb3038293e54f01e7dd9bc24f922"
+    }
+  ],
+  "sourceUnchanged": true,
+  "elapsedSeconds": 1.6333147089753766,
+  "pid": 1288,
+  "exitCode": 1,
+  "timeout": false,
+  "reaped": true,
+  "capturedAt": "2026-10-08T11:14:43.694874+00:00"
+}

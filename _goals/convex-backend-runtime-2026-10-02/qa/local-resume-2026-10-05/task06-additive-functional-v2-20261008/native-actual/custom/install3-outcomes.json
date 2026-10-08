@@ -1,0 +1,161 @@
+{
+  "kind": "custom",
+  "stage": "install3",
+  "operation": "43a8bddd-5e2a-4d15-903a-6ff12d648d0a",
+  "projectId": 3172114,
+  "deploymentName": "determined-raven-795",
+  "results": [
+    {
+      "name": "packed SDK additive plan and application preserve the selected host configuration",
+      "status": "PASS",
+      "elapsedMs": 33,
+      "evidence": {
+        "installed": 61,
+        "unchanged": 3,
+        "functionsDirectory": "custom/backend/",
+        "capabilities": {
+          "authConfigured": true,
+          "bootstrap": "trusted-operator-required",
+          "execution": "task07-required"
+        }
+      }
+    },
+    {
+      "name": "real development helper verifies and registers only the selected cloud-dev target",
+      "status": "PASS",
+      "elapsedMs": 16927,
+      "evidence": {
+        "registered": true,
+        "verified": {
+          "teamId": 325340,
+          "projectId": 3172114,
+          "deploymentName": "determined-raven-795",
+          "deploymentUrl": "https://determined-raven-795.convex.cloud",
+          "disposable": true
+        }
+      }
+    },
+    {
+      "name": "unbootstrapped public JWT has no current grant; missing core capability is actionable",
+      "status": "PASS",
+      "elapsedMs": 1054,
+      "evidence": {
+        "error": {
+          "name": "ConvexError",
+          "message": "[Request ID: ba6ffb587d13155a] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../custom/backend/runtimeAuth.ts:45:26)\n    at resolveAuthority (../../custom/backend/runtimeAuth.ts:164:46)\n    at async requireAuthority (../../custom/backend/runtimeAuth.ts:250:0)\n    at async requireDataAuthority (../../custom/backend/runtimeDataAuth.ts:29:16)\n    at async handler (../../custom/backend/runtimeTranscript.ts:281:121)\n",
+          "data": {
+            "code": "FORBIDDEN",
+            "message": "Access denied",
+            "outcome": "not_dispatched",
+            "retryable": false,
+            "version": 1
+          }
+        },
+        "actionable": {
+          "name": "Error",
+          "message": "Cortex backend capability is incomplete: bootstrapConfigured. Configure verified JWT auth, provision trusted operator grants, and register the additive core on the selected development target."
+        },
+        "stateUnchanged": true
+      }
+    },
+    {
+      "name": "verified operator helper provisions trusted scoped identity without public bootstrap",
+      "status": "PASS",
+      "elapsedMs": 2635,
+      "evidence": {
+        "principalProvisioned": true,
+        "foreignPrincipalHasCurrentIndependentGrant": true,
+        "spaceRegistered": true
+      }
+    },
+    {
+      "name": "installed Agent-backed core works through verified scoped JWT and exact replay",
+      "status": "PASS",
+      "elapsedMs": 522,
+      "evidence": {
+        "conversationId": "conversation:94da0de009a2557dc461cba610595200c84a9470cfba8c2e2cf5ebbb2f364c6e",
+        "oneCanonicalConversation": true,
+        "manualWriteLocked": true
+      }
+    },
+    {
+      "name": "noJWT, foreign identity and public internal-bootstrap attempts cause no core effects",
+      "status": "PASS",
+      "elapsedMs": 660,
+      "evidence": {
+        "errors": [
+          {
+            "name": "ConvexError",
+            "message": "[Request ID: 02c7273d37dd5df9] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"UNAUTHENTICATED\",\"message\":\"Verified identity required\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../custom/backend/runtimeAuth.ts:45:26)\n    at resolveAuthority (../../custom/backend/runtimeAuth.ts:160:47)\n    at requireAuthority (../../custom/backend/runtimeAuth.ts:250:0)\n    at async requireDataAuthority (../../custom/backend/runtimeDataAuth.ts:29:16)\n    at async requireConversation (../../custom/backend/runtimeTranscript.ts:44:34)\n    at async handler (../../custom/backend/runtimeTranscript.ts:289:30)\n",
+            "data": {
+              "code": "UNAUTHENTICATED",
+              "message": "Verified identity required",
+              "outcome": "not_dispatched",
+              "retryable": false,
+              "version": 1
+            }
+          },
+          {
+            "name": "ConvexError",
+            "message": "[Request ID: 256c92675719eaa0] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../custom/backend/runtimeAuth.ts:45:26)\n    at resolveAuthority (../../custom/backend/runtimeAuth.ts:184:0)\n    at async requireAuthority (../../custom/backend/runtimeAuth.ts:250:0)\n    at async requireDataAuthority (../../custom/backend/runtimeDataAuth.ts:29:16)\n    at async requireConversation (../../custom/backend/runtimeTranscript.ts:44:34)\n    at async handler (../../custom/backend/runtimeTranscript.ts:289:30)\n",
+            "data": {
+              "code": "FORBIDDEN",
+              "message": "Access denied",
+              "outcome": "not_dispatched",
+              "retryable": false,
+              "version": 1
+            }
+          },
+          {
+            "name": "Error",
+            "message": "[Request ID: c373908c8ff073a5] Server Error\nCould not find public function for 'runtimeAuth:provision'.\n"
+          },
+          {
+            "name": "Error",
+            "message": "[Request ID: 53820f035c9fbda0] Server Error\nCould not find public function for 'runtimeAuth:provision'.\n"
+          }
+        ],
+        "stateUnchanged": true,
+        "modelDispatches": 0
+      }
+    },
+    {
+      "name": "retry is a zero-write additive installation and helper re-registration preserves existing core",
+      "status": "PASS",
+      "elapsedMs": 7762,
+      "evidence": {
+        "writes": 0,
+        "unchanged": 64,
+        "coreStateUnchanged": true
+      }
+    },
+    {
+      "name": "custom functions/index/data/component/auth/HTTP remain live after installation and retry",
+      "status": "PASS",
+      "elapsedMs": 1537,
+      "evidence": {
+        "hostNoteRows": 1,
+        "hostThreadId": "m974x6cwckhhh5b5q5ap8f61j98fw6r7",
+        "indexExecuted": true,
+        "hostAuthAndCortexAuthSeparate": true,
+        "unrelatedNodeAction": {
+          "hash": "a59683b30140ca9b374287f21cac415147894d2bde95ef248d02a08a6e526c32",
+          "runtime": "node",
+          "subject": "host-owner"
+        },
+        "httpStatus": 200,
+        "bytePreservedFiles": [
+          "convex.json",
+          "host.ts",
+          "http.ts"
+        ],
+        "deniedOtherProvider": {
+          "name": "ConvexError",
+          "message": "[Request ID: cd0b1088909101d8] Server Error\nUncaught ConvexError: HOST_AUTH_REQUIRED\n    at owner (../custom/backend/host.ts:4:183)\n    at async handler (../custom/backend/host.ts:7:105)\n",
+          "data": "HOST_AUTH_REQUIRED"
+        }
+      }
+    }
+  ],
+  "modelDispatches": 0
+}

@@ -1,10 +1,10 @@
 {
   "schema": "cortex.completion-current.v1",
-  "timestamp_utc": "2026-10-08T11:39:20.131Z",
+  "timestamp_utc": "2026-10-08T12:32:47.112796+00:00",
   "assessment_basis": "Original product criteria plus functional non-author acceptance under user-approved policyv2; no Source/controller subgate or source/mock rate acceptance",
-  "goal_tasks_complete": 4,
+  "goal_tasks_complete": 5,
   "goal_tasks_total": 17,
-  "goal_task_percent_complete": 23.5,
+  "goal_task_percent_complete": 29.4,
   "goal_product_criteria_accepted": 0,
   "goal_product_criteria_total": 12,
   "goal_product_percent_complete": 0,
@@ -75,13 +75,16 @@
     },
     {
       "task_id": "06",
-      "percent_complete": 0,
-      "criteria_accepted": 0,
+      "percent_complete": 100,
+      "criteria_accepted": 3,
       "criteria_total": 3,
-      "accepted_scope": null,
-      "independent_acceptance_evidence": [],
+      "accepted_scope": "All original Task06 requirements and criteria: current product-generated fresh partial-failure/recovery plus applicable custom host, direct component discovery, preservation and verified bounded development helper; Task07 execution separate",
+      "independent_acceptance_evidence": [
+        "qa/local-resume-2026-10-05/task06-product-independent-review1/verdict-final1.json",
+        "qa/local-resume-2026-10-05/task06-product-independent-review1/report-final1.md"
+      ],
       "original_task_file": "tasks/06-additive-installation.md",
-      "task_file_sha256": "e2d7bae8a7d31bf5b941c91a925342c17c945a17ec04125b3aa103dfc5cb60dc"
+      "task_file_sha256": "26602b8512dd92e7a9385a4ba8df5e2596415bc81e1cec7e8161620239875d95"
     },
     {
       "task_id": "07",
@@ -195,7 +198,7 @@
     }
   ],
   "milestone_history": "qa/completion-milestones.jsonl",
-  "latest_milestone_id": "functional_v2_task06_fresh_service500_diagnosed_custom_actual_retained",
+  "latest_milestone_id": "functional_v2_task06_original_acceptance_pass",
   "acceptance_policy_version": 2,
   "acceptance_policy": "acceptance-policy.md",
   "assessment_basis_changed_without_denominator_change": true,
@@ -223,7 +226,7 @@
     }
   ],
   "active_work": {
-    "task06": "Custom current installed8/8 actual groups PASS. Fresh3172211/colorless-sturgeon-703 helper120s timeout preserved; read-only management/config shows sole cloud-dev/zero modules/no owned descendants. Captured official start_push HTTP500 establishes external registration gap; bounded diagnostic remains within original120s. Fresh actual/retirement/one final06 verdict pending; custom retainedfor07.",
-    "task07": "Read-only interfaces mapped; original06 actual acceptance required before source execution; tools/streams newqualification required"
+    "task06": "Original Task06 ACCEPTED independent PASS4.0; fresh repaired product6 actual groups and applicable custom8. Historical failed/partial receipts preserved. Fresh3172356 retired200/404; custom3172114 explicitly retained for07.",
+    "task07": "Independent Agent/Workflow/execution source active on accepted05 and custom06 current8PASS while fresh06 gate is repaired; Root output projection7 controlsPASS, Gateway tools/stream envelope active. No07 acceptance before original06 closes."
   }
 }

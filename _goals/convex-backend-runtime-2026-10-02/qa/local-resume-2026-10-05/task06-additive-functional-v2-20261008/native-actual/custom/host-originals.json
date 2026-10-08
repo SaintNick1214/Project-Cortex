@@ -1,0 +1,26 @@
+{
+  "convex.json": {
+    "content": "{\n  \"functions\": \"custom/backend/\",\n  \"node\": {\n    \"externalPackages\": []\n  }\n}\n",
+    "sha256": "18eb075466081eb8e53c6159399069248417c45709d37775cfda3f6d4d3f31f4"
+  },
+  "custom/backend/schema.ts": {
+    "content": "import {defineSchema,defineTable} from \"convex/server\";\nimport {v} from \"convex/values\";\nexport default defineSchema({hostNotes:defineTable({owner:v.string(),text:v.string()}).index(\"by_owner\",[\"owner\"])},{schemaValidation:true});\n",
+    "sha256": "23431c9781d5a9b0cefd777c4894c6fa28397cc62ebb5f219e33a2e66398fe64"
+  },
+  "custom/backend/convex.config.ts": {
+    "content": "import {defineApp} from \"convex/server\";\nimport agent from \"@convex-dev/agent/convex.config\";\nconst app=defineApp();\napp.use(agent,{name:\"hostAgent\"});\nexport default app;\n",
+    "sha256": "d50f0d25e2ad74649ebfaf2cfb4d1d20a675b57751a47ddd70d43f1f6463b1e7"
+  },
+  "custom/backend/auth.config.ts": {
+    "content": "import type {AuthConfig} from \"convex/server\";\nexport default {providers:[{\"type\":\"customJwt\",\"issuer\":\"https://unrelated-task06-custom.example\",\"jwks\":\"data:application/json;base64,eyJrZXlzIjpbeyJrdHkiOiJSU0EiLCJuIjoia2RFWUEyYlU1NzFEZXNfZEFET1VfRk1odThRSHJrVW1HODJjajNlVHVwZWxxTTY4aHNfMmZ6Ullrb0VuM1NZWVNsSW8zQmJHTXN1WDRDWUYzdjVVRVc1bXRYM0RidXpqdThveVh1T2hvRF9jYnJ3X2UtN3JYYWowS24xY0o3ZnVpZ3AzbDdfRGIzMXBTV2psMHhLTkNEdnZhNlk2enlDWF9vWkpDdlJBMGp1d1JENW05OUdNVHVnbmNvRXJTeVpRNWxzNGVRN2pvbkhxaXRXcGdTUkFtVUtvTnNEYklXT2h1cTd2THNTcTYyLS1LdURVaHpXSFNxaWc2R0xwYkdTdXFiVFB4MnFFbHppNWNDX01lU1VzT3lZbllaM2FGZHFQbExrWnh4bG9MSVFlZWk1OGtGMk5JREJNcmY2Zk9Da0Z0X1RWNmowQzE4QTQ1bHhSZEMyVDJ3IiwiZSI6IkFRQUIiLCJraWQiOiJ0YXNrMDYtY3VzdG9tIiwiYWxnIjoiUlMyNTYiLCJ1c2UiOiJzaWcifV19\",\"algorithm\":\"RS256\",\"applicationID\":\"unrelated-host\"}]} satisfies AuthConfig;\n",
+    "sha256": "d824c892620ec3e333618b5e8cbf7ee97277595f9eaa5dd55395a6e29a825c8a"
+  },
+  "custom/backend/host.ts": {
+    "content": "import {mutation,query} from \"./_generated/server\";\nimport {components} from \"./_generated/api\";\nimport {createThread} from \"@convex-dev/agent\";\nimport {v,ConvexError} from \"convex/values\";\nconst owner=async(ctx:any)=>{const i=await ctx.auth.getUserIdentity();if(!i||i.issuer!==\"https://unrelated-task06-custom.example\")throw new ConvexError(\"HOST_AUTH_REQUIRED\");return i.subject;};\nexport const seed=mutation({args:{text:v.string()},handler:async(ctx,args)=>{const subject=await owner(ctx);const row=await ctx.db.query(\"hostNotes\").withIndex(\"by_owner\",q=>q.eq(\"owner\",subject)).unique();if(row)return {noteId:row._id};const noteId=await ctx.db.insert(\"hostNotes\",{owner:subject,text:args.text});const threadId=await createThread(ctx,components.hostAgent,{userId:subject,title:\"unrelated host thread\"});return {noteId,threadId};}});\nexport const list=query({args:{},handler:async(ctx)=>ctx.db.query(\"hostNotes\").withIndex(\"by_owner\",q=>q.eq(\"owner\",\"host-owner\")).collect()});\nexport const authenticated=query({args:{},handler:async(ctx)=>{const subject=await owner(ctx);return ctx.db.query(\"hostNotes\").withIndex(\"by_owner\",q=>q.eq(\"owner\",subject)).collect();}});\n",
+    "sha256": "206c2c214bdb7d77b90d4256ae5fbddcb1abda51fa895314a8c7efa8f7a68f3e"
+  },
+  "custom/backend/http.ts": {
+    "content": "import {httpRouter} from \"convex/server\";\nimport {httpAction} from \"./_generated/server\";\nconst http=httpRouter();\nhttp.route({path:\"/host-health\",method:\"GET\",handler:httpAction(async()=>new Response(\"host-route-preserved\",{status:200}))});\nexport default http;\n",
+    "sha256": "d8e3aa1447c2c858291a9ee6c0565f0f149c736dcb19c2c859ed2b5b90694849"
+  }
+}

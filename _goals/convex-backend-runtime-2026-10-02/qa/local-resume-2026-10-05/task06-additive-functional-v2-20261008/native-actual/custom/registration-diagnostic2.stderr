@@ -1,0 +1,80 @@
+▌ Developing against deployment:
+▌ [Development] nicholasgeil:cortex-task06-custom-v2-43a8bddd5e2a:dev/nicholasgeil (dev) (dashboard: https://dashboard.convex.dev/t/nicholasgeil/cortex-task06-custom-v2-43a8bddd5e2a/determined-raven-795)
+▌ └─ https://determined-raven-795.convex.cloud
+- Preparing Convex functions...
+
+Convex AI files are not installed. Run npx convex ai-files install to get started or npx convex ai-files disable to hide this message.
+✖ TypeScript typecheck via `tsc` failed.
+To ignore failing typecheck, use `--typecheck=disable`.
+- Collecting TypeScript errors
+
+[96mcustom/backend/attachments.ts[0m:[93m324[0m:[93m21[0m - [91merror[0m[90m TS2591: [0mCannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+
+[7m324[0m     const siteUrl = process.env.CONVEX_SITE_URL || "";
+[7m   [0m [91m                    ~~~~~~~[0m
+[96mcustom/backend/attachments.ts[0m:[93m334[0m:[93m7[0m - [91merror[0m[90m TS2591: [0mCannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+
+[7m334[0m       process.env.NODE_ENV === "test" ||
+[7m   [0m [91m      ~~~~~~~[0m
+[96mcustom/backend/attachments.ts[0m:[93m335[0m:[93m7[0m - [91merror[0m[90m TS2591: [0mCannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+
+[7m335[0m       process.env.CONVEX_ENVIRONMENT === "test" ||
+[7m   [0m [91m      ~~~~~~~[0m
+[96mcustom/backend/attachments.ts[0m:[93m336[0m:[93m7[0m - [91merror[0m[90m TS2591: [0mCannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+
+[7m336[0m       process.env.CONVEX_ENVIRONMENT === "development";
+[7m   [0m [91m      ~~~~~~~[0m
+[96mcustom/backend/attachments.ts[0m:[93m561[0m:[93m11[0m - [91merror[0m[90m TS2591: [0mCannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+
+[7m561[0m           Buffer.from(args.cursor, "base64").toString("utf-8"),
+[7m   [0m [91m          ~~~~~~[0m
+[96mcustom/backend/attachments.ts[0m:[93m576[0m:[93m9[0m - [91merror[0m[90m TS2591: [0mCannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+
+[7m576[0m       ? Buffer.from(JSON.stringify({ offset: offset + limit })).toString(
+[7m   [0m [91m        ~~~~~~[0m
+[96mcustom/backend/facts.ts[0m:[93m1659[0m:[93m21[0m - [91merror[0m[90m TS2591: [0mCannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+
+[7m1659[0m     const siteUrl = process.env.CONVEX_SITE_URL || "";
+[7m    [0m [91m                    ~~~~~~~[0m
+
+[96mcustom/backend/facts.ts[0m:[93m1667[0m:[93m7[0m - [91merror[0m[90m TS2591: [0mCannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+
+[7m1667[0m       process.env.NODE_ENV === "test" ||
+[7m    [0m [91m      ~~~~~~~[0m
+[96mcustom/backend/facts.ts[0m:[93m1668[0m:[93m7[0m - [91merror[0m[90m TS2591: [0mCannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+
+[7m1668[0m       process.env.CONVEX_ENVIRONMENT === "test";
+[7m    [0m [91m      ~~~~~~~[0m
+[96mcustom/backend/memories.ts[0m:[93m721[0m:[93m21[0m - [91merror[0m[90m TS2591: [0mCannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+
+[7m721[0m     const siteUrl = process.env.CONVEX_SITE_URL || "";
+[7m   [0m [91m                    ~~~~~~~[0m
+[96mcustom/backend/memories.ts[0m:[93m729[0m:[93m7[0m - [91merror[0m[90m TS2591: [0mCannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+
+[7m729[0m       process.env.NODE_ENV === "test" ||
+[7m   [0m [91m      ~~~~~~~[0m
+[96mcustom/backend/memories.ts[0m:[93m730[0m:[93m7[0m - [91merror[0m[90m TS2591: [0mCannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+
+[7m730[0m       process.env.CONVEX_ENVIRONMENT === "test";
+[7m   [0m [91m      ~~~~~~~[0m
+[96mcustom/backend/runtimeGateway.ts[0m:[93m501[0m:[93m5[0m - [91merror[0m[90m TS2322: [0mType '({ params, type }: { type: "generate" | "stream"; params: LanguageModelV4CallOptions; model: LanguageModelV4; }) => Promise<LanguageModelV4CallOptions>' is not assignable to type '(options: { type: "generate" | "stream"; params: LanguageModelV4CallOptions; model: LanguageModelV4; }) => PromiseLike<LanguageModelV4CallOptions>'.
+  Call signature return types 'Promise<LanguageModelV4CallOptions>' and 'PromiseLike<LanguageModelV4CallOptions>' are incompatible.
+    The types of 'then' are incompatible between these types.
+      Type '<TResult1 = LanguageModelV4CallOptions, TResult2 = never>(onfulfilled?: ((value: LanguageModelV4CallOptions) => TResult1 | PromiseLike<TResult1>) | null | undefined, onrejected?: ((reason: any) => TResult2 | PromiseLike<...>) | ... 1 more ... | undefined) => Promise<...>' is not assignable to type '<TResult1 = LanguageModelV4CallOptions, TResult2 = never>(onfulfilled?: ((value: LanguageModelV4CallOptions) => TResult1 | PromiseLike<TResult1>) | null | undefined, onrejected?: ((reason: any) => TResult2 | PromiseLike<...>) | ... 1 more ... | undefined) => PromiseLike<...>'.
+        Types of parameters 'onfulfilled' and 'onfulfilled' are incompatible.
+          Types of parameters 'value' and 'value' are incompatible.
+            Type 'import("/Users/SaintNick/.codex/tmp/cortex-task06-custom-native-43a8bddd5e2a/project/node_modules/@ai-sdk/provider/dist/index").LanguageModelV4CallOptions' is not assignable to type 'import("/Users/SaintNick/.codex/tmp/cortex-task06-custom-native-43a8bddd5e2a/project/node_modules/@ai-sdk/gateway/node_modules/@ai-sdk/provider/dist/index").LanguageModelV4CallOptions'.
+              Types of property 'reasoning' are incompatible.
+                Type '"none" | "low" | "high" | "provider-default" | "minimal" | "medium" | "xhigh" | "max" | undefined' is not assignable to type '"none" | "low" | "high" | "provider-default" | "minimal" | "medium" | "xhigh" | undefined'.
+                  Type '"max"' is not assignable to type '"none" | "low" | "high" | "provider-default" | "minimal" | "medium" | "xhigh" | undefined'.
+
+[7m501[0m     transformParams: async ({ params, type }) => { const normalized = languageParams(params, state.resolution.snapshot, state.resolution.dispatchEvidence, state.binding, state.controller.signal);
+[7m   [0m [91m    ~~~~~~~~~~~~~~~[0m
+
+Found 13 errors in 4 files.
+
+Errors  Files
+     6  custom/backend/attachments.ts[90m:324[0m
+     3  custom/backend/facts.ts[90m:1659[0m
+     3  custom/backend/memories.ts[90m:721[0m
+     1  custom/backend/runtimeGateway.ts[90m:501[0m

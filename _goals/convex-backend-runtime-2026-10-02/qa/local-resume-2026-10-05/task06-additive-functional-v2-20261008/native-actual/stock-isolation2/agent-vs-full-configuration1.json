@@ -1,0 +1,25 @@
+{
+  "scope": "READ_ONLY_LOCAL_CONFIGURATION_COMPARISON_NO_CAUSE_CLAIM",
+  "files": {
+    "convex/convex.config.ts": {
+      "content": "import { defineApp } from \"convex/server\";\nimport { registerCortexComponentsV1 } from \"./_cortex/components\";\nconst app = defineApp();\nregisterCortexComponentsV1(app);\nexport default app;\n",
+      "sha256": "20017b5192b7678470f271b97ec2d13b592ea3bd05ec0bc48a026e8440038740"
+    },
+    "convex/_cortex/components.ts": {
+      "content": "import type { AppDefinition } from \"convex/server\";\nimport agent from \"@convex-dev/agent/convex.config\";\nexport function registerCortexComponentsV1(app: AppDefinition): void {\napp.use(agent, { name: \"agent\" });\n}\n",
+      "sha256": "ddcec540205695e17c7a33de5f3efa01671fc8634cc4ffc57612329df68fc710"
+    },
+    "convex/schema.ts": {
+      "content": "import { cortexTablesV1 } from \"./_cortex/schema\";\nimport {defineSchema} from \"convex/server\";\nexport default defineSchema({\n  ...cortexTablesV1,});\n",
+      "sha256": "90c6c496eba7e702275e26d34fbb9306cec804e5fc63e21597bffc4f11a39542"
+    },
+    "agent-isolation1/convex/convex.config.ts": {
+      "content": "import {defineApp} from \"convex/server\";\nimport agent from \"@convex-dev/agent/convex.config\";\nconst app=defineApp();\napp.use(agent,{name:\"agent\"});\nexport default app;\n",
+      "sha256": "4333ae2485bea6b2070e9e2125addf1842d1a7c4d6b255b91080b265076ba51f"
+    },
+    "agent-isolation1/convex/schema.ts": {
+      "content": "import {defineSchema} from \"convex/server\";\nexport default defineSchema({});\n",
+      "sha256": "a7dce92f84ae45e90e02c533e37d2be146ad3456056a6283b3e747f1489ea657"
+    }
+  }
+}

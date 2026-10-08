@@ -1,0 +1,162 @@
+{
+  "version": 1,
+  "task": "06-additive-installation",
+  "policy": "acceptance-policy.md v2",
+  "reviewer": "/root/task03_linux_source_adapter_judge1",
+  "implementationAuthorship": false,
+  "scope": "Same coherent Task06 review closed partially at checkpoint54; source/offline and custom installed host judged, fresh registration missing",
+  "status": "NOT_ACCEPTED_EXTERNAL_SERVICE_GATE_OPEN",
+  "rubricVerdict": "NEEDS_REVISION",
+  "rubricMeaning": "Required functional completion remains missing; no code revision requested by this partial result",
+  "task06Accepted": false,
+  "task07Accepted": false,
+  "goalAccepted": false,
+  "candidate": {
+    "checkpoint": "1298bcf4c053af238a1f49dd56450e8b856f2a84",
+    "selectedSourceDigest": "bd5b277c368bf41d104a0beca01066f990e80046c0012c9f867f4f48a241b86f",
+    "sourceBinding": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task06-product-independent-review1/checkpoint54-selected-source-binding1.json",
+    "distributionManifestSha256": "5803f6aa2eebf0fda6f373760503330fbeecea269151bed5786831a4ee6d1990",
+    "packedSdkSha256": "bf94d41a80809858c1418742371b0eb8b6e5da81744b5ee67edf96480405ad99"
+  },
+  "scores": {
+    "requirementFulfillment": 3,
+    "testCoverage": 3,
+    "codeQuality": 4,
+    "patternAdherence": 4,
+    "implementationCompleteness": 3
+  },
+  "averageScore": 3.4,
+  "requirements": [
+    {
+      "id": "R1",
+      "status": "PARTIAL",
+      "finding": "Fresh-host registration missing; versioned additive artifacts and custom runtime/auth integration demonstrated"
+    },
+    {
+      "id": "R2",
+      "status": "PASS",
+      "finding": "Source/offline and actual custom host preservation/conflict/retry boundaries demonstrated"
+    },
+    {
+      "id": "R3",
+      "status": "PASS",
+      "finding": "Explicit verified cloud-dev helper/trusted bootstrap/bounded unknown timeout; no production or implicit project creation"
+    },
+    {
+      "id": "R4",
+      "status": "PASS",
+      "finding": "Incremental core additive mechanism demonstrated; later optional/fullCLI/07 execution separated"
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "id": "AC1",
+      "status": "PARTIAL",
+      "finding": "Custom8 actual PASS; fresh0 registered modules after bounded failures"
+    },
+    {
+      "id": "AC2",
+      "status": "PASS",
+      "finding": "Verified custom disposable target registers core/auth, returns actionable incomplete bootstrap and enforces JWT/grant/internal visibility"
+    },
+    {
+      "id": "AC3",
+      "status": "PASS_SCOPED_OFFLINE_AND_ACTUAL_CUSTOM",
+      "finding": "Meaningful retry/partial/ambiguous fixtures preserve host; custom actual retry0writes/64same. Overall fresh registration still pending"
+    }
+  ],
+  "findings": [
+    {
+      "id": "F1",
+      "priority": "P1",
+      "category": "REQUIRED_FUNCTIONAL_RESULT_MISSING",
+      "productDefectEstablished": false,
+      "title": "Fresh-host core registration has not succeeded",
+      "evidence": [
+        "fresh/install3-outcomes.json",
+        "fresh/registration-diagnostic2.json",
+        "fresh/registration-diagnostic2.stderr",
+        "fresh/post-timeout-remote-config-and-children2.json"
+      ],
+      "observed": {
+        "helperElapsedMs": 120292,
+        "diagnosticElapsedMs": 120076,
+        "capturedStartPushHttp500Responses": 11,
+        "finalConfigHttpStatus": 200,
+        "registeredModules": 0
+      },
+      "requiredCompletion": "A successful actual fresh-host installation/registration result. Root is pursuing a materially different stock-baseline diagnosis; no identical command loop or requirement waiver."
+    }
+  ],
+  "checks": {
+    "independentAffectedSubset": {
+      "passed": 24,
+      "failed": 0,
+      "skipped": 0,
+      "raw": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task06-product-independent-review1/affected-independent-results2.json",
+      "priorReviewerSetupFailure": {
+        "passed": 23,
+        "failed": 1,
+        "raw": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task06-product-independent-review1/affected-independent-results1.json",
+        "cause": "Owned temporary CJS fixture inherited repository ESM; corrected only own fixture boundary"
+      }
+    },
+    "authorEarlierCLI": {
+      "passed": 207,
+      "newConditions": 39,
+      "overlapNotSummed": true
+    },
+    "authorEarlierPackedConsumers": {
+      "passed": 6,
+      "currentNativePathProof": false
+    },
+    "currentGatewayRawVerified": {
+      "passed": 260,
+      "failed": 0,
+      "skipped": 0,
+      "independentlyExecuted": false,
+      "newNegatives": 2
+    },
+    "independentEmittedJavaScript": {
+      "exactlyEqual": true,
+      "bytes": 56952,
+      "sha256": "db59ac80d01fac8af7dd724bd4df896bf41dfda3a847d44ee983732a3a447b7c"
+    },
+    "customActual": {
+      "passedGroups": 8,
+      "baselineGroups": 1,
+      "enabledTypecheckCodegenExit": 0,
+      "retryWrites": 0,
+      "modelOperations": 0,
+      "modelAttempts": 0,
+      "dispatches": 0
+    },
+    "freshActual": {
+      "additiveApplicationPassed": true,
+      "installedFiles": 65,
+      "registrationSucceeded": false
+    }
+  },
+  "cleanup": {
+    "freshProject": 3172211,
+    "freshRetirementPost": 200,
+    "freshRetirementReadback": 404,
+    "freshPrivateCleanupRecorded": true,
+    "ownedProcessesRemaining": 0,
+    "customProject": 3172114,
+    "customExplicitlyRetainedForTask07": true,
+    "customHandoff": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task06-additive-functional-v2-20261008/native-actual/custom/retained-for-task07.json",
+    "customNextTaskReverifyRequired": true,
+    "customRetirementOnCompletionOrAbandonmentRequired": true
+  },
+  "limitations": [
+    "HTTP500 establishes the target/request registration failure, not a global outage or underlying product cause",
+    "No Task07 paid/tool/stream execution qualified",
+    "No existing-Cortex deployment upgrade support claimed",
+    "No recursive source-custody/controller gates imposed"
+  ],
+  "historicalFailuresPreserved": true,
+  "report": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task06-product-independent-review1/report-partial1.md",
+  "closedAt": "2026-10-08T11:49:53.852880+00:00",
+  "remainingWrites": []
+}

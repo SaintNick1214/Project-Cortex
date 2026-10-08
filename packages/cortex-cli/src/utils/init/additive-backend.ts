@@ -72,33 +72,75 @@ function addSchema(text: string, tables: string[]): string {
   if (!bindingAvailable(ast, "cortexTablesV1")) throw new Error("Host binding cortexTablesV1 conflicts with the additive schema import.");
   return 'import { cortexTablesV1 } from "./_cortex/schema";\n' + text.slice(0, object.getStart(ast) + 1) + "\n  ...cortexTablesV1," + text.slice(object.getStart(ast) + 1);
 }
-function addComponents(text: string, components: string[]): string {
+type ComponentRegistration = { name: string; module: string };
+/** Convex1.46 discovers component edges between .config files, not through ordinary helpers. */
+function componentRegistrations(text: string, names: string[]): ComponentRegistration[] {
+  const ast = parse("components.ts", text);
+  const imports = new Map<string, string>();
+  for (const statement of ast.statements) {
+    if (ts.isImportDeclaration(statement) && ts.isStringLiteral(statement.moduleSpecifier) && statement.importClause?.name) {
+      imports.set(statement.importClause.name.text, statement.moduleSpecifier.text);
+    }
+  }
+  const helper = ast.statements.find((statement): statement is ts.FunctionDeclaration =>
+    ts.isFunctionDeclaration(statement) && statement.name?.text === "registerCortexComponentsV1");
+  if (!helper?.body || helper.parameters.length !== 1 || !ts.isIdentifier(helper.parameters[0].name)) throw new Error("Backend component helper requires static named registrations.");
+  const app = helper.parameters[0].name.text;
+  const result: ComponentRegistration[] = [];
+  for (const statement of helper.body.statements) {
+    if (!ts.isExpressionStatement(statement) || !ts.isCallExpression(statement.expression)) throw new Error("Dynamic backend component registration requires a reviewed merge.");
+    const call = statement.expression;
+    if (!ts.isPropertyAccessExpression(call.expression) || call.expression.expression.getText(ast) !== app || call.expression.name.text !== "use"
+      || call.arguments.length !== 2 || !ts.isIdentifier(call.arguments[0]) || !ts.isObjectLiteralExpression(call.arguments[1])) throw new Error("Backend component registration is not a static app.use().");
+    const options = call.arguments[1].properties;
+    if (options.length !== 1 || !ts.isPropertyAssignment(options[0]) || options[0].name.getText(ast) !== "name" || !ts.isStringLiteral(options[0].initializer)) throw new Error("Backend components require explicit names and supported static options.");
+    const name = options[0].initializer.text;
+    const module = imports.get(call.arguments[0].text);
+    if (!/^[A-Za-z][A-Za-z0-9_]*$/.test(name) || !module || !/\/convex\.config(?:\.[cm]?[jt]s)?$/.test(module)) throw new Error("Backend component lacks a direct static configuration import.");
+    result.push({ name, module });
+  }
+  if (new Set(names).size !== names.length || result.length !== names.length || result.some(entry => !names.includes(entry.name))
+    || new Set(result.map(entry => entry.name)).size !== result.length) throw new Error("Backend component registrations differ from the versioned manifest.");
+  return result;
+}
+const componentBinding = (name: string) => `_cortex_component_${name}`;
+function addComponents(text: string, components: ComponentRegistration[]): string {
   const ast = parse("convex.config.ts", text);
   const exported = ast.statements.filter(ts.isExportAssignment);
   if (exported.length !== 1 || !ts.isIdentifier(exported[0].expression)) throw new Error("Component configuration must export a named defineApp() instance; review the proposed registration helper.");
   const app = exported[0].expression.text;
   const declaration = ast.statements.filter(ts.isVariableStatement).flatMap((statement) => [...statement.declarationList.declarations]).find((entry) => ts.isIdentifier(entry.name) && entry.name.text === app);
   if (!declaration?.initializer || !ts.isCallExpression(declaration.initializer) || declaration.initializer.expression.getText(ast) !== "defineApp") throw new Error("Cannot identify the host defineApp() instance safely; review the registration helper.");
-  const managedImport = ast.statements.some((statement) => ts.isImportDeclaration(statement) && ts.isStringLiteral(statement.moduleSpecifier) && statement.moduleSpecifier.text === "./_cortex/components" && statement.importClause?.namedBindings && ts.isNamedImports(statement.importClause.namedBindings) && statement.importClause.namedBindings.elements.some((entry) => entry.name.text === "registerCortexComponentsV1"));
-  let managed = false;
+  const imports = new Map<string, string>();
+  for (const statement of ast.statements) if (ts.isImportDeclaration(statement) && ts.isStringLiteral(statement.moduleSpecifier) && statement.importClause?.name) imports.set(statement.importClause.name.text, statement.moduleSpecifier.text);
+  const managed = new Set<string>();
   const visit = (node: ts.Node) => {
     if (ts.isCallExpression(node) && node.expression.getText(ast) === "registerCortexComponentsV1") {
-      if (!managedImport || node.arguments.length !== 1 || node.arguments[0].getText(ast) !== app || managed) throw new Error("Ambiguous Cortex component registration requires a reviewed merge.");
-      managed = true;
+      throw new Error("Indirect Cortex component registration requires a reviewed merge to direct root component imports.");
     }
     if (ts.isCallExpression(node) && ts.isPropertyAccessExpression(node.expression) && node.expression.expression.getText(ast) === app && node.expression.name.text === "use") {
       const options = node.arguments[1];
       if (!options || !ts.isObjectLiteralExpression(options)) throw new Error("Host component has an implicit or dynamic name; review names before Cortex registration.");
       const name = options.properties.find((entry) => ts.isPropertyAssignment(entry) && entry.name.getText(ast) === "name");
       if (!name || !ts.isPropertyAssignment(name) || !ts.isStringLiteral(name.initializer)) throw new Error("Host component has a dynamic name; review names before Cortex registration.");
-      if (components.includes(name.initializer.text)) throw new Error(`Host component ${name.initializer.text} conflicts with Cortex registration.`);
+      const componentName = name.initializer.text;
+      const component = components.find(entry => entry.name === componentName);
+      if (component) {
+        if (node.arguments.length !== 2 || !ts.isIdentifier(node.arguments[0]) || node.arguments[0].text !== componentBinding(component.name)
+          || options.properties.length !== 1 || imports.get(node.arguments[0].text) !== component.module || managed.has(component.name)) throw new Error(`Host component ${component.name} conflicts with Cortex registration.`);
+        if (!ts.isExpressionStatement(node.parent) || node.parent.parent !== ast) throw new Error("Cortex component registration must remain at the root configuration's top level.");
+        managed.add(component.name);
+      }
     }
     ts.forEachChild(node, visit);
   };
   visit(ast);
-  if (managed) return text;
-  if (!bindingAvailable(ast, "registerCortexComponentsV1")) throw new Error("Host binding registerCortexComponentsV1 conflicts with the additive helper.");
-  return 'import { registerCortexComponentsV1 } from "./_cortex/components";\n' + text.slice(0, exported[0].getStart(ast)) + `registerCortexComponentsV1(${app});\n` + text.slice(exported[0].getStart(ast));
+  const missing = components.filter(component => !managed.has(component.name));
+  if (!missing.length) return text;
+  for (const component of missing) if (!bindingAvailable(ast, componentBinding(component.name))) throw new Error(`Host binding ${componentBinding(component.name)} conflicts with Cortex registration.`);
+  const addedImports = missing.map(component => `import ${componentBinding(component.name)} from ${JSON.stringify(component.module)};\n`).join("");
+  const registrations = missing.map(component => `${app}.use(${componentBinding(component.name)}, { name: ${JSON.stringify(component.name)} });\n`).join("");
+  return addedImports + text.slice(0, exported[0].getStart(ast)) + registrations + text.slice(exported[0].getStart(ast));
 }
 function validateProvider(provider: TrustedJwtProvider): void {
   if (provider.type !== "customJwt" || !["RS256", "ES256"].includes(provider.algorithm) || !provider.issuer || !provider.jwks) throw new Error("Explicit issuer, JWKS and asymmetric algorithm are required for trusted JWT integration.");
@@ -174,17 +216,20 @@ export async function planAdditiveBackendInstallation(projectPath: string, sdkPa
     else plan.changes.push({ path: relative, beforeSha256: current === null ? null : digest(current), content, reason });
   }
   const seen = new Set<string>();
+  let componentSource = "";
   for (const entry of manifest.files) {
     if (!safeRelative(entry.path) || seen.has(entry.path) || !/^[a-f0-9]{64}$/.test(entry.sha256)) throw new Error("Unsafe or duplicate backend distribution path.");
     seen.add(entry.path);
     await rejectSymlinks(distribution, entry.path);
     const content = await fs.readFile(path.join(distribution, entry.path), "utf8");
     if (digest(content) !== entry.sha256) throw new Error(`Backend distribution digest mismatch: ${entry.path}`);
+    if (entry.path === "_cortex/components.ts") componentSource = content;
     await proposed(path.join(normalized, entry.path), content, "versioned Cortex backend source");
   }
   if (!seen.has("_cortex/schema.ts") || !seen.has("_cortex/components.ts")) throw new Error("Backend distribution lacks additive schema/component helpers.");
+  const registrations = componentRegistrations(componentSource, manifest.components);
   await proposed(path.join(normalized, "schema.ts"), 'import { defineSchema } from "convex/server";\nimport { cortexTablesV1 } from "./_cortex/schema";\nexport default defineSchema({ ...cortexTablesV1 });\n', "add Cortex table map while preserving host tables and options", (current) => addSchema(current, manifest.tables));
-  await proposed(path.join(normalized, "convex.config.ts"), 'import { defineApp } from "convex/server";\nimport { registerCortexComponentsV1 } from "./_cortex/components";\nconst app = defineApp();\nregisterCortexComponentsV1(app);\nexport default app;\n', "register qualified Cortex components alongside host components", (current) => addComponents(current, manifest.components));
+  await proposed(path.join(normalized, "convex.config.ts"), addComponents('import { defineApp } from "convex/server";\nconst app = defineApp();\nexport default app;\n', registrations), "register qualified Cortex components with direct root imports alongside host components", (current) => addComponents(current, registrations));
   if (configText === null) await proposed("convex.json", JSON.stringify({ functions }, null, 2) + "\n", "initialize absent functions configuration");
   const authPath = path.join(normalized, "auth.config.ts");
   if (options.trustedJwtProvider) {

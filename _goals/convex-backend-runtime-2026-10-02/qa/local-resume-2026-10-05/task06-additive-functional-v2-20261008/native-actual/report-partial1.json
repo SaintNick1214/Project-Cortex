@@ -1,0 +1,487 @@
+{
+  "scope": "TASK06_INSTALLED_PACKED_SDK_ACTUAL_HOST_QUALIFICATION_PARTIAL",
+  "status": "CUSTOM_HOST_PASS_FRESH_REGISTRATION_BLOCKED_RETIRED",
+  "fullTask06Accepted": false,
+  "goalAccepted": false,
+  "executionPolicy": "acceptance-policy.md v2; meaningful product/source/tests/native outcomes only",
+  "toolchain": {
+    "node": "v24.15.0",
+    "npm": "12.2.0",
+    "convex": "1.46.0"
+  },
+  "testedDistribution": {
+    "manifest": "dist/backend/v1/manifest.json",
+    "sha256": "5803f6aa2eebf0fda6f373760503330fbeecea269151bed5786831a4ee6d1990",
+    "files": 61,
+    "tables": 40,
+    "components": 1,
+    "packedSDKReceipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task06-additive-functional-v2-20261008/native-actual/packed-sdk-repair2.json",
+    "packed": {
+      "file": "/Users/SaintNick/.codex/tmp/cortex-task06-installed-ac0631c43fa5/packages-repair2/cortexmemory-sdk-0.37.0.tgz",
+      "name": "@cortexmemory/sdk",
+      "version": "0.37.0",
+      "bytes": 788116,
+      "sha256": "bf94d41a80809858c1418742371b0eb8b6e5da81744b5ee67edf96480405ad99",
+      "distributionManifestSha256": "5803f6aa2eebf0fda6f373760503330fbeecea269151bed5786831a4ee6d1990",
+      "distributionSourceFiles": 61
+    }
+  },
+  "custom": {
+    "operation": "43a8bddd-5e2a-4d15-903a-6ff12d648d0a",
+    "projectId": 3172114,
+    "deploymentName": "determined-raven-795",
+    "baselineGroups": [
+      {
+        "name": "unrelated indexed host data and separate Agent component are live before installation",
+        "status": "PASS",
+        "elapsedMs": 859,
+        "evidence": {
+          "seeded": {
+            "noteId": "j57af6cafcy6mw9qpa4fqgsrcx8fwnzn",
+            "threadId": "m974x6cwckhhh5b5q5ap8f61j98fw6r7"
+          },
+          "rows": 1,
+          "component": "hostAgent"
+        }
+      }
+    ],
+    "finalGroups": [
+      {
+        "name": "packed SDK additive plan and application preserve the selected host configuration",
+        "status": "PASS",
+        "elapsedMs": 33,
+        "evidence": {
+          "installed": 61,
+          "unchanged": 3,
+          "functionsDirectory": "custom/backend/",
+          "capabilities": {
+            "authConfigured": true,
+            "bootstrap": "trusted-operator-required",
+            "execution": "task07-required"
+          }
+        }
+      },
+      {
+        "name": "real development helper verifies and registers only the selected cloud-dev target",
+        "status": "PASS",
+        "elapsedMs": 16927,
+        "evidence": {
+          "registered": true,
+          "verified": {
+            "teamId": 325340,
+            "projectId": 3172114,
+            "deploymentName": "determined-raven-795",
+            "deploymentUrl": "https://determined-raven-795.convex.cloud",
+            "disposable": true
+          }
+        }
+      },
+      {
+        "name": "unbootstrapped public JWT has no current grant; missing core capability is actionable",
+        "status": "PASS",
+        "elapsedMs": 1054,
+        "evidence": {
+          "error": {
+            "name": "ConvexError",
+            "message": "[Request ID: ba6ffb587d13155a] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../custom/backend/runtimeAuth.ts:45:26)\n    at resolveAuthority (../../custom/backend/runtimeAuth.ts:164:46)\n    at async requireAuthority (../../custom/backend/runtimeAuth.ts:250:0)\n    at async requireDataAuthority (../../custom/backend/runtimeDataAuth.ts:29:16)\n    at async handler (../../custom/backend/runtimeTranscript.ts:281:121)\n",
+            "data": {
+              "code": "FORBIDDEN",
+              "message": "Access denied",
+              "outcome": "not_dispatched",
+              "retryable": false,
+              "version": 1
+            }
+          },
+          "actionable": {
+            "name": "Error",
+            "message": "Cortex backend capability is incomplete: bootstrapConfigured. Configure verified JWT auth, provision trusted operator grants, and register the additive core on the selected development target."
+          },
+          "stateUnchanged": true
+        }
+      },
+      {
+        "name": "verified operator helper provisions trusted scoped identity without public bootstrap",
+        "status": "PASS",
+        "elapsedMs": 2635,
+        "evidence": {
+          "principalProvisioned": true,
+          "foreignPrincipalHasCurrentIndependentGrant": true,
+          "spaceRegistered": true
+        }
+      },
+      {
+        "name": "installed Agent-backed core works through verified scoped JWT and exact replay",
+        "status": "PASS",
+        "elapsedMs": 522,
+        "evidence": {
+          "conversationId": "conversation:94da0de009a2557dc461cba610595200c84a9470cfba8c2e2cf5ebbb2f364c6e",
+          "oneCanonicalConversation": true,
+          "manualWriteLocked": true
+        }
+      },
+      {
+        "name": "noJWT, foreign identity and public internal-bootstrap attempts cause no core effects",
+        "status": "PASS",
+        "elapsedMs": 660,
+        "evidence": {
+          "errors": [
+            {
+              "name": "ConvexError",
+              "message": "[Request ID: 02c7273d37dd5df9] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"UNAUTHENTICATED\",\"message\":\"Verified identity required\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../custom/backend/runtimeAuth.ts:45:26)\n    at resolveAuthority (../../custom/backend/runtimeAuth.ts:160:47)\n    at requireAuthority (../../custom/backend/runtimeAuth.ts:250:0)\n    at async requireDataAuthority (../../custom/backend/runtimeDataAuth.ts:29:16)\n    at async requireConversation (../../custom/backend/runtimeTranscript.ts:44:34)\n    at async handler (../../custom/backend/runtimeTranscript.ts:289:30)\n",
+              "data": {
+                "code": "UNAUTHENTICATED",
+                "message": "Verified identity required",
+                "outcome": "not_dispatched",
+                "retryable": false,
+                "version": 1
+              }
+            },
+            {
+              "name": "ConvexError",
+              "message": "[Request ID: 256c92675719eaa0] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../custom/backend/runtimeAuth.ts:45:26)\n    at resolveAuthority (../../custom/backend/runtimeAuth.ts:184:0)\n    at async requireAuthority (../../custom/backend/runtimeAuth.ts:250:0)\n    at async requireDataAuthority (../../custom/backend/runtimeDataAuth.ts:29:16)\n    at async requireConversation (../../custom/backend/runtimeTranscript.ts:44:34)\n    at async handler (../../custom/backend/runtimeTranscript.ts:289:30)\n",
+              "data": {
+                "code": "FORBIDDEN",
+                "message": "Access denied",
+                "outcome": "not_dispatched",
+                "retryable": false,
+                "version": 1
+              }
+            },
+            {
+              "name": "Error",
+              "message": "[Request ID: c373908c8ff073a5] Server Error\nCould not find public function for 'runtimeAuth:provision'.\n"
+            },
+            {
+              "name": "Error",
+              "message": "[Request ID: 53820f035c9fbda0] Server Error\nCould not find public function for 'runtimeAuth:provision'.\n"
+            }
+          ],
+          "stateUnchanged": true,
+          "modelDispatches": 0
+        }
+      },
+      {
+        "name": "retry is a zero-write additive installation and helper re-registration preserves existing core",
+        "status": "PASS",
+        "elapsedMs": 7762,
+        "evidence": {
+          "writes": 0,
+          "unchanged": 64,
+          "coreStateUnchanged": true
+        }
+      },
+      {
+        "name": "custom functions/index/data/component/auth/HTTP remain live after installation and retry",
+        "status": "PASS",
+        "elapsedMs": 1537,
+        "evidence": {
+          "hostNoteRows": 1,
+          "hostThreadId": "m974x6cwckhhh5b5q5ap8f61j98fw6r7",
+          "indexExecuted": true,
+          "hostAuthAndCortexAuthSeparate": true,
+          "unrelatedNodeAction": {
+            "hash": "a59683b30140ca9b374287f21cac415147894d2bde95ef248d02a08a6e526c32",
+            "runtime": "node",
+            "subject": "host-owner"
+          },
+          "httpStatus": 200,
+          "bytePreservedFiles": [
+            "convex.json",
+            "host.ts",
+            "http.ts"
+          ],
+          "deniedOtherProvider": {
+            "name": "ConvexError",
+            "message": "[Request ID: cd0b1088909101d8] Server Error\nUncaught ConvexError: HOST_AUTH_REQUIRED\n    at owner (../custom/backend/host.ts:4:183)\n    at async handler (../custom/backend/host.ts:7:105)\n",
+            "data": "HOST_AUTH_REQUIRED"
+          }
+        }
+      }
+    ],
+    "counts": {
+      "runtimeAuthGrants": 2,
+      "runtimeAuthPrincipals": 2,
+      "runtimeConversations": 1,
+      "runtimeModelAttempts": 0,
+      "runtimeModelOperations": 0,
+      "runtimeRuns": 0
+    },
+    "enabledTypecheckCodegen": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task06-additive-functional-v2-20261008/native-actual/custom/enabled-typecheck-codegen3.json",
+    "currentResult": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task06-additive-functional-v2-20261008/native-actual/custom/installed-final3.json",
+    "handoff": {
+      "scope": "TASK06_EXPLICIT_OWNED_INSTALLED_RESOURCE_HANDOFF_FOR_TASK07",
+      "status": "RETAINED_FOR_NEXT_AUTHORIZED_TASK_NOT_RETIRED",
+      "operation": "43a8bddd-5e2a-4d15-903a-6ff12d648d0a",
+      "teamId": 325340,
+      "projectId": 3172114,
+      "projectSlug": "cortex-task06-custom-v2-43a8bddd5e2a",
+      "deploymentName": "determined-raven-795",
+      "url": "https://determined-raven-795.convex.cloud",
+      "verifiedAt": "2026-10-08T11:25:53.670Z",
+      "soleCloudDevelopment": true,
+      "production": false,
+      "fixturePointer": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task06-additive-functional-v2-20261008/native-actual/custom/fixture-pointer.json",
+      "privateDirectory": "/Users/SaintNick/.codex/tmp/cortex-task06-custom-native-43a8bddd5e2a",
+      "hostProject": "/Users/SaintNick/.codex/tmp/cortex-task06-custom-native-43a8bddd5e2a/project",
+      "functionsDirectory": "custom/backend/",
+      "installedSDKManifestSha256": "5803f6aa2eebf0fda6f373760503330fbeecea269151bed5786831a4ee6d1990",
+      "packedSDKReceipt": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task06-additive-functional-v2-20261008/native-actual/packed-sdk-repair2.json",
+      "currentCases": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task06-additive-functional-v2-20261008/native-actual/custom/install3-outcomes.json",
+      "credentialMode": 384,
+      "jwtPrivateMode": 384,
+      "privateDirectoryMode": 448,
+      "ownedProcessesRemaining": 0,
+      "modelDispatches": 0,
+      "owner": "Root feature-orchestrator / Task07 assigned executor",
+      "cleanupObligation": "retire exact3172114 project via POST200/GET404 after Task07 or on abandonment; preserve unrelated host data through subsequent controlled install changes",
+      "nextTaskMustReverifyBeforeMutation": true,
+      "executionTask07StillRequired": true,
+      "noCredentialValuesIncluded": true
+    },
+    "cleanupDisposition": "Explicitly retained for Task07; exact project retirement200/404 obligation after07 or abandonment. Reverify before further mutation."
+  },
+  "fresh": {
+    "operation": "1c9a5648-e4a1-41ca-a3f7-bcf9782a1ed6",
+    "projectId": 3172211,
+    "deploymentName": "colorless-sturgeon-703",
+    "initialResults": [
+      {
+        "name": "packed SDK additive plan and application preserve the selected host configuration",
+        "status": "PASS",
+        "elapsedMs": 47,
+        "evidence": {
+          "installed": 65,
+          "unchanged": 0,
+          "functionsDirectory": "convex/",
+          "capabilities": {
+            "authConfigured": true,
+            "bootstrap": "trusted-operator-required",
+            "execution": "task07-required"
+          }
+        }
+      },
+      {
+        "name": "real development helper verifies and registers only the selected cloud-dev target",
+        "status": "FAIL",
+        "elapsedMs": 120292,
+        "error": {
+          "name": "Error",
+          "message": "Convex development operation timed out; inspect the selected target before retrying an uncertain mutation."
+        }
+      }
+    ],
+    "diagnostic": {
+      "operation": "1c9a5648-e4a1-41ca-a3f7-bcf9782a1ed6",
+      "projectId": 3172211,
+      "deploymentName": "colorless-sturgeon-703",
+      "verifiedAt": "2026-10-08T11:37:24.814Z",
+      "args": [
+        "dev",
+        "--once",
+        "--typecheck",
+        "enable",
+        "--verbose",
+        "--env-file",
+        "[private temporary env file]"
+      ],
+      "cwd": "/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project",
+      "pid": 7031,
+      "code": null,
+      "signal": "SIGTERM",
+      "timedOut": true,
+      "elapsedMs": 120076,
+      "progress": [
+        {
+          "elapsedMs": 20006,
+          "pid": 7031,
+          "lastPhase": "✖ Error fetching POST  https://colorless-sturgeon-703.convex.cloud/api/deploy2/start_push 500 Internal Server Error: InternalServerError: Your request couldn't be completed. Try again later.\nFailed due to network error, retrying in 11.02s...\n"
+        },
+        {
+          "elapsedMs": 40008,
+          "pid": 7031,
+          "lastPhase": "✖ Error fetching POST  https://colorless-sturgeon-703.convex.cloud/api/deploy2/start_push 500 Internal Server Error: InternalServerError: Your request couldn't be completed. Try again later.\nFailed due to network error, retrying in 16.5s...\n"
+        },
+        {
+          "elapsedMs": 60011,
+          "pid": 7031,
+          "lastPhase": "✖ Error fetching POST  https://colorless-sturgeon-703.convex.cloud/api/deploy2/start_push 500 Internal Server Error: InternalServerError: Your request couldn't be completed. Try again later.\nFailed due to network error, retrying in 8.52s...\n"
+        },
+        {
+          "elapsedMs": 80012,
+          "pid": 7031,
+          "lastPhase": "  Not a file or virtual config.\n  -> Component import! Recording it. @convex-dev/agent/convex.config /Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/node_modules/@convex-dev/agent/dist/component/convex.config.js\n"
+        },
+        {
+          "elapsedMs": 100014,
+          "pid": 7031,
+          "lastPhase": "- Bundling modules for Node.js runtime...\n\n"
+        },
+        {
+          "elapsedMs": 120015,
+          "pid": 7031,
+          "lastPhase": "✖ Error fetching POST  https://colorless-sturgeon-703.convex.cloud/api/deploy2/start_push 500 Internal Server Error: InternalServerError: Your request couldn't be completed. Try again later.\nFailed due to network error, retrying in 19.87s...\n"
+        }
+      ],
+      "temporaryEnvRemoved": true,
+      "ownedFixtureProcessesRemaining": [],
+      "credentialsPrinted": false,
+      "priorTimeoutPreserved": true
+    },
+    "finalReadOnly": {
+      "operation": "1c9a5648-e4a1-41ca-a3f7-bcf9782a1ed6",
+      "projectId": 3172211,
+      "deploymentName": "colorless-sturgeon-703",
+      "readOnly": true,
+      "elapsedMs": 297,
+      "results": [
+        {
+          "credentialKind": "adminKey",
+          "httpStatus": 200,
+          "responseKeys": [
+            "config",
+            "moduleHashes",
+            "udfServerVersion",
+            "nodeVersion"
+          ],
+          "config": {
+            "functions": "convex/"
+          },
+          "moduleHashes": [],
+          "nodeVersion": null,
+          "udfServerVersion": null
+        },
+        {
+          "credentialKind": "deployKey",
+          "httpStatus": 200,
+          "responseKeys": [
+            "config",
+            "moduleHashes",
+            "udfServerVersion",
+            "nodeVersion"
+          ],
+          "config": {
+            "functions": "convex/"
+          },
+          "moduleHashes": [],
+          "nodeVersion": null,
+          "udfServerVersion": null
+        }
+      ],
+      "ownedFixtureProcessMatches": [],
+      "ownedDescendantsObserved": 0,
+      "noSignalsSent": true,
+      "originalHelperTimeoutMs": 120292,
+      "at": "2026-10-08T11:41:22.494Z"
+    },
+    "retirement": {
+      "deletion": {
+        "operation": "1c9a5648-e4a1-41ca-a3f7-bcf9782a1ed6",
+        "projectId": 3172211,
+        "projectSlug": "cortex-task06-fresh-v2-1c9a5648e4a1",
+        "deletionHttpStatus": 200,
+        "at": "2026-10-08T11:41:28.743Z"
+      },
+      "retirement": {
+        "operation": "1c9a5648-e4a1-41ca-a3f7-bcf9782a1ed6",
+        "projectId": 3172211,
+        "projectSlug": "cortex-task06-fresh-v2-1c9a5648e4a1",
+        "deploymentName": "colorless-sturgeon-703",
+        "readbackHttpStatus": 404,
+        "retired": true,
+        "productionMutations": 0,
+        "at": "2026-10-08T11:41:28.924Z"
+      }
+    },
+    "localCleanup": {
+      "scope": "TASK06_FAILED_FRESH_FIXTURE_NORMAL_OWNED_CLEANUP",
+      "projectId": 3172211,
+      "retirementPost": 200,
+      "retirementGet": 404,
+      "removed": [
+        "/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/credentials.json",
+        "/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/jwt-private.pem",
+        "/Users/SaintNick/.codex/tmp/cortex-task06-fresh-native-1c9a5648e4a1/project/node_modules"
+      ],
+      "retainedDiagnosticFixtureSource": true,
+      "retainedDependencyLock": true,
+      "sharedPackagesAndCustomTargetPreserved": true,
+      "ownedDescendantsRemaining": 0,
+      "temporaryEnvRemoved": true,
+      "noForeignCleanup": true,
+      "at": "2026-10-08T11:43:46.725Z"
+    },
+    "missingCapability": "This freshly verified cloud-dev target did not accept the installed bundle at official /api/deploy2/start_push: eleven HTTP500 InternalServerError responses in one captured120s CLI diagnostic. No current modules were registered. This is a target/request-specific service gate, not evidence of a global outage or fresh-host success.",
+    "remainingCases": [
+      "fresh registration with enabled typecheck/codegen",
+      "fresh trusted bootstrap/authenticated canonical core",
+      "fresh negative authentication/foreign scope/public internal reachability",
+      "fresh zero-write install and bounded helper retry"
+    ]
+  },
+  "preservedFailures": [
+    {
+      "receipt": "package-pointer-preimage1.json",
+      "cause": "fixture npm12 pack JSON keyed-object parsing"
+    },
+    {
+      "receipt": "custom/deploy-host-before.json",
+      "cause": "fixture lacked direct declared Convex dependency before explicit dependencies added"
+    },
+    {
+      "receipt": "custom/registration-diagnostic1.json",
+      "cause": "actual native400 invalid vendored model-policy filename; corrected segment mapping/imports/collision behavior"
+    },
+    {
+      "receipt": "custom/repair-merge-proposal1.json",
+      "cause": "real installer refuses changed installed distribution; explicitly owned failed-unregistered fixture repair verified only61 files before removal"
+    },
+    {
+      "receipt": "custom/registration-diagnostic2.json",
+      "cause": "real provider declaration reasoning type mismatch plus fixture missing node types; output annotations/fixture types repaired, emittedJS unchanged"
+    },
+    {
+      "receipt": "custom/repair-merge-proposal2.json",
+      "cause": "real installer retains collision rejection; only61 proven prior fixture distribution files removed under explicit authorization"
+    },
+    {
+      "receipt": "fresh/install3-outcomes.json",
+      "cause": "real helper120292ms deadline, uncertain until read-only0modules"
+    },
+    {
+      "receipt": "fresh/registration-diagnostic2.json",
+      "cause": "captured official120076ms diagnostic timed out on11start_push500, owned SIGTERM/nullcode, all descendants absent"
+    }
+  ],
+  "assertionScope": {
+    "customEightGroups": "Distinct final actual assertions; baseline host sentinel counted separately. Unit counts are not summed into native groups.",
+    "installerRepair": "Fixture-only controlled correction on explicitly owned failed-unregistered host. General product conflicts still emit reviewable proposals and never overwrite. Final current retry writes0.",
+    "noSelectiveProductSourceCopy": true,
+    "productionMutations": 0,
+    "modelDispatches": 0,
+    "paidInference": 0
+  },
+  "acceptanceCriteria": [
+    {
+      "criterion": "fresh and customized host core/schema/routes registration with host preservation",
+      "status": "PARTIAL",
+      "evidence": "custom final8PASS; fresh is blocked and retired"
+    },
+    {
+      "criterion": "verified disposable core and actionable incomplete capability; later execution07",
+      "status": "CUSTOM_PASS",
+      "evidence": "real helper/currentJWT/core/negative/actionable bootstrap cases; no execution claim"
+    },
+    {
+      "criterion": "retry/partial failure/ambiguous merge preserve host",
+      "status": "CUSTOM_PASS_FRESH_PENDING",
+      "evidence": "real conflict/proposal, proven61 fixture repair, final zero-write retry and original unrelated data/config preserved"
+    }
+  ],
+  "review": {
+    "implementationAndReviewSeparate": true,
+    "reviewer": "/root/task03_linux_source_adapter_judge1",
+    "finalIndependentVerdictPending": true
+  },
+  "closedAt": "2026-10-08T11:43:46.729Z",
+  "writersStopped": true
+}

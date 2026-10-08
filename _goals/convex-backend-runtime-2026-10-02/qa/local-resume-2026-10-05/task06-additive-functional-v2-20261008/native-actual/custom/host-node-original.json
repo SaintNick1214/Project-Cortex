@@ -1,0 +1,6 @@
+{
+  "path": "custom/backend/hostNode.ts",
+  "content": "\"use node\";\nimport {action} from \"./_generated/server\";\nimport {createHash} from \"node:crypto\";\nexport const health=action({args:{},handler:async(ctx)=>{const i=await ctx.auth.getUserIdentity();if(!i||i.issuer!==\"https://unrelated-task06-custom.example\")throw Error(\"HOST_AUTH_REQUIRED\");return {runtime:\"node\",hash:createHash(\"sha256\").update(\"unrelated-host-node\").digest(\"hex\"),subject:i.subject};}});\n",
+  "sha256": "afef0949ad405817d966c3fbd745db065fdfe28afb3c073bd3872bda1866405c",
+  "introduced": "owned unrelated host fixture before first successful Cortex registration; baseline indexed data predates this fixture addition"
+}
