@@ -1,0 +1,244 @@
+{
+  "schema": "mature-focused-G2-evidence-readback-v1",
+  "allTwoFDsBeforeBodies": true,
+  "records": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-root-borrowed-guard-independent-review2/independent-focused-results2.json",
+      "bytes": 179753,
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "95537532",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "179753",
+        "mtime_ns": "1791434780282102787",
+        "ctime_ns": "1791434780293078970"
+      },
+      "ageSeconds": 443.61130003,
+      "OPEN9": {
+        "dev": "16777234",
+        "ino": "95537532",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "179753",
+        "mtime_ns": "1791434780282102787",
+        "ctime_ns": "1791434780293078970"
+      },
+      "sha256": "4fb851e0d28dfea59478509afe4ab4e82fede0e8802b54272a43fa3b010156c2",
+      "fullEOF": true,
+      "POST9": {
+        "dev": "16777234",
+        "ino": "95537532",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "179753",
+        "mtime_ns": "1791434780282102787",
+        "ctime_ns": "1791434780293078970"
+      },
+      "FINAL9": {
+        "dev": "16777234",
+        "ino": "95537532",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "179753",
+        "mtime_ns": "1791434780282102787",
+        "ctime_ns": "1791434780293078970"
+      },
+      "onceCloseCount": 1
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-root-borrowed-guard-independent-review2/native-focused-bootstrap-closure2.json",
+      "bytes": 4803,
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "95537533",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "4803",
+        "mtime_ns": "1791434780282467861",
+        "ctime_ns": "1791434780295355413"
+      },
+      "ageSeconds": 443.609023587,
+      "OPEN9": {
+        "dev": "16777234",
+        "ino": "95537533",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "4803",
+        "mtime_ns": "1791434780282467861",
+        "ctime_ns": "1791434780295355413"
+      },
+      "sha256": "fbce555a32cf745610c7ee52c5a35d28a2f7889c33cc066f8446bd8591055b6e",
+      "fullEOF": true,
+      "POST9": {
+        "dev": "16777234",
+        "ino": "95537533",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "4803",
+        "mtime_ns": "1791434780282467861",
+        "ctime_ns": "1791434780295355413"
+      },
+      "FINAL9": {
+        "dev": "16777234",
+        "ino": "95537533",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "4803",
+        "mtime_ns": "1791434780282467861",
+        "ctime_ns": "1791434780295355413"
+      },
+      "onceCloseCount": 1
+    }
+  ],
+  "errors": [],
+  "SourceEligibility": false,
+  "codeBehaviorChecks": [
+    {
+      "RootOwnedDescriptorClosesByBorrower": 0,
+      "actualOwnedFD": 53,
+      "afterMutation": {
+        "borrowedLedgerIsOriginalRootLedger": false,
+        "borrowedOwnerTokenIsOriginalRootOwner": true,
+        "guardLedgerIsOriginalRootLedger": true,
+        "guardOwnerIsOriginalRootOwner": true,
+        "ownerLedgerIsOriginalRootLedger": true
+      },
+      "afterRestore": {
+        "borrowedLedgerIsOriginalRootLedger": true,
+        "borrowedOwnerTokenIsOriginalRootOwner": true,
+        "guardLedgerIsOriginalRootLedger": true,
+        "guardOwnerIsOriginalRootOwner": true,
+        "ownerLedgerIsOriginalRootLedger": true
+      },
+      "beforeMutation": {
+        "borrowedLedgerIsOriginalRootLedger": true,
+        "borrowedOwnerTokenIsOriginalRootOwner": true,
+        "guardLedgerIsOriginalRootLedger": true,
+        "guardOwnerIsOriginalRootOwner": true,
+        "ownerLedgerIsOriginalRootLedger": true
+      },
+      "bodyPreadCalls": 2,
+      "existingGuardBridgeCallsDuringRead": 0,
+      "existingGuardCheckOwnerError": null,
+      "existingGuardReturnedExactFixtureBytes": "REVIEWER_GUARD_VALUE = 41\n",
+      "foreignLedgerReadDebtCountAfter": 0,
+      "foreignLedgerReadDebtCountBefore": 0,
+      "newConstructorDeniesSameMutationBeforeCallbackOrIO": true,
+      "newConstructorError": {
+        "error": "",
+        "type": "AssertionError"
+      },
+      "originalBridgeCalls": 1,
+      "retainedRootFailures": [],
+      "returnedBytes": 26,
+      "returnedSHA256": "363219523d9c3a90e7bd499feadcb608d7e920b2ed6a1fa79764242ca48cb7cf",
+      "rootReadDebtCountAfter": 47,
+      "rootReadDebtCountBefore": 47,
+      "variant": "borrow_ledger"
+    },
+    {
+      "RootOwnedDescriptorClosesByBorrower": 0,
+      "actualOwnedFD": 53,
+      "afterMutation": {
+        "borrowedLedgerIsOriginalRootLedger": true,
+        "borrowedOwnerTokenIsOriginalRootOwner": true,
+        "guardLedgerIsOriginalRootLedger": true,
+        "guardOwnerIsOriginalRootOwner": true,
+        "ownerLedgerIsOriginalRootLedger": false
+      },
+      "afterRestore": {
+        "borrowedLedgerIsOriginalRootLedger": true,
+        "borrowedOwnerTokenIsOriginalRootOwner": true,
+        "guardLedgerIsOriginalRootLedger": true,
+        "guardOwnerIsOriginalRootOwner": true,
+        "ownerLedgerIsOriginalRootLedger": true
+      },
+      "beforeMutation": {
+        "borrowedLedgerIsOriginalRootLedger": true,
+        "borrowedOwnerTokenIsOriginalRootOwner": true,
+        "guardLedgerIsOriginalRootLedger": true,
+        "guardOwnerIsOriginalRootOwner": true,
+        "ownerLedgerIsOriginalRootLedger": true
+      },
+      "bodyPreadCalls": 2,
+      "existingGuardBridgeCallsDuringRead": 0,
+      "existingGuardCheckOwnerError": null,
+      "existingGuardReturnedExactFixtureBytes": "REVIEWER_GUARD_VALUE = 41\n",
+      "foreignLedgerReadDebtCountAfter": 1,
+      "foreignLedgerReadDebtCountBefore": 0,
+      "newConstructorDeniesSameMutationBeforeCallbackOrIO": true,
+      "newConstructorError": {
+        "error": "",
+        "type": "AssertionError"
+      },
+      "originalBridgeCalls": 1,
+      "retainedRootFailures": [],
+      "returnedBytes": 26,
+      "returnedSHA256": "363219523d9c3a90e7bd499feadcb608d7e920b2ed6a1fa79764242ca48cb7cf",
+      "rootReadDebtCountAfter": 47,
+      "rootReadDebtCountBefore": 47,
+      "variant": "owner_ledger"
+    },
+    {
+      "RootOwnedDescriptorClosesByBorrower": 0,
+      "actualOwnedFD": 53,
+      "afterMutation": {
+        "borrowedLedgerIsOriginalRootLedger": true,
+        "borrowedOwnerTokenIsOriginalRootOwner": false,
+        "guardLedgerIsOriginalRootLedger": true,
+        "guardOwnerIsOriginalRootOwner": true,
+        "ownerLedgerIsOriginalRootLedger": true
+      },
+      "afterRestore": {
+        "borrowedLedgerIsOriginalRootLedger": true,
+        "borrowedOwnerTokenIsOriginalRootOwner": true,
+        "guardLedgerIsOriginalRootLedger": true,
+        "guardOwnerIsOriginalRootOwner": true,
+        "ownerLedgerIsOriginalRootLedger": true
+      },
+      "beforeMutation": {
+        "borrowedLedgerIsOriginalRootLedger": true,
+        "borrowedOwnerTokenIsOriginalRootOwner": true,
+        "guardLedgerIsOriginalRootLedger": true,
+        "guardOwnerIsOriginalRootOwner": true,
+        "ownerLedgerIsOriginalRootLedger": true
+      },
+      "bodyPreadCalls": 2,
+      "existingGuardBridgeCallsDuringRead": 0,
+      "existingGuardCheckOwnerError": null,
+      "existingGuardReturnedExactFixtureBytes": "REVIEWER_GUARD_VALUE = 41\n",
+      "foreignLedgerReadDebtCountAfter": null,
+      "foreignLedgerReadDebtCountBefore": null,
+      "newConstructorDeniesSameMutationBeforeCallbackOrIO": true,
+      "newConstructorError": {
+        "error": "",
+        "type": "AssertionError"
+      },
+      "originalBridgeCalls": 1,
+      "retainedRootFailures": [],
+      "returnedBytes": 26,
+      "returnedSHA256": "363219523d9c3a90e7bd499feadcb608d7e920b2ed6a1fa79764242ca48cb7cf",
+      "rootReadDebtCountAfter": 47,
+      "rootReadDebtCountBefore": 47,
+      "variant": "owner_token"
+    }
+  ],
+  "oldFailedIntervalsPreserved": true
+}
