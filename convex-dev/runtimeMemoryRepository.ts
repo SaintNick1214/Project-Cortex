@@ -11,6 +11,7 @@ import { DEFAULT_EMBEDDING_PROFILE, assertEmbeddingVector, assertProfileMatches,
 import { assertSourceLineage, isCurrentAuthorizedVector, prepareSourceContent, processingIdentityKey } from "../src/domain/sources";
 import { assertResourceScope, createAuthorityReader, recheckAuthority } from "./runtimeAuth";
 import { managedSourceIsCurrent } from "./runtimeDataAuth";
+import type { ContextSourcePermission } from "../src/domain/context-witness";
 
 export type DerivedCommit = Parameters<MemoryRepository["commitDerived"]>[0];
 export type FactQuery = Parameters<MemoryRepository["listFacts"]>[0];
@@ -34,6 +35,13 @@ export const memoryReferences = {
 
 export function memoryError(code: string, message: string): never {
   throw new ConvexError({ version: 1, code, message, retryable: false, outcome: "not_dispatched" });
+}
+/** Only a native resource denial is eligible for read-list exclusion. */
+export function isMemoryResourceDenied(error: unknown): boolean {
+  if (!(error instanceof ConvexError)) return false;
+  const data = Object.getOwnPropertyDescriptor(error, "data");
+  return Boolean(data && "value" in data && data.value !== null && typeof data.value === "object"
+    && Object.getOwnPropertyDescriptor(data.value, "code")?.value === "FORBIDDEN");
 }
 export function memoryScope(reference: RuntimeAuthorityReference): TrustedMemoryScope {
   if (!reference.memorySpaceId || !Number.isSafeInteger(reference.memorySpaceEpoch) || reference.memorySpaceEpoch! < 1) {
@@ -89,14 +97,14 @@ export class ConvexMemoryRepository {
     if (!this.writer || this.capability !== "write") memoryError("FORBIDDEN", "A write-authorized mutation is required");
     return this.writer;
   }
-  async getSource(sourceId: string): Promise<SourceContent | null> {
+  async getSource(sourceId: string, permission?: ContextSourcePermission): Promise<SourceContent | null> {
     await this.authority();
     const row = await this.ctx.db.query("runtimeMemorySources").withIndex("by_scope_source", (q) =>
       q.eq("tenantId", this.scope.tenantId).eq("memorySpaceId", this.scope.memorySpaceId).eq("lineage.sourceId", sourceId)).unique();
     if (!row) return null;
     const source = stripSystem(row);
     await this.authority(sourceResource(source));
-    if (source.tombstonedAt !== undefined || !await managedSourceIsCurrent(this.ctx, this.reference, row, this.capability)) memoryError("FORBIDDEN", "Source was deleted");
+    if (source.tombstonedAt !== undefined || !await managedSourceIsCurrent(this.ctx, this.reference, row, this.capability, permission)) memoryError("FORBIDDEN", "Source was deleted or access was revoked");
     return source;
   }
   async putSource(source: SourceContent): Promise<{ source: SourceContent; created: boolean }> {
@@ -231,9 +239,15 @@ export class ConvexMemoryRepository {
     const reader = createAuthorityReader(this.ctx);
     if (await reader.hasTombstone({ tenantId: this.scope.tenantId, memorySpaceId: this.scope.memorySpaceId, resourceType: "source", resourceId: sourceId })
       || await reader.hasTombstone({ tenantId: this.scope.tenantId, resourceType: "source", resourceId: sourceId })) return null;
-    if (!await managedSourceIsCurrent(this.ctx, this.reference, row, "read", permission)) return null;
     const source = stripSystem(row);
-    await this.authority(sourceResource(source), "read");
+    try {
+      if (!await managedSourceIsCurrent(this.ctx, this.reference, row, "read", permission)) return null;
+      await this.authority(sourceResource(source), "read");
+    } catch (error) {
+      if (!isMemoryResourceDenied(error)) throw error;
+      // A private neighbor is excluded; revoking the reader's grant still denies the whole read.
+      await this.authority(undefined, "read"); return null;
+    }
     return source;
   }
   async listFacts(query: FactQuery): Promise<DerivedFact[]> {

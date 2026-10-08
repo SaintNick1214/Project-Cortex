@@ -1,0 +1,79 @@
+{
+  "operation": "2003afa6-8ba0-4096-a0eb-82c1b903b64b",
+  "candidate": "a789e1a84d26ac59ded3e42afe2ce12f38e9d3315fc0f3c70446a5c40b2ed0f2",
+  "outcomes": [
+    {
+      "name": "authorized shared editor indexes under current grant while preserving original source owner",
+      "status": "PASS",
+      "evidence": {
+        "owner": "n57699p09x6ebrb99wb96a84as8fwn3g",
+        "billingActor": "n579yr7zapvakzqvqqfjx6926s8fxat7",
+        "currentRevision": 3,
+        "oldOwnerRevoked": true,
+        "ownOnlyDenied": {
+          "name": "ConvexError",
+          "message": "[Request ID: 769a705d57221aef] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../custom/backend/runtimeAuth.ts:46:26)\n    at assertResourceScope (../../custom/backend/runtimeAuth.ts:93:0)\n    at materialize (../../custom/backend/runtimeAuth.ts:146:4)\n    at async resolveAuthorityReference (../../custom/backend/runtimeAuth.ts:203:0)\n    at async recheckAuthority (../../custom/backend/runtimeAuth.ts:257:0)\n    at async managedConversationAccess (../../custom/backend/runtimeDataAuth.ts:169:81)\n    at async checkConversation (../../custom/backend/runtimeTranscript.ts:44:0)\n    at async requireConversation (../../custom/backend/runtimeTranscript.ts:52:0)\n    at async reviseMessage (../../custom/backend/runtimeTranscript.ts:423:55)\n    at async handler (../../custom/backend/runtimeTranscript.ts:455:143)\n",
+          "data": {
+            "code": "FORBIDDEN",
+            "message": "Access denied",
+            "outcome": "not_dispatched",
+            "retryable": false,
+            "version": 1
+          }
+        },
+        "oldRevisionDenied": {
+          "name": "ConvexError",
+          "message": "[Request ID: b38331204aae24b7] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"STALE_SOURCE\",\"message\":\"Memory indexing operation denied.\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at ingestionDenied (../../custom/backend/runtimeIngestion.ts:33:0)\n    at readEventCurrent (../../custom/backend/runtimeIngestion.ts:51:58)\n    at async requireStageLease (../../custom/backend/runtimeIngestion.ts:164:6)\n    at async requireStageCommit (../../custom/backend/runtimeIngestion.ts:173:28)\n    at async handler (../../custom/backend/runtimeIngestion.ts:252:63)\n",
+          "data": {
+            "code": "STALE_SOURCE",
+            "message": "Memory indexing operation denied.",
+            "outcome": "not_dispatched",
+            "retryable": false,
+            "version": 1
+          }
+        }
+      }
+    },
+    {
+      "name": "tracked indexed-source edit excludes old facts and vectors until the current revision repairs",
+      "status": "PASS",
+      "evidence": {
+        "oldRevision": 3,
+        "currentRevision": 4,
+        "oldFactsHidden": true,
+        "oldVectorsHidden": true,
+        "currentRepairComplete": true
+      }
+    },
+    {
+      "name": "current deletion excludes derived facts and revoked grant blocks any late claim before dispatch",
+      "status": "PASS",
+      "evidence": {
+        "lateAfterRemove": {
+          "name": "ConvexError",
+          "message": "[Request ID: 03a6ab05e4782f96] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"STALE_SOURCE\",\"message\":\"Memory indexing operation denied.\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at ingestionDenied (../../custom/backend/runtimeIngestion.ts:33:0)\n    at readEventCurrent (../../custom/backend/runtimeIngestion.ts:51:58)\n    at async handler (../../custom/backend/runtimeIngestion.ts:215:10)\n",
+          "data": {
+            "code": "STALE_SOURCE",
+            "message": "Memory indexing operation denied.",
+            "outcome": "not_dispatched",
+            "retryable": false,
+            "version": 1
+          }
+        },
+        "revoked": {
+          "name": "ConvexError",
+          "message": "[Request ID: 9e0138b5bb37b6db] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../custom/backend/runtimeAuth.ts:46:26)\n    at materialize (../../custom/backend/runtimeAuth.ts:127:73)\n    at resolveAuthorityReference (../../custom/backend/runtimeAuth.ts:203:0)\n    at async recheckAuthority (../../custom/backend/runtimeAuth.ts:257:0)\n    at async authority [as authority] (../../custom/backend/runtimeMemoryRepository.ts:91:62)\n    at async recheckAuthority [as recheckAuthority] (../../custom/backend/runtimeMemoryRepository.ts:94:68)\n    at async readEventCurrent (../../custom/backend/runtimeIngestion.ts:50:39)\n    at async handler (../../custom/backend/runtimeIngestion.ts:215:10)\n",
+          "data": {
+            "code": "FORBIDDEN",
+            "message": "Access denied",
+            "outcome": "not_dispatched",
+            "retryable": false,
+            "version": 1
+          }
+        },
+        "visibleFactsFromDeletedSource": 0,
+        "modelAttemptsUnchanged": true
+      }
+    }
+  ]
+}

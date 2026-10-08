@@ -1,0 +1,338 @@
+(node:74106) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeIngestion/stages.test.ts
+  durable ingestion stage boundary
+    ✕ same tuple replay is one event/counter, changed hash or event alias cannot enter (13 ms)
+    ✕ scope counter is shared across conversations, separate from their queue position (4 ms)
+    ✕ approved user source schedules independently, awaiting approval never creates a job or dispatch (4 ms)
+    ✕ assistant completion is context/vector work with fact extraction explicitly skipped (9 ms)
+    ✕ duplicate delivery claims once; native account is fresh and policy pin rejects wrong stage (5 ms)
+    ✕ expired lease is unknown and cannot be retried or attach its old extraction (7 ms)
+    ✕ revision change blocks all late stage writes (17 ms)
+    ✕ tombstone change blocks all late stage writes (4 ms)
+    ✕ grant change blocks all late stage writes (4 ms)
+    ✕ safe failure has finite retry budget; known unknown never retries and summaries reflect it (4 ms)
+    ✕ facts and vector stages are distinct; default profile is pinned1536 (3 ms)
+
+  ● durable ingestion stage boundary › same tuple replay is one event/counter, changed hash or event alias cannot enter
+
+    ConvexError: {"version":1,"code":"POLICY_DENIED","message":"Agent definition control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      20 | export async function executableRegistryHash(): Promise<string> { return await semanticHash(canonicalModelJson(EXECUTABLE_REGISTRY)); }
+      21 | function denied(code = "POLICY_DENIED"): never {
+    > 22 |   throw new ConvexError({ version: 1, code, message: "Agent definition control failed.", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      23 | }
+      24 | function unicode(s: string): boolean { try { assertUnicode(s); return true; } catch { return false; } }
+      25 | const text = z.string().min(1).max(256).refine(s => s.trim() === s && unicode(s));
+
+      at denied (convex-dev/agentDefinitions.ts:22:9)
+      at narrowPolicies (convex-dev/agentDefinitions.ts:89:15)
+      at Function.handler [as _handler] (convex-dev/agentDefinitions.ts:158:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:98:10)
+      at tests/unit/runtimeTranscript/fixture.ts:159:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:155:18)
+      at call (tests/unit/runtimeTranscript/fixture.ts:159:77)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:164:21)
+      at ingestionFixture (tests/unit/runtimeIngestion/fixture.ts:12:13)
+      at Object.<anonymous> (tests/unit/runtimeIngestion/stages.test.ts:10:15)
+
+  ● durable ingestion stage boundary › scope counter is shared across conversations, separate from their queue position
+
+    ConvexError: {"version":1,"code":"POLICY_DENIED","message":"Agent definition control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      20 | export async function executableRegistryHash(): Promise<string> { return await semanticHash(canonicalModelJson(EXECUTABLE_REGISTRY)); }
+      21 | function denied(code = "POLICY_DENIED"): never {
+    > 22 |   throw new ConvexError({ version: 1, code, message: "Agent definition control failed.", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      23 | }
+      24 | function unicode(s: string): boolean { try { assertUnicode(s); return true; } catch { return false; } }
+      25 | const text = z.string().min(1).max(256).refine(s => s.trim() === s && unicode(s));
+
+      at denied (convex-dev/agentDefinitions.ts:22:9)
+      at narrowPolicies (convex-dev/agentDefinitions.ts:89:15)
+      at Function.handler [as _handler] (convex-dev/agentDefinitions.ts:158:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:98:10)
+      at tests/unit/runtimeTranscript/fixture.ts:159:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:155:18)
+      at call (tests/unit/runtimeTranscript/fixture.ts:159:77)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:164:21)
+      at ingestionFixture (tests/unit/runtimeIngestion/fixture.ts:12:13)
+      at Object.<anonymous> (tests/unit/runtimeIngestion/stages.test.ts:20:15)
+
+  ● durable ingestion stage boundary › approved user source schedules independently, awaiting approval never creates a job or dispatch
+
+    ConvexError: {"version":1,"code":"POLICY_DENIED","message":"Agent definition control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      20 | export async function executableRegistryHash(): Promise<string> { return await semanticHash(canonicalModelJson(EXECUTABLE_REGISTRY)); }
+      21 | function denied(code = "POLICY_DENIED"): never {
+    > 22 |   throw new ConvexError({ version: 1, code, message: "Agent definition control failed.", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      23 | }
+      24 | function unicode(s: string): boolean { try { assertUnicode(s); return true; } catch { return false; } }
+      25 | const text = z.string().min(1).max(256).refine(s => s.trim() === s && unicode(s));
+
+      at denied (convex-dev/agentDefinitions.ts:22:9)
+      at narrowPolicies (convex-dev/agentDefinitions.ts:89:15)
+      at Function.handler [as _handler] (convex-dev/agentDefinitions.ts:158:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:98:10)
+      at tests/unit/runtimeTranscript/fixture.ts:159:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:155:18)
+      at call (tests/unit/runtimeTranscript/fixture.ts:159:77)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:164:21)
+      at ingestionFixture (tests/unit/runtimeIngestion/fixture.ts:12:13)
+      at Object.<anonymous> (tests/unit/runtimeIngestion/stages.test.ts:27:15)
+
+  ● durable ingestion stage boundary › assistant completion is context/vector work with fact extraction explicitly skipped
+
+    ConvexError: {"version":1,"code":"POLICY_DENIED","message":"Agent definition control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      20 | export async function executableRegistryHash(): Promise<string> { return await semanticHash(canonicalModelJson(EXECUTABLE_REGISTRY)); }
+      21 | function denied(code = "POLICY_DENIED"): never {
+    > 22 |   throw new ConvexError({ version: 1, code, message: "Agent definition control failed.", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      23 | }
+      24 | function unicode(s: string): boolean { try { assertUnicode(s); return true; } catch { return false; } }
+      25 | const text = z.string().min(1).max(256).refine(s => s.trim() === s && unicode(s));
+
+      at denied (convex-dev/agentDefinitions.ts:22:9)
+      at narrowPolicies (convex-dev/agentDefinitions.ts:89:15)
+      at Function.handler [as _handler] (convex-dev/agentDefinitions.ts:158:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:98:10)
+      at tests/unit/runtimeTranscript/fixture.ts:159:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:155:18)
+      at call (tests/unit/runtimeTranscript/fixture.ts:159:77)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:164:21)
+      at ingestionFixture (tests/unit/runtimeIngestion/fixture.ts:12:13)
+      at Object.<anonymous> (tests/unit/runtimeIngestion/stages.test.ts:37:15)
+
+  ● durable ingestion stage boundary › duplicate delivery claims once; native account is fresh and policy pin rejects wrong stage
+
+    ConvexError: {"version":1,"code":"POLICY_DENIED","message":"Agent definition control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      20 | export async function executableRegistryHash(): Promise<string> { return await semanticHash(canonicalModelJson(EXECUTABLE_REGISTRY)); }
+      21 | function denied(code = "POLICY_DENIED"): never {
+    > 22 |   throw new ConvexError({ version: 1, code, message: "Agent definition control failed.", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      23 | }
+      24 | function unicode(s: string): boolean { try { assertUnicode(s); return true; } catch { return false; } }
+      25 | const text = z.string().min(1).max(256).refine(s => s.trim() === s && unicode(s));
+
+      at denied (convex-dev/agentDefinitions.ts:22:9)
+      at narrowPolicies (convex-dev/agentDefinitions.ts:89:15)
+      at Function.handler [as _handler] (convex-dev/agentDefinitions.ts:158:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:98:10)
+      at tests/unit/runtimeTranscript/fixture.ts:159:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:155:18)
+      at call (tests/unit/runtimeTranscript/fixture.ts:159:77)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:164:21)
+      at ingestionFixture (tests/unit/runtimeIngestion/fixture.ts:12:13)
+      at Object.<anonymous> (tests/unit/runtimeIngestion/stages.test.ts:43:15)
+
+  ● durable ingestion stage boundary › expired lease is unknown and cannot be retried or attach its old extraction
+
+    ConvexError: {"version":1,"code":"POLICY_DENIED","message":"Agent definition control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      20 | export async function executableRegistryHash(): Promise<string> { return await semanticHash(canonicalModelJson(EXECUTABLE_REGISTRY)); }
+      21 | function denied(code = "POLICY_DENIED"): never {
+    > 22 |   throw new ConvexError({ version: 1, code, message: "Agent definition control failed.", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      23 | }
+      24 | function unicode(s: string): boolean { try { assertUnicode(s); return true; } catch { return false; } }
+      25 | const text = z.string().min(1).max(256).refine(s => s.trim() === s && unicode(s));
+
+      at denied (convex-dev/agentDefinitions.ts:22:9)
+      at narrowPolicies (convex-dev/agentDefinitions.ts:89:15)
+      at Function.handler [as _handler] (convex-dev/agentDefinitions.ts:158:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:98:10)
+      at tests/unit/runtimeTranscript/fixture.ts:159:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:155:18)
+      at call (tests/unit/runtimeTranscript/fixture.ts:159:77)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:164:21)
+      at ingestionFixture (tests/unit/runtimeIngestion/fixture.ts:12:13)
+      at Object.<anonymous> (tests/unit/runtimeIngestion/stages.test.ts:52:15)
+
+  ● durable ingestion stage boundary › revision change blocks all late stage writes
+
+    ConvexError: {"version":1,"code":"POLICY_DENIED","message":"Agent definition control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      20 | export async function executableRegistryHash(): Promise<string> { return await semanticHash(canonicalModelJson(EXECUTABLE_REGISTRY)); }
+      21 | function denied(code = "POLICY_DENIED"): never {
+    > 22 |   throw new ConvexError({ version: 1, code, message: "Agent definition control failed.", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      23 | }
+      24 | function unicode(s: string): boolean { try { assertUnicode(s); return true; } catch { return false; } }
+      25 | const text = z.string().min(1).max(256).refine(s => s.trim() === s && unicode(s));
+
+      at denied (convex-dev/agentDefinitions.ts:22:9)
+      at narrowPolicies (convex-dev/agentDefinitions.ts:89:15)
+      at Function.handler [as _handler] (convex-dev/agentDefinitions.ts:158:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:98:10)
+      at tests/unit/runtimeTranscript/fixture.ts:159:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:155:18)
+      at call (tests/unit/runtimeTranscript/fixture.ts:159:77)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:164:21)
+      at ingestionFixture (tests/unit/runtimeIngestion/fixture.ts:12:13)
+      at tests/unit/runtimeIngestion/stages.test.ts:60:15
+
+  ● durable ingestion stage boundary › tombstone change blocks all late stage writes
+
+    ConvexError: {"version":1,"code":"POLICY_DENIED","message":"Agent definition control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      20 | export async function executableRegistryHash(): Promise<string> { return await semanticHash(canonicalModelJson(EXECUTABLE_REGISTRY)); }
+      21 | function denied(code = "POLICY_DENIED"): never {
+    > 22 |   throw new ConvexError({ version: 1, code, message: "Agent definition control failed.", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      23 | }
+      24 | function unicode(s: string): boolean { try { assertUnicode(s); return true; } catch { return false; } }
+      25 | const text = z.string().min(1).max(256).refine(s => s.trim() === s && unicode(s));
+
+      at denied (convex-dev/agentDefinitions.ts:22:9)
+      at narrowPolicies (convex-dev/agentDefinitions.ts:89:15)
+      at Function.handler [as _handler] (convex-dev/agentDefinitions.ts:158:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:98:10)
+      at tests/unit/runtimeTranscript/fixture.ts:159:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:155:18)
+      at call (tests/unit/runtimeTranscript/fixture.ts:159:77)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:164:21)
+      at ingestionFixture (tests/unit/runtimeIngestion/fixture.ts:12:13)
+      at tests/unit/runtimeIngestion/stages.test.ts:60:15
+
+  ● durable ingestion stage boundary › grant change blocks all late stage writes
+
+    ConvexError: {"version":1,"code":"POLICY_DENIED","message":"Agent definition control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      20 | export async function executableRegistryHash(): Promise<string> { return await semanticHash(canonicalModelJson(EXECUTABLE_REGISTRY)); }
+      21 | function denied(code = "POLICY_DENIED"): never {
+    > 22 |   throw new ConvexError({ version: 1, code, message: "Agent definition control failed.", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      23 | }
+      24 | function unicode(s: string): boolean { try { assertUnicode(s); return true; } catch { return false; } }
+      25 | const text = z.string().min(1).max(256).refine(s => s.trim() === s && unicode(s));
+
+      at denied (convex-dev/agentDefinitions.ts:22:9)
+      at narrowPolicies (convex-dev/agentDefinitions.ts:89:15)
+      at Function.handler [as _handler] (convex-dev/agentDefinitions.ts:158:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:98:10)
+      at tests/unit/runtimeTranscript/fixture.ts:159:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:155:18)
+      at call (tests/unit/runtimeTranscript/fixture.ts:159:77)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:164:21)
+      at ingestionFixture (tests/unit/runtimeIngestion/fixture.ts:12:13)
+      at tests/unit/runtimeIngestion/stages.test.ts:60:15
+
+  ● durable ingestion stage boundary › safe failure has finite retry budget; known unknown never retries and summaries reflect it
+
+    ConvexError: {"version":1,"code":"POLICY_DENIED","message":"Agent definition control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      20 | export async function executableRegistryHash(): Promise<string> { return await semanticHash(canonicalModelJson(EXECUTABLE_REGISTRY)); }
+      21 | function denied(code = "POLICY_DENIED"): never {
+    > 22 |   throw new ConvexError({ version: 1, code, message: "Agent definition control failed.", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      23 | }
+      24 | function unicode(s: string): boolean { try { assertUnicode(s); return true; } catch { return false; } }
+      25 | const text = z.string().min(1).max(256).refine(s => s.trim() === s && unicode(s));
+
+      at denied (convex-dev/agentDefinitions.ts:22:9)
+      at narrowPolicies (convex-dev/agentDefinitions.ts:89:15)
+      at Function.handler [as _handler] (convex-dev/agentDefinitions.ts:158:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:98:10)
+      at tests/unit/runtimeTranscript/fixture.ts:159:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:155:18)
+      at call (tests/unit/runtimeTranscript/fixture.ts:159:77)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:164:21)
+      at ingestionFixture (tests/unit/runtimeIngestion/fixture.ts:12:13)
+      at Object.<anonymous> (tests/unit/runtimeIngestion/stages.test.ts:68:15)
+
+  ● durable ingestion stage boundary › facts and vector stages are distinct; default profile is pinned1536
+
+    ConvexError: {"version":1,"code":"POLICY_DENIED","message":"Agent definition control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      20 | export async function executableRegistryHash(): Promise<string> { return await semanticHash(canonicalModelJson(EXECUTABLE_REGISTRY)); }
+      21 | function denied(code = "POLICY_DENIED"): never {
+    > 22 |   throw new ConvexError({ version: 1, code, message: "Agent definition control failed.", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      23 | }
+      24 | function unicode(s: string): boolean { try { assertUnicode(s); return true; } catch { return false; } }
+      25 | const text = z.string().min(1).max(256).refine(s => s.trim() === s && unicode(s));
+
+      at denied (convex-dev/agentDefinitions.ts:22:9)
+      at narrowPolicies (convex-dev/agentDefinitions.ts:89:15)
+      at Function.handler [as _handler] (convex-dev/agentDefinitions.ts:158:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:98:10)
+      at tests/unit/runtimeTranscript/fixture.ts:159:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:155:18)
+      at call (tests/unit/runtimeTranscript/fixture.ts:159:77)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:164:21)
+      at ingestionFixture (tests/unit/runtimeIngestion/fixture.ts:12:13)
+      at Object.<anonymous> (tests/unit/runtimeIngestion/stages.test.ts:79:15)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     2.5s | 0/11 passed | /tests/unit/runtimeIngestion/stages.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [31m✗[0m    0.02s ( 0.7%) - durable ingestion stage boundary revision change blocks all late stage writes
+    /tests/unit/runtimeIngestion/stages.test.ts
+
+ 2. [31m✗[0m    0.01s ( 0.5%) - durable ingestion stage boundary same tuple replay is one event/counter, changed hash or event alias cannot enter
+    /tests/unit/runtimeIngestion/stages.test.ts
+
+ 3. [31m✗[0m    0.01s ( 0.3%) - durable ingestion stage boundary assistant completion is context/vector work with fact extraction explicitly skipped
+    /tests/unit/runtimeIngestion/stages.test.ts
+
+ 4. [31m✗[0m    0.01s ( 0.3%) - durable ingestion stage boundary expired lease is unknown and cannot be retried or attach its old extraction
+    /tests/unit/runtimeIngestion/stages.test.ts
+
+ 5. [31m✗[0m    0.01s ( 0.2%) - durable ingestion stage boundary duplicate delivery claims once; native account is fresh and policy pin rejects wrong stage
+    /tests/unit/runtimeIngestion/stages.test.ts
+
+ 6. [31m✗[0m    0.00s ( 0.2%) - durable ingestion stage boundary scope counter is shared across conversations, separate from their queue position
+    /tests/unit/runtimeIngestion/stages.test.ts
+
+ 7. [31m✗[0m    0.00s ( 0.2%) - durable ingestion stage boundary approved user source schedules independently, awaiting approval never creates a job or dispatch
+    /tests/unit/runtimeIngestion/stages.test.ts
+
+ 8. [31m✗[0m    0.00s ( 0.2%) - durable ingestion stage boundary tombstone change blocks all late stage writes
+    /tests/unit/runtimeIngestion/stages.test.ts
+
+ 9. [31m✗[0m    0.00s ( 0.2%) - durable ingestion stage boundary grant change blocks all late stage writes
+    /tests/unit/runtimeIngestion/stages.test.ts
+
+10. [31m✗[0m    0.00s ( 0.2%) - durable ingestion stage boundary safe failure has finite retry budget; known unknown never retries and summaries reflect it
+    /tests/unit/runtimeIngestion/stages.test.ts
+
+11. [31m✗[0m    0.00s ( 0.1%) - durable ingestion stage boundary facts and vector stages are distinct; default profile is pinned1536
+    /tests/unit/runtimeIngestion/stages.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.07s (2.9% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      2.58s
+  Test suites:        1
+  Individual tests:   11
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 failed, 1 total
+Tests:       11 failed, 11 total
+Snapshots:   0 total
+Time:        2.584 s, estimated 3 s
+Ran all test suites within paths "tests/unit/runtimeIngestion/stages.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/units3.json

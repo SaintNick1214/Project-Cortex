@@ -1,0 +1,218 @@
+  console.error
+    ◇ injected env (0) from .env.test
+
+      13 | import dotenv from "dotenv";
+      14 | import { resolve } from "path";
+    > 15 |
+         | ^
+      16 | // Load .env.test first (test defaults)
+      17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+      18 |
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:15:8
+
+  console.error
+    ◇ injected env (0) from .env.local
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+  console.log
+    
+    🧪 Testing against LOCAL Convex: http://127.0.0.1:1
+
+      at tests/env.ts:35:13
+
+  console.log
+       Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:36:13
+
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:121:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:122:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:123:13
+
+(node:5681) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeAgent/execution.test.ts
+  durable Agent execution product boundaries
+    ✓ start claims/enqueues one Workflow atomically; duplicate start keeps same attempt and changed delivery contract denies (31 ms)
+    ✓ start preserves the claim's oversized-prefix terminal disposition instead of rolling it back (9 ms)
+    ✓ native schemas reject the former model/tool extra fields without changing their validators (10 ms)
+    ✓ start rejects no-jwt before Workflow or model effects (6 ms)
+    ✓ start rejects revoked before Workflow or model effects (5 ms)
+    ✓ start rejects foreign before Workflow or model effects (4 ms)
+    ✓ start rejects definition-revoked before Workflow or model effects (4 ms)
+    ✓ start rejects conversation-tombstone before Workflow or model effects (8 ms)
+    ✓ future queued request remains durable and only dispatches after the current head retires (16 ms)
+    ✓ private selected canonical history retains typed calls/results, while public history omits private tool payloads (13 ms)
+    ✓ source/manual edits fence every delegated operation and finalization before effects (13 ms)
+    ✓ unlocked edit cannot orphan a canonical assistant tool call and its result (6 ms)
+    ✓ unlocked remove cannot orphan a canonical assistant tool call and its result (5 ms)
+    ✓ started/unknown paid work cannot be readmitted; completed exact replay is reusable and changed input denies (19 ms)
+    ✓ finalization registers canonical messages and one ingestion receipt atomically/idempotently (15 ms)
+    ✓ component-save gap recovers exact server generation without a model/tool retry; stale/cancelled gaps cannot attach (15 ms)
+    ✓ current-generation reconciliation ignores retained failed/unregistered holes and stops at older orders (36 ms)
+    ✓ later private hydration retains source provenance (fork=false, changed) (27 ms)
+    ✓ later private hydration retains source provenance (fork=false, tombstoned) (28 ms)
+    ✓ later private hydration retains source provenance (fork=true, changed) (49 ms)
+    ✓ later private hydration retains source provenance (fork=true, tombstoned) (41 ms)
+    ✓ observers replay scoped saved deltas with independent cursors; final-only withholds until completion and strips secrets (16 ms)
+    ✓ cancel retires Workflow/budget/output delivery and obsolete attempts cannot finalize (13 ms)
+    ✓ corrupted definition cannot enter context dispatch (7 ms)
+    ✓ strict facts barrier waits and then reports the pinned deadline before embedding dispatch (12 ms)
+    ✓ explicit tool approval requires the current scoped admin, exact request hash and pinned history; resumes one durable event (15 ms)
+    ✓ expired active approval cannot renew, then its owned timer cancels once and makes the next queued run ready (16 ms)
+    ✓ current unexpired tool approval keeps its durable wait positive and a stale expiry callback cannot cancel renewed work (11 ms)
+    ✓ queue recovery retires an expired active approval but leaves intentional unclaimed input approval pending (19 ms)
+    ✓ expiry cleanup survives an obsolete owner grant and recovers a later queued row under its own current authority (13 ms)
+    ✓ current owner can read status and cancel after definition revocation while executable paths stay closed (9 ms)
+    ✓ definition-revoked metadata/cancellation still denies no-jwt without effects (8 ms)
+    ✓ definition-revoked metadata/cancellation still denies foreign-space without effects (7 ms)
+    ✓ a legitimately renewed owner grant cancels the captured budget without changing paid or uncertain accounting (8 ms)
+    ✓ renewed owner budget cancellation still denies no-jwt without accounting or Workflow effects (7 ms)
+    ✓ renewed owner budget cancellation still denies foreign-space without accounting or Workflow effects (7 ms)
+    ✓ dynamic tool-recalled source changed is denied before next paid admission and finalization (11 ms)
+    ✓ dynamic tool-recalled source tombstoned is denied before next paid admission and finalization (11 ms)
+    ✓ saved private tool/model body mutation cannot reach a later native admission (13 ms)
+    ✓ saved private tool/model position mutation cannot reach a later native admission (12 ms)
+    ✓ the ledger transaction rejects cancel after an earlier action-side hydration (8 ms)
+    ✓ the ledger transaction rejects edit after an earlier action-side hydration (8 ms)
+    ✓ the ledger transaction rejects revoke after an earlier action-side hydration (7 ms)
+    ✓ the ledger transaction rejects expired after an earlier action-side hydration (8 ms)
+    ✓ standalone model/memory budgets retain their original contract without transcript reads (1 ms)
+    ✓ duplicate completion callbacks keep one terminal output and gap reconciliation supplies final-only text (14 ms)
+    ✓ Workflow uses fresh immutable ordinals and never retries model, context or tool actions (1 ms)
+    ✓ tool source commits recheck cancellation in the effect transaction, after an earlier approved check (17 ms)
+  closed server tool contract
+    ✓ registered tools expose exact schemas and no SDK execute callback
+    ✓ tool input rejects malformed/extra/foreign control {} (1 ms)
+    ✓ tool input rejects malformed/extra/foreign control {"text": ""}
+    ✓ tool input rejects malformed/extra/foreign control {"limit": 11, "text": "ok"} (1 ms)
+    ✓ tool input rejects malformed/extra/foreign control {"limit": 1, "tenantId": "other", "text": "ok"}
+    ✓ tool input rejects malformed/extra/foreign control {"limit": true, "text": "ok"}
+    ✓ tool input rejects malformed/extra/foreign control {"limit": 1.5, "text": "ok"}
+    ✓ tool input rejects getters before invocation and unknown native names cannot select callbacks (1 ms)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     3.1s | 56/56 passed | /tests/unit/runtimeAgent/execution.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.05s ( 1.5%) - durable Agent execution product boundaries later private hydration retains source provenance (fork=true, changed)
+    /tests/unit/runtimeAgent/execution.test.ts
+
+ 2. [32m✓[0m    0.04s ( 1.3%) - durable Agent execution product boundaries later private hydration retains source provenance (fork=true, tombstoned)
+    /tests/unit/runtimeAgent/execution.test.ts
+
+ 3. [32m✓[0m    0.04s ( 1.1%) - durable Agent execution product boundaries current-generation reconciliation ignores retained failed/unregistered holes and stops at older orders
+    /tests/unit/runtimeAgent/execution.test.ts
+
+ 4. [32m✓[0m    0.03s ( 0.9%) - durable Agent execution product boundaries start claims/enqueues one Workflow atomically; duplicate start keeps same attempt and changed delivery contract denies
+    /tests/unit/runtimeAgent/execution.test.ts
+
+ 5. [32m✓[0m    0.03s ( 0.9%) - durable Agent execution product boundaries later private hydration retains source provenance (fork=false, tombstoned)
+    /tests/unit/runtimeAgent/execution.test.ts
+
+ 6. [32m✓[0m    0.03s ( 0.8%) - durable Agent execution product boundaries later private hydration retains source provenance (fork=false, changed)
+    /tests/unit/runtimeAgent/execution.test.ts
+
+ 7. [32m✓[0m    0.02s ( 0.6%) - durable Agent execution product boundaries started/unknown paid work cannot be readmitted; completed exact replay is reusable and changed input denies
+    /tests/unit/runtimeAgent/execution.test.ts
+
+ 8. [32m✓[0m    0.02s ( 0.6%) - durable Agent execution product boundaries queue recovery retires an expired active approval but leaves intentional unclaimed input approval pending
+    /tests/unit/runtimeAgent/execution.test.ts
+
+ 9. [32m✓[0m    0.02s ( 0.5%) - durable Agent execution product boundaries tool source commits recheck cancellation in the effect transaction, after an earlier approved check
+    /tests/unit/runtimeAgent/execution.test.ts
+
+10. [32m✓[0m    0.02s ( 0.5%) - durable Agent execution product boundaries future queued request remains durable and only dispatches after the current head retires
+    /tests/unit/runtimeAgent/execution.test.ts
+
+11. [32m✓[0m    0.02s ( 0.5%) - durable Agent execution product boundaries observers replay scoped saved deltas with independent cursors; final-only withholds until completion and strips secrets
+    /tests/unit/runtimeAgent/execution.test.ts
+
+12. [32m✓[0m    0.02s ( 0.5%) - durable Agent execution product boundaries expired active approval cannot renew, then its owned timer cancels once and makes the next queued run ready
+    /tests/unit/runtimeAgent/execution.test.ts
+
+13. [32m✓[0m    0.01s ( 0.5%) - durable Agent execution product boundaries finalization registers canonical messages and one ingestion receipt atomically/idempotently
+    /tests/unit/runtimeAgent/execution.test.ts
+
+14. [32m✓[0m    0.01s ( 0.5%) - durable Agent execution product boundaries component-save gap recovers exact server generation without a model/tool retry; stale/cancelled gaps cannot attach
+    /tests/unit/runtimeAgent/execution.test.ts
+
+15. [32m✓[0m    0.01s ( 0.5%) - durable Agent execution product boundaries explicit tool approval requires the current scoped admin, exact request hash and pinned history; resumes one durable event
+    /tests/unit/runtimeAgent/execution.test.ts
+
+16. [32m✓[0m    0.01s ( 0.4%) - durable Agent execution product boundaries duplicate completion callbacks keep one terminal output and gap reconciliation supplies final-only text
+    /tests/unit/runtimeAgent/execution.test.ts
+
+17. [32m✓[0m    0.01s ( 0.4%) - durable Agent execution product boundaries private selected canonical history retains typed calls/results, while public history omits private tool payloads
+    /tests/unit/runtimeAgent/execution.test.ts
+
+18. [32m✓[0m    0.01s ( 0.4%) - durable Agent execution product boundaries source/manual edits fence every delegated operation and finalization before effects
+    /tests/unit/runtimeAgent/execution.test.ts
+
+19. [32m✓[0m    0.01s ( 0.4%) - durable Agent execution product boundaries cancel retires Workflow/budget/output delivery and obsolete attempts cannot finalize
+    /tests/unit/runtimeAgent/execution.test.ts
+
+20. [32m✓[0m    0.01s ( 0.4%) - durable Agent execution product boundaries expiry cleanup survives an obsolete owner grant and recovers a later queued row under its own current authority
+    /tests/unit/runtimeAgent/execution.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.43s (13.0% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      3.27s
+  Test suites:        1
+  Individual tests:   51
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 passed, 1 total
+Tests:       56 passed, 56 total
+Snapshots:   0 total
+Time:        3.274 s
+Ran all test suites within paths "tests/unit/runtimeAgent/execution.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/tool-snapshot-current2.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

@@ -1,0 +1,87 @@
+{
+  "command": [
+    "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node",
+    "--experimental-vm-modules",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/jest/bin/jest.js",
+    "--config",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-product-independent-review1/independent-pending-jest1.config.mjs",
+    "--runInBand",
+    "--no-cache",
+    "--json",
+    "--outputFile",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-product-independent-review1/pending-cutoff-independent1.results.json"
+  ],
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "pid": 77521,
+  "exit": 1,
+  "reaped": true,
+  "elapsedSeconds": 4.734466791007435,
+  "deadlineSeconds": 55,
+  "timedOut": false,
+  "sourceBefore": [
+    {
+      "path": "convex-dev/runtimeMemoryContext.ts",
+      "bytes": 9370,
+      "sha256": "cf3d441c33ddaba518628ed8f0c9219ecbf974852c294ea88933f6c2bda0660c"
+    },
+    {
+      "path": "convex-dev/runtimeTranscript.ts",
+      "bytes": 51144,
+      "sha256": "0567510299e8c56beb2ab5e8f7d8da641f92a5b1101eb42ddd2f9b854288d92d"
+    },
+    {
+      "path": "convex-dev/runs.ts",
+      "bytes": 27916,
+      "sha256": "3aa08c179c8cafafb7f56b70d43c21b3c7e26c997c928d2b0da14497f2fd6036"
+    },
+    {
+      "path": "convex-dev/runtimeIngestion.ts",
+      "bytes": 42922,
+      "sha256": "153b413c969f1cd86ba2866402e186a43016c684e321e7985cd9445b70e5663c"
+    },
+    {
+      "path": "tests/unit/runtimeIngestion/fixture.ts",
+      "bytes": 6274,
+      "sha256": "cfee3cb34d13671f777990cdb60c9d0904186fdaa2bab0726714607cc9d87ff5"
+    },
+    {
+      "path": "tests/unit/runtimeTranscript/fixture.ts",
+      "bytes": 17873,
+      "sha256": "30eeb3043c7af65aad2cfa1dfebc1889d8535ca81709e6ced4f8a2a3b18db862"
+    }
+  ],
+  "sourceAfter": [
+    {
+      "path": "convex-dev/runtimeMemoryContext.ts",
+      "bytes": 9370,
+      "sha256": "cf3d441c33ddaba518628ed8f0c9219ecbf974852c294ea88933f6c2bda0660c"
+    },
+    {
+      "path": "convex-dev/runtimeTranscript.ts",
+      "bytes": 51144,
+      "sha256": "0567510299e8c56beb2ab5e8f7d8da641f92a5b1101eb42ddd2f9b854288d92d"
+    },
+    {
+      "path": "convex-dev/runs.ts",
+      "bytes": 27916,
+      "sha256": "3aa08c179c8cafafb7f56b70d43c21b3c7e26c997c928d2b0da14497f2fd6036"
+    },
+    {
+      "path": "convex-dev/runtimeIngestion.ts",
+      "bytes": 42922,
+      "sha256": "153b413c969f1cd86ba2866402e186a43016c684e321e7985cd9445b70e5663c"
+    },
+    {
+      "path": "tests/unit/runtimeIngestion/fixture.ts",
+      "bytes": 6274,
+      "sha256": "cfee3cb34d13671f777990cdb60c9d0904186fdaa2bab0726714607cc9d87ff5"
+    },
+    {
+      "path": "tests/unit/runtimeTranscript/fixture.ts",
+      "bytes": 17873,
+      "sha256": "30eeb3043c7af65aad2cfa1dfebc1889d8535ca81709e6ced4f8a2a3b18db862"
+    }
+  ],
+  "scope": "Registered submit/claim and real pending handler over controlled database/Agent peer; no targets/inference/private effects.",
+  "sourceStable": true
+}

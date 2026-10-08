@@ -1,6 +1,7 @@
 /** Trusted authorization boundary. Registered functions in this module are internal only. */
 import { ConvexError, v } from "convex/values";
-import type { UserIdentity } from "convex/server";
+import { makeFunctionReference } from "convex/server";
+import type { FunctionReference, UserIdentity } from "convex/server";
 import { internalMutation, internalQuery } from "./_generated/server";
 import type { MutationCtx, QueryCtx } from "./_generated/server";
 import type {
@@ -392,5 +393,9 @@ export const tombstoneResource = internalMutation({
   handler: async (ctx, args) => {
     nonempty(args.tenantId); nonempty(args.resourceId);
     if (!await createAuthorityReader(ctx).hasTombstone(args)) await ctx.db.insert("runtimeAuthTombstones", { ...args, deletedAt: Date.now() });
+    if (args.resourceType === "source" && args.memorySpaceId) await ctx.runMutation(
+      makeFunctionReference("runtimeIngestion:retireScopedSource") as unknown as FunctionReference<"mutation", "internal", {
+        tenantId: string; memorySpaceId: string; sourceId: string }, null>,
+      { tenantId: args.tenantId, memorySpaceId: args.memorySpaceId, sourceId: args.resourceId });
   },
 });

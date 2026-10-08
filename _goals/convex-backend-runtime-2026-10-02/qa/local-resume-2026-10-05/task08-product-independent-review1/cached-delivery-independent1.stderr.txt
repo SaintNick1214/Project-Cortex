@@ -1,0 +1,27 @@
+(node:96428) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-product-independent-review1/cached-delivery-independent1.test.mjs (5.958 s)
+  ✕ selective evidence revocation fences completed durable output, public transcript/export and assistant vectors (102 ms)
+
+  ● selective evidence revocation fences completed durable output, public transcript/export and assistant vectors
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      27 |  const paths={};for(const [name,registration] of [["messages",transcript.messages],["exportPage",transcript.exportPage]]){try{const page=await f.call(registration,{conversationId:run.conversationId});paths[name]={denied:false,containsSentinel:JSON.stringify(page).includes(sentinel),page};}catch(error){paths[name]={denied:true,code:error.data?.code};}}
+      28 |  const current=await managedSourceIsCurrent(f.ctx,reference,derivedSource,"read","canViewMemories");const hits=await f.call(memory.readVectorMatches,{reference,capability:"read",hits:[{id:vector._id,score:1}]});observations.push({case:"completed-cached-evidence-revocation",runId:run.runId,ownConversation:run.conversationId,source:witness,derivedSourceId:derivedSource.lineage.sourceId,observeDenied,paths,managedAssistantSourceCurrent:current,vectorMatches:hits,modelAttempts:f.db.table("runtimeModelAttempts").length,scope:"actual registered handlers with native peer fixture and fixed1536 vector; no provider/service"});
+    > 29 |  expect(observeDenied).toBe(true);expect(Object.values(paths).every(p=>p.denied || !p.containsSentinel)).toBe(true);expect(current).toBe(false);expect(hits).toHaveLength(0);expect(f.db.table("runtimeModelAttempts")).toHaveLength(0);
+         |                                                                                                          ^
+      30 | });
+      31 |
+
+      at Object.<anonymous> (_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-product-independent-review1/cached-delivery-independent1.test.mjs:29:106)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 1 total
+Snapshots:   0 total
+Time:        6.074 s
+Ran all test suites.
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-product-independent-review1/cached-delivery-independent1.results.json

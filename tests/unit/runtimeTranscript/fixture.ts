@@ -6,6 +6,7 @@ import type { DeploymentPolicyManifest } from "../../../convex-dev/runtimeModelP
 import type { TrustedModelPolicyRecord } from "../../../src/domain/model-policy";
 import { canonicalModelJson } from "../../../src/domain/model-policy";
 import { semanticHash } from "../../../src/domain/profile";
+import { DEFAULT_GATEWAY_POLICY_MANIFEST } from "../../../convex-dev/runtimeGatewayQualifications";
 import { AGENT_NATIVE_TOOLS, AGENT_TOOL_REGISTRY_VERSION } from "../../../src/domain/agent-tools";
 
 const lookup = jest.fn<(id: string, revision: number) => DeploymentPolicyManifest | undefined>();
@@ -39,6 +40,13 @@ export function installMockRoot(options: { tools?: boolean } = {}) {
   lookup.mockReset(); lookup.mockImplementation((id, revision) => id === root.manifestId && revision === root.revision ? root : undefined);
   jest.spyOn(Date, "now").mockReturnValue(clock);
 }
+/** Same native policy handlers with controlled installed-manifest time; no service/model claim. */
+export function installIngestionMockRoot() {
+  root = { ...DEFAULT_GATEWAY_POLICY_MANIFEST, manifestId: "ingestion-offline-root", classification: "fixture-synthetic",
+    dispatchEvidence: DEFAULT_GATEWAY_POLICY_MANIFEST.dispatchEvidence.map(proof => ({ ...proof, checkedAt: clock - 1, expiresAt: clock + 600_000 })) };
+  lookup.mockReset(); lookup.mockImplementation((id, revision) => id === root.manifestId && revision === root.revision ? root : undefined);
+  jest.spyOn(Date, "now").mockReturnValue(clock);
+}
 // Keep controlled persisted records in the Jest realm, like Convex JSON-decoded values.
 export function clone<T>(value: T): T {
   if (value instanceof Map) return new Map([...value].map(([key, item]) => [key, clone(item)])) as T;
@@ -61,9 +69,10 @@ export class TranscriptDb {
     const builder = {
       withIndex: (name: string, callback: (q: unknown) => unknown) => {
         const q = { eq: (key: string, value: unknown) => { filters.push(row => field(row, key) === value); return q; },
-          gt: (key: string, value: number) => { filters.push(row => (field(row, key) as number) > value); return q; } };
+          gt: (key: string, value: number) => { filters.push(row => (field(row, key) as number) > value); return q; },
+          lte: (key: string, value: number) => { filters.push(row => (field(row, key) as number) <= value); return q; } };
         callback(q);
-        keys = name === "by_scoped_version" ? ["version"] : name === "by_conversation_status" || name === "by_conversation_queue" || name === "by_conversation" ? ["queueSequence", "sequence"] : name === "by_conversation_position" ? ["order", "stepOrder"] : [];
+        keys = name === "by_scope_sequence" || name === "by_owner_sequence" ? ["sequence"] : name === "by_scoped_version" ? ["version"] : name === "by_conversation_status" || name === "by_conversation_queue" || name === "by_conversation" ? ["queueSequence", "sequence"] : name === "by_conversation_position" ? ["order", "stepOrder"] : [];
         return builder;
       },
       filter: (callback: (q: { field(path: string): (row: Row) => unknown; eq(a: unknown, b: unknown): (row: Row) => boolean; and(...items: ((row: Row) => boolean)[]): (row: Row) => boolean }) => (row: Row) => boolean) => {
@@ -88,7 +97,7 @@ export class TranscriptDb {
 export async function invoke<T = unknown>(registration: unknown, ctx: MutationCtx, args: unknown): Promise<T> {
   return await (registration as { _handler(ctx: MutationCtx, args: unknown): Promise<T> })._handler(ctx, args);
 }
-export async function transcriptFixture() {
+export async function transcriptFixture(options: { maxContextTokens?: number } = {}) {
   const db = new TranscriptDb();
   const principal = db.seed("runtimeAuthPrincipals", { issuer: "https://host.test", subject: "user-a", metadataUserId: "user-a", actorKind: "user", version: 1 });
   const membership = db.seed("runtimeAuthMemberships", { principalId: principal._id, tenantId: "tenant-a", version: 1 });
@@ -148,9 +157,9 @@ export async function transcriptFixture() {
     }
   };
   const call = async <T = unknown>(registration: unknown, args: unknown) => await transaction(async () => await invoke<T>(registration, ctx, args));
-  await call(ledger.installDeploymentPolicy, { manifestId: root.manifestId, expectedRevision: 1 });
+  await call(ledger.installDeploymentPolicy, { manifestId: root.manifestId, expectedRevision: root.revision });
   const definitionInput = { instructions: { text: "HIDDEN instructions PROVIDER_SECRET", promptVersion: "prompt-1" }, tools: [],
-    context: { handlerId: "cortex.transcript", handlerVersion: 1, registryHash: await definitions.executableRegistryHash(), memoryMode: "indexed-plus-pending", requiredStages: [], maxContextTokens: 160_000 },
+    context: { handlerId: "cortex.transcript", handlerVersion: 1, registryHash: await definitions.executableRegistryHash(), memoryMode: "indexed-plus-pending", requiredStages: [], maxContextTokens: options.maxContextTokens ?? 160_000 },
     policies: [{ policyId: "agent-default", version: 1, rules: { limits: { toolSteps: 0 } } }] };
   const published = await call<{ agentId: string; version: number; definitionHash: string }>(definitions.publishVersion, { memorySpaceId: "space-a", clientMutationId: "publish-1", expectedPreviousVersion: 0, definitionInput });
   const request = (key = "input-1", conversationId?: string) => ({ version: 1 as const, agentId: published.agentId, agentVersion: published.version, clientRequestId: key,

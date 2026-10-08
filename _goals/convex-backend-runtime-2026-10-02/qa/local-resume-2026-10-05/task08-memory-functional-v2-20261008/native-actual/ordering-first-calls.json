@@ -1,0 +1,194 @@
+{
+  "operation": "73a91eb5-3928-4521-8340-c371f42fb3e9",
+  "candidate": "fb894ea3a6e68e32ccc49942b16b9e1e97f700e7c9b3cea6ddc4828e0a1db318",
+  "records": [
+    {
+      "label": "older-seed",
+      "kind": "mutation",
+      "function": "ingestionQualification:seedSources",
+      "args": {
+        "reference": {
+          "grantId": "mx7bt4v43gv2n8y5pehwrrdf658fxfg5",
+          "grantVersion": 1,
+          "membershipId": "n176gzbw46svsw2nnj6d9hax918fxw0a",
+          "membershipVersion": 1,
+          "memorySpaceEpoch": 1,
+          "memorySpaceId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e-space",
+          "principalId": "n573t34xng3hctk542pyp379xd8fwpts",
+          "principalVersion": 1,
+          "tenantEpoch": 1,
+          "tenantId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e"
+        },
+        "prefix": "73a91eb5-3928-4521-8340-c371f42fb3e9-older",
+        "texts": [
+          "Task08 order tester has favorite drink tea."
+        ]
+      },
+      "result": [
+        {
+          "created": true,
+          "eventId": "ingestion:6a24a04116bbea57875c07abced5e8e30dd74969a6818b1cf1787baccf6d2357",
+          "sequence": 40
+        }
+      ],
+      "elapsedMs": 485
+    },
+    {
+      "label": "newer-seed",
+      "kind": "mutation",
+      "function": "ingestionQualification:seedSources",
+      "args": {
+        "reference": {
+          "grantId": "mx7bt4v43gv2n8y5pehwrrdf658fxfg5",
+          "grantVersion": 1,
+          "membershipId": "n176gzbw46svsw2nnj6d9hax918fxw0a",
+          "membershipVersion": 1,
+          "memorySpaceEpoch": 1,
+          "memorySpaceId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e-space",
+          "principalId": "n573t34xng3hctk542pyp379xd8fwpts",
+          "principalVersion": 1,
+          "tenantEpoch": 1,
+          "tenantId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e"
+        },
+        "prefix": "73a91eb5-3928-4521-8340-c371f42fb3e9-newer",
+        "texts": [
+          "Task08 order tester has favorite drink coffee. This corrects the earlier favorite drink tea."
+        ]
+      },
+      "result": [
+        {
+          "created": true,
+          "eventId": "ingestion:bc4f346cc784d8fa88f4ca4917ff4bcd1c3f8c68e9d8abedba14d9fce17fa713",
+          "sequence": 41
+        }
+      ],
+      "elapsedMs": 219
+    },
+    {
+      "label": "older-actual-extract",
+      "kind": "action",
+      "function": "ingestionQualification:releaseExtractHeld",
+      "args": {
+        "reference": {
+          "grantId": "mx7bt4v43gv2n8y5pehwrrdf658fxfg5",
+          "grantVersion": 1,
+          "membershipId": "n176gzbw46svsw2nnj6d9hax918fxw0a",
+          "membershipVersion": 1,
+          "memorySpaceEpoch": 1,
+          "memorySpaceId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e-space",
+          "principalId": "n573t34xng3hctk542pyp379xd8fwpts",
+          "principalVersion": 1,
+          "tenantEpoch": 1,
+          "tenantId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e"
+        },
+        "eventId": "ingestion:6a24a04116bbea57875c07abced5e8e30dd74969a6818b1cf1787baccf6d2357",
+        "stage": "extract"
+      },
+      "result": null,
+      "elapsedMs": 4456
+    },
+    {
+      "label": "older-native-plan",
+      "kind": "mutation",
+      "function": "ingestionQualification:preparePlan",
+      "args": {
+        "reference": {
+          "grantId": "mx7bt4v43gv2n8y5pehwrrdf658fxfg5",
+          "grantVersion": 1,
+          "membershipId": "n176gzbw46svsw2nnj6d9hax918fxw0a",
+          "membershipVersion": 1,
+          "memorySpaceEpoch": 1,
+          "memorySpaceId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e-space",
+          "principalId": "n573t34xng3hctk542pyp379xd8fwpts",
+          "principalVersion": 1,
+          "tenantEpoch": 1,
+          "tenantId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e"
+        },
+        "eventId": "ingestion:6a24a04116bbea57875c07abced5e8e30dd74969a6818b1cf1787baccf6d2357"
+      },
+      "result": {
+        "attempt": 1,
+        "eventId": "ingestion:6a24a04116bbea57875c07abced5e8e30dd74969a6818b1cf1787baccf6d2357",
+        "leaseVersion": 1,
+        "planCanonical": "{\"entries\":[{\"candidate\":{\"confidence\":1,\"entities\":[{\"name\":\"tea\",\"type\":\"concept\"}],\"fact\":\"User has a favorite drink, tea.\",\"factType\":\"preference\",\"lineage\":{\"role\":\"user\",\"sourceEventId\":\"73a91eb5-3928-4521-8340-c371f42fb3e9-older:0:1\",\"sourceId\":\"73a91eb5-3928-4521-8340-c371f42fb3e9-older:0\",\"sourceRevision\":1,\"trust\":\"user_assertion\"},\"object\":\"tea\",\"predicate\":\"has_favorite_drink\",\"subject\":\"User\",\"tags\":[]},\"decision\":{\"action\":\"ADD\",\"mergedFact\":null,\"reason\":\"No current matching belief\",\"targetFactId\":null},\"next\":{\"_id\":\"\",\"confidence\":100,\"createdAt\":1791475649354,\"entities\":[{\"name\":\"tea\",\"type\":\"concept\"}],\"extractionPolicyVersion\":\"ordered-belief-v1\",\"fact\":\"User has a favorite drink, tea.\",\"factId\":\"1af07f297d5c76d04e7e6ed5299ca3caa150a819c9fb2d2a462e902b86221aec\",\"factType\":\"preference\",\"lineage\":{\"role\":\"user\",\"sourceEventId\":\"73a91eb5-3928-4521-8340-c371f42fb3e9-older:0:1\",\"sourceId\":\"73a91eb5-3928-4521-8340-c371f42fb3e9-older:0\",\"sourceRevision\":1,\"trust\":\"user_assertion\"},\"memorySpaceId\":\"task08-8c9e4ca1-8498-481d-89da-6b5063f3813e-space\",\"object\":\"tea\",\"ownerPrincipalId\":\"n573t34xng3hctk542pyp379xd8fwpts\",\"predicate\":\"has_favorite_drink\",\"relations\":[],\"sourceType\":\"conversation\",\"subject\":\"User\",\"tags\":[],\"tenantId\":\"task08-8c9e4ca1-8498-481d-89da-6b5063f3813e\",\"updatedAt\":1791475649354,\"version\":1},\"ordinal\":0,\"slotKey\":\"[\\\"n573t34xng3hctk542pyp379xd8fwpts\\\",\\\"[\\\\\\\"user\\\\\\\",\\\\\\\"has_favorite_drink\\\\\\\"]\\\"]\",\"targetFactId\":null}],\"eventId\":\"ingestion:6a24a04116bbea57875c07abced5e8e30dd74969a6818b1cf1787baccf6d2357\",\"expectedVersions\":{\"1af07f297d5c76d04e7e6ed5299ca3caa150a819c9fb2d2a462e902b86221aec\":0,\"5c140d66c42c49d70860deed35073857e7ecfccbeb0ef0cc7718219f339700a5\":1},\"sequence\":40,\"sourceHash\":\"74150daf327201c1329ad1af236d2f9fe39eaa002ed91dc3b456bfac523c088b\",\"version\":1}",
+        "reference": {
+          "grantId": "mx7bt4v43gv2n8y5pehwrrdf658fxfg5",
+          "grantVersion": 1,
+          "membershipId": "n176gzbw46svsw2nnj6d9hax918fxw0a",
+          "membershipVersion": 1,
+          "memorySpaceEpoch": 1,
+          "memorySpaceId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e-space",
+          "principalId": "n573t34xng3hctk542pyp379xd8fwpts",
+          "principalVersion": 1,
+          "tenantEpoch": 1,
+          "tenantId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e"
+        },
+        "stage": "facts"
+      },
+      "elapsedMs": 842
+    },
+    {
+      "label": "newer-actual-extract",
+      "kind": "action",
+      "function": "ingestionQualification:releaseExtractHeld",
+      "args": {
+        "reference": {
+          "grantId": "mx7bt4v43gv2n8y5pehwrrdf658fxfg5",
+          "grantVersion": 1,
+          "membershipId": "n176gzbw46svsw2nnj6d9hax918fxw0a",
+          "membershipVersion": 1,
+          "memorySpaceEpoch": 1,
+          "memorySpaceId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e-space",
+          "principalId": "n573t34xng3hctk542pyp379xd8fwpts",
+          "principalVersion": 1,
+          "tenantEpoch": 1,
+          "tenantId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e"
+        },
+        "eventId": "ingestion:bc4f346cc784d8fa88f4ca4917ff4bcd1c3f8c68e9d8abedba14d9fce17fa713",
+        "stage": "extract"
+      },
+      "result": null,
+      "elapsedMs": 4557
+    },
+    {
+      "label": "newer-native-plan",
+      "kind": "mutation",
+      "function": "ingestionQualification:preparePlan",
+      "args": {
+        "reference": {
+          "grantId": "mx7bt4v43gv2n8y5pehwrrdf658fxfg5",
+          "grantVersion": 1,
+          "membershipId": "n176gzbw46svsw2nnj6d9hax918fxw0a",
+          "membershipVersion": 1,
+          "memorySpaceEpoch": 1,
+          "memorySpaceId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e-space",
+          "principalId": "n573t34xng3hctk542pyp379xd8fwpts",
+          "principalVersion": 1,
+          "tenantEpoch": 1,
+          "tenantId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e"
+        },
+        "eventId": "ingestion:bc4f346cc784d8fa88f4ca4917ff4bcd1c3f8c68e9d8abedba14d9fce17fa713"
+      },
+      "result": {
+        "attempt": 1,
+        "eventId": "ingestion:bc4f346cc784d8fa88f4ca4917ff4bcd1c3f8c68e9d8abedba14d9fce17fa713",
+        "leaseVersion": 1,
+        "planCanonical": "{\"entries\":[{\"candidate\":{\"confidence\":1,\"entities\":[{\"name\":\"Task08 order tester\",\"type\":\"person\"},{\"name\":\"coffee\",\"type\":\"product\"}],\"fact\":\"Task08 order tester has a favorite drink coffee\",\"factType\":\"preference\",\"lineage\":{\"role\":\"user\",\"sourceEventId\":\"73a91eb5-3928-4521-8340-c371f42fb3e9-newer:0:1\",\"sourceId\":\"73a91eb5-3928-4521-8340-c371f42fb3e9-newer:0\",\"sourceRevision\":1,\"trust\":\"user_assertion\"},\"object\":\"coffee\",\"predicate\":\"has_favorite_drink\",\"subject\":\"Task08 order tester\",\"tags\":[]},\"decision\":{\"action\":\"ADD\",\"mergedFact\":null,\"reason\":\"No current matching belief\",\"targetFactId\":null},\"next\":{\"_id\":\"\",\"confidence\":100,\"createdAt\":1791475649886,\"entities\":[{\"name\":\"Task08 order tester\",\"type\":\"person\"},{\"name\":\"coffee\",\"type\":\"product\"}],\"extractionPolicyVersion\":\"ordered-belief-v1\",\"fact\":\"Task08 order tester has a favorite drink coffee\",\"factId\":\"bec5209dc6ed934b0d32e68c10befa1325b99d2cacf14afc922f186a2a06ba70\",\"factType\":\"preference\",\"lineage\":{\"role\":\"user\",\"sourceEventId\":\"73a91eb5-3928-4521-8340-c371f42fb3e9-newer:0:1\",\"sourceId\":\"73a91eb5-3928-4521-8340-c371f42fb3e9-newer:0\",\"sourceRevision\":1,\"trust\":\"user_assertion\"},\"memorySpaceId\":\"task08-8c9e4ca1-8498-481d-89da-6b5063f3813e-space\",\"object\":\"coffee\",\"ownerPrincipalId\":\"n573t34xng3hctk542pyp379xd8fwpts\",\"predicate\":\"has_favorite_drink\",\"relations\":[],\"sourceType\":\"conversation\",\"subject\":\"Task08 order tester\",\"tags\":[],\"tenantId\":\"task08-8c9e4ca1-8498-481d-89da-6b5063f3813e\",\"updatedAt\":1791475649886,\"version\":1},\"ordinal\":0,\"slotKey\":\"[\\\"n573t34xng3hctk542pyp379xd8fwpts\\\",\\\"[\\\\\\\"task08 order tester\\\\\\\",\\\\\\\"has_favorite_drink\\\\\\\"]\\\"]\",\"targetFactId\":null}],\"eventId\":\"ingestion:bc4f346cc784d8fa88f4ca4917ff4bcd1c3f8c68e9d8abedba14d9fce17fa713\",\"expectedVersions\":{\"5c140d66c42c49d70860deed35073857e7ecfccbeb0ef0cc7718219f339700a5\":1,\"bec5209dc6ed934b0d32e68c10befa1325b99d2cacf14afc922f186a2a06ba70\":0},\"sequence\":41,\"sourceHash\":\"87481727613ba326c04a74c032483313437497b5b44a4e59bcc2c381cba6462e\",\"version\":1}",
+        "reference": {
+          "grantId": "mx7bt4v43gv2n8y5pehwrrdf658fxfg5",
+          "grantVersion": 1,
+          "membershipId": "n176gzbw46svsw2nnj6d9hax918fxw0a",
+          "membershipVersion": 1,
+          "memorySpaceEpoch": 1,
+          "memorySpaceId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e-space",
+          "principalId": "n573t34xng3hctk542pyp379xd8fwpts",
+          "principalVersion": 1,
+          "tenantEpoch": 1,
+          "tenantId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e"
+        },
+        "stage": "facts"
+      },
+      "elapsedMs": 567
+    }
+  ]
+}

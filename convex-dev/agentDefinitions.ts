@@ -38,7 +38,8 @@ const definitionInput = z.object({ instructions: z.object({ text: z.string().max
   tools: z.array(z.object({ toolId: text, toolVersion: positive, registryHash: z.string().regex(/^[a-f0-9]{64}$/),
     requiredCapability: z.literal("tool"), approval: z.enum(["none", "explicit"]) }).strict()).max(32),
   context: z.object({ handlerId: text, handlerVersion: positive, registryHash: z.string().regex(/^[a-f0-9]{64}$/),
-    memoryMode: z.enum(["indexed-plus-pending", "strict"]), requiredStages: z.array(z.enum(["facts", "vectors", "graph"])).max(3), maxContextTokens: positive }).strict(),
+    memoryMode: z.enum(["indexed-plus-pending", "strict"]), requiredStages: z.array(z.enum(["facts", "vectors", "graph"])).max(3), maxContextTokens: positive,
+    barrier: z.object({ deadlineMs: z.number().int().min(1).max(120_000), onFailure: z.enum(["fail", "incomplete"]) }).strict().optional() }).strict(),
   policies: z.array(policyInput).min(1).max(32),
 }).strict();
 export type ExecutableDefinitionV1 = Omit<z.infer<typeof definitionInput>, "policies"> & {

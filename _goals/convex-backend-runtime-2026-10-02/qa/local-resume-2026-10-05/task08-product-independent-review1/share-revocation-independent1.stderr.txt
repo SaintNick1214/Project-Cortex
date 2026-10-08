@@ -1,0 +1,27 @@
+(node:89987) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-product-independent-review1/share-revocation-independent1.test.mjs (6.681 s)
+  ✕ revoking fact access fences cached derived Agent context even when an independent view-only share remains (62 ms)
+
+  ● revoking fact access fences cached derived Agent context even when an independent view-only share remains
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      18 |  await f.call(runtime.saveContext,{...args,context:canonicalModelJson(visibleFacts),witnesses:[witness],completeness:"complete"});await guardAgentRunBudget(f.ctx,reference,row.runAccountId);
+      19 |  f.identity({issuer:"https://host.test",subject:"user-a"});await f.call(shares.revoke,{shareId:dataShare.shareId});f.identity({issuer:"https://host.test",subject:"reader-b"});expect(await f.call(memory.readSource,{reference,capability:"read",sourceId:witness.sourceId})).toMatchObject({contentHash:witness.contentHash});
+    > 20 |  let denied=false;try{await guardAgentRunBudget(f.ctx,reference,row.runAccountId);}catch{denied=true;}observations.push({case:"selective-data-share-revocation",dataShare:dataShare.shareId,viewShareRetained:true,runId:run.runId,witness,paidFenceDenied:denied,modelAttempts:f.db.table("runtimeModelAttempts").length});expect(denied).toBe(true);expect(f.db.table("runtimeModelAttempts")).toHaveLength(0);
+         |                                                                                                                                                                                                                                                                                                                                            ^
+      21 | });
+      22 |
+
+      at Object.<anonymous> (_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-product-independent-review1/share-revocation-independent1.test.mjs:20:332)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 1 total
+Snapshots:   0 total
+Time:        6.806 s
+Ran all test suites.
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-product-independent-review1/share-revocation-independent1.results.json

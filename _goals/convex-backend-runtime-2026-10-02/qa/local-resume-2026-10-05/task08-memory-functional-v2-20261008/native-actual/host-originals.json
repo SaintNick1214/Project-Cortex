@@ -1,0 +1,34 @@
+{
+  "convex.json": {
+    "content": "{\n  \"functions\": \"custom/backend/\",\n  \"node\": {\n    \"externalPackages\": []\n  }\n}\n",
+    "sha256": "18eb075466081eb8e53c6159399069248417c45709d37775cfda3f6d4d3f31f4"
+  },
+  "custom/backend/tsconfig.json": {
+    "content": "{\n  \"compilerOptions\": {\n    \"allowJs\": true,\n    \"strict\": true,\n    \"moduleResolution\": \"Bundler\",\n    \"jsx\": \"react-jsx\",\n    \"skipLibCheck\": true,\n    \"allowSyntheticDefaultImports\": true,\n    \"target\": \"ESNext\",\n    \"lib\": [\n      \"ES2021\",\n      \"dom\"\n    ],\n    \"forceConsistentCasingInFileNames\": true,\n    \"module\": \"ESNext\",\n    \"isolatedModules\": true,\n    \"noEmit\": true,\n    \"types\": [\n      \"node\"\n    ]\n  },\n  \"include\": [\n    \"./**/*\"\n  ],\n  \"exclude\": [\n    \"_generated\"\n  ]\n}\n",
+    "sha256": "8e89c80ff70f977a9ff85fb661452fa86e8025f0d3824016141395e8e9c9c669"
+  },
+  "custom/backend/schema.ts": {
+    "content": "import {defineSchema,defineTable} from \"convex/server\";\nimport {v} from \"convex/values\";\nexport default defineSchema({hostNotes:defineTable({owner:v.string(),text:v.string()}).index(\"by_owner\",[\"owner\"])},{schemaValidation:true});\n",
+    "sha256": "23431c9781d5a9b0cefd777c4894c6fa28397cc62ebb5f219e33a2e66398fe64"
+  },
+  "custom/backend/convex.config.ts": {
+    "content": "import {defineApp} from \"convex/server\";\nconst app=defineApp();\nexport default app;\n",
+    "sha256": "a432deedc25d222df36f2a1db91f165922c3074ddb6e2001478ef79ec36874a3"
+  },
+  "custom/backend/auth.config.ts": {
+    "content": "import type {AuthConfig} from \"convex/server\";\nexport default {providers:[{\"type\":\"customJwt\",\"issuer\":\"https://unrelated-task08-host.example\",\"jwks\":\"data:application/json;base64,eyJrZXlzIjpbeyJrdHkiOiJSU0EiLCJuIjoiazNGODJBWGR2SU5nVFhxOVkwa1VKMnFqUkZTVUYzY0NVWG9nWjVaQk5zb1NDMTdoUmtiQkY4VWZSb3NMYW5yTDRJX3dFcHpPLWV2WTdIV0d4QkU3X0JHcVEtaEoxZFRCS0MyLW9lWnZZUFRENV9rb3kzVUc1cVpMMUVLcDZfbFBFMTBHd2wySW9vNWpCRGR2S3g0dnVpYjhRRWVMdjVTak42UGtwaTR4TFZzbVI2MkdWSVZJa2Jkd2JJSktLb3NtdUdDbUJrakVtTHMtSEFKZWlCQnpJYmJOeGdUZzA0OEFiaHFndkdiY2pXRTFDMmFmRFkyWGNIdWd2UkswWVdIWEdFazZ4bkNvb3F0X0k1NzBhbFpLcVNqVnJtc2NaMllwckFXZXZkeGNTODl2RVpZRlRjc25jZGMzQ2xkdkVsbW1fdmw1N2lsVGs2R0NtbnNYTXFZcDF3IiwiZSI6IkFRQUIiLCJraWQiOiJ0YXNrMDgtbWVtb3J5LThjOWU0Y2ExLTg0OTgtNDgxZC04OWRhLTZiNTA2M2YzODEzZSIsImFsZyI6IlJTMjU2IiwidXNlIjoic2lnIn1dfQ==\",\"algorithm\":\"RS256\",\"applicationID\":\"unrelated-host\"}]} satisfies AuthConfig;\n",
+    "sha256": "d65243baa99c765ca20da339bcac748a40a86468fac98723734e4b876386b219"
+  },
+  "custom/backend/host.ts": {
+    "content": "import {mutation,query} from \"./_generated/server\";\nimport {v,ConvexError} from \"convex/values\";\nconst owner=async(ctx:any)=>{const i=await ctx.auth.getUserIdentity();if(!i||i.issuer!==\"https://unrelated-task08-host.example\")throw new ConvexError(\"HOST_AUTH_REQUIRED\");return i.subject;};\nexport const seed=mutation({args:{text:v.string()},handler:async(ctx,args)=>{const subject=await owner(ctx);const row=await ctx.db.query(\"hostNotes\").withIndex(\"by_owner\",q=>q.eq(\"owner\",subject)).unique();if(row)return {noteId:row._id};return {noteId:await ctx.db.insert(\"hostNotes\",{owner:subject,text:args.text})};}});\nexport const authenticated=query({args:{},handler:async(ctx)=>{const subject=await owner(ctx);return ctx.db.query(\"hostNotes\").withIndex(\"by_owner\",q=>q.eq(\"owner\",subject)).collect();}});\n",
+    "sha256": "3536d8f6038892908227a569a95b359ae97a1e221b9ab07711dfc5c10b2568d5"
+  },
+  "custom/backend/hostNode.ts": {
+    "content": "\"use node\";\nimport {action} from \"./_generated/server\";\nimport {ConvexError} from \"convex/values\";\nexport const health=action({args:{},handler:async(ctx)=>{const i=await ctx.auth.getUserIdentity();if(!i||i.issuer!==\"https://unrelated-task08-host.example\")throw new ConvexError(\"HOST_AUTH_REQUIRED\");return {runtime:\"node\",subject:i.subject};}});\n",
+    "sha256": "4f79d261aa407738c1e5e88bb9f6596388144d6e0927635bf40dd3f7709f9f23"
+  },
+  "custom/backend/http.ts": {
+    "content": "import {httpRouter} from \"convex/server\";\nimport {httpAction} from \"./_generated/server\";\nconst http=httpRouter();\nhttp.route({path:\"/host-health\",method:\"GET\",handler:httpAction(async()=>new Response(\"host-route-preserved\",{status:200}))});\nexport default http;\n",
+    "sha256": "d8e3aa1447c2c858291a9ee6c0565f0f149c736dcb19c2c859ed2b5b90694849"
+  }
+}

@@ -8,6 +8,7 @@ import { publicTextParts } from "../src/domain/transcript";
 import type { MessagePin } from "../src/domain/transcript";
 import { bindDataActor, dataAuthorityReference, managedConversationAccess, requireDataAuthority } from "./runtimeDataAuth";
 import { agentComponent, bridgeFor, checkConversation, conversationById, readTranscriptPage, requireConversation, singleTranscript, transcriptDenied, verifyMessage } from "./runtimeTranscript";
+import { checkContextSourceWitnesses } from "./runtimeContextWitness";
 
 async function snapshotById(ctx: Pick<QueryCtx, "db">, reference: RuntimeAuthorityReference, snapshotId: string) {
   return singleTranscript(await ctx.db.query("runtimeConversationSnapshots").withIndex("by_scoped_id", q => q.eq("tenantId", reference.tenantId).eq("memorySpaceId", reference.memorySpaceId!).eq("snapshotId", snapshotId)).take(2));
@@ -29,6 +30,7 @@ async function hydrate(ctx: Pick<QueryCtx, "db" | "runQuery">, reference: Runtim
       if (!bridge || !bridge.approved || bridge.revision !== pin.sourceRevision || bridge.sourceEventId !== pin.sourceEventId
         || bridge.contentHash !== pin.contentHash || bridge.order !== pin.order || bridge.stepOrder !== pin.stepOrder) transcriptDenied("STALE_TRANSCRIPT");
       await verifyMessage(ctx, conversation, bridge, natives[i]);
+      await checkContextSourceWitnesses(ctx, reference, bridge.contextSourceWitnesses ?? []);
       if (row.redactBefore !== undefined && bridge.createdAt < row.redactBefore) continue;
       const parts = publicTextParts(natives[i]!.message!.content);
       const visible = parts.map(p => ({ type: "text" as const, text: row.redactPII ? redact(p.text) : p.text }));
@@ -64,7 +66,7 @@ export const create = mutation({ args: {
   if (args.includeFacts || args.includeMemories || args.customRedactions?.length) transcriptDenied("CAPABILITY_UNAVAILABLE");
   if (args.redactBefore !== undefined && !Number.isSafeInteger(args.redactBefore)) transcriptDenied("INVALID_INPUT");
   const pins: MessagePin[] = []; let cursor: string | null = null;
-  do { const page = await readTranscriptPage(ctx, conversation, cursor, 100); for (const message of page.page) {
+  do { const page = await readTranscriptPage(ctx, conversation, reference, cursor, 100); for (const message of page.page) {
       if (message.status !== "success") continue; const bridge = await bridgeFor(ctx, conversation, message.id); if (!bridge) transcriptDenied("STALE_TRANSCRIPT");
       pins.push({ nativeMessageId: message.id, order: message.order, stepOrder: message.stepOrder, sourceEventId: bridge.sourceEventId, sourceRevision: bridge.revision, contentHash: bridge.contentHash });
     } if (pins.length > 1000) transcriptDenied("QUERY_TOO_BROAD"); cursor = page.continueCursor;

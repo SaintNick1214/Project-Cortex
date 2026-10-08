@@ -1,0 +1,35 @@
+(node:4620) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-product-independent-review1/cached-delivery-reader-independent1.test.mjs (6.379 s)
+  ● delivery fences use the actual reader, not the still-authorized cached-output owner
+
+    ConvexError: {"version":1,"code":"FORBIDDEN","message":"Access denied","retryable":false,"outcome":"not_dispatched"}
+
+      45 |
+      46 | function deny(code: "UNAUTHENTICATED" | "FORBIDDEN" | "INVALID_INPUT" = "FORBIDDEN"): never {
+    > 47 |   throw new ConvexError({ version: 1, code, message: code === "UNAUTHENTICATED"
+         |         ^
+      48 |     ? "Verified identity required" : code === "INVALID_INPUT" ? "Invalid authority configuration" : "Access denied",
+      49 |   retryable: false, outcome: "not_dispatched" });
+      50 | }
+
+      at deny (convex-dev/runtimeAuth.ts:47:9)
+      at resolveAuthority (convex-dev/runtimeAuth.ts:182:26)
+      at requireAuthority (convex-dev/runtimeAuth.ts:251:10)
+      at requireDataAuthority (convex-dev/runtimeDataAuth.ts:32:21)
+      at requireConversation (convex-dev/runtimeTranscript.ts:48:17)
+      at Function.handler [as _handler] (convex-dev/conversationShares.ts:44:46)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:98:10)
+      at tests/unit/runtimeTranscript/fixture.ts:159:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:155:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:159:77)
+      at Object.<anonymous> (_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-product-independent-review1/cached-delivery-reader-independent1.test.mjs:28:2)
+
+PASS _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-product-independent-review1/cached-delivery-independent2.test.mjs
+
+Test Suites: 1 failed, 1 passed, 2 total
+Tests:       1 failed, 1 passed, 2 total
+Snapshots:   0 total
+Time:        6.726 s
+Ran all test suites.
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-product-independent-review1/cached-delivery-replay-independent1.results.json

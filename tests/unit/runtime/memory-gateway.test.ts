@@ -36,11 +36,13 @@ const backendComposition = jest.fn<typeof import("../../../convex-dev/runtimeGat
 const ensureBudget = jest.fn<typeof import("../../../convex-dev/runtimeGatewayBackend").ensureBackendGatewayBudget>();
 // Retain the actual RPC composer for the domain-to-native contract regression.
 const actualBackend = await import("../../../convex-dev/runtimeGatewayBackend");
-const nativePolicy = await import("../../../convex-dev/runtimeModelPolicy");
 jest.unstable_mockModule("../../../convex-dev/runtimeGatewayBackend", () => ({
   createBackendGatewayComposition: backendComposition, ensureBackendGatewayBudget: ensureBudget,
 }));
 const { createGatewayMemoryModel } = await import("../../../convex-dev/runtimeMemoryGateway");
+// The ingestion ledger imports the memory adapter. Install controlled backend ports
+// before that ledger import; the strict native exportArgs checks below stay real.
+const nativePolicy = await import("../../../convex-dev/runtimeModelPolicy");
 
 const reference = { tenantId: "tenant-a", tenantEpoch: 2, memorySpaceId: "space-a", memorySpaceEpoch: 3,
   principalId: "principal-a", principalVersion: 4, membershipId: "member-a", membershipVersion: 5,

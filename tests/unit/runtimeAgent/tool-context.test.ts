@@ -40,7 +40,8 @@ it("dynamic recall records exact source witnesses and threads the primary native
   const result = await executeServerTool(ctx, binding, "memory.recall", { text: "preferred drink", limit: 2 });
   expect(result.result).toMatchObject({ context: expect.stringContaining("green tea"), profileId: DEFAULT_EMBEDDING_PROFILE.profileId });
   const lineage = source.lineage as { sourceId: string; sourceEventId: string; sourceRevision: number };
-  expect(result.witnesses).toEqual([{ sourceId: lineage.sourceId, sourceEventId: lineage.sourceEventId, sourceRevision: lineage.sourceRevision, contentHash: source.contentHash }]);
+  expect(result.witnesses).toEqual([{ sourceId: lineage.sourceId, sourceEventId: lineage.sourceEventId, sourceRevision: lineage.sourceRevision,
+    contentHash: source.contentHash, permissions: ["canViewFacts"] }]);
   expect(bindings).toEqual([{ runBudgetId: "shared-run", parentOperationId: "model-parent" }]); expect(embed).toHaveBeenCalledTimes(1);
   expect(binding.checkCurrent).toHaveBeenCalled(); expect(binding.writeSource).not.toHaveBeenCalled(); expect(binding.commitDerived).not.toHaveBeenCalled();
 });

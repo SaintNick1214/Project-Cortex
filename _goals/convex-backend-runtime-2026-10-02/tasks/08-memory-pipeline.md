@@ -1,6 +1,6 @@
 # Task 08: Durable asynchronous memory and belief consistency
 
-**Status:** Execution authorized — pending prerequisite implementation and independent acceptance.
+**Status:** Complete — independent PASS4.0 under acceptance policy v2 (Task08 scope).
 **Goal:** [Cortex-owned backend runs](../goal.md)
 **Depends on:** [02 Backend-friendly memory domain services](02-domain-services.md), [05 Canonical transcript, agent definitions and run admission](05-transcripts-runs.md), [07 Agent execution and durable reactive output](07-agent-streams.md)
 
@@ -10,18 +10,18 @@ Update Cortex memory independently of response delivery with explicit freshness 
 
 ## Requirements
 
-- [ ] Execute bounded substeps with separate receipts: 08A durable source/stage records, pinned extraction and default-profile vector jobs; 08B ordered atomic belief/history/projection commits and tombstone/revision fencing; 08C contiguous watermarks, pending-tail context and strict barriers. Freeze shared records/interfaces before dependent edits and serialize schema/finalization writes. Prove the fresh default profile's source/chunk/vector and query-policy matching here; managed retrieval is a Task 09 acceptance prerequisite, while additional profiles remain Task 10.
-- [ ] Persist source-role/trust/event lineage and pinned extraction versions; enqueue eligible user work during response and completed assistant work according to policy.
-- [ ] Deduplicate per-stage extraction/fact/vector receipts; atomically version-check and apply belief revision/history/outbox; enforce source ordering for corrections.
-- [ ] Implement scoped stage-specific indexedThrough watermarks defined by contiguous eligible completion, with explicit holes/failed receipts rather than the highest completed sequence, bounded eligible pending-tail context and strict stage-specific memory barrier; handle oversized tail/deadlines explicitly.
-- [ ] Bound retries and dead-letter states; deletion tombstones, source revision changes and revoked grants block every late commit. Unlocked transcript edits invalidate affected derived data and reset stage readiness until eligible repair completes. Expose response success with indexing pending/failed.
+- [x] Execute bounded substeps with separate receipts: 08A durable source/stage records, pinned extraction and default-profile vector jobs; 08B ordered atomic belief/history/projection commits and tombstone/revision fencing; 08C contiguous watermarks, pending-tail context and strict barriers. Freeze shared records/interfaces before dependent edits and serialize schema/finalization writes. Prove the fresh default profile's source/chunk/vector and query-policy matching here; managed retrieval is a Task 09 acceptance prerequisite, while additional profiles remain Task 10.
+- [x] Persist source-role/trust/event lineage and pinned extraction versions; enqueue eligible user work during response and completed assistant work according to policy.
+- [x] Deduplicate per-stage extraction/fact/vector receipts; atomically version-check and apply belief revision/history/outbox; enforce source ordering for corrections.
+- [x] Implement scoped stage-specific indexedThrough watermarks defined by contiguous eligible completion, with explicit holes/failed receipts rather than the highest completed sequence, bounded eligible pending-tail context and strict stage-specific memory barrier; handle oversized tail/deadlines explicitly.
+- [x] Bound retries and dead-letter states; deletion tombstones, source revision changes and revoked grants block every late commit. Unlocked transcript edits invalidate affected derived data and reset stage readiness until eligible repair completes. Expose response success with indexing pending/failed.
 
 ## Acceptance Criteria
 
-- [ ] Response reaches final before delayed extraction finishes, and next same-thread turn answers from unprocessed approved history.
-- [ ] Cross-thread pending updates and strict barrier have documented measurable behavior; an earlier failed/pending event followed by a later completed event cannot advance the contiguous watermark across the hole. Tail overflow cannot silently claim fresh context.
-- [ ] Duplicate jobs, reversed correction completion, concurrent fact mutation and delete-during-extraction cannot duplicate, restore stale or recreate facts. Editing a source while extraction is running rejects the obsolete result; stale derived memory is excluded until repair.
-- [ ] Assistant speculation and cancelled partial output are not recorded as authoritative user assertions; failures remain observable and retryable.
+- [x] Response reaches final before delayed extraction finishes, and next same-thread turn answers from unprocessed approved history.
+- [x] Cross-thread pending updates and strict barrier have documented measurable behavior; an earlier failed/pending event followed by a later completed event cannot advance the contiguous watermark across the hole. Tail overflow cannot silently claim fresh context.
+- [x] Duplicate jobs, reversed correction completion, concurrent fact mutation and delete-during-extraction cannot duplicate, restore stale or recreate facts. Editing a source while extraction is running rejects the obsolete result; stale derived memory is excluded until repair.
+- [x] Assistant speculation and cancelled partial output are not recorded as authoritative user assertions; failures remain observable and retryable.
 
 ## Context and Research
 
@@ -34,3 +34,7 @@ Update Cortex memory independently of response delivery with explicit freshness 
 Memory and isolation skills; forced failure/race assertions rather than implementation-mirroring tests. Stage freshness is explicit.
 
 No implementation, installation, paid inference, deployment or application testing is authorized by this task's presence. Re-read target AGENTS.md, Git status and manifests at execution. Use explicit working directories, preserve local work and record meaningful outcomes under this goal's qa/ directory.
+
+## Functional acceptance — 2026-10-08
+
+The reused non-author review accepts all five original requirements and four criteria, PASS4.0, with meaningful source controls and actual installed delayed-memory, ordered correction/CAS, edit/delete/revocation, failure, secondary fact-resolution and cleanup outcomes. See [review](../qa/local-resume-2026-10-05/task08-product-independent-review1/report1.md), [verdict](../qa/local-resume-2026-10-05/task08-product-independent-review1/verdict1.json) and [native report](../qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/native-actual/report-final1.json). Controlled decisions and genuine ordinary provider resolution are distinguished. Historical failures and unknown-cost liability remain preserved. Disposable target3173328 is explicitly retained for a new Task09 tenant; final retirement remains open. This does not accept Task09 or full-goal outcomes.

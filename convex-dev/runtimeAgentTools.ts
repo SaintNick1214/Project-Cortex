@@ -5,6 +5,8 @@ import { ConvexError } from "convex/values";
 import type { ActionCtx } from "./_generated/server";
 import type { Id } from "./_generated/dataModel";
 import type { MemoryRepository, SourceLineage, TrustedMemoryScope } from "../src/domain/contracts";
+import type { ContextSourcePermission, ContextSourceWitness } from "../src/domain/context-witness";
+import { mergeContextWitness } from "../src/domain/context-witness";
 import type { RuntimeAuthorityReference } from "../src/auth/verified";
 import { canonicalModelJson } from "../src/domain/model-policy";
 import { createActionMemoryRepository } from "./runtimeMemoryRepository";
@@ -15,7 +17,7 @@ import { utf8Bytes } from "../src/domain/transcript";
 import { NATIVE_TOOL_NAMES, SERVER_TOOL_SCHEMAS } from "../src/domain/agent-tools";
 export { NATIVE_TOOL_NAMES, SERVER_TOOL_SCHEMAS } from "../src/domain/agent-tools";
 export type ServerToolName = keyof typeof NATIVE_TOOL_NAMES;
-export type ToolSourceWitness = { sourceId: string; sourceEventId: string; sourceRevision: number; contentHash: string };
+export type ToolSourceWitness = ContextSourceWitness;
 /** Model-selected tool arguments are tool evidence, never an assertion made by the user. */
 export function serverToolSourceLineage(scope: TrustedMemoryScope, operationId: string): SourceLineage {
   const { sourceId, sourceEventId, sourceRevision } = explicitSourceLineage(scope, operationId);
@@ -53,19 +55,20 @@ export async function executeServerTool(ctx: ActionCtx, binding: { reference: Ru
   await ctx.runQuery(runtimeAgentReference("checkToolAuthority"), { reference: binding.reference, toolName: name });
   const base = createActionMemoryRepository(ctx, binding.reference, name === "memory.remember" ? "write" : "read");
   const witnesses = new Map<string, ToolSourceWitness>();
-  const rememberSource = async (sourceId: string, expected: { sourceEventId: string; sourceRevision: number; contentHash?: string }) => {
+  const rememberSource = async (sourceId: string, expected: { sourceEventId: string; sourceRevision: number; contentHash?: string }, permission: ContextSourcePermission) => {
     const source = await base.getSource(sourceId); if (!source) throw new Error("STALE_CONTEXT");
     if (source.lineage.sourceEventId !== expected.sourceEventId || source.lineage.sourceRevision !== expected.sourceRevision
       || expected.contentHash !== undefined && source.contentHash !== expected.contentHash) throw new Error("STALE_CONTEXT");
-    const witness = { sourceId, sourceEventId: source.lineage.sourceEventId, sourceRevision: source.lineage.sourceRevision, contentHash: source.contentHash };
-    const prior = witnesses.get(sourceId); if (prior && canonicalModelJson(prior) !== canonicalModelJson(witness)) throw new Error("STALE_CONTEXT");
+    const witness = mergeContextWitness(witnesses.get(sourceId), { sourceId, sourceEventId: source.lineage.sourceEventId,
+      sourceRevision: source.lineage.sourceRevision, contentHash: source.contentHash, permissions: [permission] });
+    if (!witness) throw new Error("STALE_CONTEXT");
     witnesses.set(sourceId, witness);
   };
   const repository = { ...base, recheckAuthority: async () => { await binding.checkCurrent(); await base.recheckAuthority(); },
     listFacts: async (...args: Parameters<typeof base.listFacts>) => { await binding.checkCurrent(); const facts = await base.listFacts(...args);
-      for (const fact of facts) await rememberSource(fact.lineage.sourceId, fact.lineage); return facts; },
+      for (const fact of facts) await rememberSource(fact.lineage.sourceId, fact.lineage, "canViewFacts"); return facts; },
     searchVectors: async (...args: Parameters<typeof base.searchVectors>) => { await binding.checkCurrent(); const matches = await base.searchVectors(...args);
-      for (const match of matches) await rememberSource(match.source.lineage.sourceId, { ...match.source.lineage, contentHash: match.source.contentHash }); return matches; },
+      for (const match of matches) await rememberSource(match.source.lineage.sourceId, { ...match.source.lineage, contentHash: match.source.contentHash }, "canViewMemories"); return matches; },
     putSource: async (...args: Parameters<typeof base.putSource>) => { await binding.checkCurrent(); return await binding.writeSource(...args); },
     commitDerived: async (...args: Parameters<typeof base.commitDerived>) => { await binding.checkCurrent(); return await binding.commitDerived(...args); } };
   const model = createGatewayMemoryModel(ctx, repository, { runBudgetId: binding.runBudgetId, parentOperationId: binding.parentOperationId });

@@ -1,0 +1,58 @@
+{
+  "operation": "2efd6a51-2b17-4fef-a96e-24d119523f65",
+  "candidate": "a789e1a84d26ac59ded3e42afe2ce12f38e9d3315fc0f3c70446a5c40b2ed0f2",
+  "records": [
+    {
+      "label": "new-distinct-correction",
+      "kind": "mutation",
+      "function": "ingestionQualification:seedSources",
+      "args": {
+        "reference": {
+          "grantId": "mx7bt4v43gv2n8y5pehwrrdf658fxfg5",
+          "grantVersion": 1,
+          "membershipId": "n176gzbw46svsw2nnj6d9hax918fxw0a",
+          "membershipVersion": 1,
+          "memorySpaceEpoch": 1,
+          "memorySpaceId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e-space",
+          "principalId": "n573t34xng3hctk542pyp379xd8fwpts",
+          "principalVersion": 1,
+          "tenantEpoch": 1,
+          "tenantId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e"
+        },
+        "prefix": "2efd6a51-2b17-4fef-a96e-24d119523f65-ordinary-resolution",
+        "texts": [
+          "I am the same user. I now prefer water as my favorite drink, replacing coffee."
+        ]
+      },
+      "result": [
+        {
+          "created": true,
+          "eventId": "ingestion:f92b8eff89661b88ff850a7c4ebe9d379bfc380dca9e5f2f59b975a98f142bdd",
+          "sequence": 58
+        }
+      ]
+    },
+    {
+      "label": "release-ordinary-worker",
+      "kind": "action",
+      "function": "ingestionQualification:release",
+      "args": {
+        "reference": {
+          "grantId": "mx7bt4v43gv2n8y5pehwrrdf658fxfg5",
+          "grantVersion": 1,
+          "membershipId": "n176gzbw46svsw2nnj6d9hax918fxw0a",
+          "membershipVersion": 1,
+          "memorySpaceEpoch": 1,
+          "memorySpaceId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e-space",
+          "principalId": "n573t34xng3hctk542pyp379xd8fwpts",
+          "principalVersion": 1,
+          "tenantEpoch": 1,
+          "tenantId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e"
+        },
+        "eventId": "ingestion:f92b8eff89661b88ff850a7c4ebe9d379bfc380dca9e5f2f59b975a98f142bdd",
+        "stage": "extract"
+      },
+      "result": null
+    }
+  ]
+}

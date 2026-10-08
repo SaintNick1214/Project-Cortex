@@ -1,0 +1,408 @@
+[
+  {
+    "case": "registered-shared-edit-positive",
+    "owner": "runtimeAuthPrincipals:1",
+    "editor": "runtimeAuthPrincipals:28",
+    "source": {
+      "tenantId": "tenant-a",
+      "memorySpaceId": "space-a",
+      "ownerPrincipalId": "runtimeAuthPrincipals:1",
+      "lineage": {
+        "sourceId": "transcript:conversation:6d91bfdc16bf555f89ca1f0e9d491f44acfefa752a6f7bc1d36fc90e430364e1:native:2",
+        "sourceEventId": "transcript:conversation:6d91bfdc16bf555f89ca1f0e9d491f44acfefa752a6f7bc1d36fc90e430364e1:native:2",
+        "sourceRevision": 2,
+        "role": "user",
+        "trust": "user_assertion"
+      },
+      "content": "Shared editor correction",
+      "contentHash": "4b82532b73b6aedfa55d8a2c4512d6df01eb59b644d06d1daedaa95e01d7d8e3",
+      "createdAt": 1000000,
+      "transcriptOrigin": {
+        "conversationId": "conversation:6d91bfdc16bf555f89ca1f0e9d491f44acfefa752a6f7bc1d36fc90e430364e1",
+        "conversationEpoch": 1,
+        "nativeMessageId": "native:2"
+      },
+      "_id": "runtimeMemorySources:19",
+      "_creationTime": 1000000
+    },
+    "event": {
+      "version": 1,
+      "tenantId": "tenant-a",
+      "memorySpaceId": "space-a",
+      "eventId": "ingestion:ddd336089238ce4f425131b656103f5df1dd4f08dbc31d474a58d8c2430775f7",
+      "identityCanonical": "[\"cortex-ingestion-v1\",\"tenant-a\",\"space-a\",\"transcript:conversation:6d91bfdc16bf555f89ca1f0e9d491f44acfefa752a6f7bc1d36fc90e430364e1:native:2\",\"transcript:conversation:6d91bfdc16bf555f89ca1f0e9d491f44acfefa752a6f7bc1d36fc90e430364e1:native:2\",2,\"4b82532b73b6aedfa55d8a2c4512d6df01eb59b644d06d1daedaa95e01d7d8e3\"]",
+      "ownerPrincipalId": "runtimeAuthPrincipals:1",
+      "sequence": 2,
+      "lineage": {
+        "sourceId": "transcript:conversation:6d91bfdc16bf555f89ca1f0e9d491f44acfefa752a6f7bc1d36fc90e430364e1:native:2",
+        "sourceEventId": "transcript:conversation:6d91bfdc16bf555f89ca1f0e9d491f44acfefa752a6f7bc1d36fc90e430364e1:native:2",
+        "sourceRevision": 2,
+        "role": "user",
+        "trust": "user_assertion"
+      },
+      "contentHash": "4b82532b73b6aedfa55d8a2c4512d6df01eb59b644d06d1daedaa95e01d7d8e3",
+      "authorityReference": {
+        "principalId": "runtimeAuthPrincipals:28",
+        "principalVersion": 1,
+        "membershipId": "runtimeAuthMemberships:29",
+        "membershipVersion": 1,
+        "grantId": "runtimeAuthGrants:30",
+        "grantVersion": 1,
+        "tenantId": "tenant-a",
+        "tenantEpoch": 1,
+        "memorySpaceId": "space-a",
+        "memorySpaceEpoch": 1
+      },
+      "eligibility": "eligible",
+      "factsState": "pending",
+      "vectorsState": "pending",
+      "extractionVersion": "source-attributed-facts-v1",
+      "beliefVersion": "ordered-belief-v1",
+      "profile": {
+        "profileId": "cortex-text-small-1536-v1",
+        "modelId": "openai/text-embedding-3-small",
+        "dimensions": 1536,
+        "normalization": "text-nfc-lf-v1",
+        "chunking": "codepoint-1600-overlap-200-v1",
+        "indexName": "by_default_embedding_v1"
+      },
+      "conversationId": "conversation:6d91bfdc16bf555f89ca1f0e9d491f44acfefa752a6f7bc1d36fc90e430364e1",
+      "conversationSequence": 1,
+      "conversationEpoch": 1,
+      "nativeMessageId": "native:2",
+      "runId": "run:6d91bfdc16bf555f89ca1f0e9d491f44acfefa752a6f7bc1d36fc90e430364e1",
+      "createdAt": 1000000,
+      "updatedAt": 1000000,
+      "_id": "runtimeIngestionEvents:33",
+      "_creationTime": 1000000
+    },
+    "job": {
+      "tenantId": "tenant-a",
+      "memorySpaceId": "space-a",
+      "eventId": "ingestion:ddd336089238ce4f425131b656103f5df1dd4f08dbc31d474a58d8c2430775f7",
+      "runBudgetId": "a6b2b00a48c126c82131e8ee4c84b991564655ad7344ae065864bb34db460da5",
+      "runAccountId": "runtimeBudgetAccounts:37",
+      "requestCanonical": "[\"[\\\"cortex-ingestion-v1\\\",\\\"tenant-a\\\",\\\"space-a\\\",\\\"transcript:conversation:6d91bfdc16bf555f89ca1f0e9d491f44acfefa752a6f7bc1d36fc90e430364e1:native:2\\\",\\\"transcript:conversation:6d91bfdc16bf555f89ca1f0e9d491f44acfefa752a6f7bc1d36fc90e430364e1:native:2\\\",2,\\\"4b82532b73b6aedfa55d8a2c4512d6df01eb59b644d06d1daedaa95e01d7d8e3\\\"]\",\"source-attributed-facts-v1\",\"ordered-belief-v1\",{\"chunking\":\"codepoint-1600-overlap-200-v1\",\"dimensions\":1536,\"indexName\":\"by_default_embedding_v1\",\"modelId\":\"openai/text-embedding-3-small\",\"normalization\":\"text-nfc-lf-v1\",\"profileId\":\"cortex-text-small-1536-v1\"}]",
+      "createdAt": 1000000,
+      "_id": "runtimeIngestionJobs:38",
+      "_creationTime": 1000000
+    }
+  },
+  {
+    "case": "registered-foreign-edit-negative",
+    "rows": {
+      "effects": {
+        "budgets": 0,
+        "deletes": 0,
+        "edits": 0,
+        "saves": 1
+      },
+      "nativeMessages": [
+        [
+          "native:2",
+          {
+            "_creationTime": 1000000,
+            "_id": "native:2",
+            "message": {
+              "content": [
+                {
+                  "text": "Hello ",
+                  "type": "text"
+                },
+                {
+                  "text": "world!",
+                  "type": "text"
+                }
+              ],
+              "role": "user"
+            },
+            "order": 0,
+            "status": "success",
+            "stepOrder": 0,
+            "threadId": "thread:1",
+            "tool": false,
+            "userId": "runtimeAuthPrincipals:1"
+          }
+        ]
+      ],
+      "tables": {
+        "runtimeBudgetAccounts": [
+          {
+            "_creationTime": 1000000,
+            "_id": "runtimeBudgetAccounts:16",
+            "accountKey": "3820fa08c26aa180fe7d90940f4d77ddbc0dcd23f28edddca11ed99d8c7d2388",
+            "activeConcurrency": 0,
+            "cancelled": false,
+            "concurrencyLimit": 2,
+            "createdAt": 1000000,
+            "currency": "USD",
+            "current": true,
+            "kind": "tenant",
+            "limitUnits": 10000000,
+            "monetaryUnit": "micro-USD",
+            "overrun": false,
+            "reservedUnits": 0,
+            "root": {
+              "acceptanceHash": "99154716ae1c4a9e69c299c9c60cdc7437ff129d2c11095767e5eb14f2076976",
+              "artifactRevision": "237ca57e5886fc7293aad968f787f1357d58f0a7c025d969561975edda219ccf",
+              "canonical": "{\"acceptanceHash\":\"99154716ae1c4a9e69c299c9c60cdc7437ff129d2c11095767e5eb14f2076976\",\"artifactRevision\":\"237ca57e5886fc7293aad968f787f1357d58f0a7c025d969561975edda219ccf\",\"budgetWindowMs\":86400000,\"classification\":\"fixture-synthetic\",\"dispatchEvidence\":[{\"boundRevision\":\"text-8192-512-schema-v2\",\"checkedAt\":999999,\"evidenceHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\",\"expiresAt\":1600000,\"inputBound\":{\"documentHash\":\"cd1d1897380273728e11c1efcdb311ea6675677cf583ae5b9d1f8a5798ba8eaf\",\"featureEnvelope\":\"plain-chat-v1\",\"nativeTransformHash\":\"5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613\",\"proofHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\",\"revision\":1,\"ruleId\":\"plain-chat-cookbook-utf8-v1\"},\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"providerVersion\":\"0.2.1\",\"receiptId\":\"gateway-gpt4omini-chat-20261008-v3\",\"resultBound\":{\"maximumEmbeddingValues\":1,\"maximumOutputTokens\":512,\"maximumPrivateResultBytes\":60000,\"proofHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\"},\"terminalCost\":\"unavailable\",\"terminalProof\":\"provider-terminal-v1\"},{\"boundRevision\":\"text-8192-512-schema-v2\",\"checkedAt\":999999,\"evidenceHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\",\"expiresAt\":1600000,\"inputBound\":{\"documentHash\":\"cd1d1897380273728e11c1efcdb311ea6675677cf583ae5b9d1f8a5798ba8eaf\",\"featureEnvelope\":\"plain-chat-v1\",\"nativeTransformHash\":\"5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613\",\"proofHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\",\"revision\":1,\"ruleId\":\"plain-chat-cookbook-utf8-v1\"},\"modelId\":\"openai/gpt-4o\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"providerVersion\":\"0.2.1\",\"receiptId\":\"gateway-gpt4o-chat-20261008-v3\",\"resultBound\":{\"maximumEmbeddingValues\":1,\"maximumOutputTokens\":512,\"maximumPrivateResultBytes\":60000,\"proofHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\"},\"terminalCost\":\"unavailable\",\"terminalProof\":\"provider-terminal-v1\"},{\"boundRevision\":\"text-8192-512-schema-v2\",\"checkedAt\":999999,\"evidenceHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\",\"expiresAt\":1600000,\"inputBound\":{\"documentHash\":\"cd1d1897380273728e11c1efcdb311ea6675677cf583ae5b9d1f8a5798ba8eaf\",\"featureEnvelope\":\"default-embedding-v1\",\"nativeTransformHash\":\"5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613\",\"proofHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\",\"revision\":1,\"ruleId\":\"default-embedding-utf8-v1\"},\"modelId\":\"openai/text-embedding-3-small\",\"nativeInterface\":\"embedding\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"providerVersion\":\"0.2.1\",\"receiptId\":\"gateway-text-embedding-small-20261008-v3\",\"resultBound\":{\"maximumEmbeddingValues\":1,\"maximumOutputTokens\":0,\"maximumPrivateResultBytes\":60000,\"proofHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\"},\"terminalCost\":\"unavailable\",\"terminalModelId\":\"text-embedding-3-small\",\"terminalProof\":\"provider-terminal-v1\"},{\"boundRevision\":\"agent-tools-32768-512-v1\",\"checkedAt\":999999,\"evidenceHash\":\"99154716ae1c4a9e69c299c9c60cdc7437ff129d2c11095767e5eb14f2076976\",\"expiresAt\":1600000,\"inputBound\":{\"documentHash\":\"305b8fa2b38d6a8a59fb7ef759711990d064ab9e03ca1c2da95b39006600f568\",\"featureEnvelope\":\"agent-tools-chat-v1\",\"nativeTransformHash\":\"5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613\",\"proofHash\":\"99154716ae1c4a9e69c299c9c60cdc7437ff129d2c11095767e5eb14f2076976\",\"revision\":1,\"ruleId\":\"agent-tools-chat-utf8-v1\"},\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"providerVersion\":\"0.2.1\",\"receiptId\":\"gateway-gpt4omini-agent-tools-stream-20261008-v5\",\"resultBound\":{\"maximumEmbeddingValues\":1,\"maximumOutputTokens\":512,\"maximumPrivateResultBytes\":60000,\"proofHash\":\"99154716ae1c4a9e69c299c9c60cdc7437ff129d2c11095767e5eb14f2076976\"},\"supportsStream\":true,\"terminalCost\":\"unavailable\",\"terminalProof\":\"provider-terminal-v1\",\"toolContract\":{\"maximumToolCalls\":4,\"registryVersion\":\"cortex-memory-tools-v1\",\"toolsCanonical\":\"[{\\\"description\\\":\\\"Recall authorized Cortex memory.\\\",\\\"inputSchema\\\":{\\\"additionalProperties\\\":false,\\\"properties\\\":{\\\"limit\\\":{\\\"maximum\\\":10,\\\"minimum\\\":1,\\\"type\\\":\\\"integer\\\"},\\\"text\\\":{\\\"maxLength\\\":4096,\\\"minLength\\\":1,\\\"type\\\":\\\"string\\\"}},\\\"required\\\":[\\\"text\\\",\\\"limit\\\"],\\\"type\\\":\\\"object\\\"},\\\"name\\\":\\\"memory_recall\\\",\\\"type\\\":\\\"function\\\"},{\\\"description\\\":\\\"Remember explicit information in authorized Cortex memory.\\\",\\\"inputSchema\\\":{\\\"additionalProperties\\\":false,\\\"properties\\\":{\\\"text\\\":{\\\"maxLength\\\":4096,\\\"minLength\\\":1,\\\"type\\\":\\\"string\\\"}},\\\"required\\\":[\\\"text\\\"],\\\"type\\\":\\\"object\\\"},\\\"name\\\":\\\"memory_remember\\\",\\\"type\\\":\\\"function\\\"}]\"}}],\"evidenceHash\":\"99154716ae1c4a9e69c299c9c60cdc7437ff129d2c11095767e5eb14f2076976\",\"manifestId\":\"ingestion-offline-root\",\"policies\":[{\"policyId\":\"cortex-model-defaults-v5\",\"rules\":{\"allowedModels\":[\"openai/gpt-4o-mini\",\"openai/gpt-4o\",\"openai/text-embedding-3-small\"],\"allowedOptions\":[],\"allowedTools\":[\"memory_recall\",\"memory_remember\"],\"capabilities\":[\"text\",\"structured\",\"embedding\",\"tools\"],\"fallbackModels\":[],\"interfaces\":[\"chat\",\"embedding\"],\"limits\":{\"concurrency\":2,\"contextTokens\":65536,\"inputTokens\":32768,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":4},\"pins\":{\"boundRevision\":\"text-8192-512-schema-v2\",\"extractionVersion\":\"task04-qualification-e1\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"promptVersion\":\"memory-schema-prompt-v2\",\"schemaVersion\":\"facts-v1\",\"toolRegistryVersion\":\"none-v1\"}},\"scope\":\"deployment\",\"version\":5},{\"operationKey\":\"conversation.title\",\"policyId\":\"cortex-conversation-title-v5\",\"rules\":{\"modelId\":\"openai/gpt-4o\",\"nativeInterface\":\"chat\"},\"scope\":\"deployment\",\"version\":5},{\"operationKey\":\"facts.resolve\",\"policyId\":\"cortex-facts-resolution-v5\",\"rules\":{\"pins\":{\"boundRevision\":\"text-8192-512-schema-v2\",\"promptVersion\":\"memory-schema-prompt-v2\",\"schemaVersion\":\"conflicts-v1\"}},\"scope\":\"deployment\",\"version\":5},{\"operationKey\":\"agent.respond\",\"policyId\":\"cortex-agent-response-v5\",\"rules\":{\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"pins\":{\"boundRevision\":\"agent-tools-32768-512-v1\",\"toolRegistryVersion\":\"cortex-memory-tools-v1\"}},\"scope\":\"deployment\",\"version\":5}],\"qualifications\":[{\"allowedOptions\":[],\"boundRevision\":\"text-8192-512-schema-v2\",\"capabilities\":[\"text\",\"structured\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras\"},\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"receiptId\":\"gateway-gpt4omini-chat-20261008-v3\"},{\"allowedOptions\":[],\"boundRevision\":\"text-8192-512-schema-v2\",\"capabilities\":[\"text\",\"structured\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras\"},\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/gpt-4o\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"receiptId\":\"gateway-gpt4o-chat-20261008-v3\"},{\"allowedOptions\":[],\"boundRevision\":\"text-8192-512-schema-v2\",\"capabilities\":[\"embedding\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras\"},\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/text-embedding-3-small\",\"nativeInterface\":\"embedding\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"receiptId\":\"gateway-text-embedding-small-20261008-v3\"},{\"allowedOptions\":[],\"boundRevision\":\"agent-tools-32768-512-v1\",\"capabilities\":[\"text\",\"tools\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Actual disposable generate/native tool-stream/final text-stream at fixed tools32768/512 envelope; published highest displayed0.165/0.66USD/M gives5746microUSD fullcap; retain100000 microUSD for unavailable aggregate charge; no enabled provider extras\"},\"limits\":{\"concurrency\":2,\"contextTokens\":65536,\"inputTokens\":32768,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":4},\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"receiptId\":\"gateway-gpt4omini-agent-tools-stream-20261008-v5\"}],\"revision\":5}",
+              "evidenceHash": "99154716ae1c4a9e69c299c9c60cdc7437ff129d2c11095767e5eb14f2076976",
+              "hash": "e9dbb747d985e510be9340b56882e08a9f61ec1a6ab9b3a3374c86835dd12b98",
+              "manifestId": "ingestion-offline-root",
+              "revision": 5
+            },
+            "scopeKey": "[\"tenant\",\"tenant-a\"]",
+            "settledUnits": 0,
+            "tenantId": "tenant-a",
+            "uncertainUnits": 0,
+            "version": 1,
+            "windowEnd": 86400000,
+            "windowId": "[\"tenant-a\",0,86400000]",
+            "windowStart": 0
+          },
+          {
+            "_creationTime": 1000000,
+            "_id": "runtimeBudgetAccounts:17",
+            "accountKey": "5041ebd6221e3589325873d47726dc394af9b9aab6e8552ead8e52ccda8969a6",
+            "activeConcurrency": 0,
+            "agentId": "agent:cd6f8ff373bb160d14c3dd2c7ef15c6543f70287b8f122abcfde4bf898979da6",
+            "agentVersion": 1,
+            "cancelled": false,
+            "concurrencyLimit": 2,
+            "createdAt": 1000000,
+            "currency": "USD",
+            "current": true,
+            "kind": "run",
+            "limitUnits": 2000000,
+            "monetaryUnit": "micro-USD",
+            "overrun": false,
+            "reference": {
+              "grantId": "runtimeAuthGrants:5",
+              "grantVersion": 1,
+              "membershipId": "runtimeAuthMemberships:2",
+              "membershipVersion": 1,
+              "memorySpaceEpoch": 1,
+              "memorySpaceId": "space-a",
+              "principalId": "runtimeAuthPrincipals:1",
+              "principalVersion": 1,
+              "tenantEpoch": 1,
+              "tenantId": "tenant-a"
+            },
+            "requestCanonical": "{\"identity\":[\"cortex.submit.v1\",\"tenant-a\",\"space-a\",\"runtimeAuthPrincipals:1\",[\"create\"],\"original\"],\"publicRequest\":{\"agentId\":\"agent:cd6f8ff373bb160d14c3dd2c7ef15c6543f70287b8f122abcfde4bf898979da6\",\"agentVersion\":1,\"clientRequestId\":\"original\",\"parts\":[{\"text\":\"Hello \",\"type\":\"text\"},{\"text\":\"world!\",\"type\":\"text\"}],\"version\":1},\"version\":1}",
+            "reservedUnits": 0,
+            "root": {
+              "acceptanceHash": "99154716ae1c4a9e69c299c9c60cdc7437ff129d2c11095767e5eb14f2076976",
+              "artifactRevision": "237ca57e5886fc7293aad968f787f1357d58f0a7c025d969561975edda219ccf",
+              "canonical": "{\"acceptanceHash\":\"99154716ae1c4a9e69c299c9c60cdc7437ff129d2c11095767e5eb14f2076976\",\"artifactRevision\":\"237ca57e5886fc7293aad968f787f1357d58f0a7c025d969561975edda219ccf\",\"budgetWindowMs\":86400000,\"classification\":\"fixture-synthetic\",\"dispatchEvidence\":[{\"boundRevision\":\"text-8192-512-schema-v2\",\"checkedAt\":999999,\"evidenceHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\",\"expiresAt\":1600000,\"inputBound\":{\"documentHash\":\"cd1d1897380273728e11c1efcdb311ea6675677cf583ae5b9d1f8a5798ba8eaf\",\"featureEnvelope\":\"plain-chat-v1\",\"nativeTransformHash\":\"5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613\",\"proofHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\",\"revision\":1,\"ruleId\":\"plain-chat-cookbook-utf8-v1\"},\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"providerVersion\":\"0.2.1\",\"receiptId\":\"gateway-gpt4omini-chat-20261008-v3\",\"resultBound\":{\"maximumEmbeddingValues\":1,\"maximumOutputTokens\":512,\"maximumPrivateResultBytes\":60000,\"proofHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\"},\"terminalCost\":\"unavailable\",\"terminalProof\":\"provider-terminal-v1\"},{\"boundRevision\":\"text-8192-512-schema-v2\",\"checkedAt\":999999,\"evidenceHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\",\"expiresAt\":1600000,\"inputBound\":{\"documentHash\":\"cd1d1897380273728e11c1efcdb311ea6675677cf583ae5b9d1f8a5798ba8eaf\",\"featureEnvelope\":\"plain-chat-v1\",\"nativeTransformHash\":\"5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613\",\"proofHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\",\"revision\":1,\"ruleId\":\"plain-chat-cookbook-utf8-v1\"},\"modelId\":\"openai/gpt-4o\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"providerVersion\":\"0.2.1\",\"receiptId\":\"gateway-gpt4o-chat-20261008-v3\",\"resultBound\":{\"maximumEmbeddingValues\":1,\"maximumOutputTokens\":512,\"maximumPrivateResultBytes\":60000,\"proofHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\"},\"terminalCost\":\"unavailable\",\"terminalProof\":\"provider-terminal-v1\"},{\"boundRevision\":\"text-8192-512-schema-v2\",\"checkedAt\":999999,\"evidenceHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\",\"expiresAt\":1600000,\"inputBound\":{\"documentHash\":\"cd1d1897380273728e11c1efcdb311ea6675677cf583ae5b9d1f8a5798ba8eaf\",\"featureEnvelope\":\"default-embedding-v1\",\"nativeTransformHash\":\"5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613\",\"proofHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\",\"revision\":1,\"ruleId\":\"default-embedding-utf8-v1\"},\"modelId\":\"openai/text-embedding-3-small\",\"nativeInterface\":\"embedding\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"providerVersion\":\"0.2.1\",\"receiptId\":\"gateway-text-embedding-small-20261008-v3\",\"resultBound\":{\"maximumEmbeddingValues\":1,\"maximumOutputTokens\":0,\"maximumPrivateResultBytes\":60000,\"proofHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\"},\"terminalCost\":\"unavailable\",\"terminalModelId\":\"text-embedding-3-small\",\"terminalProof\":\"provider-terminal-v1\"},{\"boundRevision\":\"agent-tools-32768-512-v1\",\"checkedAt\":999999,\"evidenceHash\":\"99154716ae1c4a9e69c299c9c60cdc7437ff129d2c11095767e5eb14f2076976\",\"expiresAt\":1600000,\"inputBound\":{\"documentHash\":\"305b8fa2b38d6a8a59fb7ef759711990d064ab9e03ca1c2da95b39006600f568\",\"featureEnvelope\":\"agent-tools-chat-v1\",\"nativeTransformHash\":\"5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613\",\"proofHash\":\"99154716ae1c4a9e69c299c9c60cdc7437ff129d2c11095767e5eb14f2076976\",\"revision\":1,\"ruleId\":\"agent-tools-chat-utf8-v1\"},\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"providerVersion\":\"0.2.1\",\"receiptId\":\"gateway-gpt4omini-agent-tools-stream-20261008-v5\",\"resultBound\":{\"maximumEmbeddingValues\":1,\"maximumOutputTokens\":512,\"maximumPrivateResultBytes\":60000,\"proofHash\":\"99154716ae1c4a9e69c299c9c60cdc7437ff129d2c11095767e5eb14f2076976\"},\"supportsStream\":true,\"terminalCost\":\"unavailable\",\"terminalProof\":\"provider-terminal-v1\",\"toolContract\":{\"maximumToolCalls\":4,\"registryVersion\":\"cortex-memory-tools-v1\",\"toolsCanonical\":\"[{\\\"description\\\":\\\"Recall authorized Cortex memory.\\\",\\\"inputSchema\\\":{\\\"additionalProperties\\\":false,\\\"properties\\\":{\\\"limit\\\":{\\\"maximum\\\":10,\\\"minimum\\\":1,\\\"type\\\":\\\"integer\\\"},\\\"text\\\":{\\\"maxLength\\\":4096,\\\"minLength\\\":1,\\\"type\\\":\\\"string\\\"}},\\\"required\\\":[\\\"text\\\",\\\"limit\\\"],\\\"type\\\":\\\"object\\\"},\\\"name\\\":\\\"memory_recall\\\",\\\"type\\\":\\\"function\\\"},{\\\"description\\\":\\\"Remember explicit information in authorized Cortex memory.\\\",\\\"inputSchema\\\":{\\\"additionalProperties\\\":false,\\\"properties\\\":{\\\"text\\\":{\\\"maxLength\\\":4096,\\\"minLength\\\":1,\\\"type\\\":\\\"string\\\"}},\\\"required\\\":[\\\"text\\\"],\\\"type\\\":\\\"object\\\"},\\\"name\\\":\\\"memory_remember\\\",\\\"type\\\":\\\"function\\\"}]\"}}],\"evidenceHash\":\"99154716ae1c4a9e69c299c9c60cdc7437ff129d2c11095767e5eb14f2076976\",\"manifestId\":\"ingestion-offline-root\",\"policies\":[{\"policyId\":\"cortex-model-defaults-v5\",\"rules\":{\"allowedModels\":[\"openai/gpt-4o-mini\",\"openai/gpt-4o\",\"openai/text-embedding-3-small\"],\"allowedOptions\":[],\"allowedTools\":[\"memory_recall\",\"memory_remember\"],\"capabilities\":[\"text\",\"structured\",\"embedding\",\"tools\"],\"fallbackModels\":[],\"interfaces\":[\"chat\",\"embedding\"],\"limits\":{\"concurrency\":2,\"contextTokens\":65536,\"inputTokens\":32768,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":4},\"pins\":{\"boundRevision\":\"text-8192-512-schema-v2\",\"extractionVersion\":\"task04-qualification-e1\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"promptVersion\":\"memory-schema-prompt-v2\",\"schemaVersion\":\"facts-v1\",\"toolRegistryVersion\":\"none-v1\"}},\"scope\":\"deployment\",\"version\":5},{\"operationKey\":\"conversation.title\",\"policyId\":\"cortex-conversation-title-v5\",\"rules\":{\"modelId\":\"openai/gpt-4o\",\"nativeInterface\":\"chat\"},\"scope\":\"deployment\",\"version\":5},{\"operationKey\":\"facts.resolve\",\"policyId\":\"cortex-facts-resolution-v5\",\"rules\":{\"pins\":{\"boundRevision\":\"text-8192-512-schema-v2\",\"promptVersion\":\"memory-schema-prompt-v2\",\"schemaVersion\":\"conflicts-v1\"}},\"scope\":\"deployment\",\"version\":5},{\"operationKey\":\"agent.respond\",\"policyId\":\"cortex-agent-response-v5\",\"rules\":{\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"pins\":{\"boundRevision\":\"agent-tools-32768-512-v1\",\"toolRegistryVersion\":\"cortex-memory-tools-v1\"}},\"scope\":\"deployment\",\"version\":5}],\"qualifications\":[{\"allowedOptions\":[],\"boundRevision\":\"text-8192-512-schema-v2\",\"capabilities\":[\"text\",\"structured\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras\"},\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"receiptId\":\"gateway-gpt4omini-chat-20261008-v3\"},{\"allowedOptions\":[],\"boundRevision\":\"text-8192-512-schema-v2\",\"capabilities\":[\"text\",\"structured\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras\"},\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/gpt-4o\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"receiptId\":\"gateway-gpt4o-chat-20261008-v3\"},{\"allowedOptions\":[],\"boundRevision\":\"text-8192-512-schema-v2\",\"capabilities\":[\"embedding\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras\"},\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/text-embedding-3-small\",\"nativeInterface\":\"embedding\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"receiptId\":\"gateway-text-embedding-small-20261008-v3\"},{\"allowedOptions\":[],\"boundRevision\":\"agent-tools-32768-512-v1\",\"capabilities\":[\"text\",\"tools\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Actual disposable generate/native tool-stream/final text-stream at fixed tools32768/512 envelope; published highest displayed0.165/0.66USD/M gives5746microUSD fullcap; retain100000 microUSD for unavailable aggregate charge; no enabled provider extras\"},\"limits\":{\"concurrency\":2,\"contextTokens\":65536,\"inputTokens\":32768,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":4},\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"receiptId\":\"gateway-gpt4omini-agent-tools-stream-20261008-v5\"}],\"revision\":5}",
+              "evidenceHash": "99154716ae1c4a9e69c299c9c60cdc7437ff129d2c11095767e5eb14f2076976",
+              "hash": "e9dbb747d985e510be9340b56882e08a9f61ec1a6ab9b3a3374c86835dd12b98",
+              "manifestId": "ingestion-offline-root",
+              "revision": 5
+            },
+            "runBudgetId": "5041ebd6221e3589325873d47726dc394af9b9aab6e8552ead8e52ccda8969a6",
+            "scopeKey": "[\"run\",\"tenant-a\",\"space-a\",\"runtimeAuthPrincipals:1\",\"agent.respond\",\"submit-v1:6d91bfdc16bf555f89ca1f0e9d491f44acfefa752a6f7bc1d36fc90e430364e1\"]",
+            "settledUnits": 0,
+            "tenantId": "tenant-a",
+            "uncertainUnits": 0,
+            "version": 1,
+            "windowEnd": 86400000,
+            "windowId": "[\"tenant-a\",0,86400000]",
+            "windowStart": 0
+          }
+        ],
+        "runtimeConversations": [
+          {
+            "_creationTime": 1000000,
+            "_id": "runtimeConversations:15",
+            "conversationId": "conversation:6d91bfdc16bf555f89ca1f0e9d491f44acfefa752a6f7bc1d36fc90e430364e1",
+            "createdAt": 1000000,
+            "creationCanonical": "{\"identity\":[\"cortex.submit.v1\",\"tenant-a\",\"space-a\",\"runtimeAuthPrincipals:1\",[\"create\"],\"original\"],\"publicRequest\":{\"agentId\":\"agent:cd6f8ff373bb160d14c3dd2c7ef15c6543f70287b8f122abcfde4bf898979da6\",\"agentVersion\":1,\"clientRequestId\":\"original\",\"parts\":[{\"text\":\"Hello \",\"type\":\"text\"},{\"text\":\"world!\",\"type\":\"text\"}],\"version\":1},\"version\":1}",
+            "creationIdentity": "[\"cortex.submit.v1\",\"tenant-a\",\"space-a\",\"runtimeAuthPrincipals:1\",[\"create\"],\"original\"]",
+            "epoch": 1,
+            "executionRevision": 1,
+            "historyRevision": 2,
+            "manualWriteLocked": false,
+            "memorySpaceId": "space-a",
+            "messageCount": 1,
+            "nextQueueSequence": 1,
+            "ownerPrincipalId": "runtimeAuthPrincipals:1",
+            "participants": [
+              "runtimeAuthPrincipals:1"
+            ],
+            "requireApproval": false,
+            "tenantId": "tenant-a",
+            "threadId": "thread:1",
+            "type": "user-agent",
+            "updatedAt": 1000000,
+            "visibility": "private"
+          }
+        ],
+        "runtimeIngestionEvents": [
+          {
+            "_creationTime": 1000000,
+            "_id": "runtimeIngestionEvents:22",
+            "authorityReference": {
+              "grantId": "runtimeAuthGrants:5",
+              "grantVersion": 1,
+              "membershipId": "runtimeAuthMemberships:2",
+              "membershipVersion": 1,
+              "memorySpaceEpoch": 1,
+              "memorySpaceId": "space-a",
+              "principalId": "runtimeAuthPrincipals:1",
+              "principalVersion": 1,
+              "tenantEpoch": 1,
+              "tenantId": "tenant-a"
+            },
+            "beliefVersion": "ordered-belief-v1",
+            "contentHash": "264d0ad08ab9bd789fc882fefd32ebb6a827fd0c21c728e1ea6c0f4dcf846821",
+            "conversationEpoch": 1,
+            "conversationId": "conversation:6d91bfdc16bf555f89ca1f0e9d491f44acfefa752a6f7bc1d36fc90e430364e1",
+            "conversationSequence": 1,
+            "createdAt": 1000000,
+            "eligibility": "eligible",
+            "eventId": "ingestion:0a5d2e1379607aad38421d994b56d46613e9c25e89f548feca4d0665c9826bed",
+            "extractionVersion": "source-attributed-facts-v1",
+            "factsState": "pending",
+            "identityCanonical": "[\"cortex-ingestion-v1\",\"tenant-a\",\"space-a\",\"transcript:conversation:6d91bfdc16bf555f89ca1f0e9d491f44acfefa752a6f7bc1d36fc90e430364e1:native:2\",\"transcript:conversation:6d91bfdc16bf555f89ca1f0e9d491f44acfefa752a6f7bc1d36fc90e430364e1:native:2\",1,\"264d0ad08ab9bd789fc882fefd32ebb6a827fd0c21c728e1ea6c0f4dcf846821\"]",
+            "lineage": {
+              "role": "user",
+              "sourceEventId": "transcript:conversation:6d91bfdc16bf555f89ca1f0e9d491f44acfefa752a6f7bc1d36fc90e430364e1:native:2",
+              "sourceId": "transcript:conversation:6d91bfdc16bf555f89ca1f0e9d491f44acfefa752a6f7bc1d36fc90e430364e1:native:2",
+              "sourceRevision": 1,
+              "trust": "user_assertion"
+            },
+            "memorySpaceId": "space-a",
+            "nativeMessageId": "native:2",
+            "ownerPrincipalId": "runtimeAuthPrincipals:1",
+            "profile": {
+              "chunking": "codepoint-1600-overlap-200-v1",
+              "dimensions": 1536,
+              "indexName": "by_default_embedding_v1",
+              "modelId": "openai/text-embedding-3-small",
+              "normalization": "text-nfc-lf-v1",
+              "profileId": "cortex-text-small-1536-v1"
+            },
+            "runId": "run:6d91bfdc16bf555f89ca1f0e9d491f44acfefa752a6f7bc1d36fc90e430364e1",
+            "sequence": 1,
+            "tenantId": "tenant-a",
+            "updatedAt": 1000000,
+            "vectorsState": "pending",
+            "version": 1
+          }
+        ],
+        "runtimeIngestionJobs": [],
+        "runtimeIngestionScopes": [
+          {
+            "_creationTime": 1000000,
+            "_id": "runtimeIngestionScopes:21",
+            "factsThrough": 0,
+            "graphThrough": 0,
+            "memorySpaceId": "space-a",
+            "sequence": 1,
+            "tenantId": "tenant-a",
+            "updatedAt": 1000000,
+            "vectorsThrough": 0,
+            "version": 1
+          }
+        ],
+        "runtimeIngestionStages": [
+          {
+            "_creationTime": 1000000,
+            "_id": "runtimeIngestionStages:23",
+            "attempt": 0,
+            "eventId": "ingestion:0a5d2e1379607aad38421d994b56d46613e9c25e89f548feca4d0665c9826bed",
+            "leaseVersion": 0,
+            "memorySpaceId": "space-a",
+            "stage": "extract",
+            "state": "pending",
+            "tenantId": "tenant-a",
+            "updatedAt": 1000000
+          },
+          {
+            "_creationTime": 1000000,
+            "_id": "runtimeIngestionStages:24",
+            "attempt": 0,
+            "eventId": "ingestion:0a5d2e1379607aad38421d994b56d46613e9c25e89f548feca4d0665c9826bed",
+            "leaseVersion": 0,
+            "memorySpaceId": "space-a",
+            "stage": "facts",
+            "state": "pending",
+            "tenantId": "tenant-a",
+            "updatedAt": 1000000
+          },
+          {
+            "_creationTime": 1000000,
+            "_id": "runtimeIngestionStages:25",
+            "attempt": 0,
+            "eventId": "ingestion:0a5d2e1379607aad38421d994b56d46613e9c25e89f548feca4d0665c9826bed",
+            "leaseVersion": 0,
+            "memorySpaceId": "space-a",
+            "stage": "vectors",
+            "state": "pending",
+            "tenantId": "tenant-a",
+            "updatedAt": 1000000
+          }
+        ],
+        "runtimeMemorySources": [
+          {
+            "_creationTime": 1000000,
+            "_id": "runtimeMemorySources:19",
+            "content": "Hello \nworld!",
+            "contentHash": "264d0ad08ab9bd789fc882fefd32ebb6a827fd0c21c728e1ea6c0f4dcf846821",
+            "createdAt": 1000000,
+            "lineage": {
+              "role": "user",
+              "sourceEventId": "transcript:conversation:6d91bfdc16bf555f89ca1f0e9d491f44acfefa752a6f7bc1d36fc90e430364e1:native:2",
+              "sourceId": "transcript:conversation:6d91bfdc16bf555f89ca1f0e9d491f44acfefa752a6f7bc1d36fc90e430364e1:native:2",
+              "sourceRevision": 1,
+              "trust": "user_assertion"
+            },
+            "memorySpaceId": "space-a",
+            "ownerPrincipalId": "runtimeAuthPrincipals:1",
+            "tenantId": "tenant-a",
+            "transcriptOrigin": {
+              "conversationEpoch": 1,
+              "conversationId": "conversation:6d91bfdc16bf555f89ca1f0e9d491f44acfefa752a6f7bc1d36fc90e430364e1",
+              "nativeMessageId": "native:2"
+            }
+          }
+        ],
+        "runtimeTranscriptMessages": [
+          {
+            "_creationTime": 1000000,
+            "_id": "runtimeTranscriptMessages:18",
+            "actorReference": {
+              "grantId": "runtimeAuthGrants:5",
+              "grantVersion": 1,
+              "membershipId": "runtimeAuthMemberships:2",
+              "membershipVersion": 1,
+              "memorySpaceEpoch": 1,
+              "memorySpaceId": "space-a",
+              "principalId": "runtimeAuthPrincipals:1",
+              "principalVersion": 1,
+              "tenantEpoch": 1,
+              "tenantId": "tenant-a"
+            },
+            "approved": true,
+            "contentHash": "8b8204d3e902e97094877e40aa68c84aba3083cb8d955f1b337a6635bc2e55b7",
+            "conversationId": "conversation:6d91bfdc16bf555f89ca1f0e9d491f44acfefa752a6f7bc1d36fc90e430364e1",
+            "createdAt": 1000000,
+            "memorySpaceId": "space-a",
+            "nativeMessageId": "native:2",
+            "order": 0,
+            "ownerPrincipalId": "runtimeAuthPrincipals:1",
+            "revision": 1,
+            "role": "user",
+            "runId": "run:6d91bfdc16bf555f89ca1f0e9d491f44acfefa752a6f7bc1d36fc90e430364e1",
+            "sourceContentHash": "264d0ad08ab9bd789fc882fefd32ebb6a827fd0c21c728e1ea6c0f4dcf846821",
+            "sourceEventId": "transcript:conversation:6d91bfdc16bf555f89ca1f0e9d491f44acfefa752a6f7bc1d36fc90e430364e1:native:2",
+            "sourceId": "transcript:conversation:6d91bfdc16bf555f89ca1f0e9d491f44acfefa752a6f7bc1d36fc90e430364e1:native:2",
+            "stepOrder": 0,
+            "tenantId": "tenant-a",
+            "updatedAt": 1000000
+          }
+        ]
+      }
+    }
+  }
+]

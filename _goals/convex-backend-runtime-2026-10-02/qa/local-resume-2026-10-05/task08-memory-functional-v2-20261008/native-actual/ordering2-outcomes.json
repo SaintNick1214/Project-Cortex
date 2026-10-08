@@ -1,0 +1,70 @@
+{
+  "operation": "9595e551-ccad-4f47-80ae-844bc14969bb",
+  "candidate": "fb894ea3a6e68e32ccc49942b16b9e1e97f700e7c9b3cea6ddc4828e0a1db318",
+  "outcomes": [
+    {
+      "name": "newer correction wins; stale CAS and recomputed older completion cannot restore it",
+      "status": "PASS",
+      "evidence": {
+        "newerReceipt": "6901c15bbcf2eaca23ebc9cbd89a9894be136a4b64563c78e19911fd322a673b",
+        "olderSequence": 48,
+        "newerSequence": 49,
+        "stale": {
+          "name": "ConvexError",
+          "message": "[Request ID: b50ef6ac3f98b409] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"FACT_VERSION_CONFLICT\",\"message\":\"Memory indexing operation denied.\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at ingestionDenied (../../custom/backend/runtimeIngestion.ts:33:0)\n    at commitBeliefPlan (../../custom/backend/runtimeBeliefs.ts:37:36)\n    at async handler (../custom/backend/ingestionQualification.ts:133:51)\n",
+          "data": {
+            "code": "FACT_VERSION_CONFLICT",
+            "message": "Memory indexing operation denied.",
+            "outcome": "not_dispatched",
+            "retryable": false,
+            "version": 1
+          }
+        },
+        "reversed": {
+          "name": "ConvexError",
+          "message": "[Request ID: 3c4f823b2543a750] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"BELIEF_ORDER_CONFLICT\",\"message\":\"Memory indexing operation denied.\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at ingestionDenied (../../custom/backend/runtimeIngestion.ts:33:0)\n    at commitBeliefPlan (../../custom/backend/runtimeBeliefs.ts:40:2)\n    at async handler (../custom/backend/ingestionQualification.ts:133:51)\n",
+          "data": {
+            "code": "BELIEF_ORDER_CONFLICT",
+            "message": "Memory indexing operation denied.",
+            "outcome": "not_dispatched",
+            "retryable": false,
+            "version": 1
+          }
+        }
+      }
+    },
+    {
+      "name": "concurrent native change is atomic and saved stale draft requests replan without dispatch",
+      "status": "PASS",
+      "evidence": {
+        "conflict": {
+          "name": "ConvexError",
+          "message": "[Request ID: 9692486a735a7b5f] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"FACT_VERSION_CONFLICT\",\"message\":\"Memory indexing operation denied.\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at ingestionDenied (../../custom/backend/runtimeIngestion.ts:33:0)\n    at commitBeliefPlan (../../custom/backend/runtimeBeliefs.ts:32:2)\n    at async handler (../custom/backend/ingestionQualification.ts:133:51)\n",
+          "data": {
+            "code": "FACT_VERSION_CONFLICT",
+            "message": "Memory indexing operation denied.",
+            "outcome": "not_dispatched",
+            "retryable": false,
+            "version": 1
+          }
+        },
+        "replan": {
+          "failureCode": "REPLAN_REQUIRED",
+          "receiptId": null,
+          "reconciled": false
+        },
+        "paidAttemptsUnchanged": true
+      }
+    },
+    {
+      "name": "confirmed durable facts draft reconciles exactly once without repeated extraction or resolution",
+      "status": "PASS",
+      "evidence": {
+        "receiptId": "1310281a54d81ed8c9e2ed678a3e79134654032eca032bbdc6d3ceadbc234a8b",
+        "oneHistoryAndOutbox": true,
+        "noRepeatedExtractOrResolve": true,
+        "vectorFollowupMayDispatchOnce": true
+      }
+    }
+  ]
+}

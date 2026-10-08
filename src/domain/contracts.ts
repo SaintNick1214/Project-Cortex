@@ -50,6 +50,8 @@ export interface SourceContent {
   contentHash: string;
   createdAt: number;
   tombstonedAt?: number;
+  /** Server-pinned data dependencies of generated tool evidence. */
+  contextSourceWitnesses?: import("./context-witness.js").ContextSourceWitness[];
 }
 
 /** Logical chunk: content and lineage exist independently of the derived vector. */

@@ -1,0 +1,44 @@
+{
+  "status": "PASS",
+  "candidate": "a789e1a84d26ac59ded3e42afe2ce12f38e9d3315fc0f3c70446a5c40b2ed0f2",
+  "eventId": "ingestion:f92b8eff89661b88ff850a7c4ebe9d379bfc380dca9e5f2f59b975a98f142bdd",
+  "actualOrdinaryWorker": true,
+  "controlledDecisions": false,
+  "extractOperationId": "pn71ts2w2v8wf9961qvesvdpcs8fx7ye",
+  "resolutionOperationId": "pn7dxeegws7b6ebhzncw58xkyd8fxame",
+  "parentExact": true,
+  "actualModel": "openai/gpt-4o-mini",
+  "onePaidResolutionAttempt": true,
+  "terminal": {
+    "actualModel": "openai/gpt-4o-mini",
+    "costSource": "unavailable",
+    "dispatchIdentity": "19bf9d0b7d0a0c2766d946bec997127d820ee641b4baf526b244832c5d924664",
+    "modelId": "openai/gpt-4o-mini",
+    "nativeInterface": "chat",
+    "outcome": "confirmed",
+    "proof": "provider-terminal-v1",
+    "receiptId": "3dbae60e-cf65-438e-bf47-0a6615ca4e72",
+    "usage": {
+      "cachedInputTokens": 0,
+      "inputTokens": 1645,
+      "outputTokens": 96,
+      "reasoningTokens": 0,
+      "totalTokens": 1741
+    },
+    "version": 1
+  },
+  "retainedLiability": 100000,
+  "slotReleased": true,
+  "historyActions": [
+    "SUPERSEDE"
+  ],
+  "vectorDimensions": 1536,
+  "oracleCorrection": "Original script incorrectly expected finished; confirmed terminal with unavailable cost correctly remains uncertain+attached under adopted policy. No new inference.",
+  "operationKeyCounts": {
+    "embedding.query": 4,
+    "agent.respond": 3,
+    "embedding.memory": 8,
+    "memory.extract": 10,
+    "facts.resolve": 1
+  }
+}

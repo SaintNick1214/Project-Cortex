@@ -8,6 +8,9 @@ import type { RuntimeAuthority, RuntimeAuthorityReference, RuntimeAuthorityRequi
 import type { SourceLineage } from "../src/domain/contracts";
 import { normalizeSourceText, semanticHash } from "../src/domain/profile";
 import { assertSourceLineage } from "../src/domain/sources";
+import { contextWitnessPermissions } from "../src/domain/context-witness";
+import type { ContextSourceWitness } from "../src/domain/context-witness";
+import { canonicalModelJson } from "../src/domain/model-policy";
 import { assertResourceScope, createAuthorityReader, recheckAuthority, requireAuthority, resolveAuthority, resolveAuthorityReference } from "./runtimeAuth";
 import type { AuthorityReader, GrantRecord } from "./runtimeAuth";
 
@@ -182,7 +185,36 @@ export async function managedConversationAccess(ctx: ReadCtx, reference: Runtime
  * Return false for retired evidence; current access is still rechecked and never obtained from a share token alone. */
 export async function managedSourceIsCurrent(ctx: ReadCtx, reference: RuntimeAuthorityReference,
   source: Doc<"runtimeMemorySources">, capability: "read" | "write", permission?: ConversationPermission): Promise<boolean> {
-  const origin = source.transcriptOrigin; if (!origin) return true;
+  return await evaluateManagedSource(ctx, reference, source, capability, permission,
+    { visiting: new Set(), verified: new Map(), remaining: 256 });
+}
+type ManagedSourceTraversal = { visiting: Set<string>; verified: Map<string, boolean>; remaining: number };
+async function evaluateManagedSource(ctx: ReadCtx, reference: RuntimeAuthorityReference, source: Doc<"runtimeMemorySources">,
+  capability: "read" | "write", permission: ConversationPermission | undefined, traversal: ManagedSourceTraversal): Promise<boolean> {
+  const key = JSON.stringify([source._id, capability, permission ?? null]);
+  if (traversal.verified.has(key)) return traversal.verified.get(key)!;
+  if (traversal.visiting.has(source._id)) return false;
+  if (--traversal.remaining < 0) dataDenied("CONTEXT_LIMIT_EXCEEDED", "Cached source ancestry exceeds the bounded read");
+  traversal.visiting.add(source._id);
+  try {
+    const current = await checkManagedSource(ctx, reference, source, capability, permission, traversal);
+    traversal.verified.set(key, current); return current;
+  } finally { traversal.visiting.delete(source._id); }
+}
+async function checkManagedSource(ctx: ReadCtx, reference: RuntimeAuthorityReference,
+  source: Doc<"runtimeMemorySources">, capability: "read" | "write", permission: ConversationPermission | undefined,
+  traversal: ManagedSourceTraversal): Promise<boolean> {
+  if (source.lineage.role === "tool") {
+    const operations = await ctx.db.query("runtimeAgentOperations").withIndex("by_operation", q => q.eq("tenantId", source.tenantId)
+      .eq("memorySpaceId", source.memorySpaceId).eq("operationId", source.lineage.role === "tool" ? source.lineage.operationId : "")).take(2);
+    const operation = operations.length === 1 ? operations[0] : undefined;
+    if (operations.length > 1) return false;
+    // The native write pipeline needs its running source. Context/derived reads require positive completion.
+    if (operation?.toolName === "memory_remember" && (capability === "read" ? operation.state !== "complete"
+      : operation.state !== "complete" && operation.state !== "started")) return false;
+  }
+  const origin = source.transcriptOrigin;
+  if (!origin) return await managedCachedSourcesAreCurrent(ctx, reference, source, source.contextSourceWitnesses ?? [], traversal);
   const conversations = await ctx.db.query("runtimeConversations").withIndex("by_scoped_id", q => q.eq("tenantId", source.tenantId)
     .eq("memorySpaceId", source.memorySpaceId).eq("conversationId", origin.conversationId)).take(2);
   const conversation = conversations.length === 1 ? conversations[0] : undefined;
@@ -202,16 +234,48 @@ export async function managedSourceIsCurrent(ctx: ReadCtx, reference: RuntimeAut
   }
   await managedConversationAccess(ctx, reference, conversation, capability);
   if (capability === "read" && permission) await managedConversationAccess(ctx, reference, conversation, capability, permission);
+  // Generated text and its vectors remain dependent on the data actually used
+  // by the generating run. Ownership of the new transcript cannot erase that dependency.
+  return await managedCachedSourcesAreCurrent(ctx, reference, source,
+    [...(source.contextSourceWitnesses ?? []), ...(bridge.contextSourceWitnesses ?? [])], traversal);
+}
+async function managedCachedSourcesAreCurrent(ctx: ReadCtx, reference: RuntimeAuthorityReference,
+  source: Doc<"runtimeMemorySources">, witnesses: readonly ContextSourceWitness[], traversal: ManagedSourceTraversal): Promise<boolean> {
+  if (witnesses.length > 32) dataDenied("CONTEXT_LIMIT_EXCEEDED");
+  for (const witness of witnesses) {
+    const linked = await ctx.db.query("runtimeMemorySources").withIndex("by_scope_source", q => q.eq("tenantId", source.tenantId)
+      .eq("memorySpaceId", source.memorySpaceId).eq("lineage.sourceId", witness.sourceId)).take(2);
+    const original = linked.length === 1 ? linked[0] : undefined;
+    if (!original || original.tombstonedAt !== undefined || original.lineage.sourceEventId !== witness.sourceEventId
+      || original.lineage.sourceRevision !== witness.sourceRevision || original.contentHash !== witness.contentHash) return false;
+    try {
+      await recheckAuthority(ctx, reference, { capability: "read", tenantId: source.tenantId, memorySpaceId: source.memorySpaceId,
+        resource: { resourceType: "source", resourceId: original.lineage.sourceId, tenantId: original.tenantId,
+          memorySpaceId: original.memorySpaceId, ownerPrincipalId: original.ownerPrincipalId } });
+      for (const needed of contextWitnessPermissions(witness)) {
+        if (!await evaluateManagedSource(ctx, reference, original, "read", needed, traversal)) return false;
+      }
+    } catch (error) {
+      if (!(error instanceof ConvexError) || error.data.code !== "FORBIDDEN") throw error;
+      // A revoked upstream resource retires the derivative. A revoked reader
+      // scope remains a hard denial, including on a list of other valid sources.
+      await recheckAuthority(ctx, reference, { capability: "read", tenantId: source.tenantId, memorySpaceId: source.memorySpaceId });
+      return false;
+    }
+  }
   return true;
 }
 function sourceWitness(source: Doc<"runtimeMemorySources">): CanonicalSourceWitness {
-  return Object.freeze({ ...source, lineage: Object.freeze({ ...source.lineage }) });
+  return Object.freeze({ ...source, lineage: Object.freeze({ ...source.lineage }),
+    ...(source.contextSourceWitnesses ? { contextSourceWitnesses: source.contextSourceWitnesses.map(witness => ({ ...witness,
+      ...(witness.permissions ? { permissions: [...witness.permissions] } : {}) })) } : {}) });
 }
 function sameSource(a: CanonicalSourceWitness, b: CanonicalSourceWitness): boolean {
   return a._id === b._id && a._creationTime === b._creationTime && a.tenantId === b.tenantId
     && a.memorySpaceId === b.memorySpaceId && a.ownerPrincipalId === b.ownerPrincipalId
     && sameLineage(a.lineage, b.lineage) && a.content === b.content && a.contentHash === b.contentHash
     && a.createdAt === b.createdAt && a.tombstonedAt === b.tombstonedAt
+    && canonicalModelJson(a.contextSourceWitnesses ?? []) === canonicalModelJson(b.contextSourceWitnesses ?? [])
     && a.transcriptOrigin?.conversationId === b.transcriptOrigin?.conversationId
     && a.transcriptOrigin?.conversationEpoch === b.transcriptOrigin?.conversationEpoch
     && a.transcriptOrigin?.nativeMessageId === b.transcriptOrigin?.nativeMessageId;

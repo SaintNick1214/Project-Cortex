@@ -1,0 +1,12 @@
+# Task08 cached-delivery repair successor
+
+The delivery successor passes 652 affected controlled cases across 16 suites. Its precise tool-source dependency snapshot regression also passes the 56-case execution suite. SDK/backend types and scoped lint pass. There were no service or paid calls in these checks.
+
+Compatibility history reads and snapshot hydration now use the actual current reader's reference. Cached-source permission checks run before text decoding. Nine compatibility delivery/create paths reject content after selective data-share revocation without writes, while metadata remains available. A separately authorized reader can still read the existing snapshot and history, proving that the original output actor is not substituted for the reader.
+
+Root's shared fence also checks assistant source ancestry, source revisions/tombstones, and the exact consumed facts/memory permissions. Tool-created sources retain their initial execution dependency snapshot; later execution witness expansion cannot mutate that source ancestry or create a self-cycle. The snapshot test explicitly reselects the current row after the fixture's deliberate transaction rollback.
+
+Current combined coverage is 1,199 assertion instances across 34 suites, or 1,195 literal suite/full-name identities. Parameterized assertion ordinals remain separate. The 708 affected executions are overlapping verification, not extra unique coverage. See [report2](/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/controlled-source-report2.json), [commands](/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/delivery-command-receipts2.json), [delivery raw](/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/delivery-affected1.json) and [snapshot raw](/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/tool-snapshot-current2.json).
+
+Report1, the independent stale-delivery finding, and all earlier raw failures remain preserved. Native current-candidate verification and the single independent original Task08 verdict are pending. No product writer remains active in this author lane.
+

@@ -1803,3 +1803,24 @@ Actual normal live run on installed shipped defaultV5 passes scoped backend reca
 ### Milestone144 — Original Task07 independently accepted
 
 All five original requirements and four criteria accepted by the reused non-author reviewer, PASS4.0,32 distinct controlled cases, no open breaking finding. Actual shipped live Agent passes backend recall/tool, two observers, disconnect/cursor replay, final-only delivery and one final transcript/ingestion; native completion gap reconciles without another paid call. Current installed expiry, definition/grant revocation and grant-renewal cancellation pass while old cost liability remains intact. Host contracts preserved;3172114 retired200/404, owned credentials/clients/deployment processes closed. Earlier failures and unavailable terminal monetary cost remain explicit. Current235 author checks overlap Root134/515 scopes and are not summed. Accepted completion6/17=35.3%,19/61=31.1%,full outcomes0/12=0%;08–17 and final goal audit remain open.
+
+
+### Milestone145 — Task08 context controlled batch (2026-10-08T15:26:52.153352+00:00)
+
+Executable pending-tail and indexed retrieval now fence later queued same-conversation input against the captured run and native anchor. Strict stage barriers use persisted deadlines and official Workflow sleeps. Root context-jest2 passed70/70 with0skips; scoped lint1 exit0. Independent pending-cutoff3 passed3/3. These are controlled source checks with overlapping cases, not actual08 service acceptance. Root context-jest1 retains69PASS/1fixture child-reference setup failure; backend-types1 retains author WIP TS2367, with repair/affected rerun required. Fresh disposable3173328 is authenticated and installed07baseline with0model calls; actual08 outcomes remain pending. Original08 criteria0/4. Completion stays6/17=35.3%,19/61=31.1%,0/12 full outcomes; final audit open.
+
+
+### Milestone146 — Task08 context access repairs (2026-10-08T16:03:47.942268+00:00)
+
+Private pending/indexed neighbors are excluded after scope grant recheck; precise consumed fact/memory permissions fence cached Agent context and public observation. Root current74/74 controlled PASS, independent3 prior counterexamples+memory-only positive PASS, SDK/backend types/scoped lint PASS. Prior runtime reds and Root72PASS/2delivery-fence failures preserved. Actual installed08 outcomes and one coherent independent acceptance remain pending; overlapping checks are not summed. Accepted completion remains6/17=35.3%,19/61=31.1%,0/12 full outcomes=0%; final audit open.
+
+
+### Milestone147 — Actual Task08 delayed-memory batch (2026-10-08T16:09:06.055256+00:00)
+
+Installed79-file/51-table current2 on verified disposable3173328 passed8/8 actual delayed-memory groups: response-final before held extraction, exact next-turn history, authorized pending/private-peer exclusion, contiguous hole/byte+33-source overflow, persisted strict1200ms deadline with zero Agent dispatch, real extract/facts/default1536 vector and matching managed query, replay with no extra attempts. Closed run/clients cleanup errors0; remaining ordering/CAS/edit/delete/revocation/failure evidence and whole-task cleanup/review pending. No original08 acceptance yet. Accepted completion6/17=35.3%,19/61=31.1%,0/12 outcomes=0%; final audit open.
+
+### Milestone148 — Original Task08 functional acceptance (2026-10-08T16:53:08.733883+00:00)
+
+Original Task08 accepted by reused non-author PASS4.0: all5 requirements/4 criteria, current controlled1199 assertions plus24 distinct independent cases; actual delayed8, ordering3 with explicit controlled decisions, fences4+shared3, cached derivative revoke and genuine ordinary facts.resolve exact extraction parent. Owned cleanup55 sources/58 events/62 held rows/10 grants;26 slots released/full2600000 uncertain liability retained. Verified dev3173328 retained for new09tenant; final retirement open. Historical runtime/setup/oracle reds preserved. No09/full-goal acceptance.
+
+Accepted tasks **7/17 (41.2%)**; original task criteria **23/61 (37.7%)**; full-goal outcomes **0/12 (0%)**. Original08 complete;09–17/03-final and final audit remain open.

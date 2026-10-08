@@ -23,6 +23,7 @@ import { AGENT_NATIVE_TOOLS, AGENT_TOOL_REGISTRY_VERSION, agentToolsInputBound }
 import { parseAgentLanguageResult } from "../src/domain/agent-language";
 import { guardAgentRunBudget } from "./runtimeAgentFence";
 import { currentControlRun } from "./runs";
+import { assertIngestionPolicyPin, guardIngestionRunBudget } from "./runtimeIngestion";
 
 type ReadCtx = Pick<QueryCtx, "db" | "runQuery">;
 type WriteCtx = Pick<MutationCtx, "db" | "runQuery">;
@@ -247,14 +248,17 @@ function snapshotOf(record: Pick<Operation, "resolutionCanonical" | "snapshotCan
   if (canonical(snapshot) !== record.snapshotCanonical) fail("POLICY_DENIED");
   return snapshot;
 }
-async function currentOperation(ctx: ReadCtx, reference: RuntimeAuthorityReference, operation: Operation, permitCancelled = false) {
+async function currentOperation(ctx: ReadCtx, reference: RuntimeAuthorityReference, operation: Operation, permitCancelled = false, asParent = false) {
   if (!sameAuthority(reference, operation.reference)) fail("FORBIDDEN");
   await currentAuthority(ctx, reference, operation.operationKey);
   await checkSource(ctx, reference, operation.operationKey, operation.source);
   if (operation.cancelled && !permitCancelled) fail("RUN_CANCELLED");
   const run = await ctx.db.get("runtimeBudgetAccounts", operation.runAccountId);
   if (!run || !run.reference || !sameAuthority(run.reference, reference) || run.tenantId !== reference.tenantId || (run.cancelled && !permitCancelled)) fail("FORBIDDEN");
-  if (!permitCancelled) await guardAgentRunBudget(ctx, reference, run._id);
+  if (!permitCancelled) {
+    await guardAgentRunBudget(ctx, reference, run._id);
+    await guardIngestionRunBudget(ctx, reference, run._id);
+  }
   let parentId = operation.parentOperationId;
   const visited = new Set<string>([operation._id]);
   while (parentId) {
@@ -268,6 +272,7 @@ async function currentOperation(ctx: ReadCtx, reference: RuntimeAuthorityReferen
   }
   const snapshot = snapshotOf(operation);
   const current = await resolveCurrent(ctx, reference, operation.operationKey, run.runBudgetId!, operation.source, operation.parentOperationId, run.agentId ? { agentId: run.agentId, version: run.agentVersion! } : undefined);
+  if (!permitCancelled) await assertIngestionPolicyPin(ctx, run._id, operation.operationKey, current.snapshot, false, !asParent);
   if (!current.snapshot.allowedModels.includes(snapshot.modelId) || !snapshot.capabilities.every((cap) => current.snapshot.capabilities.includes(cap))
     || !current.manifest.qualifications.some((q) => q.receiptId === snapshot.qualificationReceiptId && q.modelId === snapshot.modelId && q.nativeInterface === snapshot.nativeInterface
       && q.priceRevision === snapshot.pins.priceRevision && q.boundRevision === snapshot.pins.boundRevision)) fail("POLICY_DENIED");
@@ -440,13 +445,15 @@ const resolveArgs = { reference: runtimeAuthorityReference, operationKey: modelO
 export const resolve = internalQuery({ args: resolveArgs, handler: async (ctx, args) => {
   await currentAuthority(ctx, args.reference, args.operationKey); const run = await runAccount(ctx, args.reference, args.runBudgetId);
   await guardAgentRunBudget(ctx, args.reference, run._id);
+  await guardIngestionRunBudget(ctx, args.reference, run._id);
   await checkSource(ctx, args.reference, args.operationKey, args.source);
   if (args.parentOperationId) {
     const parent = await ctx.db.get("runtimeModelOperations", args.parentOperationId);
     if (!parent || parent.runAccountId !== run._id) fail("FORBIDDEN");
-    await currentOperation(ctx, args.reference, parent);
+    await currentOperation(ctx, args.reference, parent, false, true);
   }
   const resolved = await resolveCurrent(ctx, args.reference, args.operationKey, args.runBudgetId, args.source, args.parentOperationId, run.agentId ? { agentId: run.agentId, version: run.agentVersion! } : undefined);
+  await assertIngestionPolicyPin(ctx, run._id, args.operationKey, resolved.snapshot, true, true);
   return { snapshot: resolved.snapshot, dispatchEvidence: evidence(resolved.manifest, resolved.snapshot), storageLimits: MODEL_LEDGER_STORAGE_LIMITS };
 } });
 /** Full final request bytes, not caller estimates. Proof exists only in reviewed compiled root. */
@@ -498,10 +505,11 @@ export const admit = internalMutation({ args: admitArgs, handler: async (ctx, ar
   await checkSource(ctx, args.reference, args.operationKey, args.source);
   const run = await runAccount(ctx, args.reference, args.runBudgetId);
   await guardAgentRunBudget(ctx, args.reference, run._id);
+  await guardIngestionRunBudget(ctx, args.reference, run._id);
   if (args.parentOperationId) {
     const parent = await ctx.db.get("runtimeModelOperations", args.parentOperationId);
     if (!parent || parent.runAccountId !== run._id) fail("FORBIDDEN");
-    await currentOperation(ctx, args.reference, parent);
+    await currentOperation(ctx, args.reference, parent, false, true);
   }
   let operation = single(await ctx.db.query("runtimeModelOperations").withIndex("by_identity", (q) => q.eq("tenantId", args.reference.tenantId)
     .eq("memorySpaceId", args.reference.memorySpaceId!).eq("principalId", args.reference.principalId).eq("semanticId", args.semanticId).eq("operationKey", args.operationKey)).take(2));
@@ -513,6 +521,7 @@ export const admit = internalMutation({ args: admitArgs, handler: async (ctx, ar
   if (operation) assertModelRequestIdentity({ canonical: operation.identityCanonical, hash: operation.identityHash }, { canonical: binding, hash: bindingHash });
   const snapshot = resolved.snapshot;
   const effectiveSnapshot = "current" in resolved ? resolved.current.snapshot : snapshot;
+  await assertIngestionPolicyPin(ctx, run._id, args.operationKey, effectiveSnapshot, false, true);
   const root = "root" in resolved ? resolved.root : run.root;
   const manifest = await trustedRoot(root);
   const proof = evidence(manifest, snapshot);

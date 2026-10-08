@@ -1,5 +1,6 @@
 import { defineTable } from "convex/server";
 import { v } from "convex/values";
+import { contextSourceWitness } from "./runtimeContextWitnessSchema";
 import { runtimeAuthorityReference } from "./runtimeAuthSchema";
 
 export const responseStatus = v.union(v.literal("queued"), v.literal("running"), v.literal("waiting_approval"),
@@ -45,7 +46,7 @@ export const runtimeTranscriptTables = {
     revision: v.number(), contentHash: v.string(), sourceEventId: v.string(), sourceId: v.string(),
     sourceContentHash: v.string(), actorReference: runtimeAuthorityReference, approved: v.boolean(),
     legacyMessageId: v.optional(v.string()), legacyRequestCanonical: v.optional(v.string()),
-    contextSourceWitnesses: v.optional(v.array(v.object({ sourceId: v.string(), sourceEventId: v.string(), sourceRevision: v.number(), contentHash: v.string() }))),
+    contextSourceWitnesses: v.optional(v.array(contextSourceWitness)),
     runId: v.optional(v.string()), attemptNumber: v.optional(v.number()), createdAt: v.number(), updatedAt: v.number(),
     tombstonedAt: v.optional(v.number()),
   }).index("by_native", ["tenantId", "memorySpaceId", "nativeMessageId"])
@@ -60,6 +61,7 @@ export const runtimeTranscriptTables = {
     outputMessageIds: v.array(v.string()), approvedAt: v.optional(v.number()), approvalActor: v.optional(runtimeAuthorityReference),
     cancellationRequestedAt: v.optional(v.number()), cancelledAt: v.optional(v.number()),
     failureCode: v.optional(v.string()), snapshotCanonical: v.optional(v.string()), executionRequested: v.optional(v.boolean()), streamingRequested: v.optional(v.boolean()),
+    contextCompleteness: v.optional(v.union(v.literal("complete"), v.literal("incomplete"))), contextFailureCode: v.optional(v.string()),
     createdAt: v.number(), updatedAt: v.number(), tombstonedAt: v.optional(v.number()),
   }).index("by_request", ["tenantId", "memorySpaceId", "ownerPrincipalId", "requestIdentityHash"])
     .index("by_scoped_id", ["tenantId", "memorySpaceId", "runId"])

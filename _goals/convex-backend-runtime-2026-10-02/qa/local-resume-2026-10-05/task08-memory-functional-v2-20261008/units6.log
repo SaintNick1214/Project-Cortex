@@ -1,0 +1,106 @@
+(node:76164) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeIngestion/stages.test.ts
+  durable ingestion stage boundary
+    ✓ same tuple replay is one event/counter, changed hash or event alias cannot enter (15 ms)
+    ✓ scope counter is shared across conversations, separate from their queue position (4 ms)
+    ✓ approved user source schedules independently, awaiting approval never creates a job or dispatch (4 ms)
+    ✓ assistant completion is context/vector work with fact extraction explicitly skipped (5 ms)
+    ✓ duplicate delivery claims once; native account is fresh and policy pin rejects wrong stage (9 ms)
+    ✓ expired lease is unknown and cannot be retried or attach its old extraction (9 ms)
+    ✓ revision change blocks all late stage writes (8 ms)
+    ✓ tombstone change blocks all late stage writes (7 ms)
+    ✓ grant change blocks all late stage writes (8 ms)
+    ✓ safe failure has finite retry budget; known unknown never retries and summaries reflect it (14 ms)
+    ✕ facts and vector stages are distinct; default profile is pinned1536 (8 ms)
+
+  ● durable ingestion stage boundary › facts and vector stages are distinct; default profile is pinned1536
+
+    ConvexError: {"version":1,"code":"INVALID_INPUT","message":"Memory indexing operation denied.","retryable":false,"outcome":"not_dispatched"}
+
+      31 | const processRef = ref<"action", { reference: RuntimeAuthorityReference; eventId: string; stage: IngestionStage }, null>("action", "runtimeIngestion:processStage");
+      32 | export function ingestionDenied(code = "INGESTION_DENIED", uncertain = false): never {
+    > 33 |   throw new ConvexError({ version: 1, code, message: "Memory indexing operation denied.", retryable: false, outcome: uncertain ? "uncertain" : "not_dispatched" });
+         |         ^
+      34 | }
+      35 | function exactOne<T>(rows: T[]): T | undefined { if (rows.length > 1) ingestionDenied("INGESTION_CONFLICT"); return rows[0]; }
+      36 | export async function readScopeCutoff(ctx: ReadCtx, reference: RuntimeAuthorityReference) {
+
+      at ingestionDenied (convex-dev/runtimeIngestion.ts:33:9)
+      at Function.handler [as _handler] (convex-dev/runtimeIngestion.ts:232:90)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:98:10)
+      at tests/unit/runtimeTranscript/fixture.ts:159:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:155:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:159:77)
+      at Object.extraction (tests/unit/runtimeIngestion/fixture.ts:57:5)
+      at Object.<anonymous> (tests/unit/runtimeIngestion/stages.test.ts:80:5)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     2.7s | 10/11 passed | /tests/unit/runtimeIngestion/stages.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.01s ( 0.5%) - durable ingestion stage boundary same tuple replay is one event/counter, changed hash or event alias cannot enter
+    /tests/unit/runtimeIngestion/stages.test.ts
+
+ 2. [32m✓[0m    0.01s ( 0.5%) - durable ingestion stage boundary safe failure has finite retry budget; known unknown never retries and summaries reflect it
+    /tests/unit/runtimeIngestion/stages.test.ts
+
+ 3. [32m✓[0m    0.01s ( 0.3%) - durable ingestion stage boundary duplicate delivery claims once; native account is fresh and policy pin rejects wrong stage
+    /tests/unit/runtimeIngestion/stages.test.ts
+
+ 4. [32m✓[0m    0.01s ( 0.3%) - durable ingestion stage boundary expired lease is unknown and cannot be retried or attach its old extraction
+    /tests/unit/runtimeIngestion/stages.test.ts
+
+ 5. [32m✓[0m    0.01s ( 0.3%) - durable ingestion stage boundary revision change blocks all late stage writes
+    /tests/unit/runtimeIngestion/stages.test.ts
+
+ 6. [32m✓[0m    0.01s ( 0.3%) - durable ingestion stage boundary grant change blocks all late stage writes
+    /tests/unit/runtimeIngestion/stages.test.ts
+
+ 7. [31m✗[0m    0.01s ( 0.3%) - durable ingestion stage boundary facts and vector stages are distinct; default profile is pinned1536
+    /tests/unit/runtimeIngestion/stages.test.ts
+
+ 8. [32m✓[0m    0.01s ( 0.2%) - durable ingestion stage boundary tombstone change blocks all late stage writes
+    /tests/unit/runtimeIngestion/stages.test.ts
+
+ 9. [32m✓[0m    0.01s ( 0.2%) - durable ingestion stage boundary assistant completion is context/vector work with fact extraction explicitly skipped
+    /tests/unit/runtimeIngestion/stages.test.ts
+
+10. [32m✓[0m    0.00s ( 0.1%) - durable ingestion stage boundary scope counter is shared across conversations, separate from their queue position
+    /tests/unit/runtimeIngestion/stages.test.ts
+
+11. [32m✓[0m    0.00s ( 0.1%) - durable ingestion stage boundary approved user source schedules independently, awaiting approval never creates a job or dispatch
+    /tests/unit/runtimeIngestion/stages.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.09s (3.2% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      2.84s
+  Test suites:        1
+  Individual tests:   11
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 10 passed, 11 total
+Snapshots:   0 total
+Time:        2.84 s, estimated 3 s
+Ran all test suites within paths "tests/unit/runtimeIngestion/stages.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/units6.json

@@ -22,7 +22,11 @@ export const readSource = internalQuery({ args: { ...scopedArgs, sourceId: v.str
 export const writeSource = internalMutation({ args: { ...scopedArgs, source: sourceContent },
   handler: async (ctx, args) => await new ConvexMemoryRepository(ctx, args.reference, args.capability, ctx.db).putSource(args.source) });
 export const writeDerived = internalMutation({ args: { ...scopedArgs, input: commitDerivedInput },
-  handler: async (ctx, args) => await new ConvexMemoryRepository(ctx, args.reference, args.capability, ctx.db).commitDerived(args.input) });
+  handler: async (ctx, args) => {
+    const result = await new ConvexMemoryRepository(ctx, args.reference, args.capability, ctx.db).commitDerived(args.input);
+    await ctx.runMutation(makeFunctionReference("runtimeIngestion:registerCompletedDerived") as unknown as FunctionReference<"mutation", "internal",
+      { reference: RuntimeAuthorityReference; receiptId: string }, null>, { reference: args.reference, receiptId: result.receiptId }); return result;
+  } });
 export const readFacts = internalQuery({ args: { ...scopedArgs, query: v.object({
   subject: v.optional(v.string()), factType: v.optional(v.union(v.literal("preference"), v.literal("identity"), v.literal("knowledge"),
     v.literal("relationship"), v.literal("event"), v.literal("observation"), v.literal("custom"))), limit: v.number(),

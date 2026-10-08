@@ -1,0 +1,122 @@
+{
+  "scope": "native fixture argument failure; no Task08 acceptance",
+  "operation": "9deb3066-e658-4f8a-8f52-b33455234898",
+  "command": "node exercise-fences.mjs",
+  "sessionId": 43971,
+  "exitCode": 1,
+  "failure": "ArgumentValidationError: .reference has extra actorKind/capabilities/resourceAccess/userId from provision authority",
+  "groups": [
+    {
+      "name": "source deletion during the native running stage denies late completion and cannot recreate facts",
+      "status": "PASS",
+      "evidence": {
+        "eventId": "ingestion:a23c2d6e24d56e2a0a63baaa6d1679deb4409f597550eb867229dff578442ec8",
+        "denial": {
+          "name": "ConvexError",
+          "message": "[Request ID: b3d870d5c28b4315] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"STALE_SOURCE\",\"message\":\"Memory indexing operation denied.\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at ingestionDenied (../../custom/backend/runtimeIngestion.ts:33:0)\n    at readEventCurrent (../../custom/backend/runtimeIngestion.ts:51:58)\n    at async requireStageLease (../../custom/backend/runtimeIngestion.ts:164:6)\n    at async requireStageCommit (../../custom/backend/runtimeIngestion.ts:173:28)\n    at async handler (../../custom/backend/runtimeIngestion.ts:252:63)\n",
+          "data": {
+            "code": "STALE_SOURCE",
+            "message": "Memory indexing operation denied.",
+            "outcome": "not_dispatched",
+            "retryable": false,
+            "version": 1
+          }
+        },
+        "noNewModelAttempt": true,
+        "noResurrection": true
+      }
+    },
+    {
+      "name": "unknown failure is not replayed; safe pre-dispatch retries stop at the native dead-letter bound",
+      "status": "PASS",
+      "evidence": {
+        "unknown": {
+          "name": "ConvexError",
+          "message": "[Request ID: b2582e34a9ff4d57] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"RETRY_NOT_SAFE\",\"message\":\"Memory indexing operation denied.\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at ingestionDenied (../../custom/backend/runtimeIngestion.ts:33:0)\n    at handler (../../custom/backend/runtimeIngestion.ts:294:104)\n",
+          "data": {
+            "code": "RETRY_NOT_SAFE",
+            "message": "Memory indexing operation denied.",
+            "outcome": "not_dispatched",
+            "retryable": false,
+            "version": 1
+          }
+        },
+        "noProof": {
+          "name": "ConvexError",
+          "message": "[Request ID: 57ba479716fb9b1f] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"RECONCILIATION_NOT_SAFE\",\"message\":\"Memory indexing operation denied.\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at ingestionDenied (../../custom/backend/runtimeIngestion.ts:33:0)\n    at handler (../../custom/backend/runtimeIngestion.ts:300:128)\n",
+          "data": {
+            "code": "RECONCILIATION_NOT_SAFE",
+            "message": "Memory indexing operation denied.",
+            "outcome": "not_dispatched",
+            "retryable": false,
+            "version": 1
+          }
+        },
+        "attempts": 3,
+        "finalState": "dead_letter",
+        "retryOnlySchedulerIntentHeld": true
+      }
+    },
+    {
+      "name": "assistant claims never enter authoritative extraction or belief stages",
+      "status": "PASS",
+      "evidence": {
+        "eventId": "ingestion:d7a1beed896a1c19d0404fb37fd63177259d2ff4004f6cf94a91dae808ab4108",
+        "stages": [
+          {
+            "attempt": 0,
+            "failureCode": null,
+            "receiptId": null,
+            "stage": "extract",
+            "state": "skipped"
+          },
+          {
+            "attempt": 0,
+            "failureCode": null,
+            "receiptId": null,
+            "stage": "facts",
+            "state": "skipped"
+          },
+          {
+            "attempt": 0,
+            "failureCode": null,
+            "receiptId": null,
+            "stage": "vectors",
+            "state": "pending"
+          }
+        ],
+        "noAuthoritativeFacts": true
+      }
+    },
+    {
+      "name": "cancelled native partial output is neither a registered source nor an authoritative assertion",
+      "status": "PASS",
+      "evidence": {
+        "nativePendingMessage": {
+          "id": "kx73g6jz0dyfyh38x3c5tn8tjn8fwdwm",
+          "order": 0,
+          "role": "assistant",
+          "status": "pending",
+          "stepOrder": 1
+        },
+        "lateCompletionDenied": {
+          "name": "ConvexError",
+          "message": "[Request ID: 31072a9cdeacbb02] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"INVALID_STATE\",\"message\":\"Conversation operation denied.\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at transcriptDenied (../../custom/backend/runtimeTranscript.ts:33:0)\n    at activeAttempt (../../custom/backend/runs.ts:247:41)\n    at async handler (../../custom/backend/runs.ts:261:65)\n",
+          "data": {
+            "code": "INVALID_STATE",
+            "message": "Conversation operation denied.",
+            "outcome": "not_dispatched",
+            "retryable": false,
+            "version": 1
+          }
+        },
+        "noAssistantSource": true,
+        "noModelDispatch": true
+      }
+    }
+  ],
+  "actualSharedEditorInference": false,
+  "correction": "successor projects exact runtimeAuthorityReference keys; no product validator change",
+  "receipt": "fences-first-calls.json",
+  "cleanup": "fences-first-cleanup.json"
+}

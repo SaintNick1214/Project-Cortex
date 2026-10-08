@@ -1,0 +1,376 @@
+{
+  "scope": "TASK08_NATIVE_PRODUCT_FUNCTIONAL_V2",
+  "status": "ACTUAL_PASS_SCOPED_PENDING_INDEPENDENT_REVIEW",
+  "generatedUtc": "2026-10-08T16:51:33.827136+00:00",
+  "taskAcceptanceGranted": false,
+  "fullGoalAccepted": false,
+  "policy": "acceptance-policy.md v2; no retired Source/custody/controller prerequisites",
+  "target": {
+    "operation": "8c9e4ca1-8498-481d-89da-6b5063f3813e",
+    "teamId": 325340,
+    "projectId": 3173328,
+    "deploymentName": "vivid-warbler-703",
+    "url": "https://vivid-warbler-703.convex.cloud",
+    "production": false,
+    "soleOwnedCloudDevelopment": true
+  },
+  "toolchain": {
+    "node": "24.15.0",
+    "npm": "12.2.0",
+    "convex": "1.46.0",
+    "agent": "0.7.3",
+    "workflow": "0.4.8",
+    "gateway": "0.2.1",
+    "ai": "7.0.127"
+  },
+  "currentCandidate": {
+    "manifestSha256": "a789e1a84d26ac59ded3e42afe2ce12f38e9d3315fc0f3c70446a5c40b2ed0f2",
+    "sourceManifest": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/native-actual/installed-task08-source-manifest3.json",
+      "bytes": 15198,
+      "sha256": "4b554deb4b11e43fd9e6f9c4108c7ca0f21d5ef2ccbfaf3e08df6fa89b573a91"
+    },
+    "package": {
+      "operation": "5dc9cfa4-3040-4da2-b00a-17b42d405b32",
+      "file": "/Users/SaintNick/.codex/tmp/cortex-task08-pack-5dc9cfa4-3040-4da2-b00a-17b42d405b32/cortexmemory-sdk-0.37.0.tgz",
+      "bytes": 872422,
+      "sha256": "8062ba20a39c3f49882b33545773fd1616a115ee1d66eec4c2db05941d3602b3",
+      "unpackedBackend": "/Users/SaintNick/.codex/tmp/cortex-task08-pack-5dc9cfa4-3040-4da2-b00a-17b42d405b32/unpacked/package/dist/backend/v1",
+      "manifestSha256": "a789e1a84d26ac59ded3e42afe2ce12f38e9d3315fc0f3c70446a5c40b2ed0f2",
+      "package": "@cortexmemory/sdk",
+      "version": "0.37.0",
+      "sourceBuildAlreadyReleased": true,
+      "packIgnoredScripts": true,
+      "noServiceEffects": true
+    },
+    "files": 79,
+    "tables": 51,
+    "components": [
+      "agent",
+      "workflow"
+    ],
+    "compiledDefault": "cortex-gateway-agent-defaults-2026-10-08/rev5",
+    "qualificationTrustException": false
+  },
+  "priorApplicableCandidate": {
+    "manifestSha256": "fb894ea3a6e68e32ccc49942b16b9e1e97f700e7c9b3cea6ddc4828e0a1db318",
+    "sourceManifest": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/native-actual/installed-task08-source-manifest2.json",
+      "bytes": 15419,
+      "sha256": "593a6d9c1990a21cc2babc3ead79a23617e815f8ee5b8f7e080f94798091c5d8"
+    },
+    "changedCurrent3Paths": [
+      "_cortex/shared/domain/contracts.ts",
+      "conversations.ts",
+      "conversationSnapshots.ts",
+      "runtimeAgent.ts",
+      "runtimeDataAuth.ts",
+      "runtimeMemorySchema.ts",
+      "runtimeTranscript.ts"
+    ],
+    "applicability": "Current2 families retain their tested-source identity. Current3 only changes the listed delivery/auth contracts; stage, belief and ordinary Gateway bodies are unchanged. Current3 shared, cached delivery, real resolution and final readback cover affected current routes. Current1 never deployed."
+  },
+  "families": [
+    {
+      "id": "delayed",
+      "candidate": "current2",
+      "status": "PASS",
+      "outcomeGroups": 8,
+      "outcomes": [
+        "response is final while its real source extraction is deliberately held",
+        "next same-thread response reads unprocessed approved history",
+        "cross-thread context includes current authorized pending sources and excludes another private owner",
+        "stage watermark never jumps a held earlier event despite later assistant completion",
+        "strict persisted deadline fails before model dispatch across the pending hole",
+        "released actual job produces pinned facts/chunks/default1536 vectors under a separate budget",
+        "completed native replay is deduplicated and query uses matching managed profile",
+        "an oversized authorized tail is explicitly incomplete and never silently fresh"
+      ],
+      "receipts": [
+        "delayed-final.json",
+        "delayed-calls.json",
+        "delayed-indexed-native-state.json",
+        "delayed-cleanup.json"
+      ]
+    },
+    {
+      "id": "ordering-cas-recovery",
+      "candidate": "current2",
+      "status": "PASS",
+      "outcomeGroups": 3,
+      "outcomes": [
+        "newer correction wins; stale CAS and recomputed older completion cannot restore it",
+        "concurrent native change is atomic and saved stale draft requests replan without dispatch",
+        "confirmed durable facts draft reconciles exactly once without repeated extraction or resolution"
+      ],
+      "limits": "Extraction is genuine. Conflict decisions/concurrent writer are fixture-controlled native plan data, not ordinary provider resolution. One separately recorded current3 ordinary worker covers that path.",
+      "receipts": [
+        "ordering2-final.json",
+        "ordering2-calls.json",
+        "ordering2-final-native-state.json",
+        "ordering2-cleanup.json"
+      ]
+    },
+    {
+      "id": "delete-retry-role-cancel",
+      "candidate": "current2",
+      "status": "PASS_SCOPED_BEFORE_LATER_QA_ARGUMENT_FAILURE",
+      "outcomeGroups": 4,
+      "outcomes": [
+        "source deletion during the native running stage denies late completion and cannot recreate facts",
+        "unknown failure is not replayed; safe pre-dispatch retries stop at the native dead-letter bound",
+        "assistant claims never enter authoritative extraction or belief stages",
+        "cancelled native partial output is neither a registered source nor an authoritative assertion"
+      ],
+      "receipts": [
+        "fences-first-outcomes.json",
+        "fences-first-calls.json",
+        "fences-first-cleanup.json",
+        "fences-first-fixture-failure1.json"
+      ]
+    },
+    {
+      "id": "shared-editor-revision-repair",
+      "candidate": "current3",
+      "status": "PASS",
+      "outcomeGroups": 3,
+      "outcomes": [
+        "authorized shared editor indexes under current grant while preserving original source owner",
+        "tracked indexed-source edit excludes old facts and vectors until the current revision repairs",
+        "current deletion excludes derived facts and revoked grant blocks any late claim before dispatch"
+      ],
+      "receipts": [
+        "fences-shared2-final.json",
+        "fences-shared2-calls.json",
+        "fences-shared2-final-native-state.json",
+        "fences-shared2-cleanup.json"
+      ]
+    },
+    {
+      "id": "selective-share-revoke-cached-delivery",
+      "candidate": "current3",
+      "status": "PASS",
+      "outcomeGroups": 4,
+      "countInterpretation": "Four read surfaces from one genuine saved-output/vector scenario; not four independent executions.",
+      "outcomes": [
+        "observe",
+        "messages",
+        "export",
+        "vector"
+      ],
+      "receipts": [
+        "derivative-revoke-final.json",
+        "derivative-revoke-calls.json",
+        "derivative-revoke-cleanup.json"
+      ]
+    },
+    {
+      "id": "ordinary-facts-resolution",
+      "candidate": "current3",
+      "status": "PASS_READONLY_VERIFIED_AFTER_COST_STATE_QA_FAILURE",
+      "outcomeGroups": 1,
+      "outcomes": [
+        "Ordinary production processStageHandler extracts, resolves the matching conflict using the exact extraction parent, commits SUPERSEDE/history/outbox, then completes default1536 vectors."
+      ],
+      "actualModel": "openai/gpt-4o-mini",
+      "actualTerminalUsage": {
+        "cachedInputTokens": 0,
+        "inputTokens": 1645,
+        "outputTokens": 96,
+        "reasoningTokens": 0,
+        "totalTokens": 1741
+      },
+      "noControlledDecision": true,
+      "onePaidResolutionAttempt": true,
+      "receipts": [
+        "real-resolution3-final.json",
+        "real-resolution2-calls.json",
+        "real-resolution2-native-state.json",
+        "real-resolution3-native-state.json",
+        "real-resolution2-cost-state-fixture-failure1.json",
+        "real-resolution3-cleanup.json"
+      ]
+    }
+  ],
+  "originalAcceptanceCriteria": [
+    {
+      "original": 1,
+      "status": "PASS_OBSERVED",
+      "evidence": [
+        "delayed-final.json"
+      ],
+      "result": "Response A final while extraction attempt remains zero/held; next same-thread B answers exact KUMQUAT sentinel from approved unprocessed history."
+    },
+    {
+      "original": 2,
+      "status": "PASS_OBSERVED",
+      "evidence": [
+        "delayed-final.json"
+      ],
+      "result": "Authorized cross-thread pending context excludes private peer; earlier sequence1 hole holds both indexedThrough at0 despite later completion; strict persisted1200ms barrier fails before model dispatch; byte/tail overflow explicitly incomplete."
+    },
+    {
+      "original": 3,
+      "status": "PASS_OBSERVED_WITH_EXPLICIT_NATIVE_PLAN_INJECTION_FOR_RACES",
+      "evidence": [
+        "ordering2-final.json",
+        "fences-first-outcomes.json",
+        "fences-shared2-final.json",
+        "real-resolution3-final.json"
+      ],
+      "result": "Duplicate receipt/replay does not add model work/history; reversed matching corrections enforce CAS and source order; concurrent native change requests REPLAN_REQUIRED; deletion/running-stage edit denies obsolete completion; stale facts/vectors excluded until genuine current revision repair. Ordinary provider conflict resolution is separately genuine."
+    },
+    {
+      "original": 4,
+      "status": "PASS_OBSERVED",
+      "evidence": [
+        "fences-first-outcomes.json",
+        "delayed-final.json"
+      ],
+      "result": "Assistant source extraction/facts skipped under role policy; cancelled native partial has no authoritative source; unknown failure cannot retry or fabricate reconcile; safe predispatch retry remains observable and deadletters at3."
+    }
+  ],
+  "money": {
+    "operationKeyCounts": {
+      "embedding.query": 4,
+      "agent.respond": 3,
+      "embedding.memory": 8,
+      "memory.extract": 10,
+      "facts.resolve": 1
+    },
+    "operations": 26,
+    "attempts": 26,
+    "allSlotsReleased": true,
+    "allAccountsActiveConcurrency": 0,
+    "allAccountsReservedUnits": 0,
+    "tenantLimitMicroUSD": 10000000,
+    "tenantUncertainMicroUSD": 2600000,
+    "tenantSettledMicroUSD": 0,
+    "overrun": false,
+    "costSource": "unavailable",
+    "policy": "Every actual call keeps its full100000microUSD ceiling. Complete exact-matching bounded terminal results are attached; no settlement discount/refund or paid retry of an already completed request. First ambiguous extraction pair is included in these totals."
+  },
+  "fixtureBoundaries": [
+    "Scheduler decorator holds only ingestion processStage before claim, then releases the production handler; no fixture model bypass.",
+    "Ordering/race cases use real extraction parents plus explicit native controlled conflict decision and concurrent writer data.",
+    "Delete/edit/unknown/cancel negatives use native transactions and bounded fixture state; cancelled partial is a native pending Agent row without inference.",
+    "One ordinary worker conflict job uses the real production resolver and current policy, with no controlled decisions.",
+    "New cleanup-only helper clears exact tenant/space QA held rows after verifying all corresponding ingestion events retired; product rows are not deleted."
+  ],
+  "preservedFailures": [
+    {
+      "receipt": "ordering-first-fixture-failure1.json",
+      "kind": "actual provider semantic mismatch",
+      "result": "Different normalized subjects; no fact commits and no paid identical retry. Clearer distinct new inputs used."
+    },
+    {
+      "receipt": "fences-first-fixture-failure1.json",
+      "kind": "QA native argument projection",
+      "result": "Provision authority included forbidden reference fields; strict validator remained; successor projects exact10-key reference."
+    },
+    {
+      "receipt": "real-resolution-first-fixture-failure1.json",
+      "kind": "unpaid QA prerequisite",
+      "result": "Expected predicate did not match preserved native belief; no source mutation/model dispatch before denial."
+    },
+    {
+      "receipt": "real-resolution2-cost-state-fixture-failure1.json",
+      "kind": "QA cost-state oracle",
+      "result": "Finished expectation was invalid for intentionally unavailable cost; same completed paid operation verified read-only, not repeated."
+    },
+    {
+      "receipt": "deploy-cleanup-helper1.json",
+      "kind": "QA cleanup helper type/index mismatch",
+      "result": "Enabled typecheck denied nonexistent composite index; exact filtered cleanup successor deployed normally, product source unchanged."
+    },
+    {
+      "kind": "product cached derivative leak",
+      "result": "Current2 actual and independent selective-share delivery leak was repaired in current3; genuine cached text/vector read surfaces deny after revoke. Earlier current2 source/receipts remain scoped and immutable."
+    }
+  ],
+  "cleanup": {
+    "sourceIds": 55,
+    "eventsRetired": 58,
+    "heldRowsDeleted": 62,
+    "scopedGrantsRevoked": 10,
+    "nonterminalRuns": 0,
+    "activeModelSlots": 0,
+    "paidAttemptsBefore": 26,
+    "paidAttemptsAfter": 26,
+    "liabilitiesRetained": true
+  },
+  "retainedTarget": {
+    "receipt": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/native-actual/retained-for-task09.json",
+      "bytes": 2987,
+      "sha256": "a1aea2042c93127bb55f7580f0c35181fca8f6fd3e4d77c3cd4d27f682b50552"
+    },
+    "status": "RETAINED_OWNED_NOT_RETIRED",
+    "purpose": "Original Task09 actual TypeScript/browser text slice after Task08 independent acceptance",
+    "privateResources": [
+      {
+        "path": "/Users/SaintNick/.codex/tmp/cortex-task08-memory-native-8c9e4ca18498/credentials.json",
+        "mode": "0600",
+        "bytes": 321,
+        "secretPrinted": false
+      },
+      {
+        "path": "/Users/SaintNick/.codex/tmp/cortex-task08-memory-native-8c9e4ca18498/auth.json",
+        "mode": "0600",
+        "bytes": 899,
+        "secretPrinted": false
+      },
+      {
+        "path": "/Users/SaintNick/.codex/tmp/cortex-task08-memory-native-8c9e4ca18498/jwt-private.pem",
+        "mode": "0600",
+        "bytes": 1704,
+        "secretPrinted": false
+      },
+      {
+        "path": "/Users/SaintNick/.codex/tmp/cortex-task08-memory-native-8c9e4ca18498/state.json",
+        "mode": "0600",
+        "bytes": 554,
+        "secretPrinted": false
+      }
+    ],
+    "issuer": "https://cortex-task08-memory.example",
+    "applicationID": "cortex-task08-memory",
+    "privateDirectoryMode": "0700",
+    "registeredQAHelpers": "Retained private disposable-fixture APIs; every owned08 source/event retired and grant revoked. Task09 must use a new authorized tenant scope.",
+    "retirementDue": "After Task09 or when no longer needed; full-goal cleanup remains open."
+  },
+  "hostPreservation": {
+    "receipt": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/native-actual/final-host-and-ledger-readback.json",
+      "bytes": 16733,
+      "sha256": "83d016205ca3cb5b6631fd39cf38aa5635227580762d47f57e99f623ce3fba8b"
+    },
+    "unrelatedSentinelRows": 1,
+    "unrelatedFilesMatched": 6,
+    "node": {
+      "runtime": "node",
+      "subject": "host-owner"
+    },
+    "httpStatus": 200
+  },
+  "ownedProcessCleanup": {
+    "allRecordedBuildPackDeployChildrenClosed": true,
+    "allNativeScriptSessionsCompleted": true,
+    "allReactiveClientsClosed": true,
+    "cleanupErrorReceipts": [
+      "delayed-cleanup.json",
+      "derivative-revoke-cleanup.json",
+      "owned08-client-cleanup.json",
+      "final-client-cleanup.json"
+    ],
+    "noRemainingOwnedExecution": true
+  },
+  "cleanupHelperPostimage": {
+    "file": "ingestionQualification.ts",
+    "bytes": 15984,
+    "sha256": "682579a9245ee0308872b4ac1e3728473b2c690306e55561c3fbfe6b287bc471",
+    "preimage": "ingestionQualification-pre-cleanup.ts",
+    "appliesOnlyToCleanup": "Installed product79-filecandidate is unchanged; sourceManifest3 helper preimage records the tested functions, this explicit postimage adds only cleanup."
+  },
+  "disposition": "Independent reviewer J8 determines original08 acceptance in the existing coherent batch. Retained target is not retired; use new authorized tenant for09 after08acceptance. Full goal/final target cleanup remain open."
+}

@@ -1,0 +1,14 @@
+{
+  "scope": "QA expectation failure after completed ordinary worker; historical red retained",
+  "command": "node exercise-real-resolution2.mjs",
+  "sessionId": 5646,
+  "exitCode": 1,
+  "failingAssertion": "exercise-real-resolution2.mjs:23 expected runtimeModelAttempts[0].state === finished",
+  "observedState": "uncertain",
+  "observedComplete": true,
+  "paidWorkAlreadyComplete": true,
+  "cause": "Confirmed terminal intentionally has unavailable cost; adopted policy retains the full liability while attaching the matching bounded result and releasing only the finished concurrency slot.",
+  "resolution": "Read-only verify-real-resolution3.mjs inspected the same exact native operation and terminal. No repeated inference.",
+  "sourceReceipt": "real-resolution2-native-state.json",
+  "successorReceipt": "real-resolution3-final.json"
+}

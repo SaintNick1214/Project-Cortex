@@ -1,16 +1,19 @@
 import { defineTable } from "convex/server";
 import { v } from "convex/values";
 import { runtimeAuthorityReference } from "./runtimeAuthSchema";
+import { contextSourceWitness } from "./runtimeContextWitnessSchema";
 
 export const agentAttempt = { reference: runtimeAuthorityReference, runId: v.string(), attemptNumber: v.number(), leaseVersion: v.number() };
-export const sourceWitness = v.object({ sourceId: v.string(), sourceEventId: v.string(), sourceRevision: v.number(), contentHash: v.string() });
+export const sourceWitness = contextSourceWitness;
 const scope = { tenantId: v.string(), memorySpaceId: v.string(), runId: v.string(), attemptNumber: v.number() };
 export const runtimeAgentTables = {
   runtimeAgentExecutions: defineTable({ ...scope, workflowId: v.optional(v.string()), reference: runtimeAuthorityReference,
     leaseVersion: v.number(), state: v.union(v.literal("ready"), v.literal("running"), v.literal("waiting_approval"),
       v.literal("finalizing"), v.literal("complete"), v.literal("failed"), v.literal("cancelled"), v.literal("unknown")),
     streaming: v.boolean(), nextOutputSequence: v.number(), nextModelStep: v.number(), toolCount: v.number(),
-    contextCanonical: v.optional(v.string()), contextState: v.optional(v.union(v.literal("started"), v.literal("complete"))), sourceWitnesses: v.array(sourceWitness),
+    contextCanonical: v.optional(v.string()), contextState: v.optional(v.union(v.literal("started"), v.literal("complete"), v.literal("failed"))), sourceWitnesses: v.array(sourceWitness),
+    contextCompleteness: v.optional(v.union(v.literal("complete"), v.literal("incomplete"))), contextFailureCode: v.optional(v.string()),
+    barrierStartedAt: v.optional(v.number()),
     savedMessageIds: v.array(v.string()), savedMessagePins: v.optional(v.array(v.object({ id: v.string(), order: v.number(), stepOrder: v.number(), canonicalContentHash: v.string() }))), finalMessageIds: v.optional(v.array(v.string())),
     ingestionReceiptId: v.optional(v.string()), failureCode: v.optional(v.string()), createdAt: v.number(), updatedAt: v.number(),
   }).index("by_attempt", ["tenantId", "memorySpaceId", "runId", "attemptNumber"]),

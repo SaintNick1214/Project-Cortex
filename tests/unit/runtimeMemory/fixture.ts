@@ -7,6 +7,8 @@ import * as memory from "../../../convex-dev/runtimeMemory";
 import * as auth from "../../../convex-dev/runtimeAuth";
 
 type Row = Record<string, unknown> & { _id: string; _creationTime: number };
+// Persist Convex JSON values in this realm; structuredClone uses a foreign Jest prototype.
+function nativeClone<T>(value: T): T { return JSON.parse(JSON.stringify(value)) as T; }
 export function registeredHandler<Args, Result>(registration: unknown): (ctx: MutationCtx, args: Args) => Promise<Result> {
   return (registration as { _handler: (ctx: MutationCtx, args: Args) => Promise<Result> })._handler;
 }
@@ -24,8 +26,9 @@ export class MemoryTestDb {
   }
   query(table: string) {
     const filters: [string, unknown][] = [];
+    let descending = false;
     let predicate: (row: Row) => boolean = () => true;
-    const selected = () => this.table(table).filter((row) => filters.every(([key, value]) => field(row, key) === value) && predicate(row));
+    const selected = () => { const rows = this.table(table).filter((row) => filters.every(([key, value]) => field(row, key) === value) && predicate(row)); return descending ? rows.reverse() : rows; };
     const builder = {
       withIndex: (_name: string, callback: (q: { eq(key: string, value: unknown): unknown }) => unknown) => {
         const q: { eq(key: string, value: unknown): typeof q } = { eq: (key, value) => { filters.push([key, value]); return q; } };
@@ -39,20 +42,25 @@ export class MemoryTestDb {
           and: (...predicates) => (row) => predicates.every((test) => test(row)) }); return builder;
       },
       unique: async () => { const rows = selected(); if (rows.length > 1) throw new Error("Nonunique canonical index"); return rows[0] ?? null; },
+      order: (direction: "asc" | "desc") => { descending = direction === "desc"; return builder; },
       collect: async () => [...selected()], take: async (limit: number) => selected().slice(0, limit),
     };
     return builder;
   }
   normalizeId(table: string, id: string): string | null { return id.startsWith(`${table}:`) ? id : null; }
   async get(table: string, id: string): Promise<Row | null> { return this.table(table).find((row) => row._id === id) ?? null; }
-  async insert(table: string, value: Record<string, unknown>): Promise<string> { this.writes++; return this.seed(table, structuredClone(value))._id; }
+  async insert(table: string, value: Record<string, unknown>): Promise<string> { this.writes++; return this.seed(table, nativeClone(value))._id; }
+  async patch(table: string, id: string, value: Record<string, unknown>): Promise<void> {
+    const row = await this.get(table, id); if (!row) throw new Error("Missing row");
+    this.writes++; Object.assign(row, nativeClone(value));
+  }
   async replace(table: string, id: string, value: Record<string, unknown>): Promise<void> {
     const rows = this.table(table); const index = rows.findIndex((row) => row._id === id);
     if (index < 0) throw new Error("Missing row"); this.writes++;
-    rows[index] = { ...structuredClone(value), _id: id, _creationTime: rows[index]!._creationTime };
+    rows[index] = { ...nativeClone(value), _id: id, _creationTime: rows[index]!._creationTime };
   }
   async transaction<T>(run: () => Promise<T>): Promise<T> {
-    const before = structuredClone(this.rows); const writes = this.writes; const sequence = this.sequence;
+    const before = new Map([...this.rows].map(([table, rows]) => [table, nativeClone(rows)])); const writes = this.writes; const sequence = this.sequence;
     try { return await run(); } catch (error) { this.rows = before; this.writes = writes; this.sequence = sequence; throw error; }
   }
 }
@@ -87,6 +95,11 @@ export function memoryFixture(options: { budget?: (args: BackendGatewayBudgetArg
         throw new ConvexError({ version: 1, code: "CAPABILITY_UNAVAILABLE", message: "Memory capability unavailable.",
           retryable: false, outcome: "not_dispatched" });
       }
+      if (module === "runtimeIngestion" && ["registerCompletedDerived", "retireScopedSource"].includes(key!)) {
+        // Real atomic child bookkeeping; defer module load until synthetic policy peers are installed.
+        const ingestion = await import("../../../convex-dev/runtimeIngestion");
+        return await db.transaction(async () => await registeredHandler<unknown, unknown>((ingestion as unknown as Record<string, unknown>)[key!]!)(ctx, args));
+      }
       if (module !== "runtimeMemory") throw new Error("Unsupported fixture mutation");
       return await db.transaction(async () => await registeredHandler<unknown, unknown>((memory as unknown as Record<string, unknown>)[key!]!)(ctx, args));
     },
@@ -96,5 +109,7 @@ export function memoryFixture(options: { budget?: (args: BackendGatewayBudgetArg
       return db.table(table).filter((row) => row[filter.key] === filter.value).slice(0, query.limit).map((row) => ({ _id: row._id, _score: 0.9 }));
     },
   } as unknown as ActionCtx;
+  ctx.runMutation = actionCtx.runMutation as unknown as MutationCtx["runMutation"];
+  ctx.scheduler = { runAfter: async () => "scheduled:memory-bookkeeping" } as unknown as MutationCtx["scheduler"];
   return { db, ctx, actionCtx, reference, principal, membership, grant, searches, policyRequests };
 }

@@ -1,0 +1,341 @@
+(node:88278) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeAuth/provisioning.test.ts
+FAIL tests/unit/runtimeMemory/public-functional.test.ts
+  ● functional public memory wiring with an offline model › preflights exact trusted request before writing, then remembers and recalls real scoped data
+
+    ConvexError: {"version":1,"code":"MEMORY_OPERATION_FAILED","message":"Memory operation failed.","retryable":false,"outcome":"uncertain"}
+
+      175 |   try { return await call(); }
+      176 |   catch {
+    > 177 |     throw new ConvexError({ version: 1, code: "MEMORY_OPERATION_FAILED", message: "Memory operation failed.",
+          |           ^
+      178 |       retryable: false, outcome: "uncertain" });
+      179 |   }
+      180 | }
+
+      at memoryOperation (convex-dev/runtimeMemory.ts:177:11)
+      at handler (convex-dev/runtimeMemory.ts:188:10)
+      at remember (tests/unit/runtimeMemory/public-functional.test.ts:53:10)
+      at Object.<anonymous> (tests/unit/runtimeMemory/public-functional.test.ts:71:20)
+
+  ● functional public memory wiring with an offline model › reuses normalized request account and derived receipt without duplicate persistent data
+
+    ConvexError: {"version":1,"code":"MEMORY_OPERATION_FAILED","message":"Memory operation failed.","retryable":false,"outcome":"uncertain"}
+
+      175 |   try { return await call(); }
+      176 |   catch {
+    > 177 |     throw new ConvexError({ version: 1, code: "MEMORY_OPERATION_FAILED", message: "Memory operation failed.",
+          |           ^
+      178 |       retryable: false, outcome: "uncertain" });
+      179 |   }
+      180 | }
+
+      at memoryOperation (convex-dev/runtimeMemory.ts:177:11)
+      at handler (convex-dev/runtimeMemory.ts:188:10)
+      at remember (tests/unit/runtimeMemory/public-functional.test.ts:53:10)
+      at Object.<anonymous> (tests/unit/runtimeMemory/public-functional.test.ts:100:38)
+
+  ● functional public memory wiring with an offline model › rejects changed remember input before persistence or a second model invocation
+
+    ConvexError: {"version":1,"code":"MEMORY_OPERATION_FAILED","message":"Memory operation failed.","retryable":false,"outcome":"uncertain"}
+
+      175 |   try { return await call(); }
+      176 |   catch {
+    > 177 |     throw new ConvexError({ version: 1, code: "MEMORY_OPERATION_FAILED", message: "Memory operation failed.",
+          |           ^
+      178 |       retryable: false, outcome: "uncertain" });
+      179 |   }
+      180 | }
+
+      at memoryOperation (convex-dev/runtimeMemory.ts:177:11)
+      at handler (convex-dev/runtimeMemory.ts:188:10)
+      at remember (tests/unit/runtimeMemory/public-functional.test.ts:53:10)
+      at tests/unit/runtimeMemory/public-functional.test.ts:110:5
+
+  ● functional public memory wiring with an offline model › post-query-model failure does not return a partial recall or leak provider diagnostics
+
+    ConvexError: {"version":1,"code":"MEMORY_OPERATION_FAILED","message":"Memory operation failed.","retryable":false,"outcome":"uncertain"}
+
+      175 |   try { return await call(); }
+      176 |   catch {
+    > 177 |     throw new ConvexError({ version: 1, code: "MEMORY_OPERATION_FAILED", message: "Memory operation failed.",
+          |           ^
+      178 |       retryable: false, outcome: "uncertain" });
+      179 |   }
+      180 | }
+
+      at memoryOperation (convex-dev/runtimeMemory.ts:177:11)
+      at handler (convex-dev/runtimeMemory.ts:188:10)
+      at remember (tests/unit/runtimeMemory/public-functional.test.ts:53:10)
+      at Object.<anonymous> (tests/unit/runtimeMemory/public-functional.test.ts:184:24)
+
+PASS tests/unit/runtimeMemory/public-boundary.test.ts
+FAIL tests/unit/runtimeMemory/services.test.ts
+  ● modern backend memory services › persists normalized source/chunks/vectors and authoritative facts with one confidence conversion
+
+    TypeError: ctx.db.patch is not a function
+
+      149 | async function writeStage(ctx: MutationCtx, event: Event, row: Doc<"runtimeIngestionStages">,
+      150 |   patch: Partial<Omit<Doc<"runtimeIngestionStages">, "_id" | "_creationTime">>) {
+    > 151 |   await ctx.db.patch("runtimeIngestionStages", row._id, patch);
+          |                ^
+      152 |   if (patch.state) {
+      153 |     const summary = row.stage === "vectors" ? { vectorsState: patch.state } : row.stage === "facts" ? { factsState: patch.state }
+      154 |       : ["failed", "unknown", "dead_letter"].includes(patch.state) ? { factsState: patch.state } : { factsState: "pending" as const };
+
+      at writeStage (convex-dev/runtimeIngestion.ts:151:16)
+      at registerCompletedDerivedSource (convex-dev/runtimeIngestion.ts:452:71)
+      at handler (convex-dev/runtimeIngestion.ts:476:35)
+      at tests/unit/runtimeMemory/fixture.ts:95:49
+      at MemoryTestDb.transaction (tests/unit/runtimeMemory/fixture.ts:58:18)
+      at Object.runMutation (tests/unit/runtimeMemory/fixture.ts:95:16)
+      at handler (convex-dev/runtimeMemory.ts:27:5)
+      at tests/unit/runtimeMemory/fixture.ts:98:47
+      at MemoryTestDb.transaction (tests/unit/runtimeMemory/fixture.ts:58:18)
+      at Object.runMutation (tests/unit/runtimeMemory/fixture.ts:98:14)
+      at Object.commitDerived (convex-dev/runtimeMemoryRepository.ts:320:37)
+      at rememberMemory (convex-dev/runtimeMemoryServices.ts:70:21)
+      at Object.<anonymous> (tests/unit/runtimeMemory/services.test.ts:30:40)
+
+  ● modern backend memory services › replays identical normalized source/derived payload without duplicate facts or receipts
+
+    TypeError: ctx.db.patch is not a function
+
+      149 | async function writeStage(ctx: MutationCtx, event: Event, row: Doc<"runtimeIngestionStages">,
+      150 |   patch: Partial<Omit<Doc<"runtimeIngestionStages">, "_id" | "_creationTime">>) {
+    > 151 |   await ctx.db.patch("runtimeIngestionStages", row._id, patch);
+          |                ^
+      152 |   if (patch.state) {
+      153 |     const summary = row.stage === "vectors" ? { vectorsState: patch.state } : row.stage === "facts" ? { factsState: patch.state }
+      154 |       : ["failed", "unknown", "dead_letter"].includes(patch.state) ? { factsState: patch.state } : { factsState: "pending" as const };
+
+      at writeStage (convex-dev/runtimeIngestion.ts:151:16)
+      at registerCompletedDerivedSource (convex-dev/runtimeIngestion.ts:452:71)
+      at handler (convex-dev/runtimeIngestion.ts:476:35)
+      at tests/unit/runtimeMemory/fixture.ts:95:49
+      at MemoryTestDb.transaction (tests/unit/runtimeMemory/fixture.ts:58:18)
+      at Object.runMutation (tests/unit/runtimeMemory/fixture.ts:95:16)
+      at handler (convex-dev/runtimeMemory.ts:27:5)
+      at tests/unit/runtimeMemory/fixture.ts:98:47
+      at MemoryTestDb.transaction (tests/unit/runtimeMemory/fixture.ts:58:18)
+      at Object.runMutation (tests/unit/runtimeMemory/fixture.ts:98:14)
+      at Object.commitDerived (convex-dev/runtimeMemoryRepository.ts:320:37)
+      at rememberMemory (convex-dev/runtimeMemoryServices.ts:70:21)
+      at Object.<anonymous> (tests/unit/runtimeMemory/services.test.ts:42:38)
+
+  ● modern backend memory services › rejects source key reuse with different normalized content before a second model call
+
+    TypeError: ctx.db.patch is not a function
+
+      149 | async function writeStage(ctx: MutationCtx, event: Event, row: Doc<"runtimeIngestionStages">,
+      150 |   patch: Partial<Omit<Doc<"runtimeIngestionStages">, "_id" | "_creationTime">>) {
+    > 151 |   await ctx.db.patch("runtimeIngestionStages", row._id, patch);
+          |                ^
+      152 |   if (patch.state) {
+      153 |     const summary = row.stage === "vectors" ? { vectorsState: patch.state } : row.stage === "facts" ? { factsState: patch.state }
+      154 |       : ["failed", "unknown", "dead_letter"].includes(patch.state) ? { factsState: patch.state } : { factsState: "pending" as const };
+
+      at writeStage (convex-dev/runtimeIngestion.ts:151:16)
+      at registerCompletedDerivedSource (convex-dev/runtimeIngestion.ts:452:71)
+      at handler (convex-dev/runtimeIngestion.ts:476:35)
+      at tests/unit/runtimeMemory/fixture.ts:95:49
+      at MemoryTestDb.transaction (tests/unit/runtimeMemory/fixture.ts:58:18)
+      at Object.runMutation (tests/unit/runtimeMemory/fixture.ts:95:16)
+      at handler (convex-dev/runtimeMemory.ts:27:5)
+      at tests/unit/runtimeMemory/fixture.ts:98:47
+      at MemoryTestDb.transaction (tests/unit/runtimeMemory/fixture.ts:58:18)
+      at Object.runMutation (tests/unit/runtimeMemory/fixture.ts:98:14)
+      at Object.commitDerived (convex-dev/runtimeMemoryRepository.ts:320:37)
+      at rememberMemory (convex-dev/runtimeMemoryServices.ts:70:21)
+      at Object.<anonymous> (tests/unit/runtimeMemory/services.test.ts:52:24)
+
+  ● modern backend memory services › embeds attributed assistant context without extracting assistant claims as facts
+
+    TypeError: ctx.db.patch is not a function
+
+      149 | async function writeStage(ctx: MutationCtx, event: Event, row: Doc<"runtimeIngestionStages">,
+      150 |   patch: Partial<Omit<Doc<"runtimeIngestionStages">, "_id" | "_creationTime">>) {
+    > 151 |   await ctx.db.patch("runtimeIngestionStages", row._id, patch);
+          |                ^
+      152 |   if (patch.state) {
+      153 |     const summary = row.stage === "vectors" ? { vectorsState: patch.state } : row.stage === "facts" ? { factsState: patch.state }
+      154 |       : ["failed", "unknown", "dead_letter"].includes(patch.state) ? { factsState: patch.state } : { factsState: "pending" as const };
+
+      at writeStage (convex-dev/runtimeIngestion.ts:151:16)
+      at registerCompletedDerivedSource (convex-dev/runtimeIngestion.ts:452:71)
+      at handler (convex-dev/runtimeIngestion.ts:476:35)
+      at tests/unit/runtimeMemory/fixture.ts:95:49
+      at MemoryTestDb.transaction (tests/unit/runtimeMemory/fixture.ts:58:18)
+      at Object.runMutation (tests/unit/runtimeMemory/fixture.ts:95:16)
+      at handler (convex-dev/runtimeMemory.ts:27:5)
+      at tests/unit/runtimeMemory/fixture.ts:98:47
+      at MemoryTestDb.transaction (tests/unit/runtimeMemory/fixture.ts:58:18)
+      at Object.runMutation (tests/unit/runtimeMemory/fixture.ts:98:14)
+      at Object.commitDerived (convex-dev/runtimeMemoryRepository.ts:320:37)
+      at rememberMemory (convex-dev/runtimeMemoryServices.ts:70:21)
+      at Object.<anonymous> (tests/unit/runtimeMemory/services.test.ts:80:24)
+
+  ● modern backend memory services › uses actual scoped internal selection and shared ranking/context for recall
+
+    TypeError: ctx.db.patch is not a function
+
+      149 | async function writeStage(ctx: MutationCtx, event: Event, row: Doc<"runtimeIngestionStages">,
+      150 |   patch: Partial<Omit<Doc<"runtimeIngestionStages">, "_id" | "_creationTime">>) {
+    > 151 |   await ctx.db.patch("runtimeIngestionStages", row._id, patch);
+          |                ^
+      152 |   if (patch.state) {
+      153 |     const summary = row.stage === "vectors" ? { vectorsState: patch.state } : row.stage === "facts" ? { factsState: patch.state }
+      154 |       : ["failed", "unknown", "dead_letter"].includes(patch.state) ? { factsState: patch.state } : { factsState: "pending" as const };
+
+      at writeStage (convex-dev/runtimeIngestion.ts:151:16)
+      at registerCompletedDerivedSource (convex-dev/runtimeIngestion.ts:452:71)
+      at handler (convex-dev/runtimeIngestion.ts:476:35)
+      at tests/unit/runtimeMemory/fixture.ts:95:49
+      at MemoryTestDb.transaction (tests/unit/runtimeMemory/fixture.ts:58:18)
+      at Object.runMutation (tests/unit/runtimeMemory/fixture.ts:95:16)
+      at handler (convex-dev/runtimeMemory.ts:27:5)
+      at tests/unit/runtimeMemory/fixture.ts:98:47
+      at MemoryTestDb.transaction (tests/unit/runtimeMemory/fixture.ts:58:18)
+      at Object.runMutation (tests/unit/runtimeMemory/fixture.ts:98:14)
+      at Object.commitDerived (convex-dev/runtimeMemoryRepository.ts:320:37)
+      at rememberMemory (convex-dev/runtimeMemoryServices.ts:70:21)
+      at Object.<anonymous> (tests/unit/runtimeMemory/services.test.ts:90:24)
+
+  ● remember write permission › write-only memory admission returns only this successful commit's facts without a general read query
+
+    TypeError: ctx.db.patch is not a function
+
+      149 | async function writeStage(ctx: MutationCtx, event: Event, row: Doc<"runtimeIngestionStages">,
+      150 |   patch: Partial<Omit<Doc<"runtimeIngestionStages">, "_id" | "_creationTime">>) {
+    > 151 |   await ctx.db.patch("runtimeIngestionStages", row._id, patch);
+          |                ^
+      152 |   if (patch.state) {
+      153 |     const summary = row.stage === "vectors" ? { vectorsState: patch.state } : row.stage === "facts" ? { factsState: patch.state }
+      154 |       : ["failed", "unknown", "dead_letter"].includes(patch.state) ? { factsState: patch.state } : { factsState: "pending" as const };
+
+      at writeStage (convex-dev/runtimeIngestion.ts:151:16)
+      at registerCompletedDerivedSource (convex-dev/runtimeIngestion.ts:452:71)
+      at handler (convex-dev/runtimeIngestion.ts:476:35)
+      at tests/unit/runtimeMemory/fixture.ts:95:49
+      at MemoryTestDb.transaction (tests/unit/runtimeMemory/fixture.ts:58:18)
+      at Object.runMutation (tests/unit/runtimeMemory/fixture.ts:95:16)
+      at handler (convex-dev/runtimeMemory.ts:27:5)
+      at tests/unit/runtimeMemory/fixture.ts:98:47
+      at MemoryTestDb.transaction (tests/unit/runtimeMemory/fixture.ts:58:18)
+      at Object.runMutation (tests/unit/runtimeMemory/fixture.ts:98:14)
+      at Object.commitDerived (convex-dev/runtimeMemoryRepository.ts:320:37)
+      at rememberMemory (convex-dev/runtimeMemoryServices.ts:70:21)
+      at Object.<anonymous> (tests/unit/runtimeMemory/services.test.ts:118:21)
+
+PASS tests/unit/runtimeAuth/inventory.test.ts
+PASS tests/unit/runtimeMemory/public-closure.test.ts
+FAIL tests/unit/runtimeMemory/native-repository.test.ts
+  ● Test suite failed to run
+
+    ENOENT: no such file or directory, open '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeMemory/native-repository.test.ts'
+
+      at runTestInternal (node_modules/jest-runner/build/index.js:129:27)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     2.0s | 15/15 passed | /tests/unit/runtimeAuth/provisioning.test.ts
+  ❌     1.0s | 21/25 passed | /tests/unit/runtimeMemory/public-functional.test.ts
+  ✅     0.8s | 176/176 passed | /tests/unit/runtimeMemory/public-boundary.test.ts
+  ✅     0.7s | 64/64 passed | /tests/unit/runtimeAuth/inventory.test.ts
+  ❌     0.6s | 11/17 passed | /tests/unit/runtimeMemory/services.test.ts
+  ✅     0.6s | 67/67 passed | /tests/unit/runtimeMemory/public-closure.test.ts
+  ✅     0.0s | 0/0 passed | /tests/unit/runtimeMemory/native-repository.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.14s ( 2.4%) - portable generated inventory policies: /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03a/reproduction/inventory.mjs accepts changed source bytes and an additional registration without coupling policy to frozen production hashes/counts
+    /tests/unit/runtimeAuth/inventory.test.ts
+
+ 2. [32m✓[0m    0.14s ( 2.3%) - portable generated inventory policies: /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/task03a/inventory.mjs accepts changed source bytes and an additional registration without coupling policy to frozen production hashes/counts
+    /tests/unit/runtimeAuth/inventory.test.ts
+
+ 3. [31m✗[0m    0.07s ( 1.2%) - functional public memory wiring with an offline model preflights exact trusted request before writing, then remembers and recalls real scoped data
+    /tests/unit/runtimeMemory/public-functional.test.ts
+
+ 4. [31m✗[0m    0.02s ( 0.3%) - modern backend memory services persists normalized source/chunks/vectors and authoritative facts with one confidence conversion
+    /tests/unit/runtimeMemory/services.test.ts
+
+ 5. [32m✓[0m    0.01s ( 0.1%) - native remember control boundary projects the actual14-field native auth result to frozen10-field reference
+    /tests/unit/runtimeMemory/public-boundary.test.ts
+
+ 6. [31m✗[0m    0.01s ( 0.1%) - modern backend memory services uses actual scoped internal selection and shared ranking/context for recall
+    /tests/unit/runtimeMemory/services.test.ts
+
+ 7. [31m✗[0m    0.00s ( 0.1%) - functional public memory wiring with an offline model reuses normalized request account and derived receipt without duplicate persistent data
+    /tests/unit/runtimeMemory/public-functional.test.ts
+
+ 8. [32m✓[0m    0.00s ( 0.1%) - functional public memory wiring with an offline model rejects changed recall input before persistence or a second model invocation
+    /tests/unit/runtimeMemory/public-functional.test.ts
+
+ 9. [32m✓[0m    0.00s ( 0.1%) - native remember control boundary invalid runtimeMemory:checkAuthority field principalVersion stays opaque
+    /tests/unit/runtimeMemory/public-boundary.test.ts
+
+10. [32m✓[0m    0.00s ( 0.1%) - registered public remember foundation closure returns the exact readiness envelope after concrete authority and persisted recheck
+    /tests/unit/runtimeMemory/public-closure.test.ts
+
+11. [31m✗[0m    0.00s ( 0.0%) - functional public memory wiring with an offline model rejects changed remember input before persistence or a second model invocation
+    /tests/unit/runtimeMemory/public-functional.test.ts
+
+12. [31m✗[0m    0.00s ( 0.0%) - functional public memory wiring with an offline model post-query-model failure does not return a partial recall or leak provider diagnostics
+    /tests/unit/runtimeMemory/public-functional.test.ts
+
+13. [31m✗[0m    0.00s ( 0.0%) - modern backend memory services replays identical normalized source/derived payload without duplicate facts or receipts
+    /tests/unit/runtimeMemory/services.test.ts
+
+14. [31m✗[0m    0.00s ( 0.0%) - modern backend memory services rejects source key reuse with different normalized content before a second model call
+    /tests/unit/runtimeMemory/services.test.ts
+
+15. [31m✗[0m    0.00s ( 0.0%) - modern backend memory services embeds attributed assistant context without extracting assistant claims as facts
+    /tests/unit/runtimeMemory/services.test.ts
+
+16. [32m✓[0m    0.00s ( 0.0%) - modern backend memory services fails closed on incompatible model profile/dimensions before committing vectors
+    /tests/unit/runtimeMemory/services.test.ts
+
+17. [32m✓[0m    0.00s ( 0.0%) - internal bootstrap and trusted control table adapters exposes no public provisioning, revocation, deletion, or action authority resolver
+    /tests/unit/runtimeAuth/provisioning.test.ts
+
+18. [32m✓[0m    0.00s ( 0.0%) - internal bootstrap and trusted control table adapters provisions only trusted control records, returns immutable references and is idempotent
+    /tests/unit/runtimeAuth/provisioning.test.ts
+
+19. [32m✓[0m    0.00s ( 0.0%) - internal bootstrap and trusted control table adapters resolves public identity through Convex auth and never uses tokenIdentifier or admin metadata
+    /tests/unit/runtimeAuth/provisioning.test.ts
+
+20. [32m✓[0m    0.00s ( 0.0%) - internal bootstrap and trusted control table adapters replaces changed capabilities with a new grant generation and invalidates pending old work
+    /tests/unit/runtimeAuth/provisioning.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.40s (6.8% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      5.90s
+  Test suites:        7
+  Individual tests:   123
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 7
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 3 failed, 4 passed, 7 total
+Tests:       10 failed, 354 passed, 364 total
+Snapshots:   0 total
+Time:        5.905 s
+Ran all test suites within paths "tests/unit/runtimeMemory/public-functional.test.ts", "tests/unit/runtimeMemory/public-boundary.test.ts", "tests/unit/runtimeMemory/public-closure.test.ts", "tests/unit/runtimeMemory/native-repository.test.ts", "tests/unit/runtimeMemory/services.test.ts", "tests/unit/runtimeAuth/provisioning.test.ts", "tests/unit/runtimeAuth/inventory.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/memory-auth1.json

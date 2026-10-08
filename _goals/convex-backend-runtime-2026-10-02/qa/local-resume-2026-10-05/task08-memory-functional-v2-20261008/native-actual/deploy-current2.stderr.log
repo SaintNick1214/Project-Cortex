@@ -1,0 +1,24 @@
+▌ Developing against deployment:
+▌ [Development] nicholasgeil:cortex-task08-memory-v2-8c9e4ca18498:dev/nicholasgeil (dev) (dashboard: https://dashboard.convex.dev/t/nicholasgeil/cortex-task08-memory-v2-8c9e4ca18498/vivid-warbler-703)
+▌ └─ https://vivid-warbler-703.convex.cloud
+- Preparing Convex functions...
+
+Convex AI files are not installed. Run npx convex ai-files install to get started or npx convex ai-files disable to hide this message.
+✔ Added table indexes:
+  [+] runtimeBeliefHeads.by_slot   tenantId, memorySpaceId, slotKey, _creationTime
+  [+] runtimeBeliefHistory.by_event   tenantId, memorySpaceId, eventId, _creationTime
+  [+] runtimeBeliefHistory.by_fact   tenantId, memorySpaceId, factId, sequence, _creationTime
+  [+] runtimeBeliefOutbox.by_event   tenantId, memorySpaceId, eventId, _creationTime
+  [+] runtimeIngestionEvents.by_conversation_sequence   tenantId, memorySpaceId, conversationId, sequence, _creationTime
+  [+] runtimeIngestionEvents.by_event   tenantId, memorySpaceId, eventId, _creationTime
+  [+] runtimeIngestionEvents.by_owner_sequence   tenantId, memorySpaceId, ownerPrincipalId, sequence, _creationTime
+  [+] runtimeIngestionEvents.by_scope_sequence   tenantId, memorySpaceId, sequence, _creationTime
+  [+] runtimeIngestionEvents.by_source   tenantId, memorySpaceId, lineage.sourceId, lineage.sourceRevision, _creationTime
+  [+] runtimeIngestionEvents.by_source_eligibility   tenantId, memorySpaceId, lineage.sourceId, eligibility, _creationTime
+  [+] runtimeIngestionJobs.by_account   runAccountId, _creationTime
+  [+] runtimeIngestionJobs.by_budget   runBudgetId, _creationTime
+  [+] runtimeIngestionJobs.by_event   tenantId, memorySpaceId, eventId, _creationTime
+  [+] runtimeIngestionScopes.by_scope   tenantId, memorySpaceId, _creationTime
+  [+] runtimeIngestionStages.by_event_stage   tenantId, memorySpaceId, eventId, stage, _creationTime
+  [+] task08HeldStages.by_event_stage   eventId, stage, _creationTime
+✔ 09:05:37 Convex functions ready! (8.64s)

@@ -1,0 +1,18 @@
+{
+  "scope": "actual native fixture failure; no Task08 acceptance",
+  "operation": "73a91eb5-3928-4521-8340-c371f42fb3e9",
+  "command": "node exercise-ordering.mjs",
+  "sessionId": 3651,
+  "exitCode": 1,
+  "failure": "Actual extraction must expose a shared correction slot; do not infer an ordering proof from unrelated slots",
+  "causeObserved": {
+    "olderSubject": "User",
+    "newerSubject": "Task08 order tester",
+    "predicate": "has_favorite_drink"
+  },
+  "actualExtractionCallsCompleted": 2,
+  "factsCommitted": 0,
+  "sourceReceipt": "ordering-calls.json",
+  "cleanupReceipt": "ordering-cleanup.json",
+  "noPaidSameRequestRetry": true
+}

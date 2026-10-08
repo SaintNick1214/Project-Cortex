@@ -1,0 +1,320 @@
+(node:72834) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeIngestion/stages.test.ts
+  durable ingestion stage boundary
+    ✕ same tuple replay is one event/counter, changed hash or event alias cannot enter (1 ms)
+    ✕ scope counter is shared across conversations, separate from their queue position
+    ✕ approved user source schedules independently, awaiting approval never creates a job or dispatch (1 ms)
+    ✕ assistant completion is context/vector work with fact extraction explicitly skipped
+    ✕ duplicate delivery claims once; native account is fresh and policy pin rejects wrong stage (1 ms)
+    ✕ expired lease is unknown and cannot be retried or attach its old extraction
+    ✕ revision change blocks all late stage writes
+    ✕ tombstone change blocks all late stage writes (1 ms)
+    ✕ grant change blocks all late stage writes
+    ✕ safe failure has finite retry budget; known unknown never retries and summaries reflect it
+    ✕ facts and vector stages are distinct; default profile is pinned1536 (1 ms)
+
+  ● durable ingestion stage boundary › same tuple replay is one event/counter, changed hash or event alias cannot enter
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      37 | const digest = /^[a-f0-9]{64}$/;
+      38 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 39 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      40 | }
+      41 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      42 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:39:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:126:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:367:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:98:92)
+      at tests/unit/runtimeTranscript/fixture.ts:159:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:155:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:159:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:160:9)
+      at ingestionFixture (tests/unit/runtimeIngestion/fixture.ts:12:19)
+      at Object.<anonymous> (tests/unit/runtimeIngestion/stages.test.ts:10:21)
+
+  ● durable ingestion stage boundary › scope counter is shared across conversations, separate from their queue position
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      37 | const digest = /^[a-f0-9]{64}$/;
+      38 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 39 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      40 | }
+      41 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      42 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:39:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:126:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:367:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:98:92)
+      at tests/unit/runtimeTranscript/fixture.ts:159:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:155:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:159:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:160:9)
+      at ingestionFixture (tests/unit/runtimeIngestion/fixture.ts:12:19)
+      at Object.<anonymous> (tests/unit/runtimeIngestion/stages.test.ts:20:21)
+
+  ● durable ingestion stage boundary › approved user source schedules independently, awaiting approval never creates a job or dispatch
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      37 | const digest = /^[a-f0-9]{64}$/;
+      38 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 39 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      40 | }
+      41 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      42 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:39:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:126:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:367:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:98:92)
+      at tests/unit/runtimeTranscript/fixture.ts:159:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:155:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:159:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:160:9)
+      at ingestionFixture (tests/unit/runtimeIngestion/fixture.ts:12:19)
+      at Object.<anonymous> (tests/unit/runtimeIngestion/stages.test.ts:27:21)
+
+  ● durable ingestion stage boundary › assistant completion is context/vector work with fact extraction explicitly skipped
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      37 | const digest = /^[a-f0-9]{64}$/;
+      38 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 39 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      40 | }
+      41 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      42 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:39:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:126:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:367:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:98:92)
+      at tests/unit/runtimeTranscript/fixture.ts:159:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:155:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:159:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:160:9)
+      at ingestionFixture (tests/unit/runtimeIngestion/fixture.ts:12:19)
+      at Object.<anonymous> (tests/unit/runtimeIngestion/stages.test.ts:37:21)
+
+  ● durable ingestion stage boundary › duplicate delivery claims once; native account is fresh and policy pin rejects wrong stage
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      37 | const digest = /^[a-f0-9]{64}$/;
+      38 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 39 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      40 | }
+      41 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      42 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:39:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:126:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:367:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:98:92)
+      at tests/unit/runtimeTranscript/fixture.ts:159:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:155:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:159:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:160:9)
+      at ingestionFixture (tests/unit/runtimeIngestion/fixture.ts:12:19)
+      at Object.<anonymous> (tests/unit/runtimeIngestion/stages.test.ts:43:21)
+
+  ● durable ingestion stage boundary › expired lease is unknown and cannot be retried or attach its old extraction
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      37 | const digest = /^[a-f0-9]{64}$/;
+      38 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 39 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      40 | }
+      41 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      42 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:39:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:126:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:367:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:98:92)
+      at tests/unit/runtimeTranscript/fixture.ts:159:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:155:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:159:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:160:9)
+      at ingestionFixture (tests/unit/runtimeIngestion/fixture.ts:12:19)
+      at Object.<anonymous> (tests/unit/runtimeIngestion/stages.test.ts:52:21)
+
+  ● durable ingestion stage boundary › revision change blocks all late stage writes
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      37 | const digest = /^[a-f0-9]{64}$/;
+      38 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 39 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      40 | }
+      41 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      42 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:39:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:126:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:367:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:98:92)
+      at tests/unit/runtimeTranscript/fixture.ts:159:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:155:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:159:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:160:9)
+      at ingestionFixture (tests/unit/runtimeIngestion/fixture.ts:12:19)
+      at tests/unit/runtimeIngestion/stages.test.ts:60:21
+
+  ● durable ingestion stage boundary › tombstone change blocks all late stage writes
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      37 | const digest = /^[a-f0-9]{64}$/;
+      38 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 39 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      40 | }
+      41 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      42 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:39:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:126:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:367:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:98:92)
+      at tests/unit/runtimeTranscript/fixture.ts:159:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:155:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:159:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:160:9)
+      at ingestionFixture (tests/unit/runtimeIngestion/fixture.ts:12:19)
+      at tests/unit/runtimeIngestion/stages.test.ts:60:21
+
+  ● durable ingestion stage boundary › grant change blocks all late stage writes
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      37 | const digest = /^[a-f0-9]{64}$/;
+      38 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 39 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      40 | }
+      41 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      42 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:39:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:126:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:367:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:98:92)
+      at tests/unit/runtimeTranscript/fixture.ts:159:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:155:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:159:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:160:9)
+      at ingestionFixture (tests/unit/runtimeIngestion/fixture.ts:12:19)
+      at tests/unit/runtimeIngestion/stages.test.ts:60:21
+
+  ● durable ingestion stage boundary › safe failure has finite retry budget; known unknown never retries and summaries reflect it
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      37 | const digest = /^[a-f0-9]{64}$/;
+      38 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 39 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      40 | }
+      41 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      42 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:39:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:126:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:367:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:98:92)
+      at tests/unit/runtimeTranscript/fixture.ts:159:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:155:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:159:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:160:9)
+      at ingestionFixture (tests/unit/runtimeIngestion/fixture.ts:12:19)
+      at Object.<anonymous> (tests/unit/runtimeIngestion/stages.test.ts:68:21)
+
+  ● durable ingestion stage boundary › facts and vector stages are distinct; default profile is pinned1536
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      37 | const digest = /^[a-f0-9]{64}$/;
+      38 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 39 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      40 | }
+      41 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      42 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:39:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:126:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:367:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:98:92)
+      at tests/unit/runtimeTranscript/fixture.ts:159:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:155:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:159:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:160:9)
+      at ingestionFixture (tests/unit/runtimeIngestion/fixture.ts:12:19)
+      at Object.<anonymous> (tests/unit/runtimeIngestion/stages.test.ts:79:21)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     2.8s | 0/11 passed | /tests/unit/runtimeIngestion/stages.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [31m✗[0m    0.00s ( 0.0%) - durable ingestion stage boundary same tuple replay is one event/counter, changed hash or event alias cannot enter
+    /tests/unit/runtimeIngestion/stages.test.ts
+
+ 2. [31m✗[0m    0.00s ( 0.0%) - durable ingestion stage boundary approved user source schedules independently, awaiting approval never creates a job or dispatch
+    /tests/unit/runtimeIngestion/stages.test.ts
+
+ 3. [31m✗[0m    0.00s ( 0.0%) - durable ingestion stage boundary duplicate delivery claims once; native account is fresh and policy pin rejects wrong stage
+    /tests/unit/runtimeIngestion/stages.test.ts
+
+ 4. [31m✗[0m    0.00s ( 0.0%) - durable ingestion stage boundary tombstone change blocks all late stage writes
+    /tests/unit/runtimeIngestion/stages.test.ts
+
+ 5. [31m✗[0m    0.00s ( 0.0%) - durable ingestion stage boundary facts and vector stages are distinct; default profile is pinned1536
+    /tests/unit/runtimeIngestion/stages.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.01s (0.2% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      2.88s
+  Test suites:        1
+  Individual tests:   5
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 failed, 1 total
+Tests:       11 failed, 11 total
+Snapshots:   0 total
+Time:        2.875 s
+Ran all test suites within paths "tests/unit/runtimeIngestion/stages.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/units1.json

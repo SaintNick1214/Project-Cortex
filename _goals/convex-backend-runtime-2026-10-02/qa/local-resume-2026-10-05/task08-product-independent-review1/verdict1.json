@@ -1,0 +1,609 @@
+{
+  "version": 1,
+  "createdUtc": "2026-10-08T16:55:22.004749+00:00",
+  "reviewer": "/root/task03_linux_source_adapter_judge1",
+  "implementationAuthorship": false,
+  "policy": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/acceptance-policy.md",
+  "task": "08-memory-pipeline",
+  "verdict": "PASS",
+  "averageScore": 4.0,
+  "scores": [
+    {
+      "dimension": "Requirement fulfillment",
+      "score": 4,
+      "reason": "All five original mandatory behaviors met, with scoped genuine native evidence and explicit fixture boundaries."
+    },
+    {
+      "dimension": "Test quality",
+      "score": 4,
+      "reason": "24 selected independent adversarial assertions, relevant preserved reds and native delay/race/revoke/overflow/recovery outcomes; no count inflation."
+    },
+    {
+      "dimension": "Completeness",
+      "score": 4,
+      "reason": "Installed worker/context/public delivery paths are usable, current default profile matches, and cleanup/next-task resource retention is explicit."
+    },
+    {
+      "dimension": "Code quality",
+      "score": 4,
+      "reason": "Atomic mutations, typed errors and shared current-reader fences are maintainable; worker/auth/context complexity is a disclosed ongoing maintenance cost."
+    },
+    {
+      "dimension": "Pattern adherence",
+      "score": 4,
+      "reason": "Canonical sources, registered internal/public boundaries, shared native budget policy and additive host preservation follow accepted contracts."
+    }
+  ],
+  "requirements": [
+    {
+      "original": 1,
+      "status": "PASS",
+      "behavior": "Durable extract/facts/vector jobs have separate receipts, current source/policy pins and fresh bounded budgets. Whole-readset belief commits are atomic; current default1536 source/chunk/vector/query matching is genuinely exercised. Managed retrieval remains Task09 and extra profiles Task10.",
+      "evidence": [
+        "draft-recovery-independent1",
+        "belief-atomic-independent3",
+        "delayed-final.json",
+        "real-resolution3-final.json"
+      ]
+    },
+    {
+      "original": 2,
+      "status": "PASS",
+      "behavior": "Source role/trust/event lineage and stage versions are retained; eligible user work starts during response, assistant extraction/facts are skipped by policy, completed assistant/tool work is attributed. Current shared editor billing preserves the original source owner.",
+      "evidence": [
+        "shared-transcript-independent2",
+        "fences-first-outcomes.json",
+        "fences-shared2-final.json"
+      ]
+    },
+    {
+      "original": 3,
+      "status": "PASS",
+      "behavior": "Stage receipts deduplicate; full fact readset CAS, ordered heads/history/outbox and source sequence prevent duplicates and older correction resurrection. Native race decisions are explicitly injected; ordinary real facts.resolve separately commits SUPERSEDE once.",
+      "evidence": [
+        "belief-atomic-independent3",
+        "ordering2-final.json",
+        "real-resolution3-final.json"
+      ]
+    },
+    {
+      "original": 4,
+      "status": "PASS",
+      "behavior": "Scoped facts/vector watermarks stop at earlier holes; bounded authorized pending context excludes future same-thread input and private peers. Strict persisted barriers and both byte/count overflow have explicit outcomes.",
+      "evidence": [
+        "pending-cutoff-independent3",
+        "isolation-replay-independent1",
+        "share-revocation-independent3",
+        "delayed-final.json"
+      ]
+    },
+    {
+      "original": 5,
+      "status": "PASS",
+      "behavior": "Retries are bounded and unknown work is nonretryable without a confirmed draft. Confirmed drafts reconcile without repeated model work, invalid readsets require replan; deletion/revision/grant/policy changes deny late commits. Current-reader cached and derived fences exclude revoked evidence, while response status exposes indexing pending/failed.",
+      "evidence": [
+        "draft-recovery-independent1",
+        "cached-delivery-replay-independent1",
+        "cached-reader-replay-independent2",
+        "fences-first-outcomes.json",
+        "fences-shared2-final.json",
+        "derivative-revoke-final.json"
+      ]
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "original": 1,
+      "status": "PASS",
+      "result": "Genuine response reaches final with extraction held; the next same-thread turn answers the sentinel from approved unprocessed history.",
+      "evidence": [
+        "delayed-final.json",
+        "pending-cutoff-independent3.results.json"
+      ]
+    },
+    {
+      "original": 2,
+      "status": "PASS",
+      "result": "Authorized cross-thread pending context, earlier-hole contiguous cursors, persisted1200ms strict failure before dispatch and explicit oversized-tail/byte overflow are observed.",
+      "evidence": [
+        "delayed-final.json",
+        "isolation-replay-independent1.results.json"
+      ]
+    },
+    {
+      "original": 3,
+      "status": "PASS",
+      "result": "Duplicate/reverse/CAS/delete/running edit cannot recreate obsolete facts. Current revision repair restores eligibility; evidence permission revocation blocks cached text and derived vector delivery.",
+      "evidence": [
+        "ordering2-final.json",
+        "fences-shared2-final.json",
+        "derivative-revoke-final.json",
+        "belief-atomic-independent3.results.json",
+        "draft-recovery-independent1.results.json"
+      ]
+    },
+    {
+      "original": 4,
+      "status": "PASS",
+      "result": "Assistant speculation and cancelled native partial output are excluded from authoritative user fact stages; failures are observable with safe retry/deadletter and no unknown paid retry.",
+      "evidence": [
+        "fences-first-outcomes.json",
+        "delayed-final.json",
+        "draft-recovery-independent1.results.json"
+      ]
+    }
+  ],
+  "requirementsSatisfied": 5,
+  "criteriaSatisfied": 4,
+  "unresolvedBreakingFindings": [],
+  "repairedFindings": [
+    {
+      "id": "P1",
+      "status": "REPAIRED",
+      "finding": "Future queued same-thread pending/indexed content could enter an earlier anchored turn.",
+      "proof": [
+        "pending-cutoff-independent3.results.json"
+      ],
+      "historical": "Original static reachability finding retained; earlier cutoff test setup failures are not claimed as runtime reproductions."
+    },
+    {
+      "id": "P2",
+      "status": "REPAIRED",
+      "finding": "A confirmed saved draft could remain stranded after lease expiry.",
+      "proof": [
+        "draft-recovery-independent1.results.json"
+      ]
+    },
+    {
+      "id": "P3",
+      "status": "REPAIRED",
+      "finding": "Own-only resource grants could read whole-scope diagnostic activity.",
+      "proof": [
+        "draft-recovery-independent1.results.json"
+      ]
+    },
+    {
+      "id": "P4",
+      "status": "REPAIRED",
+      "finding": "An unrelated private source could block authorized pending/indexed context.",
+      "red": [
+        "private-pending-independent1.results.json",
+        "private-indexed-independent1.results.json"
+      ],
+      "proof": [
+        "isolation-replay-independent1.results.json"
+      ]
+    },
+    {
+      "id": "P5",
+      "status": "REPAIRED",
+      "finding": "Cached Agent context did not recheck consumed fact permission when a view/memory share remained.",
+      "red": [
+        "share-revocation-independent1.results.json"
+      ],
+      "proof": [
+        "isolation-replay-independent1.results.json",
+        "share-revocation-independent3.results.json"
+      ]
+    },
+    {
+      "id": "P6",
+      "status": "REPAIRED",
+      "finding": "Completed public transcript/export and assistant vectors could disclose cached revoked evidence.",
+      "red": [
+        "cached-delivery-independent1.results.json",
+        "cached-delivery-independent1.finding.json"
+      ],
+      "proof": [
+        "cached-delivery-replay-independent1.results.json",
+        "cached-reader-replay-independent2.results.json",
+        "derivative-revoke-final.json"
+      ]
+    }
+  ],
+  "candidate": {
+    "sourceBinding": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-product-independent-review1/current-source-binding1.json",
+      "bytes": 7589,
+      "sha256": "0ddf4cc7479a5b7923faddf34318ae4bba05fb3a53625f5e79ebc1b84a53815d"
+    },
+    "sourceDigest": "57bcb6d89b0fc35859917b884d1fe8c6fdf476485340938285d1da00ca88bbe0",
+    "sourceRows": 28,
+    "currentBytesHashesMatch": true,
+    "installedManifestSha256": "a789e1a84d26ac59ded3e42afe2ce12f38e9d3315fc0f3c70446a5c40b2ed0f2",
+    "sdkSha256": "8062ba20a39c3f49882b33545773fd1616a115ee1d66eec4c2db05941d3602b3",
+    "current2Applicability": "Current2 families retain their tested-source identity. Current3 only changes the listed delivery/auth contracts; stage, belief and ordinary Gateway bodies are unchanged. Current3 shared, cached delivery, real resolution and final readback cover affected current routes. Current1 never deployed."
+  },
+  "controlledEvidence": {
+    "authorAssertions": 1199,
+    "authorDistinctDisplayKeys": 1195,
+    "authorSuites": 34,
+    "authorCountBasis": "Final report2; affected652 and56 executions overlap the larger baseline and are not added as independent cases.",
+    "authorReport": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/controlled-source-report2.json",
+      "bytes": 36665,
+      "sha256": "c487eae3cd32694762767e15a6525d7ab3c37dad64502aa182e95ae7c598ee2a"
+    },
+    "independentSelectedUniqueAssertions": 24,
+    "checks": [
+      {
+        "id": "pending-cutoff-independent3",
+        "selectedPassingCases": [
+          "later queued same-thread input is excluded from an earlier turn's pending context",
+          "authorized older cross-thread pending source remains included",
+          "fast indexed future same-thread source is excluded by the same captured boundary"
+        ],
+        "selectedPassCount": 3,
+        "recordedAggregatePass": 3,
+        "recordedAggregateFail": 0,
+        "raw": {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-product-independent-review1/pending-cutoff-independent3.results.json",
+          "bytes": 2086,
+          "sha256": "86cab9ddfe5d1b7155f6124c1bddedc02303932d895cae37c59a4bd013972743"
+        },
+        "command": {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-product-independent-review1/pending-cutoff-independent3.command.json",
+          "bytes": 3234,
+          "sha256": "863445b3849ab81541cf3e1288da79f966a30ce028f09f8e1de003fb55c6b206"
+        },
+        "sourceStable": true,
+        "exit": 0,
+        "reaped": true,
+        "elapsedSeconds": 4.654769291984849,
+        "note": "Recorded stable source interval; unchanged assertions reused without a repeated whole-batch gate."
+      },
+      {
+        "id": "draft-recovery-independent1",
+        "selectedPassingCases": [
+          "confirmed facts draft recovers after expiry exactly once, without a new operation or model attempt",
+          "confirmed default1536 vector draft recovers after expiry once and cannot create duplicate chunks/vectors",
+          "changed consumed fact produces observable REPLAN_REQUIRED without a partial receipt/head/history/outbox",
+          "tombstone invalidation denies saved-draft recovery before any effect",
+          "revision invalidation denies saved-draft recovery before any effect",
+          "grant invalidation denies saved-draft recovery before any effect",
+          "policy invalidation denies saved-draft recovery before any effect",
+          "unknown without a confirmed facts draft cannot be reconciled or silently requeued",
+          "space editor can repair a different owner's source without transferring ownership or misbinding the extract parent",
+          "own-only admin cannot enqueue another owner's source or read whole-scope diagnostic activity"
+        ],
+        "selectedPassCount": 10,
+        "recordedAggregatePass": 10,
+        "recordedAggregateFail": 0,
+        "raw": {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-product-independent-review1/draft-recovery-independent1.results.json",
+          "bytes": 5113,
+          "sha256": "5e88d29a61c485faa1132b53935cfae6e7f72ab15a5cdf41c1d391fdeda1f72e"
+        },
+        "command": {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-product-independent-review1/draft-recovery-independent1.command.json",
+          "bytes": 4495,
+          "sha256": "5f939adfe038f3ead6dea287231332eccbc65863ea364c78fa28e504cf203b03"
+        },
+        "sourceStable": true,
+        "exit": 0,
+        "reaped": true,
+        "elapsedSeconds": 6.008806083991658,
+        "note": "Recorded stable source interval; unchanged assertions reused without a repeated whole-batch gate."
+      },
+      {
+        "id": "belief-atomic-independent3",
+        "selectedPassingCases": [
+          "current ADD commits one receipt/head/history/outbox and duplicate job cannot duplicate it",
+          "concurrent consumed-fact version change rejects the entire belief commit without partial receipt/history/outbox",
+          "older source completing after newer correction cannot supersede the newer head even after replanning from its current readset"
+        ],
+        "selectedPassCount": 3,
+        "recordedAggregatePass": 3,
+        "recordedAggregateFail": 0,
+        "raw": {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-product-independent-review1/belief-atomic-independent3.results.json",
+          "bytes": 2291,
+          "sha256": "038e5688f2c3893aa824671c471195f28d8995f351b7b18734d2b1c8a5238961"
+        },
+        "command": {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-product-independent-review1/belief-atomic-independent3.command.json",
+          "bytes": 6520,
+          "sha256": "859a71759cbeae0c11298b838f5f757fda9eaa268ae133efe7718cf83436c974"
+        },
+        "sourceStable": true,
+        "exit": 0,
+        "reaped": true,
+        "elapsedSeconds": 5.398826165997889,
+        "note": "Recorded stable source interval; unchanged assertions reused without a repeated whole-batch gate."
+      },
+      {
+        "id": "shared-transcript-independent2",
+        "selectedPassingCases": [
+          "registered shared edit with a current space grant repairs indexing even after the original owner's grant is revoked",
+          "registered foreign own-only edit is denied before native/source/revision/event changes"
+        ],
+        "selectedPassCount": 2,
+        "recordedAggregatePass": 2,
+        "recordedAggregateFail": 0,
+        "raw": {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-product-independent-review1/shared-transcript-independent2.results.json",
+          "bytes": 1796,
+          "sha256": "a5a054bde2bddfcacac659c655e5f03af76d7d50bbf9b74c6df68c3bd8089884"
+        },
+        "command": {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-product-independent-review1/shared-transcript-independent2.command.json",
+          "bytes": 4499,
+          "sha256": "d5b45c9c36f2c162edeb7b233e54cbdb3938dbdffda4065dd85fd9fa7f91fdad"
+        },
+        "sourceStable": true,
+        "exit": 0,
+        "reaped": true,
+        "elapsedSeconds": 5.265809709002497,
+        "note": "Recorded stable source interval; unchanged assertions reused without a repeated whole-batch gate."
+      },
+      {
+        "id": "isolation-replay-independent1",
+        "selectedPassingCases": [
+          "revoking fact access fences cached derived Agent context even when an independent view-only share remains",
+          "indexed facts from an unshared private conversation are excluded without blocking the authorized scope reader",
+          "another unshared private conversation cannot block an authorized space reader's own pending context"
+        ],
+        "selectedPassCount": 3,
+        "recordedAggregatePass": 3,
+        "recordedAggregateFail": 0,
+        "raw": {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-product-independent-review1/isolation-replay-independent1.results.json",
+          "bytes": 2946,
+          "sha256": "8b7dfbd17363bea279b2e62642803960a271f093452e3028f3e6a46d35377659"
+        },
+        "command": {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-product-independent-review1/isolation-replay-independent1.command.json",
+          "bytes": 6530,
+          "sha256": "80fcc7f08da703eb2354e949f083995a0186bffd1de651ab6f5cf90eab0e060d"
+        },
+        "sourceStable": true,
+        "exit": 0,
+        "reaped": true,
+        "elapsedSeconds": 6.4641233749862295,
+        "note": "Recorded stable source interval; unchanged assertions reused without a repeated whole-batch gate."
+      },
+      {
+        "id": "share-revocation-independent3",
+        "selectedPassingCases": [
+          "memory-only pending context remains usable until its consumed memory permission is revoked"
+        ],
+        "selectedPassCount": 1,
+        "recordedAggregatePass": 1,
+        "recordedAggregateFail": 0,
+        "raw": {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-product-independent-review1/share-revocation-independent3.results.json",
+          "bytes": 1322,
+          "sha256": "038dc5bf042810a5a7215bf9064f57be1bdbe043cff233a21996b2b54d5b489d"
+        },
+        "command": {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-product-independent-review1/share-revocation-independent3.command.json",
+          "bytes": 6534,
+          "sha256": "d8d0893098bba5d75f06784d27aa5c2cea68300302560307f66c268d487d3c80"
+        },
+        "sourceStable": true,
+        "exit": 0,
+        "reaped": true,
+        "elapsedSeconds": 6.043290207977407,
+        "note": "Recorded stable source interval; unchanged assertions reused without a repeated whole-batch gate."
+      },
+      {
+        "id": "cached-delivery-replay-independent1",
+        "selectedPassingCases": [
+          "selective evidence revocation fences completed durable output, public transcript/export and assistant vectors"
+        ],
+        "selectedPassCount": 1,
+        "recordedAggregatePass": 1,
+        "recordedAggregateFail": 1,
+        "raw": {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-product-independent-review1/cached-delivery-replay-independent1.results.json",
+          "bytes": 5528,
+          "sha256": "3311c4835b6cd9ede6beff4b1db2f5406c72f1e925e24838280212fa9fe32881"
+        },
+        "command": {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-product-independent-review1/cached-delivery-replay-independent1.command.json",
+          "bytes": 6537,
+          "sha256": "afa453618b9932c757e3c900ea489c73fdd6d0a76db44dfe45a4ad3b3cd7b25f"
+        },
+        "sourceStable": true,
+        "exit": 1,
+        "reaped": true,
+        "elapsedSeconds": 7.20944195901393,
+        "note": "The aggregate contains one own fixture setup failure; the owner-revoke case passed here and the separate-reader case passed in cached-reader-replay-independent2."
+      },
+      {
+        "id": "cached-reader-replay-independent2",
+        "selectedPassingCases": [
+          "delivery fences use the actual reader, not the still-authorized cached-output owner"
+        ],
+        "selectedPassCount": 1,
+        "recordedAggregatePass": 1,
+        "recordedAggregateFail": 0,
+        "raw": {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-product-independent-review1/cached-reader-replay-independent2.results.json",
+          "bytes": 1316,
+          "sha256": "fecbd58ee5347c519b800bcb2c16a72ef94b34bf78f70eaad46a547145ab4a55"
+        },
+        "command": {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-product-independent-review1/cached-reader-replay-independent2.command.json",
+          "bytes": 6536,
+          "sha256": "519528693b5b280ccbbacf499d02bb4b2a206822593ea7a11d416141f0ad8e23"
+        },
+        "sourceStable": true,
+        "exit": 0,
+        "reaped": true,
+        "elapsedSeconds": 6.445078499993542,
+        "note": "Recorded stable source interval; unchanged assertions reused without a repeated whole-batch gate."
+      }
+    ],
+    "claim": "Selected controls passed in their recorded stable source intervals. This does not relabel any aggregate failed command PASS or claim all24 executed against one byte interval."
+  },
+  "nativeEvidence": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/native-actual/report-final1.json",
+      "bytes": 16756,
+      "sha256": "62f3a842229f17462803da1df8f9fea19163077be112b5cb9064f7b9b3a7790b"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/native-actual/report-final1.md",
+      "bytes": 4517,
+      "sha256": "c7d84377e52796f794110c926f0455edf6018680a17d76d7c7d6729ff724a777"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/native-actual/receipt-index-final1.json",
+      "bytes": 23250,
+      "sha256": "59406205bccd7f7d70dc4af8bf1253eade26e51848c441e22d42b50eeb12fa67"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/native-actual/installed-task08-source-manifest3.json",
+      "bytes": 15198,
+      "sha256": "4b554deb4b11e43fd9e6f9c4108c7ca0f21d5ef2ccbfaf3e08df6fa89b573a91"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/native-actual/delayed-final.json",
+      "bytes": 12844,
+      "sha256": "2922a6ebfab6a99d9afacac0f99b4a26823377eaa85363eb51be9a61215ca2c1"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/native-actual/ordering2-final.json",
+      "bytes": 3625,
+      "sha256": "4dba12e0cf3e520d7cb2c11bc6a6e52f5b430b1c233eb1d094529748d3443295"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/native-actual/fences-first-outcomes.json",
+      "bytes": 5080,
+      "sha256": "a7eb569c1d9ec420b3ac65346ab78215ba5ed303373ecf9e6ecb0d3784521411"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/native-actual/fences-shared2-final.json",
+      "bytes": 5184,
+      "sha256": "692a8847b055ca293f2a4e6db29192a5fcd6de2d10c93f142f6e21facb87fa4c"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/native-actual/derivative-revoke-final.json",
+      "bytes": 6626,
+      "sha256": "a3c01504bbca43c73d51618244e777ea1fcf0ac727ccacfd61ffd96c7cd0f98b"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/native-actual/real-resolution3-final.json",
+      "bytes": 1508,
+      "sha256": "7384f59f2170bd6598e5e5371faee0eb3a982014ddfddd4c0dfdb4f467a3be7e"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/native-actual/real-resolution3-native-state.json",
+      "bytes": 2716618,
+      "sha256": "6b5d57fed67012784a8139e5aa5cda2962cbbd9dd38cb916ea2756a731a7755e"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/native-actual/owned08-post-cleanup-state.json",
+      "bytes": 2661453,
+      "sha256": "57c5cb88d299318b713047eb50eccbdb4a16b4a97daac876905ab2c7c9e8171b"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/native-actual/owned08-cleanup-calls.json",
+      "bytes": 30336,
+      "sha256": "0a924aaea0a8621ae31e10eda76a088e4ff625be5fd175d77b2d5e69f1c9aaed"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/native-actual/owned08-client-cleanup.json",
+      "bytes": 62,
+      "sha256": "c8378e901ef70d515bd2123196ebfa573e9686ef5068ae75caa0770f43026ee2"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/native-actual/final-client-cleanup.json",
+      "bytes": 41,
+      "sha256": "cd4d0a6e6ae8d2386f731161e6c7e0db9fadac65b8f98f5b291dd4bcf80f7eea"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/native-actual/final-host-and-ledger-readback.json",
+      "bytes": 16733,
+      "sha256": "83d016205ca3cb5b6631fd39cf38aa5635227580762d47f57e99f623ce3fba8b"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/native-actual/retained-for-task09.json",
+      "bytes": 2987,
+      "sha256": "a1aea2042c93127bb55f7580f0c35181fca8f6fd3e4d77c3cd4d27f682b50552"
+    }
+  ],
+  "nativeInterpretation": {
+    "orderingDecisions": "Explicit injected native decisions/concurrent writer for race assertions, with genuine extraction; not claimed as real provider decisions.",
+    "ordinaryResolution": "Separate genuine production processStageHandler facts.resolve: exact extraction parent, one paid child, no injected decisions, SUPERSEDE/history/outbox/default1536 vector.",
+    "ordinaryResolutionUsage": {
+      "inputTokens": 1645,
+      "outputTokens": 96,
+      "totalTokens": 1741
+    },
+    "cachedScenario": "One genuine saved-output/default1536-vector scenario with four read-surface checks, not four executions.",
+    "cost": "All26 attempts keep100000microUSD each as uncertain; total2600000, slots all released, no paid repetition of a completed result."
+  },
+  "cleanup": {
+    "owned08RunsNonterminal": 0,
+    "activeModelSlots": 0,
+    "runningStages": 0,
+    "heldRowsRemaining": 0,
+    "eventsRetired": 58,
+    "sourceIdsCovered": 55,
+    "scopedGrantsRevoked": 10,
+    "paidAttemptsBefore": 26,
+    "paidAttemptsAfter": 26,
+    "liabilitiesRetained": true,
+    "ownedClientsAndRecordedChildrenClosed": true,
+    "unrelatedHostPreserved": true,
+    "target": {
+      "projectId": 3173328,
+      "deployment": "vivid-warbler-703",
+      "status": "RETAINED_OWNED_NOT_RETIRED",
+      "purpose": "Authorized Task09 on a new tenant",
+      "privateResources": "Metadata-only receipt;0700 directory/four0600 files; reviewer did not read credentials.",
+      "finalGoalRetirementOpen": true
+    },
+    "physicalPurgeClaim": false,
+    "note": "Historical sources/jobs/receipts remain. Retired events and revoked grants make old08 work inert; no claim that every source/account/stage row was physically deleted or terminal."
+  },
+  "preservedFailures": {
+    "native": [
+      {
+        "receipt": "ordering-first-fixture-failure1.json",
+        "kind": "actual provider semantic mismatch",
+        "result": "Different normalized subjects; no fact commits and no paid identical retry. Clearer distinct new inputs used."
+      },
+      {
+        "receipt": "fences-first-fixture-failure1.json",
+        "kind": "QA native argument projection",
+        "result": "Provision authority included forbidden reference fields; strict validator remained; successor projects exact10-key reference."
+      },
+      {
+        "receipt": "real-resolution-first-fixture-failure1.json",
+        "kind": "unpaid QA prerequisite",
+        "result": "Expected predicate did not match preserved native belief; no source mutation/model dispatch before denial."
+      },
+      {
+        "receipt": "real-resolution2-cost-state-fixture-failure1.json",
+        "kind": "QA cost-state oracle",
+        "result": "Finished expectation was invalid for intentionally unavailable cost; same completed paid operation verified read-only, not repeated."
+      },
+      {
+        "receipt": "deploy-cleanup-helper1.json",
+        "kind": "QA cleanup helper type/index mismatch",
+        "result": "Enabled typecheck denied nonexistent composite index; exact filtered cleanup successor deployed normally, product source unchanged."
+      },
+      {
+        "kind": "product cached derivative leak",
+        "result": "Current2 actual and independent selective-share delivery leak was repaired in current3; genuine cached text/vector read surfaces deny after revoke. Earlier current2 source/receipts remain scoped and immutable."
+      }
+    ],
+    "reviewer": "All original genuine red receipts, source-unstable first belief run, failed setup/route/share/grantedBy/config attempts and own dispositions remain unchanged. Cached combined replay retains its1PASS/1setupFAIL; separate reader successor passes."
+  },
+  "limitations": [
+    "Task08 acceptance only; Task09 managed retrieval/browser client, Task10 additional profiles, graph/media/extensions/final audit and all full-goal outcomes remain open.",
+    "No mathematical proof of all undiscovered defects or all provider cost completeness.",
+    "Bounded source-ancestry traversal can return typed unavailable for oversized/cyclic histories; no current original criterion is silently waived.",
+    "Maintainability of the larger shared worker/auth/context surface merits later focused refactoring; no unresolved breaking finding."
+  ],
+  "authority": {
+    "task08Accepted": true,
+    "fullGoalAccepted": false,
+    "task09Accepted": false,
+    "sourceCustodyCertification": false,
+    "retiredHarnessHistoryRelabeled": false
+  }
+}

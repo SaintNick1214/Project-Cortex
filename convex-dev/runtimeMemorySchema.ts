@@ -1,6 +1,7 @@
 /** Fresh logical source/chunk/vector stores; no legacy vector adoption. */
 import { defineTable } from "convex/server";
 import { v } from "convex/values";
+import { contextSourceWitness } from "./runtimeContextWitnessSchema";
 
 export const sourceReference = { sourceId: v.string(), sourceEventId: v.string(), sourceRevision: v.number() };
 export const sourceLineage = v.union(
@@ -16,6 +17,7 @@ export const sourceContent = v.object({
   tenantId: v.string(), memorySpaceId: v.string(), ownerPrincipalId: v.string(),
   lineage: sourceLineage, content: v.string(), contentHash: v.string(), createdAt: v.number(),
   tombstonedAt: v.optional(v.number()),
+  contextSourceWitnesses: v.optional(v.array(contextSourceWitness)),
   transcriptOrigin: v.optional(v.object({ conversationId: v.string(), conversationEpoch: v.number(), nativeMessageId: v.string() })),
 });
 export const sourceChunk = v.object({

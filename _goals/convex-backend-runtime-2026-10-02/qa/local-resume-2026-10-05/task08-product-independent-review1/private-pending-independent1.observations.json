@@ -1,0 +1,28 @@
+[
+  {
+    "case": "private-neighbor-isolation",
+    "reference": {
+      "principalId": "runtimeAuthPrincipals:28",
+      "principalVersion": 1,
+      "membershipId": "runtimeAuthMemberships:29",
+      "membershipVersion": 1,
+      "grantId": "runtimeAuthGrants:30",
+      "grantVersion": 1,
+      "tenantId": "tenant-a",
+      "tenantEpoch": 1,
+      "memorySpaceId": "space-a",
+      "memorySpaceEpoch": 1
+    },
+    "ownedRun": "run:cee57ba5c6c4877d259ca9b380485767592de6792cc51eb8f99da4ad16469641",
+    "foreignRun": "run:d97b0640cd3c972ef42580fd744832a3dbc38bbc5f1cc473d9cda6188f0d8c40",
+    "ownSource": "transcript:conversation:cee57ba5c6c4877d259ca9b380485767592de6792cc51eb8f99da4ad16469641:native:4",
+    "foreignSource": "transcript:conversation:d97b0640cd3c972ef42580fd744832a3dbc38bbc5f1cc473d9cda6188f0d8c40:native:2",
+    "errorData": {
+      "version": 1,
+      "code": "FORBIDDEN",
+      "message": "Access denied",
+      "retryable": false,
+      "outcome": "not_dispatched"
+    }
+  }
+]

@@ -44,7 +44,7 @@ async function started(f: F) {
   const run = await f.run(); await f.call(runtime.start, { runId: run.runId });
   const row = f.db.table("runtimeRuns")[0], owned = f.db.table("runtimeAgentExecutions")[0];
   const args = { reference: f.reference, runId: run.runId, attemptNumber: row.attemptNumber as number, leaseVersion: owned.leaseVersion as number };
-  await f.call(runtime.saveContext, { ...args, context: "private memory context SENTINEL", witnesses: [] });
+  await f.call(runtime.saveContext, { ...args, context: "private memory context SENTINEL", witnesses: [], completeness: "complete" });
   return { run, args, owned };
 }
 async function savedFinal(f: F, args: Awaited<ReturnType<typeof started>>["args"], text = "public final") {
@@ -66,7 +66,7 @@ async function approvalWait(shortLease = false) {
   const run = await f.call<{ runId: string; conversationId: string }>(runs.submit, { request: request("waiting") });
   await f.call(runtime.start, { runId: run.runId }); const owned = f.db.table("runtimeAgentExecutions")[0];
   const args = { reference: f.reference, runId: run.runId, attemptNumber: 1, leaseVersion: owned.leaseVersion as number };
-  await f.call(runtime.saveContext, { ...args, context: "", witnesses: [] });
+  await f.call(runtime.saveContext, { ...args, context: "", witnesses: [], completeness: "complete" });
   const requestCanonical = f.canonical({ text: "Approved tool evidence" });
   const op = await f.call<{ operationId: string }>(runtime.beginOperation, { ...args, kind: "tool", ordinal: 0, toolCallId: "expiring-call", toolName: "memory_remember", requestCanonical });
   const outbox = f.db.table("runtimeRunOutbox")[0]; if (shortLease) outbox.leaseExpiresAt = Date.now() + 5;
@@ -248,14 +248,21 @@ describe("durable Agent execution product boundaries", () => {
     f.db.table("runtimeAgentDefinitions")[0].definitionCanonical = "{}";
     await expect(f.call(runtime.startContext, args)).rejects.toThrow(); expect(f.db.table("runtimeAgentOperations")).toEqual([]);
   });
-  it("a valid strict definition with missing Task08 stages fails before its embedding dispatch", async () => {
+  it("strict facts barrier waits and then reports the pinned deadline before embedding dispatch", async () => {
     const f = await fixture(); const published = await f.call<{ agentId: string; version: number }>(definitions.publishVersion, {
       memorySpaceId: "space-a", clientMutationId: "strict", expectedPreviousVersion: 0,
-      definitionInput: { ...f.definitionInput, context: { ...f.definitionInput.context, memoryMode: "strict", requiredStages: ["facts"] } } });
+      definitionInput: { ...f.definitionInput, context: { ...f.definitionInput.context, memoryMode: "strict", requiredStages: ["facts"], barrier: { deadlineMs: 100, onFailure: "fail" } } } });
     const run = await f.call<{ runId: string }>(runs.submit, { request: { ...f.request("strict-input"), agentId: published.agentId, agentVersion: published.version } });
     await f.call(runtime.start, { runId: run.runId }); const owned = f.db.table("runtimeAgentExecutions")[0];
-    await expect(f.call(runtime.startContext, { reference: f.reference, runId: run.runId, attemptNumber: 1, leaseVersion: owned.leaseVersion })).rejects.toThrow("CONTEXT_NOT_READY");
-    expect(owned.contextState).toBeUndefined(); expect(f.db.table("runtimeModelOperations")).toEqual([]);
+    const args = { reference: f.reference, runId: run.runId, attemptNumber: 1, leaseVersion: owned.leaseVersion };
+    await f.call(runtime.startContext, args);
+    expect(await f.call(runtime.contextBarrier, args)).toMatchObject({ state: "waiting", remainingMs: 100 });
+    jest.mocked(Date.now).mockReturnValue(Date.now() + 101);
+    expect(await f.call(runtime.contextBarrier, args)).toMatchObject({ state: "failed", failureCode: "MEMORY_BARRIER_TIMEOUT" });
+    await f.call(runtime.failContext, { ...args, failureCode: "MEMORY_BARRIER_TIMEOUT" });
+    await f.call(runtime.endInterrupted, { ...args, cancelled: false });
+    expect(f.db.table("runtimeRuns")[0]).toMatchObject({ responseStatus: "failed", contextCompleteness: "incomplete", failureCode: "MEMORY_BARRIER_TIMEOUT" });
+    expect(f.db.table("runtimeModelOperations")).toEqual([]);
   });
   it("explicit tool approval requires the current scoped admin, exact request hash and pinned history; resumes one durable event", async () => {
     installMockRoot({ tools: true }); const f = await fixture(); f.grant.capabilities = [...f.grant.capabilities as string[], "tool"];
@@ -265,7 +272,7 @@ describe("durable Agent execution product boundaries", () => {
     const run = await f.call<{ runId: string }>(runs.submit, { request: { ...f.request("tool-input"), agentId: published.agentId, agentVersion: published.version } });
     await f.call(runtime.start, { runId: run.runId }); const owned = f.db.table("runtimeAgentExecutions")[0];
     const args = { reference: f.reference, runId: run.runId, attemptNumber: 1, leaseVersion: owned.leaseVersion as number };
-    await f.call(runtime.saveContext, { ...args, context: "", witnesses: [] });
+    await f.call(runtime.saveContext, { ...args, context: "", witnesses: [], completeness: "complete" });
     const requestCanonical = f.canonical({ text: "Remember controlled text" });
     const op = await f.call<{ operationId: string; state: string }>(runtime.beginOperation, { ...args, kind: "tool", ordinal: 0, toolCallId: "tc", toolName: "memory_remember", requestCanonical });
     expect(op.state).toBe("waiting_approval"); await f.call(runtime.waitForApproval, { ...args, operationId: op.operationId });
@@ -430,7 +437,7 @@ describe("durable Agent execution product boundaries", () => {
       const name = getFunctionName(ref as never); actions.push({ name, ordinal: args.ordinal as number | undefined, retry: options.retry });
       return name === "runtimeAgent:modelStep" ? args.ordinal === 0 ? { savedMessageIds: ["call"], calls: [{ toolCallId: "tc", toolName: "memory_remember", inputCanonical: '{"text":"remember"}' }], final: false }
         : { savedMessageIds: ["final"], calls: [], final: true } : null;
-    }, runMutation: async (ref: unknown, args: unknown) => { const name = getFunctionName(ref as never); if (name === "runtimeAgent:finalize") finals.push(args); return { state: "waiting_approval", operationId: "owned-tool" }; },
+    }, runMutation: async (ref: unknown, args: unknown) => { const name = getFunctionName(ref as never); if (name === "runtimeAgent:finalize") finals.push(args); if (name === "runtimeAgent:contextBarrier") return { state: "ready", remainingMs: 0 }; return { state: "waiting_approval", operationId: "owned-tool" }; },
     awaitEvent: async (args: unknown) => { waits.push(args); return "approved"; } };
     const handler = (runtime.executeTurn as unknown as { _handler: (step: unknown, args: unknown) => Promise<null> })._handler;
     expect(await handler(step, { reference: {}, runId: "r", attemptNumber: 1, leaseVersion: 1 })).toBeNull();
@@ -446,7 +453,11 @@ describe("durable Agent execution product boundaries", () => {
     const run = await f.call<{ runId: string }>(runs.submit, { request: { ...f.request("atomic-input"), agentId: published.agentId, agentVersion: published.version } });
     await f.call(runtime.start, { runId: run.runId }); const owned = f.db.table("runtimeAgentExecutions")[0];
     const args = { reference: f.reference, runId: run.runId, attemptNumber: 1, leaseVersion: owned.leaseVersion as number };
-    await f.call(runtime.saveContext, { ...args, context: "", witnesses: [] });
+    const originalSource = f.db.table("runtimeMemorySources")[0];
+    const lineage = originalSource.lineage as { sourceId: string; sourceEventId: string; sourceRevision: number };
+    const initialWitnesses = [{ sourceId: lineage.sourceId, sourceEventId: lineage.sourceEventId, sourceRevision: lineage.sourceRevision,
+      contentHash: originalSource.contentHash, permissions: ["canViewFacts"] }];
+    await f.call(runtime.saveContext, { ...args, context: "", witnesses: initialWitnesses, completeness: "complete" });
     const op = await f.call<{ operationId: string }>(runtime.beginOperation, { ...args, kind: "tool", ordinal: 0, toolCallId: "tc", toolName: "memory_remember", requestCanonical: f.canonical({ text: "controlled write" }) });
     await f.call(runtime.startOperation, { ...args, operationId: op.operationId }); await f.call(runtime.checkActiveTool, { ...args, operationId: op.operationId });
     const oldUserLineage = await prepareSourceContent(memoryScope(f.reference), explicitSourceLineage(memoryScope(f.reference), op.operationId), "controlled write", { now: () => Date.now() });
@@ -456,6 +467,14 @@ describe("durable Agent execution product boundaries", () => {
     const prepared = await prepareSourceContent(memoryScope(f.reference), tools.serverToolSourceLineage(memoryScope(f.reference), op.operationId), "controlled write", { now: () => Date.now() });
     expect(prepared.source.lineage).toEqual({ ...oldUserLineage.source.lineage, role: "tool", trust: "verified_tool_evidence", operationId: op.operationId });
     expect(await f.call(runtime.writeToolSource, { ...args, operationId: op.operationId, source: prepared.source })).toMatchObject({ created: true });
+    const stored = f.db.table("runtimeMemorySources").find(source => (source.lineage as { sourceId: string }).sourceId === prepared.source.lineage.sourceId)!;
+    expect(stored.contextSourceWitnesses).toEqual(initialWitnesses);
+    // A later execution witness expansion must not mutate this source's captured ancestry or create a self-cycle.
+    const laterExecution = f.db.table("runtimeAgentExecutions").find(execution => execution.runId === run.runId)!;
+    (laterExecution.sourceWitnesses as unknown[]).push({ sourceId: prepared.source.lineage.sourceId, sourceEventId: prepared.source.lineage.sourceEventId,
+      sourceRevision: prepared.source.lineage.sourceRevision, contentHash: prepared.source.contentHash, permissions: ["canViewMemories"] });
+    expect(stored.contextSourceWitnesses).toEqual(initialWitnesses);
+    expect(await f.call(memory.readSource, { reference: f.reference, capability: "write", sourceId: prepared.source.lineage.sourceId })).toMatchObject({ contextSourceWitnesses: initialWitnesses });
     const before = f.db.table("runtimeMemorySources").length; await f.call(runtime.cancel, { runId: run.runId });
     await expect(f.call(runtime.writeToolSource, { ...args, operationId: op.operationId, source: prepared.source })).rejects.toThrow(); expect(f.db.table("runtimeMemorySources")).toHaveLength(before);
   });

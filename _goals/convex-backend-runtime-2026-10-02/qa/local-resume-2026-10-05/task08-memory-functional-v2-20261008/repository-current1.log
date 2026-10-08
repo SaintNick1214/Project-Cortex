@@ -1,0 +1,138 @@
+(node:91472) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeMemory/repository.test.ts
+  scoped Convex memory persistence
+    ✓ selects actual canonical source in trusted tenant/space despite a foreign duplicate ID inserted first (3 ms)
+    ✓ checks actual normalized content SHA-256 rather than trusting supplied same-hash metadata (1 ms)
+    ✓ rejects same-event aliases and cannot overwrite a canonical source on content hash collision
+    ✓ rejects source tenantId forgery before writes (1 ms)
+    ✓ rejects source memorySpaceId forgery before writes
+    ✓ rejects source ownerPrincipalId forgery before writes (1 ms)
+    ✓ commits source-derived chunk/vector/fact and one receipt atomically and idempotently (2 ms)
+    ✓ compares receipt canonical payload on reuse instead of accepting just its hash (1 ms)
+    ✓ rejects canonical identity collision when distinct source IDs share the receipt digest tuple (1 ms)
+    ✓ rejects changed sourceRevision on a delayed commit
+    ✓ rejects changed sourceEventId on a delayed commit (1 ms)
+    ✓ fences source row deletion before reads and commits
+    ✓ fences source scoped-control deletion before reads and commits
+    ✓ fences source tenant-control deletion before reads and commits
+    ✓ checks every conflict candidate CAS and rolls back the full registered mutation on mismatch (1 ms)
+    ✓ requires expected version for new and updated facts (1 ms)
+    ✓ rejects noncanonical chunk window before writes (1 ms)
+    ✓ rejects noncanonical chunk hash before writes (1 ms)
+    ✓ rejects noncanonical chunk profile before writes
+    ✓ rejects noncanonical chunk duplicate before writes (1 ms)
+    ✓ rejects assistant-derived facts regardless of supplied fact role/trust (1 ms)
+    ✓ reads current facts from the authoritative store and excludes other owners/missing lineage/stale source (1 ms)
+    ✓ excludes a tombstoned fact from derived recall (1 ms)
+    ✓ excludes a tombstoned source from derived recall (2 ms)
+    ✓ uses injected clock for temporal validity (3 ms)
+    ✓ post-filters actual vector candidate with invalid revision (2 ms)
+    ✓ post-filters actual vector candidate with invalid profile (1 ms)
+    ✓ post-filters actual vector candidate with invalid owner (1 ms)
+    ✓ post-filters actual vector candidate with invalid tenant (1 ms)
+    ✓ post-filters actual vector candidate with invalid space (1 ms)
+    ✓ post-filters actual vector candidate with invalid missing-receipt (1 ms)
+    ✓ exact vector prefilter prevents foreign tenant/profile/owner candidates consuming top-k slots (1 ms)
+    ✓ space-sharing uses exact scope/profile prefilter while retaining explicit owner checks (1 ms)
+    ✓ rejects incompatible queries before search and revoked refs before any result (5 ms)
+  memory capability separation and bounded selection
+    ✓ does not grant list/search read permission to a write-only repository (1 ms)
+    ✓ filters actual owner/subject/type before bounded take so unrelated rows cannot starve a narrow read (1 ms)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     2.0s | 36/36 passed | /tests/unit/runtimeMemory/repository.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.01s ( 0.2%) - scoped Convex memory persistence rejects incompatible queries before search and revoked refs before any result
+    /tests/unit/runtimeMemory/repository.test.ts
+
+ 2. [32m✓[0m    0.00s ( 0.1%) - scoped Convex memory persistence selects actual canonical source in trusted tenant/space despite a foreign duplicate ID inserted first
+    /tests/unit/runtimeMemory/repository.test.ts
+
+ 3. [32m✓[0m    0.00s ( 0.1%) - scoped Convex memory persistence uses injected clock for temporal validity
+    /tests/unit/runtimeMemory/repository.test.ts
+
+ 4. [32m✓[0m    0.00s ( 0.1%) - scoped Convex memory persistence commits source-derived chunk/vector/fact and one receipt atomically and idempotently
+    /tests/unit/runtimeMemory/repository.test.ts
+
+ 5. [32m✓[0m    0.00s ( 0.1%) - scoped Convex memory persistence excludes a tombstoned source from derived recall
+    /tests/unit/runtimeMemory/repository.test.ts
+
+ 6. [32m✓[0m    0.00s ( 0.1%) - scoped Convex memory persistence post-filters actual vector candidate with invalid revision
+    /tests/unit/runtimeMemory/repository.test.ts
+
+ 7. [32m✓[0m    0.00s ( 0.0%) - scoped Convex memory persistence checks actual normalized content SHA-256 rather than trusting supplied same-hash metadata
+    /tests/unit/runtimeMemory/repository.test.ts
+
+ 8. [32m✓[0m    0.00s ( 0.0%) - scoped Convex memory persistence rejects source tenantId forgery before writes
+    /tests/unit/runtimeMemory/repository.test.ts
+
+ 9. [32m✓[0m    0.00s ( 0.0%) - scoped Convex memory persistence rejects source ownerPrincipalId forgery before writes
+    /tests/unit/runtimeMemory/repository.test.ts
+
+10. [32m✓[0m    0.00s ( 0.0%) - scoped Convex memory persistence compares receipt canonical payload on reuse instead of accepting just its hash
+    /tests/unit/runtimeMemory/repository.test.ts
+
+11. [32m✓[0m    0.00s ( 0.0%) - scoped Convex memory persistence rejects canonical identity collision when distinct source IDs share the receipt digest tuple
+    /tests/unit/runtimeMemory/repository.test.ts
+
+12. [32m✓[0m    0.00s ( 0.0%) - scoped Convex memory persistence rejects changed sourceEventId on a delayed commit
+    /tests/unit/runtimeMemory/repository.test.ts
+
+13. [32m✓[0m    0.00s ( 0.0%) - scoped Convex memory persistence checks every conflict candidate CAS and rolls back the full registered mutation on mismatch
+    /tests/unit/runtimeMemory/repository.test.ts
+
+14. [32m✓[0m    0.00s ( 0.0%) - scoped Convex memory persistence requires expected version for new and updated facts
+    /tests/unit/runtimeMemory/repository.test.ts
+
+15. [32m✓[0m    0.00s ( 0.0%) - scoped Convex memory persistence rejects noncanonical chunk window before writes
+    /tests/unit/runtimeMemory/repository.test.ts
+
+16. [32m✓[0m    0.00s ( 0.0%) - scoped Convex memory persistence rejects noncanonical chunk hash before writes
+    /tests/unit/runtimeMemory/repository.test.ts
+
+17. [32m✓[0m    0.00s ( 0.0%) - scoped Convex memory persistence rejects noncanonical chunk duplicate before writes
+    /tests/unit/runtimeMemory/repository.test.ts
+
+18. [32m✓[0m    0.00s ( 0.0%) - scoped Convex memory persistence rejects assistant-derived facts regardless of supplied fact role/trust
+    /tests/unit/runtimeMemory/repository.test.ts
+
+19. [32m✓[0m    0.00s ( 0.0%) - scoped Convex memory persistence reads current facts from the authoritative store and excludes other owners/missing lineage/stale source
+    /tests/unit/runtimeMemory/repository.test.ts
+
+20. [32m✓[0m    0.00s ( 0.0%) - scoped Convex memory persistence excludes a tombstoned fact from derived recall
+    /tests/unit/runtimeMemory/repository.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.03s (1.4% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      2.17s
+  Test suites:        1
+  Individual tests:   29
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 passed, 1 total
+Tests:       36 passed, 36 total
+Snapshots:   0 total
+Time:        2.166 s
+Ran all test suites within paths "tests/unit/runtimeMemory/repository.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/repository-current1.json

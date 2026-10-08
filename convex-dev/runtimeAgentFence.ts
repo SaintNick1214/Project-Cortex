@@ -7,7 +7,7 @@ import type { QueryCtx } from "./_generated/server";
 import type { Id } from "./_generated/dataModel";
 import { activeAttempt } from "./runs";
 import { agentComponent, canonicalMessageHash, hydratePrivateCutoff, singleTranscript, transcriptDenied } from "./runtimeTranscript";
-import { ConvexMemoryRepository } from "./runtimeMemoryRepository";
+import { checkContextSourceWitnesses } from "./runtimeContextWitness";
 import { recheckAuthority } from "./runtimeAuth";
 import { NATIVE_TOOL_NAMES } from "../src/domain/agent-tools";
 
@@ -34,12 +34,7 @@ export async function guardAgentRunBudget(ctx: Pick<QueryCtx, "db" | "runQuery">
         || !pin || pin.order !== message.order || pin.stepOrder !== message.stepOrder || pin.canonicalContentHash !== await canonicalMessageHash(message)) transcriptDenied("STALE_TRANSCRIPT");
     }
   }
-  const repository = new ConvexMemoryRepository(ctx, reference, "read");
-  for (const witness of owned.sourceWitnesses) {
-    const source = await repository.getSource(witness.sourceId);
-    if (!source || source.lineage.sourceEventId !== witness.sourceEventId || source.lineage.sourceRevision !== witness.sourceRevision
-      || source.contentHash !== witness.contentHash) transcriptDenied("STALE_CONTEXT");
-  }
+  await checkContextSourceWitnesses(ctx, reference, owned.sourceWitnesses);
   const tools = await ctx.db.query("runtimeAgentOperations").withIndex("by_attempt", q => q.eq("tenantId", run.tenantId)
     .eq("memorySpaceId", run.memorySpaceId).eq("runId", run.runId).eq("attemptNumber", run.attemptNumber).eq("kind", "tool")).take(33);
   if (tools.length > 32) transcriptDenied("TOOL_STEP_LIMIT");

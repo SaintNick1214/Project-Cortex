@@ -10,14 +10,18 @@ import { isStepCount } from "ai";
 import type { ModelMessage } from "ai";
 import type { RuntimeAuthorityReference } from "../src/auth/verified";
 import type { CutoffV1 } from "../src/domain/transcript";
+import type { ContextSourcePermission, ContextSourceWitness } from "../src/domain/context-witness";
+import { mergeContextWitness } from "../src/domain/context-witness";
 import { canonicalModelJson } from "../src/domain/model-policy";
 import { semanticHash } from "../src/domain/profile";
 import { comparePosition, utf8Bytes } from "../src/domain/transcript";
+import { contextSourceKey, evaluateMemoryBarrier } from "../src/domain/memory-context";
 import { mutation, query, internalAction, internalMutation, internalQuery } from "./_generated/server";
 import type { ActionCtx, MutationCtx, QueryCtx } from "./_generated/server";
 import type { Doc } from "./_generated/dataModel";
 import { components } from "./_generated/api";
-import { agentAttempt } from "./runtimeAgentSchema";
+import { agentAttempt, sourceWitness } from "./runtimeAgentSchema";
+import { checkContextSourceWitnesses } from "./runtimeContextWitness";
 import { runtimeAuthorityReference } from "./runtimeAuthSchema";
 import { currentRun, currentControlRun, activeAttempt, publicRun } from "./runs";
 import { agentComponent, canonicalMessageHash, checkConversation, conversationById, hydratePrivateCutoff, privateModelMessage, registerMessages, singleTranscript, transcriptDenied } from "./runtimeTranscript";
@@ -28,6 +32,8 @@ import { createAgentGatewayCancellationBridge, createGovernedGatewayModel } from
 import { createActionMemoryRepository } from "./runtimeMemoryRepository";
 import { ConvexMemoryRepository, memoryScope } from "./runtimeMemoryRepository";
 import { sourceContent, commitDerivedInput } from "./runtimeMemorySchema";
+import { registerCompletedToolSource } from "./runtimeIngestion";
+import { readPendingContext, readStageProgress, refreshScopeWatermarks } from "./runtimeMemoryContext";
 import { createGatewayMemoryModel } from "./runtimeMemoryGateway";
 import { recallMemory } from "./runtimeMemoryServices";
 import { executeServerTool, NATIVE_TOOL_NAMES, semanticToolName, serverTools, serverToolSourceLineage, validateToolInput } from "./runtimeAgentTools";
@@ -37,7 +43,7 @@ import type { RuntimePublicOutputPart } from "./runtimeOutputProjection";
 type Attempt = { reference: RuntimeAuthorityReference; runId: string; attemptNumber: number; leaseVersion: number };
 type ToolCall = { toolCallId: string; toolName: string; inputCanonical: string };
 type StepResult = { savedMessageIds: string[]; calls: ToolCall[]; final: boolean };
-type Witness = { sourceId: string; sourceEventId: string; sourceRevision: number; contentHash: string };
+type Witness = ContextSourceWitness;
 function attemptArgs(args: Attempt): Attempt { return { reference: args.reference, runId: args.runId, attemptNumber: args.attemptNumber, leaseVersion: args.leaseVersion }; }
 export type AgentPublicPart = RuntimePublicOutputPart | { type: "status"; state: Doc<"runtimeAgentExecutions">["state"] }
   | { type: "artifact"; artifactId: string; kind: "memory-receipt" };
@@ -51,7 +57,7 @@ const refs = {
   claim: ref<"mutation", { reference: RuntimeAuthorityReference; conversationId: string; leaseMs: number }, { runId: string; attemptNumber: number; leaseVersion: number } | { runId: string; failureCode: string } | null>("mutation", "runs:claimNext"),
   hydrate: ref<"query", Attempt, Awaited<ReturnType<typeof executionContext>>>("query", "runtimeAgent:hydrateExecution"),
   prepareContext: ref<"action", Attempt, null>("action", "runtimeAgent:prepareContext"),
-  context: ref<"mutation", Attempt & { context: string; witnesses: Witness[] }, null>("mutation", "runtimeAgent:saveContext"),
+  context: ref<"mutation", Attempt & { context: string; witnesses: Witness[]; completeness: "complete" | "incomplete"; failureCode?: string }, null>("mutation", "runtimeAgent:saveContext"),
   begin: ref<"mutation", Attempt & { kind: "model" | "tool"; ordinal: number; requestCanonical: string; toolCallId?: string; toolName?: string },
     { operationId: string; semanticId: string; state: string; resultCanonical: string | null; nativeMessageIds: string[] }>("mutation", "runtimeAgent:beginOperation"),
   finish: ref<"mutation", Attempt & { operationId: string; resultCanonical: string; nativeMessageIds: string[] }, null>("mutation", "runtimeAgent:finishOperation"),
@@ -85,14 +91,7 @@ async function writeParts(ctx: MutationCtx, owned: Doc<"runtimeAgentExecutions">
   await ctx.db.patch("runtimeAgentExecutions", owned._id, { nextOutputSequence: sequence });
 }
 async function checkWitnesses(ctx: Pick<QueryCtx, "db" | "runQuery">, args: Attempt, witnesses: Witness[]) {
-  for (const witness of witnesses) {
-    // Repository getSource checks transcript origin, bridge revision, current scope and tombstones.
-    const source = await ctx.runQuery(ref<"query", { reference: RuntimeAuthorityReference; capability: "read"; sourceId: string },
-      import("../src/domain/contracts").SourceContent | null>("query", "runtimeMemory:readSource"),
-    { reference: args.reference, capability: "read", sourceId: witness.sourceId });
-    if (!source || source.lineage.sourceEventId !== witness.sourceEventId || source.lineage.sourceRevision !== witness.sourceRevision
-      || source.contentHash !== witness.contentHash) transcriptDenied("STALE_CONTEXT");
-  }
+  await checkContextSourceWitnesses(ctx, args.reference, witnesses);
 }
 async function executionContext(ctx: Pick<QueryCtx, "db" | "runQuery">, args: Attempt, reconcile = false) {
   const current = reconcile ? await currentRun(ctx, args.reference, args.runId, "run") : await activeAttempt(ctx, args);
@@ -162,6 +161,16 @@ export const dispatchReady = internalMutation({ args: { reference: runtimeAuthor
   await startExecution(ctx, args.reference, current.row, current.row.streamingRequested ?? true); return null;
 } });
 export const executeTurn = workflow.define({ args: agentAttempt, returns: v.null(), handler: async (step, args) => {
+  await step.runMutation(ref<"mutation", Attempt, null>("mutation", "runtimeAgent:startContext"), args);
+  for (;;) {
+    const decision = await step.runMutation(ref<"mutation", Attempt, ReturnType<typeof evaluateMemoryBarrier>>("mutation", "runtimeAgent:contextBarrier"), args);
+    if (decision.state === "failed") {
+      await step.runMutation(ref<"mutation", Attempt & { failureCode: string }, null>("mutation", "runtimeAgent:failContext"), { ...args, failureCode: decision.failureCode! });
+      throw new Error(decision.failureCode);
+    }
+    if (decision.state !== "waiting") break;
+    await step.sleep(Math.min(1000, decision.remainingMs), { name: "memory stage barrier" });
+  }
   await step.runAction(refs.prepareContext, args, { retry: false, name: "authorized Cortex context" });
   for (let ordinal = 0; ordinal < 33; ordinal++) {
     const result = await step.runAction(refs.model, { ...args, ordinal }, { retry: false, name: `model ${ordinal}` });
@@ -179,42 +188,100 @@ export const executeTurn = workflow.define({ args: agentAttempt, returns: v.null
   }
   throw new Error("TOOL_STEP_LIMIT");
 } });
-export const saveContext = internalMutation({ args: { ...agentAttempt, context: v.string(), witnesses: v.array(v.object({ sourceId: v.string(), sourceEventId: v.string(), sourceRevision: v.number(), contentHash: v.string() })) }, handler: async (ctx, args) => {
+export const saveContext = internalMutation({ args: { ...agentAttempt, context: v.string(), witnesses: v.array(sourceWitness),
+  completeness: v.union(v.literal("complete"), v.literal("incomplete")), failureCode: v.optional(v.string()) }, handler: async (ctx, args) => {
   const current = await executionContext(ctx, args); if (current.execution.contextCanonical !== undefined) transcriptDenied("INVALID_STATE");
   if (utf8Bytes(args.context) > Math.min(16_384, current.definition.context.maxContextTokens) || args.witnesses.length > 32) transcriptDenied("CONTEXT_LIMIT_EXCEEDED");
   await checkWitnesses(ctx, args, args.witnesses);
-  await ctx.db.patch("runtimeAgentExecutions", current.execution._id, { contextCanonical: args.context, contextState: "complete", sourceWitnesses: args.witnesses, state: "running", updatedAt: Date.now() }); return null;
+  if (args.completeness === "complete" && args.failureCode !== undefined || args.completeness === "incomplete" && !args.failureCode) transcriptDenied("INVALID_INPUT");
+  await ctx.db.patch("runtimeAgentExecutions", current.execution._id, { contextCanonical: args.context, contextState: "complete", sourceWitnesses: args.witnesses,
+    contextCompleteness: args.completeness, contextFailureCode: args.failureCode, state: "running", updatedAt: Date.now() });
+  await ctx.db.patch("runtimeRuns", current.run._id, { contextCompleteness: args.completeness, contextFailureCode: args.failureCode, updatedAt: Date.now() }); return null;
 } });
 export const startContext = internalMutation({ args: agentAttempt, handler: async (ctx, args) => {
   const current = await executionContext(ctx, args);
   if (current.execution.contextState !== undefined) transcriptDenied("INTERRUPTED_REQUIRES_RECONCILIATION");
-  if (current.definition.context.memoryMode === "strict" && current.definition.context.requiredStages.length) transcriptDenied("CONTEXT_NOT_READY");
-  await ctx.db.patch("runtimeAgentExecutions", current.execution._id, { contextState: "started" }); return null;
+  await ctx.db.patch("runtimeAgentExecutions", current.execution._id, { contextState: "started", barrierStartedAt: Date.now() }); return null;
+} });
+export const contextBarrier = internalMutation({ args: agentAttempt, handler: async (ctx, args) => {
+  const current = await executionContext(ctx, args);
+  if (current.execution.contextState !== "started" || current.execution.barrierStartedAt === undefined) transcriptDenied("INVALID_STATE");
+  if (current.definition.context.memoryMode !== "strict") return { state: "ready" as const, remainingMs: 0 };
+  await refreshScopeWatermarks(ctx, args.reference);
+  const cutoff = current.snapshot.ingestionCutoff.sequence;
+  const progress = await readStageProgress(ctx, args.reference, cutoff);
+  const barrier = current.definition.context.barrier ?? { deadlineMs: 30_000, onFailure: "fail" as const };
+  const decision = evaluateMemoryBarrier({ cutoff, requiredStages: current.snapshot.ingestionCutoff.requiredStages,
+    progress, startedAt: current.execution.barrierStartedAt, deadlineMs: barrier.deadlineMs, now: Date.now(), onFailure: barrier.onFailure });
+  if (decision.state === "incomplete") {
+    await ctx.db.patch("runtimeAgentExecutions", current.execution._id, { contextCompleteness: "incomplete", contextFailureCode: decision.failureCode });
+    await ctx.db.patch("runtimeRuns", current.run._id, { contextCompleteness: "incomplete", contextFailureCode: decision.failureCode });
+  }
+  return decision;
+} });
+export const failContext = internalMutation({ args: { ...agentAttempt, failureCode: v.union(v.literal("CAPABILITY_UNAVAILABLE"),
+  v.literal("MEMORY_STAGE_FAILED"), v.literal("MEMORY_BARRIER_TIMEOUT"), v.literal("CONTEXT_OVERFLOW")) }, handler: async (ctx, args) => {
+  const current = await executionContext(ctx, args);
+  if (current.execution.contextState !== "started") transcriptDenied("INVALID_STATE");
+  await ctx.db.patch("runtimeAgentExecutions", current.execution._id, { contextState: "failed", contextCompleteness: "incomplete", contextFailureCode: args.failureCode, updatedAt: Date.now() });
+  await ctx.db.patch("runtimeRuns", current.run._id, { contextCompleteness: "incomplete", contextFailureCode: args.failureCode, updatedAt: Date.now() }); return null;
 } });
 export const prepareContext = internalAction({ args: agentAttempt, handler: async (ctx, args): Promise<null> => {
   const current = await ctx.runQuery(refs.hydrate, args);
-  await ctx.runMutation(ref<"mutation", Attempt, null>("mutation", "runtimeAgent:startContext"), args);
+  if (current.execution.contextState !== "started") transcriptDenied("INVALID_STATE");
+  const cutoff = current.snapshot.ingestionCutoff.sequence;
+  const barrier = current.definition.context.barrier ?? { deadlineMs: 30_000, onFailure: "fail" as const };
+  let completeness: "complete" | "incomplete" = current.execution.contextCompleteness ?? "complete"; let failureCode = current.execution.contextFailureCode;
+  async function fail(code: "CAPABILITY_UNAVAILABLE" | "MEMORY_STAGE_FAILED" | "MEMORY_BARRIER_TIMEOUT" | "CONTEXT_OVERFLOW"): Promise<never> {
+    await ctx.runMutation(ref<"mutation", Attempt & { failureCode: typeof code }, null>("mutation", "runtimeAgent:failContext"), { ...args, failureCode: code });
+    return transcriptDenied(code);
+  }
+  const scope = { tenantId: args.reference.tenantId, memorySpaceId: args.reference.memorySpaceId! };
+  const boundary = { conversationId: current.snapshot.conversationId, runId: args.runId, queueSequence: current.snapshot.queueSequence,
+    anchor: { order: current.snapshot.anchor.order, stepOrder: current.snapshot.anchor.stepOrder } };
+  const represented = current.snapshot.messages.map(pin => contextSourceKey(scope, { ...pin, sourceId: pin.sourceEventId }));
+  const pending = await ctx.runQuery(ref<"query", { reference: RuntimeAuthorityReference; cutoff: number; alreadyRepresented: string[]; maxBytes: number; boundary: typeof boundary },
+    Awaited<ReturnType<typeof readPendingContext>>>("query", "runtimeMemoryContext:pendingContext"),
+  { reference: args.reference, cutoff, alreadyRepresented: represented, maxBytes: Math.min(16_384, current.definition.context.maxContextTokens), boundary });
+  if (pending.completeness === "incomplete") {
+    if (barrier.onFailure === "fail") return await fail("CONTEXT_OVERFLOW");
+    completeness = "incomplete"; failureCode = "CONTEXT_OVERFLOW";
+  }
   const repository = createActionMemoryRepository(ctx, args.reference, "read"); const witnesses = new Map<string, Witness>();
-  async function remember(sourceId: string, expected: { sourceEventId: string; sourceRevision: number; contentHash?: string }) {
+  const excluded = new Set([...represented, ...pending.sourceKeys]);
+  const provenance = new Map<string, import("../src/domain/contracts").SourceLineage>();
+  async function remember(sourceId: string, expected: { sourceEventId: string; sourceRevision: number; contentHash?: string }, permission: ContextSourcePermission) {
     const source = await repository.getSource(sourceId); if (!source) transcriptDenied("STALE_CONTEXT");
     if (source.lineage.sourceEventId !== expected.sourceEventId || source.lineage.sourceRevision !== expected.sourceRevision
       || expected.contentHash !== undefined && source.contentHash !== expected.contentHash) transcriptDenied("STALE_CONTEXT");
-    const witness = { sourceId, sourceEventId: source.lineage.sourceEventId, sourceRevision: source.lineage.sourceRevision, contentHash: source.contentHash };
-    const prior = witnesses.get(sourceId); if (prior && canonicalModelJson(prior) !== canonicalModelJson(witness)) transcriptDenied("STALE_CONTEXT");
-    witnesses.set(sourceId, witness);
+    const key = contextSourceKey(scope, source.lineage); if (excluded.has(key)) return false;
+    const eligible = await ctx.runQuery(ref<"query", { reference: RuntimeAuthorityReference; sourceId: string; sourceRevision: number; cutoff: number; boundary: typeof boundary }, boolean>("query", "runtimeMemoryContext:indexedSourceAtCutoff"),
+      { reference: args.reference, sourceId, sourceRevision: source.lineage.sourceRevision, cutoff, boundary });
+    if (!eligible) return false;
+    const witness = mergeContextWitness(witnesses.get(sourceId), { sourceId, sourceEventId: source.lineage.sourceEventId,
+      sourceRevision: source.lineage.sourceRevision, contentHash: source.contentHash, permissions: [permission] });
+    if (!witness) transcriptDenied("STALE_CONTEXT");
+    witnesses.set(sourceId, witness); provenance.set(key, source.lineage); return true;
   }
   const scoped = { ...repository, listFacts: async (query: Parameters<typeof repository.listFacts>[0]) => {
-    const facts = await repository.listFacts(query); for (const fact of facts) await remember(fact.lineage.sourceId, fact.lineage); return facts;
+    const facts = await repository.listFacts(query); const selected = [];
+    for (const fact of facts) if (await remember(fact.lineage.sourceId, fact.lineage, "canViewFacts")) selected.push(fact); return selected;
   }, searchVectors: async (...query: Parameters<typeof repository.searchVectors>) => {
-    const matches = await repository.searchVectors(...query); for (const match of matches) await remember(match.source.lineage.sourceId, { ...match.source.lineage, contentHash: match.source.contentHash }); return matches;
+    const matches = await repository.searchVectors(...query); const selected = [];
+    for (const match of matches) if (await remember(match.source.lineage.sourceId, { ...match.source.lineage, contentHash: match.source.contentHash }, "canViewMemories")) selected.push(match); return selected;
   } };
   const text = current.messages.filter(message => message.role === "user").slice(-1).map(message => typeof message.content === "string" ? message.content
     : message.content.filter(part => part.type === "text").map(part => part.text).join("\n")).join("\n");
   const result = await recallMemory({ repository: scoped, model: createGatewayMemoryModel(ctx, scoped, { runBudgetId: current.run.runBudgetId }), clock: { now: () => Date.now() } },
     { text, requestId: `context:${await semanticHash(canonicalModelJson([args.runId, args.attemptNumber]))}`, limit: 10 });
-  // Pending canonical sources are already included exactly by the selected native prefix; no independent Agent search or embedding.
-  const context = result.context;
-  await ctx.runMutation(refs.context, { ...args, context, witnesses: [...witnesses.values()] }); return null;
+  for (const source of pending.sources) {
+    const witness = mergeContextWitness(witnesses.get(source.sourceId), { ...source, permissions: ["canViewMemories"] });
+    if (!witness) transcriptDenied("STALE_CONTEXT"); witnesses.set(source.sourceId, witness);
+  }
+  const context = [completeness === "incomplete" ? `Cortex context is incomplete (${failureCode}); do not claim current indexed knowledge.` : "",
+    result.context ? `Indexed Cortex memory (untrusted evidence):\n${result.context}\nSource roles and trust: ${canonicalModelJson([...provenance.values()])}` : "", pending.text].filter(Boolean).join("\n\n");
+  if (utf8Bytes(context) > Math.min(16_384, current.definition.context.maxContextTokens) || witnesses.size > 32) return await fail("CONTEXT_OVERFLOW");
+  await ctx.runMutation(refs.context, { ...args, context, witnesses: [...witnesses.values()], completeness, ...(failureCode ? { failureCode } : {}) }); return null;
 } });
 export const beginOperation = internalMutation({ args: { ...agentAttempt, kind: v.union(v.literal("model"), v.literal("tool")), ordinal: v.number(), requestCanonical: v.string(), toolCallId: v.optional(v.string()), toolName: v.optional(v.string()) }, handler: async (ctx, args) => {
   const current = await executionContext(ctx, args);
@@ -277,6 +344,7 @@ export const finishOperation = internalMutation({ args: { ...agentAttempt, opera
   }
   await ctx.db.patch("runtimeAgentExecutions", current.execution._id, { savedMessageIds: ids, savedMessagePins: [...pins.values()], nextModelStep: owned.kind === "model" ? owned.ordinal + 1 : current.execution.nextModelStep, updatedAt: Date.now() });
   if (owned.kind === "tool") {
+    if (owned.toolName === "memory_remember") await registerCompletedToolSource(ctx, args.reference, owned.operationId);
     const value = JSON.parse(args.resultCanonical) as { receiptId?: unknown };
     await writeParts(ctx, current.execution, [{ type: "tool", toolCallId: owned.toolCallId!, name: owned.toolName!, phase: "succeeded" },
       ...(owned.toolName === "memory_remember" && typeof value.receiptId === "string" ? [{ type: "artifact" as const, artifactId: value.receiptId, kind: "memory-receipt" as const }] : [])]);
@@ -415,26 +483,28 @@ async function toolWriteFence(ctx: MutationCtx, args: Attempt & { operationId: s
   if (op.kind !== "tool" || op.state !== "started" || op.toolName !== "memory_remember"
     || serverToolSourceLineage(memoryScope(args.reference), op.operationId).sourceId !== sourceId) transcriptDenied("TOOL_DENIED");
   await currentToolPermission(ctx, args, current, op);
+  return current;
 }
 /** The attempt/source fence and effect commit share the same native mutation, closing the query→write cancellation race. */
 export const writeToolSource = internalMutation({ args: { ...agentAttempt, operationId: v.string(), source: sourceContent }, handler: async (ctx, args) => {
-  await toolWriteFence(ctx, args, args.source.lineage.sourceId);
+  const current = await toolWriteFence(ctx, args, args.source.lineage.sourceId);
   const op = await operation(ctx, args, args.operationId); const requested = validateToolInput("memory.remember", JSON.parse(op.requestCanonical));
   const expected = serverToolSourceLineage(memoryScope(args.reference), op.operationId);
   if (canonicalModelJson(args.source.lineage) !== canonicalModelJson(expected) || args.source.content !== requested.text.normalize("NFC").replace(/\r\n?/g, "\n").trim()) transcriptDenied("TOOL_DENIED");
-  return await new ConvexMemoryRepository(ctx, args.reference, "write", ctx.db).putSource(args.source);
+  return await new ConvexMemoryRepository(ctx, args.reference, "write", ctx.db).putSource({ ...args.source,
+    contextSourceWitnesses: current.execution.sourceWitnesses });
 } });
 export const writeToolDerived = internalMutation({ args: { ...agentAttempt, operationId: v.string(), input: commitDerivedInput }, handler: async (ctx, args) => {
   await toolWriteFence(ctx, args, args.input.source.sourceId);
   return await new ConvexMemoryRepository(ctx, args.reference, "write", ctx.db).commitDerived(args.input);
 } });
-export const rememberToolSources = internalMutation({ args: { ...agentAttempt, operationId: v.string(), witnesses: v.array(v.object({ sourceId: v.string(), sourceEventId: v.string(), sourceRevision: v.number(), contentHash: v.string() })) }, handler: async (ctx, args) => {
+export const rememberToolSources = internalMutation({ args: { ...agentAttempt, operationId: v.string(), witnesses: v.array(sourceWitness) }, handler: async (ctx, args) => {
   const current = await executionContext(ctx, args); const op = await operation(ctx, args, args.operationId);
   if (op.kind !== "tool" || op.state !== "started") transcriptDenied("INVALID_STATE");
   const merged = new Map(current.execution.sourceWitnesses.map(source => [source.sourceId, source]));
   for (const witness of args.witnesses) {
-    const prior = merged.get(witness.sourceId); if (prior && canonicalModelJson(prior) !== canonicalModelJson(witness)) transcriptDenied("STALE_CONTEXT");
-    merged.set(witness.sourceId, witness);
+    const combined = mergeContextWitness(merged.get(witness.sourceId), witness); if (!combined) transcriptDenied("STALE_CONTEXT");
+    merged.set(witness.sourceId, combined);
   }
   if (merged.size > 32) transcriptDenied("CONTEXT_LIMIT_EXCEEDED");
   const sourceWitnesses = [...merged.values()]; await checkWitnesses(ctx, args, sourceWitnesses);
@@ -601,14 +671,15 @@ export const endInterrupted = internalMutation({ args: { ...agentAttempt, cancel
   for (const op of operations) if (op.state === "started") await ctx.db.patch("runtimeAgentOperations", op._id, { state: "unknown", endedAt: Date.now() });
   const cancelled = args.cancelled || row?.cancellationRequestedAt !== undefined || row?.responseStatus === "cancelled";
   const state = cancelled ? "cancelled" : uncertain ? "unknown" : "failed";
-  await ctx.db.patch("runtimeAgentExecutions", owned._id, { state, failureCode: uncertain ? "INTERRUPTED_REQUIRES_RECONCILIATION" : args.cancelled ? "CANCELLED" : "EXECUTION_FAILED", updatedAt: Date.now() });
+  const failureCode = uncertain ? "INTERRUPTED_REQUIRES_RECONCILIATION" : cancelled ? "CANCELLED" : owned.contextFailureCode ?? "EXECUTION_FAILED";
+  await ctx.db.patch("runtimeAgentExecutions", owned._id, { state, failureCode, updatedAt: Date.now() });
   await writeParts(ctx, owned, [{ type: "status", state }, ...(cancelled ? [] : [{ type: "error" as const, code: "RUNTIME_OUTPUT_FAILED" as const }])]);
   if (row && row.attemptNumber === args.attemptNumber && row.responseStatus !== "complete") {
-    await ctx.db.patch("runtimeRuns", row._id, { responseStatus: cancelled ? "cancelled" : "failed", failureCode: uncertain ? "INTERRUPTED_REQUIRES_RECONCILIATION" : "EXECUTION_FAILED", updatedAt: Date.now() });
+    await ctx.db.patch("runtimeRuns", row._id, { responseStatus: cancelled ? "cancelled" : "failed", failureCode, updatedAt: Date.now() });
     const outbox = singleTranscript(await ctx.db.query("runtimeRunOutbox").withIndex("by_run", q => q.eq("tenantId", owned.tenantId).eq("memorySpaceId", owned.memorySpaceId).eq("runId", owned.runId)).take(2));
     if (outbox) await ctx.db.patch("runtimeRunOutbox", outbox._id, { state: "complete", updatedAt: Date.now() });
     const attempt = singleTranscript(await ctx.db.query("runtimeRunAttempts").withIndex("by_run_attempt", q => q.eq("tenantId", owned.tenantId).eq("memorySpaceId", owned.memorySpaceId).eq("runId", owned.runId).eq("attemptNumber", owned.attemptNumber)).take(2));
-    if (attempt) await ctx.db.patch("runtimeRunAttempts", attempt._id, { status: cancelled ? "cancelled" : "failed", failureCode: uncertain ? "INTERRUPTED_REQUIRES_RECONCILIATION" : "EXECUTION_FAILED", endedAt: Date.now() });
+    if (attempt) await ctx.db.patch("runtimeRunAttempts", attempt._id, { status: cancelled ? "cancelled" : "failed", failureCode, endedAt: Date.now() });
     await ctx.scheduler.runAfter(0, ref<"mutation", { reference: RuntimeAuthorityReference; conversationId: string }, unknown>("mutation", "runs:recoverQueue"),
       { reference: owned.reference, conversationId: row.conversationId });
   }
@@ -623,6 +694,7 @@ export const observe = query({ args: { ...selector, afterSequence: v.optional(v.
   const after = args.afterSequence ?? 0, limit = args.limit ?? 100;
   if (!Number.isSafeInteger(after) || after < 0 || !Number.isSafeInteger(limit) || limit < 1 || limit > 100) transcriptDenied("INVALID_INPUT");
   const owned = singleTranscript(await ctx.db.query("runtimeAgentExecutions").withIndex("by_attempt", q => q.eq("tenantId", current.row.tenantId).eq("memorySpaceId", current.row.memorySpaceId).eq("runId", args.runId).eq("attemptNumber", current.row.attemptNumber)).take(2));
+  if (owned) await checkContextSourceWitnesses(ctx, dataAuthorityReference(actor), owned.sourceWitnesses);
   const finalOnly = !owned?.streaming || args.finalOnly;
   const rows = !owned || finalOnly && owned.state !== "complete" ? [] : finalOnly
     ? await ctx.db.query("runtimeAgentOutput").withIndex("by_delivery", q => q.eq("tenantId", owned.tenantId).eq("memorySpaceId", owned.memorySpaceId).eq("runId", args.runId).eq("attemptNumber", owned.attemptNumber).eq("final", true).gt("sequence", after)).take(limit)

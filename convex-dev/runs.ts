@@ -54,6 +54,7 @@ export function publicRun(row: Doc<"runtimeRuns">) {
     queueSequence: row.queueSequence, responseStatus: row.responseStatus, memoryStatus: row.memoryStatus, graphStatus: row.graphStatus,
     attemptNumber: row.attemptNumber, cancellationRequested: row.cancellationRequestedAt !== undefined,
     inputMessageIds: row.inputMessageIds, outputMessageIds: row.outputMessageIds, failureCode: row.failureCode ?? null,
+    contextCompleteness: row.contextCompleteness ?? null, contextFailureCode: row.contextFailureCode ?? null,
     createdAt: row.createdAt, updatedAt: row.updatedAt };
 }
 /** Exported pure handler for meaningful native rollback fixtures, not a public fault-injection flag. */
@@ -89,7 +90,7 @@ export async function submitHandler(ctx: MutationCtx, args: { request: unknown }
   if (!Number.isSafeInteger(sequence)) transcriptDenied("TRANSCRIPT_CONFLICT");
   const saved = await saveMessages(ctx, agentComponent, { threadId: conversation.threadId, userId: actor.principalId,
     order: "next", messages: [{ role: "user", content: binding.normalized.userInput.parts }], failPendingSteps: false });
-  await registerMessages(ctx, conversation, reference, saved.messages, { runId, approved: !conversation.requireApproval, invalidateExecution: false });
+  await registerMessages(ctx, conversation, reference, saved.messages, { runId, queueSequence: sequence, approved: !conversation.requireApproval, invalidateExecution: false });
   const now = Date.now();
   const id = await ctx.db.insert("runtimeRuns", { tenantId: actor.tenantId, memorySpaceId: actor.memorySpaceId, ownerPrincipalId: actor.principalId,
     runId, conversationId: conversation.conversationId, conversationEpoch: conversation.epoch,

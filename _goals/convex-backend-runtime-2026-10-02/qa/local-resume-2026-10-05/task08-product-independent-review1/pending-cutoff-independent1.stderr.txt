@@ -1,0 +1,58 @@
+(node:77521) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-product-independent-review1/pending-cutoff-independent1.test.mjs
+  ✕ later queued same-thread input is excluded from an earlier turn's pending context (2 ms)
+  ✕ authorized older cross-thread pending source remains included (1 ms)
+
+  ● later queued same-thread input is excluded from an earlier turn's pending context
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      37 | const digest = /^[a-f0-9]{64}$/;
+      38 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 39 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      40 | }
+      41 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      42 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:39:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:126:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:367:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:98:92)
+      at tests/unit/runtimeTranscript/fixture.ts:159:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:155:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:159:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:160:9)
+      at ingestionFixture (tests/unit/runtimeIngestion/fixture.ts:13:19)
+      at Object.<anonymous> (_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-product-independent-review1/pending-cutoff-independent1.test.mjs:17:16)
+
+  ● authorized older cross-thread pending source remains included
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      37 | const digest = /^[a-f0-9]{64}$/;
+      38 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 39 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      40 | }
+      41 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      42 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:39:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:126:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:367:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:98:92)
+      at tests/unit/runtimeTranscript/fixture.ts:159:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:155:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:159:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:160:9)
+      at ingestionFixture (tests/unit/runtimeIngestion/fixture.ts:13:19)
+      at Object.<anonymous> (_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-product-independent-review1/pending-cutoff-independent1.test.mjs:24:16)
+
+Test Suites: 1 failed, 1 total
+Tests:       2 failed, 2 total
+Snapshots:   0 total
+Time:        4.559 s
+Ran all test suites.
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-product-independent-review1/pending-cutoff-independent1.results.json

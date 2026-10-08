@@ -1,0 +1,36 @@
+(node:78344) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeAgent/execution.test.ts (5.262 s)
+FAIL tests/unit/runtimeIngestion/context.test.ts
+  ● scoped contiguous memory context › later queued input is excluded from pending and indexed paths despite captured scope sequence
+
+    Expected function reference in the current component like "api.file.func" or "internal.file.func", but received reference _reference/childComponent/agent/threads/createThread
+
+      26 |   }) as MutationCtx["runQuery"];
+      27 |   f.ctx.runMutation = (async (ref, args) => {
+    > 28 |     const name = getFunctionName(ref);
+         |                  ^
+      29 |     const registered = { "runtimeIngestion:claim": ingestion.claim, "runtimeIngestion:persistStage": ingestion.persistStage,
+      30 |       "runtimeIngestion:persistDraft": ingestion.persistDraft, "runtimeIngestion:failUnclaimed": ingestion.failUnclaimed, "runtimeIngestion:expireStage": ingestion.expireStage,
+      31 |       "runtimeIngestion:commitVectors": ingestion.commitVectors, "runtimeIngestion:failStage": ingestion.failStage, "runtimeBeliefs:commit": beliefs.commit };
+
+      at getFunctionName (node_modules/convex/dist/esm/server/api.js:12:13)
+      at Object.f.ctx.runMutation (tests/unit/runtimeIngestion/fixture.ts:28:18)
+      at createThread (node_modules/@convex-dev/agent/src/client/threads.ts:22:39)
+      at createManagedConversation (convex-dev/runtimeTranscript.ts:77:26)
+      at Function.submitHandler [as _handler] (convex-dev/runs.ts:85:20)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:98:10)
+      at tests/unit/runtimeTranscript/fixture.ts:159:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:155:18)
+      at call (tests/unit/runtimeTranscript/fixture.ts:159:77)
+      at Object.run (tests/unit/runtimeTranscript/fixture.ts:167:67)
+      at Object.<anonymous> (tests/unit/runtimeIngestion/context.test.ts:54:51)
+
+PASS tests/unit/domain/memory-context.test.ts
+
+Test Suites: 1 failed, 2 passed, 3 total
+Tests:       1 failed, 69 passed, 70 total
+Snapshots:   0 total
+Time:        6.094 s
+Ran all test suites within paths "tests/unit/domain/memory-context.test.ts", "tests/unit/runtimeIngestion/context.test.ts", "tests/unit/runtimeAgent/execution.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-context-functional-v2-20261008/context-jest1.result.json

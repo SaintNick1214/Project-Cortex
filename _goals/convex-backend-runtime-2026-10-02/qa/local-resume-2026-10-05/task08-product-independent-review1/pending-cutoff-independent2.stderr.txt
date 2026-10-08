@@ -1,0 +1,85 @@
+(node:78062) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-product-independent-review1/pending-cutoff-independent2.test.mjs
+  ✕ later queued same-thread input is excluded from an earlier turn's pending context (15 ms)
+  ✕ authorized older cross-thread pending source remains included (6 ms)
+  ✕ fast indexed future same-thread source is excluded by the same captured boundary (5 ms)
+
+  ● later queued same-thread input is excluded from an earlier turn's pending context
+
+    Expected function reference in the current component like "api.file.func" or "internal.file.func", but received reference _reference/childComponent/agent/threads/createThread
+
+      26 |   }) as MutationCtx["runQuery"];
+      27 |   f.ctx.runMutation = (async (ref, args) => {
+    > 28 |     const name = getFunctionName(ref);
+         |                  ^
+      29 |     const registered = { "runtimeIngestion:claim": ingestion.claim, "runtimeIngestion:persistStage": ingestion.persistStage,
+      30 |       "runtimeIngestion:persistDraft": ingestion.persistDraft, "runtimeIngestion:failUnclaimed": ingestion.failUnclaimed, "runtimeIngestion:expireStage": ingestion.expireStage,
+      31 |       "runtimeIngestion:commitVectors": ingestion.commitVectors, "runtimeIngestion:failStage": ingestion.failStage, "runtimeBeliefs:commit": beliefs.commit };
+
+      at getFunctionName (node_modules/convex/dist/esm/server/api.js:12:13)
+      at Object.f.ctx.runMutation (tests/unit/runtimeIngestion/fixture.ts:28:18)
+      at createThread (node_modules/@convex-dev/agent/src/client/threads.ts:22:39)
+      at createManagedConversation (convex-dev/runtimeTranscript.ts:77:26)
+      at Function.submitHandler [as _handler] (convex-dev/runs.ts:85:20)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:98:10)
+      at tests/unit/runtimeTranscript/fixture.ts:159:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:155:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:159:77)
+      at submit (_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-product-independent-review1/pending-cutoff-independent2.test.mjs:10:58)
+      at Object.<anonymous> (_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-product-independent-review1/pending-cutoff-independent2.test.mjs:17:44)
+
+  ● authorized older cross-thread pending source remains included
+
+    Expected function reference in the current component like "api.file.func" or "internal.file.func", but received reference _reference/childComponent/agent/threads/createThread
+
+      26 |   }) as MutationCtx["runQuery"];
+      27 |   f.ctx.runMutation = (async (ref, args) => {
+    > 28 |     const name = getFunctionName(ref);
+         |                  ^
+      29 |     const registered = { "runtimeIngestion:claim": ingestion.claim, "runtimeIngestion:persistStage": ingestion.persistStage,
+      30 |       "runtimeIngestion:persistDraft": ingestion.persistDraft, "runtimeIngestion:failUnclaimed": ingestion.failUnclaimed, "runtimeIngestion:expireStage": ingestion.expireStage,
+      31 |       "runtimeIngestion:commitVectors": ingestion.commitVectors, "runtimeIngestion:failStage": ingestion.failStage, "runtimeBeliefs:commit": beliefs.commit };
+
+      at getFunctionName (node_modules/convex/dist/esm/server/api.js:12:13)
+      at Object.f.ctx.runMutation (tests/unit/runtimeIngestion/fixture.ts:28:18)
+      at createThread (node_modules/@convex-dev/agent/src/client/threads.ts:22:39)
+      at createManagedConversation (convex-dev/runtimeTranscript.ts:77:26)
+      at Function.submitHandler [as _handler] (convex-dev/runs.ts:85:20)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:98:10)
+      at tests/unit/runtimeTranscript/fixture.ts:159:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:155:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:159:77)
+      at submit (_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-product-independent-review1/pending-cutoff-independent2.test.mjs:10:58)
+      at Object.<anonymous> (_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-product-independent-review1/pending-cutoff-independent2.test.mjs:24:48)
+
+  ● fast indexed future same-thread source is excluded by the same captured boundary
+
+    Expected function reference in the current component like "api.file.func" or "internal.file.func", but received reference _reference/childComponent/agent/threads/createThread
+
+      26 |   }) as MutationCtx["runQuery"];
+      27 |   f.ctx.runMutation = (async (ref, args) => {
+    > 28 |     const name = getFunctionName(ref);
+         |                  ^
+      29 |     const registered = { "runtimeIngestion:claim": ingestion.claim, "runtimeIngestion:persistStage": ingestion.persistStage,
+      30 |       "runtimeIngestion:persistDraft": ingestion.persistDraft, "runtimeIngestion:failUnclaimed": ingestion.failUnclaimed, "runtimeIngestion:expireStage": ingestion.expireStage,
+      31 |       "runtimeIngestion:commitVectors": ingestion.commitVectors, "runtimeIngestion:failStage": ingestion.failStage, "runtimeBeliefs:commit": beliefs.commit };
+
+      at getFunctionName (node_modules/convex/dist/esm/server/api.js:12:13)
+      at Object.f.ctx.runMutation (tests/unit/runtimeIngestion/fixture.ts:28:18)
+      at createThread (node_modules/@convex-dev/agent/src/client/threads.ts:22:39)
+      at createManagedConversation (convex-dev/runtimeTranscript.ts:77:26)
+      at Function.submitHandler [as _handler] (convex-dev/runs.ts:85:20)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:98:10)
+      at tests/unit/runtimeTranscript/fixture.ts:159:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:155:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:159:77)
+      at submit (_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-product-independent-review1/pending-cutoff-independent2.test.mjs:10:58)
+      at Object.<anonymous> (_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-product-independent-review1/pending-cutoff-independent2.test.mjs:31:44)
+
+Test Suites: 1 failed, 1 total
+Tests:       3 failed, 3 total
+Snapshots:   0 total
+Time:        4.637 s
+Ran all test suites.
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-product-independent-review1/pending-cutoff-independent2.results.json

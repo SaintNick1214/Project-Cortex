@@ -1,0 +1,116 @@
+{
+  "status": "PASS",
+  "operation": "87c46625-b5b3-4f47-bd8b-776be209d781",
+  "candidate": "a789e1a84d26ac59ded3e42afe2ce12f38e9d3315fc0f3c70446a5c40b2ed0f2",
+  "runId": "run:33f6cc096d252df2ff2a115ac099d469a535397e26da218a18755a7f0f35499b",
+  "sentinel": "KUMQUAT_06df338f",
+  "sourceWitnesses": [
+    {
+      "contentHash": "7ce2dfd1050808eb9b8467c7d1be97ab1c2166d0e487c3c83d0bbfe5dcf9d675",
+      "permissions": [
+        "canViewFacts",
+        "canViewMemories"
+      ],
+      "sourceEventId": "transcript:conversation:e88e562c113b172fdb8981856c52a42e18851c63de2d03ff0420a60a9cfcbc0c:kx7dekvr101q423g5t4dfdryk98fxjjr",
+      "sourceId": "transcript:conversation:e88e562c113b172fdb8981856c52a42e18851c63de2d03ff0420a60a9cfcbc0c:kx7dekvr101q423g5t4dfdryk98fxjjr",
+      "sourceRevision": 1
+    },
+    {
+      "contentHash": "aa3b6820f8dd6d6e281268b0fc68c48af9c6a772e4cdb11a6ecd05d7de432c09",
+      "permissions": [
+        "canViewFacts",
+        "canViewMemories"
+      ],
+      "sourceEventId": "9595e551-ccad-4f47-80ae-844bc14969bb-recovery:0:1",
+      "sourceId": "9595e551-ccad-4f47-80ae-844bc14969bb-recovery:0",
+      "sourceRevision": 1
+    },
+    {
+      "contentHash": "eb523bdbac16c741dcbc589ca6f9adcf2ef12a8c66d1a29490645ca36efded6f",
+      "permissions": [
+        "canViewMemories"
+      ],
+      "sourceEventId": "transcript:conversation:e88e562c113b172fdb8981856c52a42e18851c63de2d03ff0420a60a9cfcbc0c:kx70094m4awjbkgqkfybj4g4vs8fw70w",
+      "sourceId": "transcript:conversation:e88e562c113b172fdb8981856c52a42e18851c63de2d03ff0420a60a9cfcbc0c:kx70094m4awjbkgqkfybj4g4vs8fw70w",
+      "sourceRevision": 1
+    },
+    {
+      "contentHash": "5d9fc92246251380d3bd53daa8142a88bc64f5e6ac21740b12ee9b2cc79dbdcb",
+      "permissions": [
+        "canViewMemories"
+      ],
+      "sourceEventId": "transcript:conversation:e88e562c113b172fdb8981856c52a42e18851c63de2d03ff0420a60a9cfcbc0c:kx74tj7g3vqm57xh126smy0m1h8fw9n4",
+      "sourceId": "transcript:conversation:e88e562c113b172fdb8981856c52a42e18851c63de2d03ff0420a60a9cfcbc0c:kx74tj7g3vqm57xh126smy0m1h8fw9n4",
+      "sourceRevision": 1
+    },
+    {
+      "contentHash": "df83f71c284582ce51b5d9f6ad4e3d36ea0725fae24dd3c82a2132856088b753",
+      "permissions": [
+        "canViewFacts"
+      ],
+      "sourceEventId": "9595e551-ccad-4f47-80ae-844bc14969bb-newer:0:1",
+      "sourceId": "9595e551-ccad-4f47-80ae-844bc14969bb-newer:0",
+      "sourceRevision": 1
+    }
+  ],
+  "actualSavedFinal": true,
+  "actualDefaultVectorDimensions": [
+    1536
+  ],
+  "remainingMemoryPermission": true,
+  "modelAttemptsBefore": 23,
+  "modelAttemptsAfter": 23,
+  "outcomes": [
+    {
+      "name": "observe",
+      "status": "PASS",
+      "denial": {
+        "name": "ConvexError",
+        "message": "[Request ID: e6135c2404334df0] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at dataDenied (../../custom/backend/runtimeDataAuth.ts:23:0)\n    at managedConversationAccess (../../custom/backend/runtimeDataAuth.ts:182:0)\n    at async checkManagedSource (../../custom/backend/runtimeDataAuth.ts:238:46)\n    at async evaluateManagedSource (../../custom/backend/runtimeDataAuth.ts:200:14)\n    at async managedSourceIsCurrent (../../custom/backend/runtimeDataAuth.ts:187:37)\n    at async getSource [as getSource] (../../custom/backend/runtimeMemoryRepository.ts:108:2)\n    at async checkContextSourceWitnesses (../../custom/backend/runtimeContextWitness.ts:12:26)\n    at async handler (../custom/backend/runtimeAgent.ts:697:8)\n",
+        "data": {
+          "code": "FORBIDDEN",
+          "message": "Access denied",
+          "outcome": "not_dispatched",
+          "retryable": false,
+          "version": 1
+        }
+      }
+    },
+    {
+      "name": "messages",
+      "status": "PASS",
+      "denial": {
+        "name": "ConvexError",
+        "message": "[Request ID: d79d61399d47b4f8] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at dataDenied (../../custom/backend/runtimeDataAuth.ts:23:0)\n    at managedConversationAccess (../../custom/backend/runtimeDataAuth.ts:182:0)\n    at async checkManagedSource (../../custom/backend/runtimeDataAuth.ts:238:46)\n    at async evaluateManagedSource (../../custom/backend/runtimeDataAuth.ts:200:14)\n    at async managedSourceIsCurrent (../../custom/backend/runtimeDataAuth.ts:187:37)\n    at async getSource [as getSource] (../../custom/backend/runtimeMemoryRepository.ts:108:2)\n    at async checkContextSourceWitnesses (../../custom/backend/runtimeContextWitness.ts:12:26)\n    at async currentPrivateSources (../../custom/backend/runtimeTranscript.ts:202:0)\n    at async readTranscriptPage (../../custom/backend/runtimeTranscript.ts:241:32)\n    at async handler (../../custom/backend/runtimeTranscript.ts:383:146)\n",
+        "data": {
+          "code": "FORBIDDEN",
+          "message": "Access denied",
+          "outcome": "not_dispatched",
+          "retryable": false,
+          "version": 1
+        }
+      }
+    },
+    {
+      "name": "export",
+      "status": "PASS",
+      "denial": {
+        "name": "ConvexError",
+        "message": "[Request ID: edbe62b953a4b682] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at dataDenied (../../custom/backend/runtimeDataAuth.ts:23:0)\n    at managedConversationAccess (../../custom/backend/runtimeDataAuth.ts:182:0)\n    at async checkManagedSource (../../custom/backend/runtimeDataAuth.ts:238:46)\n    at async evaluateManagedSource (../../custom/backend/runtimeDataAuth.ts:200:14)\n    at async managedSourceIsCurrent (../../custom/backend/runtimeDataAuth.ts:187:37)\n    at async getSource [as getSource] (../../custom/backend/runtimeMemoryRepository.ts:108:2)\n    at async checkContextSourceWitnesses (../../custom/backend/runtimeContextWitness.ts:12:26)\n    at async currentPrivateSources (../../custom/backend/runtimeTranscript.ts:202:0)\n    at async readTranscriptPage (../../custom/backend/runtimeTranscript.ts:241:32)\n    at async handler (../../custom/backend/runtimeTranscript.ts:511:54)\n",
+        "data": {
+          "code": "FORBIDDEN",
+          "message": "Access denied",
+          "outcome": "not_dispatched",
+          "retryable": false,
+          "version": 1
+        }
+      }
+    },
+    {
+      "name": "vector",
+      "status": "PASS",
+      "result": []
+    }
+  ],
+  "unknownCostsRetained": true
+}

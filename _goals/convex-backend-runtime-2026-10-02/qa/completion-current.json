@@ -1,10 +1,10 @@
 {
   "schema": "cortex.completion-current.v1",
-  "timestamp_utc": "2026-10-08T14:39:29.137155+00:00",
+  "timestamp_utc": "2026-10-08T16:53:08.733883+00:00",
   "assessment_basis": "Original product criteria plus functional non-author acceptance under user-approved policyv2; no Source/controller subgate or source/mock rate acceptance",
-  "goal_tasks_complete": 6,
+  "goal_tasks_complete": 7,
   "goal_tasks_total": 17,
-  "goal_task_percent_complete": 35.3,
+  "goal_task_percent_complete": 41.2,
   "goal_product_criteria_accepted": 0,
   "goal_product_criteria_total": 12,
   "goal_product_percent_complete": 0,
@@ -103,13 +103,17 @@
     },
     {
       "task_id": "08",
-      "percent_complete": 0,
-      "criteria_accepted": 0,
+      "percent_complete": 100,
+      "criteria_accepted": 4,
       "criteria_total": 4,
-      "accepted_scope": null,
-      "independent_acceptance_evidence": [],
+      "accepted_scope": "Original Task08 accepted by reused non-author PASS4.0: all5 requirements/4 criteria, current controlled1199 assertions plus24 distinct independent cases; actual delayed8, ordering3 with explicit controlled decisions, fences4+shared3, cached derivative revoke and genuine ordinary facts.resolve exact extraction parent. Owned cleanup55 sources/58 events/62 held rows/10 grants;26 slots released/full2600000 uncertain liability retained. Verified dev3173328 retained for new09tenant; final retirement open. Historical runtime/setup/oracle reds preserved. No09/full-goal acceptance.",
+      "independent_acceptance_evidence": [
+        "qa/local-resume-2026-10-05/task08-product-independent-review1/verdict1.json",
+        "qa/local-resume-2026-10-05/task08-product-independent-review1/report1.md",
+        "qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/native-actual/report-final1.json"
+      ],
       "original_task_file": "tasks/08-memory-pipeline.md",
-      "task_file_sha256": "2f883577b0f3a43f969c5f7783803de0a4976a85e530ee7e34b6edfd4719cccf"
+      "task_file_sha256": "255318cdb12cd726b2ea960833fab704d69093e210322e6768bf1ec8ffb54db8"
     },
     {
       "task_id": "09",
@@ -203,7 +207,7 @@
     }
   ],
   "milestone_history": "qa/completion-milestones.jsonl",
-  "latest_milestone_id": "functional_v2_task07_original_acceptance_pass",
+  "latest_milestone_id": "functional_v2_task08_original_acceptance_pass",
   "acceptance_policy_version": 2,
   "acceptance_policy": "acceptance-policy.md",
   "assessment_basis_changed_without_denominator_change": true,
@@ -233,9 +237,10 @@
   "active_work": {
     "task06": "Original Task06 ACCEPTED independent PASS4.0; fresh repaired product6 actual groups and applicable custom8. Historical failed/partial receipts preserved. Fresh3172356 retired200/404; custom3172114 explicitly retained for07.",
     "task07": "Original Task07 ACCEPTED independent PASS4.0: original5 requirements/4 criteria,32 independent controlled cases; genuine installed live/two observers/reconnect/final-only/backend tool/canonical final+ingestion/gap reconciliation and edit/remove/source/expiry/revocation/renewed-grant controls. Target3172114 retired200/404, owned credentials/clients/processes closed. Unknown liability and prior reds preserved.",
-    "task08": "Next authorized implementation:08A durable source/stage/pinned jobs +08B ordered belief/history/projection by delegated author;08C contiguous scoped watermarks/pending context/strict barriers by Root after shared typed records. Original08 criteria0/4; final goal open."
+    "task08": "Original Task08 accepted by reused non-author PASS4.0: all5 requirements/4 criteria, current controlled1199 assertions plus24 distinct independent cases; actual delayed8, ordering3 with explicit controlled decisions, fences4+shared3, cached derivative revoke and genuine ordinary facts.resolve exact extraction parent. Owned cleanup55 sources/58 events/62 held rows/10 grants;26 slots released/full2600000 uncertain liability retained. Verified dev3173328 retained for new09tenant; final retirement open. Historical runtime/setup/oracle reds preserved. No09/full-goal acceptance.",
+    "task09": "Execution started after original08 independent PASS; browser-safe authenticated SDK/AI SDK7 remote transport plus canonical UI and current managed-default retrieval. No09 acceptance yet."
   },
-  "goal_task_criteria_accepted": 19,
+  "goal_task_criteria_accepted": 23,
   "goal_task_criteria_total": 61,
-  "goal_task_criteria_percent_complete": 31.1
+  "goal_task_criteria_percent_complete": 37.7
 }

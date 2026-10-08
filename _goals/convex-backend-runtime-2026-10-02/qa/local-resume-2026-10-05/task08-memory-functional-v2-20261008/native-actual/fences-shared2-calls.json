@@ -1,0 +1,882 @@
+{
+  "operation": "2003afa6-8ba0-4096-a0eb-82c1b903b64b",
+  "candidate": "a789e1a84d26ac59ded3e42afe2ce12f38e9d3315fc0f3c70446a5c40b2ed0f2",
+  "records": [
+    {
+      "label": "task08-edit-owner-2003afa6-8ba0-4096-a0eb-82c1b903b64b-grant",
+      "kind": "mutation",
+      "function": "runtimeAuth:provision",
+      "args": {
+        "issuer": "https://cortex-task08-memory.example",
+        "subject": "task08-edit-owner-2003afa6-8ba0-4096-a0eb-82c1b903b64b",
+        "actorKind": "user",
+        "tenantId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e",
+        "memorySpaceId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e-space",
+        "capabilities": [
+          "read",
+          "write",
+          "run",
+          "admin",
+          "tool"
+        ],
+        "resourceAccess": "space"
+      },
+      "result": {
+        "actorKind": "user",
+        "capabilities": [
+          "admin",
+          "read",
+          "run",
+          "tool",
+          "write"
+        ],
+        "grantId": "mx7aqtg4v8hertmac10500n4pd8fw0a7",
+        "grantVersion": 1,
+        "membershipId": "n17418dekcg4x00fsdj15pmc218fw8qh",
+        "membershipVersion": 1,
+        "memorySpaceEpoch": 1,
+        "memorySpaceId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e-space",
+        "principalId": "n57699p09x6ebrb99wb96a84as8fwn3g",
+        "principalVersion": 1,
+        "resourceAccess": "space",
+        "tenantEpoch": 1,
+        "tenantId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e",
+        "userId": "n57699p09x6ebrb99wb96a84as8fwn3g"
+      },
+      "elapsedMs": 224
+    },
+    {
+      "label": "task08-editor-2003afa6-8ba0-4096-a0eb-82c1b903b64b-grant",
+      "kind": "mutation",
+      "function": "runtimeAuth:provision",
+      "args": {
+        "issuer": "https://cortex-task08-memory.example",
+        "subject": "task08-editor-2003afa6-8ba0-4096-a0eb-82c1b903b64b",
+        "actorKind": "user",
+        "tenantId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e",
+        "memorySpaceId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e-space",
+        "capabilities": [
+          "read",
+          "write",
+          "run",
+          "admin",
+          "tool"
+        ],
+        "resourceAccess": "space"
+      },
+      "result": {
+        "actorKind": "user",
+        "capabilities": [
+          "admin",
+          "read",
+          "run",
+          "tool",
+          "write"
+        ],
+        "grantId": "mx70amxz68079dbx9pm6078z7x8fw0hg",
+        "grantVersion": 1,
+        "membershipId": "n173r64avjt25rjdqkjq087ka18fwxra",
+        "membershipVersion": 1,
+        "memorySpaceEpoch": 1,
+        "memorySpaceId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e-space",
+        "principalId": "n579yr7zapvakzqvqqfjx6926s8fxat7",
+        "principalVersion": 1,
+        "resourceAccess": "space",
+        "tenantEpoch": 1,
+        "tenantId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e",
+        "userId": "n579yr7zapvakzqvqqfjx6926s8fxat7"
+      },
+      "elapsedMs": 213
+    },
+    {
+      "label": "task08-own-only-2003afa6-8ba0-4096-a0eb-82c1b903b64b-grant",
+      "kind": "mutation",
+      "function": "runtimeAuth:provision",
+      "args": {
+        "issuer": "https://cortex-task08-memory.example",
+        "subject": "task08-own-only-2003afa6-8ba0-4096-a0eb-82c1b903b64b",
+        "actorKind": "user",
+        "tenantId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e",
+        "memorySpaceId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e-space",
+        "capabilities": [
+          "read",
+          "write",
+          "run",
+          "admin",
+          "tool"
+        ],
+        "resourceAccess": "own"
+      },
+      "result": {
+        "actorKind": "user",
+        "capabilities": [
+          "admin",
+          "read",
+          "run",
+          "tool",
+          "write"
+        ],
+        "grantId": "mx7afc5272zkffvhgpy1k6srr98fx2ed",
+        "grantVersion": 1,
+        "membershipId": "n173k2rnf34d8k4v6nqbmfte8s8fwj61",
+        "membershipVersion": 1,
+        "memorySpaceEpoch": 1,
+        "memorySpaceId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e-space",
+        "principalId": "n57615dbdfc2b0cf5dkv0kr8t18fxhjy",
+        "principalVersion": 1,
+        "resourceAccess": "own",
+        "tenantEpoch": 1,
+        "tenantId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e",
+        "userId": "n57615dbdfc2b0cf5dkv0kr8t18fxhjy"
+      },
+      "elapsedMs": 282
+    },
+    {
+      "label": "shared-create",
+      "kind": "mutation",
+      "function": "runtimeTranscript:create",
+      "args": {
+        "memorySpaceId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e-space",
+        "clientRequestId": "2003afa6-8ba0-4096-a0eb-82c1b903b64b-shared"
+      },
+      "result": {
+        "conversationId": "conversation:7c89a235d8a669c119a37e8c2685b23169e107c4ee17e4fd77e54fdafd0c2db3",
+        "createdAt": 1791476735921,
+        "epoch": 1,
+        "historyRevision": 0,
+        "manualWriteLocked": true,
+        "messageCount": 0,
+        "participants": [
+          "n57699p09x6ebrb99wb96a84as8fwn3g"
+        ],
+        "requireApproval": false,
+        "retentionUntil": null,
+        "type": "user-agent",
+        "updatedAt": 1791476735921,
+        "visibility": "private"
+      },
+      "elapsedMs": 575
+    },
+    {
+      "label": "shared-unlock",
+      "kind": "mutation",
+      "function": "runtimeTranscript:setPolicy",
+      "args": {
+        "memorySpaceId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e-space",
+        "conversationId": "conversation:7c89a235d8a669c119a37e8c2685b23169e107c4ee17e4fd77e54fdafd0c2db3",
+        "expectedRevision": 0,
+        "manualWriteLocked": false
+      },
+      "result": {
+        "historyRevision": 1,
+        "updated": true
+      },
+      "elapsedMs": 356
+    },
+    {
+      "label": "shared-owned-input",
+      "kind": "mutation",
+      "function": "ingestionQualification:appendHeld",
+      "args": {
+        "memorySpaceId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e-space",
+        "conversationId": "conversation:7c89a235d8a669c119a37e8c2685b23169e107c4ee17e4fd77e54fdafd0c2db3",
+        "expectedRevision": 1,
+        "role": "user",
+        "parts": [
+          {
+            "type": "text",
+            "text": "The shared source owner prefers amber tea."
+          }
+        ]
+      },
+      "result": [
+        {
+          "contentHash": "d3d313a7b0ba329a21b250872613830e0b5e75c4d892cb0f091a54f92d05cd69",
+          "nativeMessageId": "kx73d392hmtbgx9ayr3re21ssh8fxjc1",
+          "order": 0,
+          "sourceEventId": "transcript:conversation:7c89a235d8a669c119a37e8c2685b23169e107c4ee17e4fd77e54fdafd0c2db3:kx73d392hmtbgx9ayr3re21ssh8fxjc1",
+          "sourceRevision": 1,
+          "stepOrder": 0
+        }
+      ],
+      "elapsedMs": 357
+    },
+    {
+      "label": "edit-old-claim",
+      "kind": "mutation",
+      "function": "runtimeIngestion:claim",
+      "args": {
+        "reference": {
+          "principalId": "n57699p09x6ebrb99wb96a84as8fwn3g",
+          "principalVersion": 1,
+          "membershipId": "n17418dekcg4x00fsdj15pmc218fw8qh",
+          "membershipVersion": 1,
+          "grantId": "mx7aqtg4v8hertmac10500n4pd8fw0a7",
+          "grantVersion": 1,
+          "tenantId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e",
+          "tenantEpoch": 1,
+          "memorySpaceId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e-space",
+          "memorySpaceEpoch": 1
+        },
+        "eventId": "ingestion:8bbf7e675d01153615729b4f665bf995d1c9a804d18ee89fec8eb2ad10f7b00a",
+        "stage": "extract"
+      },
+      "result": {
+        "attempt": 1,
+        "eventId": "ingestion:8bbf7e675d01153615729b4f665bf995d1c9a804d18ee89fec8eb2ad10f7b00a",
+        "leaseVersion": 1,
+        "reference": {
+          "grantId": "mx7aqtg4v8hertmac10500n4pd8fw0a7",
+          "grantVersion": 1,
+          "membershipId": "n17418dekcg4x00fsdj15pmc218fw8qh",
+          "membershipVersion": 1,
+          "memorySpaceEpoch": 1,
+          "memorySpaceId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e-space",
+          "principalId": "n57699p09x6ebrb99wb96a84as8fwn3g",
+          "principalVersion": 1,
+          "tenantEpoch": 1,
+          "tenantId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e"
+        },
+        "runBudgetId": "c820e0795796aea7ff22455f7a5fd6900b8962f68bbdc200919317e41ed64321",
+        "stage": "extract"
+      },
+      "elapsedMs": 572
+    },
+    {
+      "label": "owner-edit-while-running",
+      "kind": "mutation",
+      "function": "ingestionQualification:editHeld",
+      "args": {
+        "memorySpaceId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e-space",
+        "conversationId": "conversation:7c89a235d8a669c119a37e8c2685b23169e107c4ee17e4fd77e54fdafd0c2db3",
+        "expectedRevision": 2,
+        "messageId": "kx73d392hmtbgx9ayr3re21ssh8fxjc1",
+        "expectedMessageRevision": 1,
+        "parts": [
+          {
+            "type": "text",
+            "text": "The shared source owner now prefers green tea."
+          }
+        ]
+      },
+      "result": {
+        "deleted": false,
+        "messageId": "kx73d392hmtbgx9ayr3re21ssh8fxjc1",
+        "revision": 2
+      },
+      "elapsedMs": 386
+    },
+    {
+      "label": "edit-obsolete-result",
+      "kind": "mutation",
+      "function": "runtimeIngestion:persistStage",
+      "args": {
+        "reference": {
+          "grantId": "mx7aqtg4v8hertmac10500n4pd8fw0a7",
+          "grantVersion": 1,
+          "membershipId": "n17418dekcg4x00fsdj15pmc218fw8qh",
+          "membershipVersion": 1,
+          "memorySpaceEpoch": 1,
+          "memorySpaceId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e-space",
+          "principalId": "n57699p09x6ebrb99wb96a84as8fwn3g",
+          "principalVersion": 1,
+          "tenantEpoch": 1,
+          "tenantId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e"
+        },
+        "eventId": "ingestion:8bbf7e675d01153615729b4f665bf995d1c9a804d18ee89fec8eb2ad10f7b00a",
+        "stage": "extract",
+        "attempt": 1,
+        "leaseVersion": 1,
+        "payloadCanonical": "[]"
+      },
+      "error": {
+        "name": "ConvexError",
+        "message": "[Request ID: b38331204aae24b7] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"STALE_SOURCE\",\"message\":\"Memory indexing operation denied.\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at ingestionDenied (../../custom/backend/runtimeIngestion.ts:33:0)\n    at readEventCurrent (../../custom/backend/runtimeIngestion.ts:51:58)\n    at async requireStageLease (../../custom/backend/runtimeIngestion.ts:164:6)\n    at async requireStageCommit (../../custom/backend/runtimeIngestion.ts:173:28)\n    at async handler (../../custom/backend/runtimeIngestion.ts:252:63)\n",
+        "data": {
+          "code": "STALE_SOURCE",
+          "message": "Memory indexing operation denied.",
+          "outcome": "not_dispatched",
+          "retryable": false,
+          "version": 1
+        }
+      },
+      "elapsedMs": 237
+    },
+    {
+      "label": "share-n579yr7zapvakzqvqqfjx6926s8fxat7",
+      "kind": "mutation",
+      "function": "conversationShares:create",
+      "args": {
+        "memorySpaceId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e-space",
+        "conversationId": "conversation:7c89a235d8a669c119a37e8c2685b23169e107c4ee17e4fd77e54fdafd0c2db3",
+        "grantedBy": "n57699p09x6ebrb99wb96a84as8fwn3g",
+        "grantType": "user",
+        "grantedTo": "n579yr7zapvakzqvqqfjx6926s8fxat7",
+        "permissions": {
+          "canView": true,
+          "canViewFacts": true,
+          "canViewMemories": true,
+          "canContinue": true,
+          "canFork": false,
+          "canExport": false
+        }
+      },
+      "result": {
+        "_id": "nn79txt0k6dqrecj70kvmskryh8fw0yz",
+        "conversationId": "conversation:7c89a235d8a669c119a37e8c2685b23169e107c4ee17e4fd77e54fdafd0c2db3",
+        "createdAt": 1791476739072,
+        "grantType": "user",
+        "grantedBy": "n57699p09x6ebrb99wb96a84as8fwn3g",
+        "grantedTo": "n579yr7zapvakzqvqqfjx6926s8fxat7",
+        "permissions": {
+          "canContinue": true,
+          "canExport": false,
+          "canFork": false,
+          "canView": true,
+          "canViewFacts": true,
+          "canViewMemories": true
+        },
+        "redactSensitive": false,
+        "shareId": "share:6838ee76-69ac-4331-8f3d-e2a7211b54bb",
+        "sourceMemorySpaceId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e-space",
+        "status": "active",
+        "tenantId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e",
+        "viewCount": 0
+      },
+      "elapsedMs": 255
+    },
+    {
+      "label": "share-n57615dbdfc2b0cf5dkv0kr8t18fxhjy",
+      "kind": "mutation",
+      "function": "conversationShares:create",
+      "args": {
+        "memorySpaceId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e-space",
+        "conversationId": "conversation:7c89a235d8a669c119a37e8c2685b23169e107c4ee17e4fd77e54fdafd0c2db3",
+        "grantedBy": "n57699p09x6ebrb99wb96a84as8fwn3g",
+        "grantType": "user",
+        "grantedTo": "n57615dbdfc2b0cf5dkv0kr8t18fxhjy",
+        "permissions": {
+          "canView": true,
+          "canViewFacts": true,
+          "canViewMemories": true,
+          "canContinue": true,
+          "canFork": false,
+          "canExport": false
+        }
+      },
+      "result": {
+        "_id": "nn7568mgdemz87eerg8mt8byd58fwtvr",
+        "conversationId": "conversation:7c89a235d8a669c119a37e8c2685b23169e107c4ee17e4fd77e54fdafd0c2db3",
+        "createdAt": 1791476739328,
+        "grantType": "user",
+        "grantedBy": "n57699p09x6ebrb99wb96a84as8fwn3g",
+        "grantedTo": "n57615dbdfc2b0cf5dkv0kr8t18fxhjy",
+        "permissions": {
+          "canContinue": true,
+          "canExport": false,
+          "canFork": false,
+          "canView": true,
+          "canViewFacts": true,
+          "canViewMemories": true
+        },
+        "redactSensitive": false,
+        "shareId": "share:5254d1c7-653d-4dc5-8f9b-d28debd91409",
+        "sourceMemorySpaceId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e-space",
+        "status": "active",
+        "tenantId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e",
+        "viewCount": 0
+      },
+      "elapsedMs": 251
+    },
+    {
+      "label": "own-only-editor-denied",
+      "kind": "mutation",
+      "function": "ingestionQualification:editHeld",
+      "args": {
+        "memorySpaceId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e-space",
+        "conversationId": "conversation:7c89a235d8a669c119a37e8c2685b23169e107c4ee17e4fd77e54fdafd0c2db3",
+        "expectedRevision": 3,
+        "messageId": "kx73d392hmtbgx9ayr3re21ssh8fxjc1",
+        "expectedMessageRevision": 2,
+        "parts": [
+          {
+            "type": "text",
+            "text": "Foreign own-only attempted change"
+          }
+        ]
+      },
+      "error": {
+        "name": "ConvexError",
+        "message": "[Request ID: 769a705d57221aef] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../custom/backend/runtimeAuth.ts:46:26)\n    at assertResourceScope (../../custom/backend/runtimeAuth.ts:93:0)\n    at materialize (../../custom/backend/runtimeAuth.ts:146:4)\n    at async resolveAuthorityReference (../../custom/backend/runtimeAuth.ts:203:0)\n    at async recheckAuthority (../../custom/backend/runtimeAuth.ts:257:0)\n    at async managedConversationAccess (../../custom/backend/runtimeDataAuth.ts:169:81)\n    at async checkConversation (../../custom/backend/runtimeTranscript.ts:44:0)\n    at async requireConversation (../../custom/backend/runtimeTranscript.ts:52:0)\n    at async reviseMessage (../../custom/backend/runtimeTranscript.ts:423:55)\n    at async handler (../../custom/backend/runtimeTranscript.ts:455:143)\n",
+        "data": {
+          "code": "FORBIDDEN",
+          "message": "Access denied",
+          "outcome": "not_dispatched",
+          "retryable": false,
+          "version": 1
+        }
+      },
+      "elapsedMs": 245
+    },
+    {
+      "label": "original-owner-grant-revoked",
+      "kind": "mutation",
+      "function": "runtimeAuth:revokeGrant",
+      "args": {
+        "grantId": "mx7aqtg4v8hertmac10500n4pd8fw0a7"
+      },
+      "result": null,
+      "elapsedMs": 115
+    },
+    {
+      "label": "current-shared-editor-update",
+      "kind": "mutation",
+      "function": "ingestionQualification:editHeld",
+      "args": {
+        "memorySpaceId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e-space",
+        "conversationId": "conversation:7c89a235d8a669c119a37e8c2685b23169e107c4ee17e4fd77e54fdafd0c2db3",
+        "expectedRevision": 3,
+        "messageId": "kx73d392hmtbgx9ayr3re21ssh8fxjc1",
+        "expectedMessageRevision": 2,
+        "parts": [
+          {
+            "type": "text",
+            "text": "The shared source owner now prefers jasmine tea."
+          }
+        ]
+      },
+      "result": {
+        "deleted": false,
+        "messageId": "kx73d392hmtbgx9ayr3re21ssh8fxjc1",
+        "revision": 3
+      },
+      "elapsedMs": 500
+    },
+    {
+      "label": "shared-editor-real-extract",
+      "kind": "action",
+      "function": "ingestionQualification:release",
+      "args": {
+        "reference": {
+          "principalId": "n579yr7zapvakzqvqqfjx6926s8fxat7",
+          "principalVersion": 1,
+          "membershipId": "n173r64avjt25rjdqkjq087ka18fwxra",
+          "membershipVersion": 1,
+          "grantId": "mx70amxz68079dbx9pm6078z7x8fw0hg",
+          "grantVersion": 1,
+          "tenantId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e",
+          "tenantEpoch": 1,
+          "memorySpaceId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e-space",
+          "memorySpaceEpoch": 1
+        },
+        "eventId": "ingestion:eba72277e039b680ffa8b957aba7c93671fb7da97877320c8cc0005424837874",
+        "stage": "extract"
+      },
+      "result": null,
+      "elapsedMs": 3789
+    },
+    {
+      "label": "indexed-source-edit",
+      "kind": "mutation",
+      "function": "ingestionQualification:editHeld",
+      "args": {
+        "memorySpaceId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e-space",
+        "conversationId": "conversation:7c89a235d8a669c119a37e8c2685b23169e107c4ee17e4fd77e54fdafd0c2db3",
+        "expectedRevision": 4,
+        "messageId": "kx73d392hmtbgx9ayr3re21ssh8fxjc1",
+        "expectedMessageRevision": 3,
+        "parts": [
+          {
+            "type": "text",
+            "text": "The shared source owner now prefers lotus tea."
+          }
+        ]
+      },
+      "result": {
+        "deleted": false,
+        "messageId": "kx73d392hmtbgx9ayr3re21ssh8fxjc1",
+        "revision": 4
+      },
+      "elapsedMs": 495
+    },
+    {
+      "label": "edited-source-visible-facts",
+      "kind": "query",
+      "function": "runtimeMemory:readFacts",
+      "args": {
+        "reference": {
+          "principalId": "n579yr7zapvakzqvqqfjx6926s8fxat7",
+          "principalVersion": 1,
+          "membershipId": "n173r64avjt25rjdqkjq087ka18fwxra",
+          "membershipVersion": 1,
+          "grantId": "mx70amxz68079dbx9pm6078z7x8fw0hg",
+          "grantVersion": 1,
+          "tenantId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e",
+          "tenantEpoch": 1,
+          "memorySpaceId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e-space",
+          "memorySpaceEpoch": 1
+        },
+        "capability": "read",
+        "query": {
+          "limit": 100
+        }
+      },
+      "result": [
+        {
+          "_id": "k976228ew3f8s5kmvx9y8412898fx37a",
+          "confidence": 100,
+          "createdAt": 1791476578322,
+          "entities": [
+            {
+              "name": "coffee",
+              "type": "product"
+            },
+            {
+              "name": "tea",
+              "type": "product"
+            }
+          ],
+          "extractionPolicyVersion": "ordered-belief-v1",
+          "fact": "User's favorite drink is coffee, replacing tea.",
+          "factId": "41b409f3a2275e9e630b0a8fa2679bb2c8d10f55209b9afd9bfe12bd707eadac",
+          "factType": "preference",
+          "lineage": {
+            "role": "user",
+            "sourceEventId": "9595e551-ccad-4f47-80ae-844bc14969bb-newer:0:1",
+            "sourceId": "9595e551-ccad-4f47-80ae-844bc14969bb-newer:0",
+            "sourceRevision": 1,
+            "trust": "user_assertion"
+          },
+          "memorySpaceId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e-space",
+          "object": "coffee",
+          "ownerPrincipalId": "n573t34xng3hctk542pyp379xd8fwpts",
+          "predicate": "prefers",
+          "relations": [
+            {
+              "object": "coffee",
+              "predicate": "prefers",
+              "subject": "User"
+            }
+          ],
+          "sourceType": "conversation",
+          "subject": "User",
+          "tags": [],
+          "tenantId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e",
+          "updatedAt": 1791476595791,
+          "version": 2
+        },
+        {
+          "_id": "k970nh42nh9fperq9nd9j73xad8fxz9z",
+          "confidence": 100,
+          "createdAt": 1791476598511,
+          "entities": [
+            {
+              "name": "Task08",
+              "type": "concept"
+            },
+            {
+              "name": "MARIGOLD",
+              "type": "product"
+            }
+          ],
+          "extractionPolicyVersion": "ordered-belief-v1",
+          "fact": "User states that the Task08 recovery fixture launch code is MARIGOLD.",
+          "factId": "0185085648d5ce63767609949b4dfd266a930278b6e29f38d65468031b9b3e56",
+          "factType": "custom",
+          "lineage": {
+            "role": "user",
+            "sourceEventId": "9595e551-ccad-4f47-80ae-844bc14969bb-recovery:0:1",
+            "sourceId": "9595e551-ccad-4f47-80ae-844bc14969bb-recovery:0",
+            "sourceRevision": 1,
+            "trust": "user_assertion"
+          },
+          "memorySpaceId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e-space",
+          "object": "Task08 recovery fixture launch code is MARIGOLD",
+          "ownerPrincipalId": "n573t34xng3hctk542pyp379xd8fwpts",
+          "predicate": "states",
+          "relations": [
+            {
+              "object": "MARIGOLD",
+              "predicate": "states",
+              "subject": "User"
+            },
+            {
+              "object": "MARIGOLD",
+              "predicate": "has_launch_code",
+              "subject": "Task08"
+            }
+          ],
+          "sourceType": "conversation",
+          "subject": "User",
+          "tags": [],
+          "tenantId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e",
+          "updatedAt": 1791476598511,
+          "version": 1
+        }
+      ],
+      "elapsedMs": 278
+    },
+    {
+      "label": "edited-source-visible-vectors",
+      "kind": "query",
+      "function": "runtimeMemory:readVectorMatches",
+      "args": {
+        "reference": {
+          "principalId": "n579yr7zapvakzqvqqfjx6926s8fxat7",
+          "principalVersion": 1,
+          "membershipId": "n173r64avjt25rjdqkjq087ka18fwxra",
+          "membershipVersion": 1,
+          "grantId": "mx70amxz68079dbx9pm6078z7x8fw0hg",
+          "grantVersion": 1,
+          "tenantId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e",
+          "tenantEpoch": 1,
+          "memorySpaceId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e-space",
+          "memorySpaceEpoch": 1
+        },
+        "capability": "read",
+        "hits": [
+          {
+            "id": "pd77s188ybw7h6nfmc08y6fsns8fxxbq",
+            "score": 1
+          }
+        ]
+      },
+      "result": [],
+      "elapsedMs": 190
+    },
+    {
+      "label": "edited-source-repair-extract",
+      "kind": "action",
+      "function": "ingestionQualification:release",
+      "args": {
+        "reference": {
+          "principalId": "n579yr7zapvakzqvqqfjx6926s8fxat7",
+          "principalVersion": 1,
+          "membershipId": "n173r64avjt25rjdqkjq087ka18fwxra",
+          "membershipVersion": 1,
+          "grantId": "mx70amxz68079dbx9pm6078z7x8fw0hg",
+          "grantVersion": 1,
+          "tenantId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e",
+          "tenantEpoch": 1,
+          "memorySpaceId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e-space",
+          "memorySpaceEpoch": 1
+        },
+        "eventId": "ingestion:e80c2a9c96bb065b346562ebf30c304e4300b30447ffbf2373a2b5532a6c336a",
+        "stage": "extract"
+      },
+      "result": null,
+      "elapsedMs": 3695
+    },
+    {
+      "label": "shared-remove",
+      "kind": "mutation",
+      "function": "runtimeTranscript:removeMessage",
+      "args": {
+        "memorySpaceId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e-space",
+        "conversationId": "conversation:7c89a235d8a669c119a37e8c2685b23169e107c4ee17e4fd77e54fdafd0c2db3",
+        "expectedRevision": 5,
+        "messageId": "kx73d392hmtbgx9ayr3re21ssh8fxjc1",
+        "expectedMessageRevision": 4
+      },
+      "result": {
+        "deleted": true,
+        "messageId": "kx73d392hmtbgx9ayr3re21ssh8fxjc1",
+        "revision": 5
+      },
+      "elapsedMs": 262
+    },
+    {
+      "label": "deleted-current-stage-denied",
+      "kind": "mutation",
+      "function": "runtimeIngestion:claim",
+      "args": {
+        "reference": {
+          "principalId": "n579yr7zapvakzqvqqfjx6926s8fxat7",
+          "principalVersion": 1,
+          "membershipId": "n173r64avjt25rjdqkjq087ka18fwxra",
+          "membershipVersion": 1,
+          "grantId": "mx70amxz68079dbx9pm6078z7x8fw0hg",
+          "grantVersion": 1,
+          "tenantId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e",
+          "tenantEpoch": 1,
+          "memorySpaceId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e-space",
+          "memorySpaceEpoch": 1
+        },
+        "eventId": "ingestion:e80c2a9c96bb065b346562ebf30c304e4300b30447ffbf2373a2b5532a6c336a",
+        "stage": "vectors"
+      },
+      "error": {
+        "name": "ConvexError",
+        "message": "[Request ID: 03a6ab05e4782f96] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"STALE_SOURCE\",\"message\":\"Memory indexing operation denied.\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at ingestionDenied (../../custom/backend/runtimeIngestion.ts:33:0)\n    at readEventCurrent (../../custom/backend/runtimeIngestion.ts:51:58)\n    at async handler (../../custom/backend/runtimeIngestion.ts:215:10)\n",
+        "data": {
+          "code": "STALE_SOURCE",
+          "message": "Memory indexing operation denied.",
+          "outcome": "not_dispatched",
+          "retryable": false,
+          "version": 1
+        }
+      },
+      "elapsedMs": 166
+    },
+    {
+      "label": "post-delete-visible-facts",
+      "kind": "query",
+      "function": "runtimeMemory:readFacts",
+      "args": {
+        "reference": {
+          "principalId": "n579yr7zapvakzqvqqfjx6926s8fxat7",
+          "principalVersion": 1,
+          "membershipId": "n173r64avjt25rjdqkjq087ka18fwxra",
+          "membershipVersion": 1,
+          "grantId": "mx70amxz68079dbx9pm6078z7x8fw0hg",
+          "grantVersion": 1,
+          "tenantId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e",
+          "tenantEpoch": 1,
+          "memorySpaceId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e-space",
+          "memorySpaceEpoch": 1
+        },
+        "capability": "read",
+        "query": {
+          "limit": 100
+        }
+      },
+      "result": [
+        {
+          "_id": "k976228ew3f8s5kmvx9y8412898fx37a",
+          "confidence": 100,
+          "createdAt": 1791476578322,
+          "entities": [
+            {
+              "name": "coffee",
+              "type": "product"
+            },
+            {
+              "name": "tea",
+              "type": "product"
+            }
+          ],
+          "extractionPolicyVersion": "ordered-belief-v1",
+          "fact": "User's favorite drink is coffee, replacing tea.",
+          "factId": "41b409f3a2275e9e630b0a8fa2679bb2c8d10f55209b9afd9bfe12bd707eadac",
+          "factType": "preference",
+          "lineage": {
+            "role": "user",
+            "sourceEventId": "9595e551-ccad-4f47-80ae-844bc14969bb-newer:0:1",
+            "sourceId": "9595e551-ccad-4f47-80ae-844bc14969bb-newer:0",
+            "sourceRevision": 1,
+            "trust": "user_assertion"
+          },
+          "memorySpaceId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e-space",
+          "object": "coffee",
+          "ownerPrincipalId": "n573t34xng3hctk542pyp379xd8fwpts",
+          "predicate": "prefers",
+          "relations": [
+            {
+              "object": "coffee",
+              "predicate": "prefers",
+              "subject": "User"
+            }
+          ],
+          "sourceType": "conversation",
+          "subject": "User",
+          "tags": [],
+          "tenantId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e",
+          "updatedAt": 1791476595791,
+          "version": 2
+        },
+        {
+          "_id": "k970nh42nh9fperq9nd9j73xad8fxz9z",
+          "confidence": 100,
+          "createdAt": 1791476598511,
+          "entities": [
+            {
+              "name": "Task08",
+              "type": "concept"
+            },
+            {
+              "name": "MARIGOLD",
+              "type": "product"
+            }
+          ],
+          "extractionPolicyVersion": "ordered-belief-v1",
+          "fact": "User states that the Task08 recovery fixture launch code is MARIGOLD.",
+          "factId": "0185085648d5ce63767609949b4dfd266a930278b6e29f38d65468031b9b3e56",
+          "factType": "custom",
+          "lineage": {
+            "role": "user",
+            "sourceEventId": "9595e551-ccad-4f47-80ae-844bc14969bb-recovery:0:1",
+            "sourceId": "9595e551-ccad-4f47-80ae-844bc14969bb-recovery:0",
+            "sourceRevision": 1,
+            "trust": "user_assertion"
+          },
+          "memorySpaceId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e-space",
+          "object": "Task08 recovery fixture launch code is MARIGOLD",
+          "ownerPrincipalId": "n573t34xng3hctk542pyp379xd8fwpts",
+          "predicate": "states",
+          "relations": [
+            {
+              "object": "MARIGOLD",
+              "predicate": "states",
+              "subject": "User"
+            },
+            {
+              "object": "MARIGOLD",
+              "predicate": "has_launch_code",
+              "subject": "Task08"
+            }
+          ],
+          "sourceType": "conversation",
+          "subject": "User",
+          "tags": [],
+          "tenantId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e",
+          "updatedAt": 1791476598511,
+          "version": 1
+        }
+      ],
+      "elapsedMs": 294
+    },
+    {
+      "label": "editor-grant-revoked",
+      "kind": "mutation",
+      "function": "runtimeAuth:revokeGrant",
+      "args": {
+        "grantId": "mx70amxz68079dbx9pm6078z7x8fw0hg"
+      },
+      "result": null,
+      "elapsedMs": 105
+    },
+    {
+      "label": "revoked-worker-denied",
+      "kind": "mutation",
+      "function": "runtimeIngestion:claim",
+      "args": {
+        "reference": {
+          "principalId": "n579yr7zapvakzqvqqfjx6926s8fxat7",
+          "principalVersion": 1,
+          "membershipId": "n173r64avjt25rjdqkjq087ka18fwxra",
+          "membershipVersion": 1,
+          "grantId": "mx70amxz68079dbx9pm6078z7x8fw0hg",
+          "grantVersion": 1,
+          "tenantId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e",
+          "tenantEpoch": 1,
+          "memorySpaceId": "task08-8c9e4ca1-8498-481d-89da-6b5063f3813e-space",
+          "memorySpaceEpoch": 1
+        },
+        "eventId": "ingestion:e80c2a9c96bb065b346562ebf30c304e4300b30447ffbf2373a2b5532a6c336a",
+        "stage": "extract"
+      },
+      "error": {
+        "name": "ConvexError",
+        "message": "[Request ID: 9e0138b5bb37b6db] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../custom/backend/runtimeAuth.ts:46:26)\n    at materialize (../../custom/backend/runtimeAuth.ts:127:73)\n    at resolveAuthorityReference (../../custom/backend/runtimeAuth.ts:203:0)\n    at async recheckAuthority (../../custom/backend/runtimeAuth.ts:257:0)\n    at async authority [as authority] (../../custom/backend/runtimeMemoryRepository.ts:91:62)\n    at async recheckAuthority [as recheckAuthority] (../../custom/backend/runtimeMemoryRepository.ts:94:68)\n    at async readEventCurrent (../../custom/backend/runtimeIngestion.ts:50:39)\n    at async handler (../../custom/backend/runtimeIngestion.ts:215:10)\n",
+        "data": {
+          "code": "FORBIDDEN",
+          "message": "Access denied",
+          "outcome": "not_dispatched",
+          "retryable": false,
+          "version": 1
+        }
+      },
+      "elapsedMs": 159
+    }
+  ]
+}

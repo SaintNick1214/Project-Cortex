@@ -2,6 +2,7 @@
 import { ConvexError, v } from "convex/values";
 import { mutation, query, internalMutation } from "./_generated/server";
 import type { QueryCtx } from "./_generated/server";
+import type { RuntimeAuthorityReference } from "../src/auth/verified";
 import type { ManagedConversation } from "./runtimeTranscript";
 import { bindDataActor, dataAuthorityReference, managedConversationAccess, requireDataAuthority } from "./runtimeDataAuth";
 import { internalUnavailable } from "./runtimeUnavailableAuth";
@@ -28,9 +29,9 @@ function view(row: ManagedConversation): import("../src/types").Conversation & {
     visibility: row.visibility, collaborativeSettings: { requireApproval: row.requireApproval, approvedParticipants: row.participants },
     manualWriteLocked: row.manualWriteLocked, historyRevision: row.historyRevision, createdAt: row.createdAt, updatedAt: row.updatedAt };
 }
-async function history(ctx: ReadCtx, conversation: ManagedConversation) {
+async function history(ctx: ReadCtx, conversation: ManagedConversation, reference: RuntimeAuthorityReference) {
   const messages: (import("../src/types").Message & { revision: number })[] = []; let cursor: string | null = null;
-  do { const page = await readTranscriptPage(ctx, conversation, cursor, 100);
+  do { const page = await readTranscriptPage(ctx, conversation, reference, cursor, 100);
     for (const message of page.page) { const bridge = await bridgeFor(ctx, conversation, message.id); if (!bridge) transcriptDenied("STALE_TRANSCRIPT");
       messages.push({ id: bridge.legacyMessageId ?? message.id, role: message.role === "assistant" ? "agent" : "user", content: message.parts.map(part => part.text).join("\n"), timestamp: bridge.createdAt,
         approvalStatus: bridge.approved ? "approved" : "pending", revision: bridge.revision }); }
@@ -223,8 +224,8 @@ export const getMessage = query({ args: {
     conversationId: v.string(),
     messageId: v.string(),
   }, handler: async (ctx, args) => {
-  const { conversation } = await requireConversation(ctx, args, args.conversationId, "read"); const bridge = await legacyBridge(ctx, conversation, args.messageId); if (!bridge) return null;
-  return (await history(ctx, conversation)).find(m => m.id === (bridge.legacyMessageId ?? bridge.nativeMessageId)) ?? null;
+  const { conversation, reference } = await requireConversation(ctx, args, args.conversationId, "read"); const bridge = await legacyBridge(ctx, conversation, args.messageId); if (!bridge) return null;
+  return (await history(ctx, conversation, reference)).find(m => m.id === (bridge.legacyMessageId ?? bridge.nativeMessageId)) ?? null;
 } });
 
 export const getMessagesByIds = query({ args: {
@@ -233,8 +234,8 @@ export const getMessagesByIds = query({ args: {
     conversationId: v.string(),
     messageIds: v.array(v.string()),
   }, handler: async (ctx, args) => {
-  const { conversation } = await requireConversation(ctx, args, args.conversationId, "read"); if (args.messageIds.length > 100) transcriptDenied("INVALID_INPUT");
-  const messages = await history(ctx, conversation); return args.messageIds.map(id => messages.find(m => m.id === id) ?? null);
+  const { conversation, reference } = await requireConversation(ctx, args, args.conversationId, "read"); if (args.messageIds.length > 100) transcriptDenied("INVALID_INPUT");
+  const messages = await history(ctx, conversation, reference); return args.messageIds.map(id => messages.find(m => m.id === id) ?? null);
 } });
 
 export const getOrCreate = mutation({ args: {
@@ -295,8 +296,8 @@ export const get = query({ args: {
     includeMessages: v.optional(v.boolean()), // Default: true
     messageLimit: v.optional(v.number()), // Limit messages returned
   }, handler: async (ctx, args) => {
-  const { conversation } = await requireConversation(ctx, args, args.conversationId, "read");
-  const result = view(conversation); if (args.includeMessages !== false) { const limit = args.messageLimit ?? 1000; if (!Number.isSafeInteger(limit) || limit < 1 || limit > 1000) transcriptDenied("INVALID_INPUT"); result.messages = (await history(ctx, conversation)).slice(-limit); } return result;
+  const { conversation, reference } = await requireConversation(ctx, args, args.conversationId, "read");
+  const result = view(conversation); if (args.includeMessages !== false) { const limit = args.messageLimit ?? 1000; if (!Number.isSafeInteger(limit) || limit < 1 || limit > 1000) transcriptDenied("INVALID_INPUT"); result.messages = (await history(ctx, conversation, reference)).slice(-limit); } return result;
 } });
 
 export const list = query({ args: {
@@ -328,14 +329,14 @@ export const list = query({ args: {
     sortOrder: v.optional(v.union(v.literal("asc"), v.literal("desc"))),
     includeMessages: v.optional(v.boolean()),
   }, handler: async (ctx, args) => {
-  if (args.participantId !== undefined) transcriptDenied("INVALID_INPUT"); const { rows } = await visible(ctx, args); const limit = args.limit ?? 100; const offset = args.offset ?? 0;
+  if (args.participantId !== undefined) transcriptDenied("INVALID_INPUT"); const { rows, reference } = await visible(ctx, args); const limit = args.limit ?? 100; const offset = args.offset ?? 0;
   if (!Number.isSafeInteger(limit) || limit < 1 || limit > 100 || !Number.isSafeInteger(offset) || offset < 0) transcriptDenied("INVALID_INPUT");
   const selected = rows.filter(row => (args.createdBefore === undefined || row.createdAt < args.createdBefore) && (args.createdAfter === undefined || row.createdAt > args.createdAfter)
     && (args.updatedBefore === undefined || row.updatedAt < args.updatedBefore) && (args.updatedAfter === undefined || row.updatedAt > args.updatedAfter)
     && (args.lastMessageBefore === undefined || row.updatedAt < args.lastMessageBefore) && (args.lastMessageAfter === undefined || row.updatedAt > args.lastMessageAfter)
     && (args.messageCountMin === undefined || row.messageCount >= args.messageCountMin) && (args.messageCountMax === undefined || row.messageCount <= args.messageCountMax));
   const sort = args.sortBy === "lastMessageAt" ? "updatedAt" : args.sortBy ?? "createdAt"; selected.sort((a,b) => (a[sort] - b[sort]) * (args.sortOrder === "asc" ? 1 : -1));
-  const result = []; for (const row of selected.slice(offset, offset + limit)) { const item = view(row); if (args.includeMessages) item.messages = await history(ctx, row); result.push(item); }
+  const result = []; for (const row of selected.slice(offset, offset + limit)) { const item = view(row); if (args.includeMessages) item.messages = await history(ctx, row, reference); result.push(item); }
   return { conversations: result, total: selected.length, hasMore: offset + limit < selected.length, offset, limit };
 } });
 
@@ -365,9 +366,9 @@ export const getHistory = query({ args: {
       ),
     ), // Filter by role
   }, handler: async (ctx, args) => {
-  const { conversation } = await requireConversation(ctx, args, args.conversationId, "read"); const limit = args.limit ?? 100; const offset = args.offset ?? 0;
+  const { conversation, reference } = await requireConversation(ctx, args, args.conversationId, "read"); const limit = args.limit ?? 100; const offset = args.offset ?? 0;
   if (!Number.isSafeInteger(limit) || limit < 1 || limit > 1000 || !Number.isSafeInteger(offset) || offset < 0) transcriptDenied("INVALID_INPUT");
-  const messages = (await history(ctx, conversation)).filter(m => (args.since === undefined || m.timestamp >= args.since) && (args.until === undefined || m.timestamp <= args.until) && (!args.roles || args.roles.includes(m.role)));
+  const messages = (await history(ctx, conversation, reference)).filter(m => (args.since === undefined || m.timestamp >= args.since) && (args.until === undefined || m.timestamp <= args.until) && (!args.roles || args.roles.includes(m.role)));
   if (args.sortOrder === "desc") messages.reverse(); return { messages: messages.slice(offset, offset + limit), total: messages.length, hasMore: offset + limit < messages.length, conversationId: conversation.conversationId };
 } });
 
@@ -390,9 +391,9 @@ export const search = query({ args: {
     ), // Default: "contains"
   }, handler: async (ctx, args) => {
   if (!args.query || utf8Bytes(args.query) > 1024 || args.searchIn === "metadata" || args.matchMode === "fuzzy") transcriptDenied("INVALID_INPUT");
-  const { rows } = await visible(ctx, args); const limit = args.limit ?? 100; if (!Number.isSafeInteger(limit) || limit < 1 || limit > 100) transcriptDenied("INVALID_INPUT"); const results = [];
+  const { rows, reference } = await visible(ctx, args); const limit = args.limit ?? 100; if (!Number.isSafeInteger(limit) || limit < 1 || limit > 100) transcriptDenied("INVALID_INPUT"); const results = [];
   for (const row of rows) { if (args.dateStart !== undefined && row.createdAt < args.dateStart || args.dateEnd !== undefined && row.createdAt > args.dateEnd) continue;
-    const matches = (await history(ctx, row)).filter(m => args.matchMode === "exact" ? m.content === args.query : m.content.toLowerCase().includes(args.query.toLowerCase())); if (matches.length) results.push({ conversation: view(row), matchedMessages: matches, highlights: matches.map(m => m.content), score: matches.length }); if (results.length >= limit) break; } return results;
+    const matches = (await history(ctx, row, reference)).filter(m => args.matchMode === "exact" ? m.content === args.query : m.content.toLowerCase().includes(args.query.toLowerCase())); if (matches.length) results.push({ conversation: view(row), matchedMessages: matches, highlights: matches.map(m => m.content), score: matches.length }); if (results.length >= limit) break; } return results;
 } });
 
 export const exportConversations = query({ args: {
@@ -411,7 +412,7 @@ export const exportConversations = query({ args: {
   const { reference, rows } = await visible(ctx, args); if (args.conversationIds && (args.conversationIds.length > 100 || new Set(args.conversationIds).size !== args.conversationIds.length)) transcriptDenied("INVALID_INPUT");
   const selected = args.conversationIds ? await Promise.all(args.conversationIds.map(async id => { const row = await conversationById(ctx, reference, id); if (!row) transcriptDenied(); await checkConversation(ctx, reference, row, "read"); return row; })) : rows;
   const records = []; for (const row of selected) { if (args.dateStart !== undefined && row.createdAt < args.dateStart || args.dateEnd !== undefined && row.createdAt > args.dateEnd) continue;
-    await managedConversationAccess(ctx, reference, row, "read", "canExport"); const item = view(row); item.messages = await history(ctx, row); if (!args.includeMetadata) item.metadata = undefined; records.push(item); if (utf8Bytes(JSON.stringify(records)) > 1_000_000) transcriptDenied("QUERY_TOO_BROAD"); }
+    await managedConversationAccess(ctx, reference, row, "read", "canExport"); const item = view(row); item.messages = await history(ctx, row, reference); if (!args.includeMetadata) item.metadata = undefined; records.push(item); if (utf8Bytes(JSON.stringify(records)) > 1_000_000) transcriptDenied("QUERY_TOO_BROAD"); }
   const data = args.format === "json" ? JSON.stringify(records) : ["conversationId,messageId,role,text", ...records.flatMap(c => c.messages.map(m => [c.conversationId,m.id,m.role,m.content].map(value => `"${value.replaceAll('"','""')}"`).join(",")))].join("\n");
   return { format: args.format, data, count: records.length, exportedAt: Date.now() };
 } });

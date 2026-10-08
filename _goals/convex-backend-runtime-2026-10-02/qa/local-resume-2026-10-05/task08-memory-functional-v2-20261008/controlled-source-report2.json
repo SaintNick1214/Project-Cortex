@@ -1,0 +1,620 @@
+{
+  "version": 1,
+  "createdAt": "2026-10-08T16:25:43.964Z",
+  "scope": "Task08 coherent controlled successor after independent cached-delivery finding; native and non-author acceptance pending",
+  "predecessor": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/controlled-source-report1.json",
+    "bytes": 22173,
+    "sha256": "019004471aafeb1ac5620a0f58ef0dfa6088d2490459979c769a53864bd8585c"
+  },
+  "change": "Compatibility history and snapshots now use the actual current reader for cached-source consumed-permission checks. Shared recursive source fence excludes stale assistant facts/vectors and immutable tool-source dependencies cannot acquire later self-cycles.",
+  "counts": {
+    "currentAssertionInstances": 1199,
+    "currentNamedIdentities": 1195,
+    "suites": 34,
+    "passed": 1199,
+    "failed": 0,
+    "skipped": 0,
+    "affectedDelivery": 652,
+    "affectedToolSnapshot": 56,
+    "affectedExecutions": 708
+  },
+  "checks": {
+    "deliveryAffected": "PASS652/652 across16suites",
+    "toolSnapshotAffected": "PASS56/56; current row selected after fixture rollback",
+    "sdkTypes": "PASS",
+    "backendEnabledTypes": "PASS",
+    "scopedLint": "PASS"
+  },
+  "newRegression": "Real controlled finalization stores cached witness provenance; nine compatibility delivery/create calls deny after selective fact-share revoke with no writes; metadata remains usable; a separately authorized current reader can read the existing snapshot/history. Tool write snapshots initial dependencies and later mutable execution witness expansion cannot create a self-reference.",
+  "sourceRows": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/src/domain/ingestion.ts",
+      "bytes": 2331,
+      "sha256": "0f94fa1c791283994e58ef417d095aa930ebfcd007389056290784216e9fc70a"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/src/domain/belief-plan.ts",
+      "bytes": 4905,
+      "sha256": "8acd2daf8885a97b6ab17835d0ca8b6ab878a26659eb4351feba5d898a80ed83"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/src/domain/memory-context.ts",
+      "bytes": 7125,
+      "sha256": "7c2fc2f3423b768c86072cb880fedd60b605ebe9022c65917466a9900240a6ed"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/src/domain/context-witness.ts",
+      "bytes": 1373,
+      "sha256": "aba80fad5117710e626a1a4eb793f0bb95cb087bbbdb1df0e7dcd58b16f67149"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeIngestion.ts",
+      "bytes": 49976,
+      "sha256": "5b9bbfa6d4423341f13100267974e96cbfa5cda34f67151d41f8ee7a2e47db18"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeIngestionSchema.ts",
+      "bytes": 4318,
+      "sha256": "b23f49fe8f57967b75eaf3823848be5b4a60fc41d0ee94f46dbbcfde52043f5f"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeBeliefs.ts",
+      "bytes": 6966,
+      "sha256": "9e26f639580dab4166fe4bed4ba96dd25dfd761a2476844885ca76b1cf9f937a"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryContext.ts",
+      "bytes": 11889,
+      "sha256": "751f2d51acb7053cbd6fe42b09896a24d3b6be04458cd39b4ff9b14fff6a0057"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeContextWitness.ts",
+      "bytes": 1140,
+      "sha256": "477c43d08ebc6cbf60ba523710b7674ce1065374438a2976fe5dddede1430542"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeContextWitnessSchema.ts",
+      "bytes": 354,
+      "sha256": "b92de2075a8747259dbab08c568bc903bf69e5cd289b25cbd8e2eaa27c63ee59"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeTranscript.ts",
+      "bytes": 50648,
+      "sha256": "3adcb1f73671008a1a0ca8dfebfc877b6a4952d8f5e10350b1559029680e6464"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeTranscriptSchema.ts",
+      "bytes": 8520,
+      "sha256": "aae1c0c87ca53935dc3ff272248e5b9401db2049ecd69d1250e0030ed4503be3"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAuth.ts",
+      "bytes": 23704,
+      "sha256": "50a232ab925bcde78ae81626eb45323bde355810c6c6184034a39542f0f5577f"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeDataAuth.ts",
+      "bytes": 67037,
+      "sha256": "cd92b29092901fd06e77528e110323fbf0070a1cb4e6125d56f74bc00100da8c"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemory.ts",
+      "bytes": 14419,
+      "sha256": "2badf252b5d72a70bc87481333682f895117d663e647163159a782f2615e6dfe"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryRepository.ts",
+      "bytes": 25303,
+      "sha256": "021cc7903635c58da7367c5e8057abe20303ab32437d673f374d936c15bf0bcf"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicy.ts",
+      "bytes": 97130,
+      "sha256": "53956fe79973f21d3210afb5eb896c6c2f9b07d3621d732cd624a778b6139f54"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts",
+      "bytes": 73924,
+      "sha256": "f99bc1ca5466f42a307e55f341644e1ecec26162e91ffd66ec9149db94dbe547"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgentFence.ts",
+      "bytes": 4172,
+      "sha256": "4a35c7be42b85cdc2799fea21f0787c81ab8fe28839db0236cd466f0fd83d1ec"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgentSchema.ts",
+      "bytes": 3470,
+      "sha256": "fc90afcd41ec5331c46ca7bb81d71edb4be73919a49a24609ea91df35ae8f8cf"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgentTools.ts",
+      "bytes": 7424,
+      "sha256": "0a7eeacf4f837aee69558578823752e278108ce63d55d05aced0da19c4544eae"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/agentDefinitions.ts",
+      "bytes": 16415,
+      "sha256": "5515c432ccd3f3411b23866704e6e008a2c8aca0c9c3dada2cd2df2c589a6c2f"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runs.ts",
+      "bytes": 27941,
+      "sha256": "f8510dc93d30cfe300613b4186c5609556a95f27b763b6b425a7816ffff9ba37"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/schema.ts",
+      "bytes": 54860,
+      "sha256": "6ecac4d677df9e0ab638298d3ee1a9a3c1a7ea24dee1dbb117fd0674a23b261b"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/src/domain/contracts.ts",
+      "bytes": 5586,
+      "sha256": "c611121be61755ee5e2220f96c27f67fd8e312e4b3ab3e481e17c1e936d24102"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemorySchema.ts",
+      "bytes": 4903,
+      "sha256": "0febeecbac69822d27d4f7b46d242e913477cc939b2569f70340d320e1f7de53"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/conversations.ts",
+      "bytes": 29475,
+      "sha256": "5ab29370589ad3fdfa1917ab377768c884e8446930dc12d9e8a59eb32c8f7d82"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/conversationSnapshots.ts",
+      "bytes": 9406,
+      "sha256": "77cd28faab3fcf4649e87d5def2bd28dc05e54efc3bdae1af05fdb78a4ba4c30"
+    }
+  ],
+  "testRows": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/execution.test.ts",
+      "bytes": 52400,
+      "sha256": "61d3e15e499e5d5adf8c8bef3fdae771754158ac600f677a073888ae83de3aea"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/domain/model-policy.test.ts",
+      "bytes": 33476,
+      "sha256": "a7067f0339df7812c5937aef73a386715fbf0e52555c165a604454ae14426b75"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAuth/authority.test.ts",
+      "bytes": 23126,
+      "sha256": "1b7503136bd8e34da1f13fc2f68a828a28680ba352008266faf8e90f182f905c"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeIngestion/worker.test.ts",
+      "bytes": 16757,
+      "sha256": "8c69aa762187502434207bf43ec4eedf0ca6e5ba46d3343cee548552adb375cc"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeTranscript/managed.test.ts",
+      "bytes": 16382,
+      "sha256": "c7fa49f10c1cf49c42fb6a9c0c003c18a24565204ff9cab4890d06a5624c4645"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeMemory/repository.test.ts",
+      "bytes": 16140,
+      "sha256": "8c6b77a7e18e60136c502031fa5fd875febe0559ec3f16f436a4cf5e6425f93b"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAuth/provisioning.test.ts",
+      "bytes": 15204,
+      "sha256": "54aca98b16f3ffb77d2d7740e986dfc68aa124e8baff56ae33486ccddc07b580"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeMemory/public-functional.test.ts",
+      "bytes": 15024,
+      "sha256": "f3f9376f90eb961eff7fa782f3c6d46d74155b248d84e1ea53b47642bad7ab26"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/domain/sources.test.ts",
+      "bytes": 14588,
+      "sha256": "246790ce51a358e1f73667b34e905173f87b3b3660037145ee9cf9a7c593c6ec"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeRuns/admission.test.ts",
+      "bytes": 14193,
+      "sha256": "dfb62c5e01d814b3a10f21563870b68da1d3d6a3259962a24ed23c5262167358"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeMemory/public-boundary.test.ts",
+      "bytes": 12798,
+      "sha256": "3b1ca003ec8724e4d720fd20135068a735684b36fdf1eeacf6d09742665580bc"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/model-owner.test.ts",
+      "bytes": 10931,
+      "sha256": "37ce0925f69ae2bda93e90ae107ca4140d73ab35f97d174553cbbf3d6ae03292"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeMemory/services.test.ts",
+      "bytes": 10401,
+      "sha256": "4b074258bbb4ebff610e461aea9624966873391bfb5f87056f3c9a26be3d7f53"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAuth/inventory.test.ts",
+      "bytes": 10338,
+      "sha256": "df38d2f49861acc331e4fbad5fdac55ab0ede8cf39cc15d7df1cfd049c6d9a57"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeMemory/public-closure.test.ts",
+      "bytes": 10202,
+      "sha256": "065de39fed1f1d20617a23d7e8cc52dc66671e5fc9fdb57f9f0308518839debc"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeIngestion/stages.test.ts",
+      "bytes": 8837,
+      "sha256": "148c307acff1563f8357f45463a4cafbbc5ed505628762718a5fea03880a12aa"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeBeliefs/atomic.test.ts",
+      "bytes": 8293,
+      "sha256": "e9e0eb4063bc8c2aaedc1a7b350eb6604a00990398a7dca5a6ebbd891ad9b42b"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeIngestion/context.test.ts",
+      "bytes": 7846,
+      "sha256": "a677f653aa9fe41b2dfedebcf0d6ac0feeb82b27063532a0df67064e40db1715"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/agentDefinitions/definitions.test.ts",
+      "bytes": 7384,
+      "sha256": "e137b4c59f08efc90ec7141e1d01da2b57bff377ee3540be5fb3b2f5352abf16"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/domain/memory-context.test.ts",
+      "bytes": 6535,
+      "sha256": "11700ecc25efc2aea53df1bea422d7df69be8d24a030c5f3addd3fdc9e6d7b04"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeTranscript/contracts.test.ts",
+      "bytes": 6272,
+      "sha256": "63aeedeab027cf77794910c75697dc38816d12e2dff2a833869e5d1ef70d1a8b"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/domain/outcomes.test.ts",
+      "bytes": 5922,
+      "sha256": "221bea22d7b396596a75c861addfc68bf33d9186bf7f16ee3da25396c2e343bc"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeIngestion/context-permissions.test.ts",
+      "bytes": 5868,
+      "sha256": "1b73ef98918add258e4e732798c24eb795d9beb9fa30c46c3a77f7a4122abdf0"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/tool-context.test.ts",
+      "bytes": 5544,
+      "sha256": "1ba945e847deb2e9695c91a381a0470fd113d333fde558e33acadbbf14feef6f"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/output-projection.test.ts",
+      "bytes": 4472,
+      "sha256": "212966c7c53cd664fd7e0cfd796e3e58287c152ef04397c4f5402f0778004d01"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeIngestion/shared-edit.test.ts",
+      "bytes": 4293,
+      "sha256": "e94c13ff34bfd38859222f66789da3a4fcde1c6ce41a78ab063dd97ec92b6296"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/domain/profile.test.ts",
+      "bytes": 3675,
+      "sha256": "2a94febdcb9c7454d154a313351b15737b8441543b16f0f0a47a9bd39560b38e"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/memory-gateway.test.ts",
+      "bytes": 46574,
+      "sha256": "7cd6e1432c7de3b184eced61c44d86f25c9e6a90bc42b04d4bc18dc780e79bb5"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/model-policy-admission.test.ts",
+      "bytes": 96237,
+      "sha256": "39deed762300ce0a83c3b33a3868863f88e5c8473804ce83b8502a3e0e64f51b"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/gateway-terminal-composition.test.ts",
+      "bytes": 88856,
+      "sha256": "0f9c8315214d4bcba33431aa6dbc5b0950ee34b991357b06e61b1bf7a59a8159"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/model-policy-model-drift.test.ts",
+      "bytes": 35159,
+      "sha256": "4f8bb8a8e26d4ebdd2b27bd0d9f5ebbb4ae5f59d8b8cd140c49250ab88d85c92"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/gateway-backend.test.ts",
+      "bytes": 41841,
+      "sha256": "65e075956ab1b02b95b827224e2a4c7de15a4cd86d5ef2d71bc6181f3cd8d648"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/gateway-qualification-registry.test.ts",
+      "bytes": 5347,
+      "sha256": "4287d3fa907b9618eb73bc6b76641649631a18f7bc2b29a2946e15c17f41f582"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeIngestion/cached-compatibility.test.ts",
+      "bytes": 7805,
+      "sha256": "26663189af6dad366718ec70f359d112e11e173a1f09a5232faeb79c11886812"
+    }
+  ],
+  "suiteEvidence": [
+    {
+      "suite": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/execution.test.ts",
+      "evidence": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/tool-snapshot-current2.json",
+      "cases": 56
+    },
+    {
+      "suite": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/domain/model-policy.test.ts",
+      "evidence": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/affected-current4.json",
+      "cases": 36
+    },
+    {
+      "suite": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAuth/authority.test.ts",
+      "evidence": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/affected-current4.json",
+      "cases": 54
+    },
+    {
+      "suite": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeIngestion/worker.test.ts",
+      "evidence": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/delivery-affected1.json",
+      "cases": 12
+    },
+    {
+      "suite": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeTranscript/managed.test.ts",
+      "evidence": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/delivery-affected1.json",
+      "cases": 15
+    },
+    {
+      "suite": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeMemory/repository.test.ts",
+      "evidence": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/delivery-affected1.json",
+      "cases": 36
+    },
+    {
+      "suite": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAuth/provisioning.test.ts",
+      "evidence": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/affected-current4.json",
+      "cases": 15
+    },
+    {
+      "suite": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeMemory/public-functional.test.ts",
+      "evidence": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/delivery-affected1.json",
+      "cases": 25
+    },
+    {
+      "suite": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/domain/sources.test.ts",
+      "evidence": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/affected-current4.json",
+      "cases": 12
+    },
+    {
+      "suite": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeRuns/admission.test.ts",
+      "evidence": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/affected-current4.json",
+      "cases": 20
+    },
+    {
+      "suite": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeMemory/public-boundary.test.ts",
+      "evidence": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/delivery-affected1.json",
+      "cases": 176
+    },
+    {
+      "suite": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/model-owner.test.ts",
+      "evidence": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/delivery-affected1.json",
+      "cases": 6
+    },
+    {
+      "suite": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeMemory/services.test.ts",
+      "evidence": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/delivery-affected1.json",
+      "cases": 17
+    },
+    {
+      "suite": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAuth/inventory.test.ts",
+      "evidence": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/affected-current4.json",
+      "cases": 64
+    },
+    {
+      "suite": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeMemory/public-closure.test.ts",
+      "evidence": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/delivery-affected1.json",
+      "cases": 67
+    },
+    {
+      "suite": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeIngestion/stages.test.ts",
+      "evidence": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/affected-current4.json",
+      "cases": 11
+    },
+    {
+      "suite": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeBeliefs/atomic.test.ts",
+      "evidence": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/affected-current4.json",
+      "cases": 9
+    },
+    {
+      "suite": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeIngestion/context.test.ts",
+      "evidence": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/delivery-affected1.json",
+      "cases": 7
+    },
+    {
+      "suite": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/agentDefinitions/definitions.test.ts",
+      "evidence": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/affected-current4.json",
+      "cases": 21
+    },
+    {
+      "suite": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/domain/memory-context.test.ts",
+      "evidence": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/affected-current4.json",
+      "cases": 8
+    },
+    {
+      "suite": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeTranscript/contracts.test.ts",
+      "evidence": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/delivery-affected1.json",
+      "cases": 31
+    },
+    {
+      "suite": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/domain/outcomes.test.ts",
+      "evidence": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/affected-current4.json",
+      "cases": 5
+    },
+    {
+      "suite": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeIngestion/context-permissions.test.ts",
+      "evidence": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/delivery-affected1.json",
+      "cases": 3
+    },
+    {
+      "suite": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/tool-context.test.ts",
+      "evidence": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/delivery-affected1.json",
+      "cases": 4
+    },
+    {
+      "suite": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/output-projection.test.ts",
+      "evidence": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/affected-current4.json",
+      "cases": 7
+    },
+    {
+      "suite": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeIngestion/shared-edit.test.ts",
+      "evidence": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/affected-current4.json",
+      "cases": 2
+    },
+    {
+      "suite": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/domain/profile.test.ts",
+      "evidence": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/affected-current4.json",
+      "cases": 7
+    },
+    {
+      "suite": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/memory-gateway.test.ts",
+      "evidence": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/delivery-affected1.json",
+      "cases": 62
+    },
+    {
+      "suite": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/model-policy-admission.test.ts",
+      "evidence": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/delivery-affected1.json",
+      "cases": 134
+    },
+    {
+      "suite": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/gateway-terminal-composition.test.ts",
+      "evidence": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/affected-current4.json",
+      "cases": 179
+    },
+    {
+      "suite": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/model-policy-model-drift.test.ts",
+      "evidence": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/affected-current4.json",
+      "cases": 57
+    },
+    {
+      "suite": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/gateway-backend.test.ts",
+      "evidence": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/affected-current4.json",
+      "cases": 36
+    },
+    {
+      "suite": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/gateway-qualification-registry.test.ts",
+      "evidence": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/affected-current4.json",
+      "cases": 4
+    },
+    {
+      "suite": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeIngestion/cached-compatibility.test.ts",
+      "evidence": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/delivery-affected1.json",
+      "cases": 1
+    }
+  ],
+  "evidence": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/delivery-affected1.json",
+      "bytes": 326100,
+      "sha256": "21a3a637d2fae32d882452e2d6f6149fdf09b74969660435af5f21b41f07482e"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/delivery-affected1.log",
+      "bytes": 42062,
+      "sha256": "e79c24828a79ff04cd71be43d752f4931c76e3b9da161ec924e1fbadf3c1b2ec"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/tool-snapshot-current2.json",
+      "bytes": 29165,
+      "sha256": "28c79e77a4b49c839496b4136407f3529f2429196bd3eb83e164b8b1ab61bb0c"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/tool-snapshot-current2.log",
+      "bytes": 15041,
+      "sha256": "a3bd7fea8f449d63f11eaa814b4c9c8378b1f124404b8408f5031bdd177db8ba"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/delivery-alltypes1.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/delivery-types1.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/delivery-lint1.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/tool-snapshot-lint2.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task08-memory-functional-v2-20261008/delivery-command-receipts2.json",
+      "bytes": 5759,
+      "sha256": "c88ff1425568533cb22e57d84e8bd7642a48d3548b26d8f8a74414d72a81a025"
+    }
+  ],
+  "preserved": "Report1 and every previous failure/raw remain unchanged. First tool snapshot assertion used a row displaced by fixture rollback; its immutable-snapshot claim is replaced by the affected current-row replay, not retrospectively strengthened.",
+  "requirements": [
+    {
+      "requirement": 1,
+      "implementation": "Durable source and separate extract/facts/vectors receipts; native policy pins; new per-job budget and exact default1536 profile; serialized shared schema plus Root context contract.",
+      "controlled": "stages/worker/atomic tests and model-policy preservation/guard checks",
+      "native": "Current2 verification pending; real extract/default-profile native query matching required."
+    },
+    {
+      "requirement": 2,
+      "implementation": "User source enqueued during response; assistant extract/facts skipped with attributed vectors; awaiting approval/tool eligibility explicit; only completed memory_remember promoted.",
+      "controlled": "worker completed-tool dedup, assistant and partial-output stage tests",
+      "native": "Delayed worker/Agent finality and provenance verification pending."
+    },
+    {
+      "requirement": 3,
+      "implementation": "Whole read-set CAS, ordered slot heads, receipt/history/outbox atomic; duplicate identity/full canonical comparison; revisions/tombstones exclude late results.",
+      "controlled": "atomic reversed completion/CAS/duplicate/delete/edit tests plus confirmed-draft recovery",
+      "native": "Native duplicate/reverse/CAS/edit/delete controls pending."
+    },
+    {
+      "requirement": 4,
+      "implementation": "Independent tenant/space facts/vectors contiguous cursors, bounded authorized tail, explicit overflow, real Workflow strict deadlines; separate conversation anchor/queue cutoff; cached context consumed-permission witnesses.",
+      "controlled": "context/pure watermark/Agent barrier/privacy tests and selective-share revocation tests",
+      "native": "Delayed same-thread/cross-thread/strict-hole/overflow measured outcomes pending."
+    },
+    {
+      "requirement": 5,
+      "implementation": "Three attempt maximum/dead-letter; ambiguous unknown no blind retry; durable confirmed draft commit-only reconciliation; current source/grant/policy at every attachment; response finality separate indexing state.",
+      "controlled": "worker expiry/recovery/unknown denial and native-ledger guard tests",
+      "native": "Real retries/deletion/revision/grant/late-commit checks pending."
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "criterion": 1,
+      "status": "Implemented with controlled checks; native evidence and single non-author review pending"
+    },
+    {
+      "criterion": 2,
+      "status": "Implemented with controlled checks; native evidence and single non-author review pending"
+    },
+    {
+      "criterion": 3,
+      "status": "Implemented with controlled checks; native evidence and single non-author review pending"
+    },
+    {
+      "criterion": 4,
+      "status": "Implemented with controlled checks; native evidence and single non-author review pending"
+    }
+  ],
+  "remaining": [
+    "Actual fresh verified disposable target current2 deployment/inference/delay/order/privacy/recovery and owned cleanup",
+    "One coherent non-author original08 verdict",
+    "Graph watermark projection remains explicitly unavailable until Task11; additional embedding profiles remain Task10"
+  ],
+  "authority": "Author controlled checks do not accept Task08 or the full goal; current native disposable-target outcomes and one non-author original08 review remain mandatory."
+}
