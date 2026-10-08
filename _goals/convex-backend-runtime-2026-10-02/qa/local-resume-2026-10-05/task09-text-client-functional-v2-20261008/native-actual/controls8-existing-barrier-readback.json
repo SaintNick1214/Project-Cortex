@@ -1,0 +1,165 @@
+{
+  "status": "PASS_EXISTING_UNPAID_BARRIER_OVERFLOW",
+  "priorFailure": "controls4-strict-overflow-failure.json: overflow asynchronous state sampled as not_started; no restart or new submission",
+  "injectedEarlierFailure": {
+    "eventId": "ingestion:a0dd5fd9c10a8816dcb1d74780ccb96c1216f5537b4b6dfe6f5064bd05c5358a",
+    "sequence": 2,
+    "stage": {
+      "_creationTime": 1791480292313.4683,
+      "_id": "rh78a1jjtgrfb3xxsjjxxndyz58fwqd3",
+      "attempt": 1,
+      "eventId": "ingestion:a0dd5fd9c10a8816dcb1d74780ccb96c1216f5537b4b6dfe6f5064bd05c5358a",
+      "failureCode": "INDEXING_ADMISSION_FAILED",
+      "leaseVersion": 0,
+      "memorySpaceId": "task09-8e22880a-3d8e-4640-9749-f4834f667125-space",
+      "stage": "extract",
+      "state": "failed",
+      "tenantId": "task09-8e22880a-3d8e-4640-9749-f4834f667125",
+      "updatedAt": 1791483608466
+    }
+  },
+  "laterCompletedEvent": {
+    "eventId": "ingestion:3cf721d30cef39e3493ee20e0e73952f63d64f50f91bb2dc92eb3184ba539b08",
+    "sequence": 4
+  },
+  "strictHandle": {
+    "agentId": "agent:815c30492860966b7eabcd49f826cec8cf505c7ab4b5bcc752c6796508096143",
+    "agentVersion": 1,
+    "attemptNumber": 0,
+    "cancellationRequested": false,
+    "contextCompleteness": null,
+    "contextFailureCode": null,
+    "conversationId": "conversation:ecf056bd459070d324d47c17f92240171d988cf82cabd0308fe8da0c5c2a54d5",
+    "createdAt": 1791483608813,
+    "definitionHash": "25e74893727abb696e296b5588d049111c9975489cc5eb74304da2134138811f",
+    "failureCode": null,
+    "graphStatus": "not_requested",
+    "inputMessageIds": [
+      "kx72d08cmd7fffvkg694sy4x798fwdk6"
+    ],
+    "memoryStatus": "pending",
+    "outputMessageIds": [],
+    "queueSequence": 1,
+    "responseStatus": "queued",
+    "runId": "run:ecf056bd459070d324d47c17f92240171d988cf82cabd0308fe8da0c5c2a54d5",
+    "scope": {
+      "memorySpaceId": "task09-8e22880a-3d8e-4640-9749-f4834f667125-space",
+      "tenantId": "task09-8e22880a-3d8e-4640-9749-f4834f667125"
+    },
+    "updatedAt": 1791483608813,
+    "version": 1
+  },
+  "strictFinal": {
+    "approvals": [],
+    "cursor": 2,
+    "parts": [
+      {
+        "part": {
+          "state": "failed",
+          "type": "status"
+        },
+        "sequence": 1
+      },
+      {
+        "part": {
+          "code": "RUNTIME_OUTPUT_FAILED",
+          "type": "error"
+        },
+        "sequence": 2
+      }
+    ],
+    "run": {
+      "agentId": "agent:815c30492860966b7eabcd49f826cec8cf505c7ab4b5bcc752c6796508096143",
+      "agentVersion": 1,
+      "attemptNumber": 1,
+      "cancellationRequested": false,
+      "contextCompleteness": "incomplete",
+      "contextFailureCode": "MEMORY_STAGE_FAILED",
+      "conversationId": "conversation:ecf056bd459070d324d47c17f92240171d988cf82cabd0308fe8da0c5c2a54d5",
+      "createdAt": 1791483608813,
+      "definitionHash": "25e74893727abb696e296b5588d049111c9975489cc5eb74304da2134138811f",
+      "failureCode": "MEMORY_STAGE_FAILED",
+      "graphStatus": "not_requested",
+      "inputMessageIds": [
+        "kx72d08cmd7fffvkg694sy4x798fwdk6"
+      ],
+      "memoryStatus": "complete",
+      "outputMessageIds": [],
+      "queueSequence": 1,
+      "responseStatus": "failed",
+      "runId": "run:ecf056bd459070d324d47c17f92240171d988cf82cabd0308fe8da0c5c2a54d5",
+      "scope": {
+        "memorySpaceId": "task09-8e22880a-3d8e-4640-9749-f4834f667125-space",
+        "tenantId": "task09-8e22880a-3d8e-4640-9749-f4834f667125"
+      },
+      "updatedAt": 1791483893899,
+      "version": 1
+    },
+    "state": "failed"
+  },
+  "overflowHandle": {
+    "agentId": "agent:8575ddf56a760363599116b5f432f773f7f67c73a9e000c31704ac1db48e5981",
+    "agentVersion": 1,
+    "attemptNumber": 0,
+    "cancellationRequested": false,
+    "contextCompleteness": null,
+    "contextFailureCode": null,
+    "conversationId": "conversation:4b568d03f82e48e8d4b929e06446fbb3858490c52aa4e4428870c5d2ba2553b7",
+    "createdAt": 1791483618842,
+    "definitionHash": "2d44755e1e8b4007a299b2c682105119a215a5ca798a0f080b1d6d25e6d59a35",
+    "failureCode": null,
+    "graphStatus": "not_requested",
+    "inputMessageIds": [
+      "kx7f97wxzacqavkk61t5wwc1s58fw4eh"
+    ],
+    "memoryStatus": "pending",
+    "outputMessageIds": [],
+    "queueSequence": 1,
+    "responseStatus": "queued",
+    "runId": "run:4b568d03f82e48e8d4b929e06446fbb3858490c52aa4e4428870c5d2ba2553b7",
+    "scope": {
+      "memorySpaceId": "task09-8e22880a-3d8e-4640-9749-f4834f667125-space",
+      "tenantId": "task09-8e22880a-3d8e-4640-9749-f4834f667125"
+    },
+    "updatedAt": 1791483618842,
+    "version": 1
+  },
+  "overflowFinal": {
+    "approvals": [],
+    "cursor": 0,
+    "parts": [],
+    "run": {
+      "agentId": "agent:8575ddf56a760363599116b5f432f773f7f67c73a9e000c31704ac1db48e5981",
+      "agentVersion": 1,
+      "attemptNumber": 0,
+      "cancellationRequested": false,
+      "contextCompleteness": null,
+      "contextFailureCode": null,
+      "conversationId": "conversation:4b568d03f82e48e8d4b929e06446fbb3858490c52aa4e4428870c5d2ba2553b7",
+      "createdAt": 1791483618842,
+      "definitionHash": "2d44755e1e8b4007a299b2c682105119a215a5ca798a0f080b1d6d25e6d59a35",
+      "failureCode": "CONTEXT_LIMIT_EXCEEDED",
+      "graphStatus": "not_requested",
+      "inputMessageIds": [
+        "kx7f97wxzacqavkk61t5wwc1s58fw4eh"
+      ],
+      "memoryStatus": "complete",
+      "outputMessageIds": [],
+      "queueSequence": 1,
+      "responseStatus": "failed",
+      "runId": "run:4b568d03f82e48e8d4b929e06446fbb3858490c52aa4e4428870c5d2ba2553b7",
+      "scope": {
+        "memorySpaceId": "task09-8e22880a-3d8e-4640-9749-f4834f667125-space",
+        "tenantId": "task09-8e22880a-3d8e-4640-9749-f4834f667125"
+      },
+      "updatedAt": 1791483894091,
+      "version": 1
+    },
+    "state": "failed"
+  },
+  "paidOperationsForBoth": 0,
+  "sourceScope": "installed-task09-source-manifest5.json",
+  "noModelInvocation": true,
+  "noRunRestart": true,
+  "noNewSubmission": true
+}

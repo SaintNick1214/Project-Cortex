@@ -1,0 +1,71 @@
+(node:42974) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeAgent/execution.test.ts
+  durable Agent execution product boundaries
+    ✓ observe keeps an unstarted queued run nonterminal without manufacturing output or an execution (20 ms)
+    ✓ observe delivers the real failed disposition when no Agent execution exists (14 ms)
+    ✓ observe delivers the real cancelled disposition when no Agent execution exists (10 ms)
+    ○ skipped start claims/enqueues one Workflow atomically; duplicate start keeps same attempt and changed delivery contract denies
+    ○ skipped start preserves the claim's oversized-prefix terminal disposition instead of rolling it back
+    ○ skipped native schemas reject the former model/tool extra fields without changing their validators
+    ○ skipped start rejects no-jwt before Workflow or model effects
+    ○ skipped start rejects revoked before Workflow or model effects
+    ○ skipped start rejects foreign before Workflow or model effects
+    ○ skipped start rejects definition-revoked before Workflow or model effects
+    ○ skipped start rejects conversation-tombstone before Workflow or model effects
+    ○ skipped future queued request remains durable and only dispatches after the current head retires
+    ○ skipped private selected canonical history retains typed calls/results, while public history omits private tool payloads
+    ○ skipped source/manual edits fence every delegated operation and finalization before effects
+    ○ skipped unlocked edit cannot orphan a canonical assistant tool call and its result
+    ○ skipped unlocked remove cannot orphan a canonical assistant tool call and its result
+    ○ skipped started/unknown paid work cannot be readmitted; completed exact replay is reusable and changed input denies
+    ○ skipped finalization registers canonical messages and one ingestion receipt atomically/idempotently
+    ○ skipped component-save gap recovers exact server generation without a model/tool retry; stale/cancelled gaps cannot attach
+    ○ skipped current-generation reconciliation ignores retained failed/unregistered holes and stops at older orders
+    ○ skipped later private hydration retains source provenance (fork=false, changed)
+    ○ skipped later private hydration retains source provenance (fork=false, tombstoned)
+    ○ skipped later private hydration retains source provenance (fork=true, changed)
+    ○ skipped later private hydration retains source provenance (fork=true, tombstoned)
+    ○ skipped observers replay scoped saved deltas with independent cursors; final-only withholds until completion and strips secrets
+    ○ skipped cancel retires Workflow/budget/output delivery and obsolete attempts cannot finalize
+    ○ skipped corrupted definition cannot enter context dispatch
+    ○ skipped strict facts barrier waits and then reports the pinned deadline before embedding dispatch
+    ○ skipped explicit tool approval requires the current scoped admin, exact request hash and pinned history; resumes one durable event
+    ○ skipped expired active approval cannot renew, then its owned timer cancels once and makes the next queued run ready
+    ○ skipped current unexpired tool approval keeps its durable wait positive and a stale expiry callback cannot cancel renewed work
+    ○ skipped queue recovery retires an expired active approval but leaves intentional unclaimed input approval pending
+    ○ skipped expiry cleanup survives an obsolete owner grant and recovers a later queued row under its own current authority
+    ○ skipped current owner can read status and cancel after definition revocation while executable paths stay closed
+    ○ skipped definition-revoked metadata/cancellation still denies no-jwt without effects
+    ○ skipped definition-revoked metadata/cancellation still denies foreign-space without effects
+    ○ skipped a legitimately renewed owner grant cancels the captured budget without changing paid or uncertain accounting
+    ○ skipped renewed owner budget cancellation still denies no-jwt without accounting or Workflow effects
+    ○ skipped renewed owner budget cancellation still denies foreign-space without accounting or Workflow effects
+    ○ skipped dynamic tool-recalled source changed is denied before next paid admission and finalization
+    ○ skipped dynamic tool-recalled source tombstoned is denied before next paid admission and finalization
+    ○ skipped saved private tool/model body mutation cannot reach a later native admission
+    ○ skipped saved private tool/model position mutation cannot reach a later native admission
+    ○ skipped the ledger transaction rejects cancel after an earlier action-side hydration
+    ○ skipped the ledger transaction rejects edit after an earlier action-side hydration
+    ○ skipped the ledger transaction rejects revoke after an earlier action-side hydration
+    ○ skipped the ledger transaction rejects expired after an earlier action-side hydration
+    ○ skipped standalone model/memory budgets retain their original contract without transcript reads
+    ○ skipped duplicate completion callbacks keep one terminal output and gap reconciliation supplies final-only text
+    ○ skipped Workflow uses fresh immutable ordinals and never retries model, context or tool actions
+    ○ skipped tool source commits recheck cancellation in the effect transaction, after an earlier approved check
+  closed server tool contract
+    ○ skipped registered tools expose exact schemas and no SDK execute callback
+    ○ skipped tool input rejects malformed/extra/foreign control {}
+    ○ skipped tool input rejects malformed/extra/foreign control {"text": ""}
+    ○ skipped tool input rejects malformed/extra/foreign control {"limit": 11, "text": "ok"}
+    ○ skipped tool input rejects malformed/extra/foreign control {"limit": 1, "tenantId": "other", "text": "ok"}
+    ○ skipped tool input rejects malformed/extra/foreign control {"limit": true, "text": "ok"}
+    ○ skipped tool input rejects malformed/extra/foreign control {"limit": 1.5, "text": "ok"}
+    ○ skipped tool input rejects getters before invocation and unknown native names cannot select callbacks
+
+Test Suites: 1 passed, 1 total
+Tests:       56 skipped, 3 passed, 59 total
+Snapshots:   0 total
+Time:        3.563 s
+Ran all test suites within paths "tests/unit/runtimeAgent/execution.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-product-independent-review1/terminal-without-execution-replay1.results.json

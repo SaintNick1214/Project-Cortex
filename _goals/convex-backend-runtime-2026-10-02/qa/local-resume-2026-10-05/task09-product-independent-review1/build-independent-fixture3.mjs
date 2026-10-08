@@ -1,0 +1,1 @@
+import{build}from "esbuild";import path from "node:path";const J=process.argv[2];await build({entryPoints:[path.join(J,"reconnect-and-auth-independent3.mjs")],bundle:true,platform:"node",format:"esm",outfile:path.join(J,"reconnect-and-auth-independent3.bundle.mjs"),alias:{"@cortexmemory/sdk/runtime":path.join(J,"captured-successor-sources3/validation.ts")},logLevel:"warning"});

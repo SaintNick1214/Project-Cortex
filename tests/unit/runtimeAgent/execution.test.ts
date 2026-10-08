@@ -90,6 +90,32 @@ describe("durable Agent execution product boundaries", () => {
     expect(f.db.table("runtimeRuns")[0].responseStatus).toBe("failed"); expect(f.db.table("runtimeRunOutbox")[0].state).toBe("complete");
     expect(starts).toEqual([]); expect(f.db.table("runtimeAgentExecutions")).toEqual([]); expect(f.db.table("runtimeModelOperations")).toEqual([]);
   });
+  it("observe keeps an unstarted queued run nonterminal without manufacturing output or an execution", async () => {
+    const f = await fixture(); const run = await f.run(); const writes = f.db.writes;
+    expect(await f.call(runtime.observe, { runId: run.runId, afterSequence: 7 })).toMatchObject({
+      state: "not_started", run: { responseStatus: "queued", attemptNumber: 0 }, parts: [], cursor: 7, approvals: [],
+    });
+    expect(f.db.writes).toBe(writes); expect(starts).toEqual([]); expect(f.db.table("runtimeAgentExecutions")).toEqual([]);
+  });
+  it.each(["failed", "cancelled"])("observe delivers the real %s disposition when no Agent execution exists", async status => {
+    const f = await fixture();
+    let run: { runId: string };
+    if (status === "failed") {
+      const published = await f.call<{ agentId: string; version: number }>(definitions.publishVersion, { memorySpaceId: "space-a", clientMutationId: "observed-overflow", expectedPreviousVersion: 0,
+        definitionInput: { ...f.definitionInput, context: { ...f.definitionInput.context, maxContextTokens: 20 } } });
+      run = await f.call(runs.submit, { request: { ...f.request("observed-overflow"), agentId: published.agentId, agentVersion: published.version, parts: [{ type: "text", text: "x".repeat(1000) }] } });
+      await f.call(runtime.start, { runId: run.runId });
+    } else {
+      run = await f.run(); await f.call(runtime.cancel, { runId: run.runId });
+    }
+    const writes = f.db.writes;
+    expect(await f.call(runtime.observe, { runId: run.runId, finalOnly: true })).toMatchObject({
+      state: status, run: { responseStatus: status, attemptNumber: 0, ...(status === "failed" ? { failureCode: "CONTEXT_LIMIT_EXCEEDED" } : {}) },
+      parts: [], cursor: 0, approvals: [],
+    });
+    expect(f.db.writes).toBe(writes); expect(starts).toEqual([]); expect(f.db.table("runtimeAgentExecutions")).toEqual([]);
+    expect(f.db.table("runtimeAgentOperations")).toEqual([]); expect(f.db.table("runtimeModelOperations")).toEqual([]);
+  });
   it("native schemas reject the former model/tool extra fields without changing their validators", async () => {
     const f = await fixture(); const { args } = await started(f);
     expect(() => assertNativeArgs(runtime.hydrateExecution, args)).not.toThrow();

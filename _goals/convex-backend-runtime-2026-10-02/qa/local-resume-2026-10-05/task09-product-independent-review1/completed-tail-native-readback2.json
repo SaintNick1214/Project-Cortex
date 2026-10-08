@@ -1,0 +1,56 @@
+{
+  "schema": "task09-independent-actual-tail-readback/v1",
+  "at": "2026-10-08T18:02:56.384843+00:00",
+  "inputs": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-text-client-functional-v2-20261008/native-actual/native3-completed-scope-readback.json",
+      "bytes": 28615,
+      "sha256": "6722a143aa68a2318c4eddf04a63d58c57dfbacf1fc390978bf6024116f4a17b"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-text-client-functional-v2-20261008/native-actual/ui-c-tail-and-prompt-diagnosis4.json",
+      "bytes": 22883,
+      "sha256": "df0947d20be0e79fe931583f722baa03872af5198b18391b62d1f69836f704a7"
+    }
+  ],
+  "effectScope": "Read-only public saved actual receipts, no fixture mutation or model call",
+  "B": {
+    "runId": "run:15da2d1f0afe9bdd8be7d0f8706e4c0cb9498a634cc53b26eedb98736964ab45",
+    "distinctRecallInvocations": 2,
+    "oneFinalTranscript": [
+      "kx723ah2cr5tn0shrs0njxtec58fwzbe"
+    ],
+    "oneIngestionIdentity": "agent-ingestion:b726d91f1f310881503154a983476d5d0b38dbbfa6e1555858a5cf7f95f50230",
+    "cursorResumeParts": 0,
+    "noAddedPaidDispatch": true,
+    "unchangedCounts": {
+      "runtimeModelAttempts": 11,
+      "runtimeTranscriptMessages": 6,
+      "runtimeIngestionEvents": 4
+    }
+  },
+  "C": {
+    "runId": "run:c58dc73792d56cfd352215df3a356c03c666fc7aeb971b0dd755b2fcd53ced03",
+    "completedBPin": {
+      "canonicalContentHash": "fe4f8b8750753a2df927fc4548b0e77caba09933250a6f6a0464fe874f9fe1c8",
+      "contentHash": "7fa28fa74e2a6990ce1b2a4848b63346832368d808c402a668804689e36ae137",
+      "nativeMessageId": "kx7esyc7swtafkmbkb1cp82qz18fwg46",
+      "order": 1,
+      "sourceEventId": "transcript:conversation:de3a0bf36f399a3f22a899725832fc0f65306ea05d0d57ae4371a2626d97fd58:kx7esyc7swtafkmbkb1cp82qz18fwg46",
+      "sourceRevision": 1,
+      "stepOrder": 0
+    },
+    "pendingBExtract": {
+      "state": "pending",
+      "attempt": 0
+    },
+    "nativeRequestMessages": 7,
+    "previousTextOccurrences": 1,
+    "currentTextOccurrences": 1,
+    "measuredInputTokens": 20394,
+    "maximumOutputTokens": 128,
+    "responseStatus": "complete"
+  },
+  "assessment": "Exact completed pending B tail appears once in C native context. The quoted-answer oracle red is retained as model answer-quality evidence; no missing tail, duplicate current input or duplicate transport/observer effects is demonstrated. This is not a full Task09 verdict.",
+  "preservedFailure": "C quotes its current request rather than previous B request; no model replay performed to force the oracle."
+}

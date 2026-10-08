@@ -1,0 +1,112 @@
+[
+  {
+    "name": "SDK controlled suite",
+    "command": "node --experimental-vm-modules node_modules/jest/bin/jest.js tests/unit/client-runtime/client.test.ts --runInBand --json",
+    "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+    "exitCode": 0,
+    "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-client-functional-v2-20261008/client-jest5.log",
+    "toolchain": {
+      "node": "24.15.0",
+      "npm": "12.2.0"
+    }
+  },
+  {
+    "name": "provider controlled suite",
+    "command": "node --experimental-vm-modules ../../node_modules/jest/bin/jest.js --selectProjects unit --runTestsByPath tests/unit/remote.test.ts --runInBand --json",
+    "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider",
+    "exitCode": 0,
+    "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-client-functional-v2-20261008/remote-jest3.log",
+    "toolchain": {
+      "node": "24.15.0",
+      "npm": "12.2.0"
+    }
+  },
+  {
+    "name": "affected test-typing replay",
+    "command": "node --experimental-vm-modules node_modules/jest/bin/jest.js tests/unit/client-runtime/client.test.ts --testNamePattern='async .* delivery|drains cursor' --runInBand --json",
+    "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+    "exitCode": 0,
+    "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-client-functional-v2-20261008/client-typing-affected1.log",
+    "toolchain": {
+      "node": "24.15.0",
+      "npm": "12.2.0"
+    }
+  },
+  {
+    "name": "SDK complete types",
+    "command": "npx tsc --noEmit",
+    "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+    "exitCode": 0,
+    "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-client-functional-v2-20261008/sdk-types4.log",
+    "toolchain": {
+      "node": "24.15.0",
+      "npm": "12.2.0"
+    }
+  },
+  {
+    "name": "provider complete types/lint",
+    "command": "npm run lint",
+    "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider",
+    "exitCode": 0,
+    "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-client-functional-v2-20261008/provider-types2.log",
+    "toolchain": {
+      "node": "24.15.0",
+      "npm": "12.2.0"
+    }
+  },
+  {
+    "name": "SDK scoped ESLint",
+    "command": "npx eslint src/client-runtime tests/unit/client-runtime --report-unused-disable-directives",
+    "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+    "exitCode": 0,
+    "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-client-functional-v2-20261008/sdk-lint2.log",
+    "toolchain": {
+      "node": "24.15.0",
+      "npm": "12.2.0"
+    }
+  },
+  {
+    "name": "SDK/backend ordinary build",
+    "command": "npm run build",
+    "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+    "exitCode": 0,
+    "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-client-functional-v2-20261008/sdk-full-build1.log",
+    "toolchain": {
+      "node": "24.15.0",
+      "npm": "12.2.0"
+    }
+  },
+  {
+    "name": "provider ordinary build",
+    "command": "npm run build",
+    "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider",
+    "exitCode": 0,
+    "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-client-functional-v2-20261008/provider-build1.log",
+    "toolchain": {
+      "node": "24.15.0",
+      "npm": "12.2.0"
+    }
+  },
+  {
+    "name": "browser entry contracts",
+    "command": "node /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-client-functional-v2-20261008/browser-entry-contract.mjs",
+    "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+    "exitCode": 0,
+    "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-client-functional-v2-20261008/browser-entry-contract1.log",
+    "toolchain": {
+      "node": "24.15.0",
+      "npm": "12.2.0"
+    }
+  },
+  {
+    "name": "established packed public contracts",
+    "command": "npm run test:contracts",
+    "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+    "exitCode": 0,
+    "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-client-functional-v2-20261008/public-contracts1.log",
+    "toolchain": {
+      "node": "24.15.0",
+      "npm": "12.2.0"
+    }
+  }
+]

@@ -1,0 +1,919 @@
+{
+  "status": "PASS_SCOPED_COMPLETED_TURN_READBACK",
+  "operation": "7ae8d289-886e-4c09-9451-7cc00acd4233",
+  "handle": {
+    "version": 1,
+    "tenantId": "task09-8e22880a-3d8e-4640-9749-f4834f667125",
+    "memorySpaceId": "task09-8e22880a-3d8e-4640-9749-f4834f667125-space",
+    "principalId": "n573t34xng3hctk542pyp379xd8fwpts",
+    "runId": "run:15da2d1f0afe9bdd8be7d0f8706e4c0cb9498a634cc53b26eedb98736964ab45",
+    "conversationId": "conversation:de3a0bf36f399a3f22a899725832fc0f65306ea05d0d57ae4371a2626d97fd58",
+    "agentId": "agent:e57eee1cd68e3e3bca068a1fcbc1d886ff19f5c3219c9a4d5d1f2e882890dcb8",
+    "agentVersion": 1,
+    "definitionHash": "ad972ee3e9358715dd5579f72c62a61b840c06f5e4d1ad71c8b921a3f278e2be"
+  },
+  "text": "Your nickname is not explicitly mentioned in the memory recall. However, your project codeword is **LANTERN_7ae8d289**. If you have a specific nickname, please let me know!",
+  "run": {
+    "_creationTime": 1791481867373.5454,
+    "_id": "q97eqwv5a4sa1xgbm5f33rddzh8fwxvm",
+    "agentId": "agent:e57eee1cd68e3e3bca068a1fcbc1d886ff19f5c3219c9a4d5d1f2e882890dcb8",
+    "agentVersion": 1,
+    "attemptNumber": 1,
+    "authorityReference": {
+      "grantId": "mx798md2ak6mrah8g5tha0saxh8fxbe9",
+      "grantVersion": 1,
+      "membershipId": "n170hkm5yqkk99n1t2cmptwqnn8fwp85",
+      "membershipVersion": 1,
+      "memorySpaceEpoch": 1,
+      "memorySpaceId": "task09-8e22880a-3d8e-4640-9749-f4834f667125-space",
+      "principalId": "n573t34xng3hctk542pyp379xd8fwpts",
+      "principalVersion": 1,
+      "tenantEpoch": 1,
+      "tenantId": "task09-8e22880a-3d8e-4640-9749-f4834f667125"
+    },
+    "contextCompleteness": "complete",
+    "conversationEpoch": 1,
+    "conversationId": "conversation:de3a0bf36f399a3f22a899725832fc0f65306ea05d0d57ae4371a2626d97fd58",
+    "createdAt": 1791481867373,
+    "definitionHash": "ad972ee3e9358715dd5579f72c62a61b840c06f5e4d1ad71c8b921a3f278e2be",
+    "executionRequested": true,
+    "graphStatus": "not_requested",
+    "historyRevision": 0,
+    "inputMessageIds": [
+      "kx7esyc7swtafkmbkb1cp82qz18fwg46"
+    ],
+    "memorySpaceId": "task09-8e22880a-3d8e-4640-9749-f4834f667125-space",
+    "memoryStatus": "pending",
+    "outputMessageIds": [
+      "kx723ah2cr5tn0shrs0njxtec58fwzbe"
+    ],
+    "ownerPrincipalId": "n573t34xng3hctk542pyp379xd8fwpts",
+    "queueSequence": 2,
+    "requestCanonical": "{\"identity\":[\"cortex.submit.v1\",\"task09-8e22880a-3d8e-4640-9749-f4834f667125\",\"task09-8e22880a-3d8e-4640-9749-f4834f667125-space\",\"n573t34xng3hctk542pyp379xd8fwpts\",[\"existing\",\"conversation:de3a0bf36f399a3f22a899725832fc0f65306ea05d0d57ae4371a2626d97fd58\"],\"task09-tail-b-7ae8d289-886e-4c09-9451-7cc00acd4233\"],\"publicRequest\":{\"agentId\":\"agent:e57eee1cd68e3e3bca068a1fcbc1d886ff19f5c3219c9a4d5d1f2e882890dcb8\",\"agentVersion\":1,\"clientRequestId\":\"task09-tail-b-7ae8d289-886e-4c09-9451-7cc00acd4233\",\"conversationId\":\"conversation:de3a0bf36f399a3f22a899725832fc0f65306ea05d0d57ae4371a2626d97fd58\",\"parts\":[{\"text\":\"Use memory_recall once for my project codeword. What nickname did I give in my previous user message? Reply with my nickname and the retrieved codeword.\",\"type\":\"text\"}],\"version\":1},\"version\":1}",
+    "requestIdentityCanonical": "[\"cortex.submit.v1\",\"task09-8e22880a-3d8e-4640-9749-f4834f667125\",\"task09-8e22880a-3d8e-4640-9749-f4834f667125-space\",\"n573t34xng3hctk542pyp379xd8fwpts\",[\"existing\",\"conversation:de3a0bf36f399a3f22a899725832fc0f65306ea05d0d57ae4371a2626d97fd58\"],\"task09-tail-b-7ae8d289-886e-4c09-9451-7cc00acd4233\"]",
+    "requestIdentityHash": "15da2d1f0afe9bdd8be7d0f8706e4c0cb9498a634cc53b26eedb98736964ab45",
+    "responseStatus": "complete",
+    "runAccountId": "nh75dwntak3n90a8ysvwejm0gh8fw17x",
+    "runBudgetId": "21bb3574ea1903a478abeadcdbf7d8835db1ff184606615dcb88bb63a715db6f",
+    "runId": "run:15da2d1f0afe9bdd8be7d0f8706e4c0cb9498a634cc53b26eedb98736964ab45",
+    "snapshotCanonical": "{\"anchor\":{\"canonicalContentHash\":\"fe4f8b8750753a2df927fc4548b0e77caba09933250a6f6a0464fe874f9fe1c8\",\"contentHash\":\"7fa28fa74e2a6990ce1b2a4848b63346832368d808c402a668804689e36ae137\",\"nativeMessageId\":\"kx7esyc7swtafkmbkb1cp82qz18fwg46\",\"order\":1,\"sourceEventId\":\"transcript:conversation:de3a0bf36f399a3f22a899725832fc0f65306ea05d0d57ae4371a2626d97fd58:kx7esyc7swtafkmbkb1cp82qz18fwg46\",\"sourceRevision\":1,\"stepOrder\":0},\"attemptNumber\":1,\"capturedAuthorityReference\":{\"grantId\":\"mx798md2ak6mrah8g5tha0saxh8fxbe9\",\"grantVersion\":1,\"membershipId\":\"n170hkm5yqkk99n1t2cmptwqnn8fwp85\",\"membershipVersion\":1,\"memorySpaceEpoch\":1,\"memorySpaceId\":\"task09-8e22880a-3d8e-4640-9749-f4834f667125-space\",\"principalId\":\"n573t34xng3hctk542pyp379xd8fwpts\",\"principalVersion\":1,\"tenantEpoch\":1,\"tenantId\":\"task09-8e22880a-3d8e-4640-9749-f4834f667125\"},\"completeness\":\"complete\",\"conversationEpoch\":1,\"conversationId\":\"conversation:de3a0bf36f399a3f22a899725832fc0f65306ea05d0d57ae4371a2626d97fd58\",\"definitionHash\":\"ad972ee3e9358715dd5579f72c62a61b840c06f5e4d1ad71c8b921a3f278e2be\",\"definitionVersion\":1,\"historyRevision\":0,\"ingestionCutoff\":{\"requiredStages\":[],\"scopeIdentity\":\"[\\\"task09-8e22880a-3d8e-4640-9749-f4834f667125\\\",\\\"task09-8e22880a-3d8e-4640-9749-f4834f667125-space\\\"]\",\"sequence\":3},\"messages\":[{\"canonicalContentHash\":\"fe4f8b8750753a2df927fc4548b0e77caba09933250a6f6a0464fe874f9fe1c8\",\"contentHash\":\"7fa28fa74e2a6990ce1b2a4848b63346832368d808c402a668804689e36ae137\",\"nativeMessageId\":\"kx7esyc7swtafkmbkb1cp82qz18fwg46\",\"order\":1,\"sourceEventId\":\"transcript:conversation:de3a0bf36f399a3f22a899725832fc0f65306ea05d0d57ae4371a2626d97fd58:kx7esyc7swtafkmbkb1cp82qz18fwg46\",\"sourceRevision\":1,\"stepOrder\":0}],\"queueSequence\":2,\"runDocId\":\"q97eqwv5a4sa1xgbm5f33rddzh8fwxvm\",\"threadId\":\"m97502yppkme3sfj1wp04casyd8fwzcp\",\"version\":1}",
+    "streamingRequested": true,
+    "tenantId": "task09-8e22880a-3d8e-4640-9749-f4834f667125",
+    "updatedAt": 1791481927809
+  },
+  "eventId": "ingestion:48397c12dee19619937cea2c2faa7ba48b25b60f05b05a9906c991199f169313",
+  "extract": {
+    "_creationTime": 1791481867373.5437,
+    "_id": "rh729gbyynakg1ch87rr1zmw9d8fwwgd",
+    "attempt": 0,
+    "eventId": "ingestion:48397c12dee19619937cea2c2faa7ba48b25b60f05b05a9906c991199f169313",
+    "leaseVersion": 0,
+    "memorySpaceId": "task09-8e22880a-3d8e-4640-9749-f4834f667125-space",
+    "stage": "extract",
+    "state": "pending",
+    "tenantId": "task09-8e22880a-3d8e-4640-9749-f4834f667125",
+    "updatedAt": 1791481867373
+  },
+  "successfulToolCalls": [
+    {
+      "sequence": 7,
+      "part": {
+        "type": "tool",
+        "toolCallId": "call_hf1PIR9jeZUmIZh5wZdSco7a",
+        "name": "memory_recall",
+        "phase": "succeeded"
+      }
+    },
+    {
+      "sequence": 10,
+      "part": {
+        "type": "tool",
+        "toolCallId": "call_0wb8z1wLrMKteQtcjGukKE7c",
+        "name": "memory_recall",
+        "phase": "succeeded"
+      }
+    }
+  ],
+  "actualDistinctToolInvocations": 2,
+  "requestedOnceButModelRequestedTwo": true,
+  "oneFinalTranscript": [
+    "kx723ah2cr5tn0shrs0njxtec58fwzbe"
+  ],
+  "oneIngestionIdentity": "agent-ingestion:b726d91f1f310881503154a983476d5d0b38dbbfa6e1555858a5cf7f95f50230",
+  "cursorResume": {
+    "run": {
+      "version": 1,
+      "runId": "run:15da2d1f0afe9bdd8be7d0f8706e4c0cb9498a634cc53b26eedb98736964ab45",
+      "conversationId": "conversation:de3a0bf36f399a3f22a899725832fc0f65306ea05d0d57ae4371a2626d97fd58",
+      "agentId": "agent:e57eee1cd68e3e3bca068a1fcbc1d886ff19f5c3219c9a4d5d1f2e882890dcb8",
+      "agentVersion": 1,
+      "scope": {
+        "tenantId": "task09-8e22880a-3d8e-4640-9749-f4834f667125",
+        "memorySpaceId": "task09-8e22880a-3d8e-4640-9749-f4834f667125-space"
+      },
+      "definitionHash": "ad972ee3e9358715dd5579f72c62a61b840c06f5e4d1ad71c8b921a3f278e2be",
+      "queueSequence": 2,
+      "responseStatus": "complete",
+      "memoryStatus": "pending",
+      "graphStatus": "not_requested",
+      "attemptNumber": 1,
+      "cancellationRequested": false,
+      "inputMessageIds": [
+        "kx7esyc7swtafkmbkb1cp82qz18fwg46"
+      ],
+      "outputMessageIds": [
+        "kx723ah2cr5tn0shrs0njxtec58fwzbe"
+      ],
+      "failureCode": null,
+      "contextCompleteness": "complete",
+      "contextFailureCode": null,
+      "createdAt": 1791481867373,
+      "updatedAt": 1791481927809
+    },
+    "state": "complete",
+    "cursor": 40,
+    "parts": [],
+    "approvals": []
+  },
+  "observerUpdates": [
+    {
+      "observer": "first",
+      "run": {
+        "version": 1,
+        "runId": "run:15da2d1f0afe9bdd8be7d0f8706e4c0cb9498a634cc53b26eedb98736964ab45",
+        "conversationId": "conversation:de3a0bf36f399a3f22a899725832fc0f65306ea05d0d57ae4371a2626d97fd58",
+        "agentId": "agent:e57eee1cd68e3e3bca068a1fcbc1d886ff19f5c3219c9a4d5d1f2e882890dcb8",
+        "agentVersion": 1,
+        "scope": {
+          "tenantId": "task09-8e22880a-3d8e-4640-9749-f4834f667125",
+          "memorySpaceId": "task09-8e22880a-3d8e-4640-9749-f4834f667125-space"
+        },
+        "definitionHash": "ad972ee3e9358715dd5579f72c62a61b840c06f5e4d1ad71c8b921a3f278e2be",
+        "queueSequence": 2,
+        "responseStatus": "complete",
+        "memoryStatus": "pending",
+        "graphStatus": "not_requested",
+        "attemptNumber": 1,
+        "cancellationRequested": false,
+        "inputMessageIds": [
+          "kx7esyc7swtafkmbkb1cp82qz18fwg46"
+        ],
+        "outputMessageIds": [
+          "kx723ah2cr5tn0shrs0njxtec58fwzbe"
+        ],
+        "failureCode": null,
+        "contextCompleteness": "complete",
+        "contextFailureCode": null,
+        "createdAt": 1791481867373,
+        "updatedAt": 1791481927809
+      },
+      "state": "complete",
+      "cursor": 40,
+      "parts": [
+        {
+          "sequence": 1,
+          "part": {
+            "type": "tool",
+            "toolCallId": "call_hf1PIR9jeZUmIZh5wZdSco7a",
+            "name": "memory_recall",
+            "phase": "requested"
+          }
+        },
+        {
+          "sequence": 2,
+          "part": {
+            "type": "tool",
+            "toolCallId": "call_0wb8z1wLrMKteQtcjGukKE7c",
+            "name": "memory_recall",
+            "phase": "requested"
+          }
+        },
+        {
+          "sequence": 3,
+          "part": {
+            "type": "tool",
+            "toolCallId": "call_hf1PIR9jeZUmIZh5wZdSco7a",
+            "name": "memory_recall",
+            "phase": "requested"
+          }
+        },
+        {
+          "sequence": 4,
+          "part": {
+            "type": "tool",
+            "toolCallId": "call_0wb8z1wLrMKteQtcjGukKE7c",
+            "name": "memory_recall",
+            "phase": "requested"
+          }
+        },
+        {
+          "sequence": 5,
+          "part": {
+            "type": "tool",
+            "toolCallId": "call_hf1PIR9jeZUmIZh5wZdSco7a",
+            "name": "memory_recall",
+            "phase": "requested"
+          }
+        },
+        {
+          "sequence": 6,
+          "part": {
+            "type": "tool",
+            "toolCallId": "call_hf1PIR9jeZUmIZh5wZdSco7a",
+            "name": "memory_recall",
+            "phase": "running"
+          }
+        },
+        {
+          "sequence": 7,
+          "part": {
+            "type": "tool",
+            "toolCallId": "call_hf1PIR9jeZUmIZh5wZdSco7a",
+            "name": "memory_recall",
+            "phase": "succeeded"
+          }
+        },
+        {
+          "sequence": 8,
+          "part": {
+            "type": "tool",
+            "toolCallId": "call_0wb8z1wLrMKteQtcjGukKE7c",
+            "name": "memory_recall",
+            "phase": "requested"
+          }
+        },
+        {
+          "sequence": 9,
+          "part": {
+            "type": "tool",
+            "toolCallId": "call_0wb8z1wLrMKteQtcjGukKE7c",
+            "name": "memory_recall",
+            "phase": "running"
+          }
+        },
+        {
+          "sequence": 10,
+          "part": {
+            "type": "tool",
+            "toolCallId": "call_0wb8z1wLrMKteQtcjGukKE7c",
+            "name": "memory_recall",
+            "phase": "succeeded"
+          }
+        },
+        {
+          "sequence": 11,
+          "part": {
+            "type": "text-start",
+            "id": "governed-text"
+          }
+        },
+        {
+          "sequence": 12,
+          "part": {
+            "type": "text-delta",
+            "text": "Your ",
+            "id": "governed-text"
+          }
+        },
+        {
+          "sequence": 13,
+          "part": {
+            "type": "text-delta",
+            "text": "nickname ",
+            "id": "governed-text"
+          }
+        },
+        {
+          "sequence": 14,
+          "part": {
+            "type": "text-delta",
+            "text": "is ",
+            "id": "governed-text"
+          }
+        },
+        {
+          "sequence": 15,
+          "part": {
+            "type": "text-delta",
+            "text": "not ",
+            "id": "governed-text"
+          }
+        },
+        {
+          "sequence": 16,
+          "part": {
+            "type": "text-delta",
+            "text": "explicitly ",
+            "id": "governed-text"
+          }
+        },
+        {
+          "sequence": 17,
+          "part": {
+            "type": "text-delta",
+            "text": "mentioned ",
+            "id": "governed-text"
+          }
+        },
+        {
+          "sequence": 18,
+          "part": {
+            "type": "text-delta",
+            "text": "in ",
+            "id": "governed-text"
+          }
+        },
+        {
+          "sequence": 19,
+          "part": {
+            "type": "text-delta",
+            "text": "the ",
+            "id": "governed-text"
+          }
+        },
+        {
+          "sequence": 20,
+          "part": {
+            "type": "text-delta",
+            "text": "memory ",
+            "id": "governed-text"
+          }
+        },
+        {
+          "sequence": 21,
+          "part": {
+            "type": "text-delta",
+            "text": "recall. ",
+            "id": "governed-text"
+          }
+        },
+        {
+          "sequence": 22,
+          "part": {
+            "type": "text-delta",
+            "text": "However, ",
+            "id": "governed-text"
+          }
+        },
+        {
+          "sequence": 23,
+          "part": {
+            "type": "text-delta",
+            "text": "your ",
+            "id": "governed-text"
+          }
+        },
+        {
+          "sequence": 24,
+          "part": {
+            "type": "text-delta",
+            "text": "project ",
+            "id": "governed-text"
+          }
+        },
+        {
+          "sequence": 25,
+          "part": {
+            "type": "text-delta",
+            "text": "codeword ",
+            "id": "governed-text"
+          }
+        },
+        {
+          "sequence": 26,
+          "part": {
+            "type": "text-delta",
+            "text": "is ",
+            "id": "governed-text"
+          }
+        },
+        {
+          "sequence": 27,
+          "part": {
+            "type": "text-delta",
+            "text": "**LANTERN_7ae8d289**. ",
+            "id": "governed-text"
+          }
+        },
+        {
+          "sequence": 28,
+          "part": {
+            "type": "text-delta",
+            "text": "If ",
+            "id": "governed-text"
+          }
+        },
+        {
+          "sequence": 29,
+          "part": {
+            "type": "text-delta",
+            "text": "you ",
+            "id": "governed-text"
+          }
+        },
+        {
+          "sequence": 30,
+          "part": {
+            "type": "text-delta",
+            "text": "have ",
+            "id": "governed-text"
+          }
+        },
+        {
+          "sequence": 31,
+          "part": {
+            "type": "text-delta",
+            "text": "a ",
+            "id": "governed-text"
+          }
+        },
+        {
+          "sequence": 32,
+          "part": {
+            "type": "text-delta",
+            "text": "specific ",
+            "id": "governed-text"
+          }
+        },
+        {
+          "sequence": 33,
+          "part": {
+            "type": "text-delta",
+            "text": "nickname, ",
+            "id": "governed-text"
+          }
+        },
+        {
+          "sequence": 34,
+          "part": {
+            "type": "text-delta",
+            "text": "please ",
+            "id": "governed-text"
+          }
+        },
+        {
+          "sequence": 35,
+          "part": {
+            "type": "text-delta",
+            "text": "let ",
+            "id": "governed-text"
+          }
+        },
+        {
+          "sequence": 36,
+          "part": {
+            "type": "text-delta",
+            "text": "me ",
+            "id": "governed-text"
+          }
+        },
+        {
+          "sequence": 37,
+          "part": {
+            "type": "text-delta",
+            "text": "know!",
+            "id": "governed-text"
+          }
+        },
+        {
+          "sequence": 38,
+          "part": {
+            "type": "text-end",
+            "id": "governed-text"
+          }
+        },
+        {
+          "sequence": 39,
+          "part": {
+            "type": "text",
+            "text": "Your nickname is not explicitly mentioned in the memory recall. However, your project codeword is **LANTERN_7ae8d289**. If you have a specific nickname, please let me know!"
+          }
+        },
+        {
+          "sequence": 40,
+          "part": {
+            "type": "status",
+            "state": "complete"
+          }
+        }
+      ],
+      "approvals": []
+    },
+    {
+      "observer": "second",
+      "run": {
+        "version": 1,
+        "runId": "run:15da2d1f0afe9bdd8be7d0f8706e4c0cb9498a634cc53b26eedb98736964ab45",
+        "conversationId": "conversation:de3a0bf36f399a3f22a899725832fc0f65306ea05d0d57ae4371a2626d97fd58",
+        "agentId": "agent:e57eee1cd68e3e3bca068a1fcbc1d886ff19f5c3219c9a4d5d1f2e882890dcb8",
+        "agentVersion": 1,
+        "scope": {
+          "tenantId": "task09-8e22880a-3d8e-4640-9749-f4834f667125",
+          "memorySpaceId": "task09-8e22880a-3d8e-4640-9749-f4834f667125-space"
+        },
+        "definitionHash": "ad972ee3e9358715dd5579f72c62a61b840c06f5e4d1ad71c8b921a3f278e2be",
+        "queueSequence": 2,
+        "responseStatus": "complete",
+        "memoryStatus": "pending",
+        "graphStatus": "not_requested",
+        "attemptNumber": 1,
+        "cancellationRequested": false,
+        "inputMessageIds": [
+          "kx7esyc7swtafkmbkb1cp82qz18fwg46"
+        ],
+        "outputMessageIds": [
+          "kx723ah2cr5tn0shrs0njxtec58fwzbe"
+        ],
+        "failureCode": null,
+        "contextCompleteness": "complete",
+        "contextFailureCode": null,
+        "createdAt": 1791481867373,
+        "updatedAt": 1791481927809
+      },
+      "state": "complete",
+      "cursor": 40,
+      "parts": [
+        {
+          "sequence": 1,
+          "part": {
+            "type": "tool",
+            "toolCallId": "call_hf1PIR9jeZUmIZh5wZdSco7a",
+            "name": "memory_recall",
+            "phase": "requested"
+          }
+        },
+        {
+          "sequence": 2,
+          "part": {
+            "type": "tool",
+            "toolCallId": "call_0wb8z1wLrMKteQtcjGukKE7c",
+            "name": "memory_recall",
+            "phase": "requested"
+          }
+        },
+        {
+          "sequence": 3,
+          "part": {
+            "type": "tool",
+            "toolCallId": "call_hf1PIR9jeZUmIZh5wZdSco7a",
+            "name": "memory_recall",
+            "phase": "requested"
+          }
+        },
+        {
+          "sequence": 4,
+          "part": {
+            "type": "tool",
+            "toolCallId": "call_0wb8z1wLrMKteQtcjGukKE7c",
+            "name": "memory_recall",
+            "phase": "requested"
+          }
+        },
+        {
+          "sequence": 5,
+          "part": {
+            "type": "tool",
+            "toolCallId": "call_hf1PIR9jeZUmIZh5wZdSco7a",
+            "name": "memory_recall",
+            "phase": "requested"
+          }
+        },
+        {
+          "sequence": 6,
+          "part": {
+            "type": "tool",
+            "toolCallId": "call_hf1PIR9jeZUmIZh5wZdSco7a",
+            "name": "memory_recall",
+            "phase": "running"
+          }
+        },
+        {
+          "sequence": 7,
+          "part": {
+            "type": "tool",
+            "toolCallId": "call_hf1PIR9jeZUmIZh5wZdSco7a",
+            "name": "memory_recall",
+            "phase": "succeeded"
+          }
+        },
+        {
+          "sequence": 8,
+          "part": {
+            "type": "tool",
+            "toolCallId": "call_0wb8z1wLrMKteQtcjGukKE7c",
+            "name": "memory_recall",
+            "phase": "requested"
+          }
+        },
+        {
+          "sequence": 9,
+          "part": {
+            "type": "tool",
+            "toolCallId": "call_0wb8z1wLrMKteQtcjGukKE7c",
+            "name": "memory_recall",
+            "phase": "running"
+          }
+        },
+        {
+          "sequence": 10,
+          "part": {
+            "type": "tool",
+            "toolCallId": "call_0wb8z1wLrMKteQtcjGukKE7c",
+            "name": "memory_recall",
+            "phase": "succeeded"
+          }
+        },
+        {
+          "sequence": 11,
+          "part": {
+            "type": "text-start",
+            "id": "governed-text"
+          }
+        },
+        {
+          "sequence": 12,
+          "part": {
+            "type": "text-delta",
+            "text": "Your ",
+            "id": "governed-text"
+          }
+        },
+        {
+          "sequence": 13,
+          "part": {
+            "type": "text-delta",
+            "text": "nickname ",
+            "id": "governed-text"
+          }
+        },
+        {
+          "sequence": 14,
+          "part": {
+            "type": "text-delta",
+            "text": "is ",
+            "id": "governed-text"
+          }
+        },
+        {
+          "sequence": 15,
+          "part": {
+            "type": "text-delta",
+            "text": "not ",
+            "id": "governed-text"
+          }
+        },
+        {
+          "sequence": 16,
+          "part": {
+            "type": "text-delta",
+            "text": "explicitly ",
+            "id": "governed-text"
+          }
+        },
+        {
+          "sequence": 17,
+          "part": {
+            "type": "text-delta",
+            "text": "mentioned ",
+            "id": "governed-text"
+          }
+        },
+        {
+          "sequence": 18,
+          "part": {
+            "type": "text-delta",
+            "text": "in ",
+            "id": "governed-text"
+          }
+        },
+        {
+          "sequence": 19,
+          "part": {
+            "type": "text-delta",
+            "text": "the ",
+            "id": "governed-text"
+          }
+        },
+        {
+          "sequence": 20,
+          "part": {
+            "type": "text-delta",
+            "text": "memory ",
+            "id": "governed-text"
+          }
+        },
+        {
+          "sequence": 21,
+          "part": {
+            "type": "text-delta",
+            "text": "recall. ",
+            "id": "governed-text"
+          }
+        },
+        {
+          "sequence": 22,
+          "part": {
+            "type": "text-delta",
+            "text": "However, ",
+            "id": "governed-text"
+          }
+        },
+        {
+          "sequence": 23,
+          "part": {
+            "type": "text-delta",
+            "text": "your ",
+            "id": "governed-text"
+          }
+        },
+        {
+          "sequence": 24,
+          "part": {
+            "type": "text-delta",
+            "text": "project ",
+            "id": "governed-text"
+          }
+        },
+        {
+          "sequence": 25,
+          "part": {
+            "type": "text-delta",
+            "text": "codeword ",
+            "id": "governed-text"
+          }
+        },
+        {
+          "sequence": 26,
+          "part": {
+            "type": "text-delta",
+            "text": "is ",
+            "id": "governed-text"
+          }
+        },
+        {
+          "sequence": 27,
+          "part": {
+            "type": "text-delta",
+            "text": "**LANTERN_7ae8d289**. ",
+            "id": "governed-text"
+          }
+        },
+        {
+          "sequence": 28,
+          "part": {
+            "type": "text-delta",
+            "text": "If ",
+            "id": "governed-text"
+          }
+        },
+        {
+          "sequence": 29,
+          "part": {
+            "type": "text-delta",
+            "text": "you ",
+            "id": "governed-text"
+          }
+        },
+        {
+          "sequence": 30,
+          "part": {
+            "type": "text-delta",
+            "text": "have ",
+            "id": "governed-text"
+          }
+        },
+        {
+          "sequence": 31,
+          "part": {
+            "type": "text-delta",
+            "text": "a ",
+            "id": "governed-text"
+          }
+        },
+        {
+          "sequence": 32,
+          "part": {
+            "type": "text-delta",
+            "text": "specific ",
+            "id": "governed-text"
+          }
+        },
+        {
+          "sequence": 33,
+          "part": {
+            "type": "text-delta",
+            "text": "nickname, ",
+            "id": "governed-text"
+          }
+        },
+        {
+          "sequence": 34,
+          "part": {
+            "type": "text-delta",
+            "text": "please ",
+            "id": "governed-text"
+          }
+        },
+        {
+          "sequence": 35,
+          "part": {
+            "type": "text-delta",
+            "text": "let ",
+            "id": "governed-text"
+          }
+        },
+        {
+          "sequence": 36,
+          "part": {
+            "type": "text-delta",
+            "text": "me ",
+            "id": "governed-text"
+          }
+        },
+        {
+          "sequence": 37,
+          "part": {
+            "type": "text-delta",
+            "text": "know!",
+            "id": "governed-text"
+          }
+        },
+        {
+          "sequence": 38,
+          "part": {
+            "type": "text-end",
+            "id": "governed-text"
+          }
+        },
+        {
+          "sequence": 39,
+          "part": {
+            "type": "text",
+            "text": "Your nickname is not explicitly mentioned in the memory recall. However, your project codeword is **LANTERN_7ae8d289**. If you have a specific nickname, please let me know!"
+          }
+        },
+        {
+          "sequence": 40,
+          "part": {
+            "type": "status",
+            "state": "complete"
+          }
+        }
+      ],
+      "approvals": []
+    }
+  ],
+  "replay": {
+    "agentId": "agent:e57eee1cd68e3e3bca068a1fcbc1d886ff19f5c3219c9a4d5d1f2e882890dcb8",
+    "agentVersion": 1,
+    "attemptNumber": 1,
+    "cancellationRequested": false,
+    "contextCompleteness": "complete",
+    "contextFailureCode": null,
+    "conversationId": "conversation:de3a0bf36f399a3f22a899725832fc0f65306ea05d0d57ae4371a2626d97fd58",
+    "createdAt": 1791481867373,
+    "definitionHash": "ad972ee3e9358715dd5579f72c62a61b840c06f5e4d1ad71c8b921a3f278e2be",
+    "failureCode": null,
+    "graphStatus": "not_requested",
+    "inputMessageIds": [
+      "kx7esyc7swtafkmbkb1cp82qz18fwg46"
+    ],
+    "memoryStatus": "pending",
+    "outputMessageIds": [
+      "kx723ah2cr5tn0shrs0njxtec58fwzbe"
+    ],
+    "queueSequence": 2,
+    "responseStatus": "complete",
+    "runId": "run:15da2d1f0afe9bdd8be7d0f8706e4c0cb9498a634cc53b26eedb98736964ab45",
+    "scope": {
+      "memorySpaceId": "task09-8e22880a-3d8e-4640-9749-f4834f667125-space",
+      "tenantId": "task09-8e22880a-3d8e-4640-9749-f4834f667125"
+    },
+    "updatedAt": 1791481927809,
+    "version": 1
+  },
+  "reconciled": {
+    "receiptId": "agent-ingestion:b726d91f1f310881503154a983476d5d0b38dbbfa6e1555858a5cf7f95f50230"
+  },
+  "countsUnchanged": {
+    "runtimeModelAttempts": 11,
+    "runtimeTranscriptMessages": 6,
+    "runtimeIngestionEvents": 4
+  },
+  "noAddedPaidDispatch": true,
+  "oldNative3NicknameFailurePreserved": true,
+  "oldFailedTurnExcludedByCompletedHistoryPredicate": true,
+  "pendingTailForNextTurn": {
+    "role": "user",
+    "sourceEventId": "transcript:conversation:de3a0bf36f399a3f22a899725832fc0f65306ea05d0d57ae4371a2626d97fd58:kx7esyc7swtafkmbkb1cp82qz18fwg46",
+    "sourceId": "transcript:conversation:de3a0bf36f399a3f22a899725832fc0f65306ea05d0d57ae4371a2626d97fd58:kx7esyc7swtafkmbkb1cp82qz18fwg46",
+    "sourceRevision": 1,
+    "trust": "user_assertion"
+  },
+  "operationKeyCounts": {
+    "memory.extract": 1,
+    "embedding.memory": 2,
+    "embedding.query": 5,
+    "agent.respond": 3
+  }
+}

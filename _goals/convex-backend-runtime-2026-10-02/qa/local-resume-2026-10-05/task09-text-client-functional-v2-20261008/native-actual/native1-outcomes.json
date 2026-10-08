@@ -1,0 +1,42 @@
+{
+  "operation": "7ae8d289-886e-4c09-9451-7cc00acd4233",
+  "outcomes": [
+    {
+      "name": "installed SDK session and managed profile are native and scoped",
+      "status": "PASS",
+      "evidence": {
+        "session": {
+          "version": 1,
+          "tenantId": "task09-8e22880a-3d8e-4640-9749-f4834f667125",
+          "memorySpaceId": "task09-8e22880a-3d8e-4640-9749-f4834f667125-space",
+          "principalId": "n573t34xng3hctk542pyp379xd8fwpts",
+          "userId": "n573t34xng3hctk542pyp379xd8fwpts"
+        },
+        "profile": {
+          "profile": {
+            "chunking": "codepoint-1600-overlap-200-v1",
+            "dimensions": 1536,
+            "indexName": "by_default_embedding_v1",
+            "modelId": "openai/text-embedding-3-small",
+            "normalization": "text-nfc-lf-v1",
+            "profileId": "cortex-text-small-1536-v1"
+          },
+          "version": 1
+        },
+        "definition": {
+          "agentId": "agent:e57eee1cd68e3e3bca068a1fcbc1d886ff19f5c3219c9a4d5d1f2e882890dcb8",
+          "definitionHash": "ad972ee3e9358715dd5579f72c62a61b840c06f5e4d1ad71c8b921a3f278e2be",
+          "memoryMode": "indexed-plus-pending",
+          "tools": [
+            {
+              "toolId": "memory.recall",
+              "toolVersion": 1
+            }
+          ],
+          "version": 1
+        },
+        "SDKBytes": "21a48d327cbd7c5617f92a7f59c5f2592cdee682789f72c3a1c749dd8720654c"
+      }
+    }
+  ]
+}

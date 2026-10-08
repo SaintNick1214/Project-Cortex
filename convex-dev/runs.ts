@@ -51,6 +51,7 @@ export async function currentRun(ctx: Pick<QueryCtx, "db">, reference: RuntimeAu
 }
 export function publicRun(row: Doc<"runtimeRuns">) {
   return { version: 1 as const, runId: row.runId, conversationId: row.conversationId, agentId: row.agentId, agentVersion: row.agentVersion,
+    scope: { tenantId: row.tenantId, memorySpaceId: row.memorySpaceId }, definitionHash: row.definitionHash,
     queueSequence: row.queueSequence, responseStatus: row.responseStatus, memoryStatus: row.memoryStatus, graphStatus: row.graphStatus,
     attemptNumber: row.attemptNumber, cancellationRequested: row.cancellationRequestedAt !== undefined,
     inputMessageIds: row.inputMessageIds, outputMessageIds: row.outputMessageIds, failureCode: row.failureCode ?? null,
@@ -58,8 +59,8 @@ export function publicRun(row: Doc<"runtimeRuns">) {
     createdAt: row.createdAt, updatedAt: row.updatedAt };
 }
 /** Exported pure handler for meaningful native rollback fixtures, not a public fault-injection flag. */
-export async function submitHandler(ctx: MutationCtx, args: { request: unknown }) {
-  const actor = await requireDataAuthority(ctx, {}, "run");
+export async function submitHandler(ctx: MutationCtx, args: { request: unknown; tenantId?: string; memorySpaceId?: string }) {
+  const actor = await requireDataAuthority(ctx, args, "run");
   // A run grant does not silently become write authority for persistent input.
   const reference = dataAuthorityReference(actor);
   await recheckAuthority(ctx, reference, { capability: "write", tenantId: actor.tenantId, memorySpaceId: actor.memorySpaceId });
@@ -109,7 +110,7 @@ export async function submitHandler(ctx: MutationCtx, args: { request: unknown }
   await recheckAuthority(ctx, reference, { capability: "run", tenantId: actor.tenantId, memorySpaceId: actor.memorySpaceId });
   return publicRun((await ctx.db.get("runtimeRuns", id))!);
 }
-export const submit = mutation({ args: { request: v.any() }, handler: submitHandler });
+export const submit = mutation({ args: { request: v.any(), tenantId: v.optional(v.string()), memorySpaceId: v.optional(v.string()) }, handler: submitHandler });
 const runSelector = { runId: v.string(), memorySpaceId: v.optional(v.string()), tenantId: v.optional(v.string()) };
 export const get = query({ args: runSelector, handler: async (ctx, args) => {
   const actor = await requireDataAuthority(ctx, args, "read"); return publicRun((await currentControlRun(ctx, dataAuthorityReference(actor), args.runId, "read")).row);

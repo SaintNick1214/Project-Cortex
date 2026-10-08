@@ -1,0 +1,80 @@
+{
+  "status": "FAIL",
+  "error": {
+    "name": "AssertionError",
+    "message": "The input did not match the regular expression /Willow_7ae8d289/. Input:\n\n'Your nickname is not explicitly mentioned in the memory recall. However, your project codeword is **LANTERN_7ae8d289**. If you have a specific nickname, please let me know!'\n"
+  },
+  "outcomes": [
+    {
+      "name": "real backend recall completes while both eligible user events remain unprocessed",
+      "status": "FAIL",
+      "error": {
+        "name": "AssertionError",
+        "message": "The input did not match the regular expression /Willow_7ae8d289/. Input:\n\n'Your nickname is not explicitly mentioned in the memory recall. However, your project codeword is **LANTERN_7ae8d289**. If you have a specific nickname, please let me know!'\n"
+      }
+    }
+  ],
+  "records": [
+    {
+      "label": "new-logical-held-tool-turn",
+      "kind": "mutation",
+      "function": "ingestionQualification:submitHeld",
+      "args": {
+        "request": {
+          "version": 1,
+          "agentId": "agent:e57eee1cd68e3e3bca068a1fcbc1d886ff19f5c3219c9a4d5d1f2e882890dcb8",
+          "agentVersion": 1,
+          "conversationId": "conversation:de3a0bf36f399a3f22a899725832fc0f65306ea05d0d57ae4371a2626d97fd58",
+          "clientRequestId": "task09-tail-b-7ae8d289-886e-4c09-9451-7cc00acd4233",
+          "parts": [
+            {
+              "type": "text",
+              "text": "Use memory_recall once for my project codeword. What nickname did I give in my previous user message? Reply with my nickname and the retrieved codeword."
+            }
+          ]
+        }
+      },
+      "result": {
+        "agentId": "agent:e57eee1cd68e3e3bca068a1fcbc1d886ff19f5c3219c9a4d5d1f2e882890dcb8",
+        "agentVersion": 1,
+        "attemptNumber": 0,
+        "cancellationRequested": false,
+        "contextCompleteness": null,
+        "contextFailureCode": null,
+        "conversationId": "conversation:de3a0bf36f399a3f22a899725832fc0f65306ea05d0d57ae4371a2626d97fd58",
+        "createdAt": 1791481867373,
+        "definitionHash": "ad972ee3e9358715dd5579f72c62a61b840c06f5e4d1ad71c8b921a3f278e2be",
+        "failureCode": null,
+        "graphStatus": "not_requested",
+        "inputMessageIds": [
+          "kx7esyc7swtafkmbkb1cp82qz18fwg46"
+        ],
+        "memoryStatus": "pending",
+        "outputMessageIds": [],
+        "queueSequence": 2,
+        "responseStatus": "queued",
+        "runId": "run:15da2d1f0afe9bdd8be7d0f8706e4c0cb9498a634cc53b26eedb98736964ab45",
+        "scope": {
+          "memorySpaceId": "task09-8e22880a-3d8e-4640-9749-f4834f667125-space",
+          "tenantId": "task09-8e22880a-3d8e-4640-9749-f4834f667125"
+        },
+        "updatedAt": 1791481867373,
+        "version": 1
+      },
+      "elapsedMs": 748
+    }
+  ],
+  "handle": {
+    "version": 1,
+    "tenantId": "task09-8e22880a-3d8e-4640-9749-f4834f667125",
+    "memorySpaceId": "task09-8e22880a-3d8e-4640-9749-f4834f667125-space",
+    "principalId": "n573t34xng3hctk542pyp379xd8fwpts",
+    "runId": "run:15da2d1f0afe9bdd8be7d0f8706e4c0cb9498a634cc53b26eedb98736964ab45",
+    "conversationId": "conversation:de3a0bf36f399a3f22a899725832fc0f65306ea05d0d57ae4371a2626d97fd58",
+    "agentId": "agent:e57eee1cd68e3e3bca068a1fcbc1d886ff19f5c3219c9a4d5d1f2e882890dcb8",
+    "agentVersion": 1,
+    "definitionHash": "ad972ee3e9358715dd5579f72c62a61b840c06f5e4d1ad71c8b921a3f278e2be"
+  },
+  "elapsedMs": 60479.689291999995,
+  "paidRetry": false
+}

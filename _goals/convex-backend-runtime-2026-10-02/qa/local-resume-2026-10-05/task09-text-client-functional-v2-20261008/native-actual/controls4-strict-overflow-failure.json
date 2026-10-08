@@ -1,0 +1,143 @@
+{
+  "status": "FAIL",
+  "error": {
+    "name": "AssertionError",
+    "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ 'not_started'\n- 'failed'\n"
+  },
+  "records": [
+    {
+      "label": "current-reference",
+      "kind": "query",
+      "function": "ingestionQualification:reference",
+      "args": {
+        "memorySpaceId": "task09-8e22880a-3d8e-4640-9749-f4834f667125-space"
+      },
+      "result": {
+        "grantId": "mx798md2ak6mrah8g5tha0saxh8fxbe9",
+        "grantVersion": 1,
+        "membershipId": "n170hkm5yqkk99n1t2cmptwqnn8fwp85",
+        "membershipVersion": 1,
+        "memorySpaceEpoch": 1,
+        "memorySpaceId": "task09-8e22880a-3d8e-4640-9749-f4834f667125-space",
+        "principalId": "n573t34xng3hctk542pyp379xd8fwpts",
+        "principalVersion": 1,
+        "tenantEpoch": 1,
+        "tenantId": "task09-8e22880a-3d8e-4640-9749-f4834f667125"
+      }
+    },
+    {
+      "label": "mark-earlier-held-extraction-failed",
+      "kind": "mutation",
+      "function": "runtimeIngestion:failUnclaimed",
+      "args": {
+        "reference": {
+          "grantId": "mx798md2ak6mrah8g5tha0saxh8fxbe9",
+          "grantVersion": 1,
+          "membershipId": "n170hkm5yqkk99n1t2cmptwqnn8fwp85",
+          "membershipVersion": 1,
+          "memorySpaceEpoch": 1,
+          "memorySpaceId": "task09-8e22880a-3d8e-4640-9749-f4834f667125-space",
+          "principalId": "n573t34xng3hctk542pyp379xd8fwpts",
+          "principalVersion": 1,
+          "tenantEpoch": 1,
+          "tenantId": "task09-8e22880a-3d8e-4640-9749-f4834f667125"
+        },
+        "eventId": "ingestion:a0dd5fd9c10a8816dcb1d74780ccb96c1216f5537b4b6dfe6f5064bd05c5358a",
+        "stage": "extract"
+      },
+      "result": null
+    },
+    {
+      "label": "strict-failed-hole-held-submit",
+      "kind": "mutation",
+      "function": "ingestionQualification:submitHeld",
+      "args": {
+        "request": {
+          "version": 1,
+          "agentId": "agent:815c30492860966b7eabcd49f826cec8cf505c7ab4b5bcc752c6796508096143",
+          "agentVersion": 1,
+          "clientRequestId": "task09-strict-failed-hole-8e22880a-3d8e-4640-9749-f4834f667125",
+          "parts": [
+            {
+              "type": "text",
+              "text": "Require facts readiness across all earlier accepted inputs; the earlier failed stage must not be skipped."
+            }
+          ]
+        }
+      },
+      "result": {
+        "agentId": "agent:815c30492860966b7eabcd49f826cec8cf505c7ab4b5bcc752c6796508096143",
+        "agentVersion": 1,
+        "attemptNumber": 0,
+        "cancellationRequested": false,
+        "contextCompleteness": null,
+        "contextFailureCode": null,
+        "conversationId": "conversation:ecf056bd459070d324d47c17f92240171d988cf82cabd0308fe8da0c5c2a54d5",
+        "createdAt": 1791483608813,
+        "definitionHash": "25e74893727abb696e296b5588d049111c9975489cc5eb74304da2134138811f",
+        "failureCode": null,
+        "graphStatus": "not_requested",
+        "inputMessageIds": [
+          "kx72d08cmd7fffvkg694sy4x798fwdk6"
+        ],
+        "memoryStatus": "pending",
+        "outputMessageIds": [],
+        "queueSequence": 1,
+        "responseStatus": "queued",
+        "runId": "run:ecf056bd459070d324d47c17f92240171d988cf82cabd0308fe8da0c5c2a54d5",
+        "scope": {
+          "memorySpaceId": "task09-8e22880a-3d8e-4640-9749-f4834f667125-space",
+          "tenantId": "task09-8e22880a-3d8e-4640-9749-f4834f667125"
+        },
+        "updatedAt": 1791483608813,
+        "version": 1
+      }
+    },
+    {
+      "label": "overflow-held-submit",
+      "kind": "mutation",
+      "function": "ingestionQualification:submitHeld",
+      "args": {
+        "request": {
+          "version": 1,
+          "agentId": "agent:8575ddf56a760363599116b5f432f773f7f67c73a9e000c31704ac1db48e5981",
+          "agentVersion": 1,
+          "clientRequestId": "task09-overflow-8e22880a-3d8e-4640-9749-f4834f667125",
+          "parts": [
+            {
+              "type": "text",
+              "text": "Large context without model execution: context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound context-bound "
+            }
+          ]
+        }
+      },
+      "result": {
+        "agentId": "agent:8575ddf56a760363599116b5f432f773f7f67c73a9e000c31704ac1db48e5981",
+        "agentVersion": 1,
+        "attemptNumber": 0,
+        "cancellationRequested": false,
+        "contextCompleteness": null,
+        "contextFailureCode": null,
+        "conversationId": "conversation:4b568d03f82e48e8d4b929e06446fbb3858490c52aa4e4428870c5d2ba2553b7",
+        "createdAt": 1791483618842,
+        "definitionHash": "2d44755e1e8b4007a299b2c682105119a215a5ca798a0f080b1d6d25e6d59a35",
+        "failureCode": null,
+        "graphStatus": "not_requested",
+        "inputMessageIds": [
+          "kx7f97wxzacqavkk61t5wwc1s58fw4eh"
+        ],
+        "memoryStatus": "pending",
+        "outputMessageIds": [],
+        "queueSequence": 1,
+        "responseStatus": "queued",
+        "runId": "run:4b568d03f82e48e8d4b929e06446fbb3858490c52aa4e4428870c5d2ba2553b7",
+        "scope": {
+          "memorySpaceId": "task09-8e22880a-3d8e-4640-9749-f4834f667125-space",
+          "tenantId": "task09-8e22880a-3d8e-4640-9749-f4834f667125"
+        },
+        "updatedAt": 1791483618842,
+        "version": 1
+      }
+    }
+  ]
+}

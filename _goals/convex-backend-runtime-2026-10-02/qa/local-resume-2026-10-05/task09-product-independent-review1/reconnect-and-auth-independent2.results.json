@@ -1,0 +1,76 @@
+{
+  "scope": "Independent controlled CODE fixture; no actual service/model/credential effect",
+  "tests": [
+    {
+      "name": "Cached prefix must not emit before current evidence permission authorization",
+      "expected": {
+        "cachedTextBeforeAuthorization": false
+      },
+      "actual": {
+        "cachedTextBeforeAuthorization": false,
+        "preAuthorizationChunks": [
+          {
+            "type": "start",
+            "messageId": "cortex:run:assistant"
+          },
+          {
+            "type": "reset-step"
+          },
+          {
+            "type": "text-start",
+            "id": "cortex:run:text"
+          }
+        ],
+        "getCalls": 1,
+        "observationDenied": true,
+        "observerStops": 1
+      },
+      "status": "PASS"
+    },
+    {
+      "name": "In-flight handle read must not deliver across a principal refresh",
+      "expected": {
+        "errorCode": "SESSION_CHANGED"
+      },
+      "actual": {
+        "value": {
+          "version": 1,
+          "runId": "run",
+          "conversationId": "conversation",
+          "agentId": "agent",
+          "agentVersion": 1,
+          "scope": {
+            "tenantId": "tenant",
+            "memorySpaceId": "space"
+          },
+          "definitionHash": "definition",
+          "queueSequence": 1,
+          "responseStatus": "complete",
+          "memoryStatus": "pending",
+          "graphStatus": "not_requested",
+          "attemptNumber": 1,
+          "cancellationRequested": false,
+          "inputMessageIds": [
+            "input"
+          ],
+          "outputMessageIds": [
+            "output"
+          ],
+          "failureCode": null,
+          "contextCompleteness": "complete",
+          "contextFailureCode": null,
+          "createdAt": 1,
+          "updatedAt": 2
+        }
+      },
+      "status": "FAIL"
+    }
+  ],
+  "cleanup": {
+    "networkConnectionsCreated": 0,
+    "processChildrenCreated": 0,
+    "clientClosed": true,
+    "readableReaderReleased": true
+  },
+  "failures": 1
+}

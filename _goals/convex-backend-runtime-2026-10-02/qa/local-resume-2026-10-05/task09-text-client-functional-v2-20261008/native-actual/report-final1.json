@@ -1,0 +1,124 @@
+{
+  "schema": "cortex.task09.native-actual-report.v1",
+  "closedAt": "2026-10-08T18:37:49.974Z",
+  "status": "CLOSED_ACTUAL_EXECUTOR_EVIDENCE_FOR_INDEPENDENT_REVIEW",
+  "taskAcceptanceClaim": false,
+  "fullGoalAcceptanceClaim": false,
+  "runtime": {
+    "node": "24.15.0",
+    "npm": "12.2.0",
+    "Convex": "1.46",
+    "Agent": "0.7.3",
+    "Workflow": "0.4.8",
+    "AI": "7.0.127",
+    "Gateway": "0.2.1"
+  },
+  "target": {
+    "projectId": 3173328,
+    "deploymentName": "vivid-warbler-703",
+    "production": false,
+    "status": "retired",
+    "deleteStatus": 200,
+    "readbackStatus": 404
+  },
+  "candidate": {
+    "manifestSha256": "137eb2d0a968486d40fb583bd633f21cc9d6a9aec3dac95c2a2585926943c95b",
+    "files": 80,
+    "qualificationTrustException": false,
+    "sourceManifest": "installed-task09-source-manifest5.json",
+    "paidSuccessSource": "installed-task09-source-manifest4.json",
+    "finalDelta": [
+      "runtimeAgent.ts terminal observe projection only"
+    ],
+    "modelEnvelopeCodecPolicyExecutionHooks": "unchanged",
+    "GatewaySourceSha256": "65598302a2bd945a6b15eeab93c8bfa44a109f5335ed0ccae4fab8a5ab597672",
+    "AgentSourceSha256": "ab78521ef1d2d2c96f531d9142a1ac9d2001b486fb770b6afefe5b82d16f9bd6"
+  },
+  "originalCriteria": [
+    {
+      "id": 1,
+      "evidence": "controls7-small-approval-readback.json",
+      "actual": "One scoped backend recall tool, final text, memory pending; genuine governed native calls"
+    },
+    {
+      "id": 2,
+      "evidence": [
+        "native3-completed-scope-readback.json",
+        "controls7-small-approval-readback.json",
+        "controls8-cancel-readback.json"
+      ],
+      "actual": "Cursor reconnect, second observer, no duplicate effects, typed approval continuation and pre-execution cancel"
+    },
+    {
+      "id": 3,
+      "evidence": [
+        "ui-c-tail-and-prompt-diagnosis4.json",
+        "controls8-existing-barrier-readback.json"
+      ],
+      "actual": "Eligible unprocessed B tail in C exactly once; strict failed earlier hole despite later complete event; no inference for failure"
+    },
+    {
+      "id": 4,
+      "evidence": [
+        "native-control1-failure.json",
+        "native-control-tail2.json",
+        "../../task09-ui-functional-v2-20261008/root-ui-report1.json"
+      ],
+      "actual": "TS and actual UI equivalent scope/status/error, current JWT refresh and no-JWT/foreign/changed-principal denial; no provider keys in app"
+    },
+    {
+      "id": 5,
+      "evidence": [
+        "native1-outcomes.json",
+        "../../task09-ui-functional-v2-20261008/root-ui-report1.json"
+      ],
+      "actual": "Tasks01–09 text/default1536 managed retrieval only; no graph/media/alternate-profile prerequisite"
+    }
+  ],
+  "accounting": {
+    "governedAttempts": 24,
+    "operations": 24,
+    "byOperationKey": {
+      "agent.respond": 7,
+      "embedding.memory": 5,
+      "embedding.query": 10,
+      "memory.extract": 2
+    },
+    "slotsReleased": true,
+    "reservations": 0,
+    "terminalCost": "unavailable",
+    "fullLiabilityRetained": true,
+    "noAggregateUsdClaim": true,
+    "noSummationAcrossTenantRunOperationLedgers": true
+  },
+  "cleanup": {
+    "eventsRetired": 12,
+    "sourceIds": 12,
+    "grantsRevoked": 2,
+    "heldRowsRemaining": 0,
+    "paidAttemptsBefore": 24,
+    "paidAttemptsAfter": 24,
+    "settledAndUncertainConserved": true,
+    "removedCredentialFiles": 6,
+    "rootUiCleanup": "../../task09-ui-functional-v2-20261008/root-ui-cleanup1.json",
+    "targetRetainedForNextTask": false
+  },
+  "historicalFailures": [
+    "A terminal persistence-window unknown/no readmission",
+    "B nickname oracle incorrectly expected prior failed A in eligible history",
+    "C model misquoted current input despite correct admitted pending-tail dataflow",
+    "D bounded continuation denial:30170 first,33430 deterministic saved continuation>32768; exact rejected request unavailable",
+    "Attempt0 terminal observe mismatch repaired on existing rows without restart",
+    "First overflow read assertion and15s wait; stopped cancel wait exit130 with explicit close not observed",
+    "Seed return-shape and completed-reconcile shape QA expectations corrected, originals preserved"
+  ],
+  "limitations": [
+    "No mobile viewport PASS; Root reports ineffective narrow override",
+    "Published-agent input visually clipped but functional",
+    "C semantic quote and small final rhetorical-confirmation imperfections retained",
+    "Legacy410 mock routes do not count as this actual flow",
+    "Retired credential-free installed source/package fixture retained for same review only"
+  ],
+  "report": "report-final1.md",
+  "receiptIndex": "receipt-index-final1.json"
+}

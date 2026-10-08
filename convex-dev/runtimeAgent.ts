@@ -700,7 +700,12 @@ export const observe = query({ args: { ...selector, afterSequence: v.optional(v.
     ? await ctx.db.query("runtimeAgentOutput").withIndex("by_delivery", q => q.eq("tenantId", owned.tenantId).eq("memorySpaceId", owned.memorySpaceId).eq("runId", args.runId).eq("attemptNumber", owned.attemptNumber).eq("final", true).gt("sequence", after)).take(limit)
     : await ctx.db.query("runtimeAgentOutput").withIndex("by_sequence", q => q.eq("tenantId", owned.tenantId).eq("memorySpaceId", owned.memorySpaceId).eq("runId", args.runId).eq("attemptNumber", owned.attemptNumber).gt("sequence", after)).take(limit);
   const approvals = !owned || owned.state !== "waiting_approval" ? [] : await ctx.db.query("runtimeAgentOperations").withIndex("by_attempt", q => q.eq("tenantId", owned.tenantId).eq("memorySpaceId", owned.memorySpaceId).eq("runId", args.runId).eq("attemptNumber", owned.attemptNumber).eq("kind", "tool")).take(32);
-  return { run: publicRun(current.row), state: owned?.state ?? "not_started", parts: rows.map(row => ({ sequence: row.sequence, part: JSON.parse(row.partCanonical) as unknown })),
+  // A bounded claim or pre-execution cancellation can retire the Core run
+  // without creating an Agent execution. Observers still need its terminal
+  // disposition; only a nonterminal, unowned run is not_started.
+  const status = current.row.responseStatus;
+  const state = owned?.state ?? (status === "complete" || status === "failed" || status === "cancelled" ? status : "not_started");
+  return { run: publicRun(current.row), state, parts: rows.map(row => ({ sequence: row.sequence, part: JSON.parse(row.partCanonical) as unknown })),
     cursor: rows[rows.length - 1]?.sequence ?? after, approvals: await Promise.all(approvals.filter(op => op.state === "waiting_approval").map(async op => ({ operationId: op.operationId, toolName: op.toolName, requestHash: await semanticHash(op.requestCanonical) }))) };
 } });
 export const cancel = mutation({ args: selector, handler: async (ctx, args) => {

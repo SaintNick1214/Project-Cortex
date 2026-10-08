@@ -1,0 +1,145 @@
+{
+  "version": 1,
+  "status": "BOUNDED_SOURCE_REPAIR_PASS",
+  "scope": "Task09 installed native terminal persistence and issued-RPC cleanup repair; full Task09 acceptance remains pending actual/UI outcomes",
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "toolchain": {
+    "node": "v24.15.0",
+    "npm": "12.2.0"
+  },
+  "createdAt": "2026-10-08T17:50:03.945Z",
+  "source": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeGateway.ts",
+      "bytes": 72440,
+      "sha256": "65598302a2bd945a6b15eeab93c8bfa44a109f5335ed0ccae4fab8a5ab597672"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/gateway-terminal-composition.test.ts",
+      "bytes": 94758,
+      "sha256": "5b7137a4193f00615a2c02b9f911e2e591ccd0c1a56b2b0418f824f376720690"
+    }
+  ],
+  "changes": {
+    "terminalPersistenceDefaultMs": 5000,
+    "terminalPersistenceMaximumMs": 10000,
+    "terminalObservationMaximumMs": 1000,
+    "cleanupMaximumMs": 1000,
+    "originalCaptureAndAttachmentDeadline": "one shared deadline, unchanged",
+    "cleanup": "After joining every owned task, join only already-issued tracked RPC promises through one cleanupMs reserve. No writes, retries or visible output are introduced. If unresolved, throw CLEANUP_PENDING, retain prior drain error as cause, leave pendingWork truthful."
+  },
+  "outcomes": {
+    "current": {
+      "passed": 224,
+      "failed": 0,
+      "skipped": 0,
+      "suites": 2
+    },
+    "focused": {
+      "passed": 10,
+      "failed": 0,
+      "selectedOut": 178
+    },
+    "counting": "9 new distinct controls; focused10 overlaps the final224 and is not added to it.",
+    "tests": [
+      "capture transaction/OCC-like waits650+650ms plus attachment300ms succeed beyond the former1000ms window with one native call/capture/attachment",
+      "default total5000ms deadline is not restarted after1200ms capture; late attachment cannot reopen delivery; unresolved cleanup stays bounded100ms",
+      "issued attachment resolving inside80ms cleanup reserve is joined after original terminal timeout, with zero delivered output and no retry",
+      "terminal10000ms is accepted; terminal10001/Infinity/0 and observation/cleanup1001 deny before admission",
+      "all existing source/identity/cancellation/accounting/replay/stream fences remain covered by current224"
+    ]
+  },
+  "preserved": {
+    "nativeUnknown": "Original confirmed Mini terminal468input21output before Agent save, unknown liability/slot released; no readmission/paid retry. Executor-owned native2 receipts remain unchanged.",
+    "firstReplay": {
+      "passed": 223,
+      "failed": 1,
+      "raw": {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-client-functional-v2-20261008/gateway-persistence-repair1/current-results1.json",
+        "bytes": 115901,
+        "sha256": "0dcad1b1536c89ee50fb9be02ca70a08688b4b4fe53ecfa3a1b78f1bb15348af"
+      },
+      "log": {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-client-functional-v2-20261008/gateway-persistence-repair1/current-jest1.log",
+        "bytes": 13270,
+        "sha256": "d3096d3bdd0066589a70651dfd3149281a03d2111f6def802a6701ec88c3f594"
+      },
+      "explanation": "Existing70ms authority-timeout oracle implicitly used100ms cleanup. Fixture now explicitly uses its existing20ms shortOwnedTiming; exact70ms/no-late-output oracle retained."
+    }
+  },
+  "commands": [
+    {
+      "check": "focused persistence/ownership cases",
+      "command": "node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand --runTestsByPath tests/unit/runtime/gateway-terminal-composition.test.ts -t \"original terminal capture\" --json --outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-client-functional-v2-20261008/gateway-persistence-repair1/focused-results1.json",
+      "exit": 0,
+      "results": {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-client-functional-v2-20261008/gateway-persistence-repair1/focused-results1.json",
+        "bytes": 94290,
+        "sha256": "44f3ff496d0905e8faf7356b9ee32437714164e0a0b9bc26e63a839bf1a735f6"
+      },
+      "log": {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-client-functional-v2-20261008/gateway-persistence-repair1/focused-jest1.log",
+        "bytes": 23760,
+        "sha256": "5ce0a5a15ed7cf49bb36a24f3e3bd2409f47a14e724898c3cfa64f35161b2c8e"
+      }
+    },
+    {
+      "check": "current Gateway source regressions",
+      "command": "node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand --runTestsByPath tests/unit/runtime/gateway-terminal-composition.test.ts tests/unit/runtime/gateway-backend.test.ts --json --outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-client-functional-v2-20261008/gateway-persistence-repair1/current-results2.json",
+      "exit": 0,
+      "results": {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-client-functional-v2-20261008/gateway-persistence-repair1/current-results2.json",
+        "bytes": 114002,
+        "sha256": "6cf8ebab19b632e7e1881120541d3e2d5712b73b3d2122ad712d4134357d54ed"
+      },
+      "log": {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-client-functional-v2-20261008/gateway-persistence-repair1/current-jest2.log",
+        "bytes": 12087,
+        "sha256": "1ab0fbffde089b20f3d21d5d3db00d73620f26fbcb55751f3734e2029ec9b255"
+      }
+    },
+    {
+      "check": "SDK typecheck",
+      "command": "npx tsc --noEmit",
+      "exit": 0,
+      "log": {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-client-functional-v2-20261008/gateway-persistence-repair1/sdk-types2.log",
+        "bytes": 74,
+        "sha256": "b41eb607065a2edb9fbae0c5f5649cf2080ce645c7b4f8e15bb453226ed483bc"
+      }
+    },
+    {
+      "check": "backend typecheck",
+      "command": "npx tsc --noEmit --project convex-dev/tsconfig.json",
+      "exit": 0,
+      "log": {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-client-functional-v2-20261008/gateway-persistence-repair1/backend-types2.log",
+        "bytes": 109,
+        "sha256": "40ff0ceaae63caff05f2744d566e7cf2d33003a808d27bd2cd474dc2f98aa836"
+      }
+    },
+    {
+      "check": "scoped lint",
+      "command": "npx eslint convex-dev/runtimeGateway.ts tests/unit/runtime/gateway-terminal-composition.test.ts",
+      "exit": 0,
+      "errors": 0,
+      "warnings": 1,
+      "log": {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-client-functional-v2-20261008/gateway-persistence-repair1/lint2.log",
+        "bytes": 434,
+        "sha256": "832cfdd451806d4c80259af7dfa92365145434ab83a0134c90225f5b60691e49"
+      }
+    }
+  ],
+  "buildHandoff": {
+    "owner": "/root/task03_attempt6_integrated_preparation",
+    "exclusiveBackendBuildReleased": true,
+    "installedRepairVerification": "pending native executor; this author performed no service or paid calls"
+  },
+  "limitations": [
+    "No full Task09/UI/native acceptance is inferred.",
+    "A timed RPC cannot be cancelled or proved rolled back; unresolved issued work remains explicitly reported after finite cleanup reserve.",
+    "No unbounded owner join or automatic model/attachment retry."
+  ],
+  "writersStopped": true
+}

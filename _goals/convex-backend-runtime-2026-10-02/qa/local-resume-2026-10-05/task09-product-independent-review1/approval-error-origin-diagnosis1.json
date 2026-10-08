@@ -1,0 +1,64 @@
+{
+  "schema": "task09-independent-approval-error-diagnosis/v1",
+  "at": "2026-10-08T18:15:31.539512+00:00",
+  "scope": "Read-only actual log and product mapping; no provider/fixture effects",
+  "inputs": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-text-client-functional-v2-20261008/native-actual/controls5-cli-logs.stdout.log",
+      "bytes": 120347,
+      "sha256": "c8eefab30ed5a7df01e76a8c52f93bfdaeaeefc91f4f36eb27a37384fe554cb8"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-text-client-functional-v2-20261008/native-actual/controls5-approval-progress-readonly.json",
+      "bytes": 10627,
+      "sha256": "1a70a6676312e8c25d1b28c70526e4eab4553ff127ac6b8c61fc325fcd626237"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/src/domain/model-policy.ts",
+      "bytes": 28711,
+      "sha256": "435a8af15b0545041e97de7e218cd60ebd0ca2589e34ccad613e0ab955f0362b"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeGateway.ts",
+      "bytes": 72440,
+      "sha256": "65598302a2bd945a6b15eeab93c8bfa44a109f5335ed0ccae4fab8a5ab597672"
+    }
+  ],
+  "modelStepErrors": [
+    {
+      "line": 76,
+      "identifier": "runtimeAgent:modelStep",
+      "timestamp": 1791482843.8687575,
+      "error": null,
+      "logLines": [
+        {
+          "messages": [
+            "'onError'",
+            "{\n  error: [Error: POLICY_DENIED: request exceeds bounded limits]\n}"
+          ],
+          "isTruncated": false,
+          "timestamp": 1791482845924,
+          "level": "ERROR",
+          "systemMetadata": null
+        }
+      ]
+    },
+    {
+      "line": 83,
+      "identifier": "runtimeAgent:modelStep",
+      "timestamp": 1791482846.6948183,
+      "error": "Uncaught AbortError: This operation was aborted\n    at #u (../../node_modules/@convex-dev/agent/src/vercel/client/streaming.ts:616:2)\n    at fail [as fail] (../../node_modules/@convex-dev/agent/src/vercel/client/streaming.ts:587:2)\n    at failStreamer [as failStreamer] (../../node_modules/@convex-dev/agent/src/vercel/client/streamText.ts:192:9)\n    at <anonymous> (../../node_modules/@convex-dev/agent/src/vercel/client/streamText.ts:39:38)\n    at async allSettled [as allSettled] (<anonymous>)\n    at async runStreamCleanup (../../node_modules/@convex-dev/agent/src/vercel/client/streamText.ts:36:4)\n    at async onError (../../node_modules/@convex-dev/agent/src/vercel/client/streamText.ts:189:31)\n    at async callbacks (../../node_modules/ai/src/generate-text/stream-text.ts:1521:25)\n    at async <anonymous> (../../node_modules/ai/src/util/notify.ts:15:6)\n",
+      "logLines": []
+    }
+  ],
+  "origin": "POLICY_DENIED: request exceeds bounded limits precedes Agent cleanup AbortError. Domain validation checks only inputTokens/outputTokens/toolSteps/timeoutMs for this message.",
+  "sourceMapping": {
+    "domainLine": 322,
+    "requestBaseTimeout": "exact snapshot limit",
+    "requestToolSteps": "exact snapshot limit when tools enabled",
+    "maxOutput": "min(snapshot limit, qualified maximum)",
+    "inputMeasurement": "agentToolsInputBound full messages/tools: 6\u00d7canonical UTF8 bytes plus framing allowances"
+  },
+  "hypothesis": "Input bound is the likely rejected field, not yet proven by exact D saved payload measurement. No bound widening, paid replay or product repair is recommended until exact field is established.",
+  "actualDisposition": "Approved tool succeeded, second model admission absent, run unknown/failed; original D remains preserved. Functional continuation is unresolved."
+}

@@ -298,7 +298,8 @@ describe("C2 owned cancellation and finite RPC lifetime", () => {
     expect(parts).toEqual([]); expect(f.receipts).toHaveLength(1); expect(f.count()).toBe(1); expect(JSON.parse(f.receipts[0]!).aggregateCostUsd).toBe("0.0005");
   });
   it("deadline bounds an unreleased authority RPC; late completion cannot reopen the observer", async () => {
-    const f = fixture(); f.r.snapshot = { ...f.r.snapshot, limits: { ...f.r.snapshot.limits, timeoutMs: 20 } };
+    const f = fixture(); f.composition.ownedTiming = shortOwnedTiming;
+    f.r.snapshot = { ...f.r.snapshot, limits: { ...f.r.snapshot.limits, timeoutMs: 20 } };
     const entered = gate<void>(); const release = gate<void>(); f.composition.ledger.markVisible = async () => { entered.resolve(); await release.promise; return { recorded: true }; };
     const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r); const result = await h.model.doStream(params()); await entered.promise;
     let completed = false; const completion = h.lifecycle.complete().then(() => { completed = true; }, () => { completed = true; });
@@ -339,7 +340,7 @@ describe("C2 finite terminal persistence and retained RPC outcomes", () => {
     const f = fixture(); f.composition.ownedTiming = shortOwnedTiming; const entered = gate<void>(); const release = gate<void>(); const prior = f.composition.ledger.attachTerminalResult; let calls = 0; let outputs = 0;
     f.composition.ledger.attachTerminalResult = async (args) => { calls++; entered.resolve(); await release.promise; return prior(args); };
     const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r); const operation = h.model.doGenerate(params()).then((result) => { outputs++; return result; }); const rejected = expect(operation).rejects.toMatchObject({ code: "TERMINAL_RECONCILIATION_PENDING" });
-    await entered.promise; await rejected; await expect(h.lifecycle.complete()).rejects.toMatchObject({ code: "TERMINAL_RECONCILIATION_PENDING" });
+    await entered.promise; await rejected; await expect(h.lifecycle.complete()).rejects.toMatchObject({ code: "CLEANUP_PENDING" });
     expect(f.receipts).toHaveLength(1); expect(h.lifecycle.pendingWork().settlement).toBe(1); release.resolve(); await pause(0);
     expect(outputs).toBe(0); expect(calls).toBe(1); expect(f.events.filter((x) => x === "attach")).toHaveLength(1); expect(await h.lifecycle.retryPendingTerminalEvidence()).toBe(false); await h.lifecycle.complete();
     await expect(h.model.doGenerate(params())).rejects.toMatchObject({ code: "UNCERTAIN_OR_INFLIGHT" }); expect(f.count()).toBe(1);
@@ -416,6 +417,78 @@ describe("C2 initial native hook ownership", () => {
 });
 
 describe("original terminal capture and attachment share a single persistence deadline", () => {
+  it("the default window accommodates capture retry latency plus attachment without another inference", async () => {
+    const f = fixture(); f.r.snapshot = { ...f.r.snapshot, limits: { ...f.r.snapshot.limits, timeoutMs: 10000 } };
+    const capture = f.composition.terminalSink.capture, attach = f.composition.ledger.attachTerminalResult;
+    // Two transaction waits model the observed OCC capture retry. Their total
+    // exceeds the former one-second window before attachment even begins.
+    f.composition.terminalSink.capture = async args => { await pause(650); await pause(650); return capture(args); };
+    f.composition.ledger.attachTerminalResult = async args => { await pause(300); return attach(args); };
+    const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r);
+    const result = await h.model.doGenerate(params()); await h.lifecycle.complete();
+    expect(result.content).toEqual([{ type: "text", text: "answer" }]);
+    expect(f.count()).toBe(1); expect(f.receipts).toHaveLength(1); expect(f.attachments).toHaveLength(1);
+    expect(f.accounting).toMatchObject({ settledUnits: 500, uncertainUnits: 0, activeSlots: 0, outputVisible: true });
+    expect(h.lifecycle.pendingWork()).toEqual({ authority: 0, capture: 0, settlement: 0, native: 0, reader: 0, cleanup: 0 });
+  });
+  it("the default total deadline is not restarted after slow capture; unresolved cleanup stays finite", async () => {
+    jest.useFakeTimers({ now: 1000 });
+    const f = fixture(); f.r.snapshot = { ...f.r.snapshot, limits: { ...f.r.snapshot.limits, timeoutMs: 10000 } };
+    const entered = gate<void>(), release = gate<void>(), capture = f.composition.terminalSink.capture;
+    let attachmentCalls = 0, outputs = 0;
+    f.composition.terminalSink.capture = async args => { await pause(1200); return capture(args); };
+    f.composition.ledger.attachTerminalResult = async () => { attachmentCalls++; entered.resolve(); await release.promise; return { attached: true, resultWithheld: false }; };
+    const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r);
+    try {
+      const operation = h.model.doGenerate(params()).then(result => { outputs++; return result; });
+      const rejected = expect(operation).rejects.toMatchObject({ code: "TERMINAL_RECONCILIATION_PENDING" });
+      await jest.advanceTimersByTimeAsync(1200); await entered.promise;
+      await jest.advanceTimersByTimeAsync(3799); expect(outputs).toBe(0); expect(h.lifecycle.pendingWork().settlement).toBe(1);
+      await jest.advanceTimersByTimeAsync(1); await rejected;
+      let completed = false;
+      const completion = h.lifecycle.complete().finally(() => { completed = true; });
+      const unresolved = expect(completion).rejects.toMatchObject({ code: "CLEANUP_PENDING" });
+      await jest.advanceTimersByTimeAsync(99); expect(completed).toBe(false);
+      await jest.advanceTimersByTimeAsync(1); await unresolved;
+      expect(h.lifecycle.pendingWork().settlement).toBe(1); expect(f.accounting.settledUnits).toBe(500);
+      expect(f.receipts).toHaveLength(1); expect(attachmentCalls).toBe(1); expect(f.count()).toBe(1);
+      release.resolve(); await jest.advanceTimersByTimeAsync(0); await h.lifecycle.complete();
+      expect(outputs).toBe(0); expect(h.lifecycle.pendingWork().settlement).toBe(0);
+      expect(await h.lifecycle.retryPendingTerminalAttachment()).toBeUndefined();
+    } finally { release.resolve(); jest.useRealTimers(); }
+  });
+  it("complete joins an issued attachment that resolves inside its cleanup reserve without reopening delivery", async () => {
+    const f = fixture(); f.composition.ownedTiming = { ...shortOwnedTiming, cleanupMs: 80 };
+    const entered = gate<void>(), release = gate<void>(), attach = f.composition.ledger.attachTerminalResult;
+    let outputs = 0, completed = false;
+    f.composition.ledger.attachTerminalResult = async args => { entered.resolve(); await release.promise; return attach(args); };
+    const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r);
+    const operation = h.model.doGenerate(params()).then(result => { outputs++; return result; });
+    const rejected = expect(operation).rejects.toMatchObject({ code: "TERMINAL_RECONCILIATION_PENDING" });
+    await entered.promise; await rejected;
+    const completion = h.lifecycle.complete().then(() => { completed = true; });
+    try {
+      await pause(5); expect(completed).toBe(false); expect(h.lifecycle.pendingWork().settlement).toBe(1);
+      release.resolve(); await completion;
+      expect(completed).toBe(true); expect(outputs).toBe(0); expect(f.count()).toBe(1);
+      expect(f.receipts).toHaveLength(1); expect(f.attachments).toHaveLength(1);
+      expect(h.lifecycle.pendingWork().settlement).toBe(0); expect(await h.lifecycle.retryPendingTerminalAttachment()).toBeUndefined();
+    } finally { release.resolve(); await completion; }
+  });
+  it.each([
+    { terminalObservationMs: 1001 }, { cleanupMs: 1001 }, { terminalPersistenceMs: 10001 },
+    { terminalPersistenceMs: Infinity }, { terminalPersistenceMs: 0 },
+  ])("rejects an out-of-bound owned timing before admission: %j", timing => {
+    const f = fixture(); f.composition.ownedTiming = { ...shortOwnedTiming, ...timing };
+    expect(() => governGatewayLanguageModel(f.model, f.composition, f.b, f.r)).toThrow();
+    expect(f.events).toEqual([]); expect(f.count()).toBe(0);
+  });
+  it("permits the finite persistence cap without widening observation or cleanup caps", async () => {
+    const f = fixture(); f.composition.ownedTiming = { ...shortOwnedTiming, terminalPersistenceMs: 10000 };
+    const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r);
+    expect((await h.model.doGenerate(params())).content).toEqual([{ type: "text", text: "answer" }]);
+    await h.lifecycle.complete(); expect(f.receipts).toHaveLength(1); expect(f.count()).toBe(1);
+  });
   it("capture consumes the budget and attachment receives only the remaining time", async () => {
     const f = fixture(); f.composition.ownedTiming = { ...shortOwnedTiming, terminalPersistenceMs: 80 };
     const release = gate<void>(); const entered = gate<void>(); const prior = f.composition.terminalSink.capture;

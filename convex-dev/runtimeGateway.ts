@@ -53,7 +53,8 @@ export interface DurableTerminalEvidenceSink {
 }
 /** Finite server-code composition bounds, independent of model price/token qualifications. */
 export interface GatewayOwnedTiming { terminalObservationMs: number; terminalPersistenceMs: number; cleanupMs: number }
-export const DEFAULT_GATEWAY_OWNED_TIMING: Readonly<GatewayOwnedTiming> = Object.freeze({ terminalObservationMs: 100, terminalPersistenceMs: 1000, cleanupMs: 100 });
+// Capture (including transaction retries) and attachment share one finite window.
+export const DEFAULT_GATEWAY_OWNED_TIMING: Readonly<GatewayOwnedTiming> = Object.freeze({ terminalObservationMs: 100, terminalPersistenceMs: 5000, cleanupMs: 100 });
 export interface GatewayComposition { ledger: GatewayLedgerPort; terminalSink: DurableTerminalEvidenceSink; now?: () => number; ownedTiming?: GatewayOwnedTiming }
 export class GatewayDispatchError extends Error {
   constructor(readonly code: string) { super("Governed model call did not complete for delivery."); this.name = "GatewayDispatchError"; }
@@ -422,7 +423,9 @@ function stateFor(composition: GatewayComposition, inputBinding: GatewayBinding,
   proofFor(resolution, (composition.now ?? Date.now)());
   if (!count(binding.ordinal) || !stableId(binding.semanticId) || !stableId(binding.runBudgetId)) fail("INVALID_BINDING");
   const timing = detached(composition.ownedTiming ?? DEFAULT_GATEWAY_OWNED_TIMING);
-  for (const value of [timing.terminalObservationMs, timing.terminalPersistenceMs, timing.cleanupMs]) if (!count(value) || value < 1 || value > 1000) fail("INVALID_OWNED_TIMING");
+  for (const [value, maximum] of [[timing.terminalObservationMs, 1000], [timing.terminalPersistenceMs, 10000], [timing.cleanupMs, 1000]] as const) {
+    if (!count(value) || value < 1 || value > maximum) fail("INVALID_OWNED_TIMING");
+  }
   const controller = new AbortController(); const tasks: Promise<unknown>[] = []; let replay: string | undefined;
   let deliveryDeadline = Infinity; let observationDeadline = Infinity; let lifetimeTimer: ReturnType<typeof setTimeout> | undefined;
   type WorkKind = "authority" | "capture" | "settlement" | "native" | "reader" | "cleanup";
@@ -550,7 +553,28 @@ function stateFor(composition: GatewayComposition, inputBinding: GatewayBinding,
   const lifecycle: GatewayLifecycle = { signal: controller.signal, pendingWork: () => {
     const counts = { authority: 0, capture: 0, settlement: 0, native: 0, reader: 0, cleanup: 0 };
     pendingRPCs.forEach((slot) => { counts[slot.kind]++; }); return Object.freeze(counts);
-  }, cancel: () => controller.abort(), complete: async () => { let joined = 0; while (joined < tasks.length) { const batch = tasks.slice(joined); joined = tasks.length; await Promise.all(batch); } if (pendingEvidence) fail("TERMINAL_CAPTURE_PENDING"); if (reconciliationPending) fail("TERMINAL_RECONCILIATION_PENDING"); },
+  }, cancel: () => controller.abort(), complete: async () => {
+    let joined = 0, primary: unknown;
+    while (joined < tasks.length) {
+      const batch = tasks.slice(joined); joined = tasks.length;
+      await Promise.all(batch.map(task => task.catch(error => { primary ??= error; })));
+    }
+    // Timed waits retain their issued RPC promises. Join those original calls
+    // within one cleanup reserve; never retry a mutation or reopen delivery.
+    const deadline = Date.now() + timing.cleanupMs;
+    try {
+      while (pendingRPCs.size) {
+        const pending = [...pendingRPCs].map(slot => slot.promise.then(() => undefined, () => undefined));
+        await wait(Promise.all(pending), () => deadline, "CLEANUP_PENDING", "persistence");
+      }
+    } catch (error) {
+      if (primary !== undefined && error instanceof Error) Object.defineProperty(error, "cause", { value: primary });
+      throw error;
+    }
+    if (primary !== undefined) throw primary;
+    if (pendingEvidence) fail("TERMINAL_CAPTURE_PENDING");
+    if (reconciliationPending) fail("TERMINAL_RECONCILIATION_PENDING");
+  },
   retryPendingTerminalEvidence: () => own(() => capturePending()), retryPendingTerminalAttachment: () => own(() => attachPending()), consumeReplay: () => own(async () => {
     if (!replay) return undefined; assertDelivery(); proofFor(checkedResolution(await authority(() => composition.ledger.resolve(resolveArgs(binding)))), (composition.now ?? Date.now)());
     const result = providerJSON(exactJSON(replay, resolution.storageLimits.privateResultBytes));

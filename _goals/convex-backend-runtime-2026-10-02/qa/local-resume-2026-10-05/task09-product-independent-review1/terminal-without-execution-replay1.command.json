@@ -1,0 +1,45 @@
+{
+  "command": [
+    "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+    "--experimental-vm-modules",
+    "node_modules/jest/bin/jest.js",
+    "--config",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-ui-functional-v2-20261008/jest.config.mjs",
+    "--runInBand",
+    "--runTestsByPath",
+    "tests/unit/runtimeAgent/execution.test.ts",
+    "--testNamePattern",
+    "observe (keeps an unstarted queued run|delivers the real)",
+    "--json",
+    "--outputFile",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-product-independent-review1/terminal-without-execution-replay1.results.json"
+  ],
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "node": "v24.15.0",
+  "environmentOverride": {
+    "CONVEX_URL": "http://127.0.0.1:1"
+  },
+  "elapsedSeconds": 3.780126666009892,
+  "pid": 42974,
+  "exitCode": 0,
+  "timeoutSeconds": 40,
+  "timedOut": false,
+  "ownedChildReaped": true,
+  "sourcePins": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts",
+      "bytes": 74286,
+      "sha256": "ab78521ef1d2d2c96f531d9142a1ac9d2001b486fb770b6afefe5b82d16f9bd6"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeAgent/execution.test.ts",
+      "bytes": 54431,
+      "sha256": "a1043c2dec9816d89b67de17b3ca1ef6b1d41629f63eed4583443726eb8c3295"
+    }
+  ],
+  "sourceUnchangedAfter": [
+    true,
+    true
+  ],
+  "scope": "Independent replay of three author-written actual-handler controls; no new independently authored functional cases or native/model/service effects"
+}

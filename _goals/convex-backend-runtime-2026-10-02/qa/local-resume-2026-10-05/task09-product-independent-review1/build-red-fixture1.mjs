@@ -1,0 +1,1 @@
+import{build}from "esbuild";import path from "node:path";const J=process.argv[2];await build({entryPoints:[path.join(J,"reconnect-and-auth-red1.mjs")],bundle:true,platform:"node",format:"esm",outfile:path.join(J,"reconnect-and-auth-red1.bundle.mjs"),alias:{"@cortexmemory/sdk/runtime":path.join(J,"captured-red-sources1/validation.ts")},logLevel:"warning"});

@@ -1,0 +1,120 @@
+{
+  "status": "FAIL",
+  "error": {
+    "name": "AssertionError",
+    "message": "{\"created\":true,\"facts\":[{\"confidence\":100,\"createdAt\":1791480229057,\"entities\":[{\"name\":\"LANTERN_7ae8d289\",\"type\":\"concept\"}],\"extractionPolicyVersion\":\"source-attributed-facts-v1\",\"fact\":\"User's project codeword is LANTERN_7ae8d289.\",\"factId\":\"d94822f63a0cfa4262494e18127868d8ee9130301d9423ddc4715f8bf94ad209\",\"factType\":\"identity\",\"lineage\":{\"role\":\"user\",\"sourceEventId\":\"explicit:[\\\"task09-8e22880a-3d8e-4640-9749-f4834f667125\\\",\\\"task09-8e22880a-3d8e-4640-9749-f4834f667125-space\\\",\\\"n573t34xng3hctk542pyp379xd8fwpts\\\",\\\"task09-seed-7ae8d289-886e-4c09-9451-7cc00acd4233\\\"]\",\"sourceId\":\"explicit:[\\\"task09-8e22880a-3d8e-4640-9749-f4834f667125\\\",\\\"task09-8e22880a-3d8e-4640-9749-f4834f667125-space\\\",\\\"n573t34xng3hctk542pyp379xd8fwpts\\\",\\\"task09-seed-7ae8d289-886e-4c09-9451-7cc00acd4233\\\"]\",\"sourceRevision\":1,\"trust\":\"user_assertion\"},\"memorySpaceId\":\"task09-8e22880a-3d8e-4640-9749-f4834f667125-space\",\"object\":\"LANTERN_7ae8d289\",\"ownerPrincipalId\":\"n573t34xng3hctk542pyp379xd8fwpts\",\"predicate\":\"has_project_codeword\",\"sourceType\":\"manual\",\"subject\":\"User\",\"tags\":[],\"tenantId\":\"task09-8e22880a-3d8e-4640-9749-f4834f667125\",\"updatedAt\":1791480229057,\"version\":1}],\"receiptId\":\"9d1ff94fcdb51ecfec1a5d8a1df8b7af9115aa038e46bd4b20fad0b255e8eae4\",\"sourceId\":\"explicit:[\\\"task09-8e22880a-3d8e-4640-9749-f4834f667125\\\",\\\"task09-8e22880a-3d8e-4640-9749-f4834f667125-space\\\",\\\"n573t34xng3hctk542pyp379xd8fwpts\\\",\\\"task09-seed-7ae8d289-886e-4c09-9451-7cc00acd4233\\\"]\",\"sourceRevision\":1}\n+ actual - expected\n\n+ undefined\n- true\n"
+  },
+  "outcomes": [
+    {
+      "name": "installed SDK session and managed profile are native and scoped",
+      "status": "PASS",
+      "evidence": {
+        "session": {
+          "version": 1,
+          "tenantId": "task09-8e22880a-3d8e-4640-9749-f4834f667125",
+          "memorySpaceId": "task09-8e22880a-3d8e-4640-9749-f4834f667125-space",
+          "principalId": "n573t34xng3hctk542pyp379xd8fwpts",
+          "userId": "n573t34xng3hctk542pyp379xd8fwpts"
+        },
+        "profile": {
+          "profile": {
+            "chunking": "codepoint-1600-overlap-200-v1",
+            "dimensions": 1536,
+            "indexName": "by_default_embedding_v1",
+            "modelId": "openai/text-embedding-3-small",
+            "normalization": "text-nfc-lf-v1",
+            "profileId": "cortex-text-small-1536-v1"
+          },
+          "version": 1
+        },
+        "definition": {
+          "agentId": "agent:e57eee1cd68e3e3bca068a1fcbc1d886ff19f5c3219c9a4d5d1f2e882890dcb8",
+          "definitionHash": "ad972ee3e9358715dd5579f72c62a61b840c06f5e4d1ad71c8b921a3f278e2be",
+          "memoryMode": "indexed-plus-pending",
+          "tools": [
+            {
+              "toolId": "memory.recall",
+              "toolVersion": 1
+            }
+          ],
+          "version": 1
+        },
+        "SDKBytes": "21a48d327cbd7c5617f92a7f59c5f2592cdee682789f72c3a1c749dd8720654c"
+      }
+    }
+  ],
+  "records": [
+    {
+      "label": "current-reference",
+      "kind": "query",
+      "function": "ingestionQualification:reference",
+      "args": {
+        "memorySpaceId": "task09-8e22880a-3d8e-4640-9749-f4834f667125-space"
+      },
+      "result": {
+        "grantId": "mx798md2ak6mrah8g5tha0saxh8fxbe9",
+        "grantVersion": 1,
+        "membershipId": "n170hkm5yqkk99n1t2cmptwqnn8fwp85",
+        "membershipVersion": 1,
+        "memorySpaceEpoch": 1,
+        "memorySpaceId": "task09-8e22880a-3d8e-4640-9749-f4834f667125-space",
+        "principalId": "n573t34xng3hctk542pyp379xd8fwpts",
+        "principalVersion": 1,
+        "tenantEpoch": 1,
+        "tenantId": "task09-8e22880a-3d8e-4640-9749-f4834f667125"
+      },
+      "elapsedMs": 327
+    },
+    {
+      "label": "governed-owned-memory-seed",
+      "kind": "action",
+      "function": "runtimeMemory:remember",
+      "args": {
+        "tenantId": "task09-8e22880a-3d8e-4640-9749-f4834f667125",
+        "memorySpaceId": "task09-8e22880a-3d8e-4640-9749-f4834f667125-space",
+        "requestId": "task09-seed-7ae8d289-886e-4c09-9451-7cc00acd4233",
+        "text": "My project codeword is LANTERN_7ae8d289. It is the exact codeword that I use for this project."
+      },
+      "result": {
+        "created": true,
+        "facts": [
+          {
+            "confidence": 100,
+            "createdAt": 1791480229057,
+            "entities": [
+              {
+                "name": "LANTERN_7ae8d289",
+                "type": "concept"
+              }
+            ],
+            "extractionPolicyVersion": "source-attributed-facts-v1",
+            "fact": "User's project codeword is LANTERN_7ae8d289.",
+            "factId": "d94822f63a0cfa4262494e18127868d8ee9130301d9423ddc4715f8bf94ad209",
+            "factType": "identity",
+            "lineage": {
+              "role": "user",
+              "sourceEventId": "explicit:[\"task09-8e22880a-3d8e-4640-9749-f4834f667125\",\"task09-8e22880a-3d8e-4640-9749-f4834f667125-space\",\"n573t34xng3hctk542pyp379xd8fwpts\",\"task09-seed-7ae8d289-886e-4c09-9451-7cc00acd4233\"]",
+              "sourceId": "explicit:[\"task09-8e22880a-3d8e-4640-9749-f4834f667125\",\"task09-8e22880a-3d8e-4640-9749-f4834f667125-space\",\"n573t34xng3hctk542pyp379xd8fwpts\",\"task09-seed-7ae8d289-886e-4c09-9451-7cc00acd4233\"]",
+              "sourceRevision": 1,
+              "trust": "user_assertion"
+            },
+            "memorySpaceId": "task09-8e22880a-3d8e-4640-9749-f4834f667125-space",
+            "object": "LANTERN_7ae8d289",
+            "ownerPrincipalId": "n573t34xng3hctk542pyp379xd8fwpts",
+            "predicate": "has_project_codeword",
+            "sourceType": "manual",
+            "subject": "User",
+            "tags": [],
+            "tenantId": "task09-8e22880a-3d8e-4640-9749-f4834f667125",
+            "updatedAt": 1791480229057,
+            "version": 1
+          }
+        ],
+        "receiptId": "9d1ff94fcdb51ecfec1a5d8a1df8b7af9115aa038e46bd4b20fad0b255e8eae4",
+        "sourceId": "explicit:[\"task09-8e22880a-3d8e-4640-9749-f4834f667125\",\"task09-8e22880a-3d8e-4640-9749-f4834f667125-space\",\"n573t34xng3hctk542pyp379xd8fwpts\",\"task09-seed-7ae8d289-886e-4c09-9451-7cc00acd4233\"]",
+        "sourceRevision": 1
+      },
+      "elapsedMs": 4496
+    }
+  ]
+}

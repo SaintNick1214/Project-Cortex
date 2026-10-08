@@ -1,0 +1,62 @@
+{
+  "schema": "task09-independent-cutoff-assessment/v1",
+  "observedAt": "2026-10-08T17:57:33.341843+00:00",
+  "scope": "Read-only current product and preserved actual fixture state; no inference or effect replay",
+  "inputs": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-text-client-functional-v2-20261008/native-actual/native3-state-after-nickname-red.json",
+      "bytes": 819166,
+      "sha256": "bde53da74fce799b27db34ef4a2b209f4305c4d6697fa07b203114bcb8fa9369"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeTranscript.ts",
+      "bytes": 50648,
+      "sha256": "3adcb1f73671008a1a0ca8dfebfc877b6a4952d8f5e10350b1559029680e6464"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryContext.ts",
+      "bytes": 11889,
+      "sha256": "751f2d51acb7053cbd6fe42b09896a24d3b6be04458cd39b4ff9b14fff6a0057"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/tasks/09-text-client-slice.md",
+      "bytes": 3715,
+      "sha256": "69494e32a6ddcfff899fab3bbb99abd5797c73f1908109c67d1b1cfa3be6c031"
+    }
+  ],
+  "runs": [
+    {
+      "runId": "run:de3a0bf36f399a3f22a899725832fc0f65306ea05d0d57ae4371a2626d97fd58",
+      "responseStatus": "failed",
+      "memoryStatus": "pending",
+      "queueSequence": 1,
+      "cutoff": {
+        "requiredStages": [],
+        "scopeIdentity": "[\"task09-8e22880a-3d8e-4640-9749-f4834f667125\",\"task09-8e22880a-3d8e-4640-9749-f4834f667125-space\"]",
+        "sequence": 2
+      },
+      "snapshotMessageIds": [
+        "kx7b82rrj9nd4vtge38kvjq4318fxrsc"
+      ]
+    },
+    {
+      "runId": "run:15da2d1f0afe9bdd8be7d0f8706e4c0cb9498a634cc53b26eedb98736964ab45",
+      "responseStatus": "complete",
+      "memoryStatus": "pending",
+      "queueSequence": 2,
+      "cutoff": {
+        "requiredStages": [],
+        "scopeIdentity": "[\"task09-8e22880a-3d8e-4640-9749-f4834f667125\",\"task09-8e22880a-3d8e-4640-9749-f4834f667125-space\"]",
+        "sequence": 3
+      },
+      "snapshotMessageIds": [
+        "kx7esyc7swtafkmbkb1cp82qz18fwg46"
+      ]
+    }
+  ],
+  "assessment": "Prior failed A is excluded by the same completed-prior-run predicate in canonical capture and memory boundary. Its nickname absence is a fixture assumption. B is complete with pending ingestion and supplies the eligible unprocessed tail for C.",
+  "criterion": "Original09 immediate next turn must use eligible unprocessed tail; actual C evidence remains pending.",
+  "toolCount": "Author reports two distinct bounded recall calls; native bridge state contains two tool messages. This is not reported as one invocation. Observer/reconnect must add zero duplicate effects.",
+  "preservedFailure": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-text-client-functional-v2-20261008/native-actual/native3-state-after-nickname-red.json",
+  "functionalAcceptance": false
+}

@@ -1,0 +1,239 @@
+{
+  "status": "READ_ONLY_APPROVAL_PROGRESS",
+  "handle": {
+    "version": 1,
+    "tenantId": "task09-8e22880a-3d8e-4640-9749-f4834f667125",
+    "memorySpaceId": "task09-8e22880a-3d8e-4640-9749-f4834f667125-space",
+    "principalId": "n573t34xng3hctk542pyp379xd8fwpts",
+    "runId": "run:58d60233acc0fbfbd1655dabc27f8e0aa2d420571acb170bddd7950d6df63f1e",
+    "conversationId": "conversation:58d60233acc0fbfbd1655dabc27f8e0aa2d420571acb170bddd7950d6df63f1e",
+    "agentId": "agent:5a4319a5e53f32e733e99e762f8d74bfa9de95d6e5a26cd7fd5f5bea0442bd7f",
+    "agentVersion": 1,
+    "definitionHash": "2e3cee784d93747e0edfe4b67d565db9a5f24820c495f9dec354dc9a1033ba7f"
+  },
+  "run": {
+    "_creationTime": 1791482660358.9802,
+    "_id": "q97dtxrsm4wf632s5hqmf6y20h8fwdrc",
+    "agentId": "agent:5a4319a5e53f32e733e99e762f8d74bfa9de95d6e5a26cd7fd5f5bea0442bd7f",
+    "agentVersion": 1,
+    "attemptNumber": 1,
+    "authorityReference": {
+      "grantId": "mx798md2ak6mrah8g5tha0saxh8fxbe9",
+      "grantVersion": 1,
+      "membershipId": "n170hkm5yqkk99n1t2cmptwqnn8fwp85",
+      "membershipVersion": 1,
+      "memorySpaceEpoch": 1,
+      "memorySpaceId": "task09-8e22880a-3d8e-4640-9749-f4834f667125-space",
+      "principalId": "n573t34xng3hctk542pyp379xd8fwpts",
+      "principalVersion": 1,
+      "tenantEpoch": 1,
+      "tenantId": "task09-8e22880a-3d8e-4640-9749-f4834f667125"
+    },
+    "contextCompleteness": "complete",
+    "conversationEpoch": 1,
+    "conversationId": "conversation:58d60233acc0fbfbd1655dabc27f8e0aa2d420571acb170bddd7950d6df63f1e",
+    "createdAt": 1791482660358,
+    "definitionHash": "2e3cee784d93747e0edfe4b67d565db9a5f24820c495f9dec354dc9a1033ba7f",
+    "executionRequested": true,
+    "failureCode": "INTERRUPTED_REQUIRES_RECONCILIATION",
+    "graphStatus": "not_requested",
+    "historyRevision": 0,
+    "inputMessageIds": [
+      "kx76wm78y7g2t5y4gkgvf00s418fx3w5"
+    ],
+    "memorySpaceId": "task09-8e22880a-3d8e-4640-9749-f4834f667125-space",
+    "memoryStatus": "pending",
+    "outputMessageIds": [],
+    "ownerPrincipalId": "n573t34xng3hctk542pyp379xd8fwpts",
+    "queueSequence": 1,
+    "requestCanonical": "{\"identity\":[\"cortex.submit.v1\",\"task09-8e22880a-3d8e-4640-9749-f4834f667125\",\"task09-8e22880a-3d8e-4640-9749-f4834f667125-space\",\"n573t34xng3hctk542pyp379xd8fwpts\",[\"create\"],\"task09-approval-8e22880a-3d8e-4640-9749-f4834f667125\"],\"publicRequest\":{\"agentId\":\"agent:5a4319a5e53f32e733e99e762f8d74bfa9de95d6e5a26cd7fd5f5bea0442bd7f\",\"agentVersion\":1,\"clientRequestId\":\"task09-approval-8e22880a-3d8e-4640-9749-f4834f667125\",\"parts\":[{\"text\":\"Please retrieve my project codeword with memory_recall after I explicitly approve the tool.\",\"type\":\"text\"}],\"version\":1},\"version\":1}",
+    "requestIdentityCanonical": "[\"cortex.submit.v1\",\"task09-8e22880a-3d8e-4640-9749-f4834f667125\",\"task09-8e22880a-3d8e-4640-9749-f4834f667125-space\",\"n573t34xng3hctk542pyp379xd8fwpts\",[\"create\"],\"task09-approval-8e22880a-3d8e-4640-9749-f4834f667125\"]",
+    "requestIdentityHash": "58d60233acc0fbfbd1655dabc27f8e0aa2d420571acb170bddd7950d6df63f1e",
+    "responseStatus": "failed",
+    "runAccountId": "nh732s1wz73gvnfvgdfhj3ptv18fwwa2",
+    "runBudgetId": "142ce0a78503d5656d9d2b4b0a071da6a6491f477a6de0f7427ecee6fd07cbb9",
+    "runId": "run:58d60233acc0fbfbd1655dabc27f8e0aa2d420571acb170bddd7950d6df63f1e",
+    "snapshotCanonical": "{\"anchor\":{\"canonicalContentHash\":\"752402f98880126fb3f69b748d818c7233a312d56b6acaadce408f356fa3016a\",\"contentHash\":\"8c21308e4a46579f1afe42c8dc2608acbc91a7afab338b2d89891b4660cd9eef\",\"nativeMessageId\":\"kx76wm78y7g2t5y4gkgvf00s418fx3w5\",\"order\":0,\"sourceEventId\":\"transcript:conversation:58d60233acc0fbfbd1655dabc27f8e0aa2d420571acb170bddd7950d6df63f1e:kx76wm78y7g2t5y4gkgvf00s418fx3w5\",\"sourceRevision\":1,\"stepOrder\":0},\"attemptNumber\":1,\"capturedAuthorityReference\":{\"grantId\":\"mx798md2ak6mrah8g5tha0saxh8fxbe9\",\"grantVersion\":1,\"membershipId\":\"n170hkm5yqkk99n1t2cmptwqnn8fwp85\",\"membershipVersion\":1,\"memorySpaceEpoch\":1,\"memorySpaceId\":\"task09-8e22880a-3d8e-4640-9749-f4834f667125-space\",\"principalId\":\"n573t34xng3hctk542pyp379xd8fwpts\",\"principalVersion\":1,\"tenantEpoch\":1,\"tenantId\":\"task09-8e22880a-3d8e-4640-9749-f4834f667125\"},\"completeness\":\"complete\",\"conversationEpoch\":1,\"conversationId\":\"conversation:58d60233acc0fbfbd1655dabc27f8e0aa2d420571acb170bddd7950d6df63f1e\",\"definitionHash\":\"2e3cee784d93747e0edfe4b67d565db9a5f24820c495f9dec354dc9a1033ba7f\",\"definitionVersion\":1,\"historyRevision\":0,\"ingestionCutoff\":{\"requiredStages\":[],\"scopeIdentity\":\"[\\\"task09-8e22880a-3d8e-4640-9749-f4834f667125\\\",\\\"task09-8e22880a-3d8e-4640-9749-f4834f667125-space\\\"]\",\"sequence\":7},\"messages\":[{\"canonicalContentHash\":\"752402f98880126fb3f69b748d818c7233a312d56b6acaadce408f356fa3016a\",\"contentHash\":\"8c21308e4a46579f1afe42c8dc2608acbc91a7afab338b2d89891b4660cd9eef\",\"nativeMessageId\":\"kx76wm78y7g2t5y4gkgvf00s418fx3w5\",\"order\":0,\"sourceEventId\":\"transcript:conversation:58d60233acc0fbfbd1655dabc27f8e0aa2d420571acb170bddd7950d6df63f1e:kx76wm78y7g2t5y4gkgvf00s418fx3w5\",\"sourceRevision\":1,\"stepOrder\":0}],\"queueSequence\":1,\"runDocId\":\"q97dtxrsm4wf632s5hqmf6y20h8fwdrc\",\"threadId\":\"m977t0zmhtvf5zzc2nzfa8vt7n8fwd8h\",\"version\":1}",
+    "streamingRequested": true,
+    "tenantId": "task09-8e22880a-3d8e-4640-9749-f4834f667125",
+    "updatedAt": 1791482847293
+  },
+  "observation": {
+    "approvals": [],
+    "cursor": 11,
+    "parts": [
+      {
+        "part": {
+          "name": "memory_recall",
+          "phase": "requested",
+          "toolCallId": "call_UDGyuwrdPl3phDo62lhNOBhS",
+          "type": "tool"
+        },
+        "sequence": 1
+      },
+      {
+        "part": {
+          "name": "memory_recall",
+          "phase": "requested",
+          "toolCallId": "call_UDGyuwrdPl3phDo62lhNOBhS",
+          "type": "tool"
+        },
+        "sequence": 2
+      },
+      {
+        "part": {
+          "name": "memory_recall",
+          "phase": "requested",
+          "toolCallId": "call_UDGyuwrdPl3phDo62lhNOBhS",
+          "type": "tool"
+        },
+        "sequence": 3
+      },
+      {
+        "part": {
+          "state": "waiting_approval",
+          "type": "status"
+        },
+        "sequence": 4
+      },
+      {
+        "part": {
+          "name": "memory_recall",
+          "phase": "approved",
+          "toolCallId": "call_UDGyuwrdPl3phDo62lhNOBhS",
+          "type": "tool"
+        },
+        "sequence": 5
+      },
+      {
+        "part": {
+          "state": "running",
+          "type": "status"
+        },
+        "sequence": 6
+      },
+      {
+        "part": {
+          "name": "memory_recall",
+          "phase": "running",
+          "toolCallId": "call_UDGyuwrdPl3phDo62lhNOBhS",
+          "type": "tool"
+        },
+        "sequence": 7
+      },
+      {
+        "part": {
+          "name": "memory_recall",
+          "phase": "succeeded",
+          "toolCallId": "call_UDGyuwrdPl3phDo62lhNOBhS",
+          "type": "tool"
+        },
+        "sequence": 8
+      },
+      {
+        "part": {
+          "code": "RUNTIME_OUTPUT_FAILED",
+          "type": "error"
+        },
+        "sequence": 9
+      },
+      {
+        "part": {
+          "state": "unknown",
+          "type": "status"
+        },
+        "sequence": 10
+      },
+      {
+        "part": {
+          "code": "RUNTIME_OUTPUT_FAILED",
+          "type": "error"
+        },
+        "sequence": 11
+      }
+    ],
+    "run": {
+      "agentId": "agent:5a4319a5e53f32e733e99e762f8d74bfa9de95d6e5a26cd7fd5f5bea0442bd7f",
+      "agentVersion": 1,
+      "attemptNumber": 1,
+      "cancellationRequested": false,
+      "contextCompleteness": "complete",
+      "contextFailureCode": null,
+      "conversationId": "conversation:58d60233acc0fbfbd1655dabc27f8e0aa2d420571acb170bddd7950d6df63f1e",
+      "createdAt": 1791482660358,
+      "definitionHash": "2e3cee784d93747e0edfe4b67d565db9a5f24820c495f9dec354dc9a1033ba7f",
+      "failureCode": "INTERRUPTED_REQUIRES_RECONCILIATION",
+      "graphStatus": "not_requested",
+      "inputMessageIds": [
+        "kx76wm78y7g2t5y4gkgvf00s418fx3w5"
+      ],
+      "memoryStatus": "pending",
+      "outputMessageIds": [],
+      "queueSequence": 1,
+      "responseStatus": "failed",
+      "runId": "run:58d60233acc0fbfbd1655dabc27f8e0aa2d420571acb170bddd7950d6df63f1e",
+      "scope": {
+        "memorySpaceId": "task09-8e22880a-3d8e-4640-9749-f4834f667125-space",
+        "tenantId": "task09-8e22880a-3d8e-4640-9749-f4834f667125"
+      },
+      "updatedAt": 1791482847293,
+      "version": 1
+    },
+    "state": "unknown"
+  },
+  "operations": [
+    {
+      "id": "pn79q1vjmpzzk75nzkrp9f9zz58fxp9z",
+      "operationKey": "embedding.query",
+      "operationId": "d5aed726fd5d50299d66b5b1e2ce8fb1327fd6eaaabe8e66fceaf765e4088652",
+      "createdAt": 1791482666148,
+      "uncertainUnits": 100000
+    },
+    {
+      "id": "pn726phbd70sjqk63k8qck6nn58fxbdj",
+      "operationKey": "agent.respond",
+      "operationId": "d8d6a039e65054af4e6b4ecfa6038db0be719e999b660ec5cd81e38f10b540c6",
+      "createdAt": 1791482672733,
+      "uncertainUnits": 100000
+    },
+    {
+      "id": "pn75gjeyde2cvc148k790e5jvs8fxjmz",
+      "operationKey": "embedding.query",
+      "operationId": "900deb6049ed455b764180519f2dbef2232f7b5019dbad7467eb52e21f59a4ac",
+      "createdAt": 1791482838429,
+      "uncertainUnits": 100000
+    }
+  ],
+  "attempts": [
+    {
+      "id": "ph7513whee0gg3fv70afwrcn018fw16c",
+      "operationDocumentId": "pn79q1vjmpzzk75nzkrp9f9zz58fxp9z",
+      "createdAt": 1791482666148,
+      "state": "uncertain",
+      "slotReleased": true,
+      "reservationUnits": 100000,
+      "terminalEvidenceHash": "48aa2b701a97d79bc67bc76f333c014a566f0a2a7a23c823f3805edf9846d7dc"
+    },
+    {
+      "id": "ph71vp7vfex55nca53pvw2r0nd8fxbxp",
+      "operationDocumentId": "pn726phbd70sjqk63k8qck6nn58fxbdj",
+      "createdAt": 1791482672733,
+      "state": "uncertain",
+      "slotReleased": true,
+      "reservationUnits": 100000,
+      "terminalEvidenceHash": "c52b4b2b1c0f4ac15af2e96fc6b9f2bd5588dbc83420c4747781def280997b41"
+    },
+    {
+      "id": "ph7ec5736v1c2an91qj5q50rq98fwttr",
+      "operationDocumentId": "pn75gjeyde2cvc148k790e5jvs8fxjmz",
+      "createdAt": 1791482838429,
+      "state": "uncertain",
+      "slotReleased": true,
+      "reservationUnits": 100000,
+      "terminalEvidenceHash": "e1a6f8c4ed953d69a4bc87e05f5ad14d06856abee64c0500378f6269b5dfccfb"
+    }
+  ],
+  "readyGlobalAttemptCount": 18,
+  "currentGlobalAttemptCount": 19,
+  "noCallsFromObserverScript": true
+}

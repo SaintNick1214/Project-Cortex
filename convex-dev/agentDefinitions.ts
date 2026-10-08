@@ -175,8 +175,8 @@ export const revokeVersion = mutation({ args: { memorySpaceId: v.string(), agent
       { revokedAt: Date.now(), revocationActorReference: reference, revocationReason: args.reason });
     return { revoked: true as const };
   } });
-export const get = query({ args: { memorySpaceId: v.string(), agentId: v.string(), version: v.number() }, handler: async (ctx, args) => {
-  const actor = await requireDataAuthority(ctx, { memorySpaceId: args.memorySpaceId }, "run");
+export const get = query({ args: { memorySpaceId: v.string(), tenantId: v.optional(v.string()), agentId: v.string(), version: v.number() }, handler: async (ctx, args) => {
+  const actor = await requireDataAuthority(ctx, { tenantId: args.tenantId, memorySpaceId: args.memorySpaceId }, "run");
   const current = await readCurrentExecutableDefinition(ctx, dataAuthorityReference(actor), { agentId: args.agentId, version: args.version }, { capability: "run" });
   return { agentId: args.agentId, version: args.version, definitionHash: current.definitionHash,
     tools: current.definition.tools.map(tool => ({ toolId: tool.toolId, toolVersion: tool.toolVersion })), memoryMode: current.definition.context.memoryMode };

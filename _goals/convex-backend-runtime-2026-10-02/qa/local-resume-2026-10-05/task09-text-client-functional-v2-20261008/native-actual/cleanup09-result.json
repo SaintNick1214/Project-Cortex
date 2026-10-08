@@ -1,0 +1,43 @@
+{
+  "status": "PASS_OWNED_SCOPE_CLEANUP",
+  "sourceIds": [
+    "explicit:[\"task09-8e22880a-3d8e-4640-9749-f4834f667125\",\"task09-8e22880a-3d8e-4640-9749-f4834f667125-space\",\"n573t34xng3hctk542pyp379xd8fwpts\",\"task09-seed-7ae8d289-886e-4c09-9451-7cc00acd4233\"]",
+    "transcript:conversation:de3a0bf36f399a3f22a899725832fc0f65306ea05d0d57ae4371a2626d97fd58:kx7b82rrj9nd4vtge38kvjq4318fxrsc",
+    "transcript:conversation:de3a0bf36f399a3f22a899725832fc0f65306ea05d0d57ae4371a2626d97fd58:kx7esyc7swtafkmbkb1cp82qz18fwg46",
+    "transcript:conversation:de3a0bf36f399a3f22a899725832fc0f65306ea05d0d57ae4371a2626d97fd58:kx723ah2cr5tn0shrs0njxtec58fwzbe",
+    "transcript:conversation:de3a0bf36f399a3f22a899725832fc0f65306ea05d0d57ae4371a2626d97fd58:kx768kva13yrcf40nyjykkgtcn8fwack",
+    "transcript:conversation:de3a0bf36f399a3f22a899725832fc0f65306ea05d0d57ae4371a2626d97fd58:kx74xdy7chqfadtm96gdkeh3hs8fx1q8",
+    "transcript:conversation:58d60233acc0fbfbd1655dabc27f8e0aa2d420571acb170bddd7950d6df63f1e:kx76wm78y7g2t5y4gkgvf00s418fx3w5",
+    "transcript:conversation:c506f96cdd5c7b5beb05256c2ac5db1733b46b816aed57711d56bb7bb53eb173:kx722gy150nc1wcmbstyn45xe98fwwrw",
+    "transcript:conversation:ecf056bd459070d324d47c17f92240171d988cf82cabd0308fe8da0c5c2a54d5:kx72d08cmd7fffvkg694sy4x798fwdk6",
+    "transcript:conversation:4b568d03f82e48e8d4b929e06446fbb3858490c52aa4e4428870c5d2ba2553b7:kx7f97wxzacqavkk61t5wwc1s58fw4eh",
+    "transcript:conversation:befc9a315a595bf25583211feaca82e5d30a80f74cc048723abaf635478767ec:kx79fzm7q9jesnvyhd2jng9vzh8fxa54",
+    "transcript:conversation:befc9a315a595bf25583211feaca82e5d30a80f74cc048723abaf635478767ec:kx7b9ypdateq9p65sha9w9ezcx8fxrzk"
+  ],
+  "eventsRetired": 12,
+  "heldRowsDeleted": 1,
+  "productRowsDeleted": 0,
+  "grantsRevoked": [
+    "mx798md2ak6mrah8g5tha0saxh8fxbe9",
+    "mx73t8fb8hd9j7jga2jebsvm658fx5my"
+  ],
+  "nonterminalRuns": 0,
+  "activeSlots": 0,
+  "reservations": 0,
+  "paidAttemptsBefore": 24,
+  "paidAttemptsAfter": 24,
+  "fullLiabilitiesRetained": true,
+  "revokedOwnerDenied": {
+    "name": "ConvexError",
+    "message": "[Request ID: 5e04272f310138ca] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../custom/backend/runtimeAuth.ts:46:26)\n    at resolveAuthority (../../custom/backend/runtimeAuth.ts:185:0)\n    at async requireAuthority (../../custom/backend/runtimeAuth.ts:251:0)\n    at async requireDataAuthority (../../custom/backend/runtimeDataAuth.ts:32:16)\n    at async handler (../custom/backend/runtimeClient.ts:9:11)\n",
+    "data": {
+      "code": "FORBIDDEN",
+      "message": "Access denied",
+      "outcome": "not_dispatched",
+      "retryable": false,
+      "version": 1
+    }
+  },
+  "sourceEligibilityRetired": true,
+  "historicalRowsPreserved": true
+}

@@ -1,0 +1,445 @@
+  console.error
+    ◇ injected env (0) from .env.test
+
+      13 | import dotenv from "dotenv";
+      14 | import { resolve } from "path";
+    > 15 |
+         | ^
+      16 | // Load .env.test first (test defaults)
+      17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+      18 |
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:15:8
+
+  console.error
+    ◇ injected env (0) from .env.local
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+  console.log
+    
+    🧪 Testing against LOCAL Convex: http://127.0.0.1:3210
+
+      at tests/env.ts:54:17
+
+  console.log
+       Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:55:17
+
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:121:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:122:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:123:13
+
+(node:20443) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/client-runtime/client.test.ts
+  browser remote runtime client
+    ✕ sends exact v1 text and verified outer selectors; pins the server run
+    ✕ denies invalid public graph before session or mutation 0
+    ✕ denies invalid public graph before session or mutation 1
+    ✕ denies invalid public graph before session or mutation 2
+    ✕ denies invalid public graph before session or mutation 3
+    ✕ denies invalid public graph before session or mutation 4
+    ✕ denies invalid public graph before session or mutation 5
+    ✕ denies invalid public graph before session or mutation 6
+    ✕ denies invalid public graph before session or mutation 7
+    ✕ does not invoke input getters
+    ✕ accepts ordered unicode text parts without normalization or history resend
+    ✕ awaits official initial auth and refresh acceptance, propagates force refresh unchanged
+    ✕ rejects failed refresh and closes all active observations before late data
+    ✕ denies pinned handle on changed verified session 0
+    ✕ denies pinned handle on changed verified session 1
+    ✕ denies pinned handle on changed verified session 2
+    ✕ passes current pinned definition and exact approval hash; no caller tool payload
+    ✕ routes default metadata and recall through governed registered action only
+    ✕ resets one-shot old-attempt cursor before reading replacement output
+    ✕ drains cursor pages once, reacts to approvals, and resets replacement attempt
+    ✕ closes a session-switched reactive query without delivering cached result
+    ✕ withholds typed backend error details and never exposes provider diagnostics
+
+  ● browser remote runtime client › sends exact v1 text and verified outer selectors; pins the server run
+
+    ReferenceError: jest is not defined
+
+      16 |   const subscriptions: { name: string; args: Record<string, unknown>; update: (value: unknown) => void; error: (error: Error) => void; closed: boolean }[] = [];
+      17 |   let observe: RuntimeObservation = { run: value, state: "running", parts: [], cursor: 0, approvals: [] };
+    > 18 |   const query = jest.fn(async (ref: Parameters<RuntimeClientPort["query"]>[0], args: Record<string, unknown>) => {
+         |                 ^
+      19 |     const name = getFunctionName(ref); calls.push({ name, args });
+      20 |     if (name === "runtimeClient:session") return current;
+      21 |     if (name === "runtimeAgent:observe") return observe;
+
+      at fixture (tests/unit/client-runtime/client.test.ts:18:17)
+      at Object.<anonymous> (tests/unit/client-runtime/client.test.ts:39:15)
+
+  ● browser remote runtime client › denies invalid public graph before session or mutation 0
+
+    ReferenceError: jest is not defined
+
+      16 |   const subscriptions: { name: string; args: Record<string, unknown>; update: (value: unknown) => void; error: (error: Error) => void; closed: boolean }[] = [];
+      17 |   let observe: RuntimeObservation = { run: value, state: "running", parts: [], cursor: 0, approvals: [] };
+    > 18 |   const query = jest.fn(async (ref: Parameters<RuntimeClientPort["query"]>[0], args: Record<string, unknown>) => {
+         |                 ^
+      19 |     const name = getFunctionName(ref); calls.push({ name, args });
+      20 |     if (name === "runtimeClient:session") return current;
+      21 |     if (name === "runtimeAgent:observe") return observe;
+
+      at fixture (tests/unit/client-runtime/client.test.ts:18:17)
+      at tests/unit/client-runtime/client.test.ts:50:15
+
+  ● browser remote runtime client › denies invalid public graph before session or mutation 1
+
+    ReferenceError: jest is not defined
+
+      16 |   const subscriptions: { name: string; args: Record<string, unknown>; update: (value: unknown) => void; error: (error: Error) => void; closed: boolean }[] = [];
+      17 |   let observe: RuntimeObservation = { run: value, state: "running", parts: [], cursor: 0, approvals: [] };
+    > 18 |   const query = jest.fn(async (ref: Parameters<RuntimeClientPort["query"]>[0], args: Record<string, unknown>) => {
+         |                 ^
+      19 |     const name = getFunctionName(ref); calls.push({ name, args });
+      20 |     if (name === "runtimeClient:session") return current;
+      21 |     if (name === "runtimeAgent:observe") return observe;
+
+      at fixture (tests/unit/client-runtime/client.test.ts:18:17)
+      at tests/unit/client-runtime/client.test.ts:50:15
+
+  ● browser remote runtime client › denies invalid public graph before session or mutation 2
+
+    ReferenceError: jest is not defined
+
+      16 |   const subscriptions: { name: string; args: Record<string, unknown>; update: (value: unknown) => void; error: (error: Error) => void; closed: boolean }[] = [];
+      17 |   let observe: RuntimeObservation = { run: value, state: "running", parts: [], cursor: 0, approvals: [] };
+    > 18 |   const query = jest.fn(async (ref: Parameters<RuntimeClientPort["query"]>[0], args: Record<string, unknown>) => {
+         |                 ^
+      19 |     const name = getFunctionName(ref); calls.push({ name, args });
+      20 |     if (name === "runtimeClient:session") return current;
+      21 |     if (name === "runtimeAgent:observe") return observe;
+
+      at fixture (tests/unit/client-runtime/client.test.ts:18:17)
+      at tests/unit/client-runtime/client.test.ts:50:15
+
+  ● browser remote runtime client › denies invalid public graph before session or mutation 3
+
+    ReferenceError: jest is not defined
+
+      16 |   const subscriptions: { name: string; args: Record<string, unknown>; update: (value: unknown) => void; error: (error: Error) => void; closed: boolean }[] = [];
+      17 |   let observe: RuntimeObservation = { run: value, state: "running", parts: [], cursor: 0, approvals: [] };
+    > 18 |   const query = jest.fn(async (ref: Parameters<RuntimeClientPort["query"]>[0], args: Record<string, unknown>) => {
+         |                 ^
+      19 |     const name = getFunctionName(ref); calls.push({ name, args });
+      20 |     if (name === "runtimeClient:session") return current;
+      21 |     if (name === "runtimeAgent:observe") return observe;
+
+      at fixture (tests/unit/client-runtime/client.test.ts:18:17)
+      at tests/unit/client-runtime/client.test.ts:50:15
+
+  ● browser remote runtime client › denies invalid public graph before session or mutation 4
+
+    ReferenceError: jest is not defined
+
+      16 |   const subscriptions: { name: string; args: Record<string, unknown>; update: (value: unknown) => void; error: (error: Error) => void; closed: boolean }[] = [];
+      17 |   let observe: RuntimeObservation = { run: value, state: "running", parts: [], cursor: 0, approvals: [] };
+    > 18 |   const query = jest.fn(async (ref: Parameters<RuntimeClientPort["query"]>[0], args: Record<string, unknown>) => {
+         |                 ^
+      19 |     const name = getFunctionName(ref); calls.push({ name, args });
+      20 |     if (name === "runtimeClient:session") return current;
+      21 |     if (name === "runtimeAgent:observe") return observe;
+
+      at fixture (tests/unit/client-runtime/client.test.ts:18:17)
+      at tests/unit/client-runtime/client.test.ts:50:15
+
+  ● browser remote runtime client › denies invalid public graph before session or mutation 5
+
+    ReferenceError: jest is not defined
+
+      16 |   const subscriptions: { name: string; args: Record<string, unknown>; update: (value: unknown) => void; error: (error: Error) => void; closed: boolean }[] = [];
+      17 |   let observe: RuntimeObservation = { run: value, state: "running", parts: [], cursor: 0, approvals: [] };
+    > 18 |   const query = jest.fn(async (ref: Parameters<RuntimeClientPort["query"]>[0], args: Record<string, unknown>) => {
+         |                 ^
+      19 |     const name = getFunctionName(ref); calls.push({ name, args });
+      20 |     if (name === "runtimeClient:session") return current;
+      21 |     if (name === "runtimeAgent:observe") return observe;
+
+      at fixture (tests/unit/client-runtime/client.test.ts:18:17)
+      at tests/unit/client-runtime/client.test.ts:50:15
+
+  ● browser remote runtime client › denies invalid public graph before session or mutation 6
+
+    ReferenceError: jest is not defined
+
+      16 |   const subscriptions: { name: string; args: Record<string, unknown>; update: (value: unknown) => void; error: (error: Error) => void; closed: boolean }[] = [];
+      17 |   let observe: RuntimeObservation = { run: value, state: "running", parts: [], cursor: 0, approvals: [] };
+    > 18 |   const query = jest.fn(async (ref: Parameters<RuntimeClientPort["query"]>[0], args: Record<string, unknown>) => {
+         |                 ^
+      19 |     const name = getFunctionName(ref); calls.push({ name, args });
+      20 |     if (name === "runtimeClient:session") return current;
+      21 |     if (name === "runtimeAgent:observe") return observe;
+
+      at fixture (tests/unit/client-runtime/client.test.ts:18:17)
+      at tests/unit/client-runtime/client.test.ts:50:15
+
+  ● browser remote runtime client › denies invalid public graph before session or mutation 7
+
+    ReferenceError: jest is not defined
+
+      16 |   const subscriptions: { name: string; args: Record<string, unknown>; update: (value: unknown) => void; error: (error: Error) => void; closed: boolean }[] = [];
+      17 |   let observe: RuntimeObservation = { run: value, state: "running", parts: [], cursor: 0, approvals: [] };
+    > 18 |   const query = jest.fn(async (ref: Parameters<RuntimeClientPort["query"]>[0], args: Record<string, unknown>) => {
+         |                 ^
+      19 |     const name = getFunctionName(ref); calls.push({ name, args });
+      20 |     if (name === "runtimeClient:session") return current;
+      21 |     if (name === "runtimeAgent:observe") return observe;
+
+      at fixture (tests/unit/client-runtime/client.test.ts:18:17)
+      at tests/unit/client-runtime/client.test.ts:50:15
+
+  ● browser remote runtime client › does not invoke input getters
+
+    ReferenceError: jest is not defined
+
+      16 |   const subscriptions: { name: string; args: Record<string, unknown>; update: (value: unknown) => void; error: (error: Error) => void; closed: boolean }[] = [];
+      17 |   let observe: RuntimeObservation = { run: value, state: "running", parts: [], cursor: 0, approvals: [] };
+    > 18 |   const query = jest.fn(async (ref: Parameters<RuntimeClientPort["query"]>[0], args: Record<string, unknown>) => {
+         |                 ^
+      19 |     const name = getFunctionName(ref); calls.push({ name, args });
+      20 |     if (name === "runtimeClient:session") return current;
+      21 |     if (name === "runtimeAgent:observe") return observe;
+
+      at fixture (tests/unit/client-runtime/client.test.ts:18:17)
+      at Object.<anonymous> (tests/unit/client-runtime/client.test.ts:53:15)
+
+  ● browser remote runtime client › accepts ordered unicode text parts without normalization or history resend
+
+    ReferenceError: jest is not defined
+
+      16 |   const subscriptions: { name: string; args: Record<string, unknown>; update: (value: unknown) => void; error: (error: Error) => void; closed: boolean }[] = [];
+      17 |   let observe: RuntimeObservation = { run: value, state: "running", parts: [], cursor: 0, approvals: [] };
+    > 18 |   const query = jest.fn(async (ref: Parameters<RuntimeClientPort["query"]>[0], args: Record<string, unknown>) => {
+         |                 ^
+      19 |     const name = getFunctionName(ref); calls.push({ name, args });
+      20 |     if (name === "runtimeClient:session") return current;
+      21 |     if (name === "runtimeAgent:observe") return observe;
+
+      at fixture (tests/unit/client-runtime/client.test.ts:18:17)
+      at Object.<anonymous> (tests/unit/client-runtime/client.test.ts:58:15)
+
+  ● browser remote runtime client › awaits official initial auth and refresh acceptance, propagates force refresh unchanged
+
+    ReferenceError: jest is not defined
+
+      16 |   const subscriptions: { name: string; args: Record<string, unknown>; update: (value: unknown) => void; error: (error: Error) => void; closed: boolean }[] = [];
+      17 |   let observe: RuntimeObservation = { run: value, state: "running", parts: [], cursor: 0, approvals: [] };
+    > 18 |   const query = jest.fn(async (ref: Parameters<RuntimeClientPort["query"]>[0], args: Record<string, unknown>) => {
+         |                 ^
+      19 |     const name = getFunctionName(ref); calls.push({ name, args });
+      20 |     if (name === "runtimeClient:session") return current;
+      21 |     if (name === "runtimeAgent:observe") return observe;
+
+      at fixture (tests/unit/client-runtime/client.test.ts:18:17)
+      at Object.<anonymous> (tests/unit/client-runtime/client.test.ts:62:15)
+
+  ● browser remote runtime client › rejects failed refresh and closes all active observations before late data
+
+    ReferenceError: jest is not defined
+
+      16 |   const subscriptions: { name: string; args: Record<string, unknown>; update: (value: unknown) => void; error: (error: Error) => void; closed: boolean }[] = [];
+      17 |   let observe: RuntimeObservation = { run: value, state: "running", parts: [], cursor: 0, approvals: [] };
+    > 18 |   const query = jest.fn(async (ref: Parameters<RuntimeClientPort["query"]>[0], args: Record<string, unknown>) => {
+         |                 ^
+      19 |     const name = getFunctionName(ref); calls.push({ name, args });
+      20 |     if (name === "runtimeClient:session") return current;
+      21 |     if (name === "runtimeAgent:observe") return observe;
+
+      at fixture (tests/unit/client-runtime/client.test.ts:18:17)
+      at Object.<anonymous> (tests/unit/client-runtime/client.test.ts:69:15)
+
+  ● browser remote runtime client › denies pinned handle on changed verified session 0
+
+    ReferenceError: jest is not defined
+
+      16 |   const subscriptions: { name: string; args: Record<string, unknown>; update: (value: unknown) => void; error: (error: Error) => void; closed: boolean }[] = [];
+      17 |   let observe: RuntimeObservation = { run: value, state: "running", parts: [], cursor: 0, approvals: [] };
+    > 18 |   const query = jest.fn(async (ref: Parameters<RuntimeClientPort["query"]>[0], args: Record<string, unknown>) => {
+         |                 ^
+      19 |     const name = getFunctionName(ref); calls.push({ name, args });
+      20 |     if (name === "runtimeClient:session") return current;
+      21 |     if (name === "runtimeAgent:observe") return observe;
+
+      at fixture (tests/unit/client-runtime/client.test.ts:18:17)
+      at tests/unit/client-runtime/client.test.ts:77:15
+
+  ● browser remote runtime client › denies pinned handle on changed verified session 1
+
+    ReferenceError: jest is not defined
+
+      16 |   const subscriptions: { name: string; args: Record<string, unknown>; update: (value: unknown) => void; error: (error: Error) => void; closed: boolean }[] = [];
+      17 |   let observe: RuntimeObservation = { run: value, state: "running", parts: [], cursor: 0, approvals: [] };
+    > 18 |   const query = jest.fn(async (ref: Parameters<RuntimeClientPort["query"]>[0], args: Record<string, unknown>) => {
+         |                 ^
+      19 |     const name = getFunctionName(ref); calls.push({ name, args });
+      20 |     if (name === "runtimeClient:session") return current;
+      21 |     if (name === "runtimeAgent:observe") return observe;
+
+      at fixture (tests/unit/client-runtime/client.test.ts:18:17)
+      at tests/unit/client-runtime/client.test.ts:77:15
+
+  ● browser remote runtime client › denies pinned handle on changed verified session 2
+
+    ReferenceError: jest is not defined
+
+      16 |   const subscriptions: { name: string; args: Record<string, unknown>; update: (value: unknown) => void; error: (error: Error) => void; closed: boolean }[] = [];
+      17 |   let observe: RuntimeObservation = { run: value, state: "running", parts: [], cursor: 0, approvals: [] };
+    > 18 |   const query = jest.fn(async (ref: Parameters<RuntimeClientPort["query"]>[0], args: Record<string, unknown>) => {
+         |                 ^
+      19 |     const name = getFunctionName(ref); calls.push({ name, args });
+      20 |     if (name === "runtimeClient:session") return current;
+      21 |     if (name === "runtimeAgent:observe") return observe;
+
+      at fixture (tests/unit/client-runtime/client.test.ts:18:17)
+      at tests/unit/client-runtime/client.test.ts:77:15
+
+  ● browser remote runtime client › passes current pinned definition and exact approval hash; no caller tool payload
+
+    ReferenceError: jest is not defined
+
+      16 |   const subscriptions: { name: string; args: Record<string, unknown>; update: (value: unknown) => void; error: (error: Error) => void; closed: boolean }[] = [];
+      17 |   let observe: RuntimeObservation = { run: value, state: "running", parts: [], cursor: 0, approvals: [] };
+    > 18 |   const query = jest.fn(async (ref: Parameters<RuntimeClientPort["query"]>[0], args: Record<string, unknown>) => {
+         |                 ^
+      19 |     const name = getFunctionName(ref); calls.push({ name, args });
+      20 |     if (name === "runtimeClient:session") return current;
+      21 |     if (name === "runtimeAgent:observe") return observe;
+
+      at fixture (tests/unit/client-runtime/client.test.ts:18:17)
+      at Object.<anonymous> (tests/unit/client-runtime/client.test.ts:80:15)
+
+  ● browser remote runtime client › routes default metadata and recall through governed registered action only
+
+    ReferenceError: jest is not defined
+
+      16 |   const subscriptions: { name: string; args: Record<string, unknown>; update: (value: unknown) => void; error: (error: Error) => void; closed: boolean }[] = [];
+      17 |   let observe: RuntimeObservation = { run: value, state: "running", parts: [], cursor: 0, approvals: [] };
+    > 18 |   const query = jest.fn(async (ref: Parameters<RuntimeClientPort["query"]>[0], args: Record<string, unknown>) => {
+         |                 ^
+      19 |     const name = getFunctionName(ref); calls.push({ name, args });
+      20 |     if (name === "runtimeClient:session") return current;
+      21 |     if (name === "runtimeAgent:observe") return observe;
+
+      at fixture (tests/unit/client-runtime/client.test.ts:18:17)
+      at Object.<anonymous> (tests/unit/client-runtime/client.test.ts:87:15)
+
+  ● browser remote runtime client › resets one-shot old-attempt cursor before reading replacement output
+
+    ReferenceError: jest is not defined
+
+      16 |   const subscriptions: { name: string; args: Record<string, unknown>; update: (value: unknown) => void; error: (error: Error) => void; closed: boolean }[] = [];
+      17 |   let observe: RuntimeObservation = { run: value, state: "running", parts: [], cursor: 0, approvals: [] };
+    > 18 |   const query = jest.fn(async (ref: Parameters<RuntimeClientPort["query"]>[0], args: Record<string, unknown>) => {
+         |                 ^
+      19 |     const name = getFunctionName(ref); calls.push({ name, args });
+      20 |     if (name === "runtimeClient:session") return current;
+      21 |     if (name === "runtimeAgent:observe") return observe;
+
+      at fixture (tests/unit/client-runtime/client.test.ts:18:17)
+      at Object.<anonymous> (tests/unit/client-runtime/client.test.ts:91:15)
+
+  ● browser remote runtime client › drains cursor pages once, reacts to approvals, and resets replacement attempt
+
+    ReferenceError: jest is not defined
+
+      16 |   const subscriptions: { name: string; args: Record<string, unknown>; update: (value: unknown) => void; error: (error: Error) => void; closed: boolean }[] = [];
+      17 |   let observe: RuntimeObservation = { run: value, state: "running", parts: [], cursor: 0, approvals: [] };
+    > 18 |   const query = jest.fn(async (ref: Parameters<RuntimeClientPort["query"]>[0], args: Record<string, unknown>) => {
+         |                 ^
+      19 |     const name = getFunctionName(ref); calls.push({ name, args });
+      20 |     if (name === "runtimeClient:session") return current;
+      21 |     if (name === "runtimeAgent:observe") return observe;
+
+      at fixture (tests/unit/client-runtime/client.test.ts:18:17)
+      at Object.<anonymous> (tests/unit/client-runtime/client.test.ts:96:15)
+
+  ● browser remote runtime client › closes a session-switched reactive query without delivering cached result
+
+    ReferenceError: jest is not defined
+
+      16 |   const subscriptions: { name: string; args: Record<string, unknown>; update: (value: unknown) => void; error: (error: Error) => void; closed: boolean }[] = [];
+      17 |   let observe: RuntimeObservation = { run: value, state: "running", parts: [], cursor: 0, approvals: [] };
+    > 18 |   const query = jest.fn(async (ref: Parameters<RuntimeClientPort["query"]>[0], args: Record<string, unknown>) => {
+         |                 ^
+      19 |     const name = getFunctionName(ref); calls.push({ name, args });
+      20 |     if (name === "runtimeClient:session") return current;
+      21 |     if (name === "runtimeAgent:observe") return observe;
+
+      at fixture (tests/unit/client-runtime/client.test.ts:18:17)
+      at Object.<anonymous> (tests/unit/client-runtime/client.test.ts:109:15)
+
+  ● browser remote runtime client › withholds typed backend error details and never exposes provider diagnostics
+
+    ReferenceError: jest is not defined
+
+      16 |   const subscriptions: { name: string; args: Record<string, unknown>; update: (value: unknown) => void; error: (error: Error) => void; closed: boolean }[] = [];
+      17 |   let observe: RuntimeObservation = { run: value, state: "running", parts: [], cursor: 0, approvals: [] };
+    > 18 |   const query = jest.fn(async (ref: Parameters<RuntimeClientPort["query"]>[0], args: Record<string, unknown>) => {
+         |                 ^
+      19 |     const name = getFunctionName(ref); calls.push({ name, args });
+      20 |     if (name === "runtimeClient:session") return current;
+      21 |     if (name === "runtimeAgent:observe") return observe;
+
+      at fixture (tests/unit/client-runtime/client.test.ts:18:17)
+      at Object.<anonymous> (tests/unit/client-runtime/client.test.ts:114:15)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     2.4s | 0/22 passed | /tests/unit/client-runtime/client.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      2.49s
+  Test suites:        1
+  Individual tests:   0
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 failed, 1 total
+Tests:       22 failed, 22 total
+Snapshots:   0 total
+Time:        2.489 s
+Ran all test suites matching tests/unit/client-runtime/client.test.ts.
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task09-client-functional-v2-20261008/client-results2.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

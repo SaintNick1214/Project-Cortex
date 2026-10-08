@@ -2,17 +2,27 @@
 import { makeFunctionReference } from "convex/server";
 import type { FunctionReference } from "convex/server";
 import { ConvexError, v } from "convex/values";
-import { action, internalMutation, internalQuery } from "./_generated/server";
+import { action, query, internalMutation, internalQuery } from "./_generated/server";
 import type { ActionCtx } from "./_generated/server";
 import type { RuntimeAuthority, RuntimeAuthorityReference, RuntimeAuthorityRequirement } from "../src/auth/verified";
 import { runtimeAuthorityReference } from "./runtimeAuthSchema";
 import { commitDerivedInput, sourceContent } from "./runtimeMemorySchema";
 import { ConvexMemoryRepository, createActionMemoryRepository, memoryError, memoryScope } from "./runtimeMemoryRepository";
 import { assertMemoryRequestId, explicitSourceLineage, recallMemory, rememberMemory } from "./runtimeMemoryServices";
-import { normalizeSourceText } from "../src/domain/profile";
+import { DEFAULT_EMBEDDING_PROFILE, normalizeSourceText } from "../src/domain/profile";
+import { requireDataAuthority } from "./runtimeDataAuth";
 import { canonicalModelJson } from "../src/domain/model-policy";
 import { createGatewayMemoryModel } from "./runtimeMemoryGateway";
 import { ensureBackendGatewayBudget } from "./runtimeGatewayBackend";
+
+/** Describes the fresh managed index. Retrieval still requires its qualified, governed query call. */
+export const defaultProfile = query({
+  args: { tenantId: v.optional(v.string()), memorySpaceId: v.optional(v.string()) },
+  handler: async (ctx, args) => {
+    await requireDataAuthority(ctx, args, "read");
+    return { version: 1 as const, profile: DEFAULT_EMBEDDING_PROFILE };
+  },
+});
 
 const scopedArgs = { reference: runtimeAuthorityReference, capability: v.union(v.literal("read"), v.literal("write")) };
 export const checkAuthority = internalQuery({ args: scopedArgs,

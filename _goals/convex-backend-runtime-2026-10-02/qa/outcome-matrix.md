@@ -489,3 +489,21 @@ Installed79-file/51-table current2 on verified disposable3173328 passed8/8 actua
 Original Task08 accepted by reused non-author PASS4.0: all5 requirements/4 criteria, current controlled1199 assertions plus24 distinct independent cases; actual delayed8, ordering3 with explicit controlled decisions, fences4+shared3, cached derivative revoke and genuine ordinary facts.resolve exact extraction parent. Owned cleanup55 sources/58 events/62 held rows/10 grants;26 slots released/full2600000 uncertain liability retained. Verified dev3173328 retained for new09tenant; final retirement open. Historical runtime/setup/oracle reds preserved. No09/full-goal acceptance.
 
 Accepted tasks **7/17 (41.2%)**; original task criteria **23/61 (37.7%)**; full-goal outcomes **0/12 (0%)**. Original08 complete;09–17/03-final and final audit remain open.
+
+### Milestone149 — Task09 actual browser bootstrap and managed retrieval (2026-10-08T17:36:15.616565+00:00)
+
+Task09 source/build/package and five independent focused delivery controls pass; Root actual IAB verified JWT bootstrap/default1536 metadata and governed managed fact+memory recall. Native first tool run has confirmed usage but attachment pending/unknown and no saved final; failure retained, no paid repeat. Original09 acceptance/cleanup/review remain open. cp57 accepted08 delivery pushed exact6a1ca08c10c7f2b004ff5ce30ff2e896686e322e; draftPR135 remains incomplete goal.
+
+Accepted tasks **7/17 (41.2%)**; original task criteria **23/61 (37.7%)**; full-goal outcomes **0/12 (0%)**. Original09 **0/5 accepted**, final audit open. [Partial UI receipt](local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-partial1.json).
+
+### Milestone150 — Task09 actual final/pending context and approval bound failure (2026-10-08T18:14:44.817117+00:00)
+
+Repaired shared Gateway terminal window produced actual B final with memory pending and two bounded recall invocations. Native and actual two-tab UI observers/reconnect/replay converge without extra paid effects; C received eligible completed-but-unprocessed B history exactly once, model quotation error retained. Actual D explicit approval succeeded for recall then next model request was denied by configured input bounds before admission; both UI failure captures and exact logs retained. Bounded product repair/control closure and reused Task09 final review remain open; no original09 acceptance.
+
+Accepted tasks **7/17 (41.2%)**; original task criteria **23/61 (37.7%)**; full-goal outcomes **0/12 (0%)**. Original09 **0/5 accepted**; final audit open. [Actual browser control receipt](local-resume-2026-10-05/task09-ui-functional-v2-20261008/browser-control-progress2.json).
+
+### Milestone151 — Original Task09 independent functional acceptance (2026-10-08T18:37:59.803783+00:00)
+
+Original Task09 accepted by reused non-author PASS4.0: all4 requirements/5criteria. Actual verifiedJWT/currentdefault1536 managed retrieval, finalwithpendingmemory,2 observers/attach/reconnect/noduplicateeffects, UI nextturnexacteligiblependinghistory, oneboundedapprovedrecall+2models/onefinal/oneingestion, queuedcancel, strictfailed-earlierhole and boundedoverflow. Observe terminal-attempt0 defect fixed/regressed and sameinstalledoldrows passunpaid.24governedattempts released/alluncertainliabilityretained;12sourcesretired,2grantsrevoked, target3173328retired200/404, Rootsignout/tabs/server/negativecredentialsclosed. Historical A/D/fixture failures and modelanswer-qualityreds/narrowviewportunavailable/clippedagentfieldretained. No10+/03-final/fullgoalacceptance.
+
+Accepted tasks **8/17 (47.1%)**; original task criteria **28/61 (45.9%)**; full-goal outcomes **0/12 (0%)**. Task09 **5/5 accepted**; Tasks10–17/03-final and independent final audit remain open.
