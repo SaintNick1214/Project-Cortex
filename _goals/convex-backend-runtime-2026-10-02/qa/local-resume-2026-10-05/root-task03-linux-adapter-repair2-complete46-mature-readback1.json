@@ -1,0 +1,141 @@
+{
+  "scope": "ROOT_PROSPECTIVE_FINITE_PACKET_ONLY",
+  "packet": "task03-u4-linux-prospective-source-qualification-repair2",
+  "ordinaryDiscoveryBeforeThisInterval": {
+    "pinsHeader": "finite-publication-pins1.json",
+    "retroactivelyQualified": false,
+    "physicalNineAtOrdinaryRead": "NOT_RECORDED"
+  },
+  "sourceEligibility": false,
+  "functionalTask03": false,
+  "functionalTask04": false,
+  "fullGoal": false,
+  "startedUnixNs": "1791421765731153000",
+  "rows": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-u4-linux-prospective-source-qualification-repair2/finite-publication-pins1.json",
+      "PRE9": [
+        16777234,
+        93867656,
+        33188,
+        1,
+        501,
+        20,
+        26778,
+        1791421087003131989,
+        1791421088221503454
+      ],
+      "ageSeconds": 677.509713546,
+      "historicalPinMatched": false,
+      "fd": 3,
+      "OPEN9": [
+        16777234,
+        93867656,
+        33188,
+        1,
+        501,
+        20,
+        26778,
+        1791421087003131989,
+        1791421088221503454
+      ],
+      "bytes": 26778,
+      "sha256": "323750bdf2c2892089f7f7ae75e9e4c7a1df3ecc7892dae7e97206728d554d27",
+      "fullEOF": true,
+      "POST9": [
+        16777234,
+        93867656,
+        33188,
+        1,
+        501,
+        20,
+        26778,
+        1791421087003131989,
+        1791421088221503454
+      ],
+      "PATH_POST9": [
+        16777234,
+        93867656,
+        33188,
+        1,
+        501,
+        20,
+        26778,
+        1791421087003131989,
+        1791421088221503454
+      ]
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-u4-linux-prospective-source-qualification-repair2/final-writers-stopped1.json",
+      "PRE9": [
+        16777234,
+        93867657,
+        33188,
+        1,
+        501,
+        20,
+        678,
+        1791421087003213865,
+        1791421088225222779
+      ],
+      "ageSeconds": 677.506063221,
+      "historicalPinMatched": false,
+      "fd": 4,
+      "OPEN9": [
+        16777234,
+        93867657,
+        33188,
+        1,
+        501,
+        20,
+        678,
+        1791421087003213865,
+        1791421088225222779
+      ],
+      "bytes": 678,
+      "sha256": "8f33d74b1bdff085dbe1b4ae65a987e711f3adf7f69638d163010b89af05a690",
+      "fullEOF": true,
+      "POST9": [
+        16777234,
+        93867657,
+        33188,
+        1,
+        501,
+        20,
+        678,
+        1791421087003213865,
+        1791421088225222779
+      ],
+      "PATH_POST9": [
+        16777234,
+        93867657,
+        33188,
+        1,
+        501,
+        20,
+        678,
+        1791421087003213865,
+        1791421088225222779
+      ]
+    }
+  ],
+  "closeAttempts": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-u4-linux-prospective-source-qualification-repair2/final-writers-stopped1.json",
+      "fd": 4,
+      "attempt": 1,
+      "result": "CLOSED"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-u4-linux-prospective-source-qualification-repair2/finite-publication-pins1.json",
+      "fd": 3,
+      "attempt": 1,
+      "result": "CLOSED"
+    }
+  ],
+  "errors": [],
+  "result": "FAILED_UNKNOWN",
+  "failure": "AssertionError()",
+  "opened": 2,
+  "finishedUnixNs": "1791421765731590000"
+}

@@ -1,0 +1,46 @@
+{
+  "scope": "ROOT_SOURCE_MOCK_AUTHOR_RAW_CONSERVATION_ONLY",
+  "result": "PASS",
+  "packets": [
+    {
+      "packet": "task03-u4-linux-prospective-source-qualification-repair2",
+      "raw": "local-resume-2026-10-05/task03-u4-linux-prospective-source-qualification-repair2/held-author-controls3.json",
+      "rawSha256": "20f6a81f22ce25e138d2f4de987bf8cb8ad1d0d149caef30f1fa8c2cb8d3e223",
+      "rootReadback": "local-resume-2026-10-05/root-task03-linux-adapter-repair2-complete44-physical-mature-readback2.json",
+      "counts": [
+        26,
+        351
+      ],
+      "authorOwnedFDs": 31,
+      "allLiteralNineFinalsMatched": true,
+      "effects": 0,
+      "sourceEligibility": false,
+      "skippedCountNotInEveryRawSchema": true
+    },
+    {
+      "packet": "task03-f2-phase-contract-repair5",
+      "raw": "local-resume-2026-10-05/task03-f2-phase-contract-repair5/held-author-controls1.json",
+      "rawSha256": "2775c26537f8783b88f6066f31bc2ca8c373cd9693192083eb86ba0115300365",
+      "rootReadback": "local-resume-2026-10-05/root-task03-phase-repair5-complete17-physical-mature-readback2.json",
+      "counts": [
+        97,
+        14
+      ],
+      "authorOwnedFDs": 11,
+      "allLiteralNineFinalsMatched": true,
+      "effects": 0,
+      "sourceEligibility": false,
+      "skippedCountNotInEveryRawSchema": true
+    }
+  ],
+  "sourceEligibility": false,
+  "functionalAcceptance": false,
+  "priorFailuresPreserved": true,
+  "rootVerifierPriorFailure": {
+    "error": "KeyError('skipped')",
+    "cause": "Root assumed optional raw-schema key",
+    "productOrRawChanged": false,
+    "writesBeforeFailure": false
+  },
+  "timestamp_utc": "2026-10-08T01:12:03.765981+00:00"
+}

@@ -1,0 +1,141 @@
+{
+  "scope": "ROOT_PROSPECTIVE_FINITE_PACKET_ONLY",
+  "packet": "task03-f2-phase-contract-repair5",
+  "ordinaryDiscoveryBeforeThisInterval": {
+    "pinsHeader": "finite-publication-pins1.json",
+    "retroactivelyQualified": false,
+    "physicalNineAtOrdinaryRead": "NOT_RECORDED"
+  },
+  "sourceEligibility": false,
+  "functionalTask03": false,
+  "functionalTask04": false,
+  "fullGoal": false,
+  "startedUnixNs": "1791421765731820000",
+  "rows": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-f2-phase-contract-repair5/finite-publication-pins1.json",
+      "PRE9": [
+        16777234,
+        93891835,
+        33188,
+        1,
+        501,
+        20,
+        9803,
+        1791421335878742845,
+        1791421335889255440
+      ],
+      "ageSeconds": 429.84260756,
+      "historicalPinMatched": false,
+      "fd": 3,
+      "OPEN9": [
+        16777234,
+        93891835,
+        33188,
+        1,
+        501,
+        20,
+        9803,
+        1791421335878742845,
+        1791421335889255440
+      ],
+      "bytes": 9803,
+      "sha256": "d095fa4c961f07ebc3d5dbac73c9a5935bea56658eb25b042b4365f38331e63a",
+      "fullEOF": true,
+      "POST9": [
+        16777234,
+        93891835,
+        33188,
+        1,
+        501,
+        20,
+        9803,
+        1791421335878742845,
+        1791421335889255440
+      ],
+      "PATH_POST9": [
+        16777234,
+        93891835,
+        33188,
+        1,
+        501,
+        20,
+        9803,
+        1791421335878742845,
+        1791421335889255440
+      ]
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-f2-phase-contract-repair5/final-writers-stopped1.json",
+      "PRE9": [
+        16777234,
+        93891836,
+        33188,
+        1,
+        501,
+        20,
+        689,
+        1791421335878991097,
+        1791421335891470085
+      ],
+      "ageSeconds": 429.840441915,
+      "historicalPinMatched": false,
+      "fd": 4,
+      "OPEN9": [
+        16777234,
+        93891836,
+        33188,
+        1,
+        501,
+        20,
+        689,
+        1791421335878991097,
+        1791421335891470085
+      ],
+      "bytes": 689,
+      "sha256": "3ead6dfba9ed47157c2ef2fb945f8cc32f42e94f91a1b842a689176aabeb0bd3",
+      "fullEOF": true,
+      "POST9": [
+        16777234,
+        93891836,
+        33188,
+        1,
+        501,
+        20,
+        689,
+        1791421335878991097,
+        1791421335891470085
+      ],
+      "PATH_POST9": [
+        16777234,
+        93891836,
+        33188,
+        1,
+        501,
+        20,
+        689,
+        1791421335878991097,
+        1791421335891470085
+      ]
+    }
+  ],
+  "closeAttempts": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-f2-phase-contract-repair5/final-writers-stopped1.json",
+      "fd": 4,
+      "attempt": 1,
+      "result": "CLOSED"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-f2-phase-contract-repair5/finite-publication-pins1.json",
+      "fd": 3,
+      "attempt": 1,
+      "result": "CLOSED"
+    }
+  ],
+  "errors": [],
+  "result": "FAILED_UNKNOWN",
+  "failure": "AssertionError()",
+  "opened": 2,
+  "finishedUnixNs": "1791421765736033000"
+}

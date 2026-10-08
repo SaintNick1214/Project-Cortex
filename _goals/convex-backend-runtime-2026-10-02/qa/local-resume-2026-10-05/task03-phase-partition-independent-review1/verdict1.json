@@ -1,0 +1,79 @@
+{
+  "actualClocksStarted": false,
+  "adapterIntegration": "PENDING_REPAIR_AND_FRESH_INDEPENDENT_REVIEW",
+  "allFinalFullEOFHashSizeNine": true,
+  "average": 2.8,
+  "boundedGoal": "1/17 task01 only",
+  "candidate": "task03-f2-phase-partition-repair4",
+  "candidateOrCurrentAdaptersEdited": false,
+  "closeErrors": 0,
+  "closedEpoch2Rows": 53,
+  "codeConservation": "REJECT",
+  "dimensions": {
+    "codeQuality": 2,
+    "completeness": 3,
+    "patternAdherence": 4,
+    "requirementFulfillment": 2,
+    "testQuality": 3
+  },
+  "effects": 0,
+  "externalOrdinaryBootstrapRows": 2,
+  "findings": [
+    {
+      "candidateLine": 345,
+      "caseLine": 44,
+      "name": "shared_simultaneous_descriptor_cap",
+      "priority": 1
+    },
+    {
+      "candidateLine": 424,
+      "caseLine": 68,
+      "name": "late_Source_approval_reuse",
+      "priority": 1
+    },
+    {
+      "candidateLine": 267,
+      "caseLine": 76,
+      "name": "same_path_changed_tuple_mixed_role_deferral",
+      "priority": 1
+    },
+    {
+      "candidateLine": 99,
+      "caseLine": 40,
+      "name": "mutable_admission_nine",
+      "priority": 2
+    }
+  ],
+  "fullTask03Accepted": false,
+  "fullTask04Accepted": false,
+  "functionalTask03": "0/3",
+  "functionalTask04": "0/3",
+  "goalAccepted": false,
+  "minimumA4CurrentCaptureAgeSeconds": 1587.6901071071625,
+  "minimumOwnedCaptureAgeSeconds": 289.75593638420105,
+  "physicalActualConservationAccepted": false,
+  "priorFailedEpochPreserved": true,
+  "productPercent": 0,
+  "scope": "A4_BOUNDED_SOURCE_MOCK_CODE_CONSERVATION_ONLY",
+  "sourceEligibility": "PENDING_NOT_GRANTED",
+  "testCounts": {
+    "additionalFailed": 4,
+    "additionalIndependentChecks": 19,
+    "additionalPassed": 15,
+    "authorDiscovered": 97,
+    "authorExecuted": 97,
+    "authorFailed": 0,
+    "authorPassed": 97,
+    "authorSkipped": 0,
+    "independentHarnessDiscovered": 20,
+    "independentHarnessExecuted": 20,
+    "independentHarnessFailed": 4,
+    "independentHarnessPassed": 16,
+    "independentHarnessSkipped": 0,
+    "totalDistinctExecuted": 116,
+    "totalDistinctFailed": 4,
+    "totalDistinctPassed": 112,
+    "totalDistinctSkipped": 0
+  },
+  "verdict": "REJECT"
+}
