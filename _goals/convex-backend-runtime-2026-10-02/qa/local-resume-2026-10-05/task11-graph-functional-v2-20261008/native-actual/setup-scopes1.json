@@ -1,0 +1,185 @@
+{
+  "status": "PASS",
+  "projectId": 3174742,
+  "operation": "7c3504e9-96d6-48e9-9022-7d1e8f655226",
+  "data": {
+    "name": "owner",
+    "subject": "task11-owner-7c3504e9-96d6-48e9-9022-7d1e8f655226",
+    "scope": {
+      "tenantId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226",
+      "memorySpaceId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space"
+    },
+    "reference": {
+      "principalId": "n57asa7r2996k89m6vzp15h3xd8fwv2x",
+      "principalVersion": 1,
+      "membershipId": "n1705djj8kshjn8dm9n82jbm6n8fwzvc",
+      "membershipVersion": 1,
+      "grantId": "mx77td4ng6heb77967b4d0xqrd8fwr4b",
+      "grantVersion": 1,
+      "tenantId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226",
+      "tenantEpoch": 1,
+      "memorySpaceId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space",
+      "memorySpaceEpoch": 1
+    },
+    "actorKind": "user",
+    "capabilities": [
+      "read",
+      "write",
+      "admin",
+      "tool"
+    ],
+    "resourceAccess": "space"
+  },
+  "ownReader": {
+    "name": "own-reader",
+    "subject": "task11-own-reader-7c3504e9-96d6-48e9-9022-7d1e8f655226",
+    "scope": {
+      "tenantId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226",
+      "memorySpaceId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space"
+    },
+    "reference": {
+      "principalId": "n57d8eet2aap104k0q1a8krrp18fxj5b",
+      "principalVersion": 1,
+      "membershipId": "n17cmx195pza72ebcgrcjdjqv98fwm8k",
+      "membershipVersion": 1,
+      "grantId": "mx7em2ec3cprjkpm1nh5dgzssx8fwhfh",
+      "grantVersion": 1,
+      "tenantId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226",
+      "tenantEpoch": 1,
+      "memorySpaceId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space",
+      "memorySpaceEpoch": 1
+    },
+    "actorKind": "user",
+    "capabilities": [
+      "read",
+      "write",
+      "tool"
+    ],
+    "resourceAccess": "own"
+  },
+  "policyAdmin": {
+    "name": "policy-admin",
+    "subject": "task11-policy-admin-7c3504e9-96d6-48e9-9022-7d1e8f655226",
+    "scope": {
+      "tenantId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226"
+    },
+    "reference": {
+      "principalId": "n57epj1tjs08q0e616tv7pemy98fwth9",
+      "principalVersion": 1,
+      "membershipId": "n173j58wrvg8sfr3y67tn3w29s8fwasw",
+      "membershipVersion": 1,
+      "grantId": "mx79hjf19cd0gqvqxbpthr6zzh8fw0qe",
+      "grantVersion": 1,
+      "tenantId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226",
+      "tenantEpoch": 1
+    },
+    "actorKind": "user",
+    "capabilities": [
+      "admin"
+    ],
+    "resourceAccess": "tenant"
+  },
+  "operator": {
+    "name": "operator",
+    "subject": "task11-operator-7c3504e9-96d6-48e9-9022-7d1e8f655226",
+    "scope": {
+      "tenantId": "task11-control-7c3504e9-96d6-48e9-9022-7d1e8f655226",
+      "memorySpaceId": "task11-control-7c3504e9-96d6-48e9-9022-7d1e8f655226-space"
+    },
+    "reference": {
+      "principalId": "n57e86qyvjregkt152bsvqgprd8fwp11",
+      "principalVersion": 1,
+      "membershipId": "n176tdxys1nrceay0zprep7bq98fwvqe",
+      "membershipVersion": 1,
+      "grantId": "mx7bq773658v47b2d9yx2y8mz58fwvm4",
+      "grantVersion": 1,
+      "tenantId": "task11-control-7c3504e9-96d6-48e9-9022-7d1e8f655226",
+      "tenantEpoch": 1,
+      "memorySpaceId": "task11-control-7c3504e9-96d6-48e9-9022-7d1e8f655226-space",
+      "memorySpaceEpoch": 1
+    },
+    "actorKind": "user",
+    "capabilities": [
+      "read",
+      "write",
+      "admin"
+    ],
+    "resourceAccess": "space"
+  },
+  "worker": {
+    "name": "worker",
+    "subject": "task11-worker-7c3504e9-96d6-48e9-9022-7d1e8f655226",
+    "scope": {
+      "tenantId": "task11-control-7c3504e9-96d6-48e9-9022-7d1e8f655226",
+      "memorySpaceId": "task11-control-7c3504e9-96d6-48e9-9022-7d1e8f655226-space"
+    },
+    "reference": {
+      "principalId": "n574v2qjm7rbr2t3crf0z51frd8fxgjz",
+      "principalVersion": 1,
+      "membershipId": "n17f43jw9821mbns67kx5r95es8fwn8k",
+      "membershipVersion": 1,
+      "grantId": "mx7c46gswa62b1sqwsp20tb6jd8fwqd6",
+      "grantVersion": 1,
+      "tenantId": "task11-control-7c3504e9-96d6-48e9-9022-7d1e8f655226",
+      "tenantEpoch": 1,
+      "memorySpaceId": "task11-control-7c3504e9-96d6-48e9-9022-7d1e8f655226-space",
+      "memorySpaceEpoch": 1
+    },
+    "actorKind": "service",
+    "capabilities": [
+      "admin"
+    ],
+    "resourceAccess": "space"
+  },
+  "foreign": {
+    "name": "foreign",
+    "subject": "task11-foreign-7c3504e9-96d6-48e9-9022-7d1e8f655226",
+    "scope": {
+      "tenantId": "task11-foreign-7c3504e9-96d6-48e9-9022-7d1e8f655226",
+      "memorySpaceId": "task11-foreign-7c3504e9-96d6-48e9-9022-7d1e8f655226-space"
+    },
+    "reference": {
+      "principalId": "n575x45dmff65kawrrmsbmw9258fxqet",
+      "principalVersion": 1,
+      "membershipId": "n174s8nxwnr70eeyqg4ybz26t18fx1yt",
+      "membershipVersion": 1,
+      "grantId": "mx789kbfdws0qfbsvgsx1pc4098fw8ve",
+      "grantVersion": 1,
+      "tenantId": "task11-foreign-7c3504e9-96d6-48e9-9022-7d1e8f655226",
+      "tenantEpoch": 1,
+      "memorySpaceId": "task11-foreign-7c3504e9-96d6-48e9-9022-7d1e8f655226-space",
+      "memorySpaceEpoch": 1
+    },
+    "actorKind": "user",
+    "capabilities": [
+      "read",
+      "write",
+      "admin",
+      "tool"
+    ],
+    "resourceAccess": "space"
+  },
+  "spaces": [
+    {
+      "name": "owner",
+      "memorySpaceId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space",
+      "ownerPrincipalId": "n57asa7r2996k89m6vzp15h3xd8fwv2x"
+    },
+    {
+      "name": "operator",
+      "memorySpaceId": "task11-control-7c3504e9-96d6-48e9-9022-7d1e8f655226-space",
+      "ownerPrincipalId": "n57e86qyvjregkt152bsvqgprd8fwp11"
+    },
+    {
+      "name": "foreign",
+      "memorySpaceId": "task11-foreign-7c3504e9-96d6-48e9-9022-7d1e8f655226-space",
+      "ownerPrincipalId": "n575x45dmff65kawrrmsbmw9258fxqet"
+    }
+  ],
+  "expiresAt": 1791500383068,
+  "separateCurrentWorkerControlScope": true,
+  "priorTask10ScopesChanged": false,
+  "modelCalls": 0,
+  "credentialsOrJwtPrinted": false,
+  "connectorConfigurationPending": true
+}

@@ -1,0 +1,456 @@
+(node:96452) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeGraph/projection.test.ts
+  ● Console
+
+    console.error
+      ◇ injected env (0) from .env.test
+
+      13 | import dotenv from "dotenv";
+      14 | import { resolve } from "path";
+    > 15 |
+         | ^
+      16 | // Load .env.test first (test defaults)
+      17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+      18 |
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:15:8
+
+    console.error
+      ◇ injected env (0) from .env.local
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+    console.log
+      
+      🧪 Testing against LOCAL Convex: http://127.0.0.1:1
+
+      at tests/env.ts:35:13
+
+    console.log
+         Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:36:13
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:121:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:122:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:123:13
+
+FAIL tests/unit/runtimeIngestion/context.test.ts
+  ● Console
+
+    console.error
+      ◇ injected env (0) from .env.test
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+    console.error
+      ◇ injected env (0) from .env.local
+
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+    > 20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+         |        ^
+      21 |
+      22 | // Determine which Convex deployment to test against
+      23 | // Note: In auto mode, the test-runner.mjs script handles detection and orchestration
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:20:8
+
+    console.log
+      
+      🧪 Testing against LOCAL Convex: http://127.0.0.1:1
+
+      at tests/env.ts:44:11
+
+    console.log
+         Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:45:11
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:147:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:150:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:151:11
+
+  ● scoped contiguous memory context › stage-specific progress is bounded without reading extraction payload bodies
+
+    TypeError: Cannot read properties of undefined (reading 'role')
+
+      31 |   if (event.eligibility !== "eligible") return "pending";
+      32 |   if (stage === "graph") {
+    > 33 |     if (event.lineage.role === "assistant") return "skipped";
+         |                       ^
+      34 |     if (["failed", "unknown", "dead_letter"].includes(event.factsState)) return "failed";
+      35 |     if (event.graphState === "complete" && event.graphProfilesComplete?.includes(profileId)) return "complete";
+      36 |     return event.graphState === "failed" ? "failed" : "pending";
+
+      at state (convex-dev/runtimeMemoryContext.ts:33:23)
+      at convex-dev/runtimeMemoryContext.ts:64:86
+          at Array.map (<anonymous>)
+      at progress (convex-dev/runtimeMemoryContext.ts:64:37)
+      at convex-dev/runtimeMemoryContext.ts:91:106
+          at async Promise.all (index 0)
+      at Module.refreshScopeWatermarks (convex-dev/runtimeMemoryContext.ts:91:18)
+      at Object.<anonymous> (tests/unit/runtimeIngestion/context.test.ts:75:12)
+
+  ● scoped contiguous memory context › a nondefault profile continues all bounded pages even when default and facts are already current
+
+    TypeError: Cannot read properties of undefined (reading 'role')
+
+      31 |   if (event.eligibility !== "eligible") return "pending";
+      32 |   if (stage === "graph") {
+    > 33 |     if (event.lineage.role === "assistant") return "skipped";
+         |                       ^
+      34 |     if (["failed", "unknown", "dead_letter"].includes(event.factsState)) return "failed";
+      35 |     if (event.graphState === "complete" && event.graphProfilesComplete?.includes(profileId)) return "complete";
+      36 |     return event.graphState === "failed" ? "failed" : "pending";
+
+      at state (convex-dev/runtimeMemoryContext.ts:33:23)
+      at convex-dev/runtimeMemoryContext.ts:64:86
+          at Array.map (<anonymous>)
+      at progress (convex-dev/runtimeMemoryContext.ts:64:37)
+      at convex-dev/runtimeMemoryContext.ts:91:106
+          at async Promise.all (index 0)
+      at Module.refreshScopeWatermarks (convex-dev/runtimeMemoryContext.ts:91:18)
+      at Object.<anonymous> (tests/unit/runtimeIngestion/context.test.ts:94:5)
+
+PASS tests/unit/runtimeIngestion/stages.test.ts
+  ● Console
+
+    console.error
+      ◇ injected env (0) from .env.test
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+    console.error
+      ◇ injected env (0) from .env.local
+
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+    > 20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+         |        ^
+      21 |
+      22 | // Determine which Convex deployment to test against
+      23 | // Note: In auto mode, the test-runner.mjs script handles detection and orchestration
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:20:8
+
+    console.log
+      
+      🧪 Testing against LOCAL Convex: http://127.0.0.1:1
+
+      at tests/env.ts:44:11
+
+    console.log
+         Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:45:11
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:147:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:150:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:151:11
+
+PASS tests/unit/runtimeMemory/repository.test.ts
+  ● Console
+
+    console.error
+      ◇ injected env (0) from .env.test
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+    console.error
+      ◇ injected env (0) from .env.local
+
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+    > 20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+         |        ^
+      21 |
+      22 | // Determine which Convex deployment to test against
+      23 | // Note: In auto mode, the test-runner.mjs script handles detection and orchestration
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:20:8
+
+    console.log
+      
+      🧪 Testing against LOCAL Convex: http://127.0.0.1:1
+
+      at tests/env.ts:44:11
+
+    console.log
+         Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:45:11
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:147:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:150:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:151:11
+
+PASS tests/unit/domain/memory-context.test.ts
+  ● Console
+
+    console.error
+      ◇ injected env (0) from .env.test
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+    console.error
+      ◇ injected env (0) from .env.local
+
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+    > 20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+         |        ^
+      21 |
+      22 | // Determine which Convex deployment to test against
+      23 | // Note: In auto mode, the test-runner.mjs script handles detection and orchestration
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:20:8
+
+    console.log
+      
+      🧪 Testing against LOCAL Convex: http://127.0.0.1:1
+
+      at tests/env.ts:44:11
+
+    console.log
+         Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:45:11
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:147:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:150:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:151:11
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     3.1s | 20/20 passed | /tests/unit/runtimeGraph/projection.test.ts
+  ❌     1.1s | 6/8 passed | /tests/unit/runtimeIngestion/context.test.ts
+  ✅     1.1s | 36/36 passed | /tests/unit/runtimeMemory/repository.test.ts
+  ✅     0.9s | 11/11 passed | /tests/unit/runtimeIngestion/stages.test.ts
+  ✅     0.3s | 8/8 passed | /tests/unit/domain/memory-context.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.03s ( 0.4%) - scoped durable graph projection real derived commit enqueues exact active snapshot; replay is one intent and receipt
+    /tests/unit/runtimeGraph/projection.test.ts
+
+ 2. [32m✓[0m    0.03s ( 0.4%) - scoped durable graph projection expansion is reachable through service leases and freshly hydrates canonical authorized facts
+    /tests/unit/runtimeGraph/projection.test.ts
+
+ 3. [32m✓[0m    0.03s ( 0.4%) - scoped contiguous memory context 33 unrepresented sources withhold the whole tail; history dedup happens before the source bound
+    /tests/unit/runtimeIngestion/context.test.ts
+
+ 4. [32m✓[0m    0.02s ( 0.3%) - scoped durable graph projection known failures have bounded backoff and end dead-letter rather than synced
+    /tests/unit/runtimeGraph/projection.test.ts
+
+ 5. [32m✓[0m    0.02s ( 0.3%) - scoped contiguous memory context later queued input is excluded from pending and indexed paths despite captured scope sequence
+    /tests/unit/runtimeIngestion/context.test.ts
+
+ 6. [32m✓[0m    0.02s ( 0.3%) - scoped durable graph projection public manual store/edit/delete write the canonical fact and graph snapshot together
+    /tests/unit/runtimeGraph/projection.test.ts
+
+ 7. [32m✓[0m    0.02s ( 0.3%) - scoped contiguous memory context a failed earlier fact event blocks only facts; explicit retirement closes the hole
+    /tests/unit/runtimeIngestion/context.test.ts
+
+ 8. [32m✓[0m    0.02s ( 0.3%) - durable ingestion stage boundary same tuple replay is one event/counter, changed hash or event alias cannot enter
+    /tests/unit/runtimeIngestion/stages.test.ts
+
+ 9. [32m✓[0m    0.02s ( 0.3%) - scoped durable graph projection parent failure rolls back fact, processing receipt, graph intent and scheduling
+    /tests/unit/runtimeGraph/projection.test.ts
+
+10. [32m✓[0m    0.02s ( 0.3%) - scoped durable graph projection each enabled connector must acknowledge; a live lease is not reclaimed
+    /tests/unit/runtimeGraph/projection.test.ts
+
+11. [32m✓[0m    0.02s ( 0.3%) - scoped durable graph projection expired final worker lease becomes explicit failed freshness without any synced receipt
+    /tests/unit/runtimeGraph/projection.test.ts
+
+12. [32m✓[0m    0.02s ( 0.3%) - durable ingestion stage boundary safe failure has finite retry budget; known unknown never retries and summaries reflect it
+    /tests/unit/runtimeIngestion/stages.test.ts
+
+13. [32m✓[0m    0.01s ( 0.2%) - scoped durable graph projection revision fences old already-issued work and enqueues a later authoritative fence
+    /tests/unit/runtimeGraph/projection.test.ts
+
+14. [32m✓[0m    0.01s ( 0.2%) - scoped durable graph projection direct-fact graph debt blocks a zero-ingestion strict graph cutoff until acknowledgement
+    /tests/unit/runtimeGraph/projection.test.ts
+
+15. [32m✓[0m    0.01s ( 0.2%) - durable ingestion stage boundary duplicate delivery claims once; native account is fresh and policy pin rejects wrong stage
+    /tests/unit/runtimeIngestion/stages.test.ts
+
+16. [32m✓[0m    0.01s ( 0.2%) - durable ingestion stage boundary expired lease is unknown and cannot be retried or attach its old extraction
+    /tests/unit/runtimeIngestion/stages.test.ts
+
+17. [32m✓[0m    0.01s ( 0.2%) - durable ingestion stage boundary facts and vector stages are distinct; default profile is pinned1536
+    /tests/unit/runtimeIngestion/stages.test.ts
+
+18. [32m✓[0m    0.01s ( 0.2%) - scoped durable graph projection scope fences old already-issued work and enqueues a later authoritative fence
+    /tests/unit/runtimeGraph/projection.test.ts
+
+19. [32m✓[0m    0.01s ( 0.2%) - scoped durable graph projection invalid trusted receipt cannot advance freshness
+    /tests/unit/runtimeGraph/projection.test.ts
+
+20. [32m✓[0m    0.01s ( 0.2%) - scoped contiguous memory context current scope auth and owner index exclude another principal before source hydration
+    /tests/unit/runtimeIngestion/context.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.36s (5.4% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      6.65s
+  Test suites:        5
+  Individual tests:   72
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 5
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 1 failed, 4 passed, 5 total
+Tests:       2 failed, 81 passed, 83 total
+Snapshots:   0 total
+Time:        6.65 s, estimated 8 s
+Ran all test suites within paths "tests/unit/runtimeGraph/projection.test.ts", "tests/unit/runtimeMemory/repository.test.ts", "tests/unit/runtimeIngestion/stages.test.ts", "tests/unit/runtimeIngestion/context.test.ts", "tests/unit/domain/memory-context.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-graph-functional-v2-20261008/author/affected-tests2.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

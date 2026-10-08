@@ -88,7 +88,7 @@ export type BarrierDecision = { state: "ready" | "waiting" | "failed" | "incompl
 export function evaluateMemoryBarrier(args: {
   cutoff: number; requiredStages: readonly MemoryStage[];
   progress: Partial<Record<MemoryStage, StageWatermark>>;
-  startedAt: number; deadlineMs: number; now: number; onFailure: "fail" | "incomplete";
+  startedAt: number; deadlineMs: number; now: number; onFailure: "fail" | "incomplete"; stageCutoffs?: Partial<Record<MemoryStage, number>>;
 }): BarrierDecision {
   integer(args.cutoff); integer(args.startedAt); integer(args.now); integer(args.deadlineMs, 1);
   if (args.deadlineMs > 120_000 || args.now < args.startedAt || !["fail", "incomplete"].includes(args.onFailure)
@@ -101,8 +101,9 @@ export function evaluateMemoryBarrier(args: {
     if (!["facts", "vectors", "graph"].includes(stage)) invalid();
     const progress = args.progress[stage]; if (!progress) return stop("CAPABILITY_UNAVAILABLE");
     integer(progress.indexedThrough);
-    if (progress.cutoff !== args.cutoff) invalid();
-    if (progress.indexedThrough >= args.cutoff) continue;
+    const cutoff = args.stageCutoffs?.[stage] ?? args.cutoff; integer(cutoff);
+    if (progress.cutoff !== cutoff) invalid();
+    if (progress.indexedThrough >= cutoff && progress.complete) continue;
     ready = false;
     if (progress.hole?.state === "failed") return stop("MEMORY_STAGE_FAILED");
   }

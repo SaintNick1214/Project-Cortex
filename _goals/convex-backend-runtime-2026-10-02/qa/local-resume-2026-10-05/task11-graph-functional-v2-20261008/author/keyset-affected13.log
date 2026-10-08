@@ -1,0 +1,305 @@
+(node:30292) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeMemory/profiles.test.ts
+  ● Console
+
+    console.error
+      ◇ injected env (0) from .env.test
+
+      13 | import dotenv from "dotenv";
+      14 | import { resolve } from "path";
+    > 15 |
+         | ^
+      16 | // Load .env.test first (test defaults)
+      17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+      18 |
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:15:8
+
+    console.error
+      ◇ injected env (0) from .env.local
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+    console.log
+      
+      🧪 Testing against LOCAL Convex: http://127.0.0.1:1
+
+      at tests/env.ts:35:13
+
+    console.log
+         Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:36:13
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:121:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:122:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:123:13
+
+FAIL tests/unit/runtime/model-policy-admission.test.ts
+  ● Console
+
+    console.error
+      ◇ injected env (0) from .env.test
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+    console.error
+      ◇ injected env (0) from .env.local
+
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+    > 20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+         |        ^
+      21 |
+      22 | // Determine which Convex deployment to test against
+      23 | // Note: In auto mode, the test-runner.mjs script handles detection and orchestration
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:20:8
+
+    console.log
+      
+      🧪 Testing against LOCAL Convex: http://127.0.0.1:1
+
+      at tests/env.ts:44:11
+
+    console.log
+         Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:45:11
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:147:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:150:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:151:11
+
+  ● native private policy ledger — offline logic only › preserves all original native, transcript, Agent, ingestion and profile tables with nine graph tables and unique indexes
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 7
+    Received: 6
+
+      422 |     for (const definition of Object.values(schema.tables)) {
+      423 |       const configurations = definition[" indexes"]().map((index) => JSON.stringify(index.fields));
+    > 424 |       expect(new Set(configurations).size).toBe(configurations.length);
+          |                                            ^
+      425 |     }
+      426 |   });
+      427 |   it.each([["0", 0], ["0.0000001", 1], ["0.000001", 1], ["1.23456789", 1234568]])("rounds authoritative %s USD upward to %s microUSD", (usd, expected) => {
+
+      at Object.<anonymous> (tests/unit/runtime/model-policy-admission.test.ts:424:44)
+
+PASS tests/unit/runtimeMemory/repository.test.ts
+  ● Console
+
+    console.error
+      ◇ injected env (0) from .env.test
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+    console.error
+      ◇ injected env (0) from .env.local
+
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+    > 20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+         |        ^
+      21 |
+      22 | // Determine which Convex deployment to test against
+      23 | // Note: In auto mode, the test-runner.mjs script handles detection and orchestration
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:20:8
+
+    console.log
+      
+      🧪 Testing against LOCAL Convex: http://127.0.0.1:1
+
+      at tests/env.ts:44:11
+
+    console.log
+         Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:45:11
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:147:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:150:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:151:11
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     2.9s | 14/14 passed | /tests/unit/runtimeMemory/profiles.test.ts
+  ❌     2.4s | 133/134 passed | /tests/unit/runtime/model-policy-admission.test.ts
+  ✅     0.9s | 36/36 passed | /tests/unit/runtimeMemory/repository.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.06s ( 1.0%) - backend-selected profile generations single-source generation calls only selected embedding, keeps source/chunks, and returns no extracted facts
+    /tests/unit/runtimeMemory/profiles.test.ts
+
+ 2. [32m✓[0m    0.04s ( 0.6%) - terminal embedding result profile fence known embedding capture accepts only one current matching profile vector, with zero attachment charge delta
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+ 3. [32m✓[0m    0.03s ( 0.4%) - native private policy ledger — offline logic only malformed/missing cost remains unknown liability; qualified terminal proof releases slot only
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+ 4. [32m✓[0m    0.02s ( 0.3%) - native private policy ledger — offline logic only explicit compatible safe fallback reserves once with pinned candidate and no lost prior spend
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+ 5. [32m✓[0m    0.02s ( 0.3%) - trusted terminal capture and current private attachment healthy charge capture and attachment are separate, monetary once, exact-current retries zero writes
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+ 6. [32m✓[0m    0.02s ( 0.3%) - current policy narrowing at fallback and dispatch boundaries compatible fallback at exact narrowed cumulative ceiling remains permitted
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+ 7. [32m✓[0m    0.02s ( 0.3%) - native private policy ledger — offline logic only one checkpoint winner returns a permit and subsequent attempts cannot dispatch
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+ 8. [32m✓[0m    0.02s ( 0.3%) - native private policy ledger — offline logic only postcheckpoint crash recovery cannot claim no dispatch or zero cost
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+ 9. [32m✓[0m    0.02s ( 0.3%) - current policy narrowing at fallback and dispatch boundaries fallback permission revoked after valid reservation denies checkpoint with zero effects
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+10. [32m✓[0m    0.02s ( 0.3%) - terminal eligibility unexpected errors preserve exact persistence retry faulted pending attachment preserves all rows and original error/cause; exact retry attaches once after read recovery
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+11. [32m✓[0m    0.01s ( 0.2%) - native private policy ledger — offline logic only same child canonical replay does not reserve again; changed text/hash collision rejects
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+12. [32m✓[0m    0.01s ( 0.2%) - current policy narrowing at fallback and dispatch boundaries current fallback revocation denies fresh reservation and query even with generally allowed model
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+13. [32m✓[0m    0.01s ( 0.2%) - current policy narrowing at fallback and dispatch boundaries operation narrowing after valid fallback reserve preserves full original liability and denies permit
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+14. [32m✓[0m    0.01s ( 0.2%) - terminal eligibility unexpected errors preserve exact persistence retry unexpected domainMessage propagates exact identity without getter calls or state change
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+15. [32m✓[0m    0.01s ( 0.2%) - terminal eligibility unexpected errors preserve exact persistence retry unexpected structuredLookingPlainObject propagates exact identity without getter calls or state change
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+16. [32m✓[0m    0.01s ( 0.2%) - Agent budget admission versus charge-only terminal capture refuses current Agent admission and visibility, but accounts terminal evidence exactly once
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+17. [32m✓[0m    0.01s ( 0.2%) - native private policy ledger — offline logic only known cost settles exactly once and eligible result replay needs no new reservation
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+18. [32m✓[0m    0.01s ( 0.2%) - native private policy ledger — offline logic only usage exceeding trusted input/output caps fully charges and blocks the faulty qualification
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+19. [32m✓[0m    0.01s ( 0.2%) - trusted terminal capture and current private attachment live revoked origin unknown100 refines full150 once without admin, slot decrement or reopened attachment
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+20. [32m✓[0m    0.01s ( 0.2%) - terminal eligibility unexpected errors preserve exact persistence retry unexpected dataAccessor propagates exact identity without getter calls or state change
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.40s (6.4% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      6.30s
+  Test suites:        3
+  Individual tests:   163
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 3
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 1 failed, 2 passed, 3 total
+Tests:       1 failed, 183 passed, 184 total
+Snapshots:   0 total
+Time:        6.303 s
+Ran all test suites within paths "tests/unit/runtime/model-policy-admission.test.ts", "tests/unit/runtimeMemory/repository.test.ts", "tests/unit/runtimeMemory/profiles.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-graph-functional-v2-20261008/author/keyset-affected13.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

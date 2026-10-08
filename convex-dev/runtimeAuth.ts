@@ -256,6 +256,11 @@ export async function recheckAuthority(
 ): Promise<RuntimeAuthority> {
   return await resolveAuthorityReference(createAuthorityReader(ctx), reference, requirement);
 }
+async function retireGraphAuthority(ctx: MutationCtx, selector: { grantId?: string; principalId?: string; membershipId?: string; tenantId?: string; memorySpaceId?: string; sourceId?: string; conversationId?: string }) {
+  // This child mutation shares the authority change's transaction. Cleanup never
+  // borrows the obsolete grant, and the connector's operator scope is separate.
+  await ctx.runMutation(makeFunctionReference<"mutation", typeof selector, null>("runtimeGraph:retireAuthority"), selector);
+}
 
 /** Actions invoke this internal query with inherited verified Convex auth (codegen in Task 03B/06). */
 export const authorize = internalQuery({
@@ -339,6 +344,7 @@ export const provision = internalMutation({
       const id = ctx.db.normalizeId("runtimeAuthGrants", old._id);
       if (!id) deny();
       await ctx.db.patch("runtimeAuthGrants", id, { revokedAt: now });
+      await retireGraphAuthority(ctx, { grantId: old._id });
     }
     const id = await ctx.db.insert("runtimeAuthGrants", {
       principalId: principal._id, membershipId: membership._id, tenantId: args.tenantId,
@@ -357,7 +363,10 @@ export const revokeGrant = internalMutation({
   args: { grantId: v.id("runtimeAuthGrants") },
   handler: async (ctx, args) => {
     const grant = await ctx.db.get("runtimeAuthGrants", args.grantId);
-    if (grant && grant.revokedAt === undefined) await ctx.db.patch("runtimeAuthGrants", grant._id, { revokedAt: Date.now() });
+    if (grant && grant.revokedAt === undefined) {
+      await ctx.db.patch("runtimeAuthGrants", grant._id, { revokedAt: Date.now() });
+      await retireGraphAuthority(ctx, { grantId: String(grant._id) });
+    }
   },
 });
 export const revokeMembership = internalMutation({
@@ -366,6 +375,7 @@ export const revokeMembership = internalMutation({
     const membership = await ctx.db.get("runtimeAuthMemberships", args.membershipId);
     if (membership && membership.revokedAt === undefined) await ctx.db.patch("runtimeAuthMemberships", membership._id,
       { revokedAt: Date.now(), version: membership.version + 1 });
+    if (membership) await retireGraphAuthority(ctx, { membershipId: String(membership._id) });
   },
 });
 export const deletePrincipal = internalMutation({
@@ -374,6 +384,7 @@ export const deletePrincipal = internalMutation({
     const principal = await ctx.db.get("runtimeAuthPrincipals", args.principalId);
     if (principal && principal.deletedAt === undefined) await ctx.db.patch("runtimeAuthPrincipals", principal._id,
       { deletedAt: Date.now(), version: principal.version + 1 });
+    if (principal) await retireGraphAuthority(ctx, { principalId: String(principal._id) });
   },
 });
 export const deleteScope = internalMutation({
@@ -386,6 +397,7 @@ export const deleteScope = internalMutation({
     const key = { ...args, resourceType: args.memorySpaceId === undefined ? "tenant" as const : "memorySpace" as const,
       resourceId: args.memorySpaceId ?? args.tenantId };
     if (!await createAuthorityReader(ctx).hasTombstone(key)) await ctx.db.insert("runtimeAuthTombstones", { ...key, deletedAt: Date.now() });
+    await retireGraphAuthority(ctx, args);
   },
 });
 export const tombstoneResource = internalMutation({
@@ -397,5 +409,13 @@ export const tombstoneResource = internalMutation({
       makeFunctionReference("runtimeIngestion:retireScopedSource") as unknown as FunctionReference<"mutation", "internal", {
         tenantId: string; memorySpaceId: string; sourceId: string }, null>,
       { tenantId: args.tenantId, memorySpaceId: args.memorySpaceId, sourceId: args.resourceId });
+    else if (args.resourceType === "source") await retireGraphAuthority(ctx, { tenantId: args.tenantId, sourceId: args.resourceId });
+    if (args.resourceType === "conversation") await retireGraphAuthority(ctx, { tenantId: args.tenantId,
+      ...(args.memorySpaceId ? { memorySpaceId: args.memorySpaceId } : {}), conversationId: args.resourceId });
+    if (args.resourceType === "fact") {
+      const rows = await ctx.db.query("facts").withIndex("by_factId", q => q.eq("factId", args.resourceId))
+        .filter(q => q.and(q.eq(q.field("tenantId"), args.tenantId), ...(args.memorySpaceId ? [q.eq(q.field("memorySpaceId"), args.memorySpaceId)] : []))).take(2);
+      for (const fact of rows) if (fact.lineage) await retireGraphAuthority(ctx, { tenantId: args.tenantId, memorySpaceId: fact.memorySpaceId, sourceId: fact.lineage.sourceId });
+    }
   },
 });

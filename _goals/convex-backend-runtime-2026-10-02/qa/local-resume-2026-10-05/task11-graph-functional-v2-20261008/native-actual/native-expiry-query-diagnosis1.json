@@ -1,0 +1,89 @@
+{
+  "version": 1,
+  "status": "ACTUAL_MUTATION_EXPIRY_DENIAL_DIAGNOSED",
+  "cases": [
+    {
+      "engine": "neo4j",
+      "args": {
+        "tenantId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226",
+        "memorySpaceId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space",
+        "connectorId": "task11-neo4j",
+        "jobId": "graph:d51cee62ff798a63af4d219483841c3f3d3e40b047981b9a2acf993b5d115b8f",
+        "workerId": "task11-old-source-tombstone-neo4j",
+        "leaseVersion": 1
+      },
+      "query": {
+        "returned": false,
+        "error": {
+          "name": "ConvexError",
+          "message": "[Request ID: ea698d1182651432] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"GRAPH_LEASE_EXPIRED\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at dataDenied (../../custom/backend/runtimeDataAuth.ts:23:0)\n    at requireJob (../../custom/backend/runtimeGraph.ts:334:51)\n    at async handler (../../custom/backend/runtimeGraph.ts:373:94)\n",
+          "data": {
+            "code": "GRAPH_LEASE_EXPIRED",
+            "message": "Access denied",
+            "outcome": "not_dispatched",
+            "retryable": false,
+            "version": 1
+          }
+        }
+      },
+      "mutation": {
+        "denied": true,
+        "error": {
+          "name": "ConvexError",
+          "message": "[Request ID: 0547f14f368f5b1a] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"GRAPH_LEASE_EXPIRED\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at dataDenied (../../custom/backend/runtimeDataAuth.ts:23:0)\n    at requireJob (../../custom/backend/runtimeGraph.ts:334:51)\n    at async handler (../../custom/backend/runtimeGraph.ts:406:2)\n",
+          "data": {
+            "code": "GRAPH_LEASE_EXPIRED",
+            "message": "Access denied",
+            "outcome": "not_dispatched",
+            "retryable": false,
+            "version": 1
+          }
+        }
+      }
+    },
+    {
+      "engine": "memgraph",
+      "args": {
+        "tenantId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226",
+        "memorySpaceId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space",
+        "connectorId": "task11-memgraph",
+        "jobId": "graph:3c59fa3bac0e0bd1c09417b8e048cffc37becb657a50daa87c18c95454599f0d",
+        "workerId": "task11-old-source-tombstone-memgraph",
+        "leaseVersion": 1
+      },
+      "query": {
+        "returned": false,
+        "error": {
+          "name": "ConvexError",
+          "message": "[Request ID: 008b7fed8718d6c7] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"GRAPH_LEASE_EXPIRED\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at dataDenied (../../custom/backend/runtimeDataAuth.ts:23:0)\n    at requireJob (../../custom/backend/runtimeGraph.ts:334:51)\n    at async handler (../../custom/backend/runtimeGraph.ts:373:94)\n",
+          "data": {
+            "code": "GRAPH_LEASE_EXPIRED",
+            "message": "Access denied",
+            "outcome": "not_dispatched",
+            "retryable": false,
+            "version": 1
+          }
+        }
+      },
+      "mutation": {
+        "denied": true,
+        "error": {
+          "name": "ConvexError",
+          "message": "[Request ID: d2bc7265659a3b50] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"GRAPH_LEASE_EXPIRED\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at dataDenied (../../custom/backend/runtimeDataAuth.ts:23:0)\n    at requireJob (../../custom/backend/runtimeGraph.ts:334:51)\n    at async handler (../../custom/backend/runtimeGraph.ts:406:2)\n",
+          "data": {
+            "code": "GRAPH_LEASE_EXPIRED",
+            "message": "Access denied",
+            "outcome": "not_dispatched",
+            "retryable": false,
+            "version": 1
+          }
+        }
+      }
+    }
+  ],
+  "graphJobsUnchanged": true,
+  "modelCalls": 0,
+  "queryClockCacheHypothesis": false,
+  "noNewGraphPacketIssued": true,
+  "ownedClientsClosed": true
+}

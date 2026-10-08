@@ -15,6 +15,8 @@ import { prepareMutationRowsWrite, finalizeMutationRowsRead, recheckSourceWitnes
   getScopedFactDocument, rejectUnqualifiedEmbedding, reviseDataSource, searchScopedFacts, tombstoneDataRow,
 } from "./runtimeDataAuth";
 import { Doc } from "./_generated/dataModel";
+import { projectChangedSources, retireGraphSource } from "./runtimeGraph";
+import { dataAuthorityReference } from "./runtimeDataAuth";
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Mutations (Write Operations)
@@ -137,6 +139,7 @@ export const store = mutation({
       updatedAt: now,
     });
 
+    await projectChangedSources(ctx, dataAuthorityReference(authority), [lineage.sourceId]);
     return await factMutationResult(ctx, authority, factId, authority.principalId, "store");
   },
 });
@@ -253,6 +256,7 @@ export const update = mutation({
       validUntil: now,
     });
 
+    await projectChangedSources(ctx, dataAuthorityReference(authority), [existing.lineage!.sourceId, lineage.sourceId]);
     return await factMutationResult(ctx, authority, newFactId, existing.ownerPrincipalId!, "update");
   },
 });
@@ -280,6 +284,7 @@ export const deleteFact = mutation({
     }
 
     await tombstoneDataRow(ctx, authority, "facts", fact);
+    await projectChangedSources(ctx, dataAuthorityReference(authority), [fact.lineage!.sourceId]);
 
     return { deleted: true, factId: args.factId };
   },
@@ -343,6 +348,7 @@ export const supersede = mutation({
 
     const witnesses = [...admittedSources, ...await assertDataRow(ctx, authority, capability, oldFact), ...await assertDataRow(ctx, authority, capability, newFact)];
     await recheckSourceWitnesses(ctx, authority, capability, witnesses);
+    await projectChangedSources(ctx, dataAuthorityReference(authority), [oldFact.lineage!.sourceId, newFact.lineage!.sourceId]);
     return {
       superseded: true,
       oldFactId: args.oldFactId,
@@ -426,6 +432,7 @@ export const updateInPlace = mutation({
     const { lineage, manualSourceBinding } = await reviseDataSource(ctx, authority, existing, args.fact ?? existing.fact);
     await ctx.db.patch(existing._id, { ...updates, runtimeEditor: dataEditor(authority), lineage, manualSourceBinding, sourceType: "manual", extractionPolicyVersion: "manual-assertion-v1", version: existing.version + 1 });
 
+    await projectChangedSources(ctx, dataAuthorityReference(authority), [existing.lineage!.sourceId, lineage.sourceId]);
     return await factMutationResult(ctx, authority, existing.factId, existing.ownerPrincipalId!, "updateInPlace");
   },
 });
@@ -471,6 +478,7 @@ export const deleteMany = mutation({
     }
 
     await finalizeMutationRowsRead(ctx, authority, admission, deletions);
+    await projectChangedSources(ctx, dataAuthorityReference(authority), facts.map(f => f.lineage!.sourceId));
     return { deleted, memorySpaceId: args.memorySpaceId };
   },
 });
@@ -1566,6 +1574,7 @@ export const consolidate = mutation({
     const witnesses: CanonicalSourceWitness[] = [...admittedSources];
     for (const fact of facts) witnesses.push(...await assertDataRow(ctx, authority, "write", fact));
     await recheckSourceWitnesses(ctx, authority, "write", witnesses);
+    await projectChangedSources(ctx, dataAuthorityReference(authority), facts.map(f => f.lineage!.sourceId));
     return { consolidated: true, keptFactId: kept.factId, mergedCount: facts.length - 1 };
   },
 });
@@ -1645,6 +1654,7 @@ export const deleteByIds = mutation({
     const deletions = [];
     for (const row of rows) deletions.push(await tombstoneDataRow(ctx, authority, "facts", row));
     await finalizeMutationRowsRead(ctx, authority, admission, deletions);
+    await projectChangedSources(ctx, dataAuthorityReference(authority), rows.map(f => f.lineage!.sourceId));
     return { deleted: rows.length, factIds: rows.map(row => row.factId) };
   },
 });
@@ -1677,6 +1687,12 @@ export const purgeAll = internalMutation({
 
     for (const fact of allFacts) {
       await ctx.db.delete(fact._id);
+    }
+    const retired = new Set<string>();
+    for (const fact of allFacts) if (fact.tenantId && fact.lineage) {
+      const key = JSON.stringify([fact.tenantId, fact.memorySpaceId, fact.lineage.sourceId]);
+      if (retired.has(key)) continue; retired.add(key);
+      await retireGraphSource(ctx, { tenantId: fact.tenantId, memorySpaceId: fact.memorySpaceId }, fact.lineage.sourceId);
     }
 
     return { deleted: allFacts.length };

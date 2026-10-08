@@ -1,0 +1,37 @@
+(node:9772) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-product-independent-review1/dependency-retirement-independent1.test.ts
+  ✕ upstream source deletion must enqueue retirement for a projected tool derivative that is now ineligible (6 ms)
+
+  ● upstream source deletion must enqueue retirement for a projected tool derivative that is now ineligible
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 3
+
+      Object {
+    -   "advanced": true,
+    -   "operation": "tombstone",
+    -   "state": "pending",
+    +   "advanced": false,
+    +   "operation": "replace",
+    +   "state": "complete",
+      }
+
+      49 |   expect(await data.managedSourceIsCurrent(ctx, reference, derivative as never, 'read')).toBe(false);
+      50 |   const after = db.table('runtimeGraphSources').find(row => row.sourceId === lineage.sourceId)!;
+    > 51 |   expect({ operation: after.operation, state: after.state, advanced: Number(after.revision) > initial.revision }).toEqual({
+         |                                                                                                                   ^
+      52 |     operation: 'tombstone', state: 'pending', advanced: true });
+      53 | });
+      54 |
+
+      at Object.<anonymous> (_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-product-independent-review1/dependency-retirement-independent1.test.ts:51:115)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 1 total
+Snapshots:   0 total
+Time:        4.387 s
+Ran all test suites within paths "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-product-independent-review1/dependency-retirement-independent1.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-product-independent-review1/dependency-retirement-run1.results.json

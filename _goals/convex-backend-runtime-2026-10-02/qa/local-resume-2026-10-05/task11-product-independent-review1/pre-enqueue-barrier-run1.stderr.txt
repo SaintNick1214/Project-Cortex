@@ -1,0 +1,52 @@
+(node:92127) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-product-independent-review1/pre-enqueue-barrier-independent1.test.ts
+  ✕ graph-only strict waits for an eligible captured source whose fact job has not created graph intent yet (2 ms)
+  ✕ an explicitly ineligible captured source does not fabricate a graph-stage dependency
+
+  ● graph-only strict waits for an eligible captured source whose fact job has not created graph intent yet
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      37 | const digest = /^[a-f0-9]{64}$/;
+      38 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 39 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      40 | }
+      41 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      42 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:39:9)
+      at activeRoot (convex-dev/runtimeModelPolicy.ts:167:41)
+      at resolveCurrent (convex-dev/runtimeModelPolicy.ts:243:30)
+      at readCurrentEmbeddingProfile (convex-dev/runtimeModelPolicy.ts:475:19)
+      at readStageProgress (convex-dev/runtimeMemoryContext.ts:63:19)
+      at decision (_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-product-independent-review1/pre-enqueue-barrier-independent1.test.ts:32:20)
+      at Object.<anonymous> (_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-product-independent-review1/pre-enqueue-barrier-independent1.test.ts:37:11)
+
+  ● an explicitly ineligible captured source does not fabricate a graph-stage dependency
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      37 | const digest = /^[a-f0-9]{64}$/;
+      38 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 39 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      40 | }
+      41 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      42 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:39:9)
+      at activeRoot (convex-dev/runtimeModelPolicy.ts:167:41)
+      at resolveCurrent (convex-dev/runtimeModelPolicy.ts:243:30)
+      at readCurrentEmbeddingProfile (convex-dev/runtimeModelPolicy.ts:475:19)
+      at readStageProgress (convex-dev/runtimeMemoryContext.ts:63:19)
+      at decision (_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-product-independent-review1/pre-enqueue-barrier-independent1.test.ts:32:20)
+      at Object.<anonymous> (_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-product-independent-review1/pre-enqueue-barrier-independent1.test.ts:40:11)
+
+Test Suites: 1 failed, 1 total
+Tests:       2 failed, 2 total
+Snapshots:   0 total
+Time:        3.282 s
+Ran all test suites within paths "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-product-independent-review1/pre-enqueue-barrier-independent1.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-product-independent-review1/pre-enqueue-barrier-run1.results.json

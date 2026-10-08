@@ -91,20 +91,27 @@ export class TranscriptDb {
     const builder = {
       withIndex: (name: string, callback: (q: unknown) => unknown) => {
         const q = { eq: (key: string, value: unknown) => { filters.push(row => field(row, key) === value); return q; },
-          gt: (key: string, value: number) => { filters.push(row => (field(row, key) as number) > value); return q; },
+          gt: (key: string, value: number | string) => { filters.push(row => (field(row, key) as typeof value) > value); return q; },
           lte: (key: string, value: number) => { filters.push(row => (field(row, key) as number) <= value); return q; } };
         callback(q);
-        keys = name === "by_scope_sequence" || name === "by_owner_sequence" ? ["sequence"] : name === "by_scoped_version" ? ["version"] : name === "by_conversation_status" || name === "by_conversation_queue" || name === "by_conversation" ? ["queueSequence", "sequence"] : name === "by_conversation_position" ? ["order", "stepOrder"] : [];
+        keys = table === "runtimeGraphDependencies" && name === "by_upstream" ? ["dependentSourceId"]
+          : table === "runtimeGraphSources" ? name === "by_tenant_source" ? ["memorySpaceId"] : ["tenantId", "memorySpaceId", "sourceId"]
+          : name === "by_scope_revision" ? ["revision"] : name === "by_queue" ? ["revision", "createdAt"] : name === "by_scope_sequence" || name === "by_owner_sequence" ? ["sequence"] : name === "by_scoped_version" ? ["version"] : name === "by_conversation_status" || name === "by_conversation_queue" || name === "by_conversation" ? ["queueSequence", "sequence"] : name === "by_conversation_position" ? ["order", "stepOrder"] : [];
         return builder;
       },
-      filter: (callback: (q: { field(path: string): (row: Row) => unknown; eq(a: unknown, b: unknown): (row: Row) => boolean; and(...items: ((row: Row) => boolean)[]): (row: Row) => boolean }) => (row: Row) => boolean) => {
+      filter: (callback: (q: { field(path: string): (row: Row) => unknown; eq(a: unknown, b: unknown): (row: Row) => boolean;
+        gt(a: unknown, b: number): (row: Row) => boolean; and(...items: ((row: Row) => boolean)[]): (row: Row) => boolean;
+        or(...items: ((row: Row) => boolean)[]): (row: Row) => boolean }) => (row: Row) => boolean) => {
         const expr = { field: (path: string) => (row: Row) => field(row, path),
           eq: (a: unknown, b: unknown) => (row: Row) => (typeof a === "function" ? a(row) : a) === (typeof b === "function" ? b(row) : b),
+          gt: (a: unknown, b: number) => (row: Row) => (typeof a === "function" ? a(row) : a) > b,
+          or: (...items: ((row: Row) => boolean)[]) => (row: Row) => items.some(item => item(row)),
           and: (...items: ((row: Row) => boolean)[]) => (row: Row) => items.every(item => item(row)) };
         filters.push(callback(expr)); return builder;
       },
       order: (value: string) => { direction = value === "desc" ? -1 : 1; return builder; },
       take: async (n: number) => clone(selected().slice(0, n)), collect: async () => clone(selected()),
+      first: async () => selected()[0] ? clone(selected()[0]) : null,
       unique: async () => { const rows = selected(); if (rows.length > 1) throw new Error("Duplicate rows"); return rows[0] ? clone(rows[0]) : null; },
       paginate: async (opts: { cursor: string | null; numItems: number }) => { const rows = selected(); const offset = Number(opts.cursor ?? 0); return { page: clone(rows.slice(offset, offset + opts.numItems)), isDone: offset + opts.numItems >= rows.length, continueCursor: String(offset + opts.numItems) }; },
     }; return builder;
@@ -112,7 +119,13 @@ export class TranscriptDb {
   normalizeId(table: string, id: string) { return id.startsWith(`${table}:`) ? id : null; }
   async get(table: string, id: string) { const row = this.table(table).find(row => row._id === id); return row ? clone(row) : null; }
   async insert(table: string, value: Record<string, unknown>) { this.writes++; return this.seed(table, clone(value))._id; }
-  async patch(table: string, id: string, value: Record<string, unknown>) { const row = this.table(table).find(row => row._id === id); if (!row) throw new Error("Missing row"); Object.assign(row, clone(value)); this.writes++; }
+  async patch(table: string, id: string, value: Record<string, unknown>): Promise<void>;
+  async patch(id: string, value: Record<string, unknown>): Promise<void>;
+  async patch(tableOrId: string, idOrValue: string | Record<string, unknown>, value?: Record<string, unknown>) {
+    const table = typeof idOrValue === "string" ? tableOrId : tableOrId.split(":")[0];
+    const id = typeof idOrValue === "string" ? idOrValue : tableOrId; const patch = typeof idOrValue === "string" ? value! : idOrValue;
+    const row = this.table(table).find(row => row._id === id); if (!row) throw new Error("Missing row"); Object.assign(row, clone(patch)); this.writes++;
+  }
   async replace(table: string, id: string, value: Record<string, unknown>) { const row = this.table(table).find(row => row._id === id); if (!row) throw new Error("Missing row"); const index = this.table(table).indexOf(row); this.table(table)[index] = { ...clone(value), _id: id, _creationTime: row._creationTime }; this.writes++; }
   async delete(table: string, id: string) { this.rows.set(table, this.table(table).filter(row => row._id !== id)); this.writes++; }
 }
@@ -168,6 +181,8 @@ export async function transcriptFixture(options: { maxContextTokens?: number } =
     if (path?.endsWith("/deleteByIds")) { effects.deletes++; for (const id of args.messageIds as string[]) native.messages.delete(id); return null; }
     if (path?.endsWith("/deleteAllForThreadIdAsync")) { effects.deletes++; for (const [id, m] of native.messages) if (m.threadId === args.threadId) native.messages.delete(id); native.threads.delete(args.threadId as string); return null; }
     const name = getFunctionName(ref as Parameters<typeof getFunctionName>[0]);
+    if (name === "runtimeGraph:retireAuthority") return await invoke((await import("../../../convex-dev/runtimeGraph")).retireAuthority, ctx, args);
+    if (name === "runtimeGraph:reconcileScoped") return await invoke((await import("../../../convex-dev/runtimeGraph")).reconcileScoped, ctx, args);
     if (name === "runtimeModelPolicy:cancelBudget") return await invoke(ledger.cancelBudget, ctx, args);
     if (name === "runtimeModelPolicy:cancelAgentBudget") return await invoke(ledger.cancelAgentBudget, ctx, args);
     throw new Error("Unexpected mutation " + name);

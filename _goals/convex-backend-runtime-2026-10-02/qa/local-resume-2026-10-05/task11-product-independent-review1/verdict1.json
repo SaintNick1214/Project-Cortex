@@ -1,0 +1,356 @@
+{
+  "version": 1,
+  "task": 11,
+  "title": "Scoped durable external graph projection",
+  "verdict": "PASS",
+  "averageScore": 4.0,
+  "policy": "acceptance-policy.md v2",
+  "scores": {
+    "requirementFulfillment": 4,
+    "codeQuality": 4,
+    "testQuality": 4,
+    "patternAdherence": 4,
+    "completeness": 4
+  },
+  "createdAt": "2026-10-08T22:00:21.554918+00:00",
+  "role": "NONAUTHOR_INDEPENDENT_PRODUCT_REVIEW",
+  "scope": "Full original Task11: all four requirements and three acceptance criteria. No other task, full-goal or final-audit acceptance.",
+  "requirements": [
+    {
+      "id": "R1",
+      "requirement": "Qualify actual graph runtime, network and service with Node connector or trusted worker.",
+      "met": true,
+      "evidence": [
+        "installed-current3-source-manifest.json",
+        "native-package-smoke3.json",
+        "native-core1-outcomes.json"
+      ]
+    },
+    {
+      "id": "R2",
+      "requirement": "Scoped versioned atomic outbox, leases, deduplicated receipts, bounded retry and explicit dead-letter.",
+      "met": true,
+      "evidence": [
+        "native-core1-outcomes.json",
+        "native-exhaustion2-outcomes.json",
+        "native-dependency3-outcomes.json"
+      ]
+    },
+    {
+      "id": "R3",
+      "requirement": "Deploy independent qualified Node/trusted worker; no SDK subscription worker in actions.",
+      "met": true,
+      "evidence": [
+        "native-core1-outcomes.json",
+        "native-fresh-rpc1-outcomes.json",
+        "final-native-report1.json"
+      ]
+    },
+    {
+      "id": "R4",
+      "requirement": "Remote revision/epoch/tombstone fences; current grant/profile/source expansion; separate lag and strict barrier.",
+      "met": true,
+      "evidence": [
+        "native-late6-outcomes.json",
+        "native-revocation3-outcomes.json",
+        "native-profile2-outcomes.json",
+        "native-dependency3-outcomes.json",
+        "native-exhaustion2-outcomes.json"
+      ]
+    }
+  ],
+  "acceptanceCriteria": [
+    {
+      "id": "A1",
+      "criterion": "Actual Neo4j/Memgraph ordered deduplicated projection after failure/retry.",
+      "met": true,
+      "evidence": [
+        "native-core1-outcomes.json",
+        "native-timeout2-neo4j.json",
+        "native-timeout3-outcomes.json"
+      ]
+    },
+    {
+      "id": "A2",
+      "criterion": "Cross-tenant denial and already-issued expired writes cannot overwrite newer state or restore deleted content; strict freshness.",
+      "met": true,
+      "evidence": [
+        "native-core1-outcomes.json",
+        "native-late1-outcomes.json (two scoped newer-revision positives)",
+        "native-late6-outcomes.json",
+        "native-fresh-rpc1-outcomes.json",
+        "native-revocation3-outcomes.json"
+      ]
+    },
+    {
+      "id": "A3",
+      "criterion": "Retry exhaustion fails rather than syncs; application disconnect does not stop projection.",
+      "met": true,
+      "evidence": [
+        "native-exhaustion2-outcomes.json",
+        "native-core1-outcomes.json"
+      ]
+    }
+  ],
+  "openBreakingFindings": [],
+  "independence": "Reviewer authored no product source and performed no Git, target, graph-service or private-resource mutation; independent tests used controlled ports only.",
+  "candidate": {
+    "authorCandidateDigest": "5dd226a6fc89d3d80f9bc2e99e447d34d9dd2900b53c3d3bdd28cbef176be9ee",
+    "authorSourceReady": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-graph-functional-v2-20261008/author/source-ready4.json",
+      "bytes": 9199,
+      "sha256": "e2bb4940aaf3e8eec449594d7c903022fa90c3660f25dbcd4cbc1465d0276634"
+    },
+    "nodeSources": [
+      {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/src/graph/runtime/CypherProjectionConnector.ts",
+        "bytes": 25887,
+        "sha256": "533011fb2174f37bbb91371e9d7811b12922cf049ee93774649c63d87c75748a"
+      },
+      {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/src/graph/runtime/worker.ts",
+        "bytes": 12940,
+        "sha256": "74241e5e0c17d0645c0d0f41f7b7b15f63ba51f43c2803b53780367989e297c3"
+      },
+      {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/src/graph/runtime/index.ts",
+        "bytes": 789,
+        "sha256": "661c9d5151c3f47a1598fc724b1c7812de5389da7864797af87535b09cb86d0e"
+      }
+    ],
+    "deployedBackendManifest": {
+      "bytes": 25207,
+      "sha256": "bcd5cef050532263f160c578c797b85fd86b587d01d182b7ce28faaeca6b7f8e",
+      "sourceFiles": 83,
+      "tables": 61
+    },
+    "packedSdk": {
+      "bytes": 942876,
+      "sha256": "23f8b01dc6d6f06f46b1d6dbcc9daf9a26176565a33563b7f042f63015ab342e"
+    }
+  },
+  "coverage": {
+    "authorUniquePassedIdentities": 369,
+    "rootControlledCases": 26,
+    "independentDistinctPassedCases": 16,
+    "countsAreNotSummedAcrossScopes": true,
+    "independentControls": [
+      {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-product-independent-review1/expired-lease-red1.results.json",
+        "bytes": 1935,
+        "sha256": "5ec393a8304809bae0c5ba035473d3f2769f4dbc386a4626ca1b3d3f4985e2d1",
+        "passed": 2,
+        "scope": "CONTROLLED_CODE_NO_SERVICE"
+      },
+      {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-product-independent-review1/connector-cleanup-run2.results.json",
+        "bytes": 2579,
+        "sha256": "46f71eb0563cd0036321b46c7fb05869cb72bd8aae63780bf48efc16aa915672",
+        "passed": 3,
+        "scope": "CONTROLLED_CODE_NO_SERVICE"
+      },
+      {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-product-independent-review1/profile-currentness-run3.results.json",
+        "bytes": 1359,
+        "sha256": "c5e2ce1fdced4e5a8da614cc5b831cb0d356e6eb1eb7d282e5e2d46cb32c6cb7",
+        "passed": 1,
+        "scope": "CONTROLLED_CODE_NO_SERVICE"
+      },
+      {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-product-independent-review1/pre-enqueue-barrier-run4.results.json",
+        "bytes": 2612,
+        "sha256": "6b408a2ae1f5dff75a09b0568475b5c97c60746e9c205b37ede344f47a91c0f5",
+        "passed": 4,
+        "scope": "CONTROLLED_CODE_NO_SERVICE"
+      },
+      {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-product-independent-review1/source-history-run1.results.json",
+        "bytes": 1754,
+        "sha256": "5b25181c5a2718a95ef8773c014e306f5babcd89b8ff244902fd91524880c776",
+        "passed": 2,
+        "scope": "CONTROLLED_CODE_NO_SERVICE"
+      },
+      {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-product-independent-review1/dependency-retirement-run2.results.json",
+        "bytes": 1352,
+        "sha256": "d80a57cf889ff9bb8cab06cd5d0cd7383ba38338b1a87c3ed250dd62a57dbb81",
+        "passed": 1,
+        "scope": "CONTROLLED_CODE_NO_SERVICE"
+      },
+      {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-product-independent-review1/connector-timeout-run1.results.json",
+        "bytes": 1328,
+        "sha256": "e851e81334da68d84d22fc30a4f474507988f9ccd4285315eeac50110957413d",
+        "passed": 1,
+        "scope": "CONTROLLED_CODE_NO_SERVICE"
+      },
+      {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-product-independent-review1/expiration-boundary-run1.results.json",
+        "bytes": 1350,
+        "sha256": "b59ff1a137e79974b0b5784a2beedc39c8b78cfffeb9b4868530fb2ee38ebbcb",
+        "passed": 1,
+        "scope": "CONTROLLED_CODE_NO_SERVICE"
+      },
+      {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-product-independent-review1/dependency-pagination-run2.results.json",
+        "bytes": 1363,
+        "sha256": "2b378775972974e60d0407ad3d29ca326d8efd0ea0f97bfabb15ca2ce1ac5556",
+        "passed": 1,
+        "scope": "CONTROLLED_CODE_NO_SERVICE"
+      }
+    ],
+    "actualServiceOutcomes": [
+      "final-native-report1.json",
+      "final-native-index1.json",
+      "installed-current3-source-manifest.json",
+      "native-core1-outcomes.json",
+      "native-profile2-outcomes.json",
+      "native-late6-outcomes.json",
+      "native-exhaustion2-outcomes.json",
+      "native-dependency3-outcomes.json",
+      "native-fresh-rpc1-outcomes.json",
+      "native-timeout3-outcomes.json",
+      "native-revocation3-outcomes.json",
+      "native-retirement4-outcomes.json"
+    ],
+    "applicability": "Native current1/current2 unchanged positive branches remain scoped; current3 covers fresh mutation expiry, keyset retirement, Memgraph timeout, revocation and cleanup. Failed whole intervals stay failed."
+  },
+  "quality": "Affected author/Root SDK and backend typechecks, scoped lint, Node ESM/CJS package import and browser exclusion passed; selected source hashes bound by current handoffs.",
+  "cleanup": {
+    "evidence": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-graph-functional-v2-20261008/native-actual/native-retirement4-outcomes.json",
+      "bytes": 6496,
+      "sha256": "9a12d6d9b99f6fa1a35f11cbd2fbc7b006a710fecbe9c5252fe1fea464996177"
+    },
+    "remoteOwnedContent": {
+      "neo4j": 0,
+      "memgraph": 0
+    },
+    "tombstoneFencesPerEngine": 12,
+    "pendingJobs": 0,
+    "ownedWorkersClientsProxiesChildrenClosed": true,
+    "task11ScopesAndGrantsRetired": true,
+    "hostPreserved": true,
+    "newTask11ModelCalls": 0,
+    "priorModelAttempts": 5,
+    "priorUnknownLiabilityMicroUsd": 500000,
+    "activeSlots": 0,
+    "resetOrRefund": false,
+    "targetRetained": {
+      "projectId": 3174742,
+      "deployment": "formal-husky-914",
+      "for": "Task12/13"
+    },
+    "graphServicesRetainedFor": "Task16/final adversarial",
+    "privateMetadataOnly": "Owned retained directories0700/files0600; no secret body read or published by reviewer.",
+    "finalGoalRetirementStillRequired": true
+  },
+  "preservedFailuresAndOracleCorrections": {
+    "connector-cleanup-run1.results.json": "Genuine controlled cleanup failures (2 fail/1 pass); repaired and unchanged assertions pass3 in successor fixture with required constraint metadata.",
+    "dependency-retirement-run1.results.json": "Genuine production-tool dependency retirement failure; unchanged successor passes.",
+    "dependency-pagination-run1.results.json": "Genuine one-paginated-query-per-function failure in parent/recursive cleanup; unchanged keyset successor passes.",
+    "profile-currentness-run1/results and run2": "Reviewer setup failures (new RPC expectation / missing revision rows), not product failures.",
+    "pre-enqueue-barrier earlier runs": "Reviewer setup failures in root/definition pins, not successful barrier coverage.",
+    "native-timeout1": "Actual hung RUN/tx.close, owned SIGTERM143/unknown preserved. Deadline-race successor verified on both engines; promise/upstream cancellation not claimed.",
+    "native-late3": "Actual rich-scope strict-schema rollback preserved; exact scope repaired and genuine source tombstone verified.",
+    "native-dependency1": "Actual recursive multiple-pagination rollback preserved; same original sources retired after keyset repair.",
+    "native-late4/5": "Time/query-poll oracle failures preserved; no permanent cache bypass finding asserted. Fresh mutation expiry outcomes verify repaired service fence.",
+    "native-expansion1 / late1 / late3": "Whole failed statuses preserved; only exact applicable neighbor/profile/newer revision/empty fact-replacement positive prefixes cited.",
+    "native-timeout2": "Memgraph500ms readiness failed before RUN; distinct supported3000ms held RUN passes. Neo4j500ms positive retained.",
+    "native-retirement3": "Cleanup effects completed before stale public Task10 filename error; retirement4 read-only closure corrects locator with no repeated effects.",
+    "author report4": "Original copied top-level368 retained; separate accounting correction and exact identity file establish369.",
+    "expired-lease-red1.results.json": "Prospective filename; actual raw is PASS2 because fix landed before execution. No runtime red invented."
+  },
+  "evidence": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-graph-functional-v2-20261008/native-actual/final-native-report1.json",
+      "bytes": 11450,
+      "sha256": "e1eaa72a6dd64814c0560866c015918483c98d7070d1842dbe8ad8792efd4f68"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-graph-functional-v2-20261008/native-actual/final-native-index1.json",
+      "bytes": 52733,
+      "sha256": "2a7dc1a0a7dcb7a6471360b9aa3612d2874506d02ad01662642c618e007a5c2a"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-graph-functional-v2-20261008/native-actual/installed-current3-source-manifest.json",
+      "bytes": 17047,
+      "sha256": "9f116c201c380405c2b7f381faca790c3719a7d49aa5f2180a99fc2c8c028105"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-graph-functional-v2-20261008/native-actual/native-core1-outcomes.json",
+      "bytes": 6024,
+      "sha256": "d33bdb18938707f91a1e59258f03a2f56f6a5a91f5770f2a10a1326db99a9da6"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-graph-functional-v2-20261008/native-actual/native-profile2-outcomes.json",
+      "bytes": 2256,
+      "sha256": "f2a3aabcd88ec0fc92b1ee8afd0a09f468dfa033b5f14c2a52076392e1f82694"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-graph-functional-v2-20261008/native-actual/native-late6-outcomes.json",
+      "bytes": 7922,
+      "sha256": "ddf8dad9b45b77f57ad3e717412de475f4c90a9610724de7ad837373a3243ef8"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-graph-functional-v2-20261008/native-actual/native-exhaustion2-outcomes.json",
+      "bytes": 3929,
+      "sha256": "5ae092c16bc30583d86fbb644bb29a16c26ea272697f3e07fc49a689ef5f8356"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-graph-functional-v2-20261008/native-actual/native-dependency3-outcomes.json",
+      "bytes": 9036,
+      "sha256": "60dde424b339ddd4bd82e263a01e076fa1a2d2ba06c0e583dee71d3064e08238"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-graph-functional-v2-20261008/native-actual/native-fresh-rpc1-outcomes.json",
+      "bytes": 1341,
+      "sha256": "5801a7817bc84a8b0e78a334192f9fbfd79a63cea7ae4dce2f55cda73ca109f1"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-graph-functional-v2-20261008/native-actual/native-timeout3-outcomes.json",
+      "bytes": 2390,
+      "sha256": "422381b020472ac1a475698de1a6c3aaa4658e74d1cbc02db290ee990952acf3"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-graph-functional-v2-20261008/native-actual/native-revocation3-outcomes.json",
+      "bytes": 10046,
+      "sha256": "c27bb1a035b175a90530d9a0d648fcea267a149b9da64df861e8f510e889fdb7"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-graph-functional-v2-20261008/native-actual/native-retirement4-outcomes.json",
+      "bytes": 6496,
+      "sha256": "9a12d6d9b99f6fa1a35f11cbd2fbc7b006a710fecbe9c5252fe1fea464996177"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-graph-functional-v2-20261008/author/final-author-report1.json",
+      "bytes": 24998,
+      "sha256": "e24bff810de44170bbfab609be42d5ccb34bb9465efb8c00a345f5013fad7907"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-graph-functional-v2-20261008/author/final-author-handoff1.json",
+      "bytes": 1769,
+      "sha256": "cd76ce739c9e149221e6920dda598e44fb15eb5a37234f96632ca0e6cd5036be"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-graph-functional-v2-20261008/author/source-ready4.json",
+      "bytes": 9199,
+      "sha256": "e2bb4940aaf3e8eec449594d7c903022fa90c3660f25dbcd4cbc1465d0276634"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-graph-functional-v2-20261008/author/assertion-identities4.json",
+      "bytes": 188598,
+      "sha256": "af37d14ee5b378bf55efaea823ba4d2b157658fdf2dca5dca8205c7deb7dd242"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-graph-functional-v2-20261008/author/report4-accounting-correction1.json",
+      "bytes": 1133,
+      "sha256": "afab0a0c237588f9d9108f46f9551ecec415e984672779d1a9b8c8ec3cef189e"
+    }
+  ],
+  "limitations": [
+    "No production deployment or package release accepted.",
+    "Retained target, graph services and private resources must be retired at their later authorized/final cleanup scope.",
+    "Other tasks, aggregate authorization audit and all original goal success outcomes remain independently open."
+  ]
+}

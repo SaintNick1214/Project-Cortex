@@ -27,25 +27,38 @@ export class MemoryTestDb {
     this.table(table).push(row); return row;
   }
   query(table: string) {
-    const filters: [string, unknown][] = [];
+    const filters: ((row: Row) => boolean)[] = []; let keys: string[] = [];
     let descending = false;
     let predicate: (row: Row) => boolean = () => true;
-    const selected = () => { const rows = this.table(table).filter((row) => filters.every(([key, value]) => field(row, key) === value) && predicate(row)); return descending ? rows.reverse() : rows; };
+    const selected = () => { const rows = this.table(table).filter(row => filters.every(test => test(row)) && predicate(row)).sort((a, b) => {
+      for (const key of keys) { const av = field(a, key); const bv = field(b, key); if (av !== bv) return (av as number | string) < (bv as number | string) ? -1 : 1; } return 0;
+    }); return descending ? rows.reverse() : rows; };
     const builder = {
-      withIndex: (_name: string, callback: (q: { eq(key: string, value: unknown): unknown }) => unknown) => {
-        const q: { eq(key: string, value: unknown): typeof q } = { eq: (key, value) => { filters.push([key, value]); return q; } };
+      withIndex: (name: string, callback: (q: { eq(key: string, value: unknown): unknown; gt(key: string, value: string | number): unknown }) => unknown) => {
+        const q = { eq: (key: string, value: unknown) => { filters.push(row => field(row, key) === value); return q; },
+          gt: (key: string, value: string | number) => { filters.push(row => (field(row, key) as typeof value) > value); return q; } };
+        keys = table === "runtimeGraphDependencies" && name === "by_upstream" ? ["dependentSourceId"]
+          : table === "runtimeGraphSources" ? name === "by_tenant_source" ? ["memorySpaceId"] : ["tenantId", "memorySpaceId", "sourceId"] : [];
         callback(q); return builder;
       },
       filter: (callback: (q: {
         field(name: string): string; eq(name: string, value: unknown): (row: Row) => boolean;
         and(...predicates: ((row: Row) => boolean)[]): (row: Row) => boolean;
+        or(...predicates: ((row: Row) => boolean)[]): (row: Row) => boolean;
+        gt(name: string, value: number): (row: Row) => boolean;
       }) => (row: Row) => boolean) => {
         predicate = callback({ field: (name) => name, eq: (name, value) => (row) => field(row, name) === value,
-          and: (...predicates) => (row) => predicates.every((test) => test(row)) }); return builder;
+          and: (...predicates) => (row) => predicates.every((test) => test(row)),
+          or: (...predicates) => (row) => predicates.some((test) => test(row)),
+          gt: (name, value) => row => (field(row, name) as number) > value }); return builder;
       },
       unique: async () => { const rows = selected(); if (rows.length > 1) throw new Error("Nonunique canonical index"); return rows[0] ?? null; },
       order: (direction: "asc" | "desc") => { descending = direction === "desc"; return builder; },
       collect: async () => [...selected()], take: async (limit: number) => selected().slice(0, limit),
+      paginate: async (opts: { cursor: string | null; numItems: number }) => {
+        const rows = selected(); const offset = Number(opts.cursor ?? 0);
+        return { page: rows.slice(offset, offset + opts.numItems), isDone: offset + opts.numItems >= rows.length, continueCursor: String(offset + opts.numItems) };
+      },
     };
     return builder;
   }

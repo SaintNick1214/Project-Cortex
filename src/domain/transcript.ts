@@ -20,7 +20,7 @@ export interface CutoffV1 {
   version: 1; conversationId: string; threadId: string; conversationEpoch: number;
   historyRevision: number; queueSequence: number; runDocId: string; attemptNumber: number;
   definitionVersion: number; definitionHash: string; anchor: MessagePin; messages: MessagePin[];
-  ingestionCutoff: { scopeIdentity: string; sequence: number; requiredStages: ("facts" | "vectors" | "graph")[] };
+  ingestionCutoff: { scopeIdentity: string; sequence: number; graphSequence?: number; requiredStages: ("facts" | "vectors" | "graph")[] };
   capturedAuthorityReference: import("../auth/verified.js").RuntimeAuthorityReference;
   completeness: "complete" | "incomplete";
 }

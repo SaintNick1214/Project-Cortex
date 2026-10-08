@@ -1,0 +1,81 @@
+{
+  "status": "FAIL_OR_UNKNOWN",
+  "version": 1,
+  "outcomes": [
+    {
+      "name": "silent-actual-first-run-neo4j",
+      "status": "PASS",
+      "connectorTimeoutMs": 500,
+      "issuedAtLeaseCurrent": true,
+      "held": {
+        "heldBytes": 987,
+        "matchedProjectionRun": true
+      },
+      "failed": {
+        "error": {
+          "name": "GraphConnectorError",
+          "code": "GRAPH_WRITE_FAILED_OR_UNKNOWN"
+        }
+      },
+      "elapsedMs": 1507.9146669999996,
+      "proxy": {
+        "state": "failed",
+        "events": [
+          {
+            "kind": "connected",
+            "elapsedMs": 21.580332999999882
+          },
+          {
+            "kind": "armed-after-connect",
+            "elapsedMs": 1120.604375
+          },
+          {
+            "kind": "run-held",
+            "elapsedMs": 1138.1514579999998,
+            "packetBytes": 975,
+            "marker": "CortexRuntimeGraphScope"
+          },
+          {
+            "kind": "failure",
+            "elapsedMs": 1632.5272909999999,
+            "code": "SOCKET_CLOSED_BEFORE_RELEASE"
+          }
+        ],
+        "heldBytes": 993,
+        "maximumHeldBytes": 262144,
+        "maximumDelayMs": 5000,
+        "failure": "SOCKET_CLOSED_BEFORE_RELEASE",
+        "rawPacketContentsRecorded": false,
+        "upstreamPort": 51389,
+        "credentialsRecorded": false
+      },
+      "alreadyIssuedOutcome": "unknown, no remote success claimed",
+      "retrySameDurableJob": true,
+      "retryLeaseVersion": 2,
+      "result": {
+        "version": 1,
+        "connectorId": "task11-neo4j",
+        "jobId": "graph:37566a56db3b6319ccfa08025a2b7b53f61527b3adfadff86106474d6a53022a",
+        "payloadHash": "be9a2c2fe2905cb5bfb5bad164cbac030364de4db714749930d958d604f9c429",
+        "tenantId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226",
+        "memorySpaceId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space",
+        "sourceId": "manual:[\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226\",\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space\",\"fact\",\"fact-1791495227207-6ezdphst5\"]",
+        "tenantEpoch": 1,
+        "memorySpaceEpoch": 1,
+        "revision": 14,
+        "state": "applied",
+        "currentRevision": 14
+      },
+      "modelCalls": 0
+    }
+  ],
+  "error": {
+    "name": "GraphConnectorError",
+    "message": "GRAPH_CONNECTION_UNAVAILABLE"
+  },
+  "noBlindRepeat": true,
+  "modelCalls": 0,
+  "cleanupErrors": [],
+  "ownedConnectionsClosed": true,
+  "elapsedMs": 7368.2697499999995
+}

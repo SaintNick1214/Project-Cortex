@@ -1,0 +1,48 @@
+(node:88805) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-product-independent-review1/connector-cleanup-independent1.test.ts
+  independent remote session ownership on real connector paths (controlled driver only)
+    ✕ closes the allocated session after beginTransaction rejects (8 ms)
+    ✕ closes the session independently when transaction close rejects after commit (1 ms)
+    ✓ returns an applied receipt and closes each owner once on the ordinary path
+
+  ● independent remote session ownership on real connector paths (controlled driver only) › closes the allocated session after beginTransaction rejects
+
+    expect(jest.fn()).toHaveBeenCalledTimes(expected)
+
+    Expected number of calls: 1
+    Received number of calls: 0
+
+      37 |     try {
+      38 |       await expect(f.connector.apply(f.work)).rejects.toThrow();
+    > 39 |       expect(f.projectionSession.close).toHaveBeenCalledTimes(1);
+         |                                         ^
+      40 |       expect(f.tx.run).not.toHaveBeenCalled();
+      41 |       expect(f.tx.close).not.toHaveBeenCalled();
+      42 |     } finally { await f.connector.close(); }
+
+      at Object.<anonymous> (_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-product-independent-review1/connector-cleanup-independent1.test.ts:39:41)
+
+  ● independent remote session ownership on real connector paths (controlled driver only) › closes the session independently when transaction close rejects after commit
+
+    expect(jest.fn()).toHaveBeenCalledTimes(expected)
+
+    Expected number of calls: 1
+    Received number of calls: 0
+
+      49 |       expect(f.tx.commit).toHaveBeenCalledTimes(1);
+      50 |       expect(f.tx.close).toHaveBeenCalledTimes(1);
+    > 51 |       expect(f.projectionSession.close).toHaveBeenCalledTimes(1);
+         |                                         ^
+      52 |     } finally { await f.connector.close(); }
+      53 |     expect(f.driver.close).toHaveBeenCalledTimes(1);
+      54 |   });
+
+      at Object.<anonymous> (_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-product-independent-review1/connector-cleanup-independent1.test.ts:51:41)
+
+Test Suites: 1 failed, 1 total
+Tests:       2 failed, 1 passed, 3 total
+Snapshots:   0 total
+Time:        1.835 s
+Ran all test suites within paths "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-product-independent-review1/connector-cleanup-independent1.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-product-independent-review1/connector-cleanup-run1.results.json

@@ -1,0 +1,130 @@
+{
+  "status": "ACTUAL_EXHAUSTION_PASS",
+  "version": 1,
+  "outcomes": [
+    {
+      "name": "native-max-three-exhaustion-neo4j",
+      "status": "PASS",
+      "steps": [
+        {
+          "attempt": 1,
+          "result": {
+            "kind": "projection",
+            "jobId": "graph:6ea68029800297160481ae37cb794f10bb9b99e09699ec25887972cf8f8c88f9",
+            "state": "failed",
+            "backendAcknowledged": true
+          },
+          "state": "pending",
+          "retryAt": 1791495363716,
+          "failureCode": "GRAPH_WRITE_FAILED"
+        },
+        {
+          "attempt": 2,
+          "result": {
+            "kind": "projection",
+            "jobId": "graph:6ea68029800297160481ae37cb794f10bb9b99e09699ec25887972cf8f8c88f9",
+            "state": "failed",
+            "backendAcknowledged": true
+          },
+          "state": "pending",
+          "retryAt": 1791495365118,
+          "failureCode": "GRAPH_WRITE_FAILED"
+        },
+        {
+          "attempt": 3,
+          "result": {
+            "kind": "projection",
+            "jobId": "graph:6ea68029800297160481ae37cb794f10bb9b99e09699ec25887972cf8f8c88f9",
+            "state": "failed",
+            "backendAcknowledged": true
+          },
+          "state": "dead_letter",
+          "retryAt": 1791495366670,
+          "failureCode": "GRAPH_WRITE_FAILED"
+        }
+      ],
+      "connectAttempts": 3,
+      "remoteApplyCalls": 0,
+      "fixtureFault": "pre-dispatch connector failure"
+    },
+    {
+      "name": "native-max-three-exhaustion-memgraph",
+      "status": "PASS",
+      "steps": [
+        {
+          "attempt": 1,
+          "result": {
+            "kind": "projection",
+            "jobId": "graph:683713c35ad39b204a716957f92f060f95efb5c68727542cf65ff2f9f08c241a",
+            "state": "failed",
+            "backendAcknowledged": true
+          },
+          "state": "pending",
+          "retryAt": 1791495367077,
+          "failureCode": "GRAPH_WRITE_FAILED"
+        },
+        {
+          "attempt": 2,
+          "result": {
+            "kind": "projection",
+            "jobId": "graph:683713c35ad39b204a716957f92f060f95efb5c68727542cf65ff2f9f08c241a",
+            "state": "failed",
+            "backendAcknowledged": true
+          },
+          "state": "pending",
+          "retryAt": 1791495368269,
+          "failureCode": "GRAPH_WRITE_FAILED"
+        },
+        {
+          "attempt": 3,
+          "result": {
+            "kind": "projection",
+            "jobId": "graph:683713c35ad39b204a716957f92f060f95efb5c68727542cf65ff2f9f08c241a",
+            "state": "failed",
+            "backendAcknowledged": true
+          },
+          "state": "dead_letter",
+          "retryAt": 1791495369955,
+          "failureCode": "GRAPH_WRITE_FAILED"
+        }
+      ],
+      "connectAttempts": 3,
+      "remoteApplyCalls": 0,
+      "fixtureFault": "pre-dispatch connector failure"
+    },
+    {
+      "name": "native-exhaustion-visible-failure-strict-freshness",
+      "status": {
+        "profileId": "cortex-text-small-1536-v1",
+        "revision": 15,
+        "selectedProfileId": "cortex-text-small-1536-v1",
+        "state": "dead_letter",
+        "version": 1
+      },
+      "progress": {
+        "cutoff": 15,
+        "progress": {
+          "available": true,
+          "complete": false,
+          "cutoff": 15,
+          "hole": {
+            "sequence": 15,
+            "state": "failed"
+          },
+          "indexedThrough": 14
+        },
+        "version": 1
+      },
+      "strictCode": "GRAPH_NOT_READY",
+      "completeClaimed": false,
+      "sourceId": "manual:[\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226\",\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space\",\"fact\",\"fact-1791495362150-z1zby5kr1\"]"
+    }
+  ],
+  "modelCalls": 0,
+  "noRemoteApplyOrUnknownSuccessClaim": true,
+  "maximumAttempts": 3,
+  "deadlineMs": 60000,
+  "cleanupErrors": [],
+  "ownedWorkersClosed": true,
+  "elapsedMs": 9190.998334
+}

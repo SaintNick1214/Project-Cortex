@@ -1,0 +1,550 @@
+{
+  "version": 1,
+  "createdAt": "2026-10-08T21:57:48.674420+00:00",
+  "task": 11,
+  "role": "bounded implementation-executor author",
+  "status": "AUTHOR_IMPLEMENTATION_AND_ACTUAL_BATCH_CLOSED_AWAITING_SINGLE_NONAUTHOR_VERDICT",
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "versions": {
+    "node": "v24.15.0",
+    "npm": "12.2.0"
+  },
+  "sourceWritersStopped": true,
+  "ownedSourcesUnchangedSinceReady4": true,
+  "files": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeGraph.ts",
+      "bytes": 54107,
+      "sha256": "0c371ab0766f218848a95efe8cea116d1a5781c47a486f5b8ee8267d46710401"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeGraphSchema.ts",
+      "bytes": 5219,
+      "sha256": "91b1d19ce44bb0d0a1ba5ada255fd1030197b152b079a46f7f1743f97482706a"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/src/domain/graph-projection.ts",
+      "bytes": 3395,
+      "sha256": "405d713de30affb1c9a0f7faf37d8178038b6eb7080bd0213584cd825af958e2"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/schema.ts",
+      "bytes": 55053,
+      "sha256": "4a5e993d14a55cb3852ddc5e43d66d7da8706d0d801efb8c6d1acebd7099f5d0"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryContext.ts",
+      "bytes": 16442,
+      "sha256": "a290c85f34bfeadbea1b7bdec8f3b4694c95f0b760ce4c5efca2b3dd72a40dc4"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAuth.ts",
+      "bytes": 25438,
+      "sha256": "1588a66efbbab47e1f507a39a4d2973a0833935cdc3c606dc39ca465dfacea83"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeBeliefs.ts",
+      "bytes": 7383,
+      "sha256": "1f1a91ca49840b392fbc3abee4f04efc6739284bcf5453e1eb870192d660184b"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeIngestion.ts",
+      "bytes": 51718,
+      "sha256": "66a36c2a04f014cbab825a3b1276a7f5ade6ba2817b00650a7f437b23dd0573b"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeIngestionSchema.ts",
+      "bytes": 4673,
+      "sha256": "cec8c9ab488c42bed1fb6b853ab4d01ce52669bde993dec08a4068500da93499"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeMemoryRepository.ts",
+      "bytes": 30656,
+      "sha256": "fa6cc1ac08ab7fec1aaf714d6f9353220c17bfb480a3b9bf790012c1c34d1881"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeTranscript.ts",
+      "bytes": 51089,
+      "sha256": "e1235ca2fd402e2019014fa613def6608a4707f10cf36013353c6dc1a7e5bc88"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeAgent.ts",
+      "bytes": 74492,
+      "sha256": "76f1cea82de264a735372527a22dab8354035eb280cdc2fb17a12e47f242396b"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/facts.ts",
+      "bytes": 58932,
+      "sha256": "326f4d07fac8ab473e23d77e74e045e36a9a2a347ff29eaf0f0585d4c7a2277c"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/src/domain/memory-context.ts",
+      "bytes": 7268,
+      "sha256": "85deb720acb6b5f4c8762006db815671ee3856417128d6f2b766745660851767"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/src/domain/transcript.ts",
+      "bytes": 6691,
+      "sha256": "41bc7b161b5366640523c551a1bdb50f559b4cb823864df7e68491f6f7cf979a"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeGraph/projection.test.ts",
+      "bytes": 32688,
+      "sha256": "90dd9614373276967eb3a47f9528d62a8b919f35bb68f62e51a42d37d7a9190e"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeTranscript/fixture.ts",
+      "bytes": 21724,
+      "sha256": "3c50e92ec79dc2490c600815b057efdebbe6bfce42f879464ef434e2b31c1b58"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeMemory/fixture.ts",
+      "bytes": 10385,
+      "sha256": "8936c2bb5e101c0d14e6a55f7dca37a0840453b4554d64c047e22cfde4cc778f"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtime/model-policy-admission.test.ts",
+      "bytes": 97123,
+      "sha256": "66b52191bc2730076e8fb2c9421f7d1b87bb59c8271e11d633e40d046d48c373"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/conversationShares.ts",
+      "bytes": 12086,
+      "sha256": "b4b1fec9429204c18d03edd8fea893b1bd4350b81e7e68fefa3f3a0cc43241f3"
+    }
+  ],
+  "candidateDigest": "5dd226a6fc89d3d80f9bc2e99e447d34d9dd2900b53c3d3bdd28cbef176be9ee",
+  "requirements": [
+    {
+      "requirement": "Actual graph runtime/network",
+      "state": "IMPLEMENTED_VERIFIED",
+      "implementation": "Node-only runtime/graph package with fixed Cypher adapter; verified service-JWT RPCs; no old SDK subscription worker in actions.",
+      "evidence": [
+        "final-native-report1.json runtimeNetwork",
+        "native-core1-outcomes.json",
+        "native-fresh-rpc1-outcomes.json"
+      ]
+    },
+    {
+      "requirement": "Scoped durable outbox, leases, dedup, retries/dead-letter and atomic fact commits",
+      "state": "IMPLEMENTED_VERIFIED",
+      "implementation": "Canonical manual/foreground/belief fact writes atomically enqueue full per-source current snapshots, including superseded sources. Finite3 attempts, scoped source versions/leases and exact-once receipts; optional payload/cardinality failures preserve canonical writes with explicit failed graph intent. Bounded keyset retirement, queued expected revision/current ancestry, and transitive/selective share cleanup.",
+      "evidence": [
+        "keyset-tests14.json",
+        "native-core1-outcomes.json",
+        "native-exhaustion2-outcomes.json",
+        "native-dependency3-outcomes.json"
+      ]
+    },
+    {
+      "requirement": "Deployed qualified trusted Node worker",
+      "state": "IMPLEMENTED_VERIFIED",
+      "implementation": "Authenticated scoped worker registration and Node transport can drain without app connection; declared SDK subpath is packed and enabled native type/deploy succeeds. Finite connector work/cleanup, no arbitrary Cypher/credential output.",
+      "evidence": [
+        "final-native-report1.json candidate/runtimeNetwork/independentWorker",
+        "native-core1-outcomes.json",
+        "native-timeout2-neo4j.json",
+        "native-timeout3-outcomes.json"
+      ]
+    },
+    {
+      "requirement": "Remote epoch/revision fences, tombstones, current expansion and separate graph lag/strict barrier",
+      "state": "IMPLEMENTED_VERIFIED",
+      "implementation": "Both services use scoped transactional remote epoch/source-revision fences. Core receipt and expansion validate current authority/source/profile/lease; time-sensitive pre-effect/delivery RPCs are fresh mutations. Current-authorized related facts are rehydrated separately; combined ingestion/direct-graph cutoff blocks pending/failed/retirement debt.",
+      "evidence": [
+        "native-late1-outcomes.json",
+        "native-late6-outcomes.json",
+        "native-revocation3-outcomes.json",
+        "native-fresh-rpc1-outcomes.json",
+        "native-dependency3-outcomes.json",
+        "native-expansion1-outcomes.json",
+        "native-profile2-outcomes.json",
+        "keyset-tests14.json"
+      ]
+    }
+  ],
+  "criteria": [
+    {
+      "criterion": "Actual Neo4j and Memgraph ordered/deduplicated projection after failure/retry",
+      "state": "VERIFIED",
+      "evidence": [
+        "native-core1-outcomes.json",
+        "native-late1-outcomes.json",
+        "native-late6-outcomes.json"
+      ]
+    },
+    {
+      "criterion": "Cross-tenant denial, stale issued writes cannot overwrite/restore, strict freshness",
+      "state": "VERIFIED",
+      "evidence": [
+        "native-core1-outcomes.json",
+        "native-expansion1-outcomes.json",
+        "native-profile2-outcomes.json",
+        "native-late6-outcomes.json",
+        "native-revocation3-outcomes.json",
+        "native-fresh-rpc1-outcomes.json"
+      ]
+    },
+    {
+      "criterion": "Exhausted retries explicitly fail and app disconnect does not prevent worker progress",
+      "state": "VERIFIED",
+      "evidence": [
+        "native-exhaustion2-outcomes.json",
+        "native-core1-outcomes.json",
+        "native-timeout3-outcomes.json"
+      ]
+    }
+  ],
+  "controlledChecks": {
+    "latestUniquePassedIdentities": 369,
+    "basis": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-graph-functional-v2-20261008/author/assertion-identities4.json",
+    "latestAffected": 218,
+    "latestAffectedArithmetic": "Graph34 + model-policy134 + repository36 + profiles14 =218. These replace matching prior identity rows; no overlap summed.",
+    "sdkTypesExit": 0,
+    "backendTypesExit": 0,
+    "scopedLintExit": 0,
+    "historicalTopLevelReport4Correction": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-graph-functional-v2-20261008/author/report4-accounting-correction1.json"
+  },
+  "nativeEvidence": {
+    "root": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-graph-functional-v2-20261008/native-actual",
+    "finalReport": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-graph-functional-v2-20261008/native-actual/final-native-report1.json",
+    "manifestSHA256": "bcd5cef050532263f160c578c797b85fd86b587d01d182b7ce28faaeca6b7f8e",
+    "sourceFileCount": 83,
+    "tableCount": 61,
+    "sourceApplicability": {
+      "current1": "native-core1: seven groups; native-expansion1: six related-neighbor/private-filter/profile groups before fixture policy-parser failure; native-late1: two newer revision arrival positives before deletion-oracle failure.",
+      "current2": "native-profile2, native-late6 source-tombstone, native-exhaustion2, Neo4j actual500ms timeout and ordinary pending completion. These branches remain applicable; unchanged groups were not repeated.",
+      "current3": "fresh mutation RPCs/real expired service grant within valid lease, three-level retirement after pagination repair, Memgraph3000ms actual held-RUN timeout, final revocation/scoped cleanup."
+    },
+    "modelCalls": 0,
+    "groups": [
+      {
+        "receipt": "native-core1-outcomes.json",
+        "status": "ACTUAL_CORE_PASS",
+        "groups": [
+          {
+            "name": "real-parent-mutation-fact-source-outbox-rollback",
+            "status": "PASS"
+          },
+          {
+            "name": "current-exact-service-worker-authority-negatives",
+            "status": "PASS"
+          },
+          {
+            "name": "native-manual-fact-atomic-two-connector-outbox",
+            "status": "PASS"
+          },
+          {
+            "name": "strict-pending-denial-and-application-disconnected",
+            "status": "PASS"
+          },
+          {
+            "name": "both-native-services-backend-retry-and-dedup",
+            "status": "PASS"
+          },
+          {
+            "name": "native-neo4j-expansion-core-current-rehydration",
+            "status": "PASS"
+          },
+          {
+            "name": "native-memgraph-expansion-core-current-rehydration",
+            "status": "PASS"
+          }
+        ],
+        "elapsedMs": 17555.893375
+      },
+      {
+        "receipt": "native-profile2-outcomes.json",
+        "status": "ACTUAL_PROFILE_DENIAL_PASS"
+      },
+      {
+        "receipt": "native-late6-outcomes.json",
+        "status": "ACTUAL_LATE_WRITE_PASS",
+        "groups": [
+          {
+            "name": "source-tombstone-neo4j",
+            "status": "PASS"
+          },
+          {
+            "name": "source-tombstone-memgraph",
+            "status": "PASS"
+          },
+          {
+            "name": "source-tombstone-current-reader-denied",
+            "status": "PASS"
+          }
+        ],
+        "elapsedMs": 9333.898292
+      },
+      {
+        "receipt": "native-exhaustion2-outcomes.json",
+        "status": "ACTUAL_EXHAUSTION_PASS",
+        "groups": [
+          {
+            "name": "native-max-three-exhaustion-neo4j",
+            "status": "PASS"
+          },
+          {
+            "name": "native-max-three-exhaustion-memgraph",
+            "status": "PASS"
+          },
+          {
+            "name": "native-exhaustion-visible-failure-strict-freshness",
+            "status": {
+              "profileId": "cortex-text-small-1536-v1",
+              "revision": 15,
+              "selectedProfileId": "cortex-text-small-1536-v1",
+              "state": "dead_letter",
+              "version": 1
+            }
+          }
+        ],
+        "elapsedMs": 9190.998334
+      },
+      {
+        "receipt": "native-dependency3-outcomes.json",
+        "status": "ACTUAL_DEPENDENCY_RETIREMENT_PASS",
+        "groups": [
+          {
+            "name": "committed-upstream-tombstone-transitive-intents-and-current-denial",
+            "status": "PASS"
+          },
+          {
+            "name": "native-transitive-remote-deletion-neo4j",
+            "status": "PASS"
+          },
+          {
+            "name": "native-transitive-remote-deletion-memgraph",
+            "status": "PASS"
+          }
+        ],
+        "elapsedMs": 7425.218167
+      },
+      {
+        "receipt": "native-fresh-rpc1-outcomes.json",
+        "status": "ACTUAL_FRESH_RPC_EXPIRY_PASS",
+        "groups": [
+          {
+            "name": "three-registered-fresh-mutation-ABI",
+            "status": "PASS"
+          },
+          {
+            "name": "actual-expired-grant-before-valid-and-invalid-lease",
+            "status": "PASS"
+          },
+          {
+            "name": "packed-worker-fresh-current-ABI-both-engines",
+            "status": "PASS"
+          }
+        ],
+        "elapsedMs": 15970.609083
+      },
+      {
+        "receipt": "native-timeout3-outcomes.json",
+        "status": "ACTUAL_TIMEOUT_PASS",
+        "groups": [
+          {
+            "name": "silent-actual-first-run-memgraph",
+            "status": "PASS"
+          }
+        ],
+        "elapsedMs": 9051.780958
+      },
+      {
+        "receipt": "native-revocation3-outcomes.json",
+        "status": "ACTUAL_REVOCATION_PASS",
+        "groups": [
+          {
+            "name": "owner-grant-revocation-neo4j",
+            "status": "PASS"
+          },
+          {
+            "name": "owner-grant-revocation-memgraph",
+            "status": "PASS"
+          },
+          {
+            "name": "revoked-owner-current-core-denied",
+            "status": "PASS"
+          },
+          {
+            "name": "separate-service-control-drains-revoked-data-neo4j",
+            "status": "PASS"
+          },
+          {
+            "name": "separate-service-control-drains-revoked-data-memgraph",
+            "status": "PASS"
+          }
+        ],
+        "elapsedMs": 16487.414582999998
+      },
+      {
+        "receipt": "native-retirement4-outcomes.json",
+        "status": "ACTUAL_SCOPED_RETIREMENT_RETAINED_RESOURCES_PASS",
+        "elapsedMs": 3785.683417
+      }
+    ],
+    "extraApplicablePositives": {
+      "neo4jSilentFirstRun": "native-timeout2-neo4j.json",
+      "relatedNeighborsAndPrivateFilter": "native-expansion1-outcomes.json",
+      "newerRevisionBothEngines": "native-late1-outcomes.json",
+      "emptyFactReplacement": "native-late3-outcomes.json"
+    }
+  },
+  "cleanup": {
+    "receipt": "native-retirement4-outcomes.json",
+    "status": "ACTUAL_SCOPED_RETIREMENT_RETAINED_RESOURCES_PASS",
+    "pendingJobs": 0,
+    "ownedWorkersAndClientsClosed": true,
+    "target": {
+      "projectId": 3174742,
+      "deploymentName": "formal-husky-914",
+      "status": "RETAINED_EXPLICITLY_FOR_TASK12_TASK13",
+      "production": false
+    },
+    "services": [
+      {
+        "engine": "neo4j",
+        "containerId": "4d6c5d3ed53d121e3296120f6aede30ebe117f39b775e61119f4ddd3c46997a8",
+        "uri": "bolt://127.0.0.1:51389",
+        "status": "RETAINED_FOR_TASK16_AND_FINAL_ADVERSARIAL",
+        "ownedDataContentCount": 0,
+        "tombstoneFenceCount": 12,
+        "selectedMetadataOwnershipVerified": true
+      },
+      {
+        "engine": "memgraph",
+        "containerId": "3e15a768c3ab8715aadcd781a95ff7b49d3323b0b810df7735e3f4d4c035eaa8",
+        "uri": "bolt://127.0.0.1:51397",
+        "status": "RETAINED_FOR_TASK16_AND_FINAL_ADVERSARIAL",
+        "ownedDataContentCount": 0,
+        "tombstoneFenceCount": 12,
+        "selectedMetadataOwnershipVerified": true
+      }
+    ],
+    "privateMetadata": [
+      {
+        "directory": "/Users/SaintNick/.codex/tmp/cortex-task10-embedding-native-fe3a2599d6fd",
+        "file": "credentials.json",
+        "mode": "0600",
+        "bodyPublished": false,
+        "retained": true
+      },
+      {
+        "directory": "/Users/SaintNick/.codex/tmp/cortex-task10-embedding-native-fe3a2599d6fd",
+        "file": "auth.json",
+        "mode": "0600",
+        "bodyPublished": false,
+        "retained": true
+      },
+      {
+        "directory": "/Users/SaintNick/.codex/tmp/cortex-task10-embedding-native-fe3a2599d6fd",
+        "file": "jwt-private.pem",
+        "mode": "0600",
+        "bodyPublished": false,
+        "retained": true
+      },
+      {
+        "directory": "/Users/SaintNick/.codex/tmp/cortex-task10-embedding-native-fe3a2599d6fd",
+        "file": "state.json",
+        "mode": "0600",
+        "bodyPublished": false,
+        "retained": true
+      },
+      {
+        "directory": "/Users/SaintNick/.codex/tmp/cortex-task11-native-7c3504e9",
+        "file": "state.json",
+        "mode": "0600",
+        "bodyPublished": false,
+        "retained": true
+      },
+      {
+        "directory": "/Users/SaintNick/.codex/tmp/cortex-task11-graph-6c189764d39e",
+        "file": "credentials.json",
+        "mode": "0600",
+        "bodyPublished": false,
+        "retained": true
+      }
+    ],
+    "unknownTenantLiability": 500000,
+    "liabilityResetOrRefund": false,
+    "finalGoalRetirementRequired": true,
+    "noTask12ScopeOrInferenceStarted": true
+  },
+  "preservedFailures": {
+    "author": "Reports1-4 and every earlier failed source/type/test receipt remain unchanged; report4 accounting addendum corrects only its copied368 field to369.",
+    "native": [
+      "native-expansion1: fixture JSON.stringify policy canonicalization error; corrected native-profile2, no model replay.",
+      "native-timeout1: owned child terminated exit143/unknown; read-only diagnosis proved driver/socket close while RUN and tx.close promises remained pending; independent I/O race repaired.",
+      "native-late1/3: literal tombstone oracle wrong for deleteFact canonical-source-preserving empty replacement; separate actual source tombstone tested.",
+      "native-late2: fixture payload lookup key mismatch; no mutation.",
+      "native-late4/5: wall-time/query-poll fixture expiry checks failed; no false expiry claim; fresh denied mutation was used in late6.",
+      "native-late3: real rich-scope GraphPayload validation error/atomic rollback, repaired in current2.",
+      "native-timeout2: Memgraph500ms readiness failed before silent RUN; distinct supported3000ms timeout case used, Neo4j500ms result retained.",
+      "native-retirement3: all scoped cleanup effects completed before a stale public Task10 managed-setup1 filename; retirement4 read-only closure uses actual managed-setup4 and repeats no cleanup effects.",
+      "native-dependency1: real recursive multiple-pagination platform error/atomic rollback; dependency2 parent committed on current3 then dependent STALE_SOURCE denial differed from literal FORBIDDEN oracle; dependency3 drains same committed tombstones without repeated parent."
+    ],
+    "independent": "Original dependent-retirement and platform-pagination reds remain in independent QA; unchanged successor oracles passed. No fabricated runtime red for statically caught branches."
+  },
+  "remaining": [
+    "One coherent non-author original11 verdict is reviewer-owned.",
+    "Explicitly retained native target and graph services require final-goal retirement; no deletion is claimed here."
+  ],
+  "evidence": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-graph-functional-v2-20261008/author/report4.json",
+      "bytes": 22592,
+      "sha256": "529deb00842e68f34127c2fd883da5e8ab208f1d1884c3096103334ac5379ff9"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-graph-functional-v2-20261008/author/report4-accounting-correction1.json",
+      "bytes": 1133,
+      "sha256": "afab0a0c237588f9d9108f46f9551ecec415e984672779d1a9b8c8ec3cef189e"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-graph-functional-v2-20261008/author/source-ready4.json",
+      "bytes": 9199,
+      "sha256": "e2bb4940aaf3e8eec449594d7c903022fa90c3660f25dbcd4cbc1465d0276634"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-graph-functional-v2-20261008/author/assertion-identities4.json",
+      "bytes": 188598,
+      "sha256": "af37d14ee5b378bf55efaea823ba4d2b157658fdf2dca5dca8205c7deb7dd242"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-graph-functional-v2-20261008/author/keyset-tests14.json",
+      "bytes": 110488,
+      "sha256": "f77cac847260a028d1d5cc25c742777e550f628e36dd09e07e58ce99b65b067c"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-graph-functional-v2-20261008/author/sdk-types10.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-graph-functional-v2-20261008/author/backend-types11.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-graph-functional-v2-20261008/author/lint7.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-graph-functional-v2-20261008/native-actual/final-native-report1.json",
+      "bytes": 11450,
+      "sha256": "e1eaa72a6dd64814c0560866c015918483c98d7070d1842dbe8ad8792efd4f68"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-graph-functional-v2-20261008/native-actual/final-native-report1.md",
+      "bytes": 943,
+      "sha256": "1ebe86eae11cf250886a6480ff06c1b55a1027d4cc552cf53a1e32364c2ad265"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-graph-functional-v2-20261008/native-actual/final-native-index1.json",
+      "bytes": 52733,
+      "sha256": "2a7dc1a0a7dcb7a6471360b9aa3612d2874506d02ad01662642c618e007a5c2a"
+    }
+  ],
+  "scopeBoundaries": "No Git/index/trackers/production/service/inference effects by this author; Root owns Node connector/worker/build wiring and native executor owns actual target/network effects. No Task12 implementation started."
+}

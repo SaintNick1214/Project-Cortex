@@ -2,6 +2,7 @@
 import { makeFunctionReference } from "convex/server";
 import type { FunctionReference } from "convex/server";
 import { ConvexError, v } from "convex/values";
+import { retireGraphSource } from "./runtimeGraph";
 import { internalAction, internalMutation, internalQuery, mutation, query } from "./_generated/server";
 import type { ActionCtx, MutationCtx, QueryCtx } from "./_generated/server";
 import type { Doc, Id } from "./_generated/dataModel";
@@ -136,6 +137,7 @@ export async function retireSourceEvents(ctx: MutationCtx, reference: RuntimeAut
 }
 /** Trusted parent deletion/edit already checked its own resource authority. Active rows only: retained history never grows cleanup cost. */
 export async function retireScopedSourceEvents(ctx: MutationCtx, scope: { tenantId: string; memorySpaceId: string }, sourceId: string, state: "superseded" | "tombstoned") {
+  await retireGraphSource(ctx, scope, sourceId);
   for (const eligibility of ["eligible", "awaiting_approval", "awaiting_tool"] as const) {
     const events = await ctx.db.query("runtimeIngestionEvents").withIndex("by_source_eligibility", q => q.eq("tenantId", scope.tenantId)
       .eq("memorySpaceId", scope.memorySpaceId).eq("lineage.sourceId", sourceId).eq("eligibility", eligibility)).take(2);

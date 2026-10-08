@@ -20,6 +20,11 @@
       "types": "./dist/client-runtime/index.d.ts",
       "import": "./dist/client-runtime/index.js",
       "require": "./dist/client-runtime/index.cjs"
+    },
+    "./runtime/graph": {
+      "types": "./dist/graph-runtime/index.d.ts",
+      "import": "./dist/graph-runtime/index.js",
+      "require": "./dist/graph-runtime/index.cjs"
     }
   },
   "files": [
@@ -63,7 +68,7 @@
     "provenance": true
   },
   "scripts": {
-    "build": "tsup src/index.ts --format cjs,esm --dts --clean && tsup src/client-runtime/index.ts --format cjs,esm --dts --out-dir dist/client-runtime && node scripts/backend/build-distribution.mjs",
+    "build": "tsup src/index.ts --format cjs,esm --dts --clean && tsup src/client-runtime/index.ts --format cjs,esm --dts --out-dir dist/client-runtime && tsup src/graph/runtime/index.ts --format cjs,esm --dts --out-dir dist/graph-runtime && node scripts/backend/build-distribution.mjs",
     "build:watch": "tsup src/index.ts --format cjs,esm --dts --watch",
     "clean": "rimraf dist",
     "prepublishOnly": "npm test && npm run build",

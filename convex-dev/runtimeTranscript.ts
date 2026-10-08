@@ -289,11 +289,12 @@ export async function captureCutoff(ctx: ReadCtx, conversation: ManagedConversat
   } while (true);
   if (complete && !inputPins.every(pin => pins.some(p => p.nativeMessageId === pin.nativeMessageId))) transcriptDenied("STALE_TRANSCRIPT");
   const ingestion = await readScopeCutoff(ctx, run.authorityReference);
+  const graph = await ctx.db.query("runtimeGraphScopes").withIndex("by_scope", q => q.eq("tenantId", conversation.tenantId).eq("memorySpaceId", conversation.memorySpaceId)).unique();
   const snapshot: CutoffV1 = { version: 1, conversationId: conversation.conversationId, threadId: conversation.threadId,
     conversationEpoch: conversation.epoch, historyRevision: executionRevision(conversation), queueSequence: run.queueSequence,
     runDocId: run._id, attemptNumber: run.attemptNumber + 1, definitionVersion: run.agentVersion, definitionHash: run.definitionHash,
     anchor, messages: pins.sort(comparePosition), ingestionCutoff: { scopeIdentity: canonicalModelJson([conversation.tenantId, conversation.memorySpaceId]),
-      sequence: ingestion.sequence, requiredStages }, capturedAuthorityReference: run.authorityReference, completeness: complete ? "complete" : "incomplete" };
+      sequence: ingestion.sequence, graphSequence: graph?.sequence ?? 0, requiredStages }, capturedAuthorityReference: run.authorityReference, completeness: complete ? "complete" : "incomplete" };
   if (utf8Bytes(canonicalModelJson(snapshot)) > 180_000) transcriptDenied("CONTEXT_INCOMPLETE");
   return snapshot;
 }
@@ -458,6 +459,8 @@ export async function deleteManagedConversation(ctx: MutationCtx, args: { conver
   if (conversation.manualWriteLocked) transcriptDenied("TRANSCRIPT_LOCKED");
   const now = Date.now();
   await ctx.db.patch("runtimeConversations", conversation._id, { tombstonedAt: now, epoch: conversation.epoch + 1, historyRevision: conversation.historyRevision + 1, executionRevision: executionRevision(conversation) + 1, deletionActorReference: reference, updatedAt: now });
+  await ctx.runMutation(makeFunctionReference<"mutation">("runtimeGraph:retireAuthority"), { tenantId: conversation.tenantId,
+    memorySpaceId: conversation.memorySpaceId, conversationId: conversation.conversationId });
   await ctx.scheduler.runAfter(0, cleanupReference, { reference, conversationId: conversation.conversationId,
     epoch: conversation.epoch + 1, phase: "messages", cursor: null });
   // Visibility/tombstones commit now; physical component deletion is explicitly paged work.

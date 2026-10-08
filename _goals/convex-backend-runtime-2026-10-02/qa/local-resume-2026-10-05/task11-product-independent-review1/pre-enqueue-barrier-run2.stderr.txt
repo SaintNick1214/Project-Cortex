@@ -1,0 +1,60 @@
+(node:92577) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-product-independent-review1/pre-enqueue-barrier-independent2.test.ts
+  ✕ graph-only strict waits for an eligible captured source whose fact job has not created graph intent yet (17 ms)
+  ✕ an explicitly ineligible captured source does not fabricate a graph-stage dependency (5 ms)
+
+  ● graph-only strict waits for an eligible captured source whose fact job has not created graph intent yet
+
+    ConvexError: {"version":1,"code":"POLICY_DENIED","message":"Agent definition control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      20 | export async function executableRegistryHash(): Promise<string> { return await semanticHash(canonicalModelJson(EXECUTABLE_REGISTRY)); }
+      21 | function denied(code = "POLICY_DENIED"): never {
+    > 22 |   throw new ConvexError({ version: 1, code, message: "Agent definition control failed.", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      23 | }
+      24 | function unicode(s: string): boolean { try { assertUnicode(s); return true; } catch { return false; } }
+      25 | const text = z.string().min(1).max(256).refine(s => s.trim() === s && unicode(s));
+
+      at denied (convex-dev/agentDefinitions.ts:22:9)
+      at narrowPolicies (convex-dev/agentDefinitions.ts:90:15)
+      at Function.handler [as _handler] (convex-dev/agentDefinitions.ts:159:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:121:10)
+      at tests/unit/runtimeTranscript/fixture.ts:184:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:180:18)
+      at call (tests/unit/runtimeTranscript/fixture.ts:184:77)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:189:21)
+      at fixture (_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-product-independent-review1/pre-enqueue-barrier-independent2.test.ts:11:13)
+      at decision (_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-product-independent-review1/pre-enqueue-barrier-independent2.test.ts:21:13)
+      at Object.<anonymous> (_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-product-independent-review1/pre-enqueue-barrier-independent2.test.ts:27:11)
+
+  ● an explicitly ineligible captured source does not fabricate a graph-stage dependency
+
+    ConvexError: {"version":1,"code":"POLICY_DENIED","message":"Agent definition control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      20 | export async function executableRegistryHash(): Promise<string> { return await semanticHash(canonicalModelJson(EXECUTABLE_REGISTRY)); }
+      21 | function denied(code = "POLICY_DENIED"): never {
+    > 22 |   throw new ConvexError({ version: 1, code, message: "Agent definition control failed.", retryable: false, outcome: "not_dispatched" });
+         |         ^
+      23 | }
+      24 | function unicode(s: string): boolean { try { assertUnicode(s); return true; } catch { return false; } }
+      25 | const text = z.string().min(1).max(256).refine(s => s.trim() === s && unicode(s));
+
+      at denied (convex-dev/agentDefinitions.ts:22:9)
+      at narrowPolicies (convex-dev/agentDefinitions.ts:90:15)
+      at Function.handler [as _handler] (convex-dev/agentDefinitions.ts:159:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:121:10)
+      at tests/unit/runtimeTranscript/fixture.ts:184:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:180:18)
+      at call (tests/unit/runtimeTranscript/fixture.ts:184:77)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:189:21)
+      at fixture (_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-product-independent-review1/pre-enqueue-barrier-independent2.test.ts:11:13)
+      at decision (_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-product-independent-review1/pre-enqueue-barrier-independent2.test.ts:21:13)
+      at Object.<anonymous> (_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-product-independent-review1/pre-enqueue-barrier-independent2.test.ts:30:11)
+
+Test Suites: 1 failed, 1 total
+Tests:       2 failed, 2 total
+Snapshots:   0 total
+Time:        3.343 s
+Ran all test suites within paths "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-product-independent-review1/pre-enqueue-barrier-independent2.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-product-independent-review1/pre-enqueue-barrier-run2.results.json

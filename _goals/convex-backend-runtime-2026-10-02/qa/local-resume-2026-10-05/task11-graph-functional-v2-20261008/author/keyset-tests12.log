@@ -1,0 +1,195 @@
+  console.error
+    ◇ injected env (0) from .env.test
+
+      13 | import dotenv from "dotenv";
+      14 | import { resolve } from "path";
+    > 15 |
+         | ^
+      16 | // Load .env.test first (test defaults)
+      17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+      18 |
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:15:8
+
+  console.error
+    ◇ injected env (0) from .env.local
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+  console.log
+    
+    🧪 Testing against LOCAL Convex: http://127.0.0.1:1
+
+      at tests/env.ts:35:13
+
+  console.log
+       Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:36:13
+
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:121:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:122:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:123:13
+
+(node:29794) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeGraph/projection.test.ts (7.449 s)
+  scoped durable graph projection
+    ✓ real derived commit enqueues exact active snapshot; replay is one intent and receipt (33 ms)
+    ✓ parent failure rolls back fact, processing receipt, graph intent and scheduling (16 ms)
+    ✓ noJWT cannot claim configured worker jobs (8 ms)
+    ✓ user-admin cannot claim configured worker jobs (10 ms)
+    ✓ foreign-service cannot claim configured worker jobs (7 ms)
+    ✓ cross-tenant selector cannot borrow the configured service grant (8 ms)
+    ✓ each enabled connector must acknowledge; a live lease is not reclaimed (19 ms)
+    ✓ fresh pre-effect mutation denies time-only source grant expiry within a live worker lease (14 ms)
+    ✓ fresh expansion pre-effect mutation retains time-only authority expiry checks (19 ms)
+    ✓ fresh expansion delivery mutation retains time-only authority expiry checks (28 ms)
+    ✓ expired final worker lease becomes explicit failed freshness without any synced receipt (13 ms)
+    ✓ known failures have bounded backoff and end dead-letter rather than synced (22 ms)
+    ✓ revision fences old already-issued work and enqueues a later authoritative fence (14 ms)
+    ✓ tombstone fences old already-issued work and enqueues a later authoritative fence (10 ms)
+    ✓ fact-tombstone fences old already-issued work and enqueues a later authoritative fence (11 ms)
+    ✓ grant fences old already-issued work and enqueues a later authoritative fence (9 ms)
+    ✓ scope fences old already-issued work and enqueues a later authoritative fence (10 ms)
+    ✓ graph-only strict barrier includes upstream eligible source before any outbox exists (6 ms)
+    ✓ direct-fact graph debt blocks a zero-ingestion strict graph cutoff until acknowledgement (15 ms)
+    ✓ public manual store/edit/delete write the canonical fact and graph snapshot together (21 ms)
+    ✓ retained source history does not count against the current active snapshot (13 ms)
+    ✓ optional graph payload failure preserves canonical text (configured=false) (7 ms)
+    ✓ optional graph payload failure preserves canonical text (configured=true) (15 ms)
+    ✓ canonical fact cardinality is preserved with an explicit failed graph intent (16 ms)
+    ✓ upstream deletion retires transitive production tool witness projections (21 ms)
+    ✓ rich caller scopes are projected before native schema writes and scheduled refresh (14 ms)
+    ✓ bounded transitive cleanup fences queued old generations and leaves unrelated current sources intact (149 ms)
+    ✓ authority keysets visit repeated source IDs across scopes and preserve unrelated grants (161 ms)
+    ✓ selective share revoke retires consumed graph evidence but preserves unrelated owner projections (19 ms)
+    ✓ selective share expiry retires consumed graph evidence but preserves unrelated owner projections (15 ms)
+    ✓ invalid trusted receipt cannot advance freshness (12 ms)
+    ✓ large-profile belief/manual snapshots do not silently revert to small (11 ms)
+    ✓ expansion is reachable through service leases and freshly hydrates canonical authorized facts (24 ms)
+    ✓ no connector graph-only barrier remains explicitly unavailable (7 ms)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     7.4s | 34/34 passed | /tests/unit/runtimeGraph/projection.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.16s ( 2.1%) - scoped durable graph projection authority keysets visit repeated source IDs across scopes and preserve unrelated grants
+    /tests/unit/runtimeGraph/projection.test.ts
+
+ 2. [32m✓[0m    0.15s ( 2.0%) - scoped durable graph projection bounded transitive cleanup fences queued old generations and leaves unrelated current sources intact
+    /tests/unit/runtimeGraph/projection.test.ts
+
+ 3. [32m✓[0m    0.03s ( 0.4%) - scoped durable graph projection real derived commit enqueues exact active snapshot; replay is one intent and receipt
+    /tests/unit/runtimeGraph/projection.test.ts
+
+ 4. [32m✓[0m    0.03s ( 0.4%) - scoped durable graph projection fresh expansion delivery mutation retains time-only authority expiry checks
+    /tests/unit/runtimeGraph/projection.test.ts
+
+ 5. [32m✓[0m    0.02s ( 0.3%) - scoped durable graph projection expansion is reachable through service leases and freshly hydrates canonical authorized facts
+    /tests/unit/runtimeGraph/projection.test.ts
+
+ 6. [32m✓[0m    0.02s ( 0.3%) - scoped durable graph projection known failures have bounded backoff and end dead-letter rather than synced
+    /tests/unit/runtimeGraph/projection.test.ts
+
+ 7. [32m✓[0m    0.02s ( 0.3%) - scoped durable graph projection public manual store/edit/delete write the canonical fact and graph snapshot together
+    /tests/unit/runtimeGraph/projection.test.ts
+
+ 8. [32m✓[0m    0.02s ( 0.3%) - scoped durable graph projection upstream deletion retires transitive production tool witness projections
+    /tests/unit/runtimeGraph/projection.test.ts
+
+ 9. [32m✓[0m    0.02s ( 0.2%) - scoped durable graph projection each enabled connector must acknowledge; a live lease is not reclaimed
+    /tests/unit/runtimeGraph/projection.test.ts
+
+10. [32m✓[0m    0.02s ( 0.2%) - scoped durable graph projection fresh expansion pre-effect mutation retains time-only authority expiry checks
+    /tests/unit/runtimeGraph/projection.test.ts
+
+11. [32m✓[0m    0.02s ( 0.2%) - scoped durable graph projection selective share revoke retires consumed graph evidence but preserves unrelated owner projections
+    /tests/unit/runtimeGraph/projection.test.ts
+
+12. [32m✓[0m    0.02s ( 0.2%) - scoped durable graph projection parent failure rolls back fact, processing receipt, graph intent and scheduling
+    /tests/unit/runtimeGraph/projection.test.ts
+
+13. [32m✓[0m    0.02s ( 0.2%) - scoped durable graph projection canonical fact cardinality is preserved with an explicit failed graph intent
+    /tests/unit/runtimeGraph/projection.test.ts
+
+14. [32m✓[0m    0.01s ( 0.2%) - scoped durable graph projection direct-fact graph debt blocks a zero-ingestion strict graph cutoff until acknowledgement
+    /tests/unit/runtimeGraph/projection.test.ts
+
+15. [32m✓[0m    0.01s ( 0.2%) - scoped durable graph projection optional graph payload failure preserves canonical text (configured=true)
+    /tests/unit/runtimeGraph/projection.test.ts
+
+16. [32m✓[0m    0.01s ( 0.2%) - scoped durable graph projection selective share expiry retires consumed graph evidence but preserves unrelated owner projections
+    /tests/unit/runtimeGraph/projection.test.ts
+
+17. [32m✓[0m    0.01s ( 0.2%) - scoped durable graph projection fresh pre-effect mutation denies time-only source grant expiry within a live worker lease
+    /tests/unit/runtimeGraph/projection.test.ts
+
+18. [32m✓[0m    0.01s ( 0.2%) - scoped durable graph projection revision fences old already-issued work and enqueues a later authoritative fence
+    /tests/unit/runtimeGraph/projection.test.ts
+
+19. [32m✓[0m    0.01s ( 0.2%) - scoped durable graph projection rich caller scopes are projected before native schema writes and scheduled refresh
+    /tests/unit/runtimeGraph/projection.test.ts
+
+20. [32m✓[0m    0.01s ( 0.2%) - scoped durable graph projection expired final worker lease becomes explicit failed freshness without any synced receipt
+    /tests/unit/runtimeGraph/projection.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.65s (8.5% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      7.62s
+  Test suites:        1
+  Individual tests:   34
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 passed, 1 total
+Tests:       34 passed, 34 total
+Snapshots:   0 total
+Time:        7.621 s, estimated 14 s
+Ran all test suites within paths "tests/unit/runtimeGraph/projection.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-graph-functional-v2-20261008/author/keyset-tests12.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

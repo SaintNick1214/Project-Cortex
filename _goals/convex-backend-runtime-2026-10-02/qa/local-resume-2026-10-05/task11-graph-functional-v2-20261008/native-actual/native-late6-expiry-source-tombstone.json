@@ -1,0 +1,31 @@
+{
+  "expiryProof": [
+    {
+      "engine": "neo4j",
+      "lease": {
+        "tenantId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226",
+        "memorySpaceId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space",
+        "connectorId": "task11-neo4j",
+        "jobId": "graph:d45c38c9ca8f61e427eb2f6892bf71dbc03899447ccf6d2fdf3618c14baac14b",
+        "workerId": "task11-old-source-tombstone-neo4j",
+        "leaseVersion": 1
+      },
+      "code": "GRAPH_LEASE_EXPIRED",
+      "monotonicHoldMs": 3000
+    },
+    {
+      "engine": "memgraph",
+      "lease": {
+        "tenantId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226",
+        "memorySpaceId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space",
+        "connectorId": "task11-memgraph",
+        "jobId": "graph:36454dfb93dbf2fdfd6b0c8e7c73466325383e63db70cdb757e5fe28fec4461a",
+        "workerId": "task11-old-source-tombstone-memgraph",
+        "leaseVersion": 1
+      },
+      "code": "GRAPH_LEASE_EXPIRED",
+      "monotonicHoldMs": 3000
+    }
+  ],
+  "expectedDeniedMutations": true
+}

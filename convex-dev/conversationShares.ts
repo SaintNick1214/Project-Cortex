@@ -1,10 +1,13 @@
 /** Authenticated managed shares. A share never supplies JWT authority or widens scope. */
 import { ConvexError, v } from "convex/values";
+import { makeFunctionReference } from "convex/server";
 import { mutation, query, internalMutation } from "./_generated/server";
 import { internalUnavailable } from "./runtimeUnavailableAuth";
 import { bindDataActor, dataAuthorityReference, managedConversationAccess, requireDataAuthority } from "./runtimeDataAuth";
 import { checkConversation, conversationById, requireConversation, singleTranscript, transcriptDenied } from "./runtimeTranscript";
 import { boundedIdentifier } from "../src/domain/transcript";
+const reconcileGraph = makeFunctionReference<"mutation", { tenantId: string; memorySpaceId: string }>("runtimeGraph:reconcileScoped");
+const expireGraph = makeFunctionReference<"mutation", { tenantId: string; memorySpaceId: string; shareId: string; expiresAt: number }>("conversationShares:expireGraphShare");
 
 async function shareById(ctx: Pick<import("./_generated/server").QueryCtx, "db">, reference: import("../src/auth/verified").RuntimeAuthorityReference, shareId: string) {
   return singleTranscript(await ctx.db.query("runtimeConversationShares").withIndex("by_scoped_id", q => q.eq("tenantId", reference.tenantId).eq("memorySpaceId", reference.memorySpaceId!).eq("shareId", shareId)).take(2));
@@ -69,6 +72,8 @@ export const create = mutation({ args: {
     shareId, conversationId: conversation.conversationId, grantType: args.grantType, grantedTo, permissions: args.permissions,
     state: "active", actorReference: reference, ...(args.expiresAt === undefined ? {} : { expiresAt: args.expiresAt }),
     ...(args.maxViews === undefined ? {} : { maxViews: args.maxViews }), viewCount: 0, createdAt: Date.now() });
+  if (args.expiresAt !== undefined) await ctx.scheduler.runAfter(Math.min(86_400_000, args.expiresAt - Date.now()), expireGraph,
+    { tenantId: actor.tenantId, memorySpaceId: actor.memorySpaceId, shareId, expiresAt: args.expiresAt });
   return view((await ctx.db.get("runtimeConversationShares", id))!);
 } });
 
@@ -83,8 +88,22 @@ export const revoke = mutation({ args: {
   const row = await shareById(ctx, reference, args.shareId); if (!row) transcriptDenied();
   const conversation = await conversationById(ctx, reference, row.conversationId); if (!conversation) transcriptDenied();
   await checkConversation(ctx, reference, conversation, "admin");
-  if (row.revokedAt === undefined) await ctx.db.patch("runtimeConversationShares", row._id, { state: "revoked", revokedAt: Date.now(), revocationActor: reference });
+  if (row.revokedAt === undefined) {
+    await ctx.db.patch("runtimeConversationShares", row._id, { state: "revoked", revokedAt: Date.now(), revocationActor: reference });
+    await ctx.runMutation(reconcileGraph, { tenantId: actor.tenantId, memorySpaceId: actor.memorySpaceId });
+  }
   return view((await ctx.db.get("runtimeConversationShares", row._id))!);
+} });
+
+/** Owned expiration scheduling rechecks exact immutable share identity; it
+ * only reconciles graph cleanup, without extending a share or using its grant. */
+export const expireGraphShare = internalMutation({ args: { tenantId: v.string(), memorySpaceId: v.string(), shareId: v.string(), expiresAt: v.number() }, handler: async (ctx, args) => {
+  const row = await ctx.db.query("runtimeConversationShares").withIndex("by_scoped_id", q => q.eq("tenantId", args.tenantId)
+    .eq("memorySpaceId", args.memorySpaceId).eq("shareId", args.shareId)).unique();
+  if (!row || row.revokedAt !== undefined || row.expiresAt !== args.expiresAt) return null;
+  if (args.expiresAt > Date.now()) await ctx.scheduler.runAfter(Math.min(86_400_000, args.expiresAt - Date.now()), expireGraph, args);
+  else await ctx.runMutation(reconcileGraph, { tenantId: args.tenantId, memorySpaceId: args.memorySpaceId });
+  return null;
 } });
 
 export const incrementViewCount = internalMutation({ args: {

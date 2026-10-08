@@ -1,0 +1,105 @@
+{
+  "name": "newer-revision-memgraph",
+  "status": "PASS",
+  "heldFirstActualProjectionRun": {
+    "heldBytes": 987,
+    "matchedProjectionRun": true
+  },
+  "oldLease": {
+    "tenantId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226",
+    "memorySpaceId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space",
+    "connectorId": "task11-memgraph",
+    "jobId": "graph:2ba0ed0061a33ad7edc09c976b3cd90667c43d7b24a8c062c3e034d8e39f635b",
+    "workerId": "task11-old-newer-revision-memgraph",
+    "leaseVersion": 1
+  },
+  "oldExpiresAt": 1791493726133,
+  "oldRevision": 5,
+  "newer": {
+    "lease": {
+      "tenantId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226",
+      "memorySpaceId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space",
+      "connectorId": "task11-memgraph",
+      "jobId": "graph:115fd1485065739cf3d96fa75b18c31689562c493364c4d9606ac6526a9ed329",
+      "workerId": "task11-new-newer-revision-memgraph",
+      "leaseVersion": 1
+    },
+    "revision": 6,
+    "receipt": {
+      "version": 1,
+      "connectorId": "task11-memgraph",
+      "jobId": "graph:115fd1485065739cf3d96fa75b18c31689562c493364c4d9606ac6526a9ed329",
+      "payloadHash": "ebca36dc80639871992a63d81aa8623dc5c58d75993582e430bade8939247c1c",
+      "tenantId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226",
+      "memorySpaceId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space",
+      "sourceId": "manual:[\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226\",\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space\",\"fact\",\"fact-1791493201284-aons8vrae\"]",
+      "tenantEpoch": 1,
+      "memorySpaceEpoch": 1,
+      "revision": 6,
+      "state": "applied",
+      "currentRevision": 6
+    }
+  },
+  "late": {
+    "error": {
+      "code": "GRAPH_WRITE_FAILED_OR_UNKNOWN",
+      "name": "GraphConnectorError"
+    }
+  },
+  "currentDenied": "GRAPH_LEASE_EXPIRED",
+  "finalFence": {
+    "tenantEpoch": 1,
+    "memorySpaceEpoch": 1,
+    "revision": 6,
+    "leaseVersion": 2,
+    "payloadHash": "ebca36dc80639871992a63d81aa8623dc5c58d75993582e430bade8939247c1c",
+    "tombstoned": false,
+    "profileId": "cortex-text-small-1536-v1"
+  },
+  "remoteContentCounts": [
+    {
+      "labels": [
+        "CortexRuntimeGraphFact"
+      ],
+      "count": 1
+    },
+    {
+      "labels": [
+        "CortexRuntimeGraphEntity"
+      ],
+      "count": 2
+    }
+  ],
+  "delay": {
+    "state": "released",
+    "events": [
+      {
+        "kind": "connected",
+        "elapsedMs": 1.7236659999998665
+      },
+      {
+        "kind": "armed-after-connect",
+        "elapsedMs": 652.4444579999999
+      },
+      {
+        "kind": "run-held",
+        "elapsedMs": 654.4937909999999,
+        "packetBytes": 975,
+        "marker": "CortexRuntimeGraphScope"
+      },
+      {
+        "kind": "released",
+        "elapsedMs": 5342.806625,
+        "heldBytes": 987
+      }
+    ],
+    "heldBytes": 987,
+    "maximumHeldBytes": 262144,
+    "maximumDelayMs": 20000,
+    "failure": null,
+    "rawPacketContentsRecorded": false,
+    "upstreamPort": 51397,
+    "credentialsRecorded": false
+  },
+  "rawPacketsRecorded": false
+}

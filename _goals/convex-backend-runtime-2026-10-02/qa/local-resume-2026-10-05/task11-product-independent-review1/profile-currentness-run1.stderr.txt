@@ -1,0 +1,43 @@
+(node:90358) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-product-independent-review1/profile-currentness-independent1.test.ts
+  ✕ a current large source replacement cannot retain strict small graph completeness from the deleted generation (6 ms)
+
+  ● a current large source replacement cannot retain strict small graph completeness from the deleted generation
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+    @@ -1,7 +1,7 @@
+      Object {
+    -   "operationKey": "embedding.query",
+    +   "operationKey": "embedding.memory",
+        "reference": Object {
+          "grantId": "runtimeAuthGrants:5",
+          "grantVersion": 1,
+          "membershipId": "runtimeAuthMemberships:2",
+          "membershipVersion": 1,
+
+      36 |     scheduler: { runAfter: async () => 'scheduled' }, runQuery: async (ref: unknown, args: unknown) => {
+      37 |       expect(getFunctionName(ref as Parameters<typeof getFunctionName>[0])).toBe('runtimeModelPolicy:embeddingProfile');
+    > 38 |       expect(args).toEqual({ reference, operationKey: 'embedding.query' }); return LARGE_EMBEDDING_PROFILE;
+         |                    ^
+      39 |     } } as unknown as MutationCtx;
+      40 |   // Controlled trusted remote receipt models the connector's full source replacement, not a service qualification.
+      41 |   await invoke(graph.complete, ctx, { tenantId: 't', memorySpaceId: 's', connectorId: 'c', jobId: 'j', workerId: 'w', leaseVersion: 1,
+
+      at Object.runQuery (_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-product-independent-review1/profile-currentness-independent1.test.ts:38:20)
+      at selectedProfile (convex-dev/runtimeGraph.ts:28:14)
+      at requireJob (convex-dev/runtimeGraph.ts:210:34)
+      at Function.handler [as _handler] (convex-dev/runtimeGraph.ts:258:68)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:120:10)
+      at Object.<anonymous> (_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-product-independent-review1/profile-currentness-independent1.test.ts:41:3)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 1 total
+Snapshots:   0 total
+Time:        3.402 s
+Ran all test suites within paths "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-product-independent-review1/profile-currentness-independent1.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-product-independent-review1/profile-currentness-run1.results.json

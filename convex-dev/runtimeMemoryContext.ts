@@ -15,6 +15,7 @@ import { runtimeAuthorityReference } from "./runtimeAuthSchema";
 import { ConvexMemoryRepository, isMemoryResourceDenied } from "./runtimeMemoryRepository";
 import { dataAuthorityReference, requireDataAuthority, managedConversationAccess } from "./runtimeDataAuth";
 import { ingestionDenied, readEventCurrent, readScopeCutoff } from "./runtimeIngestion";
+import { readGraphProgress, refreshGraphWatermarks } from "./runtimeGraph";
 
 type ReadCtx = Pick<QueryCtx, "db" | "runQuery">;
 type Event = Doc<"runtimeIngestionEvents">;
@@ -25,9 +26,15 @@ const refreshRef = makeFunctionReference<"mutation", { reference: RuntimeAuthori
 function boundedCutoff(value: number): void {
   if (!Number.isSafeInteger(value) || value < 0) ingestionDenied("INVALID_INPUT");
 }
-function state(event: Event, stage: "facts" | "vectors", profileId = DEFAULT_EMBEDDING_PROFILE.profileId): WatermarkState {
+function state(event: Event, stage: "facts" | "vectors" | "graph", profileId = DEFAULT_EMBEDDING_PROFILE.profileId): WatermarkState {
   if (skipsIngestion(event.eligibility)) return "skipped";
   if (event.eligibility !== "eligible") return "pending";
+  if (stage === "graph") {
+    if (event.lineage.role === "assistant") return "skipped";
+    if (["failed", "unknown", "dead_letter"].includes(event.factsState)) return "failed";
+    if (event.graphState === "complete" && event.graphProfilesComplete?.includes(profileId)) return "complete";
+    return event.graphState === "failed" ? "failed" : "pending";
+  }
   const summary = stage === "facts" ? event.factsState : event.vectorsState;
   if (stage === "vectors" && summary === "complete" && !(event.vectorProfilesComplete ?? [event.profile.profileId]).includes(profileId)) return "pending";
   if (summary === "complete" || summary === "skipped") return summary;
@@ -49,37 +56,56 @@ async function withinConversationBoundary(ctx: ReadCtx, event: Event, boundary?:
   } else if (!event.runId) return false;
   return true;
 }
-async function progress(ctx: ReadCtx, reference: RuntimeAuthorityReference, stage: "facts" | "vectors", cutoff: number, through: number, profileId = DEFAULT_EMBEDDING_PROFILE.profileId) {
+async function progress(ctx: ReadCtx, reference: RuntimeAuthorityReference, stage: "facts" | "vectors" | "graph", cutoff: number, through: number, profileId = DEFAULT_EMBEDDING_PROFILE.profileId) {
   if (through >= cutoff) return contiguousWatermark([], cutoff, through);
   // Each stage has its own cursor. A facts hole must not strand vector progress.
   const events = await ctx.db.query("runtimeIngestionEvents").withIndex("by_scope_sequence", q => q.eq("tenantId", reference.tenantId)
     .eq("memorySpaceId", reference.memorySpaceId!).gt("sequence", through).lte("sequence", cutoff)).take(256);
   return contiguousWatermark(events.map(event => ({ sequence: event.sequence, state: state(event, stage, profileId) })), cutoff, through);
 }
-export async function readStageProgress(ctx: ReadCtx, reference: RuntimeAuthorityReference, cutoff: number, runBudgetId?: string): Promise<Partial<Record<MemoryStage, StageWatermark>>> {
+export async function readStageProgress(ctx: ReadCtx, reference: RuntimeAuthorityReference, cutoff: number, runBudgetId?: string, graphCutoff?: number): Promise<Partial<Record<MemoryStage, StageWatermark>>> {
   boundedCutoff(cutoff); const scope = await readScopeCutoff(ctx, reference);
   if (cutoff > scope.sequence) ingestionDenied("INVALID_INPUT");
   const profile = await readCurrentEmbeddingProfile(ctx, reference, "embedding.query", runBudgetId);
+  const graphScope = await ctx.db.query("runtimeGraphScopes").withIndex("by_scope", q => q.eq("tenantId", reference.tenantId).eq("memorySpaceId", reference.memorySpaceId!)).unique();
+  const graphSequence = graphCutoff ?? graphScope?.sequence ?? 0; boundedCutoff(graphSequence);
+  if (graphSequence > (graphScope?.sequence ?? 0)) ingestionDenied("INVALID_INPUT");
+  const graph = await readGraphProgress(ctx, reference, graphSequence, Math.min(graphSequence, graphScope?.profileThrough?.[profile.profileId] ?? 0), profile);
+  const scopeRow = await ctx.db.query("runtimeIngestionScopes").withIndex("by_scope", q => q.eq("tenantId", reference.tenantId).eq("memorySpaceId", reference.memorySpaceId!)).unique();
+  const eventGraph = graph.available ? await progress(ctx, reference, "graph", cutoff,
+    Math.min(cutoff, scopeRow?.graphProfileThrough?.[profile.profileId] ?? 0), profile.profileId) : contiguousWatermark([], 0, 0);
+  // Graph-only strict mode covers upstream captured source holes AND explicit
+  // direct-fact writes. The two monotone counters retain separate meanings.
+  const combinedGraph: StageWatermark = { ...eventGraph, complete: eventGraph.complete && graph.available && graph.complete,
+    hole: eventGraph.hole ?? (graph.available && !graph.complete ? { sequence: cutoff, state: graph.hole?.state === "failed" ? "failed" : "pending" } : null) };
   return { facts: await progress(ctx, reference, "facts", cutoff, scope.factsThrough),
-    vectors: await progress(ctx, reference, "vectors", cutoff, scope.vectorProfileThrough[profile.profileId] ?? (profile.profileId === DEFAULT_EMBEDDING_PROFILE.profileId ? scope.vectorsThrough : 0), profile.profileId) };
-  // Graph is added by its qualified projection service. It is unavailable here.
+    vectors: await progress(ctx, reference, "vectors", cutoff, scope.vectorProfileThrough[profile.profileId] ?? (profile.profileId === DEFAULT_EMBEDDING_PROFILE.profileId ? scope.vectorsThrough : 0), profile.profileId),
+    ...(graph.available ? { graph: combinedGraph } : {}) };
 }
 export async function refreshScopeWatermarks(ctx: MutationCtx, reference: RuntimeAuthorityReference) {
   await new ConvexMemoryRepository(ctx, reference, "write").recheckAuthority();
+  await refreshGraphWatermarks(ctx, reference);
   const scope = await ctx.db.query("runtimeIngestionScopes").withIndex("by_scope", q => q.eq("tenantId", reference.tenantId)
     .eq("memorySpaceId", reference.memorySpaceId!)).unique();
   if (!scope) return null;
   const facts = await progress(ctx, reference, "facts", scope.sequence, scope.factsThrough);
+  const graphAvailable = (await readGraphProgress(ctx, reference, 0)).available;
+  const graphs = graphAvailable ? await Promise.all(SUPPORTED_EMBEDDING_PROFILES.map(async profile => ({ profile, result: await progress(ctx, reference, "graph", scope.sequence,
+    scope.graphProfileThrough?.[profile.profileId] ?? 0, profile.profileId) }))) : [];
+  const graphProfileThrough = Object.fromEntries(graphs.map(({ profile, result }) => [profile.profileId, result.indexedThrough]));
   const profiles = await Promise.all(SUPPORTED_EMBEDDING_PROFILES.map(async profile => ({ profile, result: await progress(ctx, reference, "vectors", scope.sequence,
     scope.vectorProfileThrough?.[profile.profileId] ?? (profile.profileId === DEFAULT_EMBEDDING_PROFILE.profileId ? scope.vectorsThrough : 0), profile.profileId) })));
   const vectorProfileThrough = Object.fromEntries(profiles.map(value => [value.profile.profileId, value.result.indexedThrough]));
   const vectors = profiles.find(value => value.profile.profileId === DEFAULT_EMBEDDING_PROFILE.profileId)!.result;
-  if (facts.indexedThrough !== scope.factsThrough || JSON.stringify(vectorProfileThrough) !== JSON.stringify(scope.vectorProfileThrough)) {
+  if (facts.indexedThrough !== scope.factsThrough || JSON.stringify(vectorProfileThrough) !== JSON.stringify(scope.vectorProfileThrough)
+    || JSON.stringify(graphProfileThrough) !== JSON.stringify(scope.graphProfileThrough)) {
     await ctx.db.patch("runtimeIngestionScopes", scope._id, { factsThrough: facts.indexedThrough,
-      vectorsThrough: vectors.indexedThrough, vectorProfileThrough, version: scope.version + 1, updatedAt: Date.now() });
+      vectorsThrough: vectors.indexedThrough, vectorProfileThrough, graphThrough: graphProfileThrough[DEFAULT_EMBEDDING_PROFILE.profileId] ?? 0,
+      graphProfileThrough, version: scope.version + 1, updatedAt: Date.now() });
   }
   // Continue only after making bounded progress through a full metadata page.
   if (facts.hole?.state === "missing" && facts.indexedThrough > scope.factsThrough
+    || graphs.some(({ profile, result }) => result.hole?.state === "missing" && result.indexedThrough > (scope.graphProfileThrough?.[profile.profileId] ?? 0))
     || profiles.some(({ profile, result }) => result.hole?.state === "missing"
       && result.indexedThrough > (scope.vectorProfileThrough?.[profile.profileId]
         ?? (profile.profileId === DEFAULT_EMBEDDING_PROFILE.profileId ? scope.vectorsThrough : 0)))) {
@@ -89,8 +115,8 @@ export async function refreshScopeWatermarks(ctx: MutationCtx, reference: Runtim
 }
 export const refreshWatermarks = internalMutation({ args: { reference: runtimeAuthorityReference },
   handler: async (ctx, args) => await refreshScopeWatermarks(ctx, args.reference) });
-export const stageProgress = internalQuery({ args: { reference: runtimeAuthorityReference, cutoff: v.number(), runBudgetId: v.optional(v.string()) },
-  handler: async (ctx, args) => await readStageProgress(ctx, args.reference, args.cutoff, args.runBudgetId) });
+export const stageProgress = internalQuery({ args: { reference: runtimeAuthorityReference, cutoff: v.number(), runBudgetId: v.optional(v.string()), graphCutoff: v.optional(v.number()) },
+  handler: async (ctx, args) => await readStageProgress(ctx, args.reference, args.cutoff, args.runBudgetId, args.graphCutoff) });
 export const indexedSourceAtCutoff = internalQuery({ args: { reference: runtimeAuthorityReference, sourceId: v.string(), sourceRevision: v.number(), cutoff: v.number(), boundary: v.optional(contextBoundary) },
   handler: async (ctx, args) => {
     boundedCutoff(args.cutoff); const repository = new ConvexMemoryRepository(ctx, args.reference, "read");
@@ -156,5 +182,5 @@ export const status = query({ args: { tenantId: v.optional(v.string()), memorySp
   const actor = await requireDataAuthority(ctx, args, "read"); const reference = dataAuthorityReference(actor);
   if (actor.resourceAccess === "own") ingestionDenied("FORBIDDEN");
   const scope = await readScopeCutoff(ctx, reference); const stages = await readStageProgress(ctx, reference, scope.sequence);
-  return { version: 1, cutoff: scope.sequence, stages, graph: { state: "unavailable", failureCode: "CAPABILITY_UNAVAILABLE" } };
+  return { version: 1, cutoff: scope.sequence, stages, graph: stages.graph ?? { state: "unavailable", failureCode: "CAPABILITY_UNAVAILABLE" } };
 } });

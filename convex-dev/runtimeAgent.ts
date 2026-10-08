@@ -209,9 +209,10 @@ export const contextBarrier = internalMutation({ args: agentAttempt, handler: as
   if (current.definition.context.memoryMode !== "strict") return { state: "ready" as const, remainingMs: 0 };
   await refreshScopeWatermarks(ctx, args.reference);
   const cutoff = current.snapshot.ingestionCutoff.sequence;
-  const progress = await readStageProgress(ctx, args.reference, cutoff, current.run.runBudgetId);
+  const progress = await readStageProgress(ctx, args.reference, cutoff, current.run.runBudgetId, current.snapshot.ingestionCutoff.graphSequence);
   const barrier = current.definition.context.barrier ?? { deadlineMs: 30_000, onFailure: "fail" as const };
   const decision = evaluateMemoryBarrier({ cutoff, requiredStages: current.snapshot.ingestionCutoff.requiredStages,
+    stageCutoffs: progress.graph ? { graph: progress.graph.cutoff } : {},
     progress, startedAt: current.execution.barrierStartedAt, deadlineMs: barrier.deadlineMs, now: Date.now(), onFailure: barrier.onFailure });
   if (decision.state === "incomplete") {
     await ctx.db.patch("runtimeAgentExecutions", current.execution._id, { contextCompleteness: "incomplete", contextFailureCode: decision.failureCode });

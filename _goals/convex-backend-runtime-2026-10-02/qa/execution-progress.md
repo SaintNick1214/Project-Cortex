@@ -1872,3 +1872,34 @@ Accepted tasks **8/17 (47.1%)**; original task criteria **28/61 (45.9%)**; full-
 Original Task10 accepted by one non-author PASS4.0: all 5 requirements and 4 criteria. Both actual managed profiles retrieve identical canonical source/chunks with separate matching 1536/3072 generations; current policy, tracked edit, deletion, revocation and replay fences pass. Five governed calls retain full 500000 uncertain liability and release terminal slots. Shipped revision9 preserves exact V5/four proofs/default-small settings. Task10 scopes are cleaned; owned development target3174742 is retained prospectively for Task11, with final retirement open. Historical failures and scoped limits remain unchanged. No Task11+,03-final or full-goal acceptance.
 
 Accepted tasks **9/17 (52.9%)**; original task criteria **32/61 (52.5%)**; full-goal outcomes **0/12 (0%)**. Task10 **4/4 accepted**; Task11 **0/3**, later tasks,03-final and final audit remain open.
+
+### Milestone157 — Task11 connector readiness and controlled worker (2026-10-08T20:47:24.631Z)
+
+Task11 Node connector verifies five enforced unique .key identities on both actual owned graphs, including two fresh connections per service; zero content nodes and all clients closed. Root24 controlled worker/HTTP ABI/ownership checks PASS, SDK types PASS and scoped lint0errors/16 defensive typed-boundary warnings. Independent unchanged cleanup assertions now PASS3 with original2FAIL/1PASS preserved. Backend atomic hooks, barriers and actual worker retry/delayed stale-write/current expansion/cleanup are still in progress; no Task11 criterion accepted.
+
+Accepted tasks **9/17 (52.9%)**; original task criteria **32/61 (52.5%)**; full-goal outcomes **0/12 (0%)**. Task11 **0/3 accepted**; final audit open.
+
+### Milestone158 — Task11 actual worker Core and concrete repairs (2026-10-08T21:10:38.942Z)
+
+Installed packed ./runtime/graph ESM/CJS and 83-file/60-table additive deployment pass; exact shipped9 model proofs and unrelated host files preserved. Actual Core seven groups pass with0model calls: registered-parent rollback, current service authority negatives, atomic two-connector outboxes, app-disconnected worker, both real graphs retry/dedup and current authorized expansion. Final frozen Root25 controlled checks/types/lint pass. Concrete upstream derivative-retirement and optional graph-size rollback regressions require bounded source repair; actual silent-network case is UNKNOWN/SIGTERM143, with exact read-only diagnosis pending. Six later related/private/profile graph cases passed but profile codec fixture red preserved; no Task11 criterion or final audit accepted.
+
+Accepted tasks **9/17 (52.9%)**; original task criteria **32/61 (52.5%)**; full-goal outcomes **0/12 (0%)**. Task11 **0/3 accepted**; final audit open.
+
+### Milestone159 — Task11 actual timeout diagnosis and bounded repair (2026-10-08T21:22:06.770635+00:00)
+
+Distinct actual read-only held-RUN diagnosis completed with all owned clients/proxy closed: official driver.close and session.close fulfill and native sockets disappear, while RUN and transaction.close promises remain pending. Root added an independent I/O deadline race and bounded cleanup; 26 controlled tests pass with unchanged Root source and lint0errors. SDK typecheck retains a concurrent author fixture-type failure. Actual Core seven groups, six expansion controls, corrected current-profile negative and newer/empty-delete replacements are scoped successes. True source retirement rolled back on extra scope fields rejected by the strict schema; exactScope, dependency retirement and optional graph-size repairs are being completed before one packed successor. Original timeout UNKNOWN/143 and every failed oracle are preserved. No Task11 criterion accepted.
+
+Accepted tasks **9/17 (52.9%)**; original task criteria **32/61 (52.5%)**; full-goal outcomes **0/12 (0%)**. Task11 **0/3 accepted**; final audit open.
+
+### Milestone160 — Task11 real source tombstone and bounded network recovery (2026-10-08T21:36:28.722276+00:00)
+
+Current2 packed SDK and additive83-file61-table installation/enabled deployment pass with shipped9 proofs and7 unrelated host files preserved. Actual source-tombstone races pass on both engines: authoritative expired-lease mutations deny before newer tombstone; the held old Neo4j RUN returns stale and old Memgraph transaction aborts, leaving higher tombstone fences/content0 and denying old Core acknowledgment/source reads. Actual Neo4j held-first-RUN500ms timeout returns unknown in1.508s with bounded cleanup and durable same-payload reclaim/apply; Memgraph500ms readiness failure is preserved and a distinct supported3000ms network case is pending. Three new expiry-sensitive graph reads are being moved to fresh mutations, with independent registered-handler expiry control PASS; no permanent native cache failure is claimed. Retry exhaustion, transitive actual cleanup, final installed-current checks and the same full review remain open. Original Task11 remains0/3 accepted.
+
+Accepted tasks **9/17 (52.9%)**; original task criteria **32/61 (52.5%)**; full-goal outcomes **0/12 (0%)**. Task11 **0/3 accepted**; final audit open.
+
+
+### Milestone161 — original Task11 accepted, 2026-10-08T22:02:50.213365+00:00
+
+Original Task11 accepted by one nonauthor PASS4.0: all4 requirements/3criteria; installed Node worker and actual Neo4j/Memgraph ordered retry/dedup, stale revision/source/profile/expiry/revocation/tombstone fences, transitive dependency retirement, real network timeout recovery, explicit exhausted strict failure and app-independent execution. Author369, Root26 and independent16 controlled cases are separate scopes. Cleanup leaves content0/12tombstone fences/11scopes retired; prior5attempts/full500000 uncertain liability unchanged, slots0. Dev3174742 and2graphs explicitly retained for later qualification/final retirement. Historical failures preserved; no12+/03-final/full-goal acceptance.
+
+Completion: **10/17 tasks (58.8%)**, **35/61 original task criteria (57.4%)**, **0/12 full goal outcomes** independently accepted. Tasks12–17,03-final, aggregate qualification and final audit remain open. See [independent review](local-resume-2026-10-05/task11-product-independent-review1/report1.md) and [final native outcomes](local-resume-2026-10-05/task11-graph-functional-v2-20261008/native-actual/final-native-report1.json).

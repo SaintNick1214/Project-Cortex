@@ -1,0 +1,156 @@
+{
+  "version": 1,
+  "scope": "SCOPED_PRE_SUCCESSOR_STATUS_NOT_TASK_ACCEPTANCE",
+  "originalUnknownTimeout": "native-timeout1-owned-termination1.json",
+  "modelCalls": 0,
+  "rows": [
+    {
+      "path": "native-core1-outcomes.json",
+      "status": "ACTUAL_CORE_PASS",
+      "outcomes": [
+        {
+          "name": "real-parent-mutation-fact-source-outbox-rollback",
+          "status": "PASS"
+        },
+        {
+          "name": "current-exact-service-worker-authority-negatives",
+          "status": "PASS"
+        },
+        {
+          "name": "native-manual-fact-atomic-two-connector-outbox",
+          "status": "PASS"
+        },
+        {
+          "name": "strict-pending-denial-and-application-disconnected",
+          "status": "PASS"
+        },
+        {
+          "name": "both-native-services-backend-retry-and-dedup",
+          "status": "PASS"
+        },
+        {
+          "name": "native-neo4j-expansion-core-current-rehydration",
+          "status": "PASS"
+        },
+        {
+          "name": "native-memgraph-expansion-core-current-rehydration",
+          "status": "PASS"
+        }
+      ],
+      "elapsedMs": 17555.893375,
+      "ownedCleanup": true
+    },
+    {
+      "path": "native-expansion1-outcomes.json",
+      "status": "FAIL_OR_UNKNOWN",
+      "outcomes": [
+        {
+          "name": "related-neighbor-neo4j",
+          "status": "PASS"
+        },
+        {
+          "name": "private-neighbor-current-core-filter-neo4j",
+          "status": "PASS"
+        },
+        {
+          "name": "actual-remote-profile-index-fence-neo4j",
+          "status": "PASS"
+        },
+        {
+          "name": "related-neighbor-memgraph",
+          "status": "PASS"
+        },
+        {
+          "name": "private-neighbor-current-core-filter-memgraph",
+          "status": "PASS"
+        },
+        {
+          "name": "actual-remote-profile-index-fence-memgraph",
+          "status": "PASS"
+        }
+      ],
+      "elapsedMs": 19550.121375000002,
+      "ownedCleanup": true,
+      "error": {
+        "name": "ConvexError",
+        "message": "[Request ID: 9cc5c3eabf48ca88] Server Error",
+        "code": "INVALID_INPUT"
+      }
+    },
+    {
+      "path": "native-profile2-outcomes.json",
+      "status": "ACTUAL_PROFILE_DENIAL_PASS"
+    },
+    {
+      "path": "native-late1-outcomes.json",
+      "status": "FAIL_OR_UNKNOWN",
+      "outcomes": [
+        {
+          "name": "newer-revision-neo4j",
+          "status": "PASS"
+        },
+        {
+          "name": "newer-revision-memgraph",
+          "status": "PASS"
+        }
+      ],
+      "elapsedMs": 11541.986917,
+      "ownedCleanup": true,
+      "error": {
+        "name": "AssertionError",
+        "message": "Expected values to be strictly equal:"
+      }
+    },
+    {
+      "path": "native-late2-outcomes.json",
+      "status": "FAIL_OR_UNKNOWN",
+      "outcomes": [],
+      "elapsedMs": 956.019709,
+      "ownedCleanup": true,
+      "error": {
+        "name": "TypeError",
+        "message": "Cannot read properties of undefined (reading 'payloadCanonical')"
+      }
+    },
+    {
+      "path": "native-late3-outcomes.json",
+      "status": "FAIL_OR_UNKNOWN",
+      "outcomes": [
+        {
+          "name": "fact-deletion-empty-current-replacement-neo4j",
+          "status": "PASS"
+        },
+        {
+          "name": "fact-deletion-empty-current-replacement-memgraph",
+          "status": "PASS"
+        }
+      ],
+      "elapsedMs": 6712.3213749999995,
+      "ownedCleanup": true,
+      "error": {
+        "name": "Error",
+        "message": "[Request ID: 5f22efebe670aaa2] Server Error"
+      }
+    },
+    {
+      "path": "readonly-driver-close1.json",
+      "status": "READONLY_DIAGNOSIS_CLOSED",
+      "elapsedMs": 6194.77625
+    }
+  ],
+  "pending": [
+    "repaired source tombstone/dependencies",
+    "bounded native timeout successor",
+    "exhaustion",
+    "revocation/currentness cleanup"
+  ],
+  "futurePreparedScriptsNotExecuted": [
+    "native-late4",
+    "native-timeout2",
+    "native-exhaustion2",
+    "native-dependency1",
+    "native-revocation2",
+    "native-retirement2"
+  ],
+  "noOptionalMatrixOrPaidReplay": true
+}

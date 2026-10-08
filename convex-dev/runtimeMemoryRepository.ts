@@ -13,6 +13,7 @@ import { assertResourceScope, createAuthorityReader, recheckAuthority } from "./
 import { managedSourceIsCurrent } from "./runtimeDataAuth";
 import type { EmbeddingProfile } from "../src/domain/profile";
 import type { ContextSourcePermission } from "../src/domain/context-witness";
+import { enqueueFactProjection } from "./runtimeGraph";
 
 export type DerivedCommit = Parameters<MemoryRepository["commitDerived"]>[0];
 export type FactQuery = Parameters<MemoryRepository["listFacts"]>[0];
@@ -86,7 +87,7 @@ export function vectorOwnerScopeKey(tenantId: string, memorySpaceId: string, pro
 /** Query/mutation adapter. Only a real mutation ctx can write. */
 export class ConvexMemoryRepository {
   readonly scope: TrustedMemoryScope;
-  constructor(private readonly ctx: Pick<QueryCtx, "db"> & Partial<Pick<QueryCtx, "runQuery">>, private readonly reference: RuntimeAuthorityReference,
+  constructor(private readonly ctx: Pick<QueryCtx, "db"> & Partial<Pick<QueryCtx, "runQuery">> & Partial<Pick<MutationCtx, "scheduler">>, private readonly reference: RuntimeAuthorityReference,
     private readonly capability: "read" | "write", private readonly writer?: MutationCtx["db"],
     private readonly clock: DomainClock = { now: () => Date.now() }) {
     this.scope = memoryScope(reference);
@@ -265,6 +266,7 @@ export class ConvexMemoryRepository {
       if (existing) await db.replace("facts", existing._id, record);
       else await db.insert("facts", record);
     }
+    await enqueueFactProjection({ ...this.ctx, db }, this.reference, source.lineage.sourceId, input.vectors?.length ? profile : undefined);
     return { receiptId, created: true };
   }
   private async findChunk(chunkId: string): Promise<SourceChunk | null> {

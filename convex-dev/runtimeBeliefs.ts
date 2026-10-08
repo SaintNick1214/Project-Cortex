@@ -13,6 +13,7 @@ import { ingestionStage } from "./runtimeIngestionSchema";
 import { ConvexMemoryRepository } from "./runtimeMemoryRepository";
 import { finishBeliefStage, requireStageCommit, ingestionDenied } from "./runtimeIngestion";
 import type { StageLease } from "./runtimeIngestion";
+import { enqueueFactProjection } from "./runtimeGraph";
 
 export async function commitBeliefPlan(ctx: MutationCtx, args: StageLease & { planCanonical: string }) {
   const current = await requireStageCommit(ctx, args);
@@ -65,6 +66,11 @@ export async function commitBeliefPlan(ctx: MutationCtx, args: StageLease & { pl
   }
   await ctx.db.insert("runtimeBeliefOutbox", { tenantId: current.event.tenantId, memorySpaceId: current.event.memorySpaceId,
     eventId: current.event.eventId, receiptId: receipt.receiptId, sequence: current.event.sequence, factIds: facts.map(f => f.factId), state: "pending", createdAt: Date.now() });
+  const affectedSources = new Set([current.source.lineage.sourceId, ...plan.entries.flatMap(entry => {
+    const old = entry.targetFactId ? existing.find(f => f.factId === entry.targetFactId) : undefined;
+    return old ? [old.lineage.sourceId] : [];
+  })]);
+  for (const sourceId of affectedSources) await enqueueFactProjection(ctx, args.reference, sourceId);
   await finishBeliefStage(ctx, args, receipt.receiptId, args.planCanonical);
   return receipt;
 }

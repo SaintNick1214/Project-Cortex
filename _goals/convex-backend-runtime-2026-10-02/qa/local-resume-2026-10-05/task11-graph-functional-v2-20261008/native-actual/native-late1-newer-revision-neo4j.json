@@ -1,0 +1,115 @@
+{
+  "name": "newer-revision-neo4j",
+  "status": "PASS",
+  "heldFirstActualProjectionRun": {
+    "heldBytes": 987,
+    "matchedProjectionRun": true
+  },
+  "oldLease": {
+    "tenantId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226",
+    "memorySpaceId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space",
+    "connectorId": "task11-neo4j",
+    "jobId": "graph:0ff8de1f2877aaa914d7d8226936d92ae660fc8880b4609f394bf03fe85956d3",
+    "workerId": "task11-old-newer-revision-neo4j",
+    "leaseVersion": 1
+  },
+  "oldExpiresAt": 1791493725415,
+  "oldRevision": 5,
+  "newer": {
+    "lease": {
+      "tenantId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226",
+      "memorySpaceId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space",
+      "connectorId": "task11-neo4j",
+      "jobId": "graph:2c9f585896e371419de12762cc55a8ad007a83152dd6c7b5dad10fc9f6240048",
+      "workerId": "task11-new-newer-revision-neo4j",
+      "leaseVersion": 1
+    },
+    "revision": 6,
+    "receipt": {
+      "version": 1,
+      "connectorId": "task11-neo4j",
+      "jobId": "graph:2c9f585896e371419de12762cc55a8ad007a83152dd6c7b5dad10fc9f6240048",
+      "payloadHash": "ebca36dc80639871992a63d81aa8623dc5c58d75993582e430bade8939247c1c",
+      "tenantId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226",
+      "memorySpaceId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space",
+      "sourceId": "manual:[\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226\",\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space\",\"fact\",\"fact-1791493201284-aons8vrae\"]",
+      "tenantEpoch": 1,
+      "memorySpaceEpoch": 1,
+      "revision": 6,
+      "state": "applied",
+      "currentRevision": 6
+    }
+  },
+  "late": {
+    "receipt": {
+      "version": 1,
+      "connectorId": "task11-neo4j",
+      "jobId": "graph:0ff8de1f2877aaa914d7d8226936d92ae660fc8880b4609f394bf03fe85956d3",
+      "payloadHash": "c6cc896223db72a7e15a540004f8486931bae968772e7d13df97f0ac6c2fb5b9",
+      "tenantId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226",
+      "memorySpaceId": "task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space",
+      "sourceId": "manual:[\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226\",\"task11-7c3504e9-96d6-48e9-9022-7d1e8f655226-space\",\"fact\",\"fact-1791493201284-aons8vrae\"]",
+      "tenantEpoch": 1,
+      "memorySpaceEpoch": 1,
+      "revision": 5,
+      "state": "stale",
+      "currentRevision": 6
+    }
+  },
+  "currentDenied": "GRAPH_LEASE_EXPIRED",
+  "finalFence": {
+    "tenantEpoch": 1,
+    "memorySpaceEpoch": 1,
+    "revision": 6,
+    "leaseVersion": 2,
+    "payloadHash": "ebca36dc80639871992a63d81aa8623dc5c58d75993582e430bade8939247c1c",
+    "tombstoned": false,
+    "profileId": "cortex-text-small-1536-v1"
+  },
+  "remoteContentCounts": [
+    {
+      "labels": [
+        "CortexRuntimeGraphEntity"
+      ],
+      "count": 2
+    },
+    {
+      "labels": [
+        "CortexRuntimeGraphFact"
+      ],
+      "count": 1
+    }
+  ],
+  "delay": {
+    "state": "released",
+    "events": [
+      {
+        "kind": "connected",
+        "elapsedMs": 3.2793750000000728
+      },
+      {
+        "kind": "armed-after-connect",
+        "elapsedMs": 545.9533750000003
+      },
+      {
+        "kind": "run-held",
+        "elapsedMs": 554.0710420000003,
+        "packetBytes": 975,
+        "marker": "CortexRuntimeGraphScope"
+      },
+      {
+        "kind": "released",
+        "elapsedMs": 5392.456917,
+        "heldBytes": 987
+      }
+    ],
+    "heldBytes": 987,
+    "maximumHeldBytes": 262144,
+    "maximumDelayMs": 20000,
+    "failure": null,
+    "rawPacketContentsRecorded": false,
+    "upstreamPort": 51389,
+    "credentialsRecorded": false
+  },
+  "rawPacketsRecorded": false
+}

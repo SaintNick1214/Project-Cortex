@@ -1,0 +1,95 @@
+{
+  "version": 1,
+  "scope": "READONLY_REAL_BOLT_DELAY_HELPER",
+  "node": "v24.15.0",
+  "graphWrites": 0,
+  "workerRaceQualified": false,
+  "services": [
+    {
+      "service": "neo4j",
+      "authenticatedBeforeArm": true,
+      "actualRunWithheld": {
+        "heldBytes": 83,
+        "matchedProjectionRun": true
+      },
+      "independentDirectQueryCompletedBeforeRelease": true,
+      "originalQueryCompletedAfterRelease": true,
+      "summary": {
+        "state": "released",
+        "events": [
+          {
+            "kind": "connected",
+            "elapsedMs": 6.05112500000007
+          },
+          {
+            "kind": "armed-after-connect",
+            "elapsedMs": 22.04395800000009
+          },
+          {
+            "kind": "run-held",
+            "elapsedMs": 22.702333000000067,
+            "packetBytes": 71,
+            "marker": "CortexRuntimeGraphScope"
+          },
+          {
+            "kind": "released",
+            "elapsedMs": 48.34125000000006,
+            "heldBytes": 83
+          }
+        ],
+        "heldBytes": 83,
+        "maximumHeldBytes": 262144,
+        "maximumDelayMs": 10000,
+        "failure": null,
+        "rawPacketContentsRecorded": false,
+        "upstreamPort": 51389,
+        "credentialsRecorded": false
+      }
+    },
+    {
+      "service": "memgraph",
+      "authenticatedBeforeArm": true,
+      "actualRunWithheld": {
+        "heldBytes": 83,
+        "matchedProjectionRun": true
+      },
+      "independentDirectQueryCompletedBeforeRelease": true,
+      "originalQueryCompletedAfterRelease": true,
+      "summary": {
+        "state": "released",
+        "events": [
+          {
+            "kind": "connected",
+            "elapsedMs": 0.8700840000000198
+          },
+          {
+            "kind": "armed-after-connect",
+            "elapsedMs": 199.33008400000006
+          },
+          {
+            "kind": "run-held",
+            "elapsedMs": 199.63658400000008,
+            "packetBytes": 71,
+            "marker": "CortexRuntimeGraphScope"
+          },
+          {
+            "kind": "released",
+            "elapsedMs": 408.19875000000013,
+            "heldBytes": 83
+          }
+        ],
+        "heldBytes": 83,
+        "maximumHeldBytes": 262144,
+        "maximumDelayMs": 10000,
+        "failure": null,
+        "rawPacketContentsRecorded": false,
+        "upstreamPort": 51397,
+        "credentialsRecorded": false
+      }
+    }
+  ],
+  "cleanupErrors": [],
+  "status": "PASS",
+  "ownedClientsSocketsClosed": true,
+  "credentialsPrinted": false
+}

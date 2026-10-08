@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "scope": "CONTROLLED_CODE_NO_SERVICE",
+  "status": "OPEN_REACHABLE_PRODUCT_FINDING",
+  "createdAt": "2026-10-08T21:04:54.607319+00:00",
+  "originalRequirement": "Task11 remote revision/epoch tombstones; deletion cannot restore or retain synchronized obsolete graph content",
+  "productionPath": [
+    "runtimeAgent.writeToolSource stores immutable contextSourceWitnesses",
+    "runtimeMemoryRepository.commitDerived/enqueueSourceProjection builds current derivative facts",
+    "runtimeAuth.tombstoneResource(source) -> runtimeIngestion.retireScopedSource -> runtimeGraph.retireGraphSource(upstream only)"
+  ],
+  "observed": {
+    "managedDerivativeCurrentAfterUpstreamTombstone": false,
+    "derivativeGraphOperation": "replace",
+    "derivativeGraphState": "complete",
+    "revisionAdvanced": false,
+    "retirementJobAdded": false
+  },
+  "initialCondition": "Explicit controlled prior-worker complete state. No actual graph or service effect is claimed.",
+  "possibleRepair": "Trusted reverse dependency retirement or authoritative reconciliation must invalidate dependent graph freshness and queue remote tombstones, transitively as required by persisted source ancestry.",
+  "evidence": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-product-independent-review1/dependency-retirement-independent1.test.ts",
+      "bytes": 5530,
+      "sha256": "8ebaedd07b7004c6b098d20c6dde7f522dd831afcfbf95f6bcf2f2073b5ba30d"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-product-independent-review1/dependency-retirement-run1.results.json",
+      "bytes": 3607,
+      "sha256": "88bb5ce37a1af22dd9d42048c2428c223f5d1fbee47acd07dccd1b62ae41e61a"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task11-product-independent-review1/dependency-retirement-run1.command.json",
+      "bytes": 1718,
+      "sha256": "5be116eb173f658a521c38ffbcd52ff974561589cc8178fe6903d0d592d5326f"
+    }
+  ],
+  "effects": {
+    "modelCalls": 0,
+    "realGraphCalls": 0,
+    "targetsMutated": 0,
+    "productFilesEdited": 0,
+    "ownedTestChildWaited": true
+  },
+  "taskVerdict": null
+}
