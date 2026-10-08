@@ -1,0 +1,175 @@
+"""Finite mature author replay. Bootstrap is ordinary debt, never self-approved."""
+import hashlib
+import json
+import os
+import stat
+import sys
+import time
+import types
+from pathlib import Path
+
+
+FIELDS = ('dev', 'ino', 'mode', 'uid', 'gid', 'nlink', 'size', 'mtime_ns', 'ctime_ns')
+
+
+def nine(value):
+    return {key: str(getattr(value, 'st_' + key)) for key in FIELDS}
+
+
+def body(fd):
+    data = bytearray()
+    digest = hashlib.sha256()
+    while True:
+        chunk = os.read(fd, 65536)
+        if not chunk:
+            break
+        data.extend(chunk)
+        digest.update(chunk)
+    return bytes(data), digest.hexdigest()
+
+
+def run(directory, expected_plan, expected_stop, output):
+    directory = Path(directory)
+    opened = []
+    rows = []
+    closes = []
+    errors = []
+    result = {'scope': 'REPAIR7_AUTHOR_FINITE_SOURCE_MOCK_ONLY',
+              'bootstrapOrdinaryReadDebt': True, 'sourceEligibility': False,
+              'runtimeAuthority': False, 'fullTask03': False, 'fullGoal': False,
+              'actualDockerEffects': 0, 'serviceEffects': 0, 'privateReads': 0,
+              'allMemberFDsBeforeFirstMemberBody': False,
+              'allFDsBeforeFirstHeaderDiscoveryBody': False}
+    now = time.time_ns()
+    ages = []
+
+    def acquire(path, size=None, digest=None, pin=None):
+        value = os.lstat(path)
+        observed = nine(value)
+        age = (now - max(value.st_mtime_ns, value.st_ctime_ns)) / 1e9
+        ages.append(age)
+        if age < 240:
+            raise ValueError('CURRENT_240_SECOND_MATURITY: ' + str(path) + ' ' + str(age))
+        if not stat.S_ISREG(value.st_mode) or value.st_size > 16777216:
+            raise ValueError('FINITE_REGULAR_FILE_CAP')
+        if pin is not None and observed != pin:
+            raise ValueError('ORIGINAL_DECLARED_NINE_NOT_REFRESHED: ' + str(path))
+        if size is not None and value.st_size != size:
+            raise ValueError('DECLARED_SIZE')
+        fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW)
+        opened.append({'path': str(path), 'fd': fd, 'PRE9': observed,
+                       'bytes': value.st_size, 'sha256': digest})
+        if nine(os.fstat(fd)) != observed:
+            raise ValueError('OPEN_NINE')
+        return opened[-1]
+
+    def read(row):
+        os.lseek(row['fd'], 0, os.SEEK_SET)
+        raw, digest = body(row['fd'])
+        if len(raw) != row['bytes'] or (row['sha256'] and digest != row['sha256']):
+            raise ValueError('FULL_EOF_SIZE_HASH')
+        if nine(os.fstat(row['fd'])) != row['PRE9'] or nine(os.lstat(row['path'])) != row['PRE9']:
+            raise ValueError('POST_PATH_LITERAL_NINE')
+        return raw, digest
+
+    try:
+        plan_row = acquire(directory / 'source-input-plan3.json', digest=expected_plan)
+        stop_row = acquire(directory / 'source-writers-stopped3.json', digest=expected_stop)
+        plan = json.loads(read(plan_row)[0])
+        stop = json.loads(read(stop_row)[0])
+        assert stop['remainingWrites'] == [] and stop['sourceWriters'] == 'STOPPED'
+        assert stop['planSha256'] == expected_plan
+        assert sum(row['bytes'] for row in plan['members']) + plan_row['bytes'] + stop_row['bytes'] <= 16777216
+        assert len({row['path'] for row in plan['members']}) == len(plan['members'])
+        for row in plan['members']:
+            acquire(row['path'], row['bytes'], row['sha256'], row['PRE9'])
+        result['allMemberFDsBeforeFirstMemberBody'] = True
+        values = {}
+        for spec, row in zip(plan['members'], opened[2:]):
+            values[spec['name']] = read(row)[0]
+        import ast
+        sources = values
+        M = types.ModuleType('held_phase_partition_repair7')
+        sys.modules[M.__name__] = M
+        M.__file__ = next(row['path'] for row in plan['members'] if row['name'] == 'M')
+        exec(compile(sources['M'], M.__file__, 'exec', dont_inherit=True), M.__dict__)
+        tree = ast.parse(sources['F'])
+        loader = [node for node in tree.body if node.lineno in (14, 15)]
+        assert len(loader) == 4
+        assert [type(node).__name__ for node in loader] == ['Assign', 'Assign', 'Assign', 'Expr']
+        tree.body = [node for node in tree.body if node not in loader]
+        F = types.ModuleType('held_original_phase_controls')
+        F.__file__ = next(row['path'] for row in plan['members'] if row['name'] == 'F')
+        F.M = M
+        exec(compile(tree, F.__file__, 'exec', dont_inherit=True), F.__dict__)
+        F.OWN = directory / 'owned-original-regression-replay2'
+        F.OWN.mkdir(mode=0o700, exist_ok=False)
+        N = types.ModuleType('held_phase_repair5_controls')
+        exec(compile(sources['N'], 'held_phase_repair5_controls', 'exec', dont_inherit=True), N.__dict__)
+        result['originalRegressionLoaderTransformation'] = {
+            'removedStatements': 4, 'lines': [14, 15],
+            'purpose': 'Replace original disk module load with exact held candidate module; assertions unchanged',
+            'originalAssertionsChanged': False}
+        result['originalRegressionControls'] = F.run_controls()
+        result['repairControls'] = N.run(M, F)
+        X = types.ModuleType('held_phase_close_fence_controls')
+        exec(compile(sources['X'], 'held_phase_close_fence_controls', 'exec', dont_inherit=True), X.__dict__)
+        result['closeFenceControls'] = X.run(M, F)
+        Y = types.ModuleType('held_registration7_controls')
+        exec(compile(sources['Y'], 'held_registration7_controls', 'exec', dont_inherit=True), Y.__dict__)
+        result['registrationControls'] = Y.run(M)
+        assert result['registrationControls']['passed'] == 48 and result['registrationControls']['failed'] == 0
+        prior_env = {'mods': {'phase_candidate': M}, 'data': {
+            'original_phase2': sources['oldM'], 'original_controls2': sources['F']},
+            'D': F.OWN, 'ORIGINAL': Path(next(row['path'] for row in plan['members']
+                                           if row['name'] == 'F')).parent, 'json': json, 'Path': Path}
+        for name in ('J35', 'J7', 'J26'):
+            exec(compile(sources[name], name, 'exec', dont_inherit=True), dict(prior_env))
+        result['priorIndependentRegressions'] = {}
+        for name, filename, count in (('J35', 'independent-controls-raw1.json', 36),
+                                      ('J7', 'independent-additional-controls-raw1.json', 7),
+                                      ('J26', 'independent-close-fence-controls-raw1.json', 26)):
+            value = json.loads((F.OWN / filename).read_text())
+            assert value['passed'] == count and value['failed'] == 0 and value['skipped'] == 0
+            result['priorIndependentRegressions'][name] = value
+            (F.OWN / filename).unlink()
+        assert result['closeFenceControls']['passed'] == 11 and result['closeFenceControls']['failed'] == 0
+        assert result['originalRegressionControls']['passed'] == 97
+        assert result['originalRegressionControls']['failed'] == 0
+        assert result['repairControls']['failed'] == 0
+        assert not (F.OWN / 'controls-fixture1').exists()
+        F.OWN.rmdir()
+        result['ownedOriginalFixtureCleanupComplete'] = True
+        for row in opened:
+            raw, digest = read(row)
+            rows.append({key: row[key] for key in ('path', 'PRE9', 'bytes')} |
+                        {'OPEN9': row['PRE9'], 'POST9': nine(os.fstat(row['fd'])),
+                         'sha256': digest, 'fullEOF': True})
+        for row, record in zip(opened, rows):
+            final = nine(os.fstat(row['fd']))
+            assert final == row['PRE9'] == nine(os.lstat(row['path']))
+            record['FINAL9'] = final
+        result['result'] = 'PASS_AUTHOR_FINITE_SOURCE_MOCK_ONLY'
+    except BaseException as error:
+        errors.append({'type': type(error).__name__, 'error': str(error)})
+        result['result'] = 'FAILED_UNKNOWN_NO_ADOPTION'
+    finally:
+        for row in opened:
+            try:
+                os.close(row['fd'])
+                closes.append({'path': row['path'], 'attempt': 1, 'error': None})
+            except BaseException as error:
+                closes.append({'path': row['path'], 'attempt': 1, 'error': str(error)})
+                errors.append({'type': type(error).__name__, 'close': row['path']})
+    result.update(rows=rows, closeAttempts=closes, errors=errors, opened=len(opened),
+                  minimumCurrentAgeSeconds=min(ages) if ages else None,
+                  startedUnixNs=str(now), finishedUnixNs=str(time.time_ns()))
+    Path(output).write_text(json.dumps(result, indent=2) + '\n')
+    print(json.dumps({'result': result['result'], 'opened': len(opened), 'errors': errors,
+                      'repairPassed': result.get('repairControls', {}).get('passed'),
+                      'regressionPassed': result.get('originalRegressionControls', {}).get('passed')}))
+    return 0 if not errors else 1
+
+
+if __name__ == '__main__':
+    raise SystemExit(run(*sys.argv[1:]))

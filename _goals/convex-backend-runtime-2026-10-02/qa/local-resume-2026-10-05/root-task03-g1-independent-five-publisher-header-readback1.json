@@ -1,0 +1,400 @@
+{
+  "scope": "ROOT_G1_JUDGE_FIVE_PUBLISHER_HEADER_DISCOVERY_ONLY",
+  "SourceEligibility": false,
+  "functionalAcceptance": false,
+  "result": "PASS_HEADER_DISCOVERY_ONLY",
+  "verdictReadback": {
+    "scope": "INDEPENDENT_ROOT_BORROWED_G_CODE_HOST_ONLY",
+    "verdict": "REJECT",
+    "average": 2.8,
+    "scores": {
+      "requirementFulfillment": 3,
+      "codeQuality": 2,
+      "testQuality": 4,
+      "patternAdherence": 3,
+      "completeness": 2
+    },
+    "candidateSource": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-root-borrowed-guard-seam1/source-gates-borrowed1.py",
+      "bytes": 25434,
+      "sha256": "f799f1b1bcfd971be32b89ee88285e7d4d820b870330f63a592c998a78ff1eed"
+    },
+    "counts": {
+      "discovered": 112,
+      "executed": 112,
+      "observedPASS": 107,
+      "observedFAIL": 5,
+      "candidateFAIL": 4,
+      "reviewerSetupFAIL": 1,
+      "skipped": 0,
+      "authorBridgePASS": 18,
+      "underlyingNScopedRegressionPASS": 71,
+      "newIndependentPASS": 18
+    },
+    "findings": [
+      {
+        "priority": "P1",
+        "class": "ACQUIRE_METADATA_FAILURE_NOT_STICKY",
+        "line": 155,
+        "actualIndependentCases": 3
+      },
+      {
+        "priority": "P1",
+        "class": "LOCAL_DATA_CAP_FAILURE_NOT_STICKY",
+        "line": 168,
+        "actualIndependentCases": 1,
+        "unitBoundaryStubsDeclared": true
+      }
+    ],
+    "reviewerSetup": {
+      "case": "post_constructor_cap_bytes_denies_before_body",
+      "error": "AttributeError: can't set attribute",
+      "candidateFinding": false,
+      "positiveBudgetCoverage": false
+    },
+    "physical": {
+      "sourceRows": 25,
+      "sourceBytes": 290850,
+      "minSourceAgeNs": "282418200494",
+      "allFDsBeforeMemberBodies": true,
+      "allOriginalNineFullEOFFinalHashSize": true,
+      "sourceOnceCloses": 25,
+      "sourceCloseErrors": 0,
+      "producerDocumentRows": 4,
+      "producerDocumentBytes": 79214,
+      "minProducerAgeNs": "298563052057",
+      "producerOnceCloses": 4,
+      "producerCloseErrors": 0
+    },
+    "inherited": {
+      "N1": "REJECT_2.6_UNCHANGED_NOT_INDEPENDENTLY_JUDGED_HERE",
+      "R6": "REJECT_2.8_UNCHANGED",
+      "earlierNativeToolingWholeSourceQualified": false
+    },
+    "sourceEligibility": false,
+    "functionalTask03Accepted": false,
+    "wholeF2CensusAccepted": false,
+    "originalTask03CriteriaAccepted": 0,
+    "originalTask03CriteriaTotal": 3,
+    "protectedEffects": 0,
+    "remaining": [
+      "repair sticky acquire/local-cap boundaries",
+      "correct byte-cap oracle in a distinct future control",
+      "independent N successor and phase registration successor acceptance",
+      "actual collector/G schema and whole cumulative Source closure",
+      "U3/B3/Root original actual lifetimes and Linux/service gates"
+    ]
+  },
+  "manifestKeys": [
+    "RootR6",
+    "SourceEligibility",
+    "allInputFDFullEOFHashNineFinalCloseProof",
+    "authorAssemblyReadDebt",
+    "average",
+    "counts",
+    "functionalAcceptance",
+    "historicalCustodyRepaired",
+    "humanVerdictPublishedAfterSourceFDClosure",
+    "inputCurrentPhysicalBytes",
+    "inputUniquePhysicalPaths",
+    "inputs",
+    "mainSourceInputs",
+    "nativeExecutorWholeSourceQualified",
+    "oneCumulativeLedger",
+    "priorDebtEvidence",
+    "producerDocumentInputs",
+    "producerReferences",
+    "protectedEffects",
+    "scope",
+    "selfExcludedPublishers",
+    "underlyingN1",
+    "verdict"
+  ],
+  "rows": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-root-borrowed-guard-independent-review1/report1.md",
+      "bytes": 9185,
+      "sha256": "ceb8c6c7d1b8647e76384297c4f47f80dffa768b9497d94064523fc0584dfd68",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "95102159",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "9185",
+        "mtime_ns": "1791430678373752031",
+        "ctime_ns": "1791430678471479631"
+      },
+      "ageSeconds": 677.059334369,
+      "OPEN9": {
+        "dev": "16777234",
+        "ino": "95102159",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "9185",
+        "mtime_ns": "1791430678373752031",
+        "ctime_ns": "1791430678471479631"
+      },
+      "POST9": {
+        "dev": "16777234",
+        "ino": "95102159",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "9185",
+        "mtime_ns": "1791430678373752031",
+        "ctime_ns": "1791430678471479631"
+      },
+      "FINAL9": {
+        "dev": "16777234",
+        "ino": "95102159",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "9185",
+        "mtime_ns": "1791430678373752031",
+        "ctime_ns": "1791430678471479631"
+      },
+      "fullEOFHashSizeInitialFinal": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-root-borrowed-guard-independent-review1/verdict1.json",
+      "bytes": 2556,
+      "sha256": "003eb90705bdeb95e431d89aea56facb16fbbd342a1f3df29e2a88d8fe3a4eba",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "95102161",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "2556",
+        "mtime_ns": "1791430678396797557",
+        "ctime_ns": "1791430678588668677"
+      },
+      "ageSeconds": 676.942191323,
+      "OPEN9": {
+        "dev": "16777234",
+        "ino": "95102161",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "2556",
+        "mtime_ns": "1791430678396797557",
+        "ctime_ns": "1791430678588668677"
+      },
+      "POST9": {
+        "dev": "16777234",
+        "ino": "95102161",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "2556",
+        "mtime_ns": "1791430678396797557",
+        "ctime_ns": "1791430678588668677"
+      },
+      "FINAL9": {
+        "dev": "16777234",
+        "ino": "95102161",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "2556",
+        "mtime_ns": "1791430678396797557",
+        "ctime_ns": "1791430678588668677"
+      },
+      "fullEOFHashSizeInitialFinal": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-root-borrowed-guard-independent-review1/finite-review-reference-manifest1.json",
+      "bytes": 72793,
+      "sha256": "d7fcd2be8ced25c10e47826434b791ac99afc0216f4252fa42c30d5d31dfca70",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "95195141",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "72793",
+        "mtime_ns": "1791430817205487869",
+        "ctime_ns": "1791430817404726568"
+      },
+      "ageSeconds": 538.126168432,
+      "OPEN9": {
+        "dev": "16777234",
+        "ino": "95195141",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "72793",
+        "mtime_ns": "1791430817205487869",
+        "ctime_ns": "1791430817404726568"
+      },
+      "POST9": {
+        "dev": "16777234",
+        "ino": "95195141",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "72793",
+        "mtime_ns": "1791430817205487869",
+        "ctime_ns": "1791430817404726568"
+      },
+      "FINAL9": {
+        "dev": "16777234",
+        "ino": "95195141",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "72793",
+        "mtime_ns": "1791430817205487869",
+        "ctime_ns": "1791430817404726568"
+      },
+      "fullEOFHashSizeInitialFinal": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-root-borrowed-guard-independent-review1/mature-control-receipt-confirmation1.json",
+      "bytes": 8940,
+      "sha256": "dcc0a6c5c3d2c54b3987c3ee09ccc4fc0da3067e988666f3755884ebbd38e124",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "95085608",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "8940",
+        "mtime_ns": "1791430400647037100",
+        "ctime_ns": "1791430400830107589"
+      },
+      "ageSeconds": 954.700815411,
+      "OPEN9": {
+        "dev": "16777234",
+        "ino": "95085608",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "8940",
+        "mtime_ns": "1791430400647037100",
+        "ctime_ns": "1791430400830107589"
+      },
+      "POST9": {
+        "dev": "16777234",
+        "ino": "95085608",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "8940",
+        "mtime_ns": "1791430400647037100",
+        "ctime_ns": "1791430400830107589"
+      },
+      "FINAL9": {
+        "dev": "16777234",
+        "ino": "95085608",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "8940",
+        "mtime_ns": "1791430400647037100",
+        "ctime_ns": "1791430400830107589"
+      },
+      "fullEOFHashSizeInitialFinal": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-root-borrowed-guard-independent-review1/final-review-writer-stop1.json",
+      "bytes": 2105,
+      "sha256": "45da63e79457cc27da94ec021d8cbca43e94c4510ac096e5ad68bbd598d158f7",
+      "PRE9": {
+        "dev": "16777234",
+        "ino": "95195142",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "2105",
+        "mtime_ns": "1791430817205640869",
+        "ctime_ns": "1791430817406792109"
+      },
+      "ageSeconds": 538.124158891,
+      "OPEN9": {
+        "dev": "16777234",
+        "ino": "95195142",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "2105",
+        "mtime_ns": "1791430817205640869",
+        "ctime_ns": "1791430817406792109"
+      },
+      "POST9": {
+        "dev": "16777234",
+        "ino": "95195142",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "2105",
+        "mtime_ns": "1791430817205640869",
+        "ctime_ns": "1791430817406792109"
+      },
+      "FINAL9": {
+        "dev": "16777234",
+        "ino": "95195142",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "2105",
+        "mtime_ns": "1791430817205640869",
+        "ctime_ns": "1791430817406792109"
+      },
+      "fullEOFHashSizeInitialFinal": true
+    }
+  ],
+  "closeAttempts": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-root-borrowed-guard-independent-review1/report1.md",
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-root-borrowed-guard-independent-review1/verdict1.json",
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-root-borrowed-guard-independent-review1/finite-review-reference-manifest1.json",
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-root-borrowed-guard-independent-review1/mature-control-receipt-confirmation1.json",
+      "attempt": 1,
+      "error": null
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-root-borrowed-guard-independent-review1/final-review-writer-stop1.json",
+      "attempt": 1,
+      "error": null
+    }
+  ],
+  "errors": [],
+  "physicalBytes": 95579,
+  "minimumCurrentAgeSeconds": 538.124158891
+}

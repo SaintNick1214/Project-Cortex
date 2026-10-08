@@ -1,0 +1,65 @@
+{
+  "result": "FAILED_UNKNOWN_NO_CONTROLS_EXECUTED",
+  "observations": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-f2-registration-fence-repair7/run-held-author-controls1.py",
+      "age": 263.280562988,
+      "observed": {
+        "dev": "16777234",
+        "ino": "94889411",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "8941",
+        "mtime_ns": "1791429105190896764",
+        "ctime_ns": "1791429105340166012"
+      },
+      "expected": {
+        "dev": "16777234",
+        "ino": "94889411",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "8941",
+        "mtime_ns": "1791429105190896764",
+        "ctime_ns": "1791429105190896764"
+      }
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-f2-registration-fence-repair7/semantic-preservation1.json",
+      "age": 263.27878042,
+      "observed": {
+        "dev": "16777234",
+        "ino": "94889419",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "331",
+        "mtime_ns": "1791429105202286454",
+        "ctime_ns": "1791429105341948580"
+      },
+      "expected": {
+        "dev": "16777234",
+        "ino": "94889419",
+        "mode": "33188",
+        "uid": "501",
+        "gid": "20",
+        "nlink": "1",
+        "size": "331",
+        "mtime_ns": "1791429105202286454",
+        "ctime_ns": "1791429105202286454"
+      }
+    }
+  ],
+  "originalPlanImmutable": true,
+  "candidateAndRegistrationControlPinsUnchanged": true,
+  "oneChangedCodeInput": "run-held-author-controls1.py",
+  "oneChangedDocumentInput": "semantic-preservation1.json",
+  "prospectiveSuccessor": "new physical runner2; no old code pin refresh; new documentary baseline only for closed semantic receipt",
+  "originalRunnerBytesRemainReadDebt": 8941,
+  "sourceEligibility": false,
+  "effects": 0
+}

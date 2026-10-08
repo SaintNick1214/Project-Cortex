@@ -1,0 +1,82 @@
+{
+  "scope": "INDEPENDENT_ROOT_BORROWED_G_CODE_HOST_ONLY",
+  "verdict": "REJECT",
+  "average": 2.8,
+  "scores": {
+    "requirementFulfillment": 3,
+    "codeQuality": 2,
+    "testQuality": 4,
+    "patternAdherence": 3,
+    "completeness": 2
+  },
+  "candidateSource": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-root-borrowed-guard-seam1/source-gates-borrowed1.py",
+    "bytes": 25434,
+    "sha256": "f799f1b1bcfd971be32b89ee88285e7d4d820b870330f63a592c998a78ff1eed"
+  },
+  "counts": {
+    "discovered": 112,
+    "executed": 112,
+    "observedPASS": 107,
+    "observedFAIL": 5,
+    "candidateFAIL": 4,
+    "reviewerSetupFAIL": 1,
+    "skipped": 0,
+    "authorBridgePASS": 18,
+    "underlyingNScopedRegressionPASS": 71,
+    "newIndependentPASS": 18
+  },
+  "findings": [
+    {
+      "priority": "P1",
+      "class": "ACQUIRE_METADATA_FAILURE_NOT_STICKY",
+      "line": 155,
+      "actualIndependentCases": 3
+    },
+    {
+      "priority": "P1",
+      "class": "LOCAL_DATA_CAP_FAILURE_NOT_STICKY",
+      "line": 168,
+      "actualIndependentCases": 1,
+      "unitBoundaryStubsDeclared": true
+    }
+  ],
+  "reviewerSetup": {
+    "case": "post_constructor_cap_bytes_denies_before_body",
+    "error": "AttributeError: can't set attribute",
+    "candidateFinding": false,
+    "positiveBudgetCoverage": false
+  },
+  "physical": {
+    "sourceRows": 25,
+    "sourceBytes": 290850,
+    "minSourceAgeNs": "282418200494",
+    "allFDsBeforeMemberBodies": true,
+    "allOriginalNineFullEOFFinalHashSize": true,
+    "sourceOnceCloses": 25,
+    "sourceCloseErrors": 0,
+    "producerDocumentRows": 4,
+    "producerDocumentBytes": 79214,
+    "minProducerAgeNs": "298563052057",
+    "producerOnceCloses": 4,
+    "producerCloseErrors": 0
+  },
+  "inherited": {
+    "N1": "REJECT_2.6_UNCHANGED_NOT_INDEPENDENTLY_JUDGED_HERE",
+    "R6": "REJECT_2.8_UNCHANGED",
+    "earlierNativeToolingWholeSourceQualified": false
+  },
+  "sourceEligibility": false,
+  "functionalTask03Accepted": false,
+  "wholeF2CensusAccepted": false,
+  "originalTask03CriteriaAccepted": 0,
+  "originalTask03CriteriaTotal": 3,
+  "protectedEffects": 0,
+  "remaining": [
+    "repair sticky acquire/local-cap boundaries",
+    "correct byte-cap oracle in a distinct future control",
+    "independent N successor and phase registration successor acceptance",
+    "actual collector/G schema and whole cumulative Source closure",
+    "U3/B3/Root original actual lifetimes and Linux/service gates"
+  ]
+}
