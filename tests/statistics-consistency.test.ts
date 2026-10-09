@@ -9,31 +9,37 @@
  */
 
 import { describe, it, expect, beforeAll, afterAll } from "@jest/globals";
-import { Cortex } from "../src/index";
+import { Cortex, testDeploymentKey } from "./helpers/deployment-operator";
+import { createErasureTransport, type ErasureTransport } from "../src/users/erasure";
+import { createRuntimeFixture } from "./helpers/runtime-fixture";
 import { createTestRunContext } from "./helpers/isolation";
 
 describe("Statistics Consistency Testing", () => {
   let cortex: Cortex;
+  let erasureTransport: ErasureTransport;
   // Use TestRunContext for parallel-safe test isolation
   const ctx = createTestRunContext();
   const BASE_ID = ctx.runId;
   const TEST_USER_ID = ctx.userId("stats-user");
   const TEST_AGENT_ID = ctx.agentId("stats-agent");
+  let runtime: Awaited<ReturnType<typeof createRuntimeFixture>>;
+  const CONTEXT_SCOPES = ["all-layers", "ctx-count", "ctx-status-count"].map(suffix => `${BASE_ID}-${suffix}`);
 
-  beforeAll(() => {
+  beforeAll(async () => {
     cortex = new Cortex({ convexUrl: process.env.CONVEX_URL! });
+    erasureTransport = createErasureTransport({ url: process.env.CONVEX_URL!, deploymentKey: testDeploymentKey(process.env.CONVEX_URL!) });
+    runtime = await createRuntimeFixture(BASE_ID, CONTEXT_SCOPES, TEST_USER_ID);
+    Object.defineProperty(cortex, "contexts", { value: runtime.cortex.contexts });
   });
 
   afterAll(async () => {
-    // Cleanup all test spaces created by this run
-    try {
-      await cortex.memorySpaces.delete(BASE_ID, {
-        cascade: true,
-        reason: "test cleanup",
-      });
-    } catch (_e) {
-      // Ignore
-    }
+    const cleanups = await Promise.allSettled([
+      () => erasureTransport.close(),
+      () => runtime.close(),
+      () => cortex.shutdown(),
+    ].map(cleanup => Promise.resolve().then(cleanup)));
+    const failed = cleanups.find(cleanup => cleanup.status === "rejected");
+    if (failed?.status === "rejected") throw failed.reason;
   });
 
   // ══════════════════════════════════════════════════════════════════════
@@ -948,6 +954,7 @@ describe("Statistics Consistency Testing", () => {
       // Delete space
       await cortex.memorySpaces.delete(spaceId, {
         cascade: true,
+        erasureTransport,
         reason: "test cleanup",
       });
 
@@ -1100,8 +1107,8 @@ describe("Statistics Consistency Testing", () => {
         sourceType: "manual",
       });
 
-      await cortex.facts.update(spaceId, fact1.factId, { confidence: 80 });
-      await cortex.facts.update(spaceId, fact1.factId, { confidence: 90 });
+      const fact2 = await cortex.facts.update(spaceId, fact1.factId, { confidence: 80 });
+      await cortex.facts.update(spaceId, fact2.factId, { confidence: 90 });
 
       // Count excludes superseded
       const count = await cortex.facts.count({ memorySpaceId: spaceId });
@@ -1698,6 +1705,7 @@ describe("Statistics Consistency Testing", () => {
       // Delete with cascade
       await cortex.memorySpaces.delete(spaceId, {
         cascade: true,
+        erasureTransport,
         reason: "test cleanup",
       });
 

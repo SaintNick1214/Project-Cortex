@@ -1,0 +1,31 @@
+npm notice run @cortexmemory/vercel-ai-quickstart@1.3.0 test
+npm notice run jest --selectProjects unit integration --runInBand --forceExit=false --watchman=false --json --outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-dev-integration1/provider-ci-author1/canonical-tests1.json
+Running 2 projects:
+- integration
+- unit
+FAIL unit tests/unit/private-backend.test.ts
+  ● Test suite failed to run
+
+    Cannot find module '../_generated/server' from 'convex/app/accounts.ts'
+
+    Require stack:
+      convex/app/accounts.ts
+      tests/unit/private-backend.test.ts
+
+    > 1 | import { internalQuery, internalMutation } from "../_generated/server";
+        | ^
+      2 | import { v } from "convex/values";
+      3 |
+      4 | const credentials = {
+
+      at Resolver._throwModNotFoundError (node_modules/jest-resolve/build/index.js:1031:11)
+      at Object.<anonymous> (convex/app/accounts.ts:1:1)
+      at Object.<anonymous> (tests/unit/private-backend.test.ts:1:1)
+
+
+Test Suites: 1 failed, 5 passed, 6 total
+Tests:       115 passed, 115 total
+Snapshots:   0 total
+Time:        1.39 s, estimated 2 s
+Ran all test suites in 2 projects.
+Test results written to: ../../../_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-dev-integration1/provider-ci-author1/canonical-tests1.json

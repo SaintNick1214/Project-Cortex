@@ -1,339 +1,84 @@
-/**
- * Graph Schema Initialization
- *
- * Creates constraints and indexes for optimal graph database performance
- */
-
-/* eslint-disable no-console */
-// Console logging is intentional for schema initialization progress tracking
-
+/** Explicit, fixed managed-v2 schema. Existing legacy/custom schema is never adopted or dropped. */
 import type { GraphAdapter } from "../types";
 import { GraphDatabaseError } from "../types";
+import { MANAGED_KINDS, MANAGED_LABELS } from "../identity";
 
-/**
- * Initialize graph database schema
- *
- * Creates unique constraints and performance indexes for all node types.
- * This should be run once after connecting to a new graph database.
- *
- * @example
- * ```typescript
- * const adapter = new CypherGraphAdapter();
- * await adapter.connect({ uri: 'bolt://localhost:7687', ... });
- * await initializeGraphSchema(adapter);
- * ```
- */
-export async function initializeGraphSchema(
-  adapter: GraphAdapter,
-): Promise<void> {
-  console.log("📐 Initializing graph schema...");
-
-  try {
-    // Create unique constraints (these also create indexes)
-    await createUniqueConstraints(adapter);
-
-    // Create additional performance indexes
-    await createPerformanceIndexes(adapter);
-
-    console.log("✅ Graph schema initialized successfully");
-  } catch (error) {
-    throw new GraphDatabaseError(
-      `Failed to initialize graph schema: ${error instanceof Error ? error.message : String(error)}`,
-      "SCHEMA_INIT_ERROR",
-      error instanceof Error ? error : undefined,
-    );
-  }
+const names = MANAGED_KINDS.map(kind => ({kind, label: MANAGED_LABELS[kind],
+  name: `cortex_v2_${kind.toLowerCase()}_key`, scope: `cortex_v2_${kind.toLowerCase()}_scope`}));
+const list = (value: unknown): string[] => Array.isArray(value) ? value.map(String) : [];
+async function inspect(adapter: GraphAdapter) {
+  const dialect = await adapter.managedDialect?.();
+  if (!adapter.managedRead) throw new GraphDatabaseError("Adapter requires bounded managed reads.", "GRAPH_SCHEMA_MIGRATION_REQUIRED");
+  if (!dialect) throw new GraphDatabaseError("This adapter needs managed-v2 dialect support. Upgrade the adapter and explicitly initialize/rebuild.", "GRAPH_SCHEMA_MIGRATION_REQUIRED");
+  const constraints = (await adapter.managedRead(dialect === "neo4j" ?
+    "SHOW CONSTRAINTS YIELD name, type, entityType, labelsOrTypes, properties RETURN *" : "SHOW CONSTRAINT INFO")).records;
+  const indexes = (await adapter.managedRead(dialect === "neo4j" ?
+    "SHOW INDEXES YIELD name, type, entityType, labelsOrTypes, properties, state, owningConstraint RETURN *" : "SHOW INDEX INFO")).records;
+  return {dialect, constraints, indexes};
 }
-
-/**
- * Create unique constraints for all entity IDs
- *
- * These constraints ensure data integrity and automatically create indexes
- */
-async function createUniqueConstraints(adapter: GraphAdapter): Promise<void> {
-  console.log("  Creating unique constraints...");
-
-  const constraints = [
-    // MemorySpace
-    {
-      label: "MemorySpace",
-      property: "memorySpaceId",
-      name: "memory_space_id",
-    },
-
-    // Context
-    {
-      label: "Context",
-      property: "contextId",
-      name: "context_id",
-    },
-
-    // Conversation
-    {
-      label: "Conversation",
-      property: "conversationId",
-      name: "conversation_id",
-    },
-
-    // Memory
-    {
-      label: "Memory",
-      property: "memoryId",
-      name: "memory_id",
-    },
-
-    // Fact
-    {
-      label: "Fact",
-      property: "factId",
-      name: "fact_id",
-    },
-
-    // User
-    {
-      label: "User",
-      property: "userId",
-      name: "user_id",
-    },
-
-    // Agent
-    {
-      label: "Agent",
-      property: "agentId",
-      name: "agent_id",
-    },
-
-    // Participant (Hive Mode)
-    {
-      label: "Participant",
-      property: "participantId",
-      name: "participant_id",
-    },
-
-    // Entity
-    {
-      label: "Entity",
-      property: "name",
-      name: "entity_name",
-    },
-  ];
-
-  for (const constraint of constraints) {
-    try {
-      await adapter.query({
-        cypher: `
-          CREATE CONSTRAINT ${constraint.name} IF NOT EXISTS
-          FOR (n:${constraint.label})
-          REQUIRE n.${constraint.property} IS UNIQUE
-        `,
-      });
-
-      console.log(`    ✓ ${constraint.label}.${constraint.property}`);
-    } catch (_error) {
-      // Constraint may already exist, which is fine
-      console.log(
-        `    ~ ${constraint.label}.${constraint.property} (already exists)`,
-      );
-    }
-  }
+function constraintMatches(r: Record<string, unknown>, label: string, dialect: string) {
+  // Neo4j 5 reports UNIQUENESS; Cypher 25 names the same node constraint NODE_PROPERTY_UNIQUENESS.
+  return dialect === "neo4j" ? (r.type === "UNIQUENESS" || r.type === "NODE_PROPERTY_UNIQUENESS") && r.entityType === "NODE" &&
+    JSON.stringify(list(r.labelsOrTypes)) === JSON.stringify([label]) && JSON.stringify(list(r.properties)) === '["key"]' :
+    r["constraint type"] === "unique" && r.label === label && JSON.stringify(list(r.properties)) === '["key"]';
 }
-
-/**
- * Create performance indexes for frequently queried properties
- *
- * These indexes improve query performance for common access patterns
- */
-async function createPerformanceIndexes(adapter: GraphAdapter): Promise<void> {
-  console.log("  Creating performance indexes...");
-
-  const indexes = [
-    // Context indexes
-    { label: "Context", property: "status", name: "context_status" },
-    { label: "Context", property: "depth", name: "context_depth" },
-    {
-      label: "Context",
-      property: "memorySpaceId",
-      name: "context_memory_space",
-    },
-    { label: "Context", property: "userId", name: "context_user" },
-    { label: "Context", property: "parentId", name: "context_parent" },
-
-    // Conversation indexes
-    { label: "Conversation", property: "type", name: "conversation_type" },
-    {
-      label: "Conversation",
-      property: "memorySpaceId",
-      name: "conversation_memory_space",
-    },
-    { label: "Conversation", property: "userId", name: "conversation_user" },
-    { label: "Conversation", property: "agentId", name: "conversation_agent" },
-
-    // Memory indexes
-    { label: "Memory", property: "importance", name: "memory_importance" },
-    { label: "Memory", property: "sourceType", name: "memory_source_type" },
-    { label: "Memory", property: "memorySpaceId", name: "memory_memory_space" },
-    { label: "Memory", property: "userId", name: "memory_user" },
-    { label: "Memory", property: "agentId", name: "memory_agent" },
-    { label: "Memory", property: "contentType", name: "memory_content_type" },
-
-    // Fact indexes
-    { label: "Fact", property: "factType", name: "fact_type" },
-    { label: "Fact", property: "confidence", name: "fact_confidence" },
-    { label: "Fact", property: "subject", name: "fact_subject" },
-    { label: "Fact", property: "memorySpaceId", name: "fact_memory_space" },
-    { label: "Fact", property: "sourceType", name: "fact_source_type" },
-
-    // MemorySpace indexes
-    { label: "MemorySpace", property: "type", name: "memory_space_type" },
-    { label: "MemorySpace", property: "status", name: "memory_space_status" },
-
-    // Entity indexes
-    { label: "Entity", property: "type", name: "entity_type" },
-
-    // Participant indexes (Hive Mode)
-    { label: "Participant", property: "type", name: "participant_type" },
-  ];
-
-  for (const index of indexes) {
-    try {
-      await adapter.query({
-        cypher: `
-          CREATE INDEX ${index.name} IF NOT EXISTS
-          FOR (n:${index.label})
-          ON (n.${index.property})
-        `,
-      });
-
-      console.log(`    ✓ ${index.label}.${index.property}`);
-    } catch (_error) {
-      // Index may already exist or not supported by the database
-      console.log(
-        `    ~ ${index.label}.${index.property} (already exists or not supported)`,
-      );
-    }
-  }
+function indexMatches(r: Record<string, unknown>, label: string, property: string, dialect: string) {
+  return dialect === "neo4j" ? r.entityType === "NODE" && r.state === "ONLINE" &&
+    JSON.stringify(list(r.labelsOrTypes)) === JSON.stringify([label]) && JSON.stringify(list(r.properties)) === JSON.stringify([property]) :
+    r.label === label && JSON.stringify(list(r.property)) === JSON.stringify([property]) && r["index type"] === "label+property";
 }
-
-/**
- * Verify schema is properly initialized
- *
- * Checks if all constraints and indexes are in place
- */
-export async function verifyGraphSchema(adapter: GraphAdapter): Promise<{
-  valid: boolean;
-  constraints: string[];
-  indexes: string[];
-  missing: string[];
-}> {
-  try {
-    // Query for existing constraints
-    const constraintsResult = await adapter.query({
-      cypher: "SHOW CONSTRAINTS",
-    });
-
-    // Query for existing indexes
-    const indexesResult = await adapter.query({
-      cypher: "SHOW INDEXES",
-    });
-
-    const constraints = constraintsResult.records.map(
-      (r) => (r as { name?: string }).name || "unknown",
-    );
-    const indexes = indexesResult.records.map(
-      (r) => (r as { name?: string }).name || "unknown",
-    );
-
-    // Check for required constraints
-    const requiredConstraints = [
-      "memory_space_id",
-      "context_id",
-      "conversation_id",
-      "memory_id",
-      "fact_id",
-      "user_id",
-    ];
-
-    const missing = requiredConstraints.filter(
-      (name) => !constraints.includes(name),
-    );
-
-    return {
-      valid: missing.length === 0,
-      constraints,
-      indexes,
-      missing,
-    };
-  } catch (error) {
-    // Some graph databases may not support SHOW CONSTRAINTS/INDEXES
-    console.warn("Could not verify schema (may not be supported):", error);
-    return {
-      valid: false,
-      constraints: [],
-      indexes: [],
-      missing: ["verification not supported"],
-    };
+export async function verifyGraphSchema(adapter: GraphAdapter): Promise<{valid: boolean; constraints: string[]; indexes: string[]; missing: string[]}> {
+  const actual = await inspect(adapter), missing: string[] = [];
+  for (const item of names) {
+    if (actual.dialect === "neo4j") {
+      const named = actual.constraints.find(r => r.name === item.name);
+      if (named && !constraintMatches(named, item.label, actual.dialect))
+        throw new GraphDatabaseError("A fixed managed schema name has a conflicting definition.", "GRAPH_SCHEMA_CONFLICT");
+      const scope = actual.indexes.find(r => r.name === item.scope);
+      if (scope && !indexMatches(scope, item.label, "tenantValue", actual.dialect))
+        throw new GraphDatabaseError("A fixed managed scope index has a conflicting definition.", "GRAPH_SCHEMA_CONFLICT");
+    }
+    if (!actual.constraints.some(r => constraintMatches(r, item.label, actual.dialect))) missing.push(item.name);
+    if (!actual.indexes.some(r => indexMatches(r, item.label, "key", actual.dialect))) missing.push(`${item.label}.key index`);
+    if (!actual.indexes.some(r => indexMatches(r, item.label, "tenantValue", actual.dialect))) missing.push(item.scope);
   }
+  return {valid: missing.length === 0, constraints: actual.constraints.map(r => String(r.name ?? `${r.label}.key`)),
+    indexes: actual.indexes.map(r => String(r.name ?? `${r.label}.${r.property}`)), missing};
 }
-
-/**
- * Drop all constraints and indexes
- *
- * WARNING: This removes all schema constraints and indexes!
- * Use only for testing or when resetting the database.
- */
-export async function dropGraphSchema(adapter: GraphAdapter): Promise<void> {
-  console.log("⚠️  Dropping graph schema (constraints and indexes)...");
-
-  try {
-    // Get all constraints
-    const constraintsResult = await adapter.query({
-      cypher: "SHOW CONSTRAINTS",
-    });
-
-    // Drop each constraint
-    for (const record of constraintsResult.records) {
-      const name = record.name;
-      if (name) {
-        try {
-          await adapter.query({
-            cypher: `DROP CONSTRAINT ${name} IF EXISTS`,
-          });
-          console.log(`  ✓ Dropped constraint: ${name}`);
-        } catch (error) {
-          console.log(`  ✗ Failed to drop constraint ${name}:`, error);
-        }
-      }
+export async function assertManagedGraphCompatibility(adapter: GraphAdapter): Promise<void> {
+  if (!await adapter.isConnected()) throw new GraphDatabaseError("Managed graph is unavailable.", "GRAPH_UNAVAILABLE");
+  const result = await verifyGraphSchema(adapter);
+  if (!result.valid) throw new GraphDatabaseError("Managed-v2 graph schema is missing. Run explicit initializeGraphSchema and initialGraphSync with an administrator rebuild transport.", "GRAPH_SCHEMA_MIGRATION_REQUIRED");
+}
+export async function initializeGraphSchema(adapter: GraphAdapter): Promise<void> {
+  // Inspection errors always propagate; a network/auth/syntax error is never already-exists.
+  const actual = await inspect(adapter);
+  await verifyGraphSchema(adapter); // Detect conflicting fixed names before any creation.
+  for (const item of names) {
+    if (!actual.constraints.some(r => constraintMatches(r, item.label, actual.dialect))) await adapter.query(actual.dialect === "neo4j" ?
+      `CREATE CONSTRAINT ${item.name} IF NOT EXISTS FOR (n:${item.label}) REQUIRE n.key IS UNIQUE` :
+      `CREATE CONSTRAINT ON (n:${item.label}) ASSERT n.key IS UNIQUE`);
+    if (actual.dialect === "memgraph" && !actual.indexes.some(r => indexMatches(r, item.label, "key", actual.dialect)))
+      await adapter.query(`CREATE INDEX ON :${item.label}(key)`);
+    if (!actual.indexes.some(r => indexMatches(r, item.label, "tenantValue", actual.dialect))) await adapter.query(actual.dialect === "neo4j" ?
+      `CREATE INDEX ${item.scope} IF NOT EXISTS FOR (n:${item.label}) ON (n.tenantValue)` : `CREATE INDEX ON :${item.label}(tenantValue)`);
+  }
+  await assertManagedGraphCompatibility(adapter);
+}
+export async function dropGraphSchema(adapter: GraphAdapter, options?: {managedVersion: 2}): Promise<void> {
+  if (options?.managedVersion !== 2) throw new GraphDatabaseError("Global schema deletion is retired. Explicitly select managedVersion:2 to drop only fixed Cortex-v2 objects.", "GRAPH_SCHEMA_MIGRATION_REQUIRED");
+  const actual = await inspect(adapter);
+  await verifyGraphSchema(adapter); // All named shapes are checked before effects.
+  for (const item of names) {
+    if (actual.dialect === "neo4j") {
+      if (actual.constraints.some(r => r.name === item.name && constraintMatches(r, item.label, actual.dialect)))
+        await adapter.query(`DROP CONSTRAINT ${item.name} IF EXISTS`);
+      if (actual.indexes.some(r => r.name === item.scope && indexMatches(r, item.label, "tenantValue", actual.dialect)))
+        await adapter.query(`DROP INDEX ${item.scope} IF EXISTS`);
+    } else {
+      if (actual.constraints.some(r => constraintMatches(r, item.label, actual.dialect))) await adapter.query(`DROP CONSTRAINT ON (n:${item.label}) ASSERT n.key IS UNIQUE`);
+      for (const property of ["key", "tenantValue"]) if (actual.indexes.some(r => indexMatches(r, item.label, property, actual.dialect)))
+        await adapter.query(`DROP INDEX ON :${item.label}(${property})`);
     }
-
-    // Get all indexes
-    const indexesResult = await adapter.query({
-      cypher: "SHOW INDEXES",
-    });
-
-    // Drop each index (except constraint-backed indexes)
-    for (const record of indexesResult.records) {
-      const name = record.name;
-      const type = record.type;
-
-      // Skip constraint-backed indexes (they're dropped with constraints)
-      if (name && type !== "UNIQUENESS") {
-        try {
-          await adapter.query({
-            cypher: `DROP INDEX ${name} IF EXISTS`,
-          });
-          console.log(`  ✓ Dropped index: ${name}`);
-        } catch (error) {
-          console.log(`  ✗ Failed to drop index ${name}:`, error);
-        }
-      }
-    }
-
-    console.log("✅ Schema dropped");
-  } catch (error) {
-    throw new GraphDatabaseError(
-      `Failed to drop graph schema: ${error instanceof Error ? error.message : String(error)}`,
-      "SCHEMA_DROP_ERROR",
-      error instanceof Error ? error : undefined,
-    );
   }
 }

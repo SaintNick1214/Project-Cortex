@@ -349,6 +349,20 @@ export const beginOperation = internalMutation({ args: { ...agentAttempt, kind: 
   if (args.kind === "tool") await writeParts(ctx, current.execution, [{ type: "tool", toolCallId: args.toolCallId!, name: args.toolName!, phase: "requested" }]);
   return { operationId, semanticId, state, resultCanonical: null, nativeMessageIds: [] as string[] };
 } });
+/** Reconcile an already completed model step before its own saved output extends
+ * the hydrated history. Current authority, cutoff, sources and saved-message pins
+ * are checked again; this does not readmit a started or unknown operation. */
+export const completedModelStep = internalQuery({ args: { ...agentAttempt, ordinal: v.number() }, handler: async (ctx, args) => {
+  const current = await executionContext(ctx, args);
+  if (!Number.isSafeInteger(args.ordinal) || args.ordinal < 0 || args.ordinal > 32) transcriptDenied("INVALID_INPUT");
+  const semanticId = await semanticHash(canonicalModelJson([args.runId, args.attemptNumber, "model", args.ordinal, null]));
+  const owned = singleTranscript(await ctx.db.query("runtimeAgentOperations").withIndex("by_operation", q => q.eq("tenantId", args.reference.tenantId)
+    .eq("memorySpaceId", args.reference.memorySpaceId!).eq("operationId", `agent-op:${semanticId}`)).take(2));
+  if (!owned || owned.state !== "complete") return null;
+  if (owned.kind !== "model" || owned.runId !== args.runId || owned.attemptNumber !== args.attemptNumber || owned.ordinal !== args.ordinal
+    || !owned.resultCanonical || owned.nativeMessageIds.some(id => !current.execution.savedMessageIds.includes(id))) transcriptDenied("INVALID_STATE");
+  return owned.resultCanonical;
+} });
 export const startOperation = internalMutation({ args: { ...agentAttempt, operationId: v.string() }, handler: async (ctx, args) => {
   const current = await executionContext(ctx, args); const owned = await operation(ctx, args, args.operationId);
   if (owned.state !== "prepared" && owned.state !== "approved") transcriptDenied("INTERRUPTED_REQUIRES_RECONCILIATION");
@@ -412,6 +426,8 @@ export const recordOutput = internalMutation({ args: { ...agentAttempt, parts: v
 export async function modelStepHandler(ctx: ActionCtx, args: Attempt & { ordinal: number }): Promise<StepResult> {
   const attempt = attemptArgs(args);
   const current = await ctx.runQuery(refs.hydrate, attempt);
+  const completed = await ctx.runQuery(ref<"query", Attempt & { ordinal: number }, string | null>("query", "runtimeAgent:completedModelStep"), { ...attempt, ordinal: args.ordinal });
+  if (completed !== null) return JSON.parse(completed) as StepResult;
   const requestCanonical = canonicalModelJson({ messages: current.messages, context: current.execution.contextCanonical ?? "", instructions: current.definition.instructions });
   const op = await ctx.runMutation(refs.begin, { ...attempt, ordinal: args.ordinal, kind: "model", requestCanonical });
   if (op.state === "complete" && op.resultCanonical) return JSON.parse(op.resultCanonical) as StepResult;
@@ -435,7 +451,7 @@ export async function modelStepHandler(ctx: ActionCtx, args: Attempt & { ordinal
     semanticId: op.semanticId, ordinal: args.ordinal });
   let cancellationBridge: ReturnType<typeof createAgentGatewayCancellationBridge> | undefined;
   try {
-    if (governed.model.specificationVersion !== "v4" || !("doStream" in governed.model)) transcriptDenied("CAPABILITY_UNAVAILABLE");
+    if (governed.model.specificationVersion !== "v4" || !("doGenerate" in governed.model) || !("doStream" in governed.model)) transcriptDenied("CAPABILITY_UNAVAILABLE");
     cancellationBridge = createAgentGatewayCancellationBridge(governed.model, governed.lifecycle);
     const agent = new Agent(agentComponent, { name: attemptName(args, args.ordinal), languageModel: cancellationBridge.model,
     tools: serverTools(current.definition.tools.map(tool => tool.toolId as keyof typeof NATIVE_TOOL_NAMES)),
@@ -465,12 +481,22 @@ export async function modelStepHandler(ctx: ActionCtx, args: Attempt & { ordinal
     if (parts.length) await ctx.runMutation(refs.output, { ...attempt, parts });
     lastFlush = Date.now();
   }
-    const result = await agent.streamText(ctx, { threadId: current.threadId, userId: args.reference.principalId },
-      { promptMessageId: current.run.inputMessageIds[current.run.inputMessageIds.length - 1], instructions: current.definition.instructions.text,
+    const identity = { threadId: current.threadId, userId: args.reference.principalId };
+    const parameters = { promptMessageId: current.run.inputMessageIds[current.run.inputMessageIds.length - 1], instructions: current.definition.instructions.text,
         maxOutputTokens: Math.min(resolution.snapshot.limits.outputTokens, resolution.dispatchEvidence.resultBound.maximumOutputTokens),
-        maxRetries: 0, stopWhen: isStepCount(1), onChunk: async ({ chunk }) => { pending.push(chunk); if (pending.length >= 32 || Date.now() - lastFlush >= 250) await flush(); } },
-      { saveStreamDeltas: { throttleMs: 250, returnImmediately: false, sendSources: false } });
-    await flush(); const calls = (await result.toolCalls).map(call => ({ toolCallId: call.toolCallId, toolName: call.toolName, inputCanonical: canonicalModelJson(call.input) }));
+        maxRetries: 0, stopWhen: isStepCount(1) };
+    const result = current.execution.streaming
+      ? await agent.streamText(ctx, identity, { ...parameters,
+        onChunk: async ({ chunk }) => { pending.push(chunk); if (pending.length >= 32 || Date.now() - lastFlush >= 250) await flush(); } },
+        { saveStreamDeltas: { throttleMs: 250, returnImmediately: false, sendSources: false } })
+      : await agent.generateText(ctx, identity, parameters);
+    const calls = (await result.toolCalls).map(call => ({ toolCallId: call.toolCallId, toolName: call.toolName, inputCanonical: canonicalModelJson(call.input) }));
+    if (!current.execution.streaming) {
+      const text = await result.text;
+      if (text) pending.push({type: "text", text});
+      for (const call of calls) pending.push({type: "tool-call", toolCallId: call.toolCallId, toolName: call.toolName});
+    }
+    await flush();
     const savedMessageIds = (result.savedMessages ?? []).map(message => message._id);
     const value: StepResult = { savedMessageIds, calls, final: calls.length === 0 };
     if (value.final && !(await result.text).trim()) throw new Error("INVALID_MODEL_OUTPUT");

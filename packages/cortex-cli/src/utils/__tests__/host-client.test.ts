@@ -9,27 +9,29 @@ let response: unknown = { privateValue: "current" }, onRpc: (() => void) | undef
 const constructed: FakeCortex[] = [];
 class FakeCortex {
   closed = false;
+  readonly automation = { facts: process.env.CORTEX_FACT_EXTRACTION, embedding: process.env.CORTEX_EMBEDDING };
   constructor(readonly options: { fetchAuthToken: (request: { forceRefreshToken: boolean }) => Promise<string | null>; auth: { userId: string; tenantId: string } }) { constructed.push(this); }
   readonly port = { query: async () => { onRpc?.(); return response; }, mutation: async () => { onRpc?.(); return response; }, action: async () => { onRpc?.(); return response; } };
   getClient() { return this.port; }
   close() { this.closed = true; }
+  async shutdown() { this.close(); }
 }
-jest.unstable_mockModule("@cortexmemory/sdk", () => ({ Cortex: FakeCortex }));
+jest.unstable_mockModule("@cortexmemory/sdk", () => ({ createAuthContext: (value: unknown) => value, Cortex: FakeCortex }));
 jest.unstable_mockModule("convex/browser", () => ({ ConvexHttpClient: class { setAuth() {} async mutation() { return { ...current }; } } }));
 const { createClient, closeClient, withClient, configureClientOptions } = await import("../client.js");
 const { credentialSource } = await import("../host-auth.js");
 const config: CLIConfig = { deployments: { test: { url: "https://test.convex.cloud", key: "dev:not-a-host-jwt" } }, default: "test", format: "json", confirmDangerous: true };
 const directories: string[] = [];
 beforeEach(() => { constructed.length = 0; current = { version: 1, tenantId: "tenant", memorySpaceId: "space", principalId: "A", userId: "user-A", deliveryExpiresAt: Date.now() + 60000 }; response = { privateValue: "current" }; onRpc = undefined; configureClientOptions({}); process.env.CORTEX_AUTH_TOKEN = "a.b.c"; });
-afterEach(async () => { closeClient(); delete process.env.CORTEX_AUTH_TOKEN; for (const dir of directories.splice(0)) await fs.rm(dir, { recursive: true, force: true }); });
+afterEach(async () => { await closeClient(); delete process.env.CORTEX_AUTH_TOKEN; for (const dir of directories.splice(0)) await fs.rm(dir, { recursive: true, force: true }); });
 it("requires an actual host credential before constructing any SDK client; deploy keys do not authenticate", async () => {
   delete process.env.CORTEX_AUTH_TOKEN;
-  await expect(createClient(config, {})).rejects.toThrow("Host JWT"); expect(constructed).toHaveLength(0);
+  await expect(createClient(config, { tokenEnv: "CORTEX_AUTH_TOKEN" })).rejects.toThrow("Host JWT"); expect(constructed).toHaveLength(0);
 });
 it("never shares client identity for two principals at the same URL and closes each exact owned client", async () => {
   const a = await createClient(config, {}); current = { ...current, principalId: "B", userId: "user-B" }; const b = await createClient(config, {});
   expect(a).not.toBe(b); expect(constructed.map(c => c.options.auth.userId)).toEqual(["user-A", "user-B"]);
-  closeClient(a); expect(constructed[0].closed).toBe(true); expect(constructed[1].closed).toBe(false);
+  await closeClient(a); expect(constructed[0].closed).toBe(true); expect(constructed[1].closed).toBe(false);
 });
 it.each(["query", "mutation", "action"] as const)("fences %s delivery before command code can receive or print delayed A data", async kind => {
   const a = await createClient(config, {}); onRpc = () => { current = { ...current, principalId: "B", userId: "user-B" }; };
@@ -61,4 +63,22 @@ it("rereads a private rotated token file and rejects insecure files/symlinks wit
 });
 it("pins configured selector scope against verified server metadata, not labels or decoded claims", async () => {
   await expect(createClient(config, { tenantId: "foreign" })).rejects.toThrow("INVALID_SESSION"); expect(constructed).toHaveLength(0);
+});
+
+it("public JWT construction disables ambient app inference gates and restores host environment exactly", async () => {
+  const before = [process.env.CORTEX_FACT_EXTRACTION, process.env.CORTEX_EMBEDDING];
+  try {
+    process.env.CORTEX_FACT_EXTRACTION = "true"; process.env.CORTEX_EMBEDDING = "true";
+    await createClient(config, {});
+    expect(constructed[0].automation).toEqual({ facts: "false", embedding: "false" });
+    expect([process.env.CORTEX_FACT_EXTRACTION, process.env.CORTEX_EMBEDDING]).toEqual(["true", "true"]);
+  } finally {
+    ["CORTEX_FACT_EXTRACTION", "CORTEX_EMBEDDING"].forEach((name, index) => { if (before[index] === undefined) delete process.env[name]; else process.env[name] = before[index]; });
+  }
+});
+
+it("an explicitly empty host token cannot fall back to a configured deployment operator key", async () => {
+  process.env.CORTEX_AUTH_TOKEN = "";
+  await expect(createClient(config, {})).rejects.toThrow("Host JWT");
+  expect(constructed).toHaveLength(0);
 });

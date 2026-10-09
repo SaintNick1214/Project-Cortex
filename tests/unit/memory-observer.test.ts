@@ -27,9 +27,10 @@ class ObserverUnitClient {
   constructor(readonly url: string) { if (url !== "https://unit.invalid") throw new Error("Observer fixture requires unit.invalid"); ObserverUnitClient.owned.push(this); }
   async mutation(ref: Parameters<typeof getFunctionName>[0], args: Record<string, unknown>) {
     if (this.closed) throw new Error("Owned unit client is closed");
-    const name = getFunctionName(ref); this.calls.push(name);
+    const registeredName = getFunctionName(ref); this.calls.push(registeredName);
+    const name = registeredName.replace(/^cliOperator\//, "");
     // Ensure observed latency has a real async boundary without a live socket.
-    await new Promise(resolve => setTimeout(resolve, 1));
+    await new Promise(resolve => setTimeout(resolve, 5));
     if (name === "memorySpaces:get") return { memorySpaceId: args.memorySpaceId, type: "personal", participants: [], status: "active", createdAt: 1, updatedAt: 1 };
     if (name === "immutable:get") return { type: "user", id: args.id, data: { name: "Unit user" }, version: 1, createdAt: 1 };
     if (name === "users:get") return { userId: args.userId, data: {}, version: 1, createdAt: 1, updatedAt: 1 };
@@ -50,17 +51,23 @@ class ObserverUnitClient {
     }
     if (name === "memories:search") return [];
     if (name === "facts:search") return [];
+    if (name === "facts:candidatePage") return { page: [], isDone: true, continueCursor: "unit-facts-complete" };
     throw new Error(`Unexpected observer unit mutation ${name}`);
   }
-  async query(ref: Parameters<typeof getFunctionName>[0]) { throw new Error(`Unexpected observer unit query ${getFunctionName(ref)}`); }
+  async query(ref: Parameters<typeof getFunctionName>[0], args: Record<string, unknown>) { return this.mutation(ref, args); }
+  onUpdate() { throw new Error("Observer unit fixture has no subscription effects"); }
   async action(ref: Parameters<typeof getFunctionName>[0]) {
-    const name = getFunctionName(ref); this.calls.push(name);
+    const registeredName = getFunctionName(ref); this.calls.push(registeredName);
+    const name = registeredName.replace(/^cliOperator\//, "");
     if (name !== "memories:search") throw new Error(`Unexpected observer unit action ${name}`);
-    await new Promise(resolve => setTimeout(resolve, 1)); return [];
+    await new Promise(resolve => setTimeout(resolve, 5)); return [];
   }
   async close() { this.closed = true; }
 }
-jest.unstable_mockModule("convex/browser", () => ({ ConvexClient: ObserverUnitClient }));
+jest.unstable_mockModule("convex/browser", () => ({
+  ConvexClient: ObserverUnitClient,
+  ConvexHttpClient: class { constructor() { throw new Error("Observer unit fixture must not construct an HTTP transport"); } },
+}));
 const { Cortex } = await import("../../src");
 
 // Create test run context for parallel execution isolation
@@ -120,7 +127,7 @@ describe("Memory Orchestration Observer", () => {
   });
 
   beforeAll(async () => {
-    cortex = new Cortex({ convexUrl: CONVEX_URL, resilience: { enabled: false } });
+    cortex = new Cortex({ convexUrl: CONVEX_URL, resilience: { enabled: false } }, { deploymentOperator: true });
   });
 
   afterAll(async () => {
@@ -128,8 +135,8 @@ describe("Memory Orchestration Observer", () => {
     expect(ObserverUnitClient.owned).toHaveLength(1);
     expect(ObserverUnitClient.owned.every(client => client.closed)).toBe(true);
     expect(ObserverUnitClient.owned[0].memories.length).toBeGreaterThan(0);
-    expect(ObserverUnitClient.owned[0].calls).toContain("memories:search");
-    expect(ObserverUnitClient.owned[0].calls).toContain("conversations:addMessage");
+    expect(ObserverUnitClient.owned[0].calls).toContain("cliOperator/memories:search");
+    expect(ObserverUnitClient.owned[0].calls).toContain("cliOperator/conversations:addMessage");
   });
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

@@ -1,0 +1,85 @@
+{
+  "version": 1,
+  "status": "SOURCE_READY",
+  "closedAtUtc": "2026-10-09T07:12:59.865201+00:00",
+  "scope": "Task16 incoming-dev integration backend/shared SDK author",
+  "candidateDigest": "15b26e06279146fe4612832162252a556bb9c555837b604617da019ed6e27832",
+  "sourceManifest": "source-manifest1.json",
+  "initialTextualConflicts": 15,
+  "assignedConflictMarkersRemaining": 0,
+  "gitIndexUnmergedEntries": "Untouched by author; Parent owns merge staging",
+  "materialChoices": [
+    {
+      "id": "canonical-runtime",
+      "choice": "Resolve incoming cloned-runtime import sections against current canonical src/auth and src/domain; retain original auth/model/Gateway/profile/accounting source semantics. Incoming legacy lib/runtimeDomain sources remain historical but are absent from the derived shipped closure.",
+      "evidence": "source-manifest1.json coreHeadByteEquivalence:12/12 exact HEAD"
+    },
+    {
+      "id": "legacy-administration",
+      "choice": "Retain incoming explicit cliOperator internal administrative APIs, reference lifecycle, fact provenance, paging, erasure receipts and graph/domain operations. Public protected reads use fresh mutations; marked deployment operators keep separate internal query bindings. No retry or fallback crosses modes.",
+      "evidence": "focused-tests3.json 7 read-routing controls; affected-tests1.json reference/provenance/operator/domain cases"
+    },
+    {
+      "id": "schema",
+      "choice": "Preserve all 68 current tables plus four incoming cortexErasureReceipts/cortexReferenceTargets/cortexReferenceEdges/cortexReferenceState tables; retain both runtime-source lineage and incoming provenance/reference indexes.",
+      "evidence": "generated-closure1/manifest.json 72 tables; affected model-policy table preservation tests"
+    },
+    {
+      "id": "current-write-results",
+      "choice": "Keep canonical write metadata and video/asset public argument/result shapes alongside legacy administrative types. Restore/archive may return an explicit confirmed mutation receipt rather than inventing hydrated memory; consumer types discriminate the result.",
+      "evidence": "src/common/backendApi.ts; src/vector/index.ts; source-only SDK tsc0"
+    },
+    {
+      "id": "recursive-installation",
+      "choice": "Derive additive distribution from current reachable source; include nested cliOperator entries, normalize module collisions, preserve five exact HTTP routes/schema/components fragments and bind nested generated references to host codegen. Do not adopt the incoming fixed SDK_CONTRACT or package generated snapshots.",
+      "evidence": "generated-closure1/manifest.json 154 files/12 cliOperator entries/0 stale cloned modules; focused-tests3.json 2 actual generator controls"
+    },
+    {
+      "id": "ordinary-memory-no-effects",
+      "choice": "Ordinary MemoryAPI remember/rememberStream/recall orchestration and implicit search embedding refuse before callbacks, observer notification, stream consumption or RPC. Extraction-enabled store/update refuse before writes. Manual canonical writes and explicit deploymentOperator administrative orchestration remain available; modern CortexRuntimeClient unchanged.",
+      "evidence": "memory-capability-red1.json 7FAIL/3PASS -> memory-capability-green2.json 10PASS; src/memory/index.ts first-entry guards"
+    },
+    {
+      "id": "operator-introspection",
+      "choice": "Readonly Cortex.deploymentOperator reports the actual local client marker for borrowed provider capability guards; it does not authorize a caller or bypass server deployment-key checks.",
+      "evidence": "src/index.ts getter; src/common/deploymentOperator.ts existing initializer/server boundary"
+    },
+    {
+      "id": "entry-export-preservation",
+      "choice": "Retain incoming transport initialization and owned graph/resource disposal together with existing main/runtime/runtime-graph exports and current Agent/asset error exports.",
+      "evidence": "src/index.ts; Root owns aggregate built export validation"
+    }
+  ],
+  "currentControlledInstances": 559,
+  "currentFocusedInstances": 19,
+  "applicableAffectedInstances": 540,
+  "skips": 0,
+  "currentProductSourceTypes": "PASS",
+  "backendTypes": "PASS",
+  "scopedLint": "PASS (0 errors; incoming nonbreaking warnings retained)",
+  "checks": "checks-summary1.json",
+  "preservedFailures": [
+    "focused-tests1 missing explicit CONVEX_URL guard before clients",
+    "backend-types1 duplicate auto-merge and ES2021 source availability",
+    "sdk-types1/2/3 initial public/query/receipt type mismatches",
+    "scoped-lint1 exact unused import",
+    "memory-capability-red1 7 failures before guard",
+    "sdk-types5 cross-owner test fixtures and own now-repaired mock annotation"
+  ],
+  "limitations": [
+    "Source implementation is closed; merged candidate service/native acceptance, aggregate codegen/types/unit checks and final non-author review are Parent-owned follow-up. No service/model operation, deployment, installation or Git mutation was performed by this author.",
+    "The preceding Root SDK build and packed receipt are pre-Memory-guard; a new SDK build is required. Current backend runtime executable core/proof/accounting bytes remain exact HEAD and do not justify blind repeated paid qualification.",
+    "Full sdk-types5 red is retained. Test-owner public/operator RPC-kind and restore receipt fixture adjustments are pending aggregate full typecheck; the authors own void mock annotation was repaired. Current product source-only SDK tsc and backend tsc pass.",
+    "Historical ordinary MemoryAPI orchestration files/fixtures require explicit administrative fixture selection where they intentionally test that legacy behavior. These assertions are not silently removed or weakened; current public no-effect regression is separate.",
+    "Genuine asynchronous video remains externally blocked by the previously observed HTTP503 configuration error; no retry/enablement/terminal or callback PASS is claimed. Existing image/V2/source proofs and financial liabilities stay historical until prospective material integration checks."
+  ],
+  "actions": {
+    "sourceAndQaWrites": true,
+    "serviceCalls": 0,
+    "modelCalls": 0,
+    "deployments": 0,
+    "installs": 0,
+    "gitMutations": 0
+  },
+  "writerState": "QUIET"
+}

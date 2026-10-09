@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "records": {
+    "observed-image-model-v4-record1.json": "34e95f16f5a7a2c0acbda094299d0dc4a8f3a44502acc317d558366cf36e434a",
+    "observed-v2-stream-generate-record1.json": "acbf6761b494268c5292dc5a961a4056fd1b60887e64e24a3dea9e126e980859",
+    "observed-secondary-currentness-record1.json": "68eff3b251cda876d945e37b08a08b5cf98327ee6eff3cfa3cede396131e927d",
+    "observed-ci-title-currentness-record1.json": "e998d452fef1275b5be784bda1ea35d1fbba71912f469a430951198a5e980ad7"
+  },
+  "registrationSourceSha256": "41737855c394577a6d3118cbdaf135399ae1c7f33beeba5e75517435ba78177d",
+  "manifestSha256": "4259c5cc3932a3b62608dc8d010615e226b4cb9b02eb4f5d2e4ca36b6dc3d5f5",
+  "oldManifest9Sha256": "1a0b8c91551f62a78da6be6e017e8a11ec4fd1ec08f4f0b0a22414223032da70",
+  "oldFivePrefixUnchanged": true,
+  "oldDefault9SourceSha256": "ec0bdc4206270dbd4a3bf2aea9ccbbcb8209060ad0d67f182fa5684e1a91a44f",
+  "newDispatches": 0,
+  "renewedOperations": [
+    "memory.extract",
+    "embedding.memory",
+    "embedding.query",
+    "conversation.title"
+  ],
+  "unobservedExcluded": [
+    "facts.resolve",
+    "large3072",
+    "V1-tools",
+    "async-video"
+  ]
+}

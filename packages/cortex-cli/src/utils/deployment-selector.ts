@@ -2,51 +2,109 @@
  * Deployment Selection Utility
  *
  * Provides consistent deployment selection across all CLI commands.
- * Priority order: -d flag > cortex use > interactive/single
+ * Priority order: -d flag > scoped cortex use > configured default > singleton
  */
 
 import { existsSync } from "fs";
-import { readFile, writeFile, unlink } from "fs/promises";
+import { readFile, unlink } from "fs/promises";
 import { homedir } from "os";
-import { join } from "path";
-import prompts from "prompts";
+import { join, isAbsolute } from "path";
 import pc from "picocolors";
+import { currentAdmissionContext, readAdmissionFile, recheckAdmission } from "./bootstrap-admission.js";
 import type { CLIConfig, DeploymentConfig } from "../types.js";
+import {
+  atomicPrivateWrite,
+  getConfigScope,
+  validateDeploymentName,
+} from "./config.js";
 
 /**
  * Path to the current deployment file
  */
-const CURRENT_DEPLOYMENT_PATH = join(homedir(), ".cortex-current");
-
-/**
- * Get the current deployment set via `cortex use`
- */
-export async function getCurrentDeployment(): Promise<string | null> {
-  if (!existsSync(CURRENT_DEPLOYMENT_PATH)) {
-    return null;
-  }
+function currentPath(): string {
+  return join(homedir(), ".cortex-current");
+}
+interface SelectionStore {
+  version: 1;
+  selections: Record<string, string>;
+  legacy?: string;
+}
+async function readStore(): Promise<SelectionStore> {
   try {
-    const content = await readFile(CURRENT_DEPLOYMENT_PATH, "utf-8");
-    return content.trim() || null;
-  } catch {
-    return null;
+    const context = currentAdmissionContext();
+    if (context?.mode === "owned-data-only") await recheckAdmission(context);
+    const safe = context?.mode === "owned-data-only" ? await readAdmissionFile(currentPath()) : undefined;
+    const content = context?.mode === "owned-data-only" ? (safe?.bytes.toString("utf8") ?? "{\"version\":1,\"selections\":{}}") : await readFile(currentPath(), "utf-8");
+    // Preserve legacy global selection but do not let it silently target another project.
+    if (!content.trim().startsWith("{"))
+      return { version: 1, selections: {}, legacy: content.trim() };
+    const raw: unknown = JSON.parse(content);
+    if (
+      !raw ||
+      typeof raw !== "object" ||
+      !("version" in raw) ||
+      raw.version !== 1 ||
+      !("selections" in raw) ||
+      !raw.selections ||
+      typeof raw.selections !== "object" ||
+      Array.isArray(raw.selections)
+    )
+      throw new Error("Invalid scoped selection");
+    for (const [scope, name] of Object.entries(raw.selections)) {
+      if (!isAbsolute(scope) || typeof name !== "string")
+        throw new Error("Invalid scoped selection");
+      validateDeploymentName(name);
+    }
+    return raw as SelectionStore;
+  } catch (error) {
+    if (
+      error &&
+      typeof error === "object" &&
+      "code" in error &&
+      error.code === "ENOENT"
+    )
+      return { version: 1, selections: {} };
+    throw new Error(
+      "Cannot read scoped target selection; inspect the .cortex-current file before selecting a target",
+      { cause: error },
+    );
   }
 }
-
-/**
- * Set the current deployment via `cortex use`
- */
+export async function getCurrentDeployment(): Promise<string | null> {
+  const selections = (await readStore()).selections;
+  const scope = await getConfigScope();
+  // Older single-directory discovery stored explicit use under cwd. Preserve
+  // that choice until an explicit use/clear replaces it; reads never migrate it.
+  const cwd = process.cwd();
+  if (Object.hasOwn(selections, cwd)) return selections[cwd];
+  return Object.hasOwn(selections, scope) ? selections[scope] : null;
+}
 export async function setCurrentDeployment(name: string): Promise<void> {
-  await writeFile(CURRENT_DEPLOYMENT_PATH, name, "utf-8");
+  validateDeploymentName(name);
+  const store = await readStore();
+  const scope = await getConfigScope();
+  if (process.cwd() !== scope) delete store.selections[process.cwd()];
+  store.selections[scope] = name;
+  await atomicPrivateWrite(currentPath(), JSON.stringify(store, null, 2));
 }
-
-/**
- * Clear the current deployment
- */
 export async function clearCurrentDeployment(): Promise<void> {
-  if (existsSync(CURRENT_DEPLOYMENT_PATH)) {
-    await unlink(CURRENT_DEPLOYMENT_PATH);
-  }
+  const store = await readStore();
+  delete store.selections[await getConfigScope()];
+  delete store.selections[process.cwd()];
+  if (Object.keys(store.selections).length || store.legacy)
+    await atomicPrivateWrite(currentPath(), JSON.stringify(store, null, 2));
+  else
+    await unlink(currentPath()).catch((error: unknown) => {
+      if (
+        !(
+          error &&
+          typeof error === "object" &&
+          "code" in error &&
+          error.code === "ENOENT"
+        )
+      )
+        throw error;
+    });
 }
 
 /**
@@ -62,102 +120,56 @@ export interface DeploymentSelection {
  *
  * Priority order:
  * 1. -d flag (options.deployment)
- * 2. cortex use (~/.cortex-current)
- * 3. Single deployment → use it
- * 4. Multiple deployments → interactive prompt
+ * 2. Scoped cortex use (~/.cortex-current)
+ * 3. Configured default
+ * 4. Single deployment
+ * 5. Actionable failure for missing, stale or ambiguous targets
  *
- * Always prints "Using: <name>" hint.
+ * Prints a stderr selection hint unless quiet.
  *
  * @param config - CLI configuration
  * @param options - Command options (may contain deployment)
- * @param actionDescription - Optional description for the prompt (e.g., "list memories")
- * @returns Selected deployment or null if cancelled
+ * @param actionDescription - Compatibility description for callers
+ * @returns Selected deployment; invalid selection throws
  */
 export async function selectDeployment(
   config: CLIConfig,
-  options: { deployment?: string },
+  options: { deployment?: string; quiet?: boolean },
   actionDescription?: string,
 ): Promise<DeploymentSelection | null> {
-  const deployments = Object.entries(config.deployments);
-
-  if (deployments.length === 0) {
-    console.log(pc.red("\n   No deployments configured"));
-    console.log(
+  const names = Object.keys(config.deployments);
+  if (!names.length)
+    throw new Error(
+      "No deployments configured. Run 'cortex init' or 'cortex config add-deployment'",
+    );
+  const current = options.deployment ? null : await getCurrentDeployment();
+  const selectedName =
+    options.deployment ??
+    current ??
+    (config.default || (names.length === 1 ? names[0] : undefined));
+  if (!selectedName)
+    throw new Error(
+      `Choose a deployment with -d <name>, 'cortex use <name>' or 'cortex config set default <name>'. Available: ${names.join(", ")}`,
+    );
+  validateDeploymentName(selectedName);
+  if (!Object.hasOwn(config.deployments, selectedName))
+    throw new Error(
+      `Deployment "${selectedName}" not found. Available: ${names.join(", ")}; select -d <name> or clear a stale selection with 'cortex use --clear'`,
+    );
+  if (!options.quiet)
+    console.error(
       pc.dim(
-        "   Run 'cortex init' or 'cortex config add-deployment' to add one\n",
+        `   Using: ${selectedName}${actionDescription ? ` (${actionDescription})` : ""}`,
       ),
     );
-    return null;
-  }
-
-  let selectedName: string | null = null;
-
-  // Priority 1: -d flag
-  if (options.deployment) {
-    if (!config.deployments[options.deployment]) {
-      console.log(pc.red(`\n   Deployment "${options.deployment}" not found`));
-      const names = Object.keys(config.deployments);
-      console.log(pc.dim(`   Available: ${names.join(", ")}\n`));
-      return null;
-    }
-    selectedName = options.deployment;
-  }
-
-  // Priority 2: cortex use
-  if (!selectedName) {
-    const current = await getCurrentDeployment();
-    if (current) {
-      if (config.deployments[current]) {
-        selectedName = current;
-      }
-      // If current deployment no longer exists, ignore it silently
-    }
-  }
-
-  // Priority 3: Single deployment
-  if (!selectedName && deployments.length === 1) {
-    selectedName = deployments[0][0];
-  }
-
-  // Priority 4: Interactive prompt for multiple deployments
-  if (!selectedName) {
-    const action = actionDescription ? ` to ${actionDescription}` : "";
-    const response = await prompts({
-      type: "select",
-      name: "deployment",
-      message: `Select deployment${action}:`,
-      choices: deployments.map(([name, dep]) => ({
-        title: name === config.default ? `${name} (default)` : name,
-        description: dep.url,
-        value: name,
-      })),
-      initial: deployments.findIndex(([name]) => name === config.default),
-    });
-
-    if (!response.deployment) {
-      console.log(pc.yellow("\n   Operation cancelled\n"));
-      return null;
-    }
-    selectedName = response.deployment;
-  }
-
-  // Get the deployment config
-  const deployment = config.deployments[selectedName!];
-
-  // Always show "Using: X" hint
-  console.log(pc.dim(`   Using: ${selectedName}`));
-
-  return {
-    name: selectedName!,
-    deployment,
-  };
+  return { name: selectedName, deployment: config.deployments[selectedName] };
 }
 
 /**
  * Get the path to the current deployment file (for display purposes)
  */
 export function getCurrentDeploymentPath(): string {
-  return CURRENT_DEPLOYMENT_PATH;
+  return currentPath();
 }
 
 /**

@@ -1,3 +1,4 @@
+import { createRuntimeFixture } from "./helpers/runtime-fixture";
 /**
  * Edge Cases & Error Conditions Tests (v0.6.1)
  *
@@ -5,8 +6,8 @@
  * and boundary conditions.
  */
 
-import { Cortex } from "../src";
-import { ConvexClient } from "convex/browser";
+import { Cortex } from "./helpers/deployment-operator";
+import { ConvexClient } from "./helpers/deployment-operator";
 import { TestCleanup } from "./helpers/cleanup";
 import { createTestRunContext } from "./helpers/isolation";
 
@@ -15,6 +16,7 @@ const ctx = createTestRunContext();
 
 describe("Edge Cases: Extreme Values", () => {
   let cortex: Cortex;
+  let runtimeFixture: Awaited<ReturnType<typeof createRuntimeFixture>>;
   let client: ConvexClient;
   let _cleanup: TestCleanup;
   const CONVEX_URL = process.env.CONVEX_URL || "http://127.0.0.1:3210";
@@ -23,6 +25,9 @@ describe("Edge Cases: Extreme Values", () => {
 
   beforeAll(async () => {
     cortex = new Cortex({ convexUrl: CONVEX_URL });
+    // Explicit owned scope/actor fixture; canonical contexts stay public.
+    runtimeFixture = await createRuntimeFixture(ctx.runId, TEST_MEMSPACE_ID, "test-user");
+    Object.defineProperty(cortex, "contexts", { value: runtimeFixture.cortex.contexts });
     client = new ConvexClient(CONVEX_URL);
     _cleanup = new TestCleanup(client);
     // NOTE: Removed purgeAll() for parallel execution compatibility.
@@ -30,7 +35,13 @@ describe("Edge Cases: Extreme Values", () => {
 
   afterAll(async () => {
     // NOTE: Removed purgeAll() to prevent deleting parallel test data.
-    await client.close();
+    const cleanups = await Promise.allSettled([
+      () => runtimeFixture?.close(),
+      () => cortex.shutdown(),
+      () => client.close(),
+    ].map(cleanup => Promise.resolve().then(cleanup)));
+    const failed = cleanups.find(cleanup => cleanup.status === "rejected");
+    if (failed?.status === "rejected") throw failed.reason;
   });
 
   describe("Large Content", () => {

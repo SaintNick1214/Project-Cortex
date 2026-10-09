@@ -13,7 +13,7 @@
 
 import type { ConvexClient } from "convex/browser";
 import type { FunctionReference } from "convex/server";
-import { api } from "../../convex-dev/_generated/api";
+import { api } from "../common/backendApi";
 
 // Type assertion for the a2a module (Convex types regenerated on deploy)
 const a2aApi = api as unknown as {

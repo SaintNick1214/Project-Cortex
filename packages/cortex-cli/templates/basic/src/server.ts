@@ -1,6 +1,7 @@
 /** Authenticated local HTTP facade. Each request owns and closes its remote client. */
 import { serve } from "@hono/node-server";
 import { Hono } from "hono";
+import { localRequest } from "./local-request.js";
 import { pathToFileURL } from "node:url";
 import { AppError, CortexRuntimeError, bearer, identifier, runtimeConfig, withRuntime } from "./cortex.js";
 import type { RuntimeFactory, RuntimeConfig } from "./cortex.js";
@@ -29,6 +30,7 @@ export function createApp(options: { config?: RuntimeConfig; factory?: RuntimeFa
     return c.json({ version: 1, code }, /UNAUTHENTICATED|AUTH_TOKEN/.test(code) ? 401 : /FORBIDDEN|SESSION_CHANGED|AUTHORITY_EXPIRED/.test(code) ? 403 : /INVALID_/.test(code) ? 400 : 503);
   });
   app.use("*", async (c, next) => { c.header("Cache-Control", "no-store"); await next(); });
+  app.use("*", localRequest);
   app.get("/health", c => c.json({ version: 1, status: "ok", inferenceOwner: "registered-backend" }));
   app.use("*", async (c, next) => { bearer(c.req.header("Authorization")); await next(); });
   const remote = <T>(request: Request, work: Parameters<typeof withRuntime<T>>[1]) => withRuntime(async () => bearer(request.headers.get("Authorization") ?? undefined), work,

@@ -5,10 +5,14 @@ on:
     workflows: ["PR Checks", "Security Scans"]
     types: [completed]
     branches: [main]
+  # Re-evaluate when the external security status finishes after Actions.
+  status:
 
 permissions:
   contents: read
   actions: read
+  checks: read
+  statuses: read
 
 concurrency:
   group: publish-main
@@ -17,37 +21,45 @@ concurrency:
 jobs:
   gate:
     if: >-
+      (github.event_name == 'workflow_run' &&
       github.event.workflow_run.event == 'push' &&
       github.event.workflow_run.conclusion == 'success' &&
-      github.event.workflow_run.head_repository.full_name == github.repository
+      github.event.workflow_run.head_repository.full_name == github.repository) ||
+      (github.event_name == 'status' && github.event.state == 'success' &&
+      startsWith(github.event.context, 'security/snyk'))
     runs-on: ubuntu-latest
     outputs:
       ready: ${{ steps.check.outputs.ready }}
       checks-run: ${{ steps.check.outputs.checks_run }}
+      source-sha: ${{ steps.check.outputs.source_sha }}
     steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.event.sha }}
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "24"
       - name: Require successful tests and security for the same main commit
         id: check
         env:
           GH_TOKEN: ${{ github.token }}
-          SOURCE_SHA: ${{ github.event.workflow_run.head_sha }}
+          SOURCE_SHA: ${{ github.event.workflow_run.head_sha || github.event.sha }}
         run: |
           MAIN_SHA=$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/main" --jq '.object.sha')
+          echo "source_sha=$SOURCE_SHA" >> "$GITHUB_OUTPUT"
           if [ "$MAIN_SHA" != "$SOURCE_SHA" ]; then
             echo 'A newer main commit superseded this delivery run.'
             echo 'ready=false' >> "$GITHUB_OUTPUT"
             exit 0
           fi
           gh api "repos/$GITHUB_REPOSITORY/actions/runs?branch=main&event=push&head_sha=$SOURCE_SHA&per_page=100" > runs.json
+          gh api "repos/$GITHUB_REPOSITORY/commits/$SOURCE_SHA/check-runs?per_page=100" > checks.json
+          gh api "repos/$GITHUB_REPOSITORY/commits/$SOURCE_SHA/status" > statuses.json
           node --input-type=module <<'JS'
           import {readFileSync, appendFileSync} from 'node:fs';
-          const runs = JSON.parse(readFileSync('runs.json')).workflow_runs;
-          const successful = name => {
-            const latest = runs.filter(run => run.name === name && run.head_sha === process.env.SOURCE_SHA).sort((a,b) => b.id-a.id)[0];
-            return latest?.status === 'completed' && latest.conclusion === 'success' ? latest : undefined;
-          };
-          const checks = successful('PR Checks');
-          const security = successful('Security Scans');
-          appendFileSync(process.env.GITHUB_OUTPUT, `ready=${Boolean(checks && security)}\nchecks_run=${checks?.id ?? ''}\n`);
+          import {deliveryReady} from './scripts/release-contract.mjs';
+          const {ready,checksRun} = deliveryReady({runs:JSON.parse(readFileSync('runs.json')).workflow_runs,checks:JSON.parse(readFileSync('checks.json')).check_runs,statuses:JSON.parse(readFileSync('statuses.json')).statuses,sourceSha:process.env.SOURCE_SHA});
+          appendFileSync(process.env.GITHUB_OUTPUT, `ready=${ready}\nchecks_run=${checksRun ?? ''}\n`);
           JS
 
   release:
@@ -61,32 +73,40 @@ jobs:
     steps:
       - uses: actions/checkout@v6
         with:
-          ref: ${{ github.event.workflow_run.head_sha }}
+          ref: ${{ needs.gate.outputs.source-sha }}
           fetch-depth: 0
       - uses: actions/setup-node@v6
         with:
           node-version: "24.15.0"
           cache: npm
+      - name: Use declared npm version
+        run: npm install --global npm@12.2.0
+
       - uses: actions/download-artifact@v5
         with:
           name: delivery-paths
           run-id: ${{ needs.gate.outputs.checks-run }}
           github-token: ${{ github.token }}
-      - run: npm install --global npm@12.2.0
       - run: npm ci
       - name: Plan changed package versions
         run: node scripts/plan-release.mjs
         env:
-          SOURCE_SHA: ${{ github.event.workflow_run.head_sha }}
+          SOURCE_SHA: ${{ needs.gate.outputs.source-sha }}
       - name: Build and check public package contracts
         run: |
           npm run build
           npm run test:contracts
           npm run build --workspace=@cortexmemory/vercel-ai-provider
-          node packages/cortex-cli/scripts/sync-quickstart-template.js
+          npm run test:release
+          if node -e 'process.exit(JSON.parse(require("fs").readFileSync("release-plan.json","utf8")).packages.find(p=>p.key === "templates").changed ? 0 : 1)'; then
+            npm run assemble --workspace=@cortexmemory/templates
+          fi
+          npm run lint --workspace=@cortexmemory/templates
+          npm run typecheck --workspace=@cortexmemory/templates
+          npm test --workspace=@cortexmemory/templates
           npm run build --workspace=@cortexmemory/cli
-      - name: Publish SDK, provider, then CLI using npm trusted publishing
+      - name: Publish SDK, provider, catalog, then CLI using npm trusted publishing
         run: node scripts/publish-release.mjs
         env:
           GH_TOKEN: ${{ github.token }}
-          SOURCE_SHA: ${{ github.event.workflow_run.head_sha }}
+          SOURCE_SHA: ${{ needs.gate.outputs.source-sha }}

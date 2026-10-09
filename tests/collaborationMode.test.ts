@@ -1,3 +1,4 @@
+import { createRuntimeFixture } from "./helpers/runtime-fixture";
 /**
  * E2E Tests: Collaboration Mode
  *
@@ -8,12 +9,13 @@
  * - Access control
  */
 
-import { Cortex } from "../src";
-import { ConvexClient } from "convex/browser";
+import { Cortex } from "./helpers/deployment-operator";
+import { ConvexClient } from "./helpers/deployment-operator";
 import { createNamedTestRunContext, ScopedCleanup } from "./helpers";
 
 describe("Collaboration Mode", () => {
   let cortex: Cortex;
+  let runtimeFixture: Awaited<ReturnType<typeof createRuntimeFixture>>;
   let client: ConvexClient;
   let cleanup: ScopedCleanup;
   const CONVEX_URL = process.env.CONVEX_URL || "http://127.0.0.1:3210";
@@ -27,6 +29,9 @@ describe("Collaboration Mode", () => {
 
   beforeAll(async () => {
     cortex = new Cortex({ convexUrl: CONVEX_URL });
+    // Explicit fixed actor and all three owned scopes; no label grants authority.
+    runtimeFixture = await createRuntimeFixture(ctx.runId, [ORG_A_SPACE, ORG_B_SPACE, ctx.memorySpaceId("partner"), ctx.memorySpaceId("hive-demo"), ctx.memorySpaceId("company-x"), ctx.memorySpaceId("company-y")], ctx.userId("runtime-owner"));
+    Object.defineProperty(cortex, "contexts", { value: runtimeFixture.cortex.contexts });
     client = new ConvexClient(CONVEX_URL);
     cleanup = new ScopedCleanup(client, ctx);
 
@@ -53,9 +58,22 @@ describe("Collaboration Mode", () => {
   });
 
   afterAll(async () => {
-    // Only cleanup data belonging to this test run
-    await cleanup.cleanupAll();
-    await client.close();
+    const cleanups = await Promise.allSettled([
+      () => runtimeFixture?.close(),
+      () => cortex.shutdown(),
+      async () => {
+        // Keep owned data cleanup ahead of closing its transport.
+        try { await cleanup.cleanupAll(); } finally { await client.close(); }
+      },
+    ].map(cleanup => Promise.resolve().then(cleanup)));
+    const failed = cleanups.find(cleanup => cleanup.status === "rejected");
+    if (failed?.status === "rejected") throw failed.reason;
+  });
+
+  it("never provisions authority from an undeclared memory-space selector", async () => {
+    const before = await runtimeFixture.ownedRows("contexts");
+    await expect(runtimeFixture.cortex.contexts.create({ memorySpaceId: ctx.memorySpaceId("unprovisioned"), purpose: "Forged selector" })).rejects.toThrow("FORBIDDEN");
+    expect(await runtimeFixture.ownedRows("contexts")).toEqual(before);
   });
 
   describe("Memory Space Isolation", () => {

@@ -1,0 +1,7 @@
+CLI/catalog/Basic/Chat integration source and controlled checks are closed. Incoming0.38 support and independent catalog semantics are preserved. Catalog1.2 selects new runtime1.3 applications while all354 incoming1.2 payload blobs remain exact. Source manifest2 has1220 entries, including7 previously declared deletions. No service/Git effects or task acceptance were performed.
+
+CLI build/types/lint pass. All41 unit suites1039/1039 pass without skips and exit naturally. Full command15 discovered all20 files:778/779 pass; the original1RED is retained. Its exact affected installed-host successor16 passes15/15, preserving the explicit additive review proposal and original host bytes plus legacy backup/ownership contracts. Other19 command suites remain byte-applicable. No fabricated full-green command exit is claimed.
+
+Basic112/112 units, build and test types pass. Chat251/251 units, real generated-host production types and Next build pass. App lint has0 errors and164 enabled nonbreaking warnings; original full-format/lint reds remain. SDK3 and finalSDK4 have identical30 public executable/declaration artifacts, dependencies and exports; Basic's earlier SDK2 public delta is bridged by current installed112-unit run4. Actual backend behavior remains separately qualified by Root/Native.
+
+Final catalog and exact source/check pins are in report1.json. Historical reds, scoped source candidates, official codegen overlays and runtime fixture/dependency bindings remain explicit.

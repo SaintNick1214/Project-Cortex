@@ -5,11 +5,13 @@ import type { ActionCtx } from "../../../convex-dev/_generated/server";
 import { assertNativeArgs } from "./native-arguments";
 const nativeAgent = await import("@convex-dev/agent");
 const complete = jest.fn(async () => {}); let mode = "success";
+const nativeMethods: string[] = [];
 let fixtureFinal: Record<string, unknown>, capturedOptions: Record<string, unknown>, capturedCall: Record<string, unknown>;
 let privateContext: unknown;
 jest.unstable_mockModule("@convex-dev/agent", () => ({ ...nativeAgent, Agent: class {
   constructor(_component: unknown, options: Record<string, unknown>) { capturedOptions = options; if (mode === "constructor") throw new Error("Constructor failure"); }
   async streamText(_ctx: unknown, _identity: unknown, call: Record<string, unknown>, storage: unknown) {
+    nativeMethods.push("streamText");
     capturedCall = { ...call, storage }; privateContext = await (capturedOptions.contextHandler as () => Promise<unknown>)();
     if (mode === "stream") throw new Error("Ambiguous stream failure");
     await (call.onChunk as (value: unknown) => Promise<void>)({ chunk: { type: "text-delta", text: "safe", providerMetadata: { secret: "PROVIDER_SECRET" } } });
@@ -21,6 +23,14 @@ jest.unstable_mockModule("@convex-dev/agent", () => ({ ...nativeAgent, Agent: cl
     ]) await (call.onChunk as (value: unknown) => Promise<void>)({ chunk });
     return { toolCalls: Promise.resolve([]), savedMessages: [fixtureFinal], text: Promise.resolve("safe final") };
   }
+  async generateText(_ctx: unknown, _identity: unknown, call: Record<string, unknown>) {
+    nativeMethods.push("generateText"); capturedCall = call;
+    privateContext = await (capturedOptions.contextHandler as () => Promise<unknown>)();
+    if (mode === "generate") throw new Error("Ambiguous generation failure");
+    return { toolCalls: mode === "generate-tool" ? [{toolCallId: "generated-call", toolName: "memory_recall", input: {text: "query", limit: 1}}] : [],
+      savedMessages: [fixtureFinal], text: mode === "generate-tool" ? "" : "safe final",
+      response: {timestamp: new Date(), headers: {authorization: "PRIVATE_GENERATION_HEADER"}} };
+  }
 } }));
 jest.unstable_mockModule("@convex-dev/workflow", () => ({ WorkflowManager: class {
   define(value: { handler: unknown }) { return { _handler: value.handler }; } async start() { return "workflow:1"; }
@@ -28,7 +38,7 @@ jest.unstable_mockModule("@convex-dev/workflow", () => ({ WorkflowManager: class
 const { transcriptFixture, installMockRoot, runs, ledger, invoke } = await import("../runtimeTranscript/fixture");
 const originalGateway = await import("../../../convex-dev/runtimeGateway");
 jest.unstable_mockModule("../../../convex-dev/runtimeGateway", () => ({ ...originalGateway, createGovernedGatewayModel: async () => ({
-  model: { specificationVersion: mode === "identity" ? "v3" : "v4", doStream: async () => {}, provider: "controlled", modelId: "controlled/model" },
+  model: { specificationVersion: mode === "identity" ? "v3" : "v4", doStream: async () => {}, doGenerate: async () => {}, provider: "controlled", modelId: "controlled/model" },
   lifecycle: { complete, signal: new AbortController().signal },
 }) }));
 const originalTools = await import("../../../convex-dev/runtimeAgentTools");
@@ -37,9 +47,9 @@ jest.unstable_mockModule("../../../convex-dev/runtimeAgentTools", () => ({ ...or
 const runtime = await import("../../../convex-dev/runtimeAgent");
 const definitions = await import("../../../convex-dev/agentDefinitions");
 const memory = await import("../../../convex-dev/runtimeMemory");
-beforeEach(() => { installMockRoot(); mode = "success"; complete.mockClear(); executeTool.mockClear(); });
+beforeEach(() => { installMockRoot(); mode = "success"; complete.mockClear(); executeTool.mockClear(); nativeMethods.length = 0; });
 afterEach(() => { jest.restoreAllMocks(); });
-async function setup(withTool = false) {
+async function setup(withTool = false, streaming = true) {
   if (withTool) installMockRoot({ tools: true });
   const f = await transcriptFixture(); const mutation = f.ctx.runMutation.bind(f.ctx), query = f.ctx.runQuery.bind(f.ctx); const calls: string[] = [];
   f.ctx.runQuery = (async (reference: unknown, args: unknown) => {
@@ -61,7 +71,7 @@ async function setup(withTool = false) {
       definitionInput: { ...f.definitionInput, tools: [{ toolId: "memory.recall", toolVersion: 1, registryHash: await definitions.executableRegistryHash(), requiredCapability: "tool", approval: "none" }], policies: [{ policyId: "tool", version: 1, rules: { limits: { toolSteps: 4 } } }] } });
     request = { ...request, agentId: published.agentId, agentVersion: published.version };
   }
-  const run = await f.call<{ runId: string }>(runs.submit, { request }); await f.call(runtime.start, { runId: run.runId });
+  const run = await f.call<{ runId: string }>(runs.submit, { request }); await f.call(runtime.start, { runId: run.runId, streaming });
   const owned = f.db.table("runtimeAgentExecutions")[0]; const args = { reference: f.reference, runId: run.runId, attemptNumber: 1, leaseVersion: owned.leaseVersion as number };
   await f.call(runtime.saveContext, { ...args, context: "PRIVATE_MEMORY_CONTEXT", witnesses: [] });
   const input = f.native.messages.get((f.db.table("runtimeRuns")[0].inputMessageIds as string[])[0])!;
@@ -109,4 +119,51 @@ it("projects real SDK Date-containing finish-step parts before native RPC serial
   expect(parts).toContainEqual({ type: "tool", toolCallId: "chunk-call", name: "memory_recall", phase: "requested" });
   expect(JSON.stringify(parts)).not.toMatch(/PRIVATE_|PROVIDER_SECRET|finish-step|timestamp|unknown|opaque/);
   expect(f.db.table("runtimeAgentOperations")[0].state).toBe("complete"); expect(complete).toHaveBeenCalledTimes(1);
+});
+it.each([true, false])("uses the requested native interface with the same owned history and no retries (streaming=%s)", async streaming => {
+  const {f, args} = await setup(false, streaming);
+  const result = await runtime.modelStepHandler(f.ctx as unknown as ActionCtx, {...args, ordinal: 0});
+  expect(nativeMethods).toEqual([streaming ? "streamText" : "generateText"]);
+  expect(result).toEqual({savedMessageIds: ["final:controlled"], calls: [], final: true});
+  expect(capturedCall).toMatchObject({maxRetries: 0, maxOutputTokens: 2000});
+  expect(capturedCall).toHaveProperty("stopWhen");
+  expect(JSON.stringify(privateContext)).toContain("PRIVATE_MEMORY_CONTEXT");
+  expect(f.db.table("runtimeAgentOperations")[0].state).toBe("complete");
+  expect(complete).toHaveBeenCalledTimes(1);
+  if (!streaming) {
+    expect(capturedCall).not.toHaveProperty("onChunk"); expect(capturedCall).not.toHaveProperty("storage");
+    const output = f.db.table("runtimeAgentOutput").map(row => JSON.parse(row.partCanonical as string));
+    expect(output).toContainEqual({type: "text", text: "safe final"});
+    expect(JSON.stringify(output)).not.toContain("PRIVATE_GENERATION_HEADER");
+  }
+});
+it("nonstream tool calls retain exact private inputs and public requested phases before the deferred tool", async () => {
+  const {f,args} = await setup(true, false); mode = "generate-tool";
+  const result = await runtime.modelStepHandler(f.ctx as unknown as ActionCtx, {...args, ordinal: 0});
+  expect(nativeMethods).toEqual(["generateText"]);
+  expect(result).toEqual({savedMessageIds: ["final:controlled"], calls: [{toolCallId: "generated-call", toolName: "memory_recall", inputCanonical: '{"limit":1,"text":"query"}'}], final: false});
+  const output = f.db.table("runtimeAgentOutput").map(row => JSON.parse(row.partCanonical as string));
+  expect(output).toContainEqual({type: "tool", toolCallId: "generated-call", name: "memory_recall", phase: "requested"});
+  expect(executeTool).not.toHaveBeenCalled(); expect(JSON.stringify(output)).not.toContain("PRIVATE_GENERATION_HEADER");
+});
+it("ambiguous nonstream failure closes ownership without a completed operation or automatic readmission", async () => {
+  const {f,args} = await setup(false, false); mode = "generate";
+  await expect(runtime.modelStepHandler(f.ctx as unknown as ActionCtx, {...args, ordinal: 0})).rejects.toThrow("Ambiguous generation failure");
+  expect(nativeMethods).toEqual(["generateText"]); expect(complete).toHaveBeenCalledTimes(1);
+  expect(f.db.table("runtimeAgentOperations")[0].state).toBe("started"); expect(f.db.table("runtimeAgentIngestion")).toEqual([]);
+});
+it("confirmed nonstream operation replay returns its canonical result without another native method", async () => {
+  const {f,args} = await setup(false, false);
+  const first = await runtime.modelStepHandler(f.ctx as unknown as ActionCtx, {...args, ordinal: 0});
+  await expect(runtime.modelStepHandler(f.ctx as unknown as ActionCtx, {...args, ordinal: 0})).resolves.toEqual(first);
+  expect(nativeMethods).toEqual(["generateText"]); expect(complete).toHaveBeenCalledTimes(1);
+  expect(f.db.table("runtimeAgentOperations")).toHaveLength(1);
+});
+
+it("completed nonstream replay rechecks saved-message pins before returning protected evidence", async () => {
+  const {f,args} = await setup(false, false);
+  await runtime.modelStepHandler(f.ctx as unknown as ActionCtx, {...args, ordinal: 0});
+  fixtureFinal.message = {role: "assistant", content: "edited saved output"};
+  await expect(runtime.modelStepHandler(f.ctx as unknown as ActionCtx, {...args, ordinal: 0})).rejects.toThrow("STALE_TRANSCRIPT");
+  expect(nativeMethods).toEqual(["generateText"]); expect(complete).toHaveBeenCalledTimes(1);
 });

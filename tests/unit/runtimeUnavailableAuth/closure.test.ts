@@ -5,7 +5,7 @@ import * as a2a from '../../../convex-dev/a2a';
 import { ConvexError } from 'convex/values';
 import { fixture, invoke } from '../runtimeRegistryAuth/fixture';
 import fs from 'node:fs';
-import crypto from 'node:crypto';
+import { backendSource, canonicalValidator, catalogDeclarations, catalogFixture, type HistoricalModules } from '../../helpers/backend-catalog';
 
 type Native = { isPublic?: boolean; isInternal?: boolean; isQuery?: boolean; exportArgs(): string };
 type Validator = { type: string; value?: unknown; tableName?: string };
@@ -174,12 +174,39 @@ for (const call of unavailableCalls) describe(call.path, () => {
     await outcome(call, f, args(call), 'FORBIDDEN');
   });
 });
-it('freezes original source hashes, full native validators and original 251 classification', () => {
-  const qa = '_goals/convex-backend-runtime-2026-10-02/qa/task03b2e-transcript-a2a-foundation/original/';
-  const hashes = JSON.parse(fs.readFileSync(qa + 'source-hashes.json', 'utf8')) as Record<string, string>;
-  for (const [file, expected] of Object.entries(hashes)) expect(crypto.createHash('sha256').update(fs.readFileSync(qa + file.split('/').pop())).digest('hex')).toBe(expected);
-  const rows = JSON.parse(fs.readFileSync(qa + 'registrations48.json', 'utf8')) as unknown[]; expect(rows).toHaveLength(48);
-  expect(fs.existsSync(qa + 'baseline251.json')).toBe(true);
+interface TranscriptHistorical extends HistoricalModules {
+  classification: string;
+  registrations: { path: string; sourceSha256: string; validators: string }[];
+  baseline: {
+    completeness: { counts: Record<string, number>; unresolved: string[]; sourceHashes: { file: string; sha256: string }[] };
+    endpoints: { path: string; visibility: string; disposition: string }[];
+  };
+}
+it('pins the original source provenance, all 48 registrations and every original 251 classification as historical', () => {
+  const frozen = catalogFixture<TranscriptHistorical>('transcript-historical.json');
+  expect(frozen.classification).toBe('HISTORICAL_PRE_CLOSURE_ONLY');
+  expect(Object.keys(frozen.sourceHashes)).toHaveLength(5);
+  expect(frozen.registrations).toHaveLength(48);
+  expect(new Set(frozen.registrations.map(row => row.path))).toHaveProperty('size', 48);
+  for (const row of frozen.registrations) {
+    const module = row.path.split(':')[0];
+    expect(row.sourceSha256).toBe(frozen.sourceHashes[`convex-dev/${module}.ts`]);
+    expect(row.validators).toMatch(/^\{/);
+  }
+  expect([...frozen.registrations.map(row => row.path), "conversationShares:expireGraphShare"].sort()).toEqual(calls.map(call => call.path).sort());
+  expect(frozen.baseline.completeness.unresolved).toEqual([]);
+  expect(frozen.baseline.completeness.counts).toEqual({ modules: 22, registered: 251, public: 240, internal: 11,
+    httpRoutes: 0, registeredBuilderCalls: 251, resolvedExports: 251, guard: 198, internalize: 42 });
+  expect(frozen.baseline.endpoints).toHaveLength(251);
+  expect(new Set(frozen.baseline.endpoints.map(row => row.path)).size).toBe(251);
+  expect(frozen.baseline.endpoints.filter(row => row.visibility === 'public')).toHaveLength(240);
+  expect(frozen.baseline.endpoints.filter(row => row.visibility === 'internal')).toHaveLength(11);
+  expect(frozen.baseline.endpoints.filter(row => row.disposition === 'guard')).toHaveLength(198);
+  expect(frozen.baseline.endpoints.filter(row => row.disposition === 'internalize')).toHaveLength(42);
+  expect(frozen.baseline.endpoints.filter(row => row.disposition === 'retain-internal')).toHaveLength(11);
+  for (const [file, hash] of Object.entries(frozen.sourceHashes)) {
+    expect(frozen.baseline.completeness.sourceHashes.find(row => row.file === file)?.sha256).toBe(hash);
+  }
 });
 
 it('all current public handlers retain native scope selectors and callable registrations', () => {
@@ -295,4 +322,18 @@ it('internal share expiry checks its exact metadata before scheduling, with no p
   const scheduled = f.f.scheduled.length;
   await f.f.call(shares.expireGraphShare, { tenantId: 'tenant-b', memorySpaceId: 'space-a', shareId: f.share.shareId, expiresAt: row.expiresAt });
   expect(f.f.scheduled).toHaveLength(scheduled);
+});
+
+it('original argument validators remain byte-identical per AST; only absent selectors added', () => {
+  const frozen = catalogFixture<HistoricalModules>('transcript-historical.json');
+  for (const module of Object.keys(modules)) {
+    const before = frozen.originalModules[module];
+    const after = catalogDeclarations(backendSource(module));
+    expect(after.map(row => row.name)).toEqual(expect.arrayContaining(before.map(row => row.name)));
+    for (const original of before) {
+      const current = after.find(row => row.name === original.name)!.validators;
+      for (const [field, validator] of Object.entries(original.validators)) expect(current[field]).toBe(canonicalValidator(validator));
+      expect(Object.keys(current).filter(field => !(field in original.validators)).every(field => ['tenantId', 'memorySpaceId'].includes(field))).toBe(true);
+    }
+  }
 });

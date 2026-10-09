@@ -1,0 +1,83 @@
+{
+  "version": 1,
+  "checks": {
+    "affected-tests1.json": {
+      "success": true,
+      "numTotalTestSuites": 11,
+      "numPassedTestSuites": 11,
+      "numFailedTestSuites": 0,
+      "numTotalTests": 540,
+      "numPassedTests": 540,
+      "numFailedTests": 0,
+      "numPendingTests": 0,
+      "startTime": 1791529022165,
+      "sha256": "005dc0af67f7e471db9a586cbefcd03416e7ed369ab97b5952853fbc5ce8a79a"
+    },
+    "focused-tests2.json": {
+      "success": true,
+      "numTotalTestSuites": 2,
+      "numPassedTestSuites": 2,
+      "numFailedTestSuites": 0,
+      "numTotalTests": 9,
+      "numPassedTests": 9,
+      "numFailedTests": 0,
+      "numPendingTests": 0,
+      "startTime": 1791528903675,
+      "sha256": "fdf531c2c343c0f3c5ffaf96b8646148702837055e0f4ed3551960be20ec13fe"
+    },
+    "focused-tests3.json": {
+      "success": true,
+      "numTotalTestSuites": 3,
+      "numPassedTestSuites": 3,
+      "numFailedTestSuites": 0,
+      "numTotalTests": 19,
+      "numPassedTests": 19,
+      "numFailedTests": 0,
+      "numPendingTests": 0,
+      "startTime": 1791529597768,
+      "sha256": "aa34921c6759a2745658c7e419c43dca61ee3e433a94234862368fa9f77b8254"
+    },
+    "memory-capability-red1.json": {
+      "success": false,
+      "numTotalTestSuites": 1,
+      "numPassedTestSuites": 0,
+      "numFailedTestSuites": 1,
+      "numTotalTests": 10,
+      "numPassedTests": 3,
+      "numFailedTests": 7,
+      "numPendingTests": 0,
+      "startTime": 1791529544603,
+      "sha256": "04c3af962dac515258e021b8cf0f769e35a0c348e14ec290b86f7e4d345963f1"
+    },
+    "memory-capability-green2.json": {
+      "success": true,
+      "numTotalTestSuites": 1,
+      "numPassedTestSuites": 1,
+      "numFailedTestSuites": 0,
+      "numTotalTests": 10,
+      "numPassedTests": 10,
+      "numFailedTests": 0,
+      "numPendingTests": 0,
+      "startTime": 1791529697871,
+      "sha256": "c9bddcdb773a1fb92cb10ec13131ba1f785ab7b54c229dd8f72ecb739aeef69e"
+    }
+  },
+  "typeAndLintReceipts": {
+    "backend-types1.log": "exit2 preserved; duplicate auto-merge and ES2021 support repaired",
+    "backend-types2.log": "exit0",
+    "sdk-types1.log": "exit2 preserved",
+    "sdk-types2.log": "exit2 preserved",
+    "sdk-types3.log": "exit2 preserved",
+    "sdk-types4.log": "exit0 before latest Memory guard and sibling fixture writes",
+    "sdk-types5.log": "exit2 preserved; cross-owner test fixture kind/union and own mock void annotations; own annotations repaired",
+    "sdk-source-types1.log": "exit0 current product source",
+    "scoped-lint1.log": "exit1 unused import repaired",
+    "scoped-lint2.log": "exit0/32 warnings",
+    "memory-scoped-lint1.log": "exit0/10 warnings"
+  },
+  "currentAssertionCount": 559,
+  "countSemantics": "540 applicable affected cases +19 focused current controls; duplicate earlier focused reruns not added",
+  "serviceOrModelCalls": 0,
+  "gitMutations": 0,
+  "installs": 0
+}

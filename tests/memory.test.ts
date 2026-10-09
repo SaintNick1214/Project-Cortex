@@ -11,8 +11,8 @@
  * - memory-archive.test.ts: Archive and restore operations
  */
 
-import { Cortex } from "../src";
-import { ConvexClient } from "convex/browser";
+import { Cortex } from "./helpers/deployment-operator";
+import { ConvexClient } from "./helpers/deployment-operator";
 import { api } from "../convex-dev/_generated/api";
 import { TestCleanup } from "./helpers/cleanup";
 import { createTestRunContext } from "./helpers/isolation";
@@ -155,6 +155,7 @@ describe("Memory Convenience API (Layer 3)", () => {
 
         const storeResult = await cortex.memory.store(TEST_MEMSPACE_ID, {
           content: "Original content for reextraction test",
+          userId: TEST_USER_ID,
           contentType: "raw",
           source: { type: "system", timestamp: Date.now() },
           metadata: { importance: 50, tags: ["reextract-test"] },

@@ -178,7 +178,6 @@ async function activeRoot(ctx: ReadCtx): Promise<{ manifest: DeploymentPolicyMan
   if (!rows.length || rows.length > 64) fail("CAPABILITY_UNAVAILABLE");
   const root = rows[0]!.root;
   const manifest = await trustedRoot(root);
-  if (manifest.dispatchEvidence.some((proof) => proof.checkedAt > Date.now() || Date.now() >= proof.expiresAt)) fail("CAPABILITY_UNAVAILABLE");
   if (rows.length !== manifest.policies.filter((p) => p.scope === "deployment").length || rows.some((row) => row.revokedAt !== undefined || canonical(row.root) !== canonical(root)
     || !manifest.policies.some((policy) => policy.policyId === row.policyId && policy.version === row.version && canonical(policy) === row.canonical))) fail("POLICY_DENIED");
   for (const qualification of manifest.qualifications) {
@@ -191,6 +190,12 @@ function evidence(manifest: DeploymentPolicyManifest, snapshot: ModelPolicySnaps
   const proof = single(manifest.dispatchEvidence.filter((entry) => entry.receiptId === snapshot.qualificationReceiptId));
   if (!proof || proof.modelId !== snapshot.modelId || proof.nativeInterface !== snapshot.nativeInterface) fail("CAPABILITY_UNAVAILABLE");
   return proof;
+}
+/** Historical attestations remain part of immutable root provenance. Only the
+ * proof consumed by this operation grants current dispatch or replay authority. */
+function assertCurrentEvidence(proof: QualifiedDispatchEvidence): void {
+  const now = Date.now();
+  if (proof.checkedAt > now || now >= proof.expiresAt) fail("CAPABILITY_UNAVAILABLE");
 }
 const option = z.enum(["temperature", "topP", "seed", "stopSequences"]);
 const capability = z.enum(["text", "structured", "tools", "embedding", "image", "video"]);
@@ -257,6 +262,7 @@ async function resolveCurrent(ctx: ReadCtx, reference: RuntimeAuthorityReference
   context.authorizedOverrides = records.flatMap((record) => record.override ? [{ ...record.override, policyId: record.policyId, policyVersion: record.version }] : []);
   const resolution = { context, policies: records, qualifications: manifest.qualifications };
   const snapshot = resolveModelPolicy(resolution);
+  assertCurrentEvidence(evidence(manifest, snapshot));
   return { root, manifest, resolutionCanonical: canonical(resolution), snapshot };
 }
 function snapshotOf(record: Pick<Operation, "resolutionCanonical" | "snapshotCanonical">): ModelPolicySnapshotV1 {
@@ -297,6 +303,7 @@ async function currentOperation(ctx: ReadCtx, reference: RuntimeAuthorityReferen
   if (!current.snapshot.allowedModels.includes(snapshot.modelId) || !snapshot.capabilities.every((cap) => current.snapshot.capabilities.includes(cap))
     || !current.manifest.qualifications.some((q) => q.receiptId === snapshot.qualificationReceiptId && q.modelId === snapshot.modelId && q.nativeInterface === snapshot.nativeInterface
       && q.priceRevision === snapshot.pins.priceRevision && q.boundRevision === snapshot.pins.boundRevision)) fail("POLICY_DENIED");
+  assertCurrentEvidence(evidence(current.manifest, snapshot));
   return { snapshot, run, current };
 }
 function balanced(account: Account): void {
@@ -324,14 +331,12 @@ export async function bindTrustedBudget(ctx: WriteCtx, args: BindBudgetArgs): Pr
   const bindingKey = canonical(["run", args.reference.tenantId, args.reference.memorySpaceId, args.reference.principalId, args.operationKey, args.requestId]);
   const runBudgetId = await semanticHash(bindingKey);
   const existing = single(await ctx.db.query("runtimeBudgetAccounts").withIndex("by_run", (q) => q.eq("runBudgetId", runBudgetId)).take(2));
-  if (existing) {
-    if (!existing.reference || !sameAuthority(existing.reference, args.reference) || existing.scopeKey !== bindingKey || existing.requestCanonical !== args.requestCanonical || existing.agentId !== args.agentId || existing.agentVersion !== args.agentVersion) fail("IDEMPOTENCY_CONFLICT");
-    return { runBudgetId, runAccountId: existing._id };
-  }
+  if (existing && (!existing.reference || !sameAuthority(existing.reference, args.reference) || existing.scopeKey !== bindingKey || existing.requestCanonical !== args.requestCanonical || existing.agentId !== args.agentId || existing.agentVersion !== args.agentVersion)) fail("IDEMPOTENCY_CONFLICT");
   if ((args.agentId === undefined) !== (args.agentVersion === undefined)) fail("INVALID_INPUT");
   if (args.agentId) { text(args.agentId); integer(args.agentVersion!, 1); }
   const agent = args.agentId ? { agentId: args.agentId, version: args.agentVersion! } : undefined;
   const resolved = await resolveCurrent(ctx, args.reference, args.operationKey, runBudgetId, undefined, undefined, agent);
+  if (existing) return { runBudgetId, runAccountId: existing._id };
   const now = integer(Date.now());
   const start = Math.floor(now / resolved.manifest.budgetWindowMs) * resolved.manifest.budgetWindowMs;
   const end = add(start, resolved.manifest.budgetWindowMs);
@@ -386,7 +391,6 @@ export const ensureBudget = internalMutation({ args: bindingArgs, handler: async
 export const installDeploymentPolicy = internalMutation({ args: { manifestId: v.string(), expectedRevision: v.number() }, handler: async (ctx, args) => {
   text(args.manifestId); integer(args.expectedRevision, 1);
   const manifest = lookupDeploymentManifest(args.manifestId, args.expectedRevision); validManifest(manifest);
-  if (manifest.dispatchEvidence.some((proof) => proof.checkedAt > Date.now() || Date.now() >= proof.expiresAt)) fail("CAPABILITY_UNAVAILABLE");
   const root = await provenance(manifest);
   const old = await ctx.db.query("runtimeModelPolicies").withIndex("by_scope_active", (q) => q.eq("scope", "deployment").eq("tenantId", undefined).eq("active", true)).take(65);
   if (old.length > 64) fail("POLICY_DENIED");
@@ -602,6 +606,7 @@ export const admit = internalMutation({ args: admitArgs, handler: async (ctx, ar
   const root = "root" in resolved ? resolved.root : run.root;
   const manifest = await trustedRoot(root);
   const proof = evidence(manifest, snapshot);
+  assertCurrentEvidence(proof);
   const raw = decode(args.requestCanonical);
   if (!raw || typeof raw !== "object" || Array.isArray(raw)) fail("INVALID_INPUT");
   const request = raw as Record<string, unknown>;
@@ -620,6 +625,7 @@ export const admit = internalMutation({ args: admitArgs, handler: async (ctx, ar
     if (existing) {
       if (capturedAttempt(existing) && await semanticHash(existing.terminalEvidenceCanonical!) !== existing.terminalEvidenceHash) fail("POLICY_DENIED", "uncertain");
       const priorSnapshot = attemptSnapshot(existing, operation, manifest);
+      assertCurrentEvidence(evidence(manifest, priorSnapshot));
       const incoming = validateModelRequest(priorSnapshot, { ...validated.request, inputTokens: deriveQualifiedInputBound(evidence(manifest, priorSnapshot), validated.request), reservationUnits: priorSnapshot.costBound.maximumCostUnits });
       assertModelRequestIdentity({ canonical: existing.canonical, hash: existing.hash }, { canonical: incoming.canonical, hash: await semanticHash(incoming.canonical) });
       if ((existing.state === "settled" || retainedConfirmedUnknown(existing, priorSnapshot, evidence(manifest, priorSnapshot)))
@@ -1160,17 +1166,18 @@ export const admitFallback = internalMutation({ args: { ...attemptArgs, candidat
   if (!fallbackAllowed(attempt, operation, snapshot, args.candidateModelId) || !fallbackAllowed(attempt, operation, checked.current.snapshot, args.candidateModelId)) fail("POLICY_DENIED");
   const nextNumber = add(attempt.attemptNumber, 1);
   if (nextNumber > 64) fail("POLICY_DENIED");
+  const candidate = single(checked.current.manifest.qualifications.filter((q) => q.modelId === args.candidateModelId && q.nativeInterface === snapshot.nativeInterface
+    && snapshot.fallbackCandidates.some((entry) => entry.qualificationReceiptId === q.receiptId)));
+  if (!candidate) fail("CAPABILITY_UNAVAILABLE");
+  const nextSnapshot = { ...snapshotOf(operation), modelId: candidate.modelId, qualificationReceiptId: candidate.receiptId, costBound: candidate.costBound };
+  const proof = evidence(checked.current.manifest, nextSnapshot);
+  assertCurrentEvidence(proof);
   const existing = single(await ctx.db.query("runtimeModelAttempts").withIndex("by_child_attempt", (q) => q.eq("operationDocumentId", operation._id)
     .eq("childCallId", attempt.childCallId).eq("attemptNumber", nextNumber)).take(2));
   if (existing) {
     if (existing.priorAttemptId !== attempt._id || existing.fallbackModelId !== args.candidateModelId) fail("IDEMPOTENCY_CONFLICT");
     return { status: "inflight" as const, attemptId: existing._id };
   }
-  const candidate = single(checked.current.manifest.qualifications.filter((q) => q.modelId === args.candidateModelId && q.nativeInterface === snapshot.nativeInterface
-    && snapshot.fallbackCandidates.some((entry) => entry.qualificationReceiptId === q.receiptId)));
-  if (!candidate) fail("CAPABILITY_UNAVAILABLE");
-  const nextSnapshot = { ...snapshotOf(operation), modelId: candidate.modelId, qualificationReceiptId: candidate.receiptId, costBound: candidate.costBound };
-  const proof = evidence(checked.current.manifest, nextSnapshot);
   const decoded = decode(attempt.canonical);
   if (!decoded || typeof decoded !== "object" || Array.isArray(decoded)) fail("POLICY_DENIED");
   const old = validateModelRequest(snapshot, (decoded as Record<string, unknown>).request);
@@ -1180,6 +1187,7 @@ export const admitFallback = internalMutation({ args: { ...attemptArgs, candidat
   capacity(run, ceiling, Math.min(nextSnapshot.limits.runBudgetUnits, checked.current.snapshot.limits.runBudgetUnits), checked.current.snapshot.limits.concurrency);
   if (operation.overrun || add(operation.reservedUnits, operation.uncertainUnits, operation.settledUnits, ceiling) > Math.min(nextSnapshot.limits.operationBudgetUnits, checked.current.snapshot.limits.operationBudgetUnits)) fail("BUDGET_EXCEEDED");
   await finalActor(ctx, args.reference, operation.operationKey);
+  assertCurrentEvidence(proof);
   const nextId = await ctx.db.insert("runtimeModelAttempts", { operationDocumentId: operation._id, childCallId: attempt.childCallId, ordinal: attempt.ordinal,
     attemptNumber: nextNumber, fallbackModelId: candidate.modelId, priorAttemptId: attempt._id, canonical: next.canonical, hash: await semanticHash(next.canonical),
     resolutionCanonical: operation.resolutionCanonical, snapshotCanonical: canonical(nextSnapshot), inputProofCanonical: canonical({ proof, requestCanonical: canonical(next.request), inputTokens: next.request.inputTokens, outputTokens: next.request.outputTokens }),
@@ -1192,5 +1200,10 @@ export const admitFallback = internalMutation({ args: { ...attemptArgs, candidat
 export const checkFallback = internalQuery({ args: { ...attemptArgs, candidateModelId: v.string() }, handler: async (ctx, args) => {
   const { attempt, operation, snapshot } = await attemptContext(ctx, args.attemptId);
   const checked = await currentOperation(ctx, args.reference, operation);
-  return { allowed: fallbackAllowed(attempt, operation, snapshot, args.candidateModelId) && fallbackAllowed(attempt, operation, checked.current.snapshot, args.candidateModelId) };
+  const candidate = single(checked.current.manifest.qualifications.filter((q) => q.modelId === args.candidateModelId && q.nativeInterface === snapshot.nativeInterface
+    && snapshot.fallbackCandidates.some((entry) => entry.qualificationReceiptId === q.receiptId)));
+  const proof = candidate ? evidence(checked.current.manifest, { ...snapshot, modelId: candidate.modelId, qualificationReceiptId: candidate.receiptId, costBound: candidate.costBound }) : undefined;
+  const now = Date.now();
+  return { allowed: !!proof && proof.checkedAt <= now && now < proof.expiresAt
+    && fallbackAllowed(attempt, operation, snapshot, args.candidateModelId) && fallbackAllowed(attempt, operation, checked.current.snapshot, args.candidateModelId) };
 } });

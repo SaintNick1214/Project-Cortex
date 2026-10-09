@@ -10,6 +10,7 @@
 import Table from "cli-table3";
 import pc from "picocolors";
 import ora from "ora";
+import { convexToJson } from "convex/values";
 import type { OutputFormat, CLIConfig, ValidationResult } from "../types.js";
 import { validateAndCleanConfig } from "./config.js";
 
@@ -39,7 +40,19 @@ export function formatOutput(
  * Format data as JSON
  */
 export function formatJSON(data: unknown): string {
-  return JSON.stringify(data, null, 2);
+  return stringifyJSON(data, 2);
+}
+
+function stringifyJSON(data: unknown, space?: number): string {
+  return JSON.stringify(data, (_key, value) => {
+    if (
+      typeof value === "bigint" || value instanceof ArrayBuffer ||
+      (typeof value === "number" && (!Number.isFinite(value) || Object.is(value, -0)))
+    ) {
+      return convexToJson(value);
+    }
+    return value;
+  }, space);
 }
 
 /**
@@ -64,11 +77,18 @@ export function formatCSV(data: unknown, headers?: string[]): string {
     ...rows.map((row) =>
       columnHeaders
         .map((header) => {
-          const value = row[header];
+          const raw = row[header];
+          const value =
+            raw !== null && typeof raw === "object"
+              ? stringifyJSON(raw)
+              : String(raw ?? "");
           // Handle values that need quoting
           if (
             typeof value === "string" &&
-            (value.includes(",") || value.includes('"') || value.includes("\n"))
+            (value.includes(",") ||
+              value.includes('"') ||
+              value.includes("\n") ||
+              value.includes("\r"))
           ) {
             return `"${value.replace(/"/g, '""')}"`;
           }
@@ -231,32 +251,49 @@ export function formatCount(
   return `${count.toLocaleString()} ${word}`;
 }
 
+let diagnosticOptions: {
+  format?: string;
+  quiet?: boolean;
+  secrets?: string[];
+} = {};
+export function configureDiagnostics(options: typeof diagnosticOptions): void {
+  diagnosticOptions = options;
+}
+export function redactSecrets(message: string): string {
+  for (const secret of diagnosticOptions.secrets ?? [])
+    if (secret) message = message.split(secret).join("***");
+  return message;
+}
+function diagnostic(message: string): void {
+  if (!diagnosticOptions.quiet) console.error(redactSecrets(message));
+}
+
 /**
  * Print a success message
  */
 export function printSuccess(message: string): void {
-  console.log(pc.green(`✔ ${message}`));
+  diagnostic(pc.green(`✔ ${message}`));
 }
 
 /**
  * Print an error message
  */
 export function printError(message: string): void {
-  console.error(pc.red(`✖ ${message}`));
+  console.error(pc.red(`✖ ${redactSecrets(message)}`));
 }
 
 /**
  * Print a warning message
  */
 export function printWarning(message: string): void {
-  console.warn(pc.yellow(`⚠ ${message}`));
+  diagnostic(pc.yellow(`⚠ ${message}`));
 }
 
 /**
  * Print an info message
  */
 export function printInfo(message: string): void {
-  console.log(pc.blue(`ℹ ${message}`));
+  diagnostic(pc.blue(`ℹ ${message}`));
 }
 
 /**
@@ -309,136 +346,29 @@ export function createProgressText(current: number, total: number): string {
 /**
  * Display notification about cleaned stale config entries
  *
- * Used after config validation to inform user what was auto-removed.
+ * Used after observational validation to report retained entries and diagnostics.
  */
-export function displayCleanupNotification(validation: {
-  removed: { deployments: string[]; apps: string[] };
-}): void {
-  const { deployments, apps } = validation.removed;
-  if (deployments.length > 0 && apps.length > 0) {
-    console.log(
-      pc.dim(
-        `   Cleaned ${deployments.length} stale deployment(s), ${apps.length} app(s)`,
-      ),
-    );
-  } else if (deployments.length > 0) {
-    console.log(
-      pc.dim(
-        `   Cleaned ${deployments.length} stale deployment(s): ${deployments.join(", ")}`,
-      ),
-    );
-  } else if (apps.length > 0) {
-    console.log(
-      pc.dim(`   Cleaned ${apps.length} stale app(s): ${apps.join(", ")}`),
-    );
-  }
+export function displayCleanupNotification(validation: ValidationResult): void {
+  for (const issue of validation.diagnostics)
+    diagnostic(pc.dim(`   ${issue.name}: ${issue.kind} — ${issue.message}`));
 }
 
-/**
- * Run config validation with a spinner and suppressed console output
- *
- * Shows "Checking deployments..." indicator while validation runs,
- * suppressing verbose websocket/network errors from the Convex client.
- *
- * @param config - The configuration to validate
- * @param options - Validation options (checkConvex, timeout)
- * @returns Validation result with cleaned config
- */
+/** Connectivity diagnostics stay on stderr; never intercept process streams. */
 export async function runValidationWithSpinner(
   config: CLIConfig,
   options?: { checkConvex?: boolean; timeout?: number },
 ): Promise<ValidationResult> {
-  const checkConvex = options?.checkConvex ?? true;
-  const deploymentCount = Object.keys(config.deployments || {}).length;
-
-  // Skip spinner if no deployments or not checking Convex
-  if (!checkConvex || deploymentCount === 0) {
-    return validateAndCleanConfig(config, options);
-  }
-
-  const spinner = ora({
-    text: pc.dim(`Checking ${deploymentCount} deployment(s)...`),
-    color: "gray",
-  }).start();
-
-  // Suppress all console output during validation to hide verbose
-  // websocket/network errors from the Convex client
-  const originalLog = console.log;
-  const originalError = console.error;
-  const originalWarn = console.warn;
-  const originalStdoutWrite = process.stdout.write.bind(process.stdout);
-  const originalStderrWrite = process.stderr.write.bind(process.stderr);
-
-  // Filter function to allow spinner updates but suppress other output
-  // Type definition matches process.stdout.write overloads
-  type WriteCallback = (err?: Error | null) => void;
-  // eslint-disable-next-line no-undef
-  type EncodingOrCallback = BufferEncoding | WriteCallback | undefined;
-
-  const filterOutput =
-    (original: typeof process.stdout.write) =>
-    (
-      chunk: Uint8Array | string,
-      encodingOrCallback?: EncodingOrCallback,
-      callback?: WriteCallback,
-    ): boolean => {
-      const str = typeof chunk === "string" ? chunk : chunk.toString();
-      // Allow spinner frames and clear sequences through
-      if (
-        str.includes("\x1B") ||
-        str.includes("⠋") ||
-        str.includes("⠙") ||
-        str.includes("⠹") ||
-        str.includes("⠸") ||
-        str.includes("⠼") ||
-        str.includes("⠴") ||
-        str.includes("⠦") ||
-        str.includes("⠧") ||
-        str.includes("⠇") ||
-        str.includes("⠏")
-      ) {
-        if (typeof encodingOrCallback === "function") {
-          return original(chunk, encodingOrCallback);
-        }
-        return original(chunk, encodingOrCallback, callback);
-      }
-      // Suppress websocket and network error messages
-      if (
-        str.includes("WebSocket") ||
-        str.includes("network error") ||
-        str.includes("ECONNREFUSED")
-      ) {
-        if (typeof encodingOrCallback === "function") {
-          encodingOrCallback(null);
-        } else if (callback) {
-          callback(null);
-        }
-        return true;
-      }
-      // Allow other output through
-      if (typeof encodingOrCallback === "function") {
-        return original(chunk, encodingOrCallback);
-      }
-      return original(chunk, encodingOrCallback, callback);
-    };
-
-  console.log = () => {};
-  console.error = () => {};
-  console.warn = () => {};
-  process.stdout.write = filterOutput(originalStdoutWrite) as typeof process.stdout.write;
-  process.stderr.write = filterOutput(originalStderrWrite) as typeof process.stderr.write;
-
+  const spinner =
+    diagnosticOptions.format !== "json" &&
+    !diagnosticOptions.quiet &&
+    process.stderr.isTTY &&
+    (options?.checkConvex ?? true) &&
+    Object.keys(config.deployments).length
+      ? ora({ text: "Checking deployments...", stream: process.stderr }).start()
+      : undefined;
   try {
-    const result = await validateAndCleanConfig(config, options);
-    spinner.stop();
-    return result;
+    return await validateAndCleanConfig(config, options);
   } finally {
-    // Always restore console and stream functions
-    console.log = originalLog;
-    console.error = originalError;
-    console.warn = originalWarn;
-    process.stdout.write = originalStdoutWrite;
-    process.stderr.write = originalStderrWrite;
-    spinner.stop();
+    spinner?.stop();
   }
 }

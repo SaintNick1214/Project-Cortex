@@ -1,0 +1,1022 @@
+Running one project: commands
+(node:94485) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+  console.error
+       Using: one (delete-many)
+
+      158 |     );
+      159 |   if (!options.quiet)
+    > 160 |     console.error(
+          |             ^
+      161 |       pc.dim(
+      162 |         `   Using: ${selectedName}${actionDescription ? ` (${actionDescription})` : ""}`,
+      163 |       ),
+
+      at selectDeployment (src/utils/deployment-selector.ts:160:13)
+      at Command.<anonymous> (src/commands/users.ts:81:23)
+      at Command.parseAsync (node_modules/commander/lib/command.js:1113:5)
+      at Object.<anonymous> (tests/commands/users-real.test.ts:242:5)
+
+  console.error
+       Using: one (export)
+
+      158 |     );
+      159 |   if (!options.quiet)
+    > 160 |     console.error(
+          |             ^
+      161 |       pc.dim(
+      162 |         `   Using: ${selectedName}${actionDescription ? ` (${actionDescription})` : ""}`,
+      163 |       ),
+
+      at selectDeployment (src/utils/deployment-selector.ts:160:13)
+      at Command.<anonymous> (src/commands/users.ts:81:23)
+      at Command.parseAsync (node_modules/commander/lib/command.js:1113:5)
+      at tests/commands/users-real.test.ts:396:5
+
+  console.error
+       Using: one (export)
+
+      158 |     );
+      159 |   if (!options.quiet)
+    > 160 |     console.error(
+          |             ^
+      161 |       pc.dim(
+      162 |         `   Using: ${selectedName}${actionDescription ? ` (${actionDescription})` : ""}`,
+      163 |       ),
+
+      at selectDeployment (src/utils/deployment-selector.ts:160:13)
+      at Command.<anonymous> (src/commands/users.ts:81:23)
+      at Command.parseAsync (node_modules/commander/lib/command.js:1113:5)
+      at tests/commands/users-real.test.ts:396:5
+
+  console.error
+       Using: one (export)
+
+      158 |     );
+      159 |   if (!options.quiet)
+    > 160 |     console.error(
+          |             ^
+      161 |       pc.dim(
+      162 |         `   Using: ${selectedName}${actionDescription ? ` (${actionDescription})` : ""}`,
+      163 |       ),
+
+      at selectDeployment (src/utils/deployment-selector.ts:160:13)
+      at Command.<anonymous> (src/commands/users.ts:81:23)
+      at Command.parseAsync (node_modules/commander/lib/command.js:1113:5)
+      at tests/commands/users-real.test.ts:396:5
+
+  console.error
+       Using: one (export)
+
+      158 |     );
+      159 |   if (!options.quiet)
+    > 160 |     console.error(
+          |             ^
+      161 |       pc.dim(
+      162 |         `   Using: ${selectedName}${actionDescription ? ` (${actionDescription})` : ""}`,
+      163 |       ),
+
+      at selectDeployment (src/utils/deployment-selector.ts:160:13)
+      at Command.<anonymous> (src/commands/users.ts:81:23)
+      at Command.parseAsync (node_modules/commander/lib/command.js:1113:5)
+      at tests/commands/users-real.test.ts:396:5
+
+PASS commands tests/commands/users-real.test.ts (6.857 s)
+  ✓ production users ["list", "--no-stats", "--limit", "2", "--offset", "3"] returns SDK outcome and exact arguments (29 ms)
+  ✓ production users ["get", "user-one", "--include-history"] returns SDK outcome and exact arguments (19 ms)
+  ✓ production users ["delete", "user-one", "--cascade", "--yes", "--dry-run"] returns SDK outcome and exact arguments (18 ms)
+  ✓ production users ["delete-many", "user-one", "user-two", "--cascade", "--yes"] returns SDK outcome and exact arguments (20 ms)
+  ✓ production users ["stats", "user-one"] returns SDK outcome and exact arguments (18 ms)
+  ✓ production users ["update", "user-one", "--data", "{\"nested\":{\"x\":1}}"] returns SDK outcome and exact arguments (19 ms)
+  ✓ production users ["create", "user-one", "--data", "{\"name\":\"New\"}"] returns SDK outcome and exact arguments (19 ms)
+  ✓ production users ["exists", "user-one"] returns SDK outcome and exact arguments (17 ms)
+  ✓ production users ["list", "--no-stats", "--limit", "2", "--offset", "3"] propagates SDK failure and closes transport (24 ms)
+  ✓ production users ["get", "user-one", "--include-history"] propagates SDK failure and closes transport (15 ms)
+  ✓ production users ["delete", "user-one", "--cascade", "--yes", "--dry-run"] propagates SDK failure and closes transport (18 ms)
+  ✓ production users ["delete-many", "user-one", "user-two", "--cascade", "--yes"] propagates SDK failure and closes transport (16 ms)
+  ✓ production users ["stats", "user-one"] propagates SDK failure and closes transport (15 ms)
+  ✓ production users ["update", "user-one", "--data", "{\"nested\":{\"x\":1}}"] propagates SDK failure and closes transport (26 ms)
+  ✓ production users ["create", "user-one", "--data", "{\"name\":\"New\"}"] propagates SDK failure and closes transport (17 ms)
+  ✓ production users ["exists", "user-one"] propagates SDK failure and closes transport (16 ms)
+  ✓ users globals select correct authenticated target at root (13 ms)
+  ✓ users globals select correct authenticated target at group (12 ms)
+  ✓ users globals select correct authenticated target at leaf (12 ms)
+  ✓ users empty page retains machine-readable paging metadata (16 ms)
+  ✓ users counts page every space and do not cap conversation/fact totals at 1000 (15 ms)
+  ✓ users list does not swallow partial counting failures (19 ms)
+  ✓ users stats does not swallow partial counting failures (16 ms)
+  ✓ users list surfaces hasMore and exports original fields in JSON (15 ms)
+  ✓ users get fails on missing profile (17 ms)
+  ✓ users stats fails on missing profile (17 ms)
+  ✓ users delete fails on missing profile (15 ms)
+  ✓ users exists emits false result then fails; duplicate create never updates (31 ms)
+  ✓ users cascade incomplete verification and partial bulk deletion fail (32 ms)
+  ✓ users --no-verify explicitly forwards false (19 ms)
+  ✓ users rejects non-object profile data null before client (32 ms)
+  ✓ users rejects non-object profile data [] before client (34 ms)
+  ✓ users rejects non-object profile data 2 before client (32 ms)
+  ✓ users rejects non-object profile data true before client (34 ms)
+  ✓ users rejects non-object profile data "x" before client (31 ms)
+  ✓ users rejects non-object profile data bad before client (35 ms)
+  ✓ users update validates file, exclusivity and retains supplied object (66 ms)
+  ✓ users rejects invalid limit 1.5 before SDK (7 ms)
+  ✓ users rejects invalid limit 1e2 before SDK (7 ms)
+  ✓ users rejects invalid limit 1x before SDK (6 ms)
+  ✓ users rejects invalid limit 0 before SDK (9 ms)
+  ✓ users rejects invalid limit 1001 before SDK (7 ms)
+  ✓ users rejects invalid limit -1 before SDK (6 ms)
+  ✓ users ["get", "user-one", "--include-history"] rejects missing positional ID (7 ms)
+  ✓ users ["delete", "user-one", "--cascade", "--yes", "--dry-run"] rejects missing positional ID (7 ms)
+  ✓ users ["stats", "user-one"] rejects missing positional ID (8 ms)
+  ✓ users ["update", "user-one", "--data", "{\"nested\":{\"x\":1}}"] rejects missing positional ID (9 ms)
+  ✓ users ["create", "user-one", "--data", "{\"name\":\"New\"}"] rejects missing positional ID (8 ms)
+  ✓ users ["exists", "user-one"] rejects missing positional ID (6 ms)
+  ✓ actual binary invalid inputs exit nonzero before any network mutation (1082 ms)
+  ✓ users bulk result redacts configured credentials and preserves per-user failure (25 ms)
+  ✓ users confirmation cancellation and failed exact cascade confirmation do not instantiate clients (61 ms)
+  ✓ users stats rejects pagination without progress (18 ms)
+  ✓ users unknown explicit target never instantiates a client (18 ms)
+  ✓ users quiet preserves JSON and suppresses hints (16 ms)
+  ✓ users default table keeps full nested profile values readable (24 ms)
+  ✓ complete export persists canonical raw/history events and recoverable binary chunks with exact receipt (48 ms)
+  ✓ complete export resolves exact target credentials and tenant at root (21 ms)
+  ✓ complete export resolves exact target credentials and tenant at group (18 ms)
+  ✓ complete export resolves exact target credentials and tenant at leaf (22 ms)
+  ✓ complete export honors scoped use different from default and singleton selection (45 ms)
+  ✓ complete export invalid --tenant has zero client/stream/file effects (7 ms)
+  ✓ complete export invalid --tenant has zero client/stream/file effects (7 ms)
+  ✓ complete export invalid --format has zero client/stream/file effects (16 ms)
+  ✓ complete export invalid --format has zero client/stream/file effects (6 ms)
+  ✓ complete export invalid -d has zero client/stream/file effects (12 ms)
+  ✓ complete export missing key and ambiguous target fail before client or staging (34 ms)
+  ✓ complete export missing positional ID and unsupported credential flags have zero effects (20 ms)
+  ✓ complete export refuses missing manifest without publishing either destination state (35 ms)
+  ✓ complete export refuses missing header without publishing either destination state (32 ms)
+  ✓ complete export refuses duplicate header without publishing either destination state (34 ms)
+  ✓ complete export refuses duplicate manifest without publishing either destination state (34 ms)
+  ✓ complete export refuses post-terminal data without publishing either destination state (35 ms)
+  ✓ complete export refuses missing blob end without publishing either destination state (35 ms)
+  ✓ complete export refuses duplicate record without publishing either destination state (32 ms)
+  ✓ complete export refuses wrong version without publishing either destination state (32 ms)
+  ✓ complete export refuses wrong user without publishing either destination state (31 ms)
+  ✓ complete export refuses wrong scope without publishing either destination state (33 ms)
+  ✓ complete export refuses incomplete terminal without publishing either destination state (33 ms)
+  ✓ complete export refuses malformed terminal without publishing either destination state (34 ms)
+  ✓ complete export refuses wrong counts without publishing either destination state (35 ms)
+  ✓ complete export refuses bad sequence without publishing either destination state (31 ms)
+  ✓ complete export refuses bad chunk data without publishing either destination state (34 ms)
+  ✓ complete export refuses bad checksum without publishing either destination state (33 ms)
+  ✓ complete export refuses bad raw codec without publishing either destination state (32 ms)
+  ✓ complete export open disk failure preserves final bytes and joins cleanup (31 ms)
+  ✓ complete export write disk failure preserves final bytes and joins cleanup (33 ms)
+  ✓ complete export zero-write disk failure preserves final bytes and joins cleanup (35 ms)
+  ✓ complete export sync disk failure preserves final bytes and joins cleanup (34 ms)
+  ✓ complete export close disk failure preserves final bytes and joins cleanup (45 ms)
+  ✓ complete export rename disk failure preserves final bytes and joins cleanup (41 ms)
+  ✓ complete export read failure emits no receipt and awaits iterator return (17 ms)
+  ✓ complete export late-read failure emits no receipt and awaits iterator return (17 ms)
+  ✓ complete export wrong-key failure emits no receipt and awaits iterator return (16 ms)
+  ✓ complete export serializer failure emits no receipt and awaits iterator return (19 ms)
+  ✓ complete export SIGINT aborts actual iterator and joins resource/listener cleanup (16 ms)
+  ✓ complete export SIGTERM aborts actual iterator and joins resource/listener cleanup (16 ms)
+  ✓ complete export reports staging cleanup failure and never publishes or deletes unrelated stage (16 ms)
+  ✓ complete export late falsey throw undefined is failure with no published file or receipt (35 ms)
+  ✓ complete export late falsey throw null is failure with no published file or receipt (34 ms)
+  ✓ complete export late falsey throw 0 is failure with no published file or receipt (32 ms)
+  ✓ complete export late falsey throw false is failure with no published file or receipt (59 ms)
+  ✓ complete export late falsey throw  is failure with no published file or receipt (35 ms)
+  ✓ complete export iterator return failure refuses publication after terminal completion (19 ms)
+  ✓ complete export canonical text seam retains UTF16 arbitrary event keys and empty binary (27 ms)
+  ✓ complete export abort observed at awaited sync blocks the synchronous commit (31 ms)
+  ✓ complete export abort observed at awaited close blocks the synchronous commit (22 ms)
+  ✓ complete export exclusive stage collision preserves both final and unowned stage (18 ms)
+  ✓ complete export retains artifact version order and every version referrer on deduplicated storage (39 ms)
+  ✓ actual registered export leaf help states administrator/version1/supported/history/binary/scope/consistency without config or client effects (15 ms)
+  ✓ users delete cascade binds the selected endpoint/key and exact whitespace-preserving tenant without exists (12 ms)
+  ✓ users delete-many cascade binds the selected endpoint/key and exact whitespace-preserving tenant without exists (16 ms)
+  ✓ users delete rejects missing administrator authority and malformed tenant before client/transport (22 ms)
+  ✓ users delete-many rejects missing administrator authority and malformed tenant before client/transport (23 ms)
+  ✓ users profile-only rejects a maintenance tenant and retains ordinary existence/delete behavior (22 ms)
+  ✓ users bulk later-target preflight rejection invokes one whole-bulk request with zero individual mutations (16 ms)
+  ✓ users bulk stopped receipt retains exact committed/unstarted/unknown sets (unknown=false) and never retries (15 ms)
+  ✓ users bulk stopped receipt retains exact committed/unstarted/unknown sets (unknown=true) and never retries (12 ms)
+  ✓ users bulk dry-run/no-verify retains incomplete truth without implying verified deletion (32 ms)
+  ✓ users single cascade failure emits original receipt and sanitized cause before rejection (18 ms)
+  ✓ users partial CSV remains a single valid row containing the original receipt and quoted sets (16 ms)
+  ✓ users selected project graph directory marker refuses before effects (14 ms)
+  ✓ users selected project graph file marker refuses before effects (12 ms)
+  ✓ users selected project graph symlink marker refuses before effects (14 ms)
+  ✓ users uses only selected explicit graph path: absent marker is off; unrelated cwd marker is not read (13 ms)
+  ✓ users graph filesystem errors propagate before client rather than silently treating graph as off (1 ms)
+  ✓ I156 users delete missing exact selected profile refuses before any erasure and closes readonly signal (13 ms)
+  ✓ I156 users delete-many missing exact selected profile refuses before any erasure and closes readonly signal (12 ms)
+  ✓ I156 users delete native missing-profile refusal is actionable and does not erase foreign/tenantless profiles (18 ms)
+  ✓ I156 users delete-many native missing-profile refusal is actionable and does not erase foreign/tenantless profiles (16 ms)
+  ✓ I156 bulk checks all exact tenantless profiles before the one SDK whole-bulk operation (16 ms)
+  ✓ I156 readonly inspection denial/ambiguity remains a refusal with no fabricated profile or erasure (34 ms)
+  ✓ I156 missing profile dry-run refuses rather than reporting an empty complete preview (16 ms)
+  ✓ Task21 ordinary scope flags at root reach AuthContext and never derive caller from users target (16 ms)
+  ✓ Task21 ordinary scope flags at group reach AuthContext and never derive caller from users target (18 ms)
+  ✓ Task21 ordinary scope flags at leaf reach AuthContext and never derive caller from users target (16 ms)
+  ✓ Task21 closest ordinary explicit scope wins over ancestors but maintenance tenant conflicts refuse before client (22 ms)
+  ✓ Task21 maintenance caller scope never substitutes the target user and does not require a caller (35 ms)
+  ✓ Task21 invalid ordinary caller options "--scope-user" refuse before clients or target reads (7 ms)
+  ✓ Task21 invalid ordinary caller options "--tenant" refuse before clients or target reads (6 ms)
+  ✓ Task21 invalid ordinary caller options "--graph-sync" refuse before clients or target reads (6 ms)
+  ✓ Task21 ordinary profile-only explicit tenant now uses caller AuthContext rather than a maintenance transport (17 ms)
+
+PASS commands tests/commands/bootstrap-admission-real.test.ts (40.206 s)
+  ✓ I111 built nested project load/use/write and sibling selection stay scoped (2155 ms)
+  ✓ I111 packed nested project load/use/write and sibling selection stay scoped (2173 ms)
+  ✓ I111 built ancestor owned/executable admission refuses effects from nested cwd (558 ms)
+  ✓ I111 packed ancestor owned/executable admission refuses effects from nested cwd (546 ms)
+  ✓ I111 built legacy cwd selection preserves target or refuses changed endpoint before effects (2160 ms)
+  ✓ I111 packed legacy cwd selection preserves target or refuses changed endpoint before effects (2203 ms)
+  ✓ cold parser route remains env/config free (255 ms)
+  ✓ cold parser route remains env/config free (274 ms)
+  ✓ cold parser route remains env/config free (268 ms)
+  ✓ cold parser route remains env/config free (254 ms)
+  ✓ cold parser route remains env/config free (264 ms)
+  ✓ cold parser route remains env/config free (264 ms)
+  ✓ cold parser route remains env/config free (260 ms)
+  ✓ cold parser route remains env/config free (254 ms)
+  ✓ protected JSON default selection skips FIFO env and shadowed executable (273 ms)
+  ✓ protected JSON singleton selection skips FIFO env and shadowed executable (282 ms)
+  ✓ protected JSON scoped selection skips FIFO env and shadowed executable (294 ms)
+  ✓ protected JSON explicit selection skips FIFO env and shadowed executable (270 ms)
+  ✓ protected JSON inherited selection skips FIFO env and shadowed executable (281 ms)
+  ✓ db protected capture never falls through ordinary native export (281 ms)
+  ✓ convex protected capture never falls through ordinary native export (268 ms)
+  ✓ I108 db standalone provenance built refuses an ordinary unowned target before effects (266 ms)
+  ✓ I108 db standalone provenance packed refuses an ordinary unowned target before effects (276 ms)
+  ✓ I108 convex standalone provenance built refuses an ordinary unowned target before effects (274 ms)
+  ✓ I108 convex standalone provenance packed refuses an ordinary unowned target before effects (267 ms)
+  ✓ I108 db provenance refuses executable-only configuration before evaluation (272 ms)
+  ✓ I108 convex provenance refuses executable-only configuration before evaluation (276 ms)
+  ✓ I108 db import without provenance keeps benign ordinary env and archive validation (273 ms)
+  ✓ I108 convex import without provenance keeps benign ordinary env and archive validation (265 ms)
+  ✓ snapshot create is protected without existing sessions (268 ms)
+  ✓ snapshot create with JSON reaches explicit unavailable boundary without resources (276 ms)
+  ✓ snapshot status admits exact session fixture and refuses absent runtime (281 ms)
+  ✓ snapshot resume admits exact session fixture and refuses absent runtime (280 ms)
+  ✓ snapshot release admits exact session fixture and refuses absent runtime (299 ms)
+  ✓ snapshot stop admits exact session fixture and refuses absent runtime (284 ms)
+  ✓ snapshot discard admits exact session fixture and refuses absent runtime (272 ms)
+  ✓ db import admits session-bound project outside cwd (315 ms)
+  ✓ convex import admits session-bound project outside cwd (288 ms)
+  ✓ db capture explicit project outside cwd remains protected (269 ms)
+  ✓ convex capture explicit project outside cwd remains protected (282 ms)
+  ✓ db capture forbids explicit env-file before even stat (269 ms)
+  ✓ convex capture forbids explicit env-file before even stat (263 ms)
+  ✓ genuine owned registry plus active JS is ambiguity, never imported (263 ms)
+  ✓ protected js active source rejects before executable/process/env effects (270 ms)
+  ✓ protected meta-js active source rejects before executable/process/env effects (280 ms)
+  ✓ protected meta-json active source rejects before executable/process/env effects (294 ms)
+  ✓ protected import active source rejects before executable/process/env effects (260 ms)
+  ✓ protected yaml active source rejects before executable/process/env effects (276 ms)
+  ✓ unsafe active config symlink refuses with bounded zero env effects (264 ms)
+  ✓ unsafe active config oversize refuses with bounded zero env effects (274 ms)
+  ✓ unsafe active config fifo refuses with bounded zero env effects (260 ms)
+  ✓ unsafe active config unreadable refuses with bounded zero env effects (267 ms)
+  ✓ retained missing metadata cannot permit an ordinary JS bypass (267 ms)
+  ✓ retained malformed metadata cannot permit an ordinary JS bypass (258 ms)
+  ✓ retained incomplete metadata cannot permit an ordinary JS bypass (272 ms)
+  ✓ retained epoch metadata cannot permit an ordinary JS bypass (266 ms)
+  ✓ retained mode metadata cannot permit an ordinary JS bypass (266 ms)
+  ✓ ordinary trusted JS and dotenv evaluation remain automatic with positive open/process sentinels (287 ms)
+  ✓ ordinary JS can observe loaded env and user/project precedence (278 ms)
+  ✓ ordinary JS returned forged owned metadata fails without private authority/fallback (277 ms)
+  ✓ protected scoped use persists exact canonical scope without env/config effects (290 ms)
+  ✓ protected config formatting save retains binding and user/source ownership (287 ms)
+  ✓ protected identity mutation refuses before config/env writes (271 ms)
+  ✓ relocated ignored-hook CLI candidate runs actual protected index with fixture dependencies (357 ms)
+  ✓ actual executable launcher places Node boundary before protected env-file FIFO (667 ms)
+  ✓ actual npm-bin launcher places Node boundary before protected env-file FIFO (479 ms)
+  ✓ actual npm-sh launcher places Node boundary before protected env-file FIFO (627 ms)
+  ✓ protected index skips env directory without even stat (291 ms)
+  ✓ protected index skips env symlink without even stat (321 ms)
+  ✓ protected index skips env unreadable without even stat (307 ms)
+  ✓ ordinary executable meta factory remains automatic after ordinary-only proof (315 ms)
+  ✓ restore session explicit project mismatch refuses association before env/native effects (265 ms)
+  ✓ protected capture requires actual explicit alias rather than config/default fallback (267 ms)
+  ✓ db explicit normal selector cannot downgrade a restore-session import (269 ms)
+  ✓ convex explicit normal selector cannot downgrade a restore-session import (263 ms)
+  ✓ I95 actual index proposed creating session refuses JS/default/env before effects (263 ms)
+  ✓ I95 actual index proposed private-paused session refuses JS/default/env before effects (279 ms)
+  ✓ I95 actual index proposed failed session refuses JS/default/env before effects (270 ms)
+  ✓ I95 actual index proposed unknown session refuses JS/default/env before effects (264 ms)
+  ✓ I95 actual index proposed stopped session refuses JS/default/env before effects (269 ms)
+  ✓ I95 actual index proposed native-running-confirmed session refuses JS/default/env before effects (271 ms)
+  ✓ I95 actual index proposed explicit placements preserve zero effects (270 ms)
+  ✓ I95 actual index proposed explicit placements preserve zero effects (257 ms)
+  ✓ I95 actual index proposed explicit placements preserve zero effects (269 ms)
+  ✓ I95 actual index inherited proposed user-source blocks current JS (265 ms)
+  ✓ I95 actual index inherited JSON project association blocks current JS (268 ms)
+  ✓ I95 actual index explicit project blocks proposal JS outside cwd (263 ms)
+  ✓ I95 actual index proposed scoped-use selection blocks unrelated JS (270 ms)
+  ✓ I95 actual index inherited proposed default blocks current JS (262 ms)
+  ✓ I95 actual index explicit proposed alias blocks unresolved foreign association (260 ms)
+  ✓ I95 actual index proposed metadata applies to active executable meta configuration (258 ms)
+  ✓ I95 unrelated proposed scope retains ordinary JS/env positive controls (298 ms)
+  ✓ I95 closest explicit ordinary target excludes a foreign proposed ancestor (312 ms)
+  ✓ I95 exact explicit ordinary JSON alias retains env despite same-project proposal (271 ms)
+  ✓ I95 exact unrelated JSON source/project keeps same-name ordinary alias (279 ms)
+  ✓ I95 inherited symlink project reference associates a differently named proposed session (277 ms)
+  ✓ I95 already protected proposal never resolves irrelevant env regular project reference (261 ms)
+  ✓ I95 already protected proposal never resolves irrelevant env fifo project reference (267 ms)
+  ✓ I95R2 unknown proposed mixed regular references env-first never inspect env (272 ms)
+  ✓ I95R2 unknown proposed mixed regular references project-first never inspect env (271 ms)
+  ✓ I95R2 unknown proposed mixed fifo references env-first never inspect env (279 ms)
+  ✓ I95R2 unknown proposed mixed fifo references project-first never inspect env (259 ms)
+  ✓ I95R2 unknown proposed mixed symlink references env-first never inspect env (256 ms)
+  ✓ I95R2 unknown proposed mixed symlink references project-first never inspect env (265 ms)
+  ✓ I95R2 env-named canonical .env.local reference refuses before lookup (258 ms)
+  ✓ I95R2 env-named canonical .env.custom reference refuses before lookup (279 ms)
+  ✓ I95R2 env-named canonical nested/../.env.local reference refuses before lookup (287 ms)
+  ✓ I95R2 empty ordinary JSON target retains automatic env with env-named project field (271 ms)
+  ✓ I95R2 foreign-explicit ordinary JSON target retains automatic env with env-named project field (267 ms)
+
+PASS commands tests/commands/config-real.test.ts (67.936 s)
+  ✓ actual registered handler receives globals at every position: "-d" (41 ms)
+  ✓ actual registered handler receives globals at every position: "config" (15 ms)
+  ✓ actual registered handler receives globals at every position: "config" (14 ms)
+  ✓ config show/list retain stale/auth-failing entries and bytes, redact secrets, emit parseable JSON (47 ms)
+  ✓ deprecated config toggles always throw before save or client creation (23 ms)
+  ✓ quiet suppresses selection and validation hints without dropping JSON (16 ms)
+  ✓ real domain registry rejects strict limit 1.5 before selection/network (8 ms)
+  ✓ real domain registry rejects strict limit 2abc before selection/network (9 ms)
+  ✓ real domain registry rejects strict limit Infinity before selection/network (6 ms)
+  ✓ real domain registry rejects strict limit 0 before selection/network (7 ms)
+  ✓ real domain registry rejects strict limit 1001 before selection/network (8 ms)
+  ✓ valid conversations txt export is accepted by the registry validation before target failure (12 ms)
+  ✓ actual binary missing target fails with empty stdout: "users" (275 ms)
+  ✓ actual binary missing target fails with empty stdout: "spaces" (269 ms)
+  ✓ actual binary missing target fails with empty stdout: "memory" (267 ms)
+  ✓ actual binary missing target fails with empty stdout: "facts" (273 ms)
+  ✓ actual binary missing target fails with empty stdout: "conversations" (269 ms)
+  ✓ actual binary missing target fails with empty stdout: "db" (266 ms)
+  ✓ actual binary rejects malformed config and invalid options with nonzero status (1012 ms)
+  ✓ actual binary persists/readbacks scoped use, default changes, private mode and redacted show (1395 ms)
+  ✓ actual binary unknown target/toggles fail without modifying config or opening transport (1323 ms)
+  ✓ built readonly show/list retain bytes on unreachable target with parseable redacted JSON (550 ms)
+  ✓ built connection failure is structured, nonzero, redacted and leaves config intact (281 ms)
+  ✓ root/leaf debug diagnostic paths stay off JSON stdout (522 ms)
+  ✓ built use mutations and reset emit one JSON result without prose (1144 ms)
+  ✓ registered use CSV quotes its deployments array as one cell (33 ms)
+  ✓ built configuration credential/env saves are private and machine results redact the value (289 ms)
+  ✓ built invalid credential input fails before config/env creation (267 ms)
+  ✓ actual registry binds admin credential to effective endpoint {"url":"http://127.0.0.1:3"} (8 ms)
+  ✓ actual registry binds admin credential to effective endpoint {"url":"http://127.0.0.1:1/"} (8 ms)
+  ✓ actual registry binds admin credential to effective endpoint {"url":"http://127.0.0.1:3","key":"project-secret"} (7 ms)
+  ✓ registered key/url/remove handlers honor explicit target at root (74 ms)
+  ✓ registered key/url/remove handlers honor explicit target at group (71 ms)
+  ✓ registered key/url/remove handlers honor explicit target at leaf (73 ms)
+  ✓ built key/url/remove handlers honor explicit target at root and preserve other aliases (857 ms)
+  ✓ built key/url/remove handlers honor explicit target at group and preserve other aliases (838 ms)
+  ✓ built key/url/remove handlers honor explicit target at leaf and preserve other aliases (992 ms)
+  ✓ built set-key refuses conflicting target selectors before any write (299 ms)
+  ✓ built set-url refuses conflicting target selectors before any write (281 ms)
+  ✓ built remove-deployment refuses conflicting target selectors before any write (270 ms)
+  ✓ built use refuses conflicting target selectors before any write (276 ms)
+  ✓ built invalid set-key alias emits only stderr including quiet JSON (546 ms)
+  ✓ built invalid set-url alias emits only stderr including quiet JSON (531 ms)
+  ✓ built invalid use alias emits only stderr including quiet JSON (543 ms)
+  ✓ built effective remove/reset refuses inherited or mixed alias (overlay false) and preserves config/env/readback (543 ms)
+  ✓ built effective remove/reset refuses inherited or mixed alias (overlay true) and preserves config/env/readback (532 ms)
+  ✓ built URL change removes previous owned config/env key; same endpoint retains key (581 ms)
+  ✓ built convex-url setter drops old credential in user source; project partial URL change never copies user key (571 ms)
+  ✓ built agreeing positional/flag targets are accepted and scoped use honors flag-only target (592 ms)
+  ✓ registered remaining target mutations honor root selectors, requested readback and other-alias preservation (138 ms)
+  ✓ registered remaining target mutations honor group selectors, requested readback and other-alias preservation (136 ms)
+  ✓ registered remaining target mutations honor leaf selectors, requested readback and other-alias preservation (109 ms)
+  ✓ binary remaining target mutations honor root selectors, requested readback and other-alias preservation (1407 ms)
+  ✓ binary remaining target mutations honor group selectors, requested readback and other-alias preservation (1450 ms)
+  ✓ binary remaining target mutations honor leaf selectors, requested readback and other-alias preservation (1405 ms)
+  ✓ registered root unknown/conflicting and unsupported mutation selectors preserve config/env/current before effects (219 ms)
+  ✓ registered group unknown/conflicting and unsupported mutation selectors preserve config/env/current before effects (229 ms)
+  ✓ registered leaf unknown/conflicting and unsupported mutation selectors preserve config/env/current before effects (224 ms)
+  ✓ binary root unknown/conflicting and unsupported mutation selectors preserve config/env/current before effects (3521 ms)
+  ✓ binary group unknown/conflicting and unsupported mutation selectors preserve config/env/current before effects (3660 ms)
+  ✓ binary leaf unknown/conflicting and unsupported mutation selectors preserve config/env/current before effects (4320 ms)
+  ✓ registered absent alias constructor cannot mutate defaults, targets, files or functions (184 ms)
+  ✓ registered absent alias __proto__ cannot mutate defaults, targets, files or functions (190 ms)
+  ✓ registered absent alias prototype cannot mutate defaults, targets, files or functions (164 ms)
+  ✓ registered absent alias toString cannot mutate defaults, targets, files or functions (185 ms)
+  ✓ registered absent alias hasOwnProperty cannot mutate defaults, targets, files or functions (195 ms)
+  ✓ registered absent alias missing cannot mutate defaults, targets, files or functions (167 ms)
+  ✓ binary absent alias constructor cannot mutate defaults, targets, files or functions (2868 ms)
+  ✓ binary absent alias __proto__ cannot mutate defaults, targets, files or functions (2853 ms)
+  ✓ binary absent alias prototype cannot mutate defaults, targets, files or functions (2462 ms)
+  ✓ binary absent alias toString cannot mutate defaults, targets, files or functions (2490 ms)
+  ✓ binary absent alias hasOwnProperty cannot mutate defaults, targets, files or functions (2474 ms)
+  ✓ binary absent alias missing cannot mutate defaults, targets, files or functions (2516 ms)
+  ✓ registered legitimate owned prototype-style alias works through creation, updates, default/use and removal (218 ms)
+  ✓ binary legitimate owned prototype-style alias works through creation, updates, default/use and removal (2545 ms)
+  ✓ registered convex config setters honor scoped/default/singleton fallback and stale defaults fail without writes (239 ms)
+  ✓ binary convex config setters honor scoped/default/singleton fallback and stale defaults fail without writes (3041 ms)
+  ✓ registered unsupported creation aliases fail before files and selector-free global settings/reset remain functional (138 ms)
+  ✓ binary unsupported creation aliases fail before files and selector-free global settings/reset remain functional (1941 ms)
+  ✓ registered env-mirroring callers normalize duplicates and ordinary loader forms with exact literal readback (119 ms)
+  ✓ binary env-mirroring callers normalize duplicates and ordinary loader forms with exact literal readback (1189 ms)
+  ✓ registered add-deployment normalizes URL/key duplicates; removal clears export/space/colon/local deployment variants (100 ms)
+  ✓ binary add-deployment normalizes URL/key duplicates; removal clears export/space/colon/local deployment variants (1229 ms)
+  ✓ registered unsupported literal encoding uniformly refuses before config/env/current writes (177 ms)
+  ✓ binary unsupported literal encoding uniformly refuses before config/env/current writes (2708 ms)
+  ✓ built startup and action debug respect quiet at root with owned env fixture (548 ms)
+  ✓ built startup and action debug respect quiet at group with owned env fixture (534 ms)
+  ✓ built startup and action debug respect quiet at leaf with owned env fixture (538 ms)
+
+  console.info
+    task05 private compiled entry: /Users/SaintNick/.codex/tmp/cortex-integrated-apps-wse3r3g7/cortex-cli-tests-2fNPLU/tmp/cortex-actual-cli-taGTWI/cli/dist/index.js
+
+      at Object.<anonymous> (tests/commands/memory-real.test.ts:199:11)
+
+  console.error
+       Using: one (clear)
+
+      158 |     );
+      159 |   if (!options.quiet)
+    > 160 |     console.error(
+          |             ^
+      161 |       pc.dim(
+      162 |         `   Using: ${selectedName}${actionDescription ? ` (${actionDescription})` : ""}`,
+      163 |       ),
+
+      at selectDeployment (src/utils/deployment-selector.ts:160:13)
+      at Command.<anonymous> (src/commands/memory.ts:74:23)
+      at Command.parseAsync (node_modules/commander/lib/command.js:1113:5)
+      at Object.<anonymous> (tests/commands/memory-real.test.ts:854:5)
+
+PASS commands tests/commands/memory-real.test.ts (11.753 s)
+  ✓ production memory ["list", "-s", "space-one", "-u", "user-one", "-l", "2"] emits the SDK outcome and exact arguments (28 ms)
+  ✓ production memory ["search", "full", "-s", "space-one", "-u", "user-one", "-l", "3"] emits the SDK outcome and exact arguments (18 ms)
+  ✓ production memory ["get", "mem-one", "-s", "space-one", "--include-conversation"] emits the SDK outcome and exact arguments (18 ms)
+  ✓ production memory ["delete", "mem-one", "-s", "space-one", "--cascade", "--yes"] emits the SDK outcome and exact arguments (19 ms)
+  ✓ production memory ["clear", "-s", "space-one", "-u", "user-one", "--source", "tool", "--yes"] emits the SDK outcome and exact arguments (21 ms)
+  ✓ production memory ["export", "-s", "space-one", "-u", "user-one", "--include-facts", "-o", "memory-export.json"] emits the SDK outcome and exact arguments (36 ms)
+  ✓ production memory ["stats", "-s", "space-one"] emits the SDK outcome and exact arguments (22 ms)
+  ✓ production memory ["archive", "mem-one", "-s", "space-one", "--yes"] emits the SDK outcome and exact arguments (20 ms)
+  ✓ production memory ["restore", "mem-one", "-s", "space-one"] emits the SDK outcome and exact arguments (16 ms)
+  ✓ production memory ["list", "-s", "space-one", "-u", "user-one", "-l", "2"] propagates the SDK failure and closes (17 ms)
+  ✓ production memory ["search", "full", "-s", "space-one", "-u", "user-one", "-l", "3"] propagates the SDK failure and closes (33 ms)
+  ✓ production memory ["get", "mem-one", "-s", "space-one", "--include-conversation"] propagates the SDK failure and closes (17 ms)
+  ✓ production memory ["delete", "mem-one", "-s", "space-one", "--cascade", "--yes"] propagates the SDK failure and closes (16 ms)
+  ✓ production memory ["clear", "-s", "space-one", "-u", "user-one", "--source", "tool", "--yes"] propagates the SDK failure and closes (16 ms)
+  ✓ production memory ["export", "-s", "space-one", "-u", "user-one", "--include-facts", "-o", "memory-export.json"] propagates the SDK failure and closes (18 ms)
+  ✓ production memory ["stats", "-s", "space-one"] propagates the SDK failure and closes (16 ms)
+  ✓ production memory ["archive", "mem-one", "-s", "space-one", "--yes"] propagates the SDK failure and closes (16 ms)
+  ✓ production memory ["restore", "mem-one", "-s", "space-one"] propagates the SDK failure and closes (16 ms)
+  ✓ production memory registry preserves each retained leaf and tested option (6 ms)
+  ✓ memory effective globals select the target at root (23 ms)
+  ✓ memory effective globals select the target at group (13 ms)
+  ✓ memory effective globals select the target at leaf (13 ms)
+  ✓ memory nearest explicit global value wins (11 ms)
+  ✓ memory rejects partial or unsafe limit 1x before client (8 ms)
+  ✓ memory rejects partial or unsafe limit 1.2 before client (8 ms)
+  ✓ memory rejects partial or unsafe limit 1e2 before client (7 ms)
+  ✓ memory rejects partial or unsafe limit 0 before client (6 ms)
+  ✓ memory rejects partial or unsafe limit -1 before client (7 ms)
+  ✓ memory rejects partial or unsafe limit 1001 before client (7 ms)
+  ✓ memory rejects partial or unsafe limit 9007199254740993 before client (6 ms)
+  ✓ memory invalid format and unknown deployment never instantiate a client (20 ms)
+  ✓ memory missing selected deployment fails nonzero instead of succeeding (12 ms)
+  ✓ memory clear uses complete SDK bulk result and refuses partial completion (17 ms)
+  ✓ memory clear count failure never mutates (18 ms)
+  ✓ memory empty clear and cancelled clear never mutate and close transport (33 ms)
+  ✓ memory delete confirmation cancels before client creation (19 ms)
+  ✓ memory absent get and false delete are honest failures (33 ms)
+  ✓ actual memory binary rejects malformed input before network and emits no stdout (803 ms)
+  ✓ actual compiled memory binary emits parseable success JSON and nonzero SDK failure (674 ms)
+  ✓ memory clear forwards retained source conversation (16 ms)
+  ✓ memory clear forwards retained source system (34 ms)
+  ✓ memory clear forwards retained source tool (16 ms)
+  ✓ memory clear forwards retained source a2a (16 ms)
+  ✓ memory clear forwards retained source fact-extraction (17 ms)
+  ✓ memory rejects invalid source, space, user and empty query before client (69 ms)
+  ✓ memory export preserves all 1201 records and returned CSV bytes including facts (86 ms)
+  ✓ memory export refuses mismatched SDK format and surfaces filesystem failure (35 ms)
+  ✓ memory archive cancellation and false archive/restore fail honestly (51 ms)
+  ✓ memory JSON keeps empty results and full enriched source records (35 ms)
+  ✓ memory table and CSV keep readable full content (37 ms)
+  ✓ memory partial clear emits a structured receipt before nonzero failure (19 ms)
+  ✓ memory empty record ID and unsafe export path fail before SDK (31 ms)
+  ✓ memory stats retains recent activity and propagates its read failure (34 ms)
+  ✓ memory stats reports the five native sources using only supported count filters (17 ms)
+  ✓ memory stats refuses inconsistent observations rather than inventing a residual count (16 ms)
+  ✓ actual compiled memory ["list", "-s", "space-one", "-u", "user-one", "-l", "2"] preserves JSON outcomes and failure exits (675 ms)
+  ✓ actual compiled memory ["search", "full", "-s", "space-one", "-u", "user-one", "-l", "3"] preserves JSON outcomes and failure exits (676 ms)
+  ✓ actual compiled memory ["get", "mem-one", "-s", "space-one", "--include-conversation"] preserves JSON outcomes and failure exits (702 ms)
+  ✓ actual compiled memory ["delete", "mem-one", "-s", "space-one", "--cascade", "--yes"] preserves JSON outcomes and failure exits (676 ms)
+  ✓ actual compiled memory ["clear", "-s", "space-one", "-u", "user-one", "--source", "tool", "--yes"] preserves JSON outcomes and failure exits (1037 ms)
+  ✓ actual compiled memory ["export", "-s", "space-one", "-u", "user-one", "--include-facts", "-o", "memory-export.json"] preserves JSON outcomes and failure exits (698 ms)
+  ✓ actual compiled memory ["stats", "-s", "space-one"] preserves JSON outcomes and failure exits (705 ms)
+  ✓ actual compiled memory ["archive", "mem-one", "-s", "space-one", "--yes"] preserves JSON outcomes and failure exits (697 ms)
+  ✓ actual compiled memory ["restore", "mem-one", "-s", "space-one"] preserves JSON outcomes and failure exits (690 ms)
+  ✓ production memory ["list", "-s", "space-one", "-u", "user-one", "-l", "2"] retains useful table output (17 ms)
+  ✓ production memory ["search", "full", "-s", "space-one", "-u", "user-one", "-l", "3"] retains useful table output (17 ms)
+  ✓ production memory ["get", "mem-one", "-s", "space-one", "--include-conversation"] retains useful table output (26 ms)
+  ✓ production memory ["delete", "mem-one", "-s", "space-one", "--cascade", "--yes"] retains useful table output (36 ms)
+  ✓ production memory ["clear", "-s", "space-one", "-u", "user-one", "--source", "tool", "--yes"] retains useful table output (19 ms)
+  ✓ production memory ["stats", "-s", "space-one"] retains useful table output (18 ms)
+  ✓ production memory ["archive", "mem-one", "-s", "space-one", "--yes"] retains useful table output (16 ms)
+  ✓ production memory ["restore", "mem-one", "-s", "space-one"] retains useful table output (17 ms)
+  ✓ memory export atomically replaces the destination with a private complete file (29 ms)
+  ✓ memory open failure preserves destination and removes staging files (17 ms)
+  ✓ memory write failure preserves destination and removes staging files (16 ms)
+  ✓ memory sync failure preserves destination and removes staging files (15 ms)
+  ✓ memory close failure preserves destination and removes staging files (23 ms)
+  ✓ memory rename failure preserves destination and removes staging files (21 ms)
+  ✓ memory rejects malformed/incomplete export payload json not JSON before opening files (17 ms)
+  ✓ memory rejects malformed/incomplete export payload json {} before opening files (18 ms)
+  ✓ memory rejects malformed/incomplete export payload json [] before opening files (17 ms)
+  ✓ memory rejects malformed/incomplete export payload json [] before opening files (15 ms)
+  ✓ memory rejects malformed/incomplete export payload csv id,value
+row,"unterminated before opening files (16 ms)
+  ✓ memory rejects malformed/incomplete export payload csv id,value
+row,value,extra before opening files (19 ms)
+  ✓ memory rejects malformed/incomplete export payload csv id,value
+row,"closed"junk before opening files (16 ms)
+  ✓ memory rejects malformed/incomplete export payload csv id,value
+row,value before opening files (14 ms)
+  ✓ memory delete preserves named Task22 partial failure and closes without retry (15 ms)
+  ✓ memory deleteMany preserves named Task22 partial failure and closes without retry (18 ms)
+  ✓ memory archive preserves named Task22 partial failure and closes without retry (16 ms)
+  ✓ memory archive preserves the Task22 receipt and restore claims only the restored memory (36 ms)
+
+  console.info
+    task05 private compiled entry: /Users/SaintNick/.codex/tmp/cortex-integrated-apps-wse3r3g7/cortex-cli-tests-2fNPLU/tmp/cortex-actual-cli-sRfdOh/cli/dist/index.js
+
+      at Object.<anonymous> (tests/commands/facts-real.test.ts:199:11)
+
+  console.error
+       Using: one (clear)
+
+      158 |     );
+      159 |   if (!options.quiet)
+    > 160 |     console.error(
+          |             ^
+      161 |       pc.dim(
+      162 |         `   Using: ${selectedName}${actionDescription ? ` (${actionDescription})` : ""}`,
+      163 |       ),
+
+      at selectDeployment (src/utils/deployment-selector.ts:160:13)
+      at Command.<anonymous> (src/commands/facts.ts:74:23)
+      at Command.parseAsync (node_modules/commander/lib/command.js:1113:5)
+      at Object.<anonymous> (tests/commands/facts-real.test.ts:837:5)
+
+PASS commands tests/commands/facts-real.test.ts (10.09 s)
+  ✓ production facts ["list", "-s", "space-one", "-u", "user-one", "-t", "knowledge", "-l", "2"] emits the SDK outcome and exact arguments (31 ms)
+  ✓ production facts ["search", "comma", "-s", "space-one", "-t", "knowledge", "-l", "3"] emits the SDK outcome and exact arguments (18 ms)
+  ✓ production facts ["get", "fact-one", "-s", "space-one"] emits the SDK outcome and exact arguments (18 ms)
+  ✓ production facts ["delete", "fact-one", "-s", "space-one", "--yes"] emits the SDK outcome and exact arguments (21 ms)
+  ✓ production facts ["export", "-s", "space-one", "-t", "knowledge", "-o", "facts-export.json"] emits the SDK outcome and exact arguments (27 ms)
+  ✓ production facts ["count", "-s", "space-one", "-t", "knowledge"] emits the SDK outcome and exact arguments (18 ms)
+  ✓ production facts ["clear", "-s", "space-one", "-t", "knowledge", "--yes"] emits the SDK outcome and exact arguments (17 ms)
+  ✓ production facts ["list", "-s", "space-one", "-u", "user-one", "-t", "knowledge", "-l", "2"] propagates the SDK failure and closes (41 ms)
+  ✓ production facts ["search", "comma", "-s", "space-one", "-t", "knowledge", "-l", "3"] propagates the SDK failure and closes (17 ms)
+  ✓ production facts ["get", "fact-one", "-s", "space-one"] propagates the SDK failure and closes (16 ms)
+  ✓ production facts ["delete", "fact-one", "-s", "space-one", "--yes"] propagates the SDK failure and closes (15 ms)
+  ✓ production facts ["export", "-s", "space-one", "-t", "knowledge", "-o", "facts-export.json"] propagates the SDK failure and closes (22 ms)
+  ✓ production facts ["count", "-s", "space-one", "-t", "knowledge"] propagates the SDK failure and closes (18 ms)
+  ✓ production facts ["clear", "-s", "space-one", "-t", "knowledge", "--yes"] propagates the SDK failure and closes (15 ms)
+  ✓ production facts registry preserves each retained leaf and tested option (4 ms)
+  ✓ facts effective globals select the target at root (15 ms)
+  ✓ facts effective globals select the target at group (11 ms)
+  ✓ facts effective globals select the target at leaf (12 ms)
+  ✓ facts nearest explicit global value wins (13 ms)
+  ✓ facts rejects partial or unsafe limit 1x before client (7 ms)
+  ✓ facts rejects partial or unsafe limit 1.2 before client (6 ms)
+  ✓ facts rejects partial or unsafe limit 1e2 before client (9 ms)
+  ✓ facts rejects partial or unsafe limit 0 before client (7 ms)
+  ✓ facts rejects partial or unsafe limit -1 before client (6 ms)
+  ✓ facts rejects partial or unsafe limit 1001 before client (8 ms)
+  ✓ facts rejects partial or unsafe limit 9007199254740993 before client (6 ms)
+  ✓ facts invalid format and unknown deployment never instantiate a client (22 ms)
+  ✓ facts missing selected deployment fails nonzero instead of succeeding (11 ms)
+  ✓ facts clear removes complete mixed history and preserves foreign scopes (34 ms)
+  ✓ facts clear removes complete superseded-only history and preserves foreign scopes (34 ms)
+  ✓ facts clear uses complete SDK bulk result and refuses partial completion (16 ms)
+  ✓ facts clear count failure never mutates (18 ms)
+  ✓ facts empty clear and cancelled clear never mutate and close transport (34 ms)
+  ✓ facts delete confirmation cancels before client creation (16 ms)
+  ✓ facts absent get and false delete are honest failures (36 ms)
+  ✓ actual facts binary rejects malformed input before network and emits no stdout (791 ms)
+  ✓ actual compiled facts binary emits parseable success JSON and nonzero SDK failure (687 ms)
+  ✓ facts exports 1201 full records via export and count uses true count only (95 ms)
+  ✓ facts CSV is the SDK bytes with format-aware filename and explicit path retained (43 ms)
+  ✓ facts export refuses format mismatch and failed file writes (33 ms)
+  ✓ facts validates retained type/user and empty search query before client (115 ms)
+  ✓ facts JSON retains empty results and original comma/quote/newline values (54 ms)
+  ✓ facts partial clear emits a structured receipt before nonzero failure (17 ms)
+  ✓ facts empty record ID and unsafe export path fail before SDK (36 ms)
+  ✓ actual compiled facts ["list", "-s", "space-one", "-u", "user-one", "-t", "knowledge", "-l", "2"] preserves JSON outcomes and failure exits (689 ms)
+  ✓ actual compiled facts ["search", "comma", "-s", "space-one", "-t", "knowledge", "-l", "3"] preserves JSON outcomes and failure exits (682 ms)
+  ✓ actual compiled facts ["get", "fact-one", "-s", "space-one"] preserves JSON outcomes and failure exits (711 ms)
+  ✓ actual compiled facts ["delete", "fact-one", "-s", "space-one", "--yes"] preserves JSON outcomes and failure exits (684 ms)
+  ✓ actual compiled facts ["export", "-s", "space-one", "-t", "knowledge", "-o", "facts-export.json"] preserves JSON outcomes and failure exits (694 ms)
+  ✓ actual compiled facts ["count", "-s", "space-one", "-t", "knowledge"] preserves JSON outcomes and failure exits (678 ms)
+  ✓ actual compiled facts ["clear", "-s", "space-one", "-t", "knowledge", "--yes"] preserves JSON outcomes and failure exits (1069 ms)
+  ✓ production facts ["list", "-s", "space-one", "-u", "user-one", "-t", "knowledge", "-l", "2"] retains useful table output (19 ms)
+  ✓ production facts ["search", "comma", "-s", "space-one", "-t", "knowledge", "-l", "3"] retains useful table output (42 ms)
+  ✓ production facts ["get", "fact-one", "-s", "space-one"] retains useful table output (17 ms)
+  ✓ production facts ["delete", "fact-one", "-s", "space-one", "--yes"] retains useful table output (15 ms)
+  ✓ production facts ["count", "-s", "space-one", "-t", "knowledge"] retains useful table output (18 ms)
+  ✓ production facts ["clear", "-s", "space-one", "-t", "knowledge", "--yes"] retains useful table output (17 ms)
+  ✓ facts export atomically replaces the destination with a private complete file (24 ms)
+  ✓ facts open failure preserves destination and removes staging files (22 ms)
+  ✓ facts write failure preserves destination and removes staging files (24 ms)
+  ✓ facts sync failure preserves destination and removes staging files (19 ms)
+  ✓ facts close failure preserves destination and removes staging files (30 ms)
+  ✓ facts rename failure preserves destination and removes staging files (26 ms)
+  ✓ facts rejects malformed/incomplete export payload json not JSON before opening files (22 ms)
+  ✓ facts rejects malformed/incomplete export payload json {} before opening files (20 ms)
+  ✓ facts rejects malformed/incomplete export payload json [] before opening files (18 ms)
+  ✓ facts rejects malformed/incomplete export payload json [] before opening files (21 ms)
+  ✓ facts rejects malformed/incomplete export payload csv id,value
+row,"unterminated before opening files (24 ms)
+  ✓ facts rejects malformed/incomplete export payload csv id,value
+row,value,extra before opening files (18 ms)
+  ✓ facts rejects malformed/incomplete export payload csv id,value
+row,"closed"junk before opening files (21 ms)
+  ✓ facts rejects malformed/incomplete export payload csv id,value
+row,value before opening files (18 ms)
+  ✓ facts deleteMany preserves named Task22 partial failure and closes without retry (34 ms)
+
+  console.info
+    task05 private compiled entry: /Users/SaintNick/.codex/tmp/cortex-integrated-apps-wse3r3g7/cortex-cli-tests-2fNPLU/tmp/cortex-actual-cli-sZkDcd/cli/dist/index.js
+
+      at Object.<anonymous> (tests/commands/conversations-real.test.ts:199:11)
+
+  console.error
+       Using: one (clear)
+
+      158 |     );
+      159 |   if (!options.quiet)
+    > 160 |     console.error(
+          |             ^
+      161 |       pc.dim(
+      162 |         `   Using: ${selectedName}${actionDescription ? ` (${actionDescription})` : ""}`,
+      163 |       ),
+
+      at selectDeployment (src/utils/deployment-selector.ts:160:13)
+      at Command.<anonymous> (src/commands/conversations.ts:74:23)
+      at Command.parseAsync (node_modules/commander/lib/command.js:1113:5)
+      at Object.<anonymous> (tests/commands/conversations-real.test.ts:820:5)
+
+PASS commands tests/commands/conversations-real.test.ts (10.097 s)
+  ✓ production conversations ["list", "-s", "space-one", "-u", "user-one", "-t", "user-agent", "-l", "2"] emits the SDK outcome and exact arguments (52 ms)
+  ✓ production conversations ["get", "conv-one", "-m", "2"] emits the SDK outcome and exact arguments (19 ms)
+  ✓ production conversations ["delete", "conv-one", "--yes"] emits the SDK outcome and exact arguments (18 ms)
+  ✓ production conversations ["export", "conv-one", "-o", "conversations-export.json"] emits the SDK outcome and exact arguments (27 ms)
+  ✓ production conversations ["count", "-s", "space-one", "-u", "user-one", "-t", "agent-agent"] emits the SDK outcome and exact arguments (19 ms)
+  ✓ production conversations ["clear", "-s", "space-one", "-u", "user-one", "--yes"] emits the SDK outcome and exact arguments (19 ms)
+  ✓ production conversations ["messages", "conv-one", "-l", "2"] emits the SDK outcome and exact arguments (16 ms)
+  ✓ production conversations ["list", "-s", "space-one", "-u", "user-one", "-t", "user-agent", "-l", "2"] propagates the SDK failure and closes (18 ms)
+  ✓ production conversations ["get", "conv-one", "-m", "2"] propagates the SDK failure and closes (19 ms)
+  ✓ production conversations ["delete", "conv-one", "--yes"] propagates the SDK failure and closes (15 ms)
+  ✓ production conversations ["export", "conv-one", "-o", "conversations-export.json"] propagates the SDK failure and closes (15 ms)
+  ✓ production conversations ["count", "-s", "space-one", "-u", "user-one", "-t", "agent-agent"] propagates the SDK failure and closes (16 ms)
+  ✓ production conversations ["clear", "-s", "space-one", "-u", "user-one", "--yes"] propagates the SDK failure and closes (19 ms)
+  ✓ production conversations ["messages", "conv-one", "-l", "2"] propagates the SDK failure and closes (15 ms)
+  ✓ production conversations registry preserves each retained leaf and tested option (5 ms)
+  ✓ conversations effective globals select the target at root (11 ms)
+  ✓ conversations effective globals select the target at group (13 ms)
+  ✓ conversations effective globals select the target at leaf (12 ms)
+  ✓ conversations nearest explicit global value wins (13 ms)
+  ✓ conversations rejects partial or unsafe limit 1x before client (7 ms)
+  ✓ conversations rejects partial or unsafe limit 1.2 before client (7 ms)
+  ✓ conversations rejects partial or unsafe limit 1e2 before client (7 ms)
+  ✓ conversations rejects partial or unsafe limit 0 before client (8 ms)
+  ✓ conversations rejects partial or unsafe limit -1 before client (7 ms)
+  ✓ conversations rejects partial or unsafe limit 1001 before client (6 ms)
+  ✓ conversations rejects partial or unsafe limit 9007199254740993 before client (7 ms)
+  ✓ conversations invalid format and unknown deployment never instantiate a client (20 ms)
+  ✓ conversations missing selected deployment fails nonzero instead of succeeding (12 ms)
+  ✓ conversations clear uses complete SDK bulk result and refuses partial completion (17 ms)
+  ✓ conversations clear count failure never mutates (15 ms)
+  ✓ conversations empty clear and cancelled clear never mutate and close transport (36 ms)
+  ✓ conversations delete confirmation cancels before client creation (16 ms)
+  ✓ conversations absent get and false delete are honest failures (34 ms)
+  ✓ actual conversations binary rejects malformed input before network and emits no stdout (786 ms)
+  ✓ actual compiled conversations binary emits parseable success JSON and nonzero SDK failure (708 ms)
+  ✓ convs alias executes production messages with stored append order and history offset preserved (16 ms)
+  ✓ conversation message and get limits reject partial numeric input before client (111 ms)
+  ✓ conversations list/count validates type and clear requires a scope before client (55 ms)
+  ✓ conversation export keeps all messages and TXT default filename matches content (48 ms)
+  ✓ conversation export refuses missing/truncated records and propagates write failure (54 ms)
+  ✓ conversations empty list and messages preserve paging metadata in JSON (33 ms)
+  ✓ conversations clear supports user-only filter without a capped list (20 ms)
+  ✓ conversations partial clear emits a structured receipt before nonzero failure (16 ms)
+  ✓ conversations empty record ID and unsafe export path fail before SDK (31 ms)
+  ✓ actual compiled conversations ["list", "-s", "space-one", "-u", "user-one", "-t", "user-agent", "-l", "2"] preserves JSON outcomes and failure exits (673 ms)
+  ✓ actual compiled conversations ["get", "conv-one", "-m", "2"] preserves JSON outcomes and failure exits (700 ms)
+  ✓ actual compiled conversations ["delete", "conv-one", "--yes"] preserves JSON outcomes and failure exits (688 ms)
+  ✓ actual compiled conversations ["export", "conv-one", "-o", "conversations-export.json"] preserves JSON outcomes and failure exits (671 ms)
+  ✓ actual compiled conversations ["count", "-s", "space-one", "-u", "user-one", "-t", "agent-agent"] preserves JSON outcomes and failure exits (688 ms)
+  ✓ actual compiled conversations ["clear", "-s", "space-one", "-u", "user-one", "--yes"] preserves JSON outcomes and failure exits (1017 ms)
+  ✓ actual compiled conversations ["messages", "conv-one", "-l", "2"] preserves JSON outcomes and failure exits (729 ms)
+  ✓ production conversations ["list", "-s", "space-one", "-u", "user-one", "-t", "user-agent", "-l", "2"] retains useful table output (46 ms)
+  ✓ production conversations ["get", "conv-one", "-m", "2"] retains useful table output (18 ms)
+  ✓ production conversations ["delete", "conv-one", "--yes"] retains useful table output (16 ms)
+  ✓ production conversations ["count", "-s", "space-one", "-u", "user-one", "-t", "agent-agent"] retains useful table output (16 ms)
+  ✓ production conversations ["clear", "-s", "space-one", "-u", "user-one", "--yes"] retains useful table output (18 ms)
+  ✓ production conversations ["messages", "conv-one", "-l", "2"] retains useful table output (16 ms)
+  ✓ conversations export atomically replaces the destination with a private complete file (23 ms)
+  ✓ conversations open failure preserves destination and removes staging files (17 ms)
+  ✓ conversations write failure preserves destination and removes staging files (16 ms)
+  ✓ conversations sync failure preserves destination and removes staging files (17 ms)
+  ✓ conversations close failure preserves destination and removes staging files (19 ms)
+  ✓ conversations rename failure preserves destination and removes staging files (21 ms)
+  ✓ conversations delete preserves named Task22 partial failure and closes without retry (15 ms)
+  ✓ conversations deleteMany preserves named Task22 partial failure and closes without retry (16 ms)
+
+PASS commands tests/commands/spaces-real.test.ts
+  ✓ production spaces ["list", "--type", "team", "--status", "active", "--limit", "2", "--offset", "3"] returns SDK outcome and exact args (27 ms)
+  ✓ production spaces ["create", "space-one", "--type", "team", "--name", "Space", "--metadata", "{\"kept\":true}"] returns SDK outcome and exact args (18 ms)
+  ✓ production spaces ["get", "space-one"] returns SDK outcome and exact args (46 ms)
+  ✓ production spaces ["delete", "space-one", "--cascade", "--reason", "Owned cleanup", "--yes"] returns SDK outcome and exact args (18 ms)
+  ✓ production spaces ["archive", "space-one", "--reason", "Finished", "--yes"] returns SDK outcome and exact args (17 ms)
+  ✓ production spaces ["reactivate", "space-one"] returns SDK outcome and exact args (17 ms)
+  ✓ production spaces ["stats", "space-one"] returns SDK outcome and exact args (19 ms)
+  ✓ production spaces ["participants", "space-one"] returns SDK outcome and exact args (16 ms)
+  ✓ production spaces ["add-participant", "space-one", "--id", "p-two", "--type", "tool"] returns SDK outcome and exact args (17 ms)
+  ✓ production spaces ["remove-participant", "space-one", "--id", "p-one", "--yes"] returns SDK outcome and exact args (18 ms)
+  ✓ production spaces ["update", "space-one", "--name", "Next", "--status", "archived", "--metadata", "{\"new\":1}"] returns SDK outcome and exact args (21 ms)
+  ✓ production spaces ["count", "--type", "team", "--status", "active"] returns SDK outcome and exact args (16 ms)
+  ✓ production spaces ["search", "Space", "--type", "team", "--status", "active", "--limit", "2"] returns SDK outcome and exact args (16 ms)
+  ✓ production spaces ["list", "--type", "team", "--status", "active", "--limit", "2", "--offset", "3"] propagates SDK failure and closes transport (18 ms)
+  ✓ production spaces ["create", "space-one", "--type", "team", "--name", "Space", "--metadata", "{\"kept\":true}"] propagates SDK failure and closes transport (20 ms)
+  ✓ production spaces ["get", "space-one"] propagates SDK failure and closes transport (15 ms)
+  ✓ production spaces ["delete", "space-one", "--cascade", "--reason", "Owned cleanup", "--yes"] propagates SDK failure and closes transport (16 ms)
+  ✓ production spaces ["archive", "space-one", "--reason", "Finished", "--yes"] propagates SDK failure and closes transport (16 ms)
+  ✓ production spaces ["reactivate", "space-one"] propagates SDK failure and closes transport (18 ms)
+  ✓ production spaces ["stats", "space-one"] propagates SDK failure and closes transport (16 ms)
+  ✓ production spaces ["participants", "space-one"] propagates SDK failure and closes transport (16 ms)
+  ✓ production spaces ["add-participant", "space-one", "--id", "p-two", "--type", "tool"] propagates SDK failure and closes transport (18 ms)
+  ✓ production spaces ["remove-participant", "space-one", "--id", "p-one", "--yes"] propagates SDK failure and closes transport (17 ms)
+  ✓ production spaces ["update", "space-one", "--name", "Next", "--status", "archived", "--metadata", "{\"new\":1}"] propagates SDK failure and closes transport (15 ms)
+  ✓ production spaces ["count", "--type", "team", "--status", "active"] propagates SDK failure and closes transport (16 ms)
+  ✓ production spaces ["search", "Space", "--type", "team", "--status", "active", "--limit", "2"] propagates SDK failure and closes transport (18 ms)
+  ✓ spaces access rejection blocks all command reads/mutations and closes the selected client (17 ms)
+  ✓ spaces globals select authenticated target at root (13 ms)
+  ✓ spaces globals select authenticated target at group (12 ms)
+  ✓ spaces globals select authenticated target at leaf (14 ms)
+  ✓ spaces empty list/search/participants are valid JSON without human headings (49 ms)
+  ✓ spaces get fails for absent space before mutations (17 ms)
+  ✓ spaces stats fails for absent space before mutations (15 ms)
+  ✓ spaces participants fails for absent space before mutations (15 ms)
+  ✓ spaces update fails for absent space before mutations (15 ms)
+  ✓ spaces remove-participant fails for absent space before mutations (18 ms)
+  ✓ spaces failed SDK deletion result exits failure; no cascade fails before client (31 ms)
+  ✓ spaces metadata merge preserves existing keys; status-only update does not overwrite metadata (34 ms)
+  ✓ spaces participant preserves attribution shape and rejects absent participant removal (33 ms)
+  ✓ spaces invalid metadata null fails before SDK creation (34 ms)
+  ✓ spaces invalid metadata [] fails before SDK creation (33 ms)
+  ✓ spaces invalid metadata true fails before SDK creation (34 ms)
+  ✓ spaces invalid metadata "x" fails before SDK creation (34 ms)
+  ✓ spaces invalid metadata bad fails before SDK creation (34 ms)
+  ✓ spaces invalid options "list" fail before client (15 ms)
+  ✓ spaces invalid options "list" fail before client (15 ms)
+  ✓ spaces invalid options "count" fail before client (19 ms)
+  ✓ spaces invalid options "search" fail before client (15 ms)
+  ✓ spaces invalid options "search" fail before client (14 ms)
+  ✓ spaces invalid options "update" fail before client (15 ms)
+  ✓ spaces invalid options "add-participant" fail before client (19 ms)
+  ✓ spaces invalid options "add-participant" fail before client (16 ms)
+  ✓ spaces invalid options "remove-participant" fail before client (15 ms)
+  ✓ spaces invalid options "update" fail before client (16 ms)
+  ✓ spaces invalid options "update" fail before client (17 ms)
+  ✓ spaces invalid options "list" fail before client (15 ms)
+  ✓ spaces invalid options "list" fail before client (6 ms)
+  ✓ spaces invalid options "search" fail before client (11 ms)
+  ✓ spaces ["create", "space-one", "--type", "team", "--name", "Space", "--metadata", "{\"kept\":true}"] rejects missing positional ID/query (8 ms)
+  ✓ spaces ["get", "space-one"] rejects missing positional ID/query (8 ms)
+  ✓ spaces ["delete", "space-one", "--cascade", "--reason", "Owned cleanup", "--yes"] rejects missing positional ID/query (8 ms)
+  ✓ spaces ["archive", "space-one", "--reason", "Finished", "--yes"] rejects missing positional ID/query (7 ms)
+  ✓ spaces ["reactivate", "space-one"] rejects missing positional ID/query (7 ms)
+  ✓ spaces ["stats", "space-one"] rejects missing positional ID/query (6 ms)
+  ✓ spaces ["participants", "space-one"] rejects missing positional ID/query (7 ms)
+  ✓ spaces ["add-participant", "space-one", "--id", "p-two", "--type", "tool"] rejects missing positional ID/query (6 ms)
+  ✓ spaces ["remove-participant", "space-one", "--id", "p-one", "--yes"] rejects missing positional ID/query (9 ms)
+  ✓ spaces ["update", "space-one", "--name", "Next", "--status", "archived", "--metadata", "{\"new\":1}"] rejects missing positional ID/query (6 ms)
+  ✓ spaces ["search", "Space", "--type", "team", "--status", "active", "--limit", "2"] rejects missing positional ID/query (8 ms)
+  ✓ spaces duplicates fail before register and list/search warn on truncation (49 ms)
+  ✓ actual binary invalid space options exit nonzero before network mutation (1073 ms)
+  ✓ spaces cancelled delete/archive/participant removal never instantiate clients (77 ms)
+  ✓ spaces unknown explicit target fails before client (13 ms)
+  ✓ spaces quiet preserves JSON and suppresses hints (15 ms)
+  ✓ spaces default table keeps full metadata and participant details readable (19 ms)
+  ✓ spaces cascade binds selected authority/exact tenant without an ordinary-scope get (13 ms)
+  ✓ spaces dry-run and explicit no-verify preserve original incomplete receipt without false success claims (33 ms)
+  ✓ spaces incomplete verified receipt is printed intact before command rejection (16 ms)
+  ✓ spaces stopped partial/unknown receipt is emitted redacted with no resend (unknown=false) (16 ms)
+  ✓ spaces stopped partial/unknown receipt is emitted redacted with no resend (unknown=true) (12 ms)
+  ✓ spaces authority/tenant refusal and cancelled confirmation create neither client nor erasure transport (40 ms)
+  ✓ spaces selected project directory graph marker refuses before primary effects (13 ms)
+  ✓ spaces selected project symlink graph marker refuses before primary effects (13 ms)
+  ✓ spaces absent selected marker works but non-ENOENT metadata failure refuses before effects (13 ms)
+
+FAIL commands tests/commands/install-real.test.ts (8.122 s)
+  ✓ built path refuses a destination symlink without touching its target (408 ms)
+  ✓ built explicit legacy backend-only init propagates native exit 0 and strips inherited target environment (612 ms)
+  ✓ built explicit legacy backend-only init propagates native exit 7 and strips inherited target environment (587 ms)
+  ✓ built npm failure restores scaffold and unpublished registry version never falls back (818 ms)
+  ✓ built registry-source selection rejects substituted npm pack metadata before archive/install/backend writes: {"@cortexmemory/sdk":{"name":"@cortexmemory/sdk","version":"0.37.0","filename":"sdk.tgz"}} (503 ms)
+  ✓ built registry-source selection rejects substituted npm pack metadata before archive/install/backend writes: {"@cortexmemory/sdk":{"name":"@cortexmemory/sdk","version":"0.38.0","filename":"../escape.tgz"}} (502 ms)
+  real installer registry and binary
+    ✓ registers install and all retained schema leaves through the actual program (156 ms)
+    ✓ built non-TTY basic init writes deterministic files without prompts, secrets or generated bindings (510 ms)
+    ✓ built existing-project install preserves data/config/lock and repeats byte-identically (1130 ms)
+    ✓ built init refuses incompatible legacy/enabled options "--template" before destination creation (270 ms)
+    ✓ built init refuses incompatible legacy/enabled options "--template" before destination creation (248 ms)
+    ✓ built init refuses incompatible legacy/enabled options "--start" before destination creation (264 ms)
+    ✓ built init refuses incompatible legacy/enabled options "--cloud" before destination creation (252 ms)
+    ✓ built init refuses incompatible legacy/enabled options "--graph" before destination creation (246 ms)
+    ✕ current runtime dry-run/collision refuse writes; explicit legacy overwrite retains its exact backup (1179 ms)
+
+  ● real installer registry and binary › current runtime dry-run/collision refuse writes; explicit legacy overwrite retains its exact backup
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 0
+    + Received  + 1
+
+      Object {
+        "convex/": "directory",
+        "convex/schema.ts": "5c7799a35adfef5ac4b36daddf5e6c711d02b20d5d13f0bfb4d93028ef067ff1",
+    +   "cortex-backend-merge-proposal-09f334b3cdcc.json": "d2b5817176c281fb42c18ca9082523f48584943e777381126b5697522a9964bc",
+        "package.json": "3a72bb403d1aaf7fc7d2db8764cb2e9c9106ed2ee96f39c22b809657cf8535f3",
+      }
+
+      232 |     const runtimeOverwrite = run(["install", directory, ...options, "--overwrite", "--format", "json"]);
+      233 |     expect(runtimeOverwrite.status).toBe(1);
+    > 234 |     expect(tree(directory)).toEqual(before);
+          |                             ^
+      235 |     const overwrite = run([
+      236 |       "install",
+      237 |       directory,
+
+      at Object.<anonymous> (tests/commands/install-real.test.ts:234:29)
+
+PASS commands tests/commands/schema-real.test.ts
+  ✓ real registry exposes fixed maintenance leaves/options without changing status/sync (16 ms)
+  ✓ real createProgram honors selected deployment and JSON at every placement "-d" (21 ms)
+  ✓ real createProgram honors selected deployment and JSON at every placement "schema" (14 ms)
+  ✓ real createProgram honors selected deployment and JSON at every placement "schema" (15 ms)
+  ✓ closest explicit selection survives a conflicting root option (14 ms)
+  ✓ quiet JSON remains one payload and listeners are restored (21 ms)
+  ✓ nonready references is a truthful nonzero structured result (19 ms)
+  ✓ dry-run uses queries only, leaves configuration exact and reports executable nonready plan (19 ms)
+  ✓ invalid output is refused before request/configuration handler (8 ms)
+  ✓ missing explicit key refuses before network with sanitized JSON (18 ms)
+  ✓ CSV emits one stable terminal projection (17 ms)
+
+PASS commands tests/commands/completion-real.test.ts
+  current shell completion
+    ✓ bash syntax and executable lookup match every supported registry context (227 ms)
+    ✓ zsh syntax and executable lookup match every supported registry context (194 ms)
+    ✓ fish syntax and executable lookup match every supported registry context (62 ms)
+    ✓ Bash completes ["cortex",""] to templates (7 ms)
+    ✓ Bash completes ["cortex","--format","json","templates",""] to update (8 ms)
+    ✓ Bash completes ["cortex","--scope-user","templates","--tenant","tenant-a","templates","update","--r"] to --recover (8 ms)
+    ✓ Bash completes ["cortex","-dlocal","templates","update","--y"] to --yes (9 ms)
+    ✓ Bash completes ["cortex","templates","init","demo","--template","chat"] to chat-sdk (9 ms)
+    ✓ Bash completes ["cortex","init","--template","n"] to none (8 ms)
+    ✓ Bash completes ["cortex","graph","setup","--graph=n"] to --graph=neo4j (7 ms)
+    ✓ Bash completes ["cortex","status","--format","d"] to dashboard (7 ms)
+    ✓ Bash completes ["cortex","conversations","export","id","--format","t"] to txt (9 ms)
+    ✓ Bash completes ["cortex","completion","f"] to fish (7 ms)
+    ✓ Fish completes cortex --format json templates update --r to --recover (9 ms)
+    ✓ Fish completes cortex templates init demo --template chat to chat-sdk (7 ms)
+    ✓ Fish completes cortex graph setup --graph=n to --graph=neo4j (7 ms)
+    ✓ Fish completes cortex conversations export id --format t to txt (7 ms)
+    ✓ actual completion bash emits its exact selected asset without changing shell/private files (280 ms)
+    ✓ actual completion zsh emits its exact selected asset without changing shell/private files (264 ms)
+    ✓ actual completion fish emits its exact selected asset without changing shell/private files (259 ms)
+    ✓ an unsupported shell exits nonzero without an asset or success output (258 ms)
+
+PASS commands tests/commands/setup-status.test.ts
+  setup and status commands
+    setup command parsing
+      ✓ should parse setup command (1 ms)
+      ✓ should parse setup --auto
+      ✓ should parse setup --local (1 ms)
+      ✓ should parse setup --cloud
+    config command parsing
+      ✓ should parse config show
+      ✓ should parse config show with JSON format
+      ✓ should parse config set (1 ms)
+      ✓ should parse config test
+      ✓ should parse config deployments
+      ✓ should parse config path
+    status command parsing
+      ✓ should parse status command
+      ✓ should parse status with JSON format
+      ✓ should parse status --check
+      ✓ should parse status --verbose
+
+PASS commands tests/commands/memory.test.ts
+  memory commands
+    argument parsing
+      ✓ should parse memory list command with required space (2 ms)
+      ✓ should parse memory list with all options
+      ✓ should require space option for list (1 ms)
+      ✓ should parse search command with query (1 ms)
+      ✓ should parse get command with memory ID
+      ✓ should parse delete command with cascade option
+    default values
+      ✓ should use default limit of 50
+      ✓ should use default format of table
+      ✓ should override defaults with explicit values
+
+PASS commands tests/commands/spaces.test.ts
+  spaces commands
+    argument parsing
+      ✓ should parse spaces list command (2 ms)
+      ✓ should parse spaces list with filters
+      ✓ should parse spaces create with required type (1 ms)
+      ✓ should parse spaces create with all options
+      ✓ should require type for create (1 ms)
+      ✓ should parse spaces get with space ID
+      ✓ should parse spaces delete with cascade
+      ✓ should parse spaces archive with reason
+      ✓ should parse add-participant with required options (1 ms)
+
+PASS commands tests/commands/node-runtime-real.test.ts
+  ✓ Node20.0.0 refuses [] before linking app/config/env/client factories (160 ms)
+  ✓ Node20.0.0 refuses ["--version"] before linking app/config/env/client factories (38 ms)
+  ✓ Node20.0.0 refuses ["--help"] before linking app/config/env/client factories (39 ms)
+  ✓ Node20.0.0 refuses ["doctor"] before linking app/config/env/client factories (37 ms)
+  ✓ Node20.0.0 refuses ["db","backup"] before linking app/config/env/client factories (37 ms)
+  ✓ Node20.20.2 refuses [] before linking app/config/env/client factories (156 ms)
+  ✓ Node20.20.2 refuses ["--version"] before linking app/config/env/client factories (30 ms)
+  ✓ Node20.20.2 refuses ["--help"] before linking app/config/env/client factories (30 ms)
+  ✓ Node20.20.2 refuses ["doctor"] before linking app/config/env/client factories (30 ms)
+  ✓ Node20.20.2 refuses ["db","backup"] before linking app/config/env/client factories (32 ms)
+  ✓ supported minimum reports application import failure plainly without formatter fallback (33 ms)
+
+PASS commands tests/commands/conversations.test.ts
+  conversations commands
+    argument parsing
+      ✓ should parse conversations list (2 ms)
+      ✓ should parse conversations list with alias (1 ms)
+      ✓ should parse conversations list with filters
+      ✓ should parse conversations get
+      ✓ should parse conversations get with message limit
+      ✓ should parse conversations delete (1 ms)
+      ✓ should parse conversations export
+      ✓ should parse conversations count
+
+PASS commands tests/commands/facts.test.ts
+  facts commands
+    argument parsing
+      ✓ should parse facts list with required space (2 ms)
+      ✓ should parse facts list with type filter
+      ✓ should require space for list (2 ms)
+      ✓ should parse facts search with query (1 ms)
+      ✓ should parse facts get with fact ID
+      ✓ should parse facts delete with confirmation skip
+      ✓ should parse facts export with all options
+
+PASS commands tests/commands/db.test.ts
+  db commands
+    argument parsing
+      ✓ should parse db stats command (2 ms)
+      ✓ should parse db stats with JSON format
+      ✓ should parse db clear with confirmation skip
+      ✓ should parse db backup with options (1 ms)
+      ✓ should parse db restore with required input
+      ✓ should parse db restore with dry-run
+      ✓ should require input for restore (1 ms)
+      ✓ should parse db export with options
+      ✓ should parse global deployment option
+
+PASS commands tests/commands/db-modes.test.ts
+  ✓ retire-scope requires the entire guarded retirement intent before dispatch (5 ms)
+  ✓ clear requires the entire guarded retirement intent before dispatch (1 ms)
+  ✓ native export keeps ZIP mode and metadata alias writes exactly one private bounded JSON (1 ms)
+  ✓ metadata mode refuses native --local without either dispatch (1 ms)
+  ✓ metadata mode refuses native --prod without either dispatch
+  ✓ metadata mode refuses native --include-file-storage without either dispatch
+
+PASS commands tests/commands/users.test.ts
+  users commands
+    argument parsing
+      ✓ should parse users list command (2 ms)
+      ✓ should parse users list with custom limit
+      ✓ should parse users list with --no-stats
+      ✓ should parse users get with user ID (1 ms)
+      ✓ should parse users get with --include-history
+      ✓ should parse users delete with cascade option
+      ✓ should parse users delete with dry-run
+      ✓ should parse users delete-many with multiple IDs (1 ms)
+
+PASS commands tests/commands/host-retry.test.ts
+  ✓ never retries a committed retained user version after uncertain post-effect session delivery (3 ms)
+
+Test Suites: 1 failed, 19 passed, 20 total
+Tests:       1 failed, 778 passed, 779 total
+Snapshots:   0 total
+Time:        165.216 s
+Ran all test suites.
+Test results written to: ../../_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-dev-integration1/cli-catalog-author1/cli-full-commands15-results.json

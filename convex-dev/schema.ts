@@ -38,6 +38,12 @@ import { runtimeTranscriptTables } from "./runtimeTranscriptSchema";
 import { runtimeAgentTables } from "./runtimeAgentSchema";
 import { runtimeIngestionTables } from "./runtimeIngestionSchema";
 import { runtimeGraphTables } from "./runtimeGraphSchema";
+import { graphJobFields, graphReceiptValidator } from "./lib/graphSync";
+import {
+  endpointValidator,
+  pendingValidator,
+  provenanceFields,
+} from "./lib/factHistoryProvenance";
 
 export default defineSchema({
   ...runtimeAssetTables,
@@ -140,15 +146,17 @@ export default defineSchema({
     // - 'space': Anyone in the memory space can access
     // - 'public': Anyone with the conversationId can access
     visibility: v.optional(
-      v.union(
-        v.literal("private"),
-        v.literal("space"),
-        v.literal("public"),
-      ),
+      v.union(v.literal("private"), v.literal("space"), v.literal("public")),
     ),
   })
-    .index("by_conversationId", ["conversationId"]) // Unique lookup
+    .index("by_conversationId", ["conversationId"])
+    .index("by_history_scope_conversation", [
+      "tenantId",
+      "memorySpaceId",
+      "conversationId",
+    ])
     .index("by_memorySpace", ["memorySpaceId"]) // NEW: Memory space's conversations
+    .index("by_tenant_conversationId", ["tenantId", "conversationId"])
     .index("by_tenantId", ["tenantId"]) // Tenant's conversations
     .index("by_tenant_space", ["tenantId", "memorySpaceId"]) // Tenant + space
     .index("by_type", ["type"]) // List by type
@@ -420,6 +428,7 @@ export default defineSchema({
 
     // Multi-tenancy (NEW - critical for SaaS isolation)
     tenantId: v.optional(v.string()), // Tenant ID for isolation
+    vectorScopeKey: v.optional(v.string()), // Derived operational vector scope, maintained by lifecycle hooks
 
     // Content
     content: v.string(),
@@ -545,6 +554,7 @@ export default defineSchema({
       vectorField: "embedding",
       dimensions: 1536, // Default: OpenAI text-embedding-3-small
       filterFields: [
+        "vectorScopeKey",
         "memorySpaceId",
         "tenantId",
         "userId",
@@ -646,6 +656,8 @@ export default defineSchema({
     version: v.number(),
     supersededBy: v.optional(v.string()), // factId of newer version
     supersedes: v.optional(v.string()), // factId this replaces
+    supersedesEndpoint: v.optional(endpointValidator),
+    supersededByEndpoint: v.optional(endpointValidator),
 
     // Timestamps
     createdAt: v.number(),
@@ -657,6 +669,7 @@ export default defineSchema({
     .index("by_factId", ["factId"]) // Unique lookup
     .index("by_runtime_scope_factId", ["tenantId", "memorySpaceId", "factId"])
     .index("by_runtime_source", ["tenantId", "memorySpaceId", "lineage.sourceId", "lineage.sourceRevision"])
+    .index("by_history_tenant_fact", ["tenantId", "factId"])
     .index("by_memorySpace", ["memorySpaceId"]) // Memory space's facts
     .index("by_tenantId", ["tenantId"]) // Tenant's facts
     .index("by_tenant_space", ["tenantId", "memorySpaceId"]) // Tenant + space
@@ -677,6 +690,20 @@ export default defineSchema({
   // Fact History (Belief Revision Audit Trail)
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   factHistory: defineTable({
+    graphJobs: v.optional(v.array(graphReceiptValidator)),
+    ...provenanceFields,
+    operationId: v.optional(v.string()),
+    phase: v.optional(v.string()),
+    eventRole: v.optional(v.string()),
+    operationKind: v.optional(v.string()),
+    requestDigest: v.optional(v.string()),
+    requestJson: v.optional(v.string()),
+    affectedFactIds: v.optional(v.array(v.id("facts"))),
+    resultFactId: v.optional(v.id("facts")),
+    pendingRichEvent: v.optional(pendingValidator),
+    publicationState: v.optional(
+      v.union(v.literal("pending"), v.literal("complete")),
+    ),
     // Identity
     eventId: v.string(), // Unique event ID
     factId: v.string(), // The fact this event relates to
@@ -720,6 +747,44 @@ export default defineSchema({
     timestamp: v.number(),
   })
     .index("by_eventId", ["eventId"]) // Unique lookup
+    .index("by_history_scope", ["scopeVersion", "tenantId"])
+    .index("by_history_fact", ["scopeVersion", "tenantId", "factId"])
+    .index("by_history_source", ["scopeVersion", "tenantId", "sourceFactId"])
+    .index("by_history_source_space", [
+      "scopeVersion",
+      "tenantId",
+      "sourceMemorySpaceId",
+    ])
+    .index("by_history_owner", ["scopeVersion", "tenantId", "ownerUserId"])
+    .index("by_history_actor", ["scopeVersion", "tenantId", "userId"])
+    .index("by_history_space", [
+      "scopeVersion",
+      "tenantId",
+      "memorySpaceId",
+      "timestamp",
+    ])
+    .index("by_history_event", ["scopeVersion", "tenantId", "eventId"])
+    .index("by_history_operation", [
+      "scopeVersion",
+      "tenantId",
+      "memorySpaceId",
+      "operationId",
+      "phase",
+      "eventRole",
+    ])
+    .index("by_history_incoming", [
+      "scopeVersion",
+      "tenantId",
+      "supersededByEndpoint.factDocumentId",
+    ])
+    .index("by_history_outgoing", [
+      "scopeVersion",
+      "tenantId",
+      "supersedesEndpoint.factDocumentId",
+    ])
+    .index("by_history_legacy_fact", ["scopeVersion", "factId"])
+    .index("by_history_legacy_actor", ["scopeVersion", "userId"])
+    .index("by_history_legacy_space", ["scopeVersion", "memorySpaceId"])
     .index("by_factId", ["factId"]) // Get history for a fact
     .index("by_memorySpace", ["memorySpaceId"]) // Get all changes in a space
     .index("by_memorySpace_timestamp", ["memorySpaceId", "timestamp"]) // Time-range queries
@@ -943,7 +1008,8 @@ export default defineSchema({
   })
     .index("by_runtime_scope", ["tenantId", "memorySpaceId", "ownerPrincipalId"])
     .index("by_runtime_key", ["tenantId", "memorySpaceId", "sessionId"])
-    .index("by_sessionId", ["sessionId"]) // Unique lookup
+    .index("by_sessionId", ["sessionId"])
+    .index("by_lifecycle_tenant_sessionId", ["tenantId", "sessionId"]) // Unique lookup
     .index("by_userId", ["userId"]) // User's sessions
     .index("by_tenantId", ["tenantId"]) // Tenant's sessions
     .index("by_tenant_user", ["tenantId", "userId"]) // Tenant + user sessions
@@ -1019,14 +1085,11 @@ export default defineSchema({
   // Graph Sync Queue (Real-time Graph Database Synchronization)
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   graphSyncQueue: defineTable({
-    memorySpaceId: v.optional(v.string()),
+    ...graphJobFields,
     entityDocumentId: v.optional(v.id("facts")),
     entityVersion: v.optional(v.number()),
     sourceId: v.optional(v.string()),
     sourceEventId: v.optional(v.string()),
-    sourceRevision: v.optional(v.number()),
-    // Fresh verified ownership; handlers reject missing fields rather than adopt rows.
-    tenantId: v.optional(v.string()),
     ownerPrincipalId: v.optional(v.string()),
     authority: v.optional(runtimeAuthorityReference),
     // Entity identification
@@ -1061,9 +1124,13 @@ export default defineSchema({
     .index("by_table", ["table"]) // Filter by entity type
     .index("by_table_entity", ["table", "entityId"]) // Unique lookup
     .index("by_priority", ["priority", "synced"]) // Priority-based processing
-    .index("by_created", ["createdAt"]) // Chronological
+    .index("by_created", ["createdAt"])
+    .index("by_scope_state", ["tenantId", "state", "createdAt"])
+    .index("by_scope_source_state", ["tenantId", "physicalSourceId", "state"])
+    .index("by_scope_priority_state", ["tenantId", "priority", "state", "createdAt"])
+    .index("by_invocation_source", ["tenantId", "graphInvocationId", "physicalSourceId", "sourceRevision", "operation"])
     .index("by_runtime_worker_entity", ["tenantId", "memorySpaceId", "authority.grantId", "table", "entityId"])
-    .index("by_runtime_worker_state", ["tenantId", "memorySpaceId", "authority.grantId", "synced", "priority"]),
+    .index("by_runtime_worker_state", ["tenantId", "memorySpaceId", "authority.grantId", "synced", "priority"]), // Immutable graph invocations
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // Artifacts (Interactive Versioned Documents, memorySpace-scoped)
@@ -1387,4 +1454,35 @@ export default defineSchema({
       dimensions: 1536, // OpenAI text-embedding-3-small / ada-002
       filterFields: ["memorySpaceId", "tenantId", "type"],
     }),
+
+  // Temporary content-free item reconciliation. The row and this receipt commit atomically.
+  cortexErasureReceipts: defineTable({
+    operationId:v.string(), itemKey:v.string(), requestDigest:v.string(), domainDigest:v.string(),
+    stage:v.string(), state:v.literal("committed"), outcome:v.any(), createdAt:v.number(), expiresAt:v.number(),
+  }).index("by_operation_item",["operationId","itemKey"]).index("by_expiry",["expiresAt"]),
+  // Derived operational identities, never primary user content or caller authority.
+  cortexReferenceTargets: defineTable({
+    key:v.string(), kind:v.union(v.literal("storage"),v.literal("document")),
+    lifecycleVersion:v.literal(1), generation:v.string(), revision:v.number(), sourceRevision:v.optional(v.number()),
+    state:v.union(v.literal("live"),v.literal("deleted"),v.literal("missing")),
+    storageId:v.optional(v.id("_storage")), refCount:v.optional(v.number()), occurrenceCount:v.optional(v.number()), counterGeneration:v.optional(v.string()),
+    table:v.optional(v.union(v.literal("conversations"),v.literal("conversationShares"),v.literal("conversationSnapshots"),v.literal("immutable"),v.literal("mutable"),v.literal("memories"),v.literal("facts"),v.literal("factHistory"),v.literal("memorySpaces"),v.literal("contexts"),v.literal("agents"),v.literal("sessions"),v.literal("governancePolicies"),v.literal("governanceEnforcement"),v.literal("graphSyncQueue"),v.literal("artifacts"),v.literal("attachments"))), documentId:v.optional(v.string()), scopeKnown:v.optional(v.boolean()), tenantId:v.optional(v.string()), memorySpaceId:v.optional(v.string()), naturalKeyDigest:v.optional(v.string()),
+    ownerState:v.optional(v.union(v.literal("explicit"),v.literal("shared"),v.literal("unowned"),v.literal("conflicted"),v.literal("unknown"))), owners:v.optional(v.array(v.string())), ownershipDigest:v.optional(v.string()), ownershipRevision:v.optional(v.number()),
+    referenceDigest:v.optional(v.string()), preparedGeneration:v.optional(v.string()),
+    authorityParentTargetId:v.optional(v.id("cortexReferenceTargets")), authorityParentOwnershipRevision:v.optional(v.number()), finalSnapshotDigest:v.optional(v.string())
+  }).index("by_key",["key"]).index("by_document",["table","documentId"]).index("by_generation_state",["generation","state"]),
+  cortexReferenceEdges: defineTable({
+    sourceTargetId:v.id("cortexReferenceTargets"), role:v.union(v.literal("storage"),v.literal("space"),v.literal("session"),v.literal("conversation"),v.literal("immutable"),v.literal("mutable"),v.literal("fact"),v.literal("memory"),v.literal("artifact"),v.literal("attachment"),v.literal("context-parent"),v.literal("context-root"),v.literal("context-child"),v.literal("participant-space"),v.literal("share-source"),v.literal("recipient-space"),v.literal("snapshot-source"),v.literal("history-source"),v.literal("history-memory"),v.literal("history-conversation"),v.literal("history-space"),v.literal("history-supersedes"),v.literal("history-supersededBy"),v.literal("history-affected"),v.literal("history-result"),v.literal("fact-supersedes"),v.literal("fact-supersededBy"),v.literal("access-space")), slot:v.string(), bindingVersion:v.literal(1), sourceReferenceRevision:v.number(),authorityCandidate:v.optional(v.boolean()),
+    kind:v.union(v.literal("storage"),v.literal("physical"),v.literal("authority"),v.literal("unresolved")), targetTargetId:v.optional(v.id("cortexReferenceTargets")),
+    sourceTenantId:v.optional(v.string()),sourceMemorySpaceId:v.optional(v.string()),capturedTargetTenantId:v.optional(v.string()),capturedTargetMemorySpaceId:v.optional(v.string()), capturedOwnershipRevision:v.optional(v.number()),
+    logicalDigest:v.string(), naturalHint:v.optional(v.string()), unresolvedReason:v.optional(v.string()), evidence:v.union(v.literal("birth"),v.literal("legacy"),v.literal("clone")),
+    occurrenceCount:v.optional(v.number()), slotDigest:v.optional(v.string()), countedGeneration:v.optional(v.string()), generation:v.string()
+  }).index("by_source_role",["sourceTargetId","role","slot"]).index("by_source",["sourceTargetId"]).index("by_target",["targetTargetId"]).index("by_unresolved_hint",["naturalHint"]).index("by_generation",["generation"]),
+  cortexReferenceState: defineTable({
+    unresolvedCount:v.optional(v.number()),legacyUnknownCount:v.optional(v.number()),missingOrAmbiguousCount:v.optional(v.number()),
+    key:v.string(),generation:v.string(),kind:v.union(v.literal("control"),v.literal("backfill"),v.literal("validation"),v.literal("counter"),v.literal("source")),writerManifestHash:v.string(),
+    status:v.union(v.literal("building"),v.literal("finalizing"),v.literal("ready"),v.literal("invalid")),
+    phase:v.optional(v.union(v.literal("sources"),v.literal("edges"),v.literal("targets"),v.literal("counters"),v.literal("done"))),tableIndex:v.optional(v.number()), cursor:v.optional(v.union(v.string(),v.null())),endCursor:v.optional(v.union(v.string(),v.null())),splitTail:v.optional(v.union(v.string(),v.null())),
+    sourceId:v.optional(v.string()), sourceTable:v.optional(v.union(v.literal("conversations"),v.literal("conversationShares"),v.literal("conversationSnapshots"),v.literal("immutable"),v.literal("mutable"),v.literal("memories"),v.literal("facts"),v.literal("factHistory"),v.literal("memorySpaces"),v.literal("contexts"),v.literal("agents"),v.literal("sessions"),v.literal("governancePolicies"),v.literal("governanceEnforcement"),v.literal("graphSyncQueue"),v.literal("artifacts"),v.literal("attachments"))),sourceDigest:v.optional(v.string()),offset:v.optional(v.number()),targetId:v.optional(v.id("cortexReferenceTargets")),refCount:v.optional(v.number()),occurrenceCount:v.optional(v.number()),rows:v.optional(v.number()),checkpointDigest:v.optional(v.string()),complete:v.optional(v.boolean())
+  }).index("by_key",["key"]).index("by_generation_kind",["generation","kind"]),
 });

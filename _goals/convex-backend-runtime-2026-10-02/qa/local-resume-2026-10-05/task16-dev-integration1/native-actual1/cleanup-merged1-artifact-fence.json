@@ -1,0 +1,25 @@
+{
+  "deleted": {
+    "artifactId": "merged-v2-owned-tiny-20261009",
+    "deleted": true,
+    "deletedAt": 1791535481898,
+    "permanent": true,
+    "requestedHardDelete": false,
+    "restorable": false,
+    "versionsPurged": 0
+  },
+  "denial": {
+    "name": "ConvexError",
+    "message": "[Request ID: 8b815658c37906bb] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Artifact context denied.\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at denied (../../custom/backend/runtimeArtifactContext.ts:14:172)\n    at readArtifactContext (../../custom/backend/runtimeArtifactContext.ts:23:94)\n    at async checkArtifactContextWitnesses (../../custom/backend/runtimeArtifactContext.ts:53:16)\n    at async observeHandler (../../custom/backend/runtimeAgent.ts:773:67)\n",
+    "data": {
+      "code": "FORBIDDEN",
+      "message": "Artifact context denied.",
+      "outcome": "not_dispatched",
+      "retryable": false,
+      "version": 1
+    }
+  },
+  "paidCalls": 0,
+  "protectedPartsDelivered": 0,
+  "originalCompletedResultRetained": "run-merged2-closed.json"
+}

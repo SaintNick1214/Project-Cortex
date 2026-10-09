@@ -7,8 +7,10 @@
  * Updated: Added tenantId support for multi-tenancy testing.
  */
 
-import { Cortex } from "../src";
-import { ConvexClient } from "convex/browser";
+import { Cortex, testDeploymentKey } from "./helpers/deployment-operator";
+import { createRuntimeFixture } from "./helpers/runtime-fixture";
+import { createErasureTransport, type ErasureTransport } from "../src/users/erasure";
+import { ConvexClient } from "./helpers/deployment-operator";
 import { TestCleanup } from "./helpers/cleanup";
 import { createTestRunContext } from "./helpers/isolation";
 import {
@@ -22,6 +24,10 @@ const ctx = createTestRunContext();
 
 describe("GDPR: Cascade Deletion", () => {
   let cortex: Cortex;
+  const ownedTenantClients: Cortex[] = [];
+  let runtime: Awaited<ReturnType<typeof createRuntimeFixture>>;
+  let governance: Awaited<ReturnType<typeof createRuntimeFixture>>;
+  let erasureTransport: ErasureTransport;
   let client: ConvexClient;
   let _cleanup: TestCleanup;
   const CONVEX_URL = process.env.CONVEX_URL || "http://127.0.0.1:3210";
@@ -32,21 +38,32 @@ describe("GDPR: Cascade Deletion", () => {
   const TEST_USER_ID = generateTenantUserId(TEST_TENANT_ID);
 
   beforeAll(async () => {
+    erasureTransport = createErasureTransport({url: CONVEX_URL, deploymentKey: testDeploymentKey(CONVEX_URL)});
     // Initialize Cortex with auth context for multi-tenancy
     const authContext = createTenantAuthContext(TEST_TENANT_ID, TEST_USER_ID);
     cortex = new Cortex({ convexUrl: CONVEX_URL, auth: authContext });
+    runtime = await createRuntimeFixture(TEST_TENANT_ID + "-contexts", TEST_MEMSPACE_ID, TEST_USER_ID);
+    Object.defineProperty(cortex, "contexts", { value: runtime.cortex.contexts });
+    governance = await createRuntimeFixture(TEST_TENANT_ID + "-governance", ctx.memorySpaceId("governance"), TEST_USER_ID);
     client = new ConvexClient(CONVEX_URL);
     _cleanup = new TestCleanup(client);
     // NOTE: Removed purgeAll() for parallel execution compatibility.
   });
 
+  afterEach(async () => {
+    await Promise.all(ownedTenantClients.splice(0).map((sdk) => sdk.shutdown()));
+  });
+
   afterAll(async () => {
     // NOTE: Removed purgeAll() to prevent deleting parallel test data.
+    erasureTransport.close();
+    await runtime.close(); await governance.close();
+    await cortex.shutdown();
     await client.close();
   });
 
   describe("Memory Space Cascade Deletion", () => {
-    it("deleting memorySpace with cascade removes ALL data", async () => {
+    it("space cascade deletes its exclusive supported conversation, memory and fact rows", async () => {
       const SPACE = ctx.memorySpaceId("cascade-all");
       const TEST_USER = ctx.userId("cascade");
 
@@ -80,15 +97,10 @@ describe("GDPR: Cascade Deletion", () => {
         sourceType: "system",
       });
 
-      const _ctx = await cortex.contexts.create({
-        purpose: "Test context for cascade",
-        memorySpaceId: SPACE,
-        userId: "test-user",
-      });
-
       // Delete space with cascade
       await cortex.memorySpaces.delete(SPACE, {
         cascade: true,
+        erasureTransport,
         reason: "test cleanup",
       });
 
@@ -99,14 +111,10 @@ describe("GDPR: Cascade Deletion", () => {
       const memCheck = await cortex.vector.get(SPACE, mem.memoryId);
       expect(memCheck).toBeNull();
 
-      // Facts use soft delete - they're marked invalid
+      // Administrative erasure deletes its explicitly supported legacy primary scope.
       const factCheck = await cortex.facts.get(SPACE, fact.factId);
-      if (factCheck) {
-        expect(factCheck.validUntil).toBeDefined(); // Marked invalid
-      }
+      expect(factCheck).toBeNull();
 
-      // Note: Contexts may not be cascade-deleted (design decision for audit trail)
-      // The test validates that conversations and memories are deleted
 
       // Validate: Counts reflect deletion (scoped by tenantId)
       const convCount = await cortex.conversations.count({
@@ -154,6 +162,7 @@ describe("GDPR: Cascade Deletion", () => {
       // Delete space A with cascade
       await cortex.memorySpaces.delete(SPACE_A, {
         cascade: true,
+        erasureTransport,
         reason: "test cleanup",
       });
 
@@ -179,6 +188,7 @@ describe("GDPR: Cascade Deletion", () => {
       // Delete without any data
       await cortex.memorySpaces.delete(EMPTY_SPACE, {
         cascade: true,
+        erasureTransport,
         reason: "test cleanup",
       });
 
@@ -380,7 +390,7 @@ describe("GDPR: Cascade Deletion", () => {
   describe("Context Chain Deletion", () => {
     it("deleting root context cascades to children", async () => {
       // Use unique userId for test isolation
-      const testUserId = ctx.userId("ctx-cascade-root");
+      const testUserId = TEST_USER_ID;
       
       const root = await cortex.contexts.create({
         purpose: "Root for cascade",
@@ -406,19 +416,16 @@ describe("GDPR: Cascade Deletion", () => {
       await cortex.contexts.delete(root.contextId, { cascadeChildren: true });
 
       // Validate: All deleted
-      const rootCheck = await cortex.contexts.get(root.contextId);
-      expect(rootCheck).toBeNull();
+      await expect(cortex.contexts.get(root.contextId)).rejects.toMatchObject({ data: { code: "FORBIDDEN", outcome: "not_dispatched" } });
 
-      const child1Check = await cortex.contexts.get(child1.contextId);
-      expect(child1Check).toBeNull();
+      await expect(cortex.contexts.get(child1.contextId)).rejects.toMatchObject({ data: { code: "FORBIDDEN", outcome: "not_dispatched" } });
 
-      const child2Check = await cortex.contexts.get(child2.contextId);
-      expect(child2Check).toBeNull();
+      await expect(cortex.contexts.get(child2.contextId)).rejects.toMatchObject({ data: { code: "FORBIDDEN", outcome: "not_dispatched" } });
     });
 
     it("deleting child context doesn't affect parent", async () => {
       // Use unique userId for test isolation - different from other tests
-      const testUserId = ctx.userId("ctx-child-delete");
+      const testUserId = TEST_USER_ID;
       
       const parent = await cortex.contexts.create({
         purpose: "Parent context",
@@ -445,8 +452,7 @@ describe("GDPR: Cascade Deletion", () => {
       expect(parentCheck).not.toBeNull();
 
       // Validate: Child deleted
-      const childCheck = await cortex.contexts.get(child.contextId);
-      expect(childCheck).toBeNull();
+      await expect(cortex.contexts.get(child.contextId)).rejects.toMatchObject({ data: { code: "FORBIDDEN", outcome: "not_dispatched" } });
       
       // Cleanup: delete parent
       await cortex.contexts.delete(parent.contextId);
@@ -813,10 +819,12 @@ describe("GDPR: Cascade Deletion", () => {
         convexUrl: CONVEX_URL,
         auth: createTenantAuthContext(tenantA, userA),
       });
+      ownedTenantClients.push(cortexA);
       const cortexB = new Cortex({
         convexUrl: CONVEX_URL,
         auth: createTenantAuthContext(tenantB, userB),
       });
+      ownedTenantClients.push(cortexB);
 
       // Register spaces for each tenant
       await cortexA.memorySpaces.register({
@@ -877,10 +885,12 @@ describe("GDPR: Cascade Deletion", () => {
       // Cleanup
       await cortexA.memorySpaces.delete(spaceA, {
         cascade: true,
+        erasureTransport,
         reason: "test cleanup",
       });
       await cortexB.memorySpaces.delete(spaceB, {
         cascade: true,
+        erasureTransport,
         reason: "test cleanup",
       });
     });
@@ -898,10 +908,12 @@ describe("GDPR: Cascade Deletion", () => {
         convexUrl: CONVEX_URL,
         auth: createTenantAuthContext(tenantA, userA),
       });
+      ownedTenantClients.push(cortexA);
       const cortexB = new Cortex({
         convexUrl: CONVEX_URL,
         auth: createTenantAuthContext(tenantB, userB),
       });
+      ownedTenantClients.push(cortexB);
 
       // Setup: Create spaces and data
       await cortexA.memorySpaces.register({
@@ -934,6 +946,7 @@ describe("GDPR: Cascade Deletion", () => {
       // Cascade delete Tenant A's space
       await cortexA.memorySpaces.delete(spaceA, {
         cascade: true,
+        erasureTransport,
         reason: "test cleanup",
       });
 
@@ -953,6 +966,7 @@ describe("GDPR: Cascade Deletion", () => {
       // Cleanup
       await cortexB.memorySpaces.delete(spaceB, {
         cascade: true,
+        erasureTransport,
         reason: "test cleanup",
       });
     });
@@ -962,184 +976,36 @@ describe("GDPR: Cascade Deletion", () => {
   // Governance-Aware GDPR Operations
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  describe("Governance + GDPR Integration", () => {
-    it("GDPR policy enforces purgeOnUserRequest=true allows deletion", async () => {
-      const ts = Date.now();
-      const orgId = `gdpr-org-purge-${ts}`;
-      const SPACE = ctx.memorySpaceId(`gdpr-purge-${ts}`);
-      const USER_ID = `gdpr-user-${ts}`;
-
-      // 1. Apply GDPR policy (purgeOnUserRequest: true)
-      const gdprPolicy = await cortex.governance.getTemplate("GDPR");
-      await cortex.governance.setPolicy({
-        ...gdprPolicy,
-        organizationId: orgId,
-      });
-
-      // 2. Verify policy allows purge on user request
-      const policy = await cortex.governance.getPolicy({
-        organizationId: orgId,
-      });
+  describe("Current scoped governance and explicit administrative erasure", () => {
+    it("stores the GDPR purge flag without granting client-side enforcement", async () => {
+      const sdk = governance.cortex;
+      const policy = await sdk.governance.getTemplate("GDPR");
       expect(policy.conversations.retention.purgeOnUserRequest).toBe(true);
-
-      // 3. Register space and create user data
-      await cortex.memorySpaces.register({
-        memorySpaceId: SPACE,
-        name: "GDPR Test Space",
-        type: "personal",
-      });
-
-      await cortex.vector.store(SPACE, {
-        content: "User personal data for GDPR test",
-        contentType: "raw",
-        userId: USER_ID,
-        source: { type: "conversation", userId: USER_ID },
-        metadata: { importance: 70, tags: ["personal-data"] },
-      });
-
-      await cortex.facts.store({
-        memorySpaceId: SPACE,
-        userId: USER_ID,
-        fact: "User preference that should be deletable",
-        factType: "preference",
-        subject: USER_ID,
-        confidence: 85,
-        sourceType: "conversation",
-      });
-
-      // 4. User requests deletion - GDPR policy allows it
-      const deleteResult = await cortex.vector.deleteMany({
-        memorySpaceId: SPACE,
-        userId: USER_ID,
-      });
-
-      const factsDeleteResult = await cortex.facts.deleteMany({
-        memorySpaceId: SPACE,
-        userId: USER_ID,
-      });
-
-      // 5. Verify deletions succeeded (GDPR allows)
-      expect(deleteResult.deleted).toBeGreaterThanOrEqual(0);
-      expect(factsDeleteResult.deleted).toBeGreaterThanOrEqual(0);
-
-      // 6. Verify no data remains
-      const remainingMemories = await cortex.vector.list({
-        memorySpaceId: SPACE,
-        userId: USER_ID,
-      });
-      expect(remainingMemories.length).toBe(0);
+      await sdk.governance.setPolicy(policy);
+      const before = await governance.ownedRows("governancePolicies");
+      await expect(sdk.governance.enforce({ scope: { organizationId: governance.tenantId, memorySpaceId: governance.memorySpaceId }, layers: ["vector"], rules: ["purging"] }))
+        .rejects.toMatchObject({ code: "BACKEND_ENFORCEMENT_ONLY", outcome: "not_dispatched" });
+      expect(await governance.ownedRows("governancePolicies")).toEqual(before);
     });
-
-    it("compliance report reflects GDPR deletion requests", async () => {
-      const ts = Date.now();
-      const orgId = `gdpr-report-${ts}`;
-
-      // 1. Apply GDPR policy
-      const gdprPolicy = await cortex.governance.getTemplate("GDPR");
-      await cortex.governance.setPolicy({
-        ...gdprPolicy,
-        organizationId: orgId,
-      });
-
-      // 2. Generate compliance report
-      const now = Date.now();
-      const report = await cortex.governance.getComplianceReport({
-        organizationId: orgId,
-        period: {
-          start: new Date(now - 30 * 24 * 60 * 60 * 1000), // 30 days ago
-          end: new Date(now),
-        },
-      });
-
-      // 3. Verify report tracks user deletion requests
-      expect(report.userRequests).toBeDefined();
-      expect(report.userRequests.deletionRequests).toBeGreaterThanOrEqual(0);
-      expect(report.userRequests.fulfilled).toBeGreaterThanOrEqual(0);
-      expect(report.userRequests.avgFulfillmentTime).toBeDefined();
+    it("reports actual simulation capability without claiming GDPR deletion requests occurred", async () => {
+      expect(await governance.cortex.governance.getComplianceReport({ organizationId: governance.tenantId, memorySpaceId: governance.memorySpaceId, period: { start: new Date(0), end: new Date() } }))
+        .toMatchObject({ simulation: true, status: "RETENTION_EXECUTION_NOT_IMPLEMENTED", recordsPurged: 0 });
+      expect(await governance.ownedRows("governanceEnforcement")).toEqual([]);
     });
-
-    it("enforcement stats track GDPR-related deletions", async () => {
-      const ts = Date.now();
-      const orgId = `gdpr-stats-${ts}`;
-
-      // 1. Apply GDPR policy and run enforcement
-      const gdprPolicy = await cortex.governance.getTemplate("GDPR");
-      await cortex.governance.setPolicy({
-        ...gdprPolicy,
-        organizationId: orgId,
-      });
-
-      await cortex.governance.enforce({
-        layers: ["conversations", "vector"],
-        rules: ["retention", "purging"],
-        scope: { organizationId: orgId },
-      });
-
-      // 2. Get enforcement stats
-      const stats = await cortex.governance.getEnforcementStats({
-        period: "30d",
-        organizationId: orgId,
-      });
-
-      // 3. Stats should reflect enforcement activity
-      expect(stats.period.start).toBeGreaterThan(0);
-      expect(stats.conversations).toBeDefined();
-      expect(stats.vector).toBeDefined();
-      expect(stats.storageFreed).toBeGreaterThanOrEqual(0);
+    it("returns bounded simulation statistics without fabricated purging effects", async () => {
+      expect(await governance.cortex.governance.getEnforcementStats({ organizationId: governance.tenantId, memorySpaceId: governance.memorySpaceId, period: "30d" }))
+        .toMatchObject({ simulation: true, status: "RETENTION_EXECUTION_NOT_IMPLEMENTED", recordsPurged: 0, versionsDeleted: 0, storageFreed: 0 });
     });
-
-    it("memory space cascade deletion respects governance logging", async () => {
-      const ts = Date.now();
-      const orgId = `gdpr-cascade-governance-${ts}`;
-      const SPACE = ctx.memorySpaceId(`cascade-gov-${ts}`);
-
-      // 1. Apply policy with audit logging enabled
-      const hipaaPolicy = await cortex.governance.getTemplate("HIPAA");
-      await cortex.governance.setPolicy({
-        ...hipaaPolicy,
-        organizationId: orgId,
-      });
-
-      // 2. Verify audit logging is enabled
-      const policy = await cortex.governance.getPolicy({
-        organizationId: orgId,
-      });
-      expect(policy.compliance.auditLogging).toBe(true);
-
-      // 3. Register space and create data
-      await cortex.memorySpaces.register({
-        memorySpaceId: SPACE,
-        name: "Cascade Governance Test",
-        type: "personal",
-      });
-
-      await cortex.vector.store(SPACE, {
-        content: "Test data for cascade",
-        contentType: "raw",
-        source: { type: "system", userId: "test-user" },
-        metadata: { importance: 50, tags: [] },
-      });
-
-      // 4. Cascade delete the space
-      await cortex.memorySpaces.delete(SPACE, {
-        cascade: true,
-        reason: "GDPR governance test cleanup",
-      });
-
-      // 5. Verify space is deleted
-      const spaceCheck = await cortex.memorySpaces.get(SPACE);
-      expect(spaceCheck).toBeNull();
-
-      // 6. Verify compliance report can still be generated (audit trail exists)
-      const now = Date.now();
-      const report = await cortex.governance.getComplianceReport({
-        organizationId: orgId,
-        period: {
-          start: new Date(now - 7 * 24 * 60 * 60 * 1000),
-          end: new Date(now),
-        },
-      });
-      expect(report).toBeDefined();
+    it("preserves independent governance policy rows during supported legacy space erasure", async () => {
+      const spaceId = ctx.memorySpaceId("governance-independent-erasure");
+      await cortex.memorySpaces.register({ memorySpaceId: spaceId, type: "custom", name: "Owned legacy erasure" });
+      const before = await governance.ownedRows("governancePolicies");
+      const result = await cortex.memorySpaces.delete(spaceId, { cascade: true, erasureTransport, reason: "owned supported erasure" });
+      expect(result.erasure).toMatchObject({ complete: true });
+      expect(result.erasure).toMatchObject({ fullUserDataErased: false });
+      expect(await cortex.memorySpaces.get(spaceId)).toBeNull();
+      expect(await governance.ownedRows("governancePolicies")).toEqual(before);
+      expect(await governance.ownedRows("governanceEnforcement")).toEqual([]);
     });
   });
 });

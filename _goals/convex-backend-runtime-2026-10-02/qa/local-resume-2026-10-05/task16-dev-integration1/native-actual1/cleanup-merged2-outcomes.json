@@ -1,0 +1,97 @@
+{
+  "status": "ACTUAL_MERGED_SCOPE_CLEANUP_PASS",
+  "readOnlySuccessorOf": "cleanup-merged1-outcomes.json",
+  "originalOracleCorrection": "Ingestion jobs are immutable job metadata; activity is checked on their persisted stage.state rows.",
+  "committedEffectsReissued": 0,
+  "retiredScopes": 2,
+  "roleDenials": [
+    {
+      "subject": "native16v2-20261009",
+      "scope": {
+        "tenantId": "task16-merged-v2-20261009",
+        "memorySpaceId": "merged-v2-20261009"
+      },
+      "error": {
+        "name": "ConvexError",
+        "message": "[Request ID: 7ed06a8f21691e3a] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../custom/backend/runtimeAuth.ts:46:26)\n    at resolveAuthority (../../custom/backend/runtimeAuth.ts:185:0)\n    at async requireAuthority (../../custom/backend/runtimeAuth.ts:251:0)\n    at async requireDataAuthority (../../custom/backend/runtimeDataAuth.ts:34:16)\n    at async handler (../custom/backend/runtimeClient.ts:14:11)\n",
+        "data": {
+          "code": "FORBIDDEN",
+          "message": "Access denied",
+          "outcome": "not_dispatched",
+          "retryable": false,
+          "version": 1
+        }
+      },
+      "currentSignedJWT": true
+    },
+    {
+      "subject": "setup16v2-20261009",
+      "scope": {
+        "tenantId": "task16-merged-v2-20261009",
+        "memorySpaceId": "merged-v2-20261009"
+      },
+      "error": {
+        "name": "ConvexError",
+        "message": "[Request ID: 58b2110d50f7e109] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../custom/backend/runtimeAuth.ts:46:26)\n    at resolveAuthority (../../custom/backend/runtimeAuth.ts:185:0)\n    at async requireAuthority (../../custom/backend/runtimeAuth.ts:251:0)\n    at async requireDataAuthority (../../custom/backend/runtimeDataAuth.ts:34:16)\n    at async handler (../custom/backend/runtimeClient.ts:14:11)\n",
+        "data": {
+          "code": "FORBIDDEN",
+          "message": "Access denied",
+          "outcome": "not_dispatched",
+          "retryable": false,
+          "version": 1
+        }
+      },
+      "currentSignedJWT": true
+    },
+    {
+      "subject": "outsider16v2-20261009",
+      "scope": {
+        "tenantId": "task16-merged-outsider-20261009",
+        "memorySpaceId": "merged-outsider-20261009"
+      },
+      "error": {
+        "name": "ConvexError",
+        "message": "[Request ID: c0b4ba88efec863f] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../custom/backend/runtimeAuth.ts:46:26)\n    at resolveAuthority (../../custom/backend/runtimeAuth.ts:185:0)\n    at async requireAuthority (../../custom/backend/runtimeAuth.ts:251:0)\n    at async requireDataAuthority (../../custom/backend/runtimeDataAuth.ts:34:16)\n    at async handler (../custom/backend/runtimeClient.ts:14:11)\n",
+        "data": {
+          "code": "FORBIDDEN",
+          "message": "Access denied",
+          "outcome": "not_dispatched",
+          "retryable": false,
+          "version": 1
+        }
+      },
+      "currentSignedJWT": true
+    }
+  ],
+  "assets": 0,
+  "assetJobs": 0,
+  "mediaJobs": 0,
+  "retainedIngestionJobRows": 3,
+  "terminalStageRows": 9,
+  "ownedIngestionStagesActive": 0,
+  "ownedAttempts": 9,
+  "ownedUnknownUnits": 900000,
+  "ownedHeldSlots": 0,
+  "oldHeldSlots": [
+    "qd70b9bq7x251nw1522jyp606s8fxkc8",
+    "qd7fw10wfg59e0vtzbq05mz3dh8fw6wc"
+  ],
+  "oldHeld2AndAllPriorFinancialRootsWindowsCountersUnchanged": true,
+  "allTargetFinancialExactIdEquality": true,
+  "ownedToken": {
+    "path": "/Users/SaintNick/.codex/tmp/cortex-merged-v2-ui-20261009/actor.jwt",
+    "mode": "0600",
+    "bytes": 654,
+    "removed": true
+  },
+  "HTTPAndRuntimeClientsClosed": true,
+  "ownedNativeChildrenClosed": true,
+  "rootUI": "../root1/ui/cleanup1.json",
+  "mainTarget3174742": "retained for final merged-candidate CI and unresolved external async capability; not retired",
+  "graphContainers": "retained exact owned Neo4j/Memgraph for final checks",
+  "centralCredentials": "sole 0700/0600 copy retained; no values printed",
+  "newModelCalls": 0,
+  "scopeRestorations": 0,
+  "refunds": 0,
+  "originalFailureSha256": "e8e2cb56884f95cc1a87dfe175155b4c703d47d74f917cedf21e1cb52d854ca5"
+}

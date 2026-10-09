@@ -1,0 +1,1182 @@
+(node:56679) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtime/model-policy-admission.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+FAIL tests/unit/runtimeUnavailableAuth/closure.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+  ● pins the original source provenance, all 48 registrations and every original 251 classification as historical
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 0
+
+    @@ -3,11 +3,10 @@
+        "a2a:getConversation",
+        "a2a:request",
+        "a2a:send",
+        "conversationShares:checkAccess",
+        "conversationShares:create",
+    -   "conversationShares:expireGraphShare",
+        "conversationShares:get",
+        "conversationShares:incrementViewCount",
+        "conversationShares:listByConversation",
+        "conversationShares:listByGranter",
+        "conversationShares:revoke",
+
+      195 |     expect(row.validators).toMatch(/^\{/);
+      196 |   }
+    > 197 |   expect(frozen.registrations.map(row => row.path).sort()).toEqual(calls.map(call => call.path).sort());
+          |                                                            ^
+      198 |   expect(frozen.baseline.completeness.unresolved).toEqual([]);
+      199 |   expect(frozen.baseline.completeness.counts).toEqual({ modules: 22, registered: 251, public: 240, internal: 11,
+      200 |     httpRoutes: 0, registeredBuilderCalls: 251, resolvedExports: 251, guard: 198, internalize: 42 });
+
+      at Object.<anonymous> (tests/unit/runtimeUnavailableAuth/closure.test.ts:197:60)
+
+FAIL tests/unit/runtimeAssetUnavailableAuth/closure.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+  ● historical native validators remain immutable and current original handlers preserve their argument fields
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+        "fieldType": Object {
+          "type": "string",
+        },
+    -   "optional": false,
+    +   "optional": true,
+      }
+
+      165 |     const current = JSON.parse(call.registration.exportArgs()) as { type: string; value: Record<string, unknown> };
+      166 |     expect(current.type).toBe(row.args.type);
+    > 167 |     for (const [field, validator] of Object.entries(row.args.value)) expect(current.value[field]).toEqual(validator);
+          |                                                                                                   ^
+      168 |     for (const field of Object.keys(current.value).filter(k => !(k in row.args.value))) {
+      169 |       expect(['tenantId', 'memorySpaceId']).toContain(field);
+      170 |       expect(current.value[field]).toEqual({ fieldType: { type: 'string' }, optional: true });
+
+      at Object.<anonymous> (tests/unit/runtimeAssetUnavailableAuth/closure.test.ts:167:99)
+
+  ● accepted22 historical declarations stay literal-identical; all current validators and artifact bodies preserve the authorized repair
+
+    expect(received).toBe(expected) // Object.is equality
+
+    - Expected  - 4
+    + Received  + 1
+
+    - v.optional(v.object({
+    -     width: v.number(),
+    -     height: v.number(),
+    - }))
+    + v.optional(v.object({ width: v.number(), height: v.number() }))
+
+      195 |     for (const original of before) {
+      196 |       const validators = after.find(row => row.name === original.name)!.validators;
+    > 197 |       for (const [field, literal] of Object.entries(original.validators)) expect(validators[field]).toBe(canonicalValidator(literal));
+          |                                                                                                     ^
+      198 |       expect(Object.keys(validators).filter(key => !(key in original.validators)).every(key => ['tenantId', 'memorySpaceId'].includes(key))).toBe(true);
+      199 |     }
+      200 |   }
+
+      at Object.<anonymous> (tests/unit/runtimeAssetUnavailableAuth/closure.test.ts:197:101)
+
+  ● replays the exact historical three-edit native repair, 26 tables, 173 indexes and every tamper control without private runners
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      250 |   for (const declaration of historicalDeclarations) {
+      251 |     const captured = native.registrations[declaration.name] as { isInternal?: boolean; isPublic?: boolean };
+    > 252 |     expect(captured.isInternal === true).toBe(declaration.declaration.includes('= internalMutation('));
+          |                                          ^
+      253 |     expect(captured.isPublic === true).toBe(!declaration.declaration.includes('= internalMutation('));
+      254 |   }
+      255 |
+
+      at Object.<anonymous> (tests/unit/runtimeAssetUnavailableAuth/closure.test.ts:252:42)
+
+  ● retains all four historical foundation declaration tamper controls
+
+    assert(received)
+
+    Expected value to be equal to:
+      true
+    Received:
+      undefined
+
+    Message:
+      Explicit local argument schema: selectors
+
+    Difference:
+
+      Comparing two different types of values. Expected boolean but received undefined.
+
+      64 |       assert.ok(!ancestors.has(expression.text), "Acyclic explicit argument schema");
+      65 |       const object = objects.get(expression.text);
+    > 66 |       assert.ok(object, `Explicit local argument schema: ${expression.text}`);
+         |              ^
+      67 |       return resolve(object, new Set([...ancestors, expression.text]));
+      68 |     }
+      69 |     assert.ok(ts.isObjectLiteralExpression(expression), "Explicit object argument schema");
+
+      at resolve (tests/helpers/backend-catalog.ts:66:14)
+      at resolve (tests/helpers/backend-catalog.ts:72:66)
+      at catalogDeclarations (tests/helpers/backend-catalog.ts:91:21)
+      at Object.<anonymous> (tests/unit/runtimeAssetUnavailableAuth/closure.test.ts:268:12)
+
+FAIL tests/unit/runtimeArtifactAuth/inventory.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+  ● portable historical inventory remains immutable while current composition includes later guarded registrations
+
+    assert(received)
+
+    Expected value to be equal to:
+      true
+    Received:
+      undefined
+
+    Message:
+      Explicit local argument schema: selectors
+
+    Difference:
+
+      Comparing two different types of values. Expected boolean but received undefined.
+
+      64 |       assert.ok(!ancestors.has(expression.text), "Acyclic explicit argument schema");
+      65 |       const object = objects.get(expression.text);
+    > 66 |       assert.ok(object, `Explicit local argument schema: ${expression.text}`);
+         |              ^
+      67 |       return resolve(object, new Set([...ancestors, expression.text]));
+      68 |     }
+      69 |     assert.ok(ts.isObjectLiteralExpression(expression), "Explicit object argument schema");
+
+      at resolve (tests/helpers/backend-catalog.ts:66:14)
+      at resolve (tests/helpers/backend-catalog.ts:72:66)
+      at catalogDeclarations (tests/helpers/backend-catalog.ts:91:21)
+      at tests/unit/runtimeArtifactAuth/inventory.test.ts:89:27
+      at withComposedCatalog (tests/helpers/backend-catalog.ts:170:18)
+      at Object.<anonymous> (tests/unit/runtimeArtifactAuth/inventory.test.ts:71:3)
+
+FAIL tests/unit/memory-observer.test.ts
+  ● Test suite failed to run
+
+    SyntaxError: The requested module 'convex/browser' does not provide an export named 'ConvexHttpClient'
+
+      62 | }
+      63 | jest.unstable_mockModule("convex/browser", () => ({ ConvexClient: ObserverUnitClient }));
+    > 64 | const { Cortex } = await import("../../src");
+         |                    ^
+      65 |
+      66 | // Create test run context for parallel execution isolation
+      67 | const ctx = createTestRunContext();
+
+      at EsmLoader.walkGraphSync (node_modules/jest-runtime/build/index.js:1151:18)
+      at tests/unit/memory-observer.test.ts:64:20
+
+FAIL tests/unit/runtimeRegistryAuth/catalog.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+  ● portable inventory, actual schema exports and preserved sources › historical accepted agents excluded registration remains byte-for-byte frozen; current closure stays pinned
+
+    assert(received)
+
+    Expected value to be equal to:
+      true
+    Received:
+      undefined
+
+    Message:
+      Explicit local argument schema: selectors
+
+    Difference:
+
+      Comparing two different types of values. Expected boolean but received undefined.
+
+      64 |       assert.ok(!ancestors.has(expression.text), "Acyclic explicit argument schema");
+      65 |       const object = objects.get(expression.text);
+    > 66 |       assert.ok(object, `Explicit local argument schema: ${expression.text}`);
+         |              ^
+      67 |       return resolve(object, new Set([...ancestors, expression.text]));
+      68 |     }
+      69 |     assert.ok(ts.isObjectLiteralExpression(expression), "Explicit object argument schema");
+
+      at resolve (tests/helpers/backend-catalog.ts:66:14)
+      at resolve (tests/helpers/backend-catalog.ts:72:66)
+      at catalogDeclarations (tests/helpers/backend-catalog.ts:91:21)
+      at tests/unit/runtimeRegistryAuth/catalog.test.ts:54:21
+
+  ● portable inventory, actual schema exports and preserved sources › historical accepted memorySpaces excluded registration remains byte-for-byte frozen; current closure stays pinned
+
+    assert(received)
+
+    Expected value to be equal to:
+      true
+    Received:
+      undefined
+
+    Message:
+      Explicit local argument schema: selectors
+
+    Difference:
+
+      Comparing two different types of values. Expected boolean but received undefined.
+
+      64 |       assert.ok(!ancestors.has(expression.text), "Acyclic explicit argument schema");
+      65 |       const object = objects.get(expression.text);
+    > 66 |       assert.ok(object, `Explicit local argument schema: ${expression.text}`);
+         |              ^
+      67 |       return resolve(object, new Set([...ancestors, expression.text]));
+      68 |     }
+      69 |     assert.ok(ts.isObjectLiteralExpression(expression), "Explicit object argument schema");
+
+      at resolve (tests/helpers/backend-catalog.ts:66:14)
+      at resolve (tests/helpers/backend-catalog.ts:72:66)
+      at catalogDeclarations (tests/helpers/backend-catalog.ts:91:21)
+      at tests/unit/runtimeRegistryAuth/catalog.test.ts:54:21
+
+PASS tests/unit/runtimeWorkerAuth/admin-catalog.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeMetadataAuth/registrations.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeArtifactAuth/schema-indexes.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+FAIL tests/unit/attachments/sdk.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+  ● AttachmentsAPI.generateUploadUrl › requires the private HTTP upload API before transport
+
+    expect(received).rejects.toMatchObject()
+
+    Received promise resolved instead of rejected
+    Resolved to value: undefined
+
+      132 |
+      133 |   it("requires the private HTTP upload API before transport", async () => {
+    > 134 |     await expect(api.generateUploadUrl()).rejects.toMatchObject({ code: "CAPABILITY_UNAVAILABLE" });
+          |           ^
+      135 |     expect(client.mutation).not.toHaveBeenCalled(); expect(resilience.execute).not.toHaveBeenCalled();
+      136 |   });
+      137 |   it("tenant labels cannot enable a bearer upload URL", async () => {
+
+      at expect (node_modules/expect/build/index.js:2116:15)
+      at Object.<anonymous> (tests/unit/attachments/sdk.test.ts:134:11)
+
+  ● AttachmentsAPI.generateUploadUrl › tenant labels cannot enable a bearer upload URL
+
+    expect(received).rejects.toMatchObject()
+
+    Received promise resolved instead of rejected
+    Resolved to value: undefined
+
+      137 |   it("tenant labels cannot enable a bearer upload URL", async () => {
+      138 |     const tenantApi = new AttachmentsAPI(client.transport as unknown as never, resilience as never, { tenantId: "tenant-abc" } as never);
+    > 139 |     await expect(tenantApi.generateUploadUrl()).rejects.toMatchObject({ code: "CAPABILITY_UNAVAILABLE" });
+          |           ^
+      140 |     expect(client.mutation).not.toHaveBeenCalled();
+      141 |   });
+      142 |   it("unavailable legacy URL never retries through resilience", async () => {
+
+      at expect (node_modules/expect/build/index.js:2116:15)
+      at Object.<anonymous> (tests/unit/attachments/sdk.test.ts:139:11)
+
+  ● AttachmentsAPI.generateUploadUrl › unavailable legacy URL never retries through resilience
+
+    expect(received).rejects.toMatchObject()
+
+    Received promise resolved instead of rejected
+    Resolved to value: undefined
+
+      141 |   });
+      142 |   it("unavailable legacy URL never retries through resilience", async () => {
+    > 143 |     await expect(api.generateUploadUrl()).rejects.toMatchObject({ code: "CAPABILITY_UNAVAILABLE" });
+          |           ^
+      144 |     expect(resilience.execute).not.toHaveBeenCalled();
+      145 |   });
+      146 | });
+
+      at expect (node_modules/expect/build/index.js:2116:15)
+      at Object.<anonymous> (tests/unit/attachments/sdk.test.ts:143:11)
+
+  ● AttachmentsAPI.get › should retrieve attachment by ID
+
+    expect(received).toEqual(expected) // deep equality
+
+    Expected: {"_id": "doc_123", "attachmentId": "attach-abc123", "createdAt": 1791529138826, "filename": "test.png", "memorySpaceId": "space-123", "mimeType": "image/png", "size": 1024, "storageId": "storage-789", "type": "image", "updatedAt": 1791529138826, "userId": "user-456"}
+    Received: undefined
+
+      370 |     const result = await api.get("attach-abc123");
+      371 |
+    > 372 |     expect(result).toEqual(mockAttachment);
+          |                    ^
+      373 |     expect(client.mutation).toHaveBeenCalledWith(
+      374 |       expect.anything(),
+      375 |       expect.objectContaining({ attachmentId: "attach-abc123" })
+
+      at Object.<anonymous> (tests/unit/attachments/sdk.test.ts:372:20)
+
+  ● AttachmentsAPI.get › should return null for non-existent attachment
+
+    expect(received).toBeNull()
+
+    Received: undefined
+
+      382 |     const result = await api.get("non-existent");
+      383 |
+    > 384 |     expect(result).toBeNull();
+          |                    ^
+      385 |   });
+      386 |
+      387 |   // Test retrieval of each modality
+
+      at Object.<anonymous> (tests/unit/attachments/sdk.test.ts:384:20)
+
+  ● AttachmentsAPI.get › should correctly parse image attachment
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "image"
+    Received: undefined
+
+      395 |       const result = await api.get("attach-123");
+      396 |
+    > 397 |       expect(result?.type).toBe(modality);
+          |                            ^
+      398 |       if (modality === "image" || modality === "video") {
+      399 |         expect(result?.dimensions).toBeDefined();
+      400 |       }
+
+      at Object.<anonymous> (tests/unit/attachments/sdk.test.ts:397:28)
+
+  ● AttachmentsAPI.get › should correctly parse audio attachment
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "audio"
+    Received: undefined
+
+      395 |       const result = await api.get("attach-123");
+      396 |
+    > 397 |       expect(result?.type).toBe(modality);
+          |                            ^
+      398 |       if (modality === "image" || modality === "video") {
+      399 |         expect(result?.dimensions).toBeDefined();
+      400 |       }
+
+      at Object.<anonymous> (tests/unit/attachments/sdk.test.ts:397:28)
+
+  ● AttachmentsAPI.get › should correctly parse video attachment
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "video"
+    Received: undefined
+
+      395 |       const result = await api.get("attach-123");
+      396 |
+    > 397 |       expect(result?.type).toBe(modality);
+          |                            ^
+      398 |       if (modality === "image" || modality === "video") {
+      399 |         expect(result?.dimensions).toBeDefined();
+      400 |       }
+
+      at Object.<anonymous> (tests/unit/attachments/sdk.test.ts:397:28)
+
+  ● AttachmentsAPI.get › should correctly parse pdf attachment
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "pdf"
+    Received: undefined
+
+      395 |       const result = await api.get("attach-123");
+      396 |
+    > 397 |       expect(result?.type).toBe(modality);
+          |                            ^
+      398 |       if (modality === "image" || modality === "video") {
+      399 |         expect(result?.dimensions).toBeDefined();
+      400 |       }
+
+      at Object.<anonymous> (tests/unit/attachments/sdk.test.ts:397:28)
+
+  ● AttachmentsAPI.get › should correctly parse file attachment
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "file"
+    Received: undefined
+
+      395 |       const result = await api.get("attach-123");
+      396 |
+    > 397 |       expect(result?.type).toBe(modality);
+          |                            ^
+      398 |       if (modality === "image" || modality === "video") {
+      399 |         expect(result?.dimensions).toBeDefined();
+      400 |       }
+
+      at Object.<anonymous> (tests/unit/attachments/sdk.test.ts:397:28)
+
+  ● AttachmentsAPI.getUrl › requires authenticated bounded bytes instead of a bearer URL
+
+    expect(received).rejects.toMatchObject()
+
+    Received promise resolved instead of rejected
+    Resolved to value: null
+
+      422 |
+      423 |   it("requires authenticated bounded bytes instead of a bearer URL", async () => {
+    > 424 |     await expect(api.getUrl("attach-abc123")).rejects.toMatchObject({ code: "CAPABILITY_UNAVAILABLE" });
+          |           ^
+      425 |     expect(client.mutation).not.toHaveBeenCalled(); expect(resilience.execute).not.toHaveBeenCalled();
+      426 |   });
+      427 |   it("unknown IDs cannot bypass the private delivery boundary", async () => {
+
+      at expect (node_modules/expect/build/index.js:2116:15)
+      at Object.<anonymous> (tests/unit/attachments/sdk.test.ts:424:11)
+
+  ● AttachmentsAPI.getUrl › unknown IDs cannot bypass the private delivery boundary
+
+    expect(received).rejects.toMatchObject()
+
+    Received promise resolved instead of rejected
+    Resolved to value: null
+
+      426 |   });
+      427 |   it("unknown IDs cannot bypass the private delivery boundary", async () => {
+    > 428 |     await expect(api.getUrl("non-existent")).rejects.toMatchObject({ code: "CAPABILITY_UNAVAILABLE" });
+          |           ^
+      429 |     expect(client.mutation).not.toHaveBeenCalled();
+      430 |   });
+      431 | });
+
+      at expect (node_modules/expect/build/index.js:2116:15)
+      at Object.<anonymous> (tests/unit/attachments/sdk.test.ts:428:11)
+
+  ● AttachmentsAPI.list › should list all attachments in memory space
+
+    TypeError: Cannot read properties of undefined (reading 'attachments')
+
+      457 |     const result = await api.list(filter);
+      458 |
+    > 459 |     expect(result.attachments).toHaveLength(2);
+          |                   ^
+      460 |     expect(result.total).toBe(2);
+      461 |     expect(result.hasMore).toBe(false);
+      462 |   });
+
+      at Object.<anonymous> (tests/unit/attachments/sdk.test.ts:459:19)
+
+  ● AttachmentsAPI.list › should filter by image type
+
+    TypeError: Cannot read properties of undefined (reading 'attachments')
+
+      481 |       const result = await api.list(filter);
+      482 |
+    > 483 |       expect(result.attachments[0].type).toBe(modality);
+          |                     ^
+      484 |       expect(client.mutation).toHaveBeenCalledWith(
+      485 |         expect.anything(),
+      486 |         expect.objectContaining({ type: modality })
+
+      at Object.<anonymous> (tests/unit/attachments/sdk.test.ts:483:21)
+
+  ● AttachmentsAPI.list › should filter by audio type
+
+    TypeError: Cannot read properties of undefined (reading 'attachments')
+
+      481 |       const result = await api.list(filter);
+      482 |
+    > 483 |       expect(result.attachments[0].type).toBe(modality);
+          |                     ^
+      484 |       expect(client.mutation).toHaveBeenCalledWith(
+      485 |         expect.anything(),
+      486 |         expect.objectContaining({ type: modality })
+
+      at Object.<anonymous> (tests/unit/attachments/sdk.test.ts:483:21)
+
+  ● AttachmentsAPI.list › should filter by video type
+
+    TypeError: Cannot read properties of undefined (reading 'attachments')
+
+      481 |       const result = await api.list(filter);
+      482 |
+    > 483 |       expect(result.attachments[0].type).toBe(modality);
+          |                     ^
+      484 |       expect(client.mutation).toHaveBeenCalledWith(
+      485 |         expect.anything(),
+      486 |         expect.objectContaining({ type: modality })
+
+      at Object.<anonymous> (tests/unit/attachments/sdk.test.ts:483:21)
+
+  ● AttachmentsAPI.list › should filter by pdf type
+
+    TypeError: Cannot read properties of undefined (reading 'attachments')
+
+      481 |       const result = await api.list(filter);
+      482 |
+    > 483 |       expect(result.attachments[0].type).toBe(modality);
+          |                     ^
+      484 |       expect(client.mutation).toHaveBeenCalledWith(
+      485 |         expect.anything(),
+      486 |         expect.objectContaining({ type: modality })
+
+      at Object.<anonymous> (tests/unit/attachments/sdk.test.ts:483:21)
+
+  ● AttachmentsAPI.list › should filter by file type
+
+    TypeError: Cannot read properties of undefined (reading 'attachments')
+
+      481 |       const result = await api.list(filter);
+      482 |
+    > 483 |       expect(result.attachments[0].type).toBe(modality);
+          |                     ^
+      484 |       expect(client.mutation).toHaveBeenCalledWith(
+      485 |         expect.anything(),
+      486 |         expect.objectContaining({ type: modality })
+
+      at Object.<anonymous> (tests/unit/attachments/sdk.test.ts:483:21)
+
+  ● AttachmentsAPI.list › should filter by conversation
+
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+
+    Expected: Anything, ObjectContaining {"conversationId": "conv-123"}
+
+    Number of calls: 0
+
+      503 |     await api.list(filter);
+      504 |
+    > 505 |     expect(client.mutation).toHaveBeenCalledWith(
+          |                             ^
+      506 |       expect.anything(),
+      507 |       expect.objectContaining({ conversationId: "conv-123" })
+      508 |     );
+
+      at Object.<anonymous> (tests/unit/attachments/sdk.test.ts:505:29)
+
+  ● AttachmentsAPI.list › should filter by message
+
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+
+    Expected: Anything, ObjectContaining {"messageId": "msg-456"}
+
+    Number of calls: 0
+
+      523 |     await api.list(filter);
+      524 |
+    > 525 |     expect(client.mutation).toHaveBeenCalledWith(
+          |                             ^
+      526 |       expect.anything(),
+      527 |       expect.objectContaining({ messageId: "msg-456" })
+      528 |     );
+
+      at Object.<anonymous> (tests/unit/attachments/sdk.test.ts:525:29)
+
+  ● AttachmentsAPI.list › should paginate results with cursor
+
+    TypeError: Cannot read properties of undefined (reading 'hasMore')
+
+      544 |     const result = await api.list(filter);
+      545 |
+    > 546 |     expect(result.hasMore).toBe(true);
+          |                   ^
+      547 |     expect(result.cursor).toBe("cursor-page2");
+      548 |   });
+      549 |
+
+      at Object.<anonymous> (tests/unit/attachments/sdk.test.ts:546:19)
+
+  ● AttachmentsAPI.list › should sort by createdAt ascending
+
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+
+    Expected: Anything, ObjectContaining {"sortBy": "createdAt", "sortOrder": "asc"}
+
+    Number of calls: 0
+
+      559 |     await api.list(filter);
+      560 |
+    > 561 |     expect(client.mutation).toHaveBeenCalledWith(
+          |                             ^
+      562 |       expect.anything(),
+      563 |       expect.objectContaining({ sortBy: "createdAt", sortOrder: "asc" })
+      564 |     );
+
+      at Object.<anonymous> (tests/unit/attachments/sdk.test.ts:561:29)
+
+  ● AttachmentsAPI.getByConversation › should get all attachments for a conversation
+
+    TypeError: expect(received).toHaveLength(expected)
+
+    Matcher error: received value must have a length property whose value must be a number
+
+    Received has value: undefined
+
+      588 |     const result = await api.getByConversation("conv-123");
+      589 |
+    > 590 |     expect(result).toHaveLength(2);
+          |                    ^
+      591 |     expect(result[0].conversationId).toBe("conv-123");
+      592 |   });
+      593 | });
+
+      at Object.<anonymous> (tests/unit/attachments/sdk.test.ts:590:20)
+
+  ● AttachmentsAPI.getByMessage › should get all attachments for a message
+
+    TypeError: expect(received).toHaveLength(expected)
+
+    Matcher error: received value must have a length property whose value must be a number
+
+    Received has value: undefined
+
+      610 |     const result = await api.getByMessage("msg-456");
+      611 |
+    > 612 |     expect(result).toHaveLength(1);
+          |                    ^
+      613 |     expect(result[0].messageId).toBe("msg-456");
+      614 |   });
+      615 | });
+
+      at Object.<anonymous> (tests/unit/attachments/sdk.test.ts:612:20)
+
+  ● AttachmentsAPI.count › should count all attachments in memory space
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 42
+    Received: undefined
+
+      634 |     const result = await api.count({ memorySpaceId: "space-123" });
+      635 |
+    > 636 |     expect(result).toBe(42);
+          |                    ^
+      637 |   });
+      638 |
+      639 |   // Test counting by each modality
+
+      at Object.<anonymous> (tests/unit/attachments/sdk.test.ts:636:20)
+
+  ● AttachmentsAPI.count › should count image attachments
+
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+
+    Expected: Anything, ObjectContaining {"type": "image"}
+
+    Number of calls: 0
+
+      646 |       await api.count({ memorySpaceId: "space-123", type: modality });
+      647 |
+    > 648 |       expect(client.mutation).toHaveBeenCalledWith(
+          |                               ^
+      649 |         expect.anything(),
+      650 |         expect.objectContaining({ type: modality })
+      651 |       );
+
+      at Object.<anonymous> (tests/unit/attachments/sdk.test.ts:648:31)
+
+  ● AttachmentsAPI.count › should count audio attachments
+
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+
+    Expected: Anything, ObjectContaining {"type": "audio"}
+
+    Number of calls: 0
+
+      646 |       await api.count({ memorySpaceId: "space-123", type: modality });
+      647 |
+    > 648 |       expect(client.mutation).toHaveBeenCalledWith(
+          |                               ^
+      649 |         expect.anything(),
+      650 |         expect.objectContaining({ type: modality })
+      651 |       );
+
+      at Object.<anonymous> (tests/unit/attachments/sdk.test.ts:648:31)
+
+  ● AttachmentsAPI.count › should count video attachments
+
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+
+    Expected: Anything, ObjectContaining {"type": "video"}
+
+    Number of calls: 0
+
+      646 |       await api.count({ memorySpaceId: "space-123", type: modality });
+      647 |
+    > 648 |       expect(client.mutation).toHaveBeenCalledWith(
+          |                               ^
+      649 |         expect.anything(),
+      650 |         expect.objectContaining({ type: modality })
+      651 |       );
+
+      at Object.<anonymous> (tests/unit/attachments/sdk.test.ts:648:31)
+
+  ● AttachmentsAPI.count › should count pdf attachments
+
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+
+    Expected: Anything, ObjectContaining {"type": "pdf"}
+
+    Number of calls: 0
+
+      646 |       await api.count({ memorySpaceId: "space-123", type: modality });
+      647 |
+    > 648 |       expect(client.mutation).toHaveBeenCalledWith(
+          |                               ^
+      649 |         expect.anything(),
+      650 |         expect.objectContaining({ type: modality })
+      651 |       );
+
+      at Object.<anonymous> (tests/unit/attachments/sdk.test.ts:648:31)
+
+  ● AttachmentsAPI.count › should count file attachments
+
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+
+    Expected: Anything, ObjectContaining {"type": "file"}
+
+    Number of calls: 0
+
+      646 |       await api.count({ memorySpaceId: "space-123", type: modality });
+      647 |
+    > 648 |       expect(client.mutation).toHaveBeenCalledWith(
+          |                               ^
+      649 |         expect.anything(),
+      650 |         expect.objectContaining({ type: modality })
+      651 |       );
+
+      at Object.<anonymous> (tests/unit/attachments/sdk.test.ts:648:31)
+
+FAIL tests/unit/artifacts/sdk.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+  ● ArtifactsAPI › get() › should return artifact when found
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "art-abc123"
+    Received: undefined
+
+      216 |
+      217 |       expect(result).not.toBeNull();
+    > 218 |       expect(result?.artifactId).toBe("art-abc123");
+          |                                  ^
+      219 |     });
+      220 |
+      221 |     it("should return null when not found", async () => {
+
+      at Object.<anonymous> (tests/unit/artifacts/sdk.test.ts:218:34)
+
+  ● ArtifactsAPI › get() › should return null when not found
+
+    expect(received).toBeNull()
+
+    Received: undefined
+
+      224 |       const result = await artifactsApi.get("nonexistent");
+      225 |
+    > 226 |       expect(result).toBeNull();
+          |                      ^
+      227 |     });
+      228 |
+      229 |     it("should throw validation error for empty ID", async () => {
+
+      at Object.<anonymous> (tests/unit/artifacts/sdk.test.ts:226:22)
+
+  ● ArtifactsAPI › list() › should list artifacts with filter
+
+    TypeError: Cannot read properties of undefined (reading 'artifacts')
+
+      350 |
+      351 |     const listResult = result as { artifacts: Artifact[] };
+    > 352 |     return listResult.artifacts;
+          |                       ^
+      353 |   }
+      354 |
+      355 |   /**
+
+      at ArtifactsAPI.list (src/artifacts/index.ts:352:23)
+      at Object.<anonymous> (tests/unit/artifacts/sdk.test.ts:340:22)
+
+  ● ArtifactsAPI › count() › should return count
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 5
+    Received: undefined
+
+      372 |       });
+      373 |
+    > 374 |       expect(result).toBe(5);
+          |                      ^
+      375 |     });
+      376 |
+      377 |     it("should throw validation error for missing memorySpaceId", async () => {
+
+      at Object.<anonymous> (tests/unit/artifacts/sdk.test.ts:374:22)
+
+  ● ArtifactsAPI › getHistory() › should return version history
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 2
+    Received length: 0
+    Received array:  []
+
+      465 |       const result = await artifactsApi.getHistory("art-abc123");
+      466 |
+    > 467 |       expect(result).toHaveLength(2);
+          |                      ^
+      468 |     });
+      469 |
+      470 |     it("should throw validation error for empty ID", async () => {
+
+      at Object.<anonymous> (tests/unit/artifacts/sdk.test.ts:467:22)
+
+  ● ArtifactsAPI › getVersion() › should return specific version
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 2
+    Received: undefined
+
+      488 |
+      489 |       expect(result).not.toBeNull();
+    > 490 |       expect(result?.version).toBe(2);
+          |                               ^
+      491 |     });
+      492 |
+      493 |     it("should return null for invalid version", async () => {
+
+      at Object.<anonymous> (tests/unit/artifacts/sdk.test.ts:490:31)
+
+  ● ArtifactsAPI › getVersion() › should return null for invalid version
+
+    expect(received).toBeNull()
+
+    Received: undefined
+
+      496 |       const result = await artifactsApi.getVersion("art-abc123", 999);
+      497 |
+    > 498 |       expect(result).toBeNull();
+          |                      ^
+      499 |     });
+      500 |
+      501 |     it("should throw validation error for invalid version number", async () => {
+
+      at Object.<anonymous> (tests/unit/artifacts/sdk.test.ts:498:22)
+
+  ● ArtifactsAPI › getFileUrl() › direct bearer delivery is unavailable before transport
+
+    expect(received).rejects.toBeInstanceOf()
+
+    Received promise resolved instead of rejected
+    Resolved to value: null
+
+      694 |   describe("getFileUrl()", () => {
+      695 |     it("direct bearer delivery is unavailable before transport", async () => {
+    > 696 |       await expect(artifactsApi.getFileUrl("art-abc123")).rejects.toBeInstanceOf(AssetCapabilityUnavailableError);
+          |             ^
+      697 |       expect(mockClient.mutation).not.toHaveBeenCalled(); expect(mockClient.query).not.toHaveBeenCalled();
+      698 |     });
+      699 |     it("empty selectors retain the same unavailable boundary", async () => {
+
+      at expect (node_modules/expect/build/index.js:2116:15)
+      at Object.<anonymous> (tests/unit/artifacts/sdk.test.ts:696:13)
+
+  ● ArtifactsAPI › getFileUrl() › empty selectors retain the same unavailable boundary
+
+    expect(received).rejects.toBeInstanceOf(expected)
+
+    Expected constructor: AssetCapabilityUnavailableError
+    Received constructor: ArtifactValidationError
+
+      698 |     });
+      699 |     it("empty selectors retain the same unavailable boundary", async () => {
+    > 700 |       await expect(artifactsApi.getFileUrl("")).rejects.toBeInstanceOf(AssetCapabilityUnavailableError);
+          |                                                         ^
+      701 |       expect(mockClient.mutation).not.toHaveBeenCalled(); expect(mockClient.query).not.toHaveBeenCalled();
+      702 |     });
+      703 |   });
+
+      at Object.toBeInstanceOf (node_modules/expect/build/index.js:2155:20)
+      at Object.<anonymous> (tests/unit/artifacts/sdk.test.ts:700:57)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     3.4s | 1187/1188 passed | /tests/unit/runtimeUnavailableAuth/closure.test.ts
+  ✅     2.7s | 134/134 passed | /tests/unit/runtime/model-policy-admission.test.ts
+  ❌     2.1s | 357/361 passed | /tests/unit/runtimeAssetUnavailableAuth/closure.test.ts
+  ❌     1.5s | 2/3 passed | /tests/unit/runtimeArtifactAuth/inventory.test.ts
+  ✅     1.3s | 59/59 passed | /tests/unit/runtimeWorkerAuth/admin-catalog.test.ts
+  ❌     1.2s | 5/7 passed | /tests/unit/runtimeRegistryAuth/catalog.test.ts
+  ✅     1.2s | 2/2 passed | /tests/unit/runtimeMetadataAuth/registrations.test.ts
+  ✅     1.0s | 5/5 passed | /tests/unit/runtimeArtifactAuth/schema-indexes.test.ts
+  ❌     0.3s | 36/66 passed | /tests/unit/attachments/sdk.test.ts
+  ❌     0.3s | 39/48 passed | /tests/unit/artifacts/sdk.test.ts
+  ✅     0.0s | 0/0 passed | /tests/unit/memory-observer.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.25s ( 1.6%) - maintained current composition preserves every current native table and the unique artifact scope index
+    /tests/unit/runtimeAssetUnavailableAuth/closure.test.ts
+
+ 2. [32m✓[0m    0.23s ( 1.5%) - portable inventory, actual schema exports and preserved sources maintained inventory writes only owned temporary outputs and always removes them
+    /tests/unit/runtimeRegistryAuth/catalog.test.ts
+
+ 3. [32m✓[0m    0.22s ( 1.4%) - import-aware AST and native Convex registration visibility maintained import-aware AST finds the exact historical 41 metadata paths with zero unresolved
+    /tests/unit/runtimeMetadataAuth/registrations.test.ts
+
+ 4. [31m✗[0m    0.19s ( 1.2%) - portable historical inventory remains immutable while current composition includes later guarded registrations
+    /tests/unit/runtimeArtifactAuth/inventory.test.ts
+
+ 5. [32m✓[0m    0.18s ( 1.2%) - actual registered visibility and canonical schema/AST catalog maintained backend composition resolves all 25 current paths with seven public and eighteen internal
+    /tests/unit/runtimeWorkerAuth/admin-catalog.test.ts
+
+ 6. [32m✓[0m    0.16s ( 1.0%) - deployable native schema indexes all exported tables, including runtime schema fragments, have unique index field sequences
+    /tests/unit/runtimeArtifactAuth/schema-indexes.test.ts
+
+ 7. [31m✗[0m    0.06s ( 0.4%) - accepted22 historical declarations stay literal-identical; all current validators and artifact bodies preserve the authorized repair
+    /tests/unit/runtimeAssetUnavailableAuth/closure.test.ts
+
+ 8. [32m✓[0m    0.04s ( 0.3%) - original argument validators remain byte-identical per AST; only absent selectors added
+    /tests/unit/runtimeUnavailableAuth/closure.test.ts
+
+ 9. [32m✓[0m    0.03s ( 0.2%) - attachments:getByIds current authority denies missing before private reads and effects
+    /tests/unit/runtimeAssetUnavailableAuth/closure.test.ts
+
+10. [32m✓[0m    0.03s ( 0.2%) - terminal embedding result profile fence known embedding capture accepts only one current matching profile vector, with zero attachment charge delta
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+11. [32m✓[0m    0.02s ( 0.1%) - native private policy ledger — offline logic only proved precheckpoint refusal releases balances and slots exactly once
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+12. [32m✓[0m    0.02s ( 0.1%) - native private policy ledger — offline logic only explicit compatible safe fallback reserves once with pinned candidate and no lost prior spend
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+13. [32m✓[0m    0.02s ( 0.1%) - trusted terminal capture and current private attachment healthy charge capture and attachment are separate, monetary once, exact-current retries zero writes
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+14. [31m✗[0m    0.02s ( 0.1%) - replays the exact historical three-edit native repair, 26 tables, 173 indexes and every tamper control without private runners
+    /tests/unit/runtimeAssetUnavailableAuth/closure.test.ts
+
+15. [32m✓[0m    0.02s ( 0.1%) - native private policy ledger — offline logic only overrun accounts full spend and blocks further admission without rollback of charge
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+16. [32m✓[0m    0.01s ( 0.1%) - native private policy ledger — offline logic only malformed/missing cost remains unknown liability; qualified terminal proof releases slot only
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+17. [32m✓[0m    0.01s ( 0.1%) - current policy narrowing at fallback and dispatch boundaries fallback permission revoked after valid reservation denies checkpoint with zero effects
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+18. [32m✓[0m    0.01s ( 0.1%) - current policy narrowing at fallback and dispatch boundaries compatible fallback at exact narrowed cumulative ceiling remains permitted
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+19. [32m✓[0m    0.01s ( 0.1%) - native private policy ledger — offline logic only known cost settles exactly once and eligible result replay needs no new reservation
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+20. [32m✓[0m    0.01s ( 0.1%) - current policy narrowing at fallback and dispatch boundaries operation narrowing after valid fallback reserve preserves full original liability and denies permit
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 1.54s (9.8% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      15.71s
+  Test suites:        11
+  Individual tests:   830
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 11
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 7 failed, 4 passed, 11 total
+Tests:       47 failed, 1826 passed, 1873 total
+Snapshots:   0 total
+Time:        15.712 s
+Ran all test suites within paths "tests/unit/artifacts/sdk.test.ts", "tests/unit/attachments/sdk.test.ts", "tests/unit/memory-observer.test.ts", "tests/unit/runtime/model-policy-admission.test.ts", "tests/unit/runtimeArtifactAuth/inventory.test.ts", "tests/unit/runtimeArtifactAuth/schema-indexes.test.ts", "tests/unit/runtimeAssetUnavailableAuth/closure.test.ts", "tests/unit/runtimeRegistryAuth/catalog.test.ts", "tests/unit/runtimeUnavailableAuth/closure.test.ts", "tests/unit/runtimeWorkerAuth/admin-catalog.test.ts", "tests/unit/runtimeMetadataAuth/registrations.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-dev-integration1/provider-ci-author1/affected-sdk-tests1.json

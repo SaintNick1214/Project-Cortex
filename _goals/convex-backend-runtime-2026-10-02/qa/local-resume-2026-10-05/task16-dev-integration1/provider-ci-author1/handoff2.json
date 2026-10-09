@@ -1,0 +1,557 @@
+{
+  "recordedAtUtc": "2026-10-09T07:22:00.875801+00:00",
+  "purpose": "Final bounded provider/CI author handoff; no independent judgment, goal acceptance or successor actual PASS",
+  "sourceClosed": true,
+  "sourceDigest": "c00cd5aeecd61acf0efba36b83d9556ecc5d7bd00c4055669cca72c92ed1a897",
+  "files": [
+    {
+      "path": ".github/workflows/pr-checks.yml",
+      "sha256": "816afa1f8d6723ac1266e2199e2dd4ef028cc53c752ab2ed56ca6a3486f225c6"
+    },
+    {
+      "path": "packages/vercel-ai-provider/README.md",
+      "sha256": "25aa4b3ac6bdfec6d474ec0bc53122c13a58e7a42ff840aef6cd1e7e52243ac3"
+    },
+    {
+      "path": "packages/vercel-ai-provider/jest.config.js",
+      "sha256": "c678eeea96c49d3e98317d4728a173e19a45f814a9fa5c611aa31e4bb2b91734"
+    },
+    {
+      "path": "packages/vercel-ai-provider/quickstart/.env.local.example",
+      "sha256": "c524c65e267c03e1ab431f490d376666528321ff662c82fb4b082e9a809e944d"
+    },
+    {
+      "path": "packages/vercel-ai-provider/quickstart/README.md",
+      "sha256": "7395ecb4a7f532d0846cdf760bebe3474f391d6976a36fb808f70d3843cbb6e4"
+    },
+    {
+      "path": "packages/vercel-ai-provider/quickstart/app/api/chat-v6/route.ts",
+      "sha256": "49a27655f86d0384b101e263eb6675f920733e18f24e33f41e68e1a2c9fbc40a"
+    },
+    {
+      "path": "packages/vercel-ai-provider/quickstart/app/api/chat/route.ts",
+      "sha256": "49a27655f86d0384b101e263eb6675f920733e18f24e33f41e68e1a2c9fbc40a"
+    },
+    {
+      "path": "packages/vercel-ai-provider/quickstart/app/api/health/route.ts",
+      "sha256": "eab2bed0a3c7524d91aa522c5dd0131df9a0fec7feac5dd0400ff5918bcc0c45"
+    },
+    {
+      "path": "packages/vercel-ai-provider/quickstart/app/page.tsx",
+      "sha256": "3554bddaecbfbd4926a670831cf1f93e9694b5f6ce442e4d44f1b3eec17f5156"
+    },
+    {
+      "path": "packages/vercel-ai-provider/quickstart/convex/schema.ts",
+      "sha256": "8cff280e44cebd2c049a95023c05f7f26d219c5565690db3fd4137f67496d401"
+    },
+    {
+      "path": "packages/vercel-ai-provider/quickstart/jest.config.js",
+      "sha256": "e05b3fb5491249837b57d8728e24f939c738ef7b8c560bccd10ebae90083c8a3"
+    },
+    {
+      "path": "packages/vercel-ai-provider/quickstart/package-lock.json",
+      "sha256": "d2fd8dda2f0ff444b138fb84350f85f8c93d47af8e0a7251c80f1cad535e3698"
+    },
+    {
+      "path": "packages/vercel-ai-provider/quickstart/package.json",
+      "sha256": "361df3eb5cab422757cddfbbf7212739366de3f58dbd4ba3be85eca580b8ef02"
+    },
+    {
+      "path": "packages/vercel-ai-provider/quickstart/tests/helpers/convex-registration.ts",
+      "sha256": "9f2faf6c4f9f6769ec9808054e06bd2e4adc9a5a0d4cb04e9561bbb4265fa551"
+    },
+    {
+      "path": "packages/vercel-ai-provider/quickstart/tests/unit/private-chat.test.ts",
+      "sha256": "e6312af2b39c9b6cb6449bab4a1da3b6d2c801074b83e19da7f1dabe7d2d4cfb"
+    },
+    {
+      "path": "packages/vercel-ai-provider/src/index.ts",
+      "sha256": "33ff84519786d7341cd75672de9ff91f690cacffbc08f59f184f8cb6032e644f"
+    },
+    {
+      "path": "packages/vercel-ai-provider/src/legacy-capability.ts",
+      "sha256": "ba1b19ddf8127e90e702dac94edccae9d2f4c1df44c9d809f007437b044b3c18"
+    },
+    {
+      "path": "packages/vercel-ai-provider/src/provider.ts",
+      "sha256": "b7dfdeb1140bdca2fbd7ca50c9b2b71f6c6caabfd8e985e6b6a6a5f2b957fab1"
+    },
+    {
+      "path": "packages/vercel-ai-provider/src/v6-compat.ts",
+      "sha256": "21d004ea5e2aa27afb57a00662419d413e88efd8f5280e2523c32f2cd6375232"
+    },
+    {
+      "path": "packages/vercel-ai-provider/tests/integration/ai7-model.test.ts",
+      "sha256": "fdc7b6edea55617aa476a502e878f8bbe313150920cb384aaf8d1e1d2597ede7"
+    },
+    {
+      "path": "packages/vercel-ai-provider/tests/integration/layer-streaming.test.ts",
+      "sha256": "1fa30009df6602298accc4935702fe75cec1f72eebe19bcd72257b9c0b15a14c"
+    },
+    {
+      "path": "packages/vercel-ai-provider/tests/integration/memory-flow.test.ts",
+      "sha256": "6fb8d3bf6659d63535a4119eb3166175e5e9cce250254474d43f5508295df0e0"
+    },
+    {
+      "path": "packages/vercel-ai-provider/tests/integration/streaming-flow.test.ts",
+      "sha256": "3f98318f9d24973e3053537c8a6df87ae9c393e83872621b6ac43c8191989999"
+    },
+    {
+      "path": "packages/vercel-ai-provider/tests/unit/custom-context-builder.test.ts",
+      "sha256": "b37481316f30e6233bf94673a96c8b762799e581df9191ff1705451f9b9c2803"
+    },
+    {
+      "path": "packages/vercel-ai-provider/tests/unit/graph-lifecycle.test.ts",
+      "sha256": "7d7428eacf67c30ecd1d5f7ea5a0d09da753a0f8a12c5140e253826c1f0b61b0"
+    },
+    {
+      "path": "packages/vercel-ai-provider/tests/unit/index.test.ts",
+      "sha256": "7eaabae1d75ffbcbf7a026c65556a4734b1e90a2a1dedd27ab8848c2eee30a84"
+    },
+    {
+      "path": "packages/vercel-ai-provider/tests/unit/provider.test.ts",
+      "sha256": "b944c8769b3d4bf8c3a6ef6c4ab2e20b4bfe147faaac8b7737dfc9045b707d7b"
+    },
+    {
+      "path": "packages/vercel-ai-provider/tests/unit/server-credentials.test.ts",
+      "sha256": "a66f68a08d782e399419b7e3a4ec96ffabcb83509777c59f8a4fe8cba75e7342"
+    },
+    {
+      "path": "scripts/ci/runtime-environment.test.mjs",
+      "sha256": "8f816ced98ddd8bc14da507dc6334abb2593160584876f25243c636bb4e78c1c"
+    },
+    {
+      "path": "scripts/cleanup-test-data.ts",
+      "sha256": "f18dade728901c7c36c3c36e1e626798a5cfe6170bee833b1db5b07cc51ee5ea"
+    },
+    {
+      "path": "scripts/install-ci-demo.mjs",
+      "sha256": "7e034d03b9fe308740e06fb048a54af718de1782b9415c061ae9d39b7f5a489a"
+    },
+    {
+      "path": "scripts/install-ci-demo.test.mjs",
+      "sha256": "757fe258db454a3318d6924ee3074510ddc9148764d931e17ad6735e41f45845"
+    },
+    {
+      "path": "scripts/lib/ci-cleanup.ts",
+      "sha256": "e63fe80e73f89f3da02e0d8579ccbb4a0bde2a4f8686d8050ab43ee8d3f1447b"
+    },
+    {
+      "path": "scripts/prepare-ci-backend.mjs",
+      "sha256": "0afc8b957dcd2f99183a6cdc971390fd4b2f1ae16ae7b7facd31684ef3d6ebfe"
+    },
+    {
+      "path": "tests/agents.test.ts",
+      "sha256": "5f5a56b1b4532e724e7e33c7e0b4e1383b5464181c1f477b548818bb53528ded"
+    },
+    {
+      "path": "tests/helpers/backend-catalog.ts",
+      "sha256": "2e372a3b169f3aff7444a8ae2a92ea9e7c5c2ef466bc34bca2c2ab7f25ab052f"
+    },
+    {
+      "path": "tests/unit/artifacts/sdk.test.ts",
+      "sha256": "660e2af358d09db599c6445be560b764f37f34171349e3a05ffe6243b254eb33"
+    },
+    {
+      "path": "tests/unit/attachments/sdk.test.ts",
+      "sha256": "3480224804ffb07318516343571f93a863d6a68b7ea33992801e459ecb9eb9f3"
+    },
+    {
+      "path": "tests/unit/ci-cleanup.test.ts",
+      "sha256": "18834568ad3347f67e30aee4685e3d1b10642767907240c31c9f81e81afd5c21"
+    },
+    {
+      "path": "tests/unit/ci-reference-preparation.test.ts",
+      "sha256": "41654a06d365d2b2714b1f568712396036fcc5ce2db6e9ac669766479f355e80"
+    },
+    {
+      "path": "tests/unit/memory-observer.test.ts",
+      "sha256": "f70aa8fe6635cdf53b831ff20cae136a9fc3ae85b82fd4ba213f5c0c8a08d278"
+    },
+    {
+      "path": "tests/unit/runtime/model-policy-admission.test.ts",
+      "sha256": "cde39cbbfe6f1a999f6503c5e9b2c87e676c3e0c3f1192f7110e4650fd2e2db3"
+    },
+    {
+      "path": "tests/unit/runtimeArtifactAuth/inventory.test.ts",
+      "sha256": "04e1c53523babe33cac6010d36b93230d4bef46d3d012b53e8b08261e8618db5"
+    },
+    {
+      "path": "tests/unit/runtimeArtifactAuth/schema-indexes.test.ts",
+      "sha256": "58a15571b397b50f37fc7551ea4825b8efff7774f72a6d36e9ad1b4fcd29c6c0"
+    },
+    {
+      "path": "tests/unit/runtimeAssetUnavailableAuth/closure.test.ts",
+      "sha256": "429d1e6135841ee2074c40bcb209610ccab8384c41c2a2ef3bfe4fbafed40df0"
+    },
+    {
+      "path": "tests/unit/runtimeMetadataAuth/registrations.test.ts",
+      "sha256": "d584f33667af46223459ebf616c576e55f13cf82eccfc1ef9c25f9c96d0c8958"
+    },
+    {
+      "path": "tests/unit/runtimeRegistryAuth/catalog.test.ts",
+      "sha256": "bcf6020970a7c07335fbf5761febf0c42c5f0e19cf054d99828dd449104d116f"
+    },
+    {
+      "path": "tests/unit/runtimeUnavailableAuth/closure.test.ts",
+      "sha256": "da057ccdfbfed79cce5ede0de4ba306b23247fbab373fdecf1c9f6cd96be7201"
+    },
+    {
+      "path": "tests/unit/runtimeWorkerAuth/admin-catalog.test.ts",
+      "sha256": "5e0cdae81aa50806a938a1b385fd9f5076117c7f63c6dc39ea1c28ebb1d28c4f"
+    },
+    {
+      "path": "tests/users.test.ts",
+      "sha256": "0aba950f2aee7bbdde40dfa0e0a4353a5bd27139cde9b85d74ca54c0cc28d157"
+    }
+  ],
+  "providerBuildSnapshot": "provider-build-snapshot1.json",
+  "toolchain": {
+    "node": "24.15.0",
+    "npm": "12.2.0",
+    "pathPrefix": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin"
+  },
+  "observedChecks": [
+    {
+      "command": [
+        "npm",
+        "install",
+        "--package-lock-only",
+        "--ignore-scripts",
+        "--no-audit",
+        "--no-fund"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart",
+      "startUtc": "2026-10-09T06:52:59.424558+00:00",
+      "durationSeconds": 0.821,
+      "exitCode": 0,
+      "log": "canonical-lock1.log",
+      "normalChildExit": true,
+      "node": "24.15.0",
+      "npm": "12.2.0"
+    },
+    {
+      "command": [
+        "npm",
+        "ci",
+        "--ignore-scripts",
+        "--no-audit",
+        "--no-fund"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart",
+      "startUtc": "2026-10-09T06:53:06.063065+00:00",
+      "durationSeconds": 21.427,
+      "exitCode": 0,
+      "log": "canonical-install1.log",
+      "normalChildExit": true,
+      "node": "24.15.0",
+      "npm": "12.2.0"
+    },
+    {
+      "command": [
+        "node",
+        "--test",
+        "scripts/install-ci-demo.test.mjs"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "startUtc": "2026-10-09T07:12:02.805852+00:00",
+      "durationSeconds": 1.946,
+      "exitCode": 0,
+      "log": "ci-demo-install1.log",
+      "normalChildExit": true,
+      "node": "24.15.0",
+      "npm": "12.2.0"
+    },
+    {
+      "command": [
+        "npm",
+        "run",
+        "lint"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider",
+      "startUtc": "2026-10-09T07:17:47.048782+00:00",
+      "durationSeconds": 1.592,
+      "exitCode": 0,
+      "log": "provider-types2.log",
+      "normalChildExit": true,
+      "node": "24.15.0",
+      "npm": "12.2.0"
+    },
+    {
+      "command": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider",
+      "startUtc": "2026-10-09T07:18:50.403241+00:00",
+      "durationSeconds": 3.409,
+      "exitCode": 0,
+      "log": "provider-build2.log",
+      "normalChildExit": true,
+      "node": "24.15.0",
+      "npm": "12.2.0"
+    },
+    {
+      "command": [
+        "npm",
+        "run",
+        "test:unit",
+        "--",
+        "--runInBand",
+        "--forceExit=false",
+        "--watchman=false",
+        "--json",
+        "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-dev-integration1/provider-ci-author1/provider-unit1.json"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider",
+      "startUtc": "2026-10-09T07:17:47.039571+00:00",
+      "durationSeconds": 7.044,
+      "exitCode": 0,
+      "log": "provider-unit1.log",
+      "normalChildExit": true,
+      "node": "24.15.0",
+      "npm": "12.2.0",
+      "jest": {
+        "numTotalTestSuites": 11,
+        "numPassedTestSuites": 11,
+        "numFailedTestSuites": 0,
+        "numTotalTests": 286,
+        "numPassedTests": 286,
+        "numFailedTests": 0,
+        "numPendingTests": 0,
+        "success": true
+      }
+    },
+    {
+      "command": [
+        "npm",
+        "run",
+        "test:integration",
+        "--",
+        "--runInBand",
+        "--forceExit=false",
+        "--watchman=false",
+        "--json",
+        "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-dev-integration1/provider-ci-author1/provider-integration1.json"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider",
+      "startUtc": "2026-10-09T07:17:47.048509+00:00",
+      "durationSeconds": 6.291,
+      "exitCode": 0,
+      "log": "provider-integration1.log",
+      "normalChildExit": true,
+      "node": "24.15.0",
+      "npm": "12.2.0",
+      "jest": {
+        "numTotalTestSuites": 5,
+        "numPassedTestSuites": 5,
+        "numFailedTestSuites": 0,
+        "numTotalTests": 74,
+        "numPassedTests": 74,
+        "numFailedTests": 0,
+        "numPendingTests": 0,
+        "success": true
+      }
+    },
+    {
+      "command": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart",
+      "startUtc": "2026-10-09T07:12:03.950194+00:00",
+      "durationSeconds": 2.097,
+      "exitCode": 0,
+      "log": "canonical-types1.log",
+      "normalChildExit": true,
+      "node": "24.15.0",
+      "npm": "12.2.0"
+    },
+    {
+      "command": [
+        "npm",
+        "run",
+        "lint"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart",
+      "startUtc": "2026-10-09T07:12:05.153932+00:00",
+      "durationSeconds": 3.521,
+      "exitCode": 0,
+      "log": "canonical-lint1.log",
+      "normalChildExit": true,
+      "node": "24.15.0",
+      "npm": "12.2.0"
+    },
+    {
+      "command": [
+        "npm",
+        "test",
+        "--",
+        "--runInBand",
+        "--forceExit=false",
+        "--watchman=false",
+        "--json",
+        "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-dev-integration1/provider-ci-author1/canonical-tests2.json"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart",
+      "startUtc": "2026-10-09T07:14:51.010803+00:00",
+      "durationSeconds": 3.248,
+      "exitCode": 0,
+      "log": "canonical-tests2.log",
+      "normalChildExit": true,
+      "node": "24.15.0",
+      "npm": "12.2.0",
+      "jest": {
+        "numTotalTestSuites": 6,
+        "numPassedTestSuites": 6,
+        "numFailedTestSuites": 0,
+        "numTotalTests": 135,
+        "numPassedTests": 135,
+        "numFailedTests": 0,
+        "numPendingTests": 0,
+        "success": true
+      }
+    },
+    {
+      "command": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart",
+      "startUtc": "2026-10-09T07:14:51.010802+00:00",
+      "durationSeconds": 14.899,
+      "exitCode": 0,
+      "log": "canonical-build1.log",
+      "normalChildExit": true,
+      "node": "24.15.0",
+      "npm": "12.2.0"
+    },
+    {
+      "command": [
+        "node",
+        "--experimental-vm-modules",
+        "node_modules/jest/bin/jest.js",
+        "--runTestsByPath",
+        "tests/unit/artifacts/sdk.test.ts",
+        "tests/unit/attachments/sdk.test.ts",
+        "tests/unit/memory-observer.test.ts",
+        "tests/unit/runtime/model-policy-admission.test.ts",
+        "tests/unit/runtimeArtifactAuth/inventory.test.ts",
+        "tests/unit/runtimeArtifactAuth/schema-indexes.test.ts",
+        "tests/unit/runtimeAssetUnavailableAuth/closure.test.ts",
+        "tests/unit/runtimeRegistryAuth/catalog.test.ts",
+        "tests/unit/runtimeUnavailableAuth/closure.test.ts",
+        "tests/unit/runtimeWorkerAuth/admin-catalog.test.ts",
+        "tests/unit/runtimeMetadataAuth/registrations.test.ts",
+        "--runInBand",
+        "--forceExit=false",
+        "--watchman=false",
+        "--json",
+        "--outputFile=_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-dev-integration1/provider-ci-author1/affected-sdk-tests5.json"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "startUtc": "2026-10-09T07:18:50.403239+00:00",
+      "durationSeconds": 14.505,
+      "exitCode": 0,
+      "log": "affected-sdk-tests5.log",
+      "normalChildExit": true,
+      "node": "24.15.0",
+      "npm": "12.2.0",
+      "jest": {
+        "numTotalTestSuites": 11,
+        "numPassedTestSuites": 11,
+        "numFailedTestSuites": 0,
+        "numTotalTests": 1896,
+        "numPassedTests": 1896,
+        "numFailedTests": 0,
+        "numPendingTests": 0,
+        "success": true
+      }
+    },
+    {
+      "command": "node --test scripts/ci/*.test.mjs",
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exit": 0,
+      "tests": 40,
+      "passed": 40,
+      "skipped": 0,
+      "log": "ci-guards3.log",
+      "priorFailures": [
+        "ci-guards1: live CLI env conflict",
+        "ci-guards2: resolved CLI now correctly clears offline selectors; test amended with explicit shape-only runtime fixture without credentials/service effects"
+      ]
+    },
+    {
+      "command": "node --experimental-vm-modules node_modules/jest/bin/jest.js --runTestsByPath tests/unit/ci-cleanup.test.ts tests/unit/ci-reference-preparation.test.ts --runInBand --forceExit=false --json --outputFile=<author>/native-guards1.json",
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exit": 0,
+      "suites": 2,
+      "tests": 30,
+      "passed": 30,
+      "skipped": 0,
+      "log": "native-guards1.log",
+      "naturalClose": true
+    },
+    {
+      "command": "js-yaml load + TypeScript parse selected changed files + provider Jest import",
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exit": 0,
+      "workflowJobDefinitions": 13,
+      "providerProjects": 7,
+      "parseDiagnostics": 0,
+      "receipt": "source-parse1.json"
+    },
+    {
+      "command": "provider Jest --listTests --runInBand --json",
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider",
+      "exit": 0,
+      "discoveredFiles": 23,
+      "receipt": "provider-discovery1.json",
+      "warning": "Watchman recrawl only; no watcher reset performed"
+    }
+  ],
+  "currentPassingAssertions": {
+    "ciEnvironment": 40,
+    "nativeResetReferenceGuards": 30,
+    "ciArchiveInstallSelection": 9,
+    "providerUnitReactRemote": 286,
+    "providerControlledIntegration": 74,
+    "canonicalUnitIntegration": 135,
+    "affectedSdk": 1896
+  },
+  "preservedPriorFailures": [
+    "ci-guards1: live CLI env conflict",
+    "ci-guards2: offline fixture selector expectation",
+    "affected-sdk-tests1/2/3: compatibility routing, missing mock export, current managed filter additions/trivia, pagination fixture",
+    "canonical-tests1: genuine generated server bindings absent offline; resolved with transparent Jest-only official generic registration adapter"
+  ],
+  "sourceBehavior": {
+    "runtimeAppVersion": "1.3.0",
+    "sdkProviderVersion": "0.38.0",
+    "catalogOwnership": "CLI author creates new catalog1.2 runtime entry; immutable app1.2 payloads retained",
+    "modernProvider": "AI SDK7 remote submit/observe/reconnect/replay; no app inference loop",
+    "legacyProviderBoundary": "Explicit separate administrative server credentials or actual borrowed Cortex.deploymentOperator; ordinary/default factories and providers refuse before model/embed/extract/context/observer/RPC effects",
+    "ciBackendPreparation": "Explicit1.3 async full154-file distribution vs explicit immutable1.2 private legacy composer; no fallback",
+    "physicalReset": "Exact isolated-native owner+container+loopback only; SDK/CLI cloud cleanup exact retirement scopes",
+    "workflowJobDefinitions": 13,
+    "providerJestProjects": 7
+  },
+  "effects": {
+    "actualServiceCalls": 0,
+    "modelCalls": 0,
+    "deployment": 0,
+    "physicalReset": 0,
+    "cloudCleanup": 0,
+    "gitMutations": 0,
+    "dependencyInstall": "Only explicitly authorized canonical lock/ci slot and test-owned local npm/pnpm archive fixtures; lifecycle scripts disabled"
+  },
+  "remainingCoordinatorWork": [
+    "Full aggregate root type/lint/unit checks",
+    "Deliberate packed app1.3 catalog assembly/install/build by CLI author",
+    "Successor exact-source live CI/runtime/service/browser qualification and independent scope judgment as required by policy"
+  ],
+  "processClosure": "All owned check children exited naturally; no forced exit used, no shared process killed"
+}

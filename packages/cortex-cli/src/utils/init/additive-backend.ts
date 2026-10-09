@@ -21,7 +21,7 @@ export interface TrustedJwtProvider {
   algorithm: "RS256" | "ES256";
   applicationID: string;
 }
-export interface BackendInstallationOptions { trustedJwtProvider?: TrustedJwtProvider }
+export interface BackendInstallationOptions { trustedJwtProvider?: TrustedJwtProvider; prospectiveFiles?: ReadonlyMap<string, Buffer | null>; distributionFiles?: ReadonlyMap<string, Buffer> }
 export interface BackendFileChange { path: string; beforeSha256: string | null; content: string; reason: string }
 export interface BackendInstallationPlan {
   version: 1;
@@ -32,6 +32,7 @@ export interface BackendInstallationPlan {
   unchanged: string[];
   conflicts: { path: string; reason: string; proposedContent?: string; currentContent?: string }[];
   requiredDependencies: Record<string, string>;
+  observedFiles?: Record<string, string | null>;
   capabilities: { authConfigured: boolean; bootstrap: "trusted-operator-required"; execution: "task07-required" };
 }
 const digest = (text: string | Buffer) => createHash("sha256").update(text).digest("hex");
@@ -53,7 +54,7 @@ function bindingAvailable(ast: ts.SourceFile, name: string): boolean {
   const visit = (node: ts.Node) => { if (ts.isIdentifier(node) && node.text === name) found = true; ts.forEachChild(node, visit); };
   visit(ast); return !found;
 }
-function addSchema(text: string, tables: string[]): string {
+function addSchema(text: string, tables: string[], appTables?: string[]): string {
   const ast = parse("schema.ts", text);
   const exported = ast.statements.filter(ts.isExportAssignment);
   if (exported.length !== 1 || !ts.isCallExpression(exported[0].expression) || exported[0].expression.expression.getText(ast) !== "defineSchema" || !ts.isObjectLiteralExpression(exported[0].expression.arguments[0])) throw new Error("Schema is not an explicit default defineSchema({...}); review the proposed Cortex table-map import and merge.");
@@ -63,6 +64,11 @@ function addSchema(text: string, tables: string[]): string {
   for (const property of object.properties) {
     if (ts.isSpreadAssignment(property)) {
       if (cortexImport && property.expression.getText(ast) === "cortexTablesV1" && !managed) { managed = true; continue; }
+      if (appTables && property.expression.getText(ast) === "appSchema.tables"
+        && ast.statements.some(statement => ts.isImportDeclaration(statement) && ts.isStringLiteral(statement.moduleSpecifier) && statement.moduleSpecifier.text === "./app.schema" && statement.importClause?.name?.text === "appSchema")) {
+        if (appTables.some(name => tables.includes(name))) throw new Error("Host app table conflicts with Cortex table");
+        continue;
+      }
       throw new Error("An unrecognized schema spread can conceal a Cortex table collision; review and merge the explicit table maps.");
     }
     if (!property.name || !(ts.isIdentifier(property.name) || ts.isStringLiteral(property.name))) throw new Error("Computed schema table names require a reviewed merge.");
@@ -299,23 +305,38 @@ function addAuth(text: string, provider: TrustedJwtProvider): string {
 }
 export async function planAdditiveBackendInstallation(projectPath: string, sdkPath: string, options: BackendInstallationOptions = {}): Promise<BackendInstallationPlan> {
   const project = path.resolve(projectPath);
-  await fs.ensureDir(project);
   const sdk = path.resolve(sdkPath);
   const distribution = path.join(sdk, "dist/backend/v1");
-  const manifest: BackendDistributionManifest = await fs.readJson(path.join(distribution, "manifest.json"));
+  const distributionFile = async (name: string): Promise<string> => {
+    if (!safeRelative(name)) throw new Error("Unsafe backend distribution path.");
+    if (options.distributionFiles) {
+      const bytes = options.distributionFiles.get(name); if (!bytes) throw new Error(`Backend distribution missing: ${name}`);
+      return bytes.toString("utf8");
+    }
+    await rejectSymlinks(distribution, name);
+    return fs.readFile(path.join(distribution, name), "utf8");
+  };
+  const observedFiles: Record<string, string | null> = {};
+  const readProject = async (relative: string): Promise<string | null> => {
+    if (!safeRelative(relative)) throw new Error("Unsafe prospective project path.");
+    await rejectSymlinks(project, relative);
+    const content = options.prospectiveFiles?.has(relative) ? options.prospectiveFiles.get(relative)?.toString("utf8") ?? null : await readOptional(path.join(project, relative));
+    observedFiles[relative] = content === null ? null : digest(content);
+    return content;
+  };
+  const manifest: BackendDistributionManifest = JSON.parse(await distributionFile("manifest.json"));
   if (manifest.formatVersion !== 1 || !Array.isArray(manifest.files) || !Array.isArray(manifest.tables) || !Array.isArray(manifest.components) || !Array.isArray(manifest.httpRoutes) || !manifest.dependencies || !manifest.distributionId) throw new Error("Unsupported or incomplete Cortex backend distribution; rebuild/install the SDK package.");
-  const configText = await readOptional(path.join(project, "convex.json"));
+  const configText = await readProject("convex.json");
   const config: Record<string, unknown> = configText === null ? {} : JSON.parse(configText);
   if (!config || Array.isArray(config) || typeof config !== "object" || (config.functions !== undefined && typeof config.functions !== "string")) throw new Error("Invalid host convex.json; repair it before additive installation.");
   const functions = (config.functions as string | undefined) ?? "convex/";
   const normalized = functions.replace(/[\\/]$/, "");
   if (!safeRelative(normalized)) throw new Error("Convex functions directory must stay inside the explicit host project.");
   await rejectSymlinks(project, normalized);
-  const target = path.join(project, normalized);
-  const plan: BackendInstallationPlan = { version: 1, distributionId: manifest.distributionId, projectPath: project, functionsDirectory: functions, changes: [], unchanged: [], conflicts: [], requiredDependencies: { ...manifest.dependencies }, capabilities: { authConfigured: false, bootstrap: "trusted-operator-required", execution: "task07-required" } };
+  const plan: BackendInstallationPlan = { version: 1, distributionId: manifest.distributionId, projectPath: project, functionsDirectory: functions, changes: [], unchanged: [], conflicts: [], observedFiles, requiredDependencies: { ...manifest.dependencies }, capabilities: { authConfigured: false, bootstrap: "trusted-operator-required", execution: "task07-required" } };
   async function proposed(relative: string, content: string, reason: string, merge?: (current: string) => string) {
     await rejectSymlinks(project, relative);
-    const current = await readOptional(path.join(project, relative));
+    const current = await readProject(relative);
     if (current !== null && merge) {
       try { content = merge(current); } catch (error) { plan.conflicts.push({ path: relative, reason: (error as Error).message, proposedContent: content, currentContent: current }); return; }
     } else if (current !== null && current !== content) { plan.conflicts.push({ path: relative, reason: "Existing file differs from the selected versioned Cortex source; review a merge instead of overwriting it.", proposedContent: content, currentContent: current }); return; }
@@ -328,8 +349,7 @@ export async function planAdditiveBackendInstallation(projectPath: string, sdkPa
   for (const entry of manifest.files) {
     if (!safeRelative(entry.path) || seen.has(entry.path) || !/^[a-f0-9]{64}$/.test(entry.sha256)) throw new Error("Unsafe or duplicate backend distribution path.");
     seen.add(entry.path);
-    await rejectSymlinks(distribution, entry.path);
-    const content = await fs.readFile(path.join(distribution, entry.path), "utf8");
+    const content = await distributionFile(entry.path);
     if (digest(content) !== entry.sha256) throw new Error(`Backend distribution digest mismatch: ${entry.path}`);
     if (entry.path === "_cortex/components.config.ts") componentSource = content;
     if (entry.path === "_cortex/http.ts") httpSource = content;
@@ -337,7 +357,28 @@ export async function planAdditiveBackendInstallation(projectPath: string, sdkPa
   }
   if (!seen.has("_cortex/schema.ts") || !seen.has("_cortex/components.config.ts")) throw new Error("Backend distribution lacks additive schema/component helpers.");
   const registrations = componentRegistrations(componentSource, manifest.components);
-  await proposed(path.join(normalized, "schema.ts"), 'import { defineSchema } from "convex/server";\nimport { cortexTablesV1 } from "./_cortex/schema";\nexport default defineSchema({ ...cortexTablesV1 });\n', "add Cortex table map while preserving host tables and options", (current) => addSchema(current, manifest.tables));
+  // A recognized private app schema is inspected as data, never imported/executed.
+  const hostSchema = await readProject(path.join(normalized, "schema.ts"));
+  let usesAppSchema = false;
+  if (hostSchema !== null) {
+    const ast = parse("schema.ts", hostSchema);
+    const visit = (node: ts.Node) => { if (ts.isSpreadAssignment(node) && node.expression.getText(ast) === "appSchema.tables") usesAppSchema = true; ts.forEachChild(node, visit); };
+    visit(ast);
+  }
+  const appSource = usesAppSchema ? await readProject(path.join(normalized, "app.schema.ts")) : null;
+  if (usesAppSchema && appSource === null) throw new Error("Private app schema source is required for additive composition");
+  let appTables: string[] | undefined;
+  if (appSource !== null) {
+    const ast = parse("app.schema.ts", appSource), exports = ast.statements.filter(ts.isExportAssignment);
+    if (exports.length !== 1 || !ts.isCallExpression(exports[0].expression) || exports[0].expression.expression.getText(ast) !== "defineSchema" || !ts.isObjectLiteralExpression(exports[0].expression.arguments[0])) throw new Error("Private app schema needs an explicit table map for additive composition");
+    appTables = exports[0].expression.arguments[0].properties.map(property => {
+      if (!ts.isPropertyAssignment(property) || !(ts.isIdentifier(property.name) || ts.isStringLiteral(property.name))) throw new Error("Dynamic app schema tables require a reviewed merge");
+      return property.name.text;
+    });
+    if (new Set(appTables).size !== appTables.length) throw new Error("Duplicate private app table");
+  }
+
+  await proposed(path.join(normalized, "schema.ts"), 'import { defineSchema } from "convex/server";\nimport { cortexTablesV1 } from "./_cortex/schema";\nexport default defineSchema({ ...cortexTablesV1 });\n', "add Cortex table map while preserving host tables and options", (current) => addSchema(current, manifest.tables, appTables));
   await proposed(path.join(normalized, "convex.config.ts"), addComponents('import { defineApp } from "convex/server";\nconst app = defineApp();\nexport default app;\n', registrations), "register qualified Cortex components with direct root imports alongside host components", (current) => addComponents(current, registrations));
   if (manifest.httpRoutes.length && !seen.has("_cortex/http.ts")) throw new Error("Backend distribution lacks the digest-bound HTTP helper.");
   if (seen.has("_cortex/http.ts")) {
@@ -354,7 +395,7 @@ export async function planAdditiveBackendInstallation(projectPath: string, sdkPa
     validateProvider(options.trustedJwtProvider);
     await proposed(authPath, `import type { AuthConfig } from "convex/server";\nexport default { providers: [${JSON.stringify(options.trustedJwtProvider)}] } satisfies AuthConfig;\n`, "integrate explicitly selected verified JWT provider", (current) => addAuth(current, options.trustedJwtProvider!));
     plan.capabilities.authConfigured = !plan.conflicts.some((entry) => entry.path === authPath);
-  } else plan.capabilities.authConfigured = (await readOptional(path.join(target, "auth.config.ts"))) !== null;
+  } else plan.capabilities.authConfigured = (await readProject(path.join(normalized, "auth.config.ts"))) !== null;
   // An empty route manifest retains the historical no-HTTP installation behavior.
   return plan;
 }
@@ -369,6 +410,12 @@ export async function applyAdditiveBackendInstallation(plan: BackendInstallation
     const proposal = path.join(plan.projectPath, `cortex-backend-merge-proposal-${digest(JSON.stringify(plan)).slice(0, 12)}.json`);
     await fs.writeFile(proposal, JSON.stringify({ ...plan, changes: plan.changes.map((entry) => ({ ...entry, content: entry.content })) }, null, 2) + "\n", { flag: "wx" }).catch((error: { code?: string }) => { if (error.code !== "EEXIST") throw error; });
     throw new BackendMergeRequiredError(proposal, plan.conflicts);
+  }
+  for (const [relative, hash] of Object.entries(plan.observedFiles ?? {})) {
+    if (!safeRelative(relative)) throw new Error("Unsafe observed installation path.");
+    await rejectSymlinks(plan.projectPath, relative);
+    const current = await readOptional(path.join(plan.projectPath, relative));
+    if ((current === null ? null : digest(current)) !== hash) throw new Error(`Host file changed after installation planning: ${relative}; replan and review.`);
   }
   // Validate every preimage before the first write. A partial interrupted install is retried
   // by replanning: already-identical versioned files are retained, conflicting edits stop it.

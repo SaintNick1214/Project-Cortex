@@ -1,10 +1,10 @@
 import { afterEach, describe, expect, it, jest } from "@jest/globals";
 import { ConvexClient } from "convex/browser";
+import { getFunctionName } from "convex/server";
 import { ArtifactsAPI } from "../../../src/artifacts";
 import { AttachmentsAPI } from "../../../src/attachments";
 import { AssetCapabilityUnavailableError } from "../../../src/assets/errors";
 import { ResilienceLayer } from "../../../src/resilience";
-import { api } from "../../../convex-dev/_generated/api";
 
 const methods = ["artifact-upload", "artifact-url", "attachment-upload-url", "attachment-url"] as const;
 describe.each(["absent", "disabled", "enabled"] as const)("asset safety bridge resilience=%s", (mode) => {
@@ -78,8 +78,10 @@ describe.each(["absent", "disabled", "enabled"] as const)("asset safety bridge r
     await expect(new AttachmentsAPI(client, layer, auth).get("attach-abc123")).resolves.toBeNull();
     expect(query).not.toHaveBeenCalled();
     expect(mutation).toHaveBeenCalledTimes(2);
-    expect(mutation).toHaveBeenNthCalledWith(1, api.artifacts.get, { artifactId: "art-abc123", tenantId: "tenant-a" });
-    expect(mutation).toHaveBeenNthCalledWith(2, api.attachments.get, { attachmentId: "attach-abc123", tenantId: "tenant-a" });
+    expect(mutation.mock.calls.map(([reference, args]) => [getFunctionName(reference), args])).toEqual([
+      ["artifacts:get", { artifactId: "art-abc123", tenantId: "tenant-a" }],
+      ["attachments:get", { attachmentId: "attach-abc123", tenantId: "tenant-a" }],
+    ]);
     expect(execute.mock.calls.map((call) => call[1])).toEqual(mode === "absent" ? [] : ["artifacts:get", "attachments:get"]);
   });
 });

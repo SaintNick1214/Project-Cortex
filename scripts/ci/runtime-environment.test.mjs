@@ -19,6 +19,10 @@ for (const [file, cli] of [["tests/env.ts", false], ["packages/cortex-cli/tests/
         env: { ...process.env, CI: "true", CORTEX_TEST_ENV_MODE: "explicit", CONVEX_TEST_MODE: "managed",
           CONVEX_URL: "https://owned-sdk-123.convex.cloud", CONVEX_URL_CLI: cli ? expected : "",
           CLOUD_CONVEX_URL: "https://foreign-cloud.convex.cloud", LOCAL_CONVEX_URL: "http://127.0.0.1:3210",
+          // The CLI now deliberately clears offline ambient deployment values.
+          // An explicit runtime consumer must select its exact scoped fixture.
+          ...(cli ? { CORTEX_TEST_FIXTURE: JSON.stringify({ version: 1, kind: "cli", deploymentUrl: expected }),
+            CORTEX_TEST_AUTH_TOKEN: "shape-only-offline-fixture-token" } : { CORTEX_TEST_FIXTURE: "" }),
           NEO4J_URI: "", MEMGRAPH_URI: "", GRAPH_TESTING_ENABLED: "false" },
       });
       assert.deepEqual(JSON.parse(result.trim().split("\n").at(-1)), { url: expected });

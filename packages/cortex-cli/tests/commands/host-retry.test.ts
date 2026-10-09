@@ -27,8 +27,9 @@ class ComposedCortex {
   }
   getClient() { return this.port; }
   close() { this.resilience.stopQueueProcessor(); }
+  async shutdown() { this.close(); }
 }
-jest.unstable_mockModule("@cortexmemory/sdk", () => ({ Cortex: ComposedCortex }));
+jest.unstable_mockModule("@cortexmemory/sdk", () => ({ createAuthContext: (value: unknown) => value, Cortex: ComposedCortex }));
 jest.unstable_mockModule("convex/browser", () => ({ ConvexHttpClient: class {
   setAuth() {}
   async mutation() {
@@ -37,7 +38,7 @@ jest.unstable_mockModule("convex/browser", () => ({ ConvexHttpClient: class {
   }
 } }));
 const { withClient, closeClient, configureClientOptions } = await import("../../src/utils/client.js");
-afterEach(() => { closeClient(); for (const client of owned.splice(0)) client.close(); delete process.env.CORTEX_AUTH_TOKEN; });
+afterEach(async () => { await closeClient(); for (const client of owned.splice(0)) client.close(); delete process.env.CORTEX_AUTH_TOKEN; });
 it("never retries a committed retained user version after uncertain post-effect session delivery", async () => {
   effects = 0; failureDelivered = false; configureClientOptions({}); process.env.CORTEX_AUTH_TOKEN = "a.b.c";
   const config = { deployments: { test: { url: "https://fixture.convex.cloud" } }, default: "test", format: "json" as const, confirmDangerous: true };

@@ -96,3 +96,20 @@ application can connect its existing auth UI to the same client callback.
 Build, lint and affected route/client checks are local quality checks. Actual
 chat, managed retrieval, isolation, refresh, reconnect and approval outcomes
 require a verified disposable backend and are recorded separately from mocks.
+
+## Application catalog and private app modules
+
+This is the canonical development source. The independently versioned application
+catalog retains immutable published payloads and uses deliberate assembly for a new
+application candidate. CLI build does not copy this source into an older mirror.
+SDK/backend updates and application updates are separate ownership channels; review
+an explicit application update for edited host files.
+
+Incoming private account/session, history and library modules remain in the source
+with their server-only administrator transport, fixed internal operation allowlist
+and session scope checks. Their controlled compatibility tests do not qualify a
+backend runtime turn. The home page and ordinary chat entry points use the remote
+client described above, with host-issued identity and no app-side inference key.
+The composed runtime backend retains guarded public registrations separately from
+the private app module aliases; do not expose internal legacy app handlers to make
+a remote runtime endpoint callable.

@@ -2,7 +2,7 @@
  * Config Utilities Tests
  */
 
-import { describe, it, expect, beforeEach, afterEach } from "@jest/globals";
+import { describe, it, expect } from "@jest/globals";
 import {
   getDeployment,
   resolveConfig,
@@ -134,24 +134,6 @@ describe("config utilities", () => {
       expect(local?.hasKey).toBe(false);
       expect(staging?.hasKey).toBe(true);
     });
-  });
-});
-
-describe("environment variable overrides", () => {
-  const originalEnv = process.env;
-
-  beforeEach(() => {
-    process.env = { ...originalEnv };
-  });
-
-  afterEach(() => {
-    process.env = originalEnv;
-  });
-
-  it("should be tested in integration tests with actual config loading", () => {
-    // Environment overrides are applied during loadConfig()
-    // These should be tested in integration tests
-    expect(true).toBe(true);
   });
 });
 

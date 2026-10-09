@@ -2513,7 +2513,7 @@ async function testVectorDeleteMany() {
   });
 
   console.log(`✅ Deleted ${result.deleted} memories`);
-  console.log(`   Memory IDs: ${result.memoryIds.slice(0, 3).join(", ")}...`);
+  console.log(`   Memory IDs: ${result.memoryIds?.slice(0, 3).join(", ") ?? "[IDs withheld by server]"}...`);
   console.log();
 }
 

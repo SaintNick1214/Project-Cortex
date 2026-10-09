@@ -1,3 +1,7 @@
+import { readBackend } from "../common/backendRead";
+import type { FunctionReference, FunctionArgs, FunctionReturnType } from "convex/server";
+import { writeGraphMutation, type GraphPrimary } from "../graph/erasure";
+import type { GraphSyncPolicy } from "../graph/types";
 /**
  * Cortex SDK - Artifacts API
  *
@@ -11,10 +15,11 @@
  * - Graph database integration
  */
 
+import { isDeploymentOperatorClient } from "../common/deploymentOperator";
 import { AssetCapabilityUnavailableError } from "../assets/errors";
 import { resolveTenantId } from "../auth/tenant";
 import type { ConvexClient } from "convex/browser";
-import { api } from "../../convex-dev/_generated/api";
+import { api } from "../common/backendApi";
 import type {
   Artifact,
   ArtifactVersion,
@@ -60,7 +65,16 @@ export class ArtifactsAPI {
     private readonly graphAdapter?: GraphAdapter,
     private readonly resilience?: ResilienceLayer,
     private readonly authContext?: AuthContext,
+    private readonly graphSyncPolicy?: GraphSyncPolicy,
   ) {}
+  private mutateGraph<M extends FunctionReference<"mutation", "public">>(reference: M, args: FunctionArgs<M>, explicit?: boolean): Promise<GraphPrimary<FunctionReturnType<M>>> {
+    return writeGraphMutation(this.client, this.graphAdapter, this.graphSyncPolicy, reference, args, explicit);
+  }
+  private executeGraphWrite<T>(operation: () => Promise<T>, name: string, explicit?: boolean): Promise<T> {
+    // A configured graph writer has one primary application invocation; delivery retries are separate.
+    return this.graphAdapter && explicit !== false ? operation() : this.executeWithResilience(operation, name);
+  }
+
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // Private Helpers
@@ -102,78 +116,17 @@ export class ArtifactsAPI {
   /**
    * Sync artifact to graph database (if configured)
    */
-  private async syncToGraph(artifact: Artifact): Promise<void> {
-    if (!this.graphAdapter) return;
-
-    try {
-      await this.graphAdapter.createNode({
-        label: "Artifact",
-        properties: {
-          artifactId: artifact.artifactId,
-          title: artifact.title,
-          kind: artifact.kind,
-          streamingState: artifact.streamingState,
-          version: artifact.version,
-          memorySpaceId: artifact.memorySpaceId,
-          userId: artifact.userId,
-          agentId: artifact.agentId,
-          createdAt: artifact.createdAt,
-          updatedAt: artifact.updatedAt,
-        },
-      });
-
-      // Create edges (relationships) if references exist
-      if (artifact.conversationRef?.conversationId) {
-        await this.graphAdapter.createEdge({
-          from: artifact.artifactId,
-          to: artifact.conversationRef.conversationId,
-          type: "DERIVED_FROM",
-        });
-      }
-
-      if (artifact.memoryRefs && artifact.memoryRefs.length > 0) {
-        for (const memRef of artifact.memoryRefs) {
-          await this.graphAdapter.createEdge({
-            from: artifact.artifactId,
-            to: memRef.memoryId,
-            type: "DERIVED_FROM",
-            properties: { relevance: memRef.relevance },
-          });
-        }
-      }
-    } catch (error) {
-      console.warn("Failed to sync artifact to graph:", error);
-    }
-  }
+  
 
   /**
    * Update artifact in graph database
    */
-  private async updateInGraph(
-    artifactId: string,
-    properties: Record<string, unknown>,
-  ): Promise<void> {
-    if (!this.graphAdapter) return;
-
-    try {
-      await this.graphAdapter.updateNode(artifactId, properties);
-    } catch (error) {
-      console.warn("Failed to update artifact in graph:", error);
-    }
-  }
+  
 
   /**
    * Delete artifact from graph database
    */
-  private async deleteFromGraph(artifactId: string): Promise<void> {
-    if (!this.graphAdapter) return;
-
-    try {
-      await this.graphAdapter.deleteNode(artifactId, true);
-    } catch (error) {
-      console.warn("Failed to delete artifact from graph:", error);
-    }
-  }
+  
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // Core CRUD Operations
@@ -198,9 +151,9 @@ export class ArtifactsAPI {
     // Client-side validation
     validateCreateOptions(options);
 
-    const result = await this.executeWithResilience(
+    const result = await this.executeGraphWrite(
       () =>
-        this.client.mutation(api.artifacts.create, {
+        this.mutateGraph(api.artifacts.create, {
           memorySpaceId: options.memorySpaceId,
           title: options.title,
           content: options.content,
@@ -216,14 +169,14 @@ export class ArtifactsAPI {
           conversationRef: options.conversationRef,
           language: options.kindConfig?.language,
           mimeType: options.kindConfig?.mimeType,
-        }),
-      "artifacts:create",
+        }, options?.syncToGraph),
+      "artifacts:create", options?.syncToGraph,
     );
 
     const artifact = result as Artifact;
 
     // Sync to graph
-    await this.syncToGraph(artifact);
+    
 
     return artifact;
   }
@@ -246,7 +199,7 @@ export class ArtifactsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.mutation(api.artifacts.get, {
+        readBackend(this.client, api.artifacts.get, {
           artifactId,
           tenantId: this.authContext?.tenantId,
         }),
@@ -284,9 +237,9 @@ export class ArtifactsAPI {
     }
 
     try {
-      const result = await this.executeWithResilience(
+      const result = await this.executeGraphWrite(
         () =>
-          this.client.mutation(api.artifacts.update, {
+          this.mutateGraph(api.artifacts.update, {
             artifactId,
             content,
             tenantId: this.authContext?.tenantId,
@@ -294,17 +247,14 @@ export class ArtifactsAPI {
             metadata: options?.metadata,
             tags: options?.tags,
             changeSummary: options?.changeSummary,
-          }),
-        "artifacts:update",
+          }, options?.syncToGraph),
+        "artifacts:update", options?.syncToGraph,
       );
 
       const artifact = result as Artifact;
 
       // Update graph with new version info
-      await this.updateInGraph(artifactId, {
-        version: artifact.version,
-        updatedAt: artifact.updatedAt,
-      });
+      
 
       return artifact;
     } catch (error) {
@@ -333,9 +283,9 @@ export class ArtifactsAPI {
     validateArtifactIdFormat(artifactId);
 
     try {
-      const result = await this.executeWithResilience(
+      const result = await this.executeGraphWrite(
         () =>
-          this.client.mutation(api.artifacts.deleteArtifact, {
+          this.mutateGraph(api.artifacts.deleteArtifact, {
             artifactId,
             tenantId: this.authContext?.tenantId,
             hard,
@@ -345,9 +295,9 @@ export class ArtifactsAPI {
 
       // Remove from graph if hard delete
       if (hard) {
-        await this.deleteFromGraph(artifactId);
+        
       } else {
-        await this.updateInGraph(artifactId, { isDeleted: true });
+        
       }
 
       return result as DeleteArtifactResult;
@@ -377,7 +327,7 @@ export class ArtifactsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.mutation(api.artifacts.list, {
+        readBackend(this.client, api.artifacts.list, {
           memorySpaceId: filter.memorySpaceId,
           tenantId: resolveTenantId(this.authContext?.tenantId, filter.tenantId),
           userId: filter.userId,
@@ -420,7 +370,7 @@ export class ArtifactsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.mutation(api.artifacts.count, {
+        readBackend(this.client, api.artifacts.count, {
           memorySpaceId: filter.memorySpaceId,
           tenantId: resolveTenantId(this.authContext?.tenantId, filter.tenantId),
           userId: filter.userId,
@@ -472,9 +422,9 @@ export class ArtifactsAPI {
     validateArtifactIdFormat(artifactId);
 
     try {
-      const result = await this.executeWithResilience(
+      const result = await this.executeGraphWrite(
         () =>
-          this.client.mutation(api.artifacts.undo, {
+          this.mutateGraph(api.artifacts.undo, {
             artifactId,
             tenantId: this.authContext?.tenantId,
           }),
@@ -525,9 +475,9 @@ export class ArtifactsAPI {
     validateArtifactIdFormat(artifactId);
 
     try {
-      const result = await this.executeWithResilience(
+      const result = await this.executeGraphWrite(
         () =>
-          this.client.mutation(api.artifacts.redo, {
+          this.mutateGraph(api.artifacts.redo, {
             artifactId,
             tenantId: this.authContext?.tenantId,
           }),
@@ -571,7 +521,7 @@ export class ArtifactsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.mutation(api.artifacts.getHistory, {
+        readBackend(this.client, api.artifacts.getHistory, {
           artifactId,
           tenantId: this.authContext?.tenantId,
           limit: options?.limit,
@@ -605,7 +555,7 @@ export class ArtifactsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.mutation(api.artifacts.getVersion, {
+        readBackend(this.client, api.artifacts.getVersion, {
           artifactId,
           version,
           tenantId: this.authContext?.tenantId,
@@ -652,9 +602,9 @@ export class ArtifactsAPI {
     validateStartStreamingParams(params);
 
     try {
-      const result = await this.executeWithResilience(
+      const result = await this.executeGraphWrite(
         () =>
-          this.client.mutation(api.artifacts.startStreaming, {
+          this.mutateGraph(api.artifacts.startStreaming, {
             artifactId: params.artifactId,
             tenantId: this.authContext?.tenantId,
           }),
@@ -701,9 +651,9 @@ export class ArtifactsAPI {
     validateAppendContentParams(params);
 
     try {
-      const result = await this.executeWithResilience(
+      const result = await this.executeGraphWrite(
         () =>
-          this.client.mutation(api.artifacts.appendContent, {
+          this.mutateGraph(api.artifacts.appendContent, {
             artifactId: params.artifactId,
             sessionId: params.sessionId,
             chunk: params.chunk,
@@ -749,9 +699,9 @@ export class ArtifactsAPI {
     validateSessionId(params.sessionId);
 
     try {
-      const result = await this.executeWithResilience(
+      const result = await this.executeGraphWrite(
         () =>
-          this.client.mutation(api.artifacts.pauseStreaming, {
+          this.mutateGraph(api.artifacts.pauseStreaming, {
             artifactId: params.artifactId,
             sessionId: params.sessionId,
             tenantId: this.authContext?.tenantId,
@@ -794,9 +744,9 @@ export class ArtifactsAPI {
     validateSessionId(params.sessionId);
 
     try {
-      const result = await this.executeWithResilience(
+      const result = await this.executeGraphWrite(
         () =>
-          this.client.mutation(api.artifacts.resumeStreaming, {
+          this.mutateGraph(api.artifacts.resumeStreaming, {
             artifactId: params.artifactId,
             sessionId: params.sessionId,
             tenantId: this.authContext?.tenantId,
@@ -840,9 +790,9 @@ export class ArtifactsAPI {
     validateSessionId(params.sessionId);
 
     try {
-      const result = await this.executeWithResilience(
+      const result = await this.executeGraphWrite(
         () =>
-          this.client.mutation(api.artifacts.cancelStreaming, {
+          this.mutateGraph(api.artifacts.cancelStreaming, {
             artifactId: params.artifactId,
             sessionId: params.sessionId,
             tenantId: this.authContext?.tenantId,
@@ -901,9 +851,9 @@ export class ArtifactsAPI {
     validateSessionId(params.sessionId);
 
     try {
-      const result = await this.executeWithResilience(
+      const result = await this.executeGraphWrite(
         () =>
-          this.client.mutation(api.artifacts.finalizeStreaming, {
+          this.mutateGraph(api.artifacts.finalizeStreaming, {
             artifactId: params.artifactId,
             sessionId: params.sessionId,
             changeSummary: params.changeSummary,
@@ -927,11 +877,7 @@ export class ArtifactsAPI {
       };
 
       // Update graph with final state
-      await this.updateInGraph(params.artifactId, {
-        streamingState: "final",
-        version: finalizeResult.version,
-        updatedAt: finalizeResult.finalizedAt,
-      });
+      
 
       return finalizeResult;
     } catch (error) {
@@ -972,9 +918,9 @@ export class ArtifactsAPI {
     validateStreamingState(streamingState);
 
     try {
-      const result = await this.executeWithResilience(
+      const result = await this.executeGraphWrite(
         () =>
-          this.client.mutation(api.artifacts.setStreamingState, {
+          this.mutateGraph(api.artifacts.setStreamingState, {
             artifactId,
             streamingState,
             tenantId: this.authContext?.tenantId,
@@ -991,7 +937,7 @@ export class ArtifactsAPI {
       };
 
       // Update graph with new state
-      await this.updateInGraph(artifactId, { streamingState });
+      
 
       return stateResult;
     } catch (error) {
@@ -1030,8 +976,68 @@ export class ArtifactsAPI {
     version: number;
     updatedAt: number;
   }> {
-    void params;
-    throw new AssetCapabilityUnavailableError();
+    if (!isDeploymentOperatorClient(this.client)) throw new AssetCapabilityUnavailableError();
+    // Client-side validation
+    validateArtifactId(params.artifactId);
+    validateArtifactIdFormat(params.artifactId);
+
+    try {
+      // Step 1: Generate upload URL
+      const { uploadUrl } = await this.executeGraphWrite(
+        () =>
+          this.mutateGraph(api.artifacts.generateArtifactUploadUrl, {
+            artifactId: params.artifactId,
+            mimeType: params.mimeType,
+            filename: params.filename,
+            tenantId: this.authContext?.tenantId,
+          }),
+        "artifacts:generateUploadUrl",
+      );
+
+      // Step 2: Upload the file
+      const response = await fetch(uploadUrl as string, {
+        method: "POST",
+        headers: { "Content-Type": params.mimeType },
+        body: params.file,
+      });
+
+      if (!response.ok) {
+        throw new Error(`File upload failed: ${response.statusText}`);
+      }
+
+      // Get the storageId from the response
+      const { storageId } = (await response.json()) as { storageId: string };
+
+      // Step 3: Complete the upload with file reference
+      const result = await this.executeGraphWrite(
+        () =>
+          this.mutateGraph(api.artifacts.completeArtifactUpload, {
+            artifactId: params.artifactId,
+            storageId: storageId as unknown as import("convex/values").GenericId<"_storage">,
+            mimeType: params.mimeType,
+            size: params.file.size,
+            originalFilename: params.filename,
+            tenantId: this.authContext?.tenantId,
+          }),
+        "artifacts:completeUpload",
+      );
+
+      return result as {
+        success: boolean;
+        artifactId: string;
+        fileRef: {
+          storageId: string;
+          mimeType: string;
+          size: number;
+          checksum?: string;
+          originalFilename?: string;
+        };
+        version: number;
+        updatedAt: number;
+      };
+    } catch (error) {
+      this.handleConvexError(error);
+    }
   }
 
   /**
@@ -1043,8 +1049,22 @@ export class ArtifactsAPI {
    * @throws AssetCapabilityUnavailableError with CAPABILITY_UNAVAILABLE
    */
   async getFileUrl(artifactId: string): Promise<string | null> {
-    void artifactId;
-    throw new AssetCapabilityUnavailableError();
+    if (!isDeploymentOperatorClient(this.client)) throw new AssetCapabilityUnavailableError();
+    // Client-side validation
+    validateArtifactId(artifactId);
+    validateArtifactIdFormat(artifactId);
+
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.query(api.artifacts.getArtifactFileUrl, {
+          artifactId,
+          tenantId: this.authContext?.tenantId,
+        }),
+      "artifacts:getFileUrl",
+    );
+
+    const fileResult = result as { url: string } | null;
+    return fileResult?.url ?? null;
   }
 
   /**
@@ -1073,7 +1093,9 @@ export class ArtifactsAPI {
       size: number;
       originalFilename?: string;
     };
+    /** True only when bytes were removed; retained versions may protect them. */
     fileDeleted: boolean;
+    binaryDisposition?: "deleted" | "protected" | "missing";
     version: number;
     updatedAt: number;
   }> {
@@ -1082,9 +1104,9 @@ export class ArtifactsAPI {
     validateArtifactIdFormat(artifactId);
 
     try {
-      const result = await this.executeWithResilience(
+      const result = await this.executeGraphWrite(
         () =>
-          this.client.mutation(api.artifacts.detachFile, {
+          this.mutateGraph(api.artifacts.detachFile, {
             artifactId,
             deleteFile,
             tenantId: this.authContext?.tenantId,
@@ -1101,7 +1123,9 @@ export class ArtifactsAPI {
           size: number;
           originalFilename?: string;
         };
-        fileDeleted: boolean;
+        /** True only when bytes were removed; retained versions may protect them. */
+    fileDeleted: boolean;
+    binaryDisposition?: "deleted" | "protected" | "missing";
         version: number;
         updatedAt: number;
       };

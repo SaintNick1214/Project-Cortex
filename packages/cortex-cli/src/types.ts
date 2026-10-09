@@ -16,13 +16,14 @@ export type AppType = "basic" | "vercel-ai-quickstart" | "chat-sdk";
  * Configuration for an installed template app
  */
 export interface AppConfig {
+  [field: string]: unknown;
   /** Type of template app */
   type: AppType;
   /** Relative path from project root (e.g., "quickstart") */
   path: string;
   /** Absolute path to the project root where this app was installed */
   projectPath: string;
-  /** Whether this app should be started with `cortex start` */
+  /** Legacy supervisor preference preserved for compatibility */
   enabled: boolean;
   /** Port for the dev server (default varies by app type) */
   port?: number;
@@ -34,6 +35,7 @@ export interface AppConfig {
  * CLI configuration stored in ~/.cortexrc or ./cortex.config.json
  */
 export interface CLIConfig {
+  [field: string]: unknown;
   deployments: Record<string, DeploymentConfig>;
   /** Installed template apps (e.g., vercel-ai-quickstart) */
   apps?: Record<string, AppConfig>;
@@ -45,7 +47,15 @@ export interface CLIConfig {
 /**
  * Configuration for a single deployment
  */
+/** Data-only declaration matched against private admission metadata; never endpoint/runtime proof. */
+export interface RestoreRuntimeAdmissionReference {
+  version: 1;
+  sessionId: string;
+  ownerEpoch: string;
+  bindingDigest: string;
+}
 export interface DeploymentConfig {
+  [field: string]: unknown;
   url: string;
   key?: string;
   /** Public-client selectors and credential locations, never credentials. */
@@ -54,14 +64,15 @@ export interface DeploymentConfig {
   tokenEnv?: string;
   tokenFile?: string;
   deployment?: string;
+  restoreRuntime?: RestoreRuntimeAdmissionReference;
   /**
    * Path to the project directory for this deployment.
-   * Allows running `cortex start -d <name>` from anywhere.
+   * Preserved for project-aware operations.
    * Not needed for remote-only deployments (e.g., Vercel).
    */
   projectPath?: string;
   /**
-   * Whether this deployment should be started with `cortex start`.
+   * Legacy supervisor preference preserved for compatibility.
    * Defaults to true for the default deployment, false for others.
    */
   enabled?: boolean;
@@ -71,6 +82,9 @@ export interface DeploymentConfig {
  * Global CLI options that can be passed to any command
  */
 export interface GlobalOptions {
+  scopeUser?: string;
+  tenant?: string;
+  graphSync?: "auto" | "off" | "required";
   deployment?: string;
   url?: string;
   key?: string;
@@ -227,18 +241,23 @@ export interface ValidationOptions {
 }
 
 /**
- * Result of config validation and cleanup
+ * Result of observational config validation
  */
 export interface ValidationResult {
-  /** The validated (and possibly modified) config */
+  diagnostics: Array<{
+    name: string;
+    kind: "stale_path" | "auth_error" | "network_error" | "timeout";
+    message: string;
+  }>;
+  /** The original configuration, preserved without modification */
   config: CLIConfig;
-  /** Whether the config was modified during validation */
+  /** Compatibility field: always false for observational validation */
   modified: boolean;
-  /** Items that were removed during validation */
+  /** Compatibility field: always empty; validation never removes entries */
   removed: {
-    /** Deployment names that were removed */
+    /** No deployment names are removed */
     deployments: string[];
-    /** App names that were removed */
+    /** No app names are removed */
     apps: string[];
   };
 }

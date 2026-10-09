@@ -14,9 +14,9 @@
  */
 
 import { describe, it, expect, beforeAll, afterAll } from "@jest/globals";
-import { Cortex } from "../src";
+import { Cortex } from "./helpers/deployment-operator";
 import type { StoreFactParams, UpdateFactInput, SemanticSearchFactsOptions } from "../src";
-import { ConvexClient } from "convex/browser";
+import { ConvexClient } from "./helpers/deployment-operator";
 import { createNamedTestRunContext, ScopedCleanup } from "./helpers";
 
 describe("Semantic Search for Facts", () => {

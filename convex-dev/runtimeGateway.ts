@@ -246,6 +246,14 @@ export function createAgentGatewayCancellationBridge(model: LanguageModelV4, lif
     // capability or selection in that exact empty case; other choices stay gated.
     if (native.tools === undefined && native.toolChoice !== undefined
       && canonicalModelJson(native.toolChoice) === '{"type":"auto"}') delete native.toolChoice;
+    // Pinned AI SDK7 generateText adds this transport-only default even when
+    // the Agent supplied no headers. Strip only that exact descriptor here;
+    // the governed model still rejects every caller header/provider option.
+    if (native.headers !== undefined) {
+      const headers = record(native.headers, ["user-agent"]);
+      if (canonicalModelJson(headers) !== '{"user-agent":"ai/7.0.127"}') fail("UNSUPPORTED_NATIVE_FIELD");
+      delete native.headers;
+    }
     if (signal !== undefined && signal !== lifecycle.signal) {
       if (!(signal instanceof AbortSignal)) fail("UNTRUSTED_ABORT_SIGNAL");
       if (!listeners.has(signal)) { const abort = () => lifecycle.cancel(); listeners.set(signal, abort); signal.addEventListener("abort", abort, { once: true }); }

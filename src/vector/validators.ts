@@ -31,7 +31,7 @@ export class VectorValidationError extends Error {
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 const VALID_CONTENT_TYPES = ["raw", "summarized", "fact"] as const;
-const VALID_SOURCE_TYPES = ["conversation", "system", "tool", "a2a"] as const;
+const VALID_SOURCE_TYPES = ["conversation", "system", "tool", "a2a", "fact-extraction"] as const;
 const VALID_EXPORT_FORMATS = ["json", "csv"] as const;
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -455,7 +455,7 @@ export function validateSearchOptions(options?: SearchMemoriesOptions): void {
     validateMinScore(options.minScore, "minScore");
   }
 
-  if (options.limit !== undefined) {
+  if (options.limit !== undefined && options.limit !== 0) {
     validateLimit(options.limit, "limit");
   }
 
@@ -490,7 +490,7 @@ export function validateListFilter(filter: ListMemoriesFilter): void {
     validateSourceType(filter.sourceType, "sourceType");
   }
 
-  if (filter.limit !== undefined) {
+  if (filter.limit !== undefined && filter.limit !== 0) {
     validateLimit(filter.limit, "limit");
   }
 }
@@ -510,6 +510,9 @@ export function validateCountFilter(filter: CountMemoriesFilter): void {
   }
 
   validateMemorySpaceId(filter.memorySpaceId);
+  if (filter.participantId !== undefined && (typeof filter.participantId !== "string" || filter.participantId.trim().length === 0)) {
+    throw new VectorValidationError("Invalid participantId", "INVALID_PARTICIPANT_ID", "participantId");
+  }
 
   if (filter.sourceType !== undefined) {
     validateSourceType(filter.sourceType, "sourceType");
@@ -578,7 +581,7 @@ export function validateExportOptions(options: {
 export function validateDeleteManyFilter(filter: {
   memorySpaceId: string;
   userId?: string;
-  sourceType?: "conversation" | "system" | "tool" | "a2a";
+  sourceType?: "conversation" | "system" | "tool" | "a2a" | "fact-extraction";
 }): void {
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (!filter) {
@@ -642,4 +645,17 @@ export function validateUpdateManyInputs(
   if (updates.tags !== undefined) {
     validateTags(updates.tags, "tags");
   }
+}
+
+/** Preserve exact caller-selected scope; caller context is not authentication. */
+export function resolveDomainScope(context: string | undefined, selected?: string): string | undefined {
+  for (const tenant of [context, selected]) {
+    if (tenant !== undefined && (typeof tenant !== "string" || tenant.trim().length === 0 || tenant.length > 256)) {
+      throw new VectorValidationError("Invalid tenant scope", "INVALID_TENANT_ID", "tenantId");
+    }
+  }
+  if (context !== undefined && selected !== undefined && context !== selected) {
+    throw new VectorValidationError("Tenant scope conflicts with current context", "TENANT_SCOPE_MISMATCH", "tenantId");
+  }
+  return selected ?? context;
 }

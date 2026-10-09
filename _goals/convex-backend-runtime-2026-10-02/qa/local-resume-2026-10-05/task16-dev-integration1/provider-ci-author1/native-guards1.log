@@ -1,0 +1,117 @@
+watchman warning: Recrawled this watch 3 times, most recently because:
+MustScanSubDirs UserDroppedTo resolve, please review the information on
+https://facebook.github.io/watchman/docs/troubleshooting.html#recrawl
+To clear this warning, run:
+`watchman watch-del '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion' ; watchman watch-project '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion'`
+
+(node:51395) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/ci-reference-preparation.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+PASS tests/unit/ci-cleanup.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     3.2s | 13/13 passed | /tests/unit/ci-reference-preparation.test.ts
+  ✅     0.3s | 17/17 passed | /tests/unit/ci-cleanup.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.01s ( 0.2%) - refuses an unqualified deployment before native calls
+    /tests/unit/ci-reference-preparation.test.ts
+
+ 2. [32m✓[0m    0.00s ( 0.1%) - refuses unsafe/missing qualification before native effects: {"CI": "false"}
+    /tests/unit/ci-cleanup.test.ts
+
+ 3. [32m✓[0m    0.00s ( 0.0%) - runs the canonical preparation sequence and confirms the native ready state
+    /tests/unit/ci-reference-preparation.test.ts
+
+ 4. [32m✓[0m    0.00s ( 0.0%) - requires genuine complete native activation: {"backfill": [Object], "expectedWriterManifestHash": "current", "ready": true, "state": "ready", "unresolved": [Object], "validation": [Object], "writerManifestHash": "current"}
+    /tests/unit/ci-reference-preparation.test.ts
+
+ 5. [32m✓[0m    0.00s ( 0.0%) - refuses shared runtime and unowned native targets before reference mutations: {"CORTEX_CI_NATIVE_CONTAINER_ID": undefined}
+    /tests/unit/ci-reference-preparation.test.ts
+
+ 6. [32m✓[0m    0.00s ( 0.0%) - refuses unsafe/missing qualification before native effects: {"CORTEX_CI_TARGET_CLASS": undefined}
+    /tests/unit/ci-cleanup.test.ts
+
+ 7. [32m✓[0m    0.00s ( 0.0%) - refuses unsafe/missing qualification before native effects: {"CONVEX_URL": "https://steady-snake-253.convex.cloud", "CORTEX_CI_EXPECTED_CONVEX_URL": "https://steady-snake-253.convex.cloud"}
+    /tests/unit/ci-cleanup.test.ts
+
+ 8. [32m✓[0m    0.00s ( 0.0%) - refuses unsafe/missing qualification before native effects: {"CONVEX_URL": "http://127.0.0.1:53310/?redirect=other", "CORTEX_CI_EXPECTED_CONVEX_URL": "http://127.0.0.1:53310/?redirect=other"}
+    /tests/unit/ci-cleanup.test.ts
+
+ 9. [32m✓[0m    0.00s ( 0.0%) - uses native authenticated replacement then verifies all snapshot documents
+    /tests/unit/ci-cleanup.test.ts
+
+10. [32m✓[0m    0.00s ( 0.0%) - fails rather than claim _components/workflow/jobs/documents.jsonl residuals cleared
+    /tests/unit/ci-cleanup.test.ts
+
+11. [32m✓[0m    0.00s ( 0.0%) - sanitizes a failed native reset and does not retry it
+    /tests/unit/ci-cleanup.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.02s (0.5% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      3.64s
+  Test suites:        2
+  Individual tests:   11
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 2
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 2 passed, 2 total
+Tests:       30 passed, 30 total
+Snapshots:   0 total
+Time:        3.638 s
+Ran all test suites within paths "tests/unit/ci-cleanup.test.ts", "tests/unit/ci-reference-preparation.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-dev-integration1/provider-ci-author1/native-guards1.json

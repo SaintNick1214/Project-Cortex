@@ -1,0 +1,736 @@
+{
+  "contexts": [
+    {
+      "name": "",
+      "children": "start deploy update status doctor config use init install graph schema templates db backend dev memory users spaces facts conversations convex completion",
+      "options": "-h --help -V --version -d --deployment -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "start",
+      "children": "",
+      "options": "-h --help -d --deployment --project --env-file -l --local --prod --once --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment --project --env-file --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "deploy",
+      "children": "",
+      "options": "-h --help -d --deployment --project --env-file -l --local -p --prod --push -y --yes --dry-run --sync --skip-sync -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment --project --env-file -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "update",
+      "children": "",
+      "options": "-h --help -d --deployment --project --env-file --local --prod --sdk-version --convex-version --sdk-package --dry-run --sync --skip-sync -y --yes -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment --project --env-file --sdk-version --convex-version --sdk-package -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "status",
+      "children": "",
+      "options": "-h --help -d --deployment --project --env-file --local --prod --check -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment --project --env-file -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "doctor",
+      "children": "",
+      "options": "-h --help -d --deployment --project --env-file --local --prod --json --check --graph -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment --project --env-file -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "config",
+      "children": "show list set test set-path deployments add-deployment remove-deployment set-key set-url path reset",
+      "options": "-h --help -d --deployment -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "config show",
+      "children": "",
+      "options": "-h --help -f --format -d --deployment --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-f --format -d --deployment --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "config list",
+      "children": "",
+      "options": "-h --help -d --deployment -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "config set",
+      "children": "",
+      "options": "-h --help -d --deployment -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "config test",
+      "children": "",
+      "options": "-h --help -d --deployment -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "config set-path",
+      "children": "",
+      "options": "-h --help -d --deployment -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "config deployments",
+      "children": "",
+      "options": "-h --help -f --format -d --deployment --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-f --format -d --deployment --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "config add-deployment",
+      "children": "",
+      "options": "-h --help -u --url -k --key --default --json-only -d --deployment -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-u --url -k --key -d --deployment -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "config remove-deployment",
+      "children": "",
+      "options": "-h --help -y --yes --json-only -d --deployment -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "config set-key",
+      "children": "",
+      "options": "-h --help -k --key --json-only -d --deployment -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-k --key -d --deployment -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "config set-url",
+      "children": "",
+      "options": "-h --help -u --url --json-only -d --deployment -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-u --url -d --deployment -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "config path",
+      "children": "",
+      "options": "-h --help -d --deployment -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "config reset",
+      "children": "",
+      "options": "-h --help -y --yes -d --deployment -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "use",
+      "children": "",
+      "options": "-h --help --clear -d --deployment -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "init",
+      "children": "",
+      "options": "-h --help --graph --skip-graph --graph-mode --graph-uri --graph-bolt-port --graph-http-port --graph-credentials --local --cloud --no-install --no-deploy --sdk-package --dry-run --overwrite -y --yes -t --template --templates-package --catalog-version --template-version -d --deployment -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "--graph --graph-mode --graph-uri --graph-bolt-port --graph-http-port --graph-credentials --sdk-package -t --template --templates-package --catalog-version --template-version -d --deployment -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "install",
+      "children": "",
+      "options": "-h --help --graph --skip-graph --graph-mode --graph-uri --graph-bolt-port --graph-http-port --graph-credentials --local --cloud --no-install --no-deploy --sdk-package --dry-run --overwrite -y --yes -d --deployment -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "--graph --graph-mode --graph-uri --graph-bolt-port --graph-http-port --graph-credentials --sdk-package -d --deployment -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "graph",
+      "children": "setup start stop status",
+      "options": "-h --help -d --deployment -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "graph setup",
+      "children": "",
+      "options": "-h --help --dry-run -y --yes --graph --skip-graph --graph-mode --graph-uri --graph-bolt-port --graph-http-port --graph-credentials -d --deployment -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "--graph --graph-mode --graph-uri --graph-bolt-port --graph-http-port --graph-credentials -d --deployment -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "graph start",
+      "children": "",
+      "options": "-h --help --dry-run -d --deployment -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "graph stop",
+      "children": "",
+      "options": "-h --help --dry-run -d --deployment -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "graph status",
+      "children": "",
+      "options": "-h --help --dry-run -d --deployment -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "schema",
+      "children": "status sync references migrate",
+      "options": "-h --help -d --deployment -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "schema status",
+      "children": "",
+      "options": "-h --help -d --deployment -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "schema sync",
+      "children": "",
+      "options": "-h --help --dry-run --overwrite -d --deployment -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "schema references",
+      "children": "",
+      "options": "-h --help -d --deployment -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "schema migrate",
+      "children": "",
+      "options": "-h --help -d --deployment -f --format --quiet --dry-run --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "templates",
+      "children": "list init update",
+      "options": "-h --help --catalog-version --templates-package -d --deployment -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "--catalog-version --templates-package -d --deployment -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "templates list",
+      "children": "",
+      "options": "-h --help --catalog-version --templates-package -d --deployment -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "--catalog-version --templates-package -d --deployment -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "templates init",
+      "children": "",
+      "options": "-h --help --catalog-version --templates-package --template --template-version --sdk-package --provider-package --graph --skip-graph --graph-mode --graph-uri --graph-bolt-port --graph-http-port --graph-credentials --yes --no-install --dry-run -d --deployment -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "--catalog-version --templates-package --template --template-version --sdk-package --provider-package --graph --graph-mode --graph-uri --graph-bolt-port --graph-http-port --graph-credentials -d --deployment -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "templates update",
+      "children": "",
+      "options": "-h --help --catalog-version --templates-package --to --recover --yes --sdk-package --provider-package --dry-run --no-install -d --deployment -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "--catalog-version --templates-package --to --sdk-package --provider-package -d --deployment -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "db",
+      "children": "export import retire-scope runtime-stats export-metadata stats",
+      "options": "-h --help -d --deployment -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "db export",
+      "children": "",
+      "options": "-h --help -d --deployment --project --env-file --local --prod -o --output --include-file-storage --metadata -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment --project --env-file -o --output -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "db import",
+      "children": "",
+      "options": "-h --help -d --deployment --project --env-file --local --prod --append --replace --replace-all -y --yes -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment --project --env-file -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "db retire-scope",
+      "children": "",
+      "options": "-h --help --target --project --management-token-env --deploy-key-env --tenant-id --memory-space-id -y --yes -d --deployment -f --format --quiet --debug --scope-user --tenant --token-env --token-file --graph-sync",
+      "value_options": "--target --project --management-token-env --deploy-key-env --tenant-id --memory-space-id -d --deployment -f --format --scope-user --tenant --token-env --token-file --graph-sync"
+    },
+    {
+      "name": "db runtime-stats",
+      "children": "",
+      "options": "-h --help --target --project --management-token-env --deploy-key-env -f --format -d --deployment --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "--target --project --management-token-env --deploy-key-env -f --format -d --deployment --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "db export-metadata",
+      "children": "",
+      "options": "-h --help -o --output -d --deployment -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-o --output -d --deployment -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "db stats",
+      "children": "",
+      "options": "-h --help -d --deployment --project --env-file --local --prod -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment --project --env-file -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "backend",
+      "children": "install register provision configure guide",
+      "options": "-h --help -d --deployment -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "backend install",
+      "children": "",
+      "options": "-h --help --sdk-path --jwt-provider --plan -d --deployment -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "--sdk-path --jwt-provider -d --deployment -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "backend register",
+      "children": "",
+      "options": "-h --help --target --management-token-env --deploy-key-env -d --deployment -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "--target --management-token-env --deploy-key-env -d --deployment -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "backend provision",
+      "children": "",
+      "options": "-h --help --target --management-token-env --deploy-key-env --principal -d --deployment -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "--target --management-token-env --deploy-key-env --principal -d --deployment -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "backend configure",
+      "children": "",
+      "options": "-h --help --url --http-url --agent-id --agent-version --space -d --deployment -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "--url --http-url --agent-id --agent-version --space -d --deployment -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "backend guide",
+      "children": "",
+      "options": "-h --help -d --deployment -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "dev",
+      "children": "",
+      "options": "-h --help -d --deployment --project --env-file -l --local --prod --once --sync --skip-sync -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment --project --env-file -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "memory",
+      "children": "list search delete clear export stats get archive restore",
+      "options": "-h --help -d --deployment -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "memory list",
+      "children": "",
+      "options": "-h --help -d --deployment -s --space -u --user -l --limit -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment -s --space -u --user -l --limit -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "memory search",
+      "children": "",
+      "options": "-h --help -d --deployment -s --space -u --user -l --limit -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment -s --space -u --user -l --limit -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "memory delete",
+      "children": "",
+      "options": "-h --help -d --deployment -s --space --cascade -y --yes -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment -s --space -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "memory clear",
+      "children": "",
+      "options": "-h --help -d --deployment -s --space -u --user --source -y --yes -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment -s --space -u --user --source -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "memory export",
+      "children": "",
+      "options": "-h --help -d --deployment -s --space -u --user -o --output --include-facts -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment -s --space -u --user -o --output -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "memory stats",
+      "children": "",
+      "options": "-h --help -d --deployment -s --space -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment -s --space -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "memory get",
+      "children": "",
+      "options": "-h --help -d --deployment -s --space --include-conversation -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment -s --space -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "memory archive",
+      "children": "",
+      "options": "-h --help -d --deployment -s --space -y --yes -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment -s --space -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "memory restore",
+      "children": "",
+      "options": "-h --help -d --deployment -s --space -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment -s --space -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "users",
+      "children": "list get delete delete-many export stats update create exists",
+      "options": "-h --help -d --deployment -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "users list",
+      "children": "",
+      "options": "-h --help -d --deployment -l --limit --offset -f --format --no-stats --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment -l --limit --offset -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "users get",
+      "children": "",
+      "options": "-h --help -d --deployment -f --format --include-history --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "users delete",
+      "children": "",
+      "options": "-h --help -d --deployment --cascade --tenant --dry-run --verify --no-verify -y --yes -f --format --quiet --debug --scope-user --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment --tenant -f --format --scope-user --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "users delete-many",
+      "children": "",
+      "options": "-h --help -d --deployment --cascade --tenant --dry-run --verify --no-verify -y --yes -f --format --quiet --debug --scope-user --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment --tenant -f --format --scope-user --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "users export",
+      "children": "",
+      "options": "-h --help -d --deployment -o --output --tenant --format --quiet --debug --scope-user --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment -o --output --tenant --format --scope-user --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "users stats",
+      "children": "",
+      "options": "-h --help -d --deployment -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "users update",
+      "children": "",
+      "options": "-h --help -d --deployment --data -f --file --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment --data -f --file --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "users create",
+      "children": "",
+      "options": "-h --help -d --deployment --data -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment --data -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "users exists",
+      "children": "",
+      "options": "-h --help -d --deployment -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "spaces",
+      "children": "list create get delete archive reactivate stats participants add-participant remove-participant update count search",
+      "options": "-h --help -d --deployment -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "spaces list",
+      "children": "",
+      "options": "-h --help -d --deployment -t --type -s --status -l --limit --offset -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment -t --type -s --status -l --limit --offset -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "spaces create",
+      "children": "",
+      "options": "-h --help -d --deployment -t --type -n --name -m --metadata -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment -t --type -n --name -m --metadata -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "spaces get",
+      "children": "",
+      "options": "-h --help -d --deployment -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "spaces delete",
+      "children": "",
+      "options": "-h --help -d --deployment --cascade --tenant --dry-run --verify --no-verify -r --reason -y --yes -f --format --quiet --debug --scope-user --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment --tenant -r --reason -f --format --scope-user --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "spaces archive",
+      "children": "",
+      "options": "-h --help -d --deployment -r --reason -y --yes -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment -r --reason -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "spaces reactivate",
+      "children": "",
+      "options": "-h --help -d --deployment -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "spaces stats",
+      "children": "",
+      "options": "-h --help -d --deployment -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "spaces participants",
+      "children": "",
+      "options": "-h --help -d --deployment -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "spaces add-participant",
+      "children": "",
+      "options": "-h --help -d --deployment -i --id -t --type -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment -i --id -t --type -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "spaces remove-participant",
+      "children": "",
+      "options": "-h --help -d --deployment -i --id -y --yes -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment -i --id -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "spaces update",
+      "children": "",
+      "options": "-h --help -d --deployment -n --name -s --status -m --metadata -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment -n --name -s --status -m --metadata -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "spaces count",
+      "children": "",
+      "options": "-h --help -d --deployment -t --type -s --status -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment -t --type -s --status -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "spaces search",
+      "children": "",
+      "options": "-h --help -d --deployment -t --type -s --status -l --limit -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment -t --type -s --status -l --limit -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "facts",
+      "children": "list search get delete export count clear",
+      "options": "-h --help -d --deployment -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "facts list",
+      "children": "",
+      "options": "-h --help -d --deployment -s --space -t --type -u --user -l --limit -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment -s --space -t --type -u --user -l --limit -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "facts search",
+      "children": "",
+      "options": "-h --help -d --deployment -s --space -t --type -l --limit -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment -s --space -t --type -l --limit -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "facts get",
+      "children": "",
+      "options": "-h --help -d --deployment -s --space -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment -s --space -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "facts delete",
+      "children": "",
+      "options": "-h --help -d --deployment -s --space -y --yes -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment -s --space -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "facts export",
+      "children": "",
+      "options": "-h --help -d --deployment -s --space -t --type -o --output -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment -s --space -t --type -o --output -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "facts count",
+      "children": "",
+      "options": "-h --help -d --deployment -s --space -t --type -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment -s --space -t --type -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "facts clear",
+      "children": "",
+      "options": "-h --help -d --deployment -s --space -t --type -y --yes -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment -s --space -t --type -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "conversations",
+      "children": "list get delete export count clear messages",
+      "options": "-h --help -d --deployment -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "conversations list",
+      "children": "",
+      "options": "-h --help -d --deployment -s --space -u --user -t --type -l --limit -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment -s --space -u --user -t --type -l --limit -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "conversations get",
+      "children": "",
+      "options": "-h --help -d --deployment -m --messages -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment -m --messages -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "conversations delete",
+      "children": "",
+      "options": "-h --help -d --deployment -y --yes -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "conversations export",
+      "children": "",
+      "options": "-h --help -d --deployment -o --output -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment -o --output -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "conversations count",
+      "children": "",
+      "options": "-h --help -d --deployment -s --space -u --user -t --type -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment -s --space -u --user -t --type -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "conversations clear",
+      "children": "",
+      "options": "-h --help -d --deployment -s --space -u --user -y --yes -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment -s --space -u --user -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "conversations messages",
+      "children": "",
+      "options": "-h --help -d --deployment -l --limit -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment -l --limit -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "convex",
+      "children": "deploy update dev status schema dashboard logs env codegen run data export import deployment insights",
+      "options": "-h --help -d --deployment -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "convex deploy",
+      "children": "",
+      "options": "-h --help -d --deployment --project --env-file -l --local -p --prod --push -y --yes --dry-run --sync --skip-sync -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment --project --env-file -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "convex update",
+      "children": "",
+      "options": "-h --help -d --deployment --project --env-file --local --prod --sdk-version --convex-version --sdk-package --dry-run --sync --skip-sync -y --yes -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment --project --env-file --sdk-version --convex-version --sdk-package -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "convex dev",
+      "children": "",
+      "options": "-h --help -d --deployment --project --env-file -l --local --prod --once --sync --skip-sync -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment --project --env-file -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "convex status",
+      "children": "",
+      "options": "-h --help -d --deployment --project --env-file --local --prod --check -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment --project --env-file -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "convex schema",
+      "children": "",
+      "options": "-h --help --project -d --deployment -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "--project -d --deployment -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "convex dashboard",
+      "children": "",
+      "options": "-h --help -d --deployment --project --env-file -l --local -p --prod --print-url -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment --project --env-file -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "convex logs",
+      "children": "",
+      "options": "-h --help -d --deployment --project --env-file -l --local -p --prod -n --lines -t --tail --jsonl --success -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment --project --env-file -n --lines -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "convex env",
+      "children": "list get set remove",
+      "options": "-h --help -d --deployment --project --env-file --local -p --prod -l --list -s --set -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment --project --env-file -s --set -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "convex env list",
+      "children": "",
+      "options": "-h --help --values -d --deployment -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "convex env get",
+      "children": "",
+      "options": "-h --help -d --deployment -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "convex env set",
+      "children": "",
+      "options": "-h --help -d --deployment -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "convex env remove",
+      "children": "",
+      "options": "-h --help -d --deployment -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "convex codegen",
+      "children": "",
+      "options": "-h --help -d --deployment --project --env-file --local --prod --dry-run -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment --project --env-file -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "convex run",
+      "children": "",
+      "options": "-h --help -d --deployment --project --env-file --local --prod -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment --project --env-file -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "convex data",
+      "children": "",
+      "options": "-h --help -d --deployment --project --env-file --local --prod --limit --order -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment --project --env-file --limit --order -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "convex export",
+      "children": "",
+      "options": "-h --help -d --deployment --project --env-file --local --prod -o --output --include-file-storage --metadata -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment --project --env-file -o --output -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "convex import",
+      "children": "",
+      "options": "-h --help -d --deployment --project --env-file --local --prod --append --replace --replace-all -y --yes -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment --project --env-file -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "convex deployment",
+      "children": "select",
+      "options": "-h --help -d --deployment --project --env-file --local --prod -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment --project --env-file -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "convex deployment select",
+      "children": "",
+      "options": "-h --help -d --deployment -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "convex insights",
+      "children": "",
+      "options": "-h --help -d --deployment --project --env-file --local --prod --details --json -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment --project --env-file -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    },
+    {
+      "name": "completion",
+      "children": "",
+      "options": "-h --help -d --deployment -f --format --quiet --debug --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync",
+      "value_options": "-d --deployment -f --format --scope-user --tenant --token-env --token-file --tenant-id --memory-space-id --graph-sync"
+    }
+  ]
+}

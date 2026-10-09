@@ -89,6 +89,37 @@ describe("native private policy ledger — offline logic only", () => {
     expect(f.db.table("runtimeModelPolicies")).toHaveLength(1); expect(f.db.table("runtimeModelQualifications")).toHaveLength(1);
     root = { ...root, artifactRevision: "changed" }; await expect(f.install()).rejects.toThrow();
   });
+  it("retains expired unused evidence while the fresh selected proof installs, binds and reserves under the same root", async () => {
+    const unused = { ...root.qualifications[0]!, receiptId: "historical-unused", modelId: "fixture/unused" };
+    root = { ...root, qualifications: [...root.qualifications, unused], dispatchEvidence: [...root.dispatchEvidence,
+      { ...root.dispatchEvidence[0]!, receiptId: unused.receiptId, modelId: unused.modelId, checkedAt: clock - 10_000, expiresAt: clock - 1 }] };
+    const f = fixture(); await f.install(); const b = await f.bind(); const before = JSON.parse(JSON.stringify(f.account("tenant")));
+    const a = await f.admit(b); expect(await f.checkpoint(a)).toMatchObject({ dispatchPermit: true });
+    expect(f.db.table("runtimeModelQualifications")).toHaveLength(2);
+    expect(f.account("tenant")).toMatchObject({ _id: before._id, root: before.root, windowId: before.windowId,
+      reservedUnits: 100, settledUnits: 0, uncertainUnits: 0, activeConcurrency: 1 });
+  });
+  it("selected expiry denies new and existing budget binding, admission and dispatch with unchanged financial rows", async () => {
+    root = { ...root, dispatchEvidence: root.dispatchEvidence.map(proof => ({ ...proof, expiresAt: clock + 10 })) };
+    const { f, b, a } = await admitted(); const before = canonicalModelJson([f.db.table("runtimeBudgetAccounts"), f.db.table("runtimeModelOperations"), f.db.table("runtimeModelAttempts")]);
+    const writes = f.db.writes; jest.spyOn(Date, "now").mockReturnValue(clock + 10);
+    await expect(f.bind("another-request")).rejects.toThrow("CAPABILITY_UNAVAILABLE");
+    await expect(f.bind()).rejects.toThrow("CAPABILITY_UNAVAILABLE");
+    await expect(f.admit(b)).rejects.toThrow("CAPABILITY_UNAVAILABLE");
+    await expect(f.checkpoint(a)).rejects.toThrow("CAPABILITY_UNAVAILABLE");
+    expect(f.db.writes).toBe(writes);
+    expect(canonicalModelJson([f.db.table("runtimeBudgetAccounts"), f.db.table("runtimeModelOperations"), f.db.table("runtimeModelAttempts")])).toBe(before);
+  });
+  it("selected expiry withholds settled replay without changing charge, window, root or released slot", async () => {
+    root = { ...root, dispatchEvidence: root.dispatchEvidence.map(proof => ({ ...proof, expiresAt: clock + 10 })) };
+    const { f, b, a } = await admitted(); await f.checkpoint(a); await f.settle(a);
+    expect(await f.admit(b)).toMatchObject({ status: "replay" });
+    const before = canonicalModelJson([f.db.table("runtimeBudgetAccounts"), f.db.table("runtimeModelOperations"), f.db.table("runtimeModelAttempts")]); const writes = f.db.writes;
+    jest.spyOn(Date, "now").mockReturnValue(clock + 10);
+    await expect(f.admit(b)).rejects.toThrow("CAPABILITY_UNAVAILABLE");
+    expect(f.db.writes).toBe(writes);
+    expect(canonicalModelJson([f.db.table("runtimeBudgetAccounts"), f.db.table("runtimeModelOperations"), f.db.table("runtimeModelAttempts")])).toBe(before);
+  });
   it.each(["classification", "acceptance", "expiry", "model", "proof"])("rejects an invalid root %s before accounts/dispatch", async (field) => {
     if (field === "classification") root = { ...root, classification: "reviewed-actual" };
     if (field === "acceptance") root = { ...root, acceptanceHash: "claim" };
@@ -402,7 +433,8 @@ describe("native private policy ledger — offline logic only", () => {
   it("preserves all original native, transcript, Agent, ingestion and profile tables with nine graph tables, four asset tables and unique indexes", () => {
     const original = ["conversations", "conversationShares", "conversationSnapshots", "immutable", "mutable", "memories", "facts", "factHistory", "memorySpaces", "contexts", "agents", "sessions", "governancePolicies", "governanceEnforcement", "graphSyncQueue", "artifacts", "attachments",
       "runtimeAuthPrincipals", "runtimeAuthMemberships", "runtimeAuthScopes", "runtimeAuthGrants", "runtimeAuthTombstones", "runtimeMemorySources", "runtimeMemoryChunks", "runtimeMemoryVectors", "runtimeMemoryReceipts",
-      "runtimeModelPolicies", "runtimeModelQualifications", "runtimeBudgetAccounts", "runtimeModelOperations", "runtimeModelAttempts"];
+      "runtimeModelPolicies", "runtimeModelQualifications", "runtimeBudgetAccounts", "runtimeModelOperations", "runtimeModelAttempts",
+      "cortexErasureReceipts", "cortexReferenceTargets", "cortexReferenceEdges", "cortexReferenceState"];
     const added = ["runtimeAgentDefinitions", "runtimeConversations", "runtimeConversationShares", "runtimeConversationSnapshots", "runtimeTranscriptMessages", "runtimeRuns", "runtimeRunOutbox", "runtimeRunAttempts", "runtimeTranscriptOutbox"];
     const execution = ["runtimeAgentExecutions", "runtimeAgentOutput", "runtimeAgentOperations", "runtimeAgentIngestion"];
     const ingestion = ["runtimeIngestionScopes", "runtimeIngestionEvents", "runtimeIngestionStages", "runtimeIngestionJobs", "runtimeBeliefHeads", "runtimeBeliefHistory", "runtimeBeliefOutbox"];
@@ -458,6 +490,27 @@ describe("current policy narrowing at fallback and dispatch boundaries", () => {
     await state.f.settle(state.a, "0.000040", { outcome: "confirmed_rejected", privateResultCanonical: "" }); return state;
   }
   const fallbackArgs = (f: ReturnType<typeof fixture>, a: Reserved) => ({ reference: f.reference, attemptId: a.attemptId, candidateModelId: "fixture/fallback" });
+  it("an expired unused fallback does not block the selected original but cannot reserve a replacement", async () => {
+    fallbackRoot(); root = { ...root, dispatchEvidence: root.dispatchEvidence.map(proof => proof.receiptId === "synthetic-fallback"
+      ? { ...proof, checkedAt: clock - 10_000, expiresAt: clock - 1 } : proof) };
+    const { f, a } = await admitted(); await f.checkpoint(a);
+    await f.settle(a, "0.000040", { outcome: "confirmed_rejected", privateResultCanonical: "" });
+    const before = effects(f);
+    expect(await f.invoke("checkFallback", fallbackArgs(f, a))).toEqual({ allowed: false });
+    await deniedWithoutEffects(f, () => f.invoke("admitFallback", fallbackArgs(f, a)));
+    expect(effects(f)).toEqual(before); expect(f.account("tenant")).toMatchObject({ settledUnits: 40, reservedUnits: 0, activeConcurrency: 0 });
+  });
+  it("fallback expiry denies same-attempt replay and checkpoint without releasing its existing reservation", async () => {
+    fallbackRoot(); root = { ...root, dispatchEvidence: root.dispatchEvidence.map(proof => proof.receiptId === "synthetic-fallback" ? { ...proof, expiresAt: clock + 10 } : proof) };
+    const { f, a } = await admitted(); await f.checkpoint(a);
+    await f.settle(a, "0.000040", { outcome: "confirmed_rejected", privateResultCanonical: "" });
+    const candidate = await f.invoke<Reserved>("admitFallback", fallbackArgs(f, a));
+    jest.spyOn(Date, "now").mockReturnValue(clock + 10);
+    expect(await f.invoke("checkFallback", fallbackArgs(f, a))).toEqual({ allowed: false });
+    await deniedWithoutEffects(f, () => f.invoke("admitFallback", fallbackArgs(f, a)));
+    await deniedWithoutEffects(f, () => f.checkpoint(candidate));
+    expect(f.account("tenant")).toMatchObject({ settledUnits: 40, reservedUnits: 80, activeConcurrency: 1 });
+  });
   it("fresh fallback includes prior known spend under current narrowed operation ceiling", async () => {
     const { f, a } = await rejectedOriginal(); await narrow(f, { limits: { operationBudgetUnits: 100 } });
     await deniedWithoutEffects(f, () => f.invoke("admitFallback", fallbackArgs(f, a)));

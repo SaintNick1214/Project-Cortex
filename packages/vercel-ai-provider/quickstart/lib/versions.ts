@@ -1,3 +1,5 @@
+import aiPackage from "ai/package.json";
+
 /**
  * Version detection utilities for displaying SDK versions in the UI.
  */
@@ -14,8 +16,6 @@ export interface VersionInfo {
  */
 export async function detectVersions(): Promise<VersionInfo> {
   let cortexSdk = "unknown";
-  let aiSdk = "unknown";
-  let aiSdkMajor = 5;
 
   // Detect Cortex SDK version
   try {
@@ -25,32 +25,16 @@ export async function detectVersions(): Promise<VersionInfo> {
       cortexSdk = cortexModule.VERSION as string;
     } else {
       // Fallback: try to detect from package
-      cortexSdk = "0.24.0";
+      cortexSdk = "0.38.0";
     }
   } catch {
-    cortexSdk = "0.24.0";
+    cortexSdk = "0.38.0";
   }
 
-  // Detect AI SDK version by checking for v6-specific exports
-  try {
-    const aiModule = await import("ai");
-
-    // v6 has these specific exports
-    const hasV6Features =
-      "ToolLoopAgent" in aiModule ||
-      "createAgentUIStreamResponse" in aiModule ||
-      "Output" in aiModule;
-
-    if (hasV6Features) {
-      aiSdkMajor = 6;
-      aiSdk = "v6";
-    } else {
-      aiSdkMajor = 5;
-      aiSdk = "v5";
-    }
-  } catch {
-    aiSdk = "v5";
-  }
+  // Feature exports survive major upgrades; use the installed package version.
+  const aiSdkVersion = aiPackage.version;
+  const aiSdkMajor = Number.parseInt(aiSdkVersion.split(".")[0], 10);
+  const aiSdk = `v${aiSdkVersion}`;
 
   return {
     cortexSdk,

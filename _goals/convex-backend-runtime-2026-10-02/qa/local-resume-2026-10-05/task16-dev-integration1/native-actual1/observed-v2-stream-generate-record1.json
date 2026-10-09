@@ -1,0 +1,108 @@
+{
+  "version": 1,
+  "status": "ACTUAL_V2_GENERATE_AND_STREAM_NATIVE_OBSERVATION",
+  "nonstreamRecord": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-dev-integration1/native-actual1/run-merged2-closed.json",
+    "sha256": "fab8288fdb0dd5c0b93bbd3ba2b44560e990e9b3a249dfd9b33e1f93ea5f56de"
+  },
+  "streamRecord": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-media-functional-v2-20261008/native-actual/actual-agent-media-v2-qualification-record1.json",
+    "sha256": "1c0c6f88a69c1f37e46a3efebc0960e290695451e1a4723724ea0c5c5bfe2101"
+  },
+  "oldProvisionalManifestUnmodified": true,
+  "actualGenerateSteps": [
+    {
+      "operationId": "qh7bp33bpgfk4czd6q38dpn1k58fyh8v",
+      "attemptId": "qd7aktwr3hkqcgbcr2zzysck318fze00",
+      "terminal": {
+        "actualModel": "openai/gpt-4o-mini",
+        "costSource": "unavailable",
+        "dispatchIdentity": "41407d994b9244e8ea34212b3f58e0b9ff554a8c2ce2a109f1fb283a9dc97ad2",
+        "modelId": "openai/gpt-4o-mini",
+        "nativeInterface": "chat",
+        "outcome": "confirmed",
+        "proof": "provider-terminal-v1",
+        "receiptId": "0c00e187-89c8-402c-8454-f80120165d87",
+        "usage": {
+          "cachedInputTokens": 0,
+          "inputTokens": 299,
+          "outputTokens": 25,
+          "reasoningTokens": 0,
+          "totalTokens": 324
+        },
+        "version": 1
+      },
+      "slotReleased": true,
+      "reservationUnits": 100000,
+      "requestCanonicalSha256": "6fe9a78414b726cb429cfb55c803904e0f3bf2ad39645bea1e52e5e0ae22aa02",
+      "tools": [
+        "memory_remember",
+        "memory_recall",
+        "media_image_generate",
+        "media_video_generate",
+        "artifact_read"
+      ],
+      "measuredInputTokens": 13136,
+      "outputLimit": 256
+    },
+    {
+      "operationId": "qh77cahj36knpz5v0qvhc6yaqd8fybth",
+      "attemptId": "qd70wmc2vebn2dd56q1g2hc92d8fzc7m",
+      "terminal": {
+        "actualModel": "openai/gpt-4o-mini",
+        "costSource": "unavailable",
+        "dispatchIdentity": "40f077aa0915638771f0fc87890f4415bb82cb64926c5ce5128bceb3b4147217",
+        "modelId": "openai/gpt-4o-mini",
+        "nativeInterface": "chat",
+        "outcome": "confirmed",
+        "proof": "provider-terminal-v1",
+        "receiptId": "a474c16f-1c00-4e94-beaf-1d5c946f16aa",
+        "usage": {
+          "cachedInputTokens": 0,
+          "inputTokens": 372,
+          "outputTokens": 22,
+          "reasoningTokens": 0,
+          "totalTokens": 394
+        },
+        "version": 1
+      },
+      "slotReleased": true,
+      "reservationUnits": 100000,
+      "requestCanonicalSha256": "498b74d1cfc2e71ea7765d9958ef8d151a7f2c7d1ecd3faf02923efc834b6938",
+      "tools": [
+        "memory_remember",
+        "memory_recall",
+        "media_image_generate",
+        "media_video_generate",
+        "artifact_read"
+      ],
+      "measuredInputTokens": 16180,
+      "outputLimit": 256
+    }
+  ],
+  "actualStreamSteps": 2,
+  "exactCatalogHash": "8f7a1a0a0e5dee43b1d5b6d066ba3fc1ede316f940cfdea5379a3999c48e79fa",
+  "toolMetadataInAdmittedContinuation": true,
+  "generateTool": "artifact_read",
+  "streamTool": "media_image_generate",
+  "generateModel": "openai/gpt-4o-mini",
+  "streamModel": "openai/gpt-4o-mini",
+  "terminalCost": "unavailable",
+  "fullAgentCeiling": 100000,
+  "maximumToolCallsPerStep": 1,
+  "sharedRunCeiling": 3000000,
+  "maxRetries": 0,
+  "noFallback": true,
+  "supportedReplayObserved": true,
+  "foreignCurrentDenialObserved": true,
+  "nonstreamObservedAt": 1791533560830,
+  "streamObservedAt": 1791509851763,
+  "combinedRealObservationExpiresAt": 1791596251763,
+  "sourcePins": {
+    "convex-dev/runtimeGateway.ts": "e83975a54a65c33a60bf4d6b41546cf6725b143cb44f5e230c9db5353e54d08b",
+    "convex-dev/runtimeAgent.ts": "099ed48de25f22f37dd0926671eb1cb4e8eef2f4cb56f37d1cf92b0974dd6d17",
+    "src/domain/agent-tools.ts": "8fd2c39370d93acb0a22b671bb074c3599ed3de2d01061bf19c2919d2dfbcdd3"
+  },
+  "literalUnsupportedContentOraclePreserved": "run-merged2-outcomes.json",
+  "noAdditionalInference": true
+}

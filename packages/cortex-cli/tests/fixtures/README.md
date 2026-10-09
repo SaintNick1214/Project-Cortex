@@ -1,0 +1,5 @@
+# Immutable legacy backend source fixture
+
+`legacy-backend-b274.json.gz` contains the 76 non-generated TypeScript backend source modules from incoming commit `b274c7ae15adf1c796cc3b810a7316fb2407c8eb`, the reviewed backend `tsconfig.json`, plus that commit's public SDK package manifest. It contains no environment files, generated bindings, credentials, or deployed data. Each module records its Git blob identity and SHA-256; the test helper verifies the compressed fixture and every decoded module before writing an owned temporary fixture.
+
+The original fixed-contract template composer assertions use this fixture with the retained catalog 1.2.0 app inputs. This qualifies that immutable legacy source contract. Current ordinary runtime installation has separate tests against the current complete `dist/backend/v1` distribution, public verified sessions and additive host composition. Passing these source tests does not claim service execution or current-runtime compatibility for old private payloads.

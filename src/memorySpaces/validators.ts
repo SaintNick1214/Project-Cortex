@@ -414,8 +414,11 @@ export function validateTimeWindow(timeWindow: string): void {
  */
 export function validateDeleteOptions(
   memorySpaceId: string,
-  options: { cascade: boolean; reason: string; confirmId?: string },
+  options: { cascade: boolean; reason: string; confirmId?: string; dryRun?:boolean;verify?:boolean;tenantId?:string;signal?:AbortSignal },
 ): void {
+  resolveDomainScope(undefined,options.tenantId);
+  for(const key of ["dryRun","verify"] as const)if(options[key]!==undefined&&typeof options[key]!=="boolean")throw new MemorySpaceValidationError(`Invalid ${key}`,"INVALID_DELETE_OPTIONS",key);
+  if(options.signal!==undefined&&!(options.signal instanceof AbortSignal))throw new MemorySpaceValidationError("Invalid signal","INVALID_DELETE_OPTIONS","signal");
   if (options.cascade !== true) {
     throw new MemorySpaceValidationError(
       "cascade must be true to delete a memory space",
@@ -469,4 +472,17 @@ export function validateUpdateParams(updates: Record<string, unknown>): void {
       "EMPTY_UPDATES",
     );
   }
+}
+
+/** Preserve exact caller-selected scope; caller context is not authentication. */
+export function resolveDomainScope(context: string | undefined, selected?: string): string | undefined {
+  for (const tenant of [context, selected]) {
+    if (tenant !== undefined && (typeof tenant !== "string" || tenant.trim().length === 0 || tenant.length > 256)) {
+      throw new MemorySpaceValidationError("Invalid tenant scope", "INVALID_TENANT_ID", "tenantId");
+    }
+  }
+  if (context !== undefined && selected !== undefined && context !== selected) {
+    throw new MemorySpaceValidationError("Tenant scope conflicts with current context", "TENANT_SCOPE_MISMATCH", "tenantId");
+  }
+  return selected ?? context;
 }

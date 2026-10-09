@@ -5,9 +5,23 @@ import { defineConfig } from "vitest/config";
 export default defineConfig({
   plugins: [react()],
   resolve: {
-    alias: {
-      "@": path.resolve(import.meta.dirname, "./"),
-    },
+    alias: [
+      {
+        find: /^(?:.*\/)?_generated\/server$/,
+        replacement: path.resolve(
+          import.meta.dirname,
+          "./tests/helpers/convex-registration.ts"
+        ),
+      },
+      { find: "@", replacement: path.resolve(import.meta.dirname, "./") },
+      {
+        find: "server-only",
+        replacement: path.resolve(
+          import.meta.dirname,
+          "./tests/helpers/server-only.ts"
+        ),
+      },
+    ],
   },
   test: {
     coverage: {

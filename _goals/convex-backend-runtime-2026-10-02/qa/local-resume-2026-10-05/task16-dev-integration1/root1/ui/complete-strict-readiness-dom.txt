@@ -1,0 +1,71 @@
+- main:
+  - paragraph: Cortex
+  - heading "Memory chat" [level=1]
+  - paragraph: Responses and memory updates stay available across connections.
+  - button "Sign out"
+  - region "Authentication":
+    - heading "Refresh credentials" [level=2]
+    - paragraph: Use an access token issued by your host authentication provider. It stays in memory for this session.
+    - text: Access token
+    - textbox "Access token"
+    - button "Refresh token" [disabled]
+    - paragraph: Connected to merged-v2-20261009 in task16-merged-v2-20261009.
+  - form "Agent configuration":
+    - text: Published agent
+    - textbox "Published agent": agent:16eea6e48a6e17c3590689362c2bbeeb8ad36d3270d53a9c5cf36e229e039890
+    - text: Agent version
+    - spinbutton "Agent version": "1"
+    - button "Use agent version"
+    - paragraph: "Current version: 1 · Memory mode: indexed-plus-pending"
+  - region "Chat":
+    - heading "Conversation" [level=2]
+    - button "New chat"
+    - generic "Messages":
+      - article:
+        - paragraph: You
+        - paragraph: Read the owned verification artifact and tell me its exact marker.
+      - article:
+        - paragraph: You
+        - paragraph: Read the owned verification artifact and report its exact marker for this corrected nonstream verification.
+      - article:
+        - paragraph: Cortex
+        - paragraph: "The verification marker from the artifact is: **merged-v2-owned-tiny-20261009**."
+    - text: Message
+    - textbox "Message"
+    - button "Send" [disabled]
+    - paragraph:
+      - text: "Response:"
+      - strong: complete
+    - paragraph:
+      - text: "Memory:"
+      - strong: complete
+    - paragraph: "Context: complete"
+    - paragraph: "Run: run:97813f4e3b816486c3fb06e69ca1e42a581f81074aa0702b54a66353bab2350d"
+    - button "Disconnect observer" [disabled]
+    - button "Reconnect observer" [disabled]
+    - button "Cancel run" [disabled]
+    - text: Observe an existing run
+    - textbox "Observe an existing run": run:97813f4e3b816486c3fb06e69ca1e42a581f81074aa0702b54a66353bab2350d
+    - button "Observe run" [active]
+  - region "Memory search":
+    - heading "Memory search" [level=2]
+    - paragraph: cortex-text-small-1536-v1 · 1536 dimensions
+    - text: Search your memory
+    - textbox "Search your memory"
+    - button "Search memory" [disabled]
+    - group "Memory readiness":
+      - generic: Memory readiness
+      - paragraph: Read current indexing status, or require the selected stages to be complete. This check starts no model call.
+      - checkbox "Require facts" [checked]
+      - text: Require facts
+      - checkbox "Require vectors" [checked]
+      - text: Require vectors
+      - checkbox "Require graph"
+      - text: Require graph
+    - button "Check memory readiness"
+    - list:
+      - listitem: "facts: complete · indexed through 3 of 3"
+      - listitem: "vectors: complete · indexed through 3 of 3"
+  - button "Show media tools"
+- button "Open Next.js Dev Tools":
+- alert

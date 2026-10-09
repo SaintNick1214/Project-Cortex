@@ -48,6 +48,7 @@ export interface GraphConfig {
   uri: string;
   username: string;
   password: string;
+  mode?: "local" | "existing";
 }
 
 /**

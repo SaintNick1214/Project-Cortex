@@ -11,8 +11,8 @@
  * PARALLEL-SAFE: Uses TestRunContext for isolated test data
  */
 
-import { Cortex } from "../src";
-import { ConvexClient } from "convex/browser";
+import { Cortex } from "./helpers/deployment-operator";
+import { ConvexClient } from "./helpers/deployment-operator";
 import { api } from "../convex-dev/_generated/api";
 import { createNamedTestRunContext, ScopedCleanup } from "./helpers";
 
@@ -1480,24 +1480,13 @@ describe("Mutable Store API (Layer 1c)", () => {
 
   describe("syncToGraph Option", () => {
     describe("set() with syncToGraph", () => {
-      it("accepts syncToGraph option without error when no graph adapter", async () => {
+      it("refuses required graph synchronization without an adapter before effects", async () => {
         const ns = "sync-graph-test";
         const key = "no-adapter-set";
 
-        // Should not throw even with syncToGraph: true when no adapter configured
-        const result = await cortex.mutable.set(
-          ns,
-          key,
-          "test-value",
-          undefined,
-          undefined,
-          { syncToGraph: true },
-        );
-
-        expect(result).toBeDefined();
-        expect(result.namespace).toBe(ns);
-        expect(result.key).toBe(key);
-        expect(result.value).toBe("test-value");
+        await expect(cortex.mutable.set(ns, key, "test-value", undefined, undefined, { syncToGraph: true }))
+          .rejects.toMatchObject({ code: "GRAPH_ADAPTER_REQUIRED" });
+        expect(await cortex.mutable.get(ns, key)).toBeNull();
       });
 
       it("creates entry normally with syncToGraph: false", async () => {
@@ -1521,13 +1510,13 @@ describe("Mutable Store API (Layer 1c)", () => {
         expect(retrieved).toBe("no-sync-value");
       });
 
-      it("syncToGraph option does not affect basic functionality", async () => {
+      it("explicitly disabling graph synchronization preserves basic functionality", async () => {
         const ns = "sync-graph-func";
         const key = "func-test";
 
         // Create with syncToGraph
         await cortex.mutable.set(ns, key, 0, undefined, undefined, {
-          syncToGraph: true,
+          syncToGraph: false,
         });
 
         // Update (no syncToGraph option on update)
@@ -1540,22 +1529,16 @@ describe("Mutable Store API (Layer 1c)", () => {
     });
 
     describe("delete() with syncToGraph", () => {
-      it("accepts syncToGraph option without error when no graph adapter", async () => {
+      it("refuses required graph synchronization without an adapter before effects", async () => {
         const ns = "sync-graph-delete";
         const key = "to-delete";
 
         // Create entry first
         await cortex.mutable.set(ns, key, "delete-me");
 
-        // Should not throw even with syncToGraph: true when no adapter configured
-        const result = await cortex.mutable.delete(ns, key, {
-          syncToGraph: true,
-        });
-
-        expect(result).toBeDefined();
-        expect(result.deleted).toBe(true);
-        expect(result.namespace).toBe(ns);
-        expect(result.key).toBe(key);
+        await expect(cortex.mutable.delete(ns, key, { syncToGraph: true }))
+          .rejects.toMatchObject({ code: "GRAPH_ADAPTER_REQUIRED" });
+        expect(await cortex.mutable.get(ns, key)).toBe("delete-me");
       });
 
       it("deletes entry normally with syncToGraph: false", async () => {
@@ -1578,7 +1561,7 @@ describe("Mutable Store API (Layer 1c)", () => {
         expect(retrieved).toBeNull();
       });
 
-      it("syncToGraph option does not affect delete functionality", async () => {
+      it("explicitly disabling graph synchronization preserves deletion", async () => {
         const ns = "sync-graph-delete-func";
         const key = "func-delete-test";
 
@@ -1590,7 +1573,7 @@ describe("Mutable Store API (Layer 1c)", () => {
         expect(before).toBe(true);
 
         // Delete with syncToGraph
-        await cortex.mutable.delete(ns, key, { syncToGraph: true });
+        await cortex.mutable.delete(ns, key, { syncToGraph: false });
 
         // Verify deleted
         const after = await cortex.mutable.exists(ns, key);

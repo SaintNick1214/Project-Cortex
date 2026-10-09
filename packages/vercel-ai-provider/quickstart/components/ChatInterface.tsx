@@ -26,7 +26,7 @@ interface ChatInterfaceProps {
   memorySpaceId: string;
   userId: string;
   conversationId: string | null;
-  /** API endpoint for chat - defaults to /api/chat, use /api/chat-v6 for AI SDK v6 */
+  /** API endpoint for chat - defaults to /api/chat, use /api/chat-v6 for the AI SDK 6+ ToolLoopAgent path */
   apiEndpoint?: string;
   onOrchestrationStart?: () => void;
   onLayerUpdate?: (
@@ -53,6 +53,7 @@ export function ChatInterface({
   onConversationUpdate,
 }: ChatInterfaceProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [chatError, setChatError] = useState<string | null>(null);
   const [input, setInput] = useState("");
   const [suggestedMessages] = useState([
     "Hi! My name is Alex and I work at Acme Corp as a senior engineer.",
@@ -117,13 +118,20 @@ export function ChatInterface({
     [onOrchestrationStart, onLayerUpdate, onConversationUpdate],
   );
 
-  const { messages, sendMessage, status, setMessages } = useChat({
+  const { messages, sendMessage, status, setMessages, stop } = useChat({
     transport,
     onData: handleDataPart,
     onError: (error) => {
-      console.error("Chat error:", error);
+      setChatError(error.message || "Chat could not finish. Retry.");
     },
   });
+
+  useEffect(
+    () => () => {
+      stop();
+    },
+    [stop],
+  );
 
   const [isLoadingHistory, setIsLoadingHistory] = useState(false);
 
@@ -150,11 +158,11 @@ export function ChatInterface({
       setIsLoadingHistory(true);
       try {
         const response = await fetch(
-          `/api/conversations?conversationId=${encodeURIComponent(conversationId)}`,
+          `/api/conversations?conversationId=${encodeURIComponent(conversationId)}&memorySpaceId=${encodeURIComponent(memorySpaceId)}`,
         );
 
         if (!response.ok) {
-          console.error("Failed to load conversation history");
+          setChatError("Conversation could not be loaded. Retry.");
           return;
         }
 
@@ -171,24 +179,24 @@ export function ChatInterface({
             }) => ({
               id: msg.id,
               role: msg.role,
-              content: msg.content,
+              parts: [{ type: "text", text: msg.content }],
               createdAt: new Date(msg.createdAt),
             }),
           );
           setMessages(loadedMessages);
         }
-      } catch (error) {
-        console.error("Error loading conversation history:", error);
+      } catch {
+        setChatError("Conversation could not be loaded. Retry.");
       } finally {
         setIsLoadingHistory(false);
       }
     };
 
     loadConversationHistory();
-  }, [conversationId, setMessages]);
+  }, [conversationId, memorySpaceId, setMessages]);
 
   // Determine if we're actively streaming (only time to show typing indicator)
-  const isStreaming = status === "streaming";
+  const isStreaming = status === "streaming" || status === "submitted";
 
   // Auto-scroll to latest message
   useEffect(() => {
@@ -200,13 +208,15 @@ export function ChatInterface({
     e.preventDefault();
     if (!input.trim() || isStreaming) return;
 
+    setChatError(null);
     const message = input.trim();
     setInput("");
 
     try {
       await sendMessage({ text: message });
-    } catch (error) {
-      console.error("Failed to send message:", error);
+    } catch {
+      setInput(message);
+      setChatError("Message could not be sent. Retry.");
     }
   };
 
@@ -334,9 +344,24 @@ export function ChatInterface({
 
       {/* Input - only disabled during active streaming, NOT during background orchestration */}
       <div className="border-t border-white/10 p-4">
+        {chatError && (
+          <p role="alert" className="text-red-400 mb-2">
+            {chatError}
+          </p>
+        )}
+        {isStreaming && (
+          <button
+            type="button"
+            onClick={() => stop()}
+            className="mb-2 px-4 py-2 rounded bg-white/10"
+          >
+            Stop response
+          </button>
+        )}
         <form onSubmit={handleSubmit} className="flex gap-2">
           <input
             type="text"
+            aria-label="Message"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Tell me about yourself..."

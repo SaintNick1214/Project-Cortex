@@ -1,0 +1,717 @@
+(node:62633) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeUnavailableAuth/closure.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+FAIL tests/unit/runtimeAssetUnavailableAuth/closure.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+  ● historical native validators remain immutable and current original handlers preserve their argument fields
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 11
+    + Received  +  1
+
+      Object {
+        "fieldType": Object {
+    -     "type": "union",
+    -     "value": Array [
+    -       Object {
+    -         "type": "literal",
+    -         "value": "createdAt",
+    -       },
+    -       Object {
+    -         "type": "literal",
+    -         "value": "updatedAt",
+    -       },
+    -     ],
+    +     "type": "string",
+        },
+        "optional": true,
+      }
+
+      168 |       // Current verified scope can be derived when omitted. The original selector
+      169 |       // type remains literal-identical; only optionality can change for selectors.
+    > 170 |       expect(current.value[field]).toEqual(['tenantId', 'memorySpaceId'].includes(field)
+          |                                    ^
+      171 |         ? { ...(validator as object), optional: (current.value[field] as { optional: boolean }).optional }
+      172 |         : validator);
+      173 |     }
+
+      at Object.<anonymous> (tests/unit/runtimeAssetUnavailableAuth/closure.test.ts:170:36)
+
+  ● accepted22 historical declarations stay literal-identical; all current validators and artifact bodies preserve the authorized repair
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "v . optional ( v . object ( { width : v . number ( ) , height : v . number ( ) , } ) , )"
+    Received: "v . optional ( v . object ( { width : v . number ( ) , height : v . number ( ) } ) )"
+
+      201 |     for (const original of before) {
+      202 |       const validators = after.find(row => row.name === original.name)!.validators;
+    > 203 |       for (const [field, literal] of Object.entries(original.validators)) expect(validators[field]).toBe(canonicalValidator(literal));
+          |                                                                                                     ^
+      204 |       expect(Object.keys(validators).filter(key => !(key in original.validators)).every(key => ['tenantId', 'memorySpaceId'].includes(key))).toBe(true);
+      205 |     }
+      206 |   }
+
+      at Object.<anonymous> (tests/unit/runtimeAssetUnavailableAuth/closure.test.ts:203:101)
+
+  ● retains all four historical foundation declaration tamper controls
+
+    assert(received)
+
+    Expected value to be equal to:
+      true
+    Received:
+      false
+
+    Message:
+      Explicit argument property
+
+      73 |       if (ts.isSpreadAssignment(property)) Object.assign(fields, resolve(property.expression, ancestors));
+      74 |       else {
+    > 75 |         assert.ok(ts.isPropertyAssignment(property), "Explicit argument property");
+         |                ^
+      76 |         fields[property.name.getText(ast)] = canonicalValidator(property.initializer.getText(ast));
+      77 |       }
+      78 |     }
+
+      at resolve (tests/helpers/backend-catalog.ts:75:16)
+      at catalogDeclarations (tests/helpers/backend-catalog.ts:92:21)
+      at Object.<anonymous> (tests/unit/runtimeAssetUnavailableAuth/closure.test.ts:275:12)
+
+FAIL tests/unit/runtimeArtifactAuth/inventory.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+  ● portable historical inventory remains immutable while current composition includes later guarded registrations
+
+    assert(received)
+
+    Expected value to be equal to:
+      true
+    Received:
+      false
+
+    Message:
+      Explicit argument property
+
+      73 |       if (ts.isSpreadAssignment(property)) Object.assign(fields, resolve(property.expression, ancestors));
+      74 |       else {
+    > 75 |         assert.ok(ts.isPropertyAssignment(property), "Explicit argument property");
+         |                ^
+      76 |         fields[property.name.getText(ast)] = canonicalValidator(property.initializer.getText(ast));
+      77 |       }
+      78 |     }
+
+      at resolve (tests/helpers/backend-catalog.ts:75:16)
+      at catalogDeclarations (tests/helpers/backend-catalog.ts:92:21)
+      at tests/unit/runtimeArtifactAuth/inventory.test.ts:89:27
+      at withComposedCatalog (tests/helpers/backend-catalog.ts:171:18)
+      at Object.<anonymous> (tests/unit/runtimeArtifactAuth/inventory.test.ts:71:3)
+
+FAIL tests/unit/runtimeRegistryAuth/catalog.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+  ● portable inventory, actual schema exports and preserved sources › historical accepted memorySpaces excluded registration remains byte-for-byte frozen; current closure stays pinned
+
+    assert(received)
+
+    Expected value to be equal to:
+      true
+    Received:
+      false
+
+    Message:
+      Explicit argument property
+
+      73 |       if (ts.isSpreadAssignment(property)) Object.assign(fields, resolve(property.expression, ancestors));
+      74 |       else {
+    > 75 |         assert.ok(ts.isPropertyAssignment(property), "Explicit argument property");
+         |                ^
+      76 |         fields[property.name.getText(ast)] = canonicalValidator(property.initializer.getText(ast));
+      77 |       }
+      78 |     }
+
+      at resolve (tests/helpers/backend-catalog.ts:75:16)
+      at catalogDeclarations (tests/helpers/backend-catalog.ts:92:21)
+      at tests/unit/runtimeRegistryAuth/catalog.test.ts:54:21
+
+PASS tests/unit/attachments/sdk.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/artifacts/sdk.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+FAIL tests/unit/memory-observer.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+  ● Memory Orchestration Observer › recall() observer callbacks › observer.onRecallStart is called with orchestrationId
+
+    Unexpected observer unit mutation facts:candidatePage
+
+      52 |     if (name === "memories:search") return [];
+      53 |     if (name === "facts:search") return [];
+    > 54 |     throw new Error(`Unexpected observer unit mutation ${name}`);
+         |           ^
+      55 |   }
+      56 |   async query(ref: Parameters<typeof getFunctionName>[0], args: Record<string, unknown>) { return this.mutation(ref, args); }
+      57 |   onUpdate() { throw new Error("Observer unit fixture has no subscription effects"); }
+
+      at ObserverUnitClient.mutation (tests/unit/memory-observer.test.ts:54:11)
+      at boundedRead (src/common/domainPaging.ts:80:12)
+      at domainPages (src/common/domainPaging.ts:61:21)
+      at collectDomain (src/common/domainPaging.ts:103:20)
+      at FactsAPI.search (src/facts/index.ts:779:18)
+          at async Promise.all (index 1)
+      at MemoryAPI.recall (src/memory/index.ts:2922:49)
+      at Object.<anonymous> (tests/unit/memory-observer.test.ts:149:7)
+
+  ● Memory Orchestration Observer › recall() observer callbacks › vector layer event emitted with phase: 'recall'
+
+    Unexpected observer unit mutation facts:candidatePage
+
+      52 |     if (name === "memories:search") return [];
+      53 |     if (name === "facts:search") return [];
+    > 54 |     throw new Error(`Unexpected observer unit mutation ${name}`);
+         |           ^
+      55 |   }
+      56 |   async query(ref: Parameters<typeof getFunctionName>[0], args: Record<string, unknown>) { return this.mutation(ref, args); }
+      57 |   onUpdate() { throw new Error("Observer unit fixture has no subscription effects"); }
+
+      at ObserverUnitClient.mutation (tests/unit/memory-observer.test.ts:54:11)
+      at boundedRead (src/common/domainPaging.ts:80:12)
+      at domainPages (src/common/domainPaging.ts:61:21)
+      at collectDomain (src/common/domainPaging.ts:103:20)
+      at FactsAPI.search (src/facts/index.ts:779:18)
+          at async Promise.all (index 1)
+      at MemoryAPI.recall (src/memory/index.ts:2922:49)
+      at Object.<anonymous> (tests/unit/memory-observer.test.ts:166:7)
+
+  ● Memory Orchestration Observer › recall() observer callbacks › facts layer event emitted with phase: 'recall'
+
+    Unexpected observer unit mutation facts:candidatePage
+
+      52 |     if (name === "memories:search") return [];
+      53 |     if (name === "facts:search") return [];
+    > 54 |     throw new Error(`Unexpected observer unit mutation ${name}`);
+         |           ^
+      55 |   }
+      56 |   async query(ref: Parameters<typeof getFunctionName>[0], args: Record<string, unknown>) { return this.mutation(ref, args); }
+      57 |   onUpdate() { throw new Error("Observer unit fixture has no subscription effects"); }
+
+      at ObserverUnitClient.mutation (tests/unit/memory-observer.test.ts:54:11)
+      at boundedRead (src/common/domainPaging.ts:80:12)
+      at domainPages (src/common/domainPaging.ts:61:21)
+      at collectDomain (src/common/domainPaging.ts:103:20)
+      at FactsAPI.search (src/facts/index.ts:779:18)
+          at async Promise.all (index 1)
+      at MemoryAPI.recall (src/memory/index.ts:2922:49)
+      at Object.<anonymous> (tests/unit/memory-observer.test.ts:193:7)
+
+  ● Memory Orchestration Observer › recall() observer callbacks › context layer event emitted with phase: 'recall'
+
+    Unexpected observer unit mutation facts:candidatePage
+
+      52 |     if (name === "memories:search") return [];
+      53 |     if (name === "facts:search") return [];
+    > 54 |     throw new Error(`Unexpected observer unit mutation ${name}`);
+         |           ^
+      55 |   }
+      56 |   async query(ref: Parameters<typeof getFunctionName>[0], args: Record<string, unknown>) { return this.mutation(ref, args); }
+      57 |   onUpdate() { throw new Error("Observer unit fixture has no subscription effects"); }
+
+      at ObserverUnitClient.mutation (tests/unit/memory-observer.test.ts:54:11)
+      at boundedRead (src/common/domainPaging.ts:80:12)
+      at domainPages (src/common/domainPaging.ts:61:21)
+      at collectDomain (src/common/domainPaging.ts:103:20)
+      at FactsAPI.search (src/facts/index.ts:779:18)
+          at async Promise.all (index 1)
+      at MemoryAPI.recall (src/memory/index.ts:2922:49)
+      at Object.<anonymous> (tests/unit/memory-observer.test.ts:217:7)
+
+  ● Memory Orchestration Observer › recall() observer callbacks › observer.onRecallComplete called with RecallSummary
+
+    Unexpected observer unit mutation facts:candidatePage
+
+      52 |     if (name === "memories:search") return [];
+      53 |     if (name === "facts:search") return [];
+    > 54 |     throw new Error(`Unexpected observer unit mutation ${name}`);
+         |           ^
+      55 |   }
+      56 |   async query(ref: Parameters<typeof getFunctionName>[0], args: Record<string, unknown>) { return this.mutation(ref, args); }
+      57 |   onUpdate() { throw new Error("Observer unit fixture has no subscription effects"); }
+
+      at ObserverUnitClient.mutation (tests/unit/memory-observer.test.ts:54:11)
+      at boundedRead (src/common/domainPaging.ts:80:12)
+      at domainPages (src/common/domainPaging.ts:61:21)
+      at collectDomain (src/common/domainPaging.ts:103:20)
+      at FactsAPI.search (src/facts/index.ts:779:18)
+          at async Promise.all (index 1)
+      at MemoryAPI.recall (src/memory/index.ts:2922:49)
+      at Object.<anonymous> (tests/unit/memory-observer.test.ts:241:7)
+
+  ● Memory Orchestration Observer › recall() observer callbacks › recall works without observer (backward compat)
+
+    Unexpected observer unit mutation facts:candidatePage
+
+      52 |     if (name === "memories:search") return [];
+      53 |     if (name === "facts:search") return [];
+    > 54 |     throw new Error(`Unexpected observer unit mutation ${name}`);
+         |           ^
+      55 |   }
+      56 |   async query(ref: Parameters<typeof getFunctionName>[0], args: Record<string, unknown>) { return this.mutation(ref, args); }
+      57 |   onUpdate() { throw new Error("Observer unit fixture has no subscription effects"); }
+
+      at ObserverUnitClient.mutation (tests/unit/memory-observer.test.ts:54:11)
+      at boundedRead (src/common/domainPaging.ts:80:12)
+      at domainPages (src/common/domainPaging.ts:61:21)
+      at collectDomain (src/common/domainPaging.ts:103:20)
+      at FactsAPI.search (src/facts/index.ts:779:18)
+          at async Promise.all (index 1)
+      at MemoryAPI.recall (src/memory/index.ts:2922:49)
+      at Object.<anonymous> (tests/unit/memory-observer.test.ts:267:22)
+
+  ● Memory Orchestration Observer › recall() observer callbacks › observer errors don't fail recall operation
+
+    Unexpected observer unit mutation facts:candidatePage
+
+      52 |     if (name === "memories:search") return [];
+      53 |     if (name === "facts:search") return [];
+    > 54 |     throw new Error(`Unexpected observer unit mutation ${name}`);
+         |           ^
+      55 |   }
+      56 |   async query(ref: Parameters<typeof getFunctionName>[0], args: Record<string, unknown>) { return this.mutation(ref, args); }
+      57 |   onUpdate() { throw new Error("Observer unit fixture has no subscription effects"); }
+
+      at ObserverUnitClient.mutation (tests/unit/memory-observer.test.ts:54:11)
+      at boundedRead (src/common/domainPaging.ts:80:12)
+      at domainPages (src/common/domainPaging.ts:61:21)
+      at collectDomain (src/common/domainPaging.ts:103:20)
+      at FactsAPI.search (src/facts/index.ts:779:18)
+          at async Promise.all (index 1)
+      at MemoryAPI.recall (src/memory/index.ts:2922:49)
+      at Object.<anonymous> (tests/unit/memory-observer.test.ts:299:24)
+
+  ● Memory Orchestration Observer › recall() observer callbacks › layer events include timing information
+
+    Unexpected observer unit mutation facts:candidatePage
+
+      52 |     if (name === "memories:search") return [];
+      53 |     if (name === "facts:search") return [];
+    > 54 |     throw new Error(`Unexpected observer unit mutation ${name}`);
+         |           ^
+      55 |   }
+      56 |   async query(ref: Parameters<typeof getFunctionName>[0], args: Record<string, unknown>) { return this.mutation(ref, args); }
+      57 |   onUpdate() { throw new Error("Observer unit fixture has no subscription effects"); }
+
+      at ObserverUnitClient.mutation (tests/unit/memory-observer.test.ts:54:11)
+      at boundedRead (src/common/domainPaging.ts:80:12)
+      at domainPages (src/common/domainPaging.ts:61:21)
+      at collectDomain (src/common/domainPaging.ts:103:20)
+      at FactsAPI.search (src/facts/index.ts:779:18)
+          at async Promise.all (index 1)
+      at MemoryAPI.recall (src/memory/index.ts:2922:49)
+      at Object.<anonymous> (tests/unit/memory-observer.test.ts:316:7)
+
+  ● Memory Orchestration Observer › recall() observer callbacks › orchestrationId is consistent across all events
+
+    Unexpected observer unit mutation facts:candidatePage
+
+      52 |     if (name === "memories:search") return [];
+      53 |     if (name === "facts:search") return [];
+    > 54 |     throw new Error(`Unexpected observer unit mutation ${name}`);
+         |           ^
+      55 |   }
+      56 |   async query(ref: Parameters<typeof getFunctionName>[0], args: Record<string, unknown>) { return this.mutation(ref, args); }
+      57 |   onUpdate() { throw new Error("Observer unit fixture has no subscription effects"); }
+
+      at ObserverUnitClient.mutation (tests/unit/memory-observer.test.ts:54:11)
+      at boundedRead (src/common/domainPaging.ts:80:12)
+      at domainPages (src/common/domainPaging.ts:61:21)
+      at collectDomain (src/common/domainPaging.ts:103:20)
+      at FactsAPI.search (src/facts/index.ts:779:18)
+          at async Promise.all (index 1)
+      at MemoryAPI.recall (src/memory/index.ts:2922:49)
+      at Object.<anonymous> (tests/unit/memory-observer.test.ts:345:7)
+
+  ● Memory Orchestration Observer › recall() observer callbacks › events are emitted in correct order
+
+    Unexpected observer unit mutation facts:candidatePage
+
+      52 |     if (name === "memories:search") return [];
+      53 |     if (name === "facts:search") return [];
+    > 54 |     throw new Error(`Unexpected observer unit mutation ${name}`);
+         |           ^
+      55 |   }
+      56 |   async query(ref: Parameters<typeof getFunctionName>[0], args: Record<string, unknown>) { return this.mutation(ref, args); }
+      57 |   onUpdate() { throw new Error("Observer unit fixture has no subscription effects"); }
+
+      at ObserverUnitClient.mutation (tests/unit/memory-observer.test.ts:54:11)
+      at boundedRead (src/common/domainPaging.ts:80:12)
+      at domainPages (src/common/domainPaging.ts:61:21)
+      at collectDomain (src/common/domainPaging.ts:103:20)
+      at FactsAPI.search (src/facts/index.ts:779:18)
+          at async Promise.all (index 1)
+      at MemoryAPI.recall (src/memory/index.ts:2922:49)
+      at Object.<anonymous> (tests/unit/memory-observer.test.ts:373:7)
+
+  ● Memory Orchestration Observer › Edge Cases › handles async observer methods
+
+    Unexpected observer unit mutation facts:candidatePage
+
+      52 |     if (name === "memories:search") return [];
+      53 |     if (name === "facts:search") return [];
+    > 54 |     throw new Error(`Unexpected observer unit mutation ${name}`);
+         |           ^
+      55 |   }
+      56 |   async query(ref: Parameters<typeof getFunctionName>[0], args: Record<string, unknown>) { return this.mutation(ref, args); }
+      57 |   onUpdate() { throw new Error("Observer unit fixture has no subscription effects"); }
+
+      at ObserverUnitClient.mutation (tests/unit/memory-observer.test.ts:54:11)
+      at boundedRead (src/common/domainPaging.ts:80:12)
+      at domainPages (src/common/domainPaging.ts:61:21)
+      at collectDomain (src/common/domainPaging.ts:103:20)
+      at FactsAPI.search (src/facts/index.ts:779:18)
+          at async Promise.all (index 1)
+      at MemoryAPI.recall (src/memory/index.ts:2922:49)
+      at Object.<anonymous> (tests/unit/memory-observer.test.ts:623:7)
+
+  ● Memory Orchestration Observer › Edge Cases › handles partial observer (only some methods defined)
+
+    Unexpected observer unit mutation facts:candidatePage
+
+      52 |     if (name === "memories:search") return [];
+      53 |     if (name === "facts:search") return [];
+    > 54 |     throw new Error(`Unexpected observer unit mutation ${name}`);
+         |           ^
+      55 |   }
+      56 |   async query(ref: Parameters<typeof getFunctionName>[0], args: Record<string, unknown>) { return this.mutation(ref, args); }
+      57 |   onUpdate() { throw new Error("Observer unit fixture has no subscription effects"); }
+
+      at ObserverUnitClient.mutation (tests/unit/memory-observer.test.ts:54:11)
+      at boundedRead (src/common/domainPaging.ts:80:12)
+      at domainPages (src/common/domainPaging.ts:61:21)
+      at collectDomain (src/common/domainPaging.ts:103:20)
+      at FactsAPI.search (src/facts/index.ts:779:18)
+          at async Promise.all (index 1)
+      at MemoryAPI.recall (src/memory/index.ts:2922:49)
+      at Object.<anonymous> (tests/unit/memory-observer.test.ts:647:7)
+
+  ● Memory Orchestration Observer › Edge Cases › empty observer object is valid
+
+    Unexpected observer unit mutation facts:candidatePage
+
+      52 |     if (name === "memories:search") return [];
+      53 |     if (name === "facts:search") return [];
+    > 54 |     throw new Error(`Unexpected observer unit mutation ${name}`);
+         |           ^
+      55 |   }
+      56 |   async query(ref: Parameters<typeof getFunctionName>[0], args: Record<string, unknown>) { return this.mutation(ref, args); }
+      57 |   onUpdate() { throw new Error("Observer unit fixture has no subscription effects"); }
+
+      at ObserverUnitClient.mutation (tests/unit/memory-observer.test.ts:54:11)
+      at boundedRead (src/common/domainPaging.ts:80:12)
+      at domainPages (src/common/domainPaging.ts:61:21)
+      at collectDomain (src/common/domainPaging.ts:103:20)
+      at FactsAPI.search (src/facts/index.ts:779:18)
+          at async Promise.all (index 1)
+      at MemoryAPI.recall (src/memory/index.ts:2922:49)
+      at Object.<anonymous> (tests/unit/memory-observer.test.ts:661:22)
+
+PASS tests/unit/runtime/model-policy-admission.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeWorkerAuth/admin-catalog.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeMetadataAuth/registrations.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeArtifactAuth/schema-indexes.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     4.8s | 1188/1188 passed | /tests/unit/runtimeUnavailableAuth/closure.test.ts
+  ❌     2.4s | 358/361 passed | /tests/unit/runtimeAssetUnavailableAuth/closure.test.ts
+  ✅     1.8s | 2/2 passed | /tests/unit/runtimeMetadataAuth/registrations.test.ts
+  ❌     1.6s | 2/3 passed | /tests/unit/runtimeArtifactAuth/inventory.test.ts
+  ✅     1.5s | 5/5 passed | /tests/unit/runtimeArtifactAuth/schema-indexes.test.ts
+  ✅     1.4s | 59/59 passed | /tests/unit/runtimeWorkerAuth/admin-catalog.test.ts
+  ❌     1.2s | 6/7 passed | /tests/unit/runtimeRegistryAuth/catalog.test.ts
+  ✅     1.2s | 134/134 passed | /tests/unit/runtime/model-policy-admission.test.ts
+  ❌     0.7s | 7/20 passed | /tests/unit/memory-observer.test.ts
+  ✅     0.3s | 49/49 passed | /tests/unit/artifacts/sdk.test.ts
+  ✅     0.3s | 68/68 passed | /tests/unit/attachments/sdk.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.42s ( 2.4%) - import-aware AST and native Convex registration visibility maintained import-aware AST finds the exact historical 41 metadata paths with zero unresolved
+    /tests/unit/runtimeMetadataAuth/registrations.test.ts
+
+ 2. [32m✓[0m    0.31s ( 1.8%) - maintained current composition preserves every current native table and the unique artifact scope index
+    /tests/unit/runtimeAssetUnavailableAuth/closure.test.ts
+
+ 3. [32m✓[0m    0.28s ( 1.6%) - deployable native schema indexes all exported tables, including runtime schema fragments, have unique index field sequences
+    /tests/unit/runtimeArtifactAuth/schema-indexes.test.ts
+
+ 4. [32m✓[0m    0.25s ( 1.4%) - portable inventory, actual schema exports and preserved sources maintained inventory writes only owned temporary outputs and always removes them
+    /tests/unit/runtimeRegistryAuth/catalog.test.ts
+
+ 5. [32m✓[0m    0.21s ( 1.2%) - actual registered visibility and canonical schema/AST catalog maintained backend composition resolves all 25 current paths with seven public and eighteen internal
+    /tests/unit/runtimeWorkerAuth/admin-catalog.test.ts
+
+ 6. [31m✗[0m    0.20s ( 1.2%) - portable historical inventory remains immutable while current composition includes later guarded registrations
+    /tests/unit/runtimeArtifactAuth/inventory.test.ts
+
+ 7. [31m✗[0m    0.04s ( 0.3%) - accepted22 historical declarations stay literal-identical; all current validators and artifact bodies preserve the authorized repair
+    /tests/unit/runtimeAssetUnavailableAuth/closure.test.ts
+
+ 8. [32m✓[0m    0.03s ( 0.2%) - original argument validators remain byte-identical per AST; only absent selectors added
+    /tests/unit/runtimeUnavailableAuth/closure.test.ts
+
+ 9. [32m✓[0m    0.03s ( 0.2%) - terminal embedding result profile fence known embedding capture accepts only one current matching profile vector, with zero attachment charge delta
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+10. [32m✓[0m    0.03s ( 0.1%) - native private policy ledger — offline logic only explicit compatible safe fallback reserves once with pinned candidate and no lost prior spend
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+11. [32m✓[0m    0.03s ( 0.1%) - current policy narrowing at fallback and dispatch boundaries operation narrowing after valid fallback reserve preserves full original liability and denies permit
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+12. [32m✓[0m    0.02s ( 0.1%) - native private policy ledger — offline logic only visible output, unknown outcome and unqualified candidates deny fallback reservation
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+13. [32m✓[0m    0.02s ( 0.1%) - trusted terminal capture and current private attachment healthy charge capture and attachment are separate, monetary once, exact-current retries zero writes
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+14. [32m✓[0m    0.02s ( 0.1%) - current policy narrowing at fallback and dispatch boundaries fallback permission revoked after valid reservation denies checkpoint with zero effects
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+15. [32m✓[0m    0.02s ( 0.1%) - replays the exact historical three-edit native repair, 26 tables, 173 indexes and every tamper control without private runners
+    /tests/unit/runtimeAssetUnavailableAuth/closure.test.ts
+
+16. [32m✓[0m    0.02s ( 0.1%) - native private policy ledger — offline logic only known cost settles exactly once and eligible result replay needs no new reservation
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+17. [32m✓[0m    0.02s ( 0.1%) - conversations:addMessage managed outcome uses only the canonical managed transcript and protected metadata
+    /tests/unit/runtimeUnavailableAuth/closure.test.ts
+
+18. [32m✓[0m    0.02s ( 0.1%) - current policy narrowing at fallback and dispatch boundaries compatible fallback at exact narrowed cumulative ceiling remains permitted
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+19. [32m✓[0m    0.01s ( 0.1%) - artifacts:completeArtifactUpload uses the current catalog and produces its protected outcome without raw-storage delivery
+    /tests/unit/runtimeAssetUnavailableAuth/closure.test.ts
+
+20. [32m✓[0m    0.01s ( 0.1%) - current policy narrowing at fallback and dispatch boundaries current fallback revocation denies fresh reservation and query even with generally allowed model
+    /tests/unit/runtime/model-policy-admission.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 1.99s (11.4% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      17.52s
+  Test suites:        11
+  Individual tests:   842
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 11
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 4 failed, 7 passed, 11 total
+Tests:       18 failed, 1878 passed, 1896 total
+Snapshots:   0 total
+Time:        17.52 s
+Ran all test suites within paths "tests/unit/artifacts/sdk.test.ts", "tests/unit/attachments/sdk.test.ts", "tests/unit/memory-observer.test.ts", "tests/unit/runtime/model-policy-admission.test.ts", "tests/unit/runtimeArtifactAuth/inventory.test.ts", "tests/unit/runtimeArtifactAuth/schema-indexes.test.ts", "tests/unit/runtimeAssetUnavailableAuth/closure.test.ts", "tests/unit/runtimeRegistryAuth/catalog.test.ts", "tests/unit/runtimeUnavailableAuth/closure.test.ts", "tests/unit/runtimeWorkerAuth/admin-catalog.test.ts", "tests/unit/runtimeMetadataAuth/registrations.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-dev-integration1/provider-ci-author1/affected-sdk-tests2.json

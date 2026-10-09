@@ -1,4 +1,5 @@
 import { afterEach } from "@jest/globals";
+import { nativeProviderCredentials } from "./operator-client";
 import {
   createCortexMemory as createSync,
   createCortexMemoryAsync as createAsync,
@@ -13,12 +14,12 @@ afterEach(async () => {
 });
 
 export function createCortexMemory(config: CortexMemoryConfig): CortexMemoryModel {
-  const factory = createSync(config);
+  const factory = createSync(config, nativeProviderCredentials(config.convexUrl));
   factories.add(factory);
   return factory;
 }
 export async function createCortexMemoryAsync(config: CortexMemoryConfig): Promise<CortexMemoryModel> {
-  const factory = await createAsync(config);
+  const factory = await createAsync(config, nativeProviderCredentials(config.convexUrl));
   factories.add(factory);
   return factory;
 }

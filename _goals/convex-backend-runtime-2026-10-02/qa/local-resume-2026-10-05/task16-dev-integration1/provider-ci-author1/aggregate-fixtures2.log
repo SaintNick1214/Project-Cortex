@@ -1,0 +1,178 @@
+(node:71766) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/admin-security.test.ts (6.01 s)
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+PASS tests/unit/user-profile-deletion-receipt.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/immutable-history-scope.test.ts (13.345 s)
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/tenant-scope.test.ts (9.399 s)
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅    13.3s | 1/1 passed | /tests/unit/immutable-history-scope.test.ts
+  ✅     9.4s | 4/4 passed | /tests/unit/tenant-scope.test.ts
+  ✅     6.0s | 20/20 passed | /tests/unit/admin-security.test.ts
+  ✅     0.9s | 8/8 passed | /tests/unit/user-profile-deletion-receipt.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.46s ( 1.5%) - unqualified sweeping script refusals cleanup-test-data.ts rejects legacy targets and does not read configuration
+    /tests/unit/admin-security.test.ts
+
+ 2. [32m✓[0m    0.09s ( 0.3%) - unqualified sweeping script refusals test-memory-openai-20x.mjs rejects legacy targets and does not read configuration
+    /tests/unit/admin-security.test.ts
+
+ 3. [32m✓[0m    0.01s ( 0.0%) - propagates a purge failure before any verification read
+    /tests/unit/user-profile-deletion-receipt.test.ts
+
+ 4. [32m✓[0m    0.01s ( 0.0%) - preserves a confirmed purge when verification cannot disclose its result
+    /tests/unit/user-profile-deletion-receipt.test.ts
+
+ 5. [32m✓[0m    0.00s ( 0.0%) - history queries keep equal logical IDs in their authenticated tenant, including unscoped data
+    /tests/unit/immutable-history-scope.test.ts
+
+ 6. [32m✓[0m    0.00s ( 0.0%) - raw administration registration boundary contains exactly the reviewed maintenance functions
+    /tests/unit/admin-security.test.ts
+
+ 7. [32m✓[0m    0.00s ( 0.0%) - raw administration registration boundary listTable is internal and never public
+    /tests/unit/admin-security.test.ts
+
+ 8. [32m✓[0m    0.00s ( 0.0%) - raw administration registration boundary listTable has no client privilege or tenant override
+    /tests/unit/admin-security.test.ts
+
+ 9. [32m✓[0m    0.00s ( 0.0%) - preserves a confirmed purge when verification cannot disclose its result
+    /tests/unit/user-profile-deletion-receipt.test.ts
+
+10. [32m✓[0m    0.00s ( 0.0%) - propagates a purge failure before any verification read
+    /tests/unit/user-profile-deletion-receipt.test.ts
+
+11. [32m✓[0m    0.00s ( 0.0%) - dry runs do not dispatch mutation or verification
+    /tests/unit/user-profile-deletion-receipt.test.ts
+
+12. [32m✓[0m    0.00s ( 0.0%) - raw administration registration boundary countTable is internal and never public
+    /tests/unit/admin-security.test.ts
+
+13. [32m✓[0m    0.00s ( 0.0%) - raw administration registration boundary getAllCounts is internal and never public
+    /tests/unit/admin-security.test.ts
+
+14. [32m✓[0m    0.00s ( 0.0%) - raw administration registration boundary deleteRecord is internal and never public
+    /tests/unit/admin-security.test.ts
+
+15. [32m✓[0m    0.00s ( 0.0%) - raw administration registration boundary clearTable is internal and never public
+    /tests/unit/admin-security.test.ts
+
+16. [32m✓[0m    0.00s ( 0.0%) - raw administration registration boundary deleteRecord has no client privilege or tenant override
+    /tests/unit/admin-security.test.ts
+
+17. [32m✓[0m    0.00s ( 0.0%) - raw administration registration boundary listTable retains its table allowlist and excludes arbitrary tables
+    /tests/unit/admin-security.test.ts
+
+18. [32m✓[0m    0.00s ( 0.0%) - raw administration registration boundary countTable retains its table allowlist and excludes arbitrary tables
+    /tests/unit/admin-security.test.ts
+
+19. [32m✓[0m    0.00s ( 0.0%) - raw administration registration boundary deleteRecord retains its table allowlist and excludes arbitrary tables
+    /tests/unit/admin-security.test.ts
+
+20. [32m✓[0m    0.00s ( 0.0%) - raw administration registration boundary clearTable retains its table allowlist and excludes arbitrary tables
+    /tests/unit/admin-security.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.60s (2.0% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      29.89s
+  Test suites:        4
+  Individual tests:   26
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 4
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 4 passed, 4 total
+Tests:       33 passed, 33 total
+Snapshots:   0 total
+Time:        29.887 s
+Ran all test suites within paths "tests/unit/admin-security.test.ts", "tests/unit/user-profile-deletion-receipt.test.ts", "tests/unit/immutable-history-scope.test.ts", "tests/unit/tenant-scope.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-dev-integration1/provider-ci-author1/aggregate-fixtures2.json

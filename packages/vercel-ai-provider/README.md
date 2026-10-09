@@ -129,9 +129,12 @@ Async video still requires an enabled, qualified development Gateway service.
   transport options and durable reconnect/output types.
 - `@cortexmemory/sdk/runtime`: authenticated browser-safe runtime client, contracts and
   content/media/asset operations; no root SDK, graph driver or model factory is bundled.
-- Existing root and `./react` provider exports remain for legacy public contract checks.
+- Existing root and `./react` provider exports retain the incoming 0.38 server wrappers,
+  explicit private deployment transport and caller-owned graph lifecycle.
   Their older application-side model/memory wrappers are not the backend-run integration
   described here and do not replace verified runtime identity or server model policy.
+
+Legacy local model wrappers and memory factories require explicit administrative server credentials, or a borrowed `Cortex` whose `deploymentOperator` mode is enabled. Ordinary clients fail with `CAPABILITY_UNAVAILABLE` before model, embedding, extraction, observer, or memory RPC effects. The mode reports local routing; Convex still verifies administrative authentication independently. Use the `/remote` transport for application requests.
 
 ## Validation
 
@@ -151,3 +154,8 @@ The provider unit/React/remote and integration projects include controlled cover
 Actual e2e and quickstart browser qualification also require verified Convex, identity,
 Agent and Gateway prerequisites. Missing services and skipped coverage remain visible.
 See [quickstart/README.md](quickstart/README.md) for the separately installed demo.
+The application catalog has its own version and immutable payloads. CLI builds do not
+copy this source into templates; application install/update is an explicit catalog
+operation independent of SDK/backend updates. A published older application payload
+does not acquire this branch's runtime integration from an SDK update.
+

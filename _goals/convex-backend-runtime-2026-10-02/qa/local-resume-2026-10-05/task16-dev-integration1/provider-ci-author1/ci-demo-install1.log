@@ -1,0 +1,72 @@
+
+added 2 packages in 316ms
+
+added 2 packages in 146ms
+{
+  "manager": "npm@12.2.0",
+  "artifacts": [
+    {
+      "name": "@cortexmemory/sdk",
+      "version": "999.999.0",
+      "file": "/private/var/folders/xh/sddkg7sx0gdcdqsps6w1qy780000gn/T/cortex-ci-install-pkQKbE/sdk.tgz",
+      "integrity": "sha512-U0rSnUhIaGHSpeqZyk2KLx8ofy/cgWocDytyEBO4fO61T7hUp1kZcq4N7sazPhdYrdYvgb1ULpsVfmdKBietlw=="
+    },
+    {
+      "name": "@cortexmemory/vercel-ai-provider",
+      "version": "999.999.0",
+      "file": "/private/var/folders/xh/sddkg7sx0gdcdqsps6w1qy780000gn/T/cortex-ci-install-pkQKbE/provider.tgz",
+      "integrity": "sha512-1FYqNYl2qM4Mbx6pJ/LakKp0qlJ3EjhgwaTq7pe5HsFdzzp9rHmj5oKKJ+gQFWM63XbbHz6e4HmdMgTyBls/0w=="
+    }
+  ]
+}
+✔ npm@12.2.0 installs an unpublished transitive SDK candidate with ordinary frozen policy (714.092917ms)
+Progress: resolved 0, reused 0, downloaded 1, added 0
+Progress: resolved 2, reused 0, downloaded 2, added 0, done
+
+Done in 137ms using pnpm v10.33.0
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +2
+++
+Progress: resolved 2, reused 2, downloaded 0, added 2, done
+
+dependencies:
++ @cortexmemory/sdk 999.999.0
++ @cortexmemory/vercel-ai-provider 999.999.0
+
+Done in 149ms using pnpm v10.33.0
+{
+  "manager": "pnpm@10.33.0",
+  "artifacts": [
+    {
+      "name": "@cortexmemory/sdk",
+      "version": "999.999.0",
+      "file": "/private/var/folders/xh/sddkg7sx0gdcdqsps6w1qy780000gn/T/cortex-ci-install-FzSWle/sdk.tgz",
+      "integrity": "sha512-2RACn5CeiMpcJSaZO1CJPwwgRpgR9vpMFePNuVLqEannnyoTIr906OgxsX1GxnTYoyJudAokQB5oOyHxTXl7nA=="
+    },
+    {
+      "name": "@cortexmemory/vercel-ai-provider",
+      "version": "999.999.0",
+      "file": "/private/var/folders/xh/sddkg7sx0gdcdqsps6w1qy780000gn/T/cortex-ci-install-FzSWle/provider.tgz",
+      "integrity": "sha512-1RMJlxcy+0MB01yra4IjHq5hTkATiXA6BMBCtdD4TyfL8OQ0Ge0ZIWwOcLQ0xoTzAje0GPtIRWVmgpkqeEpMTg=="
+    }
+  ]
+}
+✔ pnpm@10.33.0 installs an unpublished transitive SDK candidate with ordinary frozen policy (999.179875ms)
+✔ missing provider and wrong archive identity fail before manifest mutation (26.966292ms)
+✔ unsupported manager fails before manifest mutation (23.563ms)
+✔ CLI invocation through a symlink validates required arguments and exits with failure (34.1575ms)
+Prepared vercel-ai-quickstart runtime backend from the installed candidate; native Convex codegen is still required.
+✔ 1.3 runtime preparation awaits the selected additive composer and preserves the private app registration (11.333ms)
+Prepared vercel-ai-quickstart legacy private backend from the installed candidate; native Convex codegen is still required.
+✔ immutable 1.2 explicitly retains the recognized legacy private composer even with runtime bytes present (9.864458ms)
+✔ runtime composition missing its distribution fails without falling back to legacy or changing app bytes (6.774042ms)
+✔ unreviewed template versions and unknown provider templates refuse before composition (4.451584ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 9
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1871.901583

@@ -1,0 +1,205 @@
+{
+  "recordedAtUtc": "2026-10-09T06:51:29.441375+00:00",
+  "purpose": "Coherent bounded author source handoff, no self-acceptance or successor live PASS",
+  "sourceClosed": true,
+  "candidateSourceDigest": "2210143c2ab7430f649c9dac406673e1e2b550fb57218a604c334cc453a9ae66",
+  "files": [
+    {
+      "path": ".github/workflows/pr-checks.yml",
+      "sha256": "816afa1f8d6723ac1266e2199e2dd4ef028cc53c752ab2ed56ca6a3486f225c6"
+    },
+    {
+      "path": "scripts/cleanup-test-data.ts",
+      "sha256": "f18dade728901c7c36c3c36e1e626798a5cfe6170bee833b1db5b07cc51ee5ea"
+    },
+    {
+      "path": "scripts/lib/ci-cleanup.ts",
+      "sha256": "e63fe80e73f89f3da02e0d8579ccbb4a0bde2a4f8686d8050ab43ee8d3f1447b"
+    },
+    {
+      "path": "scripts/prepare-ci-backend.mjs",
+      "sha256": "0afc8b957dcd2f99183a6cdc971390fd4b2f1ae16ae7b7facd31684ef3d6ebfe"
+    },
+    {
+      "path": "scripts/ci/runtime-environment.test.mjs",
+      "sha256": "8f816ced98ddd8bc14da507dc6334abb2593160584876f25243c636bb4e78c1c"
+    },
+    {
+      "path": "packages/vercel-ai-provider/README.md",
+      "sha256": "7b69021ca2fd31ca1819b75b19bf416a7e889690e98da4f6f5e3d4e7707a8339"
+    },
+    {
+      "path": "packages/vercel-ai-provider/jest.config.js",
+      "sha256": "c678eeea96c49d3e98317d4728a173e19a45f814a9fa5c611aa31e4bb2b91734"
+    },
+    {
+      "path": "packages/vercel-ai-provider/quickstart/.env.local.example",
+      "sha256": "c524c65e267c03e1ab431f490d376666528321ff662c82fb4b082e9a809e944d"
+    },
+    {
+      "path": "packages/vercel-ai-provider/quickstart/README.md",
+      "sha256": "7395ecb4a7f532d0846cdf760bebe3474f391d6976a36fb808f70d3843cbb6e4"
+    },
+    {
+      "path": "packages/vercel-ai-provider/quickstart/app/api/chat-v6/route.ts",
+      "sha256": "49a27655f86d0384b101e263eb6675f920733e18f24e33f41e68e1a2c9fbc40a"
+    },
+    {
+      "path": "packages/vercel-ai-provider/quickstart/app/api/chat/route.ts",
+      "sha256": "49a27655f86d0384b101e263eb6675f920733e18f24e33f41e68e1a2c9fbc40a"
+    },
+    {
+      "path": "packages/vercel-ai-provider/quickstart/app/api/health/route.ts",
+      "sha256": "eab2bed0a3c7524d91aa522c5dd0131df9a0fec7feac5dd0400ff5918bcc0c45"
+    },
+    {
+      "path": "packages/vercel-ai-provider/quickstart/app/page.tsx",
+      "sha256": "3554bddaecbfbd4926a670831cf1f93e9694b5f6ce442e4d44f1b3eec17f5156"
+    },
+    {
+      "path": "packages/vercel-ai-provider/quickstart/package.json",
+      "sha256": "361df3eb5cab422757cddfbbf7212739366de3f58dbd4ba3be85eca580b8ef02"
+    },
+    {
+      "path": "packages/vercel-ai-provider/quickstart/package-lock.json",
+      "sha256": "d2fd8dda2f0ff444b138fb84350f85f8c93d47af8e0a7251c80f1cad535e3698"
+    },
+    {
+      "path": "packages/vercel-ai-provider/quickstart/tests/unit/private-chat.test.ts",
+      "sha256": "bcad4c18b240d746f44f30f3e12b17947be05c26c271fce05da005845a865de6"
+    },
+    {
+      "path": "tests/agents.test.ts",
+      "sha256": "5f5a56b1b4532e724e7e33c7e0b4e1383b5464181c1f477b548818bb53528ded"
+    },
+    {
+      "path": "tests/users.test.ts",
+      "sha256": "0aba950f2aee7bbdde40dfa0e0a4353a5bd27139cde9b85d74ca54c0cc28d157"
+    },
+    {
+      "path": "tests/unit/artifacts/sdk.test.ts",
+      "sha256": "d6c97103476a1376efab180ee7341adf9a4ccec4391745dd8d4b48bc3ceace8c"
+    },
+    {
+      "path": "tests/unit/attachments/sdk.test.ts",
+      "sha256": "825417caebcfbdcdac5a930dc7b1e46a88406583fc3c7cdd65ef5201e7ac84ee"
+    },
+    {
+      "path": "tests/unit/memory-observer.test.ts",
+      "sha256": "b46b366331bfc37b8022a7b3555ccdfeec583d1a71bab53fa75a3b4977d30f45"
+    },
+    {
+      "path": "tests/unit/runtime/model-policy-admission.test.ts",
+      "sha256": "cde39cbbfe6f1a999f6503c5e9b2c87e676c3e0c3f1192f7110e4650fd2e2db3"
+    },
+    {
+      "path": "tests/unit/runtimeArtifactAuth/inventory.test.ts",
+      "sha256": "9029ebc9834ff761fdaf46c230d63919e40642d272440981ac08d17e1bdd7b0c"
+    },
+    {
+      "path": "tests/unit/runtimeArtifactAuth/schema-indexes.test.ts",
+      "sha256": "a41ebb59f0ddb03e7ae71c63c1c8669601fba36e493138fb2c80694663a17793"
+    },
+    {
+      "path": "tests/unit/runtimeAssetUnavailableAuth/closure.test.ts",
+      "sha256": "41500cdfe171b88b5213537b0d73c679ad24c555f7189b4ee27f5c419cd85907"
+    },
+    {
+      "path": "tests/unit/runtimeRegistryAuth/catalog.test.ts",
+      "sha256": "7bbe106eecc96cd08978e9e28fe5d588b4a6a644f0e8556688813c5975a7ae61"
+    },
+    {
+      "path": "tests/unit/runtimeUnavailableAuth/closure.test.ts",
+      "sha256": "664f93baf5e8e872d1f22096b16d0cf234f0c379c0bbebe4ea9ce741d260f579"
+    },
+    {
+      "path": "tests/unit/runtimeWorkerAuth/admin-catalog.test.ts",
+      "sha256": "39e85a2f773c17188059356eda9387225f0eaf5462fdb6fc147fb21a967a10e3"
+    },
+    {
+      "path": "tests/unit/ci-cleanup.test.ts",
+      "sha256": "18834568ad3347f67e30aee4685e3d1b10642767907240c31c9f81e81afd5c21"
+    },
+    {
+      "path": "tests/unit/ci-reference-preparation.test.ts",
+      "sha256": "41654a06d365d2b2714b1f568712396036fcc5ce2db6e9ac669766479f355e80"
+    }
+  ],
+  "toolchain": {
+    "node": "24.15.0",
+    "npm": "12.2.0",
+    "pathPrefix": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin"
+  },
+  "observedChecks": [
+    {
+      "command": "node --test scripts/ci/*.test.mjs",
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exit": 0,
+      "tests": 40,
+      "passed": 40,
+      "skipped": 0,
+      "log": "ci-guards3.log",
+      "priorFailures": [
+        "ci-guards1: live CLI env conflict",
+        "ci-guards2: resolved CLI now correctly clears offline selectors; test amended with explicit shape-only runtime fixture without credentials/service effects"
+      ]
+    },
+    {
+      "command": "node --experimental-vm-modules node_modules/jest/bin/jest.js --runTestsByPath tests/unit/ci-cleanup.test.ts tests/unit/ci-reference-preparation.test.ts --runInBand --forceExit=false --json --outputFile=<author>/native-guards1.json",
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exit": 0,
+      "suites": 2,
+      "tests": 30,
+      "passed": 30,
+      "skipped": 0,
+      "log": "native-guards1.log",
+      "naturalClose": true
+    },
+    {
+      "command": "js-yaml load + TypeScript parse selected changed files + provider Jest import",
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exit": 0,
+      "workflowJobDefinitions": 13,
+      "providerProjects": 7,
+      "parseDiagnostics": 0,
+      "receipt": "source-parse1.json"
+    },
+    {
+      "command": "provider Jest --listTests --runInBand --json",
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider",
+      "exit": 0,
+      "discoveredFiles": 23,
+      "receipt": "provider-discovery1.json",
+      "warning": "Watchman recrawl only; no watcher reset performed"
+    }
+  ],
+  "requirementsPreserved": [
+    "legacy/React exports and incoming 0.38 server wrappers; remote source stays browser-safe",
+    "canonical remote home with host JWT; both old inference routes refuse410; incoming private library assertions retained as controlled helper tests",
+    "provider seven distinct projects including remote actual and native graph; runtime-agent setup and one actual request official parser/reconnect/replay/digest/outsider/natural close remain unchanged",
+    "cloud SDK/CLI scoped retire+verify without physical purge; native prepare/reset requires explicit separate isolated-native class, exact loopback URL and job-owned container identity",
+    "runtime and incoming native/graph jobs retained; all-checks-passed requires native proof and cleanup success;13 job definitions is not historical18 matrix-expanded executions",
+    "current policy/source/asset/revocation/finality tests retained alongside portable historical fixture integrity/index/tamper assertions",
+    "canonical app1.3 candidate version; separate catalog channel/no auto mirror; released1.2 payloads owned by CLI author untouched"
+  ],
+  "dependentChecksRemaining": [
+    "Root SDK/backend source typecheck/build before provider types/build and package tests",
+    "current composer helper withComposedCatalog must select new distribution planner for full runtime current source rather than legacy1.2 plan; coordinated with CLI author",
+    "Root-owned SDK/backend distribution/packed-browser checks and selected security/unit suites",
+    "Provider all unit/React/remote/integration builds/tests on new SDK distribution",
+    "Canonical Vercel separate npm12.2 install/lock alignment and build/types/lint/tests",
+    "New actual shared CI runtime/provider/native/graph executions;171a receipts stay immutable and not successor PASS"
+  ],
+  "effects": {
+    "stage": 0,
+    "commit": 0,
+    "install": 0,
+    "deploy": 0,
+    "serviceCalls": 0,
+    "paidInference": 0,
+    "physicalReset": 0,
+    "scopedRetirement": 0,
+    "messageOtherChats": 0
+  },
+  "normalProcessClosure": "All author check children exited naturally; no force exit or residual owned process/container created."
+}

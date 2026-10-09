@@ -13,13 +13,15 @@
  * Requirements:
  * - OPENAI_API_KEY for real embeddings
  * - CONVEX_URL for test Convex deployment
+ * - Matching CORTEX_TEST_EXPECTED_CONVEX_URL and CONVEX_DEPLOY_KEY
  *
  * @jest-environment node
  */
 
 import { describe, it, expect, beforeAll, afterAll, jest } from "@jest/globals";
-import { Cortex } from "../../src";
-import { ConvexClient } from "convex/browser";
+// Belief revision uses the deployment operator's paged discovery and history
+// contract. User selectors below test workload filtering within owned spaces.
+import { Cortex } from "../helpers/deployment-operator";
 import { createNamedTestRunContext } from "../helpers/isolation";
 import {
   generateForgetfulUserPattern,
@@ -247,6 +249,10 @@ async function processTurn(
   return { factStored: false };
 }
 
+async function shutdownOwnedCortex(cortex: Cortex | undefined): Promise<void> {
+  await cortex?.shutdown();
+}
+
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Test Suite: Forgetful User
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -254,12 +260,10 @@ async function processTurn(
 describeWithOpenAI("Stress Tests - Forgetful User (50+ turns)", () => {
   const ctx = createNamedTestRunContext("stress-forgetful");
   let cortex: Cortex;
-  let client: ConvexClient;
   const memorySpaceId = ctx.memorySpaceId("forgetful");
   const userId = ctx.userId("forgetful");
 
   beforeAll(async () => {
-    client = new ConvexClient(CONVEX_URL);
     cortex = new Cortex({
       convexUrl: CONVEX_URL,
       resilience: STRESS_TEST_RESILIENCE,
@@ -283,8 +287,9 @@ describeWithOpenAI("Stress Tests - Forgetful User (50+ turns)", () => {
       });
     } catch {
       // Ignore
+    } finally {
+      await shutdownOwnedCortex(cortex);
     }
-    await client.close();
   });
 
   it("should handle 50+ repeated questions without creating duplicates", async () => {
@@ -375,12 +380,10 @@ describeWithOpenAI("Stress Tests - Forgetful User (50+ turns)", () => {
 describeWithOpenAI("Stress Tests - Indecisive User (30+ preference changes)", () => {
   const ctx = createNamedTestRunContext("stress-indecisive");
   let cortex: Cortex;
-  let client: ConvexClient;
   const memorySpaceId = ctx.memorySpaceId("indecisive");
   const userId = ctx.userId("indecisive");
 
   beforeAll(async () => {
-    client = new ConvexClient(CONVEX_URL);
     cortex = new Cortex({
       convexUrl: CONVEX_URL,
       resilience: STRESS_TEST_RESILIENCE,
@@ -401,8 +404,9 @@ describeWithOpenAI("Stress Tests - Indecisive User (30+ preference changes)", ()
       });
     } catch {
       // Ignore
+    } finally {
+      await shutdownOwnedCortex(cortex);
     }
-    await client.close();
   });
 
   it("should correctly supersede facts through 10+ color preference changes", async () => {
@@ -514,12 +518,10 @@ describeWithOpenAI("Stress Tests - Indecisive User (30+ preference changes)", ()
 describeWithOpenAI("Stress Tests - Topic Flooder (100+ similar memories)", () => {
   const ctx = createNamedTestRunContext("stress-flooder");
   let cortex: Cortex;
-  let client: ConvexClient;
   const memorySpaceId = ctx.memorySpaceId("flooder");
   const userId = ctx.userId("flooder");
 
   beforeAll(async () => {
-    client = new ConvexClient(CONVEX_URL);
     cortex = new Cortex({
       convexUrl: CONVEX_URL,
       resilience: STRESS_TEST_RESILIENCE,
@@ -540,8 +542,9 @@ describeWithOpenAI("Stress Tests - Topic Flooder (100+ similar memories)", () =>
       });
     } catch {
       // Ignore
+    } finally {
+      await shutdownOwnedCortex(cortex);
     }
-    await client.close();
   });
 
   it("should handle 25 variations on color preferences", async () => {
@@ -638,12 +641,10 @@ describeWithOpenAI("Stress Tests - Topic Flooder (100+ similar memories)", () =>
 describeWithOpenAI("Stress Tests - Combined Chaos (100+ turn ultimate test)", () => {
   const ctx = createNamedTestRunContext("stress-chaos");
   let cortex: Cortex;
-  let client: ConvexClient;
   const memorySpaceId = ctx.memorySpaceId("chaos");
   const userId = ctx.userId("chaos");
 
   beforeAll(async () => {
-    client = new ConvexClient(CONVEX_URL);
     cortex = new Cortex({
       convexUrl: CONVEX_URL,
       resilience: STRESS_TEST_RESILIENCE,
@@ -664,8 +665,9 @@ describeWithOpenAI("Stress Tests - Combined Chaos (100+ turn ultimate test)", ()
       });
     } catch {
       // Ignore
+    } finally {
+      await shutdownOwnedCortex(cortex);
     }
-    await client.close();
   });
 
   it("should survive 100+ turns of combined chaos patterns", async () => {
@@ -781,12 +783,10 @@ describeWithOpenAI("Stress Tests - Combined Chaos (100+ turn ultimate test)", ()
 describeWithOpenAI("Stress Tests - Parallel Chaos (5 concurrent users)", () => {
   const ctx = createNamedTestRunContext("stress-parallel");
   let cortex: Cortex;
-  let client: ConvexClient;
   const memorySpaceId = ctx.memorySpaceId("parallel");
   const userIds = Array.from({ length: 5 }, (_, i) => ctx.userId(`user-${i}`));
 
   beforeAll(async () => {
-    client = new ConvexClient(CONVEX_URL);
     cortex = new Cortex({
       convexUrl: CONVEX_URL,
       resilience: STRESS_TEST_RESILIENCE,
@@ -807,8 +807,9 @@ describeWithOpenAI("Stress Tests - Parallel Chaos (5 concurrent users)", () => {
       });
     } catch {
       // Ignore
+    } finally {
+      await shutdownOwnedCortex(cortex);
     }
-    await client.close();
   });
 
   it("should handle 5 concurrent users with 20 turns each", async () => {

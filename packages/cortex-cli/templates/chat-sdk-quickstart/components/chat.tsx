@@ -21,13 +21,9 @@ import {
 import { useArtifactSelector } from "@/hooks/use-artifact";
 import { useAutoResume } from "@/hooks/use-auto-resume";
 import { useChatVisibility } from "@/hooks/use-chat-visibility";
+import type { Vote } from "@/lib/types";
 import { ChatSDKError } from "@/lib/errors";
-import type {
-  Attachment,
-  ChatMessage,
-  CustomUIDataTypes,
-  Vote,
-} from "@/lib/types";
+import type { Attachment, ChatMessage, CustomUIDataTypes } from "@/lib/types";
 import { fetcher, fetchWithErrorHandlers, generateUUID } from "@/lib/utils";
 import { Artifact } from "./artifact";
 import { useDataStream } from "./data-stream-provider";
@@ -107,27 +103,9 @@ export function Chat({
     resumeStream,
     addToolApprovalResponse,
   } = useChat<ChatMessage>({
-    generateId: generateUUID,
     id,
     messages: initialMessages,
-    onData: handleDataPart,
-    onError: (error) => {
-      if (error instanceof ChatSDKError) {
-        if (
-          error.message?.includes("AI Gateway requires a valid credit card")
-        ) {
-          setShowCreditCardAlert(true);
-        } else {
-          toast({
-            description: error.message,
-            type: "error",
-          });
-        }
-      }
-    },
-    onFinish: () => {
-      mutate(unstable_serialize(getChatHistoryPaginationKey));
-    },
+    generateId: generateUUID,
     sendAutomaticallyWhen: ({ messages: currentMessages }) => {
       const lastMessage = currentMessages.at(-1);
       const shouldContinue =
@@ -136,7 +114,7 @@ export function Chat({
             "state" in part &&
             part.state === "approval-responded" &&
             "approval" in part &&
-            (part.approval as { approved?: boolean })?.approved === true
+            typeof (part.approval as { approved?: boolean })?.approved === "boolean"
         ) ?? false;
       return shouldContinue;
     },
@@ -146,19 +124,15 @@ export function Chat({
       prepareSendMessagesRequest(request) {
         const lastMessage = request.messages.at(-1);
         const isToolApprovalContinuation =
-          lastMessage?.role !== "user" ||
-          request.messages.some((msg) =>
-            msg.parts?.some((part) => {
-              const state = (part as { state?: string }).state;
-              return (
-                state === "approval-responded" || state === "output-denied"
-              );
-            })
+          lastMessage?.role === "assistant" &&
+          lastMessage.parts.some(
+            (part) => "state" in part && part.state === "approval-responded"
           );
 
         return {
           body: {
             id: request.id,
+            regenerate: request.trigger === "regenerate-message",
             ...(isToolApprovalContinuation
               ? { messages: request.messages }
               : { message: lastMessage }),
@@ -169,6 +143,29 @@ export function Chat({
         };
       },
     }),
+    onData: handleDataPart,
+    onFinish: () => {
+      mutate(unstable_serialize(getChatHistoryPaginationKey));
+    },
+    onError: (error) => {
+      if (error instanceof ChatSDKError) {
+        if (
+          error.message?.includes("AI Gateway requires a valid credit card")
+        ) {
+          setShowCreditCardAlert(true);
+        } else {
+          toast({
+            type: "error",
+            description: error.message,
+          });
+        }
+      } else {
+        toast({
+          type: "error",
+          description: "We couldn't complete the response. Please try again.",
+        });
+      }
+    },
   });
 
   const searchParams = useSearchParams();
@@ -179,8 +176,8 @@ export function Chat({
   useEffect(() => {
     if (query && !hasAppendedQuery) {
       sendMessage({
-        parts: [{ text: query, type: "text" }],
         role: "user" as const,
+        parts: [{ type: "text", text: query }],
       });
 
       setHasAppendedQuery(true);

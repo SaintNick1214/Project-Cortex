@@ -21,6 +21,7 @@
  */
 
 import { runtimeEnv } from "../runtime";
+import { ConvexError } from "convex/values";
 import { CircuitBreaker } from "./CircuitBreaker";
 import { PriorityQueue } from "./PriorityQueue";
 import { getPriority } from "./priorities";
@@ -783,18 +784,11 @@ export class ResilienceLayer {
 
       // Handle ConvexError - extract data and include in error message
       // ConvexError has a `data` property containing the actual error code/message
-      if (
-        error &&
-        typeof error === "object" &&
-        "data" in error &&
-        (error as { data: unknown }).data !== undefined
-      ) {
-        const convexError = error as { data: unknown; message?: string };
-        const errorData =
-          typeof convexError.data === "string"
-            ? convexError.data
-            : JSON.stringify(convexError.data);
-        throw new Error(errorData);
+      if (error instanceof ConvexError) {
+        // Preserve the native application-error type for commit-aware callers.
+        // A definite backend refusal must not become an unknown transport outcome.
+        // Reconstruct it from its public data to avoid retaining server diagnostics.
+        throw new ConvexError(error.data);
       }
 
       throw error;

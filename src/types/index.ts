@@ -45,7 +45,10 @@ export interface CollaborativeSettings {
   approvedParticipants?: string[];
 }
 
-export interface Conversation {
+/** Additive invocation evidence; these fields are returned separately from persisted primary documents. */
+export interface GraphCaptureMetadata {graphJobs?:import("../graph/types").GraphJobReceipt[];graphDisposition?:"queued"|"delivered";}
+
+export interface Conversation extends GraphCaptureMetadata {
   _id: string;
   conversationId: string;
   memorySpaceId: string; // Memory space isolation
@@ -439,7 +442,7 @@ export interface DeleteManyConversationsResult {
 // Immutable Store (Layer 1b)
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-export interface ImmutableEntry {
+export interface ImmutableEntry extends GraphCaptureMetadata {
   type: string;
   id: string;
   data: Record<string, unknown>;
@@ -519,7 +522,7 @@ export interface CountImmutableFilter {
 // Mutable Store (Layer 1c)
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-export interface MutableRecord {
+export interface MutableRecord extends GraphCaptureMetadata {
   _id: string;
   namespace: string;
   key: string;
@@ -568,7 +571,7 @@ export interface CountMutableFilter {
   updatedBefore?: number;
 }
 
-export interface PurgeNamespaceOptions {
+export interface PurgeNamespaceOptions extends GraphSyncOption {
   dryRun?: boolean;
   /** Tenant ID for multi-tenancy isolation (auto-injected from AuthContext) */
   tenantId?: string;
@@ -594,7 +597,12 @@ export interface PurgeManyFilter {
 // Vector Memory (Layer 2)
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-export type SourceType = "conversation" | "system" | "tool" | "a2a" | "fact-extraction";
+export type SourceType =
+  | "conversation"
+  | "system"
+  | "tool"
+  | "a2a"
+  | "fact-extraction";
 export type ContentType = "raw" | "summarized" | "fact";
 
 export interface ConversationRef {
@@ -633,7 +641,7 @@ export interface MemoryVersion {
   timestamp: number;
 }
 
-export interface MemoryEntry {
+export interface MemoryEntry extends GraphCaptureMetadata {
   _id: string;
   memoryId: string;
   memorySpaceId: string;
@@ -712,6 +720,8 @@ export interface StoreMemoryInput {
 }
 
 export interface SearchMemoriesOptions {
+  tenantId?: string;
+  participantId?: string;
   embedding?: number[];
   userId?: string;
   tags?: string[];
@@ -1081,7 +1091,7 @@ export interface ForgetResult {
   restorable: boolean;
 }
 
-export interface GetMemoryOptions {
+export interface GetMemoryOptions extends DomainReadOptions {
   includeConversation?: boolean; // Fetch ACID conversation
 }
 
@@ -1165,6 +1175,9 @@ export interface UpdateMemoryOptions extends GraphSyncOption {
 }
 
 export interface ExportMemoriesOptions {
+  tenantId?: string;
+  signal?: AbortSignal;
+  deadlineMs?: number;
   memorySpaceId: string;
   userId?: string;
   format: "json" | "csv";
@@ -1190,7 +1203,7 @@ export interface EnrichedRelation {
   object: string;
 }
 
-export interface FactRecord {
+export interface FactRecord extends GraphCaptureMetadata {
   _id: string;
   factId: string;
   memorySpaceId: string;
@@ -1210,7 +1223,7 @@ export interface FactRecord {
   predicate?: string; // Relationship type
   object?: string; // Secondary entity
   confidence: number; // 0-100
-  sourceType: "conversation" | "system" | "tool" | "manual" | "a2a";
+  sourceType: "conversation" | "system" | "tool" | "manual" | "a2a" | "fact-extraction";
   sourceRef?: {
     conversationId?: string;
     messageIds?: string[];
@@ -1236,6 +1249,9 @@ export interface FactRecord {
 
   // Embedding for semantic search (v0.30.0+)
   embedding?: number[];
+  supersedesEndpoint?: import("../facts/history").PendingRichEventV1["payload"]["supersedesEndpoint"];
+  supersededByEndpoint?: import("../facts/history").PendingRichEventV1["payload"]["supersededByEndpoint"];
+  historyReceipt?: import("../facts/history").HistoryReceipt;
 }
 
 export interface StoreFactParams {
@@ -1256,7 +1272,7 @@ export interface StoreFactParams {
   predicate?: string;
   object?: string;
   confidence: number;
-  sourceType: "conversation" | "system" | "tool" | "manual" | "a2a";
+  sourceType: "conversation" | "system" | "tool" | "manual" | "a2a" | "fact-extraction";
   sourceRef?: {
     conversationId?: string;
     messageIds?: string[];
@@ -1378,6 +1394,7 @@ export interface CountFactsFilter {
 }
 
 export interface SearchFactsOptions {
+  tenantId?: string;
   // Fact-specific filters
   factType?:
     | "preference"
@@ -1554,9 +1571,14 @@ export interface SemanticSearchFactsOptions {
   createdBefore?: Date;
 }
 
-export interface DeleteManyFactsParams {
+export interface DeleteManyFactsParams extends GraphSyncOption {
   // Required
   memorySpaceId: string;
+  tenantId?: string;
+  /** Physical clear preserves the existing destructive default: all retained versions. */
+  includeSuperseded?: boolean;
+  signal?: AbortSignal;
+  deadlineMs?: number;
 
   // Optional filters
   userId?: string; // Filter by user (GDPR cleanup)
@@ -1579,7 +1601,7 @@ export interface DeleteManyFactsResult {
 // Memory Spaces Registry (NEW)
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-export interface MemorySpace {
+export interface MemorySpace extends GraphCaptureMetadata {
   _id: string;
   memorySpaceId: string;
   tenantId?: string; // Multi-tenancy: SaaS platform isolation
@@ -1609,6 +1631,8 @@ export interface RegisterMemorySpaceParams {
 }
 
 export interface MemorySpaceStats {
+  /** Serialized full-document estimate; excludes files, indexes and physical storage overhead. */
+  storageMeasurement?: "convex-json-utf8-estimate";
   memorySpaceId: string;
   totalMemories: number;
   totalConversations: number;
@@ -1662,7 +1686,7 @@ export interface ListMemorySpacesResult {
   offset: number;
 }
 
-export interface DeleteMemorySpaceOptions {
+export interface DeleteMemorySpaceOptions extends GraphSyncOption, importErasureOptions {
   cascade: boolean; // Required: Must be true to proceed
   reason: string; // Required: Why deleting (audit trail)
   confirmId?: string; // Optional: Safety check (must match memorySpaceId)
@@ -1670,7 +1694,9 @@ export interface DeleteMemorySpaceOptions {
 
 export interface DeleteMemorySpaceResult {
   memorySpaceId: string;
-  deleted: true;
+  deleted: boolean;
+  totalBytesKind?: "serializedDocumentEstimate";
+  erasure?: import("../users/erasure").ErasureReceipt;
   cascade: {
     conversationsDeleted: number;
     memoriesDeleted: number;
@@ -1687,7 +1713,7 @@ export interface GetMemorySpaceStatsOptions {
   includeParticipants?: boolean;
 }
 
-export interface UpdateMemorySpaceOptions {}
+export interface UpdateMemorySpaceOptions extends GraphSyncOption {}
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Coordination: Agents Registry API (Optional Metadata)
@@ -2073,7 +2099,12 @@ export interface UserVersion {
   timestamp: number;
 }
 
-export interface DeleteUserOptions {
+type importErasureOptions = import("../users/erasure").ErasureOptions;
+export type ErasureReceipt = import("../users/erasure").ErasureReceipt;
+export type ErasureTransport = import("../users/erasure").ErasureTransport;
+export type ErasureGraphParticipant = import("../users/erasure").ErasureGraphParticipant;
+
+export interface DeleteUserOptions extends importErasureOptions {
   /** Enable cascade deletion across all layers (default: false) */
   cascade?: boolean;
   /** Run verification after deletion (default: true) */
@@ -2083,6 +2114,7 @@ export interface DeleteUserOptions {
 }
 
 export interface UserDeleteResult {
+  erasure?: ErasureReceipt;
   userId: string;
   deletedAt: number;
 
@@ -2098,6 +2130,8 @@ export interface UserDeleteResult {
   // Verification
   verification: {
     complete: boolean;
+    /** Present for the noncascade profile-only branch. */
+    scope?: "user-profile";
     issues: string[];
   };
 
@@ -2491,17 +2525,11 @@ export interface EnforcementStats {
 // Graph Integration Options (automatic sync via CORTEX_GRAPH_SYNC env var)
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-/**
- * Graph sync option placeholder for backward compatibility.
- *
- * As of v0.29.0, graph sync is automatic when CORTEX_GRAPH_SYNC=true is set.
- * The syncToGraph option has been removed - graph sync is now controlled
- * entirely by the environment variable and graphAdapter configuration.
- *
- * @deprecated The syncToGraph option is no longer used. Graph sync is automatic
- * when CORTEX_GRAPH_SYNC=true and graph credentials are configured.
- */
-export interface GraphSyncOption {}
+/** Per-operation graph intent; configured adapters default to their selected inline/background policy. */
+export interface GraphSyncOption {
+  /** Explicit false disables native capture and delivery; true requires an adapter. */
+  syncToGraph?: boolean;
+}
 
 // ────────────────────────────────────────────────────────────────────────────
 // Layer 1a: Conversations API Options
@@ -2551,9 +2579,80 @@ export interface DeleteMemoryOptions extends GraphSyncOption {}
 
 export interface StoreFactOptions extends GraphSyncOption {}
 
-export interface UpdateFactOptions extends GraphSyncOption {}
+export interface UpdateFactOptions extends GraphSyncOption {
+  tenantId?: string;
+  operationId?: string;
+  expectedSourceFactId?: string;
+  /** Full persisted-document official Convex JSON fingerprint frozen before effects. */
+  expectedSourceFingerprint?: string;
+}
 
-export interface DeleteFactOptions extends GraphSyncOption {}
+export interface DomainReadOptions extends GraphSyncOption {
+  tenantId?: string;
+  signal?: AbortSignal;
+  /** Relative finite page/mutation wait bound in milliseconds. */
+  deadlineMs?: number;
+}
+export interface ArchiveFactIntent {
+  memorySpaceId: string;
+  tenantId?: string;
+  physicalId: string;
+  factId: string;
+  expectedSourceFingerprint: string;
+  operationId: string;
+  requestDigest: string;
+  validUntil: number;
+  tags: string[];
+}
+export interface MemoryArchiveIntent {
+  memorySpaceId: string;
+  memoryId: string;
+  tenantId?: string;
+  memoryPhysicalId: string;
+  memoryFingerprint: string;
+  facts: ArchiveFactIntent[];
+}
+export interface DomainItemOutcome {
+  physicalId: string;
+  disposition: "knownCommitted" | "knownRolledBack" | "outcomeUnknown" | "alreadyAbsent" | "unstarted";
+  graphIdentity?: DomainGraphIdentity;
+  /** Original immutable job receipts after a known primary commit; retry delivery only. */
+  graphJobs?: import("../graph/types").GraphJobReceipt[];
+}
+export interface DomainGraphIdentity {
+  table: "memories" | "facts" | "conversations";
+  kind: "Memory" | "Fact" | "Conversation";
+  sourceDocumentId: string;
+  tenantScope: {kind: "tenantless"} | {kind: "tenant"; tenantId: string};
+  memorySpaceId: string;
+  logicalId: string;
+  targetId: string;
+  generation: string;
+  referenceRevision: number;
+  ownershipRevision: number;
+  bindings: Array<{role: string; slot: string; kind: string; targetId?: string; capturedOwnershipRevision?: number; capturedTenantId?: string; capturedMemorySpaceId?: string}>;
+}
+export interface DomainPartial {
+  outcomes: DomainItemOutcome[];
+  confirmedCount: number;
+  possibleCount: number;
+  confirmedPhysicalIds: string[];
+  unknownPhysicalIds: string[];
+  remainingPhysicalIds: string[];
+  unstartedPhysicalIds: string[];
+  originalIntents?: unknown[];
+}
+export class DomainOperationPartialError extends Error {
+  constructor(readonly operation: string, readonly partial: DomainPartial, readonly originalCause: unknown) {
+    super(`${operation} stopped: ${partial.confirmedCount} confirmed, ${partial.unknownPhysicalIds.length} unknown`);
+    this.name = "DomainOperationPartialError";
+  }
+}
+
+export interface DeleteFactOptions extends GraphSyncOption {
+  tenantId?: string;
+  operationId?: string;
+}
 
 // ────────────────────────────────────────────────────────────────────────────
 // Layer 4: Contexts API Types & Options
@@ -3468,7 +3567,7 @@ export interface ArtifactMemoryRef {
 /**
  * Main Artifact record
  */
-export interface Artifact {
+export interface Artifact extends GraphCaptureMetadata {
   /** Convex document ID */
   _id: string;
   /** Public artifact identifier */
@@ -3602,7 +3701,7 @@ export interface Artifact {
 /**
  * Options for creating a new artifact
  */
-export interface CreateArtifactOptions {
+export interface CreateArtifactOptions extends GraphSyncOption {
   /** Memory space ID (required) */
   memorySpaceId: string;
   /** Artifact title (required) */
@@ -3644,7 +3743,7 @@ export interface CreateArtifactOptions {
 /**
  * Options for updating an artifact's content
  */
-export interface UpdateArtifactOptions {
+export interface UpdateArtifactOptions extends GraphSyncOption {
   /** Optional new title */
   title?: string;
   /** Optional new kind */
@@ -3738,7 +3837,11 @@ export interface GetArtifactHistoryOptions {
 /**
  * Result from artifact deletion
  */
+export type BinaryDisposition = "deleted" | "protected" | "missing";
+
 export interface DeleteArtifactResult {
+  /** Per-blob outcome; metadata deletion does not imply shared-byte erasure. */
+  binaryDispositions?: Array<{ storageId: string; disposition: BinaryDisposition }>;
   /** Whether the artifact was deleted */
   deleted: boolean;
   /** ID of the deleted artifact */
@@ -3969,6 +4072,8 @@ export interface UploadUrlResult {
  * Result from bulk delete operation
  */
 export interface DeleteManyAttachmentsResult {
+  /** Byte outcomes, independent from the metadata deleted count. */
+  binaryDispositions?: Array<{ attachmentId: string; disposition: BinaryDisposition }>;
   /** Number of attachments deleted */
   deleted: number;
   /** Total number of attachments requested */
@@ -3979,3 +4084,31 @@ export interface DeleteManyAttachmentsResult {
     error: string;
   }>;
 }
+
+// Complete user-export fixed administrative protocol (no CLI dependency).
+export type {
+  UserExportDomain,
+  UserExportScope,
+  UserExportNode,
+  UserExportFileNode,
+  UserExportIdentity,
+  UserExportEdgeWitness,
+  UserExportProjection,
+  UserExportInspectResponse,
+  UserExportPageResponse,
+  UserExportEdgeResponse,
+  UserExportNodeResponse,
+  UserExportFileResponse,
+  UserExportCallOptions,
+  UserExportTransportOptions,
+  UserExportPageRequest,
+  UserExportEdgeRequest,
+  UserExportNodeRequest,
+  UserExportFileRequest,
+  UserExportTransport,
+  UserExportReachableNode,
+  UserExportClosure,
+  UserExportDataOptions,
+  UserExportEvent,
+  UserExportBlob,
+} from "../users/export";

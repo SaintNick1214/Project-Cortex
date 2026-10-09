@@ -1,0 +1,5807 @@
+{
+  "classification": "HISTORICAL_PRE_CLOSURE_ONLY",
+  "sourceHashes": {
+    "convex-dev/conversations.ts": "ffa908563b480d24f630238c5326e52eb531a70920c8889d91eb986397400f9e",
+    "convex-dev/conversationShares.ts": "95f5bd89a95901962bc84a4ea311bf9a28301d0c2c038c1f10433e091d5a414b",
+    "convex-dev/conversationSnapshots.ts": "e48b4d013ae2337929ca0ea4053771be3a45d9895585d6be630f1ecde4b5f5ed",
+    "convex-dev/factHistory.ts": "1cacc95b373f415749f01fca38e8334e266b8363a54884aeae756481e830cb6a",
+    "convex-dev/a2a.ts": "a898a0316faac0a48e08d0ee0ee650d81078789f0603439fdb256a34d7d1e1a3"
+  },
+  "originalModules": {
+    "conversations": [
+      {
+        "name": "create",
+        "validators": {
+          "conversationId": "v.string()",
+          "memorySpaceId": "v.string()",
+          "participantId": "v.optional(v.string())",
+          "tenantId": "v.optional(v.string())",
+          "type": "v.union(v.literal(\"user-agent\"), v.literal(\"agent-agent\"))",
+          "participants": "v.object({\n      userId: v.optional(v.string()), // The human user in the conversation\n      agentId: v.optional(v.string()), // The agent/assistant in the conversation\n      userIds: v.optional(v.array(v.string())), // Collaborative: multiple human users (Phase 4)\n      participantId: v.optional(v.string()), // Hive Mode: who created this\n      memorySpaceIds: v.optional(v.array(v.string())), // Collaboration Mode: cross-space\n    })",
+          "metadata": "v.optional(v.any())",
+          "visibility": "v.optional(\n      v.union(v.literal(\"private\"), v.literal(\"space\"), v.literal(\"public\")),\n    )",
+          "collaborativeSettings": "v.optional(\n      v.object({\n        requireApproval: v.boolean(),\n        ownerUserId: v.optional(v.string()),\n        approvedParticipants: v.optional(v.array(v.string())),\n      }),\n    )"
+        }
+      },
+      {
+        "name": "setVisibility",
+        "validators": {
+          "conversationId": "v.string()",
+          "visibility": "v.union(\n      v.literal(\"private\"),\n      v.literal(\"space\"),\n      v.literal(\"public\"),\n    )",
+          "userId": "v.optional(v.string())"
+        }
+      },
+      {
+        "name": "setMetadata",
+        "validators": {
+          "conversationId": "v.string()",
+          "metadata": "v.any()",
+          "userId": "v.string()"
+        }
+      },
+      {
+        "name": "checkAccess",
+        "validators": {
+          "conversationId": "v.string()",
+          "userId": "v.optional(v.string())",
+          "memorySpaceId": "v.optional(v.string())"
+        }
+      },
+      {
+        "name": "addMessage",
+        "validators": {
+          "conversationId": "v.string()",
+          "message": "v.object({\n      id: v.string(),\n      role: v.union(v.literal(\"user\"), v.literal(\"agent\"), v.literal(\"system\")),\n      content: v.string(),\n      participantId: v.optional(v.string()), // Hive Mode/Collaborative: which participant sent this\n      metadata: v.optional(v.any()),\n    })"
+        }
+      },
+      {
+        "name": "approveMessage",
+        "validators": {
+          "conversationId": "v.string()",
+          "messageId": "v.string()",
+          "approverId": "v.string()"
+        }
+      },
+      {
+        "name": "rejectMessage",
+        "validators": {
+          "conversationId": "v.string()",
+          "messageId": "v.string()",
+          "rejecterId": "v.string()"
+        }
+      },
+      {
+        "name": "deleteConversation",
+        "validators": {
+          "conversationId": "v.string()"
+        }
+      },
+      {
+        "name": "deleteMany",
+        "validators": {
+          "userId": "v.optional(v.string())",
+          "memorySpaceId": "v.optional(v.string())",
+          "type": "v.optional(\n      v.union(v.literal(\"user-agent\"), v.literal(\"agent-agent\")),\n    )",
+          "dryRun": "v.optional(v.boolean())",
+          "confirmationThreshold": "v.optional(v.number())"
+        }
+      },
+      {
+        "name": "deleteByIds",
+        "validators": {
+          "conversationIds": "v.array(v.string())"
+        }
+      },
+      {
+        "name": "purgeAll",
+        "validators": {}
+      },
+      {
+        "name": "getMessage",
+        "validators": {
+          "conversationId": "v.string()",
+          "messageId": "v.string()"
+        }
+      },
+      {
+        "name": "getMessagesByIds",
+        "validators": {
+          "conversationId": "v.string()",
+          "messageIds": "v.array(v.string())"
+        }
+      },
+      {
+        "name": "getOrCreate",
+        "validators": {
+          "memorySpaceId": "v.string()",
+          "participantId": "v.optional(v.string())",
+          "type": "v.union(v.literal(\"user-agent\"), v.literal(\"agent-agent\"))",
+          "participants": "v.object({\n      userId: v.optional(v.string()), // The human user in the conversation\n      agentId: v.optional(v.string()), // v0.17.0: Required for user-agent conversations\n      userIds: v.optional(v.array(v.string())), // Collaborative: multiple human users (Phase 4)\n      participantId: v.optional(v.string()), // Hive Mode: who created this\n      memorySpaceIds: v.optional(v.array(v.string())), // Collaboration Mode: cross-space\n    })",
+          "metadata": "v.optional(v.any())",
+          "visibility": "v.optional(\n      v.union(v.literal(\"private\"), v.literal(\"space\"), v.literal(\"public\")),\n    )",
+          "collaborativeSettings": "v.optional(\n      v.object({\n        requireApproval: v.boolean(),\n        ownerUserId: v.optional(v.string()),\n        approvedParticipants: v.optional(v.array(v.string())),\n      }),\n    )"
+        }
+      },
+      {
+        "name": "findConversation",
+        "validators": {
+          "memorySpaceId": "v.string()",
+          "type": "v.union(v.literal(\"user-agent\"), v.literal(\"agent-agent\"))",
+          "userId": "v.optional(v.string())",
+          "memorySpaceIds": "v.optional(v.array(v.string()))"
+        }
+      },
+      {
+        "name": "get",
+        "validators": {
+          "conversationId": "v.string()",
+          "tenantId": "v.optional(v.string())",
+          "includeMessages": "v.optional(v.boolean())",
+          "messageLimit": "v.optional(v.number())"
+        }
+      },
+      {
+        "name": "list",
+        "validators": {
+          "type": "v.optional(\n      v.union(v.literal(\"user-agent\"), v.literal(\"agent-agent\")),\n    )",
+          "userId": "v.optional(v.string())",
+          "memorySpaceId": "v.optional(v.string())",
+          "tenantId": "v.optional(v.string())",
+          "participantId": "v.optional(v.string())",
+          "createdBefore": "v.optional(v.number())",
+          "createdAfter": "v.optional(v.number())",
+          "updatedBefore": "v.optional(v.number())",
+          "updatedAfter": "v.optional(v.number())",
+          "lastMessageBefore": "v.optional(v.number())",
+          "lastMessageAfter": "v.optional(v.number())",
+          "messageCountMin": "v.optional(v.number())",
+          "messageCountMax": "v.optional(v.number())",
+          "limit": "v.optional(v.number())",
+          "offset": "v.optional(v.number())",
+          "sortBy": "v.optional(\n      v.union(\n        v.literal(\"createdAt\"),\n        v.literal(\"updatedAt\"),\n        v.literal(\"lastMessageAt\"),\n        v.literal(\"messageCount\"),\n      ),\n    )",
+          "sortOrder": "v.optional(v.union(v.literal(\"asc\"), v.literal(\"desc\")))",
+          "includeMessages": "v.optional(v.boolean())"
+        }
+      },
+      {
+        "name": "count",
+        "validators": {
+          "userId": "v.optional(v.string())",
+          "memorySpaceId": "v.optional(v.string())",
+          "type": "v.optional(\n      v.union(v.literal(\"user-agent\"), v.literal(\"agent-agent\")),\n    )"
+        }
+      },
+      {
+        "name": "getHistory",
+        "validators": {
+          "conversationId": "v.string()",
+          "limit": "v.optional(v.number())",
+          "offset": "v.optional(v.number())",
+          "sortOrder": "v.optional(v.union(v.literal(\"asc\"), v.literal(\"desc\")))",
+          "since": "v.optional(v.number())",
+          "until": "v.optional(v.number())",
+          "roles": "v.optional(\n      v.array(\n        v.union(v.literal(\"user\"), v.literal(\"agent\"), v.literal(\"system\")),\n      ),\n    )"
+        }
+      },
+      {
+        "name": "search",
+        "validators": {
+          "tenantId": "v.optional(v.string())",
+          "query": "v.string()",
+          "type": "v.optional(\n      v.union(v.literal(\"user-agent\"), v.literal(\"agent-agent\")),\n    )",
+          "userId": "v.optional(v.string())",
+          "memorySpaceId": "v.optional(v.string())",
+          "dateStart": "v.optional(v.number())",
+          "dateEnd": "v.optional(v.number())",
+          "limit": "v.optional(v.number())",
+          "searchIn": "v.optional(\n      v.union(v.literal(\"content\"), v.literal(\"metadata\"), v.literal(\"both\")),\n    )",
+          "matchMode": "v.optional(\n      v.union(v.literal(\"contains\"), v.literal(\"exact\"), v.literal(\"fuzzy\")),\n    )"
+        }
+      },
+      {
+        "name": "exportConversations",
+        "validators": {
+          "userId": "v.optional(v.string())",
+          "memorySpaceId": "v.optional(v.string())",
+          "conversationIds": "v.optional(v.array(v.string()))",
+          "type": "v.optional(\n      v.union(v.literal(\"user-agent\"), v.literal(\"agent-agent\")),\n    )",
+          "dateStart": "v.optional(v.number())",
+          "dateEnd": "v.optional(v.number())",
+          "format": "v.union(v.literal(\"json\"), v.literal(\"csv\"))",
+          "includeMetadata": "v.optional(v.boolean())"
+        }
+      }
+    ],
+    "conversationShares": [
+      {
+        "name": "create",
+        "validators": {
+          "conversationId": "v.string()",
+          "grantedBy": "v.string()",
+          "sourceMemorySpaceId": "v.optional(v.string())",
+          "grantType": "v.union(\n      v.literal(\"user\"),\n      v.literal(\"space\"),\n      v.literal(\"link\"),\n      v.literal(\"domain\"),\n    )",
+          "grantedTo": "v.optional(v.string())",
+          "permissions": "v.object({\n      canView: v.boolean(),\n      canViewFacts: v.boolean(),\n      canViewMemories: v.boolean(),\n      canContinue: v.boolean(),\n      canFork: v.boolean(),\n      canExport: v.boolean(),\n    })",
+          "expiresAt": "v.optional(v.number())",
+          "maxViews": "v.optional(v.number())",
+          "redactBefore": "v.optional(v.number())",
+          "redactSensitive": "v.optional(v.boolean())",
+          "tenantId": "v.optional(v.string())"
+        }
+      },
+      {
+        "name": "revoke",
+        "validators": {
+          "shareId": "v.string()",
+          "userId": "v.optional(v.string())"
+        }
+      },
+      {
+        "name": "incrementViewCount",
+        "validators": {
+          "shareId": "v.string()"
+        }
+      },
+      {
+        "name": "get",
+        "validators": {
+          "shareId": "v.string()"
+        }
+      },
+      {
+        "name": "listByConversation",
+        "validators": {
+          "conversationId": "v.string()",
+          "status": "v.optional(\n      v.union(v.literal(\"active\"), v.literal(\"revoked\"), v.literal(\"expired\")),\n    )"
+        }
+      },
+      {
+        "name": "listByGranter",
+        "validators": {
+          "grantedBy": "v.string()",
+          "status": "v.optional(\n      v.union(v.literal(\"active\"), v.literal(\"revoked\"), v.literal(\"expired\")),\n    )"
+        }
+      },
+      {
+        "name": "checkAccess",
+        "validators": {
+          "conversationId": "v.string()",
+          "userId": "v.optional(v.string())",
+          "memorySpaceId": "v.optional(v.string())",
+          "emailDomain": "v.optional(v.string())"
+        }
+      }
+    ],
+    "conversationSnapshots": [
+      {
+        "name": "create",
+        "validators": {
+          "conversationId": "v.string()",
+          "createdBy": "v.string()",
+          "redactPII": "v.optional(v.boolean())",
+          "redactBefore": "v.optional(v.number())",
+          "customRedactions": "v.optional(v.array(v.object({\n      pattern: v.string(),\n      replacement: v.string(),\n    })))",
+          "includeFacts": "v.optional(v.boolean())",
+          "includeMemories": "v.optional(v.boolean())",
+          "tenantId": "v.optional(v.string())"
+        }
+      },
+      {
+        "name": "deleteSnapshot",
+        "validators": {
+          "snapshotId": "v.string()",
+          "userId": "v.optional(v.string())"
+        }
+      },
+      {
+        "name": "get",
+        "validators": {
+          "snapshotId": "v.string()"
+        }
+      },
+      {
+        "name": "listByConversation",
+        "validators": {
+          "conversationId": "v.string()",
+          "includeArchived": "v.optional(v.boolean())"
+        }
+      },
+      {
+        "name": "listByUser",
+        "validators": {
+          "userId": "v.string()",
+          "includeArchived": "v.optional(v.boolean())"
+        }
+      }
+    ],
+    "factHistory": [
+      {
+        "name": "logEvent",
+        "validators": {
+          "factId": "v.string()",
+          "memorySpaceId": "v.string()",
+          "action": "v.union(\n      v.literal(\"CREATE\"),\n      v.literal(\"UPDATE\"),\n      v.literal(\"SUPERSEDE\"),\n      v.literal(\"DELETE\"),\n    )",
+          "oldValue": "v.optional(v.string())",
+          "newValue": "v.optional(v.string())",
+          "supersededBy": "v.optional(v.string())",
+          "supersedes": "v.optional(v.string())",
+          "reason": "v.optional(v.string())",
+          "confidence": "v.optional(v.number())",
+          "pipeline": "v.optional(\n      v.object({\n        slotMatching: v.optional(v.boolean()),\n        semanticMatching: v.optional(v.boolean()),\n        llmResolution: v.optional(v.boolean()),\n      }),\n    )",
+          "userId": "v.optional(v.string())",
+          "participantId": "v.optional(v.string())",
+          "conversationId": "v.optional(v.string())"
+        }
+      },
+      {
+        "name": "deleteByFactId",
+        "validators": {
+          "factId": "v.string()"
+        }
+      },
+      {
+        "name": "deleteByUserId",
+        "validators": {
+          "userId": "v.string()"
+        }
+      },
+      {
+        "name": "deleteByMemorySpace",
+        "validators": {
+          "memorySpaceId": "v.string()"
+        }
+      },
+      {
+        "name": "purgeOldEvents",
+        "validators": {
+          "memorySpaceId": "v.optional(v.string())",
+          "olderThan": "v.number()",
+          "limit": "v.optional(v.number())"
+        }
+      },
+      {
+        "name": "getHistory",
+        "validators": {
+          "factId": "v.string()",
+          "limit": "v.optional(v.number())"
+        }
+      },
+      {
+        "name": "getEvent",
+        "validators": {
+          "eventId": "v.string()"
+        }
+      },
+      {
+        "name": "getChangesByTimeRange",
+        "validators": {
+          "memorySpaceId": "v.string()",
+          "after": "v.optional(v.number())",
+          "before": "v.optional(v.number())",
+          "action": "v.optional(\n      v.union(\n        v.literal(\"CREATE\"),\n        v.literal(\"UPDATE\"),\n        v.literal(\"SUPERSEDE\"),\n        v.literal(\"DELETE\"),\n      ),\n    )",
+          "limit": "v.optional(v.number())",
+          "offset": "v.optional(v.number())"
+        }
+      },
+      {
+        "name": "countByAction",
+        "validators": {
+          "memorySpaceId": "v.string()",
+          "after": "v.optional(v.number())",
+          "before": "v.optional(v.number())"
+        }
+      },
+      {
+        "name": "getSupersessionChain",
+        "validators": {
+          "factId": "v.string()"
+        }
+      },
+      {
+        "name": "getActivitySummary",
+        "validators": {
+          "memorySpaceId": "v.string()",
+          "hours": "v.optional(v.number())"
+        }
+      }
+    ],
+    "a2a": [
+      {
+        "name": "send",
+        "validators": {
+          "from": "v.string()",
+          "to": "v.string()",
+          "message": "v.string()",
+          "userId": "v.optional(v.string())",
+          "contextId": "v.optional(v.string())",
+          "importance": "v.optional(v.number())",
+          "trackConversation": "v.optional(v.boolean())",
+          "autoEmbed": "v.optional(v.boolean())",
+          "metadata": "v.optional(v.any())"
+        }
+      },
+      {
+        "name": "request",
+        "validators": {
+          "from": "v.string()",
+          "to": "v.string()",
+          "message": "v.string()",
+          "timeout": "v.optional(v.number())",
+          "retries": "v.optional(v.number())",
+          "userId": "v.optional(v.string())",
+          "contextId": "v.optional(v.string())",
+          "importance": "v.optional(v.number())"
+        }
+      },
+      {
+        "name": "broadcast",
+        "validators": {
+          "from": "v.string()",
+          "to": "v.array(v.string())",
+          "message": "v.string()",
+          "userId": "v.optional(v.string())",
+          "contextId": "v.optional(v.string())",
+          "importance": "v.optional(v.number())",
+          "trackConversation": "v.optional(v.boolean())",
+          "metadata": "v.optional(v.any())"
+        }
+      },
+      {
+        "name": "getConversation",
+        "validators": {
+          "agent1": "v.string()",
+          "agent2": "v.string()",
+          "since": "v.optional(v.number())",
+          "until": "v.optional(v.number())",
+          "minImportance": "v.optional(v.number())",
+          "tags": "v.optional(v.array(v.string()))",
+          "userId": "v.optional(v.string())",
+          "limit": "v.optional(v.number())",
+          "offset": "v.optional(v.number())"
+        }
+      }
+    ]
+  },
+  "registrations": [
+    {
+      "path": "conversations:create",
+      "kind": "mutation",
+      "originalVisibility": "public",
+      "visibility": "public",
+      "validators": "{\n    conversationId: v.string(),\n    memorySpaceId: v.string(), // NEW: Required - which memory space owns this\n    participantId: v.optional(v.string()), // NEW: Hive Mode participant tracking\n    tenantId: v.optional(v.string()), // Multi-tenancy: SaaS platform isolation\n    type: v.union(v.literal(\"user-agent\"), v.literal(\"agent-agent\")),\n    participants: v.object({\n      userId: v.optional(v.string()), // The human user in the conversation\n      agentId: v.optional(v.string()), // The agent/assistant in the conversation\n      userIds: v.optional(v.array(v.string())), // Collaborative: multiple human users (Phase 4)\n      participantId: v.optional(v.string()), // Hive Mode: who created this\n      memorySpaceIds: v.optional(v.array(v.string())), // Collaboration Mode: cross-space\n    }),\n    metadata: v.optional(v.any()),\n    // Visibility for shareable chats (Phase 1)\n    visibility: v.optional(\n      v.union(v.literal(\"private\"), v.literal(\"space\"), v.literal(\"public\")),\n    ),\n    // Collaborative settings (Phase 4)\n    collaborativeSettings: v.optional(\n      v.object({\n        requireApproval: v.boolean(),\n        ownerUserId: v.optional(v.string()),\n        approvedParticipants: v.optional(v.array(v.string())),\n      }),\n    ),\n  }",
+      "sourceSha256": "ffa908563b480d24f630238c5326e52eb531a70920c8889d91eb986397400f9e"
+    },
+    {
+      "path": "conversations:setVisibility",
+      "kind": "mutation",
+      "originalVisibility": "public",
+      "visibility": "public",
+      "validators": "{\n    conversationId: v.string(),\n    visibility: v.union(\n      v.literal(\"private\"),\n      v.literal(\"space\"),\n      v.literal(\"public\"),\n    ),\n    // For authorization - caller must provide their userId to verify ownership\n    userId: v.optional(v.string()),\n  }",
+      "sourceSha256": "ffa908563b480d24f630238c5326e52eb531a70920c8889d91eb986397400f9e"
+    },
+    {
+      "path": "conversations:setMetadata",
+      "kind": "mutation",
+      "originalVisibility": "public",
+      "visibility": "public",
+      "validators": "{\n    conversationId: v.string(),\n    metadata: v.any(),\n    // Required for authorization - must verify ownership before modifying metadata\n    userId: v.string(),\n  }",
+      "sourceSha256": "ffa908563b480d24f630238c5326e52eb531a70920c8889d91eb986397400f9e"
+    },
+    {
+      "path": "conversations:checkAccess",
+      "kind": "query",
+      "originalVisibility": "public",
+      "visibility": "public",
+      "validators": "{\n    conversationId: v.string(),\n    userId: v.optional(v.string()),\n    memorySpaceId: v.optional(v.string()),\n  }",
+      "sourceSha256": "ffa908563b480d24f630238c5326e52eb531a70920c8889d91eb986397400f9e"
+    },
+    {
+      "path": "conversations:addMessage",
+      "kind": "mutation",
+      "originalVisibility": "public",
+      "visibility": "public",
+      "validators": "{\n    conversationId: v.string(),\n    message: v.object({\n      id: v.string(),\n      role: v.union(v.literal(\"user\"), v.literal(\"agent\"), v.literal(\"system\")),\n      content: v.string(),\n      participantId: v.optional(v.string()), // Hive Mode/Collaborative: which participant sent this\n      metadata: v.optional(v.any()),\n    }),\n  }",
+      "sourceSha256": "ffa908563b480d24f630238c5326e52eb531a70920c8889d91eb986397400f9e"
+    },
+    {
+      "path": "conversations:approveMessage",
+      "kind": "mutation",
+      "originalVisibility": "public",
+      "visibility": "public",
+      "validators": "{\n    conversationId: v.string(),\n    messageId: v.string(),\n    approverId: v.string(), // userId of the approver\n  }",
+      "sourceSha256": "ffa908563b480d24f630238c5326e52eb531a70920c8889d91eb986397400f9e"
+    },
+    {
+      "path": "conversations:rejectMessage",
+      "kind": "mutation",
+      "originalVisibility": "public",
+      "visibility": "public",
+      "validators": "{\n    conversationId: v.string(),\n    messageId: v.string(),\n    rejecterId: v.string(), // userId of the rejecter\n  }",
+      "sourceSha256": "ffa908563b480d24f630238c5326e52eb531a70920c8889d91eb986397400f9e"
+    },
+    {
+      "path": "conversations:deleteConversation",
+      "kind": "mutation",
+      "originalVisibility": "public",
+      "visibility": "public",
+      "validators": "{\n    conversationId: v.string(),\n  }",
+      "sourceSha256": "ffa908563b480d24f630238c5326e52eb531a70920c8889d91eb986397400f9e"
+    },
+    {
+      "path": "conversations:deleteMany",
+      "kind": "mutation",
+      "originalVisibility": "public",
+      "visibility": "public",
+      "validators": "{\n    userId: v.optional(v.string()),\n    memorySpaceId: v.optional(v.string()), // Filter by memory space\n    type: v.optional(\n      v.union(v.literal(\"user-agent\"), v.literal(\"agent-agent\")),\n    ),\n    dryRun: v.optional(v.boolean()), // Preview what would be deleted\n    confirmationThreshold: v.optional(v.number()), // Auto-confirm threshold (default: 10)\n  }",
+      "sourceSha256": "ffa908563b480d24f630238c5326e52eb531a70920c8889d91eb986397400f9e"
+    },
+    {
+      "path": "conversations:deleteByIds",
+      "kind": "mutation",
+      "originalVisibility": "public",
+      "visibility": "public",
+      "validators": "{\n    conversationIds: v.array(v.string()),\n  }",
+      "sourceSha256": "ffa908563b480d24f630238c5326e52eb531a70920c8889d91eb986397400f9e"
+    },
+    {
+      "path": "conversations:purgeAll",
+      "kind": "mutation",
+      "originalVisibility": "public",
+      "visibility": "internal",
+      "validators": "{}",
+      "sourceSha256": "ffa908563b480d24f630238c5326e52eb531a70920c8889d91eb986397400f9e"
+    },
+    {
+      "path": "conversations:getMessage",
+      "kind": "query",
+      "originalVisibility": "public",
+      "visibility": "public",
+      "validators": "{\n    conversationId: v.string(),\n    messageId: v.string(),\n  }",
+      "sourceSha256": "ffa908563b480d24f630238c5326e52eb531a70920c8889d91eb986397400f9e"
+    },
+    {
+      "path": "conversations:getMessagesByIds",
+      "kind": "query",
+      "originalVisibility": "public",
+      "visibility": "public",
+      "validators": "{\n    conversationId: v.string(),\n    messageIds: v.array(v.string()),\n  }",
+      "sourceSha256": "ffa908563b480d24f630238c5326e52eb531a70920c8889d91eb986397400f9e"
+    },
+    {
+      "path": "conversations:getOrCreate",
+      "kind": "mutation",
+      "originalVisibility": "public",
+      "visibility": "public",
+      "validators": "{\n    memorySpaceId: v.string(), // NEW: Required\n    participantId: v.optional(v.string()), // NEW: Hive Mode\n    type: v.union(v.literal(\"user-agent\"), v.literal(\"agent-agent\")),\n    participants: v.object({\n      userId: v.optional(v.string()), // The human user in the conversation\n      agentId: v.optional(v.string()), // v0.17.0: Required for user-agent conversations\n      userIds: v.optional(v.array(v.string())), // Collaborative: multiple human users (Phase 4)\n      participantId: v.optional(v.string()), // Hive Mode: who created this\n      memorySpaceIds: v.optional(v.array(v.string())), // Collaboration Mode: cross-space\n    }),\n    metadata: v.optional(v.any()),\n    // Visibility for shareable chats (Phase 1)\n    visibility: v.optional(\n      v.union(v.literal(\"private\"), v.literal(\"space\"), v.literal(\"public\")),\n    ),\n    // Collaborative settings (Phase 4)\n    collaborativeSettings: v.optional(\n      v.object({\n        requireApproval: v.boolean(),\n        ownerUserId: v.optional(v.string()),\n        approvedParticipants: v.optional(v.array(v.string())),\n      }),\n    ),\n  }",
+      "sourceSha256": "ffa908563b480d24f630238c5326e52eb531a70920c8889d91eb986397400f9e"
+    },
+    {
+      "path": "conversations:findConversation",
+      "kind": "query",
+      "originalVisibility": "public",
+      "visibility": "public",
+      "validators": "{\n    memorySpaceId: v.string(), // NEW: Required\n    type: v.union(v.literal(\"user-agent\"), v.literal(\"agent-agent\")),\n    userId: v.optional(v.string()),\n    memorySpaceIds: v.optional(v.array(v.string())),\n  }",
+      "sourceSha256": "ffa908563b480d24f630238c5326e52eb531a70920c8889d91eb986397400f9e"
+    },
+    {
+      "path": "conversations:get",
+      "kind": "query",
+      "originalVisibility": "public",
+      "visibility": "public",
+      "validators": "{\n    conversationId: v.string(),\n    tenantId: v.optional(v.string()), // Multi-tenancy: filter by tenant\n    includeMessages: v.optional(v.boolean()), // Default: true\n    messageLimit: v.optional(v.number()), // Limit messages returned\n  }",
+      "sourceSha256": "ffa908563b480d24f630238c5326e52eb531a70920c8889d91eb986397400f9e"
+    },
+    {
+      "path": "conversations:list",
+      "kind": "query",
+      "originalVisibility": "public",
+      "visibility": "public",
+      "validators": "{\n    type: v.optional(\n      v.union(v.literal(\"user-agent\"), v.literal(\"agent-agent\")),\n    ),\n    userId: v.optional(v.string()),\n    memorySpaceId: v.optional(v.string()), // Filter by memory space\n    tenantId: v.optional(v.string()), // Multi-tenancy: filter by tenant\n    participantId: v.optional(v.string()), // Hive Mode tracking\n    createdBefore: v.optional(v.number()),\n    createdAfter: v.optional(v.number()),\n    updatedBefore: v.optional(v.number()),\n    updatedAfter: v.optional(v.number()),\n    lastMessageBefore: v.optional(v.number()),\n    lastMessageAfter: v.optional(v.number()),\n    messageCountMin: v.optional(v.number()),\n    messageCountMax: v.optional(v.number()),\n    limit: v.optional(v.number()),\n    offset: v.optional(v.number()),\n    sortBy: v.optional(\n      v.union(\n        v.literal(\"createdAt\"),\n        v.literal(\"updatedAt\"),\n        v.literal(\"lastMessageAt\"),\n        v.literal(\"messageCount\"),\n      ),\n    ),\n    sortOrder: v.optional(v.union(v.literal(\"asc\"), v.literal(\"desc\"))),\n    includeMessages: v.optional(v.boolean()),\n  }",
+      "sourceSha256": "ffa908563b480d24f630238c5326e52eb531a70920c8889d91eb986397400f9e"
+    },
+    {
+      "path": "conversations:count",
+      "kind": "query",
+      "originalVisibility": "public",
+      "visibility": "public",
+      "validators": "{\n    userId: v.optional(v.string()),\n    memorySpaceId: v.optional(v.string()), // NEW\n    type: v.optional(\n      v.union(v.literal(\"user-agent\"), v.literal(\"agent-agent\")),\n    ),\n  }",
+      "sourceSha256": "ffa908563b480d24f630238c5326e52eb531a70920c8889d91eb986397400f9e"
+    },
+    {
+      "path": "conversations:getHistory",
+      "kind": "query",
+      "originalVisibility": "public",
+      "visibility": "public",
+      "validators": "{\n    conversationId: v.string(),\n    limit: v.optional(v.number()),\n    offset: v.optional(v.number()),\n    sortOrder: v.optional(v.union(v.literal(\"asc\"), v.literal(\"desc\"))),\n    since: v.optional(v.number()), // Messages after timestamp\n    until: v.optional(v.number()), // Messages before timestamp\n    roles: v.optional(\n      v.array(\n        v.union(v.literal(\"user\"), v.literal(\"agent\"), v.literal(\"system\")),\n      ),\n    ), // Filter by role\n  }",
+      "sourceSha256": "ffa908563b480d24f630238c5326e52eb531a70920c8889d91eb986397400f9e"
+    },
+    {
+      "path": "conversations:search",
+      "kind": "query",
+      "originalVisibility": "public",
+      "visibility": "public",
+      "validators": "{\n    tenantId: v.optional(v.string()),\n    query: v.string(),\n    type: v.optional(\n      v.union(v.literal(\"user-agent\"), v.literal(\"agent-agent\")),\n    ),\n    userId: v.optional(v.string()),\n    memorySpaceId: v.optional(v.string()), // Filter by memory space\n    dateStart: v.optional(v.number()),\n    dateEnd: v.optional(v.number()),\n    limit: v.optional(v.number()),\n    searchIn: v.optional(\n      v.union(v.literal(\"content\"), v.literal(\"metadata\"), v.literal(\"both\")),\n    ), // Default: \"content\"\n    matchMode: v.optional(\n      v.union(v.literal(\"contains\"), v.literal(\"exact\"), v.literal(\"fuzzy\")),\n    ), // Default: \"contains\"\n  }",
+      "sourceSha256": "ffa908563b480d24f630238c5326e52eb531a70920c8889d91eb986397400f9e"
+    },
+    {
+      "path": "conversations:exportConversations",
+      "kind": "query",
+      "originalVisibility": "public",
+      "visibility": "public",
+      "validators": "{\n    userId: v.optional(v.string()),\n    memorySpaceId: v.optional(v.string()), // NEW: Filter by memory space\n    conversationIds: v.optional(v.array(v.string())),\n    type: v.optional(\n      v.union(v.literal(\"user-agent\"), v.literal(\"agent-agent\")),\n    ),\n    dateStart: v.optional(v.number()),\n    dateEnd: v.optional(v.number()),\n    format: v.union(v.literal(\"json\"), v.literal(\"csv\")),\n    includeMetadata: v.optional(v.boolean()),\n  }",
+      "sourceSha256": "ffa908563b480d24f630238c5326e52eb531a70920c8889d91eb986397400f9e"
+    },
+    {
+      "path": "conversationShares:create",
+      "kind": "mutation",
+      "originalVisibility": "public",
+      "visibility": "public",
+      "validators": "{\n    conversationId: v.string(),\n    grantedBy: v.string(), // userId who is sharing\n    sourceMemorySpaceId: v.optional(v.string()), // Deprecated: now derived from conversation\n    grantType: v.union(\n      v.literal(\"user\"),\n      v.literal(\"space\"),\n      v.literal(\"link\"),\n      v.literal(\"domain\"),\n    ),\n    grantedTo: v.optional(v.string()),\n    permissions: v.object({\n      canView: v.boolean(),\n      canViewFacts: v.boolean(),\n      canViewMemories: v.boolean(),\n      canContinue: v.boolean(),\n      canFork: v.boolean(),\n      canExport: v.boolean(),\n    }),\n    expiresAt: v.optional(v.number()),\n    maxViews: v.optional(v.number()),\n    redactBefore: v.optional(v.number()),\n    redactSensitive: v.optional(v.boolean()),\n    tenantId: v.optional(v.string()),\n  }",
+      "sourceSha256": "95f5bd89a95901962bc84a4ea311bf9a28301d0c2c038c1f10433e091d5a414b"
+    },
+    {
+      "path": "conversationShares:revoke",
+      "kind": "mutation",
+      "originalVisibility": "public",
+      "visibility": "public",
+      "validators": "{\n    shareId: v.string(),\n    // Optional: caller's userId for authorization\n    userId: v.optional(v.string()),\n  }",
+      "sourceSha256": "95f5bd89a95901962bc84a4ea311bf9a28301d0c2c038c1f10433e091d5a414b"
+    },
+    {
+      "path": "conversationShares:incrementViewCount",
+      "kind": "mutation",
+      "originalVisibility": "public",
+      "visibility": "internal",
+      "validators": "{\n    shareId: v.string(),\n  }",
+      "sourceSha256": "95f5bd89a95901962bc84a4ea311bf9a28301d0c2c038c1f10433e091d5a414b"
+    },
+    {
+      "path": "conversationShares:get",
+      "kind": "query",
+      "originalVisibility": "public",
+      "visibility": "public",
+      "validators": "{\n    shareId: v.string(),\n  }",
+      "sourceSha256": "95f5bd89a95901962bc84a4ea311bf9a28301d0c2c038c1f10433e091d5a414b"
+    },
+    {
+      "path": "conversationShares:listByConversation",
+      "kind": "query",
+      "originalVisibility": "public",
+      "visibility": "public",
+      "validators": "{\n    conversationId: v.string(),\n    status: v.optional(\n      v.union(v.literal(\"active\"), v.literal(\"revoked\"), v.literal(\"expired\")),\n    ),\n  }",
+      "sourceSha256": "95f5bd89a95901962bc84a4ea311bf9a28301d0c2c038c1f10433e091d5a414b"
+    },
+    {
+      "path": "conversationShares:listByGranter",
+      "kind": "query",
+      "originalVisibility": "public",
+      "visibility": "public",
+      "validators": "{\n    grantedBy: v.string(),\n    status: v.optional(\n      v.union(v.literal(\"active\"), v.literal(\"revoked\"), v.literal(\"expired\")),\n    ),\n  }",
+      "sourceSha256": "95f5bd89a95901962bc84a4ea311bf9a28301d0c2c038c1f10433e091d5a414b"
+    },
+    {
+      "path": "conversationShares:checkAccess",
+      "kind": "query",
+      "originalVisibility": "public",
+      "visibility": "public",
+      "validators": "{\n    conversationId: v.string(),\n    userId: v.optional(v.string()),\n    memorySpaceId: v.optional(v.string()),\n    emailDomain: v.optional(v.string()),\n  }",
+      "sourceSha256": "95f5bd89a95901962bc84a4ea311bf9a28301d0c2c038c1f10433e091d5a414b"
+    },
+    {
+      "path": "conversationSnapshots:create",
+      "kind": "mutation",
+      "originalVisibility": "public",
+      "visibility": "public",
+      "validators": "{\n    conversationId: v.string(),\n    createdBy: v.string(),\n    \n    // Redaction options\n    redactPII: v.optional(v.boolean()),\n    redactBefore: v.optional(v.number()),\n    customRedactions: v.optional(v.array(v.object({\n      pattern: v.string(),\n      replacement: v.string(),\n    }))),\n    \n    // Include options\n    includeFacts: v.optional(v.boolean()),\n    includeMemories: v.optional(v.boolean()),\n    \n    // Multi-tenancy\n    tenantId: v.optional(v.string()),\n  }",
+      "sourceSha256": "e48b4d013ae2337929ca0ea4053771be3a45d9895585d6be630f1ecde4b5f5ed"
+    },
+    {
+      "path": "conversationSnapshots:deleteSnapshot",
+      "kind": "mutation",
+      "originalVisibility": "public",
+      "visibility": "public",
+      "validators": "{\n    snapshotId: v.string(),\n    userId: v.optional(v.string()),\n  }",
+      "sourceSha256": "e48b4d013ae2337929ca0ea4053771be3a45d9895585d6be630f1ecde4b5f5ed"
+    },
+    {
+      "path": "conversationSnapshots:get",
+      "kind": "query",
+      "originalVisibility": "public",
+      "visibility": "public",
+      "validators": "{\n    snapshotId: v.string(),\n  }",
+      "sourceSha256": "e48b4d013ae2337929ca0ea4053771be3a45d9895585d6be630f1ecde4b5f5ed"
+    },
+    {
+      "path": "conversationSnapshots:listByConversation",
+      "kind": "query",
+      "originalVisibility": "public",
+      "visibility": "public",
+      "validators": "{\n    conversationId: v.string(),\n    includeArchived: v.optional(v.boolean()),\n  }",
+      "sourceSha256": "e48b4d013ae2337929ca0ea4053771be3a45d9895585d6be630f1ecde4b5f5ed"
+    },
+    {
+      "path": "conversationSnapshots:listByUser",
+      "kind": "query",
+      "originalVisibility": "public",
+      "visibility": "public",
+      "validators": "{\n    userId: v.string(),\n    includeArchived: v.optional(v.boolean()),\n  }",
+      "sourceSha256": "e48b4d013ae2337929ca0ea4053771be3a45d9895585d6be630f1ecde4b5f5ed"
+    },
+    {
+      "path": "factHistory:logEvent",
+      "kind": "mutation",
+      "originalVisibility": "public",
+      "visibility": "internal",
+      "validators": "{\n    factId: v.string(),\n    memorySpaceId: v.string(),\n    action: v.union(\n      v.literal(\"CREATE\"),\n      v.literal(\"UPDATE\"),\n      v.literal(\"SUPERSEDE\"),\n      v.literal(\"DELETE\"),\n    ),\n    oldValue: v.optional(v.string()),\n    newValue: v.optional(v.string()),\n    supersededBy: v.optional(v.string()),\n    supersedes: v.optional(v.string()),\n    reason: v.optional(v.string()),\n    confidence: v.optional(v.number()),\n    pipeline: v.optional(\n      v.object({\n        slotMatching: v.optional(v.boolean()),\n        semanticMatching: v.optional(v.boolean()),\n        llmResolution: v.optional(v.boolean()),\n      }),\n    ),\n    userId: v.optional(v.string()),\n    participantId: v.optional(v.string()),\n    conversationId: v.optional(v.string()),\n  }",
+      "sourceSha256": "1cacc95b373f415749f01fca38e8334e266b8363a54884aeae756481e830cb6a"
+    },
+    {
+      "path": "factHistory:deleteByFactId",
+      "kind": "mutation",
+      "originalVisibility": "public",
+      "visibility": "internal",
+      "validators": "{\n    factId: v.string(),\n  }",
+      "sourceSha256": "1cacc95b373f415749f01fca38e8334e266b8363a54884aeae756481e830cb6a"
+    },
+    {
+      "path": "factHistory:deleteByUserId",
+      "kind": "mutation",
+      "originalVisibility": "public",
+      "visibility": "internal",
+      "validators": "{\n    userId: v.string(),\n  }",
+      "sourceSha256": "1cacc95b373f415749f01fca38e8334e266b8363a54884aeae756481e830cb6a"
+    },
+    {
+      "path": "factHistory:deleteByMemorySpace",
+      "kind": "mutation",
+      "originalVisibility": "public",
+      "visibility": "internal",
+      "validators": "{\n    memorySpaceId: v.string(),\n  }",
+      "sourceSha256": "1cacc95b373f415749f01fca38e8334e266b8363a54884aeae756481e830cb6a"
+    },
+    {
+      "path": "factHistory:purgeOldEvents",
+      "kind": "mutation",
+      "originalVisibility": "public",
+      "visibility": "internal",
+      "validators": "{\n    memorySpaceId: v.optional(v.string()),\n    olderThan: v.number(), // Timestamp - delete events before this\n    limit: v.optional(v.number()), // Max events to delete per call\n  }",
+      "sourceSha256": "1cacc95b373f415749f01fca38e8334e266b8363a54884aeae756481e830cb6a"
+    },
+    {
+      "path": "factHistory:getHistory",
+      "kind": "query",
+      "originalVisibility": "public",
+      "visibility": "public",
+      "validators": "{\n    factId: v.string(),\n    limit: v.optional(v.number()),\n  }",
+      "sourceSha256": "1cacc95b373f415749f01fca38e8334e266b8363a54884aeae756481e830cb6a"
+    },
+    {
+      "path": "factHistory:getEvent",
+      "kind": "query",
+      "originalVisibility": "public",
+      "visibility": "public",
+      "validators": "{\n    eventId: v.string(),\n  }",
+      "sourceSha256": "1cacc95b373f415749f01fca38e8334e266b8363a54884aeae756481e830cb6a"
+    },
+    {
+      "path": "factHistory:getChangesByTimeRange",
+      "kind": "query",
+      "originalVisibility": "public",
+      "visibility": "public",
+      "validators": "{\n    memorySpaceId: v.string(),\n    after: v.optional(v.number()),\n    before: v.optional(v.number()),\n    action: v.optional(\n      v.union(\n        v.literal(\"CREATE\"),\n        v.literal(\"UPDATE\"),\n        v.literal(\"SUPERSEDE\"),\n        v.literal(\"DELETE\"),\n      ),\n    ),\n    limit: v.optional(v.number()),\n    offset: v.optional(v.number()),\n  }",
+      "sourceSha256": "1cacc95b373f415749f01fca38e8334e266b8363a54884aeae756481e830cb6a"
+    },
+    {
+      "path": "factHistory:countByAction",
+      "kind": "query",
+      "originalVisibility": "public",
+      "visibility": "public",
+      "validators": "{\n    memorySpaceId: v.string(),\n    after: v.optional(v.number()),\n    before: v.optional(v.number()),\n  }",
+      "sourceSha256": "1cacc95b373f415749f01fca38e8334e266b8363a54884aeae756481e830cb6a"
+    },
+    {
+      "path": "factHistory:getSupersessionChain",
+      "kind": "query",
+      "originalVisibility": "public",
+      "visibility": "public",
+      "validators": "{\n    factId: v.string(),\n  }",
+      "sourceSha256": "1cacc95b373f415749f01fca38e8334e266b8363a54884aeae756481e830cb6a"
+    },
+    {
+      "path": "factHistory:getActivitySummary",
+      "kind": "query",
+      "originalVisibility": "public",
+      "visibility": "public",
+      "validators": "{\n    memorySpaceId: v.string(),\n    hours: v.optional(v.number()), // Default 24 hours\n  }",
+      "sourceSha256": "1cacc95b373f415749f01fca38e8334e266b8363a54884aeae756481e830cb6a"
+    },
+    {
+      "path": "a2a:send",
+      "kind": "mutation",
+      "originalVisibility": "public",
+      "visibility": "public",
+      "validators": "{\n    from: v.string(),\n    to: v.string(),\n    message: v.string(),\n    userId: v.optional(v.string()),\n    contextId: v.optional(v.string()),\n    importance: v.optional(v.number()),\n    trackConversation: v.optional(v.boolean()),\n    autoEmbed: v.optional(v.boolean()),\n    metadata: v.optional(v.any()),\n  }",
+      "sourceSha256": "a898a0316faac0a48e08d0ee0ee650d81078789f0603439fdb256a34d7d1e1a3"
+    },
+    {
+      "path": "a2a:request",
+      "kind": "mutation",
+      "originalVisibility": "public",
+      "visibility": "public",
+      "validators": "{\n    from: v.string(),\n    to: v.string(),\n    message: v.string(),\n    timeout: v.optional(v.number()),\n    retries: v.optional(v.number()),\n    userId: v.optional(v.string()),\n    contextId: v.optional(v.string()),\n    importance: v.optional(v.number()),\n  }",
+      "sourceSha256": "a898a0316faac0a48e08d0ee0ee650d81078789f0603439fdb256a34d7d1e1a3"
+    },
+    {
+      "path": "a2a:broadcast",
+      "kind": "mutation",
+      "originalVisibility": "public",
+      "visibility": "public",
+      "validators": "{\n    from: v.string(),\n    to: v.array(v.string()),\n    message: v.string(),\n    userId: v.optional(v.string()),\n    contextId: v.optional(v.string()),\n    importance: v.optional(v.number()),\n    trackConversation: v.optional(v.boolean()),\n    metadata: v.optional(v.any()),\n  }",
+      "sourceSha256": "a898a0316faac0a48e08d0ee0ee650d81078789f0603439fdb256a34d7d1e1a3"
+    },
+    {
+      "path": "a2a:getConversation",
+      "kind": "query",
+      "originalVisibility": "public",
+      "visibility": "public",
+      "validators": "{\n    agent1: v.string(),\n    agent2: v.string(),\n    since: v.optional(v.number()),\n    until: v.optional(v.number()),\n    minImportance: v.optional(v.number()),\n    tags: v.optional(v.array(v.string())),\n    userId: v.optional(v.string()),\n    limit: v.optional(v.number()),\n    offset: v.optional(v.number()),\n  }",
+      "sourceSha256": "a898a0316faac0a48e08d0ee0ee650d81078789f0603439fdb256a34d7d1e1a3"
+    }
+  ],
+  "baseline": {
+    "version": 1,
+    "functionsDirectory": "convex-dev",
+    "completeness": {
+      "method": "TypeScript AST import-aware builder-call and exported-binding resolution, recursive configured functions directory; fail on unresolved registrations/re-exports/routes/unclassified module",
+      "counts": {
+        "modules": 22,
+        "registered": 251,
+        "public": 240,
+        "internal": 11,
+        "httpRoutes": 0,
+        "registeredBuilderCalls": 251,
+        "resolvedExports": 251,
+        "guard": 198,
+        "internalize": 42
+      },
+      "unresolved": [],
+      "sourceHashes": [
+        {
+          "file": "convex-dev/a2a.ts",
+          "sha256": "a898a0316faac0a48e08d0ee0ee650d81078789f0603439fdb256a34d7d1e1a3"
+        },
+        {
+          "file": "convex-dev/admin.ts",
+          "sha256": "bc7a7d12a07405bd82d08174a99158ab44b4980ac302c98d81f968d281b32089"
+        },
+        {
+          "file": "convex-dev/agents.ts",
+          "sha256": "1c91db820f7a2903b4b4716cb0aa0e07614ad9d9b421a66381ff0f10bf3802b9"
+        },
+        {
+          "file": "convex-dev/artifacts.ts",
+          "sha256": "d3729a1445586fb1e4859e5421c488edc31078e6d7067379c5afd0e6c04523ea"
+        },
+        {
+          "file": "convex-dev/attachments.ts",
+          "sha256": "e5db5da39630172da927b01f445e637108797ba16656c8b2713745eaadd5c48e"
+        },
+        {
+          "file": "convex-dev/contexts.ts",
+          "sha256": "5cf5fba3ea848c132eeb7fbcf5d5bf7a65508788f0d934c979694619b50058c0"
+        },
+        {
+          "file": "convex-dev/conversationShares.ts",
+          "sha256": "95f5bd89a95901962bc84a4ea311bf9a28301d0c2c038c1f10433e091d5a414b"
+        },
+        {
+          "file": "convex-dev/conversationSnapshots.ts",
+          "sha256": "e48b4d013ae2337929ca0ea4053771be3a45d9895585d6be630f1ecde4b5f5ed"
+        },
+        {
+          "file": "convex-dev/conversations.ts",
+          "sha256": "ffa908563b480d24f630238c5326e52eb531a70920c8889d91eb986397400f9e"
+        },
+        {
+          "file": "convex-dev/factHistory.ts",
+          "sha256": "1cacc95b373f415749f01fca38e8334e266b8363a54884aeae756481e830cb6a"
+        },
+        {
+          "file": "convex-dev/facts.ts",
+          "sha256": "a5ca03410f0444569b75876ed0a2f351a863e0be73f586358209b4b5ed5836a5"
+        },
+        {
+          "file": "convex-dev/governance.ts",
+          "sha256": "33d0ca51e043edf076c80fa054e2a3697d212d4f8fcc5982817931848630864a"
+        },
+        {
+          "file": "convex-dev/graphSync.ts",
+          "sha256": "d2861f349eadebd75e95c579b4db18b3e401b2e1a8b1909fb0107324f89d8e4e"
+        },
+        {
+          "file": "convex-dev/immutable.ts",
+          "sha256": "bbcd5a67a54294c2b2c9d9347bc09f5b600a74dd7ab47b6dda37256bb2b1f431"
+        },
+        {
+          "file": "convex-dev/memories.ts",
+          "sha256": "e118e95b39fb2b279270e53e504b4dcd08c0da3162af8f433164250b16b5c81f"
+        },
+        {
+          "file": "convex-dev/memorySpaces.ts",
+          "sha256": "7c9f3639b21cf7b1784cc7f92d115c50c7ec0af1811ae155d7c57c9565c14eb4"
+        },
+        {
+          "file": "convex-dev/mutable.ts",
+          "sha256": "44f6c4b5de8f21251103348f13d39d233b2cf24ea368c77df33d39c4ebf886d0"
+        },
+        {
+          "file": "convex-dev/runtimeAuth.ts",
+          "sha256": "f2985d405d13e8094b6b8729d72979819ad22897cc614c1fdf44addb37bb4e9f"
+        },
+        {
+          "file": "convex-dev/runtimeAuthSchema.ts",
+          "sha256": "41859c943e06ed185d88bb4f0da21540e0999d9f736f933dfdcbd572ee9dd5d1"
+        },
+        {
+          "file": "convex-dev/schema.ts",
+          "sha256": "4a35305b53e38fd11df01b2fed09055ec88995bd34e6aa97f309586b2b89d9f8"
+        },
+        {
+          "file": "convex-dev/sessions.ts",
+          "sha256": "ff6c7a0671a0d59004e41858b77711cef7edb15a5f3f102f94bbeb79f8dae311"
+        },
+        {
+          "file": "convex-dev/users.ts",
+          "sha256": "a9ec7582a3ed4fff085504c7a4b3214bbdb16dc0cb0cff464180a40f08deabed"
+        }
+      ],
+      "statement": "Classification only: existing public paths are not yet protected. Task03B must close every public entry and recheck internal background helpers."
+    },
+    "routes": [],
+    "endpoints": [
+      {
+        "path": "a2a:send",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "conversations"
+        ],
+        "indexes": [
+          "by_conversationId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "userId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "a2a:request",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [],
+        "indexes": [],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "userId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "a2a:broadcast",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "conversations"
+        ],
+        "indexes": [
+          "by_conversationId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "userId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "a2a:getConversation",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "conversations",
+          "memories"
+        ],
+        "indexes": [
+          "by_conversationId",
+          "by_memorySpace"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "userId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "admin:listTable",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "internalize",
+        "tables": [],
+        "indexes": [],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "trusted deployment-operator internal invocation"
+      },
+      {
+        "path": "admin:deleteRecord",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "internalize",
+        "tables": [],
+        "indexes": [],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "trusted deployment-operator internal invocation"
+      },
+      {
+        "path": "admin:clearTable",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "internalize",
+        "tables": [],
+        "indexes": [],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "trusted deployment-operator internal invocation"
+      },
+      {
+        "path": "admin:countTable",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "internalize",
+        "tables": [],
+        "indexes": [],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "trusted deployment-operator internal invocation"
+      },
+      {
+        "path": "admin:getAllCounts",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "internalize",
+        "tables": [],
+        "indexes": [],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "trusted deployment-operator internal invocation"
+      },
+      {
+        "path": "agents:get",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "agents"
+        ],
+        "indexes": [
+          "by_agentId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "agentId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "admin"
+      },
+      {
+        "path": "agents:list",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "agents"
+        ],
+        "indexes": [
+          "by_status",
+          "by_registered"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "admin"
+      },
+      {
+        "path": "agents:count",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "agents"
+        ],
+        "indexes": [
+          "by_status"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "admin"
+      },
+      {
+        "path": "agents:exists",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "agents"
+        ],
+        "indexes": [
+          "by_agentId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "agentId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "admin"
+      },
+      {
+        "path": "agents:computeStats",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "memories",
+          "conversations",
+          "facts"
+        ],
+        "indexes": [
+          "by_participantId",
+          "by_memorySpace"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "agentId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "admin"
+      },
+      {
+        "path": "agents:register",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "agents"
+        ],
+        "indexes": [
+          "by_agentId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "agentId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "admin"
+      },
+      {
+        "path": "agents:update",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "agents"
+        ],
+        "indexes": [
+          "by_agentId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "agentId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "admin"
+      },
+      {
+        "path": "agents:updateMany",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "agents"
+        ],
+        "indexes": [
+          "by_agentId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "agentIds"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "admin"
+      },
+      {
+        "path": "agents:unregister",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "agents"
+        ],
+        "indexes": [
+          "by_agentId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "agentId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "admin"
+      },
+      {
+        "path": "agents:unregisterMany",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "agents"
+        ],
+        "indexes": [
+          "by_agentId",
+          "by_status"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "agentIds"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "admin"
+      },
+      {
+        "path": "agents:purgeAll",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "internalize",
+        "tables": [
+          "agents"
+        ],
+        "indexes": [],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "trusted deployment-operator internal invocation"
+      },
+      {
+        "path": "artifacts:create",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "artifacts"
+        ],
+        "indexes": [
+          "by_tenant_artifactId",
+          "by_artifactId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "memorySpaceId",
+          "participantId",
+          "tenantId",
+          "userId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "artifacts:update",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "artifacts"
+        ],
+        "indexes": [
+          "by_tenant_artifactId",
+          "by_artifactId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "tenantId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "artifacts:deleteArtifact",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "artifacts"
+        ],
+        "indexes": [
+          "by_tenant_artifactId",
+          "by_artifactId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "tenantId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "artifacts:undo",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "artifacts"
+        ],
+        "indexes": [
+          "by_tenant_artifactId",
+          "by_artifactId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "tenantId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "artifacts:redo",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "artifacts"
+        ],
+        "indexes": [
+          "by_tenant_artifactId",
+          "by_artifactId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "tenantId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "artifacts:setStreamingState",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "artifacts"
+        ],
+        "indexes": [
+          "by_tenant_artifactId",
+          "by_artifactId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "tenantId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "artifacts:setFileRef",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "internalize",
+        "tables": [
+          "artifacts"
+        ],
+        "indexes": [
+          "by_tenant_artifactId",
+          "by_artifactId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "tenantId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "storage:write"
+      },
+      {
+        "path": "artifacts:purgeVersions",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "artifacts"
+        ],
+        "indexes": [
+          "by_tenant_artifactId",
+          "by_artifactId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "tenantId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "artifacts:purgeAll",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "internalize",
+        "tables": [
+          "artifacts"
+        ],
+        "indexes": [
+          "by_tenantId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "tenantId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "trusted deployment-operator internal invocation"
+      },
+      {
+        "path": "artifacts:get",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "artifacts"
+        ],
+        "indexes": [
+          "by_tenant_artifactId",
+          "by_artifactId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "tenantId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "artifacts:getByConversation",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "artifacts"
+        ],
+        "indexes": [
+          "by_conversation"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "tenantId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "artifacts:list",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "artifacts"
+        ],
+        "indexes": [
+          "by_tenant_space",
+          "by_tenantId",
+          "by_memorySpace_state",
+          "by_memorySpace_kind",
+          "by_memorySpace",
+          "by_userId",
+          "by_streamingState"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "memorySpaceId",
+          "tenantId",
+          "userId",
+          "participantId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "artifacts:count",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "artifacts"
+        ],
+        "indexes": [
+          "by_tenant_space",
+          "by_memorySpace",
+          "by_tenantId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "memorySpaceId",
+          "tenantId",
+          "userId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "artifacts:getVersion",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "artifacts"
+        ],
+        "indexes": [
+          "by_tenant_artifactId",
+          "by_artifactId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "tenantId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "artifacts:getHistory",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "artifacts"
+        ],
+        "indexes": [
+          "by_tenant_artifactId",
+          "by_artifactId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "tenantId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "artifacts:startStreaming",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [],
+        "indexes": [],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "tenantId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "artifacts:appendContent",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [],
+        "indexes": [],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "tenantId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "artifacts:pauseStreaming",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [],
+        "indexes": [],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "tenantId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "artifacts:resumeStreaming",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [],
+        "indexes": [],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "tenantId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "artifacts:cancelStreaming",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [],
+        "indexes": [],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "tenantId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "artifacts:finalizeStreaming",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [],
+        "indexes": [],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "tenantId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "artifacts:setStreamingError",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [],
+        "indexes": [],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "tenantId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "artifacts:retryFromError",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [],
+        "indexes": [],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "tenantId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "artifacts:generateArtifactUploadUrl",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "internalize",
+        "tables": [
+          "artifacts"
+        ],
+        "indexes": [
+          "by_tenant_artifactId",
+          "by_artifactId"
+        ],
+        "usesStorage": true,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "tenantId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "storage:write"
+      },
+      {
+        "path": "artifacts:completeArtifactUpload",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "artifacts"
+        ],
+        "indexes": [
+          "by_tenant_artifactId",
+          "by_artifactId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "tenantId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "storage:write"
+      },
+      {
+        "path": "artifacts:getArtifactFileUrl",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "internalize",
+        "tables": [
+          "artifacts"
+        ],
+        "indexes": [
+          "by_tenant_artifactId",
+          "by_artifactId"
+        ],
+        "usesStorage": true,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "tenantId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "storage:read"
+      },
+      {
+        "path": "artifacts:detachFile",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "artifacts"
+        ],
+        "indexes": [
+          "by_tenant_artifactId",
+          "by_artifactId"
+        ],
+        "usesStorage": true,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "tenantId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "storage:write"
+      },
+      {
+        "path": "attachments:generateUploadUrl",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "internalize",
+        "tables": [],
+        "indexes": [],
+        "usesStorage": true,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "tenantId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "storage:write"
+      },
+      {
+        "path": "attachments:attach",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [],
+        "indexes": [],
+        "usesStorage": true,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "memorySpaceId",
+          "userId",
+          "tenantId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "storage:write"
+      },
+      {
+        "path": "attachments:remove",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [],
+        "indexes": [],
+        "usesStorage": true,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "tenantId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "storage:write"
+      },
+      {
+        "path": "attachments:removeMany",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [],
+        "indexes": [],
+        "usesStorage": true,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "tenantId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "storage:write"
+      },
+      {
+        "path": "attachments:purgeAll",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "internalize",
+        "tables": [
+          "attachments"
+        ],
+        "indexes": [
+          "by_tenant_space",
+          "by_tenantId",
+          "by_memorySpace"
+        ],
+        "usesStorage": true,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "memorySpaceId",
+          "tenantId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "trusted deployment-operator internal invocation"
+      },
+      {
+        "path": "attachments:get",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [],
+        "indexes": [],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "tenantId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "attachments:getUrl",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "internalize",
+        "tables": [],
+        "indexes": [],
+        "usesStorage": true,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "tenantId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "storage:read"
+      },
+      {
+        "path": "attachments:list",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "attachments"
+        ],
+        "indexes": [
+          "by_tenant_space",
+          "by_memorySpace_type",
+          "by_memorySpace"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "memorySpaceId",
+          "tenantId",
+          "userId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "attachments:count",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "attachments"
+        ],
+        "indexes": [
+          "by_tenant_space",
+          "by_memorySpace"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "memorySpaceId",
+          "tenantId",
+          "userId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "attachments:getByIds",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [],
+        "indexes": [],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "tenantId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "attachments:getByConversation",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "attachments"
+        ],
+        "indexes": [
+          "by_conversation"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "tenantId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "attachments:getByMessage",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "attachments"
+        ],
+        "indexes": [
+          "by_message"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "tenantId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "contexts:create",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "contexts"
+        ],
+        "indexes": [
+          "by_contextId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "memorySpaceId",
+          "tenantId",
+          "userId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "contexts:update",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "contexts"
+        ],
+        "indexes": [
+          "by_tenant_contextId",
+          "by_contextId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "tenantId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "contexts:deleteContext",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "contexts"
+        ],
+        "indexes": [
+          "by_tenant_contextId",
+          "by_contextId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "tenantId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "contexts:addParticipant",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "contexts"
+        ],
+        "indexes": [
+          "by_contextId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "participantId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "contexts:grantAccess",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "contexts"
+        ],
+        "indexes": [
+          "by_contextId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "targetMemorySpaceId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "contexts:get",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "contexts",
+          "conversations"
+        ],
+        "indexes": [
+          "by_tenant_contextId",
+          "by_contextId",
+          "by_conversationId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "tenantId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "contexts:list",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "contexts"
+        ],
+        "indexes": [
+          "by_tenant_space",
+          "by_tenantId",
+          "by_memorySpace_status",
+          "by_memorySpace",
+          "by_status",
+          "by_parentId",
+          "by_rootId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "memorySpaceId",
+          "tenantId",
+          "userId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "contexts:count",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "contexts"
+        ],
+        "indexes": [
+          "by_memorySpace_status",
+          "by_memorySpace",
+          "by_status"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "memorySpaceId",
+          "userId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "contexts:getChain",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "contexts"
+        ],
+        "indexes": [
+          "by_contextId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "contexts:getRoot",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "contexts"
+        ],
+        "indexes": [
+          "by_contextId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "contexts:getChildren",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "contexts"
+        ],
+        "indexes": [
+          "by_contextId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "contexts:search",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "contexts"
+        ],
+        "indexes": [
+          "by_memorySpace"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "memorySpaceId",
+          "userId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "contexts:updateMany",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "contexts"
+        ],
+        "indexes": [
+          "by_memorySpace"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "memorySpaceId",
+          "userId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "contexts:deleteMany",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "contexts"
+        ],
+        "indexes": [
+          "by_memorySpace"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "memorySpaceId",
+          "userId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "contexts:removeParticipant",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "contexts"
+        ],
+        "indexes": [
+          "by_contextId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "participantId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "contexts:getByConversation",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "contexts"
+        ],
+        "indexes": [],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "contexts:findOrphaned",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "contexts"
+        ],
+        "indexes": [
+          "by_contextId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "contexts:getVersion",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "contexts"
+        ],
+        "indexes": [
+          "by_contextId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "contexts:getHistory",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "contexts"
+        ],
+        "indexes": [
+          "by_contextId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "contexts:getAtTimestamp",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "contexts"
+        ],
+        "indexes": [
+          "by_contextId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "contexts:exportContexts",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "contexts"
+        ],
+        "indexes": [],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "memorySpaceId",
+          "userId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "contexts:purgeAll",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "internalize",
+        "tables": [
+          "contexts"
+        ],
+        "indexes": [],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "trusted deployment-operator internal invocation"
+      },
+      {
+        "path": "conversationShares:create",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "conversations"
+        ],
+        "indexes": [
+          "by_conversationId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "grantedBy",
+          "sourceMemorySpaceId",
+          "tenantId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "conversationShares:revoke",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "conversationShares"
+        ],
+        "indexes": [
+          "by_shareId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "userId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "conversationShares:incrementViewCount",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "internalize",
+        "tables": [
+          "conversationShares"
+        ],
+        "indexes": [
+          "by_shareId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "conversationShares:get",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "conversationShares"
+        ],
+        "indexes": [
+          "by_shareId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "conversationShares:listByConversation",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "conversationShares"
+        ],
+        "indexes": [
+          "by_conversation"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "conversationShares:listByGranter",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "conversationShares"
+        ],
+        "indexes": [
+          "by_grantedBy"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "grantedBy"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "conversationShares:checkAccess",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "conversationShares"
+        ],
+        "indexes": [
+          "by_conversation"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "userId",
+          "memorySpaceId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "conversationSnapshots:create",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "conversations"
+        ],
+        "indexes": [
+          "by_conversationId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "tenantId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "conversationSnapshots:deleteSnapshot",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "conversationSnapshots"
+        ],
+        "indexes": [
+          "by_snapshotId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "userId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "conversationSnapshots:get",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "conversationSnapshots"
+        ],
+        "indexes": [
+          "by_snapshotId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "conversationSnapshots:listByConversation",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "conversationSnapshots"
+        ],
+        "indexes": [
+          "by_conversation"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "conversationSnapshots:listByUser",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "conversationSnapshots"
+        ],
+        "indexes": [
+          "by_createdBy"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "userId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "conversations:create",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "conversations"
+        ],
+        "indexes": [
+          "by_conversationId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "memorySpaceId",
+          "participantId",
+          "tenantId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "conversations:setVisibility",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "conversations"
+        ],
+        "indexes": [
+          "by_conversationId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "userId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "conversations:setMetadata",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "conversations"
+        ],
+        "indexes": [
+          "by_conversationId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "userId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "conversations:checkAccess",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "conversations"
+        ],
+        "indexes": [
+          "by_conversationId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "userId",
+          "memorySpaceId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "conversations:addMessage",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "conversations"
+        ],
+        "indexes": [
+          "by_conversationId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "conversations:approveMessage",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "conversations"
+        ],
+        "indexes": [
+          "by_conversationId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "conversations:rejectMessage",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "conversations"
+        ],
+        "indexes": [
+          "by_conversationId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "conversations:deleteConversation",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "conversations"
+        ],
+        "indexes": [
+          "by_conversationId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "conversations:deleteMany",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "conversations"
+        ],
+        "indexes": [
+          "by_memorySpace"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "userId",
+          "memorySpaceId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "conversations:deleteByIds",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "conversations"
+        ],
+        "indexes": [
+          "by_conversationId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "conversations:purgeAll",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "internalize",
+        "tables": [
+          "conversations"
+        ],
+        "indexes": [],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "trusted deployment-operator internal invocation"
+      },
+      {
+        "path": "conversations:getMessage",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "conversations"
+        ],
+        "indexes": [
+          "by_conversationId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "conversations:getMessagesByIds",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "conversations"
+        ],
+        "indexes": [
+          "by_conversationId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "conversations:getOrCreate",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "conversations"
+        ],
+        "indexes": [
+          "by_memorySpace_user"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "memorySpaceId",
+          "participantId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "conversations:findConversation",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "conversations"
+        ],
+        "indexes": [
+          "by_memorySpace_user"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "memorySpaceId",
+          "userId",
+          "memorySpaceIds"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "conversations:get",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "conversations"
+        ],
+        "indexes": [
+          "by_conversationId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "tenantId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "conversations:list",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "conversations"
+        ],
+        "indexes": [
+          "by_tenant_space",
+          "by_tenantId",
+          "by_memorySpace_user",
+          "by_memorySpace",
+          "by_user",
+          "by_type"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "userId",
+          "memorySpaceId",
+          "tenantId",
+          "participantId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "conversations:count",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "conversations"
+        ],
+        "indexes": [
+          "by_memorySpace"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "userId",
+          "memorySpaceId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "conversations:getHistory",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "conversations"
+        ],
+        "indexes": [
+          "by_conversationId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "conversations:search",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "conversations"
+        ],
+        "indexes": [
+          "by_memorySpace"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "tenantId",
+          "userId",
+          "memorySpaceId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "conversations:exportConversations",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "conversations"
+        ],
+        "indexes": [
+          "by_memorySpace"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "userId",
+          "memorySpaceId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "factHistory:logEvent",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "internalize",
+        "tables": [],
+        "indexes": [],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "memorySpaceId",
+          "userId",
+          "participantId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "factHistory:deleteByFactId",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "internalize",
+        "tables": [
+          "factHistory"
+        ],
+        "indexes": [
+          "by_factId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "factHistory:deleteByUserId",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "internalize",
+        "tables": [
+          "factHistory"
+        ],
+        "indexes": [
+          "by_userId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "userId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "factHistory:deleteByMemorySpace",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "internalize",
+        "tables": [
+          "factHistory"
+        ],
+        "indexes": [
+          "by_memorySpace"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "memorySpaceId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "factHistory:purgeOldEvents",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "internalize",
+        "tables": [
+          "factHistory"
+        ],
+        "indexes": [
+          "by_memorySpace_timestamp",
+          "by_timestamp"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "memorySpaceId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "factHistory:getHistory",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "factHistory"
+        ],
+        "indexes": [
+          "by_factId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "factHistory:getEvent",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "factHistory"
+        ],
+        "indexes": [
+          "by_eventId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "factHistory:getChangesByTimeRange",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "factHistory"
+        ],
+        "indexes": [
+          "by_memorySpace"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "memorySpaceId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "factHistory:countByAction",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "factHistory"
+        ],
+        "indexes": [
+          "by_memorySpace"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "memorySpaceId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "factHistory:getSupersessionChain",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "factHistory"
+        ],
+        "indexes": [
+          "by_factId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "factHistory:getActivitySummary",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "factHistory"
+        ],
+        "indexes": [
+          "by_memorySpace_timestamp"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "memorySpaceId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "facts:store",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [],
+        "indexes": [],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "memorySpaceId",
+          "participantId",
+          "userId",
+          "tenantId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "facts:update",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "facts"
+        ],
+        "indexes": [
+          "by_factId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "memorySpaceId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "facts:deleteFact",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "facts"
+        ],
+        "indexes": [
+          "by_factId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "memorySpaceId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "facts:supersede",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "facts"
+        ],
+        "indexes": [
+          "by_factId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "memorySpaceId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "facts:updateInPlace",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "facts"
+        ],
+        "indexes": [
+          "by_factId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "memorySpaceId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "facts:deleteMany",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "facts"
+        ],
+        "indexes": [
+          "by_memorySpace"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "memorySpaceId",
+          "userId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "facts:get",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "facts"
+        ],
+        "indexes": [
+          "by_factId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "memorySpaceId",
+          "tenantId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "facts:list",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "facts"
+        ],
+        "indexes": [
+          "by_memorySpace"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "memorySpaceId",
+          "tenantId",
+          "userId",
+          "participantId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "facts:count",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "facts"
+        ],
+        "indexes": [
+          "by_memorySpace"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "memorySpaceId",
+          "tenantId",
+          "userId",
+          "participantId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "facts:search",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "facts"
+        ],
+        "indexes": [],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "memorySpaceId",
+          "tenantId",
+          "userId",
+          "participantId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "facts:fetchFactsByIds",
+        "kind": "internalQuery",
+        "visibility": "internal",
+        "disposition": "retain-internal",
+        "tables": [],
+        "indexes": [],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "facts:semanticSearch",
+        "kind": "action",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [],
+        "indexes": [],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "memorySpaceId",
+          "tenantId",
+          "userId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "facts:getHistory",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "facts"
+        ],
+        "indexes": [
+          "by_factId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "memorySpaceId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "facts:queryBySubject",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "facts"
+        ],
+        "indexes": [
+          "by_memorySpace_subject"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "memorySpaceId",
+          "userId",
+          "participantId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "facts:queryByRelationship",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "facts"
+        ],
+        "indexes": [
+          "by_memorySpace_subject"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "memorySpaceId",
+          "userId",
+          "participantId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "facts:exportFacts",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "facts"
+        ],
+        "indexes": [
+          "by_memorySpace"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "memorySpaceId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "facts:consolidate",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "facts"
+        ],
+        "indexes": [
+          "by_factId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "memorySpaceId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "facts:findByStructure",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "facts"
+        ],
+        "indexes": [
+          "by_memorySpace"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "memorySpaceId",
+          "userId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "facts:deleteByIds",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "facts"
+        ],
+        "indexes": [
+          "by_factId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "facts:purgeAll",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "internalize",
+        "tables": [
+          "facts"
+        ],
+        "indexes": [],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "trusted deployment-operator internal invocation"
+      },
+      {
+        "path": "governance:setPolicy",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "governancePolicies"
+        ],
+        "indexes": [
+          "by_organization",
+          "by_memorySpace"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "admin"
+      },
+      {
+        "path": "governance:setAgentOverride",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "governancePolicies"
+        ],
+        "indexes": [
+          "by_active",
+          "by_memorySpace"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "memorySpaceId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "admin"
+      },
+      {
+        "path": "governance:enforce",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "internalize",
+        "tables": [
+          "governancePolicies"
+        ],
+        "indexes": [
+          "by_memorySpace",
+          "by_organization"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "admin"
+      },
+      {
+        "path": "governance:getPolicy",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "governancePolicies"
+        ],
+        "indexes": [
+          "by_memorySpace",
+          "by_organization"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "admin"
+      },
+      {
+        "path": "governance:getTemplate",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [],
+        "indexes": [],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "admin"
+      },
+      {
+        "path": "governance:simulate",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [],
+        "indexes": [],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "admin"
+      },
+      {
+        "path": "governance:getComplianceReport",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "governanceEnforcement"
+        ],
+        "indexes": [
+          "by_organization"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "admin"
+      },
+      {
+        "path": "governance:getEnforcementStats",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "governanceEnforcement"
+        ],
+        "indexes": [
+          "by_organization"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "admin"
+      },
+      {
+        "path": "governance:purgeAllPolicies",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "internalize",
+        "tables": [
+          "governancePolicies"
+        ],
+        "indexes": [],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "trusted deployment-operator internal invocation"
+      },
+      {
+        "path": "governance:purgeAllEnforcement",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "internalize",
+        "tables": [
+          "governanceEnforcement"
+        ],
+        "indexes": [],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "trusted deployment-operator internal invocation"
+      },
+      {
+        "path": "graphSync:queueForSync",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "internalize",
+        "tables": [
+          "graphSyncQueue"
+        ],
+        "indexes": [
+          "by_table_entity"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "tool"
+      },
+      {
+        "path": "graphSync:markSynced",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "internalize",
+        "tables": [],
+        "indexes": [],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "tool"
+      },
+      {
+        "path": "graphSync:markFailed",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "internalize",
+        "tables": [],
+        "indexes": [],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "tool"
+      },
+      {
+        "path": "graphSync:deleteSyncItem",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "internalize",
+        "tables": [],
+        "indexes": [],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "tool"
+      },
+      {
+        "path": "graphSync:getUnsyncedItems",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "internalize",
+        "tables": [
+          "graphSyncQueue"
+        ],
+        "indexes": [
+          "by_synced"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "tool"
+      },
+      {
+        "path": "graphSync:getHighPriorityItems",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "internalize",
+        "tables": [
+          "graphSyncQueue"
+        ],
+        "indexes": [
+          "by_priority"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "tool"
+      },
+      {
+        "path": "graphSync:getSyncStats",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "internalize",
+        "tables": [
+          "graphSyncQueue"
+        ],
+        "indexes": [],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "tool"
+      },
+      {
+        "path": "graphSync:getFailedItems",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "internalize",
+        "tables": [
+          "graphSyncQueue"
+        ],
+        "indexes": [],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "tool"
+      },
+      {
+        "path": "graphSync:clearSyncedItems",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "internalize",
+        "tables": [
+          "graphSyncQueue"
+        ],
+        "indexes": [],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "tool"
+      },
+      {
+        "path": "graphSync:purgeAll",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "internalize",
+        "tables": [
+          "graphSyncQueue"
+        ],
+        "indexes": [],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "trusted deployment-operator internal invocation"
+      },
+      {
+        "path": "immutable:store",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "immutable"
+        ],
+        "indexes": [
+          "by_tenant_type_id",
+          "by_type_id"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "userId",
+          "tenantId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "immutable:purge",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "immutable"
+        ],
+        "indexes": [
+          "by_tenant_type_id",
+          "by_type_id"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "tenantId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "immutable:get",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "immutable"
+        ],
+        "indexes": [
+          "by_tenant_type_id",
+          "by_type_id"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "tenantId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "immutable:getVersion",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "immutable"
+        ],
+        "indexes": [
+          "by_tenant_type_id",
+          "by_type_id"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "tenantId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "immutable:getHistory",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "immutable"
+        ],
+        "indexes": [
+          "by_type_id"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "immutable:list",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "immutable"
+        ],
+        "indexes": [
+          "by_type",
+          "by_userId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "userId",
+          "tenantId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "immutable:search",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "immutable"
+        ],
+        "indexes": [],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "userId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "immutable:count",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "immutable"
+        ],
+        "indexes": [
+          "by_type"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "userId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "immutable:getAtTimestamp",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "immutable"
+        ],
+        "indexes": [
+          "by_type_id"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "immutable:purgeMany",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "immutable"
+        ],
+        "indexes": [],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "userId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "immutable:purgeVersions",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "immutable"
+        ],
+        "indexes": [
+          "by_type_id"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "immutable:purgeAll",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "internalize",
+        "tables": [
+          "immutable"
+        ],
+        "indexes": [],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "trusted deployment-operator internal invocation"
+      },
+      {
+        "path": "memories:store",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [],
+        "indexes": [],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "memorySpaceId",
+          "participantId",
+          "tenantId",
+          "sourceUserId",
+          "userId",
+          "agentId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "memories:storePartialMemory",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [],
+        "indexes": [],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "memorySpaceId",
+          "participantId",
+          "userId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "memories:updatePartialMemory",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "memories"
+        ],
+        "indexes": [
+          "by_memoryId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "memories:finalizePartialMemory",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "memories"
+        ],
+        "indexes": [
+          "by_memoryId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "memories:deleteMemory",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "memories"
+        ],
+        "indexes": [
+          "by_memoryId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "memorySpaceId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "memories:get",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "memories"
+        ],
+        "indexes": [
+          "by_memoryId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "tenantId",
+          "memorySpaceId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "memories:fetchMemoriesByIds",
+        "kind": "internalQuery",
+        "visibility": "internal",
+        "disposition": "retain-internal",
+        "tables": [],
+        "indexes": [],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "memories:keywordSearchMemories",
+        "kind": "internalQuery",
+        "visibility": "internal",
+        "disposition": "retain-internal",
+        "tables": [
+          "memories"
+        ],
+        "indexes": [],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "memorySpaceId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "memories:search",
+        "kind": "action",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [],
+        "indexes": [],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "memorySpaceId",
+          "userId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "memories:list",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "memories"
+        ],
+        "indexes": [
+          "by_memorySpace"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "memorySpaceId",
+          "userId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "memories:count",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "memories"
+        ],
+        "indexes": [
+          "by_memorySpace"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "memorySpaceId",
+          "userId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "memories:update",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "memories"
+        ],
+        "indexes": [
+          "by_memoryId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "memorySpaceId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "memories:getVersion",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "memories"
+        ],
+        "indexes": [
+          "by_memoryId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "memorySpaceId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "memories:getHistory",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "memories"
+        ],
+        "indexes": [
+          "by_memoryId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "memorySpaceId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "memories:deleteMany",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "memories"
+        ],
+        "indexes": [
+          "by_memorySpace"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "memorySpaceId",
+          "userId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "memories:deleteByIds",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "memories"
+        ],
+        "indexes": [
+          "by_memoryId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "memories:purgeAll",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "internalize",
+        "tables": [
+          "memories"
+        ],
+        "indexes": [],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "trusted deployment-operator internal invocation"
+      },
+      {
+        "path": "memories:exportMemories",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "memories"
+        ],
+        "indexes": [
+          "by_memorySpace"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "memorySpaceId",
+          "userId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "memories:updateMany",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "memories"
+        ],
+        "indexes": [
+          "by_memorySpace"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "memorySpaceId",
+          "userId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "memories:archive",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "memories"
+        ],
+        "indexes": [
+          "by_memoryId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "memorySpaceId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "memories:restoreFromArchive",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "memories"
+        ],
+        "indexes": [
+          "by_memoryId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "memorySpaceId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "memories:getAtTimestamp",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "memories"
+        ],
+        "indexes": [
+          "by_memoryId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "memorySpaceId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "memorySpaces:register",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "memorySpaces"
+        ],
+        "indexes": [
+          "by_tenant_memorySpaceId",
+          "by_memorySpaceId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "memorySpaceId",
+          "tenantId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "admin"
+      },
+      {
+        "path": "memorySpaces:update",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "memorySpaces"
+        ],
+        "indexes": [
+          "by_memorySpaceId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "memorySpaceId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "admin"
+      },
+      {
+        "path": "memorySpaces:addParticipant",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "memorySpaces"
+        ],
+        "indexes": [
+          "by_memorySpaceId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "memorySpaceId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "admin"
+      },
+      {
+        "path": "memorySpaces:removeParticipant",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "memorySpaces"
+        ],
+        "indexes": [
+          "by_memorySpaceId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "memorySpaceId",
+          "participantId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "admin"
+      },
+      {
+        "path": "memorySpaces:archive",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "memorySpaces"
+        ],
+        "indexes": [
+          "by_memorySpaceId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "memorySpaceId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "admin"
+      },
+      {
+        "path": "memorySpaces:reactivate",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "memorySpaces"
+        ],
+        "indexes": [
+          "by_memorySpaceId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "memorySpaceId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "admin"
+      },
+      {
+        "path": "memorySpaces:deleteSpace",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "memorySpaces",
+          "conversations",
+          "memories",
+          "facts"
+        ],
+        "indexes": [
+          "by_tenant_memorySpaceId",
+          "by_memorySpaceId",
+          "by_memorySpace"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "memorySpaceId",
+          "tenantId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "admin"
+      },
+      {
+        "path": "memorySpaces:get",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "memorySpaces"
+        ],
+        "indexes": [
+          "by_tenant_memorySpaceId",
+          "by_memorySpaceId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "memorySpaceId",
+          "tenantId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "memorySpaces:list",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "memorySpaces"
+        ],
+        "indexes": [],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "tenantId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "memorySpaces:count",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "memorySpaces"
+        ],
+        "indexes": [],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "memorySpaces:getStats",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "memorySpaces",
+          "conversations",
+          "memories",
+          "facts"
+        ],
+        "indexes": [
+          "by_memorySpaceId",
+          "by_memorySpace"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "memorySpaceId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "memorySpaces:findByParticipant",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "memorySpaces"
+        ],
+        "indexes": [],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "participantId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "memorySpaces:search",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "memorySpaces"
+        ],
+        "indexes": [],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "memorySpaces:updateParticipants",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "memorySpaces"
+        ],
+        "indexes": [
+          "by_memorySpaceId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "memorySpaceId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "admin"
+      },
+      {
+        "path": "memorySpaces:purgeAll",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "internalize",
+        "tables": [
+          "memorySpaces"
+        ],
+        "indexes": [],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "trusted deployment-operator internal invocation"
+      },
+      {
+        "path": "mutable:set",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "mutable"
+        ],
+        "indexes": [
+          "by_tenant_namespace_key",
+          "by_namespace_key"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "userId",
+          "tenantId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "mutable:update",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "mutable"
+        ],
+        "indexes": [
+          "by_tenant_namespace_key",
+          "by_namespace_key"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "tenantId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "mutable:deleteKey",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "mutable"
+        ],
+        "indexes": [
+          "by_tenant_namespace_key",
+          "by_namespace_key"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "tenantId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "mutable:purgeNamespace",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "mutable"
+        ],
+        "indexes": [
+          "by_tenant_namespace",
+          "by_namespace"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "tenantId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "mutable:transaction",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "mutable"
+        ],
+        "indexes": [
+          "by_tenant_namespace_key",
+          "by_namespace_key"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "tenantId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "mutable:purgeMany",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "mutable"
+        ],
+        "indexes": [
+          "by_tenant_namespace",
+          "by_namespace"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "userId",
+          "tenantId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "mutable:get",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "mutable"
+        ],
+        "indexes": [
+          "by_tenant_namespace_key",
+          "by_namespace_key"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "tenantId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "mutable:exists",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "mutable"
+        ],
+        "indexes": [
+          "by_tenant_namespace_key",
+          "by_namespace_key"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "tenantId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "mutable:list",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "mutable"
+        ],
+        "indexes": [
+          "by_tenant_namespace",
+          "by_namespace"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "userId",
+          "tenantId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "mutable:count",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "mutable"
+        ],
+        "indexes": [
+          "by_tenant_namespace",
+          "by_namespace"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "userId",
+          "tenantId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "mutable:purgeAll",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "internalize",
+        "tables": [
+          "mutable"
+        ],
+        "indexes": [
+          "by_tenantId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "tenantId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "trusted deployment-operator internal invocation"
+      },
+      {
+        "path": "runtimeAuth:authorize",
+        "kind": "internalQuery",
+        "visibility": "internal",
+        "disposition": "retain-internal",
+        "tables": [],
+        "indexes": [],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "requirement.capability"
+      },
+      {
+        "path": "runtimeAuth:recheck",
+        "kind": "internalQuery",
+        "visibility": "internal",
+        "disposition": "retain-internal",
+        "tables": [],
+        "indexes": [],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "requirement.capability"
+      },
+      {
+        "path": "runtimeAuth:provision",
+        "kind": "internalMutation",
+        "visibility": "internal",
+        "disposition": "retain-internal",
+        "tables": [
+          "runtimeAuthPrincipals",
+          "runtimeAuthMemberships"
+        ],
+        "indexes": [
+          "by_issuer_subject",
+          "by_principal_tenant"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "metadataUserId",
+          "tenantId",
+          "memorySpaceId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "trusted deployment-operator internal invocation"
+      },
+      {
+        "path": "runtimeAuth:revokeGrant",
+        "kind": "internalMutation",
+        "visibility": "internal",
+        "disposition": "retain-internal",
+        "tables": [],
+        "indexes": [],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "trusted deployment-operator internal invocation"
+      },
+      {
+        "path": "runtimeAuth:revokeMembership",
+        "kind": "internalMutation",
+        "visibility": "internal",
+        "disposition": "retain-internal",
+        "tables": [],
+        "indexes": [],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "trusted deployment-operator internal invocation"
+      },
+      {
+        "path": "runtimeAuth:deletePrincipal",
+        "kind": "internalMutation",
+        "visibility": "internal",
+        "disposition": "retain-internal",
+        "tables": [],
+        "indexes": [],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "trusted deployment-operator internal invocation"
+      },
+      {
+        "path": "runtimeAuth:deleteScope",
+        "kind": "internalMutation",
+        "visibility": "internal",
+        "disposition": "retain-internal",
+        "tables": [
+          "runtimeAuthScopes"
+        ],
+        "indexes": [
+          "by_tenant_space"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "tenantId",
+          "memorySpaceId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "trusted deployment-operator internal invocation"
+      },
+      {
+        "path": "runtimeAuth:tombstoneResource",
+        "kind": "internalMutation",
+        "visibility": "internal",
+        "disposition": "retain-internal",
+        "tables": [],
+        "indexes": [],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "tenantId",
+          "memorySpaceId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "trusted deployment-operator internal invocation"
+      },
+      {
+        "path": "sessions:create",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [],
+        "indexes": [],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "userId",
+          "tenantId",
+          "memorySpaceId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "sessions:get",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "sessions"
+        ],
+        "indexes": [
+          "by_sessionId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "sessions:touch",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "sessions"
+        ],
+        "indexes": [
+          "by_sessionId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "sessions:end",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "sessions"
+        ],
+        "indexes": [
+          "by_sessionId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "sessions:endAll",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "sessions"
+        ],
+        "indexes": [
+          "by_tenant_user",
+          "by_userId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "userId",
+          "tenantId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "sessions:list",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "sessions"
+        ],
+        "indexes": [
+          "by_tenant_user",
+          "by_tenant_status",
+          "by_tenantId",
+          "by_userId",
+          "by_memorySpace",
+          "by_status"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "userId",
+          "tenantId",
+          "memorySpaceId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "sessions:count",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "sessions"
+        ],
+        "indexes": [
+          "by_tenant_status",
+          "by_tenantId",
+          "by_userId",
+          "by_memorySpace",
+          "by_status"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "userId",
+          "tenantId",
+          "memorySpaceId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "sessions:expireIdle",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "internalize",
+        "tables": [
+          "sessions"
+        ],
+        "indexes": [
+          "by_tenantId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [
+          "tenantId"
+        ],
+        "conditionalScopeFilter": true,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "sessions:incrementMessageCount",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "internalize",
+        "tables": [
+          "sessions"
+        ],
+        "indexes": [
+          "by_sessionId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "sessions:incrementMemoryCount",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "internalize",
+        "tables": [
+          "sessions"
+        ],
+        "indexes": [
+          "by_sessionId"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "users:get",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "immutable"
+        ],
+        "indexes": [
+          "by_type_id"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "userId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "users:list",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "immutable"
+        ],
+        "indexes": [
+          "by_type"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "users:count",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "immutable"
+        ],
+        "indexes": [
+          "by_type"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": false,
+        "callerIdentityFields": [],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "users:getVersion",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "immutable"
+        ],
+        "indexes": [
+          "by_type_id"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "userId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "users:getHistory",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "immutable"
+        ],
+        "indexes": [
+          "by_type_id"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "userId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "users:getAtTimestamp",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "immutable"
+        ],
+        "indexes": [
+          "by_type_id"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "userId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "read"
+      },
+      {
+        "path": "users:deleteUserProfile",
+        "kind": "mutation",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "immutable"
+        ],
+        "indexes": [
+          "by_type_id"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "userId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "write"
+      },
+      {
+        "path": "users:exists",
+        "kind": "query",
+        "visibility": "public",
+        "disposition": "guard",
+        "tables": [
+          "immutable"
+        ],
+        "indexes": [
+          "by_type_id"
+        ],
+        "usesStorage": false,
+        "existingVerifiedIdentityCheck": false,
+        "globalIdLookup": true,
+        "callerIdentityFields": [
+          "userId"
+        ],
+        "conditionalScopeFilter": false,
+        "requiredCapability": "read"
+      }
+    ]
+  }
+}

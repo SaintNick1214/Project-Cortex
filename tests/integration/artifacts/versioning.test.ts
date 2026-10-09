@@ -12,8 +12,8 @@
  * Test IDs: INT-CRUD-004, INT-VH-001 through INT-VH-003
  */
 
-import { Cortex } from "../../../src";
-import { ConvexClient } from "convex/browser";
+import { Cortex } from "../../helpers/deployment-operator";
+import { ConvexClient } from "../../helpers/deployment-operator";
 import { createNamedTestRunContext } from "../../helpers/isolation";
 import { generateTenantId, createTenantAuthContext } from "../../helpers/tenancy";
 

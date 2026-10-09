@@ -1,12 +1,23 @@
+import { isDeploymentOperatorClient } from "../common/deploymentOperator";
+import { api as publicApi } from "../../convex-dev/_generated/api";
+import { readBackend } from "../common/backendRead";
+import { mutateGraphSelected } from "../graph/erasure";
+import type { FunctionReference, FunctionArgs, FunctionReturnType } from "convex/server";
+import { writeGraphMutation, type GraphPrimary } from "../graph/erasure";
+import type { GraphSyncPolicy } from "../graph/types";
+import { domainLoader, collectDomain, selectDomain, sameSelection, resolveDomainTenant, confirmation } from "../common/domainPaging";
+import { conversationsExport } from "../common/domainExport";
+import { DomainOperationPartialError, type DomainReadOptions, type DomainPartial } from "../types";
+import type { Id } from "../../convex-dev/_generated/dataModel";
+import { validateTenantId } from "../auth/validators";
 /**
  * Cortex SDK - Conversations API
  *
  * Layer 1a: ACID-compliant immutable conversation storage
  */
 
-import { resolveTenantId } from "../auth/tenant";
 import type { ConvexClient } from "convex/browser";
-import { api } from "../../convex-dev/_generated/api";
+import { api } from "../common/backendApi";
 import type {
   AddMessageInput,
   AddMessageOptions,
@@ -43,11 +54,6 @@ import type {
 } from "../types";
 import type { GraphAdapter } from "../graph/types";
 import {
-  syncConversationToGraph,
-  syncConversationRelationships,
-  deleteConversationFromGraph,
-} from "../graph";
-import {
   ConversationValidationError,
   validateRequiredString,
   validateConversationType,
@@ -76,7 +82,16 @@ export class ConversationsAPI {
     private readonly graphAdapter?: GraphAdapter,
     private readonly resilience?: ResilienceLayer,
     private readonly authContext?: AuthContext,
+    private readonly graphSyncPolicy?: GraphSyncPolicy,
   ) {}
+  private mutateGraph<M extends FunctionReference<"mutation", "public">>(reference: M, args: FunctionArgs<M>, explicit?: boolean): Promise<GraphPrimary<FunctionReturnType<M>>> {
+    return writeGraphMutation(this.client, this.graphAdapter, this.graphSyncPolicy, reference, args, explicit);
+  }
+  private executeGraphWrite<T>(operation: () => Promise<T>, name: string, explicit?: boolean): Promise<T> {
+    // A configured graph writer has one primary application invocation; delivery retries are separate.
+    return this.graphAdapter && explicit !== false ? operation() : this.executeWithResilience(operation, name);
+  }
+
 
   /**
    * Execute an operation through the resilience layer (if available)
@@ -156,9 +171,9 @@ export class ConversationsAPI {
     const conversationId =
       input.conversationId || this.generateConversationId();
 
-    const result = await this.executeWithResilience(
+    const result = await this.executeGraphWrite(
       () =>
-        this.client.mutation(api.conversations.create, {
+        this.mutateGraph(api.conversations.create, {
           conversationId,
           memorySpaceId: input.memorySpaceId,
           participantId: input.participantId,
@@ -168,26 +183,12 @@ export class ConversationsAPI {
           metadata: input.metadata,
           visibility: input.visibility, // Pass visibility (defaults to 'private' if undefined)
           collaborativeSettings: input.collaborativeSettings, // Phase 4: Collaborative
-        }),
-      "conversations:create",
+        }, _options?.syncToGraph),
+      "conversations:create", _options?.syncToGraph,
     );
 
     // Sync to graph if requested
-    if (this.graphAdapter) {
-      try {
-        const nodeId = await syncConversationToGraph(
-          result as Conversation,
-          this.graphAdapter,
-        );
-        await syncConversationRelationships(
-          result as Conversation,
-          nodeId,
-          this.graphAdapter,
-        );
-      } catch (error) {
-        console.warn("Failed to sync conversation to graph:", error);
-      }
-    }
+    
 
     return result as Conversation;
   }
@@ -212,15 +213,15 @@ export class ConversationsAPI {
    */
   async get(
     conversationId: string,
-    options?: GetConversationOptions,
+    options?: GetConversationOptions & DomainReadOptions,
   ): Promise<Conversation | null> {
     validateRequiredString(conversationId, "conversationId");
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.mutation(api.conversations.get, {
+        readBackend(this.client, api.conversations.get, {
           conversationId,
-          tenantId: this.authContext?.tenantId, // Inject tenantId for isolation
+          tenantId: resolveDomainTenant(this.authContext?.tenantId, options?.tenantId), // Inject tenantId for isolation
           includeMessages: options?.includeMessages,
           messageLimit: options?.messageLimit,
         }),
@@ -260,9 +261,9 @@ export class ConversationsAPI {
 
     let result;
     try {
-      result = await this.executeWithResilience(
+      result = await this.executeGraphWrite(
         () =>
-          this.client.mutation(api.conversations.addMessage, {
+          this.mutateGraph(api.conversations.addMessage, {
             conversationId: input.conversationId,
             message: {
               id: messageId,
@@ -271,31 +272,15 @@ export class ConversationsAPI {
               participantId: input.message.participantId, // Updated for Hive Mode
               metadata: input.message.metadata,
             },
-          }),
-        "conversations:addMessage",
+          }, _options?.syncToGraph),
+        "conversations:addMessage", _options?.syncToGraph,
       );
     } catch (error) {
       this.handleConvexError(error);
     }
 
     // Update in graph if requested (conversation already synced, just update properties)
-    if (this.graphAdapter) {
-      try {
-        const nodes = await this.graphAdapter.findNodes(
-          "Conversation",
-          { conversationId: input.conversationId },
-          1,
-        );
-        if (nodes.length > 0) {
-          await this.graphAdapter.updateNode(nodes[0].id!, {
-            messageCount: (result as Conversation).messageCount,
-            updatedAt: (result as Conversation).updatedAt,
-          });
-        }
-      } catch (error) {
-        console.warn("Failed to update conversation in graph:", error);
-      }
-    }
+    
 
     return result as Conversation;
   }
@@ -356,13 +341,11 @@ export class ConversationsAPI {
       }
     }
 
-    const result = await this.executeWithResilience(
-      () =>
-        this.client.mutation(api.conversations.list, {
-          type: filter?.type,
+    const selection = {
+          type: filter?.type, metadata: filter?.metadata,
           userId: filter?.userId,
           memorySpaceId: filter?.memorySpaceId,
-          tenantId: resolveTenantId(this.authContext?.tenantId, filter?.tenantId), // Support explicit or auth context
+          tenantId: resolveDomainTenant(this.authContext?.tenantId, filter?.tenantId), // Support explicit or auth context
           participantId: filter?.participantId,
           createdBefore: filter?.createdBefore,
           createdAfter: filter?.createdAfter,
@@ -372,16 +355,22 @@ export class ConversationsAPI {
           lastMessageAfter: filter?.lastMessageAfter,
           messageCountMin,
           messageCountMax,
-          limit: filter?.limit,
-          offset: filter?.offset,
-          sortBy: filter?.sortBy,
-          sortOrder: filter?.sortOrder,
-          includeMessages: filter?.includeMessages,
-        }),
-      "conversations:list",
-    );
-
-    return result as ListConversationsResult;
+        };
+    if (!isDeploymentOperatorClient(this.client)) {
+      if (filter?.metadata !== undefined) throw Object.assign(new Error("Public conversation handlers do not support metadata selectors."), {code: "UNSUPPORTED_PUBLIC_SELECTOR", selector: "metadata"});
+      const {metadata: _metadata, ...publicSelection} = selection;
+      return this.executeWithResilience(() => this.client.mutation(publicApi.conversations.list, {
+        ...publicSelection, limit: filter?.limit, offset: filter?.offset,
+        sortBy: filter?.sortBy, sortOrder: filter?.sortOrder, includeMessages: filter?.includeMessages,
+      }), "conversations:list");
+    }
+    const rows = await collectDomain<Conversation>(domainLoader(this.client, "conversations", selection));
+    const sortBy = filter?.sortBy ?? "createdAt";
+    const key = (c: Conversation) => sortBy === "lastMessageAt" ? c.messages[c.messages.length - 1]?.timestamp ?? c.createdAt : sortBy === "updatedAt" ? c.updatedAt : sortBy === "messageCount" ? c.messageCount : c.createdAt;
+    rows.sort((a,b) => (key(a) - key(b)) * (filter?.sortOrder === "asc" ? 1 : -1));
+    const offset = filter?.offset ?? 0, limit = filter?.limit ?? 50;
+    const conversations = rows.slice(offset, offset + limit).map(c => filter?.includeMessages ? c : {...c, messages: []});
+    return {conversations, total: rows.length, offset, limit, hasMore: offset + limit < rows.length};
   }
 
   /**
@@ -400,9 +389,17 @@ export class ConversationsAPI {
       validateConversationType(filter.type);
     }
 
+    const context = this.authContext?.tenantId;
+    const selected = filter?.tenantId;
+    if (context !== undefined) validateTenantId(context);
+    if (selected !== undefined) validateTenantId(selected);
+    if (context !== undefined && selected !== undefined && context !== selected) throw new Error("TENANT_SCOPE_MISMATCH");
+    const tenantId = selected ?? context;
+
     const result = await this.executeWithResilience(
       () =>
-        this.client.mutation(api.conversations.count, {
+        readBackend(this.client, api.conversations.count, {
+          tenantId,
           type: filter?.type,
           userId: filter?.userId,
           memorySpaceId: filter?.memorySpaceId, // Updated
@@ -423,39 +420,14 @@ export class ConversationsAPI {
    * console.log(`Restorable: ${result.restorable}`); // false - permanent!
    * ```
    */
-  async delete(
-    conversationId: string,
-    _options?: DeleteConversationOptions,
-  ): Promise<ConversationDeletionResult> {
+  async delete(conversationId: string, options?: DeleteConversationOptions & DomainReadOptions): Promise<ConversationDeletionResult & {partial?: DomainPartial}> {
     validateRequiredString(conversationId, "conversationId");
-
-    let result;
-    try {
-      result = await this.executeWithResilience(
-        () =>
-          this.client.mutation(api.conversations.deleteConversation, {
-            conversationId,
-          }),
-        "conversations:delete",
-      );
-    } catch (error) {
-      this.handleConvexError(error);
-    }
-
-    // Delete from graph
-    if (this.graphAdapter) {
-      try {
-        await deleteConversationFromGraph(
-          conversationId,
-          this.graphAdapter,
-          true,
-        );
-      } catch (error) {
-        console.warn("Failed to delete conversation from graph:", error);
-      }
-    }
-
-    return result as ConversationDeletionResult;
+    const tenantId = resolveDomainTenant(this.authContext?.tenantId, options?.tenantId);
+    const selected = await selectDomain<Conversation>(domainLoader(this.client, "conversations", {tenantId, conversationIds: [conversationId]}), options);
+    if (selected.length > 1) throw new Error("DOMAIN_SCOPE_AMBIGUOUS");
+    if (!selected.length) throw new Error("CONVERSATION_NOT_FOUND");
+    const partial = await mutateGraphSelected("conversations:delete", selected, row => this.mutateGraph(api.conversations.eraseSelected, {tenantId, physicalId: row.physicalId as Id<"conversations">, expectedFingerprint: row.fingerprint}, options?.syncToGraph), options, this.graphAdapter);
+    return {deleted: partial.confirmedCount === 1, conversationId, messagesDeleted: partial.confirmedCount ? selected[0].document.messageCount : 0, deletedAt: Date.now(), restorable: false, partial};
   }
 
   /**
@@ -479,40 +451,22 @@ export class ConversationsAPI {
    * console.log(`Deleted ${result.deleted} conversations`);
    * ```
    */
-  async deleteMany(
-    filter: {
-      userId?: string;
-      memorySpaceId?: string;
-      type?: "user-agent" | "agent-agent";
-    },
-    options?: DeleteManyConversationsOptions,
-  ): Promise<DeleteManyConversationsResult> {
-    // Validate type if provided
-    if (filter.type) {
-      validateConversationType(filter.type);
-    }
-
-    // Ensure at least one filter is provided
-    if (!filter.userId && !filter.memorySpaceId && !filter.type) {
-      throw new ConversationValidationError(
-        "deleteMany requires at least one filter (userId, memorySpaceId, or type)",
-        "MISSING_REQUIRED_FIELD",
-      );
-    }
-
-    const result = await this.executeWithResilience(
-      () =>
-        this.client.mutation(api.conversations.deleteMany, {
-          userId: filter.userId,
-          memorySpaceId: filter.memorySpaceId,
-          type: filter.type,
-          dryRun: options?.dryRun,
-          confirmationThreshold: options?.confirmationThreshold,
-        }),
-      "conversations:deleteMany",
-    );
-
-    return result as DeleteManyConversationsResult;
+  async deleteMany(filter: {tenantId?: string; userId?: string; memorySpaceId?: string; type?: "user-agent" | "agent-agent"}, options?: DeleteManyConversationsOptions & DomainReadOptions): Promise<DeleteManyConversationsResult & {partial?: DomainPartial}> {
+    if (filter.type !== undefined) validateConversationType(filter.type);
+    if (!filter.userId && !filter.memorySpaceId && !filter.type) throw new ConversationValidationError("deleteMany requires at least one filter (userId, memorySpaceId, or type)", "MISSING_REQUIRED_FIELD");
+    const tenantId = resolveDomainTenant(this.authContext?.tenantId, filter.tenantId);
+    const load = domainLoader(this.client, "conversations", {...filter, tenantId});
+    const selected = await selectDomain<Conversation>(load, options);
+    if (options?.dryRun) return {deleted: 0, totalMessagesDeleted: 0, conversationIds: [], wouldDelete: selected.length, dryRun: true};
+    confirmation(selected.length, options);
+    if (!sameSelection(selected, await selectDomain<Conversation>(load, options))) throw new Error("DOMAIN_SELECTION_CHANGED");
+    const partial = await mutateGraphSelected("conversations:deleteMany", selected, row => this.mutateGraph(api.conversations.eraseSelected, {tenantId, physicalId: row.physicalId as Id<"conversations">, expectedFingerprint: row.fingerprint}, options?.syncToGraph), options, this.graphAdapter);
+    const committed = selected.filter(row => partial.confirmedPhysicalIds.includes(row.physicalId));
+    try {
+      const remaining = await selectDomain<Conversation>(load, options);
+      if (remaining.length) throw new DomainOperationPartialError("conversations:deleteMany", {...partial, remainingPhysicalIds: remaining.map(row => row.physicalId)}, new Error("DOMAIN_SELECTION_CHANGED"));
+    } catch (cause) { if (cause instanceof DomainOperationPartialError) throw cause; throw new DomainOperationPartialError("conversations:deleteMany", partial, cause); }
+    return {deleted: partial.confirmedCount, conversationIds: committed.map(row => row.document.conversationId), totalMessagesDeleted: committed.reduce((sum,row) => sum + row.document.messageCount,0), dryRun: false, partial};
   }
 
   /**
@@ -532,7 +486,7 @@ export class ConversationsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.mutation(api.conversations.getMessage, {
+        readBackend(this.client, api.conversations.getMessage, {
           conversationId,
           messageId,
         }),
@@ -562,7 +516,7 @@ export class ConversationsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.mutation(api.conversations.getMessagesByIds, {
+        readBackend(this.client, api.conversations.getMessagesByIds, {
           conversationId,
           messageIds,
         }),
@@ -615,7 +569,7 @@ export class ConversationsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.mutation(api.conversations.findConversation, {
+        readBackend(this.client, api.conversations.findConversation, {
           memorySpaceId: params.memorySpaceId,
           type: params.type,
           userId: params.userId,
@@ -655,9 +609,9 @@ export class ConversationsAPI {
     // Validate visibility if provided
     validateVisibility(input.visibility);
 
-    const result = await this.executeWithResilience(
+    const result = await this.executeGraphWrite(
       () =>
-        this.client.mutation(api.conversations.getOrCreate, {
+        this.mutateGraph(api.conversations.getOrCreate, {
           memorySpaceId: input.memorySpaceId,
           participantId: input.participantId,
           type: input.type,
@@ -695,7 +649,7 @@ export class ConversationsAPI {
    */
   async getHistory(
     conversationId: string,
-    options?: GetHistoryOptions,
+    options?: GetHistoryOptions & DomainReadOptions,
   ): Promise<{
     messages: Message[];
     total: number;
@@ -722,7 +676,8 @@ export class ConversationsAPI {
     try {
       const result = await this.executeWithResilience(
         () =>
-          this.client.mutation(api.conversations.getHistory, {
+          readBackend(this.client, api.conversations.getHistory, {
+            tenantId: resolveDomainTenant(this.authContext?.tenantId, options?.tenantId),
             conversationId,
             limit: options?.limit,
             offset: options?.offset,
@@ -788,7 +743,7 @@ export class ConversationsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.mutation(api.conversations.search, {
+        readBackend(this.client, api.conversations.search, {
           tenantId: this.authContext?.tenantId,
           query: input.query,
           type: input.filters?.type,
@@ -818,41 +773,23 @@ export class ConversationsAPI {
    * });
    * ```
    */
-  async export(options: ExportConversationsOptions): Promise<ExportResult> {
+  async export(options: ExportConversationsOptions & DomainReadOptions): Promise<ExportResult> {
     validateExportFormat(options.format);
-
-    if (options.filters?.type) {
-      validateConversationType(options.filters.type);
+    if (options.filters?.type !== undefined) validateConversationType(options.filters.type);
+    if (options.filters?.conversationIds) validateNonEmptyArray(options.filters.conversationIds, "filters.conversationIds");
+    validateDateRange(options.filters?.dateRange?.start, options.filters?.dateRange?.end);
+    const tenantId = resolveDomainTenant(this.authContext?.tenantId, options.tenantId);
+    if (!isDeploymentOperatorClient(this.client)) {
+      if (options.filters?.participantId !== undefined) throw Object.assign(new Error("Public conversation export does not support participant selectors."), {code: "UNSUPPORTED_PUBLIC_SELECTOR", selector: "participantId"});
+      return this.executeWithResilience(() => this.client.mutation(publicApi.conversations.exportConversations, {
+        userId: options.filters?.userId, memorySpaceId: options.filters?.memorySpaceId,
+        conversationIds: options.filters?.conversationIds, type: options.filters?.type,
+        dateStart: options.filters?.dateRange?.start, dateEnd: options.filters?.dateRange?.end,
+        format: options.format, includeMetadata: options.includeMetadata,
+      }), "conversations:export");
     }
-    if (options.filters?.conversationIds) {
-      validateNonEmptyArray(
-        options.filters.conversationIds,
-        "filters.conversationIds",
-      );
-    }
-
-    // Validate date range
-    validateDateRange(
-      options.filters?.dateRange?.start,
-      options.filters?.dateRange?.end,
-    );
-
-    const result = await this.executeWithResilience(
-      () =>
-        this.client.mutation(api.conversations.exportConversations, {
-          userId: options.filters?.userId,
-          memorySpaceId: options.filters?.memorySpaceId, // Updated
-          conversationIds: options.filters?.conversationIds,
-          type: options.filters?.type,
-          dateStart: options.filters?.dateRange?.start,
-          dateEnd: options.filters?.dateRange?.end,
-          format: options.format,
-          includeMetadata: options.includeMetadata,
-        }),
-      "conversations:export",
-    );
-
-    return result as ExportResult;
+    const rows = await collectDomain<Conversation>(domainLoader(this.client, "conversations", {tenantId, userId: options.filters?.userId, participantId: options.filters?.participantId, memorySpaceId: options.filters?.memorySpaceId, conversationIds: options.filters?.conversationIds, type: options.filters?.type, dateStart: options.filters?.dateRange?.start, dateEnd: options.filters?.dateRange?.end}), options);
+    return conversationsExport(rows, options.format, options.includeMetadata);
   }
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -882,7 +819,7 @@ export class ConversationsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.mutation(api.conversations.checkAccess, {
+        readBackend(this.client, api.conversations.checkAccess, {
           conversationId: input.conversationId,
           userId: input.userId,
           memorySpaceId: input.memorySpaceId,
@@ -928,9 +865,9 @@ export class ConversationsAPI {
 
     let result;
     try {
-      result = await this.executeWithResilience(
+      result = await this.executeGraphWrite(
         () =>
-          this.client.mutation(api.conversations.setVisibility, {
+          this.mutateGraph(api.conversations.setVisibility, {
             conversationId: input.conversationId,
             visibility: input.visibility,
             userId: this.authContext?.userId, // Pass userId from auth context for ownership verification
@@ -1263,9 +1200,9 @@ export class ConversationsAPI {
     validateRequiredString(input.conversationId, "conversationId");
     validateRequiredString(input.messageId, "messageId");
 
-    const result = await this.executeWithResilience(
+    const result = await this.executeGraphWrite(
       () =>
-        this.client.mutation(api.conversations.approveMessage, {
+        this.mutateGraph(api.conversations.approveMessage, {
           conversationId: input.conversationId,
           messageId: input.messageId,
           approverId: this.authContext?.userId || "",
@@ -1293,9 +1230,9 @@ export class ConversationsAPI {
     validateRequiredString(input.conversationId, "conversationId");
     validateRequiredString(input.messageId, "messageId");
 
-    const result = await this.executeWithResilience(
+    const result = await this.executeGraphWrite(
       () =>
-        this.client.mutation(api.conversations.rejectMessage, {
+        this.mutateGraph(api.conversations.rejectMessage, {
           conversationId: input.conversationId,
           messageId: input.messageId,
           rejecterId: this.authContext?.userId || "",

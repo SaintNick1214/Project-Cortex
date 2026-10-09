@@ -5,19 +5,21 @@ import { makeFunctionReference } from "convex/server";
 import { fixturePlan } from "./runtime-fixtures.mjs";
 
 const fail = code => { throw new Error(code); };
-const registryHash = "c41fb7c968b1321e952fdaa14e4a5de045ae3333de14641e4d640b3307a64754";
+const registryHash = "975b0d6ba749d0198c10af7e0457e57f54bbb79a55c5c0f64b11592c0e982631";
 
-/** The accepted V1 memory registry and Agent-only bound; never a new qualification. */
+/** The observed V2 registry and Agent bound; setup never attests a qualification. */
 export function remoteAgentDefinition() {
   return {
-    instructions: { text: "Acknowledge the user's validation marker in one short sentence. Do not call tools.", promptVersion: "ci-remote-agent-v1" },
-    tools: ["memory.remember", "memory.recall"].map(toolId => ({ toolId, toolVersion: 1, registryHash,
-      requiredCapability: "tool", approval: "none" })),
+    instructions: { text: "Acknowledge the user's validation marker in one short sentence. Do not call tools.", promptVersion: "ci-remote-agent-v2" },
+    tools: ["memory.remember", "memory.recall", "media.image.generate", "media.video.generate", "artifact.read"]
+      .map(toolId => ({ toolId, toolVersion: 1, registryHash,
+        requiredCapability: "tool", approval: toolId.startsWith("media.") ? "explicit" : "none" })),
     context: { handlerId: "cortex.transcript", handlerVersion: 1, registryHash,
       memoryMode: "indexed-plus-pending", requiredStages: [], maxContextTokens: 4096 },
-    policies: [{ policyId: "ci-remote-agent-only", version: 1, operationKey: "agent.respond", rules: {
-      pins: { boundRevision: "agent-tools-32768-512-v1", toolRegistryVersion: "cortex-memory-tools-v1" },
-      allowedTools: ["memory_recall", "memory_remember"], limits: { outputTokens: 128, toolSteps: 1 },
+    policies: [{ policyId: "ci-remote-agent-only", version: 2, operationKey: "agent.respond", rules: {
+      pins: { boundRevision: "agent-tools-v2-32768-256-shared3m-v1", toolRegistryVersion: "cortex-media-tools-v2" },
+      allowedTools: ["memory_recall", "memory_remember", "media_image_generate", "media_video_generate", "artifact_read"],
+      limits: { outputTokens: 128, toolSteps: 1 },
     } }],
   };
 }

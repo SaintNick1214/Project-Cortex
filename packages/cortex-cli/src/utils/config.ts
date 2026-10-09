@@ -3,16 +3,16 @@
  *
  * Handles loading, saving, and managing CLI configuration from multiple sources:
  * 1. CLI flags (highest priority)
- * 2. Environment variables
- * 3. Project config (./cortex.config.json)
- * 4. User config (~/.cortexrc)
+ * 2. Project config (./cortex.config.json or nearest supported project config)
+ * 3. User config (~/.cortexrc)
+ * Environment variables are not deployment overrides.
  */
 
 import { cosmiconfig } from "cosmiconfig";
-import { readFile, writeFile, mkdir } from "fs/promises";
+import { readFile, mkdir, open, rename, unlink, realpath } from "fs/promises";
 import { existsSync, readdirSync, readFileSync } from "fs";
 import { homedir } from "os";
-import { join, dirname, resolve as resolvePath } from "path";
+import { join, dirname, isAbsolute, resolve as resolvePath } from "path";
 import type {
   CLIConfig,
   ConvexCheckResult,
@@ -22,11 +22,34 @@ import type {
   ValidationOptions,
   ValidationResult,
 } from "../types.js";
-import type { Cortex } from "@cortexmemory/sdk";
+import { createClient, disposeClient } from "./client.js";
+import {
+  validateUrl,
+  validateOutputFormat,
+  validateFilePath,
+} from "./validation.js";
+import { randomUUID } from "crypto";
+import { selectDeployment } from "./deployment-selector.js";
+import { serializeEnvAssignment } from "./env-file.js";
+import { projectSearchDirectories } from "./project-discovery.js";
+import {
+  attachAdmissionContext, contextForConfig, currentAdmissionContext,
+  discoverAdmission, recheckAdmission, refreshAdmissionAfterSave,
+  refuseExecutableOwnedConfig, withAdmissionContext,
+  type DataSources,
+} from "./bootstrap-admission.js";
 
 /**
  * Default configuration
  */
+interface ConfigProvenance {
+  sourcePath: string;
+  source: Partial<CLIConfig>;
+  merged: CLIConfig;
+  inherited: Partial<CLIConfig>;
+}
+const provenance = new WeakMap<CLIConfig, ConfigProvenance>();
+
 const DEFAULT_CONFIG: CLIConfig = {
   deployments: {},
   default: "",
@@ -37,15 +60,29 @@ const DEFAULT_CONFIG: CLIConfig = {
 /**
  * Explorer for loading configuration from various sources
  */
-const explorer = cosmiconfig("cortex", {
+function ordinaryExplorer(atHome = false) { return cosmiconfig("cortex", {
+  cache: false,
+  searchStrategy: "none",
   searchPlaces: [
     "cortex.config.json",
     "cortex.config.js",
     ".cortexrc",
     ".cortexrc.json",
     "package.json",
-  ],
-});
+  ].filter(place => !atHome || place !== ".cortexrc"),
+}); }
+
+async function nearestProjectConfig() {
+  const home = await realpath(homedir()).catch(error => {
+    if (isMissingFile(error)) return homedir();
+    throw error;
+  });
+  for (const directory of projectSearchDirectories(process.cwd(), home)) {
+    const result = await ordinaryExplorer(directory === home).search(directory);
+    if (result) return result;
+  }
+  return null;
+}
 
 /**
  * Get the path to the user config file
@@ -65,92 +102,425 @@ export function getProjectConfigPath(): string {
  * Load configuration from all sources
  */
 export async function loadConfig(): Promise<CLIConfig> {
-  let config: CLIConfig = { ...DEFAULT_CONFIG };
-
-  // Try to load from cosmiconfig (searches up directory tree)
+  const admitted = currentAdmissionContext();
+  if (!admitted) {
+    const context = await discoverAdmission();
+    return withAdmissionContext(context, () => loadConfig());
+  }
+  if (admitted.mode === "owned-data-only") {
+    await recheckAdmission(admitted);
+    const safe = composeDataConfig(admitted.data);
+    attachAdmissionContext(safe, admitted);
+    return safe;
+  }
+  let config: CLIConfig = { ...DEFAULT_CONFIG, deployments: {} };
+  const userPath = getUserConfigPath();
+  let source: Partial<CLIConfig> = {};
+  let sourcePath = userPath;
+  let inherited: Partial<CLIConfig> = {};
   try {
-    const result = await explorer.search();
-    if (result && result.config) {
-      config = mergeConfig(config, result.config as Partial<CLIConfig>);
+    const raw: unknown = JSON.parse(await readFile(userPath, "utf-8"));
+    validateConfigShape(raw);
+    config = mergeConfig(config, raw);
+    source = raw;
+  } catch (error) {
+    if (!isMissingFile(error))
+      throw new Error(
+        `Invalid user configuration at ${userPath}: ${safeConfigError(error)}`,
+        { cause: error },
+      );
+  }
+  try {
+    const result = await nearestProjectConfig();
+    if (result && result.filepath !== userPath) {
+      validateConfigShape(result.config, true);
+      inherited = structuredClone(source);
+      source = result.config;
+      sourcePath = result.filepath;
+      config = mergeConfig(config, result.config);
     }
   } catch {
-    // No config file found, use defaults
+    throw new Error(
+      "Invalid project configuration: malformed, unsafe or unreadable project config source",
+    );
   }
-
-  // Try to load user config from ~/.cortexrc
-  const userConfigPath = getUserConfigPath();
-  if (existsSync(userConfigPath)) {
-    try {
-      const userConfigContent = await readFile(userConfigPath, "utf-8");
-      const userConfig = JSON.parse(userConfigContent) as Partial<CLIConfig>;
-      config = mergeConfig(config, userConfig);
-    } catch {
-      // Invalid user config, skip
-    }
-  }
-
-  // Override with environment variables
-  config = applyEnvOverrides(config);
-
+  validateConfigShape(config);
+  refuseExecutableOwnedConfig(config);
+  attachAdmissionContext(config, admitted);
+  provenance.set(config, {
+    sourcePath,
+    source: structuredClone(source),
+    merged: structuredClone(config),
+    inherited,
+  });
   return config;
 }
 
-/**
- * Merge two configurations, with source overriding target
- */
+function isMissingFile(error: unknown): boolean {
+  return Boolean(
+    error &&
+      typeof error === "object" &&
+      "code" in error &&
+      error.code === "ENOENT",
+  );
+}
+function safeConfigError(error: unknown): string {
+  // JSON parser errors may contain slices of credentials; never echo source content.
+  return error instanceof SyntaxError
+    ? "Malformed configuration syntax"
+    : error instanceof Error
+      ? error.message
+      : "Cannot read configuration";
+}
+
+/** Preserve future fields, but reject prototype keys even in nested extension fields. */
+export function validateConfigShape(
+  value: unknown,
+  partialDeployments = false,
+): asserts value is Partial<CLIConfig> {
+  function object(
+    raw: unknown,
+    label: string,
+  ): asserts raw is Record<string, unknown> {
+    if (
+      !raw ||
+      typeof raw !== "object" ||
+      Array.isArray(raw) ||
+      !(
+        Object.getPrototypeOf(raw) === null ||
+        (Object.getPrototypeOf(Object.getPrototypeOf(raw)) === null &&
+          Object.getPrototypeOf(raw).constructor?.name === "Object")
+      )
+    ) {
+      throw new Error(`${label} must be an object`);
+    }
+  }
+  function safe(raw: unknown): void {
+    if (!raw || typeof raw !== "object") return;
+    if (!Array.isArray(raw)) object(raw, "Configuration field");
+    for (const [key, child] of Object.entries(raw)) {
+      if (["__proto__", "prototype", "constructor"].includes(key))
+        throw new Error("Unsafe configuration key");
+      safe(child);
+    }
+  }
+  function string(raw: unknown, label: string, empty = false): void {
+    if (
+      typeof raw !== "string" ||
+      (!empty && !raw.trim()) ||
+      raw.length > 4096 ||
+      [...raw].some((char) => char.charCodeAt(0) < 32)
+    )
+      throw new Error(`Invalid ${label}`);
+  }
+  object(value, "Configuration");
+  safe(value);
+  if (value.default !== undefined)
+    string(value.default, "default deployment", true);
+  if (value.format !== undefined) {
+    if (
+      typeof value.format !== "string" ||
+      !["table", "json", "csv"].includes(value.format)
+    )
+      throw new Error("Invalid configuration format; use table, json, csv");
+  }
+  if (
+    value.confirmDangerous !== undefined &&
+    typeof value.confirmDangerous !== "boolean"
+  )
+    throw new Error("confirmDangerous must be true or false");
+  if (value.deployments !== undefined) {
+    object(value.deployments, "deployments");
+    for (const [name, dep] of Object.entries(value.deployments)) {
+      validateDeploymentName(name);
+      object(dep, "Deployment");
+      if (!partialDeployments || dep.url !== undefined) {
+        string(dep.url, "deployment URL");
+        validateUrl(dep.url as string);
+      }
+      for (const key of ["key", "deployment", "projectPath"])
+        if (dep[key] !== undefined) string(dep[key], `deployment ${key}`);
+      if (
+        dep.projectPath !== undefined &&
+        !isAbsolute(dep.projectPath as string)
+      )
+        throw new Error("Deployment projectPath must be absolute");
+      if (dep.enabled !== undefined && typeof dep.enabled !== "boolean")
+        throw new Error("Deployment enabled must be boolean");
+    }
+  }
+  if (value.apps !== undefined) {
+    object(value.apps, "apps");
+    for (const [name, app] of Object.entries(value.apps)) {
+      validateDeploymentName(name);
+      object(app, "App");
+      for (const key of ["type", "path", "projectPath"])
+        string(app[key], `app ${key}`);
+      if (!isAbsolute(app.projectPath as string))
+        throw new Error("App projectPath must be absolute");
+      if (typeof app.enabled !== "boolean")
+        throw new Error("App enabled must be boolean");
+      if (
+        app.port !== undefined &&
+        (!Number.isInteger(app.port) ||
+          Number(app.port) < 1 ||
+          Number(app.port) > 65535)
+      )
+        throw new Error("App port must be an integer from 1 to 65535");
+      if (app.startCommand !== undefined)
+        string(app.startCommand, "app startCommand");
+    }
+  }
+}
+
+export function validateDeploymentName(name: string): void {
+  if (
+    !/^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,254}$/.test(name) ||
+    ["__proto__", "constructor", "prototype"].includes(name)
+  )
+    throw new Error(
+      "Invalid deployment/app name; use letters, numbers, dots, underscores or hyphens",
+    );
+}
+
+/** URLs are validated origins; spelling differences for the same origin retain credentials. */
+function sameEndpoint(first: string, second: string): boolean {
+  return new URL(first).origin === new URL(second).origin;
+}
+
+function mergeDeployment(
+  inherited: DeploymentConfig | undefined,
+  override: Partial<DeploymentConfig> | undefined,
+): DeploymentConfig {
+  const merged = { ...inherited, ...override } as DeploymentConfig;
+  // Alias equality is insufficient to bind a deployment credential to an endpoint.
+  if (
+    inherited &&
+    override?.url &&
+    !sameEndpoint(inherited.url, override.url) &&
+    !Object.hasOwn(override, "key")
+  )
+    delete merged.key;
+  return merged;
+}
+
+/** A spread of the previous deployment is not an intentional new endpoint credential. */
+function bindUpdatedCredential(
+  previous: DeploymentConfig | undefined,
+  updated: DeploymentConfig,
+): DeploymentConfig {
+  const bound = { ...updated };
+  if (
+    previous &&
+    !sameEndpoint(previous.url, updated.url) &&
+    updated.key === previous.key
+  )
+    delete bound.key;
+  return bound;
+}
+
+function ownEntry<T>(
+  map: Record<string, T> | undefined,
+  name: string,
+): T | undefined {
+  return map && Object.hasOwn(map, name) ? map[name] : undefined;
+}
+
 function mergeConfig(target: CLIConfig, source: Partial<CLIConfig>): CLIConfig {
   return {
-    deployments: {
-      ...target.deployments,
-      ...source.deployments,
-    },
-    apps: {
-      ...target.apps,
-      ...source.apps,
-    },
-    default: source.default ?? target.default,
-    format: source.format ?? target.format,
-    confirmDangerous: source.confirmDangerous ?? target.confirmDangerous,
+    ...target,
+    ...source,
+    deployments: Object.fromEntries(
+      [
+        ...new Set([
+          ...Object.keys(target.deployments),
+          ...Object.keys(source.deployments ?? {}),
+        ]),
+      ].map((name) => [
+        name,
+        mergeDeployment(
+          getDeployment(target, name) ?? undefined,
+          ownEntry(source.deployments, name),
+        ),
+      ]),
+    ),
+    ...(target.apps || source.apps
+      ? { apps: { ...target.apps, ...source.apps } }
+      : {}),
   };
 }
 
-/**
- * Apply environment variable overrides.
- *
- * The CLI config (~/.cortexrc) is the source of truth.
- * Environment variables from .env.local are NOT used to override config
- * because they are project-specific and would cause confusion when
- * managing multiple deployments from different directories.
- *
- * To override a deployment's URL/key at runtime, use CLI flags:
- *   cortex --url <url> --key <key> <command>
- */
-function applyEnvOverrides(config: CLIConfig): CLIConfig {
-  // No automatic overrides - config file is source of truth
+/** Data-only composition retains the existing01 merge and writable-source provenance. */
+export function composeDataConfig(data: DataSources): CLIConfig {
+  let config = mergeConfig({ ...DEFAULT_CONFIG, deployments: {} }, data.user);
+  let inherited = structuredClone(data.user);
+  let source = data.project;
+  config = mergeConfig(config, data.project);
+  if (data.overlay) {
+    inherited = structuredClone(config);
+    source = data.overlay;
+    config = mergeConfig(config, data.overlay);
+  } else if (data.sourcePath === data.userPath) {
+    source = data.user; inherited = {};
+  }
+  validateConfigShape(config);
+  provenance.set(config, { sourcePath: data.sourcePath, source: structuredClone(source), merged: structuredClone(config), inherited });
   return config;
 }
 
-/**
- * Save configuration to user config file
- */
-export async function saveUserConfig(config: CLIConfig): Promise<void> {
-  const configPath = getUserConfigPath();
-  const configDir = dirname(configPath);
-
-  // Ensure directory exists
-  if (!existsSync(configDir)) {
-    await mkdir(configDir, { recursive: true });
+/** Atomic replacement prevents partial JSON and makes credentials private even for existing files. */
+export async function atomicPrivateWrite(
+  path: string,
+  content: string,
+): Promise<void> {
+  await mkdir(dirname(path), { recursive: true });
+  const temporary = `${path}.${randomUUID()}.tmp`;
+  try {
+    const handle = await open(temporary, "wx", 0o600);
+    try {
+      await handle.writeFile(content, "utf-8");
+      await handle.sync();
+    } finally {
+      await handle.close();
+    }
+    await rename(temporary, path);
+  } finally {
+    await unlink(temporary).catch((error: unknown) => {
+      if (!isMissingFile(error)) throw error;
+    });
   }
-
-  await writeFile(configPath, JSON.stringify(config, null, 2), "utf-8");
 }
 
-/**
- * Save configuration to project config file
- */
+export async function saveUserConfig(config: CLIConfig): Promise<void> {
+  if ((currentAdmissionContext() ?? contextForConfig(config))?.mode === "owned-data-only")
+    throw new Error("ADMISSION_SAVE_SCOPE_UNSUPPORTED: use the admitted effective JSON source");
+  validateConfigShape(config);
+  await atomicPrivateWrite(
+    getUserConfigPath(),
+    JSON.stringify(config, null, 2),
+  );
+}
 export async function saveProjectConfig(config: CLIConfig): Promise<void> {
-  const configPath = getProjectConfigPath();
-  await writeFile(configPath, JSON.stringify(config, null, 2), "utf-8");
+  if ((currentAdmissionContext() ?? contextForConfig(config))?.mode === "owned-data-only")
+    throw new Error("ADMISSION_SAVE_SCOPE_UNSUPPORTED: use the admitted effective JSON source");
+  validateConfigShape(config);
+  await atomicPrivateWrite(
+    getProjectConfigPath(),
+    JSON.stringify(config, null, 2),
+  );
+}
+
+/** Config mutations persist to the active project JSON if present, otherwise the user file.
+ * Refuse a non-JSON project source rather than creating a shadowed user setting.
+ */
+export async function saveEffectiveConfig(config: CLIConfig): Promise<void> {
+  const context = currentAdmissionContext() ?? contextForConfig(config) ?? await discoverAdmission();
+  if (context.mode === "owned-data-only") await recheckAdmission(context);
+  validateConfigShape(config);
+  const metadata =
+    provenance.get(config) ?? provenance.get(await withAdmissionContext(context, () => loadConfig()))!;
+  if (context.mode === "owned-data-only") {
+    for (const session of context.registry.sessions) {
+      const name = session.registeredAlias;
+      if (name && JSON.stringify(metadata.merged.deployments[name]) !== JSON.stringify(config.deployments[name]))
+        throw new Error("ADMISSION_OWNED_CONFIG_IMMUTABLE: release/discard owns registered bindings");
+    }
+  }
+  if (
+    !["cortex.config.json", ".cortexrc", ".cortexrc.json"].includes(
+      metadata.sourcePath.split("/").pop() ?? "",
+    )
+  )
+    throw new Error(
+      "Active project config is not a writable JSON config; edit that source explicitly",
+    );
+  for (const [name, deployment] of Object.entries(config.deployments)) {
+    config.deployments[name] = bindUpdatedCredential(
+      getDeployment(metadata.merged, name) ?? undefined,
+      deployment,
+    );
+  }
+  const saved = structuredClone(metadata.source) as Record<string, unknown>;
+  const same = (a: unknown, b: unknown) =>
+    JSON.stringify(a) === JSON.stringify(b);
+  for (const key of new Set([
+    ...Object.keys(metadata.merged),
+    ...Object.keys(config),
+  ])) {
+    const updatedValue = ownEntry(config, key);
+    const originalValue = ownEntry(metadata.merged, key);
+    if (same(updatedValue, originalValue)) continue;
+    if (["deployments", "apps"].includes(key)) {
+      const original = (originalValue ?? {}) as Record<
+        string,
+        Record<string, unknown>
+      >;
+      const updated = (updatedValue ?? {}) as Record<
+        string,
+        Record<string, unknown>
+      >;
+      const own = {
+        ...((ownEntry(saved, key) as Record<string, Record<string, unknown>>) ??
+          {}),
+      };
+      for (const name of new Set([
+        ...Object.keys(original),
+        ...Object.keys(updated),
+      ])) {
+        const updatedEntry = ownEntry(updated, name);
+        const originalEntry = ownEntry(original, name);
+        if (same(updatedEntry, originalEntry)) continue;
+        if (!updatedEntry) {
+          if (
+            !Object.hasOwn(own, name) ||
+            Object.hasOwn(metadata.inherited[key] ?? {}, name)
+          )
+            throw new Error(
+              `Cannot remove inherited ${key} entry; edit its user configuration source explicitly`,
+            );
+          delete own[name];
+          continue;
+        }
+        const fields = { ...ownEntry(own, name) };
+        for (const field of new Set([
+          ...Object.keys(originalEntry ?? {}),
+          ...Object.keys(updatedEntry),
+        ])) {
+          const value = ownEntry(updatedEntry, field);
+          if (same(value, ownEntry(originalEntry, field))) continue;
+          if (value === undefined) delete fields[field];
+          else fields[field] = value;
+        }
+        own[name] = fields;
+      }
+      saved[key] = own;
+    } else if (updatedValue === undefined) delete saved[key];
+    else saved[key] = updatedValue;
+  }
+  // User entries need complete URLs; project entries may override individual fields.
+  validateConfigShape(saved, metadata.sourcePath !== getUserConfigPath());
+  if (context.mode === "owned-data-only") await recheckAdmission(context);
+  await atomicPrivateWrite(metadata.sourcePath, JSON.stringify(saved, null, 2));
+  if (context.mode === "owned-data-only") await refreshAdmissionAfterSave(context);
+  provenance.set(config, {
+    sourcePath: metadata.sourcePath,
+    source: saved,
+    merged: structuredClone(config),
+    inherited: metadata.inherited,
+  });
+}
+
+/** Scope a use selection to the nearest project configuration, otherwise this directory. */
+export async function getConfigScope(): Promise<string> {
+  const context = currentAdmissionContext() ?? await discoverAdmission();
+  if (context.mode === "owned-data-only") {
+    await recheckAdmission(context);
+    return context.data.scope;
+  }
+  const result = await nearestProjectConfig();
+  return result && result.filepath !== getUserConfigPath()
+    ? dirname(result.filepath)
+    : process.cwd();
 }
 
 /**
@@ -161,7 +531,7 @@ export function getDeployment(
   name?: string,
 ): DeploymentConfig | null {
   const deploymentName = name ?? config.default;
-  return config.deployments[deploymentName] ?? null;
+  return ownEntry(config.deployments, deploymentName) ?? null;
 }
 
 /**
@@ -182,8 +552,18 @@ export function resolveConfig(
   tokenEnv?: string;
   tokenFile?: string;
 } {
+  validateConfigShape(config);
+  const selected = options.deployment ?? currentAdmissionContext()?.selectedAlias ?? config.default;
+  const candidate = selected ? getDeployment(config, selected) : undefined;
+  if (candidate?.restoreRuntime !== undefined || candidate?.kind === "owned-restore" ||
+      ((options.url || options.key) && Object.values(config.deployments).some(dep => dep.restoreRuntime !== undefined || dep.kind === "owned-restore")))
+    throw new Error("RESTORE_RUNTIME_UNAVAILABLE: owned endpoints require later verified runtime proof");
+  if (options.format !== undefined) validateOutputFormat(options.format);
   // CLI flags have highest priority
   if (options.url) {
+    validateUrl(options.url);
+    if (options.deployment)
+      throw new Error("Use either --url or --deployment, not both");
     return {
       url: options.url,
       key: options.key,
@@ -202,13 +582,13 @@ export function resolveConfig(
   if (!deploymentConfig) {
     throw new Error(
       `Deployment "${options.deployment ?? config.default}" not found in configuration. ` +
-        `Run 'cortex setup' to configure deployments.`,
+        `Run 'cortex config add-deployment' to configure deployments.`,
     );
   }
 
   return {
     url: deploymentConfig.url,
-    key: deploymentConfig.key ?? options.key,
+    key: options.key ?? deploymentConfig.key,
     deployment: deploymentConfig.deployment,
     format: options.format ?? config.format,
     quiet: options.quiet ?? false,
@@ -228,11 +608,15 @@ export async function updateDeployment(
   deployment: DeploymentConfig,
   saveToUser = true,
 ): Promise<CLIConfig> {
+  validateDeploymentName(name);
   const config = await loadConfig();
-  config.deployments[name] = deployment;
+  config.deployments[name] = bindUpdatedCredential(
+    getDeployment(config, name) ?? undefined,
+    deployment,
+  );
 
   if (saveToUser) {
-    await saveUserConfig(config);
+    await saveEffectiveConfig(config);
   }
 
   return config;
@@ -242,14 +626,15 @@ export async function updateDeployment(
  * Set the default deployment
  */
 export async function setDefaultDeployment(name: string): Promise<void> {
+  validateDeploymentName(name);
   const config = await loadConfig();
 
-  if (!config.deployments[name]) {
+  if (!getDeployment(config, name)) {
     throw new Error(`Deployment "${name}" not found`);
   }
 
   config.default = name;
-  await saveUserConfig(config);
+  await saveEffectiveConfig(config);
 }
 
 /**
@@ -258,12 +643,24 @@ export async function setDefaultDeployment(name: string): Promise<void> {
 export async function setConfigValue(
   key: string,
   value: string,
+  options: GlobalOptions = {},
 ): Promise<void> {
+  const targeted = ["convex-url", "convex-key"].includes(key);
+  if (!targeted && options.deployment !== undefined)
+    throw new Error(
+      `Global config setting "${key}" does not support --deployment; omit -d`,
+    );
+  if (options.deployment !== undefined)
+    validateDeploymentName(options.deployment);
   const config = await loadConfig();
+  const selected = targeted
+    ? (await selectDeployment(config, { ...options, quiet: true }))!
+    : undefined;
 
   switch (key) {
     case "default":
-      if (!config.deployments[value]) {
+      validateDeploymentName(value);
+      if (!getDeployment(config, value)) {
         throw new Error(`Deployment "${value}" not found`);
       }
       config.default = value;
@@ -275,17 +672,27 @@ export async function setConfigValue(
       config.format = value as OutputFormat;
       break;
     case "confirmDangerous":
+      if (!["true", "false"].includes(value))
+        throw new Error("confirmDangerous must be true or false");
       config.confirmDangerous = value === "true";
       break;
-    case "convex-url":
-      config.deployments[config.default] = {
-        ...config.deployments[config.default],
+    case "convex-url": {
+      validateUrl(value);
+      serializeEnvAssignment("CORTEX_CONVEX_URL", value);
+      const updated = bindUpdatedCredential(selected!.deployment, {
+        ...selected!.deployment,
         url: value,
-      };
+      });
+      if (updated.key !== undefined)
+        serializeEnvAssignment("CORTEX_DEPLOY_KEY", updated.key);
+      config.deployments[selected!.name] = updated;
       break;
+    }
     case "convex-key":
-      config.deployments[config.default] = {
-        ...config.deployments[config.default],
+      validateFilePath(value);
+      serializeEnvAssignment("CORTEX_DEPLOY_KEY", value);
+      config.deployments[selected!.name] = {
+        ...selected!.deployment,
         key: value,
       };
       break;
@@ -310,7 +717,7 @@ export async function setConfigValue(
       throw new Error(`Unknown config key: ${key}`);
   }
 
-  await saveUserConfig(config);
+  await saveEffectiveConfig(config);
 }
 
 /**
@@ -475,7 +882,10 @@ export function discoverUnregisteredApps(config: CLIConfig): DiscoveredApp[] {
       // Generate unique name
       let name = location.defaultName;
       let counter = 1;
-      while (config.apps?.[name] || discovered.some((d) => d.name === name)) {
+      while (
+        (config.apps && Object.hasOwn(config.apps, name)) ||
+        discovered.some((d) => d.name === name)
+      ) {
         name = `${location.defaultName}-${counter}`;
         counter++;
       }
@@ -532,7 +942,10 @@ export function discoverUnregisteredApps(config: CLIConfig): DiscoveredApp[] {
         // Generate unique name
         let name = `${deploymentName}-${entry.name}`;
         let counter = 1;
-        while (config.apps?.[name] || discovered.some((d) => d.name === name)) {
+        while (
+          (config.apps && Object.hasOwn(config.apps, name)) ||
+          discovered.some((d) => d.name === name)
+        ) {
           name = `${deploymentName}-${entry.name}-${counter}`;
           counter++;
         }
@@ -564,6 +977,7 @@ export async function registerApp(
     port?: number;
   },
 ): Promise<CLIConfig> {
+  validateDeploymentName(app.name);
   const config = await loadConfig();
 
   if (!config.apps) {
@@ -578,7 +992,7 @@ export async function registerApp(
     port: options?.port ?? (app.type === "vercel-ai-quickstart" ? 3000 : 3001),
   };
 
-  await saveUserConfig(config);
+  await saveEffectiveConfig(config);
   return config;
 }
 
@@ -594,7 +1008,7 @@ function getErrorMessage(error: unknown): string {
  * Determine if an error indicates an authentication failure
  *
  * Returns true for errors that indicate the deployment/key is invalid
- * but does not establish that a saved host deployment should be removed. Returns false for transient errors
+ * for diagnostics only. Returns false for transient errors
  * (network issues, timeouts) where the deployment should be kept.
  */
 function isAuthError(error: unknown): boolean {
@@ -626,146 +1040,95 @@ function isAuthError(error: unknown): boolean {
  * @returns Result indicating status of the check
  */
 async function checkConvexUrl(
-  deployment: DeploymentConfig,
-  timeout = 3000,
+  config: CLIConfig,
+  name: string,
+  timeout: number,
 ): Promise<ConvexCheckResult> {
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), timeout);
-  let dispose: (() => void) | undefined;
-  const checkPromise = (async () => {
-    const { createClient, closeClient } = await import("./client.js");
-    const client: Cortex = await createClient({ deployments: { probe: deployment }, default: "probe", format: "json", confirmDangerous: true }, {});
-    dispose = () => closeClient(client);
-    if (controller.signal.aborted) { dispose(); throw new Error("Operation timed out"); }
-    await client.memorySpaces.list({ limit: 1 });
-  })();
+  let timeoutId: ReturnType<typeof setTimeout> | undefined;
+  let client: Awaited<ReturnType<typeof createClient>> | undefined;
   try {
-    const abortPromise = new Promise<never>((_, reject) => {
-      if (controller.signal.aborted) reject(new Error("Operation timed out"));
-      else controller.signal.addEventListener("abort", () => reject(new Error("Operation timed out")), { once: true });
-    });
-    await Promise.race([checkPromise, abortPromise]);
+    client = await createClient(config, { deployment: name, graphSync: "off" });
+    await Promise.race([
+      client.memorySpaces.list({ limit: 1 }),
+      new Promise<never>((_, reject) => {
+        timeoutId = setTimeout(
+          () => reject(new Error("Operation timed out")),
+          timeout,
+        );
+      }),
+    ]);
     return { status: "ok" };
   } catch (error) {
-    if (controller.signal.aborted) {
+    // Diagnostics carry classifications, never server text which could include credentials.
+    if (getErrorMessage(error) === "Operation timed out")
       return { status: "timeout" };
-    }
-    if (isAuthError(error)) {
-      return { status: "auth_error", message: getErrorMessage(error) };
-    }
-    // Default to network_error for any unrecognized error (fail-safe: keep deployment)
-    return { status: "network_error", message: getErrorMessage(error) };
+    return isAuthError(error)
+      ? {
+          status: "auth_error",
+          message:
+            "Authentication/access failed; check deployment credentials and tenant access separately",
+        }
+      : {
+          status: "network_error",
+          message: "Connection failed; configuration retained",
+        };
   } finally {
     clearTimeout(timeoutId);
-    dispose?.();
+    if (client) await disposeClient(client);
   }
 }
 
-/**
- * Validate and clean a configuration, removing invalid entries
- *
- * Performs the following validations:
- * 1. Deployment projectPath: removes if directory doesn't exist
- * 2. Current host JWT/session probe: auth/network failures preserve deployment configuration
- * 3. App paths: removes if join(projectPath, path) doesn't exist
- * 4. Default deployment: reassigns if current default was removed
- *
- * @param config - The configuration to validate
- * @param options - Validation options
- * @returns Validation result with cleaned config and list of removed items
- */
+/** Compatibility name: validation is strictly observational and never cleans or saves. */
 export async function validateAndCleanConfig(
   config: CLIConfig,
   options?: ValidationOptions,
 ): Promise<ValidationResult> {
-  const checkConvex = options?.checkConvex ?? true;
+  validateConfigShape(config);
   const timeout = options?.timeout ?? 3000;
-
+  if (!Number.isSafeInteger(timeout) || timeout < 1 || timeout > 60000)
+    throw new Error("Validation timeout must be an integer from 1 to 60000 ms");
   const result: ValidationResult = {
-    config: { ...config, deployments: { ...config.deployments } },
+    config,
     modified: false,
-    removed: {
-      deployments: [],
-      apps: [],
-    },
+    removed: { deployments: [], apps: [] },
+    diagnostics: [],
   };
-
-  // Copy apps if present
-  if (config.apps) {
-    result.config.apps = { ...config.apps };
-  }
-
-  // Validate deployments
-  const deploymentNames = Object.keys(result.config.deployments);
-
-  for (const name of deploymentNames) {
-    const deployment = result.config.deployments[name];
-    let shouldRemove = false;
-
-    // Check 1: projectPath exists (filesystem validation)
-    if (deployment.projectPath && !existsSync(deployment.projectPath)) {
-      shouldRemove = true;
-    }
-
-    // Check 2: Convex URL is reachable (if enabled and not already marked for removal)
-    if (!shouldRemove && checkConvex && deployment.url) {
-      const checkResult = await checkConvexUrl(deployment, timeout);
-
-      // A JWT/grant expiry is a session failure, never evidence that host configuration is invalid.
-      void checkResult;
-      // Note: timeout and network_error do NOT trigger removal (fail-safe)
-    }
-
-    if (shouldRemove) {
-      delete result.config.deployments[name];
-      result.removed.deployments.push(name);
-      result.modified = true;
+  for (const [name, deployment] of Object.entries(config.deployments)) {
+    if (deployment.projectPath && !existsSync(deployment.projectPath))
+      result.diagnostics.push({
+        name,
+        kind: "stale_path",
+        message: "Project path is missing; configuration retained",
+      });
+    if (options?.checkConvex ?? true) {
+      const check = await checkConvexUrl(config, name, timeout);
+      if (check.status !== "ok")
+        result.diagnostics.push({
+          name,
+          kind: check.status,
+          message: "Connectivity/access check failed; configuration retained",
+        });
     }
   }
-
-  // Validate apps
-  if (result.config.apps) {
-    const appNames = Object.keys(result.config.apps);
-
-    for (const name of appNames) {
-      const app = result.config.apps[name];
-
-      // Check: app path exists relative to projectPath
-      const fullPath = join(app.projectPath, app.path);
-      if (!existsSync(fullPath)) {
-        delete result.config.apps[name];
-        result.removed.apps.push(name);
-        result.modified = true;
-      }
-    }
+  for (const [name, app] of Object.entries(config.apps ?? {})) {
+    if (!existsSync(join(app.projectPath, app.path)))
+      result.diagnostics.push({
+        name,
+        kind: "stale_path",
+        message: "App path is missing; configuration retained",
+      });
   }
-
-  // Reassign default deployment if it was removed
-  if (
-    result.config.default &&
-    !result.config.deployments[result.config.default]
-  ) {
-    const remaining = Object.keys(result.config.deployments).sort();
-    result.config.default = remaining[0] || "";
-    result.modified = true;
-  }
-
-  // Auto-save if modified
-  if (result.modified) {
-    await saveUserConfig(result.config);
-  }
-
   return result;
 }
 
 /**
- * Load configuration and validate it, cleaning up invalid entries
+ * Load configuration and report validation without modifying entries
  *
  * Combines loadConfig() with validateAndCleanConfig() for a single
- * function that returns a validated, cleaned configuration.
+ * function that returns the original configuration after observational validation.
  *
  * @param options - Validation options
- * @returns The validated and cleaned configuration
+ * @returns The original configuration
  */
 export async function loadConfigWithValidation(
   options?: ValidationOptions,

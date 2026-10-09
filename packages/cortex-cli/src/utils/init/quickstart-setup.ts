@@ -7,17 +7,12 @@
 
 import fs from "fs-extra";
 import path from "path";
-import { fileURLToPath } from "url";
-import { dirname } from "path";
 import pc from "picocolors";
 import ora from "ora";
 import type { AppConfig } from "../../types.js";
 import { execCommand } from "../shell.js";
 import { appendRuntimeEnvironment } from "./backend-setup.js";
-
-// ES module equivalents of __dirname
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+import { resolveCatalogSource, resolveTemplateCatalog, selectResolvedTemplate, satisfiesTemplateRange } from "../templates/index.js";
 
 /**
  * Default port for the quickstart app
@@ -43,62 +38,6 @@ export type TemplateName =
   | "basic"
   | "vercel-ai-quickstart"
   | "chat-sdk-quickstart";
-
-/**
- * Find a template directory by name
- */
-function findTemplatePath(
-  templateName: TemplateName = "vercel-ai-quickstart",
-): string | null {
-  const possiblePaths = [
-    // From dist/utils/init/
-    path.join(__dirname, `../../../templates/${templateName}`),
-    // From dist/utils/init/subdir
-    path.join(__dirname, `../../../../templates/${templateName}`),
-    // From installed package in node_modules
-    path.join(
-      process.cwd(),
-      "node_modules",
-      "@cortexmemory",
-      "cli",
-      "templates",
-      templateName,
-    ),
-  ];
-
-  for (const tryPath of possiblePaths) {
-    if (fs.existsSync(tryPath)) {
-      return tryPath;
-    }
-  }
-
-  return null;
-}
-
-/**
- * Recursively copy directory, excluding specified patterns
- */
-async function copyDir(src: string, dest: string): Promise<void> {
-  await fs.ensureDir(dest);
-
-  const entries = await fs.readdir(src, { withFileTypes: true });
-
-  for (const entry of entries) {
-    const srcPath = path.join(src, entry.name);
-    const destPath = path.join(dest, entry.name);
-
-    // Skip excluded files/folders
-    if (EXCLUDE_FILES.includes(entry.name)) {
-      continue;
-    }
-
-    if (entry.isDirectory()) {
-      await copyDir(srcPath, destPath);
-    } else {
-      await fs.copyFile(srcPath, destPath);
-    }
-  }
-}
 
 /**
  * Update package.json to use npm packages instead of file: references
@@ -214,16 +153,6 @@ export async function prepareVercelAIQuickstart(
   const absoluteProjectPath = path.resolve(projectPath);
   const quickstartPath = path.join(absoluteProjectPath, "quickstart");
 
-  // Find template
-  const templatePath = findTemplatePath();
-
-  if (!templatePath) {
-    throw new Error(
-      "Vercel AI quickstart template not found. " +
-        "Please ensure @cortexmemory/cli is properly installed.",
-    );
-  }
-
   console.log(pc.cyan("\n   Installing Vercel AI quickstart..."));
 
   if (await fs.pathExists(quickstartPath) && (await fs.readdir(quickstartPath)).length) {
@@ -231,9 +160,20 @@ export async function prepareVercelAIQuickstart(
   }
   if (await fs.pathExists(quickstartPath) && (await fs.lstat(quickstartPath)).isSymbolicLink()) throw new Error("Refusing a symbolic-link quickstart destination.");
 
+  const catalog = await resolveTemplateCatalog(await resolveCatalogSource({}));
+  const selected = selectResolvedTemplate(catalog, "vercel-ai-quickstart");
+  if (!satisfiesTemplateRange(sdkVersion, selected.template.compatibility.sdk))
+    throw new Error("Quickstart SDK version is incompatible with the selected catalog template");
+
   // Copy template files
   const copySpinner = ora("Copying quickstart files...").start();
-  await copyDir(templatePath, quickstartPath);
+  await fs.ensureDir(quickstartPath);
+  for (const [name, file] of selected.files) {
+    if (name.split("/").some((part) => EXCLUDE_FILES.includes(part))) continue;
+    const target = path.join(quickstartPath, name);
+    await fs.ensureDir(path.dirname(target));
+    await fs.writeFile(target, file.bytes, { flag: "wx", mode: file.executable ? 0o755 : 0o644 });
+  }
   copySpinner.succeed("Quickstart files copied");
 
   // Update package.json with npm package versions

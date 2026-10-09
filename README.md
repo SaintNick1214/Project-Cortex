@@ -13,6 +13,19 @@ acceptance and service gaps are recorded in
 An unavailable required capability does not establish functional completion.
 This branch has not been released or deployed to production.
 
+## Package and application versions
+
+This checkout declares **0.38.0** for the SDK, CLI and AI provider. Application sources
+declare **1.3.0**; the independent `@cortexmemory/templates` catalog declares **1.2.0**.
+These source versions do not establish registry publication or installed compatibility.
+Use matching released packages, or matching local archives for this unpublished branch.
+
+SDK/backend upgrades and application-template upgrades use separate channels. CLI build
+compiles its code without copying application sources. Catalog payloads have explicit
+versions and digests; an SDK update does not replace host application files. See the
+[CLI setup and upgrade contracts](packages/cortex-cli/README.md) and
+[catalog contract](packages/cortex-templates/README.md).
+
 ## Development installation
 
 Use Node >=24.15.0 and npm 12.2.0. The SDK, CLI and provider are independent packages;
@@ -45,6 +58,20 @@ Registration, host-issued identity/grants, an administrator-published Agent defi
 and qualified server-side model policies are separate setup steps. Copying the source
 or setting a deployment URL does not qualify a model, embedding profile or media service.
 Never point test cleanup or development registration at production.
+
+### Native development and explicit administration
+
+The CLI also supports foreground native Convex development, explicit deployment
+selection, graph service ownership, SDK installation/update and independent template
+installation/update. Inspect `cortex install --help`, `cortex schema sync --help`,
+`cortex templates --help` and `cortex graph --help` for their current target and
+preservation rules. Use dry-run/plan modes before changing an existing host.
+
+Low-level domain administration, exports, provenance and reference maintenance use
+separate guarded operator contracts. A deployment administrator credential is required
+for those internal operations. Caller-supplied tenant/user labels never grant access to
+the public backend runtime. Runtime scope retirement preserves financial and tombstone
+history and must not be replaced with a native database reset.
 
 ## Submit and observe a backend run
 
@@ -174,3 +201,17 @@ verified disposable targets and real configured prerequisites. A mocked suite, a
 test or a missing service is never reported as actual runtime qualification. The goal's
 [execution record](_goals/convex-backend-runtime-2026-10-02/qa/execution-progress.md)
 links scoped independent verdicts and raw receipts.
+
+The repository also retains meaningful native provenance, reference-maintenance,
+erasure, paging and graph checks. Run the affected CLI/provider/catalog checks in their
+own packages; build does not synchronize templates or deploy Convex. `npm run test:release`
+validates release workflow contracts without publishing a package.
+
+Security scanners and dependency review run through the
+[security workflow](.github/workflows/security.yml),
+[PR checks](.github/workflows/pr-checks.yml) and
+[dependency-review configuration](.github/dependency-review-config.yml). Report private
+security findings using [SECURITY.md](SECURITY.md). Inference and external graph services
+receive authorized data through their documented boundaries; keep their credentials on
+trusted services. Package publication is a separate release action governed by
+[RELEASE-GUIDE.md](RELEASE-GUIDE.md). This continuation does not publish or deploy production.

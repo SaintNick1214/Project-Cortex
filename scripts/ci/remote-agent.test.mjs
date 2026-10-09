@@ -38,7 +38,7 @@ test("remote Agent setup refuses wrong target, foreign claims and missing explic
   const value = remoteAgentConfiguration(env); assert.equal(value.plan.kind, "sdk");
 });
 
-test("unpaid setup verifies current owner, publishes one immutable V1 definition and exports only returned pins", async () => {
+test("unpaid setup verifies current owner, publishes one immutable observed V2 definition and exports only returned pins", async () => {
   const env = environment(), fake = client(env);
   let signal;
   const result = await publishRemoteAgent(env, (url, current) => { assert.equal(url, env.CONVEX_URL); signal = current; return fake.value; });
@@ -47,8 +47,11 @@ test("unpaid setup verifies current owner, publishes one immutable V1 definition
   const publication = fake.calls[1].args;
   assert.equal(publication.agentId, undefined); assert.equal(publication.expectedPreviousVersion, 0);
   assert.equal(publication.clientMutationId, "ci-remote-agent-123-1");
-  assert.equal(publication.definitionInput.context.registryHash, "c41fb7c968b1321e952fdaa14e4a5de045ae3333de14641e4d640b3307a64754");
-  assert.equal(publication.definitionInput.policies[0].rules.pins.boundRevision, "agent-tools-32768-512-v1");
+  assert.equal(publication.definitionInput.context.registryHash, "975b0d6ba749d0198c10af7e0457e57f54bbb79a55c5c0f64b11592c0e982631");
+  assert.equal(publication.definitionInput.policies[0].rules.pins.boundRevision, "agent-tools-v2-32768-256-shared3m-v1");
+  assert.deepEqual(publication.definitionInput.tools.map(tool => tool.toolId),
+    ["memory.remember", "memory.recall", "media.image.generate", "media.video.generate", "artifact.read"]);
+  assert.ok(publication.definitionInput.tools.filter(tool => tool.toolId.startsWith("media.")).every(tool => tool.approval === "explicit"));
   assert.equal(result.agentId, agentId); assert.equal(result.definitionHash, definitionHash);
   assert.equal(result.modelCalls, 0); assert.equal(result.freshNativeQualification, false);
   assert.equal(JSON.stringify(result).includes(env.CORTEX_TEST_AUTH_TOKEN), false);

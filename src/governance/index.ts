@@ -7,7 +7,7 @@
 
 import type { ConvexClient } from "convex/browser";
 import type { FunctionReference } from "convex/server";
-import { api } from "../../convex-dev/_generated/api";
+import { api } from "../common/backendApi";
 import type {
   GovernancePolicy,
   PolicyScope,

@@ -11,8 +11,8 @@
  */
 
 import { describe, it, expect, beforeAll, afterAll } from "@jest/globals";
-import { Cortex } from "../src";
-import { ConvexClient } from "convex/browser";
+import { Cortex } from "./helpers/deployment-operator";
+import { ConvexClient } from "./helpers/deployment-operator";
 import { createNamedTestRunContext } from "./helpers";
 
 // Mock LLM client for testing
@@ -160,7 +160,7 @@ describe("Belief Revision Pipeline", () => {
       }
 
       const { ConvexClient: LocalConvexClient } = await import(
-        "convex/browser"
+        "./helpers/deployment-operator"
       );
       const localClient = new LocalConvexClient(convexUrl);
       const factsApi = new FactsAPI(localClient);

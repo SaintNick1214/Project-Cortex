@@ -1,0 +1,12 @@
+{
+  "agents": {
+    "sourceHash": "2f62a62e8ae23e84542324fc2201335eb99ca36ae7ed7c9a3173c352e3e3e17d",
+    "declaration": "export const computeStats = query({\n  args: { ...selectors, agentId: v.string() },\n  handler: async (ctx, args) => operation(ctx, \"query\", async () => {\n    const access = await RegistryAccess.open(ctx, \"read\", args);\n    const agent = (await agentAt(access, args.agentId))!;\n    await access.admit(resource(\"agents\", agent), \"admin\");\n    return await statisticsUnavailable(access);\n  }),\n});",
+    "sha256": "c7d9f1c007a876c182cc5f5aa2e5047773ed5799add3f756019ecc36c7f734da"
+  },
+  "memorySpaces": {
+    "sourceHash": "cabb138c578220ee3b4b56fd16bf466da9e92e9508f8485ce1582fd3b29eee2c",
+    "declaration": "export const getStats = query({\n  args: {\n    ...selectors,\n    memorySpaceId: v.string(),\n    timeWindow: v.optional(v.union(v.literal(\"24h\"), v.literal(\"7d\"), v.literal(\"30d\"), v.literal(\"90d\"), v.literal(\"all\"))),\n    includeParticipants: v.optional(v.boolean()),\n  },\n  handler: async (ctx, args) => operation(ctx, \"query\", async () => {\n    const access = await RegistryAccess.open(ctx, \"read\", args);\n    await spaceAt(access, args.memorySpaceId, \"read\");\n    return await statisticsUnavailable(access);\n  }),\n});",
+    "sha256": "305931516689ad876c1744eb84f60898873a5bd08c8b4f51cf9c2fb4fa1d4373"
+  }
+}

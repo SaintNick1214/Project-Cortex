@@ -10,7 +10,8 @@
  * 3. Fetch additional memories/facts that mention discovered entities
  */
 
-import type { GraphAdapter } from "../../graph/types";
+import {GraphDatabaseError,type GraphAdapter,type GraphScope} from "../../graph/types";
+import {MANAGED_LABELS,MANAGED_RELATIONSHIPS,derivedGraphIdentity,primaryGraphIdentity,assertIdentityProperties} from "../../graph/identity";
 import type { FactRecord, MemoryEntry } from "../../types";
 import type { FactsAPI } from "../../facts";
 import type { VectorAPI } from "../../vector";
@@ -45,6 +46,31 @@ export interface GraphExpansionResult {
   relatedFacts: FactRecord[];
   /** IDs already processed (to avoid re-fetching) */
   processedIds: Set<string>;
+}
+
+interface GraphNativeSelection {kind:"Memory"|"Fact";physicalSourceId:string;logicalId:string;scope:GraphScope;}
+function exactScope(scope:GraphScope|undefined,memorySpaceId?:string):GraphScope {
+  if(!scope||scope.tenantKnown!==true||scope.tenantId!==null&&(typeof scope.tenantId!=="string"||!scope.tenantId)||typeof scope.memorySpaceId!=="string"||!scope.memorySpaceId||memorySpaceId!==undefined&&scope.memorySpaceId!==memorySpaceId)
+    throw new GraphDatabaseError("Graph expansion needs the exact known tenant and owning space.","GRAPH_IDENTITY_REQUIRED");
+  return scope;
+}
+function scopeParameters(scope:GraphScope){return {tenantTag:scope.tenantId===null?"knownTenantless":"tenant",tenantValue:scope.tenantId??"",space:scope.memorySpaceId};}
+function entity(node:Record<string,unknown>,scope:GraphScope):void {
+  if(node.kind!=="Entity"||typeof node.name!=="string"||typeof node.type!=="string")throw new GraphDatabaseError("Malformed managed Entity projection.","GRAPH_IDENTITY_MISMATCH");
+  const expected=derivedGraphIdentity("Entity",node.name,scope,node.type);
+  for(const [key,value]of Object.entries(expected.properties))if(node[key]!==value)throw new GraphDatabaseError("Managed Entity key, tuple or scope mismatch.","GRAPH_IDENTITY_MISMATCH");
+}
+function pathNode(node:Record<string,unknown>,scope:GraphScope):void {
+  if(node.kind==="Entity"){entity(node,scope);return;}
+  if(!["Memory","Fact","Context","Conversation","MemorySpace","Artifact"].includes(String(node.kind))||typeof node.physicalSourceId!=="string")
+    throw new GraphDatabaseError("Legacy or inapplicable graph path node is excluded.","GRAPH_IDENTITY_MISMATCH");
+  assertIdentityProperties(node,primaryGraphIdentity(node.kind as "Memory",node.physicalSourceId,scope));
+}
+async function entitySeeds(name:string,adapter:GraphAdapter,scope:GraphScope):Promise<Record<string,unknown>[]> {
+  if(!adapter.managedRead)throw new GraphDatabaseError("Managed bounded graph reads are unavailable.","GRAPH_SCHEMA_MIGRATION_REQUIRED");
+  const result=await adapter.managedRead("MATCH (n:CortexV2Entity) WHERE n.schemaVersion=2 AND n.tenantTag=$tenantTag AND n.tenantValue=$tenantValue AND n.spaceTag='space' AND n.spaceValue=$space AND n.name=$name RETURN properties(n) AS node LIMIT 65",{...scopeParameters(scope),name:name.trim().toLowerCase()});
+  if(result.count>64)throw new GraphDatabaseError("Scoped Entity matches exceed the graph query budget.","GRAPH_QUERY_BUDGET");
+  return result.records.map(record=>{const node=record.node as Record<string,unknown>;entity(node,scope);return node;});
 }
 
 /**
@@ -109,85 +135,13 @@ export function extractEntitiesFromResults(
  * 2. Query the graph for Entity nodes matching each candidate
  * 3. Return matched entity names for graph traversal
  */
-export async function extractEntitiesFromQuery(
-  query: string,
-  graphAdapter: GraphAdapter | undefined,
-): Promise<string[]> {
-  if (!graphAdapter || !query || query.trim().length === 0) {
-    return [];
-  }
-
-  try {
-    // Check if graph is connected
-    const isConnected = await graphAdapter.isConnected();
-    if (!isConnected) {
-      return [];
-    }
-
-    const matchedEntities: string[] = [];
-
-    // Tokenize query: split on spaces and common punctuation
-    const words = query
-      .toLowerCase()
-      .replace(/[^\w\s'-]/g, " ")
-      .split(/\s+/)
-      .filter((w) => w.length > 2); // Skip very short words
-
-    // Generate candidate phrases: single words and n-grams
-    const candidates = new Set<string>();
-
-    // Add individual words (capitalized - common for names)
-    for (const word of words) {
-      // Capitalize first letter (entity names are often proper nouns)
-      const capitalized = word.charAt(0).toUpperCase() + word.slice(1);
-      candidates.add(capitalized);
-      candidates.add(word); // Also try lowercase
-    }
-
-    // Add 2-word phrases (for names like "Planet Granite", "Sarah Chen")
-    for (let i = 0; i < words.length - 1; i++) {
-      const phrase = words
-        .slice(i, i + 2)
-        .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-        .join(" ");
-      candidates.add(phrase);
-    }
-
-    // Add 3-word phrases (for longer entity names)
-    for (let i = 0; i < words.length - 2; i++) {
-      const phrase = words
-        .slice(i, i + 3)
-        .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-        .join(" ");
-      candidates.add(phrase);
-    }
-
-    // Query graph for each candidate (limit to avoid performance issues)
-    const candidateArray = Array.from(candidates).slice(0, 20);
-
-    for (const candidate of candidateArray) {
-      try {
-        // Look for exact match on entity name
-        const entityNodes = await graphAdapter.findNodes(
-          "Entity",
-          { name: candidate },
-          1,
-        );
-
-        if (entityNodes.length > 0) {
-          matchedEntities.push(candidate);
-        }
-      } catch {
-        // Individual lookup failure - continue with others
-        continue;
-      }
-    }
-
-    return matchedEntities;
-  } catch {
-    // Query entity extraction failed - return empty (graceful degradation)
-    return [];
-  }
+export async function extractEntitiesFromQuery(query:string,graphAdapter:GraphAdapter|undefined,selectedScope?:GraphScope):Promise<string[]> {
+  if(!graphAdapter||!query.trim())return [];
+  const scope=exactScope(selectedScope);if(!await graphAdapter.isConnected())throw new GraphDatabaseError("Graph expansion connection is unavailable.","GRAPH_EXPANSION_UNAVAILABLE");
+  const words=query.toLowerCase().replace(/[^\w\s'-]/g," ").split(/\s+/).filter(w=>w.length>2),candidates=new Set(words);
+  for(const size of [2,3])for(let i=0;i<=words.length-size;i++)candidates.add(words.slice(i,i+size).join(" "));
+  const matched=new Set<string>();for(const candidate of [...candidates].slice(0,20))for(const node of await entitySeeds(candidate,graphAdapter,scope))matched.add(String(node.name));
+  return [...matched];
 }
 
 /**
@@ -196,77 +150,34 @@ export async function extractEntitiesFromQuery(
  * Uses the GraphAdapter's traverse() method to find entities
  * connected to the initial set within the specified depth.
  */
-export async function expandViaGraph(
-  initialEntities: string[],
-  graphAdapter: GraphAdapter,
-  config: GraphExpansionConfig,
-): Promise<string[]> {
-  if (!graphAdapter || initialEntities.length === 0) {
-    return [];
-  }
-
-  const discoveredEntities = new Set<string>();
-
-  try {
-    // Check if graph is connected
-    const isConnected = await graphAdapter.isConnected();
-    if (!isConnected) {
-      return [];
-    }
-
-    // For each initial entity, traverse the graph
-    const maxEntities = config.entitiesPerHop ?? 5;
-    for (const entityName of initialEntities.slice(0, maxEntities)) {
-      try {
-        // Find the entity node
-        const entityNodes = await graphAdapter.findNodes(
-          "Entity",
-          { name: entityName },
-          1,
-        );
-
-        if (entityNodes.length === 0) {
-          continue;
-        }
-
-        const entityNode = entityNodes[0];
-        if (!entityNode.id) {
-          continue;
-        }
-
-        // Traverse from this entity
-        const connectedNodes = await graphAdapter.traverse({
-          startId: entityNode.id,
-          maxDepth: config.maxDepth,
-          relationshipTypes:
-            config.relationshipTypes.length > 0
-              ? config.relationshipTypes
-              : undefined,
-          direction: "BOTH",
-        });
-
-        // Extract entity names from connected nodes
-        for (const node of connectedNodes) {
-          if (node.label === "Entity" && node.properties?.name) {
-            discoveredEntities.add(node.properties.name as string);
-          }
-        }
-      } catch {
-        // Individual entity traversal failure - continue with others
-        continue;
+export async function expandViaGraph(initialEntities:string[],graphAdapter:GraphAdapter,config:GraphExpansionConfig,selectedScope?:GraphScope,nativeSelections:GraphNativeSelection[]=[]):Promise<string[]> {
+  if(!initialEntities.length||config.maxDepth===0)return [];
+  const scope=exactScope(selectedScope),maximum=config.entitiesPerHop??5;
+  if(!Number.isSafeInteger(config.maxDepth)||config.maxDepth<0||config.maxDepth>10||!Number.isSafeInteger(maximum)||maximum<1||maximum>64||config.relationshipTypes.some(type=>!(MANAGED_RELATIONSHIPS as readonly string[]).includes(type)))
+    throw new GraphDatabaseError("Invalid bounded managed graph expansion options.","GRAPH_QUERY_BUDGET");
+  if(!graphAdapter.managedRead)throw new GraphDatabaseError("Managed graph expansion is unavailable.","GRAPH_SCHEMA_MIGRATION_REQUIRED");
+  const discovered=new Set<string>(),selected=new Set(nativeSelections.map(x=>x.physicalSourceId));
+  for(const name of initialEntities.slice(0,maximum))for(const seed of await entitySeeds(name,graphAdapter,scope)) {
+    // Depth is a validated finite integer; every other user input remains a parameter.
+    const result=await graphAdapter.managedRead(`MATCH path=(seed:CortexV2Entity {key:$key})-[*1..${config.maxDepth}]-(node)
+      WHERE all(n IN nodes(path) WHERE n.schemaVersion=2 AND n.tenantTag=$tenantTag AND n.tenantValue=$tenantValue AND n.spaceTag='space' AND n.spaceValue=$space AND any(label IN labels(n) WHERE label IN $labels))
+        AND all(r IN relationships(path) WHERE r.schemaVersion=2 AND r.sourceKey=startNode(r).key AND r.sourceTuple=startNode(r).tupleJson AND r.targetKey=endNode(r).key AND r.targetTuple=endNode(r).tupleJson AND type(r) IN $relationships)
+      RETURN [n IN nodes(path)|properties(n)] AS nodes,properties(node) AS node LIMIT 65`,
+      {...scopeParameters(scope),key:seed.key,labels:[MANAGED_LABELS.Entity,MANAGED_LABELS.Memory,MANAGED_LABELS.Fact,MANAGED_LABELS.Context,MANAGED_LABELS.Conversation,MANAGED_LABELS.MemorySpace,MANAGED_LABELS.Artifact],relationships:config.relationshipTypes.length?config.relationshipTypes:MANAGED_RELATIONSHIPS});
+    if(result.count>64)throw new GraphDatabaseError("Managed expansion exceeds its bounded path result; use a smaller graph depth.","GRAPH_QUERY_BUDGET");
+    for(const record of result.records) {
+      if(!Array.isArray(record.nodes))throw new GraphDatabaseError("Managed path is malformed.","GRAPH_IDENTITY_MISMATCH");
+      for(const value of record.nodes)pathNode(value as Record<string,unknown>,scope);
+      const node=record.node as Record<string,unknown>;
+      if(node.kind==="Entity")discovered.add(String(node.name));
+      if((node.kind==="Memory"||node.kind==="Fact")&&!selected.has(String(node.physicalSourceId))) {
+        const logicalId=node.kind==="Memory"?node.memoryId:node.factId;
+        if(typeof logicalId!=="string")throw new GraphDatabaseError("Managed native display identity is missing.","GRAPH_IDENTITY_MISMATCH");
+        selected.add(String(node.physicalSourceId));nativeSelections.push({kind:node.kind,physicalSourceId:String(node.physicalSourceId),logicalId,scope});
       }
     }
-
-    // Remove initial entities from discovered (we already have those)
-    for (const initial of initialEntities) {
-      discoveredEntities.delete(initial);
-    }
-
-    return Array.from(discoveredEntities);
-  } catch {
-    // Graph expansion failed - return empty (graceful degradation)
-    return [];
   }
+  for(const initial of initialEntities)discovered.delete(initial.trim().toLowerCase());return [...discovered];
 }
 
 /**
@@ -276,58 +187,17 @@ export async function expandViaGraph(
  * - The content mentions any of the discovered entities
  * - The memory is linked to facts about those entities
  */
-export async function fetchRelatedMemories(
-  discoveredEntities: string[],
-  memorySpaceId: string,
-  vectorAPI: VectorAPI,
-  processedIds: Set<string>,
-  limit: number = 10,
-): Promise<MemoryEntry[]> {
-  if (discoveredEntities.length === 0) {
-    return [];
+export async function fetchRelatedMemories(discoveredEntities:string[],memorySpaceId:string,vectorAPI:VectorAPI,processedIds:Set<string>,limit=10,selections:GraphNativeSelection[]=[],selectedScope?:GraphScope):Promise<MemoryEntry[]> {
+  void discoveredEntities;const scope=exactScope(selectedScope,memorySpaceId),related:MemoryEntry[]=[];
+  if(!Number.isSafeInteger(limit)||limit<0)throw new GraphDatabaseError("Invalid graph result window.","GRAPH_QUERY_BUDGET");
+  for(const item of selections.filter(item=>item.kind==="Memory")) {
+    if(related.length>=limit)break;if(processedIds.has(item.logicalId))continue;
+    const row=await vectorAPI.get(memorySpaceId,item.logicalId,{tenantId:scope.tenantId??undefined});if(!row)continue;
+    if(row._id!==item.physicalSourceId||row.memorySpaceId!==memorySpaceId||(row.tenantId??null)!==scope.tenantId)
+      throw new GraphDatabaseError("A graph reference's native physical Memory changed; no logical replacement is adopted.","GRAPH_PRIMARY_CHANGED");
+    related.push(row);processedIds.add(row.memoryId);
   }
-
-  const relatedMemories: MemoryEntry[] = [];
-
-  try {
-    // Search for each entity (limit to top 5 entities to avoid too many queries)
-    for (const entity of discoveredEntities.slice(0, 5)) {
-      try {
-        // Use text search to find memories mentioning this entity
-        const memories = await vectorAPI.search(memorySpaceId, entity, {
-          limit: Math.ceil(limit / 5), // Distribute limit across entities
-          minScore: 0.5, // Reasonable relevance threshold
-        });
-
-        for (const memory of memories) {
-          // Skip if already processed
-          if (processedIds.has(memory.memoryId)) {
-            continue;
-          }
-
-          relatedMemories.push(memory);
-          processedIds.add(memory.memoryId);
-
-          // Stop if we've reached the limit
-          if (relatedMemories.length >= limit) {
-            break;
-          }
-        }
-
-        if (relatedMemories.length >= limit) {
-          break;
-        }
-      } catch {
-        // Individual search failure - continue with others
-        continue;
-      }
-    }
-
-    return relatedMemories;
-  } catch {
-    // Memory fetch failed - return empty (graceful degradation)
-    return [];
-  }
+  return related;
 }
 
 /**
@@ -337,65 +207,17 @@ export async function fetchRelatedMemories(
  * - The subject or object matches discovered entities
  * - The fact mentions the entity in its content
  */
-export async function fetchRelatedFacts(
-  discoveredEntities: string[],
-  memorySpaceId: string,
-  factsAPI: FactsAPI,
-  processedIds: Set<string>,
-  limit: number = 10,
-): Promise<FactRecord[]> {
-  if (discoveredEntities.length === 0) {
-    return [];
+export async function fetchRelatedFacts(discoveredEntities:string[],memorySpaceId:string,factsAPI:FactsAPI,processedIds:Set<string>,limit=10,selections:GraphNativeSelection[]=[],selectedScope?:GraphScope):Promise<FactRecord[]> {
+  void discoveredEntities;const scope=exactScope(selectedScope,memorySpaceId),related:FactRecord[]=[];
+  if(!Number.isSafeInteger(limit)||limit<0)throw new GraphDatabaseError("Invalid graph result window.","GRAPH_QUERY_BUDGET");
+  for(const item of selections.filter(item=>item.kind==="Fact")) {
+    if(related.length>=limit)break;if(processedIds.has(item.logicalId))continue;
+    const row=await factsAPI.get(memorySpaceId,item.logicalId,{tenantId:scope.tenantId??undefined});if(!row)continue;
+    if(row._id!==item.physicalSourceId||row.memorySpaceId!==memorySpaceId||(row.tenantId??null)!==scope.tenantId)
+      throw new GraphDatabaseError("A graph reference's native physical Fact changed; no logical replacement is adopted.","GRAPH_PRIMARY_CHANGED");
+    related.push(row);processedIds.add(row.factId);
   }
-
-  const relatedFacts: FactRecord[] = [];
-
-  try {
-    // Query facts for each entity
-    for (const entity of discoveredEntities.slice(0, 5)) {
-      try {
-        // Query facts where entity is the subject
-        const subjectFacts = await factsAPI.queryBySubject({
-          memorySpaceId,
-          subject: entity,
-          limit: Math.ceil(limit / 10),
-        });
-
-        for (const fact of subjectFacts) {
-          if (processedIds.has(fact.factId)) {
-            continue;
-          }
-          relatedFacts.push(fact);
-          processedIds.add(fact.factId);
-        }
-
-        // Also search facts by text to catch mentions in object/content
-        const searchFacts = await factsAPI.search(memorySpaceId, entity, {
-          limit: Math.ceil(limit / 10),
-        });
-
-        for (const fact of searchFacts) {
-          if (processedIds.has(fact.factId)) {
-            continue;
-          }
-          relatedFacts.push(fact);
-          processedIds.add(fact.factId);
-        }
-
-        if (relatedFacts.length >= limit) {
-          break;
-        }
-      } catch {
-        // Individual query failure - continue with others
-        continue;
-      }
-    }
-
-    return relatedFacts.slice(0, limit);
-  } catch {
-    // Facts fetch failed - return empty (graceful degradation)
-    return [];
-  }
+  return related;
 }
 
 /**
@@ -424,6 +246,7 @@ export async function performGraphExpansion(
   factsAPI: FactsAPI,
   config: GraphExpansionConfig,
   queryText?: string,
+  selectedScope?: GraphScope,
 ): Promise<GraphExpansionResult> {
   const processedIds = new Set<string>();
 
@@ -436,7 +259,7 @@ export async function performGraphExpansion(
   }
 
   // If no graph adapter or expansion disabled, return empty result
-  if (!graphAdapter || !config.expandFromFacts || !config.expandFromMemories) {
+  if (!graphAdapter || !config.expandFromFacts && !config.expandFromMemories) {
     return {
       discoveredEntities: [],
       relatedMemories: [],
@@ -445,10 +268,12 @@ export async function performGraphExpansion(
     };
   }
 
+  const scope=exactScope(selectedScope,memorySpaceId),nativeSelections:GraphNativeSelection[]=[];
+
   // Step 1: Extract entities from QUERY TEXT (NEW - enables expansion without facts)
   // This allows graph expansion even when initial search results don't contain facts
   const queryEntities = queryText
-    ? await extractEntitiesFromQuery(queryText, graphAdapter)
+    ? await extractEntitiesFromQuery(queryText, graphAdapter, scope)
     : [];
 
   // Step 2: Extract entities from initial results (existing behavior)
@@ -475,7 +300,7 @@ export async function performGraphExpansion(
   const discoveredEntities = await expandViaGraph(
     allEntities,
     graphAdapter,
-    config,
+    config, scope, nativeSelections,
   );
 
   // Even if no NEW entities discovered, if we have initial entities from query,
@@ -507,7 +332,7 @@ export async function performGraphExpansion(
           memorySpaceId,
           vectorAPI,
           processedIds,
-          totalResultsLimit,
+          totalResultsLimit, nativeSelections, scope,
         )
       : Promise.resolve([]),
     config.expandFromFacts
@@ -516,7 +341,7 @@ export async function performGraphExpansion(
           memorySpaceId,
           factsAPI,
           processedIds,
-          totalResultsLimit,
+          totalResultsLimit, nativeSelections, scope,
         )
       : Promise.resolve([]),
   ]);

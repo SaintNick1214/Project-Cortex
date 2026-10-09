@@ -4,11 +4,11 @@
  * Generates .env.local and docker-compose files for init wizard.
  */
 
-import fs from "fs-extra";
-import path from "path";
 import type { WizardConfig } from "./types.js";
 import pc from "picocolors";
 import { appendRuntimeEnvironment } from "./backend-setup.js";
+// Shared private environment loader; templates and SDK installers use the same selected configuration.
+export { readSelectedGraphEnvironment } from "../graph/service.js";
 
 /**
  * Generate .env.local file content based on wizard configuration
@@ -39,16 +39,10 @@ CONVEX_URL=${config.convexUrl || ""}
     }
   }
 
-  // Add graph database configuration if enabled
   if (config.graphEnabled && config.graphType !== "skip") {
-    env += `
-# =============================================================================
-# Graph Database Configuration (Optional)
-# =============================================================================
-NEO4J_URI=${config.graphUri || "bolt://localhost:7687"}
-NEO4J_USERNAME=${config.graphUsername || "neo4j"}
-NEO4J_PASSWORD=${config.graphPassword || "cortex-password"}
-`;
+    throw new Error(
+      "GRAPH_SHARED_SERVICE_REQUIRED: call setupGraph; credentials are stored privately in .cortex/graph",
+    );
   }
 
   env += "\n# Inference/embedding policies and optional graph workers are configured on the backend.\n# Supply host-issued JWTs via the runtime client auth callback; do not store them here.\n";
@@ -77,108 +71,19 @@ export async function createEnvFile(
  * Called after Convex deployment which may have modified .env.local
  */
 export async function appendGraphEnvVars(
-  projectPath: string,
-  config: {
-    graphUri: string;
-    graphUsername: string;
-    graphPassword: string;
-  },
+  _projectPath: string,
+  _config: { graphUri: string; graphUsername: string; graphPassword: string },
 ): Promise<void> {
-  const envPath = path.join(projectPath, ".env.local");
-
-  const graphEnvVars = `
-# =============================================================================
-# Graph Database Configuration
-# =============================================================================
-NEO4J_URI=${config.graphUri}
-NEO4J_USERNAME=${config.graphUsername}
-NEO4J_PASSWORD=${config.graphPassword}
-`;
-
-  try {
-    // Read existing content
-    let existingContent = "";
-    try {
-      existingContent = await fs.readFile(envPath, "utf-8");
-    } catch {
-      // File doesn't exist, will create new
-    }
-
-    // Check if graph vars already exist
-    if (existingContent.includes("NEO4J_URI=")) {
-      console.log(pc.dim("   Graph env vars already present in .env.local"));
-      return;
-    }
-
-    // Append graph vars
-    await fs.writeFile(envPath, existingContent + graphEnvVars);
-    console.log(pc.green("   Added graph database env vars to .env.local"));
-  } catch {
-    console.warn(
-      pc.yellow("   Warning: Could not update .env.local with graph config"),
-    );
-    console.log(pc.dim(`   Please add manually:\n${graphEnvVars}`));
-  }
+  throw new Error(
+    "GRAPH_SHARED_SERVICE_REQUIRED: call setupGraph instead of appending graph secrets to dotenv",
+  );
 }
 
-/**
- * Create docker-compose.yml for local graph database
- */
+/** Legacy Compose rendering is replaced by the one owned setup service. */
 export async function createGraphDockerCompose(
-  projectPath: string,
-  graphType: "neo4j" | "memgraph",
-  password?: string,
+  _projectPath: string,
+  _graphType: "neo4j" | "memgraph",
+  _password?: string,
 ): Promise<void> {
-  const dockerComposePath = path.join(projectPath, "docker-compose.graph.yml");
-  const graphPassword = password || "cortex-password";
-
-  let dockerCompose = "";
-
-  if (graphType === "neo4j") {
-    // Escape any special characters in password for YAML
-    const escapedPassword = graphPassword.replace(/'/g, "''");
-    dockerCompose = `services:
-  neo4j:
-    image: neo4j:5-community
-    container_name: cortex-neo4j
-    ports:
-      - "7474:7474"  # HTTP
-      - "7687:7687"  # Bolt
-    environment:
-      - NEO4J_AUTH=neo4j/${escapedPassword}
-      - NEO4J_PLUGINS=["apoc"]
-      - NEO4J_dbms_security_procedures_unrestricted=apoc.*
-    volumes:
-      - neo4j_data:/data
-      - neo4j_logs:/logs
-    restart: unless-stopped
-
-volumes:
-  neo4j_data:
-  neo4j_logs:
-`;
-  } else if (graphType === "memgraph") {
-    dockerCompose = `services:
-  memgraph:
-    image: memgraph/memgraph-platform:latest
-    container_name: cortex-memgraph
-    ports:
-      - "7687:7687"  # Bolt
-      - "3000:3000"  # Memgraph Lab
-      - "7444:7444"  # Memgraph Lab secure
-    environment:
-      - MEMGRAPH="--log-level=TRACE"
-    volumes:
-      - memgraph_data:/var/lib/memgraph
-      - memgraph_logs:/var/log/memgraph
-    restart: unless-stopped
-
-volumes:
-  memgraph_data:
-  memgraph_logs:
-`;
-  }
-
-  await fs.writeFile(dockerComposePath, dockerCompose);
-  console.log(pc.dim(`   Created docker-compose.graph.yml for ${graphType}`));
+  throw new Error("GRAPH_SHARED_SERVICE_REQUIRED: use cortex graph setup");
 }

@@ -496,3 +496,31 @@ describe("generated Convex module layout", () => {
     expect(await fs.pathExists(path.join(output, "_cortex/shared/domain/model_policy.ts"))).toBe(false);
   });
 });
+
+describe("prospective app-private schema composition", () => {
+  it("plans without creating an absent destination and composes private app tables without changing registrations", async () => {
+    await fs.remove(host);
+    const app = 'import { defineSchema, defineTable } from "convex/server"; export default defineSchema({ appMessages: defineTable({}) });\n';
+    const schema = 'import { defineSchema } from "convex/server"; import appSchema from "./app.schema"; export default defineSchema({ ...appSchema.tables }, { schemaValidation: true });\n';
+    const prospective = new Map([["convex/schema.ts", Buffer.from(schema)], ["convex/app.schema.ts", Buffer.from(app)], ["convex/sdk.registration.ts", Buffer.from('export { internalQuery as query } from "./_generated/server";\n')]]);
+    const plan = await planAdditiveBackendInstallation(host, sdk, { prospectiveFiles: prospective });
+    expect(plan.conflicts).toEqual([]); expect(await fs.pathExists(host)).toBe(false);
+    expect(plan.changes.find(item => item.path === "convex/schema.ts")?.content).toContain("...appSchema.tables");
+    expect(plan.changes.find(item => item.path === "convex/schema.ts")?.content).toContain("...cortexTablesV1");
+    expect(plan.changes.some(item => item.path === "convex/sdk.registration.ts")).toBe(false);
+    for (const [name, bytes] of prospective) await fs.outputFile(path.join(host, name), bytes);
+    await applyAdditiveBackendInstallation(plan);
+    expect(await read("convex/app.schema.ts")).toBe(app);
+    expect(await read("convex/sdk.registration.ts")).toContain("internalQuery as query");
+    expect((await planAdditiveBackendInstallation(host, sdk)).changes).toEqual([]);
+  });
+  it("rejects a hidden private-app collision and dynamic spread before any installation", async () => {
+    await put("convex/schema.ts", 'import { defineSchema } from "convex/server"; import appSchema from "./app.schema"; export default defineSchema({ ...appSchema.tables });');
+    await put("convex/app.schema.ts", 'import { defineSchema, defineTable } from "convex/server"; export default defineSchema({ runtimeRuns: defineTable({}) });');
+    const plan = await planAdditiveBackendInstallation(host, sdk); expect(plan.conflicts[0].reason).toContain("Host app table conflicts");
+    await expect(applyAdditiveBackendInstallation(plan)).rejects.toBeInstanceOf(BackendMergeRequiredError);
+    expect(await fs.pathExists(path.join(host,"convex/runs.ts"))).toBe(false);
+    await put("convex/app.schema.ts", 'export default defineSchema({ ...unknownTables });');
+    await expect(planAdditiveBackendInstallation(host,sdk)).rejects.toThrow("Dynamic app schema");
+  });
+});

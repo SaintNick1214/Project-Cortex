@@ -5,7 +5,7 @@ import { beforeEach, describe, expect, it, jest } from "@jest/globals";
 import type { LanguageModelV4, LanguageModelV4CallOptions, LanguageModelV4GenerateResult, LanguageModelV4StreamPart, EmbeddingModelV4 } from "@ai-sdk/provider";
 import { createOpenAICompatible } from "@ai-sdk/openai-compatible";
 import { createOpenAI } from "@ai-sdk/openai";
-import { streamText } from "ai";
+import { generateText, jsonSchema, streamText } from "ai";
 import type { GatewayBinding, GatewayComposition, GatewayLedgerPort, GatewayResolution } from "../../../convex-dev/runtimeGateway";
 import { canonicalModelJson, resolveModelPolicy, validateModelRequest } from "../../../src/domain/model-policy";
 import type { ModelCallRequest } from "../../../src/domain/model-policy";
@@ -859,6 +859,58 @@ describe("governed V2 media-tool Gateway parity", () => {
 });
 
 describe("trusted Agent cancellation bridge", () => {
+  it("composes installed SDK7 generateText with the official provider and unchanged admitted body", async () => {
+    const f = fixture(); const bodies: unknown[] = [];
+    const provider = createOpenAICompatible({ name: "convexGateway", baseURL: "https://offline.invalid/v1", fetch: async (_url, init) => {
+      bodies.push(JSON.parse(init!.body as string)); return new Response(JSON.stringify(raw()), { headers: { "content-type": "application/json" } });
+    } });
+    const h = governGatewayLanguageModel(provider(f.r.snapshot.modelId), f.composition, f.b, f.r);
+    const bridge = createAgentGatewayCancellationBridge(h.model, h.lifecycle);
+    try {
+      const result = await generateText({ model: bridge.model, prompt: "hello", maxOutputTokens: 16, maxRetries: 0 });
+      expect(result.text).toBe("answer"); expect(bodies).toHaveLength(1);
+      expect(bodies[0]).toEqual({ model: f.r.snapshot.modelId, messages: [{ role: "user", content: "hello" }], max_tokens: 16 });
+      expect(f.events).toEqual(["admit", "checkpoint", "capture", "attach"]);
+      expect(JSON.parse(f.admissions[0]!.requestCanonical).options).toEqual({ maxRetries: 0 });
+      expect(f.receipts).toHaveLength(1); expect(f.attachments).toHaveLength(1); expect(tokenLookup).not.toHaveBeenCalled();
+    } finally { await h.lifecycle.complete(); bridge.dispose(); }
+  });
+  it("composes installed SDK7 nonstream artifact_read with the exact five-tool catalog", async () => {
+    const f = agentFixture(); const bodies: unknown[] = [];
+    f.r.snapshot = { ...f.r.snapshot, allowedTools: AGENT_NATIVE_TOOLS_V2.map(tool => tool.name),
+      limits: { ...f.r.snapshot.limits, inputTokens: 32768, contextTokens: 33768 },
+      pins: { ...f.r.snapshot.pins, toolRegistryVersion: AGENT_TOOL_REGISTRY_VERSION_V2 } };
+    f.r.dispatchEvidence = { ...f.r.dispatchEvidence,
+      inputBound: { ...f.r.dispatchEvidence.inputBound, featureEnvelope: "agent-tools-chat-v2" },
+      toolContract: { registryVersion: AGENT_TOOL_REGISTRY_VERSION_V2, toolsCanonical: canonicalModelJson(AGENT_NATIVE_TOOLS_V2), maximumToolCalls: 4 } };
+    const call = { id: "artifact-one", type: "function", function: { name: "artifact_read", arguments: '{"artifactId":"owned-tiny"}' } };
+    const provider = createOpenAICompatible({ name: "convexGateway", baseURL: "https://offline.invalid/v1", fetch: async (_url, init) => {
+      bodies.push(JSON.parse(init!.body as string)); return new Response(JSON.stringify({ ...raw(), choices: [{ finish_reason: "tool_calls", message: { tool_calls: [call] } }] }), { headers: { "content-type": "application/json" } });
+    } });
+    const h = governGatewayLanguageModel(provider(f.r.snapshot.modelId), f.composition, f.b, f.r), bridge = createAgentGatewayCancellationBridge(h.model, h.lifecycle);
+    const tools = Object.fromEntries(AGENT_NATIVE_TOOLS_V2.map(tool => [tool.name, { description: tool.description, inputSchema: jsonSchema(tool.inputSchema) }]));
+    try {
+      const result = await generateText({ model: bridge.model, prompt: "Read the owned tiny artifact.", tools,
+        toolChoice: { type: "tool", toolName: "artifact_read" }, maxOutputTokens: 16, maxRetries: 0 });
+      expect(result.toolCalls).toMatchObject([{ toolCallId: "artifact-one", toolName: "artifact_read", input: { artifactId: "owned-tiny" } }]);
+      expect(bodies).toHaveLength(1); expect(f.admissions).toHaveLength(1); expect(f.receipts).toHaveLength(1); expect(f.attachments).toHaveLength(1);
+      expect(JSON.parse(f.admissions[0]!.requestCanonical).tools.map((tool: { name: string }) => tool.name)).toEqual(AGENT_NATIVE_TOOLS_V2.map(tool => tool.name));
+      expect(JSON.parse(f.accounting.attached!).content).toEqual([{ type: "tool-call", toolCallId: "artifact-one", toolName: "artifact_read", input: call.function.arguments }]);
+    } finally { await h.lifecycle.complete(); bridge.dispose(); }
+  });
+  it.each(["authorization", "changed-version", "extra", "getter", "prototype"])("rejects %s header at the trusted bridge before admission", async kind => {
+    const f = fixture(), h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r), bridge = createAgentGatewayCancellationBridge(h.model, h.lifecycle);
+    let reads = 0; const headers: Record<string, string> = { "user-agent": "ai/7.0.127" };
+    if (kind === "authorization") headers.Authorization = "caller-secret";
+    if (kind === "changed-version") headers["user-agent"] = "ai/7.0.128";
+    if (kind === "extra") headers["x-caller"] = "caller";
+    if (kind === "getter") Object.defineProperty(headers, "user-agent", { enumerable: true, get() { reads++; return "ai/7.0.127"; } });
+    if (kind === "prototype") Object.setPrototypeOf(headers, { inherited: true });
+    try {
+      await expect(bridge.model.doGenerate({ ...params(), headers })).rejects.toBeInstanceOf(Error);
+      expect(reads).toBe(0); expect(f.admissions).toHaveLength(0); expect(f.count()).toBe(0); expect(f.receipts).toHaveLength(0);
+    } finally { await h.lifecycle.complete(); bridge.dispose(); }
+  });
   it("composes the actual AI SDK7 streamText defaults and private raw observation", async () => {
     const f = fixture(); const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r);
     const bridge = createAgentGatewayCancellationBridge(h.model, h.lifecycle);

@@ -106,7 +106,8 @@ describe.each(["absent", "disabled", "enabled"] as const)(
       current.write.mockResolvedValue(hydrated);
       const result = await current.users.update("caller-user", { preferences: { theme: "light" } });
       expect(result).toEqual(mapped(hydrated));
-      expect(current.read).toHaveBeenCalledWith(api.immutable.get, {
+      expect(current.read.mock.calls.map(([reference]) => getFunctionName(reference))).toEqual(["immutable:get"]);
+      expect(current.read.mock.calls[0][1]).toEqual({
         type: "user", id: "caller-user", tenantId: "tenant-a",
       });
       expect(current.write).toHaveBeenCalledWith(api.immutable.store, {

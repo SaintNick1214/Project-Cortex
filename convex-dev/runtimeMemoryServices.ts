@@ -3,7 +3,7 @@ import type { MemoryDomainAdapters, SourceLineage, TrustedMemoryScope, DerivedFa
 import { DEFAULT_EMBEDDING_PROFILE, normalizeSourceText, semanticHash } from "../src/domain/profile";
 import { SOURCE_EXTRACTION_POLICY_VERSION, extractSourceFacts, prepareSourceContent, processingIdentityKey, validateModelEmbeddings } from "../src/domain/sources";
 import { deduplicateResults, factToRecallItem, formatForLLM, rankResults } from "../src/domain/recall";
-import type { RecallItem } from "../src/types/index";
+import type { RecallItem } from "../src/types";
 import { canonicalMemoryValue, memoryError } from "./runtimeMemoryRepository";
 
 export function assertMemoryRequestId(requestId: string): void {

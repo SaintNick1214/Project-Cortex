@@ -1,0 +1,13 @@
+{
+  "status": "FAIL_OR_UNKNOWN",
+  "completed": [
+    "installed-root14",
+    "new-readback-identity"
+  ],
+  "error": {
+    "name": "AssertionError",
+    "message": "The input did not match the regular expression /CAPABILITY_UNAVAILABLE/. Input:\n\n'{\"name\":\"ConvexError\",\"message\":\"[Request ID: 094de28ff3d7bf17] Server Error\\\\nUncaught ConvexError: {\\\\\"version\\\\\":1,\\\\\"code\\\\\":\\\\\"INVALID_INPUT\\\\\",\\\\\"message\\\\\":\\\\\"Model operation control failed.\\\\\",\\\\\"retryable\\\\\":false,\\\\\"outcome\\\\\":\\\\\"not_dispatched\\\\\"}\\\\n    at fail (../../custom/backend/runtimeModelPolicy.ts:43:0)\\\\n    at decode (../../custom/backend/runtimeModelPolicy.ts:99:0)\\\\n    at bindTrustedBudget (../../custom/backend/runtimeModelPolicy.ts:330:79)\\\\n    at async handler (../../custom/backend/runtimeModelPolicy.ts:376:23)\\\\n\",\"data\":{\"code\":\"INVALID_INPUT\",\"message\":\"Model operation control failed.\",\"outcome\":\"not_dispatched\",\"retryable\":false,\"version\":1}}'\n"
+  },
+  "newModelCalls": 0,
+  "noImplicitRepeatOfCommittedEffects": true
+}

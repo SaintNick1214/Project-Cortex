@@ -6,10 +6,12 @@ import { z } from "zod";
 export const createDocument = (_props: {
   session: Session;
   dataStream: UIMessageStreamWriter;
+  conversationId?: string;
 }) =>
   tool({
     description: "Backend-owned document reference",
     inputSchema: z.object({
+      instructions: z.string().optional(),
       kind: z.enum(["text", "code", "sheet"]),
       title: z.string(),
     }),

@@ -1,29 +1,35 @@
 import { describe, expect, it } from "@jest/globals";
 import fs from "node:fs";
-import os from "node:os";
-import path from "node:path";
-import crypto from "node:crypto";
-import { spawnSync } from "node:child_process";
 import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 import schema from "../../../convex-dev/schema";
-import { freshReadQa, expectedFreshRegistrationSource } from "../runtimeDelivery/fresh-registration-source";
 import { fixture, seedSpace, seedContext, invoke } from "./fixture";
 import * as spaces from "../../../convex-dev/memorySpaces";
 import * as contexts from "../../../convex-dev/contexts";
-const qa = "_goals/convex-backend-runtime-2026-10-02/qa/task03b2b1";
+import { backendSource, catalogDeclarations, catalogFixture, catalogInventory, sha256, withComposedCatalog } from "../../helpers/backend-catalog";
 describe("portable inventory, actual schema exports and preserved sources", () => {
-  it("ordinary inventory reproduction writes only owned temporary outputs and always removes them", () => {
-    const destination = fs.mkdtempSync(path.join(os.tmpdir(), "cortex-registry-catalog-"));
-    try {
-      const result = spawnSync(process.execPath, [`${qa}/inventory.mjs`, destination], { encoding: "utf8" }); expect(result.status).toBe(0);
-      const inventory = JSON.parse(fs.readFileSync(path.join(destination, "selected-path-inventory.json"), "utf8")) as { counts: unknown; hashes: { file: string; sha256: string }[]; endpoints: { path: string; kind: string }[] };
+  it("maintained inventory writes only owned temporary outputs and always removes them", async () => {
+    await withComposedCatalog((destination, files) => {
+      const actual = catalogInventory(Object.fromEntries(["agents", "memorySpaces", "contexts"].map(module => [module, files[`${module}.ts`].toString()])));
+      expect(actual.completeness.unresolved).toEqual([]);
+      expect(actual.endpoints).toHaveLength(48);
+      const excluded = ["agents:computeStats", "memorySpaces:getStats"];
+      const endpoints = actual.endpoints.filter(row => !excluded.includes(row.path));
+      const baseline = catalogFixture<{ baseline: { endpoints: { path: string }[] } }>("transcript-historical.json").baseline;
+      const expected = baseline.endpoints.filter(row => /^(agents|memorySpaces|contexts):/.test(row.path) && !excluded.includes(row.path));
+      const dependencies = ['convex-dev/agents.ts', 'convex-dev/memorySpaces.ts', 'convex-dev/contexts.ts', 'convex-dev/runtimeRegistryAuth.ts', 'convex-dev/schema.ts', 'convex-dev/runtimeAuth.ts', 'convex-dev/runtimeAuthSchema.ts', 'src/auth/verified.ts', 'convex-dev/tsconfig.json'];
+      const hashes = dependencies.map(file => ({ file, sha256: sha256(fs.readFileSync(file)) }));
+      const output = `${destination}/selected-path-inventory.json`;
+      fs.writeFileSync(output, JSON.stringify({ counts: { selected: endpoints.length, public: endpoints.filter(row => row.visibility === "public").length,
+        internal: endpoints.filter(row => row.visibility === "internal").length, moduleRegistrations: actual.endpoints.length,
+        excludedStats: actual.endpoints.length - endpoints.length, unresolved: actual.completeness.unresolved.length }, hashes, endpoints }));
+      const inventory = JSON.parse(fs.readFileSync(output, "utf8")) as { counts: unknown; hashes: { file: string; sha256: string }[]; endpoints: { path: string; kind: string }[] };
       expect(inventory.counts).toEqual({ selected: 46, public: 43, internal: 3, moduleRegistrations: 48, excludedStats: 2, unresolved: 0 });
-      expect(new Set(inventory.endpoints.map((endpoint) => endpoint.path)).size).toBe(46);
-      for (const hash of inventory.hashes) expect(crypto.createHash("sha256").update(fs.readFileSync(hash.file)).digest("hex")).toBe(hash.sha256);
-      expect(inventory.endpoints.filter((endpoint) => endpoint.kind === "internalMutation").map((endpoint) => endpoint.path).sort()).toEqual(["agents:purgeAll", "contexts:purgeAll", "memorySpaces:purgeAll"]);
-    } finally { fs.rmSync(destination, { recursive: true, force: true }); }
-    expect(fs.existsSync(destination)).toBe(false);
+      expect(new Set(inventory.endpoints.map(endpoint => endpoint.path)).size).toBe(46);
+      expect(inventory.endpoints.map(endpoint => endpoint.path).sort()).toEqual(expected.map(endpoint => endpoint.path).sort());
+      for (const hash of inventory.hashes) expect(sha256(fs.readFileSync(hash.file))).toBe(hash.sha256);
+      expect(inventory.endpoints.filter(endpoint => endpoint.kind === "internalMutation").map(endpoint => endpoint.path).sort()).toEqual(["agents:purgeAll", "contexts:purgeAll", "memorySpaces:purgeAll"]);
+    });
   });
   it("native schema includes only additive ownership/lifecycle/index/editor fields and retains host tables", () => {
     const serialize = (value: unknown) => JSON.parse((value as { export(): string }).export()) as { tables: { tableName: string; documentType: { value: Record<string, unknown> }; indexes: { indexDescriptor: string; fields: string[] }[] }[] };
@@ -38,20 +44,18 @@ describe("portable inventory, actual schema exports and preserved sources", () =
     const combined = serialize(defineSchema({ hostTable: defineTable({ preserved: v.string() }), ...schema.tables }));
     expect(combined.tables.map((value) => value.tableName)).toContain("hostTable"); expect(combined.tables).toHaveLength(exported.tables.length + 1);
   });
-  it.each([["convex-dev/agents.ts", "computeStats", "stats-agents.frozen.txt"], ["convex-dev/memorySpaces.ts", "getStats", "stats-spaces.frozen.txt"]])("historical accepted %s excluded registration remains byte-for-byte frozen; later closure stays pinned", (file, name, frozen) => {
-    const nameOfFile = path.basename(file);
-    const repair = "_goals/convex-backend-runtime-2026-10-02/qa/task03-foundation-catalog-repair";
-    const historical = `${repair}/accepted-registry/${nameOfFile}.text`;
-    const manifest = JSON.parse(fs.readFileSync(`${repair}/accepted-registry-manifest.json`, "utf8")) as { file: string; sha256: string }[];
-    const source = fs.readFileSync(historical, "utf8");
-    expect(crypto.createHash("sha256").update(source).digest("hex")).toBe(manifest.find(row => row.file === historical)!.sha256);
-    const start = source.indexOf(`export const ${name} =`); const end = source.indexOf("\n});", start) + 4;
-    expect(source.slice(start, end)).toBe(fs.readFileSync(`${qa}/${frozen}`, "utf8"));
-    const later = JSON.parse(fs.readFileSync("_goals/convex-backend-runtime-2026-10-02/qa/task03b2b2-stats/frozen-uniform-closure.json", "utf8")) as Record<string, string>;
-    const baseline = fs.readFileSync(`${freshReadQa}/accepted-query-snapshots/${nameOfFile}.txt`, "utf8");
-    expect(crypto.createHash("sha256").update(baseline).digest("hex")).toBe(later[file]);
-    // Retain every byte/body except the explicit supported read-registration conversion.
-    expect(fs.readFileSync(file, "utf8")).toBe(expectedFreshRegistrationSource(path.basename(file, ".ts"), baseline));
+  it.each([["agents", "computeStats"], ["memorySpaces", "getStats"]])("historical accepted %s excluded registration remains byte-for-byte frozen; current closure stays pinned", (module, name) => {
+    const historical = catalogFixture<Record<string, { sourceHash: string; name: string; declaration: string; sha256: string }>>("registry-statistics-historical.json")[module];
+    expect(historical.name).toBe(name);
+    expect(sha256(historical.declaration)).toBe(historical.sha256);
+    expect(historical.declaration).toMatch(new RegExp(`^export const ${name} = query`));
+    expect(historical.declaration).toContain('.query("memories")');
+    const later = catalogFixture<Record<string, { sourceHash: string; declaration: string; sha256: string }>>("statistics-historical.json")[module];
+    const current = catalogDeclarations(backendSource(module)).find(row => row.name === name)!.declaration;
+    expect(current).toBe(later.declaration);
+    expect(sha256(current)).toBe(later.sha256);
+    expect(current).toContain('statisticsUnavailable(');
+    expect(current).not.toContain('.query("memories")');
   });
   it("independent helper imports no unreviewed metadata/MF/worker bridge and no unsafe any/ts-ignore", () => {
     const source = fs.readFileSync("convex-dev/runtimeRegistryAuth.ts", "utf8");

@@ -65,8 +65,16 @@ export async function buildBackendDistribution({ sourceRoot, outputRoot }) {
     const replacements = [];
     for (const node of relativeModuleLiterals(ast)) {
       const specifier = node.text;
-      // Host bindings are produced by ordinary Convex codegen after additive installation.
-      if (specifier.startsWith("./_generated/")) continue;
+      // Host bindings are produced by ordinary Convex codegen after additive
+      // installation. Nested entry points still bind to the host root, never a
+      // packaged/generated snapshot or a second _generated namespace.
+      const binding = path.posix.normalize(path.posix.join(path.posix.dirname(source), specifier));
+      if (binding.startsWith("convex-dev/_generated/")) {
+        let rewritten = path.posix.relative(path.posix.dirname(name), binding.slice("convex-dev/".length));
+        if (!rewritten.startsWith(".")) rewritten = "./" + rewritten;
+        replacements.push({start: node.getStart(ast), end: node.end, text: JSON.stringify(rewritten)});
+        continue;
+      }
       const target = await resolveLocal(source, specifier);
       if (!target.startsWith("src/") && !target.startsWith("convex-dev/")) throw new Error(`Backend import outside its source closure: ${target}`);
       await collect(target);
@@ -88,8 +96,18 @@ export async function buildBackendDistribution({ sourceRoot, outputRoot }) {
     }
     entries.set(name, result);
   }
-  const names = (await fs.readdir(path.join(root, "convex-dev"))).filter((name) => name.endsWith(".ts") && !["convex.config.ts", "auth.config.ts", "http.ts"].includes(name)).sort();
-  for (const name of names) await collect(`convex-dev/${name}`);
+  async function entrySources(directory) {
+    const names = [];
+    for (const item of await fs.readdir(path.join(root, directory), {withFileTypes: true})) {
+      const source = path.posix.join(directory, item.name);
+      // Libraries enter only through the reachable import closure. In particular,
+      // an obsolete domain snapshot is not a second runtime contract by presence.
+      if (item.isDirectory() && !["_generated", "lib"].includes(item.name)) names.push(...await entrySources(source));
+      else if (item.isFile() && item.name.endsWith(".ts") && !item.name.endsWith(".d.ts") && !["convex.config.ts", "auth.config.ts", "http.ts"].includes(item.name)) names.push(source);
+    }
+    return names;
+  }
+  for (const source of (await entrySources("convex-dev")).sort()) await collect(source);
   const tableNames = new Set();
   function tablesFromObject(object, file) {
     for (const property of object.properties) {
