@@ -248,7 +248,7 @@ jobs:
       - name: Run native proofs without unrelated concurrent seeds
         run: |
           for file in tests/user-export.test.ts tests/fact-history-provenance.test.ts \
-            tests/facts-revision-scope.test.ts tests/domain-scope.test.ts tests/domain-operations.test.ts tests/memorySpaces.test.ts tests/operation-sequences.test.ts; do
+            tests/facts-revision-scope.test.ts tests/domain-scope.test.ts tests/domain-operations.test.ts tests/memorySpaces.test.ts tests/operation-sequences.test.ts tests/gdprCascade.test.ts; do
             npx tsx scripts/cleanup-test-data.ts
             node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand --runTestsByPath "$file"
           done
@@ -546,7 +546,7 @@ jobs:
       - name: Run tests (shard ${{ matrix.shard }}/5)
         run: |
           node --experimental-vm-modules node_modules/jest/bin/jest.js \
-            --testPathIgnorePatterns='/node_modules/|debug|/tests/unit/runtime/gateway-dispatch\.test\.ts$|/tests/graph/managed-runtime-safety\.test\.ts$|/tests/(user-export|fact-history-provenance|facts-revision-scope|domain-scope|domain-operations|memorySpaces|operation-sequences)\.test\.ts$' \
+            --testPathIgnorePatterns='/node_modules/|debug|/tests/unit/runtime/gateway-dispatch\.test\.ts$|/tests/graph/managed-runtime-safety\.test\.ts$|/tests/(user-export|fact-history-provenance|facts-revision-scope|domain-scope|domain-operations|memorySpaces|operation-sequences|gdprCascade)\.test\.ts$' \
             --shard=${{ matrix.shard }}/5 \
             --runInBand
         env:
