@@ -4,31 +4,37 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+    inputs:
+      full_ci:
+        description: Qualify every managed, native, demo and paid suite
+        type: boolean
+        default: false
+      queue_probe:
+        description: Hold lifecycle lock for 25 seconds; no functional/service/delivery proof
+        type: boolean
+        default: false
   pull_request:
     branches:
       - main
       - dev
       - chore/cortex-0.37-modernization
-    types: [opened, synchronize, reopened]
+    types: [opened, synchronize, reopened, ready_for_review, converted_to_draft]
 
-# The SDK/CLI CI deployments are shared: serialize complete runs so one PR
-# cannot redeploy or purge a backend while another PR is still testing it.
-# Suites within a run use scoped fixtures and execute in parallel.
-concurrency:
-  group: cortex-shared-ci-backends
-  cancel-in-progress: false
-
+# Only the called managed lifecycle holds the shared backend lock.
+# Offline and isolated native/graph/demo jobs can proceed while it is queued.
 # Default permissions: read-only
 # Write permissions are granted explicitly at job level
 permissions:
   contents: read
 
 # Backend integration jobs require trusted same-repository changes and dedicated CI deployments.
-# Fork PRs still run packed-package and isolated graph contracts.
+# Draft, fork and bot PRs run secret-free offline checks; service gaps are explicit.
 
 jobs:
   demo-contracts:
     name: Build demo (${{ matrix.folder }})
+    needs: [detect-changes, candidate-artifacts]
+    if: needs.detect-changes.outputs.demo-contracts == 'true'
     runs-on: ubuntu-latest
     services:
       convex:
@@ -42,30 +48,28 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        folder:
-          - packages/cortex-cli/templates/basic
-          - packages/cortex-cli/templates/chat-sdk-quickstart
-          - packages/vercel-ai-provider/quickstart
+        folder: ${{ fromJSON(needs.detect-changes.outputs.demos || '[]') }}
     steps:
       - uses: actions/checkout@v6
-      - uses: actions/setup-node@v6
         with:
-          node-version: "24"
-          cache: npm
-      - name: Use declared npm version
-        run: npm install --global npm@12.2.0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+          sparse-checkout: |
+            /*
+            !/_goals/
+            !/work/
+          sparse-checkout-cone-mode: false
+      - uses: ./.github/actions/cortex-setup
 
       - run: npm ci
-      - name: Pack the SDK and provider under review
-        run: |
-          npm run build
-          npm run build --workspace=@cortexmemory/vercel-ai-provider
-          SDK_ARCHIVE=$(npm pack --workspaces=false --ignore-scripts --silent --pack-destination "$RUNNER_TEMP")
-          PROVIDER_ARCHIVE=$(npm pack --workspace=@cortexmemory/vercel-ai-provider --ignore-scripts --silent --pack-destination "$RUNNER_TEMP")
-          echo "SDK_ARCHIVE=$RUNNER_TEMP/$SDK_ARCHIVE" >> "$GITHUB_ENV"
-          echo "PROVIDER_ARCHIVE=$RUNNER_TEMP/$PROVIDER_ARCHIVE" >> "$GITHUB_ENV"
-      - name: Build the CLI backend composer
-        run: npm run build --workspace=@cortexmemory/cli
+      - uses: actions/download-artifact@v4
+        with:
+          name: candidate-${{ github.event.pull_request.head.sha || github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/candidate
+      - name: Verify exact candidate bytes and restore built CLI composer
+        env:
+          CI_CANDIDATE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: node scripts/ci-candidate-artifacts.mjs verify "$RUNNER_TEMP/candidate" "$CI_CANDIDATE_SHA"
       - name: Use the demo package manager
         run: |
           PIN=$(node -p 'require("./${{ matrix.folder }}/package.json").packageManager')
@@ -93,15 +97,20 @@ jobs:
 
   template-catalog:
     name: Independent template catalog
+    needs: detect-changes
+    if: needs.detect-changes.outputs.template-catalog == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - uses: actions/setup-node@v6
         with:
-          node-version: "24"
-          cache: npm
-      - name: Use declared npm version
-        run: npm install --global npm@12.2.0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+          sparse-checkout: |
+            /*
+            !/_goals/
+            !/work/
+          sparse-checkout-cone-mode: false
+      - uses: ./.github/actions/cortex-setup
 
       - run: npm ci
       - run: npm run lint --workspace=@cortexmemory/templates
@@ -110,6 +119,8 @@ jobs:
 
   graph-contracts:
     name: Neo4j and Memgraph contracts
+    needs: detect-changes
+    if: needs.detect-changes.outputs.graph-contracts == 'true'
     runs-on: ubuntu-latest
     env:
       CONVEX_TEST_MODE: local
@@ -138,12 +149,15 @@ jobs:
         ports: [7688:7687]
     steps:
       - uses: actions/checkout@v6
-      - uses: actions/setup-node@v6
         with:
-          node-version: "24"
-          cache: npm
-      - name: Use declared npm version
-        run: npm install --global npm@12.2.0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+          sparse-checkout: |
+            /*
+            !/_goals/
+            !/work/
+          sparse-checkout-cone-mode: false
+      - uses: ./.github/actions/cortex-setup
 
       - run: npm ci
       - name: Prepare isolated authenticated native graph backend
@@ -189,20 +203,25 @@ jobs:
 
   public-contracts:
     name: Packed package and browser contracts
+    if: inputs.queue_probe != true
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - uses: actions/setup-node@v6
         with:
-          node-version: "24"
-          cache: npm
-      - name: Use declared npm version
-        run: npm install --global npm@12.2.0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+          sparse-checkout: |
+            /*
+            !/_goals/
+            !/work/
+          sparse-checkout-cone-mode: false
+      - uses: ./.github/actions/cortex-setup
 
       - run: npm ci
       - run: npm run build
       - run: npm run test:contracts
-      - run: npm run test:release
+      - name: CI, security and delivery readiness regressions
+        run: node --test tests/ci-pipeline.test.mjs tests/ci-managed.test.mjs tests/ci-candidate-artifacts.test.mjs tests/security-pipeline.test.mjs tests/release-pipeline.test.mjs
       - name: Verify candidate-install refusals and transitive closure
         run: |
           npm install --global pnpm@10.33.0
@@ -210,6 +229,8 @@ jobs:
 
   native-proof-contracts:
     name: Serialized native export, erasure and scope proofs
+    needs: detect-changes
+    if: needs.detect-changes.outputs.native-proof-contracts == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 45
     services:
@@ -231,12 +252,15 @@ jobs:
       CORTEX_CI_ALLOW_DESTRUCTIVE_RESET: "true"
     steps:
       - uses: actions/checkout@v6
-      - uses: actions/setup-node@v6
         with:
-          node-version: "24"
-          cache: npm
-      - name: Use declared npm version
-        run: npm install --global npm@12.2.0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+          sparse-checkout: |
+            /*
+            !/_goals/
+            !/work/
+          sparse-checkout-cone-mode: false
+      - uses: ./.github/actions/cortex-setup
       - run: npm ci
       - name: Authenticate the disposable native backend
         run: |
@@ -258,466 +282,193 @@ jobs:
   # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   detect-changes:
     name: Detect File Changes
+    if: inputs.queue_probe != true
     runs-on: ubuntu-latest
-    # Fork changes cannot use deployment credentials.
-    if: (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
     permissions:
       contents: read
-      pull-requests: read
     outputs:
-      typescript: ${{ steps.filter.outputs.typescript }}
-      vercel-ai-provider: ${{ steps.filter.outputs.vercel-ai-provider }}
-      cli: ${{ steps.filter.outputs.cli }}
-      convex: ${{ steps.filter.outputs.convex }}
-      sdk-release: ${{ steps.filter.outputs.sdk-release }}
-      provider-release: ${{ steps.filter.outputs.provider-release }}
-      cli-release: ${{ steps.filter.outputs.cli-release }}
-      templates-release: ${{ steps.filter.outputs.templates-release }}
+      selection: ${{ steps.select.outputs.selection }}
+      candidate-artifacts: ${{ steps.select.outputs.candidate-artifacts }}
+      offline-packages: ${{ steps.select.outputs.offline-packages }}
+      template-catalog: ${{ steps.select.outputs.template-catalog }}
+      demo-contracts: ${{ steps.select.outputs.demo-contracts }}
+      graph-contracts: ${{ steps.select.outputs.graph-contracts }}
+      native-proof-contracts: ${{ steps.select.outputs.native-proof-contracts }}
+      managed: ${{ steps.select.outputs.managed }}
+      managed-sdk: ${{ steps.select.outputs.managed-sdk }}
+      managed-provider: ${{ steps.select.outputs.managed-provider }}
+      managed-cli: ${{ steps.select.outputs.managed-cli }}
+      cli: ${{ steps.select.outputs.cli }}
+      provider: ${{ steps.select.outputs.provider }}
+      demos: ${{ steps.select.outputs.demos }}
+      sdk-release: ${{ steps.select.outputs.sdk-release }}
+      provider-release: ${{ steps.select.outputs.provider-release }}
+      cli-release: ${{ steps.select.outputs.cli-release }}
+      templates-release: ${{ steps.select.outputs.templates-release }}
     steps:
-      - name: Checkout PR code
-        uses: actions/checkout@v6
-
-      - name: Detect file changes
-        uses: dorny/paths-filter@v3
-        id: filter
+      - uses: actions/checkout@v6
         with:
-          base: ${{ github.event_name == 'push' && github.event.before || github.event.repository.default_branch }}
-          filters: |
-            typescript:
-              - 'src/**'
-              - 'tests/**'
-              - 'package.json'
-              - 'tsconfig.json'
-              - 'jest.config.mjs'
-              - 'package-lock.json'
-              - 'tsconfig*.json'
-              - '.github/**'
-              - 'scripts/**'
-            vercel-ai-provider:
-              - 'packages/vercel-ai-provider/**'
-            cli:
-              - 'packages/cortex-cli/**'
-            convex:
-              - 'convex-dev/**'
-            sdk-release:
-              - 'src/**'
-              - 'convex-dev/**'
-              - 'package.json'
-              - 'package-lock.json'
-              - 'tsconfig*.json'
-            provider-release:
-              - 'packages/vercel-ai-provider/src/**'
-              - 'packages/vercel-ai-provider/react/**'
-              - 'packages/vercel-ai-provider/package.json'
-              - 'packages/vercel-ai-provider/tsconfig*.json'
-            templates-release:
-              - 'packages/cortex-templates/**'
-              - 'packages/cortex-cli/templates/**'
-              - 'packages/vercel-ai-provider/quickstart/**'
-            cli-release:
-              - 'packages/cortex-cli/src/**'
-              - 'packages/cortex-cli/package.json'
-              - 'packages/cortex-cli/scripts/**'
-
-
-      - name: Save release paths for this exact main commit
-        if: github.event_name == 'push'
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+          sparse-checkout: |
+            /*
+            !/_goals/
+            !/work/
+          sparse-checkout-cone-mode: false
+      - uses: ./.github/actions/cortex-setup
+        with:
+          cache: 'false'
+      - name: Select dependency and trust coverage
+        id: select
         env:
-          SDK_CHANGED: ${{ steps.filter.outputs.sdk-release }}
-          PROVIDER_CHANGED: ${{ steps.filter.outputs.provider-release }}
-          CLI_CHANGED: ${{ steps.filter.outputs.cli-release }}
-          TEMPLATES_CHANGED: ${{ steps.filter.outputs.templates-release }}
-          SOURCE_SHA: ${{ github.sha }}
-        run: |
-          node --input-type=module -e 'import {writeFileSync} from "node:fs"; writeFileSync("delivery-paths.json", JSON.stringify({sha:process.env.SOURCE_SHA,sdk:process.env.SDK_CHANGED === "true",provider:process.env.PROVIDER_CHANGED === "true",cli:process.env.CLI_CHANGED === "true",templates:process.env.TEMPLATES_CHANGED === "true"}));'
-
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before || github.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: node scripts/ci-contract.mjs select
       - uses: actions/upload-artifact@v4
         if: github.event_name == 'push'
         with:
           name: delivery-paths
           path: delivery-paths.json
+          if-no-files-found: error
           retention-days: 30
-
-      - name: Show detected changes
-        run: |
-          echo "📊 Detected Changes:"
-          echo "  TypeScript SDK:      ${{ steps.filter.outputs.typescript }}"
-          echo "  Vercel AI Provider:  ${{ steps.filter.outputs.vercel-ai-provider }}"
-          echo "  CLI:                 ${{ steps.filter.outputs.cli }}"
-          echo "  Convex Backend:      ${{ steps.filter.outputs.convex }}"
-          echo ""
-          if [[ "${{ steps.filter.outputs.typescript }}" == "true" || \
-                "${{ steps.filter.outputs.vercel-ai-provider }}" == "true" || \
-                "${{ steps.filter.outputs.cli }}" == "true" || \
-                "${{ steps.filter.outputs.convex }}" == "true" ]]; then
-            echo "✅ Tests will run for changed packages"
-          else
-            echo "⏭️  No testable changes detected - tests will be skipped"
-          fi
 
   # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   # STAGE 2: Deploy Convex & Purge Database (runs once before all tests)
   # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  setup-and-purge:
-    name: Prepare disposable test databases
+  code-quality:
+    name: Code Quality (Lint, Types & Offline Unit)
+    if: inputs.queue_probe != true
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+          sparse-checkout: |
+            /*
+            !/_goals/
+            !/work/
+          sparse-checkout-cone-mode: false
+      - uses: ./.github/actions/cortex-setup
+      - run: npm ci
+      - run: npm run lint
+      - run: npx --no-install tsc --noEmit
+      - name: Pure SDK unit contracts without live environment loading
+        run: node scripts/ci-contract.mjs offline-unit
+
+  offline-packages:
+    name: Offline CLI and provider contracts
     runs-on: ubuntu-latest
     needs: detect-changes
-    # Run if any tests need to run OR if targeting main branch
-    if: |
-      (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository) && (
-        needs.detect-changes.outputs.typescript == 'true' ||
-        needs.detect-changes.outputs.vercel-ai-provider == 'true' ||
-        needs.detect-changes.outputs.typescript == 'true' ||
-        needs.detect-changes.outputs.convex == 'true' ||
-        needs.detect-changes.outputs.cli == 'true' ||
-        needs.detect-changes.outputs.typescript == 'true' ||
-        needs.detect-changes.outputs.convex == 'true' ||
-        needs.detect-changes.outputs.convex == 'true' ||
-        (github.event.pull_request.base.ref == 'main' || github.event_name == 'push' || github.event_name == 'workflow_dispatch')
-      )
+    if: needs.detect-changes.outputs.offline-packages == 'true'
     permissions:
       contents: read
-
     steps:
-      - name: Checkout PR code
-        uses: actions/checkout@v6
+      - uses: actions/checkout@v6
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v6
-        with:
-          node-version: "24"
-          cache: "npm"
-
-      - name: Use declared npm version
-        run: npm install --global npm@12.2.0
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Deploy Convex backend
-        run: npx convex deploy --yes
-        env:
-          CONVEX_DEPLOYMENT: ${{ secrets.CONVEX_URL }}
-          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
-
-      - name: Generate Convex types
-        run: npx convex codegen
-        env:
-          CONVEX_URL: ${{ secrets.CONVEX_URL }}
-          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
-
-      - name: Purge test database
+          persist-credentials: false
+          sparse-checkout: |
+            /*
+            !/_goals/
+            !/work/
+          sparse-checkout-cone-mode: false
+      - uses: ./.github/actions/cortex-setup
+      - run: npm ci
+      - run: npm run build
+      - name: CLI lint, types, build and unit
+        if: needs.detect-changes.outputs.cli == 'true'
         run: |
-          echo "🧹 Purging all test data before parallel test execution..."
-          npx tsx scripts/cleanup-test-data.ts
-        env:
-          CONVEX_URL: ${{ secrets.CONVEX_URL }}
-          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
-          CORTEX_CI_ALLOW_DESTRUCTIVE_RESET: "true"
-          CORTEX_CI_EXPECTED_CONVEX_URL: ${{ secrets.CONVEX_URL }}
-
-      # CLI-dedicated Convex instance (isolated from main SDK tests)
-      - name: Deploy CLI Convex backend
-        run: npx convex deploy --yes
-        env:
-          CONVEX_DEPLOYMENT: ${{ secrets.CONVEX_URL_CLI }}
-          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY_CLI }}
-
-      - name: Purge CLI test database
+          npm run lint --workspace=@cortexmemory/cli
+          npm run typecheck --workspace=@cortexmemory/cli
+          npm run build --workspace=@cortexmemory/cli
+          npm run test:unit --workspace=@cortexmemory/cli -- --runInBand
+      - name: Provider types, exports and mocked unit/integration
+        if: needs.detect-changes.outputs.provider == 'true'
         run: |
-          echo "🧹 Purging CLI test database..."
-          npx tsx scripts/cleanup-test-data.ts
-        env:
-          CONVEX_URL: ${{ secrets.CONVEX_URL_CLI }}
-          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY_CLI }}
-          CORTEX_CI_ALLOW_DESTRUCTIVE_RESET: "true"
-          CORTEX_CI_EXPECTED_CONVEX_URL: ${{ secrets.CONVEX_URL_CLI }}
-
-  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  # STAGE 3: Code Quality (runs in parallel with tests after purge)
-  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  code-quality:
-    name: Code Quality (Lint & Type Check)
-    runs-on: ubuntu-latest
-    needs: [detect-changes, setup-and-purge]
-    # Run if TypeScript files changed OR if PR is targeting main branch
-    # IMPORTANT: Requires setup-and-purge to have SUCCEEDED (not just skipped) to ensure consistency with test jobs
-    if: |
-      always() &&
-      (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository) &&
-      needs.setup-and-purge.result == 'success' &&
-      needs.detect-changes.result == 'success' &&
-      (
-        needs.detect-changes.outputs.typescript == 'true' ||
-        (github.event.pull_request.base.ref == 'main' || github.event_name == 'push' || github.event_name == 'workflow_dispatch')
-      )
-    permissions:
-      contents: read
-
-    steps:
-      - name: Checkout PR code
-        uses: actions/checkout@v6
-        with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v6
-        with:
-          node-version: "24"
-          cache: "npm"
-
-      - name: Use declared npm version
-        run: npm install --global npm@12.2.0
-
-      - name: Install Node dependencies
-        run: npm ci
-
-      - name: Generate Convex types
-        run: npx convex codegen
-        env:
-          CONVEX_URL: ${{ secrets.CONVEX_URL }}
-          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
-
-      - name: Run ESLint (TypeScript)
-        if: needs.detect-changes.outputs.typescript == 'true' || (github.event.pull_request.base.ref == 'main' || github.event_name == 'push' || github.event_name == 'workflow_dispatch')
-        run: npm run lint
-        continue-on-error: false
-
-      - name: Type check (TypeScript)
-        if: needs.detect-changes.outputs.typescript == 'true' || (github.event.pull_request.base.ref == 'main' || github.event_name == 'push' || github.event_name == 'workflow_dispatch')
-        run: npx tsc --noEmit
+          npm run lint --workspace=@cortexmemory/vercel-ai-provider
+          npm run build --workspace=@cortexmemory/vercel-ai-provider
+          npm run test:unit --workspace=@cortexmemory/vercel-ai-provider -- --runInBand
+          npm run test:integration --workspace=@cortexmemory/vercel-ai-provider -- --runInBand
 
   # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   # STAGE 3: TypeScript SDK Tests (five shards sharing one deployment)
   # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  test-typescript:
-    name: Test TypeScript SDK (Shard ${{ matrix.shard }}/5)
-    runs-on: ubuntu-latest
-    needs: [detect-changes, setup-and-purge]
-    # Run if TypeScript SDK or Convex backend changed OR if PR is targeting main branch
-    # IMPORTANT: Requires setup-and-purge to have SUCCEEDED (not just skipped) to ensure database isolation
-    if: |
-      always() &&
-      (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository) &&
-      needs.setup-and-purge.result == 'success' &&
-      needs.detect-changes.result == 'success' &&
-      (
-        needs.detect-changes.outputs.typescript == 'true' ||
-        needs.detect-changes.outputs.convex == 'true' ||
-        (github.event.pull_request.base.ref == 'main' || github.event_name == 'push' || github.event_name == 'workflow_dispatch')
-      )
+  managed-tests:
+    name: Complete managed lifecycle
+    needs: detect-changes
+    if: needs.detect-changes.outputs.managed == 'true'
+    uses: ./.github/workflows/managed-ci.yml
     permissions:
       contents: read
+      pull-requests: read
+    with:
+      candidate-sha: ${{ github.event.pull_request.head.sha || github.sha }}
+      selection: ${{ needs.detect-changes.outputs.selection }}
+    secrets:
+      CONVEX_URL: ${{ secrets.CONVEX_URL }}
+      CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
+      CONVEX_URL_CLI: ${{ secrets.CONVEX_URL_CLI }}
+      CONVEX_DEPLOY_KEY_CLI: ${{ secrets.CONVEX_DEPLOY_KEY_CLI }}
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 
-    strategy:
-      matrix:
-        shard: [1, 2, 3, 4, 5]
-      # Unique fixture IDs do not isolate deployment-wide lifecycle/range reads.
-      # Concurrent writers caused native OCC disconnects and unknown erasure outcomes.
-      max-parallel: 1
-      fail-fast: false # Continue other shards even if one fails
+  managed-queue-probe:
+    name: Queue-only managed caller
+    if: github.event_name == 'workflow_dispatch' && inputs.queue_probe == true
+    uses: ./.github/workflows/managed-ci.yml
+    permissions:
+      contents: read
+      pull-requests: read
+    with:
+      candidate-sha: ${{ github.sha }}
+      queue_probe: true
 
+  queue-probe-offline:
+    name: Independent offline queue observation
+    if: github.event_name == 'workflow_dispatch' && inputs.queue_probe == true
+    runs-on: ubuntu-latest
+    permissions: {}
     steps:
-      - name: Checkout PR code
-        uses: actions/checkout@v6
+      - run: |
+          date -u '+offline-start %Y-%m-%dT%H:%M:%SZ'
+          echo 'Queue-only observation; no functional/service/delivery proof.' >> "$GITHUB_STEP_SUMMARY"
+
+  candidate-artifacts:
+    name: Build exact candidate demo packages once
+    needs: detect-changes
+    if: needs.detect-changes.outputs.candidate-artifacts == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v6
-        with:
-          node-version: "24"
-          cache: "npm"
-
-      - name: Use declared npm version
-        run: npm install --global npm@12.2.0
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Generate Convex types
-        run: npx convex codegen
-        env:
-          CONVEX_URL: ${{ secrets.CONVEX_URL }}
-          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
-
-      - name: Run tests (shard ${{ matrix.shard }}/5)
+          persist-credentials: false
+          sparse-checkout: |
+            /*
+            !/_goals/
+            !/work/
+          sparse-checkout-cone-mode: false
+      - uses: ./.github/actions/cortex-setup
+      - run: npm ci
+      - name: Build SDK, provider and CLI composer once for all selected demos
         run: |
-          node --experimental-vm-modules node_modules/jest/bin/jest.js \
-            --testPathIgnorePatterns='/node_modules/|debug|/tests/unit/runtime/gateway-dispatch\.test\.ts$|/tests/graph/managed-runtime-safety\.test\.ts$|/tests/(user-export|fact-history-provenance|facts-revision-scope|domain-scope|domain-operations|memorySpaces|operation-sequences|gdprCascade)\.test\.ts$' \
-            --shard=${{ matrix.shard }}/5 \
-            --runInBand
+          npm run build
+          npm run build --workspace=@cortexmemory/vercel-ai-provider
+          npm run build --workspace=@cortexmemory/cli
+      - name: Package immutable candidate manifest and archives
         env:
-          CONVEX_URL: ${{ secrets.CONVEX_URL }}
-          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          CONVEX_TEST_MODE: managed
-          CORTEX_TEST_EXPECTED_CONVEX_URL: ${{ secrets.CONVEX_URL }}
-
-      # Only build package once (on shard 1 to avoid redundant builds)
-      - name: Build package
-        if: matrix.shard == 1
-        run: npm run build
-
-  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  test-vercel-ai-provider:
-    name: Test Vercel AI Provider
-    runs-on: ubuntu-latest
-    # Provider integrations also write to the SDK's shared deployment.
-    needs: [detect-changes, setup-and-purge, test-typescript]
-    # Run if Vercel AI Provider changed OR if PR is targeting main branch
-    # IMPORTANT: Requires setup-and-purge to have SUCCEEDED (not just skipped) to ensure database isolation
-    if: |
-      always() &&
-      (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository) &&
-      needs.setup-and-purge.result == 'success' &&
-      needs.detect-changes.result == 'success' &&
-      (needs.test-typescript.result == 'success' || needs.test-typescript.result == 'skipped') &&
-      (
-        needs.detect-changes.outputs.vercel-ai-provider == 'true' ||
-        needs.detect-changes.outputs.typescript == 'true' ||
-        needs.detect-changes.outputs.convex == 'true' ||
-        (github.event.pull_request.base.ref == 'main' || github.event_name == 'push' || github.event_name == 'workflow_dispatch')
-      )
-    permissions:
-      contents: read
-
-    steps:
-      - name: Checkout PR code
-        uses: actions/checkout@v6
+          CI_CANDIDATE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: node scripts/ci-candidate-artifacts.mjs create "$RUNNER_TEMP/candidate" "$CI_CANDIDATE_SHA"
+      - uses: actions/upload-artifact@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          name: candidate-${{ github.event.pull_request.head.sha || github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/candidate/*
+          if-no-files-found: error
+          retention-days: 7
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v6
-        with:
-          node-version: "24"
-          cache: "npm"
-
-      - name: Use declared npm version
-        run: npm install --global npm@12.2.0
-
-      - name: Install all workspace dependencies
-        run: npm ci
-
-      - name: Generate Convex types
-        run: npx convex codegen
-        env:
-          CONVEX_URL: ${{ secrets.CONVEX_URL }}
-          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
-
-      - name: Build main SDK first
-        run: npm run build
-
-      - name: Run Vercel AI Provider tests
-        run: npm test --workspace=@cortexmemory/vercel-ai-provider
-        env:
-          CONVEX_URL: ${{ secrets.CONVEX_URL }}
-          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
-          CORTEX_TEST_EXPECTED_CONVEX_URL: ${{ secrets.CONVEX_URL }}
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-
-      - name: Lint Vercel AI Provider
-        run: npm run lint --workspace=@cortexmemory/vercel-ai-provider
-
-      - name: Build Vercel AI Provider
-        run: npm run build --workspace=@cortexmemory/vercel-ai-provider
-
-      - name: Verify package contents
-        run: npm pack --dry-run --workspace=@cortexmemory/vercel-ai-provider
-
-  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  # STAGE 3: CLI Tests (parallel with other test jobs)
-  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  test-cli:
-    name: Test Cortex CLI
-    runs-on: ubuntu-latest
-    needs: [detect-changes, setup-and-purge]
-    # Run if CLI changed OR if PR is targeting main branch
-    # IMPORTANT: Requires setup-and-purge to have SUCCEEDED (not just skipped) to ensure database isolation
-    if: |
-      always() &&
-      (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository) &&
-      needs.setup-and-purge.result == 'success' &&
-      needs.detect-changes.result == 'success' &&
-      (
-        needs.detect-changes.outputs.cli == 'true' ||
-        needs.detect-changes.outputs.typescript == 'true' ||
-        needs.detect-changes.outputs.convex == 'true' ||
-        (github.event.pull_request.base.ref == 'main' || github.event_name == 'push' || github.event_name == 'workflow_dispatch')
-      )
-    permissions:
-      contents: read
-
-    steps:
-      - name: Checkout PR code
-        uses: actions/checkout@v6
-        with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v6
-        with:
-          node-version: "24"
-          cache: "npm"
-
-      - name: Use declared npm version
-        run: npm install --global npm@12.2.0
-
-      - name: Install all workspace dependencies
-        run: npm ci
-
-      - name: Generate Convex types
-        run: npx convex codegen
-        env:
-          CONVEX_URL: ${{ secrets.CONVEX_URL }}
-          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
-
-      - name: Build main SDK first
-        run: npm run build
-
-      - name: Build CLI
-        run: npm run build --workspace=@cortexmemory/cli
-
-      - name: Run CLI unit tests
-        run: npm run test:unit --workspace=@cortexmemory/cli
-
-      - name: Run CLI E2E tests
-        run: npm run test:e2e --workspace=@cortexmemory/cli
-        env:
-          CONVEX_URL_CLI: ${{ secrets.CONVEX_URL_CLI }}
-          CORTEX_TEST_EXPECTED_CONVEX_URL: ${{ secrets.CONVEX_URL_CLI }}
-          CONVEX_URL: ${{ secrets.CONVEX_URL_CLI }}
-          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY_CLI }}
-
-      - name: Lint CLI
-        run: npm run lint --workspace=@cortexmemory/cli
-
-      - name: Verify CLI version matches package.json
-        run: |
-          echo "🔍 Verifying CLI version synchronization..."
-          PACKAGE_VERSION=$(node -p "require('./packages/cortex-cli/package.json').version")
-          CLI_VERSION=$(node packages/cortex-cli/dist/index.js --version)
-          echo "  package.json version: $PACKAGE_VERSION"
-          echo "  CLI --version output:  $CLI_VERSION"
-          if [[ "$PACKAGE_VERSION" != "$CLI_VERSION" ]]; then
-            echo ""
-            echo "❌ Version mismatch detected!"
-            echo "   The CLI is reporting a different version than package.json."
-            echo "   This can happen if VERSION was hardcoded instead of read from package.json."
-            exit 1
-          fi
-          echo "✅ CLI version matches package.json"
-
-      - name: Verify package contents
-        run: npm pack --dry-run --workspace=@cortexmemory/cli
-
-  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  # STAGE 4: All Checks Passed (final gate)
-  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   all-checks-passed:
     name: All Checks Passed
     needs:
@@ -728,114 +479,32 @@ jobs:
         graph-contracts,
         native-proof-contracts,
         detect-changes,
-        setup-and-purge,
-        test-typescript,
-        test-vercel-ai-provider,
-        test-cli,
+        managed-tests,
+        candidate-artifacts,
         code-quality,
+        offline-packages,
       ]
-    # Backend integration gate applies to trusted same-repository changes.
-    if: always() && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
+    if: always() && inputs.queue_probe != true
     runs-on: ubuntu-latest
     permissions:
       contents: read
-
     steps:
-      - name: Check if all jobs passed
-        run: |
-          test "${{ needs.public-contracts.result }}" = "success"
-          test "${{ needs.template-catalog.result }}" = "success"
-          test "${{ needs.demo-contracts.result }}" = "success"
-          test "${{ needs.graph-contracts.result }}" = "success"
-          test "${{ needs.native-proof-contracts.result }}" = "success"
-          echo "📊 Check Results:"
-          echo "  Detect Changes:           ${{ needs.detect-changes.result }}"
-          echo "  Setup & Purge:            ${{ needs.setup-and-purge.result }}"
-          echo "  Code Quality:             ${{ needs.code-quality.result }}"
-          echo "  TypeScript Tests:         ${{ needs.test-typescript.result }}"
-          echo "  Vercel AI Provider Tests: ${{ needs.test-vercel-ai-provider.result }}"
-          echo "  CLI Tests:                ${{ needs.test-cli.result }}"
-          echo ""
-          echo "ℹ️  Security scans run in separate workflow (see Security tab)"
-          echo ""
-
-          for result in "${{ needs.detect-changes.result }}" "${{ needs.setup-and-purge.result }}" "${{ needs.code-quality.result }}" "${{ needs.test-typescript.result }}" "${{ needs.test-vercel-ai-provider.result }}" "${{ needs.test-cli.result }}"; do
-            case "$result" in failure|cancelled) exit 1 ;; esac
-          done
-          # Detect changes must pass (it's the root job)
-          if [[ "${{ needs.detect-changes.result }}" == "failure" ]]; then
-            echo "❌ Detect changes failed"
-            exit 1
-          fi
-
-          # Setup & purge must pass if it ran
-          if [[ "${{ needs.setup-and-purge.result }}" == "failure" ]]; then
-            echo "❌ Setup & purge failed"
-            exit 1
-          fi
-
-          # Validate that tests ran when they should have
-          # If setup-and-purge succeeded, tests should not be skipped (they should pass or fail)
-          if [[ "${{ needs.setup-and-purge.result }}" == "success" ]]; then
-            # Check TypeScript tests
-            if [[ ("${{ needs.detect-changes.outputs.typescript }}" == "true" || \
-                   "${{ needs.detect-changes.outputs.convex }}" == "true" || \
-                   "${{ github.event.pull_request.base.ref }}" == "main") && \
-                  "${{ needs.test-typescript.result }}" == "skipped" ]]; then
-              echo "❌ TypeScript tests should have run but were skipped"
-              exit 1
-            fi
-
-
-            # Check Vercel AI Provider tests
-            if [[ ("${{ needs.detect-changes.outputs.vercel-ai-provider }}" == "true" || \
-                   "${{ github.event.pull_request.base.ref }}" == "main") && \
-                  "${{ needs.test-vercel-ai-provider.result }}" == "skipped" ]]; then
-              echo "❌ Vercel AI Provider tests should have run but were skipped"
-              exit 1
-            fi
-
-            # Check CLI tests
-            if [[ ("${{ needs.detect-changes.outputs.cli }}" == "true" || \
-                   "${{ github.event.pull_request.base.ref }}" == "main") && \
-                  "${{ needs.test-cli.result }}" == "skipped" ]]; then
-              echo "❌ CLI tests should have run but were skipped"
-              exit 1
-            fi
-
-            # Check code quality
-            if [[ ("${{ needs.detect-changes.outputs.typescript }}" == "true" || \
-                   "${{ github.event.pull_request.base.ref }}" == "main") && \
-                  "${{ needs.code-quality.result }}" == "skipped" ]]; then
-              echo "❌ Code quality checks should have run but were skipped"
-              exit 1
-            fi
-          fi
-
-          # Code quality must pass OR be skipped (when no changes)
-          if [[ "${{ needs.code-quality.result }}" == "failure" ]]; then
-            echo "❌ Code quality check failed"
-            exit 1
-          fi
-
-          # TypeScript tests must pass OR be skipped (when no changes)
-          if [[ "${{ needs.test-typescript.result }}" == "failure" ]]; then
-            echo "❌ TypeScript tests failed"
-            exit 1
-          fi
-
-
-          # Vercel AI Provider tests must pass OR be skipped (when no changes)
-          if [[ "${{ needs.test-vercel-ai-provider.result }}" == "failure" ]]; then
-            echo "❌ Vercel AI Provider tests failed"
-            exit 1
-          fi
-
-          # CLI tests must pass OR be skipped (when no changes)
-          if [[ "${{ needs.test-cli.result }}" == "failure" ]]; then
-            echo "❌ CLI tests failed"
-            exit 1
-          fi
-
-          echo ""
-          echo "✅ All PR checks passed!"
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+          sparse-checkout: |
+            /*
+            !/_goals/
+            !/work/
+          sparse-checkout-cone-mode: false
+      - uses: ./.github/actions/cortex-setup
+        with:
+          cache: 'false'
+      - name: Require every selected job and report actual coverage
+        env:
+          CI_SELECTION: ${{ needs.detect-changes.outputs.selection }}
+          CI_PARENT: 'true'
+          CI_CANDIDATE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          CI_NEEDS: ${{ toJSON(needs) }}
+        run: node scripts/ci-contract.mjs aggregate
