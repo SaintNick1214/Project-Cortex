@@ -36,6 +36,7 @@ import { registerDeployCommands } from "./commands/deploy.js";
 // Shell completion
 import { registerCompletionCommand } from "./commands/completion.js";
 import { loadConfig } from "./utils/config.js";
+import { configureClientOptions, setupClientCleanup } from "./utils/client.js";
 
 // Read version dynamically from package.json to ensure CLI version always matches published version
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -66,12 +67,17 @@ program
   .version(VERSION)
   .enablePositionalOptions()
   .option("-d, --deployment <name>", "Deployment name to use (from config)")
+  .option("--token-env <name>", "Environment variable with a fresh host-issued JWT (default CORTEX_AUTH_TOKEN)")
+  .option("--token-file <path>", "Private host-issued JWT file, reread on refresh; never copied to config")
+  .option("--tenant-id <id>", "Verified tenant selector; does not grant authority")
+  .option("--memory-space-id <id>", "Verified memory-space selector; does not grant authority")
   .option("--debug", "Enable debug output", false)
   .configureHelp({
     // Custom sort to ensure our order is preserved
     sortSubcommands: false,
     sortOptions: false,
   });
+program.addHelpText("after", "\nAuthenticated data commands require a host-issued JWT and current backend grants. Use --token-file /private/host.jwt or --token-env CORTEX_AUTH_TOKEN before the command; files must be owned/private and are reread on refresh. Scope flags are selectors, never authority. Deploy/provider keys do not authenticate public clients.\nDatabase stats require an exact disposable-development --target and operator credentials. db clear retires only the explicitly confirmed tenant+space, preserving tombstones/billing. Generic purge/restore are unsupported.\n");
 
 // Load config and register commands
 async function main() {
@@ -137,6 +143,8 @@ ${pc.bold("Memory Operations:")}
     }
 
     // Parse arguments and execute
+    setupClientCleanup();
+    program.hook("preAction", () => { configureClientOptions(program.opts()); });
     await program.parseAsync(process.argv);
   } catch (error) {
     if (error instanceof Error) {

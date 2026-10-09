@@ -1,0 +1,177 @@
+watchman warning: Recrawled this watch 1 time, most recently because:
+MustScanSubDirs UserDroppedTo resolve, please review the information on
+https://facebook.github.io/watchman/docs/troubleshooting.html#recrawl
+To clear this warning, run:
+`watchman watch-del '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion' ; watchman watch-project '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion'`
+
+  console.error
+    ◇ injected env (0) from .env.test
+
+      13 | import dotenv from "dotenv";
+      14 | import { resolve } from "path";
+    > 15 |
+         | ^
+      16 | // Load .env.test first (test defaults)
+      17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+      18 |
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:15:8
+
+  console.error
+    ◇ injected env (0) from .env.local
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+  console.log
+    
+    🧪 Testing against LOCAL Convex: http://127.0.0.1:1
+
+      at tests/env.ts:35:13
+
+  console.log
+       Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:36:13
+
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:121:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:122:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:123:13
+
+(node:72385) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeContent/jobs.test.ts (6.131 s)
+  ✓ creates text with a real secondary title and one shared native account (125 ms)
+  ✓ creates code with a real secondary title and one shared native account (105 ms)
+  ✓ creates sheet with a real secondary title and one shared native account (101 ms)
+  ✓ rejects model/authority/budget extras before any job or artifact (6 ms)
+  ✓ retains idempotent job/account and denies a conflicting request (10 ms)
+  ✓ cancellation blocks actual native admission without refunding the account (11 ms)
+  ✓ saved primary crash never pays again and cannot publish without the secondary title (49 ms)
+  ✓ unknown work cannot reclaim or fabricate a confirmed draft (9 ms)
+  ✓ deletion after paid draft prevents atomic publication with retained liability (98 ms)
+  ✓ foreign/no-JWT callers cannot deliver owned jobs (9 ms)
+  ✓ updates an exact retained artifact version while preserving the original history and title (148 ms)
+  ✓ suggestions remain unapplied until one exact user choice; replay never pays or edits twice (148 ms)
+  ✓ recovers two confirmed durable drafts exactly once without another native attempt (97 ms)
+  ✕ automatic conversation title binds a genuine active parent model and shares its existing financial account (54 ms)
+
+  ● automatic conversation title binds a genuine active parent model and shares its existing financial account
+
+    GatewayDispatchError: Governed model call did not complete for delivery.
+
+      78 |   consumeReplay(): Promise<{ text: string } | AgentLanguageResultV1 | { profile: typeof DEFAULT_EMBEDDING_PROFILE; vectors: number[][] } | undefined>;
+      79 | }
+    > 80 | function fail(code: string): never { throw new GatewayDispatchError(code); }
+         |                                            ^
+      81 | const utf8 = (text: string): number => {
+      82 |   for (const point of text) { const n = point.codePointAt(0)!; if (n >= 0xd800 && n <= 0xdfff) fail("INVALID_UNICODE"); }
+      83 |   return new TextEncoder().encode(text).length;
+
+      at fail (convex-dev/runtimeGateway.ts:80:44)
+      at Object.terminal (convex-dev/runtimeGateway.ts:625:123)
+      at convex-dev/runtimeGateway.ts:681:25
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     6.1s | 13/14 passed | /tests/unit/runtimeContent/jobs.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.15s ( 2.4%) - updates an exact retained artifact version while preserving the original history and title
+    /tests/unit/runtimeContent/jobs.test.ts
+
+ 2. [32m✓[0m    0.15s ( 2.4%) - suggestions remain unapplied until one exact user choice; replay never pays or edits twice
+    /tests/unit/runtimeContent/jobs.test.ts
+
+ 3. [32m✓[0m    0.13s ( 2.0%) - creates text with a real secondary title and one shared native account
+    /tests/unit/runtimeContent/jobs.test.ts
+
+ 4. [32m✓[0m    0.10s ( 1.7%) - creates code with a real secondary title and one shared native account
+    /tests/unit/runtimeContent/jobs.test.ts
+
+ 5. [32m✓[0m    0.10s ( 1.6%) - creates sheet with a real secondary title and one shared native account
+    /tests/unit/runtimeContent/jobs.test.ts
+
+ 6. [32m✓[0m    0.10s ( 1.6%) - deletion after paid draft prevents atomic publication with retained liability
+    /tests/unit/runtimeContent/jobs.test.ts
+
+ 7. [32m✓[0m    0.10s ( 1.5%) - recovers two confirmed durable drafts exactly once without another native attempt
+    /tests/unit/runtimeContent/jobs.test.ts
+
+ 8. [31m✗[0m    0.05s ( 0.9%) - automatic conversation title binds a genuine active parent model and shares its existing financial account
+    /tests/unit/runtimeContent/jobs.test.ts
+
+ 9. [32m✓[0m    0.05s ( 0.8%) - saved primary crash never pays again and cannot publish without the secondary title
+    /tests/unit/runtimeContent/jobs.test.ts
+
+10. [32m✓[0m    0.01s ( 0.2%) - cancellation blocks actual native admission without refunding the account
+    /tests/unit/runtimeContent/jobs.test.ts
+
+11. [32m✓[0m    0.01s ( 0.2%) - retains idempotent job/account and denies a conflicting request
+    /tests/unit/runtimeContent/jobs.test.ts
+
+12. [32m✓[0m    0.01s ( 0.1%) - unknown work cannot reclaim or fabricate a confirmed draft
+    /tests/unit/runtimeContent/jobs.test.ts
+
+13. [32m✓[0m    0.01s ( 0.1%) - foreign/no-JWT callers cannot deliver owned jobs
+    /tests/unit/runtimeContent/jobs.test.ts
+
+14. [32m✓[0m    0.01s ( 0.1%) - rejects model/authority/budget extras before any job or artifact
+    /tests/unit/runtimeContent/jobs.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.97s (15.5% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      6.26s
+  Test suites:        1
+  Individual tests:   14
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 13 passed, 14 total
+Snapshots:   0 total
+Time:        6.261 s
+Ran all test suites matching tests/unit/runtimeContent/jobs.test.ts.
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/chat-sdk1/content-tests3.json

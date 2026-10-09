@@ -12,7 +12,7 @@ import { cosmiconfig } from "cosmiconfig";
 import { readFile, writeFile, mkdir } from "fs/promises";
 import { existsSync, readdirSync, readFileSync } from "fs";
 import { homedir } from "os";
-import { join, dirname } from "path";
+import { join, dirname, resolve as resolvePath } from "path";
 import type {
   CLIConfig,
   ConvexCheckResult,
@@ -22,7 +22,7 @@ import type {
   ValidationOptions,
   ValidationResult,
 } from "../types.js";
-import { Cortex } from "@cortexmemory/sdk";
+import type { Cortex } from "@cortexmemory/sdk";
 
 /**
  * Default configuration
@@ -177,6 +177,10 @@ export function resolveConfig(
   format: OutputFormat;
   quiet: boolean;
   debug: boolean;
+  tenantId?: string;
+  memorySpaceId?: string;
+  tokenEnv?: string;
+  tokenFile?: string;
 } {
   // CLI flags have highest priority
   if (options.url) {
@@ -186,6 +190,10 @@ export function resolveConfig(
       format: options.format ?? config.format,
       quiet: options.quiet ?? false,
       debug: options.debug ?? false,
+      tenantId: options.tenantId,
+      memorySpaceId: options.memorySpaceId,
+      tokenEnv: options.tokenEnv,
+      tokenFile: options.tokenFile,
     };
   }
 
@@ -205,6 +213,10 @@ export function resolveConfig(
     format: options.format ?? config.format,
     quiet: options.quiet ?? false,
     debug: options.debug ?? false,
+    tenantId: options.tenantId ?? deploymentConfig.tenantId,
+    memorySpaceId: options.memorySpaceId ?? deploymentConfig.memorySpaceId,
+    tokenEnv: options.tokenEnv ?? deploymentConfig.tokenEnv,
+    tokenFile: options.tokenFile ?? deploymentConfig.tokenFile,
   };
 }
 
@@ -277,6 +289,23 @@ export async function setConfigValue(
         key: value,
       };
       break;
+    case "token-env":
+    case "token-file":
+    case "tenant-id":
+    case "memory-space-id": {
+      const deployment = config.deployments[config.default];
+      if (!deployment) throw new Error("Select a configured deployment before setting credential locations or scope selectors.");
+      if (!value || value.trim() !== value || /[\r\n\0]/.test(value) || value.length > 4096 || key === "token-env" && !/^[A-Z_][A-Z0-9_]*$/.test(value)) throw new Error("Set a valid credential location or scope selector, never a JWT/provider key.");
+      if (key === "token-env") { deployment.tokenEnv = value; delete deployment.tokenFile; }
+      else if (key === "token-file") {
+        const { credentialSource } = await import("./host-auth.js");
+        await credentialSource({ tokenFile: value })({ forceRefreshToken: true });
+        deployment.tokenFile = resolvePath(value); delete deployment.tokenEnv;
+      }
+      else if (key === "tenant-id") deployment.tenantId = value;
+      else deployment.memorySpaceId = value;
+      break;
+    }
     default:
       throw new Error(`Unknown config key: ${key}`);
   }
@@ -565,7 +594,7 @@ function getErrorMessage(error: unknown): string {
  * Determine if an error indicates an authentication failure
  *
  * Returns true for errors that indicate the deployment/key is invalid
- * and should be removed from config. Returns false for transient errors
+ * but does not establish that a saved host deployment should be removed. Returns false for transient errors
  * (network issues, timeouts) where the deployment should be kept.
  */
 function isAuthError(error: unknown): boolean {
@@ -597,28 +626,25 @@ function isAuthError(error: unknown): boolean {
  * @returns Result indicating status of the check
  */
 async function checkConvexUrl(
-  url: string,
+  deployment: DeploymentConfig,
   timeout = 3000,
 ): Promise<ConvexCheckResult> {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), timeout);
-  let client: Cortex | undefined;
-
+  let dispose: (() => void) | undefined;
+  const checkPromise = (async () => {
+    const { createClient, closeClient } = await import("./client.js");
+    const client: Cortex = await createClient({ deployments: { probe: deployment }, default: "probe", format: "json", confirmDangerous: true }, {});
+    dispose = () => closeClient(client);
+    if (controller.signal.aborted) { dispose(); throw new Error("Operation timed out"); }
+    await client.memorySpaces.list({ limit: 1 });
+  })();
   try {
-    client = new Cortex({ convexUrl: url });
-
-    // Race the operation against the abort signal
-    const checkPromise = client.memorySpaces.list({ limit: 1 });
-
-    // Set up abort listener
     const abortPromise = new Promise<never>((_, reject) => {
-      controller.signal.addEventListener("abort", () => {
-        reject(new Error("Operation timed out"));
-      });
+      if (controller.signal.aborted) reject(new Error("Operation timed out"));
+      else controller.signal.addEventListener("abort", () => reject(new Error("Operation timed out")), { once: true });
     });
-
     await Promise.race([checkPromise, abortPromise]);
-
     return { status: "ok" };
   } catch (error) {
     if (controller.signal.aborted) {
@@ -631,7 +657,7 @@ async function checkConvexUrl(
     return { status: "network_error", message: getErrorMessage(error) };
   } finally {
     clearTimeout(timeoutId);
-    client?.close();
+    dispose?.();
   }
 }
 
@@ -640,7 +666,7 @@ async function checkConvexUrl(
  *
  * Performs the following validations:
  * 1. Deployment projectPath: removes if directory doesn't exist
- * 2. Deployment Convex URL: removes on auth errors, keeps on network errors
+ * 2. Current host JWT/session probe: auth/network failures preserve deployment configuration
  * 3. App paths: removes if join(projectPath, path) doesn't exist
  * 4. Default deployment: reassigns if current default was removed
  *
@@ -683,11 +709,10 @@ export async function validateAndCleanConfig(
 
     // Check 2: Convex URL is reachable (if enabled and not already marked for removal)
     if (!shouldRemove && checkConvex && deployment.url) {
-      const checkResult = await checkConvexUrl(deployment.url, timeout);
+      const checkResult = await checkConvexUrl(deployment, timeout);
 
-      if (checkResult.status === "auth_error") {
-        shouldRemove = true;
-      }
+      // A JWT/grant expiry is a session failure, never evidence that host configuration is invalid.
+      void checkResult;
       // Note: timeout and network_error do NOT trigger removal (fail-safe)
     }
 

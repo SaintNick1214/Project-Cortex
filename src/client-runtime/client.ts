@@ -11,6 +11,8 @@ import { embeddingProfileOptions, memoryReadiness, readinessOptions, runtimeArti
 import type { RuntimeMemoryReadiness, RuntimeMemoryReadinessOptions } from "./types.js";
 import type { RuntimeArtifact, RuntimeMediaJob, RuntimeMediaSubmit } from "./types.js";
 import { mediaJob, mediaJobList, mediaListOptions, mediaSubmit } from "./media.js";
+import { contentJob, contentJobList, contentListOptions, contentSubmit, contentSuggestionInput } from "./content.js";
+import type { ContentSubmitV1, RuntimeContentJobV1 } from "../domain/content.js";
 
 export type RuntimeClientPort = Pick<ConvexClient, "setAuth" | "query" | "mutation" | "action" | "onUpdate" | "close">;
 export interface CortexRuntimeClientOptions {
@@ -36,7 +38,9 @@ const refs = { session: mutation("runtimeClient:session"), signal: query("runtim
   profile: mutation("runtimeMemory:defaultProfile"), recall: action("runtimeMemory:recall"), asset: mutation("runtimeAssets:get"),
   embeddingProfile: mutation("runtimeClientExtensions:embeddingProfile"), readiness: mutation("runtimeClientExtensions:memoryReadiness"),
   mediaSubmit: mutation("runtimeMediaJobs:submit"), mediaGet: mutation("runtimeMediaJobs:get"), mediaList: mutation("runtimeMediaJobs:list"),
-  mediaCancel: mutation("runtimeMediaJobs:cancel"), mediaReconcile: mutation("runtimeMediaJobs:reconcile"), artifact: mutation("artifacts:get") };
+  mediaCancel: mutation("runtimeMediaJobs:cancel"), mediaReconcile: mutation("runtimeMediaJobs:reconcile"), artifact: mutation("artifacts:get"),
+  contentSubmit: mutation("runtimeContentJobs:submit"), contentGet: mutation("runtimeContentJobs:get"), contentList: mutation("runtimeContentJobs:list"),
+  contentCancel: mutation("runtimeContentJobs:cancel"), contentReconcile: mutation("runtimeContentJobs:reconcile"), contentApply: mutation("runtimeContentJobs:applySuggestion") };
 
 /** One authenticated Convex connection. JWTs stay inside the host's official fetchToken callback. */
 export class CortexRuntimeClient {
@@ -199,7 +203,7 @@ export class CortexRuntimeClient {
       let result = observation(await this.port.mutation(refs.observe, { ...args, afterSequence: natural(options.cursor?.sequence ?? 0), limit: options.limit ?? 100, finalOnly: options.finalOnly ?? false }));
       if (options.cursor && result.run.attemptNumber !== natural(options.cursor.attemptNumber)) result = observation(await this.port.mutation(refs.observe, { ...args, afterSequence: 0, limit: options.limit ?? 100, finalOnly: options.finalOnly ?? false }));
       this.pinned(handle, result.run); return result;
-    }); return acquired.result;
+    }); this.trackDelivery(acquired.result.deliveryExpiresAt); return acquired.result;
   }
   private watch<T>(handle: RuntimeRunHandle, ref: ReturnType<typeof mutation>, args: Record<string, unknown>, parse: (raw: unknown) => T,
     callback: (value: T) => void, onError?: (error: CortexRuntimeError) => void): () => void {
@@ -330,6 +334,38 @@ export class CortexRuntimeClient {
     const jobId = identifier(value);
     const { result } = await this.inSession(current => this.port.mutation(ref, { tenantId: current.tenantId, memorySpaceId: current.memorySpaceId, jobId }));
     const job = mediaJob(result); this.trackDelivery(job.deliveryExpiresAt); if (job.jobId !== jobId) invalid("INVALID_RESPONSE"); return job;
+  }
+  /** Submit one durable backend content intent; model, budget, tools and memory stay on the backend. */
+  async submitContentJob(input: ContentSubmitV1): Promise<RuntimeContentJobV1> {
+    const request = contentSubmit(input);
+    const { result } = await this.inSession(current => this.port.mutation(refs.contentSubmit, { tenantId: current.tenantId, memorySpaceId: current.memorySpaceId, ...request }));
+    const job = contentJob(result); this.trackDelivery(job.deliveryExpiresAt);
+    if (job.intent !== request.intent || request.conversationId !== undefined && job.conversationId !== request.conversationId) invalid("INVALID_RESPONSE");
+    return job;
+  }
+  async getContentJob(jobId: string): Promise<RuntimeContentJobV1> { return await this.contentOperation(refs.contentGet, jobId); }
+  async listContentJobs(options: { conversationId?: string; limit?: number } = {}): Promise<RuntimeContentJobV1[]> {
+    const args = contentListOptions(options);
+    const { result } = await this.inSession(current => this.port.mutation(refs.contentList, { tenantId: current.tenantId, memorySpaceId: current.memorySpaceId, ...args }));
+    const jobs = contentJobList(result, args.limit ?? 20);
+    for (const job of jobs) { this.trackDelivery(job.deliveryExpiresAt); if (args.conversationId !== undefined && job.conversationId !== args.conversationId) invalid("INVALID_RESPONSE"); }
+    return jobs;
+  }
+  async cancelContentJob(jobId: string): Promise<RuntimeContentJobV1> { return await this.contentOperation(refs.contentCancel, jobId); }
+  /** Recover only the existing operation; an unknown submission is never retried through this API. */
+  async reconcileContentJob(jobId: string): Promise<RuntimeContentJobV1> { return await this.contentOperation(refs.contentReconcile, jobId); }
+  /** Commit an explicitly selected suggestion against its exact current retained artifact version. */
+  async applyContentSuggestion(input: { jobId: string; suggestionId: string; artifactVersion: number }): Promise<RuntimeContentJobV1> {
+    const args = contentSuggestionInput(input);
+    const { result } = await this.inSession(current => this.port.mutation(refs.contentApply, { tenantId: current.tenantId, memorySpaceId: current.memorySpaceId, ...args }));
+    const job = contentJob(result); this.trackDelivery(job.deliveryExpiresAt);
+    if (job.jobId !== args.jobId || job.intent !== "suggestions" || job.artifactVersion === undefined || job.artifactVersion <= args.artifactVersion) invalid("INVALID_RESPONSE");
+    return job;
+  }
+  private async contentOperation(ref: ReturnType<typeof mutation>, value: string): Promise<RuntimeContentJobV1> {
+    const jobId = identifier(value);
+    const { result } = await this.inSession(current => this.port.mutation(ref, { tenantId: current.tenantId, memorySpaceId: current.memorySpaceId, jobId }));
+    const job = contentJob(result); this.trackDelivery(job.deliveryExpiresAt); if (job.jobId !== jobId) invalid("INVALID_RESPONSE"); return job;
   }
   private abortAssets(error: CortexRuntimeError) {
     for (const controller of this.assetRequests) controller.abort(error);

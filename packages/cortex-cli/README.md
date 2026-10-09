@@ -30,14 +30,20 @@ cortex backend provision . --target ./development-target.json --principal ./prin
 cortex backend configure . --url https://my-dev.convex.cloud --http-url https://my-dev.convex.site --agent-id published-agent --agent-version 1
 cortex backend guide
 
-# Check database statistics
-cortex db stats
+# Select a private host-issued JWT and its authorized scope
+cortex config set token-file /private/path/host.jwt
+cortex config set tenant-id demo-tenant
+cortex config set memory-space-id demo-space
+cortex config test
+
+# Read operator statistics on the verified development target
+cortex db stats --target ./development-target.json --project .
 
 # List memory spaces
 cortex spaces list
 
 # Search memories
-cortex memory search "password" --space agent-1
+cortex memory search "release codename" --space demo-space
 ```
 
 `cortex init . --backend` provides the same additive local installation. Neither
@@ -65,6 +71,15 @@ then use the browser runtime entry and remote transport. Agent/Workflow componen
 registration and Gateway model qualification are separate prerequisites; unsupported
 or unqualified model/media operations remain unavailable. App clients require no
 OpenAI, Anthropic or Gateway inference key.
+
+Public data commands use a fresh host-issued JWT from `CORTEX_AUTH_TOKEN`, an
+explicit `--token-env` name, or `--token-file`. Choose one source. A token file must
+be a regular, nonsymlink file owned by the current user with mode `0600` or stricter.
+The CLI rereads rotated credentials and verifies the current principal and scope
+before returning each result. Configuration stores environment names, private file
+paths and scope selectors. A deployment key authorizes separate operator commands;
+public SDK identity comes from the verified JWT. A missing or expired credential
+produces an actionable error; renew it through the host identity provider.
 
 Private asset upload/download routes require current identity and storage capabilities;
 their limit is 20,000,000 bytes. Provider input protocols have separate, stricter caps.
@@ -201,18 +216,26 @@ cortex convex schema sync
 ### Database Operations
 
 ```bash
-# Database statistics
-cortex db stats
+# Exact operator counts, including each table's truncation flag
+cortex db stats --target ./development-target.json --project . --format json
 
-# Clear entire database (dangerous!)
-cortex db clear --confirm "I understand this is irreversible"
+# Retire one disposable tenant and memory space with lifecycle fences
+cortex db clear --target ./development-target.json --project . \
+  --tenant-id demo-tenant --memory-space-id demo-space --yes
 
-# Backup database
-cortex db backup --output backup.json
-
-# Restore from backup
-cortex db restore --input backup.json [--dry-run]
+# Export bounded authorized metadata with restorable: false
+cortex db backup --output ./metadata.json
+cortex db export --output ./metadata-export.json
 ```
+
+`db stats` and `db clear` verify the exact disposable cloud development target and
+use a target-bound dev key through the pinned host Convex CLI. The default credential
+environment names are `CONVEX_ACCESS_TOKEN` and `CONVEX_DEPLOY_KEY`; explicit names
+can be selected with `--management-token-env` and `--deploy-key-env`. Statistics
+preserve actual count/truncation values and propagate failures. Scoped retirement
+retains billing history and deletion fences. Generic restore, global purge and
+`--include-all` exports are unsupported and fail before effects. Metadata exports
+use new private files and disclose their bounds.
 
 ### Development Utilities
 
@@ -233,16 +256,14 @@ cortex dev generate-data --template chatbot
 # Interactive setup
 cortex setup
 
-# Configure deployment
+# Configure public deployment metadata and a private host JWT location
 cortex config set convex-url https://my-deployment.convex.cloud
-cortex config set convex-key "..."
-
-# Set deploy key for a specific deployment
-cortex config set-key production --key "prod|abc123..."
-cortex config set-key  # Interactive mode - select deployment and enter key
+cortex config set token-file /private/path/host.jwt
+cortex config set tenant-id demo-tenant
+cortex config set memory-space-id demo-space
 
 # Set URL for a specific deployment
-cortex config set-url production --url "https://new-app.convex.cloud"
+cortex config set-url development --url "https://my-dev.convex.cloud"
 cortex config set-url  # Interactive mode - select deployment and enter URL
 
 # Show current configuration
@@ -256,8 +277,8 @@ cortex config test
 
 The CLI looks for configuration in the following order (highest priority first):
 
-1. CLI flags: `--url`, `--key`, `--deployment`
-2. Environment variables: `CONVEX_URL`, `CONVEX_DEPLOY_KEY`
+1. CLI flags select the named deployment, JWT source and scope.
+2. `CORTEX_AUTH_TOKEN` supplies the default host JWT; select the endpoint through flags or deployment configuration.
 3. Project config: `./cortex.config.json`
 4. User config: `~/.cortexrc`
 
@@ -266,20 +287,14 @@ The CLI looks for configuration in the following order (highest priority first):
 ```json
 {
   "deployments": {
-    "local": {
-      "url": "http://127.0.0.1:3210",
-      "deployment": "anonymous:anonymous-cortex-sdk-local"
-    },
-    "staging": {
-      "url": "https://staging.convex.cloud",
-      "key": "..."
-    },
-    "production": {
-      "url": "https://prod.convex.cloud",
-      "key": "..."
+    "development": {
+      "url": "https://my-dev.convex.cloud",
+      "tokenFile": "/private/path/host.jwt",
+      "tenantId": "demo-tenant",
+      "memorySpaceId": "demo-space"
     }
   },
-  "default": "local",
+  "default": "development",
   "format": "table",
   "confirmDangerous": true
 }
@@ -290,8 +305,10 @@ The CLI looks for configuration in the following order (highest priority first):
 All commands support these global options:
 
 - `-d, --deployment <name>` - Use a named deployment from config
-- `-u, --url <url>` - Override Convex deployment URL
-- `-k, --key <key>` - Override Convex deploy key
+- `--token-env <name>` - Select a host JWT environment variable; default `CORTEX_AUTH_TOKEN`
+- `--token-file <path>` - Select a private owned regular JWT file
+- `--tenant-id <id>` - Select a tenant covered by the current verified grant
+- `--memory-space-id <id>` - Select a memory space covered by the current verified grant
 - `-f, --format <format>` - Output format: table, json, csv
 - `-q, --quiet` - Suppress non-essential output
 - `--debug` - Enable debug output
@@ -301,7 +318,8 @@ All commands support these global options:
 - **Confirmation prompts** for dangerous operations (delete, clear)
 - **Dry-run mode** for previewing changes without executing
 - **Verification** after cascade deletions
-- **Backups** before destructive operations
+- **Scoped lifecycle retirement** preserves deletion fences and billing history
+- **Explicit bounded metadata exports** disclose `restorable: false`
 
 ## Development
 

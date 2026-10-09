@@ -1,0 +1,512 @@
+[
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/auth-config.test.ts",
+    "fullName": "persists only an absolute private token file pointer",
+    "status": "passed",
+    "receipt": "tests4.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/auth-config.test.ts",
+    "fullName": "persists the host environment selector only, never reads or saves its token contents",
+    "status": "passed",
+    "receipt": "tests4.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/auth-config.test.ts",
+    "fullName": "refuses token contents passed as a file setting or direct token setting before persistence",
+    "status": "passed",
+    "receipt": "tests4.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/auth-config.test.ts",
+    "fullName": "scope settings remain bounded selectors, never local authority",
+    "status": "passed",
+    "receipt": "tests4.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/client.test.ts",
+    "fullName": "client utilities getDeploymentInfo should detect 127.0.0.1 as local",
+    "status": "passed",
+    "receipt": "tests2.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/client.test.ts",
+    "fullName": "client utilities getDeploymentInfo should detect key presence correctly",
+    "status": "passed",
+    "receipt": "tests2.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/client.test.ts",
+    "fullName": "client utilities getDeploymentInfo should detect localhost as local",
+    "status": "passed",
+    "receipt": "tests2.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/client.test.ts",
+    "fullName": "client utilities getDeploymentInfo should respect url override from options",
+    "status": "passed",
+    "receipt": "tests2.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/client.test.ts",
+    "fullName": "client utilities getDeploymentInfo should return cloud deployment info",
+    "status": "passed",
+    "receipt": "tests2.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/client.test.ts",
+    "fullName": "client utilities getDeploymentInfo should return local deployment info",
+    "status": "passed",
+    "receipt": "tests2.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/client.test.ts",
+    "fullName": "client utilities getDeploymentInfo should return staging deployment info (no key)",
+    "status": "passed",
+    "receipt": "tests2.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/client.test.ts",
+    "fullName": "client utilities getDeploymentInfo should use default deployment when none specified",
+    "status": "passed",
+    "receipt": "tests2.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/config-validation.test.ts",
+    "fullName": "loadConfigWithValidation should combine load and validate",
+    "status": "passed",
+    "receipt": "tests3.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/config-validation.test.ts",
+    "fullName": "loadConfigWithValidation should pass timeout option through",
+    "status": "passed",
+    "receipt": "tests3.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/config-validation.test.ts",
+    "fullName": "loadConfigWithValidation should skip Convex validation when checkConvex is false",
+    "status": "passed",
+    "receipt": "tests3.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/config-validation.test.ts",
+    "fullName": "validateAndCleanConfig should handle \"access denied\" error message",
+    "status": "passed",
+    "receipt": "tests3.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/config-validation.test.ts",
+    "fullName": "validateAndCleanConfig should handle \"forbidden\" error message",
+    "status": "passed",
+    "receipt": "tests3.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/config-validation.test.ts",
+    "fullName": "validateAndCleanConfig should handle \"invalid key\" error message",
+    "status": "passed",
+    "receipt": "tests3.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/config-validation.test.ts",
+    "fullName": "validateAndCleanConfig should handle config with no apps property",
+    "status": "passed",
+    "receipt": "tests3.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/config-validation.test.ts",
+    "fullName": "validateAndCleanConfig should handle deployment without projectPath (remote-only)",
+    "status": "passed",
+    "receipt": "tests3.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/config-validation.test.ts",
+    "fullName": "validateAndCleanConfig should handle deployment without url",
+    "status": "passed",
+    "receipt": "tests3.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/config-validation.test.ts",
+    "fullName": "validateAndCleanConfig should handle empty deployments object",
+    "status": "passed",
+    "receipt": "tests3.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/config-validation.test.ts",
+    "fullName": "validateAndCleanConfig should handle partial failures correctly",
+    "status": "passed",
+    "receipt": "tests3.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/config-validation.test.ts",
+    "fullName": "validateAndCleanConfig should include correct app names in removed list",
+    "status": "passed",
+    "receipt": "tests3.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/config-validation.test.ts",
+    "fullName": "validateAndCleanConfig should include correct deployment names in removed list",
+    "status": "passed",
+    "receipt": "tests3.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/config-validation.test.ts",
+    "fullName": "validateAndCleanConfig should keep default unchanged when a non-default deployment is removed",
+    "status": "passed",
+    "receipt": "tests3.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/config-validation.test.ts",
+    "fullName": "validateAndCleanConfig should keep deployment on network error (ECONNREFUSED)",
+    "status": "passed",
+    "receipt": "tests3.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/config-validation.test.ts",
+    "fullName": "validateAndCleanConfig should keep deployment on network error (ETIMEDOUT)",
+    "status": "passed",
+    "receipt": "tests3.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/config-validation.test.ts",
+    "fullName": "validateAndCleanConfig should keep deployment on server errors (500/502/503/504)",
+    "status": "passed",
+    "receipt": "tests3.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/config-validation.test.ts",
+    "fullName": "validateAndCleanConfig should keep deployment on timeout (AbortController)",
+    "status": "passed",
+    "receipt": "tests3.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/config-validation.test.ts",
+    "fullName": "validateAndCleanConfig should NOT save config when not modified",
+    "status": "passed",
+    "receipt": "tests3.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/config-validation.test.ts",
+    "fullName": "validateAndCleanConfig should reassign default to alphabetically first deployment when default is removed",
+    "status": "passed",
+    "receipt": "tests3.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/config-validation.test.ts",
+    "fullName": "validateAndCleanConfig should remove apps with missing path",
+    "status": "passed",
+    "receipt": "tests3.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/config-validation.test.ts",
+    "fullName": "validateAndCleanConfig should remove deployments with missing projectPath",
+    "status": "passed",
+    "receipt": "tests3.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/config-validation.test.ts",
+    "fullName": "validateAndCleanConfig should respect custom timeout option",
+    "status": "passed",
+    "receipt": "tests3.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/config-validation.test.ts",
+    "fullName": "validateAndCleanConfig should retain host deployment on session auth error (401)",
+    "status": "passed",
+    "receipt": "tests3.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/config-validation.test.ts",
+    "fullName": "validateAndCleanConfig should retain host deployment on session auth error (403)",
+    "status": "passed",
+    "receipt": "tests3.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/config-validation.test.ts",
+    "fullName": "validateAndCleanConfig should retain host deployment on session auth error (message contains \"unauthorized\")",
+    "status": "passed",
+    "receipt": "tests3.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/config-validation.test.ts",
+    "fullName": "validateAndCleanConfig should return modified=false when config is valid and unchanged",
+    "status": "passed",
+    "receipt": "tests3.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/config-validation.test.ts",
+    "fullName": "validateAndCleanConfig should save config when modified",
+    "status": "passed",
+    "receipt": "tests3.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/config-validation.test.ts",
+    "fullName": "validateAndCleanConfig should set default to empty string when all deployments are removed",
+    "status": "passed",
+    "receipt": "tests3.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/config-validation.test.ts",
+    "fullName": "validateAndCleanConfig should skip Convex validation when checkConvex is false",
+    "status": "passed",
+    "receipt": "tests3.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/config.test.ts",
+    "fullName": "config utilities getDeployment should return default deployment when name not provided",
+    "status": "passed",
+    "receipt": "tests3.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/config.test.ts",
+    "fullName": "config utilities getDeployment should return deployment by name",
+    "status": "passed",
+    "receipt": "tests3.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/config.test.ts",
+    "fullName": "config utilities getDeployment should return null for non-existent deployment",
+    "status": "passed",
+    "receipt": "tests3.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/config.test.ts",
+    "fullName": "config utilities listDeployments should include deployment names",
+    "status": "passed",
+    "receipt": "tests3.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/config.test.ts",
+    "fullName": "config utilities listDeployments should indicate which deployments have keys",
+    "status": "passed",
+    "receipt": "tests3.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/config.test.ts",
+    "fullName": "config utilities listDeployments should list all deployments",
+    "status": "passed",
+    "receipt": "tests3.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/config.test.ts",
+    "fullName": "config utilities listDeployments should mark default deployment",
+    "status": "passed",
+    "receipt": "tests3.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/config.test.ts",
+    "fullName": "config utilities resolveConfig should handle debug option",
+    "status": "passed",
+    "receipt": "tests3.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/config.test.ts",
+    "fullName": "config utilities resolveConfig should handle quiet option",
+    "status": "passed",
+    "receipt": "tests3.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/config.test.ts",
+    "fullName": "config utilities resolveConfig should throw for non-existent deployment",
+    "status": "passed",
+    "receipt": "tests3.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/config.test.ts",
+    "fullName": "config utilities resolveConfig should use default deployment when no options",
+    "status": "passed",
+    "receipt": "tests3.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/config.test.ts",
+    "fullName": "config utilities resolveConfig should use deployment from options",
+    "status": "passed",
+    "receipt": "tests3.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/config.test.ts",
+    "fullName": "config utilities resolveConfig should use format from config when not in options",
+    "status": "passed",
+    "receipt": "tests3.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/config.test.ts",
+    "fullName": "config utilities resolveConfig should use format from options",
+    "status": "passed",
+    "receipt": "tests3.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/config.test.ts",
+    "fullName": "config utilities resolveConfig should use URL from options if provided",
+    "status": "passed",
+    "receipt": "tests3.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/config.test.ts",
+    "fullName": "discoverUnregisteredApps should have correct interface for DiscoveredApp",
+    "status": "passed",
+    "receipt": "tests3.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/config.test.ts",
+    "fullName": "discoverUnregisteredApps should return empty array when config has no deployments",
+    "status": "passed",
+    "receipt": "tests3.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/config.test.ts",
+    "fullName": "discoverUnregisteredApps should return empty array when no deployments have projectPath",
+    "status": "passed",
+    "receipt": "tests3.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/config.test.ts",
+    "fullName": "discoverUnregisteredApps should return empty array when projectPath does not exist",
+    "status": "passed",
+    "receipt": "tests3.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/config.test.ts",
+    "fullName": "environment variable overrides should be tested in integration tests with actual config loading",
+    "status": "passed",
+    "receipt": "tests3.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/config.test.ts",
+    "fullName": "listApps should list all configured apps",
+    "status": "passed",
+    "receipt": "tests3.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/config.test.ts",
+    "fullName": "listApps should return empty array when no apps configured",
+    "status": "passed",
+    "receipt": "tests3.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/db-maintenance.test.ts",
+    "fullName": "does not swallow failed stats or fabricate zero counts",
+    "status": "passed",
+    "receipt": "tests2.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/db-maintenance.test.ts",
+    "fullName": "legacy global clear and partial restore fail before any public/internal effect",
+    "status": "passed",
+    "receipt": "tests2.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/db-maintenance.test.ts",
+    "fullName": "preserves actual truncated counts from internal operator results",
+    "status": "passed",
+    "receipt": "tests2.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/db-maintenance.test.ts",
+    "fullName": "rejects incomplete/malformed counts and full backup rather than pretending completion",
+    "status": "passed",
+    "receipt": "tests2.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/db-maintenance.test.ts",
+    "fullName": "requires exact tenant, space and explicit confirmation before lifecycle retirement",
+    "status": "passed",
+    "receipt": "tests2.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/host-client.test.ts",
+    "fullName": "checks resource delivery deadlines after awaited session confirmation and suppresses expired values",
+    "status": "passed",
+    "receipt": "tests5.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/host-client.test.ts",
+    "fullName": "closes on operation failure without turning it into success",
+    "status": "passed",
+    "receipt": "tests5.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/host-client.test.ts",
+    "fullName": "fences action delivery before command code can receive or print delayed A data",
+    "status": "passed",
+    "receipt": "tests5.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/host-client.test.ts",
+    "fullName": "fences mutation delivery before command code can receive or print delayed A data",
+    "status": "passed",
+    "receipt": "tests5.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/host-client.test.ts",
+    "fullName": "fences query delivery before command code can receive or print delayed A data",
+    "status": "passed",
+    "receipt": "tests5.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/host-client.test.ts",
+    "fullName": "forwards official force-refresh requests to a host callback and rejects a changed verified scope",
+    "status": "passed",
+    "receipt": "tests5.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/host-client.test.ts",
+    "fullName": "never shares client identity for two principals at the same URL and closes each exact owned client",
+    "status": "passed",
+    "receipt": "tests5.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/host-client.test.ts",
+    "fullName": "pins configured selector scope against verified server metadata, not labels or decoded claims",
+    "status": "passed",
+    "receipt": "tests5.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/host-client.test.ts",
+    "fullName": "requires an actual host credential before constructing any SDK client; deploy keys do not authenticate",
+    "status": "passed",
+    "receipt": "tests5.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/host-client.test.ts",
+    "fullName": "rereads a private rotated token file and rejects insecure files/symlinks without token content",
+    "status": "passed",
+    "receipt": "tests5.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/operator.test.ts",
+    "fullName": "propagates operator failure without secret diagnostics, zero counts or mutation retries",
+    "status": "passed",
+    "receipt": "tests2.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/operator.test.ts",
+    "fullName": "rejects a changed live target before dispatch",
+    "status": "passed",
+    "receipt": "tests2.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/operator.test.ts",
+    "fullName": "rejects missing scoped retirement fields before management or mutation",
+    "status": "passed",
+    "receipt": "tests2.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/operator.test.ts",
+    "fullName": "rejects production/mismatched keys before any management or internal operation",
+    "status": "passed",
+    "receipt": "tests2.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/operator.test.ts",
+    "fullName": "retirement selects only exact tenant AND space, never table clears or global purge",
+    "status": "passed",
+    "receipt": "tests2.json"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/operator.test.ts",
+    "fullName": "uses internal stats only after two exact management readbacks and preserves truncated counts",
+    "status": "passed",
+    "receipt": "tests2.json"
+  }
+]

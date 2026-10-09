@@ -1,0 +1,184 @@
+watchman warning: Recrawled this watch 1 time, most recently because:
+MustScanSubDirs UserDroppedTo resolve, please review the information on
+https://facebook.github.io/watchman/docs/troubleshooting.html#recrawl
+To clear this warning, run:
+`watchman watch-del '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion' ; watchman watch-project '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion'`
+
+(node:7507) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeAssets/action-delivery.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+PASS tests/unit/runtimeAssets/lifecycle.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAssetClient/asset-capability-bridge.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeAssets/distribution.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     2.9s | 5/5 passed | /tests/unit/runtimeAssets/action-delivery.test.ts
+  ✅     2.5s | 21/21 passed | /tests/unit/runtimeAssetClient/asset-capability-bridge.test.ts
+  ✅     1.9s | 28/28 passed | /tests/unit/runtimeAssets/lifecycle.test.ts
+  ✅     0.8s | 3/3 passed | /tests/unit/runtimeAssets/distribution.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.67s ( 8.1%) - immutable private assets and reference ownership a retained 257-edge artifact can be deleted in bounded pages without losing the last owner
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+ 2. [32m✓[0m    0.28s ( 3.4%) - digest-bound additive private HTTP distribution an unsupported route is rejected before replacing the last complete distribution
+    /tests/unit/runtimeAssets/distribution.test.ts
+
+ 3. [32m✓[0m    0.27s ( 3.3%) - digest-bound additive private HTTP distribution a webhook mapped to an asset handler denies before publishing
+    /tests/unit/runtimeAssets/distribution.test.ts
+
+ 4. [32m✓[0m    0.16s ( 2.0%) - digest-bound additive private HTTP distribution the real generator preserves exact routes, fixed handler closure and original provenance
+    /tests/unit/runtimeAssets/distribution.test.ts
+
+ 5. [32m✓[0m    0.03s ( 0.3%) - HTTP byte delivery rejects grant expiry after its final real mutation returns
+    /tests/unit/runtimeAssets/action-delivery.test.ts
+
+ 6. [32m✓[0m    0.02s ( 0.2%) - immutable private assets and reference ownership artifact metadata reads are fresh and deny time-only expiry with unchanged arguments
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+ 7. [32m✓[0m    0.02s ( 0.2%) - current storage-only shared input remains usable on both private byte paths
+    /tests/unit/runtimeAssets/action-delivery.test.ts
+
+ 8. [32m✓[0m    0.01s ( 0.1%) - HTTP byte delivery rejects consumed export share expiry with a permanent actor grant
+    /tests/unit/runtimeAssets/action-delivery.test.ts
+
+ 9. [32m✓[0m    0.01s ( 0.1%) - immutable private assets and reference ownership actual bytes commit once, replay keeps exact metadata, no bearer URL
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+10. [32m✓[0m    0.01s ( 0.1%) - actual application and private protocol byte bounds HTTP delivers authorized catalog MIME/hash with no-store and rejects corrupted oversized storage
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+11. [32m✓[0m    0.01s ( 0.1%) - HTTP upload suppresses ready metadata after a confirmed commit crosses its grant deadline
+    /tests/unit/runtimeAssets/action-delivery.test.ts
+
+12. [32m✓[0m    0.01s ( 0.1%) - immutable private assets and reference ownership undo, redo and historical export identify the same immutable lineage
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+13. [32m✓[0m    0.01s ( 0.1%) - immutable private assets and reference ownership Agent file parts add independent ownership, and vacuum is not artifact ownership
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+14. [32m✓[0m    0.01s ( 0.1%) - immutable private assets and reference ownership the 100th owner stays readable and idempotent; a 101st join rolls back
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+15. [32m✓[0m    0.01s ( 0.1%) - immutable private assets and reference ownership attachment removal preserves artifact history; last owner deletion cleans bytes
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+16. [32m✓[0m    0.01s ( 0.1%) - immutable private assets and reference ownership an old cleanup continuation preserves a currently retained replacement version
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+17. [32m✓[0m    0.01s ( 0.1%) - actual application and private protocol byte bounds generated oversized bytes fail before job creation/store/ready
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+18. [32m✓[0m    0.01s ( 0.1%) - actual application and private protocol byte bounds private provider materialization uses exact authorized bytes and full encoded bound
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+19. [32m✓[0m    0.01s ( 0.1%) - private provider materialization rejects grant expiry after its final real mutation returns
+    /tests/unit/runtimeAssets/action-delivery.test.ts
+
+20. [32m✓[0m    0.01s ( 0.1%) - immutable private assets and reference ownership no-auth metadata delivery denies without row or byte effects
+    /tests/unit/runtimeAssets/lifecycle.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 1.55s (18.9% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      8.23s
+  Test suites:        4
+  Individual tests:   41
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 4
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 4 passed, 4 total
+Tests:       57 passed, 57 total
+Snapshots:   0 total
+Time:        8.235 s, estimated 12 s
+Ran all test suites within paths "tests/unit/runtimeAssets/action-delivery.test.ts", "tests/unit/runtimeAssets/lifecycle.test.ts", "tests/unit/runtimeAssets/distribution.test.ts", "tests/unit/runtimeAssetClient/asset-capability-bridge.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/asset-action-repair1/green1.results.json

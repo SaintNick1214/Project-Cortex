@@ -1,0 +1,311 @@
+{
+  "version": 1,
+  "passed": 61,
+  "rows": [
+    {
+      "status": "passed",
+      "suite": "tests/unit/runtimeAssets/action-delivery.test.ts",
+      "name": "HTTP byte delivery rejects grant expiry after its final real mutation returns"
+    },
+    {
+      "status": "passed",
+      "suite": "tests/unit/runtimeAssets/action-delivery.test.ts",
+      "name": "private provider materialization rejects grant expiry after its final real mutation returns"
+    },
+    {
+      "status": "passed",
+      "suite": "tests/unit/runtimeAssets/action-delivery.test.ts",
+      "name": "HTTP upload suppresses ready metadata after a confirmed commit crosses its grant deadline"
+    },
+    {
+      "status": "passed",
+      "suite": "tests/unit/runtimeAssets/action-delivery.test.ts",
+      "name": "HTTP byte delivery rejects consumed export share expiry with a permanent actor grant"
+    },
+    {
+      "status": "passed",
+      "suite": "tests/unit/runtimeAssets/action-delivery.test.ts",
+      "name": "current storage-only shared input remains usable on both private byte paths"
+    },
+    {
+      "status": "passed",
+      "suite": "tests/unit/runtimeAssets/lifecycle.test.ts",
+      "name": "immutable private assets and reference ownership actual bytes commit once, replay keeps exact metadata, no bearer URL"
+    },
+    {
+      "status": "passed",
+      "suite": "tests/unit/runtimeAssets/lifecycle.test.ts",
+      "name": "immutable private assets and reference ownership same request with a changed payload is a no-write idempotency conflict"
+    },
+    {
+      "status": "passed",
+      "suite": "tests/unit/runtimeAssets/lifecycle.test.ts",
+      "name": "immutable private assets and reference ownership the 100th owner stays readable and idempotent; a 101st join rolls back"
+    },
+    {
+      "status": "passed",
+      "suite": "tests/unit/runtimeAssets/lifecycle.test.ts",
+      "name": "immutable private assets and reference ownership catalog-backed legacy attachment preserves validated caller metadata without relabeling bytes"
+    },
+    {
+      "status": "passed",
+      "suite": "tests/unit/runtimeAssets/lifecycle.test.ts",
+      "name": "immutable private assets and reference ownership a blob with the wrong hash cannot stage or become ready"
+    },
+    {
+      "status": "passed",
+      "suite": "tests/unit/runtimeAssets/lifecycle.test.ts",
+      "name": "immutable private assets and reference ownership late finalize after revoked cannot revive a reserved version"
+    },
+    {
+      "status": "passed",
+      "suite": "tests/unit/runtimeAssets/lifecycle.test.ts",
+      "name": "immutable private assets and reference ownership late finalize after deleted cannot revive a reserved version"
+    },
+    {
+      "status": "passed",
+      "suite": "tests/unit/runtimeAssets/lifecycle.test.ts",
+      "name": "immutable private assets and reference ownership late finalize after cancelled cannot revive a reserved version"
+    },
+    {
+      "status": "passed",
+      "suite": "tests/unit/runtimeAssets/lifecycle.test.ts",
+      "name": "immutable private assets and reference ownership lost ready acknowledgement cannot trigger deletion of committed referenced bytes"
+    },
+    {
+      "status": "passed",
+      "suite": "tests/unit/runtimeAssets/lifecycle.test.ts",
+      "name": "immutable private assets and reference ownership attachment removal preserves artifact history; last owner deletion cleans bytes"
+    },
+    {
+      "status": "passed",
+      "suite": "tests/unit/runtimeAssets/lifecycle.test.ts",
+      "name": "immutable private assets and reference ownership undo, redo and historical export identify the same immutable lineage"
+    },
+    {
+      "status": "passed",
+      "suite": "tests/unit/runtimeAssets/lifecycle.test.ts",
+      "name": "immutable private assets and reference ownership a retained 257-edge artifact can be deleted in bounded pages without losing the last owner"
+    },
+    {
+      "status": "passed",
+      "suite": "tests/unit/runtimeAssets/lifecycle.test.ts",
+      "name": "immutable private assets and reference ownership an old cleanup continuation preserves a currently retained replacement version"
+    },
+    {
+      "status": "passed",
+      "suite": "tests/unit/runtimeAssets/lifecycle.test.ts",
+      "name": "immutable private assets and reference ownership artifact metadata reads are fresh and deny time-only expiry with unchanged arguments"
+    },
+    {
+      "status": "passed",
+      "suite": "tests/unit/runtimeAssets/lifecycle.test.ts",
+      "name": "immutable private assets and reference ownership no-auth metadata delivery denies without row or byte effects"
+    },
+    {
+      "status": "passed",
+      "suite": "tests/unit/runtimeAssets/lifecycle.test.ts",
+      "name": "immutable private assets and reference ownership foreign metadata delivery denies without row or byte effects"
+    },
+    {
+      "status": "passed",
+      "suite": "tests/unit/runtimeAssets/lifecycle.test.ts",
+      "name": "immutable private assets and reference ownership revoked metadata delivery denies without row or byte effects"
+    },
+    {
+      "status": "passed",
+      "suite": "tests/unit/runtimeAssets/lifecycle.test.ts",
+      "name": "immutable private assets and reference ownership failed last-owner delete remains retryable and never reports physically deleted"
+    },
+    {
+      "status": "passed",
+      "suite": "tests/unit/runtimeAssets/lifecycle.test.ts",
+      "name": "immutable private assets and reference ownership orphan marker cannot match a predictable unrelated host blob"
+    },
+    {
+      "status": "passed",
+      "suite": "tests/unit/runtimeAssets/lifecycle.test.ts",
+      "name": "immutable private assets and reference ownership principal cascade retires owned edges and preserves unrelated host bytes"
+    },
+    {
+      "status": "passed",
+      "suite": "tests/unit/runtimeAssets/lifecycle.test.ts",
+      "name": "immutable private assets and reference ownership Agent file parts add independent ownership, and vacuum is not artifact ownership"
+    },
+    {
+      "status": "passed",
+      "suite": "tests/unit/runtimeAssets/lifecycle.test.ts",
+      "name": "immutable private assets and reference ownership generated output cannot become ready after its exact input version loses its last owner"
+    },
+    {
+      "status": "passed",
+      "suite": "tests/unit/runtimeAssets/lifecycle.test.ts",
+      "name": "actual application and private protocol byte bounds exact 20,000,000 accepted and one byte above rejected"
+    },
+    {
+      "status": "passed",
+      "suite": "tests/unit/runtimeAssets/lifecycle.test.ts",
+      "name": "actual application and private protocol byte bounds streamed overflow cancels before any storage acceptance"
+    },
+    {
+      "status": "passed",
+      "suite": "tests/unit/runtimeAssets/lifecycle.test.ts",
+      "name": "actual application and private protocol byte bounds generated oversized bytes fail before job creation/store/ready"
+    },
+    {
+      "status": "passed",
+      "suite": "tests/unit/runtimeAssets/lifecycle.test.ts",
+      "name": "actual application and private protocol byte bounds upload current storage grant is checked before reading body"
+    },
+    {
+      "status": "passed",
+      "suite": "tests/unit/runtimeAssets/lifecycle.test.ts",
+      "name": "actual application and private protocol byte bounds HTTP delivers authorized catalog MIME/hash with no-store and rejects corrupted oversized storage"
+    },
+    {
+      "status": "passed",
+      "suite": "tests/unit/runtimeAssets/lifecycle.test.ts",
+      "name": "actual application and private protocol byte bounds private provider materialization uses exact authorized bytes and full encoded bound"
+    },
+    {
+      "status": "passed",
+      "suite": "tests/unit/runtimeAssetClient/asset-capability-bridge.test.ts",
+      "name": "asset safety bridge resilience=absent artifact-upload uniformly rejects before every transport/resilience/file/identity effect"
+    },
+    {
+      "status": "passed",
+      "suite": "tests/unit/runtimeAssetClient/asset-capability-bridge.test.ts",
+      "name": "asset safety bridge resilience=absent artifact-url uniformly rejects before every transport/resilience/file/identity effect"
+    },
+    {
+      "status": "passed",
+      "suite": "tests/unit/runtimeAssetClient/asset-capability-bridge.test.ts",
+      "name": "asset safety bridge resilience=absent attachment-upload-url uniformly rejects before every transport/resilience/file/identity effect"
+    },
+    {
+      "status": "passed",
+      "suite": "tests/unit/runtimeAssetClient/asset-capability-bridge.test.ts",
+      "name": "asset safety bridge resilience=absent attachment-url uniformly rejects before every transport/resilience/file/identity effect"
+    },
+    {
+      "status": "passed",
+      "suite": "tests/unit/runtimeAssetClient/asset-capability-bridge.test.ts",
+      "name": "asset safety bridge resilience=absent an actual supplied Blob is not inspected or read by uploadFile"
+    },
+    {
+      "status": "passed",
+      "suite": "tests/unit/runtimeAssetClient/asset-capability-bridge.test.ts",
+      "name": "asset safety bridge resilience=absent unavailable capability is uniform even for empty IDs"
+    },
+    {
+      "status": "passed",
+      "suite": "tests/unit/runtimeAssetClient/asset-capability-bridge.test.ts",
+      "name": "asset safety bridge resilience=absent neighboring attachment and artifact get methods retain their public transport"
+    },
+    {
+      "status": "passed",
+      "suite": "tests/unit/runtimeAssetClient/asset-capability-bridge.test.ts",
+      "name": "asset safety bridge resilience=disabled artifact-upload uniformly rejects before every transport/resilience/file/identity effect"
+    },
+    {
+      "status": "passed",
+      "suite": "tests/unit/runtimeAssetClient/asset-capability-bridge.test.ts",
+      "name": "asset safety bridge resilience=disabled artifact-url uniformly rejects before every transport/resilience/file/identity effect"
+    },
+    {
+      "status": "passed",
+      "suite": "tests/unit/runtimeAssetClient/asset-capability-bridge.test.ts",
+      "name": "asset safety bridge resilience=disabled attachment-upload-url uniformly rejects before every transport/resilience/file/identity effect"
+    },
+    {
+      "status": "passed",
+      "suite": "tests/unit/runtimeAssetClient/asset-capability-bridge.test.ts",
+      "name": "asset safety bridge resilience=disabled attachment-url uniformly rejects before every transport/resilience/file/identity effect"
+    },
+    {
+      "status": "passed",
+      "suite": "tests/unit/runtimeAssetClient/asset-capability-bridge.test.ts",
+      "name": "asset safety bridge resilience=disabled an actual supplied Blob is not inspected or read by uploadFile"
+    },
+    {
+      "status": "passed",
+      "suite": "tests/unit/runtimeAssetClient/asset-capability-bridge.test.ts",
+      "name": "asset safety bridge resilience=disabled unavailable capability is uniform even for empty IDs"
+    },
+    {
+      "status": "passed",
+      "suite": "tests/unit/runtimeAssetClient/asset-capability-bridge.test.ts",
+      "name": "asset safety bridge resilience=disabled neighboring attachment and artifact get methods retain their public transport"
+    },
+    {
+      "status": "passed",
+      "suite": "tests/unit/runtimeAssetClient/asset-capability-bridge.test.ts",
+      "name": "asset safety bridge resilience=enabled artifact-upload uniformly rejects before every transport/resilience/file/identity effect"
+    },
+    {
+      "status": "passed",
+      "suite": "tests/unit/runtimeAssetClient/asset-capability-bridge.test.ts",
+      "name": "asset safety bridge resilience=enabled artifact-url uniformly rejects before every transport/resilience/file/identity effect"
+    },
+    {
+      "status": "passed",
+      "suite": "tests/unit/runtimeAssetClient/asset-capability-bridge.test.ts",
+      "name": "asset safety bridge resilience=enabled attachment-upload-url uniformly rejects before every transport/resilience/file/identity effect"
+    },
+    {
+      "status": "passed",
+      "suite": "tests/unit/runtimeAssetClient/asset-capability-bridge.test.ts",
+      "name": "asset safety bridge resilience=enabled attachment-url uniformly rejects before every transport/resilience/file/identity effect"
+    },
+    {
+      "status": "passed",
+      "suite": "tests/unit/runtimeAssetClient/asset-capability-bridge.test.ts",
+      "name": "asset safety bridge resilience=enabled an actual supplied Blob is not inspected or read by uploadFile"
+    },
+    {
+      "status": "passed",
+      "suite": "tests/unit/runtimeAssetClient/asset-capability-bridge.test.ts",
+      "name": "asset safety bridge resilience=enabled unavailable capability is uniform even for empty IDs"
+    },
+    {
+      "status": "passed",
+      "suite": "tests/unit/runtimeAssetClient/asset-capability-bridge.test.ts",
+      "name": "asset safety bridge resilience=enabled neighboring attachment and artifact get methods retain their public transport"
+    },
+    {
+      "status": "passed",
+      "suite": "tests/unit/runtimeAssets/distribution.test.ts",
+      "name": "digest-bound additive private HTTP distribution the real generator preserves exact routes, fixed handler closure and original provenance"
+    },
+    {
+      "status": "passed",
+      "suite": "tests/unit/runtimeAssets/distribution.test.ts",
+      "name": "digest-bound additive private HTTP distribution an unsupported route is rejected before replacing the last complete distribution"
+    },
+    {
+      "status": "passed",
+      "suite": "tests/unit/runtimeAssets/distribution.test.ts",
+      "name": "digest-bound additive private HTTP distribution a webhook mapped to an asset handler denies before publishing"
+    },
+    {
+      "status": "passed",
+      "suite": "tests/unit/runtimeAssets/action-delivery.test.ts",
+      "name": "generated output denies delivery after the stored-version checkpoint without deleting its confirmed bytes"
+    },
+    {
+      "status": "passed",
+      "suite": "tests/unit/runtimeAssets/action-delivery.test.ts",
+      "name": "idempotent HTTP upload replay still fresh-fences the exact ready version"
+    },
+    {
+      "status": "passed",
+      "suite": "tests/unit/runtimeAssets/action-delivery.test.ts",
+      "name": "private provider input carries the consumed export-share cutoff with a permanent actor grant"
+    },
+    {
+      "status": "passed",
+      "suite": "tests/unit/runtimeAssets/action-delivery.test.ts",
+      "name": "HTTP upload and replay preserve current storage-write-only grant parity and canonical metadata"
+    }
+  ]
+}

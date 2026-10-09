@@ -1,0 +1,224 @@
+watchman warning: Recrawled this watch 1 time, most recently because:
+MustScanSubDirs UserDroppedTo resolve, please review the information on
+https://facebook.github.io/watchman/docs/troubleshooting.html#recrawl
+To clear this warning, run:
+`watchman watch-del '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion' ; watchman watch-project '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion'`
+
+(node:14584) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/client-runtime/observe-delivery.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+PASS tests/unit/client-runtime/assets.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/client-runtime/media.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/client-runtime/extensions.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/client-runtime/client.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/client-runtime/content.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     1.6s | 2/2 passed | /tests/unit/client-runtime/observe-delivery.test.ts
+  ✅     1.5s | 37/37 passed | /tests/unit/client-runtime/assets.test.ts
+  ✅     0.3s | 26/26 passed | /tests/unit/client-runtime/content.test.ts
+  ✅     0.3s | 36/36 passed | /tests/unit/client-runtime/client.test.ts
+  ✅     0.3s | 21/21 passed | /tests/unit/client-runtime/media.test.ts
+  ✅     0.3s | 27/27 passed | /tests/unit/client-runtime/extensions.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    1.00s (22.3%) - authenticated bounded runtime asset helpers (controlled transport) bounds a hung HTTP operation at its configured deadline
+    /tests/unit/client-runtime/assets.test.ts
+
+ 2. [32m✓[0m    0.03s ( 0.8%) - authenticated bounded runtime asset helpers (controlled transport) accepts the exact application upload boundary (controlled, not service qualification)
+    /tests/unit/client-runtime/assets.test.ts
+
+ 3. [32m✓[0m    0.01s ( 0.2%) - authenticated bounded runtime asset helpers (controlled transport) forces a fresh JWT and returns bounded verified bytes; metadata selectors are fresh mutations
+    /tests/unit/client-runtime/assets.test.ts
+
+ 4. [32m✓[0m    0.00s ( 0.1%) - one-shot observe delivers current protected parts before their consumed share cutoff
+    /tests/unit/client-runtime/observe-delivery.test.ts
+
+ 5. [32m✓[0m    0.00s ( 0.1%) - backend-owned content client withholds content after a principal changes during delivery
+    /tests/unit/client-runtime/content.test.ts
+
+ 6. [32m✓[0m    0.00s ( 0.0%) - authenticated bounded runtime asset helpers (controlled transport) uploads direct bytes once, validates exact hash/MIME/version and detaches mutable caller bytes
+    /tests/unit/client-runtime/assets.test.ts
+
+ 7. [32m✓[0m    0.00s ( 0.0%) - authenticated bounded runtime asset helpers (controlled transport) rejects unsafe HTTP origin http://foreign.example without forwarding a token
+    /tests/unit/client-runtime/assets.test.ts
+
+ 8. [32m✓[0m    0.00s ( 0.0%) - authenticated bounded runtime asset helpers (controlled transport) revokes local Blob rendering URLs after refresh
+    /tests/unit/client-runtime/assets.test.ts
+
+ 9. [32m✓[0m    0.00s ( 0.0%) - authenticated bounded runtime asset helpers (controlled transport) revokes local Blob rendering URLs after manual
+    /tests/unit/client-runtime/assets.test.ts
+
+10. [32m✓[0m    0.00s ( 0.0%) - authenticated bounded runtime asset helpers (controlled transport) revokes a private Blob at its verified grant deadline without a database event
+    /tests/unit/client-runtime/assets.test.ts
+
+11. [32m✓[0m    0.00s ( 0.0%) - backend-owned media client admits only prompt and verified selectors without any client inference
+    /tests/unit/client-runtime/media.test.ts
+
+12. [32m✓[0m    0.00s ( 0.0%) - backend-owned media client accepts only an immutable private video input selector and exact Unicode prompt
+    /tests/unit/client-runtime/media.test.ts
+
+13. [32m✓[0m    0.00s ( 0.0%) - fresh browser profile and stage APIs sends only verified selectors and an explicit administrator-profile guard
+    /tests/unit/client-runtime/extensions.test.ts
+
+14. [32m✓[0m    0.00s ( 0.0%) - browser remote runtime client denies invalid public graph before session or mutation 6
+    /tests/unit/client-runtime/client.test.ts
+
+15. [32m✓[0m    0.00s ( 0.0%) - backend-owned content client does not invoke credential or prompt accessors
+    /tests/unit/client-runtime/content.test.ts
+
+16. [32m✓[0m    0.00s ( 0.0%) - authenticated bounded runtime asset helpers (controlled transport) mirrors empty-byte and metadata limits before HTTP 1
+    /tests/unit/client-runtime/assets.test.ts
+
+17. [32m✓[0m    0.00s ( 0.0%) - authenticated bounded runtime asset helpers (controlled transport) rejects unsafe HTTP origin https://user:password@example.com without forwarding a token
+    /tests/unit/client-runtime/assets.test.ts
+
+18. [32m✓[0m    0.00s ( 0.0%) - authenticated bounded runtime asset helpers (controlled transport) rejects unsafe HTTP origin https://example.com/path without forwarding a token
+    /tests/unit/client-runtime/assets.test.ts
+
+19. [32m✓[0m    0.00s ( 0.0%) - authenticated bounded runtime asset helpers (controlled transport) allows an explicit loopback HTTP action origin for disposable local hosts
+    /tests/unit/client-runtime/assets.test.ts
+
+20. [32m✓[0m    0.00s ( 0.0%) - authenticated bounded runtime asset helpers (controlled transport) measures streamed decoded bytes when Content-Length is missing or smaller
+    /tests/unit/client-runtime/assets.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 1.08s (23.9% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      4.50s
+  Test suites:        6
+  Individual tests:   56
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 6
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 6 passed, 6 total
+Tests:       149 passed, 149 total
+Snapshots:   0 total
+Time:        4.504 s, estimated 5 s
+Ran all test suites matching tests/unit/client-runtime/.
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/root-revocation-observe1/sdk-client-tests2.json

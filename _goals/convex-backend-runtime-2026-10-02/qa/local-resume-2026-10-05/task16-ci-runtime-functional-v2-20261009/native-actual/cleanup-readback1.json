@@ -1,0 +1,50 @@
+{
+  "status": "READONLY_PARTIAL_CLEANUP_DISPOSITION_CAPTURED",
+  "results": [
+    {
+      "kind": "sdk",
+      "role": "owner",
+      "status": "DENIED",
+      "code": "FORBIDDEN",
+      "error": "[Request ID: 1f7e48c1e2979547] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../convex-dev/runtimeAuth.ts:46:26)\n    at resolveAuthority (../../convex-dev/runtimeAuth.ts:185:0)\n    at async requireAuthority (../../convex-dev/runtimeAuth.ts:251:0)\n    at async requireDataAuthority (../../convex-dev/runtimeDataAuth.ts:34:16)\n    at async handler (../convex-dev/runtimeClient.ts:14:11)\n"
+    },
+    {
+      "kind": "sdk",
+      "role": "reader",
+      "status": "DENIED",
+      "code": "FORBIDDEN",
+      "error": "[Request ID: 1de0be37646655fe] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../convex-dev/runtimeAuth.ts:46:26)\n    at resolveAuthority (../../convex-dev/runtimeAuth.ts:185:0)\n    at async requireAuthority (../../convex-dev/runtimeAuth.ts:251:0)\n    at async requireDataAuthority (../../convex-dev/runtimeDataAuth.ts:34:16)\n    at async handler (../convex-dev/runtimeClient.ts:14:11)\n"
+    },
+    {
+      "kind": "sdk",
+      "role": "outsider",
+      "status": "CURRENT_AUTHORITY",
+      "tenantId": "cortex-ci-native16-20261009-5b5ba39c-sdk-other",
+      "principalId": "nh7bds0qv6ebj8s454w19tk1zx8fybh8"
+    },
+    {
+      "kind": "cli",
+      "role": "owner",
+      "status": "CURRENT_AUTHORITY",
+      "tenantId": "cortex-ci-native16-20261009-5b5ba39c-cli",
+      "principalId": "nh7exehx2thh85j31kwvxdcjwx8fyhfz"
+    },
+    {
+      "kind": "cli",
+      "role": "reader",
+      "status": "CURRENT_AUTHORITY",
+      "tenantId": "cortex-ci-native16-20261009-5b5ba39c-cli",
+      "principalId": "nh77cfnejz1kkv3et8a9e61ny58fymw8"
+    },
+    {
+      "kind": "cli",
+      "role": "outsider",
+      "status": "CURRENT_AUTHORITY",
+      "tenantId": "cortex-ci-native16-20261009-5b5ba39c-cli-other",
+      "principalId": "nh78zcfmwjfd06t333r2d2g8zx8fzv74"
+    }
+  ],
+  "cleanupMutationsByDiagnostic": 0,
+  "modelCalls": 0,
+  "noAuthorityRestoration": true
+}

@@ -1,0 +1,180 @@
+watchman warning: Recrawled this watch 1 time, most recently because:
+MustScanSubDirs UserDroppedTo resolve, please review the information on
+https://facebook.github.io/watchman/docs/troubleshooting.html#recrawl
+To clear this warning, run:
+`watchman watch-del '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion' ; watchman watch-project '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion'`
+
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+(node:7010) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeAssets/action-delivery.test.ts
+  ✕ HTTP byte delivery rejects grant expiry after its final real mutation returns (31 ms)
+  ✕ private provider materialization rejects grant expiry after its final real mutation returns (5 ms)
+  ✕ HTTP upload suppresses ready metadata after a confirmed commit crosses its grant deadline (7 ms)
+  ✕ HTTP byte delivery rejects consumed export share expiry with a permanent actor grant (3 ms)
+  ✕ current storage-only shared input remains usable on both private byte paths (8 ms)
+
+  ● HTTP byte delivery rejects grant expiry after its final real mutation returns
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 403
+    Received: 200
+
+      33 |   const crossed = crossAfterRpc(f, "runtimeAssets:downloadCheckpoint", deadline, clock);
+      34 |   const response = await invoke<Response>(http.downloadAsset, f.ctx, download(asset.assetId));
+    > 35 |   expect(crossed()).toBe(true); expect(response.status).toBe(403);
+         |                                                         ^
+      36 |   expect(await response.json()).toEqual({ version: 1, code: "FORBIDDEN" });
+      37 |   expect(f.db.writes).toBe(writes); expect(f.blobs.size).toBe(1);
+      38 | });
+
+      at Object.<anonymous> (tests/unit/runtimeAssets/action-delivery.test.ts:35:57)
+
+  ● private provider materialization rejects grant expiry after its final real mutation returns
+
+    expect(received).rejects.toMatchObject()
+
+    Received promise resolved instead of rejected
+    Resolved to value: {"envelope": {"image": "data:image/png;base64,aW1hZ2UgYnl0ZXM=", "protocol": "image-inline-v1", "version": 1}, "metadata": {"assetId": "asset:7f812ac6cafab16b2e706ff72782d3fc1a3c8b0c7e8b6b1ca8fef34f737e93d7", "assetVersion": 1, "contentHash": "de7030234493a8bea844dbe1d8676e68a2c1a4b014c721f0425a22b6df66faec", "lineage": {"kind": "upload", "requestId": "image"}, "mediaKind": "image", "mimeType": "image/png", "sizeBytes": 11, "version": 1, "versionId": "asset:7f812ac6cafab16b2e706ff72782d3fc1a3c8b0c7e8b6b1ca8fef34f737e93d7:version:1"}, "protocol": "image-inline-v1", "protocolBytes": 91}
+
+      43 |   const writes = f.db.writes;
+      44 |   const crossed = crossAfterRpc(f, "runtimeAssets:downloadCheckpoint", deadline, clock);
+    > 45 |   await expect(assets.readPrivateProviderAsset(f.action, f.reference, { assetId: asset.assetId, version: 1, protocol: "image-inline-v1" })).rejects.toMatchObject({ data: { code: "FORBIDDEN" } });
+         |         ^
+      46 |   expect(crossed()).toBe(true); expect(f.db.writes).toBe(writes); expect(f.blobs.size).toBe(1);
+      47 | });
+      48 |
+
+      at expect (node_modules/expect/build/index.js:2116:15)
+      at Object.<anonymous> (tests/unit/runtimeAssets/action-delivery.test.ts:45:9)
+
+  ● HTTP upload suppresses ready metadata after a confirmed commit crosses its grant deadline
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 403
+    Received: 200
+
+      52 |   const crossed = crossAfterRpc(f, "runtimeAssets:finalize", deadline, clock);
+      53 |   const response = await invoke<Response>(http.uploadAsset, f.ctx, new Request("https://host/cortex/assets/upload?requestId=late", { method: "POST", headers: { "Content-Type": "text/plain" }, body: "private upload" }));
+    > 54 |   expect(crossed()).toBe(true); expect(response.status).toBe(403);
+         |                                                         ^
+      55 |   expect(await response.json()).toEqual({ version: 1, code: "FORBIDDEN" });
+      56 |   expect(f.db.table("runtimeAssetJobs")[0].state).toBe("ready");
+      57 |   expect(f.db.table("runtimeAssetVersions")).toHaveLength(1); expect(f.blobs.size).toBe(1); expect(f.deleted).toHaveLength(0);
+
+      at Object.<anonymous> (tests/unit/runtimeAssets/action-delivery.test.ts:54:57)
+
+  ● HTTP byte delivery rejects consumed export share expiry with a permanent actor grant
+
+    INVALID_INPUT: invalid text submission
+
+      30 | }
+      31 |
+    > 32 | function invalid(): never { throw new Error("INVALID_INPUT: invalid text submission"); }
+         |                                   ^
+      33 | export function utf8Bytes(text: string): number { return new TextEncoder().encode(text).length; }
+      34 | export function assertUnicode(text: string): void {
+      35 |   for (let index = 0; index < text.length; index++) {
+
+      at invalid (src/domain/transcript.ts:32:35)
+      at boundedIdentifier (src/domain/transcript.ts:43:105)
+      at clientRequestKey (src/domain/transcript.ts:47:15)
+      at Function.handler [as _handler] (convex-dev/runtimeTranscript.ts:424:100)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at sharedAsset (tests/unit/runtimeAssets/action-delivery.test.ts:62:24)
+      at Object.<anonymous> (tests/unit/runtimeAssets/action-delivery.test.ts:77:23)
+
+  ● current storage-only shared input remains usable on both private byte paths
+
+    INVALID_INPUT: invalid text submission
+
+      30 | }
+      31 |
+    > 32 | function invalid(): never { throw new Error("INVALID_INPUT: invalid text submission"); }
+         |                                   ^
+      33 | export function utf8Bytes(text: string): number { return new TextEncoder().encode(text).length; }
+      34 | export function assertUnicode(text: string): void {
+      35 |   for (let index = 0; index < text.length; index++) {
+
+      at invalid (src/domain/transcript.ts:32:35)
+      at boundedIdentifier (src/domain/transcript.ts:43:105)
+      at clientRequestKey (src/domain/transcript.ts:47:15)
+      at Function.handler [as _handler] (convex-dev/runtimeTranscript.ts:424:100)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at sharedAsset (tests/unit/runtimeAssets/action-delivery.test.ts:62:24)
+      at Object.<anonymous> (tests/unit/runtimeAssets/action-delivery.test.ts:85:89)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     2.8s | 0/5 passed | /tests/unit/runtimeAssets/action-delivery.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [31m✗[0m    0.03s ( 1.1%) - HTTP byte delivery rejects grant expiry after its final real mutation returns
+    /tests/unit/runtimeAssets/action-delivery.test.ts
+
+ 2. [31m✗[0m    0.01s ( 0.3%) - current storage-only shared input remains usable on both private byte paths
+    /tests/unit/runtimeAssets/action-delivery.test.ts
+
+ 3. [31m✗[0m    0.01s ( 0.2%) - HTTP upload suppresses ready metadata after a confirmed commit crosses its grant deadline
+    /tests/unit/runtimeAssets/action-delivery.test.ts
+
+ 4. [31m✗[0m    0.01s ( 0.2%) - private provider materialization rejects grant expiry after its final real mutation returns
+    /tests/unit/runtimeAssets/action-delivery.test.ts
+
+ 5. [31m✗[0m    0.00s ( 0.1%) - HTTP byte delivery rejects consumed export share expiry with a permanent actor grant
+    /tests/unit/runtimeAssets/action-delivery.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.05s (1.9% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      2.92s
+  Test suites:        1
+  Individual tests:   5
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 failed, 1 total
+Tests:       5 failed, 5 total
+Snapshots:   0 total
+Time:        2.918 s
+Ran all test suites within paths "tests/unit/runtimeAssets/action-delivery.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/asset-action-repair1/red1.results.json

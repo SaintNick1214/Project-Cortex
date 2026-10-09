@@ -1,0 +1,81 @@
+{
+  "source": "source1.json",
+  "toolchain": {
+    "node": "v24.15.0",
+    "npm": "12.2.0"
+  },
+  "results": [
+    {
+      "name": "tests1",
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli/templates/basic",
+      "command": [
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "--reporter=json",
+        "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/root-basic-token1/tests1.json"
+      ],
+      "startedAtUtc": "2026-10-09T03:35:47.090Z",
+      "closedAtUtc": "2026-10-09T03:35:48.140Z",
+      "pid": 97832,
+      "elapsedMs": 1049,
+      "exitCode": 0,
+      "signal": null,
+      "timedOut": false,
+      "log": "tests1.log"
+    },
+    {
+      "name": "types1",
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli/templates/basic",
+      "command": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "startedAtUtc": "2026-10-09T03:35:47.091Z",
+      "closedAtUtc": "2026-10-09T03:35:47.702Z",
+      "pid": 97833,
+      "elapsedMs": 610,
+      "exitCode": 0,
+      "signal": null,
+      "timedOut": false,
+      "log": "types1.log"
+    },
+    {
+      "name": "test-types1",
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli/templates/basic",
+      "command": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "-p",
+        "tsconfig.test.json"
+      ],
+      "startedAtUtc": "2026-10-09T03:35:47.092Z",
+      "closedAtUtc": "2026-10-09T03:35:47.794Z",
+      "pid": 97834,
+      "elapsedMs": 702,
+      "exitCode": 0,
+      "signal": null,
+      "timedOut": false,
+      "log": "test-types1.log"
+    },
+    {
+      "name": "build1",
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli/templates/basic",
+      "command": [
+        "node",
+        "node_modules/typescript/bin/tsc"
+      ],
+      "startedAtUtc": "2026-10-09T03:35:48.140Z",
+      "closedAtUtc": "2026-10-09T03:35:48.605Z",
+      "pid": 97861,
+      "elapsedMs": 465,
+      "exitCode": 0,
+      "signal": null,
+      "timedOut": false,
+      "log": "build1.log"
+    }
+  ],
+  "serviceEffects": 0,
+  "actualPosixFifoChild": true
+}

@@ -1,0 +1,46 @@
+{
+  "source": "source1.json",
+  "toolchain": {
+    "node": "v24.15.0",
+    "npm": "12.2.0"
+  },
+  "results": [
+    {
+      "name": "tests1",
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "command": [
+        "node",
+        "--test",
+        "scripts/ci/workflow-runtime-fixtures.test.mjs"
+      ],
+      "startedAtUtc": "2026-10-09T03:35:47.092Z",
+      "closedAtUtc": "2026-10-09T03:35:47.190Z",
+      "pid": 97835,
+      "elapsedMs": 98,
+      "exitCode": 0,
+      "signal": null,
+      "timedOut": false,
+      "log": "tests1.log"
+    },
+    {
+      "name": "lint1",
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "command": [
+        "node",
+        "node_modules/eslint/bin/eslint.js",
+        "scripts/ci/workflow-runtime-fixtures.test.mjs",
+        "--report-unused-disable-directives"
+      ],
+      "startedAtUtc": "2026-10-09T03:35:47.092Z",
+      "closedAtUtc": "2026-10-09T03:35:47.773Z",
+      "pid": 97836,
+      "elapsedMs": 680,
+      "exitCode": 0,
+      "signal": null,
+      "timedOut": false,
+      "log": "lint1.log"
+    }
+  ],
+  "serviceEffects": 0,
+  "actualGitHubRunner": false
+}

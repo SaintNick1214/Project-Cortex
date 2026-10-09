@@ -1,0 +1,21 @@
+{
+  "status": "PASS_CONTROLLED_ONLY",
+  "closedAtUtc": "2026-10-09T04:51:56.220333+00:00",
+  "command": "PATH=/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin:$PATH CORTEX_TEST_ENV_MODE=explicit CONVEX_URL=http://127.0.0.1:1 CONVEX_TEST_MODE=local node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand --forceExit=false --silent --runTestsByPath tests/unit/client-runtime/observe-delivery.test.ts --json --outputFile=_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-product-independent-review1/observe-delivery-outcomes1.json",
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "node": "24.15.0",
+  "exit": 0,
+  "naturalExit": true,
+  "passed": 2,
+  "failed": 0,
+  "skipped": 0,
+  "results": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-product-independent-review1/observe-delivery-outcomes1.json",
+  "serviceCalls": 0,
+  "modelCalls": 0,
+  "sourceWrites": 0,
+  "gitWrites": 0,
+  "meaningfulAssertions": [
+    "one-shot observe delivers current protected parts before their consumed share cutoff",
+    "one-shot observe withholds protected parts when consumed share expires during final actor-session RPC"
+  ]
+}

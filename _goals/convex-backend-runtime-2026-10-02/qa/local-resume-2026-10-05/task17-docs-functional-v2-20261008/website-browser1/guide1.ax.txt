@@ -1,0 +1,270 @@
+Browser tab: 8, Title: "Backend runtime (development) | Cortex Memory Docs", URL: "http://127.0.0.1:51052/getting-started/backend-runtime".
+0 AXWebArea Backend runtime (development) | Cortex Memory Docs, URL: 127.0.0.1:51052/getting-started/backend-runtime
+	1 container
+		2 container Skip to main content
+			3 link Description: Skip to main content, Value: 127.0.0.1:51052/getting-started/backend-runtime#__docusaurus_skipToContent_fallback
+		4 container Main
+			5 link Description: Cortex Memory logo Cortex Memory, Value: cortexmemory.dev/
+			6 link Description: Documentation, Value: 127.0.0.1:51052/
+			264 link Description: sdk v0.37.0, Help: @cortexmemory/sdk on npm, Value: npmjs.com/package/@cortexmemory/sdk
+			265 link Description: cli v0.37.0, Help: @cortexmemory/cli on npm, Value: npmjs.com/package/@cortexmemory/cli
+			266 link Description: cortex-memory v0.36.0, Help: cortex-memory on PyPI, Value: pypi.org/project/cortex-memory/
+			7 link Description: Main Site (opens in new tab), Value: cortexmemory.dev/
+			8 link Description: GitHub (opens in new tab), Value: github.com/SaintNick1214/Project-Cortex
+			9 button Search (Meta+k)
+				10 text Search
+			11 button Description: Switch between dark and light mode (currently system mode), Help: system mode
+		12 container Docs sidebar
+			13 content list
+				14 link Description: Documentation Overview, Value: 127.0.0.1:51052/
+				15 link Description: What's New, Value: 127.0.0.1:51052/whats-new
+				16 container
+					17 button (expanded) Getting Started, Secondary Actions: Collapse
+						18 text Getting Started
+					19 content list
+						20 link Description: Introduction to Cortex, Value: 127.0.0.1:51052/getting-started/introduction
+						21 link Description: Installation, Value: 127.0.0.1:51052/getting-started/installation
+						22 link Description: Five-Minute Quickstart, Value: 127.0.0.1:51052/getting-started/five-minute-quickstart
+						23 link Description: Core Concepts, Value: 127.0.0.1:51052/getting-started/core-concepts
+						24 link Description: Configuration, Value: 127.0.0.1:51052/getting-started/configuration
+						25 link Description: Auth Integration, Value: 127.0.0.1:51052/getting-started/auth-integration
+						26 link Description: Backend runtime (development), Value: 127.0.0.1:51052/getting-started/backend-runtime
+				27 text CORE
+				28 button (collapsed) Core Features, Secondary Actions: Expand
+					29 text Core Features
+				30 button (collapsed) Integrations, Secondary Actions: Expand
+					31 text Integrations
+				32 text DEVELOP
+				33 button (collapsed) API Reference, Secondary Actions: Expand
+					34 text API Reference
+				35 button (collapsed) Advanced Topics, Secondary Actions: Expand
+					36 text Advanced Topics
+				37 button (collapsed) Architecture, Secondary Actions: Expand
+					38 text Architecture
+				39 text RESOURCES
+				40 button (collapsed) Security, Secondary Actions: Expand
+					41 text Security
+				42 button (collapsed) Reference, Secondary Actions: Expand
+					43 text Reference
+				44 button (collapsed) Tools, Secondary Actions: Expand
+					45 text Tools
+				46 text PROJECT
+				47 button (collapsed) Roadmap, Secondary Actions: Expand
+					48 text Roadmap
+				49 button (collapsed) Project, Secondary Actions: Expand
+					50 text Project
+		51 container
+			52 container Breadcrumbs
+				53 content list
+					54 container
+						55 link Description: Home page, Value: 127.0.0.1:51052/
+					56 container
+						57 text Getting Started
+					58 text Backend runtime (development)
+			59 heading Cortex backend runtime, Value: 1
+				60 text Cortex backend runtime
+			61 container
+				62 text This guide describes the unpublished  feat/convex-backend-runtime-completion  candidate in Project-Cortex. Its SDK/provider packages currently declare  0.37.0 . Use matching local packages from that candidate; this guide does not change the website's separate released CLI, app or template installation instructions. Final cross-layer qualification and package release remain pending. Async video is currently unavailable on the qualified development target; an unavailable capability does not count as a working video implementation.
+			63 heading What the backend owns Direct link to What the backend owns, Value: 2, ID: what-the-backend-owns
+				64 text What the backend owns
+				65 link Description: Direct link to What the backend owns, Value: 127.0.0.1:51052/getting-started/backend-runtime#what-the-backend-owns
+			66 text Convex runs the qualified Agent, Workflow/Workpool jobs, backend tools and asynchronous memory pipeline. The host application supplies verified identity, submits user input and observes a retained run. It does not execute another model or tool loop, produce embeddings, or write the same exchange to memory again.
+			67 text There is one canonical executable transcript. Administrator-selected write locks control manual changes. Unlocked edits create tracked revisions; downstream context and derived memory must match the current source revision. Deletion, revocation and tombstones fence background work and prevent stale resurrection. Run IDs, conversation IDs, asset IDs and local reconnect snapshots are selectors; they are never permission to read a resource.
+			68 heading Value: 2, ID: install-and-configure-a-development-backend, Install and configure a development backend Direct link to Install and configure a development backend
+				69 text Install and configure a development backend
+				70 link Description: Direct link to Install and configure a development backend, Value: 127.0.0.1:51052/getting-started/backend-runtime#install-and-configure-a-development-backend
+			71 container
+				72 text Use Node.js at least  24.15.0  and the candidate's declared npm  12.2.0  toolchain. Build the matching SDK/backend distribution, CLI and provider before using local archives. Read the candidate's  cortex backend --help  for the additive plan, installation and explicit development registration/provisioning commands.
+			73 container
+				74 text Use  cortex backend install <host> --plan  to inspect the changes and  cortex backend install <host>  to apply an unambiguous plan. Use  backend register --target <target.json>  and  backend provision --target <target.json> --principal <principal.json>  for explicit disposable development registration and trusted grants. These commands require management access and a matching  dev:  deployment key in the selected environment variables. They verify the exact team/project/deployment tuple before dispatch.
+			75 container
+				76 text backend configure <host> --url <deployment-origin> --http-url <http-action-origin> --agent-id <id> --agent-version <version> --space <space>  appends only public metadata. It writes  NEXT_PUBLIC_CORTEX_HTTP_URL  for the canonical UI, preserves existing environment values, and refuses conflicting origins. Supply host access tokens through the application's authentication flow; configure never saves those tokens.
+			77 text Inspect an installation plan before applying it to an existing host. The installer composes the Cortex table map and qualified components with the host's schema, custom functions directory and component configuration. It preserves unrelated tables/indexes, functions, HTTP/auth routes, environment values and scripts. Ambiguous merges require an explicit source repair; replacing the host schema or copying a second whole Convex directory is not a recovery strategy.
+			78 text Developer setup has four distinct responsibilities:
+			79 content list
+				80 container
+					81 AXListMarker 1. 
+					82 text Register the additive Agent and Workflow/Workpool backend on an explicitly selected development target. Verify its actual team, project, development type and origin before registration or fixture mutation.
+				83 container
+					84 AXListMarker 2. 
+					85 text Configure the host's verified JWT issuer/audience and JWKS or supported host authentication integration. Provision trusted principal/grant records through operator administration. Browser JWT claims cannot provision a principal, grant administrator access or select another tenant.
+				86 container
+					87 AXListMarker 3. 
+					88 text Install current model qualification evidence and versioned per-function policy/budgets, then publish an executable Agent definition. A published model name or catalog entry does not establish interface/capability compatibility.
+				89 container
+					90 AXListMarker 4. 
+					91 text Configure the same installation's private HTTP action origin for assets and media. Configure optional graph workers separately when graph projection is required. Text execution does not require a graph database or media service.
+			92 text The client receives the Convex deployment URL, optional memory-space selector, published Agent ID/version and HTTP action origin. Deployment keys, Gateway credentials, graph passwords, callback secrets and upstream inference keys stay outside the browser. A host token callback supplies a short-lived access token and refreshes it through the host authentication provider.
+			93 heading TypeScript run client Direct link to TypeScript run client, Value: 2, ID: typescript-run-client
+				94 text TypeScript run client
+				95 link Description: Direct link to TypeScript run client, Value: 127.0.0.1:51052/getting-started/backend-runtime#typescript-run-client
+			96 text The runtime entry point is browser safe. The host supplies authentication rather than embedding a development deployment key in its application.
+			97 container
+				98 container
+					99 text import {  CortexRuntimeClient  } from "@cortexmemory/sdk/runtime" ;
+					100 text import type {  RuntimeObservation  } from "@cortexmemory/sdk/runtime" ;
+					101 text export async function openRun ( options : {
+					102 text   deploymentUrl : string ;
+					103 text   assetHttpUrl : string ;
+					104 text   memorySpaceId : string ;
+					105 text   agentId : string ;
+					106 text   agentVersion : number ;
+					107 text fetchToken : ( request : {  forceRefreshToken : boolean } ) => Promise < string | null > ;
+					108 text   text : string ;
+					109 text render : ( observation :  RuntimeObservation ) => void ;
+					110 text clearPrivateViews : ( ) => void ;
+					111 text onError : ( error : unknown ) => void ;
+					112 text } ) {
+					113 text const  client  = new CortexRuntimeClient ( {
+					114 text     deploymentUrl :  options . deploymentUrl ,
+					115 text     assetHttpUrl :  options . assetHttpUrl ,
+					116 text     scope : {  memorySpaceId :  options . memorySpaceId  } ,
+					117 text     fetchToken :  options . fetchToken ,
+					118 text onAuthChange :  authenticated  => {
+					119 text if ( ! authenticated )  options . clearPrivateViews ( ) ;
+					120 text } ,
+					121 text } ) ;
+					122 text let stop = ( ) => { } ;
+					123 text try {
+					124 text const  session  = await  client . session ( ) ;
+					125 text const  handle  = await  client . submit ( {
+					126 text       version : 1 ,
+					127 text       agentId :  options . agentId ,
+					128 text       agentVersion :  options . agentVersion ,
+					129 text       clientRequestId :  crypto . randomUUID ( ) ,
+					130 text       parts : [ {  type : "text" ,  text :  options . text  } ] ,
+					131 text } ) ;
+					132 text     stop  =  client . watchObservation ( handle ,  options . render ,  error  => {
+					133 text       options . clearPrivateViews ( ) ;
+					134 text       options . onError ( error ) ;
+					135 text } ) ;
+					136 text await  client . start ( handle , {  streaming : true } ) ;
+					137 text return {  client ,  session ,  handle ,  disconnect :  stop  } ;
+					138 text } catch ( error ) {
+					139 text stop ( ) ;
+					140 text await  client . close ( ) ;
+					141 text throw  error ;
+					142 text }
+					143 text }
+				144 button Description: Copy code to clipboard, Help: Copy
+			145 container
+				146 text Disconnecting an observer does not cancel its backend run. Reattach with  client.attach(runId)  and observe its verified handle/cursor; do not submit the same message under a new request ID. Cancel a run explicitly with  client.cancel(handle) . Keep the client open while observing, and call  client.close()  when the owning host view/session ends.
+			147 container
+				148 text The official token handshake is bounded by  authTimeoutMs  (default 10 seconds).  AUTHENTICATION_TIMEOUT  means the handshake did not finish; it does not invent a server rejection. RPC observation is bounded by  requestTimeoutMs  (default 12 seconds).  RPC_DEADLINE_EXCEEDED  is an uncertain outcome and does not cancel or retry a server mutation. Recover the existing run/job identity rather than automatically issuing a new paid request.
+			149 container
+				150 text Fresh protected reads return server-derived authorization deadlines when their grant, share or retained source expires. The client refuses late delivery and clears owned observers, requests and Blob previews at expiry. The host must also clear its private views in  onAuthChange(false) . Refresh the same authenticated session with  client.refreshAuth()  after the host token callback can supply a fresh token; an identity/scope change invalidates old handles and pending views.
+			151 text For configured input/tool approval, approve the existing backend operation; approval is not client-side tool execution. The administrator selects the published Agent's models, tools, memory mode and deadlines. Caller-supplied model/provider/options, scope claims, tool results or generated context cannot override those choices.
+			152 heading AI SDK 7 and React Direct link to AI SDK 7 and React, Value: 2, ID: ai-sdk-7-and-react
+				153 text AI SDK 7 and React
+				154 link Description: Direct link to AI SDK 7 and React, Value: 127.0.0.1:51052/getting-started/backend-runtime#ai-sdk-7-and-react
+			155 container
+				156 text Use  CortexRemoteTransport  from  @cortexmemory/vercel-ai-provider/remote  with AI SDK 7's  useChat . Supply an authenticated  CortexRuntimeClient  and a published Agent ID/version. The transport projects server text, tool phases, retained artifact/media references, approvals and separate run/memory/graph status.
+			157 text The canonical quickstart demonstrates connect/token refresh, chat, tool/input approval, observer disconnect/reconnect, existing-run attachment, managed memory search, stage readiness and optional media tools. It needs no provider key. Canonical transcript pages and durable job/artifact reads rebuild state after a reload. Local snapshots contain bounded references rather than media bytes or upstream URLs, and still require fresh server authorization when restored.
+			158 heading Response completion and memory consistency Direct link to Response completion and memory consistency, Value: 2, ID: response-completion-and-memory-consistency
+				159 text Response completion and memory consistency
+				160 link Description: Direct link to Response completion and memory consistency, Value: 127.0.0.1:51052/getting-started/backend-runtime#response-completion-and-memory-consistency
+			161 container
+				162 text responseStatus  is independent of  memoryStatus  and  graphStatus . A response can finish while indexing is pending or has failed; the UI can finish rendering without waiting for all asynchronous memory work.
+			163 text Eligible approved transcript history and authorized pending sources can augment indexed context. Ordered commits advance contiguous scoped watermarks; a later successful event cannot jump over a pending, failed or missing earlier event. An Agent's strict mode requires only its explicitly configured stages and captured cutoffs. It does not silently degrade to a weaker memory mode.
+			164 container
+				165 text Read fresh profile/index metadata with  client.getEmbeddingProfile() . An  expectedProfileId  is a mismatch guard, not a requested replacement profile.  client.memoryReadiness({ strictStages: ["facts", "vectors"] })  performs an explicit stage check without inference. Space-wide counters require an appropriate space or tenant grant; an own-only actor uses its run's stage status. Incomplete stages and unavailable capabilities remain explicit errors.
+			166 container
+				167 text client.recall({ text, requestId, limit })  uses a governed backend query embedding against matching profile/index provenance. Clean-slate sources, canonical chunks and profile-specific vector generations retain matching revision/hash provenance. This design includes no legacy transcript, deployment, data or embedding migration.
+			168 heading Value: 2, ID: private-files-retained-artifacts-and-media-jobs, Private files, retained artifacts and media jobs Direct link to Private files, retained artifacts and media jobs
+				169 text Private files, retained artifacts and media jobs
+				170 link Description: Direct link to Private files, retained artifacts and media jobs, Value: 127.0.0.1:51052/getting-started/backend-runtime#private-files-retained-artifacts-and-media-jobs
+			171 container
+				172 text Private bytes stay in Convex-owned storage. The application limit is  20,000,000 decoded bytes  for upload and authenticated delivery. Backend, protocol and provider-input limits can be smaller. A file under the application limit is not automatically eligible for every provider input.
+			173 container
+				174 container
+					175 text import type {  CortexRuntimeClient  } from "@cortexmemory/sdk/runtime" ;
+					176 text export async function uploadPrivateFile ( client :  CortexRuntimeClient ,  file :  File ) {
+					177 text return  client . uploadAsset ( file , {
+					178 text     requestId :  crypto . randomUUID ( ) ,
+					179 text     mimeType :  file . type  || "application/octet-stream" ,
+					180 text     filename :  file . name ,
+					181 text } ) ;
+					182 text }
+				183 button Description: Copy code to clipboard, Help: Copy
+			184 container
+				185 text An immutable  { assetId, version }  identifies a private file version. The SDK freshly authorizes metadata and downloads through the configured authenticated HTTP action origin, checks MIME/size/hash, and can create a bounded local Blob preview with  client.createAssetUrl(reference) . Revoke the returned preview on close/unmount. Authentication changes and client close also revoke owned URLs. There are no public storage URLs, external media storage or embedded base64 transcripts.
+			186 container
+				187 text client.submitMediaJob({ requestId, kind, prompt, inputAsset? })  saves a pending job and artifact before generation. The backend selects qualified fixed options. The current image profile accepts a text prompt. The video profile can use an authorized immutable PNG with its smaller provider-input limit. This includes no image understanding, OCR or visual embeddings.
+			188 container
+				189 text Read retained state using  getMediaJob ,  listMediaJobs  and  getArtifact .  reconcileMediaJob  polls/downloads an existing acknowledged operation and can recover a missed callback. Private authenticated callbacks are validated, deduplicated and ordered against the saved operation. An unknown submission does not trigger another generation on polling, reconnect or replay.
+			190 container
+				191 text cancelMediaJob  fences local delivery. Unsupported upstream cancellation is reported separately; the provider may continue running and incur costs. Assets, artifact versions, history and ownership remain governed by revocation, deletion/tombstone fencing and retained-reference cleanup.
+			192 heading Billing and capability boundaries Direct link to Billing and capability boundaries, Value: 2, ID: billing-and-capability-boundaries
+				193 text Billing and capability boundaries
+				194 link Description: Direct link to Billing and capability boundaries, Value: 127.0.0.1:51052/getting-started/backend-runtime#billing-and-capability-boundaries
+			195 heading Value: 3, ID: titles-documents-code-sheets-and-suggestions, Titles, documents, code, sheets and suggestions Direct link to Titles, documents, code, sheets and suggestions
+				196 text Titles, documents, code, sheets and suggestions
+				197 link Description: Direct link to Titles, documents, code, sheets and suggestions, Value: 127.0.0.1:51052/getting-started/backend-runtime#titles-documents-code-sheets-and-suggestions
+			198 container
+				199 text The development runtime exposes durable content jobs. ChatSDK and other hosts submit an intent; Cortex executes its governed model calls and commits retained artifact versions. No application inference credentials or application tool loop are required. The administrator selects policies for  conversation.title ,  artifact.text ,  artifact.code ,  artifact.sheet  and  artifact.suggestions .
+			200 container
+				201 container
+					202 text import type {  CortexRuntimeClient  } from "@cortexmemory/sdk/runtime" ;
+					203 text export async function generateDocument (
+					204 text   client :  CortexRuntimeClient ,
+					205 text   requestId : string ,
+					206 text   prompt : string ,
+					207 text   conversationId ? : string ,
+					208 text ) {
+					209 text return  client . submitContentJob ( {
+					210 text     version : 1 ,
+					211 text     requestId ,
+					212 text     intent : "text" ,
+					213 text     prompt ,
+					214 text ... ( conversationId  === undefined ? { } : {  conversationId  } ) ,
+					215 text } ) ;
+					216 text }
+				217 button Description: Copy code to clipboard, Help: Copy
+			218 container
+				219 text Keep the same request ID for the same intent. Read the retained result with  getContentJob(jobId)  or  listContentJobs({ conversationId }) ; disconnecting the UI does not transfer job ownership to the browser.  cancelContentJob  fences local publication.  reconcileContentJob  recovers an existing operation and never retries an unknown provider submission as a new generation.
+			220 container
+				221 text Suggestions require an exact  { artifactId, version }  input. Apply an explicitly selected suggestion with  applyContentSuggestion({ jobId, suggestionId, artifactVersion }) ; concurrent edits or a stale version require a new reviewed intent. Output remains a retained artifact, not a client-only document. Automatic conversation titles share their real parent run budget and operation. An explicit document/code/sheet request owns one logical job budget, including its secondary title call. Replays and fallback cannot reset those budgets. Actual ChatSDK/template qualification remains in progress for this candidate.
+			222 heading Value: 3, ID: reservations-unknown-outcomes-and-fallbacks, Reservations, unknown outcomes and fallbacks Direct link to Reservations, unknown outcomes and fallbacks
+				223 text Reservations, unknown outcomes and fallbacks
+				224 link Description: Direct link to Reservations, unknown outcomes and fallbacks, Value: 127.0.0.1:51052/getting-started/backend-runtime#reservations-unknown-outcomes-and-fallbacks
+			225 text Every billable call has a versioned operation/interface/capability/model policy and an admitted budget, including memory extraction/resolution/summarization, query embeddings, title/artifact/suggestion generation and media secondary calls. Replay uses the same semantic identity; fallback receives its own policy and reservation rather than bypassing the primary call's controls.
+			226 text Missing cost information is conservative incurred uncertainty. An unknown upstream outcome can retain a liability and concurrency slot. A local timeout, cancel or elapsed deadline alone does not prove provider terminality, justify a refund or authorize another paid attempt. Retained costs and unsupported capabilities stay visible instead of becoming invented zero-cost success.
+			227 text Neo4j/Memgraph remain optional external projection services with authorized workers, ordered outbox events, retry/strict-stage failure and transitive dependency retirement. Ordinary application orchestration remains in Convex. Decisions/Jev and Python implementation/parity are excluded from this runtime.
+			228 heading Qualification status Direct link to Qualification status, Value: 2, ID: qualification-status
+				229 text Qualification status
+				230 link Description: Direct link to Qualification status, Value: 127.0.0.1:51052/getting-started/backend-runtime#qualification-status
+			231 container
+				232 text Builds and mocked/unit checks establish source/package behavior; they do not establish real authentication, storage, graph, inference or browser outcomes. Current backend-runtime receipts and scoped independent verdicts live under  _goals/convex-backend-runtime-2026-10-02/qa/  in the candidate checkout. Final aggregate authorization, cross-layer adversarial outcomes, all changed templates and final independent acceptance remain required. Production deployment and package publication are not part of this development goal.
+			233 link Description: Edit this page, Value: github.com/SaintNick1214/cortexmemory.dev/tree/main/docs-site/docs/docs/getting-started/backend-runtime.mdx
+			234 container Docs pages
+				235 link Description: Previous « Auth Integration, Value: 127.0.0.1:51052/getting-started/auth-integration
+				236 link Description: Next Memory Orchestration », Value: 127.0.0.1:51052/core-features/memory-orchestration
+			237 content list
+				238 link Description: What the backend owns, Value: 127.0.0.1:51052/getting-started/backend-runtime#what-the-backend-owns
+				239 link Description: Install and configure a development backend, Value: 127.0.0.1:51052/getting-started/backend-runtime#install-and-configure-a-development-backend
+				240 link Description: TypeScript run client, Value: 127.0.0.1:51052/getting-started/backend-runtime#typescript-run-client
+				241 link Description: AI SDK 7 and React, Value: 127.0.0.1:51052/getting-started/backend-runtime#ai-sdk-7-and-react
+				242 link Description: Response completion and memory consistency, Value: 127.0.0.1:51052/getting-started/backend-runtime#response-completion-and-memory-consistency
+				243 link Description: Private files, retained artifacts and media jobs, Value: 127.0.0.1:51052/getting-started/backend-runtime#private-files-retained-artifacts-and-media-jobs
+				244 container
+					245 link Description: Billing and capability boundaries, Value: 127.0.0.1:51052/getting-started/backend-runtime#billing-and-capability-boundaries
+					246 content list
+						247 link Description: Titles, documents, code, sheets and suggestions, Value: 127.0.0.1:51052/getting-started/backend-runtime#titles-documents-code-sheets-and-suggestions
+						248 link Description: Reservations, unknown outcomes and fallbacks, Value: 127.0.0.1:51052/getting-started/backend-runtime#reservations-unknown-outcomes-and-fallbacks
+				249 link Description: Qualification status, Value: 127.0.0.1:51052/getting-started/backend-runtime#qualification-status
+		250 text Documentation
+		251 content list
+			252 link Description: Getting Started, Value: 127.0.0.1:51052/
+			253 link Description: Core Features, Value: 127.0.0.1:51052/core-features/memory-orchestration
+			254 link Description: API Reference, Value: 127.0.0.1:51052/api-reference/overview
+		255 text Community
+		256 content list
+			257 link Description: GitHub (opens in new tab), Value: github.com/SaintNick1214/Project-Cortex
+			258 link Description: GitHub Issues (opens in new tab), Value: github.com/SaintNick1214/Project-Cortex/issues
+		259 text More
+		260 content list
+			261 link Description: Main Site (opens in new tab), Value: cortexmemory.dev/
+			262 link Description: Integrations, Value: 127.0.0.1:51052/integrations/
+		263 text Copyright © 2026 Cortex Memory. Built with Docusaurus.
+
+The focused UI element is 0 AXWebArea Backend runtime (development) | Cortex Memory Docs, URL: 127.0.0.1:51052/getting-started/backend-runtime

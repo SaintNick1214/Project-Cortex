@@ -1,0 +1,36 @@
+components/runtime-chat.tsx:123:3 lint/correctness/useExhaustiveDependencies  FIXABLE  ━━━━━━━━━━━━━
+
+  × This hook specifies more dependencies than necessary: run?.responseStatus.
+  
+    121 │     return connection.client.watchRun(handle, setRun, fail);
+    122 │   }, [connection, handle, fail]);
+  > 123 │   useEffect(() => {
+        │   ^^^^^^^^^
+    124 │     if (!connection) {
+    125 │       return;
+  
+  i This dependency can be removed from the list.
+  
+    156 │       clearTimeout(timer);
+    157 │     };
+  > 158 │   }, [connection, handle, conversationId, run?.responseStatus, fail]);
+        │                                           ^^^^^^^^^^^^^^^^^^^
+    159 │   useEffect(() => {
+    160 │     if (
+  
+  i React relies on hook dependencies to determine when to re-compute Effects.
+    Specifying more dependencies than required can lead to unnecessary re-rendering
+    and degraded performance.
+  
+  i Unsafe fix: Remove the extra dependencies from the list.
+  
+    158 │ ··},·[connection,·handle,·conversationId,·run?.responseStatus,·fail]);
+        │                                           ---------------------       
+
+Checked 1 file in 558ms. No fixes applied.
+Found 1 error.
+check ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Some errors were emitted while running checks.
+  
+

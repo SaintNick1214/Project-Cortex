@@ -1,0 +1,84 @@
+{
+  "source": "source8.json",
+  "toolchain": {
+    "node": "v24.15.0",
+    "npm": "12.2.0"
+  },
+  "results": [
+    {
+      "name": "tests8",
+      "command": [
+        "node",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "--reporter=json",
+        "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/root-chat-ui1/tests8.json"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli/templates/chat-sdk-quickstart",
+      "startedAtUtc": "2026-10-09T04:04:31.178Z",
+      "closedAtUtc": "2026-10-09T04:04:32.240Z",
+      "elapsedMs": 1061,
+      "pid": 5716,
+      "exitCode": 0,
+      "signal": null,
+      "timedOut": false,
+      "log": "tests8.log"
+    },
+    {
+      "name": "types8",
+      "command": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli/templates/chat-sdk-quickstart",
+      "startedAtUtc": "2026-10-09T04:04:31.180Z",
+      "closedAtUtc": "2026-10-09T04:04:33.051Z",
+      "elapsedMs": 1871,
+      "pid": 5717,
+      "exitCode": 0,
+      "signal": null,
+      "timedOut": false,
+      "log": "types8.log"
+    },
+    {
+      "name": "lint8",
+      "command": [
+        "node",
+        "node_modules/@biomejs/biome/bin/biome",
+        "check",
+        "components/runtime-chat.tsx",
+        "tests/unit/runtime-auth-race.test.ts"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli/templates/chat-sdk-quickstart",
+      "startedAtUtc": "2026-10-09T04:04:31.180Z",
+      "closedAtUtc": "2026-10-09T04:04:31.745Z",
+      "elapsedMs": 565,
+      "pid": 5718,
+      "exitCode": 0,
+      "signal": null,
+      "timedOut": false,
+      "log": "lint8.log"
+    },
+    {
+      "name": "build8",
+      "command": [
+        "node",
+        "node_modules/next/dist/bin/next",
+        "build",
+        "--webpack"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli/templates/chat-sdk-quickstart",
+      "startedAtUtc": "2026-10-09T04:04:33.051Z",
+      "closedAtUtc": "2026-10-09T04:04:41.779Z",
+      "elapsedMs": 8728,
+      "pid": 5753,
+      "exitCode": 0,
+      "signal": null,
+      "timedOut": false,
+      "log": "build8.log"
+    }
+  ],
+  "serviceEffects": 0,
+  "actualBrowser": false
+}

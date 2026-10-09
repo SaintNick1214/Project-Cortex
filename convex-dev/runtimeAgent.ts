@@ -199,7 +199,17 @@ export const executeTurn = workflow.define({ args: agentAttempt, returns: v.null
   await step.runAction(refs.prepareContext, args, { retry: false, name: "authorized Cortex context" });
   for (let ordinal = 0; ordinal < 33; ordinal++) {
     const result = await step.runAction(refs.model, { ...args, ordinal }, { retry: false, name: `model ${ordinal}` });
-    if (result.final) { await step.runMutation(refs.finalize, { ...args, finalMessageIds: result.savedMessageIds }); return null; }
+    if (result.final) {
+      // A secondary title call shares this real active run/account and its
+      // completed model operation; optional title failure preserves the answer.
+      try {
+        const jobId = await step.runMutation(ref<"mutation", { reference: RuntimeAuthorityReference; runId: string }, string | null>("mutation", "runtimeContentJobs:enqueueParentTitle"), { reference: args.reference, runId: args.runId });
+        if (jobId) {
+          const lease = await step.runMutation(ref<"mutation", { jobId: string }, { jobId: string; leaseToken: string } | null>("mutation", "runtimeContentJobs:claim"), { jobId });
+          if (lease) { await step.runAction(ref<"action", typeof lease, null>("action", "runtimeContentGateway:processStage"), lease, { retry: false, name: "governed conversation title" }); await step.runMutation(ref<"mutation", typeof lease, null>("mutation", "runtimeContentJobs:publish"), lease); }
+        }
+      } catch { /* Title currentness or policy failure never fabricates a title. */ }
+      await step.runMutation(refs.finalize, { ...args, finalMessageIds: result.savedMessageIds }); return null; }
     if (!result.calls.length || result.calls.length > 32) throw new Error("INVALID_MODEL_OUTPUT");
     for (const call of result.calls) {
       const prepared = await step.runMutation(refs.begin, { ...args, kind: "tool", ordinal,

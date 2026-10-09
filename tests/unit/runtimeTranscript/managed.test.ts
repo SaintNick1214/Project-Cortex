@@ -1,7 +1,7 @@
 import { beforeEach, afterEach, describe, expect, it, jest } from "@jest/globals";
-import { installMockRoot, installIngestionMockRoot, transcriptFixture, transcript, invoke, clock } from "./fixture";
-import { ConvexMemoryRepository } from "../../../convex-dev/runtimeMemoryRepository";
-import { managedSourceIsCurrent, requireDataAuthority, recheckSourceWitnesses } from "../../../convex-dev/runtimeDataAuth";
+const { installMockRoot, installIngestionMockRoot, transcriptFixture, transcript, invoke, clock } = await import("./fixture");
+const { ConvexMemoryRepository } = await import("../../../convex-dev/runtimeMemoryRepository");
+const { managedSourceIsCurrent, requireDataAuthority, recheckSourceWitnesses } = await import("../../../convex-dev/runtimeDataAuth");
 import { DEFAULT_EMBEDDING_PROFILE } from "../../../src/domain/profile";
 import type { Doc } from "../../../convex-dev/_generated/dataModel";
 const conversations = await import("../../../convex-dev/conversations");

@@ -1,0 +1,56 @@
+{
+  "status": "COHERENT15C_TITLE_SUCCESSOR_BUILD_PACK_PASS",
+  "directory": "/Users/SaintNick/.codex/tmp/cortex-task15-content-pack-3a12ec94-ef0a-4028-8293-401a578a47b5",
+  "sdk": {
+    "file": "/Users/SaintNick/.codex/tmp/cortex-task15-content-pack-3a12ec94-ef0a-4028-8293-401a578a47b5/cortexmemory-sdk-0.37.0.tgz",
+    "bytes": 1041734,
+    "sha256": "5ef34fbd38004e92fdbbc34e8415cfe7985b5f07597efb7da17c8403d5a70e4e",
+    "name": "@cortexmemory/sdk",
+    "version": "0.37.0",
+    "unpackedBackend": "/Users/SaintNick/.codex/tmp/cortex-task15-content-pack-3a12ec94-ef0a-4028-8293-401a578a47b5/unpacked/package/dist/backend/v1",
+    "manifestSha256": "67e0c1a836593c15a9058d799a457a90823eb52a6eecfb0db91478f1469c034a"
+  },
+  "provider": {
+    "file": "/Users/SaintNick/.codex/tmp/cortex-task15-content-pack-b3565325-9090-4a2c-946c-917d3d07d995/cortexmemory-vercel-ai-provider-0.37.0.tgz",
+    "bytes": 73792,
+    "sha256": "97cc83bec8a1dd5f423756ba0155436a2accd46430a054459cfacb7740d7dc4c",
+    "name": "@cortexmemory/vercel-ai-provider",
+    "version": "0.37.0"
+  },
+  "sourceFileCount": 107,
+  "tableCount": 68,
+  "components": [
+    "agent",
+    "workflow"
+  ],
+  "httpRoutes": [
+    "GET /cortex/assets/download",
+    "OPTIONS /cortex/assets/download",
+    "OPTIONS /cortex/assets/upload",
+    "POST /cortex/assets/upload",
+    "POST /cortex/media/video/webhook"
+  ],
+  "authorSourceDigest": "c4512abcf6b2069b08b0229a361c3dfef835e92aa8f7f1177faa67bb9fb40941",
+  "titleSuccessorDigest": "1f5974c87eb8d843fdfe8195f94db87b62354176a19bb130650eaba097d3ba4d",
+  "parentTitleStaticImport": {
+    "generatedAtUtc": "2026-10-09T03:46:59.202Z",
+    "root": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+    "files": [
+      {
+        "path": "convex-dev/runtimeContentFence.ts",
+        "bytes": 7679,
+        "sha256": "18acc82b1dd424aac06ecd47634eb12da49c6cfd5843400d7b867714b6cb6c1d"
+      }
+    ],
+    "change": "Statically import the unchanged Agent budget guard for Convex mutation isolates",
+    "origin": "native-actual/content-auto-title4-workflow-readback.json:claim durable failed dynamic module import unsupported; original job expires normally/no revival",
+    "serviceEffects": 0
+  },
+  "compositeSourceManifest": "content-current4-composite-source-manifest.json",
+  "providerReusedUnchanged": true,
+  "authorSourceStillMatches": true,
+  "cliNotRepacked": true,
+  "packIgnoredScripts": true,
+  "targetEffects": 0,
+  "paidEffects": 0
+}

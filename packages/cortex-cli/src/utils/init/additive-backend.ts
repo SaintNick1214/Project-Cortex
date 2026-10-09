@@ -165,11 +165,22 @@ function httpRegistrations(text: string, names: string[]): HttpRoute[] {
   if (names.some(name => typeof name !== "string" || !/^(GET|POST|PUT|DELETE|OPTIONS|PATCH) \/[^\s?#]*$/.test(name)) || new Set(names).size !== names.length) throw new Error("Backend HTTP manifest requires unique exact METHOD /path entries.");
   const ast = parse("_cortex/http.ts", text);
   const handlers = new Set<string>();
+  const mediaHandlers = new Set<string>();
   for (const statement of ast.statements) {
-    if (!ts.isImportDeclaration(statement) || !ts.isStringLiteral(statement.moduleSpecifier) || !/^\.\.\/runtimeAssetsHttp(?:\.js)?$/.test(statement.moduleSpecifier.text) || statement.importClause?.isTypeOnly) continue;
+    if (!ts.isImportDeclaration(statement) || !ts.isStringLiteral(statement.moduleSpecifier) || statement.importClause?.isTypeOnly) continue;
     const bindings = statement.importClause?.namedBindings;
-    if (bindings && ts.isNamedImports(bindings)) for (const binding of bindings.elements) if (!binding.isTypeOnly) handlers.add(binding.name.text);
+    if (/^\.\.\/runtimeAssetsHttp(?:\.js)?$/.test(statement.moduleSpecifier.text)) {
+      if (bindings && ts.isNamedImports(bindings)) for (const binding of bindings.elements) if (!binding.isTypeOnly) handlers.add(binding.name.text);
+    } else if (/^\.\.\/runtimeMediaHttp(?:\.js)?$/.test(statement.moduleSpecifier.text)) {
+      if (statement.importClause?.name || !bindings || !ts.isNamedImports(bindings)) throw new Error("Backend media HTTP requires the direct named runtimeMediaHttp.videoWebhook import.");
+      for (const binding of bindings.elements) {
+        if (binding.isTypeOnly) continue;
+        if ((binding.propertyName ?? binding.name).text !== "videoWebhook" || mediaHandlers.has(binding.name.text)) throw new Error("Backend media HTTP requires only the fixed videoWebhook export.");
+        mediaHandlers.add(binding.name.text);
+      }
+    }
   }
+  if ([...mediaHandlers].some(name => handlers.has(name))) throw new Error("Backend HTTP handler bindings must not overlap asset and media modules.");
   const helpers = ast.statements.filter((statement): statement is ts.FunctionDeclaration => ts.isFunctionDeclaration(statement) && statement.name?.text === httpHelper);
   const helper = helpers[0];
   if (helpers.length !== 1 || !helper?.body || !helper.modifiers?.some(modifier => modifier.kind === ts.SyntaxKind.ExportKeyword)
@@ -181,7 +192,10 @@ function httpRegistrations(text: string, names: string[]): HttpRoute[] {
     if (!ts.isPropertyAccessExpression(call.expression) || !ts.isIdentifier(call.expression.expression) || call.expression.expression.text !== router || call.expression.name.text !== "route") throw new Error("Backend HTTP registration must be a static router.route().");
     const route = httpRoute(call);
     const handler = (call.arguments[0] as ts.ObjectLiteralExpression).properties.find(field => ts.isPropertyAssignment(field) && (ts.isIdentifier(field.name) || ts.isStringLiteral(field.name)) && field.name.text === "handler");
-    if (!handler || !ts.isPropertyAssignment(handler) || !ts.isIdentifier(handler.initializer) || !handlers.has(handler.initializer.text)) throw new Error("Backend HTTP handlers must be direct static runtimeAssetsHttp imports.");
+    if (!handler || !ts.isPropertyAssignment(handler) || !ts.isIdentifier(handler.initializer)
+      || (!handlers.has(handler.initializer.text) && !mediaHandlers.has(handler.initializer.text))) throw new Error("Backend HTTP handlers must be direct static runtimeAssetsHttp imports or the fixed runtimeMediaHttp.videoWebhook import.");
+    const mediaHandler = mediaHandlers.has(handler.initializer.text), mediaRoute = route.method === "POST" && route.path === "/cortex/media/video/webhook" && !route.prefix;
+    if (mediaHandler !== mediaRoute) throw new Error("runtimeMediaHttp.videoWebhook must register only the exact POST /cortex/media/video/webhook route.");
     if (route.prefix || result.some(prior => overlappingHttpRoute(prior, route))) throw new Error("Backend HTTP helper requires unique exact routes.");
     result.push(route);
   }
@@ -328,6 +342,7 @@ export async function planAdditiveBackendInstallation(projectPath: string, sdkPa
   if (manifest.httpRoutes.length && !seen.has("_cortex/http.ts")) throw new Error("Backend distribution lacks the digest-bound HTTP helper.");
   if (seen.has("_cortex/http.ts")) {
     const routes = httpRegistrations(httpSource, manifest.httpRoutes);
+    if (routes.some(route => route.method === "POST" && route.path === "/cortex/media/video/webhook") && !seen.has("runtimeMediaHttp.ts")) throw new Error("Backend media HTTP requires the digest-bound runtimeMediaHttp.ts source in the versioned manifest.");
     if (routes.length) {
       const fresh = 'import { httpRouter } from "convex/server";\nconst http = httpRouter();\nexport default http;\n';
       await proposed(path.join(normalized, "http.ts"), addHttpRoutes(fresh, routes), "register authenticated Cortex HTTP routes while preserving host routes", current => addHttpRoutes(current, routes));

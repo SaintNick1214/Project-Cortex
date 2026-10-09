@@ -1,0 +1,24 @@
+{
+  "command": [
+    "node",
+    "--experimental-vm-modules",
+    "../../node_modules/jest/bin/jest.js",
+    "--selectProjects",
+    "unit",
+    "--runInBand",
+    "--forceExit=false",
+    "--runTestsByPath",
+    "src/utils/__tests__/host-client.test.ts",
+    "src/utils/__tests__/operator.test.ts",
+    "src/utils/__tests__/db-maintenance.test.ts",
+    "src/utils/__tests__/client.test.ts",
+    "src/utils/__tests__/config.test.ts",
+    "src/utils/__tests__/config-validation.test.ts",
+    "--json",
+    "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/cli-auth1/tests1.json"
+  ],
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli",
+  "pid": 84039,
+  "exitCode": 1,
+  "elapsedMs": 1299
+}

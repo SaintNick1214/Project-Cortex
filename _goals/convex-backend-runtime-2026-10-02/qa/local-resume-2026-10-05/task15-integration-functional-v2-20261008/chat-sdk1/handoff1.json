@@ -1,0 +1,101 @@
+{
+  "version": 1,
+  "status": "SOURCE_READY_ACTUAL_VALIDATION_PENDING",
+  "root": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "qa": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/chat-sdk1",
+  "sourceDigest": "c4512abcf6b2069b08b0229a361c3dfef835e92aa8f7f1177faa67bb9fb40941",
+  "paths": 52,
+  "files": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/chat-sdk1/source-manifest1.json",
+      "sha256": "cdb0dfa79f90624cf661451f592538baca26a2571e32ec12a59f129a94d4e2f8"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/chat-sdk1/checks1.json",
+      "sha256": "16547fa935ad83e8e0660e511e65ac57bb8c2935832e14e0c3b4892a2891c30e"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/chat-sdk1/assertion-identities1.json",
+      "sha256": "d3317201ec24a12ec8e263b90acbeb20461fe58d98e4cb21c933966edf5e9abe"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/chat-sdk1/report1.json",
+      "sha256": "f9bcf4544f11dd30713da341f8a575aa4ac99e79eafd6c5a08d2bc3907b3547f"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/chat-sdk1/report1.md",
+      "sha256": "e8bb4273ef1eb415abaca261f35dd5580eb9f042430d5b7eee7a4955580a306e"
+    }
+  ],
+  "authorProductWriters": "quiet",
+  "nextOwner": "sole native executor build/package/install plus real content/ChatSDK HTTP/browser, same non-author coherent review",
+  "contract": {
+    "publicModule": "runtimeContentJobs",
+    "publicKind": "mutation",
+    "methods": [
+      "submit",
+      "get",
+      "list",
+      "cancel",
+      "reconcile",
+      "applySuggestion"
+    ],
+    "submit": {
+      "tenantId": "verified selector",
+      "memorySpaceId": "verified selector",
+      "version": 1,
+      "requestId": "caller-stable-id",
+      "intent": "text",
+      "prompt": "Write a short document",
+      "conversationId": "optional-current-conversation",
+      "artifact": "optional immutable {artifactId,version}",
+      "parentRunId": "optional REAL active parent; mismatches rejected"
+    },
+    "list": "{tenantId?,memorySpaceId?,conversationId?,limit?}; RuntimeContentJobV1[]; default20/max50",
+    "internal": [
+      "enqueueParentTitle",
+      "claim",
+      "input",
+      "pin",
+      "bindOperation",
+      "save",
+      "next",
+      "publish",
+      "failed",
+      "expire",
+      "execute"
+    ],
+    "factory": "runtimeContentGateway.processContentStageHandler(ctx,{jobId,leaseToken},factory:ContentModelFactory)",
+    "budget": "automatic title uses active Agent run/account/completed native parent model operation; new explicit intent owns one logical job account; primary/secondary share it; no cost/uncertainty resets on replay/reconcile/cancel",
+    "proofs": "Existing root9 plain-chat doGenerate proofs; no V1/V2 catalog or five existing proof modification; exact resolved per-function snapshots govern",
+    "policy": {
+      "artifactFunctions": [
+        "artifact.text",
+        "artifact.code",
+        "artifact.sheet",
+        "artifact.suggestions"
+      ],
+      "artifactModel": "openai/gpt-4o-mini",
+      "titleFunction": "conversation.title",
+      "titleModel": "openai/gpt-4o",
+      "nativeInterface": "chat",
+      "priceRevision": "openrouter-2026-10-08-candidate",
+      "boundRevision": "text-8192-512-schema-v2",
+      "featureEnvelope": "plain-chat-v1",
+      "ruleId": "plain-chat-cookbook-utf8-v1",
+      "inputCeiling": 8192,
+      "contextCeiling": 16384,
+      "outputCeiling": 512,
+      "fullUnknownMicroUSDPerCall": 100000
+    },
+    "sourceCurrentness": "source message hash/revision/bridge, source ancestry and artifact witnesses, exact immutable selected base artifact/hash, current grant/share/epoch/definition/native parent are rechecked at each paid guard and atomic publication; delivery retains unrelated consumed artifact witnesses independently of output version",
+    "recovery": "confirmed attached native private {text} draft only; no blind retry of unknown; saved primary alone cannot publish a new artifact without its secondary title",
+    "limits": {
+      "promptUtf8Bytes": 4096,
+      "outputUtf8Bytes": 32768,
+      "suggestions": 5,
+      "leaseMs": 120000,
+      "deadlineMs": 300000
+    }
+  }
+}

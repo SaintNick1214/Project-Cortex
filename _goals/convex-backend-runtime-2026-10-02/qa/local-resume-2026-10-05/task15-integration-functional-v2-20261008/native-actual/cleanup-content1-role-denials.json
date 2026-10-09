@@ -1,0 +1,47 @@
+{
+  "denials": [
+    {
+      "subject": "owner15c-content-20261009",
+      "scope": {
+        "tenantId": "task15c-content-20261009",
+        "memorySpaceId": "content15c-20261009"
+      },
+      "code": "FORBIDDEN",
+      "message": "[Request ID: 26da8d1f362da101] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../custom/backend/runtimeAuth.ts:46:26)\n    at resolveAuthority (../../custom/backend/runtimeAuth.ts:185:0)\n    at async requireAuthority (../../custom/backend/runtimeAuth.ts:251:0)\n    at async requireDataAuthority (../../custom/backend/runtimeDataAuth.ts:34:16)\n    at async handler (../custom/backend/runtimeClient.ts:14:11)\n",
+      "JWTCurrentAndSigned": true
+    },
+    {
+      "subject": "op15c-content-20261009",
+      "scope": {
+        "tenantId": "task15c-content-20261009",
+        "memorySpaceId": "content15c-20261009"
+      },
+      "code": "FORBIDDEN",
+      "message": "[Request ID: 817ab7f185b75acb] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../custom/backend/runtimeAuth.ts:46:26)\n    at resolveAuthority (../../custom/backend/runtimeAuth.ts:185:0)\n    at async requireAuthority (../../custom/backend/runtimeAuth.ts:251:0)\n    at async requireDataAuthority (../../custom/backend/runtimeDataAuth.ts:34:16)\n    at async handler (../custom/backend/runtimeClient.ts:14:11)\n",
+      "JWTCurrentAndSigned": true
+    },
+    {
+      "subject": "expiry15c-content-20261009",
+      "scope": {
+        "tenantId": "task15c-content-20261009",
+        "memorySpaceId": "content15c-20261009"
+      },
+      "code": "FORBIDDEN",
+      "message": "[Request ID: 562cbba7a04ae659] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../custom/backend/runtimeAuth.ts:46:26)\n    at resolveAuthority (../../custom/backend/runtimeAuth.ts:185:0)\n    at async requireAuthority (../../custom/backend/runtimeAuth.ts:251:0)\n    at async requireDataAuthority (../../custom/backend/runtimeDataAuth.ts:34:16)\n    at async handler (../custom/backend/runtimeClient.ts:14:11)\n",
+      "JWTCurrentAndSigned": true
+    },
+    {
+      "subject": "foreign15c-content-20261009",
+      "scope": {
+        "tenantId": "task15c-foreign-20261009",
+        "memorySpaceId": "foreign15c-20261009"
+      },
+      "code": "FORBIDDEN",
+      "message": "[Request ID: 996a9b960df475fb] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../custom/backend/runtimeAuth.ts:46:26)\n    at resolveAuthority (../../custom/backend/runtimeAuth.ts:185:0)\n    at async requireAuthority (../../custom/backend/runtimeAuth.ts:251:0)\n    at async requireDataAuthority (../../custom/backend/runtimeDataAuth.ts:34:16)\n    at async handler (../custom/backend/runtimeClient.ts:14:11)\n",
+      "JWTCurrentAndSigned": true
+    }
+  ],
+  "allThreeMainRolesForbidden": true,
+  "foreignOwnedScopeForbidden": true,
+  "newModelCalls": 0
+}

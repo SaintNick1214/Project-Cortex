@@ -1,0 +1,22 @@
+tests/unit/runtime-auth-race.test.ts format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Formatter would have printed the following content:
+  
+      7   7 │     clients: [] as Array<{
+      8   8 │       close: ReturnType<typeof vi.fn>;
+      9     │ - ····definition:·{·promise:·Promise<unknown>;·resolve:·(value:·unknown)·=>·void·};
+          9 │ + ····definition:·{
+         10 │ + ······promise:·Promise<unknown>;
+         11 │ + ······resolve:·(value:·unknown)·=>·void;
+         12 │ + ····};
+     10  13 │       onAuthChange: (authenticated: boolean) => void;
+     11  14 │     }>,
+  
+
+Checked 2 files in 782ms. No fixes applied.
+Found 1 error.
+check ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Some errors were emitted while running checks.
+  
+

@@ -8,11 +8,6 @@ const nextConfig: NextConfig = {
       {
         hostname: "avatar.vercel.sh",
       },
-      {
-        //https://nextjs.org/docs/messages/next-image-unconfigured-host
-        hostname: "*.public.blob.vercel-storage.com",
-        protocol: "https",
-      },
     ],
   },
   // Required for @cortexmemory packages to work with Turbopack

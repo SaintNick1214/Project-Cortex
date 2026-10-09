@@ -1,0 +1,4 @@
+src/utils/__tests__/host-client.test.ts(35,16): error TS2349: This expression is not callable.
+  Each member of the union type '(<Query extends FunctionReference<"query"> | FunctionReference_future<"query">>(query: Query, args: FunctionArgs<Query>) => Promise<Awaited<FunctionReturnType<Query>>>) | (<Mutation extends FunctionReference<"mutation"> | FunctionReference_future<"mutation">>(mutation: Mutation, args: FunctionArgs<...>, options?: Mu...' has signatures, but none of those signatures are compatible with each other.
+src/utils/__tests__/host-client.test.ts(39,61): error TS2345: Argument of type '{}' is not assignable to parameter of type 'never'.
+src/utils/__tests__/host-client.test.ts(46,120): error TS2554: Expected 0 arguments, but got 1.

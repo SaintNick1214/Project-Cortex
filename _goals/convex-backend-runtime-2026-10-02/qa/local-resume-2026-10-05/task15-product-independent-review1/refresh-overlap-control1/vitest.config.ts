@@ -1,0 +1,2 @@
+import react from "@vitejs/plugin-react";
+export default { plugins: [react()], resolve: {alias: {"@": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli/templates/chat-sdk-quickstart"}}, test: {environment:"jsdom",globals:true,include:["refresh-overlap.test.ts"],setupFiles:["/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli/templates/chat-sdk-quickstart/tests/helpers/setup.ts"],testTimeout:10000}};

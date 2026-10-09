@@ -1,0 +1,93 @@
+{
+  "version": 1,
+  "status": "SOURCE_READY_FRESH_TARGET_ALLOCATION_AND_NATIVE_EXECUTION_PENDING",
+  "sourceReceipt": "source-check-receipt.json",
+  "candidateDigest": "beb80e27a1e6cfa9c3081296e59cc28866752cb37dd8b37ecacc6c7b5ecc078d",
+  "soleExecutor": "task03_attempt6_integrated_preparation",
+  "teamId": 325340,
+  "freshTargets": [
+    {
+      "kind": "sdk",
+      "type": "dev",
+      "kindConstraint": "cloud-dev",
+      "name": "allocate fresh, not historical target"
+    },
+    {
+      "kind": "cli",
+      "type": "dev",
+      "kindConstraint": "cloud-dev",
+      "name": "allocate fresh, distinct from sdk"
+    }
+  ],
+  "neverTouch": {
+    "projectId": 3174742,
+    "deploymentName": "formal-husky-914",
+    "otherExclusions": [
+      "retired project3176298/tidy-rooster-771",
+      "all old unrelated deployments",
+      "four historical production-valued secret names"
+    ]
+  },
+  "newSecrets": [
+    "CORTEX_CI_CONVEX_URL",
+    "CORTEX_CI_CONVEX_DEPLOY_KEY",
+    "CORTEX_CI_CONVEX_URL_CLI",
+    "CORTEX_CI_CONVEX_DEPLOY_KEY_CLI",
+    "CORTEX_CI_AUTH_PRIVATE_KEY"
+  ],
+  "newVariables": {
+    "CORTEX_CI_DISPOSABLE_DEPLOYMENTS": "JSON array of exactly two allocated dev deployment names",
+    "CORTEX_CI_AUTH_ISSUER": "https://cortex-ci-runtime.example/",
+    "CORTEX_CI_AUTH_AUDIENCE": "cortex-ci-runtime",
+    "CORTEX_CI_MODEL_MANIFEST_ID": "cortex-gateway-agent-defaults-2026-10-08",
+    "CORTEX_CI_MODEL_MANIFEST_REVISION": "9"
+  },
+  "privateKey": "Fresh RSA2048 or stronger PKCS8 PEM; local0600; secret value never printed; public data-JWKS only deployed",
+  "exactAliases": "Map new secrets into guarded CONVEX_URL/DEPLOY_KEY(_CLI) environment; never fallback to historical secrets",
+  "modelPrerequisites": {
+    "endpoint": "runtimeModelPolicy:installDeploymentPolicy",
+    "args": {
+      "manifestId": "cortex-gateway-agent-defaults-2026-10-08",
+      "expectedRevision": 9
+    },
+    "trustRoot": "compiled runtimeModelPolicyBootstrap manifests; valid reviewed-actual/current dispatchEvidence only",
+    "firstExpiryUtc": "2026-10-09T08:50:12.383Z",
+    "expiredProofAction": "Stop dependent paid suite; current renewed actual qualification source required. Never extend timestamps or set fixture-synthetic as accepted.",
+    "defaultEmbeddingProfile": {
+      "profileId": "cortex-text-small-1536-v1",
+      "modelId": "openai/text-embedding-3-small",
+      "dimensions": 1536,
+      "normalization": "text-nfc-lf-v1",
+      "chunking": "codepoint-1600-overlap-200-v1",
+      "indexName": "by_default_embedding_v1"
+    },
+    "operations": [
+      "memory.extract structured",
+      "facts.resolve structured if conflicts",
+      "embedding.memory per actual source chunk",
+      "embedding.query real managed recall"
+    ],
+    "accountPrerequisite": "Native confirm actual Convex AI Gateway eligibility/credit/access for these qualified operations; no app-side inference credentials"
+  },
+  "activationSequence": [
+    "Record actual two target dev/cloud/team/project/name/url ownership metadata before keys/deploy",
+    "Prepare isolated exact candidate source; preserve all prior only-copy evidence and other checkouts",
+    "Set both exact aliases + allowlist + issuer/audience/runid; node scripts/ci/verify-disposable-targets.mjs",
+    "node scripts/ci/runtime-fixtures.mjs auth-config (exclusive create; refuses host auth)",
+    "Deploy identical candidate to sdk and cli using each exact guarded dev key; no production selector",
+    "node scripts/ci/runtime-fixtures.mjs install-policy sdk and cli; preserve actual receipt/expired refusal",
+    "node scripts/ci/runtime-fixtures.mjs provision sdk and cli; preserve scoped authority receipts",
+    "Issue perjob private JWT env through fixtureEnvironment/tokens (tokens command requires private GITHUB_ENV file; no token artifacts)",
+    "Run bounded actual registered modern suite on sdk first using node --experimental-vm-modules node_modules/jest/bin/jest.js --runTestsByPath tests/integration/runtime-ci.test.ts --runInBand --json --outputFile=<public-result-json> with explicit environment; no full156-constructor legacy rerun yet",
+    "Retire exact sdk/cli owned fixtures with scripts/cleanup-test-data.ts sdk|cli; verify FORBIDDEN for all three roles; preserve failure and tombstone history",
+    "Delete fresh native qualification targets only when all owned runs/jobs close and receipts saved; inspect 200/404 as native plan. CI persistent dev targets use scoped retirement instead of global purge",
+    "Only Root-authorized new secret/variable writes may activate GitHub CI; leave historical four selectors untouched"
+  ],
+  "limits": [
+    "Source controls and declared prospective suite are not actual qualification",
+    "JWTs last1hour; fixture grants6hours; no unlimited refresh or retries",
+    "Scope retirement fences access/effects and retires assets/graph authority, but preserves historical/raw rows and tombstones; it is not a global physical purge",
+    "Full root/CLI legacy suites remain discoverable and known incompatible assumptions remain outstanding",
+    "No media/graph/run/reconnect/full12outcome acceptance is implied by this seven-case modern suite"
+  ]
+}

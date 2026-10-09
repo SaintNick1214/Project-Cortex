@@ -12,7 +12,7 @@ on:
     types: [opened, synchronize, reopened]
 
 # The SDK/CLI CI deployments are shared: serialize complete runs so one PR
-# cannot redeploy or purge a backend while another PR is still testing it.
+# cannot redeploy a backend while another PR is still testing it.
 # Suites within a run use scoped fixtures and execute in parallel.
 concurrency:
   group: cortex-shared-ci-backends
@@ -135,6 +135,8 @@ jobs:
           npm ci
       - run: npm run build
       - run: npm run test:contracts
+      - name: Exercise CI target, JWT, lifecycle and explicit-environment guards offline
+        run: node --test scripts/ci/*.test.mjs
 
   # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   # STAGE 1: Detect which files changed (fast, runs first)
@@ -237,7 +239,19 @@ jobs:
   # STAGE 2: Deploy Convex & Purge Database (runs once before all tests)
   # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   setup-and-purge:
-    name: Deploy & Purge Database
+    env:
+      CORTEX_CI_RUN_ID: ${{ github.run_id }}-${{ github.run_attempt }}
+      CORTEX_CI_AUTH_ISSUER: ${{ vars.CORTEX_CI_AUTH_ISSUER }}
+      CORTEX_CI_AUTH_AUDIENCE: ${{ vars.CORTEX_CI_AUTH_AUDIENCE }}
+      CORTEX_CI_AUTH_PRIVATE_KEY: ${{ secrets.CORTEX_CI_AUTH_PRIVATE_KEY }}
+      CORTEX_CI_DISPOSABLE_DEPLOYMENTS: ${{ vars.CORTEX_CI_DISPOSABLE_DEPLOYMENTS }}
+      CONVEX_URL: ${{ secrets.CORTEX_CI_CONVEX_URL }}
+      CONVEX_URL_CLI: ${{ secrets.CORTEX_CI_CONVEX_URL_CLI }}
+      CONVEX_DEPLOY_KEY: ${{ secrets.CORTEX_CI_CONVEX_DEPLOY_KEY }}
+      CONVEX_DEPLOY_KEY_CLI: ${{ secrets.CORTEX_CI_CONVEX_DEPLOY_KEY_CLI }}
+      CORTEX_CI_MODEL_MANIFEST_ID: ${{ vars.CORTEX_CI_MODEL_MANIFEST_ID }}
+      CORTEX_CI_MODEL_MANIFEST_REVISION: ${{ vars.CORTEX_CI_MODEL_MANIFEST_REVISION }}
+    name: Deploy & Provision Scoped Runtime Fixtures
     runs-on: ubuntu-latest
     needs: detect-changes
     # Run if any tests need to run OR if targeting main branch
@@ -275,47 +289,36 @@ jobs:
 
       - name: Require explicitly approved disposable development targets
         run: node scripts/ci/verify-disposable-targets.mjs
-        env:
-          CORTEX_CI_DISPOSABLE_DEPLOYMENTS: ${{ vars.CORTEX_CI_DISPOSABLE_DEPLOYMENTS }}
-          CONVEX_URL: ${{ secrets.CONVEX_URL }}
-          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
-          CONVEX_URL_CLI: ${{ secrets.CONVEX_URL_CLI }}
-          CONVEX_DEPLOY_KEY_CLI: ${{ secrets.CONVEX_DEPLOY_KEY_CLI }}
 
-      - name: Deploy Convex backend
+      - name: Write public CI JWT verification config (preserve existing host auth)
+        run: node scripts/ci/runtime-fixtures.mjs auth-config
+
+      - name: Deploy SDK Convex backend to guarded dev target
+        run: npx convex deploy --yes
+
+      - name: Deploy CLI Convex backend to guarded distinct dev target
         run: npx convex deploy --yes
         env:
-          CONVEX_DEPLOYMENT: ${{ secrets.CONVEX_URL }}
-          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
+          CONVEX_URL: ${{ secrets.CORTEX_CI_CONVEX_URL_CLI }}
+          CONVEX_DEPLOY_KEY: ${{ secrets.CORTEX_CI_CONVEX_DEPLOY_KEY_CLI }}
 
-      - name: Generate Convex types
-        run: npx convex codegen
-        env:
-          CONVEX_URL: ${{ secrets.CONVEX_URL }}
-          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
-
-      - name: Purge test database
+      - name: Install the pinned compiled policy (unknown, synthetic or expired qualification fails closed)
         run: |
-          echo "🧹 Purging all test data before parallel test execution..."
-          npx tsx scripts/cleanup-test-data.ts
-        env:
-          CONVEX_URL: ${{ secrets.CONVEX_URL }}
-          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
+          node scripts/ci/runtime-fixtures.mjs install-policy sdk > ci-sdk-policy.json
+          node scripts/ci/runtime-fixtures.mjs install-policy cli > ci-cli-policy.json
 
-      # CLI-dedicated Convex instance (isolated from main SDK tests)
-      - name: Deploy CLI Convex backend
-        run: npx convex deploy --yes
-        env:
-          CONVEX_DEPLOYMENT: ${{ secrets.CONVEX_URL_CLI }}
-          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY_CLI }}
-
-      - name: Purge CLI test database
+      - name: Provision exact scoped JWT fixture identities through the internal operator API
         run: |
-          echo "🧹 Purging CLI test database..."
-          npx tsx scripts/cleanup-test-data.ts
-        env:
-          CONVEX_URL: ${{ secrets.CONVEX_URL_CLI }}
-          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY_CLI }}
+          node scripts/ci/runtime-fixtures.mjs provision sdk > ci-sdk-fixtures.json
+          node scripts/ci/runtime-fixtures.mjs provision cli > ci-cli-fixtures.json
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ci-runtime-fixture-receipts
+          path: |
+            ci-*-fixtures.json
+            ci-*-policy.json
+          retention-days: 14
 
   # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   # STAGE 3: Code Quality (runs in parallel with tests after purge)
@@ -355,12 +358,6 @@ jobs:
           npm install --global npm@12.2.0
           npm ci
 
-      - name: Generate Convex types
-        run: npx convex codegen
-        env:
-          CONVEX_URL: ${{ secrets.CONVEX_URL }}
-          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
-
       - name: Run ESLint (TypeScript)
         if: needs.detect-changes.outputs.typescript == 'true' || (github.event.pull_request.base.ref == 'main' || github.event_name == 'push' || github.event_name == 'workflow_dispatch')
         run: npm run lint
@@ -374,6 +371,14 @@ jobs:
   # STAGE 3: TypeScript SDK Tests (sharded across 5 parallel runners)
   # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   test-typescript:
+    env:
+      CORTEX_CI_RUN_ID: ${{ github.run_id }}-${{ github.run_attempt }}
+      CORTEX_CI_AUTH_ISSUER: ${{ vars.CORTEX_CI_AUTH_ISSUER }}
+      CORTEX_CI_AUTH_AUDIENCE: ${{ vars.CORTEX_CI_AUTH_AUDIENCE }}
+      CORTEX_CI_AUTH_PRIVATE_KEY: ${{ secrets.CORTEX_CI_AUTH_PRIVATE_KEY }}
+      CORTEX_CI_DISPOSABLE_DEPLOYMENTS: ${{ vars.CORTEX_CI_DISPOSABLE_DEPLOYMENTS }}
+      CONVEX_URL: ${{ secrets.CORTEX_CI_CONVEX_URL }}
+      CONVEX_URL_CLI: ${{ secrets.CORTEX_CI_CONVEX_URL_CLI }}
     name: Test TypeScript SDK (Shard ${{ matrix.shard }}/5)
     runs-on: ubuntu-latest
     needs: [detect-changes, setup-and-purge]
@@ -415,12 +420,6 @@ jobs:
           npm install --global npm@12.2.0
           npm ci
 
-      - name: Generate Convex types
-        run: npx convex codegen
-        env:
-          CONVEX_URL: ${{ secrets.CONVEX_URL }}
-          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
-
       # Stagger shard starts to reduce concurrent load on shared Convex backend.
       # 2-second increments allow each runner to begin its test subset
       # before the next starts, avoiding thundering herd on database operations.
@@ -430,6 +429,9 @@ jobs:
           echo "Staggering shard ${{ matrix.shard }} start by ${DELAY}s"
           sleep $DELAY
 
+      - name: Issue scoped verified-host JWTs into private runner environment
+        run: node scripts/ci/runtime-fixtures.mjs tokens sdk
+
       - name: Run tests (shard ${{ matrix.shard }}/5)
         run: |
           node --experimental-vm-modules node_modules/jest/bin/jest.js \
@@ -437,8 +439,7 @@ jobs:
             --shard=${{ matrix.shard }}/5 \
             --maxWorkers=75%
         env:
-          CONVEX_URL: ${{ secrets.CONVEX_URL }}
-          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
+          CONVEX_URL: ${{ secrets.CORTEX_CI_CONVEX_URL }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           CONVEX_TEST_MODE: managed
 
@@ -450,6 +451,14 @@ jobs:
   # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   test-vercel-ai-provider:
+    env:
+      CORTEX_CI_RUN_ID: ${{ github.run_id }}-${{ github.run_attempt }}
+      CORTEX_CI_AUTH_ISSUER: ${{ vars.CORTEX_CI_AUTH_ISSUER }}
+      CORTEX_CI_AUTH_AUDIENCE: ${{ vars.CORTEX_CI_AUTH_AUDIENCE }}
+      CORTEX_CI_AUTH_PRIVATE_KEY: ${{ secrets.CORTEX_CI_AUTH_PRIVATE_KEY }}
+      CORTEX_CI_DISPOSABLE_DEPLOYMENTS: ${{ vars.CORTEX_CI_DISPOSABLE_DEPLOYMENTS }}
+      CONVEX_URL: ${{ secrets.CORTEX_CI_CONVEX_URL }}
+      CONVEX_URL_CLI: ${{ secrets.CORTEX_CI_CONVEX_URL_CLI }}
     name: Test Vercel AI Provider
     runs-on: ubuntu-latest
     needs: [detect-changes, setup-and-purge]
@@ -486,11 +495,8 @@ jobs:
           npm install --global npm@12.2.0
           npm ci
 
-      - name: Generate Convex types
-        run: npx convex codegen
-        env:
-          CONVEX_URL: ${{ secrets.CONVEX_URL }}
-          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
+      - name: Issue scoped verified-host JWTs into private runner environment
+        run: node scripts/ci/runtime-fixtures.mjs tokens sdk
 
       - name: Build main SDK first
         run: npm run build
@@ -498,7 +504,7 @@ jobs:
       - name: Run Vercel AI Provider tests
         run: npm test --workspace=@cortexmemory/vercel-ai-provider
         env:
-          CONVEX_URL: ${{ secrets.CONVEX_URL }}
+          CONVEX_URL: ${{ secrets.CORTEX_CI_CONVEX_URL }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 
       - name: Lint Vercel AI Provider
@@ -514,6 +520,14 @@ jobs:
   # STAGE 3: CLI Tests (parallel with other test jobs)
   # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   test-cli:
+    env:
+      CORTEX_CI_RUN_ID: ${{ github.run_id }}-${{ github.run_attempt }}
+      CORTEX_CI_AUTH_ISSUER: ${{ vars.CORTEX_CI_AUTH_ISSUER }}
+      CORTEX_CI_AUTH_AUDIENCE: ${{ vars.CORTEX_CI_AUTH_AUDIENCE }}
+      CORTEX_CI_AUTH_PRIVATE_KEY: ${{ secrets.CORTEX_CI_AUTH_PRIVATE_KEY }}
+      CORTEX_CI_DISPOSABLE_DEPLOYMENTS: ${{ vars.CORTEX_CI_DISPOSABLE_DEPLOYMENTS }}
+      CONVEX_URL: ${{ secrets.CORTEX_CI_CONVEX_URL }}
+      CONVEX_URL_CLI: ${{ secrets.CORTEX_CI_CONVEX_URL_CLI }}
     name: Test Cortex CLI
     runs-on: ubuntu-latest
     needs: [detect-changes, setup-and-purge]
@@ -550,14 +564,11 @@ jobs:
           npm install --global npm@12.2.0
           npm ci
 
-      - name: Generate Convex types
-        run: npx convex codegen
-        env:
-          CONVEX_URL: ${{ secrets.CONVEX_URL }}
-          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
-
       - name: Build main SDK first
         run: npm run build
+
+      - name: Issue scoped verified-host JWTs into private runner environment
+        run: node scripts/ci/runtime-fixtures.mjs tokens cli
 
       - name: Run CLI unit tests
         run: npm run test:unit --workspace=@cortexmemory/cli
@@ -565,9 +576,8 @@ jobs:
       - name: Run CLI E2E tests
         run: npm run test:e2e --workspace=@cortexmemory/cli
         env:
-          CONVEX_URL_CLI: ${{ secrets.CONVEX_URL_CLI }}
-          CONVEX_URL: ${{ secrets.CONVEX_URL_CLI }}
-          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY_CLI }}
+          CONVEX_URL_CLI: ${{ secrets.CORTEX_CI_CONVEX_URL_CLI }}
+          CONVEX_URL: ${{ secrets.CORTEX_CI_CONVEX_URL_CLI }}
 
       - name: Lint CLI
         run: npm run lint --workspace=@cortexmemory/cli
@@ -594,6 +604,45 @@ jobs:
       - name: Verify package contents
         run: npm pack --dry-run --workspace=@cortexmemory/cli
 
+  cleanup-runtime-fixtures:
+    name: Retire exact CI fixture authority
+    runs-on: ubuntu-latest
+    needs: [setup-and-purge, code-quality, test-typescript, test-vercel-ai-provider, test-cli]
+    if: always() && (needs.setup-and-purge.result == 'success' || needs.setup-and-purge.result == 'failure')
+    env:
+      CORTEX_CI_RUN_ID: ${{ github.run_id }}-${{ github.run_attempt }}
+      CORTEX_CI_AUTH_ISSUER: ${{ vars.CORTEX_CI_AUTH_ISSUER }}
+      CORTEX_CI_AUTH_AUDIENCE: ${{ vars.CORTEX_CI_AUTH_AUDIENCE }}
+      CORTEX_CI_AUTH_PRIVATE_KEY: ${{ secrets.CORTEX_CI_AUTH_PRIVATE_KEY }}
+      CORTEX_CI_DISPOSABLE_DEPLOYMENTS: ${{ vars.CORTEX_CI_DISPOSABLE_DEPLOYMENTS }}
+      CONVEX_URL: ${{ secrets.CORTEX_CI_CONVEX_URL }}
+      CONVEX_URL_CLI: ${{ secrets.CORTEX_CI_CONVEX_URL_CLI }}
+      CONVEX_DEPLOY_KEY: ${{ secrets.CORTEX_CI_CONVEX_DEPLOY_KEY }}
+      CONVEX_DEPLOY_KEY_CLI: ${{ secrets.CORTEX_CI_CONVEX_DEPLOY_KEY_CLI }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "24.15.0"
+          cache: npm
+      - run: |
+          npm install --global npm@12.2.0
+          npm ci
+      - name: Retire owned SDK test tenant; preserve failure and tombstone history
+        if: always()
+        run: npx tsx scripts/cleanup-test-data.ts sdk > ci-sdk-cleanup.json
+      - name: Retire owned CLI test tenant; preserve failure and tombstone history
+        if: always()
+        run: npx tsx scripts/cleanup-test-data.ts cli > ci-cli-cleanup.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ci-runtime-cleanup-receipts
+          path: ci-*-cleanup.json
+          retention-days: 14
+
   # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   # STAGE 4: All Checks Passed (final gate)
   # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -606,6 +655,7 @@ jobs:
         graph-contracts,
         detect-changes,
         setup-and-purge,
+        cleanup-runtime-fixtures,
         test-typescript,
         test-vercel-ai-provider,
         test-cli,
@@ -623,6 +673,9 @@ jobs:
           test "${{ needs.public-contracts.result }}" = "success"
           test "${{ needs.demo-contracts.result }}" = "success"
           test "${{ needs.graph-contracts.result }}" = "success"
+          if [[ "${{ needs.setup-and-purge.result }}" == "success" ]]; then
+            test "${{ needs.cleanup-runtime-fixtures.result }}" = "success"
+          fi
           echo "📊 Check Results:"
           echo "  Detect Changes:           ${{ needs.detect-changes.result }}"
           echo "  Setup & Purge:            ${{ needs.setup-and-purge.result }}"

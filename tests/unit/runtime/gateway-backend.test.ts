@@ -10,7 +10,6 @@ import { canonicalModelJson, DEFAULT_CHAT_MODEL_ID } from "../../../src/domain/m
 import { DEFAULT_EMBEDDING_PROFILE, LARGE_EMBEDDING_PROFILE, semanticHash } from "../../../src/domain/profile";
 import { FACTS_JSON_SCHEMA } from "../../../src/domain/extraction";
 import { CONFLICT_DECISION_JSON_SCHEMA } from "../../../src/domain/conflicts";
-import { memoryFixture, registeredHandler } from "../runtimeMemory/fixture";
 
 const server = await import("convex/server");
 const tokenLookup = jest.fn<() => Promise<string>>().mockRejectedValue(new Error("OFFLINE_TOKEN_PROHIBITED"));
@@ -23,6 +22,7 @@ jest.unstable_mockModule("../../../convex-dev/runtimeModelPolicyBootstrap", () =
   isTrustedDeploymentManifest: (entry: DeploymentPolicyManifest) => entry === root && entry.classification === "fixture-synthetic",
 }));
 const nativeLedger = await import("../../../convex-dev/runtimeModelPolicy");
+const { memoryFixture, registeredHandler } = await import("../runtimeMemory/fixture");
 const { createBackendGatewayComposition, createBackendGovernedGatewayModel, ensureBackendGatewayBudget } = await import("../../../convex-dev/runtimeGatewayBackend");
 const { governGatewayLanguageModel, governGatewayEmbeddingModel } = await import("../../../convex-dev/runtimeGateway");
 const clock = 1_000_000;

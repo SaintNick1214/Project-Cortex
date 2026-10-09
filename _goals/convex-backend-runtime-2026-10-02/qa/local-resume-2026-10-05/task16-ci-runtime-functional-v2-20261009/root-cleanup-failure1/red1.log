@@ -1,0 +1,32 @@
+✔ workflow parses and guards both development targets before auth writes or service effects (0.448458ms)
+✔ consumer jobs issue scoped JWTs without deployment operator keys and retain required suite discovery (0.152042ms)
+✔ cleanup waits for every consumer, runs after failure, and is a required final result (0.052542ms)
+✖ each target cleanup still runs when the other cleanup fails (0.255083ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 3
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 56.25925
+
+✖ failing tests:
+
+test at scripts/ci/workflow-runtime-fixtures.test.mjs:43:1
+✖ each target cleanup still runs when the other cleanup fails (0.255083ms)
+  AssertionError [ERR_ASSERTION]: one fail-fast shell must not own both retirements
+      at TestContext.<anonymous> (file:///Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/scripts/ci/workflow-runtime-fixtures.test.mjs:49:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:831:18)
+      at Test.postRun (node:internal/test_runner/test:1330:19)
+      at Test.run (node:internal/test_runner/test:1258:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: { name: 'Retire owned SDK and CLI test tenants; preserve failure and tombstone history', run: 'npx tsx scripts/cleanup-test-data.ts sdk > ci-sdk-cleanup.json\nnpx tsx scripts/cleanup-test-data.ts cli > ci-cli-cleanup.json\n' },
+    expected: { name: 'Retire owned SDK and CLI test tenants; preserve failure and tombstone history', run: 'npx tsx scripts/cleanup-test-data.ts sdk > ci-sdk-cleanup.json\nnpx tsx scripts/cleanup-test-data.ts cli > ci-cli-cleanup.json\n' },
+    operator: 'notStrictEqual',
+    diff: 'simple'
+  }

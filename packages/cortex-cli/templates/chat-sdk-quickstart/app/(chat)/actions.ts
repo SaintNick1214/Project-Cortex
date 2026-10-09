@@ -1,53 +1,44 @@
 "use server";
-
-import { generateText, type UIMessage } from "ai";
+import type { UIMessage } from "ai";
 import { cookies } from "next/headers";
 import type { VisibilityType } from "@/components/visibility-selector";
-import { titlePrompt } from "@/lib/ai/prompts";
-import { getTitleModel } from "@/lib/ai/providers";
-import {
-  deleteMessagesByChatIdAfterTimestamp,
-  getMessageById,
-  updateChatVisibilityById,
-} from "@/lib/db/queries";
-import { getTextFromMessage } from "@/lib/utils";
-
+import { submitDocument } from "@/lib/artifacts/server";
 export async function saveChatModelAsCookie(model: string) {
-  const cookieStore = await cookies();
-  cookieStore.set("chat-model", model);
+  (await cookies()).set("chat-model", model);
 }
-
 export async function generateTitleFromUserMessage({
   message,
+  token,
+  conversationId,
+  parentRunId,
 }: {
   message: UIMessage;
+  token: string;
+  conversationId: string;
+  parentRunId: string;
 }) {
-  const { text } = await generateText({
-    model: getTitleModel(),
-    prompt: getTextFromMessage(message),
-    system: titlePrompt,
-  });
-  return text
-    .replace(/^[#*"\s]+/, "")
-    .replace(/["]+$/, "")
-    .trim();
-}
-
-export async function deleteTrailingMessages({ id }: { id: string }) {
-  const [message] = await getMessageById({ id });
-
-  await deleteMessagesByChatIdAfterTimestamp({
-    chatId: message.chatId,
-    timestamp: message.createdAt,
+  return submitDocument(token, {
+    conversationId,
+    intent: "title",
+    parentRunId,
+    prompt: message.parts
+      .filter((part) => part.type === "text")
+      .map((part) => part.text)
+      .join("\n"),
+    requestId: `title:${message.id}`,
+    version: 1,
   });
 }
-
-export async function updateChatVisibility({
-  chatId,
-  visibility,
-}: {
+export async function deleteTrailingMessages(_args: { id: string }) {
+  throw new Error(
+    "Use authenticated canonical transcript removal on the backend."
+  );
+}
+export async function updateChatVisibility(_args: {
   chatId: string;
   visibility: VisibilityType;
 }) {
-  await updateChatVisibilityById({ chatId, visibility });
+  throw new Error(
+    "Provision conversation sharing through the authorized backend."
+  );
 }

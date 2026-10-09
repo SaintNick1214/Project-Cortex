@@ -1,0 +1,155 @@
+{
+  "version": 1,
+  "status": "REGISTERED_CI_RUNTIME_SLICE_PASS_TARGETS_RETAINED",
+  "closedAtUtc": "2026-10-09T03:35:12.302240+00:00",
+  "backendManifest": "92fd1dad5fe420bea81460f0330bcf8fbf7d8f647d4260824a24cdb45bcffcf0",
+  "sourceCandidate": "beb80e27a1e6cfa9c3081296e59cc28866752cb37dd8b37ecacc6c7b5ecc078d",
+  "coverage": {
+    "distinctModernCases": 7,
+    "targetKindExecutions": 2,
+    "actualTestsPassedPerKind": 7,
+    "fullOriginalTask16Accepted": false,
+    "legacySuitesMarkedGreen": false
+  },
+  "actualEffects": {
+    "modelAttemptsPerKind": 5,
+    "modelAttemptsTotal": 10,
+    "operationKeysPerKind": {
+      "memory.extract": 2,
+      "embedding.memory": 2,
+      "embedding.query": 1
+    },
+    "confirmedTerminalPerKind": 5,
+    "fullUnknownLiability": 1000000,
+    "heldModelSlots": 0,
+    "paidRetries": 0,
+    "cleanupModelCalls": 0
+  },
+  "cleanup": {
+    "allThreeRolesDeniedPerKind": true,
+    "newRemainingRetirements": 3,
+    "alreadyCommittedSdkMainNotReplayed": true,
+    "financialRootWindowCountersUnchanged": true,
+    "targetsRetained": [
+      {
+        "kind": "sdk",
+        "projectId": 3176493,
+        "deploymentName": "steady-snake-253",
+        "url": "https://steady-snake-253.convex.cloud"
+      },
+      {
+        "kind": "cli",
+        "projectId": 3176494,
+        "deploymentName": "usable-sheep-908",
+        "url": "https://usable-sheep-908.convex.cloud"
+      }
+    ],
+    "credentialModes": "directory0700/files0600",
+    "GitHubWrites": 0,
+    "finalTargetRetirementStillRequired": true,
+    "ownedModelChildrenClosed": true
+  },
+  "preservedFailures": [
+    {
+      "receipt": "modern-ci1-outcomes.json",
+      "scope": "empty official data stdout parsing before Jest or inference; corrected reader only"
+    },
+    {
+      "receipt": "retirement1-outcomes.json",
+      "scope": "terminal-stage vocabulary oracle omitted skipped before mutation"
+    },
+    {
+      "receipt": "retirement2-outcomes.json",
+      "scope": "SDK main committed; official null run stdout is empty, parser then failed"
+    },
+    {
+      "receipt": "cleanup-readback1.json",
+      "scope": "read-only partial cleanup determination, no retirement replay"
+    }
+  ],
+  "applicability": {
+    "contentTitleSuccessorNotInstalled": true,
+    "initial107FileCandidateOnly": true,
+    "asyncVideo503StillUnavailable": true,
+    "CIWorkflowActivationAndBroaderTask16Pending": true,
+    "oldProductionValuedSelectorsUnused": true,
+    "old3174742Unaffected": true
+  },
+  "index": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-ci-runtime-functional-v2-20261009/native-actual/fixture-pointer1.json",
+      "bytes": 168,
+      "sha256": "f27a776ca12dad8c4a3a210b9bc841942a5d7cdcf94736995353ca2cef54e630"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-ci-runtime-functional-v2-20261009/native-actual/prepare-hosts1-outcomes.json",
+      "bytes": 666,
+      "sha256": "00d7105a3b52123d73923de79e48bf5850b306423bf9730d0f8825daea2cc4eb"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-ci-runtime-functional-v2-20261009/native-actual/deploy-provision1-outcomes.json",
+      "bytes": 896,
+      "sha256": "a4105337ff16f3f5afc91bdf886a019cb89582f6c0d0aebcd1d4b179fd0a57bd"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-ci-runtime-functional-v2-20261009/native-actual/modern-ci1-outcomes.json",
+      "bytes": 225,
+      "sha256": "d94513c2d4bb1e55e95e5fcfb06bfdc083c2cf0433743ffbfc8b1afddcf41e75"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-ci-runtime-functional-v2-20261009/native-actual/modern-ci2-outcomes.json",
+      "bytes": 945,
+      "sha256": "bf683a618a1322cfcff7495cb4b39411dab2dcd867c57c7f17c4fb6771a5ee1c"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-ci-runtime-functional-v2-20261009/native-actual/sdk-modern2-summary.json",
+      "bytes": 68217,
+      "sha256": "fa3ef76130bbdb9cc3d1a03b2e3124b8b9244a9ece4ad2ba492fc57ee995fbe4"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-ci-runtime-functional-v2-20261009/native-actual/cli-modern2-summary.json",
+      "bytes": 68218,
+      "sha256": "2e7a5c41f62f834906a428c2a2fc3942c0395672d39876054177bbd56e93fc15"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-ci-runtime-functional-v2-20261009/native-actual/sdk-modern-suite2-results.json",
+      "bytes": 4146,
+      "sha256": "8476c847e0a646632668e27ebe320339db7c418c15ec8bc3f51233bb5943c83d"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-ci-runtime-functional-v2-20261009/native-actual/cli-modern-suite2-results.json",
+      "bytes": 4146,
+      "sha256": "41e6af6d757ff95559a65008e1473e18deac0d45dac081136a14595d5c186b4c"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-ci-runtime-functional-v2-20261009/native-actual/retirement1-outcomes.json",
+      "bytes": 258,
+      "sha256": "6b2090f6ef394720486b34cc1f830baf6be91122ae873adbe816fa6118e9c0a9"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-ci-runtime-functional-v2-20261009/native-actual/retirement2-outcomes.json",
+      "bytes": 254,
+      "sha256": "184610da8d77a2f8e1830d39e99cefc7e1f477674843b58f3140d798ac9d3e1f"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-ci-runtime-functional-v2-20261009/native-actual/cleanup-readback1.json",
+      "bytes": 2331,
+      "sha256": "50d78dce54fdbd973946743a88927bb643f79d5c0aecece3ef770ac6bd71b299"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-ci-runtime-functional-v2-20261009/native-actual/retirement3-outcomes.json",
+      "bytes": 1712,
+      "sha256": "22d85dac494bf56fac54299d1924c930d4f3f602c13d597c12897c95c33f0ef5"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-ci-runtime-functional-v2-20261009/native-actual/sdk-retirement3.json",
+      "bytes": 279784,
+      "sha256": "19f076f02317f92cd4c69e815f848d291408b1d590053807f78fcf596cb5ff94"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-ci-runtime-functional-v2-20261009/native-actual/cli-retirement3.json",
+      "bytes": 279513,
+      "sha256": "84c6aec64eba18fbcf7657043da20f9719af6d5c006909bd6a839a7cc81f9459"
+    }
+  ]
+}

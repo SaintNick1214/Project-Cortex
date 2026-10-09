@@ -1,0 +1,125 @@
+Browser tab: 7, Title: "Cortex ChatSDK", URL: "http://127.0.0.1:61989/".
+0 AXWebArea Cortex ChatSDK, URL: 127.0.0.1:61989/
+	1 container
+		2 container Notifications alt+T
+		3 container
+			4 heading Cortex ChatSDK, Value: 1
+				5 text Cortex ChatSDK
+			6 text Backend Agent chat, governed document generation, retained versions and memory status.
+		7 container Host authentication
+			8 container
+				9 text Host-issued JWT
+				10 text field (settable) Description: Host-issued JWT, Value: <redacted>
+			11 container
+				12 text Agent ID
+				13 text field (settable) Description: Agent ID, Value: agent:e8d3aa2e9258286976e4eef386086130d151cb77cb196f653aac2166cfee7713
+			14 container
+				15 text Version
+				16 stepper (settable, integer) Description: Agent version, Value: 1
+			17 button Connect
+			18 button Refresh token
+			19 button Sign out
+			20 text task15c-content-20261009 / content15c-20261009 / n579nthk6v3vcf486mth09f5ts8fzkgx
+		21 container Remote chat
+			22 heading Conversation, Value: 2
+				23 text Conversation
+			24 container
+				25 text Message
+				26 text entry area (settable) Message
+				27 button Send
+			28 button Disconnect observation
+			29 button Reconnect
+			30 button Stop run
+			31 container
+				32 text Existing Run ID
+				33 text field (settable) Existing Run ID
+			34 button Attach
+		35 container Run status
+			36 heading Run status, Value: 2
+				37 text Run status
+			38 text No run
+		39 container Backend content jobs
+			40 heading Documents and suggestions, Value: 2
+				41 text Documents and suggestions
+			42 container
+				43 text Intent
+				44 pop up button (collapsed, settable) Description: Content intent, Value: text, Secondary Actions: Expand
+					45 menu
+						46 (selected) text
+						47 code
+						48 sheet
+						49 suggestions
+						50 title
+				51 text Instructions
+				52 text entry area (settable) Content instructions
+				53 text Existing Artifact ID (updates or suggestions)
+				54 text field (settable) Artifact ID
+				55 text Version
+				56 stepper (settable, integer) Description: Artifact version, Value: 1
+				57 button Generate on backend
+			58 container
+				59 heading text · unknown, Value: 3
+					60 text text  ·  unknown
+				61 text content:8f3ae6f32736fef4faad97d5a3b4b56f45e08cfcb455f5ef5fb3ea0f82c1cad1 artifact:content:8f3ae6f32736fef4faad97d5a3b4b56f45e08cfcb455f5ef5fb3ea0f82c1cad1 CONTENT_OPERATION_UNKNOWN
+				62 button Refresh
+				63 button Recover saved result
+				64 button Cancel
+			65 container
+				66 heading text · cancelled, Value: 3
+					67 text text  ·  cancelled
+				68 text content:3b4f20613300ed087616a0e02c0a89ba92b3034222d55792e82d94e26c07398c artifact:content:3b4f20613300ed087616a0e02c0a89ba92b3034222d55792e82d94e26c07398c
+				69 button Refresh
+				70 button Recover saved result
+				71 button Cancel
+			72 container
+				73 heading Value: 3, A small blue circle stands alone on a pristine white background. Its simplicity highlights clarity and focus. · ready
+					74 text A small blue circle stands alone on a pristine white background. Its simplicity highlights clarity and focus.  ·  ready
+				75 text content:35ecf0422eab0521d400e62c9a0370e475c95ef5fddc574fc02351c64e08ccfa artifact:content:644bbb93fa904ec503f189bc69fcc70d003a144e6efa447695321480bfc5d7bd version 3 A small blue circle sits quietly on a pristine white background. Its vibrant hue captures the eye, creating a striking contrast.
+				76 button Refresh
+				77 button Recover saved result
+				78 button Cancel
+				79 text Suggestion applied. Request fresh suggestions for more edits. Its vibrant hue draws the eye, creating a striking contrast.  →  Its vibrant hue captures the eye, creating a striking contrast. Changed 'draws' to 'captures' for a more dynamic expression.
+				80 button (disabled) Apply this suggestion
+			81 container
+				82 heading Simple CSV Example · ready, Value: 3
+					83 text Simple CSV Example  ·  ready
+				84 text content:f51b830cdeddc1afe7e3ca94340a3a810c128a44808446204cbbba2b5cb30a69 artifact:content:f51b830cdeddc1afe7e3ca94340a3a810c128a44808446204cbbba2b5cb30a69 version 2 label,count  
+blue,1  
+				85 button Refresh
+				86 button Recover saved result
+				87 button Cancel
+			88 container
+				89 heading Export Add Function · ready, Value: 3
+					90 text Export Add Function  ·  ready
+				91 text content:d05797c656ff1cb08d454e433892187f7a926f44485e509cd944fe0af4a0ab09 artifact:content:d05797c656ff1cb08d454e433892187f7a926f44485e509cd944fe0af4a0ab09 version 2 export function add(a, b) {
+    return a + b;
+}
+				92 button Refresh
+				93 button Recover saved result
+				94 button Cancel
+			95 container
+				96 heading Value: 3, A small blue circle stands alone on a pristine white background. Its simplicity highlights clarity and focus. · ready
+					97 text A small blue circle stands alone on a pristine white background. Its simplicity highlights clarity and focus.  ·  ready
+				98 text content:644bbb93fa904ec503f189bc69fcc70d003a144e6efa447695321480bfc5d7bd artifact:content:644bbb93fa904ec503f189bc69fcc70d003a144e6efa447695321480bfc5d7bd version 2 A small blue circle sits quietly on a pristine white background. Its vibrant hue draws the eye, creating a striking contrast.
+				99 button Refresh
+				100 button Recover saved result
+				101 button Cancel
+			102 container
+				103 heading Minimalist Blue Circle Art · ready, Value: 3
+					104 text Minimalist Blue Circle Art  ·  ready
+				105 text content:b5ae447fad0b5cd0e69abee23a7b713de0914481b5905c3df6379d99d4c26608
+				106 button Refresh
+				107 button Recover saved result
+				108 button Cancel
+		109 container History and memory
+			110 heading History and memory, Value: 2
+				111 text History and memory
+			112 button Load conversations
+			113 button Memory readiness
+			114 button Current profile
+			115 container
+				116 text Recall query
+				117 text field (settable) Recall query
+				118 button Recall
+
+The focused UI element is 17 button Connect

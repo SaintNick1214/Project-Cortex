@@ -48,6 +48,12 @@ const { existsSync } = await import("fs");
 const { writeFile } = await import("fs/promises");
 const { Cortex } = await import("@cortexmemory/sdk");
 
+// Explicit current-client boundary; session failures remain failures without deleting host config.
+jest.unstable_mockModule("../client.js", () => ({
+  createClient: async (_config: CLIConfig) => new Cortex({ convexUrl: _config.deployments.probe.url }),
+  closeClient: (client: InstanceType<typeof Cortex>) => client.close(),
+}));
+
 // Import the module under test
 const { validateAndCleanConfig, loadConfigWithValidation } =
   await import("../config.js");
@@ -220,7 +226,7 @@ describe("validateAndCleanConfig", () => {
   });
 
   // Requirement 7: Convex auth error (401) triggers removal
-  it("should remove deployment on auth error (401)", async () => {
+  it("should retain host deployment on session auth error (401)", async () => {
     mockExistsSync.mockReturnValue(true);
     mockMemorySpacesList.mockRejectedValue(new Error("401 Unauthorized"));
 
@@ -235,13 +241,13 @@ describe("validateAndCleanConfig", () => {
 
     const result = await validateAndCleanConfig(config, { checkConvex: true });
 
-    expect(result.modified).toBe(true);
-    expect(result.removed.deployments).toContain("test");
-    expect(result.config.deployments["test"]).toBeUndefined();
+    expect(result.modified).toBe(false);
+    expect(result.removed.deployments).toHaveLength(0);
+    expect(result.config.deployments["test"]).toBeDefined();
   });
 
   // Requirement 8: Convex auth error (403) triggers removal
-  it("should remove deployment on auth error (403)", async () => {
+  it("should retain host deployment on session auth error (403)", async () => {
     mockExistsSync.mockReturnValue(true);
     mockMemorySpacesList.mockRejectedValue(new Error("403 Forbidden"));
 
@@ -256,12 +262,12 @@ describe("validateAndCleanConfig", () => {
 
     const result = await validateAndCleanConfig(config, { checkConvex: true });
 
-    expect(result.modified).toBe(true);
-    expect(result.removed.deployments).toContain("test");
+    expect(result.modified).toBe(false);
+    expect(result.removed.deployments).toHaveLength(0);
   });
 
   // Requirement 9: Convex auth error (message contains "unauthorized") triggers removal
-  it('should remove deployment on auth error (message contains "unauthorized")', async () => {
+  it('should retain host deployment on session auth error (message contains "unauthorized")', async () => {
     mockExistsSync.mockReturnValue(true);
     mockMemorySpacesList.mockRejectedValue(
       new Error("Request failed: unauthorized access"),
@@ -278,8 +284,8 @@ describe("validateAndCleanConfig", () => {
 
     const result = await validateAndCleanConfig(config, { checkConvex: true });
 
-    expect(result.modified).toBe(true);
-    expect(result.removed.deployments).toContain("test");
+    expect(result.modified).toBe(false);
+    expect(result.removed.deployments).toHaveLength(0);
   });
 
   // Requirement 10: Convex network error (ECONNREFUSED) does NOT trigger removal
@@ -427,13 +433,13 @@ describe("validateAndCleanConfig", () => {
       timeout: 50,
     });
 
-    expect(result.modified).toBe(true);
+    expect(result.modified).toBe(false);
 
-    // Auth errors should be removed
-    expect(result.removed.deployments).toContain("auth-error-1");
-    expect(result.removed.deployments).toContain("auth-error-2");
-    expect(result.config.deployments["auth-error-1"]).toBeUndefined();
-    expect(result.config.deployments["auth-error-2"]).toBeUndefined();
+    // Session auth failures must not remove saved host deployments
+    expect(result.removed.deployments).not.toContain("auth-error-1");
+    expect(result.removed.deployments).not.toContain("auth-error-2");
+    expect(result.config.deployments["auth-error-1"]).toBeDefined();
+    expect(result.config.deployments["auth-error-2"]).toBeDefined();
 
     // Valid deployments should be kept
     expect(result.config.deployments["valid-1"]).toBeDefined();
@@ -442,8 +448,8 @@ describe("validateAndCleanConfig", () => {
     // Timeout should be kept (fail-safe)
     expect(result.config.deployments["timeout"]).toBeDefined();
 
-    // Exactly 2 removed
-    expect(result.removed.deployments).toHaveLength(2);
+    // No auth-driven removals
+    expect(result.removed.deployments).toHaveLength(0);
   });
 
   // Requirement 15: checkConvex: false skips Convex validation entirely
@@ -711,8 +717,8 @@ describe("validateAndCleanConfig", () => {
 
     const result = await validateAndCleanConfig(config, { checkConvex: true });
 
-    expect(result.modified).toBe(true);
-    expect(result.removed.deployments).toContain("test");
+    expect(result.modified).toBe(false);
+    expect(result.removed.deployments).toHaveLength(0);
   });
 
   it('should handle "invalid key" error message', async () => {
@@ -730,8 +736,8 @@ describe("validateAndCleanConfig", () => {
 
     const result = await validateAndCleanConfig(config, { checkConvex: true });
 
-    expect(result.modified).toBe(true);
-    expect(result.removed.deployments).toContain("test");
+    expect(result.modified).toBe(false);
+    expect(result.removed.deployments).toHaveLength(0);
   });
 
   it('should handle "access denied" error message', async () => {
@@ -749,8 +755,8 @@ describe("validateAndCleanConfig", () => {
 
     const result = await validateAndCleanConfig(config, { checkConvex: true });
 
-    expect(result.modified).toBe(true);
-    expect(result.removed.deployments).toContain("test");
+    expect(result.modified).toBe(false);
+    expect(result.removed.deployments).toHaveLength(0);
   });
 });
 

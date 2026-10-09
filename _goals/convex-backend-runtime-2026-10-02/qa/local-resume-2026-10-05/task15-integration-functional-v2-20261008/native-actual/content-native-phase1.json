@@ -1,0 +1,184 @@
+{
+  "status": "CLOSED_NATIVE_CONTENT_PHASE_WITH_PRESERVED_UI_FORMAT_FAILURE",
+  "closedAtUtc": "2026-10-09T03:18:47.023Z",
+  "candidate": {
+    "backendFiles": 107,
+    "backendManifestSha256": "92fd1dad5fe420bea81460f0330bcf8fbf7d8f647d4260824a24cdb45bcffcf0",
+    "SDK": "dda654850af85ef8bfc42a22cf84449a1806c17b64521de62c48ded0c0a0ba0a",
+    "provider": "97cc83bec8a1dd5f423756ba0155436a2accd46430a054459cfacb7740d7dc4c",
+    "consumerRootSuccessor4": "content-consumer2-source-manifest.json"
+  },
+  "nativeGroups": [
+    {
+      "name": "ordinary title ready and exact replay/reconcile",
+      "status": "PASS",
+      "jobId": "content:b5ae447fad0b5cd0e69abee23a7b713de0914481b5905c3df6379d99d4c26608"
+    },
+    {
+      "name": "ordinary text ready and exact replay/reconcile",
+      "status": "PASS",
+      "jobId": "content:644bbb93fa904ec503f189bc69fcc70d003a144e6efa447695321480bfc5d7bd"
+    },
+    {
+      "name": "ordinary code ready and exact replay/reconcile",
+      "status": "PASS",
+      "jobId": "content:d05797c656ff1cb08d454e433892187f7a926f44485e509cd944fe0af4a0ab09"
+    },
+    {
+      "name": "ordinary sheet ready and exact replay/reconcile",
+      "status": "PASS",
+      "jobId": "content:f51b830cdeddc1afe7e3ca94340a3a810c128a44808446204cbbba2b5cb30a69"
+    },
+    {
+      "name": "ordinary suggestions ready and exact replay/reconcile",
+      "status": "PASS",
+      "jobId": "content:35ecf0422eab0521d400e62c9a0370e475c95ef5fddc574fc02351c64e08ccfa"
+    },
+    {
+      "name": "current auth negatives, request conflict and exact suggestion apply/replay",
+      "status": "PASS"
+    }
+  ],
+  "unpaidGroups": [
+    {
+      "name": "pending unissued cancel is terminal and never claimed/reconciled",
+      "status": "PASS"
+    },
+    {
+      "name": "selected draft artifact deletion denies before model admission",
+      "status": "PASS"
+    },
+    {
+      "name": "clearly injected unissued unknown cannot dispatch on claim/reconcile",
+      "status": "PASS",
+      "actualProviderUnknown": false
+    },
+    {
+      "name": "nonempty actual protected RPC result withheld after real grant expiry; fresh same-args native denial",
+      "status": "PASS"
+    }
+  ],
+  "actualNativeIntentCalls": 8,
+  "distinctActualUIContentCalls": 2,
+  "currentScopeFullUnknownLiability": 1000000,
+  "all10ModelSlotsReleased": true,
+  "modelsAndProofs": "Existing genuine plain-chat doGenerate qualifications: mini primary/suggestions; GPT4o title. No tools/retries/options.",
+  "actualPrimarySecondarySharedAccount": true,
+  "currentUIFormatFailure": {
+    "jobId": "content:0323867222ac64996adef4e2722788d31055ab7410020aea1f497f1ad844ce04",
+    "state": "unknown",
+    "origin": "CONTENT_OUTPUT_INVALID",
+    "cause": "Confirmed secondary returned a multiline title rejected by strict title parser.",
+    "primaryConfirmed": true,
+    "secondaryConfirmed": true,
+    "calls": 2,
+    "fullUnknownLiability": 200000,
+    "slotsReleased": 2,
+    "paidRedispatches": 0,
+    "deadlineExtended": false
+  },
+  "AgentCalls": 0,
+  "AgentParentAutomaticTitleAwaited": true,
+  "consumerBrowserOwnedByRoot": true,
+  "resourcesRetainedForRootBrowser": true,
+  "currentSourceCleanupPending": true,
+  "Task15Acceptance": false,
+  "legacyAndAsyncVideoLimitationsUnchanged": true,
+  "evidence": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/content-packages1.json",
+      "bytes": 1584,
+      "sha256": "9591d6b6b4fa7a44ceb569395bc107633a4bc3bcf603ebc57ee0ad11a3984d8a"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/installed-content-current1-source-manifest.json",
+      "bytes": 29471,
+      "sha256": "79e56ef828b62663667b380e2a37a46bbd6304499978e4aa0561c5d9040fc41b"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/deploy-content-current1.json",
+      "bytes": 644,
+      "sha256": "a0a67f096e17206f577cf1639c56afc264adfb949b9a8672eb9b17f2b5d61d37"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/content-public-fixture1.json",
+      "bytes": 4112,
+      "sha256": "33bd939b6c72bb7e36bd92013239548c7da46ac606d706a49e2e1f88ecacfe74"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/content-local-policy-validation1.json",
+      "bytes": 5174,
+      "sha256": "1f794a296b172dd0f275ee6a192ca3de0fe90e2c8d4e30781f0f6a850a801ea2"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/content-intents1-outcomes.json",
+      "bytes": 5091,
+      "sha256": "fa97adf2149528bfb4280971795c244253adb4410b03b6c8bc62c56434578688"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/content-intents1-after.json",
+      "bytes": 260707,
+      "sha256": "df001a7ae5f9ec1bb24b5d58154bfc129e54b2bfce8e37cb2ac9176f4ebfea6f"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/content-controls1-outcomes.json",
+      "bytes": 873,
+      "sha256": "ba9d9887691ed5d81b5bf7ce3bc9074ceab43375076fe671631df229eabbdbcb"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/content-controls1-readback.json",
+      "bytes": 609954,
+      "sha256": "96e36b4932a6db087d1ef31f22e100247b744fdfc27ff933de58c4f870c77e2f"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/content-ui-unknown1-diagnosis.json",
+      "bytes": 73783,
+      "sha256": "2be03e346c45d3b529ca3d07349d53f1e9f12d8e33c47426988dec5f34618356"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/content-ui-unknown1-snapshot.json",
+      "bytes": 388114,
+      "sha256": "eb5337d81c9840b45ac1ae70f476c23b8ae7e32b984ed69c19c7418b98c33bb4"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/content-ui-unknown1-cli-logs.stdout.log",
+      "bytes": 562,
+      "sha256": "a74ae21686d6f718892f8098d080b4d213380d97a2cac1f91202d68c07861cb1"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/content-ui-unknown1-cli-logs.stderr.log",
+      "bytes": 342,
+      "sha256": "57efb8192e086f79905dd5e612c794947d93c57944e74fe132d2de0cff86a715"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/content-ui-unknown1-cli-logs.json",
+      "bytes": 125,
+      "sha256": "5c2d417492bcd38b9b2ffa7a9a4407e73d29548ac955b315be67ac8bdf212bf8"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/content-consumer2-source-manifest.json",
+      "bytes": 1068,
+      "sha256": "4277333274fc5c2e26bc8631e47d3470e37de4e5d58c9cc8136dc2f382f575a4"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/content-consumer-types2.json",
+      "bytes": 456,
+      "sha256": "fae60bf7e37c1ad7b6bd645294213c11432fa45552713e6301a939da0718f200"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/content-consumer-tests2.json",
+      "bytes": 422,
+      "sha256": "f78f9fcee11f7c3fb72b10e2a648a5785fb47320f133f3a8ecbc5d17c463a36f"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/content-consumer-build2.json",
+      "bytes": 424,
+      "sha256": "dc6b36816fde726e17bab56892934e76ea144a370f7eccf80443f02a74c57b0d"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/content-consumer2-server-ready.json",
+      "bytes": 1767,
+      "sha256": "47ecae64d5f5093d02075ac853a44b74f73db087663a64a3820018f672466e95"
+    }
+  ]
+}

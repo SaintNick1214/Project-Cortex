@@ -1,0 +1,149 @@
+watchman warning: Recrawled this watch 1 time, most recently because:
+MustScanSubDirs UserDroppedTo resolve, please review the information on
+https://facebook.github.io/watchman/docs/troubleshooting.html#recrawl
+To clear this warning, run:
+`watchman watch-del '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion' ; watchman watch-project '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion'`
+
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+(node:92100) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeContent/jobs.test.ts (10.346 s)
+  ✓ accepts quoted CSV with multiline cells and denies malformed generated sheet content (14 ms)
+  ✓ creates text with a real secondary title and one shared native account (187 ms)
+  ✓ creates code with a real secondary title and one shared native account (174 ms)
+  ✓ creates sheet with a real secondary title and one shared native account (151 ms)
+  ✓ rejects model/authority/budget extras before any job or artifact (7 ms)
+  ✓ retains idempotent job/account and denies a conflicting request (12 ms)
+  ✓ cancellation blocks actual native admission without refunding the account (13 ms)
+  ✓ saved primary crash never pays again and cannot publish without the secondary title (75 ms)
+  ✓ unknown work cannot reclaim or fabricate a confirmed draft (13 ms)
+  ✓ deletion after paid draft prevents atomic publication with retained liability (140 ms)
+  ✓ foreign/no-JWT callers cannot deliver owned jobs (12 ms)
+  ✓ updates an exact retained artifact version while preserving the original history and title (204 ms)
+  ✓ suggestions remain unapplied until one exact user choice; replay never pays or edits twice (193 ms)
+  ✓ recovers two confirmed durable drafts exactly once without another native attempt (116 ms)
+  ✓ automatic conversation title binds a genuine active parent model and shares its existing financial account (256 ms)
+  ✓ ready derived content rechecks consumed artifact metadata independently of its own output version (241 ms)
+  ✓ publishes confirmed text with a deterministic warning title after rejected multiline secondary (105 ms)
+  ✓ publishes confirmed code with a deterministic warning title after rejected multiline secondary (94 ms)
+  ✓ publishes confirmed sheet with a deterministic warning title after rejected multiline secondary (94 ms)
+  ✓ recovers a confirmed malformed secondary before its save without paying or publishing twice (88 ms)
+  ✓ denies rejected-title publication with withheld secondary evidence (82 ms)
+  ✓ denies rejected-title publication with unconfirmed secondary evidence (79 ms)
+  ✓ denies rejected-title publication with wrong-parent secondary evidence (82 ms)
+  ✓ retains confirmed-title liability and refuses fallback after deleted (79 ms)
+  ✓ retains confirmed-title liability and refuses fallback after revoked (83 ms)
+  ✓ retains confirmed-title liability and refuses fallback after expired (82 ms)
+  ✓ confirmed malformed standalone title fails honestly and never receives a document fallback (45 ms)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅    10.3s | 27/27 passed | /tests/unit/runtimeContent/jobs.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.26s ( 2.4%) - automatic conversation title binds a genuine active parent model and shares its existing financial account
+    /tests/unit/runtimeContent/jobs.test.ts
+
+ 2. [32m✓[0m    0.24s ( 2.3%) - ready derived content rechecks consumed artifact metadata independently of its own output version
+    /tests/unit/runtimeContent/jobs.test.ts
+
+ 3. [32m✓[0m    0.20s ( 1.9%) - updates an exact retained artifact version while preserving the original history and title
+    /tests/unit/runtimeContent/jobs.test.ts
+
+ 4. [32m✓[0m    0.19s ( 1.8%) - suggestions remain unapplied until one exact user choice; replay never pays or edits twice
+    /tests/unit/runtimeContent/jobs.test.ts
+
+ 5. [32m✓[0m    0.19s ( 1.8%) - creates text with a real secondary title and one shared native account
+    /tests/unit/runtimeContent/jobs.test.ts
+
+ 6. [32m✓[0m    0.17s ( 1.7%) - creates code with a real secondary title and one shared native account
+    /tests/unit/runtimeContent/jobs.test.ts
+
+ 7. [32m✓[0m    0.15s ( 1.4%) - creates sheet with a real secondary title and one shared native account
+    /tests/unit/runtimeContent/jobs.test.ts
+
+ 8. [32m✓[0m    0.14s ( 1.3%) - deletion after paid draft prevents atomic publication with retained liability
+    /tests/unit/runtimeContent/jobs.test.ts
+
+ 9. [32m✓[0m    0.12s ( 1.1%) - recovers two confirmed durable drafts exactly once without another native attempt
+    /tests/unit/runtimeContent/jobs.test.ts
+
+10. [32m✓[0m    0.10s ( 1.0%) - publishes confirmed text with a deterministic warning title after rejected multiline secondary
+    /tests/unit/runtimeContent/jobs.test.ts
+
+11. [32m✓[0m    0.09s ( 0.9%) - publishes confirmed code with a deterministic warning title after rejected multiline secondary
+    /tests/unit/runtimeContent/jobs.test.ts
+
+12. [32m✓[0m    0.09s ( 0.9%) - publishes confirmed sheet with a deterministic warning title after rejected multiline secondary
+    /tests/unit/runtimeContent/jobs.test.ts
+
+13. [32m✓[0m    0.09s ( 0.8%) - recovers a confirmed malformed secondary before its save without paying or publishing twice
+    /tests/unit/runtimeContent/jobs.test.ts
+
+14. [32m✓[0m    0.08s ( 0.8%) - retains confirmed-title liability and refuses fallback after revoked
+    /tests/unit/runtimeContent/jobs.test.ts
+
+15. [32m✓[0m    0.08s ( 0.8%) - denies rejected-title publication with withheld secondary evidence
+    /tests/unit/runtimeContent/jobs.test.ts
+
+16. [32m✓[0m    0.08s ( 0.8%) - denies rejected-title publication with wrong-parent secondary evidence
+    /tests/unit/runtimeContent/jobs.test.ts
+
+17. [32m✓[0m    0.08s ( 0.8%) - retains confirmed-title liability and refuses fallback after expired
+    /tests/unit/runtimeContent/jobs.test.ts
+
+18. [32m✓[0m    0.08s ( 0.7%) - denies rejected-title publication with unconfirmed secondary evidence
+    /tests/unit/runtimeContent/jobs.test.ts
+
+19. [32m✓[0m    0.08s ( 0.7%) - retains confirmed-title liability and refuses fallback after deleted
+    /tests/unit/runtimeContent/jobs.test.ts
+
+20. [32m✓[0m    0.07s ( 0.7%) - saved primary crash never pays again and cannot publish without the secondary title
+    /tests/unit/runtimeContent/jobs.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 2.60s (24.7% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      10.54s
+  Test suites:        1
+  Individual tests:   27
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 passed, 1 total
+Tests:       27 passed, 27 total
+Snapshots:   0 total
+Time:        10.543 s
+Ran all test suites within paths "tests/unit/runtimeContent/jobs.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/content-title-repair1/content-tests2.json

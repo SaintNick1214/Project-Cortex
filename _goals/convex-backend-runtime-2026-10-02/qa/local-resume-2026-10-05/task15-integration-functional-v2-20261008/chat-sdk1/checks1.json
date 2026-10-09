@@ -1,0 +1,206 @@
+{
+  "version": 1,
+  "sourceDigest": "c4512abcf6b2069b08b0229a361c3dfef835e92aa8f7f1177faa67bb9fb40941",
+  "closedAt": "2026-10-09T02:38:46.242Z",
+  "toolchain": {
+    "node": "v24.15.0",
+    "npm": "12.2.0"
+  },
+  "currentDistinctTestInstances": 821,
+  "backend": {
+    "suites": 10,
+    "passed": 771,
+    "failed": 0,
+    "skipped": 0,
+    "latestSuiteReceipts": [
+      "affected-tests1.json",
+      "affected-tests2.json",
+      "content-tests6.json",
+      "affected-tests3.json"
+    ],
+    "selectionRules": "Latest whole-suite result replaces earlier result; content-tests6 replaces content suite with one added CSV control. Counts are test instances, not every expect().",
+    "command": "CONVEX_URL=http://127.0.0.1:1 CONVEX_TEST_MODE=local node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand --runTestsByPath <selected tests> --json --outputFile=<receipt>; no forceExit",
+    "serviceEffects": 0
+  },
+  "template": {
+    "suites": 13,
+    "passed": 50,
+    "failed": 0,
+    "skipped": 0,
+    "receipt": "template-tests2.json",
+    "command": "npm test -- --reporter=json --outputFile=<template-tests2.json>",
+    "productionBuild": {
+      "command": "npm run build",
+      "exitCode": 0,
+      "log": "template-build2.log",
+      "note": "Next16.3.8 webpack compilation/types/page collection succeeded; metadataBase localhost warning retained. App build only; no deploy."
+    },
+    "finalChecks": [
+      {
+        "command": [
+          "node",
+          "node_modules/typescript/bin/tsc",
+          "--noEmit"
+        ],
+        "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli/templates/chat-sdk-quickstart",
+        "exitCode": 0,
+        "elapsedMs": 4259,
+        "log": "template-types5.log"
+      },
+      {
+        "command": [
+          "node_modules/.bin/biome",
+          "check",
+          "--max-diagnostics=100",
+          "app/(chat)/actions.ts",
+          "app/(chat)/api/chat/[id]/stream/route.ts",
+          "app/(chat)/api/chat/route.ts",
+          "app/(chat)/api/document/route.ts",
+          "app/(chat)/api/files/upload/route.ts",
+          "app/(chat)/api/history/route.ts",
+          "app/(chat)/api/suggestions/route.ts",
+          "app/(chat)/api/vote/route.ts",
+          "app/(chat)/chat/[id]/page.tsx",
+          "app/(chat)/layout.tsx",
+          "app/(chat)/page.tsx",
+          "app/api/share/route.ts",
+          "app/share/[id]/page.tsx",
+          "artifacts/code/server.ts",
+          "artifacts/sheet/server.ts",
+          "artifacts/text/server.ts",
+          "lib/ai/tools/create-document.ts",
+          "lib/ai/tools/request-suggestions.ts",
+          "lib/ai/tools/update-document.ts",
+          "lib/artifacts/server.ts",
+          "lib/cortex.ts",
+          "proxy.ts",
+          "tests/integration/chat.test.ts",
+          "tests/unit/cortex.test.ts",
+          "tests/unit/proxy.test.ts",
+          "components/runtime-chat.tsx",
+          "lib/runtime/server.ts",
+          "next.config.ts",
+          "app/layout.tsx",
+          "tests/unit/content-panel.test.ts"
+        ],
+        "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli/templates/chat-sdk-quickstart",
+        "exitCode": 0,
+        "elapsedMs": 503,
+        "log": "template-lint6.log"
+      }
+    ]
+  },
+  "backendTypesAndLint": [
+    {
+      "command": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit",
+        "-p",
+        "convex-dev/tsconfig.json"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "elapsedMs": 5175,
+      "log": "backend-types6.log"
+    },
+    {
+      "command": [
+        "node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "elapsedMs": 8223,
+      "log": "sdk-types4.log"
+    },
+    {
+      "command": [
+        "node",
+        "node_modules/eslint/bin/eslint.js",
+        "src/domain/content.ts",
+        "convex-dev/runtimeContentFence.ts",
+        "convex-dev/runtimeContentGateway.ts",
+        "convex-dev/runtimeContentJobs.ts",
+        "convex-dev/runtimeContentJobsSchema.ts",
+        "convex-dev/runtimeModelPolicy.ts",
+        "convex-dev/runtimeAgent.ts",
+        "convex-dev/schema.ts",
+        "tests/unit/runtimeContent/jobs.test.ts",
+        "tests/unit/runtime/model-policy-admission.test.ts",
+        "tests/unit/runtime/model-policy-model-drift.test.ts",
+        "tests/unit/runtime/gateway-backend.test.ts",
+        "tests/unit/runtimeTranscript/managed.test.ts",
+        "tests/unit/runtimeAgent/execution.test.ts",
+        "tests/unit/runtimeArtifactAuth/schema-indexes.test.ts",
+        "--report-unused-disable-directives"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "elapsedMs": 6364,
+      "log": "backend-lint3.log"
+    }
+  ],
+  "freshProcessImports": [
+    {
+      "command": [
+        "node",
+        "--import",
+        "tsx",
+        "--input-type=module",
+        "-e",
+        "for (const name of [\"schema\", \"runtimeContentJobs\", \"runtimeModelPolicy\"]) { const result = await import(\"./convex-dev/\"+name+\".ts\"); if(name === \"schema\" && !result.default.tables.runtimeContentJobs) throw Error(\"Missing content table\"); }; console.log(\"Fresh import order passed\");"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "elapsedMs": 609,
+      "order": [
+        "schema",
+        "runtimeContentJobs",
+        "runtimeModelPolicy"
+      ],
+      "log": "fresh-import1.log"
+    },
+    {
+      "command": [
+        "node",
+        "--import",
+        "tsx",
+        "--input-type=module",
+        "-e",
+        "for (const name of [\"runtimeModelPolicy\", \"runtimeContentJobs\", \"schema\"]) { const result = await import(\"./convex-dev/\"+name+\".ts\"); if(name === \"schema\" && !result.default.tables.runtimeContentJobs) throw Error(\"Missing content table\"); }; console.log(\"Fresh import order passed\");"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "elapsedMs": 295,
+      "order": [
+        "runtimeModelPolicy",
+        "runtimeContentJobs",
+        "schema"
+      ],
+      "log": "fresh-import2.log"
+    },
+    {
+      "command": [
+        "node",
+        "--import",
+        "tsx",
+        "--input-type=module",
+        "-e",
+        "for (const name of [\"runtimeContentGateway\", \"runtimeAgent\", \"schema\"]) { const result = await import(\"./convex-dev/\"+name+\".ts\"); if(name === \"schema\" && !result.default.tables.runtimeContentJobs) throw Error(\"Missing content table\"); }; console.log(\"Fresh import order passed\");"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exitCode": 0,
+      "elapsedMs": 393,
+      "order": [
+        "runtimeContentGateway",
+        "runtimeAgent",
+        "schema"
+      ],
+      "log": "fresh-import3.log"
+    }
+  ],
+  "historicalReceiptsPreserved": true,
+  "actualInstalledBackendBrowser": "pending, owned by native executor; controlled tests use synthetic qualified fixtures"
+}

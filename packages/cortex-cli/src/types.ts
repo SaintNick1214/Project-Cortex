@@ -48,6 +48,11 @@ export interface CLIConfig {
 export interface DeploymentConfig {
   url: string;
   key?: string;
+  /** Public-client selectors and credential locations, never credentials. */
+  tenantId?: string;
+  memorySpaceId?: string;
+  tokenEnv?: string;
+  tokenFile?: string;
   deployment?: string;
   /**
    * Path to the project directory for this deployment.
@@ -72,6 +77,12 @@ export interface GlobalOptions {
   format?: OutputFormat;
   quiet?: boolean;
   debug?: boolean;
+  tenantId?: string;
+  memorySpaceId?: string;
+  tokenEnv?: string;
+  tokenFile?: string;
+  /** In-process host integration only; never serialized in CLI configuration. */
+  fetchAuthToken?: (request: { forceRefreshToken: boolean }) => Promise<string | null>;
 }
 
 /**

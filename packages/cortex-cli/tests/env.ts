@@ -14,76 +14,83 @@
 import dotenv from "dotenv";
 import { resolve } from "path";
 
-// Note: dotenv@17+ auto-injects env vars on import, so .env files may already be loaded
-// by the time this code runs. We need to handle this carefully.
+// Preserve explicit disposable-target selectors in CI/native actual runs.
+const explicitEnvironment = process.env.CORTEX_TEST_ENV_MODE === "explicit" || process.env.CI === "true";
+if (explicitEnvironment) {
+  if (process.env.CONVEX_URL_CLI) process.env.CONVEX_URL = process.env.CONVEX_URL_CLI;
+} else {
+  // Note: dotenv@17+ auto-injects env vars on import, so .env files may already be loaded
+  // by the time this code runs. We need to handle this carefully.
 
-// First, load CLI-specific env file to get CONVEX_URL_CLI
-// This must happen BEFORE we check CONVEX_URL_CLI
-dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: false });
+  // First, load CLI-specific env file to get CONVEX_URL_CLI
+  // This must happen BEFORE we check CONVEX_URL_CLI
+  dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: false });
 
-// CLI tests use CONVEX_URL_CLI for dedicated database isolation
-// This ALWAYS takes priority over any other CONVEX_URL (including from auto-injected root .env files)
-if (process.env.CONVEX_URL_CLI) {
-  // Force override CONVEX_URL with CLI-specific value
-  process.env.CONVEX_URL = process.env.CONVEX_URL_CLI;
-}
+  // CLI tests use CONVEX_URL_CLI for dedicated database isolation
+  // This ALWAYS takes priority over any other CONVEX_URL (including from auto-injected root .env files)
+  if (process.env.CONVEX_URL_CLI) {
+    // Force override CONVEX_URL with CLI-specific value
+    process.env.CONVEX_URL = process.env.CONVEX_URL_CLI;
+  }
 
-// Check if CONVEX_URL is already set from CONVEX_URL_CLI
-const convexUrlAlreadySet = Boolean(process.env.CONVEX_URL_CLI);
+  // Check if CONVEX_URL is already set from CONVEX_URL_CLI
+  const convexUrlAlreadySet = Boolean(process.env.CONVEX_URL_CLI);
 
-// Only try to load .env files if CONVEX_URL is not already set
-if (!convexUrlAlreadySet) {
-  // Load from monorepo root
-  const rootDir = resolve(process.cwd(), "../..");
+  // Only try to load .env files if CONVEX_URL is not already set
+  if (!convexUrlAlreadySet) {
+    // Load from monorepo root
+    const rootDir = resolve(process.cwd(), "../..");
 
-  // Load .env.test first (test defaults)
-  dotenv.config({ path: resolve(rootDir, ".env.test") });
+    // Load .env.test first (test defaults)
+    dotenv.config({ path: resolve(rootDir, ".env.test") });
 
-  // Load .env.local second with override=true (local development overrides)
-  dotenv.config({ path: resolve(rootDir, ".env.local"), override: true });
+    // Load .env.local second with override=true (local development overrides)
+    dotenv.config({ path: resolve(rootDir, ".env.local"), override: true });
 
-  // Also try loading from CLI package directory
-  dotenv.config({ path: resolve(process.cwd(), ".env.test") });
-  dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
-}
+    // Also try loading from CLI package directory
+    dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+    dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+  }
 
-// Determine which Convex deployment to test against
-const testMode = process.env.CONVEX_TEST_MODE || "auto";
-const hasLocalConfig = Boolean(
-  process.env.LOCAL_CONVEX_URL || process.env.LOCAL_CONVEX_DEPLOYMENT,
-);
-const hasManagedConfig = Boolean(
-  process.env.CLOUD_CONVEX_URL ||
-    (process.env.CONVEX_URL &&
-      !process.env.CONVEX_URL.includes("localhost") &&
-      !process.env.CONVEX_URL.includes("127.0.0.1")),
-);
+  // Determine which Convex deployment to test against
+  const testMode = process.env.CONVEX_TEST_MODE || "auto";
+  const hasLocalConfig = Boolean(
+    process.env.LOCAL_CONVEX_URL || process.env.LOCAL_CONVEX_DEPLOYMENT,
+  );
+  const hasManagedConfig = Boolean(
+    process.env.CLOUD_CONVEX_URL ||
+      (process.env.CONVEX_URL &&
+        !process.env.CONVEX_URL.includes("localhost") &&
+        !process.env.CONVEX_URL.includes("127.0.0.1")),
+  );
 
-// Configure CONVEX_URL based on test mode (only if not already set from CI)
-if (!convexUrlAlreadySet) {
-  if (testMode === "local") {
-    if (process.env.LOCAL_CONVEX_URL) {
-      process.env.CONVEX_URL = process.env.LOCAL_CONVEX_URL;
-    }
-  } else if (testMode === "managed") {
-    if (process.env.CLOUD_CONVEX_URL) {
-      process.env.CONVEX_URL = process.env.CLOUD_CONVEX_URL;
-    }
-  } else if (testMode === "auto") {
-    if (hasLocalConfig && !hasManagedConfig) {
+  // Configure CONVEX_URL based on test mode (only if not already set from CI)
+  if (!convexUrlAlreadySet) {
+    if (testMode === "local") {
       if (process.env.LOCAL_CONVEX_URL) {
         process.env.CONVEX_URL = process.env.LOCAL_CONVEX_URL;
       }
-    } else if (hasManagedConfig && !hasLocalConfig) {
+    } else if (testMode === "managed") {
       if (process.env.CLOUD_CONVEX_URL) {
         process.env.CONVEX_URL = process.env.CLOUD_CONVEX_URL;
       }
-    } else if (hasLocalConfig && hasManagedConfig) {
-      if (process.env.LOCAL_CONVEX_URL) {
-        process.env.CONVEX_URL = process.env.LOCAL_CONVEX_URL;
+    } else if (testMode === "auto") {
+      if (hasLocalConfig && !hasManagedConfig) {
+        if (process.env.LOCAL_CONVEX_URL) {
+          process.env.CONVEX_URL = process.env.LOCAL_CONVEX_URL;
+        }
+      } else if (hasManagedConfig && !hasLocalConfig) {
+        if (process.env.CLOUD_CONVEX_URL) {
+          process.env.CONVEX_URL = process.env.CLOUD_CONVEX_URL;
+        }
+      } else if (hasLocalConfig && hasManagedConfig) {
+        if (process.env.LOCAL_CONVEX_URL) {
+          process.env.CONVEX_URL = process.env.LOCAL_CONVEX_URL;
+        }
       }
     }
   }
+
 }
 
 // Log configuration (only if CONVEX_URL is set)

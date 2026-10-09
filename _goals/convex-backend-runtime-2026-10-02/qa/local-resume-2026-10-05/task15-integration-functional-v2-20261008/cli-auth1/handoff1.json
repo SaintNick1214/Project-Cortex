@@ -1,0 +1,59 @@
+{
+  "version": 1,
+  "status": "SOURCE_READY_ACTUAL_PENDING",
+  "sourceDigest": "a1177c7382995aefbbe1af9f5502489c2fc82460d1b640c0c26a8c4e1f478f8f",
+  "changedPaths": [
+    "packages/cortex-cli/src/commands/db.ts",
+    "packages/cortex-cli/src/index.ts",
+    "packages/cortex-cli/src/types.ts",
+    "packages/cortex-cli/src/utils/__tests__/auth-config.test.ts",
+    "packages/cortex-cli/src/utils/__tests__/config-validation.test.ts",
+    "packages/cortex-cli/src/utils/__tests__/db-maintenance.test.ts",
+    "packages/cortex-cli/src/utils/__tests__/host-client.test.ts",
+    "packages/cortex-cli/src/utils/__tests__/operator.test.ts",
+    "packages/cortex-cli/src/utils/client.ts",
+    "packages/cortex-cli/src/utils/config.ts",
+    "packages/cortex-cli/src/utils/host-auth.ts",
+    "packages/cortex-cli/src/utils/operator.ts"
+  ],
+  "uniquePassedAssertions": 85,
+  "checksExitCode": 0,
+  "productWritersClosed": true,
+  "buildOwner": "sole native executor",
+  "packBoundary": "separate from immutable qualified CLI c968b056 snapshot",
+  "pins": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/cli-auth1/source-manifest1.json",
+      "bytes": 2394,
+      "sha256": "ba8a7d158337df3fe404f8c88f861801db9fd864900bb5a6341bf34ecf4674be"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/cli-auth1/checks1.json",
+      "bytes": 1764,
+      "sha256": "8f30f587ec2d19ffafc26ecdd1cf6e07d070d7c814cac5f69049c6e3a840806c"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/cli-auth1/assertion-identities1.json",
+      "bytes": 19690,
+      "sha256": "077e26d3596621dea47cf8ac8b85d51152490f635aae34f9582ca78d442073c8"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/cli-auth1/report1.json",
+      "bytes": 4420,
+      "sha256": "ceef84de5a1301cfba5ddea1bfc6620ff19598b8c4d1d4c9041b628818d5d843"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/cli-auth1/report1.md",
+      "bytes": 3281,
+      "sha256": "6c1980ea470dc48d53645cfb256b9834447926eb2ade624baa5a042c0345c9dc"
+    }
+  ],
+  "knownLimits": [
+    "This source successor is ready for installed CLI/native verification; it does not claim full Task15 or Task16 acceptance.",
+    "No build/prebuild, mirror sync, install, service/admin operation, deployment, Git mutation or paid inference was performed by this lane.",
+    "Raw CLI delivery honors returned server deliveryExpiresAt and verified session deadlines; it does not invent unreturned resource deadlines or decode JWT claims as authority.",
+    "Legacy deployment-key configuration remains historical metadata/operator compatibility; it does not authenticate the public SDK. New auth settings store only environment names/private file locations.",
+    "Generic restore and full database purge are unsupported. Backup/export is explicitly bounded authorized space/user metadata with restorable:false.",
+    "Operator counts are the exact existing internal fourteen-table response, including truncation; they do not claim a complete runtime-table inventory."
+  ]
+}

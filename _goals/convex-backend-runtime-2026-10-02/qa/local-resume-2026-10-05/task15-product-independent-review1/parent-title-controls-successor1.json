@@ -1,0 +1,25 @@
+{
+  "status": "PASS_CONTROLLED_ONLY_ACTUAL_PENDING",
+  "source": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/root-parent-title-import1/source1.json",
+  "currentFenceSha256": "18acc82b1dd424aac06ecd47634eb12da49c6cfd5843400d7b867714b6cb6c1d",
+  "review": "Only static module import replaces unsupported dynamic import; identical guardAgentRunBudget capability/reference/run/lease/source/deadline behavior remains. Native old workflow failure remains preserved and its expired job is not revived.",
+  "command": "PATH=/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin:$PATH CORTEX_TEST_ENV_MODE=explicit CONVEX_URL=http://127.0.0.1:1 CONVEX_TEST_MODE=local node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand --forceExit=false --silent --runTestsByPath tests/unit/runtimeContent/jobs.test.ts",
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "exit": 0,
+  "naturalExit": true,
+  "passed": 28,
+  "failed": 0,
+  "skipped": 0,
+  "durationSeconds": 6.176,
+  "notNativePlatformQualification": true,
+  "warnings": [
+    "Existing Watchman recrawl",
+    "Experimental VM Modules"
+  ],
+  "effects": {
+    "service": 0,
+    "models": 0,
+    "sourceWrites": 0,
+    "git": 0
+  }
+}

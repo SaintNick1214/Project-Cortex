@@ -1,0 +1,437 @@
+{
+  "status": "READONLY_DURABLE_WORKFLOW_STEPS_CAPTURED",
+  "runId": "run:3be08ef0955d913fdd1b35cd2fff9da50989ea2e6f520db8ecfe71080c49f176",
+  "execution": {
+    "_creationTime": 1791518153685.311,
+    "_id": "md78sctjzxvwrsnf8zcpehg2w18fznr1",
+    "artifactContextWitnesses": [],
+    "attemptNumber": 1,
+    "barrierStartedAt": 1791518155249,
+    "contextCanonical": "Indexed Cortex memory (untrusted evidence):\n## Relevant Context\n\n### Known Facts\n- User specifies that the release codename is Copper Lantern. (confidence: 100%, recorded: 19 minutes ago)\n\n### Conversation History\n[user]: For this verification, remember that the release codename is Copper Lantern. Reply with: content verification ready.\n[agent]: Content verification ready.\nSource roles and trust: [{\"role\":\"user\",\"sourceEventId\":\"transcript:conversation:3cb4fbe8d9905e073eb993897f992d992692ab6001fbed26695866fc5c9c4235:kx7d6ssdcy7h1epr0tj68re4m18fy3qy\",\"sourceId\":\"transcript:conversation:3cb4fbe8d9905e073eb993897f992d992692ab6001fbed26695866fc5c9c4235:kx7d6ssdcy7h1epr0tj68re4m18fy3qy\",\"sourceRevision\":1,\"trust\":\"user_assertion\"},{\"role\":\"assistant\",\"sourceEventId\":\"transcript:conversation:3cb4fbe8d9905e073eb993897f992d992692ab6001fbed26695866fc5c9c4235:kx7abdk4h8rqwksre38qpb5eth8fy9aw\",\"sourceId\":\"transcript:conversation:3cb4fbe8d9905e073eb993897f992d992692ab6001fbed26695866fc5c9c4235:kx7abdk4h8rqwksre38qpb5eth8fy9aw\",\"sourceRevision\":1,\"trust\":\"assistant_claim\"}]",
+    "contextCompleteness": "complete",
+    "contextState": "complete",
+    "createdAt": 1791518153685,
+    "finalMessageIds": [
+      "kx7dc2pkwrtqsdwdh8j45b73jx8fzr4s"
+    ],
+    "ingestionReceiptId": "agent-ingestion:0e260d7b912b4bbfac6412d4a7bbe17c2138382f8180990bf6e4a34797c44dbb",
+    "leaseVersion": 1,
+    "mediaJobReferences": [],
+    "memorySpaceId": "content15c-20261009",
+    "nextModelStep": 2,
+    "nextOutputSequence": 13,
+    "reference": {
+      "grantId": "mx76gmhcwfhnhb4t95443c038n8fyp37",
+      "grantVersion": 1,
+      "membershipId": "n17fxr7x4nvh55n40dzapwyz398fz873",
+      "membershipVersion": 1,
+      "memorySpaceEpoch": 1,
+      "memorySpaceId": "content15c-20261009",
+      "principalId": "n579nthk6v3vcf486mth09f5ts8fzkgx",
+      "principalVersion": 1,
+      "tenantEpoch": 1,
+      "tenantId": "task15c-content-20261009"
+    },
+    "runId": "run:3be08ef0955d913fdd1b35cd2fff9da50989ea2e6f520db8ecfe71080c49f176",
+    "savedMessageIds": [
+      "kx7ba9684gmsp21qbqs5c3hkyx8fzrc0",
+      "kx771g1e0j1828sfbyhtf70h6d8fyz6v",
+      "kx7dc2pkwrtqsdwdh8j45b73jx8fzr4s"
+    ],
+    "savedMessagePins": [
+      {
+        "canonicalContentHash": "0203a364f0b8c5370e944d30b363e983f2a29128c0cb61a3ae84e81c8a893fbc",
+        "id": "kx7ba9684gmsp21qbqs5c3hkyx8fzrc0",
+        "order": 0,
+        "stepOrder": 1
+      },
+      {
+        "canonicalContentHash": "4a8358d61dd454208681c94750292830472b1559f1cfa3bfe22cd802cf8a2665",
+        "id": "kx771g1e0j1828sfbyhtf70h6d8fyz6v",
+        "order": 0,
+        "stepOrder": 2
+      },
+      {
+        "canonicalContentHash": "e917b7b23de9c5b2e9d8cdc5563ac2c2987793a0066708f2b9f86076ecd60733",
+        "id": "kx7dc2pkwrtqsdwdh8j45b73jx8fzr4s",
+        "order": 0,
+        "stepOrder": 3
+      }
+    ],
+    "sourceWitnesses": [
+      {
+        "contentHash": "470897df78daabdffe7b940d3e0aa1b60ea47cfbcc2f62a431aab021cb69aee7",
+        "permissions": [
+          "canViewFacts",
+          "canViewMemories"
+        ],
+        "sourceEventId": "transcript:conversation:3cb4fbe8d9905e073eb993897f992d992692ab6001fbed26695866fc5c9c4235:kx7d6ssdcy7h1epr0tj68re4m18fy3qy",
+        "sourceId": "transcript:conversation:3cb4fbe8d9905e073eb993897f992d992692ab6001fbed26695866fc5c9c4235:kx7d6ssdcy7h1epr0tj68re4m18fy3qy",
+        "sourceRevision": 1
+      },
+      {
+        "contentHash": "a93b81be632d773893900b677b90ecd3268b7b8508da7858cb1f29f7be7c3452",
+        "permissions": [
+          "canViewMemories"
+        ],
+        "sourceEventId": "transcript:conversation:3cb4fbe8d9905e073eb993897f992d992692ab6001fbed26695866fc5c9c4235:kx7abdk4h8rqwksre38qpb5eth8fy9aw",
+        "sourceId": "transcript:conversation:3cb4fbe8d9905e073eb993897f992d992692ab6001fbed26695866fc5c9c4235:kx7abdk4h8rqwksre38qpb5eth8fy9aw",
+        "sourceRevision": 1
+      }
+    ],
+    "state": "complete",
+    "streaming": true,
+    "tenantId": "task15c-content-20261009",
+    "toolCount": 1,
+    "updatedAt": 1791518191661,
+    "workflowId": "jd74bh4v4msy9dc1dt3zzbxvgd8fy9rg"
+  },
+  "steps": {
+    "continueCursor": "[]",
+    "isDone": true,
+    "page": [
+      {
+        "args": {
+          "attemptNumber": 1,
+          "leaseVersion": 1,
+          "reference": {
+            "grantId": "mx76gmhcwfhnhb4t95443c038n8fyp37",
+            "grantVersion": 1,
+            "membershipId": "n17fxr7x4nvh55n40dzapwyz398fz873",
+            "membershipVersion": 1,
+            "memorySpaceEpoch": 1,
+            "memorySpaceId": "content15c-20261009",
+            "principalId": "n579nthk6v3vcf486mth09f5ts8fzkgx",
+            "principalVersion": 1,
+            "tenantEpoch": 1,
+            "tenantId": "task15c-content-20261009"
+          },
+          "runId": "run:3be08ef0955d913fdd1b35cd2fff9da50989ea2e6f520db8ecfe71080c49f176"
+        },
+        "completedAt": 1791518155524,
+        "kind": "function",
+        "name": "runtimeAgent:startContext",
+        "runResult": {
+          "kind": "success",
+          "returnValue": null
+        },
+        "startedAt": 1791518154746,
+        "stepId": "j976ewzaqdh75sz8scgaeppr418fydes",
+        "stepNumber": 0,
+        "workId": "jx7by9x2xrbbpwjmw217fx11498fym8n",
+        "workflowId": "jd74bh4v4msy9dc1dt3zzbxvgd8fy9rg"
+      },
+      {
+        "args": {
+          "attemptNumber": 1,
+          "leaseVersion": 1,
+          "reference": {
+            "grantId": "mx76gmhcwfhnhb4t95443c038n8fyp37",
+            "grantVersion": 1,
+            "membershipId": "n17fxr7x4nvh55n40dzapwyz398fz873",
+            "membershipVersion": 1,
+            "memorySpaceEpoch": 1,
+            "memorySpaceId": "content15c-20261009",
+            "principalId": "n579nthk6v3vcf486mth09f5ts8fzkgx",
+            "principalVersion": 1,
+            "tenantEpoch": 1,
+            "tenantId": "task15c-content-20261009"
+          },
+          "runId": "run:3be08ef0955d913fdd1b35cd2fff9da50989ea2e6f520db8ecfe71080c49f176"
+        },
+        "completedAt": 1791518156616,
+        "kind": "function",
+        "name": "runtimeAgent:contextBarrier",
+        "runResult": {
+          "kind": "success",
+          "returnValue": {
+            "remainingMs": 0,
+            "state": "ready"
+          }
+        },
+        "startedAt": 1791518155786,
+        "stepId": "j978pyhtjjp4apbzyv2008tjkd8fz5b3",
+        "stepNumber": 1,
+        "workId": "jx7am5ytkqmz9gfb3apqs9799n8fy4ng",
+        "workflowId": "jd74bh4v4msy9dc1dt3zzbxvgd8fy9rg"
+      },
+      {
+        "args": {
+          "attemptNumber": 1,
+          "leaseVersion": 1,
+          "reference": {
+            "grantId": "mx76gmhcwfhnhb4t95443c038n8fyp37",
+            "grantVersion": 1,
+            "membershipId": "n17fxr7x4nvh55n40dzapwyz398fz873",
+            "membershipVersion": 1,
+            "memorySpaceEpoch": 1,
+            "memorySpaceId": "content15c-20261009",
+            "principalId": "n579nthk6v3vcf486mth09f5ts8fzkgx",
+            "principalVersion": 1,
+            "tenantEpoch": 1,
+            "tenantId": "task15c-content-20261009"
+          },
+          "runId": "run:3be08ef0955d913fdd1b35cd2fff9da50989ea2e6f520db8ecfe71080c49f176"
+        },
+        "completedAt": 1791518162183,
+        "kind": "function",
+        "name": "authorized Cortex context",
+        "runResult": {
+          "kind": "success",
+          "returnValue": null
+        },
+        "startedAt": 1791518156831,
+        "stepId": "j978bvjt6x251mngbf0fc0vn458fzwsg",
+        "stepNumber": 2,
+        "workId": "jx761bjbw1cya3k3t7fnkt0w198fycze",
+        "workflowId": "jd74bh4v4msy9dc1dt3zzbxvgd8fy9rg"
+      },
+      {
+        "args": {
+          "attemptNumber": 1,
+          "leaseVersion": 1,
+          "ordinal": 0,
+          "reference": {
+            "grantId": "mx76gmhcwfhnhb4t95443c038n8fyp37",
+            "grantVersion": 1,
+            "membershipId": "n17fxr7x4nvh55n40dzapwyz398fz873",
+            "membershipVersion": 1,
+            "memorySpaceEpoch": 1,
+            "memorySpaceId": "content15c-20261009",
+            "principalId": "n579nthk6v3vcf486mth09f5ts8fzkgx",
+            "principalVersion": 1,
+            "tenantEpoch": 1,
+            "tenantId": "task15c-content-20261009"
+          },
+          "runId": "run:3be08ef0955d913fdd1b35cd2fff9da50989ea2e6f520db8ecfe71080c49f176"
+        },
+        "completedAt": 1791518171687,
+        "kind": "function",
+        "name": "model 0",
+        "runResult": {
+          "kind": "success",
+          "returnValue": {
+            "calls": [
+              {
+                "inputCanonical": "{\"text\":\"The verification label is Amber Harbor.\"}",
+                "toolCallId": "call_J7j7pKUtuVRgKgUrFN4lT8Ew",
+                "toolName": "memory_remember"
+              }
+            ],
+            "final": false,
+            "savedMessageIds": [
+              "kx7ba9684gmsp21qbqs5c3hkyx8fzrc0"
+            ]
+          }
+        },
+        "startedAt": 1791518162498,
+        "stepId": "j972jnw0pt4fesr5asph8yydgn8fyx3n",
+        "stepNumber": 3,
+        "workId": "jx7f3wx5440f83cxcmhpr9xvyd8fyh8v",
+        "workflowId": "jd74bh4v4msy9dc1dt3zzbxvgd8fy9rg"
+      },
+      {
+        "args": {
+          "attemptNumber": 1,
+          "kind": "tool",
+          "leaseVersion": 1,
+          "ordinal": 0,
+          "reference": {
+            "grantId": "mx76gmhcwfhnhb4t95443c038n8fyp37",
+            "grantVersion": 1,
+            "membershipId": "n17fxr7x4nvh55n40dzapwyz398fz873",
+            "membershipVersion": 1,
+            "memorySpaceEpoch": 1,
+            "memorySpaceId": "content15c-20261009",
+            "principalId": "n579nthk6v3vcf486mth09f5ts8fzkgx",
+            "principalVersion": 1,
+            "tenantEpoch": 1,
+            "tenantId": "task15c-content-20261009"
+          },
+          "requestCanonical": "{\"text\":\"The verification label is Amber Harbor.\"}",
+          "runId": "run:3be08ef0955d913fdd1b35cd2fff9da50989ea2e6f520db8ecfe71080c49f176",
+          "toolCallId": "call_J7j7pKUtuVRgKgUrFN4lT8Ew",
+          "toolName": "memory_remember"
+        },
+        "completedAt": 1791518174208,
+        "kind": "function",
+        "name": "runtimeAgent:beginOperation",
+        "runResult": {
+          "kind": "success",
+          "returnValue": {
+            "nativeMessageIds": [],
+            "operationId": "agent-op:53a8a3dfca6a547b2738905409eb20addd231ceec4348def36873fae31d744cd",
+            "resultCanonical": null,
+            "semanticId": "53a8a3dfca6a547b2738905409eb20addd231ceec4348def36873fae31d744cd",
+            "state": "prepared"
+          }
+        },
+        "startedAt": 1791518173078,
+        "stepId": "j972rardth8p84ntjkvcx11d8n8fydkb",
+        "stepNumber": 4,
+        "workId": "jx7fjc15sjb41fyv6vrsvmjf958fzv24",
+        "workflowId": "jd74bh4v4msy9dc1dt3zzbxvgd8fy9rg"
+      },
+      {
+        "args": {
+          "attemptNumber": 1,
+          "call": {
+            "inputCanonical": "{\"text\":\"The verification label is Amber Harbor.\"}",
+            "toolCallId": "call_J7j7pKUtuVRgKgUrFN4lT8Ew",
+            "toolName": "memory_remember"
+          },
+          "leaseVersion": 1,
+          "ordinal": 0,
+          "reference": {
+            "grantId": "mx76gmhcwfhnhb4t95443c038n8fyp37",
+            "grantVersion": 1,
+            "membershipId": "n17fxr7x4nvh55n40dzapwyz398fz873",
+            "membershipVersion": 1,
+            "memorySpaceEpoch": 1,
+            "memorySpaceId": "content15c-20261009",
+            "principalId": "n579nthk6v3vcf486mth09f5ts8fzkgx",
+            "principalVersion": 1,
+            "tenantEpoch": 1,
+            "tenantId": "task15c-content-20261009"
+          },
+          "runId": "run:3be08ef0955d913fdd1b35cd2fff9da50989ea2e6f520db8ecfe71080c49f176"
+        },
+        "completedAt": 1791518183217,
+        "kind": "function",
+        "name": "server tool memory_remember",
+        "runResult": {
+          "kind": "success",
+          "returnValue": null
+        },
+        "startedAt": 1791518174470,
+        "stepId": "j9706brdbwwd2arrg3zafrej258fy0k8",
+        "stepNumber": 5,
+        "workId": "jx77q1b7e42nawfs4ect0p1yt18fz4kt",
+        "workflowId": "jd74bh4v4msy9dc1dt3zzbxvgd8fy9rg"
+      },
+      {
+        "args": {
+          "attemptNumber": 1,
+          "leaseVersion": 1,
+          "ordinal": 1,
+          "reference": {
+            "grantId": "mx76gmhcwfhnhb4t95443c038n8fyp37",
+            "grantVersion": 1,
+            "membershipId": "n17fxr7x4nvh55n40dzapwyz398fz873",
+            "membershipVersion": 1,
+            "memorySpaceEpoch": 1,
+            "memorySpaceId": "content15c-20261009",
+            "principalId": "n579nthk6v3vcf486mth09f5ts8fzkgx",
+            "principalVersion": 1,
+            "tenantEpoch": 1,
+            "tenantId": "task15c-content-20261009"
+          },
+          "runId": "run:3be08ef0955d913fdd1b35cd2fff9da50989ea2e6f520db8ecfe71080c49f176"
+        },
+        "completedAt": 1791518189175,
+        "kind": "function",
+        "name": "model 1",
+        "runResult": {
+          "kind": "success",
+          "returnValue": {
+            "calls": [],
+            "final": true,
+            "savedMessageIds": [
+              "kx7dc2pkwrtqsdwdh8j45b73jx8fzr4s"
+            ]
+          }
+        },
+        "startedAt": 1791518183540,
+        "stepId": "j977m7max2eq3mpzd7887m1hzn8fzcpy",
+        "stepNumber": 6,
+        "workId": "jx785d75dp6c5dt1792ckpd7d58fycqh",
+        "workflowId": "jd74bh4v4msy9dc1dt3zzbxvgd8fy9rg"
+      },
+      {
+        "args": {
+          "reference": {
+            "grantId": "mx76gmhcwfhnhb4t95443c038n8fyp37",
+            "grantVersion": 1,
+            "membershipId": "n17fxr7x4nvh55n40dzapwyz398fz873",
+            "membershipVersion": 1,
+            "memorySpaceEpoch": 1,
+            "memorySpaceId": "content15c-20261009",
+            "principalId": "n579nthk6v3vcf486mth09f5ts8fzkgx",
+            "principalVersion": 1,
+            "tenantEpoch": 1,
+            "tenantId": "task15c-content-20261009"
+          },
+          "runId": "run:3be08ef0955d913fdd1b35cd2fff9da50989ea2e6f520db8ecfe71080c49f176"
+        },
+        "completedAt": 1791518190090,
+        "kind": "function",
+        "name": "runtimeContentJobs:enqueueParentTitle",
+        "runResult": {
+          "kind": "success",
+          "returnValue": "content:9ffbda40a523d85cb96f62542201e658ef12f003e27a0e7857292215db4ec1d6"
+        },
+        "startedAt": 1791518189415,
+        "stepId": "j9795wp9wz60tcf5wsg33gmkxs8fy304",
+        "stepNumber": 7,
+        "workId": "jx70hhavy16ytqw3jm6kc5y86s8fyn9r",
+        "workflowId": "jd74bh4v4msy9dc1dt3zzbxvgd8fy9rg"
+      },
+      {
+        "args": {
+          "jobId": "content:9ffbda40a523d85cb96f62542201e658ef12f003e27a0e7857292215db4ec1d6"
+        },
+        "completedAt": 1791518190935,
+        "kind": "function",
+        "name": "runtimeContentJobs:claim",
+        "runResult": {
+          "error": "Uncaught TypeError: dynamic module import unsupported\n    at checkContentJob (../../custom/backend/runtimeContentFence.ts:60:168)\n    at async handler (../../custom/backend/runtimeContentJobs.ts:103:78)\n",
+          "kind": "failed"
+        },
+        "startedAt": 1791518190336,
+        "stepId": "j978a9pxqdacw6y6sdxath5f3n8fyxs1",
+        "stepNumber": 8,
+        "workId": "jx79k1rap7natj8ra6gmexfwhd8fyf7s",
+        "workflowId": "jd74bh4v4msy9dc1dt3zzbxvgd8fy9rg"
+      },
+      {
+        "args": {
+          "attemptNumber": 1,
+          "finalMessageIds": [
+            "kx7dc2pkwrtqsdwdh8j45b73jx8fzr4s"
+          ],
+          "leaseVersion": 1,
+          "reference": {
+            "grantId": "mx76gmhcwfhnhb4t95443c038n8fyp37",
+            "grantVersion": 1,
+            "membershipId": "n17fxr7x4nvh55n40dzapwyz398fz873",
+            "membershipVersion": 1,
+            "memorySpaceEpoch": 1,
+            "memorySpaceId": "content15c-20261009",
+            "principalId": "n579nthk6v3vcf486mth09f5ts8fzkgx",
+            "principalVersion": 1,
+            "tenantEpoch": 1,
+            "tenantId": "task15c-content-20261009"
+          },
+          "runId": "run:3be08ef0955d913fdd1b35cd2fff9da50989ea2e6f520db8ecfe71080c49f176"
+        },
+        "completedAt": 1791518192153,
+        "kind": "function",
+        "name": "runtimeAgent:finalize",
+        "runResult": {
+          "kind": "success",
+          "returnValue": {
+            "receiptId": "agent-ingestion:0e260d7b912b4bbfac6412d4a7bbe17c2138382f8180990bf6e4a34797c44dbb"
+          }
+        },
+        "startedAt": 1791518191155,
+        "stepId": "j97c6zce4t30yfxrcj6f0nen798fzwv0",
+        "stepNumber": 9,
+        "workId": "jx72q8btyjvrdz7q86mtkh94zx8fy6bt",
+        "workflowId": "jd74bh4v4msy9dc1dt3zzbxvgd8fy9rg"
+      }
+    ]
+  },
+  "modelCalls": 0,
+  "claims": 0,
+  "reconciles": 0
+}

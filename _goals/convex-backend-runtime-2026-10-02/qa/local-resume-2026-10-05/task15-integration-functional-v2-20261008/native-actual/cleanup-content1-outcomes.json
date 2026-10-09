@@ -1,0 +1,122 @@
+{
+  "status": "ACTUAL_TASK15_OWNED_SCOPES_AND_TOKENS_RETIRED_WITH_FINANCIAL_FENCES_PRESERVED",
+  "retirements": [
+    {
+      "scope": {
+        "tenantId": "task15c-content-20261009",
+        "memorySpaceId": "content15c-20261009"
+      },
+      "result": null,
+      "originalEpoch": 1
+    },
+    {
+      "scope": {
+        "tenantId": "task15c-foreign-20261009",
+        "memorySpaceId": "foreign15c-20261009"
+      },
+      "result": null,
+      "originalEpoch": 1
+    }
+  ],
+  "denials": [
+    {
+      "subject": "owner15c-content-20261009",
+      "scope": {
+        "tenantId": "task15c-content-20261009",
+        "memorySpaceId": "content15c-20261009"
+      },
+      "code": "FORBIDDEN",
+      "message": "[Request ID: 26da8d1f362da101] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../custom/backend/runtimeAuth.ts:46:26)\n    at resolveAuthority (../../custom/backend/runtimeAuth.ts:185:0)\n    at async requireAuthority (../../custom/backend/runtimeAuth.ts:251:0)\n    at async requireDataAuthority (../../custom/backend/runtimeDataAuth.ts:34:16)\n    at async handler (../custom/backend/runtimeClient.ts:14:11)\n",
+      "JWTCurrentAndSigned": true
+    },
+    {
+      "subject": "op15c-content-20261009",
+      "scope": {
+        "tenantId": "task15c-content-20261009",
+        "memorySpaceId": "content15c-20261009"
+      },
+      "code": "FORBIDDEN",
+      "message": "[Request ID: 817ab7f185b75acb] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../custom/backend/runtimeAuth.ts:46:26)\n    at resolveAuthority (../../custom/backend/runtimeAuth.ts:185:0)\n    at async requireAuthority (../../custom/backend/runtimeAuth.ts:251:0)\n    at async requireDataAuthority (../../custom/backend/runtimeDataAuth.ts:34:16)\n    at async handler (../custom/backend/runtimeClient.ts:14:11)\n",
+      "JWTCurrentAndSigned": true
+    },
+    {
+      "subject": "expiry15c-content-20261009",
+      "scope": {
+        "tenantId": "task15c-content-20261009",
+        "memorySpaceId": "content15c-20261009"
+      },
+      "code": "FORBIDDEN",
+      "message": "[Request ID: 562cbba7a04ae659] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../custom/backend/runtimeAuth.ts:46:26)\n    at resolveAuthority (../../custom/backend/runtimeAuth.ts:185:0)\n    at async requireAuthority (../../custom/backend/runtimeAuth.ts:251:0)\n    at async requireDataAuthority (../../custom/backend/runtimeDataAuth.ts:34:16)\n    at async handler (../custom/backend/runtimeClient.ts:14:11)\n",
+      "JWTCurrentAndSigned": true
+    },
+    {
+      "subject": "foreign15c-content-20261009",
+      "scope": {
+        "tenantId": "task15c-foreign-20261009",
+        "memorySpaceId": "foreign15c-20261009"
+      },
+      "code": "FORBIDDEN",
+      "message": "[Request ID: 996a9b960df475fb] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../custom/backend/runtimeAuth.ts:46:26)\n    at resolveAuthority (../../custom/backend/runtimeAuth.ts:185:0)\n    at async requireAuthority (../../custom/backend/runtimeAuth.ts:251:0)\n    at async requireDataAuthority (../../custom/backend/runtimeDataAuth.ts:34:16)\n    at async handler (../custom/backend/runtimeClient.ts:14:11)\n",
+      "JWTCurrentAndSigned": true
+    }
+  ],
+  "ownedTokenFiles": [
+    {
+      "path": "/Users/SaintNick/.codex/tmp/cortex-task15-content-native-6e8e23ba-684f-45a0-b62b-e8a6682768d3/owner.jwt",
+      "bytes": 663,
+      "mode": "0600",
+      "removed": true
+    },
+    {
+      "path": "/Users/SaintNick/.codex/tmp/cortex-task15-content-native-6e8e23ba-684f-45a0-b62b-e8a6682768d3/owner-refresh.jwt",
+      "bytes": 663,
+      "mode": "0600",
+      "removed": true
+    },
+    {
+      "path": "/Users/SaintNick/.codex/tmp/cortex-task15-content-native-6e8e23ba-684f-45a0-b62b-e8a6682768d3/ui-expired.jwt",
+      "bytes": 663,
+      "mode": "0600",
+      "removed": true
+    },
+    {
+      "path": "/Users/SaintNick/.codex/tmp/cortex-task15-content-native-6e8e23ba-684f-45a0-b62b-e8a6682768d3/ui-foreign.jwt",
+      "bytes": 666,
+      "mode": "0600",
+      "removed": true
+    }
+  ],
+  "scopeEpochs": [
+    {
+      "id": "n970ebs7ctzt3400sk4e50tp7d8fz13x",
+      "tenantId": "task15c-foreign-20261009",
+      "memorySpaceId": "foreign15c-20261009",
+      "epoch": 2,
+      "deletedAt": 1791520712924
+    },
+    {
+      "id": "n970f98c730w9je5t4nheqfw698fzt1h",
+      "tenantId": "task15c-content-20261009",
+      "memorySpaceId": "content15c-20261009",
+      "epoch": 2,
+      "deletedAt": 1791520712217
+    }
+  ],
+  "allTargetFinancialUnchanged": true,
+  "task15ActualAttemptCount": 40,
+  "task15FullUnknownLiabilityUnits": 4000000,
+  "task15ReservedUnits": 0,
+  "task15SettledUnits": 0,
+  "task15ActiveConcurrency": 0,
+  "allTask15ConfirmedSlotsReleased": true,
+  "modelCalls": 0,
+  "readmissions": 0,
+  "authorityRestorations": 0,
+  "refunds": 0,
+  "ownedNextServerClosed": true,
+  "ownedHTTPAndRuntimeClientsClosed": true,
+  "mainDev3174742": "retained for newly scoped03/final; not retired",
+  "centralCredentialAndIssuerStore": "retained0700/0600 sole copy; no printed values or authority restoration",
+  "otherHistoricalScopesAndHeldUnknownMedia": "unchanged",
+  "current15CanonicalHistoryAndFinancialRows": "retained behind retired scope; no physical purge or reset"
+}

@@ -1,4 +1,5 @@
 /** One verified, bounded connection per CLI command or HTTP request. */
+import { constants } from "node:fs";
 import { open } from "node:fs/promises";
 import { CortexRuntimeClient, CortexRuntimeError } from "@cortexmemory/sdk/runtime";
 import type { CortexRuntimeClientOptions, RuntimeSession } from "@cortexmemory/sdk/runtime";
@@ -27,9 +28,9 @@ export async function hostToken(env: NodeJS.ProcessEnv = process.env): Promise<s
   // Reread the host-managed file for every official refresh callback. Never print tokens.
   let token = env.CORTEX_AUTH_TOKEN;
   if (env.CORTEX_AUTH_TOKEN_FILE) {
-    const file = await open(env.CORTEX_AUTH_TOKEN_FILE, "r").catch(() => { throw new AppError("HOST_TOKEN_UNAVAILABLE", 401); });
+    const file = await open(env.CORTEX_AUTH_TOKEN_FILE, constants.O_RDONLY | constants.O_NOFOLLOW | constants.O_NONBLOCK).catch(() => { throw new AppError("HOST_TOKEN_UNAVAILABLE", 401); });
     try {
-      const stat = await file.stat(); if (!stat.isFile() || stat.size > 32768) throw new AppError("INVALID_HOST_TOKEN", 401);
+      const stat = await file.stat(); if (!stat.isFile() || stat.size > 32768 || (stat.mode & 0o077) !== 0 || typeof process.getuid === "function" && stat.uid !== process.getuid()) throw new AppError("INVALID_HOST_TOKEN", 401);
       const data = Buffer.alloc(32769); let size = 0;
       while (size < data.length) { const result = await file.read(data, size, data.length - size, size); if (result.bytesRead === 0) break; size += result.bytesRead; }
       if (size > 32768) throw new AppError("INVALID_HOST_TOKEN", 401); token = data.subarray(0, size).toString("utf8").trim();

@@ -1,0 +1,19 @@
+npm notice run @cortexmemory/chat-sdk-quickstart@1.0.0 build
+npm notice run next build --webpack
+▲ Next.js 16.3.8 (webpack)
+✓ Running next.config.ts took 1335ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 7.1s
+  Running TypeScript ...
+  Finished TypeScript in 5.2s ...
+  Collecting page data using 9 workers ...
+  Generating static pages using 9 workers (0/16) ...
+  Generating static pages using 9 workers (4/16) 
+Error occurred prerendering page "/login". Read more: https://nextjs.org/docs/messages/prerender-error
+TypeError: Cannot destructure property 'update' of '(0 , h.wV)(...)' as it is undefined.
+    at n (.next/server/app/(auth)/login/page.js:1:479) {
+  digest: '2522244931'
+}
+Export encountered an error on /(auth)/login/page: /login, exiting the build.
+⨯ Next.js build worker exited with code: 1 and signal: null

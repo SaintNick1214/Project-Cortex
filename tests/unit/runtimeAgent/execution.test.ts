@@ -498,7 +498,7 @@ describe("durable Agent execution product boundaries", () => {
     awaitEvent: async (args: unknown) => { waits.push(args); return "approved"; } };
     const handler = (runtime.executeTurn as unknown as { _handler: (step: unknown, args: unknown) => Promise<null> })._handler;
     expect(await handler(step, { reference: {}, runId: "r", attemptNumber: 1, leaseVersion: 1 })).toBeNull();
-    expect(actions.map(item => [item.name, item.ordinal, item.retry])).toEqual([["runtimeAgent:prepareContext", undefined, false], ["runtimeAgent:modelStep", 0, false], ["runtimeAgent:toolStep", 0, false], ["runtimeAgent:modelStep", 1, false]]);
+    expect(actions.map(item => [item.name, item.ordinal, item.retry])).toEqual([["runtimeAgent:prepareContext", undefined, false], ["runtimeAgent:modelStep", 0, false], ["runtimeAgent:toolStep", 0, false], ["runtimeAgent:modelStep", 1, false], ["runtimeContentGateway:processStage", undefined, false]]);
     expect(waits).toHaveLength(1); expect(finals).toHaveLength(1);
     const failed = jest.fn(async () => { throw new Error("ambiguous paid failure"); });
     await expect(handler({ ...step, runAction: failed }, {})).rejects.toThrow("ambiguous paid failure"); expect(failed).toHaveBeenCalledTimes(1);

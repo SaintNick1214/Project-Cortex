@@ -1,0 +1,7 @@
+Task15 native behavior and owned cleanup are closed. Eight scoped native groups passed, including one actual packed Basic Hono POST/chat, five content intents, installed CLI auth/operator controls, exact suggestions apply/recovery and the corrected SDK4 Agent-parent automatic title.
+
+Both owned Task15 scopes are retired. Three main roles and the owned foreign role receive FORBIDDEN with freshly signed JWTs; four local JWT files are removed. The owned Next child/controller and port are closed. All target financial roots, windows, counters and attempt fences are unchanged. Task15 retains its full 4,000,000 microUSD uncertain liability from40 actual attempts, with active concurrency0 and all confirmed slots released. Main3174742 and the central private issuer store remain explicitly retained for a new03 namespace/final retirement.
+
+The initial malformed-title unknown, dynamic-import failure, wrong installed candidate selector and DTO/count oracle failures remain indexed. SDK4 outcomes do not qualify the upcoming SDK5 asset/observe deadline successor. Root's separate UI packet and the independent Task15/goal verdict remain independently owned. Async video still has its unchanged external503 gate.
+
+Exact receipts and applicability: final-native-report2.json; immutable original53-pin aggregate: final-native-report1.json; cleanup: cleanup-content1-outcomes.json. Current native aggregate has75 exact raw/source pins.

@@ -1,0 +1,175 @@
+watchman warning: Recrawled this watch 1 time, most recently because:
+MustScanSubDirs UserDroppedTo resolve, please review the information on
+https://facebook.github.io/watchman/docs/troubleshooting.html#recrawl
+To clear this warning, run:
+`watchman watch-del '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion' ; watchman watch-project '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion'`
+
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+(node:91585) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeContent/jobs.test.ts (7.652 s)
+  ✓ accepts quoted CSV with multiline cells and denies malformed generated sheet content (12 ms)
+  ✓ creates text with a real secondary title and one shared native account (226 ms)
+  ✓ creates code with a real secondary title and one shared native account (124 ms)
+  ✓ creates sheet with a real secondary title and one shared native account (129 ms)
+  ✓ rejects model/authority/budget extras before any job or artifact (15 ms)
+  ✓ retains idempotent job/account and denies a conflicting request (18 ms)
+  ✓ cancellation blocks actual native admission without refunding the account (12 ms)
+  ✓ saved primary crash never pays again and cannot publish without the secondary title (68 ms)
+  ✓ unknown work cannot reclaim or fabricate a confirmed draft (9 ms)
+  ✓ deletion after paid draft prevents atomic publication with retained liability (117 ms)
+  ✓ foreign/no-JWT callers cannot deliver owned jobs (11 ms)
+  ✓ updates an exact retained artifact version while preserving the original history and title (206 ms)
+  ✓ suggestions remain unapplied until one exact user choice; replay never pays or edits twice (177 ms)
+  ✓ recovers two confirmed durable drafts exactly once without another native attempt (116 ms)
+  ✓ automatic conversation title binds a genuine active parent model and shares its existing financial account (273 ms)
+  ✓ ready derived content rechecks consumed artifact metadata independently of its own output version (217 ms)
+  ✓ publishes confirmed text with a deterministic warning title after rejected multiline secondary (87 ms)
+  ✓ publishes confirmed code with a deterministic warning title after rejected multiline secondary (89 ms)
+  ✓ publishes confirmed sheet with a deterministic warning title after rejected multiline secondary (87 ms)
+  ✕ recovers a confirmed malformed secondary before its save without paying or publishing twice (71 ms)
+  ✓ denies rejected-title publication with withheld secondary evidence (78 ms)
+  ✓ denies rejected-title publication with unconfirmed secondary evidence (74 ms)
+  ✓ denies rejected-title publication with wrong-parent secondary evidence (72 ms)
+  ✓ retains confirmed-title liability and refuses fallback after deleted (73 ms)
+  ✓ retains confirmed-title liability and refuses fallback after revoked (75 ms)
+  ✓ retains confirmed-title liability and refuses fallback after expired (75 ms)
+  ✓ confirmed malformed standalone title fails honestly and never receives a document fallback (41 ms)
+
+  ● recovers a confirmed malformed secondary before its save without paying or publishing twice
+
+    ConvexError: {"version":1,"code":"CONTENT_JOB_EXPIRED","message":"Content operation denied.","retryable":false,"outcome":"not_dispatched"}
+
+      16 | type Ctx = Pick<QueryCtx, "db"> & Partial<Pick<QueryCtx, "runQuery">>;
+      17 | export type ContentJob = Doc<"runtimeContentJobs">;
+    > 18 | export function contentDenied(code = "FORBIDDEN"): never { throw new ConvexError({ version: 1, code, message: "Content operation denied.", retryable: false, outcome: "not_dispatched" }); }
+         |                                                                  ^
+      19 | export async function contentJob(ctx: Pick<QueryCtx, "db">, jobId: string): Promise<ContentJob> {
+      20 |   const row = await ctx.db.query("runtimeContentJobs").withIndex("by_job", q => q.eq("jobId", jobId)).unique();
+      21 |   if (!row) contentDenied("CONTENT_JOB_NOT_FOUND"); return row;
+
+      at contentDenied (convex-dev/runtimeContentFence.ts:18:66)
+      at checkContentJob (convex-dev/runtimeContentFence.ts:63:156)
+      at guardContentRunBudget (convex-dev/runtimeContentFence.ts:81:3)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:502:3)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at confirmedContentDraft (convex-dev/runtimeContentJobs.ts:131:22)
+      at titlePatch (convex-dev/runtimeContentJobs.ts:147:3)
+      at Function.handler [as _handler] (convex-dev/runtimeContentJobs.ts:214:19)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:10)
+      at tests/unit/runtimeTranscript/fixture.ts:220:107
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:18)
+      at Object.call (tests/unit/runtimeTranscript/fixture.ts:220:77)
+      at Object.<anonymous> (tests/unit/runtimeContent/jobs.test.ts:146:10)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     7.7s | 26/27 passed | /tests/unit/runtimeContent/jobs.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.27s ( 3.5%) - automatic conversation title binds a genuine active parent model and shares its existing financial account
+    /tests/unit/runtimeContent/jobs.test.ts
+
+ 2. [32m✓[0m    0.23s ( 2.9%) - creates text with a real secondary title and one shared native account
+    /tests/unit/runtimeContent/jobs.test.ts
+
+ 3. [32m✓[0m    0.22s ( 2.8%) - ready derived content rechecks consumed artifact metadata independently of its own output version
+    /tests/unit/runtimeContent/jobs.test.ts
+
+ 4. [32m✓[0m    0.21s ( 2.6%) - updates an exact retained artifact version while preserving the original history and title
+    /tests/unit/runtimeContent/jobs.test.ts
+
+ 5. [32m✓[0m    0.18s ( 2.3%) - suggestions remain unapplied until one exact user choice; replay never pays or edits twice
+    /tests/unit/runtimeContent/jobs.test.ts
+
+ 6. [32m✓[0m    0.13s ( 1.6%) - creates sheet with a real secondary title and one shared native account
+    /tests/unit/runtimeContent/jobs.test.ts
+
+ 7. [32m✓[0m    0.12s ( 1.6%) - creates code with a real secondary title and one shared native account
+    /tests/unit/runtimeContent/jobs.test.ts
+
+ 8. [32m✓[0m    0.12s ( 1.5%) - deletion after paid draft prevents atomic publication with retained liability
+    /tests/unit/runtimeContent/jobs.test.ts
+
+ 9. [32m✓[0m    0.12s ( 1.5%) - recovers two confirmed durable drafts exactly once without another native attempt
+    /tests/unit/runtimeContent/jobs.test.ts
+
+10. [32m✓[0m    0.09s ( 1.1%) - publishes confirmed code with a deterministic warning title after rejected multiline secondary
+    /tests/unit/runtimeContent/jobs.test.ts
+
+11. [32m✓[0m    0.09s ( 1.1%) - publishes confirmed text with a deterministic warning title after rejected multiline secondary
+    /tests/unit/runtimeContent/jobs.test.ts
+
+12. [32m✓[0m    0.09s ( 1.1%) - publishes confirmed sheet with a deterministic warning title after rejected multiline secondary
+    /tests/unit/runtimeContent/jobs.test.ts
+
+13. [32m✓[0m    0.08s ( 1.0%) - denies rejected-title publication with withheld secondary evidence
+    /tests/unit/runtimeContent/jobs.test.ts
+
+14. [32m✓[0m    0.07s ( 1.0%) - retains confirmed-title liability and refuses fallback after revoked
+    /tests/unit/runtimeContent/jobs.test.ts
+
+15. [32m✓[0m    0.07s ( 1.0%) - retains confirmed-title liability and refuses fallback after expired
+    /tests/unit/runtimeContent/jobs.test.ts
+
+16. [32m✓[0m    0.07s ( 0.9%) - denies rejected-title publication with unconfirmed secondary evidence
+    /tests/unit/runtimeContent/jobs.test.ts
+
+17. [32m✓[0m    0.07s ( 0.9%) - retains confirmed-title liability and refuses fallback after deleted
+    /tests/unit/runtimeContent/jobs.test.ts
+
+18. [32m✓[0m    0.07s ( 0.9%) - denies rejected-title publication with wrong-parent secondary evidence
+    /tests/unit/runtimeContent/jobs.test.ts
+
+19. [31m✗[0m    0.07s ( 0.9%) - recovers a confirmed malformed secondary before its save without paying or publishing twice
+    /tests/unit/runtimeContent/jobs.test.ts
+
+20. [32m✓[0m    0.07s ( 0.9%) - saved primary crash never pays again and cannot publish without the secondary title
+    /tests/unit/runtimeContent/jobs.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 2.43s (31.0% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      7.85s
+  Test suites:        1
+  Individual tests:   27
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 26 passed, 27 total
+Snapshots:   0 total
+Time:        7.847 s, estimated 8 s
+Ran all test suites within paths "tests/unit/runtimeContent/jobs.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/content-title-repair1/content-tests1.json

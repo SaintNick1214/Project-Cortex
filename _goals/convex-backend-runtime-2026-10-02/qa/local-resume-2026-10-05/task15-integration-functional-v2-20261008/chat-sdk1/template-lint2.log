@@ -1,0 +1,924 @@
+components/runtime-chat.tsx:604:15 lint/complexity/noVoid ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × The use of void is not allowed.
+  
+    602 │             className="rounded border p-2"
+    603 │             onClick={() =>
+  > 604 │               void client.getContentJob(job.jobId).then(update).catch(onError)
+        │               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    605 │             }
+    606 │           >
+  
+  i If you use void to alter the return type of a function or return `undefined`, use the global `undefined` instead.
+  
+
+components/runtime-chat.tsx:637:15 lint/a11y/useButtonType ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Provide an explicit type prop for the button element.
+  
+    635 │               </p>
+    636 │               <p>{suggestion.description}</p>
+  > 637 │               <button
+        │               ^^^^^^^
+  > 638 │                 className="rounded border p-2"
+         ...
+  > 648 │                 }
+  > 649 │               >
+        │               ^
+    650 │                 Apply this suggestion
+    651 │               </button>
+  
+  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
+  
+  i Allowed button types are: submit, button or reset
+  
+
+components/runtime-chat.tsx:110:7 lint/complexity/noVoid ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × The use of void is not allowed.
+  
+    108 │     () => () => {
+    109 │       connection?.transport.disconnect();
+  > 110 │       void connection?.client.close();
+        │       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    111 │     },
+    112 │     [connection]
+  
+  i If you use void to alter the return type of a function or return `undefined`, use the global `undefined` instead.
+  
+
+components/runtime-chat.tsx:150:5 lint/complexity/noVoid ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × The use of void is not allowed.
+  
+    148 │       }
+    149 │     };
+  > 150 │     void read();
+        │     ^^^^^^^^^^^
+    151 │     return () => {
+    152 │       active = false;
+  
+  i If you use void to alter the return type of a function or return `undefined`, use the global `undefined` instead.
+  
+
+components/runtime-chat.tsx:165:7 lint/complexity/noVoid ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × The use of void is not allowed.
+  
+    163 │     let active = true;
+    164 │     const timer = setTimeout(() => {
+  > 165 │       void Promise.all(
+        │       ^^^^^^^^^^^^^^^^^
+  > 166 │         jobs.map((job) => connection.client.getContentJob(job.jobId))
+         ...
+  > 177 │           }
+  > 178 │         });
+        │         ^^
+    179 │     }, 1000);
+    180 │     return () => {
+  
+  i If you use void to alter the return type of a function or return `undefined`, use the global `undefined` instead.
+  
+
+components/runtime-chat.tsx:254:26 lint/complexity/noVoid ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × The use of void is not allowed.
+  
+    252 │         <button
+    253 │           className="rounded border px-3 py-2"
+  > 254 │           onClick={() => void connect()}
+        │                          ^^^^^^^^^^^^^^
+    255 │         >
+    256 │           Connect
+  
+  i If you use void to alter the return type of a function or return `undefined`, use the global `undefined` instead.
+  
+
+components/runtime-chat.tsx:261:26 lint/complexity/noVoid ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × The use of void is not allowed.
+  
+    259 │           className="rounded border px-3 py-2"
+    260 │           disabled={!connection}
+  > 261 │           onClick={() => void refresh()}
+        │                          ^^^^^^^^^^^^^^
+    262 │         >
+    263 │           Refresh token
+  
+  i If you use void to alter the return type of a function or return `undefined`, use the global `undefined` instead.
+  
+
+components/runtime-chat.tsx:269:13 lint/complexity/noVoid ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × The use of void is not allowed.
+  
+    267 │           onClick={() => {
+    268 │             setToken("");
+  > 269 │             void disconnect();
+        │             ^^^^^^^^^^^^^^^^^
+    270 │           }}
+    271 │         >
+  
+  i If you use void to alter the return type of a function or return `undefined`, use the global `undefined` instead.
+  
+
+components/runtime-chat.tsx:297:19 lint/complexity/noVoid ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × The use of void is not allowed.
+  
+    295 │                 key={approval.operationId}
+    296 │                 onClick={() =>
+  > 297 │                   void busy(() => connection.transport.approveTool(approval))
+        │                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    298 │                 }
+    299 │               >
+  
+  i If you use void to alter the return type of a function or return `undefined`, use the global `undefined` instead.
+  
+
+components/runtime-chat.tsx:308:21 lint/complexity/noVoid ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × The use of void is not allowed.
+  
+    306 │                   className="rounded border p-2"
+    307 │                   onClick={() =>
+  > 308 │                     void busy(() => connection.transport.approveInput())
+        │                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    309 │                   }
+    310 │                 >
+  
+  i If you use void to alter the return type of a function or return `undefined`, use the global `undefined` instead.
+  
+
+components/runtime-chat.tsx:330:17 lint/complexity/noVoid ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × The use of void is not allowed.
+  
+    328 │               className="rounded border p-2"
+    329 │               onClick={() =>
+  > 330 │                 void busy(async () => {
+        │                 ^^^^^^^^^^^^^^^^^^^^^^^
+  > 331 │                   const values = await connection.client.listConversations();
+  > 332 │                   setHistory(values.map((value) => value.conversationId));
+  > 333 │                 })
+        │                 ^^
+    334 │               }
+    335 │             >
+  
+  i If you use void to alter the return type of a function or return `undefined`, use the global `undefined` instead.
+  
+
+components/runtime-chat.tsx:341:17 lint/complexity/noVoid ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × The use of void is not allowed.
+  
+    339 │               className="rounded border p-2"
+    340 │               onClick={() =>
+  > 341 │                 void busy(async () => {
+        │                 ^^^^^^^^^^^^^^^^^^^^^^^
+  > 342 │                   const value = await connection.client.memoryReadiness();
+  > 343 │                   setReadiness(JSON.stringify(value));
+  > 344 │                 })
+        │                 ^^
+    345 │               }
+    346 │             >
+  
+  i If you use void to alter the return type of a function or return `undefined`, use the global `undefined` instead.
+  
+
+components/runtime-chat.tsx:352:17 lint/complexity/noVoid ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × The use of void is not allowed.
+  
+    350 │               className="rounded border p-2"
+    351 │               onClick={() =>
+  > 352 │                 void busy(async () => {
+        │                 ^^^^^^^^^^^^^^^^^^^^^^^
+  > 353 │                   const value = await connection.client.getDefaultProfile();
+  > 354 │                   setReadiness(
+  > 355 │                     `${value.profile.modelId} / ${value.profile.dimensions}`
+  > 356 │                   );
+  > 357 │                 })
+        │                 ^^
+    358 │               }
+    359 │             >
+  
+  i If you use void to alter the return type of a function or return `undefined`, use the global `undefined` instead.
+  
+
+components/runtime-chat.tsx:367:19 lint/complexity/noVoid ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × The use of void is not allowed.
+  
+    365 │                 const text = new FormData(event.currentTarget).get("query");
+    366 │                 if (typeof text === "string") {
+  > 367 │                   void busy(async () =>
+        │                   ^^^^^^^^^^^^^^^^^^^^^
+  > 368 │                     setRecall(
+         ...
+  > 376 │                     )
+  > 377 │                   );
+        │                   ^
+    378 │                 }
+    379 │               }}
+  
+  i If you use void to alter the return type of a function or return `undefined`, use the global `undefined` instead.
+  
+
+components/runtime-chat.tsx:438:13 lint/complexity/noVoid ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × The use of void is not allowed.
+  
+    436 │           event.preventDefault();
+    437 │           if (text.trim()) {
+  > 438 │             void sendMessage({ text });
+        │             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    439 │             setText("");
+    440 │           }
+  
+  i If you use void to alter the return type of a function or return `undefined`, use the global `undefined` instead.
+  
+
+components/runtime-chat.tsx:466:24 lint/complexity/noVoid ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × The use of void is not allowed.
+  
+    464 │       <button
+    465 │         className="rounded border p-2"
+  > 466 │         onClick={() => void resumeStream()}
+        │                        ^^^^^^^^^^^^^^^^^^^
+    467 │       >
+    468 │         Reconnect
+  
+  i If you use void to alter the return type of a function or return `undefined`, use the global `undefined` instead.
+  
+
+components/runtime-chat.tsx:472:24 lint/complexity/noVoid ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × The use of void is not allowed.
+  
+    470 │       <button
+    471 │         className="rounded border p-2"
+  > 472 │         onClick={() => void connection.transport.stop().catch(onError)}
+        │                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    473 │       >
+    474 │         Stop run
+  
+  i If you use void to alter the return type of a function or return `undefined`, use the global `undefined` instead.
+  
+
+components/runtime-chat.tsx:487:11 lint/complexity/noVoid ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × The use of void is not allowed.
+  
+    485 │         className="rounded border p-2"
+    486 │         onClick={() => {
+  > 487 │           void connection.client
+        │           ^^^^^^^^^^^^^^^^^^^^^^
+  > 488 │             .attach(runId)
+         ...
+  > 493 │             })
+  > 494 │             .catch(onError);
+        │             ^^^^^^^^^^^^^^^
+    495 │         }}
+    496 │       >
+  
+  i If you use void to alter the return type of a function or return `undefined`, use the global `undefined` instead.
+  
+
+components/runtime-chat.tsx:532:11 lint/complexity/noVoid ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × The use of void is not allowed.
+  
+    530 │         onSubmit={(event) => {
+    531 │           event.preventDefault();
+  > 532 │           void client
+        │           ^^^^^^^^^^^
+  > 533 │             .submitContentJob({
+         ...
+  > 541 │             .then(update)
+  > 542 │             .catch(onError);
+        │             ^^^^^^^^^^^^^^^
+    543 │         }}
+    544 │       >
+  
+  i If you use void to alter the return type of a function or return `undefined`, use the global `undefined` instead.
+  
+
+components/runtime-chat.tsx:623:15 lint/complexity/noVoid ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × The use of void is not allowed.
+  
+    621 │             className="rounded border p-2"
+    622 │             onClick={() =>
+  > 623 │               void client
+        │               ^^^^^^^^^^^
+  > 624 │                 .cancelContentJob(job.jobId)
+  > 625 │                 .then(update)
+  > 626 │                 .catch(onError)
+        │                 ^^^^^^^^^^^^^^^
+    627 │             }
+    628 │           >
+  
+  i If you use void to alter the return type of a function or return `undefined`, use the global `undefined` instead.
+  
+
+components/runtime-chat.tsx:640:19 lint/complexity/noVoid ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × The use of void is not allowed.
+  
+    638 │                 className="rounded border p-2"
+    639 │                 onClick={() =>
+  > 640 │                   void client
+        │                   ^^^^^^^^^^^
+  > 641 │                     .applyContentSuggestion({
+         ...
+  > 646 │                     .then(update)
+  > 647 │                     .catch(onError)
+        │                     ^^^^^^^^^^^^^^^
+    648 │                 }
+    649 │               >
+  
+  i If you use void to alter the return type of a function or return `undefined`, use the global `undefined` instead.
+  
+
+components/runtime-chat.tsx:119:27 lint/correctness/useExhaustiveDependencies ━━━━━━━━━━━━━━━━━━━━━━
+
+  × fail changes on every re-render and should not be used as a hook dependency.
+  
+    117 │     }
+    118 │     return connection.client.watchRun(handle, setRun, fail);
+  > 119 │   }, [connection, handle, fail]);
+        │                           ^^^^
+    120 │   useEffect(() => {
+    121 │     if (!connection) {
+  
+  i To fix this, wrap the definition of fail in its own useCallback() hook.
+  
+
+components/runtime-chat.tsx:155:43 lint/correctness/useExhaustiveDependencies ━━━━━━━━━━━━━━━━━━━━━━
+
+  × fail changes on every re-render and should not be used as a hook dependency.
+  
+    153 │       clearTimeout(timer);
+    154 │     };
+  > 155 │   }, [connection, handle, conversationId, fail]);
+        │                                           ^^^^
+    156 │   useEffect(() => {
+    157 │     if (
+  
+  i To fix this, wrap the definition of fail in its own useCallback() hook.
+  
+
+components/runtime-chat.tsx:184:25 lint/correctness/useExhaustiveDependencies ━━━━━━━━━━━━━━━━━━━━━━
+
+  × fail changes on every re-render and should not be used as a hook dependency.
+  
+    182 │       clearTimeout(timer);
+    183 │     };
+  > 184 │   }, [connection, jobs, fail]);
+        │                         ^^^^
+    185 │   async function refresh() {
+    186 │     if (!connection) {
+  
+  i To fix this, wrap the definition of fail in its own useCallback() hook.
+  
+
+components/runtime-chat.tsx:252:9 lint/a11y/useButtonType ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Provide an explicit type prop for the button element.
+  
+    250 │           />
+    251 │         </label>
+  > 252 │         <button
+        │         ^^^^^^^
+  > 253 │           className="rounded border px-3 py-2"
+  > 254 │           onClick={() => void connect()}
+  > 255 │         >
+        │         ^
+    256 │           Connect
+    257 │         </button>{" "}
+  
+  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
+  
+  i Allowed button types are: submit, button or reset
+  
+
+components/runtime-chat.tsx:258:9 lint/a11y/useButtonType ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Provide an explicit type prop for the button element.
+  
+    256 │           Connect
+    257 │         </button>{" "}
+  > 258 │         <button
+        │         ^^^^^^^
+  > 259 │           className="rounded border px-3 py-2"
+  > 260 │           disabled={!connection}
+  > 261 │           onClick={() => void refresh()}
+  > 262 │         >
+        │         ^
+    263 │           Refresh token
+    264 │         </button>{" "}
+  
+  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
+  
+  i Allowed button types are: submit, button or reset
+  
+
+components/runtime-chat.tsx:265:9 lint/a11y/useButtonType ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Provide an explicit type prop for the button element.
+  
+    263 │           Refresh token
+    264 │         </button>{" "}
+  > 265 │         <button
+        │         ^^^^^^^
+  > 266 │           className="rounded border px-3 py-2"
+         ...
+  > 270 │           }}
+  > 271 │         >
+        │         ^
+    272 │           Sign out
+    273 │         </button>
+  
+  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
+  
+  i Allowed button types are: submit, button or reset
+  
+
+components/runtime-chat.tsx:276:8 lint/suspicious/noLeakedRender ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Potential leaked value that might cause unintended rendering.
+  
+    274 │         <p>{identity || "Disconnected. Tokens stay only in memory."}</p>
+    275 │       </section>
+  > 276 │       {error && (
+        │        ^^^^^^^^^^
+  > 277 │         <p className="text-red-700" role="alert">
+  > 278 │           {error}
+  > 279 │         </p>
+  > 280 │       )}
+        │       ^
+    281 │       {connection && (
+    282 │         <>
+  
+  i JavaScript's && operator returns the left value when it's falsy (e.g., 0, NaN, ''). React will render that value, causing unexpected UI output.
+  
+  i Make sure the condition is explicitly boolean.Use !!value, value > 0, or a ternary expression.
+  
+
+components/runtime-chat.tsx:281:8 lint/suspicious/noLeakedRender ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Potential leaked value that might cause unintended rendering.
+  
+    279 │         </p>
+    280 │       )}
+  > 281 │       {connection && (
+        │        ^^^^^^^^^^^^^^^
+  > 282 │         <>
+         ...
+  > 400 │         </>
+  > 401 │       )}
+        │       ^
+    402 │     </main>
+    403 │   );
+  
+  i JavaScript's && operator returns the left value when it's falsy (e.g., 0, NaN, ''). React will render that value, causing unexpected UI output.
+  
+  i Make sure the condition is explicitly boolean.Use !!value, value > 0, or a ternary expression.
+  
+
+components/runtime-chat.tsx:293:15 lint/a11y/useButtonType ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Provide an explicit type prop for the button element.
+  
+    291 │             <p className="break-all">{handle?.runId}</p>
+    292 │             {observation?.approvals.map((approval) => (
+  > 293 │               <button
+        │               ^^^^^^^
+  > 294 │                 className="m-1 rounded border p-2"
+         ...
+  > 298 │                 }
+  > 299 │               >
+        │               ^
+    300 │                 Approve {approval.toolName}
+    301 │               </button>
+  
+  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
+  
+  i Allowed button types are: submit, button or reset
+  
+
+components/runtime-chat.tsx:305:17 lint/a11y/useButtonType ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Provide an explicit type prop for the button element.
+  
+    303 │             {run?.responseStatus === "waiting_approval" &&
+    304 │               !observation?.approvals.length && (
+  > 305 │                 <button
+        │                 ^^^^^^^
+  > 306 │                   className="rounded border p-2"
+  > 307 │                   onClick={() =>
+  > 308 │                     void busy(() => connection.transport.approveInput())
+  > 309 │                   }
+  > 310 │                 >
+        │                 ^
+    311 │                   Approve input
+    312 │                 </button>
+  
+  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
+  
+  i Allowed button types are: submit, button or reset
+  
+
+components/runtime-chat.tsx:327:13 lint/a11y/useButtonType ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Provide an explicit type prop for the button element.
+  
+    325 │           >
+    326 │             <h2 className="text-xl">History and memory</h2>
+  > 327 │             <button
+        │             ^^^^^^^
+  > 328 │               className="rounded border p-2"
+         ...
+  > 334 │               }
+  > 335 │             >
+        │             ^
+    336 │               Load conversations
+    337 │             </button>
+  
+  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
+  
+  i Allowed button types are: submit, button or reset
+  
+
+components/runtime-chat.tsx:338:13 lint/a11y/useButtonType ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Provide an explicit type prop for the button element.
+  
+    336 │               Load conversations
+    337 │             </button>
+  > 338 │             <button
+        │             ^^^^^^^
+  > 339 │               className="rounded border p-2"
+         ...
+  > 345 │               }
+  > 346 │             >
+        │             ^
+    347 │               Memory readiness
+    348 │             </button>
+  
+  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
+  
+  i Allowed button types are: submit, button or reset
+  
+
+components/runtime-chat.tsx:349:13 lint/a11y/useButtonType ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Provide an explicit type prop for the button element.
+  
+    347 │               Memory readiness
+    348 │             </button>
+  > 349 │             <button
+        │             ^^^^^^^
+  > 350 │               className="rounded border p-2"
+         ...
+  > 358 │               }
+  > 359 │             >
+        │             ^
+    360 │               Current profile
+    361 │             </button>
+  
+  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
+  
+  i Allowed button types are: submit, button or reset
+  
+
+components/runtime-chat.tsx:390:15 lint/a11y/useButtonType ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Provide an explicit type prop for the button element.
+  
+    388 │                 />
+    389 │               </label>{" "}
+  > 390 │               <button className="rounded border p-2">Recall</button>
+        │               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    391 │             </form>
+    392 │             <p className="break-all">{readiness}</p>
+  
+  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
+  
+  i Allowed button types are: submit, button or reset
+  
+
+components/runtime-chat.tsx:454:9 lint/a11y/useButtonType ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Provide an explicit type prop for the button element.
+  
+    452 │           />
+    453 │         </label>
+  > 454 │         <button className="rounded border p-2" disabled={status !== "ready"}>
+        │         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    455 │           Send
+    456 │         </button>
+  
+  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
+  
+  i Allowed button types are: submit, button or reset
+  
+
+components/runtime-chat.tsx:458:7 lint/a11y/useButtonType ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Provide an explicit type prop for the button element.
+  
+    456 │         </button>
+    457 │       </form>
+  > 458 │       <button
+        │       ^^^^^^^
+  > 459 │         className="rounded border p-2"
+  > 460 │         onClick={() => connection.transport.disconnect()}
+  > 461 │       >
+        │       ^
+    462 │         Disconnect observation
+    463 │       </button>{" "}
+  
+  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
+  
+  i Allowed button types are: submit, button or reset
+  
+
+components/runtime-chat.tsx:464:7 lint/a11y/useButtonType ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Provide an explicit type prop for the button element.
+  
+    462 │         Disconnect observation
+    463 │       </button>{" "}
+  > 464 │       <button
+        │       ^^^^^^^
+  > 465 │         className="rounded border p-2"
+  > 466 │         onClick={() => void resumeStream()}
+  > 467 │       >
+        │       ^
+    468 │         Reconnect
+    469 │       </button>{" "}
+  
+  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
+  
+  i Allowed button types are: submit, button or reset
+  
+
+components/runtime-chat.tsx:470:7 lint/a11y/useButtonType ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Provide an explicit type prop for the button element.
+  
+    468 │         Reconnect
+    469 │       </button>{" "}
+  > 470 │       <button
+        │       ^^^^^^^
+  > 471 │         className="rounded border p-2"
+  > 472 │         onClick={() => void connection.transport.stop().catch(onError)}
+  > 473 │       >
+        │       ^
+    474 │         Stop run
+    475 │       </button>
+  
+  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
+  
+  i Allowed button types are: submit, button or reset
+  
+
+components/runtime-chat.tsx:484:7 lint/a11y/useButtonType ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Provide an explicit type prop for the button element.
+  
+    482 │         />
+    483 │       </label>{" "}
+  > 484 │       <button
+        │       ^^^^^^^
+  > 485 │         className="rounded border p-2"
+         ...
+  > 495 │         }}
+  > 496 │       >
+        │       ^
+    497 │         Attach
+    498 │       </button>
+  
+  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
+  
+  i Allowed button types are: submit, button or reset
+  
+
+components/runtime-chat.tsx:588:9 lint/a11y/useButtonType ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Provide an explicit type prop for the button element.
+  
+    586 │           />
+    587 │         </label>
+  > 588 │         <button className="rounded border p-2">Generate on backend</button>
+        │         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    589 │       </form>
+    590 │       {jobs.map((job) => (
+  
+  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
+  
+  i Allowed button types are: submit, button or reset
+  
+
+components/runtime-chat.tsx:597:14 lint/suspicious/noLeakedRender ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Potential leaked value that might cause unintended rendering.
+  
+    595 │           <p className="break-all">
+    596 │             {job.jobId} {job.artifactId}{" "}
+  > 597 │             {job.artifactVersion && `version ${job.artifactVersion}`}
+        │              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    598 │           </p>
+    599 │           <pre className="whitespace-pre-wrap">{job.content}</pre>
+  
+  i JavaScript's && operator returns the left value when it's falsy (e.g., 0, NaN, ''). React will render that value, causing unexpected UI output.
+  
+  i Make sure the condition is explicitly boolean.Use !!value, value > 0, or a ternary expression.
+  
+
+components/runtime-chat.tsx:601:11 lint/a11y/useButtonType ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Provide an explicit type prop for the button element.
+  
+    599 │           <pre className="whitespace-pre-wrap">{job.content}</pre>
+    600 │           <p>{job.failureCode}</p>
+  > 601 │           <button
+        │           ^^^^^^^
+  > 602 │             className="rounded border p-2"
+  > 603 │             onClick={() =>
+  > 604 │               void client.getContentJob(job.jobId).then(update).catch(onError)
+  > 605 │             }
+  > 606 │           >
+        │           ^
+    607 │             Refresh
+    608 │           </button>{" "}
+  
+  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
+  
+  i Allowed button types are: submit, button or reset
+  
+
+components/runtime-chat.tsx:609:11 lint/a11y/useButtonType ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Provide an explicit type prop for the button element.
+  
+    607 │             Refresh
+    608 │           </button>{" "}
+  > 609 │           <button
+        │           ^^^^^^^
+  > 610 │             className="rounded border p-2"
+         ...
+  > 616 │             }
+  > 617 │           >
+        │           ^
+    618 │             Recover saved result
+    619 │           </button>{" "}
+  
+  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
+  
+  i Allowed button types are: submit, button or reset
+  
+
+components/runtime-chat.tsx:620:11 lint/a11y/useButtonType ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Provide an explicit type prop for the button element.
+  
+    618 │             Recover saved result
+    619 │           </button>{" "}
+  > 620 │           <button
+        │           ^^^^^^^
+  > 621 │             className="rounded border p-2"
+         ...
+  > 627 │             }
+  > 628 │           >
+        │           ^
+    629 │             Cancel
+    630 │           </button>
+  
+  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
+  
+  i Allowed button types are: submit, button or reset
+  
+
+components/runtime-chat.tsx:612:15 lint/complexity/noVoid ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × The use of void is not allowed.
+  
+    610 │             className="rounded border p-2"
+    611 │             onClick={() =>
+  > 612 │               void client
+        │               ^^^^^^^^^^^
+  > 613 │                 .reconcileContentJob(job.jobId)
+  > 614 │                 .then(update)
+  > 615 │                 .catch(onError)
+        │                 ^^^^^^^^^^^^^^^
+    616 │             }
+    617 │           >
+  
+  i If you use void to alter the return type of a function or return `undefined`, use the global `undefined` instead.
+  
+
+lib/runtime/server.ts:74:39 lint/suspicious/noEmptyBlockStatements ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Unexpected empty block.
+  
+    72 │   } finally {
+    73 │     clearTimeout(timer);
+  > 74 │     await reader.cancel().catch(() => {});
+       │                                       ^^
+    75 │     reader.releaseLock();
+    76 │   }
+  
+  i Empty blocks are usually the result of an incomplete refactoring. Remove the empty block or add a comment inside it if it is intentional.
+  
+
+lib/runtime/server.ts:183:7 lint/suspicious/noControlCharactersInRegex ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Unexpected control character in a regular expression.
+  
+    181 │     value.trim() !== value ||
+    182 │     value.length > 256 ||
+  > 183 │     /[\x00-\x1f]/.test(value)
+        │       ^^^^
+    184 │   ) {
+    185 │     throw new RuntimeHttpError(400, "INVALID_INPUT");
+  
+  i Control characters are unusual and potentially incorrect inputs, so they are disallowed.
+  
+
+lib/runtime/server.ts:8:5 lint/style/noParameterProperties ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Use a more explicit class property instead of a parameter property.
+  
+     6 │ export class RuntimeHttpError extends Error {
+     7 │   constructor(
+   > 8 │     readonly status: number,
+       │     ^^^^^^^^^^^^^^^^^^^^^^^
+     9 │     readonly code: string
+    10 │   ) {
+  
+  i Parameter properties are less explicit than other ways of declaring and initializing class properties.
+  
+
+lib/runtime/server.ts:9:5 lint/style/noParameterProperties ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Use a more explicit class property instead of a parameter property.
+  
+     7 │   constructor(
+     8 │     readonly status: number,
+   > 9 │     readonly code: string
+       │     ^^^^^^^^^^^^^^^^^^^^^
+    10 │   ) {
+    11 │     super(code);
+  
+  i Parameter properties are less explicit than other ways of declaring and initializing class properties.
+  
+
+lib/runtime/server.ts:183:12 lint/suspicious/noControlCharactersInRegex ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Unexpected control character in a regular expression.
+  
+    181 │     value.trim() !== value ||
+    182 │     value.length > 256 ||
+  > 183 │     /[\x00-\x1f]/.test(value)
+        │            ^^^^
+    184 │   ) {
+    185 │     throw new RuntimeHttpError(400, "INVALID_INPUT");
+  
+  i Control characters are unusual and potentially incorrect inputs, so they are disallowed.
+  
+
+lib/runtime/server.ts:71:5 lint/style/useErrorCause ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × The original error is not being passed to the new `Error` object.Include the original error in the `cause` property to preserve it.
+  
+    69 │       throw error;
+    70 │     }
+  > 71 │     throw new RuntimeHttpError(400, "INVALID_INPUT");
+       │     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    72 │   } finally {
+    73 │     clearTimeout(timer);
+  
+
+lib/runtime/server.ts:96:5 lint/style/useErrorCause ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × The original error is not being passed to the new `Error` object.Include the original error in the `cause` property to preserve it.
+  
+    94 │       throw error;
+    95 │     }
+  > 96 │     throw new RuntimeHttpError(400, "INVALID_INPUT");
+       │     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    97 │   }
+    98 │ }
+  
+
+Checked 28 files in 733ms. Fixed 2 files.
+Found 53 errors.
+check ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Some errors were emitted while running checks.
+  
+

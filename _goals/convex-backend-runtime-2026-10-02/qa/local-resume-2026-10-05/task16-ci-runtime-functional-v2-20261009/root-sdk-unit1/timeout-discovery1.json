@@ -1,0 +1,36 @@
+{
+  "generatedAtUtc": "2026-10-09T04:49:20.209Z",
+  "scope": "Existing originalJestexclusion unchanged; discoverydiagnostic doesnot execute anytest",
+  "discovered": 118,
+  "closedBeforeWatchdog": 116,
+  "observedPassing": 111,
+  "observedFailing": 5,
+  "failed": [
+    {
+      "status": "FAIL",
+      "path": "tests/unit/runtimeAssetUnavailableAuth/closure.test.ts"
+    },
+    {
+      "status": "FAIL",
+      "path": "tests/unit/runtimeUnavailableAuth/closure.test.ts"
+    },
+    {
+      "status": "FAIL",
+      "path": "tests/unit/runtimeArtifactAuth/inventory.test.ts"
+    },
+    {
+      "status": "FAIL",
+      "path": "tests/unit/tenant-scope.test.ts"
+    },
+    {
+      "status": "FAIL",
+      "path": "tests/unit/runtimeAuth/provisioning.test.ts"
+    }
+  ],
+  "pendingFiles": [
+    "tests/unit/memory-observer.test.ts",
+    "tests/unit/client-runtime/observe-delivery.test.ts"
+  ],
+  "aggregate": false,
+  "cleanup": "parent closedSIGTERM at300s"
+}

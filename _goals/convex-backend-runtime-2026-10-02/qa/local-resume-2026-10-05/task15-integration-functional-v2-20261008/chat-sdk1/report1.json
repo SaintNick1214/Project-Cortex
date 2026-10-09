@@ -1,0 +1,161 @@
+{
+  "version": 1,
+  "scope": "Original Task15 substep15C author implementation and controlled checks",
+  "closedAt": "2026-10-09T02:40:29.075Z",
+  "status": "SOURCE_READY_ACTUAL_VALIDATION_PENDING",
+  "sourceDigest": "c4512abcf6b2069b08b0229a361c3dfef835e92aa8f7f1177faa67bb9fb40941",
+  "sourceManifest": "source-manifest1.json",
+  "checks": "checks1.json",
+  "assertionInventory": "assertion-identities1.json",
+  "distinctCurrentTestInstances": 821,
+  "requirements": [
+    {
+      "original": "15A complete capability/setup UX and additive preservation",
+      "ownership": "Previously closed CLI source/native packet, outside this batch",
+      "evidence": "../cli-setup1 and ../native-actual",
+      "fullAcceptance": "parent/reviewer owned"
+    },
+    {
+      "original": "15B canonical quickstart/basic authenticated remote-run migration",
+      "ownership": "Previously closed Basic source and native E2E; Root owns canonical mirror",
+      "evidence": "../basic1 and ../native-actual/basic-e2e1-results.json",
+      "fullAcceptance": "parent/reviewer owned"
+    },
+    {
+      "original": "15C title/text/code/sheet/suggestions/artifact operation policies and backend tools; own runtime/browser qualification",
+      "implementation": "Durable Workflow content namespace, current real parent/account for automatic titles, standalone job accounts with secondary title children, exact immutable artifact updates and one suggestion application, governed plain-chat doGenerate, versioned job DTO and authenticated ChatSDK remote-run/UI/HTTP paths",
+      "controlledEvidence": [
+        "content-tests6.json",
+        "template-tests2.json",
+        "template-build2.log",
+        "backend-checks2.json",
+        "template-checks-final1.json"
+      ],
+      "remaining": "Fresh installed backend all intent jobs, own HTTP/browser workflows and non-author coherent final review required"
+    },
+    {
+      "original": "Document Gateway/media/storage/optional graph/provisioning and actionable errors without app inference keys",
+      "implementation": "Template README/CORTEX-INTEGRATION/env describe verified host JWT, scoped selectors, published definition/policy qualification, real parent budgets, private asset20M cap, optional trusted graph worker, conservative cancellation/unknown recovery and unavailable async media",
+      "sourceEvidence": [
+        "packages/cortex-cli/templates/chat-sdk-quickstart/README.md",
+        "packages/cortex-cli/templates/chat-sdk-quickstart/CORTEX-INTEGRATION.md",
+        "packages/cortex-cli/templates/chat-sdk-quickstart/.env.local.example"
+      ]
+    }
+  ],
+  "acceptance": [
+    {
+      "criterion": "Fresh/customized host preservation and safe merge refusal",
+      "status": "Outside15C; CLI/native ownership"
+    },
+    {
+      "criterion": "Canonical authenticated recall/chat/reconnect/artifacts; templates prove own runtime",
+      "status": "Controlled ChatSDK auth/HTTP/content/UI checks and app build pass; real template HTTP/browser remains pending"
+    },
+    {
+      "criterion": "Offline Basic checks and own ChatSDK scoped lint/type/Vitest/Next/UI",
+      "status": "Own ChatSDK TS/scoped Biome/Vitest50/Next build pass; one ReactDOM UI apply control, not live-browser qualification"
+    },
+    {
+      "criterion": "No title/artifact/suggestion direct Gateway/OpenAI/Anthropic app credentials",
+      "status": "Reachable canonical/HTTP/server paths use CortexRuntimeClient; old provider and unused embedding factory deleted, direct app provider dependencies removed; no extra app model/tool or memory loop"
+    }
+  ],
+  "contract": {
+    "publicModule": "runtimeContentJobs",
+    "publicKind": "mutation",
+    "methods": [
+      "submit",
+      "get",
+      "list",
+      "cancel",
+      "reconcile",
+      "applySuggestion"
+    ],
+    "submit": {
+      "tenantId": "verified selector",
+      "memorySpaceId": "verified selector",
+      "version": 1,
+      "requestId": "caller-stable-id",
+      "intent": "text",
+      "prompt": "Write a short document",
+      "conversationId": "optional-current-conversation",
+      "artifact": "optional immutable {artifactId,version}",
+      "parentRunId": "optional REAL active parent; mismatches rejected"
+    },
+    "list": "{tenantId?,memorySpaceId?,conversationId?,limit?}; RuntimeContentJobV1[]; default20/max50",
+    "internal": [
+      "enqueueParentTitle",
+      "claim",
+      "input",
+      "pin",
+      "bindOperation",
+      "save",
+      "next",
+      "publish",
+      "failed",
+      "expire",
+      "execute"
+    ],
+    "factory": "runtimeContentGateway.processContentStageHandler(ctx,{jobId,leaseToken},factory:ContentModelFactory)",
+    "budget": "automatic title uses active Agent run/account/completed native parent model operation; new explicit intent owns one logical job account; primary/secondary share it; no cost/uncertainty resets on replay/reconcile/cancel",
+    "proofs": "Existing root9 plain-chat doGenerate proofs; no V1/V2 catalog or five existing proof modification; exact resolved per-function snapshots govern",
+    "policy": {
+      "artifactFunctions": [
+        "artifact.text",
+        "artifact.code",
+        "artifact.sheet",
+        "artifact.suggestions"
+      ],
+      "artifactModel": "openai/gpt-4o-mini",
+      "titleFunction": "conversation.title",
+      "titleModel": "openai/gpt-4o",
+      "nativeInterface": "chat",
+      "priceRevision": "openrouter-2026-10-08-candidate",
+      "boundRevision": "text-8192-512-schema-v2",
+      "featureEnvelope": "plain-chat-v1",
+      "ruleId": "plain-chat-cookbook-utf8-v1",
+      "inputCeiling": 8192,
+      "contextCeiling": 16384,
+      "outputCeiling": 512,
+      "fullUnknownMicroUSDPerCall": 100000
+    },
+    "sourceCurrentness": "source message hash/revision/bridge, source ancestry and artifact witnesses, exact immutable selected base artifact/hash, current grant/share/epoch/definition/native parent are rechecked at each paid guard and atomic publication; delivery retains unrelated consumed artifact witnesses independently of output version",
+    "recovery": "confirmed attached native private {text} draft only; no blind retry of unknown; saved primary alone cannot publish a new artifact without its secondary title",
+    "limits": {
+      "promptUtf8Bytes": 4096,
+      "outputUtf8Bytes": 32768,
+      "suggestions": 5,
+      "leaseMs": 120000,
+      "deadlineMs": 300000
+    }
+  },
+  "historicalEvidence": {
+    "policyFixtureFailures": [
+      "content-tests1.json",
+      "content-tests3.json",
+      "content-tests4.json"
+    ],
+    "affectedInitial": "affected-tests1.json preserved544PASS/226FAIL: static fixture import-before-Jest-mock bypassed the trusted synthetic fixture, automatic-title expected action omitted, Task04 current composition compared against historical pins",
+    "affectedSuccessor": "affected-tests2.json preserved312PASS/1FAIL outdated table whitelist; affected-tests3 and content-tests6 replace whole selected suites",
+    "templateFailures": [
+      "template-types1.log",
+      "template-types2.log",
+      "template-lint1.log",
+      "template-lint2.log",
+      "template-lint3.log",
+      "template-build1.log"
+    ],
+    "templateBuildCorrection": "SessionProvider retained for existing /login rendering after prerender TypeError; no authority granted by that app metadata component",
+    "originals": "accepted-baseline/baseline-manifest1 + affected-test-preimages; fixed historical Task04 composition receipts checked against immutable hashes, current all-table index assertions kept",
+    "counting": "771 backend across10 latest suites +50 template across5 latest suites =821 unique current test instances; no sum of repeated passes; three fresh import process checks separately"
+  },
+  "limitations": [
+    "No backend build/package/deploy/provider/service effect by author; native owns fresh installed qualification.",
+    "Controlled native model calls in author tests use classified synthetic fixtures, not real provider execution.",
+    "Existing plain-chat serving/output/cost qualifications are unchanged; no new media/Agent interface evidence fabricated.",
+    "Task13 async native503 remains unavailable; this batch does not count it completed.",
+    "Legacy app Auth.js/editor render components remain for compatibility and do not confer Cortex resource authority; retired votes/share endpoints return explicit migration errors.",
+    "No full Task15 or final-goal acceptance claim from this source packet."
+  ]
+}

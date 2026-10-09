@@ -1,0 +1,101 @@
+{
+  "status": "PROVISIONED_SCOPED_FIXTURES",
+  "plan": {
+    "version": 1,
+    "kind": "sdk",
+    "runId": "native16-20261009-5b5ba39c",
+    "issuer": "https://cortex-ci-runtime.example/",
+    "audience": "cortex-ci-runtime",
+    "tenantId": "cortex-ci-native16-20261009-5b5ba39c-sdk",
+    "memorySpaceId": "cortex-ci-native16-20261009-5b5ba39c-sdk-space",
+    "identities": {
+      "owner": {
+        "issuer": "https://cortex-ci-runtime.example/",
+        "subject": "cortex-ci-native16-20261009-5b5ba39c-sdk-owner",
+        "actorKind": "user",
+        "metadataUserId": "cortex-ci-native16-20261009-5b5ba39c-sdk-owner",
+        "tenantId": "cortex-ci-native16-20261009-5b5ba39c-sdk",
+        "memorySpaceId": "cortex-ci-native16-20261009-5b5ba39c-sdk-space",
+        "capabilities": [
+          "read",
+          "write",
+          "run",
+          "admin",
+          "tool",
+          "storage:read",
+          "storage:write"
+        ],
+        "resourceAccess": "space"
+      },
+      "reader": {
+        "issuer": "https://cortex-ci-runtime.example/",
+        "subject": "cortex-ci-native16-20261009-5b5ba39c-sdk-reader",
+        "actorKind": "user",
+        "metadataUserId": "cortex-ci-native16-20261009-5b5ba39c-sdk-reader",
+        "tenantId": "cortex-ci-native16-20261009-5b5ba39c-sdk",
+        "memorySpaceId": "cortex-ci-native16-20261009-5b5ba39c-sdk-space",
+        "capabilities": [
+          "read"
+        ],
+        "resourceAccess": "space"
+      },
+      "outsider": {
+        "issuer": "https://cortex-ci-runtime.example/",
+        "subject": "cortex-ci-native16-20261009-5b5ba39c-sdk-outsider",
+        "actorKind": "user",
+        "metadataUserId": "cortex-ci-native16-20261009-5b5ba39c-sdk-outsider",
+        "tenantId": "cortex-ci-native16-20261009-5b5ba39c-sdk-other",
+        "memorySpaceId": "cortex-ci-native16-20261009-5b5ba39c-sdk-other-space",
+        "capabilities": [
+          "read",
+          "write",
+          "run",
+          "admin",
+          "tool",
+          "storage:read",
+          "storage:write"
+        ],
+        "resourceAccess": "space"
+      }
+    }
+  },
+  "references": {
+    "owner": {
+      "principalId": "nh72hg0vtcewf4dez9f11481dd8fz9v3",
+      "principalVersion": 1,
+      "membershipId": "nd7crktc1zvvc12xhsex0rbfed8fzjp7",
+      "membershipVersion": 1,
+      "grantId": "n978fe69mfy5e30pr27cz48tm58fzm75",
+      "grantVersion": 1,
+      "tenantId": "cortex-ci-native16-20261009-5b5ba39c-sdk",
+      "tenantEpoch": 1,
+      "memorySpaceId": "cortex-ci-native16-20261009-5b5ba39c-sdk-space",
+      "memorySpaceEpoch": 1
+    },
+    "reader": {
+      "principalId": "nh73pxg864d9ce70gb8n9185bh8fz256",
+      "principalVersion": 1,
+      "membershipId": "nd70w5p1dkrmzmdcjvxg08swgh8fzjn6",
+      "membershipVersion": 1,
+      "grantId": "n972be8aqbxf94v8b4jc2f77ws8fy6a4",
+      "grantVersion": 1,
+      "tenantId": "cortex-ci-native16-20261009-5b5ba39c-sdk",
+      "tenantEpoch": 1,
+      "memorySpaceId": "cortex-ci-native16-20261009-5b5ba39c-sdk-space",
+      "memorySpaceEpoch": 1
+    },
+    "outsider": {
+      "principalId": "nh7bds0qv6ebj8s454w19tk1zx8fybh8",
+      "principalVersion": 1,
+      "membershipId": "nd733x42aq1jaw6gqxhqj3vdb18fzpwh",
+      "membershipVersion": 1,
+      "grantId": "n9700dwykertwqf8kb25d5xknx8fy209",
+      "grantVersion": 1,
+      "tenantId": "cortex-ci-native16-20261009-5b5ba39c-sdk-other",
+      "tenantEpoch": 1,
+      "memorySpaceId": "cortex-ci-native16-20261009-5b5ba39c-sdk-other-space",
+      "memorySpaceEpoch": 1
+    }
+  },
+  "expiresAt": 1791536924868
+}

@@ -1,0 +1,160 @@
+Running one project: unit
+watchman warning: Recrawled this watch 1 time, most recently because:
+MustScanSubDirs UserDroppedTo resolve, please review the information on
+https://facebook.github.io/watchman/docs/troubleshooting.html#recrawl
+To clear this warning, run:
+`watchman watch-del '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion' ; watchman watch-project '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion'`
+
+(node:84039) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL unit src/utils/__tests__/operator.test.ts
+  ● rejects a changed live target before dispatch
+
+    expect(received).rejects.toThrow(expected)
+
+    Expected substring: "differs"
+    Received message:   "Body is unusable: Body has already been read"
+
+          20 |   const response = await fetch(`https://api.convex.dev/v1${route}`, { headers: { Authorization: `Bearer ${token}` }, signal: AbortSignal.timeout(15000), redirect: "error" });
+          21 |   if (!response.ok) throw new Error(`Development-target verification failed (HTTP ${response.status}); no mutation dispatched.`);
+        > 22 |   return response.json();
+             |                   ^
+          23 | }
+          24 | async function inspect(target: DisposableDevelopmentTarget, token: string): Promise<void> {
+          25 |   if (target.disposable !== true || !Number.isSafeInteger(target.teamId) || target.teamId <= 0 || !Number.isSafeInteger(target.projectId) || target.projectId <= 0 || !/^[a-z0-9-]+$/.test(target.deploymentName)) throw new Error("An explicit disposable team/project/deployment identity is required.");
+
+      at managementRead (src/utils/init/development-target.ts:22:19)
+                at async Promise.all (index 1)
+      at inspect (src/utils/init/development-target.ts:28:33)
+      at verifyDisposableDevelopmentTarget (src/utils/init/development-target.ts:38:3)
+      at runOperator (src/utils/operator.ts:21:3)
+      at Object.<anonymous> (src/utils/__tests__/operator.test.ts:40:3)
+      at Object.toThrow (../../node_modules/expect/build/index.js:2155:20)
+      at Object.<anonymous> (src/utils/__tests__/operator.test.ts:40:67)
+
+FAIL unit src/utils/__tests__/config-validation.test.ts
+  ● validateAndCleanConfig › should remove deployment on auth error (401)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      236 |     const result = await validateAndCleanConfig(config, { checkConvex: true });
+      237 |
+    > 238 |     expect(result.modified).toBe(true);
+          |                             ^
+      239 |     expect(result.removed.deployments).toContain("test");
+      240 |     expect(result.config.deployments["test"]).toBeUndefined();
+      241 |   });
+
+      at Object.<anonymous> (src/utils/__tests__/config-validation.test.ts:238:29)
+
+  ● validateAndCleanConfig › should remove deployment on auth error (403)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      257 |     const result = await validateAndCleanConfig(config, { checkConvex: true });
+      258 |
+    > 259 |     expect(result.modified).toBe(true);
+          |                             ^
+      260 |     expect(result.removed.deployments).toContain("test");
+      261 |   });
+      262 |
+
+      at Object.<anonymous> (src/utils/__tests__/config-validation.test.ts:259:29)
+
+  ● validateAndCleanConfig › should remove deployment on auth error (message contains "unauthorized")
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      279 |     const result = await validateAndCleanConfig(config, { checkConvex: true });
+      280 |
+    > 281 |     expect(result.modified).toBe(true);
+          |                             ^
+      282 |     expect(result.removed.deployments).toContain("test");
+      283 |   });
+      284 |
+
+      at Object.<anonymous> (src/utils/__tests__/config-validation.test.ts:281:29)
+
+  ● validateAndCleanConfig › should handle partial failures correctly
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      428 |     });
+      429 |
+    > 430 |     expect(result.modified).toBe(true);
+          |                             ^
+      431 |
+      432 |     // Auth errors should be removed
+      433 |     expect(result.removed.deployments).toContain("auth-error-1");
+
+      at Object.<anonymous> (src/utils/__tests__/config-validation.test.ts:430:29)
+
+  ● validateAndCleanConfig › should handle "forbidden" error message
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      712 |     const result = await validateAndCleanConfig(config, { checkConvex: true });
+      713 |
+    > 714 |     expect(result.modified).toBe(true);
+          |                             ^
+      715 |     expect(result.removed.deployments).toContain("test");
+      716 |   });
+      717 |
+
+      at Object.<anonymous> (src/utils/__tests__/config-validation.test.ts:714:29)
+
+  ● validateAndCleanConfig › should handle "invalid key" error message
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      731 |     const result = await validateAndCleanConfig(config, { checkConvex: true });
+      732 |
+    > 733 |     expect(result.modified).toBe(true);
+          |                             ^
+      734 |     expect(result.removed.deployments).toContain("test");
+      735 |   });
+      736 |
+
+      at Object.<anonymous> (src/utils/__tests__/config-validation.test.ts:733:29)
+
+  ● validateAndCleanConfig › should handle "access denied" error message
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      750 |     const result = await validateAndCleanConfig(config, { checkConvex: true });
+      751 |
+    > 752 |     expect(result.modified).toBe(true);
+          |                             ^
+      753 |     expect(result.removed.deployments).toContain("test");
+      754 |   });
+      755 | });
+
+      at Object.<anonymous> (src/utils/__tests__/config-validation.test.ts:752:29)
+
+Test Suites: 2 failed, 4 passed, 6 total
+Tests:       8 failed, 73 passed, 81 total
+Snapshots:   0 total
+Time:        0.908 s, estimated 1 s
+Ran all test suites within paths "src/utils/__tests__/host-client.test.ts", "src/utils/__tests__/operator.test.ts", "src/utils/__tests__/db-maintenance.test.ts", "src/utils/__tests__/client.test.ts", "src/utils/__tests__/config.test.ts", "src/utils/__tests__/config-validation.test.ts".
+Test results written to: ../../_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/cli-auth1/tests1.json

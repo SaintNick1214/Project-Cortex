@@ -24,6 +24,7 @@ import { privateFrameVideoInputBound } from "../src/domain/media-input";
 import { mediaContractSchema, mediaInputBound, mediaResultSchema } from "../src/domain/media-jobs";
 import { allowMediaCompletion } from "./runtimeMediaFence";
 import { parseAgentLanguageResult } from "../src/domain/agent-language";
+import { guardContentRunBudget, assertContentPolicyPin } from "./runtimeContentFence";
 import { guardAgentRunBudget } from "./runtimeAgentFence";
 import { currentControlRun } from "./runs";
 import { assertIngestionPolicyPin, guardIngestionRunBudget } from "./runtimeIngestion";
@@ -273,6 +274,7 @@ async function currentOperation(ctx: ReadCtx, reference: RuntimeAuthorityReferen
   if (!permitCancelled) {
     if (!mediaCompletion) await guardAgentRunBudget(ctx, reference, run._id);
     await guardIngestionRunBudget(ctx, reference, run._id);
+    if (!asParent) await guardContentRunBudget(ctx, reference, run._id, operation.operationKey);
   }
   let parentId = operation.parentOperationId;
   const visited = new Set<string>([operation._id]);
@@ -289,6 +291,7 @@ async function currentOperation(ctx: ReadCtx, reference: RuntimeAuthorityReferen
   const current = await resolveCurrent(ctx, reference, operation.operationKey, run.runBudgetId!, operation.source, operation.parentOperationId, run.agentId ? { agentId: run.agentId, version: run.agentVersion! } : undefined);
   if (!permitCancelled) {
     await assertIngestionPolicyPin(ctx, run._id, operation.operationKey, current.snapshot, false, !asParent);
+    await assertContentPolicyPin(ctx, run._id, operation.operationKey, current.snapshot, false, !asParent);
     if (snapshot.semanticProfile) assertProfileMatches(snapshot.semanticProfile, current.snapshot.semanticProfile!);
   }
   if (!current.snapshot.allowedModels.includes(snapshot.modelId) || !snapshot.capabilities.every((cap) => current.snapshot.capabilities.includes(cap))
@@ -496,6 +499,7 @@ export const resolve = internalQuery({ args: resolveArgs, handler: async (ctx, a
   await currentAuthority(ctx, args.reference, args.operationKey); const run = await runAccount(ctx, args.reference, args.runBudgetId);
   await guardAgentRunBudget(ctx, args.reference, run._id);
   await guardIngestionRunBudget(ctx, args.reference, run._id);
+  await guardContentRunBudget(ctx, args.reference, run._id, args.operationKey);
   await checkSource(ctx, args.reference, args.operationKey, args.source);
   if (args.parentOperationId) {
     const parent = await ctx.db.get("runtimeModelOperations", args.parentOperationId);
@@ -504,6 +508,7 @@ export const resolve = internalQuery({ args: resolveArgs, handler: async (ctx, a
   }
   const resolved = await resolveCurrent(ctx, args.reference, args.operationKey, args.runBudgetId, args.source, args.parentOperationId, run.agentId ? { agentId: run.agentId, version: run.agentVersion! } : undefined);
   await assertIngestionPolicyPin(ctx, run._id, args.operationKey, resolved.snapshot, true, true);
+  await assertContentPolicyPin(ctx, run._id, args.operationKey, resolved.snapshot, true, true);
   return { snapshot: resolved.snapshot, dispatchEvidence: evidence(resolved.manifest, resolved.snapshot), storageLimits: { ...MODEL_LEDGER_STORAGE_LIMITS,
     privateResultBytes: resolved.snapshot.semanticProfile?.profileId === LARGE_EMBEDDING_PROFILE.profileId ? 131_072 : MODEL_LEDGER_STORAGE_LIMITS.privateResultBytes } };
 } });
@@ -576,6 +581,7 @@ export const admit = internalMutation({ args: admitArgs, handler: async (ctx, ar
   const run = await runAccount(ctx, args.reference, args.runBudgetId);
   await guardAgentRunBudget(ctx, args.reference, run._id);
   await guardIngestionRunBudget(ctx, args.reference, run._id);
+  await guardContentRunBudget(ctx, args.reference, run._id, args.operationKey);
   if (args.parentOperationId) {
     const parent = await ctx.db.get("runtimeModelOperations", args.parentOperationId);
     if (!parent || parent.runAccountId !== run._id) fail("FORBIDDEN");
@@ -592,6 +598,7 @@ export const admit = internalMutation({ args: admitArgs, handler: async (ctx, ar
   const snapshot = resolved.snapshot;
   const effectiveSnapshot = "current" in resolved ? resolved.current.snapshot : snapshot;
   await assertIngestionPolicyPin(ctx, run._id, args.operationKey, effectiveSnapshot, false, true);
+  await assertContentPolicyPin(ctx, run._id, args.operationKey, effectiveSnapshot, false, true);
   const root = "root" in resolved ? resolved.root : run.root;
   const manifest = await trustedRoot(root);
   const proof = evidence(manifest, snapshot);
@@ -978,7 +985,7 @@ function attachmentDenied(error: unknown): boolean {
     const code = ownValue("code");
     return typeof code === "string" && ["FORBIDDEN", "UNAUTHENTICATED", "AUTHORITY_LOOKUP_AMBIGUOUS", "RUN_CANCELLED",
       "INVALID_INPUT", "POLICY_DENIED", "CAPABILITY_UNAVAILABLE", "CAPABILITY_UNSUPPORTED", "PROFILE_NOT_READY", "IDEMPOTENCY_CONFLICT", "INVALID_STATE", "STALE_CONTEXT", "TOOL_STEP_LIMIT", "TOOL_DENIED",
-      "APPROVAL_REQUIRED", "STALE_TRANSCRIPT", "TRANSCRIPT_CONFLICT", "LEASE_EXPIRED", "MEDIA_JOB_EXPIRED", "STALE_MEDIA_INPUT"].includes(code);
+      "APPROVAL_REQUIRED", "STALE_TRANSCRIPT", "TRANSCRIPT_CONFLICT", "LEASE_EXPIRED", "MEDIA_JOB_EXPIRED", "STALE_MEDIA_INPUT", "CONTENT_JOB_EXPIRED", "CONTENT_JOB_NOT_FOUND"].includes(code);
   } catch { return false; }
 }
 async function permittedAttachment(ctx: ReadCtx, reference: RuntimeAuthorityReference, state: AttemptContext): Promise<boolean> {

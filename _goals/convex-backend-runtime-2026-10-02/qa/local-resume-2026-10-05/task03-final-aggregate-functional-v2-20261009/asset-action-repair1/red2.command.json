@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "node": "v26.10.0",
+  "command": "CORTEX_TEST_ENV_MODE=explicit CONVEX_URL=http://127.0.0.1:1 CONVEX_TEST_MODE=local node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand --forceExit=false --runTestsByPath tests/unit/runtimeAssets/action-delivery.test.ts --json --outputFile=_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-aggregate-functional-v2-20261009/asset-action-repair1/red2.results.json",
+  "exitCode": 1,
+  "evidenceClass": "real registered handlers with controlled storage and clock advancing only after real mutation returns; no service or paid effects",
+  "passed": 1,
+  "failed": 4,
+  "skipped": 0,
+  "source": [
+    {
+      "path": "convex-dev/runtimeAssets.ts",
+      "bytes": 25897,
+      "sha256": "6a43a50ca8e6956ce7e02f7dc5ff685c73faa12350b1e127202f0e4d1829c3c7"
+    },
+    {
+      "path": "convex-dev/runtimeAssetsHttp.ts",
+      "bytes": 5178,
+      "sha256": "952ada7006acb7558f643f566f030f46f73a0534f8b8a0f440746a3ecd48fb97"
+    },
+    {
+      "path": "tests/unit/runtimeAssets/action-delivery.test.ts",
+      "bytes": 6946,
+      "sha256": "e0b8f1dd6b16b4742b249ef0f23a525fd96342aaf741e2d6a13805857aeb7bc7"
+    }
+  ]
+}

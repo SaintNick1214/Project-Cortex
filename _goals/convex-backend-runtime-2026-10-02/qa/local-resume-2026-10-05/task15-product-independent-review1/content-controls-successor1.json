@@ -1,0 +1,55 @@
+{
+  "status": "PASS_CONTROLLED_ONLY",
+  "scope": "Released content title repair and public content client DTO controls; not actual service evidence",
+  "candidateDigest": "1f5974c87eb8d843fdfe8195f94db87b62354176a19bb130650eaba097d3ba4d",
+  "sourceMatches": [
+    {
+      "path": "convex-dev/runtimeContentGateway.ts",
+      "matches": true
+    },
+    {
+      "path": "convex-dev/runtimeContentJobs.ts",
+      "matches": true
+    },
+    {
+      "path": "convex-dev/runtimeContentJobsSchema.ts",
+      "matches": true
+    },
+    {
+      "path": "tests/unit/runtimeContent/jobs.test.ts",
+      "matches": true
+    }
+  ],
+  "command": "PATH=/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin:$PATH CORTEX_TEST_ENV_MODE=explicit CONVEX_URL=http://127.0.0.1:1 CONVEX_TEST_MODE=local node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand --forceExit=false --silent --runTestsByPath tests/unit/runtimeContent/jobs.test.ts tests/unit/client-runtime/content.test.ts",
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "node": "24.15.0",
+  "exit": 0,
+  "naturalExit": true,
+  "suites": 2,
+  "testsPassed": 54,
+  "failed": 0,
+  "skipped": 0,
+  "durationSeconds": 5.983,
+  "warnings": [
+    "Existing Watchman recrawl warning; watcher not reset",
+    "Experimental VM Modules warning"
+  ],
+  "usefulOutput": [
+    "PASS tests/unit/runtimeContent/jobs.test.ts (28/28)",
+    "PASS tests/unit/client-runtime/content.test.ts (26/26)",
+    "Tests:54 passed,54 total; Test Suites:2 passed,2 total"
+  ],
+  "meaningfulOutcomes": [
+    "Direct retry:false Workflow publishes confirmed primary with genuine malformed secondary warning",
+    "Text/code/sheet fallback preserves exact private raw rejected title, original strict parser and one retained version",
+    "Known confirmed malformed secondary save-gap recovers without new call/accounting or duplicate version",
+    "Missing secondary unchanged failure; withheld/unconfirmed/wrong-parent/deleted/revoked/expired fail",
+    "Standalone/Agent title formatting fails explicitly rather than receiving document fallback"
+  ],
+  "effects": {
+    "serviceCalls": 0,
+    "modelCalls": 0,
+    "sourceWrites": 0,
+    "gitWrites": 0
+  }
+}

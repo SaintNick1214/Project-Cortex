@@ -1,0 +1,109 @@
+{
+  "status": "PASS_CONTROLLED_ONLY",
+  "node": "24.15.0",
+  "npm": "12.2.0",
+  "sourceMatches": [
+    {
+      "packet": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/root-cli-fifo1/source3.json",
+      "matches": [
+        {
+          "path": "packages/cortex-cli/src/utils/client.ts",
+          "matches": true
+        },
+        {
+          "path": "packages/cortex-cli/src/utils/host-auth.ts",
+          "matches": true
+        },
+        {
+          "path": "packages/cortex-cli/src/utils/operator.ts",
+          "matches": true
+        },
+        {
+          "path": "packages/cortex-cli/src/utils/__tests__/host-token-files.test.ts",
+          "matches": true
+        },
+        {
+          "path": "packages/cortex-cli/tests/commands/host-retry.test.ts",
+          "matches": true
+        },
+        {
+          "path": "packages/cortex-cli/src/utils/__tests__/operator.test.ts",
+          "matches": true
+        }
+      ]
+    },
+    {
+      "packet": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/root-chat-ui1/source6.json",
+      "matches": [
+        {
+          "path": "packages/cortex-cli/templates/chat-sdk-quickstart/components/runtime-chat.tsx",
+          "matches": true
+        },
+        {
+          "path": "packages/cortex-cli/templates/chat-sdk-quickstart/tests/unit/runtime-auth-race.test.ts",
+          "matches": true
+        }
+      ]
+    },
+    {
+      "packet": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task17-docs-functional-v2-20261008/cli-readme1/source2.json",
+      "matches": [
+        {
+          "path": "packages/cortex-cli/README.md",
+          "matches": true
+        }
+      ]
+    }
+  ],
+  "checks": [
+    {
+      "project": "unit",
+      "selection": [
+        "src/utils/__tests__/host-client.test.ts",
+        "src/utils/__tests__/host-token-files.test.ts",
+        "src/utils/__tests__/operator.test.ts"
+      ],
+      "passed": 18,
+      "suites": 3,
+      "exit": 0,
+      "durationSeconds": 0.532,
+      "command": "PATH=/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin:$PATH CORTEX_TEST_ENV_MODE=explicit CONVEX_URL=http://127.0.0.1:1 node --experimental-vm-modules ../../node_modules/jest/bin/jest.js --selectProjects unit --runInBand --forceExit=false --runTestsByPath src/utils/__tests__/host-client.test.ts src/utils/__tests__/host-token-files.test.ts src/utils/__tests__/operator.test.ts",
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli",
+      "naturalExit": true,
+      "skipped": 0
+    },
+    {
+      "project": "commands",
+      "selection": [
+        "tests/commands/host-retry.test.ts"
+      ],
+      "passed": 1,
+      "suites": 1,
+      "exit": 0,
+      "durationSeconds": 0.498,
+      "command": "PATH=/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin:$PATH CORTEX_TEST_ENV_MODE=explicit CONVEX_URL=http://127.0.0.1:1 node --experimental-vm-modules ../../node_modules/jest/bin/jest.js --selectProjects commands --runInBand --forceExit=false --runTestsByPath tests/commands/host-retry.test.ts",
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli",
+      "naturalExit": true,
+      "skipped": 0
+    }
+  ],
+  "uniqueFocusedAssertions": 19,
+  "actualServices": false,
+  "meaningfulOutcomes": [
+    "Real temporary private FIFO rejects before 3s child bound and naturally exits; all owned temporary files removed",
+    "Actual SDK UsersAPI and ResilienceLayer composed with controlled peer: one committed version, session timeout propagated, no redispatch, clients/queue processor closed",
+    "Current principal/scope/deadline checks withhold query/mutation/action delivery before caller output",
+    "Operator refuses production/mismatch/missing scope, forwards exact internal retirement args, excludes host/management credentials from child",
+    "Empty output accepted only for successful null-return deleteScope; statistics and malformed output still fail"
+  ],
+  "originalRetryControl": "Two committed versions and false success with retry enabled are preserved in Root red2 and reviewer journal; fixed composed regression observes exactly one",
+  "warnings": [
+    "Existing Watchman recrawl and VM Modules experimental warnings preserved"
+  ],
+  "effects": {
+    "service": 0,
+    "paid": 0,
+    "sourceWrites": 0,
+    "git": 0
+  }
+}

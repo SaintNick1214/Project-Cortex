@@ -1,0 +1,52 @@
+{
+  "createdAtUtc": "2026-10-09T02:03:54.464Z",
+  "node": "v24.15.0",
+  "npm": "12.2.0",
+  "checks": [
+    {
+      "name": "root-content-lint3",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/eslint/bin/eslint.js",
+        "src/client-runtime/content.ts",
+        "src/client-runtime/client.ts",
+        "src/client-runtime/index.ts",
+        "src/vector/index.ts",
+        "convex-dev/memories.ts",
+        "convex-dev/runtimeDataAuth.ts",
+        "tests/unit/client-runtime/content.test.ts",
+        "tests/unit/runtimeDelivery/legacy-search.test.ts",
+        "tests/unit/runtimeEndpointAuth/sharedfixtures.ts",
+        "--report-unused-disable-directives"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exit": 0,
+      "signal": null,
+      "timedOut": false,
+      "elapsedMs": 10244,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/root-content1/root-content-lint3.log",
+      "bytes": 1384,
+      "sha256": "30dc80c5bb5b1efaaba4f30e1e56faea83123a2cefe3f905d6dddb8930a5c5e5",
+      "ownedChildClosed": true
+    },
+    {
+      "name": "root-content-sdk-build3",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/npm/bin/npm-cli.js",
+        "run",
+        "build"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "exit": 0,
+      "signal": null,
+      "timedOut": false,
+      "elapsedMs": 29790,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/root-content1/root-content-sdk-build3.log",
+      "bytes": 2450,
+      "sha256": "ce03a188212c9d8fbd65f98f1ee68ebbc1ee17545a703ab8fb9a1cbb7fcb00dd",
+      "ownedChildClosed": true
+    }
+  ],
+  "history": "Initial content two test mock-log failures and promise fixture type mismatch were corrected; tests2/SDKtypes/backendtypes passed. Initial post-correction lint error was unused mock argument, now prefixed; no product assertion removed. Current SDKdist build is a15 source-development successor, not retroactive qualification of priorcurrent4 packages."
+}

@@ -35,6 +35,14 @@ afterEach(async () => { jest.restoreAllMocks(); await fs.remove(root); });
 async function put(name: string, text: string) { await fs.outputFile(path.join(host, name), text); }
 async function read(name: string) { return fs.readFile(path.join(host, name), "utf8"); }
 const assetRouteNames = ["POST /cortex/assets/upload", "GET /cortex/assets/download", "OPTIONS /cortex/assets/upload", "OPTIONS /cortex/assets/download"];
+const mediaRouteName = "POST /cortex/media/video/webhook";
+function mediaHttpHelper(mediaImport = 'import { videoWebhook } from "../runtimeMediaHttp";', mediaRoute = 'router.route({method:"POST",path:"/cortex/media/video/webhook",handler:videoWebhook});') {
+  return 'import type { HttpRouter } from "convex/server"; import { upload, download, preflight } from "../runtimeAssetsHttp";\n' + mediaImport
+    + '\nexport function registerCortexHttpRoutesV1(router: HttpRouter) {\n' + assetRouteNames.map(key => {
+      const [method, routePath] = key.split(" ");
+      return `router.route({ method: ${JSON.stringify(method)}, path: ${JSON.stringify(routePath)}, handler: ${method === "OPTIONS" ? "preflight" : method === "POST" ? "upload" : "download"} });\n`;
+    }).join("") + mediaRoute + "\n}\n";
+}
 async function addHttpDistribution(routeNames = assetRouteNames, helperText?: string) {
   const helper = helperText ?? 'import type { HttpRouter } from "convex/server"; import { upload, download, preflight } from "../runtimeAssetsHttp";\nexport function registerCortexHttpRoutesV1(router: HttpRouter) {\n' + assetRouteNames.map(key => {
     const [method, routePath] = key.split(" ");
@@ -43,6 +51,11 @@ async function addHttpDistribution(routeNames = assetRouteNames, helperText?: st
   await fs.outputFile(path.join(sdk, "dist/backend/v1/_cortex/http.ts"), helper);
   const manifest = await fs.readJson(path.join(sdk, "dist/backend/v1/manifest.json"));
   manifest.files.push({ path: "_cortex/http.ts", sha256: hash(helper) }); manifest.httpRoutes = routeNames;
+  if (helper.includes("../runtimeMediaHttp")) {
+    const media = 'import { httpActionGeneric } from "convex/server"; export const videoWebhook = httpActionGeneric(async () => new Response("webhook"));\n';
+    await fs.outputFile(path.join(sdk, "dist/backend/v1/runtimeMediaHttp.ts"), media);
+    manifest.files.push({ path: "runtimeMediaHttp.ts", sha256: hash(media) });
+  }
   await fs.writeJson(path.join(sdk, "dist/backend/v1/manifest.json"), manifest);
 }
 /** Execute the installed composition against Convex's real router, without a deployment. */
@@ -54,7 +67,7 @@ async function installedHttpRouter(relative = "convex/http.ts"): Promise<HttpRou
     new Function("require", "exports", output)(required, exports);
     return exports;
   };
-  const helper = evaluate(await fs.readFile(path.join(sdk, "dist/backend/v1/_cortex/http.ts"), "utf8"), () => ({ upload: handler, download: handler, preflight: handler }));
+  const helper = evaluate(await fs.readFile(path.join(sdk, "dist/backend/v1/_cortex/http.ts"), "utf8"), () => ({ upload: handler, download: handler, preflight: handler, videoWebhook: handler }));
   const exports = evaluate(await read(relative), name => name === "convex/server" ? { httpRouter, httpActionGeneric } : helper);
   return exports.default as HttpRouter;
 }
@@ -335,6 +348,83 @@ describe("additive authenticated HTTP routes", () => {
     await expect(applyAdditiveBackendInstallation(plan)).rejects.toThrow("changed after installation planning");
     expect(await fs.pathExists(path.join(host, "convex/_cortex/http.ts"))).toBe(false);
     expect(await read("convex/http.ts")).toBe("// changed by host after planning\n");
+  });
+});
+
+describe("additive fixed media webhook", () => {
+  it("composes all five real router registrations while preserving a custom host and zero-write retry", async () => {
+    await addHttpDistribution([...assetRouteNames, mediaRouteName], mediaHttpHelper());
+    await put("convex.json", '{"functions":"custom/backend/"}\n');
+    const original = 'import { httpRouter, httpActionGeneric } from "convex/server";\nconst host = httpRouter();\nhost.route({path:"/host-health",method:"GET",handler:httpActionGeneric(async () => new Response("host"))});\nexport default host;\n';
+    await put("custom/backend/http.ts", original);
+    await put("custom/backend/hostNode.ts", '"use node";\nexport const sentinel = 42;\n');
+    const plan = await planAdditiveBackendInstallation(host, sdk);
+    expect(plan.conflicts).toEqual([]);
+    await applyAdditiveBackendInstallation(plan);
+    const installed = await read("custom/backend/http.ts");
+    expect(installed.replace('import { registerCortexHttpRoutesV1 } from "./_cortex/http";\n', "").replace("registerCortexHttpRoutesV1(host);\n", "")).toBe(original);
+    expect(await read(`custom/backend/http.ts.cortex-v1-before-${hash(original)}.txt`)).toBe(original);
+    expect(await read("custom/backend/hostNode.ts")).toBe('"use node";\nexport const sentinel = 42;\n');
+    const router = await installedHttpRouter("custom/backend/http.ts");
+    expect(router.getRoutes().map(([routePath, method]) => `${method} ${routePath}`).sort()).toEqual([...assetRouteNames, mediaRouteName, "GET /host-health"].sort());
+    expect((await installAdditiveBackend(host, sdk)).installed).toEqual([]);
+    expect(await read("custom/backend/http.ts")).toBe(installed);
+  });
+  it("accepts a direct named alias of only the fixed webhook export", async () => {
+    await addHttpDistribution([...assetRouteNames, mediaRouteName], mediaHttpHelper('import { videoWebhook as callback } from "../runtimeMediaHttp.js";', 'router.route({method:"POST",path:"/cortex/media/video/webhook",handler:callback});'));
+    await installAdditiveBackend(host, sdk);
+    expect((await installedHttpRouter()).getRoutes()).toHaveLength(5);
+  });
+  it.each([
+    'import { arbitrary as videoWebhook } from "../runtimeMediaHttp";',
+    'import videoWebhook from "../runtimeMediaHttp";',
+    'import * as videoWebhook from "../runtimeMediaHttp";',
+    'import { videoWebhook } from "../foreign";',
+  ])("rejects an unqualified media import before any host write: %s", async mediaImport => {
+    await addHttpDistribution([...assetRouteNames, mediaRouteName], mediaHttpHelper(mediaImport));
+    await expect(installAdditiveBackend(host, sdk)).rejects.toThrow(/runtimeMediaHttp|videoWebhook/);
+    expect(await fs.pathExists(path.join(host, "convex"))).toBe(false);
+  });
+  it.each([
+    ["GET /cortex/media/video/webhook", 'router.route({method:"GET",path:"/cortex/media/video/webhook",handler:videoWebhook});'],
+    ["POST /cortex/arbitrary", 'router.route({method:"POST",path:"/cortex/arbitrary",handler:videoWebhook});'],
+    [mediaRouteName, 'router.route({method:"POST",path:"/cortex/media/video/webhook",handler:upload});'],
+  ])("binds the new handler exclusively to its fixed route: %s", async (routeName, declaration) => {
+    await addHttpDistribution([...assetRouteNames, routeName], mediaHttpHelper(undefined, declaration));
+    await expect(installAdditiveBackend(host, sdk)).rejects.toThrow("only the exact POST /cortex/media/video/webhook");
+    expect(await fs.pathExists(path.join(host, "convex"))).toBe(false);
+  });
+  it("rejects overlapping local bindings from the asset and media modules", async () => {
+    await addHttpDistribution([...assetRouteNames, mediaRouteName], mediaHttpHelper('import { videoWebhook as upload } from "../runtimeMediaHttp";', 'router.route({method:"POST",path:"/cortex/media/video/webhook",handler:upload});'));
+    await expect(installAdditiveBackend(host, sdk)).rejects.toThrow("must not overlap");
+    expect(await fs.pathExists(path.join(host, "convex"))).toBe(false);
+  });
+  it.each([
+    'http.route({path:"/cortex/media/video/webhook",method:"POST",handler:host});',
+    'http.route({pathPrefix:"/cortex/media/",method:"POST",handler:host});',
+  ])("preserves a conflicting host exact or prefix route before all source writes", async declaration => {
+    await addHttpDistribution([...assetRouteNames, mediaRouteName], mediaHttpHelper());
+    const original = `import { httpRouter } from "convex/server"; const http = httpRouter(); ${declaration}\nexport default http;\n`;
+    await put("convex/http.ts", original);
+    const plan = await planAdditiveBackendInstallation(host, sdk);
+    expect(plan.conflicts).toContainEqual(expect.objectContaining({ path: "convex/http.ts", currentContent: original, reason: expect.stringContaining("conflicts") }));
+    await expect(applyAdditiveBackendInstallation(plan)).rejects.toBeInstanceOf(BackendMergeRequiredError);
+    expect(await read("convex/http.ts")).toBe(original);
+    expect(await fs.pathExists(path.join(host, "convex/_cortex/http.ts"))).toBe(false);
+    expect(await fs.pathExists(path.join(host, "convex/runs.ts"))).toBe(false);
+  });
+  it("rejects a manifest omitting the fifth helper route before installation", async () => {
+    await addHttpDistribution(assetRouteNames, mediaHttpHelper());
+    await expect(installAdditiveBackend(host, sdk)).rejects.toThrow("differ from the versioned manifest");
+    expect(await fs.pathExists(path.join(host, "convex"))).toBe(false);
+  });
+  it("rejects a webhook module missing from the digest-bound source manifest", async () => {
+    await addHttpDistribution([...assetRouteNames, mediaRouteName], mediaHttpHelper());
+    const manifest = await fs.readJson(path.join(sdk, "dist/backend/v1/manifest.json"));
+    manifest.files = manifest.files.filter((entry: { path: string }) => entry.path !== "runtimeMediaHttp.ts");
+    await fs.writeJson(path.join(sdk, "dist/backend/v1/manifest.json"), manifest);
+    await expect(installAdditiveBackend(host, sdk)).rejects.toThrow("digest-bound runtimeMediaHttp.ts source");
+    expect(await fs.pathExists(path.join(host, "convex"))).toBe(false);
   });
 });
 

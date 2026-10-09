@@ -1,0 +1,73 @@
+{
+  "version": 1,
+  "toolchain": {
+    "node": "24.15.0",
+    "npm": "12.2.0"
+  },
+  "uniqueCurrentAssertions": 85,
+  "suites": [
+    {
+      "file": "packages/cortex-cli/src/utils/__tests__/operator.test.ts",
+      "receipt": "tests2.json",
+      "total": 6,
+      "passed": 6
+    },
+    {
+      "file": "packages/cortex-cli/src/utils/__tests__/config-validation.test.ts",
+      "receipt": "tests3.json",
+      "total": 30,
+      "passed": 30
+    },
+    {
+      "file": "packages/cortex-cli/src/utils/__tests__/client.test.ts",
+      "receipt": "tests2.json",
+      "total": 8,
+      "passed": 8
+    },
+    {
+      "file": "packages/cortex-cli/src/utils/__tests__/host-client.test.ts",
+      "receipt": "tests5.json",
+      "total": 10,
+      "passed": 10
+    },
+    {
+      "file": "packages/cortex-cli/src/utils/__tests__/db-maintenance.test.ts",
+      "receipt": "tests2.json",
+      "total": 5,
+      "passed": 5
+    },
+    {
+      "file": "packages/cortex-cli/src/utils/__tests__/config.test.ts",
+      "receipt": "tests3.json",
+      "total": 22,
+      "passed": 22
+    },
+    {
+      "file": "packages/cortex-cli/src/utils/__tests__/auth-config.test.ts",
+      "receipt": "tests4.json",
+      "total": 4,
+      "passed": 4
+    }
+  ],
+  "types": {
+    "receipt": "checks-run5.json",
+    "name": "types7",
+    "exitCode": 0
+  },
+  "lint": {
+    "fullAffectedReceipt": "checks-run2.json",
+    "name": "lint2",
+    "exitCode": 0,
+    "latestConfigBoundaryReceipt": "checks-run4.json",
+    "latestDeliveryBoundaryReceipt": "checks-run5.json",
+    "latestExitCode": 0
+  },
+  "diffCheck": {
+    "command": "git diff --check -- <six modified tracked CLI paths>",
+    "exitCode": 0
+  },
+  "forceExit": false,
+  "serviceEffects": 0,
+  "builds": 0,
+  "installs": 0
+}

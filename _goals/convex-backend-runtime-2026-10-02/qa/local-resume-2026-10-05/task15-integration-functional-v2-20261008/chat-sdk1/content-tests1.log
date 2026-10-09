@@ -1,0 +1,246 @@
+watchman warning: Recrawled this watch 1 time, most recently because:
+MustScanSubDirs UserDroppedTo resolve, please review the information on
+https://facebook.github.io/watchman/docs/troubleshooting.html#recrawl
+To clear this warning, run:
+`watchman watch-del '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion' ; watchman watch-project '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion'`
+
+  console.error
+    ◇ injected env (0) from .env.test
+
+      13 | import dotenv from "dotenv";
+      14 | import { resolve } from "path";
+    > 15 |
+         | ^
+      16 | // Load .env.test first (test defaults)
+      17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+      18 |
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:15:8
+
+  console.error
+    ◇ injected env (0) from .env.local
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+  console.log
+    
+    🧪 Testing against LOCAL Convex: http://127.0.0.1:1
+
+      at tests/env.ts:35:13
+
+  console.log
+       Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:36:13
+
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:121:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:122:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:123:13
+
+(node:65043) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeContent/jobs.test.ts (5.265 s)
+  ✕ creates text with a real secondary title and one shared native account (19 ms)
+  ✕ creates code with a real secondary title and one shared native account (7 ms)
+  ✕ creates sheet with a real secondary title and one shared native account (7 ms)
+  ✓ rejects model/authority/budget extras before any job or artifact (3 ms)
+  ✓ retains idempotent job/account and denies a conflicting request (4 ms)
+  ✓ cancellation blocks actual native admission without refunding the account (3 ms)
+  ✕ saved primary crash never pays again and cannot publish without the secondary title (7 ms)
+  ✓ unknown work cannot reclaim or fabricate a confirmed draft (3 ms)
+  ✕ deletion after paid draft prevents atomic publication with retained liability (8 ms)
+  ✓ foreign/no-JWT callers cannot deliver owned jobs (3 ms)
+
+  ● creates text with a real secondary title and one shared native account
+
+    GatewayDispatchError: Governed model call did not complete for delivery.
+
+      78 |   consumeReplay(): Promise<{ text: string } | AgentLanguageResultV1 | { profile: typeof DEFAULT_EMBEDDING_PROFILE; vectors: number[][] } | undefined>;
+      79 | }
+    > 80 | function fail(code: string): never { throw new GatewayDispatchError(code); }
+         |                                            ^
+      81 | const utf8 = (text: string): number => {
+      82 |   for (const point of text) { const n = point.codePointAt(0)!; if (n >= 0xd800 && n <= 0xdfff) fail("INVALID_UNICODE"); }
+      83 |   return new TextEncoder().encode(text).length;
+
+      at fail (convex-dev/runtimeGateway.ts:80:44)
+      at proofFor (convex-dev/runtimeGateway.ts:214:315)
+      at stateFor (convex-dev/runtimeGateway.ts:434:3)
+      at governGatewayLanguageModel (convex-dev/runtimeGateway.ts:662:17)
+      at tests/unit/runtimeContent/jobs.test.ts:28:17
+      at processContentStageHandler (convex-dev/runtimeContentGateway.ts:32:20)
+      at tests/unit/runtimeContent/jobs.test.ts:36:3
+
+  ● creates code with a real secondary title and one shared native account
+
+    GatewayDispatchError: Governed model call did not complete for delivery.
+
+      78 |   consumeReplay(): Promise<{ text: string } | AgentLanguageResultV1 | { profile: typeof DEFAULT_EMBEDDING_PROFILE; vectors: number[][] } | undefined>;
+      79 | }
+    > 80 | function fail(code: string): never { throw new GatewayDispatchError(code); }
+         |                                            ^
+      81 | const utf8 = (text: string): number => {
+      82 |   for (const point of text) { const n = point.codePointAt(0)!; if (n >= 0xd800 && n <= 0xdfff) fail("INVALID_UNICODE"); }
+      83 |   return new TextEncoder().encode(text).length;
+
+      at fail (convex-dev/runtimeGateway.ts:80:44)
+      at proofFor (convex-dev/runtimeGateway.ts:214:315)
+      at stateFor (convex-dev/runtimeGateway.ts:434:3)
+      at governGatewayLanguageModel (convex-dev/runtimeGateway.ts:662:17)
+      at tests/unit/runtimeContent/jobs.test.ts:28:17
+      at processContentStageHandler (convex-dev/runtimeContentGateway.ts:32:20)
+      at tests/unit/runtimeContent/jobs.test.ts:36:3
+
+  ● creates sheet with a real secondary title and one shared native account
+
+    GatewayDispatchError: Governed model call did not complete for delivery.
+
+      78 |   consumeReplay(): Promise<{ text: string } | AgentLanguageResultV1 | { profile: typeof DEFAULT_EMBEDDING_PROFILE; vectors: number[][] } | undefined>;
+      79 | }
+    > 80 | function fail(code: string): never { throw new GatewayDispatchError(code); }
+         |                                            ^
+      81 | const utf8 = (text: string): number => {
+      82 |   for (const point of text) { const n = point.codePointAt(0)!; if (n >= 0xd800 && n <= 0xdfff) fail("INVALID_UNICODE"); }
+      83 |   return new TextEncoder().encode(text).length;
+
+      at fail (convex-dev/runtimeGateway.ts:80:44)
+      at proofFor (convex-dev/runtimeGateway.ts:214:315)
+      at stateFor (convex-dev/runtimeGateway.ts:434:3)
+      at governGatewayLanguageModel (convex-dev/runtimeGateway.ts:662:17)
+      at tests/unit/runtimeContent/jobs.test.ts:28:17
+      at processContentStageHandler (convex-dev/runtimeContentGateway.ts:32:20)
+      at tests/unit/runtimeContent/jobs.test.ts:36:3
+
+  ● saved primary crash never pays again and cannot publish without the secondary title
+
+    GatewayDispatchError: Governed model call did not complete for delivery.
+
+      78 |   consumeReplay(): Promise<{ text: string } | AgentLanguageResultV1 | { profile: typeof DEFAULT_EMBEDDING_PROFILE; vectors: number[][] } | undefined>;
+      79 | }
+    > 80 | function fail(code: string): never { throw new GatewayDispatchError(code); }
+         |                                            ^
+      81 | const utf8 = (text: string): number => {
+      82 |   for (const point of text) { const n = point.codePointAt(0)!; if (n >= 0xd800 && n <= 0xdfff) fail("INVALID_UNICODE"); }
+      83 |   return new TextEncoder().encode(text).length;
+
+      at fail (convex-dev/runtimeGateway.ts:80:44)
+      at proofFor (convex-dev/runtimeGateway.ts:214:315)
+      at stateFor (convex-dev/runtimeGateway.ts:434:3)
+      at governGatewayLanguageModel (convex-dev/runtimeGateway.ts:662:17)
+      at tests/unit/runtimeContent/jobs.test.ts:28:17
+      at processContentStageHandler (convex-dev/runtimeContentGateway.ts:32:20)
+      at Object.<anonymous> (tests/unit/runtimeContent/jobs.test.ts:46:195)
+
+  ● deletion after paid draft prevents atomic publication with retained liability
+
+    GatewayDispatchError: Governed model call did not complete for delivery.
+
+      78 |   consumeReplay(): Promise<{ text: string } | AgentLanguageResultV1 | { profile: typeof DEFAULT_EMBEDDING_PROFILE; vectors: number[][] } | undefined>;
+      79 | }
+    > 80 | function fail(code: string): never { throw new GatewayDispatchError(code); }
+         |                                            ^
+      81 | const utf8 = (text: string): number => {
+      82 |   for (const point of text) { const n = point.codePointAt(0)!; if (n >= 0xd800 && n <= 0xdfff) fail("INVALID_UNICODE"); }
+      83 |   return new TextEncoder().encode(text).length;
+
+      at fail (convex-dev/runtimeGateway.ts:80:44)
+      at proofFor (convex-dev/runtimeGateway.ts:214:315)
+      at stateFor (convex-dev/runtimeGateway.ts:434:3)
+      at governGatewayLanguageModel (convex-dev/runtimeGateway.ts:662:17)
+      at tests/unit/runtimeContent/jobs.test.ts:28:17
+      at processContentStageHandler (convex-dev/runtimeContentGateway.ts:32:20)
+      at Object.<anonymous> (tests/unit/runtimeContent/jobs.test.ts:48:193)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     5.3s | 5/10 passed | /tests/unit/runtimeContent/jobs.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [31m✗[0m    0.02s ( 0.4%) - creates text with a real secondary title and one shared native account
+    /tests/unit/runtimeContent/jobs.test.ts
+
+ 2. [31m✗[0m    0.01s ( 0.1%) - deletion after paid draft prevents atomic publication with retained liability
+    /tests/unit/runtimeContent/jobs.test.ts
+
+ 3. [31m✗[0m    0.01s ( 0.1%) - creates code with a real secondary title and one shared native account
+    /tests/unit/runtimeContent/jobs.test.ts
+
+ 4. [31m✗[0m    0.01s ( 0.1%) - creates sheet with a real secondary title and one shared native account
+    /tests/unit/runtimeContent/jobs.test.ts
+
+ 5. [31m✗[0m    0.01s ( 0.1%) - saved primary crash never pays again and cannot publish without the secondary title
+    /tests/unit/runtimeContent/jobs.test.ts
+
+ 6. [32m✓[0m    0.00s ( 0.1%) - retains idempotent job/account and denies a conflicting request
+    /tests/unit/runtimeContent/jobs.test.ts
+
+ 7. [32m✓[0m    0.00s ( 0.1%) - rejects model/authority/budget extras before any job or artifact
+    /tests/unit/runtimeContent/jobs.test.ts
+
+ 8. [32m✓[0m    0.00s ( 0.1%) - cancellation blocks actual native admission without refunding the account
+    /tests/unit/runtimeContent/jobs.test.ts
+
+ 9. [32m✓[0m    0.00s ( 0.1%) - unknown work cannot reclaim or fabricate a confirmed draft
+    /tests/unit/runtimeContent/jobs.test.ts
+
+10. [32m✓[0m    0.00s ( 0.1%) - foreign/no-JWT callers cannot deliver owned jobs
+    /tests/unit/runtimeContent/jobs.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.06s (1.2% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      5.41s
+  Test suites:        1
+  Individual tests:   10
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 failed, 1 total
+Tests:       5 failed, 5 passed, 10 total
+Snapshots:   0 total
+Time:        5.411 s
+Ran all test suites matching tests/unit/runtimeContent/jobs.test.ts.
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/chat-sdk1/content-tests1.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

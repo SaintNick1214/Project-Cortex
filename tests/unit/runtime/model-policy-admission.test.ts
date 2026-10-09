@@ -6,12 +6,12 @@ import type { DeploymentPolicyManifest, QualifiedDispatchEvidence } from "../../
 import type { ModelCallRequest, TrustedModelPolicyRecord } from "../../../src/domain/model-policy";
 import { canonicalModelJson } from "../../../src/domain/model-policy";
 import { DEFAULT_EMBEDDING_PROFILE, semanticHash } from "../../../src/domain/profile";
-import { memoryFixture } from "../runtimeMemory/fixture";
 
 const lookup = jest.fn<(id: string, revision: number) => DeploymentPolicyManifest | undefined>();
 const trustedBootstrap = await import("../../../convex-dev/runtimeModelPolicyBootstrap");
 jest.unstable_mockModule("../../../convex-dev/runtimeModelPolicyBootstrap", () => ({ qualifiedTerminalModelId: trustedBootstrap.qualifiedTerminalModelId, lookupDeploymentManifest: lookup, isTrustedDeploymentManifest: (entry: DeploymentPolicyManifest) => entry === root && entry.classification === "fixture-synthetic" }));
 const ledger = await import("../../../convex-dev/runtimeModelPolicy");
+const { memoryFixture } = await import("../runtimeMemory/fixture");
 const definitions = await import("../../../convex-dev/agentDefinitions");
 const schema = (await import("../../../convex-dev/schema")).default;
 const hash = "a".repeat(64);
@@ -409,8 +409,8 @@ describe("native private policy ledger — offline logic only", () => {
     const assets = ["runtimeAssets", "runtimeAssetVersions", "runtimeAssetReferences", "runtimeAssetJobs"];
     const media = ["runtimeMediaJobs", "runtimeMediaCallbacks"];
     const graph = ["runtimeGraphConnectors", "runtimeGraphScopes", "runtimeGraphRevisions", "runtimeGraphSources", "runtimeGraphPayloads", "runtimeGraphOutbox", "runtimeGraphReceipts", "runtimeGraphReads", "runtimeGraphDependencies"];
-    expect(Object.keys(schema.tables).sort()).toEqual([...original, ...added, ...execution, ...ingestion, "runtimeMemoryVectorGenerations", ...graph, ...assets, ...media].sort());
-    const required = { runtimeMediaJobs: ["by_job", "by_request", "by_scope", "by_owner", "by_account", "by_operation"], runtimeMediaCallbacks: ["by_identity"], runtimeAssets: ["by_asset", "by_owner"], runtimeAssetVersions: ["by_version", "by_version_id", "by_storage", "by_cleanup"], runtimeAssetReferences: ["by_version", "by_owner", "by_principal", "by_scope", "by_conversation"], runtimeAssetJobs: ["by_request", "by_job", "by_owner", "by_scope"], runtimeMemoryVectorGenerations: ["by_scope", "by_owner", "by_scope_profile_source"], runtimeAgentExecutions: ["by_attempt"], runtimeAgentOutput: ["by_sequence", "by_delivery"], runtimeAgentOperations: ["by_operation", "by_attempt"], runtimeAgentIngestion: ["by_run"],
+    expect(Object.keys(schema.tables).sort()).toEqual([...original, ...added, ...execution, ...ingestion, "runtimeMemoryVectorGenerations", ...graph, ...assets, ...media, "runtimeContentJobs"].sort());
+    const required = { runtimeContentJobs: ["by_job", "by_request", "by_account", "by_owner", "by_conversation"], runtimeMediaJobs: ["by_job", "by_request", "by_scope", "by_owner", "by_account", "by_operation"], runtimeMediaCallbacks: ["by_identity"], runtimeAssets: ["by_asset", "by_owner"], runtimeAssetVersions: ["by_version", "by_version_id", "by_storage", "by_cleanup"], runtimeAssetReferences: ["by_version", "by_owner", "by_principal", "by_scope", "by_conversation"], runtimeAssetJobs: ["by_request", "by_job", "by_owner", "by_scope"], runtimeMemoryVectorGenerations: ["by_scope", "by_owner", "by_scope_profile_source"], runtimeAgentExecutions: ["by_attempt"], runtimeAgentOutput: ["by_sequence", "by_delivery"], runtimeAgentOperations: ["by_operation", "by_attempt"], runtimeAgentIngestion: ["by_run"],
       runtimeIngestionScopes: ["by_scope"], runtimeIngestionEvents: ["by_event", "by_scope_sequence", "by_owner_sequence", "by_source", "by_source_eligibility", "by_conversation_sequence"],
       runtimeIngestionStages: ["by_event_stage"], runtimeIngestionJobs: ["by_event", "by_budget", "by_account"],
       runtimeBeliefHeads: ["by_slot"], runtimeBeliefHistory: ["by_fact", "by_event"], runtimeBeliefOutbox: ["by_event"],

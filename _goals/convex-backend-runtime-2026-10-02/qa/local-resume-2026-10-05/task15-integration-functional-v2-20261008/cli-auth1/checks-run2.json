@@ -1,0 +1,37 @@
+[
+  {
+    "command": [
+      "node",
+      "../../node_modules/typescript/bin/tsc",
+      "--noEmit"
+    ],
+    "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli",
+    "name": "types4",
+    "exitCode": 0,
+    "elapsedMs": 1048
+  },
+  {
+    "command": [
+      "node",
+      "../../node_modules/eslint/bin/eslint.js",
+      "src/utils/client.ts",
+      "src/utils/host-auth.ts",
+      "src/utils/operator.ts",
+      "src/types.ts",
+      "src/utils/config.ts",
+      "src/commands/db.ts",
+      "src/index.ts",
+      "src/utils/__tests__/host-client.test.ts",
+      "src/utils/__tests__/operator.test.ts",
+      "src/utils/__tests__/db-maintenance.test.ts",
+      "src/utils/__tests__/client.test.ts",
+      "src/utils/__tests__/config.test.ts",
+      "src/utils/__tests__/config-validation.test.ts",
+      "--report-unused-disable-directives"
+    ],
+    "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli",
+    "name": "lint2",
+    "exitCode": 0,
+    "elapsedMs": 797
+  }
+]

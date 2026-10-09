@@ -1,88 +1,20 @@
-/**
- * Cortex SDK Client
- *
- * Shared Cortex client instance for API routes.
- * Supports both unauthenticated (shared) and authenticated (per-request) clients.
- */
-
-import { type AuthContext, Cortex } from "@cortexmemory/sdk";
-
-/**
- * Cached unauthenticated client (singleton for operations that don't need auth)
- */
-let cortexClient: Cortex | null = null;
-
-/**
- * Get or create an unauthenticated Cortex SDK client.
- *
- * Use this for operations that don't require user context,
- * such as system-level queries or background jobs.
- *
- * @returns Cortex client without auth context
- */
+/** Legacy app singleton and label-based identity are retired; request handlers use lib/runtime/server. */
+import type { AuthContext, Cortex } from "@cortexmemory/sdk";
 export function getCortex(): Cortex {
-  if (!cortexClient) {
-    const convexUrl = process.env.CONVEX_URL;
-    if (!convexUrl) {
-      throw new Error("CONVEX_URL environment variable is required");
-    }
-
-    cortexClient = new Cortex({
-      convexUrl,
-    });
-  }
-
-  return cortexClient;
+  throw new Error(
+    "Use a request-scoped CortexRuntimeClient with a verified host JWT."
+  );
 }
-
-/**
- * Create an authenticated Cortex SDK client with user context.
- *
- * Use this for all user-facing operations. The auth context is
- * automatically injected into all Cortex operations.
- *
- * @param authContext - Auth context from getCortexAuthContext() or createCortexAuthContextFromSession()
- * @returns Cortex client with auth context auto-injected to all operations
- *
- * @example
- * ```typescript
- * import { getCortexAuthContext } from "@/lib/auth-cortex";
- * import { getCortexWithAuth } from "@/lib/cortex";
- *
- * const authContext = await getCortexAuthContext();
- * if (!authContext) {
- *   return new Response("Unauthorized", { status: 401 });
- * }
- *
- * const cortex = getCortexWithAuth(authContext);
- * // All operations auto-scoped to the authenticated user
- * await cortex.memory.remember({ ... });
- * ```
- */
-export function getCortexWithAuth(authContext: AuthContext): Cortex {
-  const convexUrl = process.env.CONVEX_URL;
-  if (!convexUrl) {
-    throw new Error("CONVEX_URL environment variable is required");
-  }
-
-  return new Cortex({
-    auth: authContext,
-    convexUrl,
-  });
+export function getCortexWithAuth(_labels: AuthContext): Cortex {
+  throw new Error(
+    "AuthContext labels are not a verified host JWT. Use lib/runtime/server."
+  );
 }
-
-/**
- * Get the memory space ID for the chat SDK.
- * Uses MEMORY_SPACE_ID env var or defaults to 'chat-sdk-demo'.
- */
 export function getMemorySpaceId(): string {
-  return process.env.MEMORY_SPACE_ID || "chat-sdk-demo";
+  return (
+    process.env.CORTEX_MEMORY_SPACE_ID ?? process.env.MEMORY_SPACE_ID ?? ""
+  );
 }
-
-/**
- * Get the agent/assistant ID for the chat SDK.
- * Uses AGENT_ID env var or defaults to 'chat-assistant'.
- */
 export function getAgentId(): string {
-  return process.env.AGENT_ID || "chat-assistant";
+  return process.env.CORTEX_AGENT_ID ?? process.env.AGENT_ID ?? "";
 }

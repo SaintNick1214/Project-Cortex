@@ -1,0 +1,211 @@
+{
+  "version": 1,
+  "closedAtUtc": "2026-10-09T03:42:38.211881+00:00",
+  "reviewer": "/root/task03_public_high_fd_repair2",
+  "role": "NON_AUTHOR_CI_FIXTURE_BATCH_REVIEWER",
+  "verdict": "PASS",
+  "averageScore": 4.0,
+  "scope": "Task16 CI fixture source and two-target modern registered-runtime outcome batch only",
+  "fullOriginalTask16Accepted": false,
+  "fullOriginalTask16Status": "INCOMPLETE",
+  "originalRequirementsWhollyAccepted": 0,
+  "originalAcceptanceCriteriaWhollyAccepted": 0,
+  "acceptancePolicy": "Goal functional v2; scoped requirement/test/completeness >=4, code/pattern >=3, no unresolved reachable breaking finding",
+  "scores": {
+    "scopedRequirementFulfillment": 4,
+    "codeQuality": 4,
+    "testQuality": 4,
+    "patternAdherence": 4,
+    "scopedCompleteness": 4
+  },
+  "reviewBoundary": {
+    "readOnlyProduct": true,
+    "productEdits": 0,
+    "serviceEffects": 0,
+    "GitMutations": 0,
+    "newAgentsOrReviewGates": 0,
+    "ownTask15CliAndContentSourceExcluded": true
+  },
+  "originalAuthorCandidate": "beb80e27a1e6cfa9c3081296e59cc28866752cb37dd8b37ecacc6c7b5ecc078d",
+  "combinedSourceDigest": "13919c08989275afd4dcaa8f8a1cbfc8b947942f345b8b0ddb59aa53dc2212dd",
+  "combinedSourceDigestAlgorithm": "sha256 of sorted path/bytes/sha256 entries encoded canonical compact JSON with sorted object keys",
+  "currentFiles": [
+    {
+      "path": ".github/workflows/pr-checks.yml",
+      "bytes": 34365,
+      "sha256": "905f42c1f2f7f276f8869b4a8532043f2ba408f1887ee21187ae9abb7be3642a"
+    },
+    {
+      "path": "packages/cortex-cli/tests/env.ts",
+      "bytes": 4164,
+      "sha256": "83d81099ed42eebdabc10dc9c44aaf8780a02ae7a1109ef144d82c3b258cb844"
+    },
+    {
+      "path": "scripts/ci/runtime-environment.test.mjs",
+      "bytes": 1853,
+      "sha256": "6f6d434fc918deb18dde7a01fe7f43fd1a235335f732f21f757dce2d6bac3cb1"
+    },
+    {
+      "path": "scripts/ci/runtime-fixtures.mjs",
+      "bytes": 12895,
+      "sha256": "8a3c01c3604e53fe49e6dd2beedb7fa54699551b7415bcdb337ff8908f28c77f"
+    },
+    {
+      "path": "scripts/ci/runtime-fixtures.test.mjs",
+      "bytes": 11302,
+      "sha256": "32b9bd4afaa69ca37d0f9c54d68b75e9595acc068f4acec0c31b338253137014"
+    },
+    {
+      "path": "scripts/ci/workflow-runtime-fixtures.test.mjs",
+      "bytes": 3207,
+      "sha256": "d271467af6242268a81f3ea8d620a37add162adf4deccc0cb6977fd84fa2bb82"
+    },
+    {
+      "path": "scripts/cleanup-test-data.ts",
+      "bytes": 1067,
+      "sha256": "693ce79446632c6877947533518e09e2b3c19e2b02284c4ec28651d315836292"
+    },
+    {
+      "path": "tests/env.ts",
+      "bytes": 6414,
+      "sha256": "659a503dcd01d5be5a6cc2b510f8004a0a2f2a03884de31cced9d6f559a5113f"
+    },
+    {
+      "path": "tests/helpers/runtime-fixtures.ts",
+      "bytes": 3871,
+      "sha256": "975066a1553c2abe9f41481908a602c16f558a6f744d7c7be3ab13e87d4fb6ce"
+    },
+    {
+      "path": "tests/integration/runtime-ci.test.ts",
+      "bytes": 8382,
+      "sha256": "6d1a45499f26fdabf62e153f03bed83552a7ea007ed601cbe5504d1e5b297dbe"
+    }
+  ],
+  "independentChecks": {
+    "command": "node --test scripts/ci/*.test.mjs",
+    "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+    "node": "v24.15.0",
+    "npm": "12.2.0",
+    "exitCode": 0,
+    "discovered": 32,
+    "passed": 32,
+    "failed": 0,
+    "skipped": 0,
+    "cancelled": 0,
+    "todo": 0,
+    "reportedDurationMs": 135.150041,
+    "completion": "exec_command completed with exitCode 0 and no ongoing session",
+    "coverage": "Offline crypto, temporary files, mocked operator ports and parsed workflow; no service calls",
+    "counting": "12 unchanged disposable-target controls + 14 current runtime-fixture controls + 2 environment controls + 4 workflow controls. Author 30, Root parser 19 and Root workflow 4 receipts overlap and are not added."
+  },
+  "authorAffectedTypesLint": "Author root SDK/cleanup types and scoped root/CLI/JS lint exit0; Root null-parser and cleanup-successor affected controls/lint exit0. These receipts do not prove full CI compatibility.",
+  "actual": {
+    "backendManifest": "92fd1dad5fe420bea81460f0330bcf8fbf7d8f647d4260824a24cdb45bcffcf0",
+    "report": "native-actual/modern-ci-native-report1.json",
+    "reportSha256": "f89863b7e24163708b6cbec69516a25c416f1a406cc2fa9cb0a1fc686f37221d",
+    "indexedReceiptsVerified": 15,
+    "distinctCases": 7,
+    "targetExecutions": 14,
+    "targets": [
+      {
+        "kind": "sdk",
+        "projectId": 3176493,
+        "deploymentName": "steady-snake-253"
+      },
+      {
+        "kind": "cli",
+        "projectId": 3176494,
+        "deploymentName": "usable-sheep-908"
+      }
+    ],
+    "outcomes": [
+      {
+        "kind": "sdk",
+        "passed": 7,
+        "failed": 0,
+        "skipped": 0,
+        "assertions": [
+          "verifies the host JWT on HTTP and the official reactive client with the same scoped identity",
+          "denies unauthenticated, substituted tenant and cross-tenant verified identities",
+          "creates one canonical locked conversation for an idempotent request",
+          "preserves read-only capability restrictions and cross-tenant transcript privacy",
+          "unlocks only through admin policy, rejects a stale revision and persists one authoritative message",
+          "rejects client-provided arbitrary vectors through the preserved legacy endpoint",
+          "uses governed real extraction/embeddings with matching source and profile provenance, and replays one receipt"
+        ],
+        "commandReceipt": "native-actual/sdk-modern-suite2.json",
+        "closed": true,
+        "modelAttempts": 5,
+        "slotReleased": 5,
+        "retiredVerifiedRoles": [
+          "owner",
+          "reader",
+          "outsider"
+        ],
+        "tenantUncertainMicroUsd": 500000,
+        "financialRootWindowCountersUnchanged": true
+      },
+      {
+        "kind": "cli",
+        "passed": 7,
+        "failed": 0,
+        "skipped": 0,
+        "assertions": [
+          "verifies the host JWT on HTTP and the official reactive client with the same scoped identity",
+          "denies unauthenticated, substituted tenant and cross-tenant verified identities",
+          "creates one canonical locked conversation for an idempotent request",
+          "preserves read-only capability restrictions and cross-tenant transcript privacy",
+          "unlocks only through admin policy, rejects a stale revision and persists one authoritative message",
+          "rejects client-provided arbitrary vectors through the preserved legacy endpoint",
+          "uses governed real extraction/embeddings with matching source and profile provenance, and replays one receipt"
+        ],
+        "commandReceipt": "native-actual/cli-modern-suite2.json",
+        "closed": true,
+        "modelAttempts": 5,
+        "slotReleased": 5,
+        "retiredVerifiedRoles": [
+          "owner",
+          "reader",
+          "outsider"
+        ],
+        "tenantUncertainMicroUsd": 500000,
+        "financialRootWindowCountersUnchanged": true
+      }
+    ],
+    "unknownLiabilityMicroUsd": 1000000,
+    "heldSlots": 0,
+    "paidRetries": 0,
+    "cleanupModelCalls": 0,
+    "threeRemainingRetirements": true,
+    "alreadyCommittedSdkMainNotReplayed": true,
+    "projectsRetainedAtParentRequest": true,
+    "finalProjectDisposalStillRequired": true,
+    "actualGitHubRunner": false,
+    "legacySuitesAccepted": false
+  },
+  "resolvedFinding": {
+    "id": "CI_CLEANUP_CROSS_TARGET_FAIL_FAST",
+    "status": "CLOSED",
+    "originalEvidence": "Original author workflow pins one fail-fast shell step containing both retirement commands; source-confirmed SDK failure skips CLI retirement. Root reported an affected red control; this reviewer did not run the historical failing workflow.",
+    "repair": "Separate SDK and CLI retirement steps, both if:always(), without continue-on-error; final cleanup job remains a required outcome.",
+    "regression": "Independent unchanged current workflow controls, including each target cleanup still runs when the other cleanup fails, passed within current32."
+  },
+  "knownBreakingFindingsInReviewedBatch": [],
+  "remainingFullTaskCoverage": [
+    "Fresh accepted03-final security inventory and every distinct old/new authorization/effect class",
+    "Full original core/legacy/adversarial suites with unchanged discovery and honest skips/failures",
+    "Aggregate TS/UI/service outcomes for reconnect, queue/approval/cancel, stage/profile/graph/media boundaries and failure windows",
+    "Actual positive asynchronous video submission/callback/poll/materialization; current503 configuration remains unavailable",
+    "GitHub workflow activation with new verified disposable secrets/vars and full consumer outcome; old production-valued selectors remain unused",
+    "Final owned project disposal after parent authorizes retention end"
+  ],
+  "historyPreserved": [
+    "author original10file/source-check-receipt candidate beb80e...",
+    "modern-ci1 empty data stdout reader failure before paid effects",
+    "retirement1 terminal vocabulary fixture failure before retirement",
+    "retirement2 successful SDK main retirement followed by empty-null parser failure",
+    "Root null-parser exact known deleteScope successor, no broad empty-as-success",
+    "Root cleanup-failure source/control successor; original workflow snapshot remains historical"
+  ],
+  "report": "report1.md"
+}

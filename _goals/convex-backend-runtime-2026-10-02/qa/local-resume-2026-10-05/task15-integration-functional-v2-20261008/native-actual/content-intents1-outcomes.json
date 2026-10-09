@@ -1,0 +1,143 @@
+{
+  "status": "ACTUAL_FIVE_CONTENT_INTENTS_PASS",
+  "groups": [
+    {
+      "name": "ordinary title ready and exact replay/reconcile",
+      "status": "PASS",
+      "jobId": "content:b5ae447fad0b5cd0e69abee23a7b713de0914481b5905c3df6379d99d4c26608"
+    },
+    {
+      "name": "ordinary text ready and exact replay/reconcile",
+      "status": "PASS",
+      "jobId": "content:644bbb93fa904ec503f189bc69fcc70d003a144e6efa447695321480bfc5d7bd"
+    },
+    {
+      "name": "ordinary code ready and exact replay/reconcile",
+      "status": "PASS",
+      "jobId": "content:d05797c656ff1cb08d454e433892187f7a926f44485e509cd944fe0af4a0ab09"
+    },
+    {
+      "name": "ordinary sheet ready and exact replay/reconcile",
+      "status": "PASS",
+      "jobId": "content:f51b830cdeddc1afe7e3ca94340a3a810c128a44808446204cbbba2b5cb30a69"
+    },
+    {
+      "name": "ordinary suggestions ready and exact replay/reconcile",
+      "status": "PASS",
+      "jobId": "content:35ecf0422eab0521d400e62c9a0370e475c95ef5fddc574fc02351c64e08ccfa"
+    },
+    {
+      "name": "current auth negatives, request conflict and exact suggestion apply/replay",
+      "status": "PASS"
+    }
+  ],
+  "issued": [
+    {
+      "input": {
+        "version": 1,
+        "requestId": "native15c-title-v1",
+        "intent": "title",
+        "prompt": "A small blue circle centered on a plain white background.",
+        "conversationId": "conversation:01dffe56429467bc2c88d86b8ac419afaf8749b9de7dd0db2ec37b22f0803aea"
+      },
+      "accepted": {
+        "version": 1,
+        "jobId": "content:b5ae447fad0b5cd0e69abee23a7b713de0914481b5905c3df6379d99d4c26608",
+        "intent": "title",
+        "state": "pending",
+        "revision": 1,
+        "createdAt": 1791514219286,
+        "updatedAt": 1791514219286,
+        "deliveryExpiresAt": 1791521309782,
+        "conversationId": "conversation:01dffe56429467bc2c88d86b8ac419afaf8749b9de7dd0db2ec37b22f0803aea"
+      }
+    },
+    {
+      "input": {
+        "version": 1,
+        "requestId": "native15c-text-v1",
+        "intent": "text",
+        "prompt": "Write exactly two short sentences about a small blue circle on a white background."
+      },
+      "accepted": {
+        "version": 1,
+        "jobId": "content:644bbb93fa904ec503f189bc69fcc70d003a144e6efa447695321480bfc5d7bd",
+        "intent": "text",
+        "state": "pending",
+        "revision": 1,
+        "createdAt": 1791514227387,
+        "updatedAt": 1791514227387,
+        "deliveryExpiresAt": 1791521309782,
+        "artifactId": "artifact:content:644bbb93fa904ec503f189bc69fcc70d003a144e6efa447695321480bfc5d7bd"
+      }
+    },
+    {
+      "input": {
+        "version": 1,
+        "requestId": "native15c-code-v1",
+        "intent": "code",
+        "prompt": "Write JavaScript only: export function add(a, b) that returns a + b. No imports or execution."
+      },
+      "accepted": {
+        "version": 1,
+        "jobId": "content:d05797c656ff1cb08d454e433892187f7a926f44485e509cd944fe0af4a0ab09",
+        "intent": "code",
+        "state": "pending",
+        "revision": 1,
+        "createdAt": 1791514239056,
+        "updatedAt": 1791514239056,
+        "deliveryExpiresAt": 1791521309782,
+        "artifactId": "artifact:content:d05797c656ff1cb08d454e433892187f7a926f44485e509cd944fe0af4a0ab09"
+      }
+    },
+    {
+      "input": {
+        "version": 1,
+        "requestId": "native15c-sheet-v1",
+        "intent": "sheet",
+        "prompt": "Write CSV with the header label,count and one data row blue,1."
+      },
+      "accepted": {
+        "version": 1,
+        "jobId": "content:f51b830cdeddc1afe7e3ca94340a3a810c128a44808446204cbbba2b5cb30a69",
+        "intent": "sheet",
+        "state": "pending",
+        "revision": 1,
+        "createdAt": 1791514251219,
+        "updatedAt": 1791514251219,
+        "deliveryExpiresAt": 1791521309782,
+        "artifactId": "artifact:content:f51b830cdeddc1afe7e3ca94340a3a810c128a44808446204cbbba2b5cb30a69"
+      }
+    },
+    {
+      "input": {
+        "version": 1,
+        "requestId": "native15c-suggestions-v1",
+        "intent": "suggestions",
+        "prompt": "Suggest one small wording improvement to the pinned document. The originalText must be copied exactly from that document.",
+        "artifact": {
+          "artifactId": "artifact:content:644bbb93fa904ec503f189bc69fcc70d003a144e6efa447695321480bfc5d7bd",
+          "version": 2
+        }
+      },
+      "accepted": {
+        "version": 1,
+        "jobId": "content:35ecf0422eab0521d400e62c9a0370e475c95ef5fddc574fc02351c64e08ccfa",
+        "intent": "suggestions",
+        "state": "pending",
+        "revision": 1,
+        "createdAt": 1791514267547,
+        "updatedAt": 1791514267547,
+        "deliveryExpiresAt": 1791521309782,
+        "artifactId": "artifact:content:644bbb93fa904ec503f189bc69fcc70d003a144e6efa447695321480bfc5d7bd"
+      }
+    }
+  ],
+  "ordinaryGovernedCalls": 8,
+  "fullUnknownLiability": 800000,
+  "slotsReleased": 8,
+  "genuinePrimarySecondaryParentAndAccount": true,
+  "AgentCalls": 0,
+  "AgentParentAutomaticTitleDeferredToRootBrowser": true,
+  "modelRetryCount": 0
+}

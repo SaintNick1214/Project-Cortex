@@ -1,0 +1,54 @@
+{
+  "closedAtUtc": "2026-10-09T03:17:29.159Z",
+  "entries": [
+    {
+      "path": "packages/cortex-cli/src/utils/host-auth.ts",
+      "bytes": 2527,
+      "sha256": "947f873d29d277113ce292d66ce0bd6886310037eb19512e4b8a938c8899c895"
+    },
+    {
+      "path": "packages/cortex-cli/src/utils/__tests__/host-token-files.test.ts",
+      "bytes": 1396,
+      "sha256": "aadd4b0426b96a871550e7e6eebc87d27c8dd3de66e0e4032d2c3a24e11f5c28"
+    }
+  ],
+  "findings": "Private FIFO can block read-only open before fstat and outlive credential timer. O_NONBLOCK enables prompt nonregular rejection and cleanup.",
+  "toolchain": {
+    "node": "v24.15.0",
+    "npm": "12.2.0"
+  },
+  "checks": [
+    {
+      "command": "node --experimental-vm-modules ../../node_modules/jest/bin/jest.js --selectProjects unit --runInBand --forceExit=false --runTestsByPath src/utils/__tests__/host-client.test.ts src/utils/__tests__/host-token-files.test.ts --json --outputFile=<tests1.json>",
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli",
+      "exitCode": 0,
+      "elapsedMs": 446,
+      "tests": 11,
+      "failed": 0,
+      "skipped": 0,
+      "receipt": "tests1.json",
+      "log": "tests1.log",
+      "coverage": "Ten controlled client/auth cases and one real POSIX FIFO plus fresh child natural exit under a 3s product regression bound; no service operations"
+    },
+    {
+      "command": "node ../../node_modules/typescript/bin/tsc --noEmit --pretty false",
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli",
+      "exitCode": 0,
+      "elapsedMs": 768,
+      "output": ""
+    },
+    {
+      "command": "node ../../node_modules/eslint/bin/eslint.js src/utils/host-auth.ts src/utils/__tests__/host-token-files.test.ts --report-unused-disable-directives",
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli",
+      "exitCode": 0,
+      "elapsedMs": 559,
+      "output": ""
+    }
+  ],
+  "preservedSourcePreimage": "host-auth-preimage1.ts",
+  "authorSourceManifestPredecessor": "../cli-auth1/source-manifest1.json",
+  "applicability": "Only initial credential open flags differ from author12-path candidate; regular-file/rotation/symlink/client identity/deadline checks retained and affected tests rerun",
+  "forceExit": false,
+  "serviceEffects": 0,
+  "originalTask15Accepted": false
+}

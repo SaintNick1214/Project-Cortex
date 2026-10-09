@@ -1,0 +1,37 @@
+{
+  "status": "PASS_CONTROLLED_ONLY",
+  "source": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/root-basic-token1/source1.json",
+  "sourceMatches": [
+    {
+      "path": "packages/cortex-cli/templates/basic/src/cortex.ts",
+      "match": true
+    },
+    {
+      "path": "packages/cortex-cli/templates/basic/src/__tests__/host-token-files.test.ts",
+      "match": true
+    }
+  ],
+  "command": "PATH=/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin:$PATH node node_modules/vitest/vitest.mjs run src/__tests__/host-token-files.test.ts src/__tests__/cortex.test.ts",
+  "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli/templates/basic",
+  "node": "24.15.0",
+  "vitest": "5.0.3",
+  "exit": 0,
+  "naturalExit": true,
+  "suites": 2,
+  "passed": 30,
+  "failed": 0,
+  "skipped": 0,
+  "durationMilliseconds": 261,
+  "meaningfulOutcomes": [
+    "Real private FIFO rejected before3s bound with child natural exit and no pending open",
+    "Symlink and insecure mode refused; private regular token rotation still reread",
+    "Original oversize bound and runtime auth/scope/deadline/cleanup controls retained"
+  ],
+  "services": false,
+  "effects": {
+    "models": 0,
+    "services": 0,
+    "sourceEdits": 0,
+    "git": 0
+  }
+}

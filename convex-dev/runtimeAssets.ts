@@ -20,6 +20,20 @@ import { assetDenied, authorizeAsset, publicAsset, assetVersion, versionById, ad
 const scopeArgs = { tenantId: v.optional(v.string()), memorySpaceId: v.optional(v.string()) };
 const metadataArgs = { requestId: v.string(), contentHash: v.string(), sizeBytes: v.number(), mimeType: v.string(), filename: v.optional(v.string()) };
 type Job = Doc<"runtimeAssetJobs">;
+export type AssetDeliveryWitness = { deliveryExpiresAt?: number };
+/** Action time can advance after the final mutation's fixed-time snapshot. */
+export function assertAssetActionDelivery(witness: AssetDeliveryWitness): void {
+  if (!witness || typeof witness !== "object") assetDenied();
+  const deadline = witness.deliveryExpiresAt;
+  if (deadline !== undefined && (!Number.isFinite(deadline) || deadline > Number.MAX_SAFE_INTEGER || Date.now() >= deadline)) assetDenied();
+}
+async function assetDelivery(ctx: Pick<MutationCtx, "db">, reference: RuntimeAuthorityReference,
+  value: Doc<"runtimeAssetVersions">, capability: "storage:read" | "storage:write"): Promise<AssetDeliveryWitness> {
+  const deadlines: number[] = [];
+  await authorizeAsset(ctx, reference, value, capability, new Set(), deadlines);
+  const deadline = await deliveryExpiresAt(ctx, reference, deadlines, capability);
+  return deadline === undefined ? {} : { deliveryExpiresAt: deadline };
+}
 function scope(reference: RuntimeAuthorityReference) { if (!reference.memorySpaceId) assetDenied(); return { tenantId: reference.tenantId, memorySpaceId: reference.memorySpaceId }; }
 function metadata(args: { sizeBytes: number; contentHash: string; mimeType: string; filename?: string }) {
   try { assertAssetSize(args.sizeBytes); assetMediaKind(args.mimeType); } catch (error) { assetDenied(error instanceof Error && error.message === "ASSET_TOO_LARGE" ? "ASSET_TOO_LARGE" : "INVALID_ASSET_METADATA"); }
@@ -93,7 +107,20 @@ export const get = mutation({ args: { ...scopeArgs, assetId: v.string(), version
   return { ...publicAsset(value), ...(expiresAt === undefined ? {} : { deliveryExpiresAt: expiresAt }) };
 } });
 export const downloadAuthorization = internalMutation({ args: { ...scopeArgs, assetId: v.string(), version: v.number() }, handler: async (ctx, args) => { const actor = await requireDataAuthority(ctx, args, "storage:read"); const reference = dataAuthorityReference(actor); const value = await assetVersion(ctx, scope(actor), args.assetId, args.version); if (!value) assetDenied(); await authorizeAsset(ctx, reference, value); return { metadata: publicAsset(value), storageId: value.storageId, reference }; } });
-export const downloadCheckpoint = internalMutation({ args: { reference: runtimeAuthorityReference, assetId: v.string(), version: v.number(), contentHash: v.string() }, handler: async (ctx, args) => { const value = await assetVersion(ctx, scope(args.reference), args.assetId, args.version); if (!value || value.contentHash !== args.contentHash) assetDenied(); await authorizeAsset(ctx, args.reference, value); return null; } });
+export const downloadCheckpoint = internalMutation({ args: { reference: runtimeAuthorityReference, assetId: v.string(), version: v.number(), contentHash: v.string(), capability: v.optional(v.union(v.literal("storage:read"), v.literal("storage:write"))) }, handler: async (ctx, args) => {
+  const value = await assetVersion(ctx, scope(args.reference), args.assetId, args.version);
+  if (!value || value.contentHash !== args.contentHash) assetDenied();
+  return assetDelivery(ctx, args.reference, value, args.capability ?? "storage:read");
+} });
+/** Fresh delivery of an already committed version; never alters ready ownership. */
+export const storedDeliveryCheckpoint = internalMutation({ args: { jobId: v.string() }, handler: async (ctx, args) => {
+  const job = await jobRow(ctx, args.jobId);
+  if (job.state !== "ready") assetDenied("ASSET_NOT_READY");
+  const value = await versionById(ctx, scope(job.reference), job.versionId);
+  if (!value || value.assetId !== job.assetId || value.assetVersion !== job.assetVersion
+    || value.contentHash !== job.contentHash || value.sizeBytes !== job.sizeBytes || value.mimeType !== job.mimeType) assetDenied();
+  return assetDelivery(ctx, job.reference, value, "storage:write");
+} });
 export const remove = mutation({ args: { ...scopeArgs, assetId: v.string() }, handler: async (ctx, args) => {
   const actor = await requireDataAuthority(ctx, args, "storage:write"); const s = scope(actor); const head = await ctx.db.query("runtimeAssets").withIndex("by_asset", q => q.eq("tenantId", s.tenantId).eq("memorySpaceId", s.memorySpaceId).eq("assetId", args.assetId)).unique(); if (!head) assetDenied();
   await recheckAuthority(ctx, dataAuthorityReference(actor), { ...s, capability: "storage:write", resource: { ...s, resourceType: "storage", resourceId: head.assetId, ownerPrincipalId: head.ownerPrincipalId } });
@@ -136,13 +163,23 @@ export const abandonJob = internalMutation({ args: { jobId: v.string(), storageI
 export async function storeJobBytes(ctx: ActionCtx, job: { jobId: string; marker: string }, bytes: ArrayBuffer): Promise<RuntimeAssetVersion> {
   try { assertAssetSize(bytes.byteLength); } catch { assetDenied("ASSET_TOO_LARGE"); }
   let storageId: Id<"_storage"> | undefined;
-  try { storageId = await ctx.storage.store(new Blob([bytes], { type: job.marker })); await ctx.runMutation(makeFunctionReference<"mutation">("runtimeAssets:stageStorage"), { jobId: job.jobId, storageId }); return await ctx.runMutation(makeFunctionReference<"mutation", { jobId: string }, RuntimeAssetVersion>("runtimeAssets:finalize"), { jobId: job.jobId }); }
+  try {
+    storageId = await ctx.storage.store(new Blob([bytes], { type: job.marker }));
+    await ctx.runMutation(makeFunctionReference<"mutation">("runtimeAssets:stageStorage"), { jobId: job.jobId, storageId });
+    const value = await ctx.runMutation(makeFunctionReference<"mutation", { jobId: string }, RuntimeAssetVersion>("runtimeAssets:finalize"), { jobId: job.jobId });
+    const witness = await ctx.runMutation(makeFunctionReference<"mutation", { jobId: string }, AssetDeliveryWitness>("runtimeAssets:storedDeliveryCheckpoint"), { jobId: job.jobId });
+    assertAssetActionDelivery(witness); return value;
+  }
   catch (error) { try { await ctx.runMutation(makeFunctionReference<"mutation">("runtimeAssets:abandonJob"), { jobId: job.jobId, ...(storageId ? { storageId } : {}) }); } catch { /* Durable lease cleanup owns unresolved storage. */ } throw error; }
 }
 export async function storeGeneratedAsset(ctx: ActionCtx, reference: RuntimeAuthorityReference, input: { requestId: string; mimeType: string; lineage: Extract<RuntimeAssetLineage, { kind: "generated" }>; filename?: string }, blob: Blob): Promise<RuntimeAssetVersion> {
   try { assertAssetSize(blob.size); } catch { assetDenied("ASSET_TOO_LARGE"); }
   const bytes = await blob.arrayBuffer(); const contentHash = await assetContentHash(bytes);
-  const job = await ctx.runMutation(makeFunctionReference<"mutation", Record<string, unknown>, { jobId: string; marker: string; ready?: RuntimeAssetVersion }>("runtimeAssets:beginGenerated"), { reference, ...input, contentHash, sizeBytes: bytes.byteLength }); return job.ready ?? await storeJobBytes(ctx, job, bytes);
+  const job = await ctx.runMutation(makeFunctionReference<"mutation", Record<string, unknown>, { jobId: string; marker: string; ready?: RuntimeAssetVersion }>("runtimeAssets:beginGenerated"), { reference, ...input, contentHash, sizeBytes: bytes.byteLength });
+  if (!job.ready) return storeJobBytes(ctx, job, bytes);
+  const witness = await ctx.runMutation(makeFunctionReference<"mutation", Record<string, unknown>, AssetDeliveryWitness>("runtimeAssets:downloadCheckpoint"),
+    { reference, assetId: job.ready.assetId, version: job.ready.assetVersion, contentHash: job.ready.contentHash, capability: "storage:write" });
+  assertAssetActionDelivery(witness); return job.ready;
 }
 /** Private byte access and full encoded protocol cap are independent of app delivery. */
 export async function readPrivateProviderAsset(ctx: ActionCtx, reference: RuntimeAuthorityReference, args: { assetId: string; version: number; protocol: "image-inline-v1" | "video-inline-v1" }) {
@@ -153,7 +190,8 @@ export async function readPrivateProviderAsset(ctx: ActionCtx, reference: Runtim
   let binary = ""; for (let offset = 0; offset < bytes.length; offset += 8192) binary += String.fromCharCode(...bytes.subarray(offset, offset + 8192));
   const data = `data:${mime};base64,${btoa(binary)}`; const envelope = args.protocol === "image-inline-v1" ? { version: 1, protocol: args.protocol, image: data } : { version: 1, protocol: args.protocol, video: data };
   const protocolBytes = new TextEncoder().encode(canonicalModelJson(envelope)).byteLength; if (protocolBytes > 16 * 1024 * 1024) assetDenied("PROVIDER_INPUT_TOO_LARGE");
-  await ctx.runMutation(makeFunctionReference<"mutation">("runtimeAssets:downloadCheckpoint"), { reference, assetId: args.assetId, version: args.version, contentHash: held.metadata.contentHash }); return { metadata: held.metadata, protocol: args.protocol, protocolBytes, envelope };
+  const witness = await ctx.runMutation(makeFunctionReference<"mutation", Record<string, unknown>, AssetDeliveryWitness>("runtimeAssets:downloadCheckpoint"), { reference, assetId: args.assetId, version: args.version, contentHash: held.metadata.contentHash });
+  assertAssetActionDelivery(witness); return { metadata: held.metadata, protocol: args.protocol, protocolBytes, envelope };
 }
 export const providerAuthorization = internalMutation({ args: { reference: runtimeAuthorityReference, assetId: v.string(), version: v.number() }, handler: async (ctx, args) => { const value = await assetVersion(ctx, scope(args.reference), args.assetId, args.version); if (!value) assetDenied(); await authorizeAsset(ctx, args.reference, value); return { metadata: publicAsset(value), storageId: value.storageId }; } });
 export const readProviderInput = internalAction({ args: { reference: runtimeAuthorityReference, assetId: v.string(), version: v.number(), protocol: v.union(v.literal("image-inline-v1"), v.literal("video-inline-v1")) }, handler: async (ctx, args) => readPrivateProviderAsset(ctx, args.reference, args) });

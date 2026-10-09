@@ -2,7 +2,7 @@
   "name": "@cortexmemory/chat-sdk-quickstart",
   "version": "1.0.0",
   "private": true,
-  "description": "Cortex Memory + AI Chatbot SDK Quickstart - Based on vercel/ai-chatbot at commit 9d5d8a3ea7968522a37ab1cc145a6c0ef8a9dd2e",
+  "description": "Authenticated Cortex remote Agent chat and backend content jobs",
   "scripts": {
     "build": "next build --webpack",
     "convex:deploy": "convex deploy",
@@ -17,12 +17,8 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@ai-sdk/anthropic": "^4.0.71",
-    "@ai-sdk/gateway": "^4.0.103",
-    "@ai-sdk/openai": "^4.0.83",
     "@ai-sdk/provider": "^4.0.21",
     "@ai-sdk/react": "4.0.130",
-    "@anthropic-ai/sdk": "^0.131.0",
     "@codemirror/lang-javascript": "^6.2.5",
     "@codemirror/lang-python": "^6.2.1",
     "@codemirror/state": "^6.7.6",
@@ -72,7 +68,6 @@
     "next": "16.3.8",
     "next-auth": "5.0.0-beta.32",
     "next-themes": "^0.4.6",
-    "openai": "^7.27.0",
     "orderedmap": "^2.1.1",
     "papaparse": "^5.7.0",
     "prosemirror-example-setup": "^1.2.3",

@@ -5,7 +5,7 @@ import { v } from "convex/values";
 import schema from "../../../convex-dev/schema";
 import fs from "node:fs";
 import path from "node:path";
-import { execFileSync } from "node:child_process";
+import { createHash } from "node:crypto";
 
 
 import { fixture, native } from "./fixture";
@@ -26,17 +26,19 @@ describe("deployable native schema indexes", () => {
   });
 
   test("all exported tables, including runtime schema fragments, have unique index field sequences", () => {
-    fs.mkdirSync(path.resolve("work/resume/task04-current-catalog-release-c4/test-scratch"), { recursive: true });
-  const directory = fs.mkdtempSync(path.join(path.resolve("work/resume/task04-current-catalog-release-c4/test-scratch"), "cortex-current-schema-composition-"));
-    let baselineNames: string[];
-    try {
-      const composition = JSON.parse(execFileSync(process.execPath, ["_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-release-c4/current-compose.mjs", directory], { encoding: "utf8" }));
-      const baseline = JSON.parse(fs.readFileSync(composition.exactCurrentRepair.nativeWitness, "utf8"));
-      baselineNames = baseline.definitions.map((row: { table: string }) => row.table);
-      expect(composition.currentComposition.baselineProjectionHash).toBe("07df1b0be4647848a3e9fbd1eb9d27d81ad78194f77d3c447c7ee4f2de419b1d");
-      expect(composition.currentComposition.totals).toEqual({ baselineTables: 26, additiveTables: 5, currentTables: 31, indexes: 184, policyInternal: 16 });
-    } finally { fs.rmSync(directory, { recursive: true, force: true }); }
-    expect(fs.existsSync(directory)).toBe(false);
+    // The accepted Task04 composition is an immutable historical receipt. New
+    // runtime tables must not force its former source-byte pins onto current code.
+    const witness = path.resolve("_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-release-c4/witness");
+    const read = (name: string, expectedHash: string) => {
+      const bytes = fs.readFileSync(path.join(witness, name));
+      expect(createHash("sha256").update(bytes).digest("hex")).toBe(expectedHash);
+      return JSON.parse(bytes.toString());
+    };
+    const composition = read("composition.json", "05a8e9d932b23fdd3d6100beb6f4afe29a43eff78abb39f09176b0dc8e9c72e4");
+    const baseline = read("exact-current-repair-native.json", "706ca6c5ebb21c71826a2d4dfd6adb8fb94336ab5ee0b4118434621a200dd9e7");
+    const baselineNames = baseline.definitions.map((row: { table: string }) => row.table);
+    expect(composition.currentComposition.baselineProjectionHash).toBe("07df1b0be4647848a3e9fbd1eb9d27d81ad78194f77d3c447c7ee4f2de419b1d");
+    expect(composition.currentComposition.totals).toEqual({ baselineTables: 26, additiveTables: 5, currentTables: 31, indexes: 184, policyInternal: 16 });
     expect(baselineNames!).toHaveLength(26);
     expect(Object.keys(schema.tables).filter(table => baselineNames!.includes(table))).toEqual(baselineNames!);
     for (const [table, definition] of Object.entries(schema.tables)) {

@@ -1,0 +1,34 @@
+{
+  "version": 1,
+  "node": "24.15.0",
+  "npm": "12.2.0",
+  "uniqueCurrentPassedAssertions": 28,
+  "failed": 0,
+  "skipped": 0,
+  "tests": "content-tests3.json",
+  "backendTypes": {
+    "receipt": "checks-run2.json",
+    "name": "backend-types2",
+    "exitCode": 0
+  },
+  "sdkTypes": {
+    "receipt": "checks-run4.json",
+    "name": "sdk-types4",
+    "exitCode": 0
+  },
+  "lint": {
+    "productReceipt": "checks-run2.json",
+    "latestTestReceipt": "checks-run4.json",
+    "exitCode": 0
+  },
+  "finalTestTypingChange": "After 28/28 run3, only the structural Workflow test parameter name changed from step to stepContext to remove TS2502; runtime code and assertions unchanged. SDK types4 and lint4 validate the final source.",
+  "forceExit": false,
+  "diffCheckExitCode": 0,
+  "effects": {
+    "models": 0,
+    "service": 0,
+    "builds": 0,
+    "deployments": 0,
+    "gitMutations": 0
+  }
+}

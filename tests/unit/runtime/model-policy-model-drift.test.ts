@@ -6,12 +6,12 @@ import type { DeploymentPolicyManifest, QualifiedDispatchEvidence } from "../../
 import type { ModelCallRequest, TrustedModelPolicyRecord } from "../../../src/domain/model-policy";
 import { canonicalModelJson } from "../../../src/domain/model-policy";
 import { DEFAULT_EMBEDDING_PROFILE, semanticHash } from "../../../src/domain/profile";
-import { memoryFixture } from "../runtimeMemory/fixture";
 
 const lookup = jest.fn<(id: string, revision: number) => DeploymentPolicyManifest | undefined>();
 const trustedBootstrap = await import("../../../convex-dev/runtimeModelPolicyBootstrap");
 jest.unstable_mockModule("../../../convex-dev/runtimeModelPolicyBootstrap", () => ({ qualifiedTerminalModelId: trustedBootstrap.qualifiedTerminalModelId, lookupDeploymentManifest: lookup, isTrustedDeploymentManifest: (entry: DeploymentPolicyManifest) => entry === root && entry.classification === "fixture-synthetic" }));
 const ledger = await import("../../../convex-dev/runtimeModelPolicy");
+const { memoryFixture } = await import("../runtimeMemory/fixture");
 const hash = "a".repeat(64);
 const clock = 1_000_000;
 const limits = { inputTokens: 1000, contextTokens: 2000, outputTokens: 500, toolSteps: 4, timeoutMs: 10000,

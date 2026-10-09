@@ -6,7 +6,8 @@ import { ASSET_MAX_BYTES, assetContentHash, assetMediaKind, readBoundedAsset } f
 import type { RuntimeAssetVersion } from "../src/domain/assets";
 import type { RuntimeAuthorityReference } from "../src/auth/verified";
 import type { Id } from "./_generated/dataModel";
-import { storeJobBytes } from "./runtimeAssets";
+import { assertAssetActionDelivery, storeJobBytes } from "./runtimeAssets";
+import type { AssetDeliveryWitness } from "./runtimeAssets";
 const headers = { "Cache-Control": "no-store", "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "Authorization, Content-Type", "Access-Control-Allow-Methods": "GET, POST, OPTIONS", "X-Content-Type-Options": "nosniff" };
 function fail(error: unknown): Response {
   const known = error instanceof ConvexError && typeof error.data === "object" && error.data !== null && "code" in error.data ? String(error.data.code) : error instanceof Error ? error.message : "ASSET_OPERATION_FAILED";
@@ -29,6 +30,9 @@ export const uploadAsset = httpAction(async (ctx, request) => {
     await ctx.runMutation(makeFunctionReference<"mutation">("runtimeAssets:uploadCheckpoint"), { reference });
     const job = await ctx.runMutation(makeFunctionReference<"mutation", Record<string, unknown>, { jobId: string; marker: string; ready?: RuntimeAssetVersion }>("runtimeAssets:beginUpload"), { ...selectors(url), requestId, mimeType, contentHash, sizeBytes: bytes.byteLength, ...(url.searchParams.has("filename") ? { filename: url.searchParams.get("filename")! } : {}) });
     const value = job.ready ?? await storeJobBytes(ctx, job, bytes.buffer);
+    const witness = await ctx.runMutation(makeFunctionReference<"mutation", Record<string, unknown>, AssetDeliveryWitness>("runtimeAssets:downloadCheckpoint"),
+      { reference, assetId: value.assetId, version: value.assetVersion, contentHash: value.contentHash, capability: "storage:write" });
+    assertAssetActionDelivery(witness);
     return new Response(JSON.stringify(value), { status: 200, headers: { ...headers, "Content-Type": "application/json" } });
   } catch (error) { return fail(error); }
 });
@@ -42,7 +46,8 @@ export const downloadAsset = httpAction(async (ctx, request) => {
     if (blob.size > ASSET_MAX_BYTES) throw new Error("ASSET_TOO_LARGE");
     const bytes = await readBoundedAsset(blob.stream());
     if (bytes.byteLength !== held.metadata.sizeBytes || await assetContentHash(bytes.buffer) !== held.metadata.contentHash) throw new Error("ASSET_INTEGRITY_FAILED");
-    await ctx.runMutation(makeFunctionReference<"mutation">("runtimeAssets:downloadCheckpoint"), { reference: held.reference, assetId, version: Number(raw), contentHash: held.metadata.contentHash });
+    const witness = await ctx.runMutation(makeFunctionReference<"mutation", Record<string, unknown>, AssetDeliveryWitness>("runtimeAssets:downloadCheckpoint"), { reference: held.reference, assetId, version: Number(raw), contentHash: held.metadata.contentHash });
+    assertAssetActionDelivery(witness);
     return new Response(bytes, { status: 200, headers: { ...headers, "Content-Type": held.metadata.mimeType, "Content-Length": String(bytes.byteLength) } });
   } catch (error) { return fail(error); }
 });

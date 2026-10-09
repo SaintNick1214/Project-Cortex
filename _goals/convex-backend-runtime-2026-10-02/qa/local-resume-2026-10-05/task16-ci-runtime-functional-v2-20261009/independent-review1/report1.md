@@ -1,0 +1,47 @@
+# Independent Task16 CI fixture batch review
+
+**PASS 4.0/5 for this bounded source and actual-run batch. Full original Task16 remains INCOMPLETE.** No original requirement or acceptance criterion is marked wholly complete by these outcomes.
+
+This non-author review covers the ten CI fixture files from candidate `beb80e27a1e6cfa9c3081296e59cc28866752cb37dd8b37ecacc6c7b5ecc078d`, plus the two Root null-parser replacements and two Root cleanup replacements within that same ten-file set. Current combined digest: `13919c08989275afd4dcaa8f8a1cbfc8b947942f345b8b0ddb59aa53dc2212dd`. All ten current hashes match their applicable source receipts. I authored separate Task15 CLI/content changes; those changes are excluded from this judgment. Product source, Git, services and credentials were not mutated by this review.
+
+The goal's functional acceptance policy governs the scoped scores: requirement fulfillment4, code quality4, test quality4, pattern adherence4, completeness4. There is no unresolved concretely reachable breaking finding in the reviewed CI fixture batch. These scores are not scores for full Task16.
+
+## Verified source behavior
+
+- The unchanged disposable-target guard executes before auth writes, deployment and operator calls; selectors bind separate approved development targets and fail closed on target substitution.
+- Fixture authority comes from verified RS256 host JWTs and actual provisioned grants. Owner, read-only reader and distinct outsider retain separate scopes. Test labels do not grant authority.
+- Internal operator calls use the pinned Convex CLI and an endpoint allowlist, finite timeout/output cap and minimal child environment. Consumer jobs receive scoped JWTs, not deployment keys. Auth configuration contains only public verification material and refuses existing host-auth overwrite.
+- Policy installation selects an exact compiled reviewed manifest. The fixture does not attest synthetic qualification, clear uncertain charges or substitute random embeddings as successful provenance.
+- Retirement targets only per-attempt CI tenants and preserves tombstones and financial history. Public current session reads must deny all three roles after retirement; a network error or unauthenticated response cannot pass that assertion.
+- Original consumer discovery is retained. The effective root discovery is226 files; CLI E2E discovery is5. The compatibility inventory explicitly records legacy constructors, manual-vector fixtures and conditional skips without claiming those suites have passed.
+
+## Closed finding
+
+The original workflow had both target retirement commands in one fail-fast shell step, so an SDK retirement failure skipped CLI cleanup. The Root successor now has distinct SDK and CLI retirement steps, each `if: always()`, without `continue-on-error`. Cleanup still waits for all consumers and its failure remains a required final-job failure. The current regression verifies independent steps and failure semantics. This was a source-confirmed control-flow defect; no live GitHub failure is fabricated.
+
+Evidence: [current workflow](/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/.github/workflows/pr-checks.yml), [workflow controls](/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/scripts/ci/workflow-runtime-fixtures.test.mjs), [Root cleanup source/checks](/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-ci-runtime-functional-v2-20261009/root-cleanup-failure1/checks1.json).
+
+The separate actual SDK retirement had already committed before the official CLI's empty successful null output was misparsed. The Root parser accepts empty successful output only for `runtimeAuth:deleteScope`; provision, recheck and policy install still require valid exact JSON results. Actual closure retired only the three remaining scopes and did not replay SDK main retirement.
+
+## Checks and actual outcomes
+
+My independent offline invocation, `node --test scripts/ci/*.test.mjs`, ran from `/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion` on Node24.15.0/npm12.2.0: **32/32 passed, zero failed, skipped or cancelled**, and completed normally. This is12 unchanged target controls,14 current fixture controls,2 environment controls and4 workflow controls. Earlier author30, Root parser19 and Root workflow4 selections overlap and are not summed. Author affected types/lint and both Root successor lint receipts are green; no unchanged full suite was repeated here.
+
+The actual registered runtime suite passed the same **seven distinct cases on each of two verified fresh development projects**: SDK3176493/steady-snake-253 and CLI3176494/usable-sheep-908. This is14 executions, not14 distinct product cases. Assertions cover verified HTTP/reactive identity; no-JWT/substituted-scope/foreign denial; canonical idempotent locked conversation; reader restrictions; admin unlock, stale revision denial and one canonical message; random-vector denial; real governed extraction/embedding/semantic recall with matching source/profile and repeated-remember receipt replay.
+
+Each target recorded five genuine confirmed-terminal native attempts; all ten finished slots are released. Scope retirement preserves1,000,000microUSD of full uncertain liability, reserved units0 and active concurrency0. I compared every recorded account's financial root/window/limits/reserved/settled/uncertain/concurrency fields before and after cleanup: exact equality. All three identities on both targets now receive current authorization denial. Owned children and clients are closed. The two projects remain retained at the parent's request; final project disposal remains an explicit obligation.
+
+The actual backend manifest is `92fd1dad5fe420bea81460f0330bcf8fbf7d8f647d4260824a24cdb45bcffcf0`. I independently verified all15 indexed receipt hashes and both7/7 Jest results/closed command receipts. No GitHub activation, new proof, paid retry or legacy-suite success is inferred from these outcomes. Evidence: [closed native report](/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-ci-runtime-functional-v2-20261009/native-actual/modern-ci-native-report1.json), [SDK actual assertions](/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-ci-runtime-functional-v2-20261009/native-actual/sdk-modern-suite2-results.json), [CLI actual assertions](/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-ci-runtime-functional-v2-20261009/native-actual/cli-modern-suite2-results.json), [retirement closure](/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-ci-runtime-functional-v2-20261009/native-actual/retirement3-outcomes.json).
+
+## Original Task16 mapping and remaining work
+
+| Original requirement | This batch demonstrates | Full status |
+|---|---|---|
+| Verified disposable auth/model/vector/graph/storage/media prerequisites and cleanup | Two fresh dev targets, current JWT/grants, compiled policy, actual model/vector outcomes, scoped retirement receipts | PARTIAL: aggregate graph/storage/media prerequisites and final disposal are not proven by this slice |
+| Text/tool/native output, reconnect, queue, approval/cancel, indexing/corrections/barriers/profile/media | Canonical transcript controls and governed small-profile memory remember/recall | PARTIAL: the remaining cross-layer/UI/native outcomes are outside this seven-case slice |
+| Admission/finalization/belief/external/graph/file failure windows and truthful unknown | Narrow operator/cleanup failure propagation, paid replay0 and retained unknown liability | PARTIAL: original aggregate failure windows remain |
+| Auth negatives across all old/new paths, background deletion/revocation, one writer/policy coverage | Distinct owner/reader/outsider/no-JWT controls on modern session/transcript/memory and retired scopes | PARTIAL: every old/new effect class and background path still needs final03/16 coverage |
+
+All four original acceptance criteria remain partially demonstrated rather than accepted wholesale. The matrix still needs full TypeScript/UI/service cases; broad duplicate/stale/deleted protection; contiguous barriers, both profiles, late graph and20M/private/async media outcomes; and original full-suite discovery/execution/cleanup compatibility. Async video503 is unavailable, not completed. Legacy and full-core suites remain discovered and unaccepted; their authentication/vector/purge incompatibilities must not be hidden by narrowed commands. Actual GitHub configuration/activation was not performed. Prior failed receipts are retained and never relabeled green.
+
+The exact ten-file manifest, independent command/counts, native hash pins, resolved finding and remaining coverage are in [verdict1.json](/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-ci-runtime-functional-v2-20261009/independent-review1/verdict1.json). No additional source repair or review gate is requested for this bounded batch.
