@@ -5,7 +5,7 @@ import { execFileSync, spawnSync } from 'node:child_process';
 import { mkdtempSync, mkdirSync, readFileSync, writeFileSync, rmSync, symlinkSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
-import { assertCandidateCheckout, createCandidateArtifacts, validateArchive, verifyCandidateArtifacts } from '../scripts/ci-candidate-artifacts.mjs';
+import { assertCandidateCheckout, createCandidateArtifacts, parsePackArchive, validateArchive, verifyCandidateArtifacts } from '../scripts/ci-candidate-artifacts.mjs';
 
 const sha = 'a'.repeat(40);
 const hash = bytes => createHash('sha256').update(bytes).digest('hex');
@@ -37,6 +37,21 @@ const fixture = () => {
 };
 const withFixture = fn => { const f = fixture(); try { return fn(f); } finally { rmSync(f.root, { recursive: true, force: true }); } };
 const mutateManifest = (f, fn) => { const file = join(f.directory, 'manifest.json'), manifest = JSON.parse(readFileSync(file, 'utf8')); fn(manifest); writeFileSync(file, JSON.stringify(manifest)); };
+
+test('pack parser supports the npm12 package-keyed output and legacy single-package array', () => {
+  for (const name of ['@cortexmemory/sdk', '@cortexmemory/vercel-ai-provider']) {
+    const packed = { name, version: '1.2.3', filename: `${name.slice(1).replace('/', '-')}-1.2.3.tgz` };
+    assert.equal(parsePackArchive(JSON.stringify({ [name]: packed }), name), packed.filename);
+    assert.equal(parsePackArchive(JSON.stringify([packed]), name), packed.filename);
+  }
+});
+
+test('pack parser refuses missing or multiple archives, wrong identity and unsafe filenames', () => {
+  const name = '@cortexmemory/sdk', packed = { name, version: '1.2.3', filename: 'cortexmemory-sdk-1.2.3.tgz' };
+  for (const output of [null, [], {}, [packed, packed], { [name]: packed, '@other/package': packed }, { '@other/package': packed }, { [name]: null }, { [name]: { ...packed, name: '@other/package' } }, [{ ...packed, name: '@other/package' }], { [name]: { ...packed, version: 'invalid' } }]) assert.throws(() => parsePackArchive(JSON.stringify(output), name));
+  for (const filename of ['../escape.tgz', '/tmp/escape.tgz', 'dir/escape.tgz', 'dir\\escape.tgz', 'escape.tgz\n', 'not-an-archive']) for (const output of [[{ ...packed, filename }], { [name]: { ...packed, filename } }]) assert.throws(() => parsePackArchive(JSON.stringify(output), name));
+  assert.throws(() => parsePackArchive('{', name));
+});
 
 test('real candidate archives preserve SHA, byte hashes, package identities and built composer files', () => withFixture(f => {
   const verified = verifyCandidateArtifacts({ ...f, sha });

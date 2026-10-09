@@ -28,6 +28,15 @@ function packageInfo(manifest, expected) {
   return { name: manifest.name, version: manifest.version };
 }
 
+/** npm12 keys pack JSON by package name; earlier npm emits an array. */
+export function parsePackArchive(stdout, expectedName) {
+  const output = JSON.parse(stdout);
+  const packed = Array.isArray(output) ? output : output && typeof output === 'object' && Object.keys(output).length === 1 && Object.hasOwn(output, expectedName) ? [output[expectedName]] : [];
+  if (packed.length !== 1 || typeof packed[0]?.filename !== 'string' || !/^[A-Za-z0-9_.-]+\.tgz$/.test(packed[0].filename) || !packed[0].filename.endsWith('.tgz')) throw new Error('Expected one explicit candidate package archive');
+  packageInfo(packed[0], expectedName);
+  return packed[0].filename;
+}
+
 function archivePackage(file, expected) {
   validateArchive(file, 'package');
   return packageInfo(JSON.parse(run(['-xOf', file, 'package/package.json'])), expected);
@@ -66,9 +75,8 @@ export function createCandidateArtifacts({ directory, sha, root = process.cwd() 
   if (readdirSync(dir).length) throw new Error('Candidate artifact directory must be empty; artifacts are immutable');
   for (const [name, workspace] of [['sdk.tgz', undefined], ['provider.tgz', '@cortexmemory/vercel-ai-provider']]) {
     const args = ['pack', '--ignore-scripts', '--json', '--pack-destination', dir, workspace ? `--workspace=${workspace}` : '--workspaces=false'];
-    const packed = JSON.parse(execFileSync('npm', args, { cwd: root, encoding: 'utf8', maxBuffer: 4 * 1024 * 1024 }));
-    if (!Array.isArray(packed) || packed.length !== 1 || !/^[A-Za-z0-9_.-]+\.tgz$/.test(packed[0].filename ?? '')) throw new Error('Expected one explicit candidate package archive');
-    renameSync(join(dir, packed[0].filename), join(dir, name));
+    const filename = parsePackArchive(execFileSync('npm', args, { cwd: root, encoding: 'utf8', maxBuffer: 4 * 1024 * 1024 }), names[name]);
+    renameSync(join(dir, filename), join(dir, name));
   }
   const cliSource = join(root, 'packages/cortex-cli');
   run(['-czf', join(dir, 'cli-dist.tgz'), '-C', cliSource, 'dist']);
