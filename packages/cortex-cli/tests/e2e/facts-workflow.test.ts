@@ -6,7 +6,7 @@
  */
 
 import { describe, it, expect, beforeAll, afterAll } from "@jest/globals";
-import { Cortex } from "@cortexmemory/sdk";
+import { Cortex } from "../helpers/operator-client.js";
 import { cleanupTestData } from "../setup.js";
 
 // Skip these tests if no Convex URL is configured

@@ -1,3 +1,6 @@
+import { getChatById, getDocumentById } from "../db/queries";
+import { requireScope } from "../cortex";
+import { ChatSDKError } from "../errors";
 import type { UIMessageStreamWriter } from "ai";
 import type { Session } from "next-auth";
 import { codeDocumentHandler } from "@/artifacts/code/server";
@@ -20,6 +23,7 @@ export type SaveDocumentProps = {
 export type CreateDocumentCallbackProps = {
   id: string;
   title: string;
+  instructions?: string;
   dataStream: UIMessageStreamWriter<ChatMessage>;
   session: Session;
   /** Optional conversation ID to link the artifact to */
@@ -53,48 +57,62 @@ export function createDocumentHandler<T extends ArtifactKind>(config: {
   return {
     kind: config.kind,
     onCreateDocument: async (args: CreateDocumentCallbackProps) => {
+      await requireScope(args.session?.user?.id);
+      if (
+        args.conversationId &&
+        !(await getChatById({ id: args.conversationId }))
+      )
+        throw new ChatSDKError("not_found:chat");
       const draftContent = await config.onCreateDocument({
-        conversationId: args.conversationId,
-        dataStream: args.dataStream,
         id: args.id,
-        messageId: args.messageId,
-        session: args.session,
         title: args.title,
+        instructions: args.instructions,
+        dataStream: args.dataStream,
+        session: args.session,
+        conversationId: args.conversationId,
+        messageId: args.messageId,
       });
 
       if (args.session?.user?.id) {
         await saveDocument({
-          content: draftContent,
-          conversationId: args.conversationId,
           id: args.id,
-          kind: config.kind,
-          messageId: args.messageId,
           title: args.title,
+          content: draftContent,
+          kind: config.kind,
           userId: args.session.user.id,
+          conversationId: args.conversationId,
+          messageId: args.messageId,
         });
       }
+
+      return;
     },
     onUpdateDocument: async (args: UpdateDocumentCallbackProps) => {
+      await requireScope(args.session?.user?.id);
+      const document = await getDocumentById({ id: args.document.id });
+      if (!document) throw new ChatSDKError("not_found:document");
       const draftContent = await config.onUpdateDocument({
-        conversationId: args.conversationId,
-        dataStream: args.dataStream,
+        document,
         description: args.description,
-        document: args.document,
-        messageId: args.messageId,
+        dataStream: args.dataStream,
         session: args.session,
+        conversationId: args.conversationId,
+        messageId: args.messageId,
       });
 
       if (args.session?.user?.id) {
         await saveDocument({
-          content: draftContent,
-          conversationId: args.conversationId,
           id: args.document.id,
-          kind: config.kind,
-          messageId: args.messageId,
           title: args.document.title,
+          content: draftContent,
+          kind: config.kind,
           userId: args.session.user.id,
+          conversationId: args.conversationId,
+          messageId: args.messageId,
         });
       }
+
+      return;
     },
   };
 }

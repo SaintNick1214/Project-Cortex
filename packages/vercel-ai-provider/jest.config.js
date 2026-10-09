@@ -62,6 +62,14 @@ export default {
     {
       ...baseConfig,
       displayName: "integration",
+      // Keep legacy jest.mock fixtures in CJS while Node loads AI SDK 7's ESM dependency.
+      extensionsToTreatAsEsm: [],
+      transform: {
+        "^.+\\.tsx?$": [
+          "ts-jest",
+          { useESM: false, tsconfig: "tsconfig.test.json" },
+        ],
+      },
       testMatch: ["<rootDir>/tests/integration/**/*.test.ts"],
       testTimeout: 30000,
       testEnvironmentOptions: {
@@ -72,10 +80,17 @@ export default {
       ...baseConfig,
       displayName: "e2e",
       testMatch: ["<rootDir>/tests/e2e/**/*.test.ts"],
+      testPathIgnorePatterns: ["/tests/e2e/graph-runtime\\.test\\.ts$"],
       testTimeout: 180000, // 3 minutes for E2E tests hitting real APIs
       testEnvironmentOptions: {
         JEST_PROJECT: "e2e",
       },
+    },
+    {
+      ...baseConfig,
+      displayName: "graph",
+      testMatch: ["<rootDir>/tests/e2e/graph-runtime.test.ts"],
+      testTimeout: 60000,
     },
   ],
   // Coverage thresholds

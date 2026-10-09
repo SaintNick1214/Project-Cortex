@@ -17,8 +17,9 @@
 
 import { serve } from "@hono/node-server";
 import { Hono } from "hono";
-import { cors } from "hono/cors";
 import { logger } from "hono/logger";
+import { localRequest } from "./local-request.js";
+import { createChatHandler } from "./chat-request.js";
 import { closeCortex, initCortex, CONFIG } from "./cortex.js";
 import { chat, generateConversationId } from "./chat.js";
 import { printWelcome, printInfo, printError, printSuccess } from "./display.js";
@@ -28,9 +29,11 @@ import { printWelcome, printInfo, printError, printSuccess } from "./display.js"
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 const app = new Hono();
+let server: ReturnType<typeof serve> | undefined;
 
 // Middleware
-app.use("*", cors());
+// This trusted example never exposes its deployment operator to another browser origin.
+app.use("*", localRequest);
 app.use("*", logger());
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -59,35 +62,7 @@ app.get("/health", (c) => {
  * POST /chat
  * Body: { message: string, conversationId?: string }
  */
-app.post("/chat", async (c) => {
-  try {
-    const body = await c.req.json();
-    const { message, conversationId } = body;
-
-    if (!message || typeof message !== "string") {
-      return c.json({ error: "message is required" }, 400);
-    }
-
-    const convId = conversationId || generateConversationId();
-
-    console.log(`\n[Chat] User: ${message.slice(0, 50)}${message.length > 50 ? "..." : ""}`);
-
-    const result = await chat(message, convId);
-
-    console.log(`[Chat] Response sent (${result.memoriesRecalled} memories, ${result.factsRecalled} facts recalled)\n`);
-
-    return c.json({
-      response: result.response,
-      conversationId: result.conversationId,
-      memoriesRecalled: result.memoriesRecalled,
-      factsRecalled: result.factsRecalled,
-    });
-  } catch (error) {
-    const message = error instanceof Error ? error.message : "Unknown error";
-    printError("Chat failed", error instanceof Error ? error : undefined);
-    return c.json({ error: message }, 500);
-  }
-});
+app.post("/chat", createChatHandler(chat, generateConversationId));
 
 /**
  * Recall endpoint
@@ -194,7 +169,7 @@ app.get("/history/:conversationId", async (c) => {
 app.get("/", (c) => {
   return c.json({
     name: "Cortex Memory - Basic Demo API",
-    version: "1.0.0",
+    version: "1.2.0",
     endpoints: {
       "POST /chat": {
         description: "Chat and store memory",
@@ -267,25 +242,30 @@ async function main(): Promise<void> {
   console.log('     -d \'{"message": "My name is Alex"}\'');
   console.log("");
 
-  serve({
+  server = serve({
     fetch: app.fetch,
     port: PORT,
+    hostname: "127.0.0.1",
   });
 
   printInfo(`Server running on port ${PORT}`);
 }
 
-// Handle cleanup
-process.on("SIGINT", () => {
-  console.log("\n\nShutting down...");
-  closeCortex();
-  process.exit(0);
-});
-
-process.on("SIGTERM", () => {
-  closeCortex();
-  process.exit(0);
-});
+// Stop HTTP admission and await the client before reporting shutdown complete.
+let stopping: Promise<void> | undefined;
+function stop(): Promise<void> {
+  return stopping ??= (async () => {
+    if (server) await new Promise<void>((resolve, reject) => {
+      server!.close((error) => error ? reject(error) : resolve());
+    });
+    await closeCortex();
+  })();
+}
+for (const signal of ["SIGINT", "SIGTERM"] as const) {
+  process.on(signal, () => {
+    void stop().then(() => process.exit(0), () => process.exit(1));
+  });
+}
 
 // Run
 main().catch((error) => {

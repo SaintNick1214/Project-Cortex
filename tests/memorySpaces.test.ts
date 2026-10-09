@@ -10,8 +10,9 @@
  * PARALLEL-SAFE: Uses TestRunContext for isolated test data
  */
 
-import { Cortex } from "../src";
-import { ConvexClient } from "convex/browser";
+import { Cortex } from "./helpers/deployment-operator";
+import { createErasureTransport, type ErasureTransport } from "../src/users/erasure";
+import { ConvexClient } from "./helpers/deployment-operator";
 import { api } from "../convex-dev/_generated/api";
 import { createNamedTestRunContext, ScopedCleanup } from "./helpers";
 
@@ -20,11 +21,20 @@ describe("Memory Spaces Registry API", () => {
   const ctx = createNamedTestRunContext("memspaces");
 
   let cortex: Cortex;
+  let erasureTransport: ErasureTransport;
   let client: ConvexClient;
   let scopedCleanup: ScopedCleanup;
   const CONVEX_URL = process.env.CONVEX_URL || "http://127.0.0.1:3210";
 
   beforeAll(async () => {
+    // Deletion fixtures require an explicitly owned disposable target and key.
+    // Never obtain administrative authority from saved config or client fields.
+    const ownedUrl = process.env.CORTEX_TEST_EXPECTED_CONVEX_URL;
+    const key = process.env.CONVEX_DEPLOY_KEY;
+    if (!ownedUrl || CONVEX_URL !== ownedUrl || !key) {
+      throw new Error("Explicit dedicated disposable erasure test binding required");
+    }
+    erasureTransport = createErasureTransport({url: ownedUrl, deploymentKey: key});
     console.log(`\n🧪 Memory Spaces API Tests - Run ID: ${ctx.runId}\n`);
 
     cortex = new Cortex({ convexUrl: CONVEX_URL });
@@ -38,6 +48,8 @@ describe("Memory Spaces Registry API", () => {
   afterAll(async () => {
     console.log(`\n🧹 Cleaning up test run ${ctx.runId}...`);
     await scopedCleanup.cleanupAll();
+    erasureTransport.close();
+    await cortex.shutdown();
     await client.close();
     console.log(`✅ Test run ${ctx.runId} cleanup complete\n`);
   });
@@ -899,6 +911,7 @@ describe("Memory Spaces Registry API", () => {
 
       const result = await cortex.memorySpaces.delete(deleteSpaceId, {
         cascade: true,
+        erasureTransport,
         reason: "test cleanup",
       });
 
@@ -945,20 +958,22 @@ describe("Memory Spaces Registry API", () => {
       // Delete with cascade
       const result = await cortex.memorySpaces.delete(cascadeSpaceId, {
         cascade: true,
+        erasureTransport,
         reason: "test cleanup",
       });
 
       expect(result.deleted).toBe(true);
       expect(result.cascade).toBeDefined();
+      expect(result.erasure?.complete).toBe(true);
+      expect(result.erasure?.outcomes.at(-1)?.table).toBe("memorySpaces");
     });
 
-    it("throws error for non-existent space", async () => {
-      await expect(
-        cortex.memorySpaces.delete(`nonexistent-${ctx.runId}`, {
-          cascade: true,
-          reason: "test cleanup",
-        }),
-      ).rejects.toThrow("Memory space not found");
+    it("returns verified absence for a non-existent space", async () => {
+      const result = await cortex.memorySpaces.delete(`nonexistent-${ctx.runId}`, {
+        cascade: true, erasureTransport, reason: "test cleanup",
+      });
+      expect(result.deleted).toBe(false);
+      expect(result.erasure).toMatchObject({ executed: false, complete: true, verification: { state: "verified" } });
     });
 
     it("throws when cascade is false", async () => {
@@ -990,6 +1005,7 @@ describe("Memory Spaces Registry API", () => {
       await expect(
         cortex.memorySpaces.delete(missingReasonSpaceId, {
           cascade: true,
+        erasureTransport,
           reason: "",
         }),
       ).rejects.toThrow("reason");
@@ -1007,6 +1023,7 @@ describe("Memory Spaces Registry API", () => {
       await expect(
         cortex.memorySpaces.delete(confirmMismatchSpaceId, {
           cascade: true,
+        erasureTransport,
           reason: "test",
           confirmId: "wrong-id",
         }),
@@ -1495,6 +1512,7 @@ describe("Memory Spaces Registry API", () => {
       // Delete
       const result = await cortex.memorySpaces.delete(lifecycleSpaceId, {
         cascade: true,
+        erasureTransport,
         reason: "test cleanup",
       });
 
@@ -1510,40 +1528,19 @@ describe("Memory Spaces Registry API", () => {
   describe("New API Methods", () => {
     describe("search()", () => {
       // Use test-scoped IDs to avoid parallel conflicts
-      const engineeringSpace = ctx.memorySpaceId("engineering-team");
-      const designSpace = ctx.memorySpaceId("design-team");
-      const aliceSpace = ctx.memorySpaceId("alice-personal");
+      let engineeringSpace: string, designSpace: string, aliceSpace: string;
       // Use unique searchable terms scoped to this run
       const projectTag = `apollo-${ctx.runId}`;
       const searchTerm = ctx.runId; // Use runId as a unique searchable term
 
       beforeEach(async () => {
-        // Clean up any existing test memory spaces first
-        try {
-          await cortex.memorySpaces.delete(engineeringSpace, {
-            cascade: true,
-            reason: "test cleanup",
-          });
-        } catch (_error) {
-          // Ignore if doesn't exist
-        }
-        try {
-          await cortex.memorySpaces.delete(designSpace, {
-            cascade: true,
-            reason: "test cleanup",
-          });
-        } catch (_error) {
-          // Ignore if doesn't exist
-        }
-        try {
-          await cortex.memorySpaces.delete(aliceSpace, {
-            cascade: true,
-            reason: "test cleanup",
-          });
-        } catch (_error) {
-          // Ignore if doesn't exist
-        }
-
+        // Erasure fences are retained: every case owns a fresh scope.
+        const nonce = crypto.randomUUID();
+        engineeringSpace = ctx.memorySpaceId(`engineering-team-${nonce}`);
+        designSpace = ctx.memorySpaceId(`design-team-${nonce}`);
+        aliceSpace = ctx.memorySpaceId(`alice-personal-${nonce}`);
+        // Fresh per-case IDs avoid retained erasure fences; the mandatory CI
+        // native reset owns deployment cleanup after this selected batch.
         // Now register fresh test spaces with unique searchable content
         await cortex.memorySpaces.register({
           memorySpaceId: engineeringSpace,
@@ -1565,34 +1562,6 @@ describe("Memory Spaces Registry API", () => {
           type: "personal",
           metadata: { owner: "alice" },
         });
-      });
-
-      afterEach(async () => {
-        // Clean up test memory spaces
-        try {
-          await cortex.memorySpaces.delete(engineeringSpace, {
-            cascade: true,
-            reason: "test cleanup",
-          });
-        } catch (_error) {
-          // Ignore if doesn't exist
-        }
-        try {
-          await cortex.memorySpaces.delete(designSpace, {
-            cascade: true,
-            reason: "test cleanup",
-          });
-        } catch (_error) {
-          // Ignore if doesn't exist
-        }
-        try {
-          await cortex.memorySpaces.delete(aliceSpace, {
-            cascade: true,
-            reason: "test cleanup",
-          });
-        } catch (_error) {
-          // Ignore if doesn't exist
-        }
       });
 
       it("searches by name", async () => {
@@ -1672,21 +1641,13 @@ describe("Memory Spaces Registry API", () => {
 
     describe("updateParticipants()", () => {
       // Use test-scoped IDs
-      const participantTestSpace = ctx.memorySpaceId("participant-test");
+      let participantTestSpace: string;
       const user1 = ctx.userId("p-user-1");
       const agent1 = ctx.agentId("p-agent-1");
       const tool1 = `tool-${ctx.runId}-1`;
 
-      beforeEach(async () => {
-        // Cleanup any existing participant-test space
-        try {
-          await cortex.memorySpaces.delete(participantTestSpace, {
-            cascade: true,
-            reason: "test cleanup",
-          });
-        } catch (_error) {
-          // Doesn't exist, continue
-        }
+      beforeEach(() => {
+        participantTestSpace = ctx.memorySpaceId(`participant-test-${crypto.randomUUID()}`);
       });
 
       it("adds participants", async () => {

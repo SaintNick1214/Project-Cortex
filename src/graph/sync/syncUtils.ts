@@ -1,406 +1,134 @@
-/**
- * Graph Sync Utilities
- *
- * Functions for syncing Cortex entities to graph database.
- * All sync operations use MERGE semantics for idempotency.
- */
+/** Managed-v2 compatibility. Legacy logical IDs cannot establish physical source authority. */
+import {GraphDatabaseError,type GraphAdapter,type GraphIdentity} from "../types";
+import {MANAGED_LABELS,identityProperties,assertIdentityProperties,primaryGraphIdentity} from "../identity";
+import type {Context} from "../../contexts";
+import type {Conversation,MemoryEntry,FactRecord,MemorySpace} from "../../types";
 
-import type { GraphAdapter } from "../types";
-import type { Context } from "../../contexts";
-import type {
-  Conversation,
-  MemoryEntry,
-  FactRecord,
-  MemorySpace,
-} from "../../types";
+/** Exact physical lookup; omission of captured identity is a migration error, never a wildcard. */
+export async function findGraphNodeId(label:string,cortexId:string,adapter:GraphAdapter,identity?:GraphIdentity):Promise<string|null> {
+  if(!identity||identity.kind!==label)throw new GraphDatabaseError("Pass captured native physical identity and exact scope for managed lookup.","GRAPH_IDENTITY_REQUIRED");
+  identityProperties(identity);
+  const display:Record<string,string>={Context:"contextId",Conversation:"conversationId",Memory:"memoryId",Fact:"factId",MemorySpace:"memorySpaceId",Immutable:"id",Mutable:"mutableKey",Artifact:"artifactId"};
+  const nodes=await adapter.findNodes(MANAGED_LABELS[identity.kind],{key:identity.key},2);
+  if(nodes.length>1)throw new GraphDatabaseError("Managed physical graph identity is ambiguous.","GRAPH_IDENTITY_MISMATCH");
+  if(!nodes.length)return null;
+  assertIdentityProperties(nodes[0].properties,identity);
+  if(nodes[0].properties[display[label]]!==cortexId||!nodes[0].id)throw new GraphDatabaseError("Captured physical identity does not match the requested display ID.","GRAPH_IDENTITY_MISMATCH");
+  return nodes[0].id;
+}
 
-/**
- * Sync a Context to graph database
- *
- * Creates or updates a Context node with properties.
- * Uses MERGE for idempotent operations.
- *
- * @param context - The context to sync
- * @param adapter - The graph adapter
- * @param tenantId - Optional tenant ID for multi-tenancy (CRITICAL for SaaS isolation)
- */
+/** Bounded managed-only chain. Every intermediate node and edge must remain inside exact captured scope. */
+export async function getFactSupersessionChainFromGraph(factId:string,adapter:GraphAdapter,identity?:GraphIdentity):Promise<Array<{factId:string;fact:string;supersededAt?:number}>> {
+  if(!identity||identity.kind!=="Fact")throw new GraphDatabaseError("Pass the captured physical Fact identity for a scoped chain.","GRAPH_IDENTITY_REQUIRED");
+  if(await findGraphNodeId("Fact",factId,adapter,identity)===null)return [];
+  if(!adapter.managedRead)throw new GraphDatabaseError("Adapter lacks managed bounded reads.","GRAPH_SCHEMA_MIGRATION_REQUIRED");
+  const result=await adapter.managedRead(`MATCH path=(start:CortexV2Fact {key:$key})-[:SUPERSEDES|SUPERSEDED_BY*0..10]-(node:CortexV2Fact)
+    WHERE all(n IN nodes(path) WHERE n.schemaVersion=2 AND n.kind='Fact' AND n.tenantTag=$tenantTag AND n.tenantValue=$tenantValue AND n.spaceTag='space' AND n.spaceValue=$space)
+      AND all(r IN relationships(path) WHERE r.schemaVersion=2 AND r.sourceKey=startNode(r).key AND r.targetKey=endNode(r).key AND r.ownerKey=r.sourceKey)
+    RETURN DISTINCT properties(node) AS node,length(path) AS hops ORDER BY node.createdAt ASC LIMIT 65`,
+    {key:identity.key,tenantTag:identity.tenantId===null?"knownTenantless":"tenant",tenantValue:identity.tenantId??"",space:identity.memorySpaceId});
+  if(result.count>64||result.records.some(r=>r.hops===10))throw new GraphDatabaseError("Supersession chain exceeds the bounded graph query; no truncated chain is returned.","GRAPH_QUERY_BUDGET");
+  const seen=new Set<string>(),chain=[];
+  for(const record of result.records){const node=record.node as Record<string,unknown>;
+    const captured=primaryGraphIdentity("Fact",String(node.physicalSourceId),identity);assertIdentityProperties(node,captured);
+    if(seen.has(captured.key))continue;seen.add(captured.key);
+    if(typeof node.factId!=="string"||typeof node.fact!=="string")throw new GraphDatabaseError("Managed Fact projection is malformed.","GRAPH_IDENTITY_MISMATCH");
+    chain.push({factId:node.factId,fact:node.fact,...typeof node.statusUpdatedAt==="number"?{supersededAt:node.statusUpdatedAt}:{}});
+  }
+  return chain;
+}
+/** @deprecated Use graph-enabled domain writes and their original captured jobs. Uncaptured writes refuse before effects. */
 export async function syncContextToGraph(
   context: Context,
   adapter: GraphAdapter,
   tenantId?: string,
 ): Promise<string> {
-  const nodeId = await adapter.mergeNode(
-    {
-      label: "Context",
-      properties: {
-        contextId: context.contextId,
-        memorySpaceId: context.memorySpaceId,
-        tenantId:
-          tenantId ||
-          (context as Context & { tenantId?: string }).tenantId ||
-          null,
-        purpose: context.purpose,
-        status: context.status,
-        depth: context.depth,
-        userId: context.userId || null,
-        parentId: context.parentId || null,
-        rootId: context.rootId || null,
-        participants: context.participants,
-        createdAt: context.createdAt,
-        updatedAt: context.updatedAt,
-        completedAt: context.completedAt || null,
-      },
-    },
-    { contextId: context.contextId },
-  );
-
-  return nodeId;
+  void [context, adapter, tenantId];
+  throw new GraphDatabaseError("This logical-ID helper cannot establish physical graph authority. Use graph-enabled domain writes and their original native jobs, or explicit administrator initialGraphSync for existing data.", "GRAPH_CAPTURED_JOB_REQUIRED");
 }
 
-/**
- * Sync a Conversation to graph database
- *
- * Creates or updates a Conversation node with properties.
- * Uses MERGE for idempotent operations.
- *
- * @param conversation - The conversation to sync
- * @param adapter - The graph adapter
- * @param tenantId - Optional tenant ID for multi-tenancy (CRITICAL for SaaS isolation)
- */
+/** @deprecated Use graph-enabled domain writes and their original captured jobs. Uncaptured writes refuse before effects. */
 export async function syncConversationToGraph(
   conversation: Conversation,
   adapter: GraphAdapter,
   tenantId?: string,
 ): Promise<string> {
-  const nodeId = await adapter.mergeNode(
-    {
-      label: "Conversation",
-      properties: {
-        conversationId: conversation.conversationId,
-        memorySpaceId: conversation.memorySpaceId,
-        tenantId:
-          tenantId ||
-          (conversation as Conversation & { tenantId?: string }).tenantId ||
-          null,
-        participantId: conversation.participantId || null,
-        type: conversation.type,
-        userId: conversation.participants.userId || null,
-        agentId: conversation.participants.agentId || null,
-        messageCount: conversation.messageCount,
-        createdAt: conversation.createdAt,
-        updatedAt: conversation.updatedAt,
-      },
-    },
-    { conversationId: conversation.conversationId },
-  );
-
-  return nodeId;
+  void [conversation, adapter, tenantId];
+  throw new GraphDatabaseError("This logical-ID helper cannot establish physical graph authority. Use graph-enabled domain writes and their original native jobs, or explicit administrator initialGraphSync for existing data.", "GRAPH_CAPTURED_JOB_REQUIRED");
 }
 
-/**
- * Sync a Memory to graph database
- *
- * Creates or updates a Memory node with truncated content.
- * Uses MERGE for idempotent operations.
- *
- * @param memory - The memory to sync
- * @param adapter - The graph adapter
- * @param tenantId - Optional tenant ID for multi-tenancy (CRITICAL for SaaS isolation)
- */
+/** @deprecated Use graph-enabled domain writes and their original captured jobs. Uncaptured writes refuse before effects. */
 export async function syncMemoryToGraph(
   memory: MemoryEntry,
   adapter: GraphAdapter,
   tenantId?: string,
 ): Promise<string> {
-  const nodeId = await adapter.mergeNode(
-    {
-      label: "Memory",
-      properties: {
-        memoryId: memory.memoryId,
-        memorySpaceId: memory.memorySpaceId,
-        tenantId:
-          tenantId ||
-          (memory as MemoryEntry & { tenantId?: string }).tenantId ||
-          null,
-        participantId: memory.participantId || null,
-        userId: memory.userId || null,
-        agentId: memory.agentId || null,
-        content: memory.content.substring(0, 200), // Truncate for graph
-        contentType: memory.contentType,
-        sourceType: memory.sourceType,
-        sourceUserId: memory.sourceUserId || null,
-        importance: memory.importance,
-        tags: memory.tags,
-        version: memory.version,
-        createdAt: memory.createdAt,
-        updatedAt: memory.updatedAt,
-      },
-    },
-    { memoryId: memory.memoryId },
-  );
-
-  return nodeId;
+  void [memory, adapter, tenantId];
+  throw new GraphDatabaseError("This logical-ID helper cannot establish physical graph authority. Use graph-enabled domain writes and their original native jobs, or explicit administrator initialGraphSync for existing data.", "GRAPH_CAPTURED_JOB_REQUIRED");
 }
 
-/**
- * Sync a Fact to graph database
- *
- * Creates or updates a Fact node.
- * Uses MERGE for idempotent operations.
- *
- * @param fact - The fact to sync
- * @param adapter - The graph adapter
- * @param tenantId - Optional tenant ID for multi-tenancy (CRITICAL for SaaS isolation)
- */
+/** @deprecated Use graph-enabled domain writes and their original captured jobs. Uncaptured writes refuse before effects. */
 export async function syncFactToGraph(
   fact: FactRecord,
   adapter: GraphAdapter,
   tenantId?: string,
 ): Promise<string> {
-  const nodeId = await adapter.mergeNode(
-    {
-      label: "Fact",
-      properties: {
-        factId: fact.factId,
-        memorySpaceId: fact.memorySpaceId,
-        tenantId:
-          tenantId ||
-          (fact as FactRecord & { tenantId?: string }).tenantId ||
-          null,
-        participantId: fact.participantId || null,
-        fact: fact.fact,
-        factType: fact.factType,
-        subject: fact.subject || null,
-        predicate: fact.predicate || null,
-        object: fact.object || null,
-        confidence: fact.confidence,
-        sourceType: fact.sourceType,
-        tags: fact.tags,
-        version: fact.version,
-        supersededBy: fact.supersededBy || null,
-        supersedes: fact.supersedes || null,
-        createdAt: fact.createdAt,
-        updatedAt: fact.updatedAt,
-      },
-    },
-    { factId: fact.factId },
-  );
-
-  return nodeId;
+  void [fact, adapter, tenantId];
+  throw new GraphDatabaseError("This logical-ID helper cannot establish physical graph authority. Use graph-enabled domain writes and their original native jobs, or explicit administrator initialGraphSync for existing data.", "GRAPH_CAPTURED_JOB_REQUIRED");
 }
 
-/**
- * Sync a MemorySpace to graph database
- *
- * Creates or updates a MemorySpace node.
- * Uses MERGE for idempotent operations.
- *
- * @param memorySpace - The memory space to sync
- * @param adapter - The graph adapter
- * @param tenantId - Optional tenant ID for multi-tenancy (CRITICAL for SaaS isolation)
- */
+/** @deprecated Use graph-enabled domain writes and their original captured jobs. Uncaptured writes refuse before effects. */
 export async function syncMemorySpaceToGraph(
   memorySpace: MemorySpace,
   adapter: GraphAdapter,
   tenantId?: string,
 ): Promise<string> {
-  const nodeId = await adapter.mergeNode(
-    {
-      label: "MemorySpace",
-      properties: {
-        memorySpaceId: memorySpace.memorySpaceId,
-        tenantId:
-          tenantId ||
-          (memorySpace as MemorySpace & { tenantId?: string }).tenantId ||
-          null,
-        name: memorySpace.name || null,
-        type: memorySpace.type,
-        status: memorySpace.status,
-        participantCount: memorySpace.participants.length,
-        createdAt: memorySpace.createdAt,
-        updatedAt: memorySpace.updatedAt,
-      },
-    },
-    { memorySpaceId: memorySpace.memorySpaceId },
-  );
-
-  return nodeId;
+  void [memorySpace, adapter, tenantId];
+  throw new GraphDatabaseError("This logical-ID helper cannot establish physical graph authority. Use graph-enabled domain writes and their original native jobs, or explicit administrator initialGraphSync for existing data.", "GRAPH_CAPTURED_JOB_REQUIRED");
 }
 
-/**
- * Find a graph node ID by Cortex entity ID
- *
- * Helper function to look up nodes created from Cortex entities
- */
-export async function findGraphNodeId(
-  label: string,
-  cortexId: string,
-  adapter: GraphAdapter,
-): Promise<string | null> {
-  // Determine property name based on label
-  let propertyName: string;
-  switch (label) {
-    case "Context":
-      propertyName = "contextId";
-      break;
-    case "Conversation":
-      propertyName = "conversationId";
-      break;
-    case "Memory":
-      propertyName = "memoryId";
-      break;
-    case "Fact":
-      propertyName = "factId";
-      break;
-    case "MemorySpace":
-      propertyName = "memorySpaceId";
-      break;
-    case "User":
-      propertyName = "userId";
-      break;
-    case "Agent":
-      propertyName = "agentId";
-      break;
-    case "Participant":
-      propertyName = "participantId";
-      break;
-    default:
-      throw new Error(`Unknown label: ${label}`);
-  }
-
-  // Find node by property
-  const nodes = await adapter.findNodes(label, { [propertyName]: cortexId }, 1);
-
-  return nodes.length > 0 ? nodes[0].id! : null;
-}
-
-/**
- * Ensure a User node exists in the graph
- *
- * Uses MERGE for idempotent creation.
- *
- * @param userId - The user ID
- * @param adapter - The graph adapter
- * @param tenantId - Optional tenant ID for multi-tenancy (CRITICAL for SaaS isolation)
- */
+/** @deprecated Use graph-enabled domain writes and their original captured jobs. Uncaptured writes refuse before effects. */
 export async function ensureUserNode(
   userId: string,
   adapter: GraphAdapter,
   tenantId?: string,
 ): Promise<string> {
-  return await adapter.mergeNode(
-    {
-      label: "User",
-      properties: {
-        userId,
-        tenantId: tenantId || null,
-        createdAt: Date.now(),
-      },
-    },
-    { userId },
-  );
+  void [userId, adapter, tenantId];
+  throw new GraphDatabaseError("This logical-ID helper cannot establish physical graph authority. Use graph-enabled domain writes and their original native jobs, or explicit administrator initialGraphSync for existing data.", "GRAPH_CAPTURED_JOB_REQUIRED");
 }
 
-/**
- * Ensure an Agent node exists in the graph
- *
- * Uses MERGE for idempotent creation.
- *
- * @param agentId - The agent ID
- * @param adapter - The graph adapter
- * @param tenantId - Optional tenant ID for multi-tenancy (CRITICAL for SaaS isolation)
- */
+/** @deprecated Use graph-enabled domain writes and their original captured jobs. Uncaptured writes refuse before effects. */
 export async function ensureAgentNode(
   agentId: string,
   adapter: GraphAdapter,
   tenantId?: string,
 ): Promise<string> {
-  return await adapter.mergeNode(
-    {
-      label: "Agent",
-      properties: {
-        agentId,
-        tenantId: tenantId || null,
-        createdAt: Date.now(),
-      },
-    },
-    { agentId },
-  );
+  void [agentId, adapter, tenantId];
+  throw new GraphDatabaseError("This logical-ID helper cannot establish physical graph authority. Use graph-enabled domain writes and their original native jobs, or explicit administrator initialGraphSync for existing data.", "GRAPH_CAPTURED_JOB_REQUIRED");
 }
 
-/**
- * Ensure a Participant node exists in the graph (Hive Mode)
- *
- * Uses MERGE for idempotent creation.
- *
- * @param participantId - The participant ID
- * @param adapter - The graph adapter
- * @param tenantId - Optional tenant ID for multi-tenancy (CRITICAL for SaaS isolation)
- */
+/** @deprecated Use graph-enabled domain writes and their original captured jobs. Uncaptured writes refuse before effects. */
 export async function ensureParticipantNode(
   participantId: string,
   adapter: GraphAdapter,
   tenantId?: string,
 ): Promise<string> {
-  return await adapter.mergeNode(
-    {
-      label: "Participant",
-      properties: {
-        participantId,
-        tenantId: tenantId || null,
-        createdAt: Date.now(),
-      },
-    },
-    { participantId },
-  );
+  void [participantId, adapter, tenantId];
+  throw new GraphDatabaseError("This logical-ID helper cannot establish physical graph authority. Use graph-enabled domain writes and their original native jobs, or explicit administrator initialGraphSync for existing data.", "GRAPH_CAPTURED_JOB_REQUIRED");
 }
 
-/**
- * Ensure an Entity node exists in the graph
- *
- * Helper for fact entity relationships.
- * Uses MERGE for idempotent creation.
- *
- * @param entityName - The entity name
- * @param entityType - The entity type
- * @param adapter - The graph adapter
- * @param tenantId - Optional tenant ID for multi-tenancy (CRITICAL for SaaS isolation)
- */
+/** @deprecated Use graph-enabled domain writes and their original captured jobs. Uncaptured writes refuse before effects. */
 export async function ensureEntityNode(
   entityName: string,
   entityType: string,
   adapter: GraphAdapter,
   tenantId?: string,
 ): Promise<string> {
-  return await adapter.mergeNode(
-    {
-      label: "Entity",
-      properties: {
-        name: entityName,
-        type: entityType,
-        tenantId: tenantId || null,
-        createdAt: Date.now(),
-      },
-    },
-    { name: entityName },
-  );
+  void [entityName, entityType, adapter, tenantId];
+  throw new GraphDatabaseError("This logical-ID helper cannot establish physical graph authority. Use graph-enabled domain writes and their original native jobs, or explicit administrator initialGraphSync for existing data.", "GRAPH_CAPTURED_JOB_REQUIRED");
 }
 
-/**
- * Ensure an enriched Entity node exists in the graph
- *
- * Creates Entity nodes with additional metadata from enriched extraction:
- * - entityType: Specific type (e.g., "preferred_name", "full_name", "company")
- * - fullValue: Full value if available (e.g., "Alexander Johnson" for "Alex")
- *
- * Uses MERGE for idempotent creation with property updates.
- *
- * @param entityName - The entity name
- * @param entityType - The entity type
- * @param fullValue - The full value if available
- * @param adapter - The graph adapter
- * @param tenantId - Optional tenant ID for multi-tenancy (CRITICAL for SaaS isolation)
- */
+/** @deprecated Use graph-enabled domain writes and their original captured jobs. Uncaptured writes refuse before effects. */
 export async function ensureEnrichedEntityNode(
   entityName: string,
   entityType: string,
@@ -408,39 +136,11 @@ export async function ensureEnrichedEntityNode(
   adapter: GraphAdapter,
   tenantId?: string,
 ): Promise<string> {
-  return await adapter.mergeNode(
-    {
-      label: "Entity",
-      properties: {
-        name: entityName,
-        type: entityType,
-        tenantId: tenantId || null,
-        entityType, // Specific entity type (e.g., "preferred_name")
-        fullValue: fullValue || null, // Full value if available
-        createdAt: Date.now(),
-        updatedAt: Date.now(),
-      },
-    },
-    { name: entityName },
-  );
+  void [entityName, entityType, fullValue, adapter, tenantId];
+  throw new GraphDatabaseError("This logical-ID helper cannot establish physical graph authority. Use graph-enabled domain writes and their original native jobs, or explicit administrator initialGraphSync for existing data.", "GRAPH_CAPTURED_JOB_REQUIRED");
 }
 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// Belief Revision - Fact Supersession
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-/**
- * Sync fact supersession to graph database
- *
- * Creates a SUPERSEDES relationship from new fact to old fact.
- * Also marks the old fact as superseded.
- *
- * @param oldFact - The fact being superseded
- * @param newFact - The fact that supersedes
- * @param adapter - Graph adapter
- * @param reason - Optional reason for supersession
- * @param tenantId - Optional tenant ID for multi-tenancy
- */
+/** @deprecated Use graph-enabled domain writes and their original captured jobs. Uncaptured writes refuse before effects. */
 export async function syncFactSupersession(
   oldFact: FactRecord,
   newFact: FactRecord,
@@ -448,122 +148,31 @@ export async function syncFactSupersession(
   reason?: string,
   tenantId?: string,
 ): Promise<{ oldNodeId: string; newNodeId: string; relationshipId: string }> {
-  // Ensure both facts exist in graph
-  const oldNodeId = await syncFactToGraph(
-    { ...oldFact, supersededBy: newFact.factId },
-    adapter,
-    tenantId,
-  );
-  const newNodeId = await syncFactToGraph(
-    { ...newFact, supersedes: oldFact.factId },
-    adapter,
-    tenantId,
-  );
-
-  // Create SUPERSEDES relationship
-  const relationshipId = await adapter.createEdge({
-    from: newNodeId,
-    to: oldNodeId,
-    type: "SUPERSEDES",
-    properties: {
-      reason: reason || null,
-      timestamp: Date.now(),
-    },
-  });
-
-  // Mark old fact as inactive/superseded in graph
-  await updateFactGraphStatus(oldFact.factId, "superseded", adapter);
-
-  return { oldNodeId, newNodeId, relationshipId };
+  void [oldFact, newFact, adapter, reason, tenantId];
+  throw new GraphDatabaseError("This logical-ID helper cannot establish physical graph authority. Use graph-enabled domain writes and their original native jobs, or explicit administrator initialGraphSync for existing data.", "GRAPH_CAPTURED_JOB_REQUIRED");
 }
 
-/**
- * Update fact status in graph database
- *
- * Updates the status property of a Fact node to reflect
- * its current state (active, superseded, deleted).
- */
+/** @deprecated Use graph-enabled domain writes and their original captured jobs. Uncaptured writes refuse before effects. */
 export async function updateFactGraphStatus(
   factId: string,
   status: "active" | "superseded" | "deleted",
   adapter: GraphAdapter,
 ): Promise<void> {
-  // Find the fact node
-  const nodeId = await findGraphNodeId("Fact", factId, adapter);
-
-  if (nodeId) {
-    // Update the node properties
-    await adapter.mergeNode(
-      {
-        label: "Fact",
-        properties: {
-          factId,
-          status,
-          statusUpdatedAt: Date.now(),
-        },
-      },
-      { factId },
-    );
-  }
+  void [factId, status, adapter];
+  throw new GraphDatabaseError("This logical-ID helper cannot establish physical graph authority. Use graph-enabled domain writes and their original native jobs, or explicit administrator initialGraphSync for existing data.", "GRAPH_CAPTURED_JOB_REQUIRED");
 }
 
-/**
- * Sync fact update in place to graph database
- *
- * Updates an existing Fact node with new content.
- * Used for UPDATE action in belief revision.
- *
- * @param fact - The fact to sync
- * @param adapter - The graph adapter
- * @param tenantId - Optional tenant ID for multi-tenancy
- */
+/** @deprecated Use graph-enabled domain writes and their original captured jobs. Uncaptured writes refuse before effects. */
 export async function syncFactUpdateInPlace(
   fact: FactRecord,
   adapter: GraphAdapter,
   tenantId?: string,
 ): Promise<string> {
-  return await adapter.mergeNode(
-    {
-      label: "Fact",
-      properties: {
-        factId: fact.factId,
-        memorySpaceId: fact.memorySpaceId,
-        tenantId:
-          tenantId ||
-          (fact as FactRecord & { tenantId?: string }).tenantId ||
-          null,
-        participantId: fact.participantId || null,
-        fact: fact.fact,
-        factType: fact.factType,
-        subject: fact.subject || null,
-        predicate: fact.predicate || null,
-        object: fact.object || null,
-        confidence: fact.confidence,
-        sourceType: fact.sourceType,
-        tags: fact.tags,
-        version: fact.version,
-        supersededBy: fact.supersededBy || null,
-        supersedes: fact.supersedes || null,
-        status: "active",
-        updatedAt: fact.updatedAt,
-      },
-    },
-    { factId: fact.factId },
-  );
+  void [fact, adapter, tenantId];
+  throw new GraphDatabaseError("This logical-ID helper cannot establish physical graph authority. Use graph-enabled domain writes and their original native jobs, or explicit administrator initialGraphSync for existing data.", "GRAPH_CAPTURED_JOB_REQUIRED");
 }
 
-/**
- * Create a REVISED_FROM relationship between facts
- *
- * Used when a fact is updated (refined) rather than superseded.
- * The relationship shows evolution without invalidation.
- *
- * @param originalFact - The original fact
- * @param revisedFact - The revised fact
- * @param adapter - The graph adapter
- * @param reason - Optional reason for revision
- * @param tenantId - Optional tenant ID for multi-tenancy
- */
+/** @deprecated Use graph-enabled domain writes and their original captured jobs. Uncaptured writes refuse before effects. */
 export async function syncFactRevision(
   originalFact: FactRecord,
   revisedFact: FactRecord,
@@ -575,81 +184,15 @@ export async function syncFactRevision(
   revisedNodeId: string;
   relationshipId: string;
 }> {
-  // Ensure both facts exist in graph
-  const originalNodeId = await syncFactToGraph(originalFact, adapter, tenantId);
-  const revisedNodeId = await syncFactToGraph(revisedFact, adapter, tenantId);
-
-  // Create REVISED_FROM relationship
-  const relationshipId = await adapter.createEdge({
-    from: revisedNodeId,
-    to: originalNodeId,
-    type: "REVISED_FROM",
-    properties: {
-      reason: reason || "Content refinement",
-      timestamp: Date.now(),
-    },
-  });
-
-  return { originalNodeId, revisedNodeId, relationshipId };
+  void [originalFact, revisedFact, adapter, reason, tenantId];
+  throw new GraphDatabaseError("This logical-ID helper cannot establish physical graph authority. Use graph-enabled domain writes and their original native jobs, or explicit administrator initialGraphSync for existing data.", "GRAPH_CAPTURED_JOB_REQUIRED");
 }
 
-/**
- * Get the supersession chain for a fact in the graph
- *
- * Returns all facts in the chain, from oldest to newest.
- */
-export async function getFactSupersessionChainFromGraph(
-  factId: string,
-  adapter: GraphAdapter,
-): Promise<Array<{ factId: string; fact: string; supersededAt?: number }>> {
-  // Find all facts connected by SUPERSEDES relationships
-  const cypherQuery = `
-    MATCH path = (start:Fact)-[:SUPERSEDES*]->(end:Fact)
-    WHERE start.factId = $factId OR end.factId = $factId
-    WITH DISTINCT nodes(path) as chain
-    UNWIND chain as node
-    RETURN DISTINCT node.factId as factId, node.fact as fact, node.statusUpdatedAt as supersededAt
-    ORDER BY node.createdAt ASC
-  `;
-
-  try {
-    const result = await adapter.query(cypherQuery, { factId });
-    return result.records as Array<{
-      factId: string;
-      fact: string;
-      supersededAt?: number;
-    }>;
-  } catch {
-    // Fallback if query fails - return just the current fact
-    const node = await findGraphNodeId("Fact", factId, adapter);
-    if (node) {
-      return [{ factId, fact: "(unable to retrieve fact content)" }];
-    }
-    return [];
-  }
-}
-
-/**
- * Remove supersession relationships for a fact
- *
- * Used when "undoing" a supersession or during fact deletion.
- */
+/** @deprecated Use graph-enabled domain writes and their original captured jobs. Uncaptured writes refuse before effects. */
 export async function removeFactSupersessionRelationships(
   factId: string,
   adapter: GraphAdapter,
 ): Promise<number> {
-  // Find and delete relationships
-  const cypherQuery = `
-    MATCH (f:Fact {factId: $factId})-[r:SUPERSEDES]-()
-    DELETE r
-    RETURN count(r) as deleted
-  `;
-
-  try {
-    const result = await adapter.query(cypherQuery, { factId });
-    return (result.records as Array<{ deleted: number }>)[0]?.deleted ?? 0;
-  } catch {
-    // If adapter doesn't support query, return 0
-    return 0;
-  }
+  void [factId, adapter];
+  throw new GraphDatabaseError("This logical-ID helper cannot establish physical graph authority. Use graph-enabled domain writes and their original native jobs, or explicit administrator initialGraphSync for existing data.", "GRAPH_CAPTURED_JOB_REQUIRED");
 }

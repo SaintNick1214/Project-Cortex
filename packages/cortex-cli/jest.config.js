@@ -59,7 +59,13 @@ export default {
       ...sharedConfig,
       displayName: "unit",
       rootDir: "<rootDir>",
-      testMatch: ["<rootDir>/src/utils/__tests__/**/*.test.ts"],
+      testMatch: [
+        "<rootDir>/src/utils/__tests__/**/*.test.ts",
+        "<rootDir>/tests/helpers/test-runner.test.js",
+        "<rootDir>/tests/unit/graph-*.test.ts",
+        "<rootDir>/tests/unit/template-*.test.ts",
+        "<rootDir>/tests/unit/templates-*.test.ts",
+      ],
       setupFiles: ["<rootDir>/tests/env.ts"],
       // Unit tests don't need setupFilesAfterEnv
       setupFilesAfterEnv: [],
@@ -77,7 +83,7 @@ export default {
       displayName: "e2e",
       rootDir: "<rootDir>",
       testMatch: ["<rootDir>/tests/e2e/**/*.test.ts"],
-      setupFiles: ["<rootDir>/tests/env.ts"],
+      setupFiles: ["<rootDir>/tests/helpers/live-env.ts"],
       setupFilesAfterEnv: ["<rootDir>/tests/setup.ts"],
       // E2E tests need longer timeout
       testTimeout: 120000,
@@ -85,5 +91,5 @@ export default {
   ],
   verbose: true,
   testTimeout: 60000, // 60 seconds for Convex operations with resilience layer retries
-  forceExit: true,
+  forceExit: false,
 };

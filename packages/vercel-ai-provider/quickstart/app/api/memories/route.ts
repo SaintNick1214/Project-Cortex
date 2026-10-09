@@ -1,37 +1,45 @@
-import { Cortex } from "@cortexmemory/sdk";
-
+import {
+  requireSession,
+  selectSpace,
+  errorResponse,
+  AppError,
+} from "@/lib/app-auth";
+import { withCortex } from "@/lib/cortex";
 export const dynamic = "force-dynamic";
-
-function getCortex() {
-  return new Cortex({ convexUrl: process.env.CONVEX_URL! });
-}
-
 export async function GET(req: Request) {
   try {
-    const { searchParams } = new URL(req.url);
-    const memorySpaceId =
-      searchParams.get("memorySpaceId") || "quickstart-demo";
-    const limit = parseInt(searchParams.get("limit") || "20");
-
-    const cortex = getCortex();
-
-    // Fetch recent memories
-    const memories = await cortex.memory.list({
-      memorySpaceId,
-      limit,
+    const account = await requireSession(req),
+      params = new URL(req.url).searchParams;
+    const space = selectSpace(account, {
+      userId: params.get("userId"),
+      tenantId: params.get("tenantId"),
+      memorySpaceId: params.get("memorySpaceId"),
     });
-
-    return Response.json({
-      memories,
-      count: memories.length,
-      memorySpaceId,
+    const limit = Number(params.get("limit") ?? "20");
+    if (!Number.isInteger(limit) || limit < 1 || limit > 100)
+      throw new AppError(400, "limit must be 1 to 100");
+    return await withCortex(account, async (cortex) => {
+      const records = await cortex.vector.list({
+        memorySpaceId: space,
+        userId: account.accountId,
+        limit,
+      });
+      if (
+        records.some(
+          (record) =>
+            record.memorySpaceId !== space ||
+            record.userId !== account.accountId ||
+            record.tenantId !== account.tenantId,
+        )
+      )
+        throw new AppError(503, "Backend returned an out-of-scope record");
+      return Response.json({
+        memories: records,
+        count: records.length,
+        memorySpaceId: space,
+      });
     });
   } catch (error) {
-    console.error("[Memories API Error]", error);
-
-    return Response.json(
-      { error: error instanceof Error ? error.message : "Unknown error" },
-      { status: 500 },
-    );
+    return errorResponse(error);
   }
 }

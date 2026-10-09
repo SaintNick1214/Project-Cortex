@@ -7,6 +7,7 @@ import { Chat } from "@/components/chat";
 import { DataStreamHandler } from "@/components/data-stream-handler";
 import { DEFAULT_CHAT_MODEL } from "@/lib/ai/models";
 import { getChatById, getMessagesByChatId } from "@/lib/db/queries";
+import { ChatSDKError } from "@/lib/errors";
 import { convertToUIMessages } from "@/lib/utils";
 
 export default function Page(props: { params: Promise<{ id: string }> }) {
@@ -19,28 +20,22 @@ export default function Page(props: { params: Promise<{ id: string }> }) {
 
 async function ChatPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const chat = await getChatById({ id });
-
-  if (!chat) {
-    redirect("/");
-  }
-
   const session = await auth();
-
-  if (!session) {
-    redirect("/api/auth/guest");
-  }
-
-  if (chat.visibility === "private") {
-    if (!session.user) {
+  if (!session?.user) redirect("/api/auth/guest");
+  let chat: Awaited<ReturnType<typeof getChatById>>;
+  try {
+    chat = await getChatById({ id });
+  } catch (error) {
+    if (
+      error instanceof ChatSDKError &&
+      error.type === "not_found" &&
+      error.surface === "chat"
+    ) {
       return notFound();
     }
-
-    if (session.user.id !== chat.userId) {
-      return notFound();
-    }
+    throw error;
   }
-
+  if (!chat || chat.userId !== session.user.id) return notFound();
   const messagesFromDb = await getMessagesByChatId({
     id,
   });

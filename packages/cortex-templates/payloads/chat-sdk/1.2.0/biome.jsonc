@@ -1,0 +1,69 @@
+{
+  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+  "extends": [
+    "./config/biome/core.jsonc",
+    "./config/biome/next.jsonc",
+    "./config/biome/react.jsonc"
+  ],
+  "formatter": {
+    "indentStyle": "space",
+    "indentWidth": 2
+  },
+  "files": {
+    "includes": [
+      "**/*.ts",
+      "**/*.tsx",
+      "**/*.js",
+      "**/*.jsx",
+      "!node_modules",
+      "!.next",
+      "!ai-sdk",
+      "!components/ui",
+      "!lib/utils.ts",
+      "!hooks/use-mobile.ts"
+    ]
+  },
+  "linter": {
+    "rules": {
+      "suspicious": {
+        "noExplicitAny": "off",
+        "noUnnecessaryConditions": "off",
+        "noUnknownAtRules": "off",
+        "noConsole": "off",
+        "useAwait": "off",
+        "noArrayIndexKey": "off",
+        "noNestedPromises": "off",
+        "noBitwiseOperators": "off"
+      },
+      "style": {
+        "noMagicNumbers": "off",
+        "useDestructuring": "off",
+        "noIncrementDecrement": "off",
+        "noNonNullAssertion": "off",
+        "noDescendingSpecificity": "off",
+        "noNestedTernary": "off",
+        "useConsistentTypeDefinitions": "off"
+      },
+      "nursery": {
+        "useSortedClasses": "off"
+      },
+      "complexity": {
+        "noExcessiveCognitiveComplexity": "off",
+        "useSimplifiedLogicExpression": "off"
+      },
+      "a11y": {
+        "noSvgWithoutTitle": "off"
+      },
+      "correctness": {
+        "useUniqueElementIds": "off",
+        "useImageSize": "off"
+      },
+      "performance": {
+        "noBarrelFile": "off",
+        "noJsxPropsBind": "off",
+        "noAwaitInLoops": "off",
+        "useTopLevelRegex": "off"
+      }
+    }
+  }
+}

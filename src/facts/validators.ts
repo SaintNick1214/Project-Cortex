@@ -41,6 +41,7 @@ const VALID_SOURCE_TYPES = [
   "tool",
   "manual",
   "a2a",
+  "fact-extraction",
 ] as const;
 
 const VALID_EXPORT_FORMATS = ["json", "jsonld", "csv"] as const;

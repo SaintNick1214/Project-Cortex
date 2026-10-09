@@ -25,7 +25,7 @@ export function useChatVisibility({
     null,
     {
       fallbackData: initialVisibilityType,
-    }
+    },
   );
 
   const visibilityType = useMemo(() => {
@@ -39,14 +39,10 @@ export function useChatVisibility({
     return chat.visibility;
   }, [history, chatId, localVisibility]);
 
-  const setVisibilityType = (updatedVisibilityType: VisibilityType) => {
-    setLocalVisibility(updatedVisibilityType);
-    mutate(unstable_serialize(getChatHistoryPaginationKey));
-
-    updateChatVisibility({
-      chatId,
-      visibility: updatedVisibilityType,
-    });
+  const setVisibilityType = async (updatedVisibilityType: VisibilityType) => {
+    await updateChatVisibility({ chatId, visibility: updatedVisibilityType });
+    await setLocalVisibility(updatedVisibilityType);
+    await mutate(unstable_serialize(getChatHistoryPaginationKey));
   };
 
   return { setVisibilityType, visibilityType };

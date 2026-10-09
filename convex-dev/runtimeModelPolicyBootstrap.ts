@@ -1,5 +1,5 @@
 /** Deployment artifact is the trust root. No tenant/JWT/env payload can create these attestations. */
-import type { TrustedModelPolicyRecord, TrustedModelQualification } from "../src/domain/model-policy";
+import type { TrustedModelPolicyRecord, TrustedModelQualification } from "./lib/runtimeDomain/domain/modelPolicy";
 
 export interface QualifiedDispatchEvidence {
   readonly receiptId: string;

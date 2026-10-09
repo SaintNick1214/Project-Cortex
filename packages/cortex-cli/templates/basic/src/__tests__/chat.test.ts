@@ -88,7 +88,7 @@ describe("chat", () => {
     // Reset default mock behaviors
     mockRecall.mockResolvedValue({ memories: [], facts: [] });
     mockRemember.mockResolvedValue({});
-    mockFactsList.mockResolvedValue({ facts: [] });
+    mockFactsList.mockResolvedValue([]);
     mockConversationsGet.mockResolvedValue(null);
   });
 

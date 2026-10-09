@@ -17,8 +17,8 @@ declare module "next-auth" {
   }
 
   interface User {
-    email?: string | null;
     id?: string;
+    email?: string | null;
     type: UserType;
   }
 }
@@ -37,33 +37,25 @@ export const {
   signOut,
 } = NextAuth({
   ...authConfig,
-  callbacks: {
-    jwt({ token, user }) {
-      if (user) {
-        token.id = user.id as string;
-        token.type = user.type;
-      }
-
-      return token;
-    },
-    session({ session, token }) {
-      if (session.user) {
-        session.user.id = token.id;
-        session.user.type = token.type;
-      }
-
-      return session;
-    },
+  // Explicit JWT session strategy (stateless - no database adapter required)
+  session: {
+    strategy: "jwt",
   },
   providers: [
     Credentials({
+      credentials: {},
       async authorize(
-        credentials: { email?: string; password?: string } | undefined
+        credentials: { email?: string; password?: string } | undefined,
       ) {
         const { email, password } = credentials ?? {};
-        if (!email || !password) {
+        if (
+          typeof email !== "string" ||
+          typeof password !== "string" ||
+          !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ||
+          password.length < 6 ||
+          password.length > 1024
+        )
           return null;
-        }
         const users = await getUser(email);
 
         if (users.length === 0) {
@@ -84,21 +76,34 @@ export const {
           return null;
         }
 
-        return { ...user, type: "regular" };
+        return { id: user.id, email: user.email, type: "regular" };
       },
-      credentials: {},
     }),
     Credentials({
+      id: "guest",
+      credentials: {},
       async authorize() {
         const [guestUser] = await createGuestUser();
         return { ...guestUser, type: "guest" };
       },
-      credentials: {},
-      id: "guest",
     }),
   ],
-  // Explicit JWT session strategy (stateless - no database adapter required)
-  session: {
-    strategy: "jwt",
+  callbacks: {
+    jwt({ token, user }) {
+      if (user) {
+        token.id = user.id as string;
+        token.type = user.type;
+      }
+
+      return token;
+    },
+    session({ session, token }) {
+      if (session.user) {
+        session.user.id = token.id;
+        session.user.type = token.type;
+      }
+
+      return session;
+    },
   },
 });

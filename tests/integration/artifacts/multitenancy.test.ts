@@ -12,6 +12,13 @@
  * Test IDs: INT-MT-001, INT-MT-002
  */
 
+import {
+  expectConvexRefusal,
+  expectRefusalNoEffects,
+} from "../../helpers/public-contract";
+import { createRuntimeFixture } from "../../helpers/runtime-fixture";
+const runtimeFixtures: Array<Awaited<ReturnType<typeof createRuntimeFixture>>> =
+  [];
 import { Cortex } from "../../../src";
 import { createNamedTestRunContext } from "../../helpers/isolation";
 import {
@@ -33,22 +40,38 @@ describeWithConvex("Artifacts Multi-tenancy Integration", () => {
   // Tenant contexts
   let tenantA: TenantTestContext;
   let tenantB: TenantTestContext;
+  let countCortexA: Cortex;
+  let countCortexB: Cortex;
   let globalCortex: Cortex; // No tenant context
 
   // Track created spaces for cleanup
   const createdSpaces: Array<{ spaceId: string; cortex: Cortex }> = [];
 
   // Helper to setup tenant test context
-  const setupTenantContext = async (name: string): Promise<TenantTestContext> => {
+  const setupTenantContext = async (
+    name: string,
+  ): Promise<TenantTestContext> => {
     const tenantId = generateTenantId(`${ctx.runId}-${name}`);
     const userId = generateTenantUserId(tenantId);
     const memorySpaceId = generateTenantMemorySpaceId(tenantId);
     const authContext = createTenantAuthContext(tenantId, userId);
 
-    const cortex = new Cortex({
-      convexUrl: CONVEX_URL,
-      auth: authContext,
-    });
+    const fixture = await createRuntimeFixture(
+      tenantId,
+      memorySpaceId,
+      userId,
+      { enabled: false },
+      { registerSpaces: false },
+    );
+    runtimeFixtures.push(fixture);
+    const cortex = new Cortex(
+      {
+        convexUrl: CONVEX_URL,
+        auth: authContext,
+        resilience: { enabled: false },
+      },
+      { initializeTransport: fixture.initializeTransport },
+    );
 
     // Register memory space for this tenant
     await cortex.memorySpaces.register({
@@ -69,11 +92,31 @@ describeWithConvex("Artifacts Multi-tenancy Integration", () => {
   };
 
   beforeAll(async () => {
-    console.log(`\n🧪 Artifacts Multi-tenancy Integration Tests - Run ID: ${ctx.runId}\n`);
+    console.log(
+      `\n🧪 Artifacts Multi-tenancy Integration Tests - Run ID: ${ctx.runId}\n`,
+    );
 
     // Setup two separate tenant contexts
     tenantA = await setupTenantContext("tenant-a");
     tenantB = await setupTenantContext("tenant-b");
+
+    const countA = await createRuntimeFixture(
+      tenantA.tenantId,
+      `${ctx.runId}-count-space-a`,
+      tenantA.userId,
+      { enabled: false },
+      { registerSpaces: false },
+    );
+    const countB = await createRuntimeFixture(
+      tenantB.tenantId,
+      `${ctx.runId}-count-space-b`,
+      tenantB.userId,
+      { enabled: false },
+      { registerSpaces: false },
+    );
+    runtimeFixtures.push(countA, countB);
+    countCortexA = countA.cortex;
+    countCortexB = countB.cortex;
 
     // Setup global context (no tenant)
     globalCortex = new Cortex({ convexUrl: CONVEX_URL });
@@ -86,22 +129,26 @@ describeWithConvex("Artifacts Multi-tenancy Integration", () => {
   afterAll(async () => {
     console.log(`\n🧹 Cleaning up test run ${ctx.runId}...`);
 
-    // Cleanup all memory spaces
-    for (const { spaceId, cortex } of createdSpaces) {
-      try {
-        await cortex.memorySpaces.delete(spaceId, {
-          cascade: true,
-          reason: "Test cleanup",
-        });
-      } catch {
-        // Ignore cleanup errors
+    try {
+      // Cleanup all memory spaces
+      for (const { spaceId, cortex } of createdSpaces) {
+        try {
+          await cortex.memorySpaces.delete(spaceId, {
+            cascade: true,
+            reason: "Test cleanup",
+          });
+        } catch {
+          // Public erasure requires an explicit transport.
+        }
       }
+    } finally {
+      await Promise.all([
+        ...runtimeFixtures.map((fixture) => fixture.close()),
+        tenantA?.cortex.shutdown(),
+        tenantB?.cortex.shutdown(),
+        globalCortex?.shutdown(),
+      ]);
     }
-
-    // Close all clients
-    tenantA.cortex.close();
-    tenantB.cortex.close();
-    globalCortex.close();
 
     console.log(`✅ Test run ${ctx.runId} cleanup complete\n`);
   });
@@ -123,8 +170,12 @@ describeWithConvex("Artifacts Multi-tenancy Integration", () => {
       expect(artifact.artifactId).toBeDefined();
 
       // Tenant B cannot get it
-      const result = await tenantB.cortex.artifacts.get(artifact.artifactId);
-      expect(result).toBeNull();
+      await expectRefusalNoEffects(
+        () => tenantB.cortex.artifacts.get(artifact.artifactId),
+        runtimeFixtures,
+        "artifacts",
+        "FORBIDDEN",
+      );
     });
 
     it("should prevent Tenant B from updating Tenant A artifacts", async () => {
@@ -137,9 +188,7 @@ describeWithConvex("Artifacts Multi-tenancy Integration", () => {
       });
 
       // Tenant B cannot update it
-      await expect(
-        tenantB.cortex.artifacts.update(artifact.artifactId, "Hacked content!"),
-      ).rejects.toThrow();
+      await expectConvexRefusal(tenantB.cortex.artifacts.update(artifact.artifactId, "Hacked content!"), "FORBIDDEN");
 
       // Verify content is unchanged
       const original = await tenantA.cortex.artifacts.get(artifact.artifactId);
@@ -156,10 +205,12 @@ describeWithConvex("Artifacts Multi-tenancy Integration", () => {
       });
 
       // Tenant B cannot delete it
-      await expect(tenantB.cortex.artifacts.delete(artifact.artifactId)).rejects.toThrow();
+      await expectConvexRefusal(tenantB.cortex.artifacts.delete(artifact.artifactId), "FORBIDDEN");
 
       // Verify artifact still exists for Tenant A
-      const stillExists = await tenantA.cortex.artifacts.get(artifact.artifactId);
+      const stillExists = await tenantA.cortex.artifacts.get(
+        artifact.artifactId,
+      );
       expect(stillExists).not.toBeNull();
       expect(stillExists?.content).toBe("Important document");
     });
@@ -167,7 +218,7 @@ describeWithConvex("Artifacts Multi-tenancy Integration", () => {
     it("should isolate list results by tenant", async () => {
       // Use unique marker to identify test artifacts
       const testMarker = `list-isolation-${ctx.runId}`;
-      
+
       // Both tenants create artifacts in their own spaces
       const _artA1 = await tenantA.cortex.artifacts.create({
         memorySpaceId: tenantA.memorySpaceId,
@@ -196,12 +247,18 @@ describeWithConvex("Artifacts Multi-tenancy Integration", () => {
       });
 
       // Check that we can find our test artifacts
-      const testArtifactsA = listA.filter((a) => a.content?.includes(testMarker));
+      const testArtifactsA = listA.filter((a) =>
+        a.content?.includes(testMarker),
+      );
       expect(testArtifactsA.length).toBe(2);
-      expect(testArtifactsA.every((a) => a.content?.includes("Tenant A"))).toBe(true);
-      
+      expect(testArtifactsA.every((a) => a.content?.includes("Tenant A"))).toBe(
+        true,
+      );
+
       // Among test artifacts, ensure no Tenant B artifacts appear
-      expect(testArtifactsA.some((a) => a.content?.includes("Tenant B"))).toBe(false);
+      expect(testArtifactsA.some((a) => a.content?.includes("Tenant B"))).toBe(
+        false,
+      );
 
       // Tenant B only sees their own
       const listB = await tenantB.cortex.artifacts.list({
@@ -209,12 +266,18 @@ describeWithConvex("Artifacts Multi-tenancy Integration", () => {
       });
 
       // Check that we can find our test artifact
-      const testArtifactsB = listB.filter((a) => a.content?.includes(testMarker));
+      const testArtifactsB = listB.filter((a) =>
+        a.content?.includes(testMarker),
+      );
       expect(testArtifactsB.length).toBe(1);
-      expect(testArtifactsB.every((a) => a.content?.includes("Tenant B"))).toBe(true);
-      
+      expect(testArtifactsB.every((a) => a.content?.includes("Tenant B"))).toBe(
+        true,
+      );
+
       // Among test artifacts, ensure no Tenant A artifacts appear
-      expect(testArtifactsB.some((a) => a.content?.includes("Tenant A"))).toBe(false);
+      expect(testArtifactsB.some((a) => a.content?.includes("Tenant A"))).toBe(
+        false,
+      );
     });
 
     it("should isolate count by tenant", async () => {
@@ -222,23 +285,23 @@ describeWithConvex("Artifacts Multi-tenancy Integration", () => {
       const spaceIdA = `${ctx.runId}-count-space-a`;
       const spaceIdB = `${ctx.runId}-count-space-b`;
 
-      await tenantA.cortex.memorySpaces.register({
+      await countCortexA.memorySpaces.register({
         memorySpaceId: spaceIdA,
         name: "Count Test A",
         type: "project",
       });
-      createdSpaces.push({ spaceId: spaceIdA, cortex: tenantA.cortex });
+      createdSpaces.push({ spaceId: spaceIdA, cortex: countCortexA });
 
-      await tenantB.cortex.memorySpaces.register({
+      await countCortexB.memorySpaces.register({
         memorySpaceId: spaceIdB,
         name: "Count Test B",
         type: "project",
       });
-      createdSpaces.push({ spaceId: spaceIdB, cortex: tenantB.cortex });
+      createdSpaces.push({ spaceId: spaceIdB, cortex: countCortexB });
 
       // Create 3 artifacts for A, 1 for B
       for (let i = 0; i < 3; i++) {
-        await tenantA.cortex.artifacts.create({
+        await countCortexA.artifacts.create({
           memorySpaceId: spaceIdA,
           kind: "text",
           content: `A count test ${i}`,
@@ -246,15 +309,19 @@ describeWithConvex("Artifacts Multi-tenancy Integration", () => {
         });
       }
 
-      await tenantB.cortex.artifacts.create({
+      await countCortexB.artifacts.create({
         memorySpaceId: spaceIdB,
         kind: "text",
         content: "B count test",
         title: "Count Test B",
       });
 
-      const countA = await tenantA.cortex.artifacts.count({ memorySpaceId: spaceIdA });
-      const countB = await tenantB.cortex.artifacts.count({ memorySpaceId: spaceIdB });
+      const countA = await countCortexA.artifacts.count({
+        memorySpaceId: spaceIdA,
+      });
+      const countB = await countCortexB.artifacts.count({
+        memorySpaceId: spaceIdB,
+      });
 
       expect(countA).toBe(3);
       expect(countB).toBe(1);
@@ -269,54 +336,51 @@ describeWithConvex("Artifacts Multi-tenancy Integration", () => {
     let globalSpaceId: string;
 
     beforeAll(async () => {
-      // Register a global memory space (no tenant)
       globalSpaceId = `${ctx.runId}-global-space`;
-      await globalCortex.memorySpaces.register({
-        memorySpaceId: globalSpaceId,
-        name: "Global Test Space",
-        type: "project",
-      });
-      createdSpaces.push({ spaceId: globalSpaceId, cortex: globalCortex });
+      await expectConvexRefusal(globalCortex.memorySpaces.register({
+          memorySpaceId: globalSpaceId,
+          name: "Global Test Space",
+          type: "project",
+        }), "UNAUTHENTICATED");
     });
 
     it("should create global artifacts without tenant context", async () => {
-      const artifact = await globalCortex.artifacts.create({
-        memorySpaceId: globalSpaceId,
-        kind: "text",
-        content: "Global content - no tenant",
-        title: "Global Artifact Test",
-      });
-
-      expect(artifact.artifactId).toBeDefined();
-
-      // Should be accessible without tenant
-      const retrieved = await globalCortex.artifacts.get(artifact.artifactId);
-      expect(retrieved).not.toBeNull();
-      expect(retrieved?.content).toBe("Global content - no tenant");
+      await expectRefusalNoEffects(
+        () =>
+          globalCortex.artifacts.create({
+            memorySpaceId: globalSpaceId,
+            kind: "text",
+            content: "Global content - no tenant",
+            title: "Unprovisioned global artifact",
+          }),
+        runtimeFixtures,
+        "artifacts",
+        "UNAUTHENTICATED",
+      );
     });
 
     it("should isolate global artifacts from tenant artifacts", async () => {
-      // Create global artifact
-      const globalArtifact = await globalCortex.artifacts.create({
-        memorySpaceId: globalSpaceId,
+      const artifact = await tenantA.cortex.artifacts.create({
+        memorySpaceId: tenantA.memorySpaceId,
         kind: "text",
-        content: "Global artifact content",
-        title: "Global Isolation Test",
+        content: "Owned tenant data",
+        title: "Global isolation",
       });
-
-      // Accessible without tenant
-      const result = await globalCortex.artifacts.get(globalArtifact.artifactId);
-      expect(result).not.toBeNull();
-      expect(result?.content).toBe("Global artifact content");
-
-      // NOT accessible when querying with tenantId
-      // Tenant A should not see global artifacts
-      const tenantAResult = await tenantA.cortex.artifacts.get(globalArtifact.artifactId);
-      expect(tenantAResult).toBeNull();
-
-      // Tenant B should not see global artifacts
-      const tenantBResult = await tenantB.cortex.artifacts.get(globalArtifact.artifactId);
-      expect(tenantBResult).toBeNull();
+      await expectRefusalNoEffects(
+        () => globalCortex.artifacts.get(artifact.artifactId),
+        runtimeFixtures,
+        "artifacts",
+        "UNAUTHENTICATED",
+      );
+      await expectRefusalNoEffects(
+        () => tenantB.cortex.artifacts.get(artifact.artifactId),
+        runtimeFixtures,
+        "artifacts",
+        "FORBIDDEN",
+      );
+      expect(
+        (await tenantA.cortex.artifacts.get(artifact.artifactId))?.content,
+      ).toBe("Owned tenant data");
     });
   });
 
@@ -341,21 +405,17 @@ describeWithConvex("Artifacts Multi-tenancy Integration", () => {
       });
 
       // Tenant B cannot append to it (even with session ID)
-      await expect(
-        tenantB.cortex.artifacts.appendContent({
+      await expectConvexRefusal(tenantB.cortex.artifacts.appendContent({
           artifactId: artifact.artifactId,
           sessionId,
           chunk: "Malicious content",
-        }),
-      ).rejects.toThrow();
+        }), "FORBIDDEN");
 
       // Tenant B cannot finalize it
-      await expect(
-        tenantB.cortex.artifacts.finalizeStreaming({
+      await expectConvexRefusal(tenantB.cortex.artifacts.finalizeStreaming({
           artifactId: artifact.artifactId,
           sessionId,
-        }),
-      ).rejects.toThrow();
+        }), "FORBIDDEN");
 
       // Cleanup - Tenant A finalizes
       await tenantA.cortex.artifacts.cancelStreaming({
@@ -375,11 +435,9 @@ describeWithConvex("Artifacts Multi-tenancy Integration", () => {
       });
 
       // Tenant B cannot start streaming
-      await expect(
-        tenantB.cortex.artifacts.startStreaming({
+      await expectConvexRefusal(tenantB.cortex.artifacts.startStreaming({
           artifactId: artifact.artifactId,
-        }),
-      ).rejects.toThrow();
+        }), "FORBIDDEN");
     });
   });
 
@@ -397,16 +455,25 @@ describeWithConvex("Artifacts Multi-tenancy Integration", () => {
         title: "History Isolation Test",
       });
 
-      await tenantA.cortex.artifacts.update(artifact.artifactId, "v2 - also secret");
+      await tenantA.cortex.artifacts.update(
+        artifact.artifactId,
+        "v2 - also secret",
+      );
 
       // Tenant A can see history
-      const historyA = await tenantA.cortex.artifacts.getHistory(artifact.artifactId);
+      const historyA = await tenantA.cortex.artifacts.getHistory(
+        artifact.artifactId,
+      );
       expect(historyA.length).toBe(2);
 
       // Tenant B gets empty history (artifact not accessible to them)
       // This behavior prevents tenant B from learning whether the artifact exists
-      const historyB = await tenantB.cortex.artifacts.getHistory(artifact.artifactId);
-      expect(historyB).toEqual([]);
+      await expectRefusalNoEffects(
+        () => tenantB.cortex.artifacts.getHistory(artifact.artifactId),
+        runtimeFixtures,
+        "artifacts",
+        "FORBIDDEN",
+      );
     });
 
     it("should prevent Tenant B from undo/redo on Tenant A artifacts", async () => {
@@ -421,13 +488,13 @@ describeWithConvex("Artifacts Multi-tenancy Integration", () => {
       await tenantA.cortex.artifacts.update(artifact.artifactId, "v2");
 
       // Tenant B cannot undo
-      await expect(tenantB.cortex.artifacts.undo(artifact.artifactId)).rejects.toThrow();
+      await expectConvexRefusal(tenantB.cortex.artifacts.undo(artifact.artifactId), "FORBIDDEN");
 
       // Tenant A can undo
       await tenantA.cortex.artifacts.undo(artifact.artifactId);
 
       // Tenant B cannot redo
-      await expect(tenantB.cortex.artifacts.redo(artifact.artifactId)).rejects.toThrow();
+      await expectConvexRefusal(tenantB.cortex.artifacts.redo(artifact.artifactId), "FORBIDDEN");
     });
 
     it("should prevent Tenant B from getting specific version of Tenant A artifact", async () => {
@@ -440,12 +507,19 @@ describeWithConvex("Artifacts Multi-tenancy Integration", () => {
       });
 
       // Tenant A can get version
-      const v1A = await tenantA.cortex.artifacts.getVersion(artifact.artifactId, 1);
+      const v1A = await tenantA.cortex.artifacts.getVersion(
+        artifact.artifactId,
+        1,
+      );
       expect(v1A?.content).toBe("Secret version 1");
 
       // Tenant B cannot get version
-      const v1B = await tenantB.cortex.artifacts.getVersion(artifact.artifactId, 1);
-      expect(v1B).toBeNull();
+      await expectRefusalNoEffects(
+        () => tenantB.cortex.artifacts.getVersion(artifact.artifactId, 1),
+        runtimeFixtures,
+        "artifacts",
+        "FORBIDDEN",
+      );
     });
   });
 
@@ -481,11 +555,19 @@ describeWithConvex("Artifacts Multi-tenancy Integration", () => {
       expect(resultB?.content).toBe("Concurrent B");
 
       // Cross-access fails
-      const crossA = await tenantA.cortex.artifacts.get(artifactB.artifactId);
-      expect(crossA).toBeNull();
+      await expectRefusalNoEffects(
+        () => tenantA.cortex.artifacts.get(artifactB.artifactId),
+        runtimeFixtures,
+        "artifacts",
+        "FORBIDDEN",
+      );
 
-      const crossB = await tenantB.cortex.artifacts.get(artifactA.artifactId);
-      expect(crossB).toBeNull();
+      await expectRefusalNoEffects(
+        () => tenantB.cortex.artifacts.get(artifactA.artifactId),
+        runtimeFixtures,
+        "artifacts",
+        "FORBIDDEN",
+      );
     });
 
     it("should handle concurrent updates from multiple tenants on their own artifacts", async () => {

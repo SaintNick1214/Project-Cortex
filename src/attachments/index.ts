@@ -12,10 +12,11 @@
  * - Multi-tenancy support
  */
 
+import { isDeploymentOperatorClient } from "../common/deploymentOperator";
 import { AssetCapabilityUnavailableError } from "../assets/errors";
 import { resolveTenantId } from "../auth/tenant";
 import type { ConvexClient } from "convex/browser";
-import { api } from "../../convex-dev/_generated/api";
+import { api } from "../common/backendApi";
 import type {
   Attachment,
   AttachParams,
@@ -94,7 +95,15 @@ export class AttachmentsAPI {
    * @throws AssetCapabilityUnavailableError with CAPABILITY_UNAVAILABLE
    */
   async generateUploadUrl(): Promise<UploadUrlResult> {
-    throw new AssetCapabilityUnavailableError();
+    if (!isDeploymentOperatorClient(this.client)) throw new AssetCapabilityUnavailableError();
+    const result = await this.executeWithResilience(
+      () => this.client.mutation(api.attachments.generateUploadUrl, {
+        tenantId: this.authContext?.tenantId,
+      }),
+      "attachments:generateUploadUrl",
+    );
+
+    return result as UploadUrlResult;
   }
 
   /**
@@ -190,8 +199,21 @@ export class AttachmentsAPI {
    * @throws AssetCapabilityUnavailableError with CAPABILITY_UNAVAILABLE
    */
   async getUrl(attachmentId: string): Promise<string | null> {
-    void attachmentId;
-    throw new AssetCapabilityUnavailableError();
+    if (!isDeploymentOperatorClient(this.client)) throw new AssetCapabilityUnavailableError();
+    // Client-side validation
+    validateAttachmentId(attachmentId);
+
+    const result = await this.executeWithResilience(
+      () =>
+        this.client.query(api.attachments.getUrl, {
+          attachmentId,
+          tenantId: this.authContext?.tenantId,
+        }),
+      "attachments:getUrl",
+    );
+
+    const urlResult = result as { url: string } | null;
+    return urlResult?.url ?? null;
   }
 
   /**
@@ -341,7 +363,7 @@ export class AttachmentsAPI {
   /**
    * Delete an attachment.
    *
-   * Removes both the metadata record and the file from storage.
+   * Removes the metadata record. Bytes are deleted only when no document or retained version references them. The boolean reports metadata deletion.
    *
    * @example
    * ```typescript

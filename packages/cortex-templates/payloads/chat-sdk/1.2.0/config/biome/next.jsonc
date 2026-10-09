@@ -1,0 +1,45 @@
+{
+	"root": false,
+	"$schema": "../../../node_modules/@biomejs/biome/configuration_schema.json",
+	"linter": {
+		"rules": {
+			"correctness": {
+				"noBeforeInteractiveScriptOutsideDocument": "error",
+				"noNextAsyncClientComponent": "error",
+				"useInlineScriptId": "error"
+			},
+			"performance": {
+				"noImgElement": "error"
+			},
+			"style": {
+				"noHeadElement": "error"
+			},
+			"suspicious": {
+				"noDocumentImportInPage": "error",
+				"noHeadImportInDocument": "error"
+			}
+		}
+	},
+	"overrides": [
+		{
+			"includes": ["**/next.config.*"],
+			"linter": {
+				"rules": {
+					"suspicious": {
+						"useAwait": "off"
+					}
+				}
+			}
+		},
+		{
+			"includes": ["**/page.{ts,tsx,js,jsx}", "**/layout.{ts,tsx,js,jsx}"],
+			"linter": {
+				"rules": {
+					"suspicious": {
+						"useAwait": "off"
+					}
+				}
+			}
+		}
+	]
+}

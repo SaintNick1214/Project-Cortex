@@ -47,6 +47,7 @@ jest.mock("@cortexmemory/sdk", () => {
   const mockInstance = {
     memory: mockMemory,
     close: jest.fn(),
+    shutdown: jest.fn().mockResolvedValue(undefined),
   };
 
   const MockCortex = jest.fn().mockImplementation(() => mockInstance);
@@ -147,8 +148,9 @@ describe("Factory Functions", () => {
       factory(createMockLLM());
       expect(Cortex).toHaveBeenCalledTimes(1);
       const client = (Cortex as unknown as jest.Mock).mock.results[0].value;
-      await factory.close();
-      expect(client.close).toHaveBeenCalledTimes(1);
+      await Promise.all([factory.close(), factory.close()]);
+      expect(client.shutdown).toHaveBeenCalledTimes(1);
+      expect(client.close).not.toHaveBeenCalled();
     });
 
   });

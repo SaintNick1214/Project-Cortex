@@ -8,6 +8,10 @@
  * - Tenant-scoped analytics and reporting
  */
 
+import { expectRefusalNoEffects } from "../helpers/public-contract";
+import { createRuntimeFixture } from "../helpers/runtime-fixture";
+const runtimeFixtures: Array<Awaited<ReturnType<typeof createRuntimeFixture>>> =
+  [];
 import { Cortex } from "../../src";
 import { createTestRunContext } from "../helpers/isolation";
 import {
@@ -32,6 +36,15 @@ describeWithConvex("Multi-Tenancy E2E", () => {
     initech: TenantTestContext;
   } = {} as any;
 
+  const sharedUserId = `admin-${_ctx.runId}`;
+  const onboardingTenantId = generateTenantId("new-customer");
+  const onboardingUserId = generateTenantUserId(onboardingTenantId);
+  const onboardingSpaceId = generateTenantMemorySpaceId(onboardingTenantId);
+  let sharedAcme: Awaited<ReturnType<typeof createRuntimeFixture>>;
+  let sharedGlobex: Awaited<ReturnType<typeof createRuntimeFixture>>;
+  let secondAcme: Awaited<ReturnType<typeof createRuntimeFixture>>;
+  let onboarding: Awaited<ReturnType<typeof createRuntimeFixture>>;
+
   beforeAll(async () => {
     // Setup Acme Corp tenant
     const acmeId = generateTenantId("acme-corp");
@@ -42,14 +55,26 @@ describeWithConvex("Multi-Tenancy E2E", () => {
       claims: { plan: "enterprise", seats: 100 },
     });
 
+    const acmeFixture = await createRuntimeFixture(
+      acmeId,
+      acmeSpaceId,
+      acmeUserId,
+      { enabled: false },
+      { registerSpaces: false },
+    );
+    runtimeFixtures.push(acmeFixture);
     tenants.acmeCorp = {
       tenantId: acmeId,
       userId: acmeUserId,
       memorySpaceId: acmeSpaceId,
-      cortex: new Cortex({
-        convexUrl: process.env.CONVEX_URL!,
-        auth: acmeAuth,
-      }),
+      cortex: new Cortex(
+        {
+          convexUrl: process.env.CONVEX_URL!,
+          auth: acmeAuth,
+          resilience: { enabled: false },
+        },
+        { initializeTransport: acmeFixture.initializeTransport },
+      ),
       authContext: acmeAuth,
     };
 
@@ -62,14 +87,26 @@ describeWithConvex("Multi-Tenancy E2E", () => {
       claims: { plan: "professional", seats: 25 },
     });
 
+    const globexFixture = await createRuntimeFixture(
+      globexId,
+      globexSpaceId,
+      globexUserId,
+      { enabled: false },
+      { registerSpaces: false },
+    );
+    runtimeFixtures.push(globexFixture);
     tenants.globexInc = {
       tenantId: globexId,
       userId: globexUserId,
       memorySpaceId: globexSpaceId,
-      cortex: new Cortex({
-        convexUrl: process.env.CONVEX_URL!,
-        auth: globexAuth,
-      }),
+      cortex: new Cortex(
+        {
+          convexUrl: process.env.CONVEX_URL!,
+          auth: globexAuth,
+          resilience: { enabled: false },
+        },
+        { initializeTransport: globexFixture.initializeTransport },
+      ),
       authContext: globexAuth,
     };
 
@@ -82,16 +119,58 @@ describeWithConvex("Multi-Tenancy E2E", () => {
       claims: { plan: "starter", seats: 5 },
     });
 
+    const initechFixture = await createRuntimeFixture(
+      initechId,
+      initechSpaceId,
+      initechUserId,
+      { enabled: false },
+      { registerSpaces: false },
+    );
+    runtimeFixtures.push(initechFixture);
     tenants.initech = {
       tenantId: initechId,
       userId: initechUserId,
       memorySpaceId: initechSpaceId,
-      cortex: new Cortex({
-        convexUrl: process.env.CONVEX_URL!,
-        auth: initechAuth,
-      }),
+      cortex: new Cortex(
+        {
+          convexUrl: process.env.CONVEX_URL!,
+          auth: initechAuth,
+          resilience: { enabled: false },
+        },
+        { initializeTransport: initechFixture.initializeTransport },
+      ),
       authContext: initechAuth,
     };
+
+    sharedAcme = await createRuntimeFixture(
+      acmeId,
+      acmeSpaceId,
+      sharedUserId,
+      { enabled: false },
+      { registerSpaces: false },
+    );
+    sharedGlobex = await createRuntimeFixture(
+      globexId,
+      globexSpaceId,
+      sharedUserId,
+      { enabled: false },
+      { registerSpaces: false },
+    );
+    secondAcme = await createRuntimeFixture(
+      acmeId,
+      acmeSpaceId,
+      generateTenantUserId(acmeId),
+      { enabled: false },
+      { registerSpaces: false },
+    );
+    onboarding = await createRuntimeFixture(
+      onboardingTenantId,
+      onboardingSpaceId,
+      onboardingUserId,
+      { enabled: false },
+      { registerSpaces: false },
+    );
+    runtimeFixtures.push(sharedAcme, sharedGlobex, secondAcme, onboarding);
 
     // Register memory spaces for all tenants
     await tenants.acmeCorp.cortex.memorySpaces.register({
@@ -114,16 +193,23 @@ describeWithConvex("Multi-Tenancy E2E", () => {
   });
 
   afterAll(async () => {
-    // Cleanup all tenant spaces
-    for (const tenant of Object.values(tenants)) {
-      try {
-        await tenant.cortex.memorySpaces.delete(tenant.memorySpaceId, {
-          cascade: true,
-          reason: "Test cleanup",
-        });
-      } catch {
-        // Ignore
+    try {
+      // Cleanup all tenant spaces
+      for (const tenant of Object.values(tenants)) {
+        try {
+          await tenant.cortex.memorySpaces.delete(tenant.memorySpaceId, {
+            cascade: true,
+            reason: "Test cleanup",
+          });
+        } catch {
+          // Public erasure requires an explicit transport.
+        }
       }
+    } finally {
+      await Promise.all([
+        ...Object.values(tenants).map((tenant) => tenant.cortex.shutdown()),
+        ...runtimeFixtures.map((fixture) => fixture.close()),
+      ]);
     }
   });
 
@@ -133,54 +219,45 @@ describeWithConvex("Multi-Tenancy E2E", () => {
 
   describe("Scenario 1: Parallel Tenant Operations", () => {
     it("should handle concurrent operations across tenants", async () => {
-      // All tenants perform operations simultaneously
-      const results = await Promise.all([
-        // Acme Corp creates a conversation
-        tenants.acmeCorp.cortex.conversations.create({
-          memorySpaceId: tenants.acmeCorp.memorySpaceId,
-          type: "user-agent",
-          participants: {
-            userId: tenants.acmeCorp.userId,
-            agentId: `agent_${tenants.acmeCorp.tenantId}`,
-          },
-        }),
-
-        // Globex creates a conversation
-        tenants.globexInc.cortex.conversations.create({
-          memorySpaceId: tenants.globexInc.memorySpaceId,
-          type: "user-agent",
-          participants: {
-            userId: tenants.globexInc.userId,
-            agentId: `agent_${tenants.globexInc.tenantId}`,
-          },
-        }),
-
-        // Initech creates a conversation
-        tenants.initech.cortex.conversations.create({
-          memorySpaceId: tenants.initech.memorySpaceId,
-          type: "user-agent",
-          participants: {
-            userId: tenants.initech.userId,
-            agentId: `agent_${tenants.initech.tenantId}`,
-          },
-        }),
-      ]);
-
-      // Verify each tenant got their own conversation
-      expect(results[0].tenantId).toBe(tenants.acmeCorp.tenantId);
-      expect(results[1].tenantId).toBe(tenants.globexInc.tenantId);
-      expect(results[2].tenantId).toBe(tenants.initech.tenantId);
-
-      // Cleanup
-      await tenants.acmeCorp.cortex.conversations.delete(
-        results[0].conversationId,
+      const values = Object.values(tenants);
+      const results = await Promise.all(
+        values.map((tenant) =>
+          tenant.cortex.facts.store({
+            memorySpaceId: tenant.memorySpaceId,
+            fact: "Parallel tenant operation",
+            factType: "knowledge",
+            confidence: 85,
+            sourceType: "manual",
+            userId: tenant.userId,
+          }),
+        ),
       );
-      await tenants.globexInc.cortex.conversations.delete(
-        results[1].conversationId,
-      );
-      await tenants.initech.cortex.conversations.delete(
-        results[2].conversationId,
-      );
+      for (const [index, tenant] of values.entries()) {
+        expect(results[index]!.tenantId).toBe(tenant.tenantId);
+        expect(
+          (
+            await tenant.cortex.facts.get(
+              tenant.memorySpaceId,
+              results[index]!.factId,
+            )
+          )?.factId,
+        ).toBe(results[index]!.factId);
+        await expectRefusalNoEffects(
+          () =>
+            tenant.cortex.conversations.create({
+              memorySpaceId: tenant.memorySpaceId,
+              type: "user-agent",
+              participants: { userId: tenant.userId, agentId: "test-agent" },
+            }),
+          runtimeFixtures,
+          "conversations",
+          "CAPABILITY_NOT_READY",
+        );
+        await tenant.cortex.facts.delete(
+          tenant.memorySpaceId,
+          results[index]!.factId,
+        );
+      }
     });
   });
 
@@ -267,71 +344,54 @@ describeWithConvex("Multi-Tenancy E2E", () => {
 
   describe("Scenario 3: Multi-User Within Tenant", () => {
     it("should support multiple users within same tenant", async () => {
-      // Create additional users in Acme Corp
-      const acmeUser2Id = generateTenantUserId(tenants.acmeCorp.tenantId);
-      const _acmeUser3Id = generateTenantUserId(tenants.acmeCorp.tenantId);
-
-      // User 1 creates a memory
-      const conv = await tenants.acmeCorp.cortex.conversations.create({
-        memorySpaceId: tenants.acmeCorp.memorySpaceId,
-        type: "user-agent",
-        participants: {
-          userId: tenants.acmeCorp.userId,
-          agentId: `agent_${tenants.acmeCorp.tenantId}`,
+      const first = await tenants.acmeCorp.cortex.vector.store(
+        tenants.acmeCorp.memorySpaceId,
+        {
+          content: "project Alpha for user1",
+          contentType: "raw",
+          source: { type: "system" },
+          metadata: {
+            importance: 50,
+            tags: ["project"],
+            userId: tenants.acmeCorp.userId,
+          },
         },
-      });
-
-      await tenants.acmeCorp.cortex.memory.remember({
-        memorySpaceId: tenants.acmeCorp.memorySpaceId,
-        conversationId: conv.conversationId,
-        userMessage: "User 1's conversation about project Alpha",
-        agentResponse: "I'll help with project Alpha",
-        userId: tenants.acmeCorp.userId,
-        userName: "Acme User 1",
-        agentId: `agent_${tenants.acmeCorp.tenantId}`,
-      });
-
-      // User 2 creates a memory
-      const conv2 = await tenants.acmeCorp.cortex.conversations.create({
-        memorySpaceId: tenants.acmeCorp.memorySpaceId,
-        type: "user-agent",
-        participants: {
-          userId: acmeUser2Id,
-          agentId: `agent_${tenants.acmeCorp.tenantId}`,
+      );
+      const second = await secondAcme.cortex.vector.store(
+        tenants.acmeCorp.memorySpaceId,
+        {
+          content: "project Beta for user2",
+          contentType: "raw",
+          source: { type: "system" },
+          metadata: {
+            importance: 50,
+            tags: ["project"],
+            userId: secondAcme.userId,
+          },
         },
-      });
-
-      await tenants.acmeCorp.cortex.memory.remember({
-        memorySpaceId: tenants.acmeCorp.memorySpaceId,
-        conversationId: conv2.conversationId,
-        userMessage: "User 2's conversation about project Beta",
-        agentResponse: "I'll help with project Beta",
-        userId: acmeUser2Id,
-        userName: "Acme User 2",
-        agentId: `agent_${tenants.acmeCorp.tenantId}`,
-      });
-
-      // Recall within tenant should find both users' data
+      );
       const recall = await tenants.acmeCorp.cortex.memory.recall({
         memorySpaceId: tenants.acmeCorp.memorySpaceId,
         query: "project",
         limit: 100,
       });
-
-      expect(recall.items.length).toBeGreaterThanOrEqual(2);
-
-      // But other tenants should not see any of it
-      const globexRecall = await tenants.globexInc.cortex.memory.recall({
-        memorySpaceId: tenants.acmeCorp.memorySpaceId,
-        query: "project Alpha Beta",
-        limit: 100,
-      });
-
-      expect(globexRecall.items.length).toBe(0);
-
-      // Cleanup
-      await tenants.acmeCorp.cortex.conversations.delete(conv.conversationId);
-      await tenants.acmeCorp.cortex.conversations.delete(conv2.conversationId);
+      expect(recall.items.some((item) => item.id === first.memoryId)).toBe(
+        true,
+      );
+      expect(recall.items.some((item) => item.id === second.memoryId)).toBe(
+        true,
+      );
+      await expectRefusalNoEffects(
+        () =>
+          tenants.globexInc.cortex.memory.recall({
+            memorySpaceId: tenants.acmeCorp.memorySpaceId,
+            query: "project Alpha Beta",
+            limit: 100,
+          }),
+        runtimeFixtures,
+        "memories",
+        "FORBIDDEN",
+      );
     });
   });
 
@@ -340,24 +400,26 @@ describeWithConvex("Multi-Tenancy E2E", () => {
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   describe("Scenario 4: Cross-Tenant Access Prevention", () => {
-    let acmeConversationId: string;
     let acmeFactId: string;
 
     beforeAll(async () => {
-      // Create data in Acme Corp
-      const conv = await tenants.acmeCorp.cortex.conversations.create({
-        memorySpaceId: tenants.acmeCorp.memorySpaceId,
-        type: "user-agent",
-        participants: {
-          userId: tenants.acmeCorp.userId,
-          agentId: `agent_${tenants.acmeCorp.tenantId}`,
-        },
-      });
-      acmeConversationId = conv.conversationId;
-
+      await expectRefusalNoEffects(
+        () =>
+          tenants.acmeCorp.cortex.conversations.create({
+            memorySpaceId: tenants.acmeCorp.memorySpaceId,
+            type: "user-agent",
+            participants: {
+              userId: tenants.acmeCorp.userId,
+              agentId: "test-agent",
+            },
+          }),
+        runtimeFixtures,
+        "conversations",
+        "CAPABILITY_NOT_READY",
+      );
       const fact = await tenants.acmeCorp.cortex.facts.store({
         memorySpaceId: tenants.acmeCorp.memorySpaceId,
-        fact: "Acme's secret: password is hunter2",
+        fact: "Acme secret password hunter2",
         factType: "knowledge",
         confidence: 85,
         sourceType: "manual",
@@ -367,7 +429,6 @@ describeWithConvex("Multi-Tenancy E2E", () => {
     });
 
     afterAll(async () => {
-      await tenants.acmeCorp.cortex.conversations.delete(acmeConversationId);
       await tenants.acmeCorp.cortex.facts.delete(
         tenants.acmeCorp.memorySpaceId,
         acmeFactId,
@@ -375,38 +436,54 @@ describeWithConvex("Multi-Tenancy E2E", () => {
     });
 
     it("should prevent Globex from accessing Acme conversation", async () => {
-      const result =
-        await tenants.globexInc.cortex.conversations.get(acmeConversationId);
-
-      expect(result).toBeNull();
+      await expectRefusalNoEffects(
+        () =>
+          tenants.globexInc.cortex.conversations.create({
+            memorySpaceId: tenants.acmeCorp.memorySpaceId,
+            type: "user-agent",
+            participants: {
+              userId: tenants.globexInc.userId,
+              agentId: "test-agent",
+            },
+          }),
+        runtimeFixtures,
+        "conversations",
+        "FORBIDDEN",
+      );
     });
 
     it("should prevent Initech from accessing Acme facts", async () => {
-      const result = await tenants.initech.cortex.facts.get(
-        tenants.acmeCorp.memorySpaceId,
-        acmeFactId,
+      await expectRefusalNoEffects(
+        () =>
+          tenants.initech.cortex.facts.get(
+            tenants.acmeCorp.memorySpaceId,
+            acmeFactId,
+          ),
+        runtimeFixtures,
+        "facts",
+        "FORBIDDEN",
       );
-
-      expect(result).toBeNull();
     });
 
     it("should prevent cross-tenant fact deletion", async () => {
-      // Globex tries to delete Acme's fact
-      try {
-        await tenants.globexInc.cortex.facts.delete(
-          tenants.acmeCorp.memorySpaceId,
-          acmeFactId,
-        );
-      } catch {
-        // Expected to fail
-      }
-
-      // Verify fact still exists for Acme
-      const fact = await tenants.acmeCorp.cortex.facts.get(
-        tenants.acmeCorp.memorySpaceId,
-        acmeFactId,
+      await expectRefusalNoEffects(
+        () =>
+          tenants.globexInc.cortex.facts.delete(
+            tenants.acmeCorp.memorySpaceId,
+            acmeFactId,
+          ),
+        runtimeFixtures,
+        "facts",
+        "FORBIDDEN",
       );
-      expect(fact).not.toBeNull();
+      expect(
+        (
+          await tenants.acmeCorp.cortex.facts.get(
+            tenants.acmeCorp.memorySpaceId,
+            acmeFactId,
+          )
+        )?.factId,
+      ).toBe(acmeFactId);
     });
   });
 
@@ -458,32 +535,30 @@ describeWithConvex("Multi-Tenancy E2E", () => {
 
     it("should isolate endAll by tenant when same userId exists in multiple tenants", async () => {
       // Critical test: In multi-tenant SaaS, userIds like "admin" might exist in multiple tenants
-      const sharedUserId = `admin-${Date.now()}`;
 
       // Create sessions with same userId in both tenants
-      const acmeSession1 = await tenants.acmeCorp.cortex.sessions.create({
+      const acmeSession1 = await sharedAcme.cortex.sessions.create({
         userId: sharedUserId,
         tenantId: tenants.acmeCorp.tenantId,
       });
-      const acmeSession2 = await tenants.acmeCorp.cortex.sessions.create({
+      const acmeSession2 = await sharedAcme.cortex.sessions.create({
         userId: sharedUserId,
         tenantId: tenants.acmeCorp.tenantId,
       });
 
-      const globexSession1 = await tenants.globexInc.cortex.sessions.create({
+      const globexSession1 = await sharedGlobex.cortex.sessions.create({
         userId: sharedUserId,
         tenantId: tenants.globexInc.tenantId,
       });
-      const globexSession2 = await tenants.globexInc.cortex.sessions.create({
+      const globexSession2 = await sharedGlobex.cortex.sessions.create({
         userId: sharedUserId,
         tenantId: tenants.globexInc.tenantId,
       });
 
       // End all sessions for this user ONLY in Acme tenant
-      const result = await tenants.acmeCorp.cortex.sessions.endAll(
-        sharedUserId,
-        { tenantId: tenants.acmeCorp.tenantId },
-      );
+      const result = await sharedAcme.cortex.sessions.endAll(sharedUserId, {
+        tenantId: tenants.acmeCorp.tenantId,
+      });
 
       // Should have ended exactly 2 sessions (Acme's)
       expect(result.ended).toBe(2);
@@ -491,27 +566,27 @@ describeWithConvex("Multi-Tenancy E2E", () => {
       expect(result.sessionIds).toContain(acmeSession2.sessionId);
 
       // Verify Acme sessions are ended
-      const acmeSession1After = await tenants.acmeCorp.cortex.sessions.get(
+      const acmeSession1After = await sharedAcme.cortex.sessions.get(
         acmeSession1.sessionId,
       );
-      const acmeSession2After = await tenants.acmeCorp.cortex.sessions.get(
+      const acmeSession2After = await sharedAcme.cortex.sessions.get(
         acmeSession2.sessionId,
       );
       expect(acmeSession1After?.status).toBe("ended");
       expect(acmeSession2After?.status).toBe("ended");
 
       // Verify Globex sessions are STILL ACTIVE (tenant isolation working!)
-      const globexSession1After = await tenants.globexInc.cortex.sessions.get(
+      const globexSession1After = await sharedGlobex.cortex.sessions.get(
         globexSession1.sessionId,
       );
-      const globexSession2After = await tenants.globexInc.cortex.sessions.get(
+      const globexSession2After = await sharedGlobex.cortex.sessions.get(
         globexSession2.sessionId,
       );
       expect(globexSession1After?.status).toBe("active");
       expect(globexSession2After?.status).toBe("active");
 
       // Cleanup Globex sessions
-      await tenants.globexInc.cortex.sessions.endAll(sharedUserId, {
+      await sharedGlobex.cortex.sessions.endAll(sharedUserId, {
         tenantId: tenants.globexInc.tenantId,
       });
     });
@@ -583,15 +658,11 @@ describeWithConvex("Multi-Tenancy E2E", () => {
   describe("Scenario 7: Tenant Lifecycle", () => {
     it("should onboard new tenant with isolated resources", async () => {
       // New customer signs up
-      const newTenantId = generateTenantId("new-customer");
-      const newUserId = generateTenantUserId(newTenantId);
-      const newSpaceId = generateTenantMemorySpaceId(newTenantId);
+      const newTenantId = onboardingTenantId;
+      const newUserId = onboardingUserId;
+      const newSpaceId = onboardingSpaceId;
 
-      const newTenantAuth = createTenantAuthContext(newTenantId, newUserId);
-      const newTenantCortex = new Cortex({
-        convexUrl: process.env.CONVEX_URL!,
-        auth: newTenantAuth,
-      });
+      const newTenantCortex = onboarding.cortex;
 
       // Onboard tenant - create memory space
       await newTenantCortex.memorySpaces.register({
@@ -628,10 +699,16 @@ describeWithConvex("Multi-Tenancy E2E", () => {
       // Cleanup (simulating offboarding)
       await newTenantCortex.sessions.end(session.sessionId);
       await newTenantCortex.users.delete(newUserId, { cascade: false });
-      await newTenantCortex.memorySpaces.delete(newSpaceId, {
-        cascade: true,
-        reason: "Test cleanup",
-      });
+      const spaceBefore = await newTenantCortex.memorySpaces.get(newSpaceId);
+      await expect(
+        newTenantCortex.memorySpaces.delete(newSpaceId, {
+          cascade: true,
+          reason: "Offboarding requires explicit erasure transport",
+        }),
+      ).rejects.toThrow("ERASURE_ADMIN_TRANSPORT_REQUIRED");
+      expect(await newTenantCortex.memorySpaces.get(newSpaceId)).toEqual(
+        spaceBefore,
+      );
     });
   });
 });

@@ -1,3 +1,15 @@
+import { randomUUID } from "../common/crypto";
+import { GraphCommittedPartial, GraphJobUnresolved } from "../graph/types";
+import type { FunctionReference, FunctionArgs, FunctionReturnType } from "convex/server";
+import { writeGraphMutation, type GraphPrimary } from "../graph/erasure";
+import type { GraphSyncPolicy } from "../graph/types";
+import { waitDomainOperation, isDomainGraphIdentity, domainLoader, collectDomain, selectDomain, sameSelection, resolveDomainTenant, partialFrom, assertDomainActive } from "../common/domainPaging";
+import { factsExport } from "../common/domainExport";
+import { DomainOperationPartialError, type DomainReadOptions, type DomainItemOutcome, type DomainPartial } from "../types";
+import { validateTenantId } from "../auth/validators";
+import { ConvexError } from "convex/values";
+import { resolveFactScope } from "./discovery";
+import type { Id } from "../../convex-dev/_generated/dataModel";
 /**
  * Cortex SDK - Facts API (Layer 3)
  *
@@ -6,7 +18,9 @@
 
 import { resolveTenantId } from "../auth/tenant";
 import { ConvexClient } from "convex/browser";
-import { api } from "../../convex-dev/_generated/api";
+import { api } from "../common/backendApi";
+import { api as publicApi } from "../../convex-dev/_generated/api";
+import { isDeploymentOperatorClient } from "../common/deploymentOperator";
 import type {
   CountFactsFilter,
   DeleteFactOptions,
@@ -25,9 +39,6 @@ import type {
 } from "../types";
 import type { GraphAdapter } from "../graph/types";
 import {
-  syncFactToGraph,
-  syncFactRelationships,
-  deleteFactFromGraph,
 } from "../graph";
 import {
   validateMemorySpaceId,
@@ -66,6 +77,13 @@ import {
 } from "./belief-revision";
 import {
   FactHistoryService,
+  HistoryWriteAfterCommitError,
+  FactCommitOutcomeUnknownError,
+  FactCommittedResultUnavailableError,
+  FactCommittedReceiptUnresolvedError,
+  DecisionLogError,
+  type HistoryReceipt,
+  type HistorySelector,
   type FactChangeEvent,
   type ChangeFilter,
   type ActivitySummary,
@@ -115,11 +133,16 @@ export class FactsAPI {
     authContext?: AuthContext,
     llmClient?: BeliefRevisionLLMClient,
     beliefRevisionConfig?: BeliefRevisionConfig,
+    private readonly graphSyncPolicy?: GraphSyncPolicy,
   ) {
     this.authContext = authContext;
     this.llmClient = llmClient;
     this.deduplicationService = new FactDeduplicationService(client);
-    this.historyService = new FactHistoryService(client, resilience);
+    this.historyService = new FactHistoryService(
+      client,
+      resilience,
+      authContext,
+    );
 
     // Always initialize belief revision service - "batteries included"
     // When no LLM is configured, the service uses heuristics via getDefaultDecision()
@@ -129,8 +152,17 @@ export class FactsAPI {
       llmClient,
       graphAdapter,
       beliefRevisionConfig,
+      this.graphSyncPolicy,
     );
   }
+  private mutateGraph<M extends FunctionReference<"mutation", "public">>(reference: M, args: FunctionArgs<M>, explicit?: boolean): Promise<GraphPrimary<FunctionReturnType<M>>> {
+    return writeGraphMutation(this.client, this.graphAdapter, this.graphSyncPolicy, reference, args, explicit);
+  }
+  private executeGraphWrite<T>(operation: () => Promise<T>, name: string, explicit?: boolean): Promise<T> {
+    // A configured graph writer has one primary application invocation; delivery retries are separate.
+    return this.graphAdapter && explicit !== false ? operation() : this.executeWithResilience(operation, name);
+  }
+
 
   /**
    * Configure or update the belief revision service
@@ -144,6 +176,7 @@ export class FactsAPI {
       llmClient || this.llmClient,
       this.graphAdapter,
       config,
+      this.graphSyncPolicy,
     );
   }
 
@@ -241,13 +274,16 @@ export class FactsAPI {
       validateMetadata(params.metadata);
     }
 
-    const result = await this.executeWithResilience(
+    const result = await this.executeGraphWrite(
       () =>
-        this.client.mutation(api.facts.store, {
+        this.mutateGraph(api.facts.store, {
           memorySpaceId: params.memorySpaceId,
           participantId: params.participantId,
           userId: params.userId,
-          tenantId: resolveTenantId(this.authContext?.tenantId, params.tenantId),
+          tenantId: resolveFactScope(
+            this.authContext?.tenantId,
+            params.tenantId,
+          ), // Exact data scope, not authentication
           fact: params.fact,
           factType: params.factType,
           subject: params.subject,
@@ -268,26 +304,15 @@ export class FactsAPI {
           relations: params.relations,
           // Embedding for semantic search (v0.30.0+)
           embedding: params.embedding,
-        }),
-      "facts:store",
+        }, _options?.syncToGraph),
+      "facts:store", _options?.syncToGraph,
     );
 
     const factRecord = result as FactRecord;
 
     // Sync to graph automatically when graph adapter is configured
     // Graph sync is controlled by CORTEX_GRAPH_SYNC env var at Cortex initialization
-    if (this.graphAdapter) {
-      try {
-        const nodeId = await syncFactToGraph(
-          factRecord,
-          this.graphAdapter,
-          this.authContext?.tenantId,
-        );
-        await syncFactRelationships(factRecord, nodeId, this.graphAdapter);
-      } catch (error) {
-        console.warn("[Cortex] Failed to sync fact to graph:", error);
-      }
-    }
+    
 
     return factRecord;
   }
@@ -367,6 +392,7 @@ export class FactsAPI {
       params.memorySpaceId,
       dedupConfig,
       params.userId,
+      resolveFactScope(this.authContext?.tenantId, params.tenantId),
     );
 
     // If duplicate found
@@ -384,6 +410,14 @@ export class FactsAPI {
             tags: params.tags
               ? [...new Set([...existing.tags, ...params.tags])]
               : undefined,
+          },
+          {
+            tenantId: resolveFactScope(
+              this.authContext?.tenantId,
+              params.tenantId,
+            ),
+            expectedSourceFactId: existing._id,
+            syncToGraph:options?.syncToGraph,
           },
         );
 
@@ -430,7 +464,7 @@ export class FactsAPI {
    * const fact = await cortex.facts.get('space-1', 'fact-123');
    * ```
    */
-  async get(memorySpaceId: string, factId: string): Promise<FactRecord | null> {
+  async get(memorySpaceId: string, factId: string, options?: DomainReadOptions): Promise<FactRecord | null> {
     validateMemorySpaceId(memorySpaceId);
     validateRequiredString(factId, "factId");
     validateFactIdFormat(factId);
@@ -440,7 +474,7 @@ export class FactsAPI {
         this.client.query(api.facts.get, {
           memorySpaceId,
           factId,
-          tenantId: this.authContext?.tenantId, // Inject tenantId for tenant isolation
+          tenantId: resolveDomainTenant(this.authContext?.tenantId, options?.tenantId), // Inject tenantId for tenant isolation
         }),
       "facts:get",
     );
@@ -513,11 +547,9 @@ export class FactsAPI {
       validateMetadata(filter.metadata);
     }
 
-    const result = await this.executeWithResilience(
-      () =>
-        this.client.query(api.facts.list, {
+    const selection = {
           memorySpaceId: filter.memorySpaceId,
-          tenantId: this.authContext?.tenantId, // Tenant isolation
+          tenantId: resolveDomainTenant(this.authContext?.tenantId, filter.tenantId), // Tenant isolation
           factType: filter.factType,
           subject: filter.subject,
           predicate: filter.predicate,
@@ -537,15 +569,23 @@ export class FactsAPI {
           includeSuperseded: filter.includeSuperseded,
           validAt: filter.validAt?.getTime(),
           metadata: filter.metadata,
-          limit: filter.limit,
-          offset: filter.offset,
-          sortBy: filter.sortBy,
-          sortOrder: filter.sortOrder,
-        }),
-      "facts:list",
-    );
-
-    return result as FactRecord[];
+        };
+    if (!isDeploymentOperatorClient(this.client)) {
+      // Public handlers return the complete authorized set unless the caller
+      // selects a finite window; native budget failures remain failures.
+      return await this.executeWithResilience(
+        () => this.client.query(publicApi.facts.list, { ...selection, limit: filter.limit, offset: filter.offset, sortBy: filter.sortBy, sortOrder: filter.sortOrder }),
+        "facts:list",
+      );
+    }
+    const load = domainLoader(this.client, "facts", selection);
+    const rows = await collectDomain<FactRecord>(load);
+    if (filter?.sortBy) {
+      const field = filter.sortBy;
+      rows.sort((a,b) => ((a[field] as number) - (b[field] as number)) * (filter.sortOrder === "asc" ? 1 : -1));
+    }
+    const offset = filter?.offset ?? 0, limit = filter?.limit ?? Infinity;
+    return rows.slice(offset, offset + limit);
   }
 
   /**
@@ -561,6 +601,10 @@ export class FactsAPI {
    */
   async count(filter: CountFactsFilter): Promise<number> {
     validateMemorySpaceId(filter.memorySpaceId);
+    const context = this.authContext?.tenantId;
+    if (context !== undefined) validateTenantId(context);
+    if (filter.tenantId !== undefined) validateTenantId(filter.tenantId);
+    const tenantId = resolveFactScope(context, filter.tenantId);
 
     if (filter.factType !== undefined) {
       validateFactType(filter.factType);
@@ -604,7 +648,7 @@ export class FactsAPI {
       () =>
         this.client.query(api.facts.count, {
           memorySpaceId: filter.memorySpaceId,
-          tenantId: this.authContext?.tenantId, // Tenant isolation
+          tenantId, // Tenant isolation
           factType: filter.factType,
           subject: filter.subject,
           predicate: filter.predicate,
@@ -702,11 +746,9 @@ export class FactsAPI {
       }
     }
 
-    const result = await this.executeWithResilience(
-      () =>
-        this.client.query(api.facts.search, {
+    const selection = {
           memorySpaceId,
-          tenantId: this.authContext?.tenantId, // Tenant isolation
+          tenantId: resolveDomainTenant(this.authContext?.tenantId, options?.tenantId), // Tenant isolation
           query,
           factType: options?.factType,
           subject: options?.subject,
@@ -727,15 +769,21 @@ export class FactsAPI {
           includeSuperseded: options?.includeSuperseded,
           validAt: options?.validAt?.getTime(),
           metadata: options?.metadata,
-          limit: options?.limit,
-          offset: options?.offset,
-          sortBy: options?.sortBy,
-          sortOrder: options?.sortOrder,
-        }),
-      "facts:search",
-    );
-
-    return result as FactRecord[];
+        };
+    if (!isDeploymentOperatorClient(this.client)) {
+      return await this.executeWithResilience(
+        () => this.client.query(publicApi.facts.search, { ...selection, limit: options?.limit ?? 20, offset: options?.offset, sortBy: options?.sortBy, sortOrder: options?.sortOrder }),
+        "facts:search",
+      );
+    }
+    const load = domainLoader(this.client, "facts", selection);
+    const rows = await collectDomain<FactRecord>(load);
+    if (options?.sortBy) {
+      const field = options.sortBy;
+      rows.sort((a,b) => ((a[field] as number) - (b[field] as number)) * (options.sortOrder === "asc" ? 1 : -1));
+    }
+    const offset = options?.offset ?? 0, limit = options?.limit ?? 20;
+    return rows.slice(offset, offset + limit);
   }
 
   /**
@@ -844,12 +892,22 @@ export class FactsAPI {
       validateMetadata(updates.metadata);
     }
 
+    if (_options?.expectedSourceFingerprint !== undefined && !/^[a-f0-9]{64}$/.test(_options.expectedSourceFingerprint)) throw new Error("DOMAIN_INVALID_FINGERPRINT");
+    const tenantId = resolveFactScope(
+      this.authContext?.tenantId,
+      _options?.tenantId,
+    );
+    const operationId = _options?.operationId ?? randomUUID();
     let result;
     try {
-      result = await this.executeWithResilience(
-        () =>
-          this.client.mutation(api.facts.update, {
+      const operation = () => this.mutateGraph(api.facts.update, {
             memorySpaceId,
+            tenantId,
+            operationId,
+            expectedSourceFingerprint: _options?.expectedSourceFingerprint,
+            expectedSourceFactId: _options?.expectedSourceFactId as
+              | Id<"facts">
+              | undefined,
             factId,
             fact: updates.fact,
             confidence: updates.confidence,
@@ -864,10 +922,46 @@ export class FactsAPI {
             relations: updates.relations,
             // Embedding for semantic search (v0.30.0+)
             embedding: updates.embedding,
-          }),
-        "facts:update",
-      );
+          }, _options?.syncToGraph);
+      result = _options?.expectedSourceFingerprint !== undefined ? await operation() : await this.executeGraphWrite(operation, "facts:update", _options?.syncToGraph);
     } catch (error) {
+      if (error instanceof GraphCommittedPartial || error instanceof GraphJobUnresolved || error instanceof FactCommittedResultUnavailableError || error instanceof FactCommittedReceiptUnresolvedError) throw error;
+      if (!(error instanceof ConvexError))
+        throw new FactCommitOutcomeUnknownError(operationId, "update", error);
+      if (error.data === "FACT_HISTORY_COMMITTED_RESULT_UNAVAILABLE") {
+        let receipt;
+        try {
+          receipt = await this.historyService.getOperationReceipt(
+            memorySpaceId,
+            operationId,
+            "update",
+            tenantId,
+          );
+        } catch (receiptError) {
+          throw new FactCommittedReceiptUnresolvedError(
+            operationId,
+            "update",
+            { memorySpaceId, tenantId },
+            "unavailable",
+            error,
+            receiptError,
+          );
+        }
+        if (receipt)
+          throw new FactCommittedResultUnavailableError(
+            receipt,
+            { memorySpaceId, tenantId },
+            error,
+          );
+        throw new FactCommittedReceiptUnresolvedError(
+          operationId,
+          "update",
+          { memorySpaceId, tenantId },
+          "missing",
+          error,
+        );
+      }
+      if (_options?.expectedSourceFingerprint !== undefined) throw error;
       this.handleConvexError(error);
     }
 
@@ -875,19 +969,7 @@ export class FactsAPI {
 
     // Sync to graph automatically when graph adapter is configured
     // Graph sync is controlled by CORTEX_GRAPH_SYNC env var at Cortex initialization
-    if (this.graphAdapter) {
-      try {
-        const nodes = await this.graphAdapter.findNodes("Fact", { factId }, 1);
-        if (nodes.length > 0) {
-          await this.graphAdapter.updateNode(
-            nodes[0].id!,
-            updates as unknown as Record<string, unknown>,
-          );
-        }
-      } catch (error) {
-        console.warn("[Cortex] Failed to update fact in graph:", error);
-      }
-    }
+    
 
     return factRecord;
   }
@@ -909,29 +991,28 @@ export class FactsAPI {
     validateRequiredString(factId, "factId");
     validateFactIdFormat(factId);
 
+    const tenantId = resolveFactScope(
+      this.authContext?.tenantId,
+      _options?.tenantId,
+    );
+    const operationId = _options?.operationId ?? randomUUID();
     let result;
     try {
-      result = await this.executeWithResilience(
-        () =>
-          this.client.mutation(api.facts.deleteFact, {
-            memorySpaceId,
-            factId,
-          }),
-        "facts:delete",
-      );
+      result = isDeploymentOperatorClient(this.client)
+        ? await this.executeGraphWrite(
+          () => this.mutateGraph(api.facts.deleteFact, { memorySpaceId, tenantId, operationId, factId }, _options?.syncToGraph),
+          "facts:delete", _options?.syncToGraph,
+        )
+        // The public handler has no idempotency key. A lost acknowledgement
+        // must remain unresolved rather than replay an already committed delete.
+        : await this.mutateGraph(publicApi.facts.deleteFact, { memorySpaceId, factId }, _options?.syncToGraph);
     } catch (error) {
       this.handleConvexError(error);
     }
 
     // Delete from graph automatically with Entity orphan cleanup
     // Graph sync is controlled by CORTEX_GRAPH_SYNC env var at Cortex initialization
-    if (this.graphAdapter) {
-      try {
-        await deleteFactFromGraph(factId, this.graphAdapter, true);
-      } catch (error) {
-        console.warn("[Cortex] Failed to delete fact from graph:", error);
-      }
-    }
+    
 
     return result as { deleted: boolean; factId: string };
   }
@@ -959,31 +1040,48 @@ export class FactsAPI {
    * });
    * ```
    */
-  async deleteMany(
-    params: DeleteManyFactsParams,
-  ): Promise<DeleteManyFactsResult> {
+  async deleteMany(params: DeleteManyFactsParams): Promise<DeleteManyFactsResult & {partial?: DomainPartial}> {
     validateMemorySpaceId(params.memorySpaceId);
-
-    if (params.factType !== undefined) {
-      validateFactType(params.factType);
+    if (params.factType !== undefined) validateFactType(params.factType);
+    const tenantId = resolveDomainTenant(this.authContext?.tenantId, params.tenantId);
+    if (!isDeploymentOperatorClient(this.client)) {
+      // The registered public mutation atomically tombstones its complete
+      // authorized selection. It has no candidate-page or retained-history API.
+      if (params.includeSuperseded === false) throw new Error("DOMAIN_PUBLIC_SELECTION_UNSUPPORTED");
+      assertDomainActive(params);
+      if (params.deadlineMs !== undefined && (!Number.isFinite(params.deadlineMs) || params.deadlineMs <= 0)) throw new Error("DOMAIN_INVALID_DEADLINE");
+      return await waitDomainOperation(this.mutateGraph(publicApi.facts.deleteMany, {
+        memorySpaceId: params.memorySpaceId, userId: params.userId, factType: params.factType,
+      }, params.syncToGraph), params);
     }
-
-    let result;
+    const load = domainLoader(this.client, "facts", {memorySpaceId: params.memorySpaceId, tenantId, userId: params.userId, factType: params.factType, includeSuperseded: params.includeSuperseded ?? true, deleteOperationPrefix: randomUUID()});
+    const selected = await selectDomain<FactRecord>(load, params);
+    if (!sameSelection(selected, await selectDomain<FactRecord>(load, params))) throw new Error("DOMAIN_SELECTION_CHANGED");
+    const outcomes: DomainItemOutcome[] = selected.map(row => ({physicalId: row.physicalId, disposition: "unstarted"}));
+    const intents = selected.map(row => {if (!row.deleteIntent) throw new Error("DOMAIN_INVALID_DELETE_INTENT"); return row.deleteIntent;});
+    for (let i=0; i<selected.length; i++) {
+      try { assertDomainActive(params); } catch (cause) {throw new DomainOperationPartialError("facts:deleteMany", partialFrom(outcomes, intents), cause);}
+      try {
+        const result = await waitDomainOperation(this.mutateGraph(api.facts.deleteMany, intents[i].request as Parameters<ConvexClient["mutation"]>[1]), params);
+        outcomes[i].disposition = result.deleted ? "knownCommitted" : "alreadyAbsent";
+        if ("graphIdentity" in result && isDomainGraphIdentity(result.graphIdentity)) outcomes[i].graphIdentity = result.graphIdentity;
+      } catch (cause) {
+        if (cause instanceof ConvexError) outcomes[i].disposition = "knownRolledBack";
+        else {
+          try {
+            const receipt = await waitDomainOperation(this.historyService.getOperationReceipt(params.memorySpaceId, intents[i].operationId, "physical_delete", tenantId), params);
+            outcomes[i].disposition = receipt && receipt.affectedFactIds.includes(selected[i].physicalId as Id<"facts">) && receipt.events.every(event => event.pending?.payload.requestDigest === intents[i].requestDigest) ? "knownCommitted" : "outcomeUnknown";
+          } catch {outcomes[i].disposition = "outcomeUnknown";}
+        }
+        throw new DomainOperationPartialError("facts:deleteMany", partialFrom(outcomes, intents), cause);
+      }
+    }
+    const partial = partialFrom(outcomes, intents);
     try {
-      result = await this.executeWithResilience(
-        () =>
-          this.client.mutation(api.facts.deleteMany, {
-            memorySpaceId: params.memorySpaceId,
-            userId: params.userId,
-            factType: params.factType,
-          }),
-        "facts:deleteMany",
-      );
-    } catch (error) {
-      this.handleConvexError(error);
-    }
-
-    return result as DeleteManyFactsResult;
+      const remaining = await selectDomain<FactRecord>(load, params);
+      if (remaining.length) throw new DomainOperationPartialError("facts:deleteMany", {...partial, remainingPhysicalIds: remaining.map(row => row.physicalId)}, new Error("DOMAIN_SELECTION_CHANGED"));
+    } catch (cause) {if (cause instanceof DomainOperationPartialError) throw cause; throw new DomainOperationPartialError("facts:deleteMany", partial, cause);}
+    return {deleted: partial.confirmedCount, memorySpaceId: params.memorySpaceId, partial};
   }
 
   /**
@@ -997,21 +1095,59 @@ export class FactsAPI {
   async getHistory(
     memorySpaceId: string,
     factId: string,
+    selector: Pick<HistorySelector, "tenantId"> = {},
   ): Promise<FactRecord[]> {
     validateMemorySpaceId(memorySpaceId);
     validateRequiredString(factId, "factId");
     validateFactIdFormat(factId);
 
-    const result = await this.executeWithResilience(
-      () =>
-        this.client.query(api.facts.getHistory, {
-          memorySpaceId,
-          factId,
-        }),
-      "facts:getHistory",
+    const tenantId = resolveFactScope(
+      this.authContext?.tenantId,
+      selector.tenantId,
     );
-
-    return result as FactRecord[];
+    const chain = await this.historyService.getSupersessionChain(factId, {
+      memorySpaceId,
+      tenantId,
+    });
+    const records: FactRecord[] = [];
+    if (!chain.length) {
+      const rows = await this.client.query(api.facts.getHistory, {
+        memorySpaceId,
+        tenantId,
+        factId,
+      });
+      if (
+        rows.some(
+          (row) =>
+            row.supersedes !== undefined || row.supersededBy !== undefined,
+        )
+      )
+        throw new Error("FACT_HISTORY_RELATIONSHIP_UNRESOLVED");
+      return rows as FactRecord[];
+    }
+    for (const node of chain) {
+      let rows;
+      try {
+        rows = await this.client.query(api.facts.getHistory, {
+          memorySpaceId,
+          tenantId,
+          factId: node.factId,
+          sourceFactId: node.sourceFactId as Id<"facts">,
+        });
+      } catch (error) {
+        if (
+          error instanceof ConvexError &&
+          (error.data === "FACT_HISTORY_SOURCE_REQUIRED" ||
+            error.data === "FACT_HISTORY_SOURCE_MISMATCH")
+        )
+          throw new Error("FACT_HISTORY_ORIGINAL_RECORD_UNAVAILABLE");
+        throw error;
+      }
+      if (rows.length !== 1 || rows[0]._id !== node.sourceFactId)
+        throw new Error("FACT_HISTORY_ORIGINAL_RECORD_UNAVAILABLE");
+      records.push(...(rows as FactRecord[]));
+    }
+    return records;
   }
 
   /**
@@ -1082,7 +1218,8 @@ export class FactsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.facts.queryBySubject, {
+        this.client.query(isDeploymentOperatorClient(this.client) ? api.facts.queryBySubject : publicApi.facts.queryBySubject, {
+          ...(isDeploymentOperatorClient(this.client) ? { tenantId: resolveDomainTenant(this.authContext?.tenantId) } : {}),
           memorySpaceId: filter.memorySpaceId,
           subject: filter.subject,
           factType: filter.factType,
@@ -1228,46 +1365,12 @@ export class FactsAPI {
    * });
    * ```
    */
-  async export(options: {
-    memorySpaceId: string;
-    format: "json" | "jsonld" | "csv";
-    factType?:
-      | "preference"
-      | "identity"
-      | "knowledge"
-      | "relationship"
-      | "event"
-      | "observation"
-      | "custom";
-  }): Promise<{
-    format: string;
-    data: string;
-    count: number;
-    exportedAt: number;
-  }> {
-    validateMemorySpaceId(options.memorySpaceId);
-    validateExportFormat(options.format);
-
-    if (options.factType !== undefined) {
-      validateFactType(options.factType);
-    }
-
-    const result = await this.executeWithResilience(
-      () =>
-        this.client.query(api.facts.exportFacts, {
-          memorySpaceId: options.memorySpaceId,
-          format: options.format,
-          factType: options.factType,
-        }),
-      "facts:export",
-    );
-
-    return result as {
-      format: string;
-      data: string;
-      count: number;
-      exportedAt: number;
-    };
+  async export(options: {memorySpaceId: string; format: "json" | "jsonld" | "csv"; factType?: ListFactsFilter["factType"]} & DomainReadOptions): Promise<{format: string; data: string; count: number; exportedAt: number}> {
+    validateMemorySpaceId(options.memorySpaceId); validateExportFormat(options.format);
+    if (options.factType !== undefined) validateFactType(options.factType);
+    const tenantId = resolveDomainTenant(this.authContext?.tenantId, options.tenantId);
+    const facts = await collectDomain<FactRecord>(domainLoader(this.client, "facts", {memorySpaceId: options.memorySpaceId, tenantId, factType: options.factType, includeSuperseded: false}), options);
+    return factsExport(facts, options.format);
   }
 
   /**
@@ -1286,6 +1389,9 @@ export class FactsAPI {
     memorySpaceId: string;
     factIds: string[];
     keepFactId: string;
+    tenantId?: string;
+    operationId?: string;
+    expectedFactIds?: Array<{ factId: string; factDocumentId: Id<"facts"> }>;
   }): Promise<{
     consolidated: boolean;
     keptFactId: string;
@@ -1296,12 +1402,20 @@ export class FactsAPI {
     validateRequiredString(params.keepFactId, "keepFactId");
     validateConsolidation(params.factIds, params.keepFactId);
 
-    const result = await this.executeWithResilience(
+    const tenantId = resolveFactScope(
+      this.authContext?.tenantId,
+      params.tenantId,
+    );
+    const operationId = params.operationId ?? randomUUID();
+    const result = await this.executeGraphWrite(
       () =>
-        this.client.mutation(api.facts.consolidate, {
+        this.mutateGraph(api.facts.consolidate, {
           memorySpaceId: params.memorySpaceId,
+          tenantId,
+          operationId,
           factIds: params.factIds,
           keepFactId: params.keepFactId,
+          expectedFactIds: params.expectedFactIds,
         }),
       "facts:consolidate",
     );
@@ -1353,36 +1467,45 @@ export class FactsAPI {
       );
     }
 
+    params = {
+      ...params,
+      tenantId: resolveFactScope(this.authContext?.tenantId, params.tenantId),
+    };
     const result = await this.beliefRevisionService.revise(params);
-
-    // Log to history - map belief revision actions to history actions
-    const historyAction =
-      result.action === "NONE"
-        ? "UPDATE"
-        : result.action === "ADD"
-          ? "CREATE"
-          : result.action;
-
-    await this.historyService.log({
-      factId: result.fact.factId,
-      memorySpaceId: params.memorySpaceId,
-      action: historyAction,
-      oldValue: result.superseded[0]?.fact,
-      newValue: result.fact.fact,
-      supersededBy:
-        result.action === "SUPERSEDE" ? result.fact.factId : undefined,
-      supersedes: result.superseded[0]?.factId,
-      reason: result.reason,
-      confidence: result.confidence,
-      pipeline: {
-        slotMatching: result.pipeline.slotMatching?.executed,
-        semanticMatching: result.pipeline.semanticMatching?.executed,
-        llmResolution: result.pipeline.llmResolution?.executed,
-      },
-      userId: params.userId,
-      participantId: params.participantId,
-    });
-
+    if (result.fact.historyReceipt) {
+      try {
+        await this.historyService.retryHistory(result.fact.historyReceipt);
+      } catch (error) {
+        throw new HistoryWriteAfterCommitError(
+          result.fact.historyReceipt,
+          { memorySpaceId: params.memorySpaceId, tenantId: params.tenantId },
+          error,
+        );
+      }
+    } else if (result.fact.factId) {
+      try {
+        await this.historyService.log({
+          memorySpaceId: params.memorySpaceId,
+          tenantId: params.tenantId,
+          factId: result.fact.factId,
+          sourceFactId: result.fact._id as Id<"facts">,
+          action: "UPDATE",
+          newValue: result.fact.fact,
+          reason: result.reason,
+          confidence: result.confidence,
+          pipeline: {
+            slotMatching: result.pipeline.slotMatching?.executed,
+            semanticMatching: result.pipeline.semanticMatching?.executed,
+            llmResolution: result.pipeline.llmResolution?.executed,
+          },
+          userId: params.userId,
+          participantId: params.participantId,
+          conversationId: params.sourceRef?.conversationId,
+        });
+      } catch (error) {
+        throw new DecisionLogError(error);
+      }
+    }
     return result;
   }
 
@@ -1421,7 +1544,10 @@ export class FactsAPI {
       );
     }
 
-    return this.beliefRevisionService.checkConflicts(params);
+    return this.beliefRevisionService.checkConflicts({
+      ...params,
+      tenantId: resolveFactScope(this.authContext?.tenantId, params.tenantId),
+    });
   }
 
   /**
@@ -1445,6 +1571,10 @@ export class FactsAPI {
     oldFactId: string;
     newFactId: string;
     reason?: string;
+    tenantId?: string;
+    operationId?: string;
+    expectedOldFactId?: Id<"facts">;
+    expectedNewFactId?: Id<"facts">;
   }): Promise<{ superseded: boolean; oldFactId: string; newFactId: string }> {
     validateMemorySpaceId(params.memorySpaceId);
     validateRequiredString(params.oldFactId, "oldFactId");
@@ -1452,40 +1582,45 @@ export class FactsAPI {
     validateRequiredString(params.newFactId, "newFactId");
     validateFactIdFormat(params.newFactId);
 
-    // Get both facts to verify they exist
-    const [oldFact, newFact] = await Promise.all([
-      this.get(params.memorySpaceId, params.oldFactId),
-      this.get(params.memorySpaceId, params.newFactId),
-    ]);
-
-    if (!oldFact) {
-      throw new Error(`Old fact not found: ${params.oldFactId}`);
-    }
-    if (!newFact) {
-      throw new Error(`New fact not found: ${params.newFactId}`);
-    }
-
-    // Mark old fact as superseded
-    await this.update(params.memorySpaceId, params.oldFactId, {
-      validUntil: Date.now(),
+    const tenantId = resolveFactScope(
+      this.authContext?.tenantId,
+      params.tenantId,
+    );
+    const operationId = params.operationId ?? randomUUID();
+    const result = await this.executeGraphWrite(
+      () =>
+        this.mutateGraph(api.facts.supersede, {
+          memorySpaceId: params.memorySpaceId,
+          tenantId,
+          oldFactId: params.oldFactId,
+          newFactId: params.newFactId,
+          expectedOldFactId: params.expectedOldFactId,
+          expectedNewFactId: params.expectedNewFactId,
+          reason: params.reason,
+          operationId,
+          historyIntent: {
+            operationId,
+            phase: "supersede",
+            reason: params.reason ?? "Manual supersession",
+            userId: this.authContext?.userId,
+          },
+        }),
+      "facts:supersede",
+    ).catch((error: unknown) => {
+      if (error instanceof GraphCommittedPartial || error instanceof GraphJobUnresolved || error instanceof FactCommittedResultUnavailableError || error instanceof FactCommittedReceiptUnresolvedError) throw error;
+      if (error instanceof ConvexError) throw error;
+      throw new FactCommitOutcomeUnknownError(operationId, "supersede", error);
     });
-
-    // Log to history
-    await this.historyService.log({
-      factId: params.oldFactId,
-      memorySpaceId: params.memorySpaceId,
-      action: "SUPERSEDE",
-      oldValue: oldFact.fact,
-      newValue: newFact.fact,
-      supersededBy: params.newFactId,
-      reason: params.reason || "Manual supersession",
-    });
-
-    return {
-      superseded: true,
-      oldFactId: params.oldFactId,
-      newFactId: params.newFactId,
-    };
+    try {
+      await this.historyService.retryHistory(result.historyReceipt);
+    } catch (error) {
+      throw new HistoryWriteAfterCommitError(
+        result.historyReceipt,
+        { memorySpaceId: params.memorySpaceId, tenantId },
+        error,
+      );
+    }
+    return result;
   }
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -1505,6 +1640,21 @@ export class FactsAPI {
    * }
    * ```
    */
+  retryHistory(receipt: HistoryReceipt) {
+    return this.historyService.retryHistory(receipt);
+  }
+  getHistoryOperationReceipt(
+    memorySpaceId: string,
+    operationId: string,
+    phase: string,
+  ) {
+    return this.historyService.getOperationReceipt(
+      memorySpaceId,
+      operationId,
+      phase,
+    );
+  }
+
   async history(factId: string, limit?: number): Promise<FactChangeEvent[]> {
     validateRequiredString(factId, "factId");
     validateFactIdFormat(factId);
@@ -1543,11 +1693,12 @@ export class FactsAPI {
    */
   async getSupersessionChain(
     factId: string,
+    selector?: HistorySelector,
   ): Promise<SupersessionChainEntry[]> {
     validateRequiredString(factId, "factId");
     validateFactIdFormat(factId);
 
-    return this.historyService.getSupersessionChain(factId);
+    return this.historyService.getSupersessionChain(factId, selector);
   }
 
   /**

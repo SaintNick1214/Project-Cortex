@@ -4,9 +4,10 @@
  * Wraps language models with automatic memory retrieval and storage
  */
 
-import { Cortex, CypherGraphAdapter } from "@cortexmemory/sdk";
+import { serverRuntimeOptions } from "./server-credentials";
+import { Cortex } from "@cortexmemory/sdk";
 import type { RecallResult, GraphAdapter } from "@cortexmemory/sdk";
-import type { CortexMemoryConfig, Logger } from "./types";
+import type { CortexMemoryConfig, CortexServerCredentials, Logger } from "./types";
 import {
   resolveUserId,
   resolveConversationId,
@@ -39,6 +40,8 @@ export class CortexMemoryProvider {
   private agentId: string;
   private agentName: string;
   private graphAdapter?: GraphAdapter;
+  private ownsCortex = false;
+  private closePromise?: Promise<void>;
 
   /**
    * Create a CortexMemoryProvider with async initialization (graph support)
@@ -53,54 +56,24 @@ export class CortexMemoryProvider {
   static async create(
     underlyingModel: any,
     config: CortexMemoryConfig,
+    credentials?: CortexServerCredentials,
   ): Promise<CortexMemoryProvider> {
-    const logger = config.logger || createLogger(config.debug || false);
-
-    // Initialize graph adapter if enabled
-    let graphAdapter: CypherGraphAdapter | undefined;
-    if (config.enableGraphMemory) {
-      const uri =
-        config.graphConfig?.uri ||
-        process.env.NEO4J_URI ||
-        process.env.MEMGRAPH_URI ||
-        "";
-      const username =
-        config.graphConfig?.username ||
-        process.env.NEO4J_USERNAME ||
-        process.env.MEMGRAPH_USERNAME ||
-        "";
-      const password =
-        config.graphConfig?.password ||
-        process.env.NEO4J_PASSWORD ||
-        process.env.MEMGRAPH_PASSWORD ||
-        "";
-
-      if (uri) {
-        logger.debug(`Initializing graph adapter for URI: ${uri}`);
-        graphAdapter = new CypherGraphAdapter();
-        await graphAdapter.connect({ uri, username, password });
-        logger.info("Graph adapter connected successfully");
-      } else {
-        logger.warn(
-          "enableGraphMemory is true but no graph URI configured. " +
-            "Set NEO4J_URI/MEMGRAPH_URI or graphConfig.uri",
-        );
-      }
-    }
-
-    // Initialize Cortex with graph adapter
-    const cortex = new Cortex({
+    const runtime = serverRuntimeOptions(credentials);
+    const cortexConfig = {
       convexUrl: config.convexUrl,
-      graph: graphAdapter ? { adapter: graphAdapter } : undefined,
-    });
-
-    // Create provider with pre-initialized Cortex
-    return new CortexMemoryProvider(
-      underlyingModel,
-      config,
-      cortex,
-      graphAdapter,
-    );
+      graph: config.graphConfig?.adapter ? { adapter: config.graphConfig.adapter } : undefined,
+      graphEnabled: config.enableGraphMemory,
+      graphConnection: config.graphConfig,
+    };
+    const cortex = runtime ? await Cortex.create(cortexConfig, runtime) : await Cortex.create(cortexConfig);
+    try {
+      const provider = new CortexMemoryProvider(underlyingModel, config, cortex);
+      provider.ownsCortex = true;
+      return provider;
+    } catch (error) {
+      try { await cortex.shutdown(); } catch { /* Preserve initialization error. */ }
+      throw error;
+    }
   }
 
   constructor(
@@ -108,30 +81,55 @@ export class CortexMemoryProvider {
     config: CortexMemoryConfig,
     cortexInstance?: Cortex,
     graphAdapter?: GraphAdapter,
+    credentials?: CortexServerCredentials,
   ) {
-    this.underlyingModel = underlyingModel;
-    this.config = config;
-    this.logger = config.logger || createLogger(config.debug || false);
-    this.provider = underlyingModel.provider;
-    this.modelId = underlyingModel.modelId;
-    this.specificationVersion = underlyingModel.specificationVersion;
-    this.defaultObjectGenerationMode =
-      underlyingModel.defaultObjectGenerationMode;
-    // AI SDK 6 (LanguageModelV2) requires supportedUrls - proxy from underlying model
-    this.supportedUrls = underlyingModel.supportedUrls || {};
-    this.graphAdapter = graphAdapter;
+    if (cortexInstance && credentials !== undefined) {
+      throw new Error("Cortex server credentials cannot be applied to a borrowed Cortex instance.");
+    }
+    const runtime = serverRuntimeOptions(credentials);
+    // Credentialed owned clients must authenticate before even reading model properties.
+    const initializedCortex = runtime ? new Cortex({
+      convexUrl: config.convexUrl,
+      graph: (graphAdapter ?? config.graphConfig?.adapter)
+        ? { adapter: (graphAdapter ?? config.graphConfig?.adapter)! }
+        : undefined,
+    }, runtime) : undefined;
+    try {
+      this.underlyingModel = underlyingModel;
+      this.config = config;
+      this.logger = config.logger || createLogger(config.debug || false);
+      this.provider = underlyingModel.provider;
+      this.modelId = underlyingModel.modelId;
+      this.specificationVersion = underlyingModel.specificationVersion;
+      this.defaultObjectGenerationMode =
+        underlyingModel.defaultObjectGenerationMode;
+      // AI SDK 6 (LanguageModelV2) requires supportedUrls - proxy from underlying model
+      this.supportedUrls = underlyingModel.supportedUrls || {};
+      this.graphAdapter = graphAdapter ?? config.graphConfig?.adapter;
 
-    // Resolve agent identity (required for user-agent conversations)
-    this.agentId = resolveAgentId(config);
-    this.agentName = resolveAgentName(config);
+      // Resolve agent identity (required for user-agent conversations)
+      this.agentId = resolveAgentId(config);
+      this.agentName = resolveAgentName(config);
 
-    // Use provided Cortex instance or create new one (without graph support)
-    this.cortex = cortexInstance || new Cortex({ convexUrl: config.convexUrl });
+      // Use provided Cortex instance or create new one (without graph support)
+      this.ownsCortex = !cortexInstance;
+      const cortexConfig = {
+        convexUrl: config.convexUrl,
+        graph: this.graphAdapter ? { adapter: this.graphAdapter } : undefined,
+      };
+      this.cortex = cortexInstance || initializedCortex || new Cortex(cortexConfig);
 
-    this.logger.debug(
-      `Initialized CortexMemoryProvider for model: ${this.modelId}, agent: ${this.agentId}` +
-        (this.graphAdapter ? " (with graph support)" : ""),
-    );
+      this.logger.debug(
+        `Initialized CortexMemoryProvider for model: ${this.modelId}, agent: ${this.agentId}` +
+          (this.graphAdapter ? " (with graph support)" : ""),
+      );
+    } catch (error) {
+      if (initializedCortex) {
+        initializedCortex.close();
+        void initializedCortex.shutdown().catch(() => undefined);
+      }
+      throw error;
+    }
   }
 
   /**
@@ -160,9 +158,10 @@ export class CortexMemoryProvider {
       );
     }
 
-    // Step 3: Inject memory context using recall()'s pre-formatted context
-    const augmentedPrompt = recallResult?.context
-      ? this.injectRecallContext(options.prompt, recallResult.context)
+    // Step 3: Build and inject the requested recall context.
+    const recallContext = this.buildRecallContext(recallResult);
+    const augmentedPrompt = recallContext
+      ? this.injectRecallContext(options.prompt, recallContext)
       : options.prompt;
 
     // Step 4: Call underlying LLM
@@ -171,23 +170,34 @@ export class CortexMemoryProvider {
       prompt: augmentedPrompt,
     });
 
-    // Step 5: Store conversation (async, don't block)
+    const responseText = typeof result.text === "string"
+      ? result.text
+      : Array.isArray(result.content)
+        ? result.content
+            .filter((part: { type?: string; text?: unknown }) =>
+              part.type === "text" && typeof part.text === "string",
+            )
+            .map((part: { text: string }) => part.text)
+            .join("")
+        : "";
+
+    // Step 5: Store the generated text, excluding reasoning and tool content.
     if (this.config.enableMemoryStorage !== false) {
       const lastUserMessage = getLastUserMessage(options.prompt);
-      if (lastUserMessage && result.text) {
+      if (lastUserMessage && responseText) {
         // Use phase-aware observer if configured, otherwise fall back to layerObserver
         const rememberObserver =
           this.config.rememberObserver || this.config.layerObserver;
 
         // Use remember() for non-streaming responses
         // The core SDK now handles orchestration events via the observer parameter
-        this.cortex.memory
+        await this.cortex.memory
           .remember(
             {
               memorySpaceId: this.config.memorySpaceId,
               conversationId,
               userMessage: lastUserMessage,
-              agentResponse: result.text,
+              agentResponse: responseText,
               userId,
               userName: this.config.userName || "User",
               agentId: this.agentId, // Required for user-agent conversations (SDK v0.17.0+)
@@ -249,9 +259,10 @@ export class CortexMemoryProvider {
       );
     }
 
-    // Step 3: Inject memory context using recall()'s pre-formatted context
-    const augmentedPrompt = recallResult?.context
-      ? this.injectRecallContext(options.prompt, recallResult.context)
+    // Step 3: Build and inject the requested recall context.
+    const recallContext = this.buildRecallContext(recallResult);
+    const augmentedPrompt = recallContext
+      ? this.injectRecallContext(options.prompt, recallContext)
       : options.prompt;
 
     // Step 4: Call underlying LLM stream
@@ -276,6 +287,17 @@ export class CortexMemoryProvider {
     }
 
     return streamResult;
+  }
+
+  private buildRecallContext(result: RecallResult | null): string | undefined {
+    if (!result) return undefined;
+    if (this.config.customContextBuilder) {
+      const memories = result.items.flatMap(item =>
+        item.type === "memory" && item.memory ? [item.memory] : [],
+      );
+      return this.config.customContextBuilder(memories);
+    }
+    return result.context;
   }
 
   /**
@@ -551,18 +573,14 @@ export class CortexMemoryProvider {
   }
 
   /**
-   * Close Cortex connection and graph adapter
+   * Close an owned Cortex instance. Wrappers borrowing a shared factory instance
+   * release no resources; the factory's close() controls that shared lifetime.
+   * Manually supplied graph adapters always remain caller-owned.
    */
   async close(): Promise<void> {
-    // Disconnect graph adapter if connected
-    if (this.graphAdapter) {
-      try {
-        await this.graphAdapter.disconnect();
-        this.logger.debug("Graph adapter disconnected");
-      } catch (error) {
-        this.logger.warn("Failed to disconnect graph adapter:", error);
-      }
+    if (!this.closePromise) {
+      this.closePromise = this.ownsCortex ? this.cortex.shutdown() : Promise.resolve();
     }
-    this.cortex.close();
+    await this.closePromise;
   }
 }

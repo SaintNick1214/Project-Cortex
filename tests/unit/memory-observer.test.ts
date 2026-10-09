@@ -6,8 +6,8 @@
  */
 
 import { describe, it, expect, jest, beforeEach } from "@jest/globals";
-import { Cortex } from "../../src";
-import { ConvexClient } from "convex/browser";
+import { Cortex } from "../helpers/deployment-operator";
+import { ConvexClient } from "../helpers/deployment-operator";
 import { createTestRunContext } from "../helpers/isolation";
 import type {
   OrchestrationObserver,
@@ -80,6 +80,7 @@ describe("Memory Orchestration Observer", () => {
   });
 
   afterAll(async () => {
+    await cortex.shutdown();
     await _client.close();
   });
 

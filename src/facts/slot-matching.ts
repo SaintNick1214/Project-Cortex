@@ -1,3 +1,4 @@
+import { collectCandidates } from "./discovery";
 /**
  * Cortex SDK - Slot-Based Fact Matching
  *
@@ -68,6 +69,7 @@ export class SlotMatchingService {
     },
     memorySpaceId: string,
     userId?: string,
+    tenantId?: string,
   ): Promise<SlotConflictResult> {
     // Extract slot from candidate
     const slot = extractSlot(
@@ -89,6 +91,7 @@ export class SlotMatchingService {
       memorySpaceId,
       candidate.subject!,
       userId,
+      tenantId,
     );
 
     // Filter to facts in the same slot class
@@ -119,22 +122,20 @@ export class SlotMatchingService {
     memorySpaceId: string,
     subject: string,
     userId?: string,
+    tenantId?: string,
   ): Promise<FactRecord[]> {
-    try {
-      // Dynamic import to avoid ESM issues in test environments
-      const { api } = await import("../../convex-dev/_generated/api");
-      const facts = await this.client.query(api.facts.queryBySubject, {
+    return collectCandidates(
+      this.client,
+      "queryBySubject",
+      {
         memorySpaceId,
+        tenantId,
         subject: normalizeSubject(subject),
         userId,
         includeSuperseded: false,
-        limit: 100, // Reasonable limit for slot matching
-      });
-      return facts as FactRecord[];
-    } catch {
-      // Fallback if query fails
-      return [];
-    }
+      },
+      100,
+    );
   }
 
   /**

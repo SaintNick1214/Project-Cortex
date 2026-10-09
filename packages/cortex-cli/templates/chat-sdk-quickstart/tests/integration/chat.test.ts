@@ -8,7 +8,7 @@
  * Full integration tests would require a test database and more setup.
  */
 
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import { auth } from "@/app/(auth)/auth";
 
 // Mock auth module
@@ -16,15 +16,15 @@ const mockAuth = auth as ReturnType<typeof vi.fn>;
 
 // Mock db queries to avoid database dependencies
 vi.mock("@/lib/db/queries", () => ({
-  createStreamId: vi.fn(),
-  deleteChatById: vi.fn(),
   getChatById: vi.fn(),
-  getMessageCountByUserId: vi.fn(),
   getMessagesByChatId: vi.fn(),
+  getMessageCountByUserId: vi.fn(),
   saveChat: vi.fn(),
   saveMessages: vi.fn(),
   updateChatTitleById: vi.fn(),
   updateMessage: vi.fn(),
+  deleteChatById: vi.fn(),
+  createStreamId: vi.fn(),
 }));
 
 // Mock Cortex memory provider
@@ -33,7 +33,8 @@ vi.mock("@cortexmemory/vercel-ai-provider", () => ({
 }));
 
 // Mock AI SDK functions
-vi.mock("ai", () => ({
+vi.mock("ai", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("ai")>()),
   convertToModelMessages: vi.fn().mockResolvedValue([]),
   createUIMessageStream: vi.fn().mockReturnValue({
     toDataStreamResponse: vi.fn(),
@@ -46,16 +47,15 @@ vi.mock("ai", () => ({
   streamText: vi.fn().mockReturnValue({
     toUIMessageStream: vi.fn().mockReturnValue(new ReadableStream()),
   }),
-  tool: vi.fn((definition) => definition),
 }));
 
 // Mock Vercel functions
 vi.mock("@vercel/functions", () => ({
   geolocation: vi.fn().mockReturnValue({
+    longitude: -122.4194,
+    latitude: 37.7749,
     city: "San Francisco",
     country: "US",
-    latitude: 37.7749,
-    longitude: -122.4194,
   }),
 }));
 
@@ -67,6 +67,17 @@ vi.mock("resumable-stream", () => ({
 // Mock providers
 vi.mock("@/lib/ai/providers", () => ({
   getLanguageModel: vi.fn().mockReturnValue({}),
+  assertChatConfiguration: vi.fn(),
+}));
+
+// Private upload validation is mocked explicitly; no unmocked network is admitted.
+vi.mock("@/lib/private-backend", () => ({
+  privateCall: vi.fn().mockResolvedValue(null),
+  privateConfiguration: vi.fn(() => ({
+    tenantId: "tenant",
+    convexUrl: "http://127.0.0.1:3218",
+    deploymentKey: "unit-private-key",
+  })),
 }));
 
 // Mock Cortex config
@@ -90,8 +101,8 @@ describe("Chat API Route", () => {
     // Default: user is authenticated
     mockAuth.mockResolvedValue({
       user: {
-        email: "test@example.com",
         id: "user-123",
+        email: "test@example.com",
         name: "Test User",
         type: "regular",
       },
@@ -111,17 +122,18 @@ describe("Chat API Route", () => {
       const { POST } = await import("@/app/(chat)/api/chat/route");
 
       const request = new Request("http://localhost/api/chat", {
+        method: "POST",
+        headers: { origin: "http://127.0.0.1:3219" },
         body: JSON.stringify({
-          id: "00000000-0000-4000-8000-000000000001",
+          id: "11111111-1111-4111-8111-111111111111",
           message: {
-            id: "00000000-0000-4000-8000-000000000002",
-            parts: [{ text: "Hello", type: "text" }],
+            id: "22222222-2222-4222-8222-222222222222",
             role: "user",
+            parts: [{ type: "text", text: "Hello" }],
           },
           selectedChatModel: "gpt-4",
           selectedVisibilityType: "private",
         }),
-        method: "POST",
       });
 
       const response = await POST(request);
@@ -133,8 +145,9 @@ describe("Chat API Route", () => {
       const { POST } = await import("@/app/(chat)/api/chat/route");
 
       const request = new Request("http://localhost/api/chat", {
-        body: "invalid json{",
         method: "POST",
+        headers: { origin: "http://127.0.0.1:3219" },
+        body: "invalid json{",
       });
 
       const response = await POST(request);
@@ -146,11 +159,12 @@ describe("Chat API Route", () => {
       const { POST } = await import("@/app/(chat)/api/chat/route");
 
       const request = new Request("http://localhost/api/chat", {
+        method: "POST",
+        headers: { origin: "http://127.0.0.1:3219" },
         body: JSON.stringify({
           // Missing required fields: id, selectedChatModel
-          message: { parts: [], role: "user" },
+          message: { role: "user", parts: [] },
         }),
-        method: "POST",
       });
 
       const response = await POST(request);
@@ -161,25 +175,26 @@ describe("Chat API Route", () => {
     it("returns 403 when accessing another user's chat", async () => {
       // Chat exists but belongs to different user
       mockGetChatById.mockResolvedValue({
-        id: "00000000-0000-4000-8000-000000000001",
-        title: "Another user's chat",
+        id: "11111111-1111-4111-8111-111111111111",
         userId: "different-user",
+        title: "Another user's chat",
       });
 
       const { POST } = await import("@/app/(chat)/api/chat/route");
 
       const request = new Request("http://localhost/api/chat", {
+        method: "POST",
+        headers: { origin: "http://127.0.0.1:3219" },
         body: JSON.stringify({
-          id: "00000000-0000-4000-8000-000000000001",
+          id: "11111111-1111-4111-8111-111111111111",
           message: {
-            id: "00000000-0000-4000-8000-000000000002",
-            parts: [{ text: "Hello", type: "text" }],
+            id: "22222222-2222-4222-8222-222222222222",
             role: "user",
+            parts: [{ type: "text", text: "Hello" }],
           },
           selectedChatModel: "gpt-4",
           selectedVisibilityType: "private",
         }),
-        method: "POST",
       });
 
       const response = await POST(request);
@@ -189,22 +204,23 @@ describe("Chat API Route", () => {
 
     it("returns 429 when user exceeds rate limit", async () => {
       // User has exceeded daily message limit
-      mockGetMessageCountByUserId.mockResolvedValue(10_000);
+      mockGetMessageCountByUserId.mockResolvedValue(10000);
 
       const { POST } = await import("@/app/(chat)/api/chat/route");
 
       const request = new Request("http://localhost/api/chat", {
+        method: "POST",
+        headers: { origin: "http://127.0.0.1:3219" },
         body: JSON.stringify({
-          id: "00000000-0000-4000-8000-000000000001",
+          id: "11111111-1111-4111-8111-111111111111",
           message: {
-            id: "00000000-0000-4000-8000-000000000002",
-            parts: [{ text: "Hello", type: "text" }],
+            id: "22222222-2222-4222-8222-222222222222",
             role: "user",
+            parts: [{ type: "text", text: "Hello" }],
           },
           selectedChatModel: "gpt-4",
           selectedVisibilityType: "private",
         }),
-        method: "POST",
       });
 
       const response = await POST(request);
@@ -220,9 +236,10 @@ describe("Chat API Route", () => {
       const { DELETE } = await import("@/app/(chat)/api/chat/route");
 
       const request = new Request(
-        "http://localhost/api/chat?id=00000000-0000-4000-8000-000000000001",
+        "http://localhost/api/chat?id=11111111-1111-4111-8111-111111111111",
         {
           method: "DELETE",
+          headers: { origin: "http://127.0.0.1:3219" },
         }
       );
 
@@ -236,6 +253,7 @@ describe("Chat API Route", () => {
 
       const request = new Request("http://localhost/api/chat", {
         method: "DELETE",
+        headers: { origin: "http://127.0.0.1:3219" },
       });
 
       const response = await DELETE(request);
@@ -245,17 +263,18 @@ describe("Chat API Route", () => {
 
     it("returns 403 when deleting another user's chat", async () => {
       mockGetChatById.mockResolvedValue({
-        id: "00000000-0000-4000-8000-000000000001",
-        title: "Another user's chat",
+        id: "11111111-1111-4111-8111-111111111111",
         userId: "different-user",
+        title: "Another user's chat",
       });
 
       const { DELETE } = await import("@/app/(chat)/api/chat/route");
 
       const request = new Request(
-        "http://localhost/api/chat?id=00000000-0000-4000-8000-000000000001",
+        "http://localhost/api/chat?id=11111111-1111-4111-8111-111111111111",
         {
           method: "DELETE",
+          headers: { origin: "http://127.0.0.1:3219" },
         }
       );
 

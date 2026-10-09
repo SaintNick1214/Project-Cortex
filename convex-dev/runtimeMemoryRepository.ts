@@ -4,11 +4,11 @@ import { makeFunctionReference } from "convex/server";
 import type { FunctionReference } from "convex/server";
 import type { ActionCtx, MutationCtx, QueryCtx } from "./_generated/server";
 import type { Doc, Id } from "./_generated/dataModel";
-import type { RuntimeAuthority, RuntimeAuthorityReference, RuntimeResource } from "../src/auth/verified";
-import type { DerivedFact, DerivedVector, MemoryRepository, ProfiledQuery, SourceChunk, SourceContent, TrustedMemoryScope, VectorMatch } from "../src/domain/contracts";
-import type { DomainClock } from "../src/domain/clock";
-import { DEFAULT_EMBEDDING_PROFILE, assertEmbeddingVector, assertProfileMatches, normalizeSourceText, semanticHash } from "../src/domain/profile";
-import { assertSourceLineage, isCurrentAuthorizedVector, prepareSourceContent, processingIdentityKey } from "../src/domain/sources";
+import type { RuntimeAuthority, RuntimeAuthorityReference, RuntimeResource } from "./lib/runtimeDomain/auth/verified";
+import type { DerivedFact, DerivedVector, MemoryRepository, ProfiledQuery, SourceChunk, SourceContent, TrustedMemoryScope, VectorMatch } from "./lib/runtimeDomain/domain/contracts";
+import type { DomainClock } from "./lib/runtimeDomain/domain/clock";
+import { DEFAULT_EMBEDDING_PROFILE, assertEmbeddingVector, assertProfileMatches, normalizeSourceText, semanticHash } from "./lib/runtimeDomain/domain/profile";
+import { assertSourceLineage, isCurrentAuthorizedVector, prepareSourceContent, processingIdentityKey } from "./lib/runtimeDomain/domain/sources";
 import { assertResourceScope, createAuthorityReader, recheckAuthority } from "./runtimeAuth";
 
 export type DerivedCommit = Parameters<MemoryRepository["commitDerived"]>[0];

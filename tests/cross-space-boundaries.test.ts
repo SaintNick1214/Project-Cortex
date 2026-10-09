@@ -1,3 +1,4 @@
+import { api as publicApi } from "../convex-dev/_generated/api";
 /**
  * Cross-Space Boundary Testing
  *
@@ -9,13 +10,21 @@
  * 5. Cascade delete respects boundaries
  */
 
+import { expectRefusalNoEffects, queryPublic } from "./helpers/public-contract";
 import { describe, it, expect, beforeAll, afterAll } from "@jest/globals";
 import { Cortex } from "../src/index";
+import { createRuntimeFixture } from "./helpers/runtime-fixture";
 
 describe("Cross-Space Boundary Testing", () => {
   let cortex: Cortex;
-  const SPACE_A = `space-a-${Date.now()}`;
-  const SPACE_B = `space-b-${Date.now()}`;
+  let fixture: Awaited<ReturnType<typeof createRuntimeFixture>>;
+  let scopeA: Awaited<ReturnType<typeof createRuntimeFixture>>;
+  let scopeB: Awaited<ReturnType<typeof createRuntimeFixture>>;
+  const allFixtures: Array<Awaited<ReturnType<typeof createRuntimeFixture>>> =
+    [];
+  const fixtureStamp = Date.now();
+  const SPACE_A = `space-a-${fixtureStamp}`;
+  const SPACE_B = `space-b-${fixtureStamp}`;
   const TEST_USER_ID = "boundary-test-user";
   const TEST_AGENT_ID = "boundary-test-agent";
 
@@ -41,11 +50,132 @@ describe("Cross-Space Boundary Testing", () => {
     throw new Error(`Context ${contextId} not ready after ${timeoutMs}ms`);
   };
 
-  beforeAll(() => {
-    cortex = new Cortex({ convexUrl: process.env.CONVEX_URL! });
+  beforeAll(async () => {
+    // Fixed owned scopes are provisioned before any public API call. Negative
+    // unknown/foreign selectors below never acquire grants from their args.
+    const scopes = [
+      SPACE_A,
+      SPACE_B,
+      `${SPACE_A}-only-${fixtureStamp}`,
+      `${SPACE_A}-temp-${fixtureStamp}`,
+      `${SPACE_B}-temp-${fixtureStamp}`,
+      `${SPACE_A}-cross-del-${fixtureStamp}`,
+      `${SPACE_B}-cross-del-${fixtureStamp}`,
+      `${SPACE_A}-workflow-${fixtureStamp}`,
+      `${SPACE_B}-workflow-${fixtureStamp}`,
+      `similar-${fixtureStamp}-1`,
+      `similar-${fixtureStamp}-2`,
+      `${SPACE_A}-mid-del-${fixtureStamp}`,
+      `${SPACE_A}-complete-${fixtureStamp}`,
+      `substring-${fixtureStamp}`,
+      `substring-${fixtureStamp}-2`,
+      ...Array.from({ length: 5 }, (_, i) => `rapid-${fixtureStamp}-${i}`),
+      ...Array.from({ length: 10 }, (_, i) => `multi-iso-${fixtureStamp}-${i}`),
+    ];
+    fixture = await createRuntimeFixture(
+      `boundary-tenant-${fixtureStamp}`,
+      [SPACE_A, SPACE_B],
+      TEST_USER_ID,
+      { enabled: false },
+      { registerSpaces: false },
+    );
+    scopeA = await createRuntimeFixture(
+      fixture.tenantId,
+      SPACE_A,
+      TEST_USER_ID,
+      { enabled: false },
+      { registerSpaces: false },
+    );
+    scopeB = await createRuntimeFixture(
+      fixture.tenantId,
+      SPACE_B,
+      TEST_USER_ID,
+      { enabled: false },
+      { registerSpaces: false },
+    );
+    allFixtures.push(fixture, scopeA, scopeB);
+    const selectedClients = new Map<string, Cortex>([
+      [SPACE_A, scopeA.cortex],
+      [SPACE_B, scopeB.cortex],
+    ]);
+    for (const scope of scopes.filter(
+      (scope) => scope !== SPACE_A && scope !== SPACE_B,
+    )) {
+      const selected = await createRuntimeFixture(
+        fixture.tenantId,
+        scope,
+        TEST_USER_ID,
+        { enabled: false },
+        { registerSpaces: false },
+      );
+      allFixtures.push(selected);
+      selectedClients.set(scope, selected.cortex);
+    }
+    // Each selected client has a fixed grant provisioned above. Dispatching never
+    // creates grants; unknown selectors still reach an ungranted public handler.
+    const namespaces = new Set([
+      "vector",
+      "conversations",
+      "facts",
+      "memory",
+      "memorySpaces",
+      "contexts",
+    ]);
+    const proxies = new Map<string, unknown>();
+    cortex = new Proxy(fixture.cortex, {
+      get(target, property) {
+        if (typeof property !== "string" || !namespaces.has(property))
+          return Reflect.get(target, property);
+        if (!proxies.has(property))
+          proxies.set(
+            property,
+            new Proxy(Reflect.get(target, property) as object, {
+              get(api, method) {
+                const member: unknown = Reflect.get(api, method);
+                if (typeof member !== "function") return member;
+                return (...args: unknown[]) => {
+                  const selector = args[0];
+                  const scope =
+                    typeof selector === "string"
+                      ? selector
+                      : selector &&
+                          typeof selector === "object" &&
+                          "memorySpaceId" in selector
+                        ? selector.memorySpaceId
+                        : undefined;
+                  const selected =
+                    typeof scope === "string" &&
+                    !(
+                      property === "contexts" &&
+                      [SPACE_A, SPACE_B].includes(scope)
+                    )
+                      ? (selectedClients.get(scope) ?? target)
+                      : target;
+                  const selectedApi: object = Reflect.get(
+                    selected,
+                    property,
+                  ) as object;
+                  return Reflect.apply(
+                    Reflect.get(selectedApi, method) as (
+                      ...args: unknown[]
+                    ) => unknown,
+                    selectedApi,
+                    args,
+                  );
+                };
+              },
+            }),
+          );
+        return proxies.get(property);
+      },
+    });
+
+    for (const memorySpaceId of [SPACE_A, SPACE_B])
+      await cortex.memorySpaces.register({ memorySpaceId, type: "project" });
   });
 
   afterAll(async () => {
+    await Promise.all(allFixtures.map((item) => item.close()));
     // Cleanup
     try {
       await cortex.memorySpaces.delete(SPACE_A, {
@@ -250,95 +380,69 @@ describe("Cross-Space Boundary Testing", () => {
   // ══════════════════════════════════════════════════════════════════════
 
   describe("Conversation Space Isolation", () => {
-    it("cannot get conversation from wrong space via direct access", async () => {
-      const convA = await cortex.conversations.create({
-        type: "user-agent",
-        memorySpaceId: SPACE_A,
-        participants: { userId: TEST_USER_ID, agentId: "test-agent" },
-      });
-
-      // Can get directly (conversations not space-scoped in get)
-      const result = await cortex.conversations.get(convA.conversationId);
-
-      expect(result).not.toBeNull();
-      expect(result!.memorySpaceId).toBe(SPACE_A); // Shows correct space
+    it("public transcript access refuses without effects in declared scopes", async () => {
+      await expectRefusalNoEffects(
+        () =>
+          cortex.conversations.create({
+            memorySpaceId: SPACE_A,
+            type: "user-agent",
+            participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID },
+          }),
+        allFixtures,
+        "conversations",
+        "CAPABILITY_NOT_READY",
+      );
+      await expectRefusalNoEffects(
+        () =>
+          queryPublic(fixture, publicApi.conversations.get, {
+            memorySpaceId: SPACE_B,
+            tenantId: fixture.tenantId,
+            conversationId: "conv-uncommitted",
+          }),
+        allFixtures,
+        "conversations",
+        "CAPABILITY_NOT_READY",
+      );
     });
 
-    it("list() only returns conversations from specified space", async () => {
-      await cortex.conversations.create({
-        type: "user-agent",
-        memorySpaceId: SPACE_A,
-        participants: { userId: TEST_USER_ID, agentId: "test-agent" },
-      });
-
-      await cortex.conversations.create({
-        type: "user-agent",
-        memorySpaceId: SPACE_B,
-        participants: { userId: TEST_USER_ID, agentId: "test-agent" },
-      });
-
-      const listA = await cortex.conversations.list({ memorySpaceId: SPACE_A });
-      const listB = await cortex.conversations.list({ memorySpaceId: SPACE_B });
-
-      listA.conversations.forEach((conv: { memorySpaceId: string }) => {
-        expect(conv.memorySpaceId).toBe(SPACE_A);
-      });
-
-      listB.conversations.forEach((conv: { memorySpaceId: string }) => {
-        expect(conv.memorySpaceId).toBe(SPACE_B);
-      });
+    it("public transcript listing refuses without effects in each owned space", async () => {
+      for (const memorySpaceId of [SPACE_A, SPACE_B]) {
+        await expectRefusalNoEffects(
+          () =>
+            queryPublic(fixture, publicApi.conversations.list, {
+              memorySpaceId,
+              tenantId: fixture.tenantId,
+              limit: 100,
+            }),
+          allFixtures,
+          "conversations",
+          "CAPABILITY_NOT_READY",
+        );
+      }
     });
 
-    it("count() only counts conversations in specified space", async () => {
-      await cortex.conversations.create({
-        type: "user-agent",
-        memorySpaceId: SPACE_A,
-        participants: {
-          userId: `${TEST_USER_ID}-count`,
-          agentId: "test-agent-count",
-        },
-      });
-
-      const countA = await cortex.conversations.count({
-        memorySpaceId: SPACE_A,
-      });
-      const _countB = await cortex.conversations.count({
-        memorySpaceId: SPACE_B,
-      });
-
-      expect(countA).toBeGreaterThanOrEqual(1);
-      // countB may or may not be 0 depending on other tests
+    it("public transcript count refuses without effects in each owned space", async () => {
+      for (const memorySpaceId of [SPACE_A, SPACE_B]) {
+        await expectRefusalNoEffects(
+          () => cortex.conversations.count({ memorySpaceId }),
+          allFixtures,
+          "conversations",
+          "CAPABILITY_NOT_READY",
+        );
+      }
     });
 
-    it("search() only searches within specified space", async () => {
-      const convA = await cortex.conversations.create({
-        type: "user-agent",
-        memorySpaceId: SPACE_A,
-        participants: { userId: TEST_USER_ID, agentId: "test-agent" },
-      });
-
-      await cortex.conversations.addMessage({
-        conversationId: convA.conversationId,
-        message: {
-          role: "user",
-          content: "CROSS_SPACE_SEARCH_MARKER unique to A",
-        },
-      });
-
-      // Search in space B
-      const results = await cortex.conversations.search({
-        query: "CROSS_SPACE_SEARCH_MARKER",
-        filters: { memorySpaceId: SPACE_B },
-      });
-
-      // Should not find space A conversation
-      expect(
-        results.every(
-          (r) =>
-            r.conversation.memorySpaceId === SPACE_B ||
-            r.conversation.memorySpaceId !== SPACE_A,
-        ),
-      ).toBe(true);
+    it("public transcript search refuses without effects in its selected scope", async () => {
+      await expectRefusalNoEffects(
+        () =>
+          cortex.conversations.search({
+            query: "CROSS_SPACE_SEARCH_MARKER",
+            filters: { memorySpaceId: SPACE_B },
+          }),
+        allFixtures,
+        "conversations",
+        "CAPABILITY_NOT_READY",
+      );
     });
   });
 
@@ -347,6 +451,64 @@ describe("Cross-Space Boundary Testing", () => {
   // ══════════════════════════════════════════════════════════════════════
 
   describe("Facts Space Isolation", () => {
+    it("public deleteMany uses the supported scoped mutation and preserves foreign facts", async () => {
+      const a1 = await cortex.facts.store({
+        memorySpaceId: SPACE_A,
+        fact: "Bulk custom A1",
+        factType: "custom",
+        confidence: 80,
+        sourceType: "manual",
+        userId: TEST_USER_ID,
+      });
+      const a2 = await cortex.facts.store({
+        memorySpaceId: SPACE_A,
+        fact: "Bulk custom A2",
+        factType: "custom",
+        confidence: 80,
+        sourceType: "manual",
+        userId: TEST_USER_ID,
+      });
+      const b = await cortex.facts.store({
+        memorySpaceId: SPACE_B,
+        fact: "Bulk custom B",
+        factType: "custom",
+        confidence: 80,
+        sourceType: "manual",
+        userId: TEST_USER_ID,
+      });
+      const before = await fixture.ownedRows("facts");
+      await expect(
+        cortex.facts.deleteMany({ memorySpaceId: SPACE_A, factType: "custom" }),
+      ).resolves.toMatchObject({ deleted: 2, memorySpaceId: SPACE_A });
+      await expectRefusalNoEffects(
+        () => cortex.facts.get(SPACE_A, a1.factId),
+        allFixtures,
+        "facts",
+        "FORBIDDEN",
+      );
+      await expectRefusalNoEffects(
+        () => cortex.facts.get(SPACE_A, a2.factId),
+        allFixtures,
+        "facts",
+        "FORBIDDEN",
+      );
+      expect(
+        await cortex.facts.list({ memorySpaceId: SPACE_A, factType: "custom" }),
+      ).toEqual([]);
+      expect(await cortex.facts.get(SPACE_B, b.factId)).toEqual(b);
+      const after = await fixture.ownedRows("facts");
+      for (const factId of [a1.factId, a2.factId]) {
+        const persisted = after.find(
+          (row) => (row as { factId?: string }).factId === factId,
+        ) as { tombstonedAt?: number; _id?: string } | undefined;
+        expect(typeof persisted?.tombstonedAt).toBe("number");
+        expect(persisted?._id).toBe(factId === a1.factId ? a1._id : a2._id);
+      }
+      expect(after.filter((row: any) => row.memorySpaceId === SPACE_B)).toEqual(
+        before.filter((row: any) => row.memorySpaceId === SPACE_B),
+      );
+    });
+
     it("cannot get fact from wrong space", async () => {
       const factA = await cortex.facts.store({
         memorySpaceId: SPACE_A,
@@ -577,93 +739,50 @@ describe("Cross-Space Boundary Testing", () => {
   // ══════════════════════════════════════════════════════════════════════
 
   describe("Memory Space Statistics Isolation", () => {
-    it("getStats() only counts data in specified space", async () => {
-      // Register spaces first
-      await cortex.memorySpaces.register({
-        memorySpaceId: SPACE_A,
-        type: "project",
-        name: "Stats Space A",
-      });
-
-      // Create data in space A
-      await cortex.conversations.create({
-        type: "user-agent",
-        memorySpaceId: SPACE_A,
-        participants: { userId: TEST_USER_ID, agentId: "test-agent" },
-      });
-
-      await cortex.vector.store(SPACE_A, {
+    it("owned memory reads remain isolated while public statistics refuse", async () => {
+      const memory = await cortex.vector.store(SPACE_A, {
         content: "Stats test A",
         contentType: "raw",
         source: { type: "system" },
         metadata: { importance: 50, tags: [] },
       });
-
-      await cortex.facts.store({
-        memorySpaceId: SPACE_A,
-        fact: "Stats fact A",
-        factType: "knowledge",
-        subject: TEST_USER_ID,
-        confidence: 80,
-        sourceType: "manual",
-      });
-
-      // Get stats for space A (must be registered)
-      try {
-        await cortex.memorySpaces.register({
-          memorySpaceId: SPACE_A,
-          type: "project",
-          name: "Stats A",
-        });
-      } catch (_e) {
-        // Already registered
-      }
-
-      const statsA = await cortex.memorySpaces.getStats(SPACE_A);
-
-      expect(statsA.totalConversations).toBeGreaterThanOrEqual(1);
-      expect(statsA.totalMemories).toBeGreaterThanOrEqual(1);
-      expect(statsA.totalFacts).toBeGreaterThanOrEqual(1);
-
-      // Stats should be isolated
-      try {
-        await cortex.memorySpaces.register({
-          memorySpaceId: SPACE_B,
-          type: "project",
-          name: "Stats B",
-        });
-      } catch (_e) {
-        // Already registered
-      }
-
-      const statsB = await cortex.memorySpaces.getStats(SPACE_B);
-
-      // Space B stats should be independent
-      expect(statsB).toBeDefined();
+      expect(
+        (await cortex.vector.get(SPACE_A, memory.memoryId))?.memorySpaceId,
+      ).toBe(SPACE_A);
+      expect(await cortex.vector.get(SPACE_B, memory.memoryId)).toBeNull();
+      await expectRefusalNoEffects(
+        () => cortex.memorySpaces.getStats(SPACE_A),
+        allFixtures,
+        "memories",
+        "CAPABILITY_NOT_READY",
+      );
+      await expectRefusalNoEffects(
+        () => cortex.memorySpaces.getStats(SPACE_B),
+        allFixtures,
+        "memories",
+        "CAPABILITY_NOT_READY",
+      );
     });
 
-    it("stats don't leak across spaces", async () => {
-      // Create data only in space A
-      const spaceAOnly = `${SPACE_A}-only-${Date.now()}`;
-
-      // Register the space first
-
+    it("public statistics refuse after a supported isolated memory write", async () => {
+      const scope = `${SPACE_A}-only-${fixtureStamp}`;
       await cortex.memorySpaces.register({
-        memorySpaceId: spaceAOnly,
+        memorySpaceId: scope,
         type: "project",
-        name: "Space A only",
       });
-
-      await cortex.vector.store(spaceAOnly, {
+      await cortex.vector.store(scope, {
         content: "Only in A",
         contentType: "raw",
         source: { type: "system" },
         metadata: { importance: 50, tags: [] },
       });
-
-      const stats = await cortex.memorySpaces.getStats(spaceAOnly);
-
-      expect(stats.totalMemories).toBeGreaterThanOrEqual(1);
+      expect(await cortex.vector.count({ memorySpaceId: scope })).toBe(1);
+      await expectRefusalNoEffects(
+        () => cortex.memorySpaces.getStats(scope),
+        allFixtures,
+        "memories",
+        "CAPABILITY_NOT_READY",
+      );
     });
   });
 
@@ -672,76 +791,60 @@ describe("Cross-Space Boundary Testing", () => {
   // ══════════════════════════════════════════════════════════════════════
 
   describe("Cascade Delete Boundary Respect", () => {
-    it("deleting space A doesn't affect space B", async () => {
-      const tempSpaceA = `${SPACE_A}-temp-${Date.now()}`;
-      const tempSpaceB = `${SPACE_B}-temp-${Date.now()}`;
-
-      await cortex.memorySpaces.register({
-        memorySpaceId: tempSpaceA,
-        type: "project",
-        name: "Temp A",
-      });
-
-      await cortex.memorySpaces.register({
-        memorySpaceId: tempSpaceB,
-        type: "project",
-        name: "Temp B",
-      });
-
-      // Create data in both
-      await cortex.vector.store(tempSpaceA, {
-        content: "Data in temp A",
-        contentType: "raw",
-        source: { type: "system" },
-        metadata: { importance: 50, tags: [] },
-      });
-
-      const memB = await cortex.vector.store(tempSpaceB, {
-        content: "Data in temp B",
-        contentType: "raw",
-        source: { type: "system" },
-        metadata: { importance: 50, tags: [] },
-      });
-
-      // Delete space A with cascade
-      await cortex.memorySpaces.delete(tempSpaceA, {
-        cascade: true,
-        reason: "test cleanup",
-      });
-
-      // Space B data should be intact
-      const checkB = await cortex.vector.get(tempSpaceB, memB.memoryId);
-      expect(checkB).not.toBeNull();
-
-      const spaceB = await cortex.memorySpaces.get(tempSpaceB);
-      expect(spaceB).not.toBeNull();
+    it("public erasure refusal preserves both owned spaces", async () => {
+      const a = `${SPACE_A}-temp-${fixtureStamp}`,
+        b = `${SPACE_B}-temp-${fixtureStamp}`;
+      for (const memorySpaceId of [a, b])
+        await cortex.memorySpaces.register({ memorySpaceId, type: "project" });
+      const memA = await cortex.vector.store(a, {
+          content: "Data in temp A",
+          contentType: "raw",
+          source: { type: "system" },
+          metadata: { importance: 50, tags: [] },
+        }),
+        memB = await cortex.vector.store(b, {
+          content: "Data in temp B",
+          contentType: "raw",
+          source: { type: "system" },
+          metadata: { importance: 50, tags: [] },
+        });
+      await expectRefusalNoEffects(
+        () =>
+          cortex.memorySpaces.delete(a, {
+            cascade: true,
+            reason: "Public scoped erasure refusal",
+          }),
+        allFixtures,
+        "memories",
+        "ERASURE_ADMIN_TRANSPORT_REQUIRED",
+      );
+      expect((await cortex.vector.get(a, memA.memoryId))?.content).toBe(
+        "Data in temp A",
+      );
+      expect((await cortex.vector.get(b, memB.memoryId))?.content).toBe(
+        "Data in temp B",
+      );
     });
 
-    it("user cascade delete scoped to single space", async () => {
-      const userId = `cross-space-user-${Date.now()}`;
-
-      // Create user data in both spaces
+    it("public user cascade requires explicit erasure transport without effects", async () => {
       await cortex.vector.store(SPACE_A, {
         content: "User data A",
         contentType: "raw",
-        userId,
-        source: { type: "system", userId },
+        source: { type: "system" },
         metadata: { importance: 50, tags: [] },
       });
-
-      const _memB = await cortex.vector.store(SPACE_B, {
+      await cortex.vector.store(SPACE_B, {
         content: "User data B",
         contentType: "raw",
-        userId,
-        source: { type: "system", userId },
+        source: { type: "system" },
         metadata: { importance: 50, tags: [] },
       });
-
-      // Delete user from space A only
-      await cortex.users.delete(userId, { cascade: true });
-
-      // Space B data might still exist (implementation dependent)
-      // This tests isolation behavior
+      await expectRefusalNoEffects(
+        () => scopeA.cortex.users.delete(TEST_USER_ID, { cascade: true }),
+        allFixtures,
+        "memories",
+        "ERASURE_ADMIN_TRANSPORT_REQUIRED",
+      );
     });
 
     it("context cascade doesn't cross space boundaries", async () => {
@@ -778,92 +881,71 @@ describe("Cross-Space Boundary Testing", () => {
   // Immutable & Mutable (NOT space-scoped)
   // ══════════════════════════════════════════════════════════════════════
 
-  describe("Immutable & Mutable (Globally Shared)", () => {
-    it("immutable is accessible from all spaces", async () => {
-      const record = await cortex.immutable.store({
+  describe("Immutable & Mutable (Scoped Resources)", () => {
+    it("immutable links stay within their owned scope", async () => {
+      const record = await scopeA.cortex.immutable.store({
         type: "shared",
-        id: `shared-${Date.now()}`,
-        data: { value: "global" },
+        id: `shared-${fixtureStamp}`,
+        data: { value: "owned A" },
       });
-
-      // Can reference from any space
-      const memA = await cortex.vector.store(SPACE_A, {
-        content: "Space A with immutable ref",
-        contentType: "raw",
-        source: { type: "system" },
+      const input = {
+        content: "Owned immutable ref",
+        contentType: "raw" as const,
+        source: { type: "system" as const },
         immutableRef: { type: "shared", id: record.id, version: 1 },
         metadata: { importance: 50, tags: [] },
-      });
-
-      const memB = await cortex.vector.store(SPACE_B, {
-        content: "Space B with immutable ref",
-        contentType: "raw",
-        source: { type: "system" },
-        immutableRef: { type: "shared", id: record.id, version: 1 },
-        metadata: { importance: 50, tags: [] },
-      });
-
-      // Both can resolve same immutable
-      const immutableCheck = await cortex.immutable.get("shared", record.id);
-
-      expect(immutableCheck).not.toBeNull();
-      expect(memA.immutableRef!.id).toBe(record.id);
-      expect(memB.immutableRef!.id).toBe(record.id);
+      };
+      const memory = await cortex.vector.store(SPACE_A, input);
+      expect(memory.immutableRef?.id).toBe(record.id);
+      await expectRefusalNoEffects(
+        () => cortex.vector.store(SPACE_B, input),
+        allFixtures,
+        "memories",
+        "FORBIDDEN",
+      );
+      expect(
+        (await scopeA.cortex.immutable.get("shared", record.id))?.data,
+      ).toEqual({ value: "owned A" });
+      expect(await scopeB.cortex.immutable.get("shared", record.id)).toBeNull();
     });
 
-    it("mutable is accessible from all spaces", async () => {
-      const ns = "global-ns";
-      const key = "global-key";
-
-      await cortex.mutable.set(ns, key, "global-value");
-
-      // Reference from both spaces
-      const memA = await cortex.vector.store(SPACE_A, {
-        content: "Space A with mutable ref",
-        contentType: "raw",
-        source: { type: "system" },
+    it("mutable links stay within their owned scope", async () => {
+      const namespace = "global-ns",
+        key = `key-${fixtureStamp}`;
+      await scopeA.cortex.mutable.set(namespace, key, "owned A");
+      const input = {
+        content: "Owned mutable ref",
+        contentType: "raw" as const,
+        source: { type: "system" as const },
         mutableRef: {
-          namespace: ns,
+          namespace,
           key,
-          snapshotValue: "global-value",
+          snapshotValue: "owned A",
           snapshotAt: Date.now(),
         },
         metadata: { importance: 50, tags: [] },
-      });
-
-      const memB = await cortex.vector.store(SPACE_B, {
-        content: "Space B with mutable ref",
-        contentType: "raw",
-        source: { type: "system" },
-        mutableRef: {
-          namespace: ns,
-          key,
-          snapshotValue: "global-value",
-          snapshotAt: Date.now(),
-        },
-        metadata: { importance: 50, tags: [] },
-      });
-
-      // Both reference same mutable
-      expect(memA.mutableRef!.namespace).toBe(ns);
-      expect(memB.mutableRef!.namespace).toBe(ns);
+      };
+      const memory = await cortex.vector.store(SPACE_A, input);
+      expect(memory.mutableRef?.key).toBe(key);
+      await expectRefusalNoEffects(
+        () => cortex.vector.store(SPACE_B, input),
+        allFixtures,
+        "memories",
+        "FORBIDDEN",
+      );
+      expect(await scopeA.cortex.mutable.get(namespace, key)).toBe("owned A");
+      expect(await scopeB.cortex.mutable.get(namespace, key)).toBeNull();
     });
 
-    it("updating mutable affects all spaces", async () => {
-      const ns = "shared-ns";
-      const key = "shared-counter";
-
-      await cortex.mutable.set(ns, key, 0);
-
-      // Increment from space A
-      await cortex.mutable.increment(ns, key, 5);
-
-      // Increment from space B
-      await cortex.mutable.increment(ns, key, 3);
-
-      // Value is global
-      const value = await cortex.mutable.get(ns, key);
-      expect(value).toBe(8); // 0 + 5 + 3
+    it("updating mutable changes only its selected scope", async () => {
+      const namespace = "shared-ns",
+        key = `counter-${fixtureStamp}`;
+      await scopeA.cortex.mutable.set(namespace, key, 0);
+      await scopeB.cortex.mutable.set(namespace, key, 0);
+      await scopeA.cortex.mutable.increment(namespace, key, 5);
+      await scopeB.cortex.mutable.increment(namespace, key, 3);
+      expect(await scopeA.cortex.mutable.get(namespace, key)).toBe(5);
+      expect(await scopeB.cortex.mutable.get(namespace, key)).toBe(3);
     });
   });
 
@@ -873,44 +955,32 @@ describe("Cross-Space Boundary Testing", () => {
 
   describe("Multi-Space Query Isolation", () => {
     it("memory.search() isolated by space", async () => {
-      await cortex.memory.remember({
-        memorySpaceId: SPACE_A,
-        conversationId: `search-iso-a-${Date.now()}`,
-        userMessage: "SEARCH_ISO_MARKER in space A",
-        agentResponse: "Response A",
-        userId: TEST_USER_ID,
-        userName: "User A",
-        agentId: TEST_AGENT_ID,
+      const memory = await cortex.vector.store(SPACE_A, {
+        content: "SEARCH_ISO_MARKER in space A",
+        contentType: "raw",
+        source: { type: "system" },
+        metadata: { importance: 50, tags: [] },
       });
-
       const results = await cortex.memory.search(SPACE_B, "SEARCH_ISO_MARKER");
-
-      // Should not return space A results
-      results.forEach((mem: any) => {
-        expect(mem.memorySpaceId).toBe(SPACE_B);
-      });
+      expect(results.some((row) => row.memoryId === memory.memoryId)).toBe(
+        false,
+      );
+      expect(results.every((row) => row.memorySpaceId === SPACE_B)).toBe(true);
     });
 
     it("memory.list() isolated by space", async () => {
-      await cortex.memory.remember({
-        memorySpaceId: SPACE_A,
-        conversationId: `list-iso-a-${Date.now()}`,
-        userMessage: "List test A",
-        agentResponse: "Response A",
-        userId: TEST_USER_ID,
-        userName: "User A",
-        agentId: TEST_AGENT_ID,
+      const memory = await cortex.vector.store(SPACE_A, {
+        content: "List test A",
+        contentType: "raw",
+        source: { type: "system" },
+        metadata: { importance: 50, tags: [] },
       });
-
-      const listB = await cortex.vector.list({
+      const list = await cortex.memory.list({
         memorySpaceId: SPACE_B,
         limit: 100,
       });
-
-      listB.forEach((mem: any) => {
-        expect(mem.memorySpaceId).toBe(SPACE_B);
-        expect(mem.content).not.toContain("List test A");
-      });
+      expect(list.some((row) => row.memoryId === memory.memoryId)).toBe(false);
+      expect(list.every((row) => row.memorySpaceId === SPACE_B)).toBe(true);
     });
 
     it("memory.count() isolated by space", async () => {
@@ -929,7 +999,7 @@ describe("Cross-Space Boundary Testing", () => {
 
   describe("Complex Cross-Space Scenarios", () => {
     it("same userId in different spaces is isolated", async () => {
-      const userId = `multi-space-user-${Date.now()}`;
+      const userId = TEST_USER_ID;
 
       // Create memories for same user in both spaces
       const memA = await cortex.vector.store(SPACE_A, {
@@ -985,132 +1055,139 @@ describe("Cross-Space Boundary Testing", () => {
       });
     });
 
-    it("references can point across spaces but data stays isolated", async () => {
-      const convA = await cortex.conversations.create({
-        type: "user-agent",
-        memorySpaceId: SPACE_A,
-        participants: { userId: TEST_USER_ID, agentId: "test-agent" },
+    it("cross-space source references refuse without effects", async () => {
+      await expectRefusalNoEffects(
+        () =>
+          cortex.conversations.create({
+            memorySpaceId: SPACE_A,
+            type: "user-agent",
+            participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID },
+          }),
+        allFixtures,
+        "conversations",
+        "CAPABILITY_NOT_READY",
+      );
+      const record = await scopeA.cortex.immutable.store({
+        type: "reference-boundary",
+        id: `ref-${fixtureStamp}`,
+        data: { secret: "A" },
       });
-
-      // Memory in space B can reference conversation in space A
-      const memB = await cortex.vector.store(SPACE_B, {
-        content: "Cross-space ref",
-        contentType: "raw",
-        source: { type: "conversation", userId: TEST_USER_ID },
-        conversationRef: {
-          conversationId: convA.conversationId,
-          messageIds: [],
-        },
-        metadata: { importance: 50, tags: [] },
-      });
-
-      // Memory is in space B
-      expect(memB.memorySpaceId).toBe(SPACE_B);
-
-      // Conversation is still in space A
-      const convCheck = await cortex.conversations.get(convA.conversationId);
-      expect(convCheck!.memorySpaceId).toBe(SPACE_A);
-
-      // List in space A shouldn't show memory from B
-      const listA = await cortex.vector.list({ memorySpaceId: SPACE_A });
-      expect(listA.some((m) => m.memoryId === memB.memoryId)).toBe(false);
+      await expectRefusalNoEffects(
+        () =>
+          cortex.vector.store(SPACE_B, {
+            content: "Foreign reference",
+            contentType: "raw",
+            source: { type: "system" },
+            immutableRef: {
+              type: "reference-boundary",
+              id: record.id,
+              version: 1,
+            },
+            metadata: { importance: 50, tags: [] },
+          }),
+        allFixtures,
+        "memories",
+        "FORBIDDEN",
+      );
+      expect(
+        (await scopeA.cortex.immutable.get("reference-boundary", record.id))
+          ?.data,
+      ).toEqual({ secret: "A" });
     });
 
-    it("deleting space A doesn't affect memories in space B with refs to A", async () => {
-      const tempA = `${SPACE_A}-cross-del-${Date.now()}`;
-      const tempB = `${SPACE_B}-cross-del-${Date.now()}`;
-
-      await cortex.memorySpaces.register({
-        memorySpaceId: tempA,
-        type: "project",
-        name: "Temp A",
-      });
-
-      const convA = await cortex.conversations.create({
-        type: "user-agent",
-        memorySpaceId: tempA,
-        participants: { userId: TEST_USER_ID, agentId: "test-agent" },
-      });
-
-      const memB = await cortex.vector.store(tempB, {
-        content: "B with ref to A",
+    it("public erasure and foreign transcript references preserve owned B data", async () => {
+      const a = `${SPACE_A}-cross-del-${fixtureStamp}`,
+        b = `${SPACE_B}-cross-del-${fixtureStamp}`;
+      for (const memorySpaceId of [a, b])
+        await cortex.memorySpaces.register({ memorySpaceId, type: "project" });
+      await expectRefusalNoEffects(
+        () =>
+          cortex.conversations.create({
+            memorySpaceId: a,
+            type: "user-agent",
+            participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID },
+          }),
+        allFixtures,
+        "conversations",
+        "CAPABILITY_NOT_READY",
+      );
+      await expectRefusalNoEffects(
+        () =>
+          cortex.vector.store(b, {
+            content: "B with nonexistent transcript ref",
+            contentType: "raw",
+            source: { type: "conversation", userId: TEST_USER_ID },
+            conversationRef: {
+              conversationId: "conv-uncommitted",
+              messageIds: [],
+            },
+            metadata: { importance: 50, tags: [] },
+          }),
+        allFixtures,
+        "memories",
+        "FORBIDDEN",
+      );
+      const memory = await cortex.vector.store(b, {
+        content: "Owned B data",
         contentType: "raw",
-        source: { type: "conversation", userId: TEST_USER_ID },
-        conversationRef: {
-          conversationId: convA.conversationId,
-          messageIds: [],
-        },
+        source: { type: "system" },
         metadata: { importance: 50, tags: [] },
       });
-
-      // Delete space A
-      await cortex.memorySpaces.delete(tempA, {
-        cascade: true,
-        reason: "test cleanup",
-      });
-
-      // Memory in space B still exists (with orphaned ref)
-      const memCheck = await cortex.vector.get(tempB, memB.memoryId);
-      expect(memCheck).not.toBeNull();
-
-      // Conversation deleted
-      const convCheck = await cortex.conversations.get(convA.conversationId);
-      expect(convCheck).toBeNull();
+      await expectRefusalNoEffects(
+        () =>
+          cortex.memorySpaces.delete(a, {
+            cascade: true,
+            reason: "Public scoped erasure refusal",
+          }),
+        allFixtures,
+        "memories",
+        "ERASURE_ADMIN_TRANSPORT_REQUIRED",
+      );
+      expect((await cortex.vector.get(b, memory.memoryId))?.content).toBe(
+        "Owned B data",
+      );
     });
 
     it("space boundaries respected in complex workflows", async () => {
-      const workflowA = `${SPACE_A}-workflow-${Date.now()}`;
-      const workflowB = `${SPACE_B}-workflow-${Date.now()}`;
-
-      // Complete workflow in space A
-      await cortex.memorySpaces.register({
-        memorySpaceId: workflowA,
-        type: "project",
-        name: "Workflow A",
-      });
-
-      const convA = await cortex.conversations.create({
-        type: "user-agent",
-        memorySpaceId: workflowA,
-        participants: { userId: TEST_USER_ID, agentId: "test-agent" },
-      });
-
-      const memA = await cortex.vector.store(workflowA, {
+      const a = `${SPACE_A}-workflow-${fixtureStamp}`,
+        b = `${SPACE_B}-workflow-${fixtureStamp}`;
+      for (const memorySpaceId of [a, b])
+        await cortex.memorySpaces.register({ memorySpaceId, type: "project" });
+      await expectRefusalNoEffects(
+        () =>
+          cortex.conversations.create({
+            memorySpaceId: a,
+            type: "user-agent",
+            participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID },
+          }),
+        allFixtures,
+        "conversations",
+        "CAPABILITY_NOT_READY",
+      );
+      const memory = await cortex.vector.store(a, {
         content: "Workflow memory A",
         contentType: "raw",
-        source: { type: "conversation", userId: TEST_USER_ID },
-        conversationRef: {
-          conversationId: convA.conversationId,
-          messageIds: [],
-        },
+        source: { type: "system" },
         metadata: { importance: 50, tags: [] },
       });
-
-      const factA = await cortex.facts.store({
-        memorySpaceId: workflowA,
+      const fact = await cortex.facts.store({
+        memorySpaceId: a,
         fact: "Workflow fact A",
         factType: "knowledge",
         subject: TEST_USER_ID,
         confidence: 80,
-        sourceType: "conversation",
-        sourceRef: { conversationId: convA.conversationId },
+        sourceType: "manual",
       });
-
-      // None should appear in space B queries
-      const convListB = await cortex.conversations.list({
-        memorySpaceId: workflowB,
-      });
-      const memListB = await cortex.vector.list({ memorySpaceId: workflowB });
-      const factListB = await cortex.facts.list({ memorySpaceId: workflowB });
-
       expect(
-        convListB.conversations.some(
-          (c: { conversationId: string }) =>
-            c.conversationId === convA.conversationId,
+        (await cortex.vector.list({ memorySpaceId: b })).some(
+          (row) => row.memoryId === memory.memoryId,
         ),
       ).toBe(false);
-      expect(memListB.some((m) => m.memoryId === memA.memoryId)).toBe(false);
-      expect(factListB.some((f) => f.factId === factA.factId)).toBe(false);
+      expect(
+        (await cortex.facts.list({ memorySpaceId: b })).some(
+          (row) => row.factId === fact.factId,
+        ),
+      ).toBe(false);
     });
   });
 
@@ -1120,7 +1197,7 @@ describe("Cross-Space Boundary Testing", () => {
 
   describe("Boundary Edge Cases", () => {
     it("space with similar name doesn't confuse isolation", async () => {
-      const spacePrefix = `similar-${Date.now()}`;
+      const spacePrefix = `similar-${fixtureStamp}`;
       const space1 = `${spacePrefix}-1`;
       const space2 = `${spacePrefix}-2`;
 
@@ -1152,84 +1229,74 @@ describe("Cross-Space Boundary Testing", () => {
     });
 
     it("empty space ID handled correctly", async () => {
-      try {
-        await cortex.vector.list({ memorySpaceId: "" });
-        // May return empty or throw
-      } catch (_e) {
-        expect(_e).toBeDefined();
-      }
+      await expect(cortex.vector.list({ memorySpaceId: "" })).rejects.toThrow(
+        "memorySpaceId",
+      );
     });
 
-    it("non-existent space returns empty results", async () => {
-      const list = await cortex.vector.list({
-        memorySpaceId: "non-existent-space-xyz",
-      });
-
-      expect(list).toEqual([]);
+    it("an ungranted space refuses without effects", async () => {
+      await expectRefusalNoEffects(
+        () => cortex.vector.list({ memorySpaceId: "non-existent-space-xyz" }),
+        allFixtures,
+        "memories",
+        "FORBIDDEN",
+      );
     });
 
-    it("space deleted mid-query maintains consistency", async () => {
-      const tempSpace = `${SPACE_A}-mid-del-${Date.now()}`;
-
+    it("public erasure refusal preserves a concurrent scoped query", async () => {
+      const scope = `${SPACE_A}-mid-del-${fixtureStamp}`;
       await cortex.memorySpaces.register({
-        memorySpaceId: tempSpace,
+        memorySpaceId: scope,
         type: "project",
-        name: "Temp",
       });
-
-      const _mem = await cortex.vector.store(tempSpace, {
+      const memory = await cortex.vector.store(scope, {
         content: "Temp memory",
         contentType: "raw",
         source: { type: "system" },
         metadata: { importance: 50, tags: [] },
       });
-
-      // Start query, delete space
-      const listPromise = cortex.vector.list({ memorySpaceId: tempSpace });
-      await cortex.memorySpaces.delete(tempSpace, {
-        cascade: true,
-        reason: "test cleanup",
-      });
-
-      // Query should complete (may return empty or stale data)
-      const list = await listPromise;
-      expect(Array.isArray(list)).toBe(true);
+      const listPromise = cortex.vector.list({ memorySpaceId: scope });
+      await expectRefusalNoEffects(
+        () =>
+          cortex.memorySpaces.delete(scope, {
+            cascade: true,
+            reason: "Public scoped erasure refusal",
+          }),
+        allFixtures,
+        "memories",
+        "ERASURE_ADMIN_TRANSPORT_REQUIRED",
+      );
+      expect(
+        (await listPromise).some((row) => row.memoryId === memory.memoryId),
+      ).toBe(true);
     });
 
-    it("rapid space creation/deletion doesn't corrupt isolation", async () => {
+    it("five fixed spaces remain isolated across public erasure refusals", async () => {
       const spaces = Array.from(
         { length: 5 },
-        (_, i) => `rapid-${Date.now()}-${i}`,
+        (_, i) => `rapid-${fixtureStamp}-${i}`,
       );
-
-      // Create all
-      for (const spaceId of spaces) {
-        await cortex.memorySpaces.register({
-          memorySpaceId: spaceId,
-          type: "project",
-          name: `Rapid ${spaceId}`,
-        });
-
-        await cortex.vector.store(spaceId, {
-          content: `Data in ${spaceId}`,
+      for (const memorySpaceId of spaces) {
+        await cortex.memorySpaces.register({ memorySpaceId, type: "project" });
+        await cortex.vector.store(memorySpaceId, {
+          content: "Rapid scope data",
           contentType: "raw",
           source: { type: "system" },
           metadata: { importance: 50, tags: [] },
         });
       }
-
-      // Delete all
-      for (const spaceId of spaces) {
-        await cortex.memorySpaces.delete(spaceId, {
-          cascade: true,
-          reason: "test cleanup",
-        });
-      }
-
-      // Verify all gone
-      for (const spaceId of spaces) {
-        const check = await cortex.memorySpaces.get(spaceId);
-        expect(check).toBeNull();
+      for (const scope of spaces) {
+        await expectRefusalNoEffects(
+          () =>
+            cortex.memorySpaces.delete(scope, {
+              cascade: true,
+              reason: "Public scoped erasure refusal",
+            }),
+          allFixtures,
+          "memories",
+          "ERASURE_ADMIN_TRANSPORT_REQUIRED",
+        );
+        expect(await cortex.vector.count({ memorySpaceId: scope })).toBe(1);
       }
     });
   });
@@ -1418,68 +1485,63 @@ describe("Cross-Space Boundary Testing", () => {
   // ══════════════════════════════════════════════════════════════════════
 
   describe("User Data Space Isolation", () => {
-    it("user profile is global but data scoped per space", async () => {
-      const userId = `global-user-${Date.now()}`;
-
-      // Update user (global)
-      await cortex.users.update(userId, {
-        name: "Global User",
+    it("user profile and data remain scoped per space", async () => {
+      await scopeA.cortex.users.update(TEST_USER_ID, {
+        name: "Owned A profile",
       });
-
-      // Create memories in both spaces
-      await cortex.vector.store(SPACE_A, {
-        content: "User memory in A",
-        contentType: "raw",
-        userId,
-        source: { type: "system", userId },
-        metadata: { importance: 50, tags: [] },
-      });
-
-      await cortex.vector.store(SPACE_B, {
-        content: "User memory in B",
-        contentType: "raw",
-        userId,
-        source: { type: "system", userId },
-        metadata: { importance: 50, tags: [] },
-      });
-
-      // User profile is global
-      const user = await cortex.users.get(userId);
-      expect(user).not.toBeNull();
-
-      // But memories are isolated
-      const listA = await cortex.vector.list({ memorySpaceId: SPACE_A });
-      const userMemsA = listA.filter((m) => m.userId === userId);
-      userMemsA.forEach((m) => {
-        expect(m.memorySpaceId).toBe(SPACE_A);
-      });
+      expect((await scopeA.cortex.users.get(TEST_USER_ID))?.data?.name).toBe(
+        "Owned A profile",
+      );
+      expect(await scopeB.cortex.users.get(TEST_USER_ID)).toBeNull();
+      const a = await cortex.vector.store(SPACE_A, {
+          content: "User memory in A",
+          contentType: "raw",
+          source: { type: "system" },
+          metadata: { importance: 50, tags: [] },
+        }),
+        b = await cortex.vector.store(SPACE_B, {
+          content: "User memory in B",
+          contentType: "raw",
+          source: { type: "system" },
+          metadata: { importance: 50, tags: [] },
+        });
+      expect(
+        (await cortex.vector.list({ memorySpaceId: SPACE_A })).some(
+          (row) => row.memoryId === a.memoryId,
+        ),
+      ).toBe(true);
+      expect(
+        (await cortex.vector.list({ memorySpaceId: SPACE_A })).some(
+          (row) => row.memoryId === b.memoryId,
+        ),
+      ).toBe(false);
     });
 
-    it("user delete cascade respects space boundaries", async () => {
-      const userId = `cascade-bound-${Date.now()}`;
-
-      await cortex.vector.store(SPACE_A, {
-        content: "User A data",
-        contentType: "raw",
-        userId,
-        source: { type: "system", userId },
-        metadata: { importance: 50, tags: [] },
-      });
-
-      const memB = await cortex.vector.store(SPACE_B, {
-        content: "User B data",
-        contentType: "raw",
-        userId,
-        source: { type: "system", userId },
-        metadata: { importance: 50, tags: [] },
-      });
-
-      // Delete user (cascades all spaces)
-      await cortex.users.delete(userId, { cascade: true });
-
-      // Both spaces should be cleaned
-      const _checkB = await cortex.vector.get(SPACE_B, memB.memoryId);
-      // May or may not be null depending on implementation
+    it("public user cascade refusal preserves both scopes", async () => {
+      const a = await cortex.vector.store(SPACE_A, {
+          content: "User A data",
+          contentType: "raw",
+          source: { type: "system" },
+          metadata: { importance: 50, tags: [] },
+        }),
+        b = await cortex.vector.store(SPACE_B, {
+          content: "User B data",
+          contentType: "raw",
+          source: { type: "system" },
+          metadata: { importance: 50, tags: [] },
+        });
+      await expectRefusalNoEffects(
+        () => scopeA.cortex.users.delete(TEST_USER_ID, { cascade: true }),
+        allFixtures,
+        "memories",
+        "ERASURE_ADMIN_TRANSPORT_REQUIRED",
+      );
+      expect((await cortex.vector.get(SPACE_A, a.memoryId))?.content).toBe(
+        "User A data",
+      );
+      expect((await cortex.vector.get(SPACE_B, b.memoryId))?.content).toBe(
+        "User B data",
+      );
     });
   });
 
@@ -1628,51 +1690,34 @@ describe("Cross-Space Boundary Testing", () => {
       expect(spaceAResults).toHaveLength(0);
     });
 
-    it("conversation search isolated by space", async () => {
-      const convA = await cortex.conversations.create({
-        type: "user-agent",
-        memorySpaceId: SPACE_A,
-        participants: { userId: TEST_USER_ID, agentId: "test-agent" },
-      });
-
-      await cortex.conversations.addMessage({
-        conversationId: convA.conversationId,
-        message: {
-          role: "user",
-          content: "CONV_SEARCH_BOUNDARY unique marker",
-        },
-      });
-
-      const results = await cortex.conversations.search({
-        query: "CONV_SEARCH_BOUNDARY",
-        filters: { memorySpaceId: SPACE_B },
-      });
-
-      results.forEach((r) => {
-        expect(r.conversation.memorySpaceId).not.toBe(SPACE_A);
-      });
+    it("public transcript search preserves selected-space refusal", async () => {
+      await expectRefusalNoEffects(
+        () =>
+          cortex.conversations.search({
+            query: "CONV_SEARCH_BOUNDARY",
+            filters: { memorySpaceId: SPACE_B },
+          }),
+        allFixtures,
+        "conversations",
+        "CAPABILITY_NOT_READY",
+      );
     });
 
     it("memory.search() with userId still respects space", async () => {
-      const userId = `search-user-${Date.now()}`;
-
-      await cortex.memory.remember({
-        memorySpaceId: SPACE_A,
-        conversationId: `search-a-${Date.now()}`,
-        userMessage: "CROSS_USER_SEARCH test in A",
-        agentResponse: "Response A",
-        userId,
-        userName: "Search User",
-        agentId: TEST_AGENT_ID,
+      const memory = await cortex.vector.store(SPACE_A, {
+        content: "CROSS_USER_SEARCH test in A",
+        contentType: "raw",
+        source: { type: "system", userId: TEST_USER_ID },
+        userId: TEST_USER_ID,
+        metadata: { importance: 50, tags: [] },
       });
-
-      // Search in space B for same user
       const results = await cortex.memory.search(SPACE_B, "CROSS_USER_SEARCH", {
-        userId,
+        userId: TEST_USER_ID,
       });
-
-      // Should not return space A results
-      expect(results.every((m: any) => m.memorySpaceId === SPACE_B)).toBe(true);
+      expect(results.some((row) => row.memoryId === memory.memoryId)).toBe(
+        false,
+      );
+      expect(results.every((row) => row.memorySpaceId === SPACE_B)).toBe(true);
     });
   });
 
@@ -1681,28 +1726,9 @@ describe("Cross-Space Boundary Testing", () => {
   // ══════════════════════════════════════════════════════════════════════
 
   describe("Statistics Space Isolation", () => {
-    it("stats independent for each space", async () => {
-      // Register both spaces
-      try {
-        await cortex.memorySpaces.register({
-          memorySpaceId: SPACE_A,
-          type: "project",
-          name: "Independent A",
-        });
-      } catch (_e) {
-        // Already exists
-      }
-      try {
-        await cortex.memorySpaces.register({
-          memorySpaceId: SPACE_B,
-          type: "project",
-          name: "Independent B",
-        });
-      } catch (_e) {
-        // Already exists
-      }
-
-      // Add different amounts to each space
+    it("supported counts remain independent while public statistics refuse", async () => {
+      const aBefore = await cortex.vector.count({ memorySpaceId: SPACE_A }),
+        bBefore = await cortex.vector.count({ memorySpaceId: SPACE_B });
       await cortex.vector.store(SPACE_A, {
         content: "Stats A1",
         contentType: "raw",
@@ -1715,76 +1741,69 @@ describe("Cross-Space Boundary Testing", () => {
         source: { type: "system" },
         metadata: { importance: 50, tags: [] },
       });
-
       await cortex.vector.store(SPACE_B, {
         content: "Stats B1",
         contentType: "raw",
         source: { type: "system" },
         metadata: { importance: 50, tags: [] },
       });
-
-      const statsA = await cortex.memorySpaces.getStats(SPACE_A);
-      const statsB = await cortex.memorySpaces.getStats(SPACE_B);
-
-      // Different counts
-      expect(statsA.totalMemories).toBeGreaterThanOrEqual(2);
-      expect(statsB.totalMemories).toBeGreaterThanOrEqual(1);
+      expect(await cortex.vector.count({ memorySpaceId: SPACE_A })).toBe(
+        aBefore + 2,
+      );
+      expect(await cortex.vector.count({ memorySpaceId: SPACE_B })).toBe(
+        bBefore + 1,
+      );
+      await expectRefusalNoEffects(
+        () => cortex.memorySpaces.getStats(SPACE_A),
+        allFixtures,
+        "memories",
+        "CAPABILITY_NOT_READY",
+      );
+      await expectRefusalNoEffects(
+        () => cortex.memorySpaces.getStats(SPACE_B),
+        allFixtures,
+        "memories",
+        "CAPABILITY_NOT_READY",
+      );
     });
 
-    it("adding to space A doesn't affect space B stats", async () => {
-      // Register SPACE_B if not exists
-      try {
-        await cortex.memorySpaces.register({
-          memorySpaceId: SPACE_B,
-          type: "project",
-          name: "Stats Space B",
-        });
-      } catch (_e) {
-        // Already exists
-      }
-
-      const statsBBefore = await cortex.memorySpaces.getStats(SPACE_B);
-
-      // Add to space A
+    it("adding to space A preserves the supported B count and statistics refusal", async () => {
+      const before = await cortex.vector.count({ memorySpaceId: SPACE_B });
       await cortex.vector.store(SPACE_A, {
         content: "New in A",
         contentType: "raw",
         source: { type: "system" },
         metadata: { importance: 50, tags: [] },
       });
-
-      const statsBAfter = await cortex.memorySpaces.getStats(SPACE_B);
-
-      // Space B stats unchanged
-      expect(statsBAfter.totalMemories).toBe(statsBBefore.totalMemories);
+      expect(await cortex.vector.count({ memorySpaceId: SPACE_B })).toBe(
+        before,
+      );
+      await expectRefusalNoEffects(
+        () => cortex.memorySpaces.getStats(SPACE_B),
+        allFixtures,
+        "memories",
+        "CAPABILITY_NOT_READY",
+      );
     });
 
-    it("deleting from space A doesn't affect space B stats", async () => {
-      // Ensure both spaces registered
-      try {
-        await cortex.memorySpaces.register({
-          memorySpaceId: SPACE_B,
-          type: "project",
-          name: "Stats B",
+    it("deleting from space A preserves the supported B count and statistics refusal", async () => {
+      const before = await cortex.vector.count({ memorySpaceId: SPACE_B }),
+        memory = await cortex.vector.store(SPACE_A, {
+          content: "To delete",
+          contentType: "raw",
+          source: { type: "system" },
+          metadata: { importance: 50, tags: [] },
         });
-      } catch (_e) {
-        // Already exists
-      }
-
-      const memA = await cortex.vector.store(SPACE_A, {
-        content: "To delete",
-        contentType: "raw",
-        source: { type: "system" },
-        metadata: { importance: 50, tags: [] },
-      });
-
-      const statsBBefore = await cortex.memorySpaces.getStats(SPACE_B);
-
-      await cortex.vector.delete(SPACE_A, memA.memoryId);
-
-      const statsBAfter = await cortex.memorySpaces.getStats(SPACE_B);
-
-      expect(statsBAfter.totalMemories).toBe(statsBBefore.totalMemories);
+      await cortex.vector.delete(SPACE_A, memory.memoryId);
+      expect(await cortex.vector.count({ memorySpaceId: SPACE_B })).toBe(
+        before,
+      );
+      await expectRefusalNoEffects(
+        () => cortex.memorySpaces.getStats(SPACE_B),
+        allFixtures,
+        "memories",
+        "CAPABILITY_NOT_READY",
+      );
     });
   });
 
@@ -1794,78 +1813,62 @@ describe("Cross-Space Boundary Testing", () => {
 
   describe("Comprehensive Isolation Tests", () => {
     it("complete workflow in space A invisible to space B", async () => {
-      const workflowSpace = `${SPACE_A}-complete-${Date.now()}`;
-
+      const scope = `${SPACE_A}-complete-${fixtureStamp}`;
       await cortex.memorySpaces.register({
-        memorySpaceId: workflowSpace,
+        memorySpaceId: scope,
         type: "project",
-        name: "Complete workflow",
       });
-
-      // Create complete workflow
-      const conv = await cortex.conversations.create({
-        type: "user-agent",
-        memorySpaceId: workflowSpace,
-        participants: { userId: TEST_USER_ID, agentId: "test-agent" },
-      });
-
-      await cortex.conversations.addMessage({
-        conversationId: conv.conversationId,
-        message: { role: "user", content: "Workflow message" },
-      });
-
-      const mem = await cortex.vector.store(workflowSpace, {
+      await expectRefusalNoEffects(
+        () =>
+          cortex.conversations.create({
+            memorySpaceId: scope,
+            type: "user-agent",
+            participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID },
+          }),
+        allFixtures,
+        "conversations",
+        "CAPABILITY_NOT_READY",
+      );
+      const memory = await cortex.vector.store(scope, {
         content: "Workflow memory",
         contentType: "raw",
-        source: { type: "conversation", userId: TEST_USER_ID },
-        conversationRef: {
-          conversationId: conv.conversationId,
-          messageIds: [],
-        },
+        source: { type: "system" },
         metadata: { importance: 50, tags: [] },
       });
-
       const fact = await cortex.facts.store({
-        memorySpaceId: workflowSpace,
+        memorySpaceId: scope,
         fact: "Workflow fact",
         factType: "knowledge",
         subject: TEST_USER_ID,
         confidence: 80,
-        sourceType: "conversation",
-        sourceRef: { conversationId: conv.conversationId },
+        sourceType: "manual",
       });
-
-      const ctx = await cortex.contexts.create({
-        memorySpaceId: workflowSpace,
+      const context = await cortex.contexts.create({
+        memorySpaceId: scope,
         userId: TEST_USER_ID,
         purpose: "Workflow context",
       });
-
-      // Nothing should appear in space B
-      const convListB = await cortex.conversations.list({
-        memorySpaceId: SPACE_B,
-      });
-      const memListB = await cortex.vector.list({ memorySpaceId: SPACE_B });
-      const factListB = await cortex.facts.list({ memorySpaceId: SPACE_B });
-      const ctxListB = await cortex.contexts.list({ memorySpaceId: SPACE_B });
-
       expect(
-        convListB.conversations.some(
-          (c: { conversationId: string }) =>
-            c.conversationId === conv.conversationId,
+        (await cortex.vector.list({ memorySpaceId: SPACE_B })).some(
+          (row) => row.memoryId === memory.memoryId,
         ),
       ).toBe(false);
-      expect(memListB.some((m) => m.memoryId === mem.memoryId)).toBe(false);
-      expect(factListB.some((f) => f.factId === fact.factId)).toBe(false);
-      expect(ctxListB.some((c: any) => c.contextId === ctx.contextId)).toBe(
-        false,
-      );
+      expect(
+        (await cortex.facts.list({ memorySpaceId: SPACE_B })).some(
+          (row) => row.factId === fact.factId,
+        ),
+      ).toBe(false);
+      expect(
+        (await cortex.contexts.list({ memorySpaceId: SPACE_B })).some(
+          (row) => row.contextId === context.contextId,
+        ),
+      ).toBe(false);
     });
 
-    it("100 spaces maintain complete isolation", async () => {
+    it("ten fixed spaces maintain complete isolation", async () => {
       const spaces = Array.from(
         { length: 10 },
-        (_, i) => `multi-iso-${Date.now()}-${i}`,
+        (_, i) => `multi-iso-${fixtureStamp}-${i}`,
       );
 
       // Create data in each space
@@ -1896,7 +1899,7 @@ describe("Cross-Space Boundary Testing", () => {
     });
 
     it("space ID substring matching doesn't leak data", async () => {
-      const baseId = `substring-${Date.now()}`;
+      const baseId = `substring-${fixtureStamp}`;
       const space1 = `${baseId}`;
       const space2 = `${baseId}-2`; // Contains space1 as substring
 

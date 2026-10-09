@@ -620,7 +620,9 @@ describe("ResiliencePresets", () => {
 // SDK Integration Tests
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-import { Cortex } from "../src";
+import { Cortex } from "./helpers/deployment-operator";
+import { jest } from "@jest/globals";
+import { createRuntimeFixture } from "./helpers/runtime-fixture";
 import { createTestRunContext } from "./helpers/isolation";
 
 describe("SDK Resilience Integration", () => {
@@ -630,8 +632,10 @@ describe("SDK Resilience Integration", () => {
   describe("SDK methods use resilience layer", () => {
     let cortexWithResilience: Cortex;
     let cortexWithoutResilience: Cortex;
+    let contextRuntime: Awaited<ReturnType<typeof createRuntimeFixture>>;
 
-    beforeAll(() => {
+    beforeAll(async () => {
+      contextRuntime = await createRuntimeFixture(ctx.runId, ctx.memorySpaceId("ctx-resilience"), ctx.userId("runtime-owner"), ResiliencePresets.default);
       cortexWithResilience = new Cortex({
         convexUrl: CONVEX_URL,
         resilience: ResiliencePresets.default,
@@ -643,9 +647,14 @@ describe("SDK Resilience Integration", () => {
       });
     });
 
-    afterAll(() => {
-      cortexWithResilience.close();
-      cortexWithoutResilience.close();
+    afterAll(async () => {
+      const cleanups = await Promise.allSettled([
+        () => contextRuntime.close(),
+        () => cortexWithResilience.shutdown(),
+        () => cortexWithoutResilience.shutdown(),
+      ].map(cleanup => Promise.resolve().then(cleanup)));
+      const failed = cleanups.find(cleanup => cleanup.status === "rejected");
+      if (failed?.status === "rejected") throw failed.reason;
     });
 
     test("SDK should accept resilience config", () => {
@@ -784,13 +793,17 @@ describe("SDK Resilience Integration", () => {
         type: "custom",
       });
 
-      const context = await cortexWithResilience.contexts.create({
+      const layer = contextRuntime.cortex.getResilience();
+      const execution = jest.spyOn(layer, "execute");
+      const context = await contextRuntime.cortex.contexts.create({
         memorySpaceId: spaceId,
+        userId: ctx.userId("runtime-owner"),
         purpose: "Resilience test context",
       });
-
-      expect(context).toBeDefined();
       expect(context.contextId).toBeDefined();
+      expect(execution).toHaveBeenCalledWith(expect.any(Function), "contexts:create");
+      execution.mockRestore();
+      expect(await contextRuntime.cortex.contexts.get(context.contextId)).toEqual(context);
     });
   });
 
@@ -826,9 +839,13 @@ describe("SDK Resilience Integration", () => {
       });
     });
 
-    afterAll(() => {
-      resilience.stopQueueProcessor();
-      cortex.close();
+    afterAll(async () => {
+      const cleanups = await Promise.allSettled([
+        () => resilience.stopQueueProcessor(),
+        () => cortex.shutdown(),
+      ].map(cleanup => Promise.resolve().then(cleanup)));
+      const failed = cleanups.find(cleanup => cleanup.status === "rejected");
+      if (failed?.status === "rejected") throw failed.reason;
     });
 
     test("resilience layer executes operations successfully", async () => {
@@ -1028,17 +1045,21 @@ describe("ResilienceLayer.executeWithRetry", () => {
     const holdingOperation = new Promise<void>((resolve) => {
       setTimeout(resolve, 1000);
     });
-    void fullResilience.execute(async () => {
+    const holdingExecution = fullResilience.execute(async () => {
       await holdingOperation;
       return "done";
     }, "test:operation");
 
-    // Give it time to acquire the permit
-    await new Promise((resolve) => setTimeout(resolve, 10));
+    try {
+      // Give it time to acquire the permit
+      await new Promise((resolve) => setTimeout(resolve, 10));
 
-    // Now try to execute - should fail with queue full since no queue space
-    // Note: The actual behavior depends on implementation - may timeout instead
-    fullResilience.stopQueueProcessor();
+      // Now try to execute - should fail with queue full since no queue space
+      // Note: The actual behavior depends on implementation - may timeout instead
+    } finally {
+      fullResilience.stopQueueProcessor();
+      await holdingExecution;
+    }
   });
 });
 

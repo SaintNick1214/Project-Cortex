@@ -6,11 +6,12 @@
  * defaults and environment variable support.
  */
 
-import { openai } from "@ai-sdk/openai";
 import type {
   CortexMemoryConfig,
   LayerObserver,
 } from "@cortexmemory/vercel-ai-provider";
+import { getAgentId } from "./cortex";
+import { openai } from "@ai-sdk/openai";
 import { embed } from "ai";
 
 /**
@@ -26,30 +27,35 @@ export function getCortexMemoryConfig(
   memorySpaceId: string,
   userId: string,
   conversationId: string,
-  layerObserver?: LayerObserver
+  layerObserver?: LayerObserver,
+  signal?: AbortSignal,
 ): CortexMemoryConfig {
   return {
-    agentId: "chat-sdk-assistant",
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // Core Cortex Configuration
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    convexUrl: process.env.CONVEX_URL!,
+    memorySpaceId,
+    enableGraphMemory: process.env.CORTEX_GRAPH_SYNC === "true",
+    userId,
+    userName: "User",
+    agentId: getAgentId(),
     agentName: "Chat SDK Assistant",
+    conversationId,
+
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // Fact Extraction
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    enableFactExtraction: process.env.CORTEX_FACT_EXTRACTION === "true",
 
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     // Belief Revision
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     beliefRevision: {
       enabled: true,
-      llmResolution: true,
       slotMatching: true,
+      llmResolution: true,
     },
-    conversationId,
-    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    // Core Cortex Configuration
-    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    convexUrl: process.env.CONVEX_URL!,
-
-    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    // Debug (enabled in development)
-    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    debug: process.env.NODE_ENV === "development",
 
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     // Embedding Provider (OpenAI)
@@ -59,15 +65,24 @@ export function getCortexMemoryConfig(
         const result = await embed({
           model: openai.embedding("text-embedding-3-small"),
           value: text,
+          abortSignal: signal,
         });
         return result.embedding;
       },
     },
 
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    // Fact Extraction
+    // Streaming Options
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    enableFactExtraction: process.env.CORTEX_FACT_EXTRACTION === "true",
+    streamingOptions: {
+      storePartialResponse: true,
+      progressiveFactExtraction: true,
+    },
+
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // Memory Search Settings
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    memorySearchLimit: 20,
 
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     // Layer Observation (for UI visualization)
@@ -75,28 +90,8 @@ export function getCortexMemoryConfig(
     layerObserver,
 
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    // Memory Search Settings
+    // Debug (enabled in development)
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    memorySearchLimit: 20,
-    memorySpaceId,
-
-    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    // Streaming Options
-    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    streamingOptions: {
-      progressiveFactExtraction: true,
-      storePartialResponse: true,
-    },
-    userId,
-    userName: "User",
+    debug: process.env.NODE_ENV === "development",
   };
-}
-
-/**
- * Get the memory space ID from environment or use a default.
- *
- * @returns Memory space ID
- */
-export function getMemorySpaceId(): string {
-  return process.env.MEMORY_SPACE_ID || "chat-sdk-demo";
 }

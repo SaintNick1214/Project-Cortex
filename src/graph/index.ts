@@ -38,3 +38,10 @@ export type {
   GraphSyncWorkerOptions,
   SyncHealthMetrics,
 } from "./worker/GraphSyncWorker";
+
+export * from "./identity";
+export * from "./erasure";
+export * from "./rebuildTransport";
+export * from "./erasureTransport";
+export {GraphJobUnresolved,GraphPrimaryOutcomeUnknown,GraphCommittedPartial} from "./types";
+export {assertManagedGraphCompatibility} from "./schema/initSchema";

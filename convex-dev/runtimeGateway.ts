@@ -5,10 +5,10 @@ import { ConvexError } from "convex/values";
 import { convexGateway } from "@convex-dev/ai-sdk-provider";
 import { wrapEmbeddingModel, wrapLanguageModel } from "ai";
 import type { EmbeddingModelV4, EmbeddingModelV4CallOptions, EmbeddingModelV4Result, LanguageModelV4, LanguageModelV4CallOptions, LanguageModelV4StreamPart, LanguageModelV4Usage } from "@ai-sdk/provider";
-import type { RuntimeAuthorityReference } from "../src/auth/verified";
-import { canonicalModelJson, validateModelRequest } from "../src/domain/model-policy";
-import type { ModelCallRequest, ModelOperationKey, ModelPolicySnapshotV1 } from "../src/domain/model-policy";
-import { assertEmbeddingVector, assertProfileMatches, DEFAULT_EMBEDDING_PROFILE, normalizeSourceText } from "../src/domain/profile";
+import type { RuntimeAuthorityReference } from "./lib/runtimeDomain/auth/verified";
+import { canonicalModelJson, validateModelRequest } from "./lib/runtimeDomain/domain/modelPolicy";
+import type { ModelCallRequest, ModelOperationKey, ModelPolicySnapshotV1 } from "./lib/runtimeDomain/domain/modelPolicy";
+import { assertEmbeddingVector, assertProfileMatches, DEFAULT_EMBEDDING_PROFILE, normalizeSourceText } from "./lib/runtimeDomain/domain/profile";
 import type { QualifiedDispatchEvidence } from "./runtimeModelPolicyBootstrap";
 import type { Id } from "./_generated/dataModel";
 
@@ -212,7 +212,7 @@ function requestBase(s: ModelPolicySnapshotV1, binding: GatewayBinding): ModelCa
     promptVersion: s.pins.promptVersion, schemaVersion: s.pins.schemaVersion, extractionVersion: s.pins.extractionVersion, toolRegistryVersion: s.pins.toolRegistryVersion };
 }
 const standardKeys = ["prompt", "maxOutputTokens", "temperature", "topP", "seed", "stopSequences", "topK", "presencePenalty", "frequencyPenalty", "responseFormat", "tools", "toolChoice", "headers", "providerOptions", "reasoning", "includeRawChunks", "abortSignal"];
-function languageParams(input: LanguageModelV4CallOptions, s: ModelPolicySnapshotV1, p: QualifiedDispatchEvidence, binding: GatewayBinding, signal: AbortSignal): { params: LanguageModelV4CallOptions; request: ModelCallRequest } {
+function languageParams(input: LanguageModelV4CallOptions, s: ModelPolicySnapshotV1, p: QualifiedDispatchEvidence, binding: GatewayBinding, signal: AbortSignal): { params: Omit<LanguageModelV4CallOptions, "reasoning">; request: ModelCallRequest } {
   const native = record(input, standardKeys);
   for (const key of ["topK", "presencePenalty", "frequencyPenalty", "tools", "toolChoice", "headers", "providerOptions", "reasoning", "includeRawChunks"]) if (key in native) fail("UNSUPPORTED_NATIVE_FIELD");
   if (native.abortSignal !== undefined && native.abortSignal !== signal) fail("UNTRUSTED_ABORT_SIGNAL");
@@ -240,7 +240,8 @@ function languageParams(input: LanguageModelV4CallOptions, s: ModelPolicySnapsho
   const checked = validateModelRequest(s, request).request;
   return { request: detached(checked), params: nativeLanguage(checked, signal) };
 }
-function nativeLanguage(request: Readonly<ModelCallRequest>, signal: AbortSignal): LanguageModelV4CallOptions {
+/** Reasoning is rejected before dispatch, so normalized params never expose a version-specific reasoning enum. */
+function nativeLanguage(request: Readonly<ModelCallRequest>, signal: AbortSignal): Omit<LanguageModelV4CallOptions, "reasoning"> {
   return { prompt: request.messages!.map((m) => m.role === "system" ? { role: "system", content: (m.parts[0] as { text: string }).text }
     : { role: m.role as "user" | "assistant", content: [{ type: "text", text: (m.parts[0] as { text: string }).text }] }),
   maxOutputTokens: request.outputTokens, ...request.options.temperature !== undefined ? { temperature: request.options.temperature } : {},

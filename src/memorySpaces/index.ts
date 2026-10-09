@@ -1,3 +1,7 @@
+import { createErasureTransport, prepareErasure, executeErasure, type ErasureTransport } from "../users/erasure";
+import type { FunctionReference, FunctionArgs, FunctionReturnType } from "convex/server";
+import { writeGraphMutation, type GraphPrimary } from "../graph/erasure";
+import type { GraphSyncPolicy } from "../graph/types";
 /**
  * Cortex SDK - Memory Spaces API
  *
@@ -5,9 +9,8 @@
  */
 
 import { isRegistryStatisticsUnavailable } from "../agents/statistics";
-import { resolveTenantId } from "../auth/tenant";
 import { ConvexClient } from "convex/browser";
-import { api } from "../../convex-dev/_generated/api";
+import { api } from "../common/backendApi";
 import type {
   MemorySpace,
   MemorySpaceStats,
@@ -21,10 +24,10 @@ import type {
   UpdateMemorySpaceOptions,
 } from "../types";
 import type { GraphAdapter } from "../graph/types";
-import { syncMemorySpaceToGraph } from "../graph";
 import {
   MemorySpaceValidationError,
   validateMemorySpaceId,
+  resolveDomainScope,
   validateMemorySpaceType,
   validateMemorySpaceStatus,
   validateLimit,
@@ -45,7 +48,17 @@ export class MemorySpacesAPI {
     private graphAdapter?: GraphAdapter,
     private resilience?: ResilienceLayer,
     private authContext?: AuthContext,
+    private readonly graphSyncPolicy?: GraphSyncPolicy,
   ) {}
+  createErasureTransport(options:Parameters<typeof createErasureTransport>[0]):ErasureTransport {return createErasureTransport(options);}
+  private mutateGraph<M extends FunctionReference<"mutation", "public">>(reference: M, args: FunctionArgs<M>, explicit?: boolean): Promise<GraphPrimary<FunctionReturnType<M>>> {
+    return writeGraphMutation(this.client, this.graphAdapter, this.graphSyncPolicy, reference, args, explicit);
+  }
+  private executeGraphWrite<T>(operation: () => Promise<T>, name: string, explicit?: boolean): Promise<T> {
+    // A configured graph writer has one primary application invocation; delivery retries are separate.
+    return this.graphAdapter && explicit !== false ? operation() : this.executeWithResilience(operation, name);
+  }
+
 
   /**
    * Execute an operation through the resilience layer (if available)
@@ -129,32 +142,28 @@ export class MemorySpacesAPI {
         joinedAt: now,
       })) || [];
 
+    const tenantId = resolveDomainScope(this.authContext?.tenantId, params.tenantId);
+
     let result;
     try {
-      result = await this.executeWithResilience(
+      result = await this.executeGraphWrite(
         () =>
-          this.client.mutation(api.memorySpaces.register, {
+          this.mutateGraph(api.memorySpaces.register, {
             memorySpaceId: params.memorySpaceId,
             name: params.name,
             type: params.type,
-            tenantId: this.authContext?.tenantId, // Multi-tenancy: associate space with tenant
+            tenantId, // Multi-tenancy: associate space with tenant
             participants,
             metadata: params.metadata,
-          }),
-        "memorySpaces:register",
+          }, _options?.syncToGraph),
+        "memorySpaces:register", _options?.syncToGraph,
       );
     } catch (error) {
       this.handleConvexError(error);
     }
 
     // Sync to graph if requested
-    if (this.graphAdapter) {
-      try {
-        await syncMemorySpaceToGraph(result as MemorySpace, this.graphAdapter);
-      } catch (error) {
-        console.warn("Failed to sync memory space to graph:", error);
-      }
-    }
+    
 
     return result as MemorySpace;
   }
@@ -170,11 +179,13 @@ export class MemorySpacesAPI {
   async get(memorySpaceId: string): Promise<MemorySpace | null> {
     validateMemorySpaceId(memorySpaceId);
 
+    const tenantId = resolveDomainScope(this.authContext?.tenantId, undefined);
+
     const result = await this.executeWithResilience(
       () =>
         this.client.query(api.memorySpaces.get, {
           memorySpaceId,
-          tenantId: this.authContext?.tenantId, // Multi-tenancy: find space within tenant
+          tenantId, // Multi-tenancy: find space within tenant
         }),
       "memorySpaces:get",
     );
@@ -230,6 +241,8 @@ export class MemorySpacesAPI {
       );
     }
 
+    const tenantId = resolveDomainScope(this.authContext?.tenantId, filter?.tenantId);
+
     const result = await this.executeWithResilience(
       () =>
         this.client.query(api.memorySpaces.list, {
@@ -240,7 +253,7 @@ export class MemorySpacesAPI {
           offset: filter?.offset,
           sortBy: filter?.sortBy,
           sortOrder: filter?.sortOrder,
-          tenantId: this.authContext?.tenantId, // Inject tenantId for tenant isolation
+          tenantId, // Inject tenantId for tenant isolation
         }),
       "memorySpaces:list",
     );
@@ -267,9 +280,12 @@ export class MemorySpacesAPI {
       validateMemorySpaceStatus(filter.status);
     }
 
+    const tenantId = resolveDomainScope(this.authContext?.tenantId, undefined);
+
     const result = await this.executeWithResilience(
       () =>
         this.client.query(api.memorySpaces.count, {
+          tenantId,
           type: filter?.type,
           status: filter?.status,
         }),
@@ -315,30 +331,27 @@ export class MemorySpacesAPI {
       validateMemorySpaceStatus(updates.status);
     }
 
+    const tenantId = resolveDomainScope(this.authContext?.tenantId, undefined);
+
     let result;
     try {
-      result = await this.executeWithResilience(
+      result = await this.executeGraphWrite(
         () =>
-          this.client.mutation(api.memorySpaces.update, {
+          this.mutateGraph(api.memorySpaces.update, {
+          tenantId,
             memorySpaceId,
             name: updates.name,
             metadata: updates.metadata as Record<string, unknown> | undefined,
             status: updates.status,
-          }),
-        "memorySpaces:update",
+          }, _options?.syncToGraph),
+        "memorySpaces:update", _options?.syncToGraph,
       );
     } catch (error) {
       this.handleConvexError(error);
     }
 
     // Sync to graph if requested
-    if (this.graphAdapter) {
-      try {
-        await syncMemorySpaceToGraph(result as MemorySpace, this.graphAdapter);
-      } catch (error) {
-        console.warn("Failed to sync memory space update to graph:", error);
-      }
-    }
+    
 
     return result as MemorySpace;
   }
@@ -367,9 +380,12 @@ export class MemorySpacesAPI {
     validateParticipant(participant);
 
     try {
-      const result = await this.executeWithResilience(
+      const tenantId = resolveDomainScope(this.authContext?.tenantId, undefined);
+
+    const result = await this.executeGraphWrite(
         () =>
-          this.client.mutation(api.memorySpaces.addParticipant, {
+          this.mutateGraph(api.memorySpaces.addParticipant, {
+          tenantId,
             memorySpaceId,
             participant,
           }),
@@ -403,9 +419,12 @@ export class MemorySpacesAPI {
       );
     }
 
-    const result = await this.executeWithResilience(
+    const tenantId = resolveDomainScope(this.authContext?.tenantId, undefined);
+
+    const result = await this.executeGraphWrite(
       () =>
-        this.client.mutation(api.memorySpaces.removeParticipant, {
+        this.mutateGraph(api.memorySpaces.removeParticipant, {
+          tenantId,
           memorySpaceId,
           participantId,
         }),
@@ -434,9 +453,12 @@ export class MemorySpacesAPI {
   ): Promise<MemorySpace> {
     validateMemorySpaceId(memorySpaceId);
 
-    const result = await this.executeWithResilience(
+    const tenantId = resolveDomainScope(this.authContext?.tenantId, undefined);
+
+    const result = await this.executeGraphWrite(
       () =>
-        this.client.mutation(api.memorySpaces.archive, {
+        this.mutateGraph(api.memorySpaces.archive, {
+          tenantId,
           memorySpaceId,
           reason: options?.reason,
           metadata: options?.metadata as Record<string, unknown> | undefined,
@@ -458,9 +480,12 @@ export class MemorySpacesAPI {
   async reactivate(memorySpaceId: string): Promise<MemorySpace> {
     validateMemorySpaceId(memorySpaceId);
 
-    const result = await this.executeWithResilience(
+    const tenantId = resolveDomainScope(this.authContext?.tenantId, undefined);
+
+    const result = await this.executeGraphWrite(
       () =>
-        this.client.mutation(api.memorySpaces.reactivate, {
+        this.mutateGraph(api.memorySpaces.reactivate, {
+          tenantId,
           memorySpaceId,
         }),
       "memorySpaces:reactivate",
@@ -470,20 +495,23 @@ export class MemorySpacesAPI {
   }
 
   /**
-   * Delete memory space and all associated data
+   * Delete a memory space and its supported exclusive primary data.
+   * Requires explicit administrator transport; inspect residual/partial erasure receipt.
    *
    * @example
    * ```typescript
-   * // GDPR deletion request
-   * const result = await cortex.memorySpaces.delete('user-123-personal', {
-   *   cascade: true,
-   *   reason: 'GDPR deletion request from user-123',
-   *   confirmId: 'user-123-personal', // Safety check
+   * const erasureTransport = cortex.memorySpaces.createErasureTransport({
+   *   url: process.env.CONVEX_URL!, deploymentKey: process.env.CONVEX_DEPLOY_KEY!,
    * });
-   *
-   * console.log(`Deleted ${result.cascade.memoriesDeleted} memories`);
-   * console.log(`Deleted ${result.cascade.conversationsDeleted} conversations`);
-   * console.log(`Deleted ${result.cascade.factsDeleted} facts`);
+   * try {
+   *   const result = await cortex.memorySpaces.delete('user-123-personal', {
+   *     cascade: true, tenantId: 'team-a', erasureTransport, dryRun: true,
+   *     reason: 'Reviewed retention request', confirmId: 'user-123-personal',
+   *   });
+   *   console.log(result.erasure); // Supported scope; shared/provenance residuals remain.
+   * } finally {
+   *   erasureTransport.close();
+   * }
    * ```
    */
   async delete(
@@ -493,25 +521,12 @@ export class MemorySpacesAPI {
     validateMemorySpaceId(memorySpaceId);
     validateDeleteOptions(memorySpaceId, options);
 
-    // Verify space exists for this tenant before deleting
-    const space = await this.get(memorySpaceId);
-    if (!space) {
-      throw new Error(`Memory space not found: ${memorySpaceId}`);
-    }
-
-    const result = await this.executeWithResilience(
-      () =>
-        this.client.mutation(api.memorySpaces.deleteSpace, {
-          memorySpaceId,
-          tenantId: this.authContext?.tenantId, // Multi-tenancy: ensure delete is tenant-scoped
-          cascade: options.cascade,
-          reason: options.reason,
-          confirmId: options.confirmId,
-        }),
-      "memorySpaces:delete",
-    );
-
-    return result as DeleteMemorySpaceResult;
+    const tenantId = resolveDomainScope(this.authContext?.tenantId, options.tenantId);
+    const prepared = await prepareErasure({kind:"space", memorySpaceId, tenantId}, options, this.graphAdapter);
+    const erasure = await executeErasure(prepared, this.client);
+    const count = (table:string)=>erasure.perTable[table]?.deleted??0;
+    const registry = erasure.outcomes.some(item=>item.table==="memorySpaces"&&item.deleted===1);
+    return {memorySpaceId,deleted:registry,cascade:{conversationsDeleted:count("conversations"),memoriesDeleted:count("memories"),factsDeleted:count("facts"),totalBytes:erasure.outcomes.filter(item=>item.deleted).reduce((sum,item)=>sum+(item.serializedBytes??0),0)},totalBytesKind:"serializedDocumentEstimate",reason:options.reason,deletedAt:erasure.endedAt,erasure};
   }
 
   /**
@@ -549,27 +564,16 @@ export class MemorySpacesAPI {
       validateTimeWindow(options.timeWindow);
     }
 
-    const tenantId = resolveTenantId(this.authContext?.tenantId, options?.tenantId);
+    const tenantId = resolveDomainScope(this.authContext?.tenantId, options?.tenantId);
     try {
-      const result = await this.executeWithResilience(
-        async () => {
-          try {
-            return { stats: await this.client.query(api.memorySpaces.getStats, {
-              memorySpaceId,
-              tenantId,
-              timeWindow: options?.timeWindow,
-              includeParticipants: options?.includeParticipants,
-            }) };
-          } catch (error) {
-            if (isRegistryStatisticsUnavailable(error)) {
-              return { unavailable: error };
-            }
-            throw error;
-          }
-        },
-        "memorySpaces:getStats",
-      );
-      // Capability absence is an explicit outcome, never a fabricated statistics result.
+      const result = await this.executeWithResilience(async () => {
+        try { return { stats: await this.client.query(api.memorySpaces.getStats, {
+          memorySpaceId, tenantId, timeWindow: options?.timeWindow, includeParticipants: options?.includeParticipants,
+        }) }; } catch (error) {
+          if (isRegistryStatisticsUnavailable(error)) return { unavailable: error };
+          throw error;
+        }
+      }, "memorySpaces:getStats");
       if (result.unavailable) throw result.unavailable;
       return result.stats as MemorySpaceStats;
     } catch (error) {
@@ -595,9 +599,12 @@ export class MemorySpacesAPI {
       );
     }
 
+    const tenantId = resolveDomainScope(this.authContext?.tenantId, undefined);
+
     const result = await this.executeWithResilience(
       () =>
         this.client.query(api.memorySpaces.findByParticipant, {
+          tenantId,
           participantId,
         }),
       "memorySpaces:findByParticipant",
@@ -638,9 +645,12 @@ export class MemorySpacesAPI {
       validateLimit(options.limit, 1000);
     }
 
+    const tenantId = resolveDomainScope(this.authContext?.tenantId, undefined);
+
     const result = await this.executeWithResilience(
       () =>
         this.client.query(api.memorySpaces.search, {
+          tenantId,
           query,
           type: options?.type,
           status: options?.status,
@@ -697,9 +707,12 @@ export class MemorySpacesAPI {
       }
     }
 
-    const result = await this.executeWithResilience(
+    const tenantId = resolveDomainScope(this.authContext?.tenantId, undefined);
+
+    const result = await this.executeGraphWrite(
       () =>
-        this.client.mutation(api.memorySpaces.updateParticipants, {
+        this.mutateGraph(api.memorySpaces.updateParticipants, {
+          tenantId,
           memorySpaceId,
           add: updates.add,
           remove: updates.remove,

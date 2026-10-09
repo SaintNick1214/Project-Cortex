@@ -5,15 +5,15 @@ import { createDocumentHandler } from "@/lib/artifacts/server";
 
 export const textDocumentHandler = createDocumentHandler<"text">({
   kind: "text",
-  onCreateDocument: async ({ title, dataStream }) => {
+  onCreateDocument: async ({ title, instructions, dataStream }) => {
     let draftContent = "";
 
     const { fullStream } = streamText({
-      experimental_transform: smoothStream({ chunking: "word" }),
       model: getArtifactModel(),
-      prompt: title,
       system:
         "Write about the given topic. Markdown is supported. Use headings wherever appropriate.",
+      experimental_transform: smoothStream({ chunking: "word" }),
+      prompt: instructions?.trim() ? `Title: ${title}\n\nRequested content and requirements:\n${instructions}` : title,
     });
 
     for await (const delta of fullStream) {
@@ -25,9 +25,9 @@ export const textDocumentHandler = createDocumentHandler<"text">({
         draftContent += text;
 
         dataStream.write({
+          type: "data-textDelta",
           data: text,
           transient: true,
-          type: "data-textDelta",
         });
       }
     }
@@ -38,18 +38,18 @@ export const textDocumentHandler = createDocumentHandler<"text">({
     let draftContent = "";
 
     const { fullStream } = streamText({
-      experimental_transform: smoothStream({ chunking: "word" }),
       model: getArtifactModel(),
+      system: updateDocumentPrompt(document.content, "text"),
+      experimental_transform: smoothStream({ chunking: "word" }),
       prompt: description,
       providerOptions: {
         openai: {
           prediction: {
-            content: document.content,
             type: "content",
+            content: document.content,
           },
         },
       },
-      system: updateDocumentPrompt(document.content, "text"),
     });
 
     for await (const delta of fullStream) {
@@ -61,9 +61,9 @@ export const textDocumentHandler = createDocumentHandler<"text">({
         draftContent += text;
 
         dataStream.write({
+          type: "data-textDelta",
           data: text,
           transient: true,
-          type: "data-textDelta",
         });
       }
     }

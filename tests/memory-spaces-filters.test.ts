@@ -10,7 +10,7 @@
  */
 
 import { describe, it, expect, beforeAll } from "@jest/globals";
-import { Cortex } from "../src/index";
+import { Cortex } from "./helpers/deployment-operator";
 
 // All valid memory space types and statuses
 const ALL_SPACE_TYPES = ["personal", "team", "project", "custom"] as const;

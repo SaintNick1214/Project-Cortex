@@ -1,8 +1,8 @@
 /**
  * Chat SDK Query Functions
  *
- * These functions implement chat persistence using the Cortex SDK's Conversations API.
- * The Cortex Conversations API provides ACID-compliant, immutable storage for chat history.
+ * Private app rows hold the current editable message and artifact view.
+ * Cortex conversations and artifact versions retain their separate audit history.
  *
  * Schema Mapping:
  * | Chat SDK Field | Cortex Conversation Field |
@@ -15,40 +15,24 @@
  * | updatedAt     | updatedAt (as Date)       |
  */
 
+import type { Chat, DBMessage, Document, Suggestion, Vote } from "@/lib/types";
+import {
+  requireScope,
+  withCortex,
+  assertChatOwner,
+  assertArtifactOwner,
+  getMemorySpaceId,
+  getAgentId,
+} from "@/lib/cortex";
+import { privateCall, privateConfiguration } from "@/lib/private-backend";
+import { ChatSDKError } from "@/lib/errors";
+import { randomUUID } from "node:crypto";
+import { hash } from "bcrypt-ts";
 import type {
+  Conversation,
   Artifact,
   ArtifactVersion,
-  Conversation,
-  Message as CortexMessage,
 } from "@cortexmemory/sdk";
-import { ConvexHttpClient } from "convex/browser";
-import { makeFunctionReference } from "convex/server";
-import { getAgentId, getCortex, getMemorySpaceId } from "@/lib/cortex";
-import type { Chat, DBMessage, Document, Suggestion, Vote } from "@/lib/types";
-
-// ============================================================================
-// Convex Client Helper
-// ============================================================================
-
-let convexClient: ConvexHttpClient | null = null;
-// This function belongs to the SDK backend deployed by the CLI, rather than
-// the app-only schema. Refer to it without requiring local generated bindings.
-const setConversationMetadata = makeFunctionReference<
-  "mutation",
-  { conversationId: string; metadata: Record<string, unknown>; userId: string }
->("conversations:setMetadata");
-
-function getConvexClient(): ConvexHttpClient {
-  if (!convexClient) {
-    const convexUrl = process.env.CONVEX_URL;
-    if (!convexUrl) {
-      throw new Error("CONVEX_URL environment variable is required");
-    }
-    convexClient = new ConvexHttpClient(convexUrl);
-  }
-  return convexClient;
-}
-
 // ============================================================================
 // Type Conversion Helpers
 // ============================================================================
@@ -58,78 +42,13 @@ function getConvexClient(): ConvexHttpClient {
  */
 function conversationToChat(conversation: Conversation): Chat {
   return {
-    createdAt: new Date(conversation.createdAt),
     id: conversation.conversationId,
-    title: (conversation.metadata?.title as string) || "New Chat",
-    updatedAt: new Date(conversation.updatedAt),
     userId: conversation.participants?.userId || "",
+    title: (conversation.metadata?.title as string) || "New Chat",
     visibility: conversation.visibility === "public" ? "public" : "private",
+    createdAt: new Date(conversation.createdAt),
+    updatedAt: new Date(conversation.updatedAt),
   };
-}
-
-/**
- * Convert a Cortex Message to a Chat SDK DBMessage
- */
-function cortexMessageToDBMessage(
-  message: CortexMessage,
-  chatId: string
-): DBMessage {
-  // Map Cortex roles to Chat SDK roles
-  const roleMap: Record<string, "user" | "assistant" | "system"> = {
-    agent: "assistant",
-    system: "system",
-    user: "user",
-  };
-
-  // Parse content - Cortex stores as string, Chat SDK uses parts
-  let parts: unknown;
-  try {
-    // Check if content is already JSON (for complex parts)
-    parts = JSON.parse(message.content);
-  } catch {
-    // Simple text content - wrap in parts format
-    parts = [{ text: message.content, type: "text" }];
-  }
-
-  return {
-    attachments: (message.metadata?.attachments as unknown[]) || [],
-    chatId,
-    createdAt: new Date(message.timestamp),
-    id: message.id,
-    parts,
-    role: roleMap[message.role] || "assistant",
-  };
-}
-
-/**
- * Convert Chat SDK message parts to Cortex content string
- */
-function partsToContent(parts: unknown): string {
-  if (typeof parts === "string") {
-    return parts;
-  }
-  if (Array.isArray(parts)) {
-    // Extract text from parts array
-    const textParts = parts
-      .filter((p: unknown) => {
-        if (typeof p === "object" && p !== null && "type" in p) {
-          return (p as { type: string }).type === "text";
-        }
-        return false;
-      })
-      .map((p: unknown) => {
-        if (typeof p === "object" && p !== null && "text" in p) {
-          return (p as { text: string }).text;
-        }
-        return "";
-      });
-    if (textParts.length > 0) {
-      return textParts.join("\n");
-    }
-    // If no text parts, stringify the whole thing
-    return JSON.stringify(parts);
-  }
-  return JSON.stringify(parts);
 }
 
 // ============================================================================
@@ -137,31 +56,53 @@ function partsToContent(parts: unknown): string {
 // ============================================================================
 
 export async function getUser(
-  _email: string
+  email: string
 ): Promise<Array<{ id: string; email: string; password: string | null }>> {
-  // User management is handled by NextAuth, not Cortex
-  // This is a placeholder - actual implementation depends on your auth provider
-  // For demo purposes, we return empty array (user not found)
-  return [];
+  const record = await privateCall<{
+    id: string;
+    email: string;
+    password: string | null;
+  } | null>("app/chatUsers:credentialByEmail", {
+    email: email.trim().toLowerCase(),
+  });
+  return record ? [record] : [];
 }
 
 export async function createUser(
   email: string,
-  _password: string
+  password: string
 ): Promise<Array<{ id: string; email: string }>> {
-  // User management is handled by NextAuth, not Cortex
-  // For demo purposes, we generate a user ID
-  const id = `user-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
-  return [{ email, id }];
+  if (password.length < 6 || password.length > 1024)
+    throw new ChatSDKError("bad_request:auth");
+  const userId = randomUUID();
+  const result = await privateCall<
+    { id: string; email: string } | { error: string }
+  >("app/chatUsers:register", {
+    userId,
+    email: email.trim().toLowerCase(),
+    passwordHash: await hash(password, 12),
+    tenantId: privateConfiguration().tenantId,
+    memorySpaceId: getMemorySpaceId(userId),
+  });
+  if ("error" in result)
+    throw new ChatSDKError("bad_request:auth", "Account already exists");
+  return [result];
 }
 
 export async function createGuestUser(): Promise<
   Array<{ id: string; email: string }>
 > {
-  // Create a guest user with a random ID
-  const id = `guest-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
-  const email = `guest-${id}@example.com`;
-  return [{ email, id }];
+  const userId = randomUUID();
+  const result = await privateCall<{ id: string; email: string }>(
+    "app/chatUsers:createGuest",
+    {
+      userId,
+      email: `guest-${userId}@example.com`,
+      tenantId: privateConfiguration().tenantId,
+      memorySpaceId: getMemorySpaceId(userId),
+    }
+  );
+  return [result];
 }
 
 // ============================================================================
@@ -173,14 +114,16 @@ export async function getChatById({
 }: {
   id: string;
 }): Promise<Chat | null> {
-  const cortex = getCortex();
+  const scope = await requireScope();
+  return withCortex(scope, async (cortex) => {
+    const conversation = await cortex.conversations.get(id);
+    if (!conversation) {
+      return null;
+    }
 
-  const conversation = await cortex.conversations.get(id);
-  if (!conversation) {
-    return null;
-  }
-
-  return conversationToChat(conversation);
+    assertChatOwner(conversation, scope);
+    return conversationToChat(conversation);
+  });
 }
 
 export async function getChatsByUserId({
@@ -194,38 +137,25 @@ export async function getChatsByUserId({
   startingAfter: string | null;
   endingBefore: string | null;
 }): Promise<Chat[]> {
-  const cortex = getCortex();
-  const memorySpaceId = getMemorySpaceId();
-
-  // Cortex uses offset-based pagination, convert cursor to offset if needed
-  // For now, we'll do a simple list with limit
-  const result = await cortex.conversations.list({
-    includeMessages: false,
+  const scope = await requireScope(id);
+  const rows = await privateCall<
+    Array<
+      Omit<Chat, "createdAt" | "updatedAt"> & {
+        createdAt: number;
+        updatedAt: number;
+      }
+    >
+  >("app/chatData:listChats", {
+    ...scope,
     limit,
-    memorySpaceId,
-    sortBy: "createdAt",
-    sortOrder: "desc",
-    userId: id,
+    ...(startingAfter ? { startingAfter } : {}),
+    ...(endingBefore ? { endingBefore } : {}),
   });
-
-  // Filter based on cursor if provided (client-side for now)
-  let chats = result.conversations.map(conversationToChat);
-
-  if (endingBefore) {
-    const beforeIndex = chats.findIndex((c) => c.id === endingBefore);
-    if (beforeIndex > 0) {
-      chats = chats.slice(0, beforeIndex);
-    }
-  }
-
-  if (startingAfter) {
-    const afterIndex = chats.findIndex((c) => c.id === startingAfter);
-    if (afterIndex >= 0) {
-      chats = chats.slice(afterIndex + 1);
-    }
-  }
-
-  return chats.slice(0, limit);
+  return rows.map((row) => ({
+    ...row,
+    createdAt: new Date(row.createdAt),
+    updatedAt: new Date(row.updatedAt),
+  }));
 }
 
 export async function saveChat({
@@ -239,50 +169,67 @@ export async function saveChat({
   title: string;
   visibility: "private" | "public";
 }): Promise<Chat> {
-  const cortex = getCortex();
-  const memorySpaceId = getMemorySpaceId();
-  const agentId = getAgentId();
+  const scope = await requireScope(userId);
+  return withCortex(scope, async (cortex) => {
+    const memorySpaceId = scope.memorySpaceId;
+    const agentId = getAgentId();
 
-  // Check if conversation already exists
-  const existing = await cortex.conversations.get(id);
-  if (existing) {
-    // Return existing conversation as Chat
-    return conversationToChat(existing);
-  }
+    // Check if conversation already exists
+    const existing = await cortex.conversations.get(id);
+    if (existing) {
+      assertChatOwner(existing, scope);
+      // Return existing conversation as Chat
+      return conversationToChat(existing);
+    }
 
-  // Create new conversation
-  const conversation = await cortex.conversations.create({
-    conversationId: id,
-    memorySpaceId,
-    metadata: {
-      title,
-    },
-    participants: {
-      agentId,
-      userId,
-    },
-    type: "user-agent",
-    visibility,
-  });
+    // Establish the physical owned registry before capturing conversation references.
+    const registry = await cortex.memorySpaces.get(memorySpaceId);
+    if (!registry)
+      await cortex.memorySpaces.register({
+        memorySpaceId,
+        tenantId: scope.tenantId,
+        type: "personal",
+        participants: [{ id: scope.userId, type: "user" }],
+      });
 
-  return conversationToChat(conversation);
+    // Create new conversation
+    const conversation = await cortex.conversations.create({
+      conversationId: id,
+      memorySpaceId,
+      type: "user-agent",
+      participants: {
+        userId,
+        agentId,
+      },
+      metadata: {
+        title,
+      },
+      visibility,
+    });
+
+    assertChatOwner(conversation, scope);
+    return conversationToChat(conversation);
+  }, process.env.CORTEX_GRAPH_SYNC === "true");
 }
 
 export async function deleteChatById({ id }: { id: string }): Promise<Chat> {
-  const cortex = getCortex();
+  const scope = await requireScope();
+  return withCortex(scope, async (cortex) => {
+    // Get the chat first to return it
+    const conversation = await cortex.conversations.get(id);
+    if (!conversation) {
+      throw new Error(`Chat ${id} not found`);
+    }
 
-  // Get the chat first to return it
-  const conversation = await cortex.conversations.get(id);
-  if (!conversation) {
-    throw new Error(`Chat ${id} not found`);
-  }
+    assertChatOwner(conversation, scope);
+    const chat = conversationToChat(conversation);
 
-  const chat = conversationToChat(conversation);
+    // Delete the conversation
+    await cortex.conversations.delete(id);
+    await privateCall("app/chatData:clearChat", { ...scope, chatId: id });
 
-  // Delete the conversation
-  await cortex.conversations.delete(id);
-
-  return chat;
+    return chat;
+  }, process.env.CORTEX_GRAPH_SYNC === "true");
 }
 
 export async function deleteAllChatsByUserId({
@@ -290,16 +237,19 @@ export async function deleteAllChatsByUserId({
 }: {
   userId: string;
 }): Promise<{ deletedCount: number }> {
-  const cortex = getCortex();
-  const memorySpaceId = getMemorySpaceId();
+  const scope = await requireScope(userId);
+  return withCortex(scope, async (cortex) => {
+    const memorySpaceId = scope.memorySpaceId;
 
-  // Delete all conversations for this user
-  const result = await cortex.conversations.deleteMany({
-    memorySpaceId,
-    userId,
-  });
+    // Delete all conversations for this user
+    const result = await cortex.conversations.deleteMany({
+      userId,
+      memorySpaceId,
+    });
 
-  return { deletedCount: result.deleted || 0 };
+    await privateCall("app/chatData:clearAllChats", scope);
+    return { deletedCount: result.deleted || 0 };
+  }, process.env.CORTEX_GRAPH_SYNC === "true");
 }
 
 /**
@@ -316,15 +266,8 @@ export async function updateChatTitleById({
   title: string;
   userId: string;
 }): Promise<void> {
-  const client = getConvexClient();
-
-  // Update the conversation metadata with the new title
-  // userId is required for ownership verification
-  await client.mutation(setConversationMetadata, {
-    conversationId: chatId,
-    metadata: { title },
-    userId,
-  });
+  const scope = await requireScope(userId);
+  await privateCall("app/chatData:setTitle", { ...scope, chatId, title });
 }
 
 export async function updateChatVisibilityById({
@@ -334,11 +277,10 @@ export async function updateChatVisibilityById({
   chatId: string;
   visibility: "private" | "public";
 }): Promise<void> {
-  const cortex = getCortex();
-
-  // Use the setVisibility API
-  await cortex.conversations.setVisibility({
-    conversationId: chatId,
+  const scope = await requireScope();
+  await privateCall("app/chatData:setVisibility", {
+    ...scope,
+    chatId,
     visibility,
   });
 }
@@ -352,49 +294,23 @@ export async function getMessagesByChatId({
 }: {
   id: string;
 }): Promise<DBMessage[]> {
-  const cortex = getCortex();
-
-  // Get conversation with messages
-  const conversation = await cortex.conversations.get(id, {
-    includeMessages: true,
-  });
-
-  if (!conversation?.messages) {
-    return [];
-  }
-
-  // Filter out system messages that are metadata updates (e.g., title changes)
-  // These are internal bookkeeping messages and should not appear in chat history
-  const chatMessages = conversation.messages.filter((msg) => {
-    // Keep all non-system messages
-    if (msg.role !== "system") {
-      return true;
-    }
-    // Filter out title-update system messages
-    const metadata = msg.metadata as { type?: string } | undefined;
-    if (metadata?.type === "title-update") {
-      return false;
-    }
-    // Keep other system messages
-    return true;
-  });
-
-  // Convert Cortex messages to DBMessages
-  return chatMessages.map((msg) => cortexMessageToDBMessage(msg, id));
+  const scope = await requireScope();
+  const rows = await privateCall<
+    Array<Omit<DBMessage, "createdAt"> & { createdAt: number }>
+  >("app/chatData:messages", { ...scope, chatId: id });
+  return rows.map((row) => ({ ...row, createdAt: new Date(row.createdAt) }));
 }
 
 export async function getMessageById({
-  id: _id,
+  id,
 }: {
   id: string;
 }): Promise<DBMessage[]> {
-  // This function needs to find a message by its ID across conversations
-  // Since Cortex doesn't have a global message search by ID,
-  // we'd need to know the conversation ID. For now, return empty.
-  // In a real implementation, you'd want to store a message-to-conversation mapping.
-  throw new Error(
-    "getMessageById requires chatId; use getMessagesByChatId instead"
-  );
+  const scope = await requireScope();
+  const row = await privateCall<
+    (Omit<DBMessage, "createdAt"> & { createdAt: number }) | null
+  >("app/chatData:message", { ...scope, messageId: id });
+  return row ? [{ ...row, createdAt: new Date(row.createdAt) }] : [];
 }
 
 export async function getMessageCountByUserId({
@@ -404,30 +320,13 @@ export async function getMessageCountByUserId({
   id: string;
   differenceInHours: number;
 }): Promise<number> {
-  const cortex = getCortex();
-  const memorySpaceId = getMemorySpaceId();
-
-  // Get conversations for this user within the time window
-  const since = Date.now() - differenceInHours * 60 * 60 * 1000;
-
-  const result = await cortex.conversations.list({
-    createdAfter: since,
-    includeMessages: true,
-    memorySpaceId,
-    userId: id,
+  const scope = await requireScope(id);
+  if (!Number.isFinite(differenceInHours) || differenceInHours <= 0)
+    throw new ChatSDKError("bad_request:chat");
+  return privateCall<number>("app/chatData:messageCount", {
+    ...scope,
+    since: Date.now() - differenceInHours * 3600000,
   });
-
-  // Count messages across all conversations
-  let messageCount = 0;
-  for (const conv of result.conversations) {
-    // Filter messages within the time window
-    const recentMessages = (conv.messages || []).filter(
-      (msg) => msg.timestamp >= since
-    );
-    messageCount += recentMessages.length;
-  }
-
-  return messageCount;
 }
 
 export async function saveMessages({
@@ -442,59 +341,52 @@ export async function saveMessages({
     createdAt: Date;
   }>;
 }): Promise<void> {
-  const cortex = getCortex();
-
-  // Map Chat SDK roles to Cortex roles
-  const roleMap: Record<string, "user" | "agent" | "system"> = {
-    assistant: "agent",
-    system: "system",
-    user: "user",
-  };
-
-  // Add messages to conversations
-  for (const message of messages) {
-    const content = partsToContent(message.parts);
-    const cortexRole = roleMap[message.role] || "agent";
-
-    await cortex.conversations.addMessage({
-      conversationId: message.chatId,
-      message: {
-        content,
-        id: message.id,
-        metadata: {
-          attachments: message.attachments,
-          originalParts: message.parts,
-        },
-        role: cortexRole,
-      },
-    });
-  }
+  const scope = await requireScope();
+  if (
+    messages.some(
+      (message) => !["user", "assistant", "system"].includes(message.role)
+    )
+  )
+    throw new ChatSDKError("bad_request:chat");
+  await privateCall("app/chatData:saveMessages", {
+    ...scope,
+    messages: messages.map((message) => ({
+      ...message,
+      createdAt: message.createdAt.getTime(),
+    })),
+  });
 }
 
 export async function updateMessage({
-  id: _id,
-  parts: _parts,
+  id,
+  parts,
 }: {
   id: string;
   parts: unknown;
 }): Promise<void> {
-  // Cortex messages are immutable by design
-  // This would require knowing the conversation ID and implementing
-  // a message replacement strategy
-  throw new Error("Cortex messages are immutable");
+  const scope = await requireScope();
+  await privateCall("app/chatData:updateMessage", {
+    ...scope,
+    messageId: id,
+    parts,
+  });
 }
 
 export async function deleteMessagesByChatIdAfterTimestamp({
-  chatId: _chatId,
-  timestamp: _timestamp,
+  chatId,
+  timestamp,
 }: {
   chatId: string;
   timestamp: Date;
 }): Promise<void> {
-  // Cortex messages are immutable by design
-  // Deletion would require creating a new conversation without the deleted messages
-  // For now, this is a no-op with a warning
-  throw new Error("Cortex messages are immutable");
+  const scope = await requireScope();
+  if (!Number.isFinite(timestamp.getTime()))
+    throw new ChatSDKError("bad_request:chat");
+  await privateCall("app/chatData:truncate", {
+    ...scope,
+    chatId,
+    timestamp: timestamp.getTime(),
+  });
 }
 
 // ============================================================================
@@ -515,6 +407,7 @@ type CortexArtifactKind =
   | "custom";
 
 function mapToCortexKind(chatSdkKind: string): CortexArtifactKind {
+  mapFromCortexKind(chatSdkKind);
   switch (chatSdkKind) {
     case "text":
       return "text";
@@ -529,15 +422,17 @@ function mapToCortexKind(chatSdkKind: string): CortexArtifactKind {
   }
 }
 
-function mapFromCortexKind(cortexKind: CortexArtifactKind): Document["kind"] {
-  switch (cortexKind) {
-    case "code":
-    case "sheet":
-    case "image":
-      return cortexKind;
-    default:
-      return "text";
+function mapFromCortexKind(cortexKind: string): Document["kind"] {
+  if (
+    cortexKind === "text" ||
+    cortexKind === "code" ||
+    cortexKind === "image" ||
+    cortexKind === "sheet"
+  ) {
+    return cortexKind;
   }
+  // The Chat UI has no renderer for other SDK artifact kinds; refuse rather than mislabel them.
+  throw new ChatSDKError("bad_request:document", "Unsupported document kind");
 }
 
 /**
@@ -545,13 +440,13 @@ function mapFromCortexKind(cortexKind: CortexArtifactKind): Document["kind"] {
  */
 function artifactToDocument(artifact: Artifact): Document {
   return {
-    content: artifact.content || null,
-    createdAt: new Date(artifact.createdAt),
     id: artifact.artifactId,
-    kind: mapFromCortexKind(artifact.kind),
     title: artifact.title,
-    updatedAt: new Date(artifact.updatedAt),
+    content: artifact.content ?? null,
+    kind: mapFromCortexKind(artifact.kind),
     userId: artifact.userId || "",
+    createdAt: new Date(artifact.updatedAt),
+    updatedAt: new Date(artifact.updatedAt),
   };
 }
 
@@ -562,17 +457,48 @@ function artifactVersionToDocument(
   artifactId: string,
   version: ArtifactVersion,
   userId: string,
-  kind: CortexArtifactKind
+  kind: string
 ): Document {
   return {
-    content: version.content || null,
-    createdAt: new Date(version.timestamp),
     id: artifactId,
-    kind: mapFromCortexKind(kind),
     title: version.title || "",
-    updatedAt: new Date(version.timestamp),
+    content: version.content ?? null,
+    kind: mapFromCortexKind(kind),
     userId,
+    createdAt: new Date(version.timestamp),
+    updatedAt: new Date(version.timestamp),
   };
+}
+
+async function activeArtifactToDocument(
+  cortex: import("@cortexmemory/sdk").Cortex,
+  scope: import("@/lib/cortex").AppScope,
+  artifact: Artifact
+): Promise<Document> {
+  assertArtifactOwner(artifact, scope);
+  const active = await privateCall<number[] | null>(
+    "app/chatData:documentVersions",
+    { ...scope, documentId: artifact.artifactId }
+  );
+  const selected = await privateCall<number | null>(
+    "app/chatData:documentSelection",
+    { ...scope, documentId: artifact.artifactId }
+  );
+  const versionNumber = selected ?? active?.at(-1);
+  if (versionNumber && versionNumber !== artifact.version) {
+    const version = await cortex.artifacts.getVersion(
+      artifact.artifactId,
+      versionNumber
+    );
+    if (!version) throw new ChatSDKError("offline:document");
+    return artifactVersionToDocument(
+      artifact.artifactId,
+      version,
+      scope.userId,
+      artifact.kind
+    );
+  }
+  return artifactToDocument(artifact);
 }
 
 export async function getDocumentById({
@@ -580,14 +506,16 @@ export async function getDocumentById({
 }: {
   id: string;
 }): Promise<Document | null> {
-  const cortex = getCortex();
+  const scope = await requireScope();
+  return withCortex(scope, async (cortex) => {
+    const artifact = await cortex.artifacts.get(id);
+    if (artifact) assertArtifactOwner(artifact, scope);
+    if (!artifact) {
+      return null;
+    }
 
-  const artifact = await cortex.artifacts.get(id);
-  if (!artifact) {
-    return null;
-  }
-
-  return artifactToDocument(artifact);
+    return activeArtifactToDocument(cortex, scope, artifact);
+  });
 }
 
 export async function getDocumentsById({
@@ -595,33 +523,41 @@ export async function getDocumentsById({
 }: {
   id: string;
 }): Promise<Document[]> {
-  const cortex = getCortex();
+  const scope = await requireScope();
+  return withCortex(scope, async (cortex) => {
+    // Get the current artifact
+    const artifact = await cortex.artifacts.get(id);
+    if (artifact) assertArtifactOwner(artifact, scope);
+    if (!artifact) {
+      return [];
+    }
 
-  // Get the current artifact
-  const artifact = await cortex.artifacts.get(id);
-  if (!artifact) {
-    return [];
-  }
+    // Get version history to return all versions as documents
+    const history = await cortex.artifacts.getHistory(id, {
+      sortOrder: "asc",
+    });
 
-  // Get version history to return all versions as documents
-  const history = await cortex.artifacts.getHistory(id, {
-    sortOrder: "desc",
+    if (!history || history.length === 0) {
+      // No version history, return just the current document
+      return [artifactToDocument(artifact)];
+    }
+
+    // Convert all versions to documents
+    const active = await privateCall<number[] | null>(
+      "app/chatData:documentVersions",
+      { ...scope, documentId: id }
+    );
+    return history
+      .filter((version) => !active || active.includes(version.version))
+      .map((version) =>
+        artifactVersionToDocument(
+          artifact.artifactId,
+          version,
+          artifact.userId || "",
+          artifact.kind
+        )
+      );
   });
-
-  if (!history || history.length === 0) {
-    // No version history, return just the current document
-    return [artifactToDocument(artifact)];
-  }
-
-  // Convert all versions to documents
-  return history.map((version) =>
-    artifactVersionToDocument(
-      artifact.artifactId,
-      version,
-      artifact.userId || "",
-      artifact.kind
-    )
-  );
 }
 
 export async function saveDocument({
@@ -641,40 +577,89 @@ export async function saveDocument({
   conversationId?: string;
   messageId?: string;
 }): Promise<Document> {
-  const cortex = getCortex();
-  const memorySpaceId = getMemorySpaceId();
+  mapFromCortexKind(kind);
+  const scope = await requireScope(userId);
+  return withCortex(scope, async (cortex) => {
+    const memorySpaceId = scope.memorySpaceId;
 
-  // Check if artifact already exists
-  const existing = await cortex.artifacts.get(id);
+    if (conversationId) {
+      const parent = await cortex.conversations.get(conversationId);
+      assertChatOwner(parent, scope);
+    }
+    if (messageId) {
+      if (!conversationId) throw new ChatSDKError("bad_request:document");
+      const [message] = await getMessageById({ id: messageId });
+      if (!message || message.chatId !== conversationId)
+        throw new ChatSDKError("not_found:document");
+    }
+    // Check if artifact already exists
+    const existing = await cortex.artifacts.get(id);
 
-  if (existing) {
-    // Update existing artifact (creates new version)
-    const updated = await cortex.artifacts.update(id, content, {
-      changeSummary: "Updated via Chat SDK",
-      title,
-    });
-    return artifactToDocument(updated);
-  }
-
-  // Create new artifact
-  const artifact = await cortex.artifacts.create({
-    artifactId: id,
-    content,
-    // Link to conversation if provided
-    conversationRef: conversationId
-      ? {
-          conversationId,
-          messageId,
+    if (existing) {
+      assertArtifactOwner(existing, scope);
+      // Read the active view before the version-creating SDK operation.
+      const active = await privateCall<number[] | null>(
+        "app/chatData:documentVersions",
+        { ...scope, documentId: id }
+      );
+      const selected = active
+        ? await privateCall<number | null>("app/chatData:documentSelection", {
+            ...scope,
+            documentId: id,
+          })
+        : null;
+      // Update existing artifact (creates new version)
+      const updated = await cortex.artifacts.update(id, content, {
+        title,
+        changeSummary: `Updated via Chat SDK`,
+      });
+      assertArtifactOwner(updated, scope);
+      if (active) {
+        // SDK update and app view are separate transactions. A failed view commit is
+        // a partial save; never resend the version-creating SDK operation implicitly.
+        try {
+          await privateCall("app/chatData:setDocumentVersions", {
+            ...scope,
+            documentId: id,
+            versions: [
+              ...active.slice(
+                0,
+                selected ? active.indexOf(selected) + 1 : active.length
+              ),
+              updated.version,
+            ],
+          });
+        } catch {
+          throw new ChatSDKError(
+            "offline:document",
+            "Artifact audit version was saved, but active history update did not finish. Reload before retrying."
+          );
         }
-      : undefined,
-    kind: mapToCortexKind(kind),
-    memorySpaceId,
-    streamingState: "final",
-    title,
-    userId,
-  });
+      }
+      return artifactToDocument(updated);
+    }
 
-  return artifactToDocument(artifact);
+    // Create new artifact
+    const artifact = await cortex.artifacts.create({
+      artifactId: id,
+      memorySpaceId,
+      kind: mapToCortexKind(kind),
+      title,
+      content,
+      userId,
+      streamingState: "final",
+      // Link to conversation if provided
+      conversationRef: conversationId
+        ? {
+            conversationId,
+            messageId,
+          }
+        : undefined,
+    });
+
+    assertArtifactOwner(artifact, scope);
+    return artifactToDocument(artifact);
+  });
 }
 
 /**
@@ -698,13 +683,13 @@ export async function saveDocumentWithConversation({
   messageId?: string;
 }): Promise<Document> {
   return saveDocument({
-    content,
-    conversationId,
     id,
-    kind,
-    messageId,
+    content,
     title,
+    kind,
     userId,
+    conversationId,
+    messageId,
   });
 }
 
@@ -714,57 +699,48 @@ export async function deleteDocumentsByIdAfterTimestamp({
 }: {
   id: string;
   timestamp: Date;
-}): Promise<{ deletedCount: number }> {
-  const cortex = getCortex();
-
-  // Get the artifact
-  const artifact = await cortex.artifacts.get(id);
-  if (!artifact) {
-    return { deletedCount: 0 };
-  }
-
-  // Check if the artifact was created after the timestamp
-  if (artifact.createdAt >= timestamp.getTime()) {
-    // Delete the entire artifact
-    await cortex.artifacts.delete(id, true);
-    return { deletedCount: 1 };
-  }
-
-  // For partial deletion (versions after timestamp), we use undo to restore
-  // to a previous version. Get the version history to find the right version.
-  const history = await cortex.artifacts.getHistory(id, {
-    sortOrder: "asc",
-  });
-
-  if (!history || history.length <= 1) {
-    return { deletedCount: 0 };
-  }
-
-  // Find the last version before the timestamp
-  let targetVersion: number | null = null;
-  let deletedCount = 0;
-  for (const version of history) {
-    if (version.timestamp < timestamp.getTime()) {
-      targetVersion = version.version;
-    } else {
-      deletedCount++;
+}): Promise<{
+  deletedCount: number;
+  retiredVersionCount?: number;
+  auditHistoryRetained?: true;
+}> {
+  const scope = await requireScope();
+  return withCortex(scope, async (cortex) => {
+    // Get the artifact
+    const artifact = await cortex.artifacts.get(id);
+    if (artifact) assertArtifactOwner(artifact, scope);
+    if (!artifact) {
+      return { deletedCount: 0 };
     }
-  }
 
-  if (targetVersion === null || deletedCount === 0) {
-    return { deletedCount: 0 };
-  }
-
-  // Undo to restore to the target version
-  // Note: This uses repeated undo calls to get back to the target version
-  const currentVersion = artifact.version;
-  const undoCount = currentVersion - targetVersion;
-
-  for (let i = 0; i < undoCount; i++) {
-    await cortex.artifacts.undo(id);
-  }
-
-  return { deletedCount };
+    if (!Number.isFinite(timestamp.getTime()))
+      throw new ChatSDKError("bad_request:document");
+    const history = await cortex.artifacts.getHistory(id, { sortOrder: "asc" });
+    const active = await privateCall<number[] | null>(
+      "app/chatData:documentVersions",
+      { ...scope, documentId: id }
+    );
+    const visible = history.filter(
+      (version) => !active || active.includes(version.version)
+    );
+    const kept = visible.filter(
+      (version) => version.timestamp <= timestamp.getTime()
+    );
+    if (!kept.length || kept.length === visible.length)
+      return { deletedCount: 0 };
+    // The active document/history uses these real SDK version numbers. SDK audit
+    // bytes and version records are retained; this is logical retirement only.
+    await privateCall("app/chatData:setDocumentVersions", {
+      ...scope,
+      documentId: id,
+      versions: kept.map((version) => version.version),
+    });
+    return {
+      deletedCount: visible.length - kept.length,
+      retiredVersionCount: visible.length - kept.length,
+      auditHistoryRetained: true,
+    };
+  });
 }
 
 /**
@@ -777,24 +753,36 @@ export async function getDocumentVersion({
   id: string;
   version: number;
 }): Promise<Document | null> {
-  const cortex = getCortex();
+  const scope = await requireScope();
+  return withCortex(scope, async (cortex) => {
+    const artifact = await cortex.artifacts.get(id);
+    if (artifact) assertArtifactOwner(artifact, scope);
+    if (!artifact) {
+      return null;
+    }
 
-  const artifact = await cortex.artifacts.get(id);
-  if (!artifact) {
-    return null;
-  }
+    const active = await privateCall<number[] | null>(
+      "app/chatData:documentVersions",
+      { ...scope, documentId: id }
+    );
+    if (
+      !Number.isInteger(version) ||
+      version < 1 ||
+      (active && !active.includes(version))
+    )
+      return null;
+    const versionData = await cortex.artifacts.getVersion(id, version);
+    if (!versionData) {
+      return null;
+    }
 
-  const versionData = await cortex.artifacts.getVersion(id, version);
-  if (!versionData) {
-    return null;
-  }
-
-  return artifactVersionToDocument(
-    artifact.artifactId,
-    versionData,
-    artifact.userId || "",
-    artifact.kind
-  );
+    return artifactVersionToDocument(
+      artifact.artifactId,
+      versionData,
+      artifact.userId || "",
+      artifact.kind
+    );
+  });
 }
 
 /**
@@ -807,18 +795,25 @@ export async function getDocumentsByUserId({
   userId: string;
   limit?: number;
 }): Promise<Document[]> {
-  const cortex = getCortex();
-  const memorySpaceId = getMemorySpaceId();
+  const scope = await requireScope(userId);
+  return withCortex(scope, async (cortex) => {
+    const memorySpaceId = scope.memorySpaceId;
 
-  const artifacts = await cortex.artifacts.list({
-    limit,
-    memorySpaceId,
-    sortBy: "updatedAt",
-    sortOrder: "desc",
-    userId,
+    const artifacts = await cortex.artifacts.list({
+      memorySpaceId,
+      userId,
+      limit,
+      sortBy: "updatedAt",
+      sortOrder: "desc",
+    });
+
+    artifacts.forEach((artifact) => assertArtifactOwner(artifact, scope));
+    return Promise.all(
+      artifacts.map((artifact) =>
+        activeArtifactToDocument(cortex, scope, artifact)
+      )
+    );
   });
-
-  return artifacts.map(artifactToDocument);
 }
 
 /**
@@ -829,21 +824,32 @@ export async function getDocumentsByConversationId({
 }: {
   conversationId: string;
 }): Promise<Document[]> {
-  const cortex = getCortex();
-  const memorySpaceId = getMemorySpaceId();
+  const scope = await requireScope();
+  return withCortex(scope, async (cortex) => {
+    const parent = await cortex.conversations.get(conversationId);
+    assertChatOwner(parent, scope);
 
-  // List artifacts and filter by conversationRef
-  // Note: In a production system, you'd want an index for this query
-  const artifacts = await cortex.artifacts.list({
-    limit: 100,
-    memorySpaceId,
+    const memorySpaceId = scope.memorySpaceId;
+
+    // List artifacts and filter by conversationRef
+    // Note: In a production system, you'd want an index for this query
+    const artifacts = await cortex.artifacts.list({
+      memorySpaceId,
+      userId: scope.userId,
+      limit: 100,
+    });
+
+    const linkedArtifacts = artifacts.filter(
+      (artifact) => artifact.conversationRef?.conversationId === conversationId
+    );
+
+    linkedArtifacts.forEach((artifact) => assertArtifactOwner(artifact, scope));
+    return Promise.all(
+      linkedArtifacts.map((artifact) =>
+        activeArtifactToDocument(cortex, scope, artifact)
+      )
+    );
   });
-
-  const linkedArtifacts = artifacts.filter(
-    (artifact) => artifact.conversationRef?.conversationId === conversationId
-  );
-
-  return linkedArtifacts.map(artifactToDocument);
 }
 
 /**
@@ -854,54 +860,65 @@ export async function undoDocumentChange({
 }: {
   id: string;
 }): Promise<{ success: boolean; version: number }> {
-  const cortex = getCortex();
-
-  try {
-    const result = await cortex.artifacts.undo(id);
-    return {
-      success: result.success,
-      version: result.currentVersion,
-    };
-  } catch {
-    return { success: false, version: 0 };
-  }
+  return selectAdjacentDocumentVersion(id, -1);
 }
-
-/**
- * Redo a previously undone change to a document
- */
 export async function redoDocumentChange({
   id,
 }: {
   id: string;
 }): Promise<{ success: boolean; version: number }> {
-  const cortex = getCortex();
-
-  try {
-    const result = await cortex.artifacts.redo(id);
-    return {
-      success: result.success,
-      version: result.currentVersion,
-    };
-  } catch {
-    return { success: false, version: 0 };
-  }
+  return selectAdjacentDocumentVersion(id, 1);
+}
+async function selectAdjacentDocumentVersion(
+  id: string,
+  direction: -1 | 1
+): Promise<{ success: boolean; version: number }> {
+  const scope = await requireScope();
+  return withCortex(scope, async (cortex) => {
+    const artifact = await cortex.artifacts.get(id);
+    assertArtifactOwner(artifact, scope);
+    let active = await privateCall<number[] | null>(
+      "app/chatData:documentVersions",
+      { ...scope, documentId: id }
+    );
+    const selected = await privateCall<number | null>(
+      "app/chatData:documentSelection",
+      { ...scope, documentId: id }
+    );
+    if (!active) {
+      active = (
+        await cortex.artifacts.getHistory(id, { sortOrder: "asc" })
+      ).map((version) => version.version);
+      await privateCall("app/chatData:setDocumentVersions", {
+        ...scope,
+        documentId: id,
+        versions: active,
+      });
+    }
+    const current = selected || artifact.version;
+    const target = active[active.indexOf(current) + direction];
+    if (!target) return { success: false, version: current };
+    await privateCall("app/chatData:selectDocumentVersion", {
+      ...scope,
+      documentId: id,
+      version: target,
+    });
+    return { success: true, version: target };
+  });
 }
 
 // ============================================================================
 // Vote Queries
-// Note: Votes are stored in conversation message metadata
+// Votes are durable private app records.
 // ============================================================================
-
-// In-memory vote storage (replace with conversation metadata in production)
-const voteStore = new Map<string, Vote[]>();
 
 export async function getVotesByChatId({
   id,
 }: {
   id: string;
 }): Promise<Vote[]> {
-  return voteStore.get(id) || [];
+  const scope = await requireScope();
+  return privateCall<Vote[]>("app/chatData:votes", { ...scope, chatId: id });
 }
 
 export async function voteMessage({
@@ -913,22 +930,10 @@ export async function voteMessage({
   messageId: string;
   type: "up" | "down";
 }): Promise<void> {
-  const votes = voteStore.get(chatId) || [];
-  const existingIndex = votes.findIndex((v) => v.messageId === messageId);
-
-  const vote: Vote = {
-    chatId,
-    isUpvoted: type === "up",
-    messageId,
-  };
-
-  if (existingIndex >= 0) {
-    votes[existingIndex] = vote;
-  } else {
-    votes.push(vote);
-  }
-
-  voteStore.set(chatId, votes);
+  const scope = await requireScope();
+  if (type !== "up" && type !== "down")
+    throw new ChatSDKError("bad_request:vote");
+  await privateCall("app/chatData:vote", { ...scope, chatId, messageId, type });
 }
 
 // ============================================================================
@@ -936,15 +941,27 @@ export async function voteMessage({
 // Note: Suggestions are stored separately from conversations
 // ============================================================================
 
-// In-memory suggestion storage
-const suggestionStore = new Map<string, Suggestion[]>();
+// Suggestions are durable private app records.
 
 export async function getSuggestionsByDocumentId({
   documentId,
 }: {
   documentId: string;
 }): Promise<Suggestion[]> {
-  return suggestionStore.get(documentId) || [];
+  const scope = await requireScope();
+  const rows = await privateCall<
+    Array<
+      Omit<Suggestion, "createdAt" | "documentCreatedAt"> & {
+        createdAt: number;
+        documentCreatedAt: number;
+      }
+    >
+  >("app/chatData:suggestions", { ...scope, documentId });
+  return rows.map((row) => ({
+    ...row,
+    createdAt: new Date(row.createdAt),
+    documentCreatedAt: new Date(row.documentCreatedAt),
+  }));
 }
 
 export async function saveSuggestions({
@@ -952,11 +969,18 @@ export async function saveSuggestions({
 }: {
   suggestions: Suggestion[];
 }): Promise<void> {
-  for (const suggestion of suggestions) {
-    const existing = suggestionStore.get(suggestion.documentId) || [];
-    existing.push(suggestion);
-    suggestionStore.set(suggestion.documentId, existing);
-  }
+  const scope = await requireScope();
+  if (suggestions.some((row) => row.userId !== scope.userId))
+    throw new ChatSDKError("forbidden:suggestions");
+  await privateCall("app/chatData:saveSuggestions", {
+    ...scope,
+    suggestions: suggestions.map((row) => ({
+      ...row,
+      description: row.description || undefined,
+      createdAt: row.createdAt.getTime(),
+      documentCreatedAt: row.documentCreatedAt.getTime(),
+    })),
+  });
 }
 
 // ============================================================================
@@ -964,8 +988,7 @@ export async function saveSuggestions({
 // Note: Stream tracking for resumable streams
 // ============================================================================
 
-// In-memory stream storage
-const streamStore = new Map<string, string>();
+// Stream IDs are durable private app records.
 
 export async function createStreamId({
   streamId,
@@ -974,5 +997,53 @@ export async function createStreamId({
   streamId: string;
   chatId: string;
 }): Promise<void> {
-  streamStore.set(streamId, chatId);
+  const scope = await requireScope();
+  await privateCall("app/chatData:recordStream", {
+    ...scope,
+    streamId,
+    chatId,
+  });
+}
+
+export async function isBranchEdited(chatId: string): Promise<boolean> {
+  const scope = await requireScope();
+  return privateCall<boolean>("app/chatData:branchEdited", {
+    ...scope,
+    chatId,
+  });
+}
+export type PublicShare = {
+  title: string;
+  createdAt: number;
+  messages: Array<{ role: "user" | "assistant"; text: string }>;
+};
+export function getPublicShare(chatId: string): Promise<PublicShare | null> {
+  return privateCall("app/chatData:publicShare", { chatId });
+}
+
+/** New messages are caller input; regeneration of an existing user turn must match the durable owner record. */
+export async function prepareChatMessages({
+  chatId,
+  message,
+  regenerate,
+}: {
+  chatId: string;
+  message: import("@/lib/types").ChatMessage;
+  regenerate: boolean;
+}): Promise<DBMessage[]> {
+  const [existing] = await getMessageById({ id: message.id });
+  if (existing) {
+    if (
+      !regenerate ||
+      existing.chatId !== chatId ||
+      existing.role !== "user" ||
+      JSON.stringify(existing.parts) !== JSON.stringify(message.parts)
+    )
+      throw new ChatSDKError("bad_request:chat");
+    await deleteMessagesByChatIdAfterTimestamp({
+      chatId,
+      timestamp: existing.createdAt,
+    });
+  }
+  return getMessagesByChatId({ id: chatId });
 }

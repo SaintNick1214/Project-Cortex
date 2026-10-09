@@ -2,7 +2,7 @@
 import { defineTable } from "convex/server";
 import { v } from "convex/values";
 import { runtimeAuthorityReference } from "./runtimeAuthSchema";
-import { MODEL_OPERATION_KEYS } from "../src/domain/model-policy";
+import { MODEL_OPERATION_KEYS } from "./lib/runtimeDomain/domain/modelPolicy";
 
 export const modelOperationKey = v.union(...MODEL_OPERATION_KEYS.map((key) => v.literal(key)));
 export const modelSource = v.object({ sourceId: v.string(), sourceEventId: v.string(), sourceRevision: v.number(), contentHash: v.string() });

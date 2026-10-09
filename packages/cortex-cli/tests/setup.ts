@@ -3,7 +3,7 @@
  * Global test hooks that run after test environment is initialized
  */
 
-import { Cortex } from "@cortexmemory/sdk";
+import { Cortex, withErasureTransport } from "./helpers/operator-client.js";
 
 // Global Cortex client for cleanup
 let cleanupClient: Cortex | null = null;
@@ -82,7 +82,7 @@ export async function cleanupTestData(prefix: string): Promise<void> {
       await Promise.all(
         batch.map((user) =>
           withTimeout(
-            client.users.delete(user.id, { cascade: true }).catch(() => {}),
+            withErasureTransport(client, transport => client.users.delete(user.id, { cascade: true, erasureTransport: transport })).catch(() => {}),
             OPERATION_TIMEOUT,
             undefined,
           ),
@@ -117,8 +117,8 @@ export async function cleanupTestData(prefix: string): Promise<void> {
       await Promise.all(
         batch.map((space) =>
           withTimeout(
-            client.memorySpaces
-              .delete(space.memorySpaceId, { cascade: false })
+            withErasureTransport(client, transport => client.memorySpaces
+              .delete(space.memorySpaceId, { cascade: false, erasureTransport: transport }))
               .catch(() => {}),
             OPERATION_TIMEOUT,
             undefined,

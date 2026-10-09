@@ -4,7 +4,7 @@ import type { FunctionReference } from "convex/server";
 import { ConvexError, v } from "convex/values";
 import { action, internalMutation, internalQuery } from "./_generated/server";
 import type { ActionCtx } from "./_generated/server";
-import type { RuntimeAuthority, RuntimeAuthorityReference, RuntimeAuthorityRequirement } from "../src/auth/verified";
+import type { RuntimeAuthority, RuntimeAuthorityReference, RuntimeAuthorityRequirement } from "./lib/runtimeDomain/auth/verified";
 import { runtimeAuthorityReference } from "./runtimeAuthSchema";
 import { commitDerivedInput, sourceContent } from "./runtimeMemorySchema";
 import { ConvexMemoryRepository, createActionMemoryRepository, memoryError, memoryScope } from "./runtimeMemoryRepository";

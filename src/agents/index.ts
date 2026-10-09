@@ -1,3 +1,4 @@
+import { graphOffResult } from "../graph/erasure";
 /**
  * Cortex SDK - Agents API
  *
@@ -11,7 +12,7 @@ import { isRegistryStatisticsUnavailable } from "./statistics";
 import type { AuthContext } from "../auth/types";
 import { resolveTenantId } from "../auth/tenant";
 import type { ConvexClient } from "convex/browser";
-import { api } from "../../convex-dev/_generated/api";
+import { api } from "../common/backendApi";
 import type {
   AgentRegistration,
   RegisteredAgent,
@@ -1268,9 +1269,9 @@ export class AgentsAPI {
     if (plan.facts.length > 0) {
       try {
         const factIds = plan.facts.map((f) => f.factId);
-        const deleteResult = await this.client.mutation(api.facts.deleteByIds, {
+        const deleteResult = graphOffResult(await this.client.mutation(api.facts.deleteByIds, {
           factIds,
-        });
+        }));
         result.factsDeleted = deleteResult.deleted;
         result.deletedLayers.push("facts");
       } catch (error) {
@@ -1282,10 +1283,10 @@ export class AgentsAPI {
     if (plan.memories.length > 0) {
       try {
         const memoryIds = plan.memories.map((m) => m.memoryId);
-        const deleteResult = await this.client.mutation(
+        const deleteResult = graphOffResult(await this.client.mutation(
           api.memories.deleteByIds,
           { memoryIds },
-        );
+        ));
         result.memoriesDeleted = deleteResult.deleted;
         result.deletedLayers.push("memories");
       } catch (error) {
@@ -1297,10 +1298,10 @@ export class AgentsAPI {
     if (plan.conversations.length > 0) {
       try {
         const conversationIds = plan.conversations.map((c) => c.conversationId);
-        const deleteResult = await this.client.mutation(
+        const deleteResult = graphOffResult(await this.client.mutation(
           api.conversations.deleteByIds,
           { conversationIds },
-        );
+        ));
         result.conversationsDeleted = deleteResult.deleted;
         result.conversationMessagesDeleted = deleteResult.totalMessagesDeleted;
         result.deletedLayers.push("conversations");

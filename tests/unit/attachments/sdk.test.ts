@@ -11,6 +11,9 @@
  */
 
 import { describe, it, expect, beforeEach, jest } from "@jest/globals";
+import { createUnitOperatorClient } from "../../helpers/unit-operator-client";
+import { AssetCapabilityUnavailableError } from "../../../src/assets/errors";
+import { getFunctionName } from "convex/server";
 import { AttachmentsAPI } from "../../../src/attachments";
 import type {
   Attachment,
@@ -24,17 +27,8 @@ import type {
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 // Mock types - use ReturnType to avoid typing issues
-type MockConvexClient = {
-  mutation: ReturnType<typeof jest.fn>;
-  query: ReturnType<typeof jest.fn>;
-};
-
-function createMockClient(): MockConvexClient {
-  return {
-    mutation: jest.fn(),
-    query: jest.fn(),
-  };
-}
+type MockConvexClient = ReturnType<typeof createUnitOperatorClient>;
+function createMockClient(): MockConvexClient { return createUnitOperatorClient(); }
 
 type MockResilienceLayer = {
   execute: ReturnType<typeof jest.fn>;
@@ -133,7 +127,7 @@ describe("AttachmentsAPI.generateUploadUrl", () => {
   beforeEach(() => {
     client = createMockClient();
     resilience = createMockResilience();
-    api = new AttachmentsAPI(client as unknown as never, resilience as never);
+    api = new AttachmentsAPI(client.transport as unknown as never, resilience as never);
   });
 
   it("should generate upload URL successfully", async () => {
@@ -149,7 +143,7 @@ describe("AttachmentsAPI.generateUploadUrl", () => {
   it("should pass tenant ID when auth context provided", async () => {
     const authContext = { tenantId: "tenant-abc" };
     const tenantApi = new AttachmentsAPI(
-      client as unknown as never,
+      client.transport as unknown as never,
       resilience as never,
       authContext as never
     );
@@ -157,7 +151,7 @@ describe("AttachmentsAPI.generateUploadUrl", () => {
 
     await tenantApi.generateUploadUrl();
 
-    const callArgs = client.mutation.mock.calls[0][1];
+    const callArgs = client.mutation.mock.calls[0][1] as Record<string, unknown>;
     expect(callArgs.tenantId).toBe("tenant-abc");
   });
 
@@ -186,7 +180,7 @@ describe("AttachmentsAPI.attach", () => {
   beforeEach(() => {
     client = createMockClient();
     resilience = createMockResilience();
-    api = new AttachmentsAPI(client as unknown as never, resilience as never);
+    api = new AttachmentsAPI(client.transport as unknown as never, resilience as never);
   });
 
   // Test each modality type
@@ -389,7 +383,7 @@ describe("AttachmentsAPI.get", () => {
   beforeEach(() => {
     client = createMockClient();
     resilience = createMockResilience();
-    api = new AttachmentsAPI(client as unknown as never, resilience as never);
+    api = new AttachmentsAPI(client.transport as unknown as never, resilience as never);
   });
 
   it("should retrieve attachment by ID", async () => {
@@ -446,7 +440,7 @@ describe("AttachmentsAPI.getUrl", () => {
   beforeEach(() => {
     client = createMockClient();
     resilience = createMockResilience();
-    api = new AttachmentsAPI(client as unknown as never, resilience as never);
+    api = new AttachmentsAPI(client.transport as unknown as never, resilience as never);
   });
 
   it("should return signed download URL", async () => {
@@ -483,7 +477,7 @@ describe("AttachmentsAPI.list", () => {
   beforeEach(() => {
     client = createMockClient();
     resilience = createMockResilience();
-    api = new AttachmentsAPI(client as unknown as never, resilience as never);
+    api = new AttachmentsAPI(client.transport as unknown as never, resilience as never);
   });
 
   it("should list all attachments in memory space", async () => {
@@ -616,7 +610,7 @@ describe("AttachmentsAPI.getByConversation", () => {
 
   beforeEach(() => {
     client = createMockClient();
-    api = new AttachmentsAPI(client as unknown as never);
+    api = new AttachmentsAPI(client.transport as unknown as never);
   });
 
   it("should get all attachments for a conversation", async () => {
@@ -639,7 +633,7 @@ describe("AttachmentsAPI.getByMessage", () => {
 
   beforeEach(() => {
     client = createMockClient();
-    api = new AttachmentsAPI(client as unknown as never);
+    api = new AttachmentsAPI(client.transport as unknown as never);
   });
 
   it("should get all attachments for a message", async () => {
@@ -665,7 +659,7 @@ describe("AttachmentsAPI.count", () => {
 
   beforeEach(() => {
     client = createMockClient();
-    api = new AttachmentsAPI(client as unknown as never);
+    api = new AttachmentsAPI(client.transport as unknown as never);
   });
 
   it("should count all attachments in memory space", async () => {
@@ -704,7 +698,7 @@ describe("AttachmentsAPI.delete", () => {
 
   beforeEach(() => {
     client = createMockClient();
-    api = new AttachmentsAPI(client as unknown as never);
+    api = new AttachmentsAPI(client.transport as unknown as never);
   });
 
   it("should delete attachment by ID", async () => {
@@ -731,7 +725,7 @@ describe("AttachmentsAPI.deleteMany", () => {
 
   beforeEach(() => {
     client = createMockClient();
-    api = new AttachmentsAPI(client as unknown as never);
+    api = new AttachmentsAPI(client.transport as unknown as never);
   });
 
   it("should delete multiple attachments", async () => {
@@ -781,7 +775,7 @@ describe("AttachmentsAPI Multi-Tenancy", () => {
 
   it("should include tenantId in all operations", async () => {
     const tenantApi = new AttachmentsAPI(
-      client as unknown as never,
+      client.transport as unknown as never,
       resilience as never,
       createMockAuthContext("tenant-xyz") as never
     );
@@ -838,7 +832,7 @@ describe("AttachmentsAPI Error Handling", () => {
 
   beforeEach(() => {
     client = createMockClient();
-    api = new AttachmentsAPI(client as unknown as never);
+    api = new AttachmentsAPI(client.transport as unknown as never);
   });
 
   it("should handle Convex errors with data property", async () => {
@@ -853,5 +847,23 @@ describe("AttachmentsAPI Error Handling", () => {
     client.mutation.mockRejectedValue(new Error("Network timeout"));
 
     await expect(api.delete("attach-123")).rejects.toThrow("Network timeout");
+  });
+});
+
+
+describe("public attachment asset capability", () => {
+  it("refuses upload and delivery before transport I/O without operator opt-in", async () => {
+    const publicClient = { mutation: jest.fn(), query: jest.fn() };
+    const api = new AttachmentsAPI(publicClient as never);
+    await expect(api.generateUploadUrl()).rejects.toBeInstanceOf(AssetCapabilityUnavailableError);
+    await expect(api.getUrl("attach-abc123")).rejects.toBeInstanceOf(AssetCapabilityUnavailableError);
+    expect(publicClient.mutation).not.toHaveBeenCalled();
+    expect(publicClient.query).not.toHaveBeenCalled();
+  });
+  it("routes an explicit operator upload to the administrative domain", async () => {
+    const client = createUnitOperatorClient();
+    client.mutation.mockResolvedValue({ uploadUrl: "https://example.com/upload" });
+    await new AttachmentsAPI(client.transport as never).generateUploadUrl();
+    expect(getFunctionName(client.mutation.mock.calls[0][0] as never)).toBe("cliOperator/attachments:generateUploadUrl");
   });
 });

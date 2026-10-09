@@ -13,7 +13,7 @@ Read `CODEX-RUNTIME.md` for path resolution, native delegation and evidence rule
 | Project | Cortex persistent memory and agent runtime, backed by Convex |
 | Profile root | This Git repository, the parent of `.agents/`; discover the actual checkout path |
 | Implementation branch | `feat/convex-backend-runtime`, based on reconciled `dev` |
-| npm monorepo | Root `@cortexmemory/sdk`, `packages/cortex-cli`, `packages/vercel-ai-provider`; workspaces `.` and `packages/*` |
+| npm monorepo | Root `@cortexmemory/sdk`, `packages/cortex-cli`, `packages/cortex-templates`, `packages/vercel-ai-provider`; workspaces `.` and `packages/*` |
 | Runtime | Node >=24.15.0; package manager npm 12.2.0; TypeScript ~6.0.3 and ESLint 10 at the handoff baseline |
 | Separate installs | Canonical quickstart and each shipped scaffold template |
 | Archived code | Python SDK and old pipeline helpers under `_DEPRECATED/`; excluded from active work and QA |
@@ -33,11 +33,12 @@ cloud checkout can follow them, even though `.agents/` remains ignored for untra
 | provider | AI SDK 7, TypeScript, React hooks, tsup, Jest | `packages/vercel-ai-provider/` | Core and `./react` exports |
 | demo | Next.js, React, Jest | `packages/vercel-ai-provider/quickstart/` | Canonical interactive app; separate npm install |
 | basic template | TypeScript, Vitest | `packages/cortex-cli/templates/basic/` | Offline build and unit checks; deployment is a separate script |
-| chat template | Next.js, npm, Vitest, Playwright | `packages/cortex-cli/templates/chat-sdk-quickstart/` | Separate install and product-flow checks |
+| chat template | Next.js, pnpm, Vitest, Playwright | `packages/cortex-cli/templates/chat-sdk-quickstart/` | Separate install and product-flow checks |
 | docs | Package READMEs; canonical MDX in website repository | `README.md`, package READMEs; sibling `cortexmemory.dev/docs-site/docs/` | New-install and public-contract documentation |
 
-`packages/cortex-cli/templates/vercel-ai-quickstart/` is generated from the canonical
-quickstart by CLI prebuild. Edit the source, run sync and inspect the mirror diff.
+`packages/cortex-templates/` is an independent catalog deliberately assembled from Basic,
+Chat and canonical Vercel quickstart sources. CLI build does not synchronize templates.
+SDK and application template updates are separate; both use the shared graph service.
 Do not restore removed `Documentation/`, root Python or old dependency holds.
 Sibling applications are independent repositories and are outside this feature except
 related canonical website documentation. If website access is unavailable, produce a
@@ -73,11 +74,11 @@ A successful mocked run does not certify actual service behavior.
 | sdk/backend | Unit | `node --experimental-vm-modules node_modules/jest/bin/jest.js --testPathPatterns=tests/unit --runInBand --forceExit` | `.` |
 | cli | Lint | `npm run lint` | `packages/cortex-cli` |
 | cli | Typecheck | `npm run typecheck` | `packages/cortex-cli` |
-| cli | Build and template sync | `npm run build` | `packages/cortex-cli` |
+| cli | Build | `npm run build` | `packages/cortex-cli` |
 | cli | Unit | `npm run test:unit -- --runInBand` | `packages/cortex-cli` |
 | provider | Typecheck | `npm run lint` | `packages/vercel-ai-provider` |
 | provider | Build both exports | `npm run build` | `packages/vercel-ai-provider` |
-| provider | Unit/React/mocked integration | `node --experimental-vm-modules ../../node_modules/jest/bin/jest.js --selectProjects unit unit-react integration --runInBand` | `packages/vercel-ai-provider` |
+| provider | Unit/React/mocked integration | `npm run test:unit -- --runInBand` and `npm run test:integration -- --runInBand` | `packages/vercel-ai-provider` |
 | demo | Lint | `npm run lint` | `packages/vercel-ai-provider/quickstart` |
 | demo | Typecheck | `npx --no-install tsc --noEmit` | `packages/vercel-ai-provider/quickstart` |
 | demo | Build | `npm run build` | `packages/vercel-ai-provider/quickstart` |

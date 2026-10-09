@@ -9,13 +9,13 @@ import { ConvexError, v } from "convex/values";
 import { action, internalMutation, internalQuery, mutation, query } from "./_generated/server";
 import { makeFunctionReference } from "convex/server";
 import type { FunctionReference } from "convex/server";
-import type { RuntimeAuthorityReference } from "../src/auth/verified";
+import type { RuntimeAuthorityReference } from "./lib/runtimeDomain/auth/verified";
 import type { DataDeletionProof } from "./runtimeDataAuth";
 import { runtimeAuthorityReference } from "./runtimeAuthSchema";
 import type { CanonicalSourceWitness } from "./runtimeDataAuth";
 import { finalizeDataRead, prepareMutationRowsWrite, memoryMutationResult, canReadMutationRows, finalizeMutationRowsRead, dataEditor, assertDataLinks, bindDataActor, dataDenied, getScopedMemory,
   listScopedMemories, manualDataSource, recheckDataAuthority,
-  requireDataAuthority, requireActionDataAuthority, recheckActionDataAuthority,
+  requireDataAuthority, requireActionDataAuthority, recheckActionDataAuthority, dataAuthorityReference,
   getScopedMemoryDocument, rejectUnqualifiedEmbedding, reviseDataSource, searchScopedMemories, tombstoneDataRow,
 } from "./runtimeDataAuth";
 import { Doc } from "./_generated/dataModel";
@@ -404,7 +404,7 @@ export const search = action({
     await recheckActionDataAuthority(ctx, authority, "read");
     const reference = makeFunctionReference<"query", { reference: RuntimeAuthorityReference; memorySpaceId: string; query: string; limit: number }, Doc<"memories">[]>(
       "memories:keywordSearchMemories") as unknown as FunctionReference<"query", "internal", { reference: RuntimeAuthorityReference; memorySpaceId: string; query: string; limit: number }, Doc<"memories">[]>;
-    let results = await ctx.runQuery(reference, { reference: authority, memorySpaceId: authority.memorySpaceId, query: args.query, limit });
+    let results = await ctx.runQuery(reference, { reference: dataAuthorityReference(authority), memorySpaceId: authority.memorySpaceId, query: args.query, limit });
     if (args.userId) results = results.filter(m => m.sourceUserId === args.userId || m.userId === args.userId);
     if (args.tags?.length) results = results.filter(m => args.tags!.some(tag => m.tags.includes(tag)));
     if (args.sourceType) results = results.filter(m => m.sourceType === args.sourceType);
@@ -412,7 +412,7 @@ export const search = action({
     const hydrate = makeFunctionReference<"query", { reference: RuntimeAuthorityReference; ids: Doc<"memories">["_id"][] }, Doc<"memories">[]>(
       "memories:fetchMemoriesByIds") as unknown as FunctionReference<"query", "internal", { reference: RuntimeAuthorityReference; ids: Doc<"memories">["_id"][] }, Doc<"memories">[]>;
     // Final scoped hydration rechecks each source/resource fence after candidate selection.
-    return await ctx.runQuery(hydrate, { reference: authority, ids: results.slice(0, limit).map(row => row._id) });
+    return await ctx.runQuery(hydrate, { reference: dataAuthorityReference(authority), ids: results.slice(0, limit).map(row => row._id) });
   },
 });
 

@@ -2,13 +2,11 @@ import { describe, expect, it, jest } from '@jest/globals';
 import * as artifacts from '../../../convex-dev/artifacts';
 import * as attachments from '../../../convex-dev/attachments';
 import { runtimeAssetUnavailable, internalAssetUnavailable } from '../../../convex-dev/runtimeAssetUnavailableAuth';
-import { ConvexError, type Value } from 'convex/values';
+import { ConvexError, v, type Value } from 'convex/values';
+import { defineSchema, defineTable } from 'convex/server';
+import schema from '../../../convex-dev/schema';
+import { backendSource, catalogDeclarations, catalogFixture, historicalRepairSources, repairedHistoricalSources, sha256, verifyHistoricalRepair, withComposedCatalog, type HistoricalModules, type HistoricalRepair } from '../../helpers/backend-catalog';
 import { fixture, invoke } from '../runtimeRegistryAuth/fixture';
-import fs from 'node:fs';
-import crypto from 'node:crypto';
-import ts from 'typescript';
-import { execFileSync } from 'node:child_process';
-import path from 'node:path';
 
 type Native = { isPublic?: boolean; isInternal?: boolean; isQuery?: boolean; exportArgs(): string };
 type Validator = { type: string; value?: unknown; tableName?: string };
@@ -172,21 +170,17 @@ it('both adapter guards reject and never resolve Promise<never>', async () => {
   const f = trapped(); await expect(runtimeAssetUnavailable(f.ctx, 'storage:read', { tenantId: 'tenant-a', memorySpaceId: 'space-a' })).rejects.toMatchObject({ data: unavailable });
   await expect(internalAssetUnavailable()).rejects.toMatchObject({ data: unavailable });
 });
-const qa = '_goals/convex-backend-runtime-2026-10-02/qa/task03b2f-asset-foundation/original/';
-function declarations(source: string) {
-  const ast = ts.createSourceFile('source.ts', source, ts.ScriptTarget.Latest, true); const result = new Map<string, { declaration: string; validators: Map<string, string> }>();
-  for (const s of ast.statements) if (ts.isVariableStatement(s)) for (const d of s.declarationList.declarations) {
-    const c = d.initializer; if (!c || !ts.isCallExpression(c) || !ts.isObjectLiteralExpression(c.arguments[0])) continue;
-    const a = c.arguments[0].properties.find(p => p.name?.getText(ast) === 'args');
-    if (!a || !ts.isPropertyAssignment(a) || !ts.isObjectLiteralExpression(a.initializer)) continue;
-    result.set(d.name.getText(ast), { declaration: s.getText(ast), validators: new Map(a.initializer.properties.filter(ts.isPropertyAssignment).map(p => [p.name.getText(ast), p.initializer.getText(ast)])) });
-  }
-  return result;
+interface AssetHistorical extends HistoricalModules {
+  classification: string;
+  nativeValidators: { registrations: { path: string; args: { type: string; value: Record<string, unknown> } }[] };
+  accepted22: { path: string; declaration: string; sha256: string }[];
 }
 it('native exportArgs matches every original installed Convex validator field and preserves required selectors', () => {
-  const frozen = JSON.parse(fs.readFileSync(qa + 'native-validators17.json', 'utf8')) as { registrations: { path: string; args: { type: string; value: Record<string, unknown> } }[] };
-  expect(frozen.registrations).toHaveLength(17);
-  for (const row of frozen.registrations) {
+  const frozen = catalogFixture<AssetHistorical>('asset-historical.json');
+  expect(frozen.classification).toBe('HISTORICAL_PRE_ASSET_CLOSURE_ONLY');
+  expect(frozen.nativeValidators.registrations).toHaveLength(17);
+  expect(frozen.nativeValidators.registrations.map(row => row.path).sort()).toEqual(calls.map(call => call.path).sort());
+  for (const row of frozen.nativeValidators.registrations) {
     const call = calls.find(c => c.path === row.path)!;
     const current = JSON.parse(call.registration.exportArgs()) as { type: string; value: Record<string, unknown> };
     expect(current.type).toBe(row.args.type);
@@ -197,56 +191,121 @@ it('native exportArgs matches every original installed Convex validator field an
     }
   }
 });
-it('accepted22 declarations stay literal-identical;17 original validators unchanged, only absent scope selectors added', () => {
-  const accepted = JSON.parse(fs.readFileSync(qa + 'accepted22.json', 'utf8')) as { path: string; declaration: string; sha256: string }[];
-  // Preserve the exact accepted historical declarations while separately proving
-  // the sole current native index repair; no declaration is normalized.
-  const archivedArtifact = '_goals/convex-backend-runtime-2026-10-02/qa/task03-artifact-schema-index-repair/archive/convex-dev/artifacts.ts';
-  expect(crypto.createHash('sha256').update(fs.readFileSync(archivedArtifact)).digest('hex')).toBe('15959b6cbc5126425c40a16d7a473cf0c353211b78b677e51660720abe7a9c14');
-  const current = declarations(fs.readFileSync(archivedArtifact, 'utf8')); expect(accepted).toHaveLength(22);
-  for (const row of accepted) { const text = current.get(row.path.split(':')[1])!.declaration; expect(text).toBe(row.declaration); expect(crypto.createHash('sha256').update(text).digest('hex')).toBe(row.sha256); }
-  fs.mkdirSync(path.resolve("work/resume/task04-current-catalog-release-c4/test-scratch"), { recursive: true });
-  const directory = fs.mkdtempSync(path.join(path.resolve("work/resume/task04-current-catalog-release-c4/test-scratch"), 'cortex-asset-index-preservation-'));
-  try {
-    const composition = JSON.parse(execFileSync(process.execPath,
-      ['_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-release-c4/current-compose.mjs', directory],
-      { encoding: 'utf8' }));
-    expect(composition.exactCurrentRepair.wholeByteAuthorizedEdits).toBe(3);
-    expect(composition.exactCurrentRepair.postHashes).toEqual({
-      'convex-dev/schema.ts': '07df1b0be4647848a3e9fbd1eb9d27d81ad78194f77d3c447c7ee4f2de419b1d',
-      'convex-dev/runtimeArtifactAuth.ts': 'aa75122698632dfb836b10a12251de7c580f58aa8c16d866913f07fc657962c8',
-      'convex-dev/artifacts.ts': '3252eb473cd80c9fe222a21322cb55e321704635dfd17596c319183fb9bcc2a3',
-    });
-    expect(composition.exactCurrentRepair.tables).toBe(26);
-    expect(composition.exactCurrentRepair.indexes).toBe(173);
-    expect(composition.exactCurrentRepair.duplicateSequences).toBe(0);
-    expect(composition.exactCurrentRepair.currentTamperControls).toEqual([
-      'changed tenant scope', 'extra index', 'changed candidate index', 'changed purge space bound', 'changed other declaration',
-    ]);
-    expect(composition.negativeControls).toBe(4);
-    const nativeSchema = JSON.parse(fs.readFileSync(composition.exactCurrentRepair.nativeWitness, 'utf8'));
-    expect(nativeSchema.duplicates).toEqual([]);
-    expect(nativeSchema.definitions.find((table: { table: string }) => table.table === 'artifacts').indexes
-      .filter((index: { fields: string[] }) => index.fields.join(',') === 'tenantId,memorySpaceId'))
-      .toEqual([{ indexDescriptor: 'by_tenant_space', fields: ['tenantId', 'memorySpaceId'] }]);
-    // The composer rejects any predicate/contract/index/declaration drift through
-    // exact whole-byte current proof and compares all native contracts unchanged.
-  } finally { fs.rmSync(directory, { recursive: true, force: true }); }
-  expect(fs.existsSync(directory)).toBe(false);
+it('accepted22 historical declarations stay literal-identical; all current validators and artifact bodies preserve the authorized repair', () => {
+  const frozen = catalogFixture<AssetHistorical>('asset-historical.json');
+  const archived = historicalRepairSources()['convex-dev/artifacts.ts'];
+  expect(sha256(archived)).toBe('15959b6cbc5126425c40a16d7a473cf0c353211b78b677e51660720abe7a9c14');
+  const accepted = catalogDeclarations(archived);
+  expect(frozen.accepted22).toHaveLength(22);
+  for (const row of frozen.accepted22) {
+    const text = accepted.find(declaration => declaration.name === row.path.split(':')[1])!.declaration;
+    expect(text).toBe(row.declaration);
+    expect(sha256(text)).toBe(row.sha256);
+  }
+  const repaired = repairedHistoricalSources(historicalRepairSources());
+  // Bind the entire maintained artifact body to the accepted source with its
+  // sole reviewed index edit, rather than weakening this to validator equality.
+  expect(backendSource('artifacts')).toBe(repaired['convex-dev/artifacts.ts']);
+  expect(sha256(backendSource('artifacts'))).toBe('3252eb473cd80c9fe222a21322cb55e321704635dfd17596c319183fb9bcc2a3');
+  expect(catalogDeclarations(backendSource('artifacts'))).toHaveLength(27);
   for (const module of ['artifacts', 'attachments']) {
-    const before = declarations(fs.readFileSync(qa + module + '.ts', 'utf8')); const after = declarations(fs.readFileSync('convex-dev/' + module + '.ts', 'utf8'));
-    expect([...after.keys()]).toEqual([...before.keys()]);
-    for (const [name, original] of before) {
-      const validators = after.get(name)!.validators;
-      for (const [field, literal] of original.validators) expect(validators.get(field)).toBe(literal);
-      expect([...validators.keys()].filter(k => !original.validators.has(k)).every(k => ['tenantId', 'memorySpaceId'].includes(k))).toBe(true);
+    const before = frozen.originalModules[module];
+    const after = catalogDeclarations(backendSource(module));
+    expect(after.map(row => row.name)).toEqual(before.map(row => row.name));
+    for (const original of before) {
+      const validators = after.find(row => row.name === original.name)!.validators;
+      for (const [field, literal] of Object.entries(original.validators)) expect(validators[field]).toBe(literal);
+      expect(Object.keys(validators).filter(key => !(key in original.validators)).every(key => ['tenantId', 'memorySpaceId'].includes(key))).toBe(true);
     }
   }
-  const hashes = JSON.parse(fs.readFileSync(qa + 'source-hashes.json', 'utf8')) as Record<string, string>;
-  for (const [path, hash] of Object.entries(hashes)) {
-    const actual = path.endsWith('/artifacts.ts') || path.endsWith('/attachments.ts') ? qa + path.split('/').pop()
-      : path === 'convex-dev/runtimeArtifactAuth.ts' || path === 'convex-dev/schema.ts'
-        ? '_goals/convex-backend-runtime-2026-10-02/qa/task03-artifact-schema-index-repair/archive/' + path : path;
-    expect(crypto.createHash('sha256').update(fs.readFileSync(actual)).digest('hex')).toBe(hash);
+  // The immutable manifest binds all seven original source hashes. Current auth
+  // files have later approved fences; historical hashes are not current pins.
+  expect(Object.keys(frozen.sourceHashes)).toHaveLength(7);
+  const repair = catalogFixture<HistoricalRepair>('index-repair-historical.json');
+  expect(frozen.sourceHashes['convex-dev/schema.ts']).toBe(repair.preHashes['convex-dev/schema.ts']);
+  expect(frozen.sourceHashes['convex-dev/runtimeArtifactAuth.ts']).toBe(repair.preHashes['convex-dev/runtimeArtifactAuth.ts']);
+});
+it('replays the exact historical three-edit native repair, 26 tables, 173 indexes and every tamper control without private runners', () => {
+  const repair = catalogFixture<HistoricalRepair>('index-repair-historical.json');
+  const repaired = repairedHistoricalSources(historicalRepairSources());
+  verifyHistoricalRepair(repaired);
+  expect(repair.wholeByteAuthorizedEdits).toBe(3);
+  expect(repair.postHashes).toEqual({
+    'convex-dev/schema.ts': '07df1b0be4647848a3e9fbd1eb9d27d81ad78194f77d3c447c7ee4f2de419b1d',
+    'convex-dev/runtimeArtifactAuth.ts': 'aa75122698632dfb836b10a12251de7c580f58aa8c16d866913f07fc657962c8',
+    'convex-dev/artifacts.ts': '3252eb473cd80c9fe222a21322cb55e321704635dfd17596c319183fb9bcc2a3',
+  });
+  const controls = [
+    ['changed tenant scope', 'convex-dev/runtimeArtifactAuth.ts', 'q.eq("tenantId", authority.tenantId)', 'q.eq("tenantId", "foreign")'],
+    ['extra index', 'convex-dev/schema.ts', '.index("by_runtime_key",', '.index("unauthorized", ["tenantId"]).index("by_runtime_key",'],
+    ['changed candidate index', 'convex-dev/runtimeArtifactAuth.ts', '.withIndex("by_tenant_space",', '.withIndex("by_runtime_scope",'],
+    ['changed purge space bound', 'convex-dev/artifacts.ts', '.eq("memorySpaceId", args.memorySpaceId!)', '.eq("memorySpaceId", "foreign")'],
+    ['changed other declaration', 'convex-dev/artifacts.ts', 'export const purgeAll', '/* unrelated tamper */ export const purgeAll'],
+  ];
+  for (const [, target, needle, replacement] of controls) {
+    expect(repaired[target]).toContain(needle);
+    expect(() => verifyHistoricalRepair({ ...repaired, [target]: repaired[target].replace(needle, replacement) })).toThrow();
   }
+  expect(controls.map(([name]) => name)).toEqual(['changed tenant scope', 'extra index', 'changed candidate index', 'changed purge space bound', 'changed other declaration']);
+  const before = repair.before;
+  expect(before.definitions).toHaveLength(26);
+  expect(before.definitions.reduce((count, table) => count + table.exported.indexes.length, 0)).toBe(174);
+  const native = structuredClone(before);
+  const table = native.definitions.find(definition => definition.table === 'artifacts')!;
+  expect(table.exported.indexes.filter(index => index.indexDescriptor === 'by_runtime_scope')).toHaveLength(1);
+  table.exported.indexes = table.exported.indexes.filter(index => index.indexDescriptor !== 'by_runtime_scope');
+  // All 26 validators, search/vector/index definitions and all 27 registrations
+  // must equal the actual approved native capture, not a newly captured baseline.
+  expect(sha256(JSON.stringify(native))).toBe(repair.afterHash);
+  expect(native.definitions).toHaveLength(repair.tableCount);
+  expect(native.definitions.reduce((count, definition) => count + definition.exported.indexes.length, 0)).toBe(173);
+  const duplicates = native.definitions.flatMap(definition => definition.exported.indexes.flatMap((index, position) =>
+    definition.exported.indexes.slice(position + 1).filter(other => JSON.stringify(other.fields) === JSON.stringify(index.fields))));
+  expect(duplicates).toHaveLength(0);
+  expect(repair.duplicateSequencesAfter).toBe(0);
+  expect(table.exported.indexes.filter(index => index.fields.join(',') === 'tenantId,memorySpaceId'))
+    .toEqual([{ indexDescriptor: 'by_tenant_space', fields: ['tenantId', 'memorySpaceId'] }]);
+  type Registration = { isPublic?: boolean; isInternal?: boolean; exportArgs(): string; exportReturns(): string };
+  const current = Object.fromEntries(Object.entries(artifacts).map(([name, value]) => {
+    const registration = value as unknown as Registration;
+    return [name, { isPublic: registration.isPublic, isInternal: registration.isInternal, args: registration.exportArgs(), returns: registration.exportReturns() }];
+  }));
+  expect(JSON.parse(JSON.stringify(current))).toEqual(native.registrations);
+});
+it('retains all four historical foundation declaration tamper controls', () => {
+  const repaired = repairedHistoricalSources(historicalRepairSources());
+  const artifact = repaired['convex-dev/artifacts.ts'];
+  const statistics = catalogFixture<Record<string, { sourceHash: string; declaration: string; sha256: string }>>('statistics-historical.json');
+  const controls = [
+    { source: artifact, needle: 'artifactHandler(async () => {', expected: sha256(artifact) },
+    { source: artifact, needle: 'runtimeAssetUnavailable(', expected: sha256(artifact) },
+    ...['agents', 'memorySpaces'].map(module => ({ source: statistics[module].declaration, needle: 'statisticsUnavailable(', expected: statistics[module].sha256 })),
+  ];
+  expect(controls).toHaveLength(4);
+  for (const module of ['agents', 'memorySpaces']) {
+    expect(catalogDeclarations(backendSource(module)).find(row => row.declaration.includes('statisticsUnavailable('))?.declaration)
+      .toBe(statistics[module].declaration);
+  }
+  for (const { source, needle, expected } of controls) {
+    expect(sha256(source)).toBe(expected);
+    expect(source).toContain(needle);
+    expect(sha256(source.replace(needle, needle + '/* unauthorized tampering */'))).not.toBe(expected);
+  }
+});
+it('maintained current composition preserves every current native table and the unique artifact scope index', () => {
+  withComposedCatalog((_directory, files) => {
+    expect(files['schema.ts'].toString()).toBe(backendSource('schema'));
+    const native = JSON.parse((schema as unknown as { export(): string }).export()) as { tables: { tableName: string; indexes: { indexDescriptor: string; fields: string[] }[]; documentType: unknown }[] };
+    for (const table of native.tables) {
+      expect(table.indexes.flatMap((index, position) => table.indexes.slice(position + 1)
+        .filter(other => JSON.stringify(index.fields) === JSON.stringify(other.fields)))).toEqual([]);
+    }
+    expect(native.tables.find(table => table.tableName === 'artifacts')!.indexes
+      .filter(index => index.fields.join(',') === 'tenantId,memorySpaceId'))
+      .toEqual([{ indexDescriptor: 'by_tenant_space', fields: ['tenantId', 'memorySpaceId'] }]);
+    const host = defineTable({ owner: v.string(), amount: v.number() }).index('by_owner', ['owner']);
+    const composed = JSON.parse((defineSchema({ ...schema.tables, portableHost: host }) as unknown as { export(): string }).export()) as typeof native;
+    expect(composed.tables).toHaveLength(native.tables.length + 1);
+    for (const table of native.tables) expect(composed.tables.find(candidate => candidate.tableName === table.tableName)).toEqual(table);
+  });
 });

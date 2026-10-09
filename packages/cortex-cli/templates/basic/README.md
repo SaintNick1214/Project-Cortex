@@ -1,229 +1,124 @@
 # {{PROJECT_NAME}}
 
-AI agent with persistent memory powered by [Cortex Memory SDK](https://cortexmemory.dev).
+A terminal chat agent and optional Hono HTTP server with persistent Cortex memory. This application is version 1.2.0 and uses SDK 0.38.0.
 
-This demo shows how Cortex orchestrates data through memory layers - the same logic used in the Vercel AI quickstart, but without any UI dependencies.
+## Quick start
 
-## Quick Start
-
-### 1. Start Convex Backend
+Use Node.js 24.15.0 or newer for the Cortex CLI workflow and the declared npm 12.2.0 manager for this app. Native CLI management uses the selected project's Convex 1.46.0 executable.
 
 ```bash
-npm run dev
+cortex init my-agent --template basic --local --yes --graph none
+cd my-agent
 ```
 
-Leave this running. It watches for changes and keeps the Convex server active.
+Basic is also available through the independently versioned catalog:
 
-### 2. Chat via CLI
+```bash
+cortex templates init my-agent --template basic --template-version 1.2.0 --catalog-version 1.1.0 --yes --graph none
+```
+
+Configure the generated `.env.local` with the URL of your own Convex deployment. For local setup, use the URL actually reported by Convex; do not assume an existing service on a default port. Select that project explicitly for management:
+
+```bash
+cortex config add-deployment local --url http://127.0.0.1:3210 --json-only
+cortex config set-path local .
+cortex dev -d local --local
+```
+
+Keep the foreground backend running; Ctrl-C stops its owned child. In a second terminal:
 
 ```bash
 npm start
-```
-
-This starts an interactive CLI where you can chat and see memory orchestration in real-time.
-
-### 3. Or use the HTTP API
-
-```bash
+# Or start the optional HTTP server:
 npm run server
 ```
 
-Then send requests:
-
-```bash
-curl -X POST http://localhost:3001/chat \
-  -H "Content-Type: application/json" \
-  -d '{"message": "My name is Alex and I work at Acme Corp"}'
-```
-
-## Features
-
-### Rich Console Output
-
-Watch data flow through all memory layers in real-time:
-
-```
-You: My name is Alex and I work at Acme Corp
-
-┌────────────────────────────────────────────────────────────────────┐
-│  MEMORY ORCHESTRATION                                              │
-├────────────────────────────────────────────────────────────────────┤
-│  📦 Memory Space   ✓ complete (2ms)                                │
-│     → ID: basic-demo                                               │
-│                                                                    │
-│  👤 User           ✓ complete (5ms)                                │
-│     → ID: demo-user                                                │
-│     → Name: Demo User                                              │
-│                                                                    │
-│  🤖 Agent          ✓ complete (3ms)                                │
-│     → ID: basic-assistant                                          │
-│     → Name: Cortex CLI Assistant                                   │
-│                                                                    │
-│  💬 Conversation   ✓ complete (8ms)                                │
-│     → ID: conv-abc123                                              │
-│     → Messages: 2                                                  │
-│                                                                    │
-│  🎯 Vector Store   ✓ complete (45ms)                               │
-│     → Embedded with 1536 dimensions                                │
-│     → Importance: 75                                               │
-│                                                                    │
-│  💡 Facts          ✓ complete [NEW] (120ms)                        │
-│     → Extracted 2 facts:                                           │
-│       • "User's name is Alex" (identity, 95%)                      │
-│       • "User works at Acme Corp" (employment, 90%)                │
-│                                                                    │
-│  🕸️ Graph          ○ skipped (not configured)                      │
-├────────────────────────────────────────────────────────────────────┤
-│  Total: 183ms                                                      │
-└────────────────────────────────────────────────────────────────────┘
-```
-
-### CLI Commands
-
-| Command | Description |
-|---------|-------------|
-| `/recall <query>` | Search memories without storing |
-| `/facts` | List all stored facts |
-| `/history` | Show conversation history |
-| `/new` | Start a new conversation |
-| `/config` | Show current configuration |
-| `/clear` | Clear the screen |
-| `/exit` | Exit the demo |
-
-### HTTP API Endpoints
-
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/chat` | POST | Chat and store memory |
-| `/recall` | GET | Search memories (`?query=...`) |
-| `/facts` | GET | List stored facts |
-| `/history/:id` | GET | Get conversation history |
-| `/health` | GET | Health check |
+`npm run build` only compiles TypeScript. It does not install, push or deploy a backend. For an existing npm project, `cortex install . --no-deploy --yes --graph none` stages SDK/backend files; choose the native target separately before `cortex dev --once`.
 
 ## Configuration
 
-All configuration is via environment variables in `.env.local`:
+Use private `.env.local` values for your selected deployment and provider:
 
 ```env
-# Required
-CONVEX_URL=https://your-project.convex.cloud
-
-# Optional: Enable AI responses (otherwise runs in echo mode)
-OPENAI_API_KEY=sk-...
-
-# Optional: Customize identifiers
+CONVEX_URL=http://127.0.0.1:3210
+CORTEX_APP_DEPLOYMENT_ADMIN_KEY=your-private-deployment-key
+CORTEX_APP_TENANT_ID=basic-demo
+OPENAI_API_KEY=your-private-openai-key
 MEMORY_SPACE_ID=basic-demo
 USER_ID=demo-user
 USER_NAME=Demo User
 AGENT_ID=basic-assistant
 AGENT_NAME=Cortex CLI Assistant
-
-# Optional: Feature flags
-CORTEX_FACT_EXTRACTION=true    # Enable automatic fact extraction
-CORTEX_GRAPH_SYNC=false        # Enable graph database sync
-
-# Optional: Debug mode
-DEBUG=true
+CORTEX_FACT_EXTRACTION=true
+CORTEX_GRAPH_SYNC=false
 ```
 
-## Project Structure
+The demo uses echo responses when no OpenAI key is supplied. Embeddings and LLM-powered extraction require their provider configuration. Basic requires the selected deployment's private server key and uses the SDK's internal deployment-operator mode. The CLI-generated `CONVEX_DEPLOY_KEY` is accepted when `CORTEX_APP_DEPLOYMENT_ADMIN_KEY` is unset; conflicting keys refuse startup. Its optional HTTP server binds to loopback and rejects requests from other browser origins. Basic is a server-trust SDK example; its HTTP server is not an authenticated multi-user application. Add a verified application boundary before exposing it to other users.
 
-```
-.
-├── src/
-│   ├── index.ts      # CLI entry point
-│   ├── server.ts     # HTTP server entry point
-│   ├── chat.ts       # Core chat/memory logic
-│   ├── cortex.ts     # SDK client configuration
-│   ├── llm.ts        # Optional OpenAI integration
-│   └── display.ts    # Rich console output
-├── convex/           # Cortex backend functions
-├── .env.local        # Environment configuration
-├── dev-runner.mjs    # Development helper
-└── package.json
-```
+## Chat and HTTP interface
 
-## How It Works
+| Terminal command | Purpose |
+| --- | --- |
+| `/recall <query>` | Retrieve memories without storing another turn |
+| `/facts` | List stored facts |
+| `/history` | Show the current conversation |
+| `/new` | Start another conversation |
+| `/config` | Show demo configuration |
+| `/clear` | Clear the terminal display |
+| `/exit` | Close the demo |
 
-1. **Recall** - Before responding, Cortex searches for relevant memories and facts
-2. **Generate** - Uses OpenAI (if configured) or echo mode to generate a response
-3. **Remember** - Stores the exchange through all memory layers:
-   - **Memory Space** - Isolated namespace
-   - **User** - User profile tracking
-   - **Agent** - Agent registration
-   - **Conversation** - Message storage
-   - **Vector** - Semantic embeddings for search
-   - **Facts** - Extracted structured information
-   - **Graph** - Entity relationships (optional)
-
-## Testing
-
-The project includes comprehensive tests:
+| HTTP endpoint | Method | Purpose |
+| --- | --- | --- |
+| `/chat` | POST | Chat and store memory |
+| `/recall?query=...` | GET | Retrieve memories |
+| `/facts` | GET | List facts |
+| `/history/:id` | GET | Read a conversation |
+| `/health` | GET | Check the server |
 
 ```bash
-# Run all unit tests
-npm test
+curl -X POST http://localhost:3001/chat \
+  -H 'Content-Type: application/json' \
+  -d '{"message":"My name is Alex"}'
+```
 
-# Run with coverage
-npm run test:coverage
+## Optional graph
 
-# Run integration tests (mocked SDK)
+SDK init/install and template init share the same optional graph setup service. Choose `--graph neo4j` or `--graph memgraph` with `--graph-mode local`, or configure an existing service with `--graph-mode existing --graph-uri bolt://localhost:7687`. Graph off requires no Docker. You can also configure an existing project explicitly:
+
+```bash
+cortex graph setup . --graph neo4j --graph-mode local --yes
+cortex graph status .
+cortex graph stop .
+cortex graph start .
+```
+
+Local setup owns project-specific Compose resources and private credentials. Stop preserves data volumes; it never guesses unrelated containers or ports. Existing-service setup probes without graph data mutation and does not own external start/stop. Use credentials from the selected provider's environment or a private credential file, not URI userinfo or command-line passwords. `Cortex.create()` reads the enabled graph's configuration; an explicitly enabled graph with missing/ambiguous configuration or a failed connection is an error.
+
+## Updating
+
+```bash
+cortex templates update . --to 1.2.0 --catalog-version 1.1.0 --dry-run
+cortex templates update . --to 1.2.0 --catalog-version 1.1.0
+cortex update -d local --sdk-version 0.38.0 --convex-version 1.46.0 --sync --dry-run
+```
+
+Template update checks recorded ownership and preserves user-edit conflicts. SDK update plans dependencies and optionally synchronizes SDK-owned backend files; it does not update app files or manage graph containers. An unpublished candidate must be selected explicitly with the applicable `--sdk-package`/`--templates-package` options; unavailable registry versions do not fall back to an older SDK.
+
+## Build and tests
+
+```bash
+npm run build
+npm run test:unit
 npm run test:integration
-
-# Run e2e tests (requires real backend)
-npm run test:e2e
-
-# Run all tests
-npm run test:all
-```
-
-### E2E Test Requirements
-
-E2E tests require additional setup:
-
-1. **Memory flow tests** - Need `CONVEX_URL` pointing to a deployed Cortex backend
-2. **Fact extraction tests** - Also need `OPENAI_API_KEY` for LLM-powered extraction
-3. **Server tests** - Need the HTTP server running (`npm run server`)
-
-```bash
-# Run memory flow e2e tests
-CONVEX_URL=https://your-project.convex.cloud npm run test:e2e
-
-# Run fact extraction tests (requires OpenAI)
-CONVEX_URL=https://your-project.convex.cloud \
-OPENAI_API_KEY=sk-... \
-npm run test:e2e
-
-# Run server e2e tests
-# Terminal 1: Start server
-CONVEX_URL=https://your-project.convex.cloud npm run server
-# Terminal 2: Run tests
 npm run test:e2e
 ```
 
-## Next Steps
+Integration units may use a mocked SDK. Real backend E2E needs your selected disposable deployment; provider tests need OpenAI, and server tests need the HTTP server. A skipped service test is not a runtime check.
 
-### Enable AI Responses
+## Learn more
 
-Set `OPENAI_API_KEY` in `.env.local` for real AI-powered responses instead of echo mode.
-
-### Enable Graph Database
-
-For entity relationship queries:
-
-1. Start Neo4j: `docker-compose -f docker-compose.graph.yml up -d`
-2. Set `CORTEX_GRAPH_SYNC=true` in `.env.local`
-
-### Explore the API
-
-- [Cortex Documentation](https://cortexmemory.dev/docs)
-- [API Reference](https://cortexmemory.dev/docs/api-reference)
-- [GitHub Repository](https://github.com/SaintNick1214/Project-Cortex)
-
-## Support
-
-- [GitHub Issues](https://github.com/SaintNick1214/Project-Cortex/issues)
-- [GitHub Discussions](https://github.com/SaintNick1214/Project-Cortex/discussions)
+- [Cortex documentation](https://cortexmemory.dev/docs)
+- [Source repository](https://github.com/SaintNick1214/Project-Cortex)
 
 ## License
 

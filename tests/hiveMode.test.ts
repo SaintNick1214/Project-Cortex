@@ -1,3 +1,4 @@
+import { createRuntimeFixture } from "./helpers/runtime-fixture";
 /**
  * E2E Tests: Hive Mode
  *
@@ -8,8 +9,8 @@
  * - Participant tracking
  */
 
-import { Cortex } from "../src";
-import { ConvexClient } from "convex/browser";
+import { Cortex } from "./helpers/deployment-operator";
+import { ConvexClient } from "./helpers/deployment-operator";
 import { TestCleanup } from "./helpers";
 import { createTestRunContext } from "./helpers/isolation";
 
@@ -18,6 +19,7 @@ const ctx = createTestRunContext();
 
 describe("Hive Mode", () => {
   let cortex: Cortex;
+  let runtimeFixture: Awaited<ReturnType<typeof createRuntimeFixture>>;
   let client: ConvexClient;
   let _cleanup: TestCleanup;
   const CONVEX_URL = process.env.CONVEX_URL || "http://127.0.0.1:3210";
@@ -31,6 +33,9 @@ describe("Hive Mode", () => {
 
   beforeAll(async () => {
     cortex = new Cortex({ convexUrl: CONVEX_URL });
+    // Explicit owned scope/actor fixture; canonical contexts stay public.
+    runtimeFixture = await createRuntimeFixture(ctx.runId, HIVE_SPACE, USER_ALICE);
+    Object.defineProperty(cortex, "contexts", { value: runtimeFixture.cortex.contexts });
     client = new ConvexClient(CONVEX_URL);
     _cleanup = new TestCleanup(client);
 
@@ -52,7 +57,13 @@ describe("Hive Mode", () => {
 
   afterAll(async () => {
     // NOTE: Removed purgeAll() to prevent deleting parallel test data.
-    await client.close();
+    const cleanups = await Promise.allSettled([
+      () => runtimeFixture?.close(),
+      () => cortex.shutdown(),
+      () => client.close(),
+    ].map(cleanup => Promise.resolve().then(cleanup)));
+    const failed = cleanups.find(cleanup => cleanup.status === "rejected");
+    if (failed?.status === "rejected") throw failed.reason;
   });
 
   describe("Shared Conversations", () => {
@@ -308,14 +319,14 @@ describe("Hive Mode", () => {
       });
 
       // 2. Agent delegates to calendar tool (creates context)
-      const _context = await cortex.contexts.create({
-        purpose: "Retrieve weekly schedule",
-        memorySpaceId: HIVE_SPACE,
-        conversationRef: {
-          conversationId: agentConv.conversationId,
-          messageIds: [userMsg.messages[0].id],
-        },
-      });
+      const before = await runtimeFixture.ownedRows("contexts");
+      await expect(cortex.contexts.create({
+        purpose: "Retrieve weekly schedule", memorySpaceId: HIVE_SPACE,
+        conversationRef: { conversationId: agentConv.conversationId, messageIds: [userMsg.messages[0].id] },
+      })).rejects.toThrow("CAPABILITY_NOT_READY");
+      expect(await runtimeFixture.ownedRows("contexts")).toEqual(before);
+      // A genuine unlinked workflow context remains supported.
+      const _context = await cortex.contexts.create({ purpose: "Retrieve weekly schedule", memorySpaceId: HIVE_SPACE });
 
       // 3. Calendar tool executes and stores result
       await cortex.facts.store({

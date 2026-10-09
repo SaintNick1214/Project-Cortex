@@ -77,11 +77,11 @@ const Tool = ({
       return;
     }
 
-    if (selectedTool === description) {
+    if (selectedTool !== description) {
+      setSelectedTool(description);
+    } else {
       setSelectedTool(null);
       onClick({ sendMessage });
-    } else {
-      setSelectedTool(description);
     }
   };
 
@@ -94,11 +94,11 @@ const Tool = ({
             "bg-primary text-primary-foreground!": selectedTool === description,
           })}
           exit={{
-            opacity: 0,
             scale: 0.9,
+            opacity: 0,
             transition: { duration: 0.1 },
           }}
-          initial={{ opacity: 0, scale: 1 }}
+          initial={{ scale: 1, opacity: 0 }}
           onClick={() => {
             handleSelect();
           }}
@@ -118,7 +118,6 @@ const Tool = ({
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.95 }}
         >
-          {/* biome-ignore lint/suspicious/noLeakedRender: icon is a ReactNode supplied by the caller. */}
           {selectedTool === description ? <ArrowUpIcon /> : icon}
         </motion.div>
       </TooltipTrigger>
@@ -192,24 +191,24 @@ const ReadingLevelSelector = ({
               className={cx(
                 "absolute flex flex-row items-center rounded-full border bg-background p-3",
                 {
-                  "bg-background text-foreground": currentLevel === 2,
                   "bg-primary text-primary-foreground": currentLevel !== 2,
+                  "bg-background text-foreground": currentLevel === 2,
                 }
               )}
               drag="y"
-              dragConstraints={{ bottom: 0, top: -dragConstraints }}
+              dragConstraints={{ top: -dragConstraints, bottom: 0 }}
               dragElastic={0}
               dragMomentum={false}
               onClick={() => {
                 if (currentLevel !== 2 && hasUserSelectedLevel) {
                   sendMessage({
+                    role: "user",
                     parts: [
                       {
-                        text: `Please adjust the reading level to ${LEVELS[currentLevel]} level.`,
                         type: "text",
+                        text: `Please adjust the reading level to ${LEVELS[currentLevel]} level.`,
                       },
                     ],
-                    role: "user",
                   });
 
                   setSelectedTool(null);
@@ -273,7 +272,7 @@ export const Tools = ({
       initial={{ opacity: 0, scale: 0.95 }}
     >
       <AnimatePresence>
-        {!!isToolbarVisible &&
+        {isToolbarVisible &&
           secondaryTools.map((secondaryTool) => (
             <Tool
               description={secondaryTool.description}
@@ -328,7 +327,7 @@ const PureToolbar = ({
   const [selectedTool, setSelectedTool] = useState<string | null>(null);
   const [isAnimating, setIsAnimating] = useState(false);
 
-  // usehooks-ts handles null refs at runtime; its types predate React 19.
+  // usehooks-ts 3 types predate React 19 nullable refs; its implementation guards current.
   useOnClickOutside(toolbarRef as RefObject<HTMLDivElement>, () => {
     setIsToolbarVisible(false);
     setSelectedTool(null);
@@ -351,14 +350,13 @@ const PureToolbar = ({
     }
   };
 
-  useEffect(
-    () => () => {
+  useEffect(() => {
+    return () => {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
       }
-    },
-    []
-  );
+    };
+  }, []);
 
   useEffect(() => {
     if (status === "streaming") {
@@ -387,24 +385,24 @@ const PureToolbar = ({
           isToolbarVisible
             ? selectedTool === "adjust-reading-level"
               ? {
-                  height: 6 * 43,
                   opacity: 1,
-                  scale: 0.95,
-                  transition: { delay: 0 },
                   y: 0,
+                  height: 6 * 43,
+                  transition: { delay: 0 },
+                  scale: 0.95,
                 }
               : {
-                  height: toolsByArtifactKind.length * 50,
                   opacity: 1,
-                  scale: 1,
-                  transition: { delay: 0 },
                   y: 0,
+                  height: toolsByArtifactKind.length * 50,
+                  transition: { delay: 0 },
+                  scale: 1,
                 }
-            : { height: 54, opacity: 1, transition: { delay: 0 }, y: 0 }
+            : { opacity: 1, y: 0, height: 54, transition: { delay: 0 } }
         }
         className="absolute right-6 bottom-6 flex cursor-pointer flex-col justify-end rounded-full border bg-background p-1.5 shadow-lg"
-        exit={{ opacity: 0, transition: { duration: 0.1 }, y: -20 }}
-        initial={{ opacity: 0, scale: 1, y: -20 }}
+        exit={{ opacity: 0, y: -20, transition: { duration: 0.1 } }}
+        initial={{ opacity: 0, y: -20, scale: 1 }}
         onAnimationComplete={() => {
           setIsAnimating(false);
         }}
@@ -427,7 +425,7 @@ const PureToolbar = ({
           setIsToolbarVisible(true);
         }}
         ref={toolbarRef}
-        transition={{ damping: 25, stiffness: 300, type: "spring" }}
+        transition={{ type: "spring", stiffness: 300, damping: 25 }}
       >
         {status === "streaming" ? (
           <motion.div

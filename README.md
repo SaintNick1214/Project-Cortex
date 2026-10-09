@@ -24,20 +24,11 @@
 
 **🌐 [cortexmemory.dev](https://cortexmemory.dev) | 📚 [docs.cortexmemory.dev**](https://docs.cortexmemory.dev)
 
-## 🚀 Status: Production Ready
+## 🚀 Package versions
 
-**Cortex v0.27.x is production-ready** with comprehensive features and battle-tested stability.
+This checkout declares **0.38.0** for the TypeScript SDK, CLI, and Vercel AI provider. Application templates declare **1.2.0**; their independent `@cortexmemory/templates` catalog declares **1.1.0**. The retired Python SDK remains archived under `_DEPRECATED/`. Registry publication and installed-package compatibility are separate from source version numbers. Use a matching released package set, or matching local archives when evaluating an unpublished release.
 
-**What you get:**
-
-- ✅ **Stable APIs** - TypeScript SDK with stable interfaces
-- ✅ **Comprehensive Testing** - 124 test files with 18,460+ assertions
-- ✅ **CLI Tooling** - Complete project management and development workflow
-- ✅ **Security Scanning** - CodeQL, Semgrep, Trivy, Gitleaks, Bandit, OpenSSF Scorecard
-- ✅ **Production Demo** - Interactive Vercel AI quickstart with live visualization
-- ✅ **Complete Documentation** - Getting started guides, API reference, and tutorials
-
-**Ready to use in production.** Join developers building AI agents with persistent memory.
+The CLI requires **Node.js 24.15.0 or newer** and uses **Convex 1.46.0** for native installation/management. Other packages keep their own declared runtime requirements. See the [CLI README](packages/cortex-cli/README.md) for target selection, supported operations, and migration instructions.
 
 **Want to follow along?**
 
@@ -62,61 +53,58 @@ A unified memory system that gives you everything in one package - production-re
 
 ## 🚀 Quick Start
 
-Get started in under 5 minutes:
-
 ### Install & Initialize
 
 ```bash
-# Install CLI
-npm install -g @cortexmemory/cli
+# Install the matching published CLI release
+npm install -g @cortexmemory/cli@0.38.0
 
-# Create project
-cortex init my-agent
-
-# Start building
+# Create a basic SDK project with anonymous local Convex setup
+cortex init my-agent --template basic --local --yes --graph none
 cd my-agent
-cortex start
+
+# Register the actual URL reported by setup and associate this project
+cortex config add-deployment local --url http://127.0.0.1:3210 --json-only
+cortex config set-path local .
+
+# Run one foreground Convex process; Ctrl-C stops it
+cortex dev -d local --local
 ```
 
-**What gets set up:**
+Initialization installs the SDK, stages owned backend files, and performs the explicitly selected local setup. Use `--template none` for a backend-only project, or `cortex install ./existing-project --no-deploy` to stage SDK support in an existing standalone npm project. Optional `--graph neo4j|memgraph` setup uses the same project-owned service as application templates; graph-off does not require Docker.
 
-- ✅ Cortex SDK with TypeScript support
-- ✅ Convex backend functions (deployed automatically)
-- ✅ Environment configuration (.env.local)
-- ✅ Example code to get you started
-- ✅ Optional graph database integration
-- ✅ Deployment saved to `~/.cortexrc` for CLI management
+SDK updates, application template updates, and graph start/stop are separate operations. `cortex update --dry-run` plans the selected SDK/Convex dependency update; `cortex schema sync --dry-run` inspects owned backend changes. Neither command implicitly replaces app files. See [migration instructions](packages/cortex-cli/README.md#migration-from-earlier-cli-behavior).
 
 ### 🎬 Try the Interactive Quickstart
 
-**The fastest way to see Cortex in action** - complete working demo:
-
 ```bash
-# Option 1: Via CLI
-cortex init demo --template vercel-ai-quickstart
-cd demo && cortex start
-# Open http://localhost:3000
+# Select an application through the independent template catalog
+cortex templates list --format json
+cortex templates init demo --template vercel-ai-quickstart --template-version 1.2.0 --catalog-version 1.1.0 --yes
+cd demo
 
-# Option 2: From monorepo
-cd packages/vercel-ai-provider/quickstart
-npm install && npm run dev
+# Configure the generated README's server credentials, origin, and model settings
+npm run convex:dev
+# In another terminal in demo, start the application:
+npm run dev
 ```
 
-**See a production-ready chat app featuring:**
+The catalog also supports `basic` and `chat-sdk`; Chat uses its declared pnpm manager. Use `cortex templates update ./demo --to 1.2.0 --catalog-version 1.1.0 --dry-run` to review a recorded template update. User edits and missing ownership require resolution before apply.
 
-- 🔄 Real-time memory orchestration visualization
-- 📊 Layer flow diagram (Memory Space → User → Agent → Conversation → Vector → Facts → Graph)
-- 🔀 Memory space switching (multi-tenant isolation)
-- ⚡ Streaming with progressive storage
-- 🧹 Belief revision (facts update when user changes their mind)
+For a recognized prior Next app shim lacking `MutationCtx`, update the app/template shim (and corresponding Chat handler) first, then apply the SDK backend update. SDK schema composition refuses incompatible or conflicting app files. The [CLI README](packages/cortex-cli/README.md#application-templates) explains the order and ownership boundary. For monorepo development, follow the [canonical quickstart README](packages/vercel-ai-provider/quickstart/README.md).
+
+The demo includes streaming chat, memory orchestration visualization, memory-space switching, and fact revision. Actual model calls require the configured provider credentials; app authentication and origin configuration are part of setup.
 
 ### Your First Memory
 
 ```typescript
 import { Cortex } from "@cortexmemory/sdk";
 
+// Supply a host-issued Convex JWT for a principal with stored scope grants.
 const cortex = new Cortex({
   convexUrl: process.env.CONVEX_URL!,
+  fetchAuthToken: async () => process.env.CONVEX_AUTH_TOKEN ?? null,
+  auth: { tenantId: "my-app", userId: "user-123" },
 });
 
 // Store a memory
@@ -136,9 +124,13 @@ const results = await cortex.memory.search(
 );
 ```
 
-**That's it!** Your AI agent now has persistent memory.
+The public SDK transport requires a verified host JWT and stored grants for the selected
+scope; `auth` labels alone do not authenticate. Configure the host's Convex `auth.config.ts`
+and token refresh before use. Generated apps use an explicit server-only deployment
+administrator transport for legacy SDK data. See [administrative operations](https://docs.cortexmemory.dev/security/admin-operations)
+for that separate credential boundary.
 
-**Next steps:** [Getting Started Guide](/getting-started/introduction) | [CLI Reference](https://docs.cortexmemory.dev/tools/cli-reference)
+**Next steps:** [Getting Started Guide](https://docs.cortexmemory.dev/getting-started/introduction) | [CLI README](packages/cortex-cli/README.md)
 
 ---
 
@@ -154,7 +146,7 @@ Cortex provides a complete memory system for AI agents:
 - 👥 **User Profiles** - Rich user context with GDPR cascade deletion ✅
 - 🐝 **Hive Mode** - Multi-tool memory sharing (MCP ready) ✅
 - 🛡️ **Resilience Layer** - Overload protection with circuit breakers ✅
-- 🔧 **CLI Tools** - Complete project management (init, start, dev, deploy) ✅
+- 🔧 **CLI Tools** - SDK installation, scoped administration, and foreground project management ✅
 - 📦 **Vercel AI Integration** - Production-ready with interactive demo ✅
 - 🔐 **Sessions** - Multi-session tracking with configurable lifecycle ✅
 - 📈 **Governance** - Compliance templates (GDPR, HIPAA, SOC2, FINRA) ✅
@@ -169,7 +161,7 @@ Cortex provides a complete memory system for AI agents:
 - 🔌 **Multi-Tenancy** - Complete tenant isolation with auth context ✅
 - ✅ **Client-Side Validation** - Instant error feedback (<1ms) for all APIs ✅
 
-## ✨ Latest Releases
+## ✨ Earlier Release Highlights
 
 **v0.27.x - Multi-Tenancy & Authentication (Dec 2025 - Jan 2026)**
 
@@ -187,7 +179,7 @@ Cortex provides a complete memory system for AI agents:
 **v0.21.0 - Memory Orchestration (Oct 2025)**
 
 - Automatic entity registration
-- CLI-first onboarding with interactive dev mode
+- CLI-first onboarding (historical release behavior; see current CLI migration instructions)
 - Multi-deployment management
 
 **v0.16.0 - Resilience Layer (Sep 2025)**
@@ -236,7 +228,7 @@ See [What's New](/whats-new) for complete release history.
 - Framework-agnostic (LangChain, Vercel AI, custom)
 - Embedding-agnostic (OpenAI, Cohere, local models)
 - TypeScript-first with full type safety
-- CLI-first workflow with interactive dev mode
+- CLI workflow with explicit project selection and foreground development
 
 ### 📊 Unified Architecture
 
@@ -361,7 +353,7 @@ Cortex is designed with two deployment modes:
 ### Reference
 
 - [API Reference](https://docs.cortexmemory.dev/api-reference/overview) - Full API documentation
-- [CLI Reference](https://docs.cortexmemory.dev/tools/cli-reference) - Complete command documentation
+- [CLI README](packages/cortex-cli/README.md) - Current commands, scope, and migrations
 - [System Architecture](https://docs.cortexmemory.dev/architecture/system-overview) - How it works
 - Documentation source: `cortexmemory.dev/docs-site/docs/` (maintained in the website repository)
 
@@ -398,7 +390,7 @@ See [CONTRIBUTING.md](/project/contributing) for detailed contribution guideline
 **Production Ready (Now Available):**
 
 - ✅ Core SDK (TypeScript)
-- ✅ CLI tooling with interactive dev mode
+- ✅ CLI tooling with explicit target selection and foreground Convex development
 - ✅ Vercel AI integration with quickstart demo
 - ✅ Complete documentation site
 - ✅ Multi-tenancy and authentication

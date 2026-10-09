@@ -6,7 +6,7 @@
  */
 
 import { describe, it, expect, beforeAll, afterAll } from "@jest/globals";
-import { Cortex } from "@cortexmemory/sdk";
+import { Cortex, withErasureTransport } from "../helpers/operator-client.js";
 import { cleanupTestData } from "../setup.js";
 
 // Skip these tests if no Convex URL is configured
@@ -212,10 +212,11 @@ describeE2E("User Workflow E2E", () => {
       });
 
       // Cascade delete user
-      const result = await cortex.users.delete(userId, {
+      const result = await withErasureTransport(cortex, erasureTransport => cortex.users.delete(userId, {
         cascade: true,
+        erasureTransport,
         verify: true,
-      });
+      }));
 
       expect(result.deleted || result.totalDeleted > 0).toBe(true);
 
@@ -224,7 +225,7 @@ describeE2E("User Workflow E2E", () => {
 
       // Cleanup space
       try {
-        await cortex.memorySpaces.delete(spaceId, { cascade: true });
+        await withErasureTransport(cortex, erasureTransport => cortex.memorySpaces.delete(spaceId, { cascade: true, erasureTransport }));
       } catch {
         // Ignore cleanup errors
       }

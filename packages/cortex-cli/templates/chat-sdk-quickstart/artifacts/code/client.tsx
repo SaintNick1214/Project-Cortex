@@ -1,4 +1,5 @@
 import { toast } from "sonner";
+import { loadCodeRuntime } from "@/lib/code-runtime";
 import { CodeEditor } from "@/components/code-editor";
 import {
   Console,
@@ -89,10 +90,7 @@ export const codeArtifact = new Artifact<"code", Metadata>({
         }));
 
         try {
-          // @ts-expect-error - loadPyodide is not defined
-          const currentPyodideInstance = await globalThis.loadPyodide({
-            indexURL: "https://cdn.jsdelivr.net/pyodide/v0.23.4/full/",
-          });
+          const currentPyodideInstance = await loadCodeRuntime();
 
           currentPyodideInstance.setStdout({
             batched: (output: string) => {

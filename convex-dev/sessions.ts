@@ -3,7 +3,7 @@ import { ConvexError, v } from "convex/values";
 import { mutation, query, internalMutation } from "./_generated/server";
 import type { MutationCtx } from "./_generated/server";
 import type { Doc } from "./_generated/dataModel";
-import type { RuntimeAuthority, RuntimeAuthorityReference } from "../src/auth/verified";
+import type { RuntimeAuthority, RuntimeAuthorityReference } from "./lib/runtimeDomain/auth/verified";
 import { runtimeAuthorityReference } from "./runtimeAuthSchema";
 import { recheckAuthority } from "./runtimeAuth";
 import { scopeArgs, authority, actor, sessionRow, candidates, check, fresh, finalChecks, canonicalFields, newResource, sourceId,

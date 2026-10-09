@@ -58,11 +58,9 @@ describe("ORPHAN_RULES configuration", () => {
     expect(ORPHAN_RULES.Context.explicitOnly).toBe(true);
   });
 
-  it("should have keepIfReferencedBy rule for Conversation nodes", () => {
+  it("requires explicit deletion for Conversation nodes", () => {
     expect(ORPHAN_RULES.Conversation).toBeDefined();
-    expect(ORPHAN_RULES.Conversation.keepIfReferencedBy).toContain("Memory");
-    expect(ORPHAN_RULES.Conversation.keepIfReferencedBy).toContain("Fact");
-    expect(ORPHAN_RULES.Conversation.keepIfReferencedBy).toContain("Context");
+    expect(ORPHAN_RULES.Conversation.explicitOnly).toBe(true);
   });
 
   it("should have keepIfReferencedBy rule for Entity nodes", () => {
@@ -70,9 +68,9 @@ describe("ORPHAN_RULES configuration", () => {
     expect(ORPHAN_RULES.Entity.keepIfReferencedBy).toContain("Fact");
   });
 
-  it("should not have rules for Agent (allows cascade)", () => {
-    // Agent nodes can be orphaned/deleted if not referenced
-    expect(ORPHAN_RULES.Agent).toBeUndefined();
+  it("keeps shared Agent identities during incidental orphan cleanup", () => {
+    // Shared registry identities need their own explicit erasure path.
+    expect(ORPHAN_RULES.Agent.neverDelete).toBe(true);
   });
 });
 

@@ -1,3 +1,4 @@
+import { api as publicApi } from "../../convex-dev/_generated/api";
 /**
  * E2E Tests: Cross-API TenantId Propagation
  *
@@ -12,6 +13,15 @@
  * - Graph sync (if enabled)
  */
 
+import {
+  expectRefusalNoEffects,
+  expectOwnedRecallItems,
+  queryPublic,
+  mutatePublic,
+} from "../helpers/public-contract";
+import { createRuntimeFixture } from "../helpers/runtime-fixture";
+const runtimeFixtures: Array<Awaited<ReturnType<typeof createRuntimeFixture>>> =
+  [];
 import { Cortex } from "../../src";
 import { createTestRunContext } from "../helpers/isolation";
 import {
@@ -42,10 +52,22 @@ describeWithConvex("Cross-API TenantId Propagation E2E", () => {
       organizationId: "org_cross_api_test",
     });
 
-    cortex = new Cortex({
-      convexUrl: process.env.CONVEX_URL!,
-      auth: authContext,
-    });
+    const fixture = await createRuntimeFixture(
+      testTenantId,
+      testMemorySpaceId,
+      testUserId,
+      { enabled: false },
+      { registerSpaces: false },
+    );
+    runtimeFixtures.push(fixture);
+    cortex = new Cortex(
+      {
+        convexUrl: process.env.CONVEX_URL!,
+        auth: authContext,
+        resilience: { enabled: false },
+      },
+      { initializeTransport: fixture.initializeTransport },
+    );
 
     // Register memory space
     await cortex.memorySpaces.register({
@@ -56,6 +78,8 @@ describeWithConvex("Cross-API TenantId Propagation E2E", () => {
   });
 
   afterAll(async () => {
+    await Promise.all(runtimeFixtures.map((fixture) => fixture.close()));
+    await cortex.shutdown();
     try {
       await cortex.memorySpaces.delete(testMemorySpaceId, {
         cascade: true,
@@ -104,34 +128,46 @@ describeWithConvex("Cross-API TenantId Propagation E2E", () => {
       expect(session.userId).toBe(testUserId);
     });
 
-    it("Step 3: Create conversation with tenantId", async () => {
-      const conversation = await cortex.conversations.create({
-        memorySpaceId: testMemorySpaceId,
-        type: "user-agent",
-        participants: { userId: testUserId, agentId: "test-agent" },
-      });
-
-      conversationId = conversation.conversationId;
-
-      expect(conversation.tenantId).toBe(testTenantId);
-      expect(conversation.conversationId).toBeDefined();
+    it("Step 3: Owned transcript creation refuses without dispatch", async () => {
+      conversationId = "conv-uncommitted";
+      await expectRefusalNoEffects(
+        () =>
+          cortex.conversations.create({
+            memorySpaceId: testMemorySpaceId,
+            type: "user-agent",
+            participants: { userId: testUserId, agentId: "test-agent" },
+          }),
+        runtimeFixtures,
+        "conversations",
+        "CAPABILITY_NOT_READY",
+      );
     });
 
-    it("Step 4: Create memory with tenantId (remember)", async () => {
-      const result = await cortex.memory.remember({
-        memorySpaceId: testMemorySpaceId,
-        conversationId,
-        userMessage: "Cross-API test: What is the meaning of life?",
-        agentResponse: "The meaning of life is to learn and grow.",
-        userId: testUserId,
-        userName: "Test User",
-        agentId: "test-agent",
+    it("Step 4: Current memory writes retain tenant while transcript capture refuses", async () => {
+      await expectRefusalNoEffects(
+        () =>
+          cortex.memory.remember({
+            memorySpaceId: testMemorySpaceId,
+            conversationId,
+            userMessage: "Cross-API test: meaning of life",
+            agentResponse: "The meaning of life is to learn and grow",
+            userId: testUserId,
+            userName: "Test User",
+            agentId: "test-agent",
+          }),
+        runtimeFixtures,
+        "memories",
+        "CAPABILITY_NOT_READY",
+      );
+      const memory = await cortex.vector.store(testMemorySpaceId, {
+        content: "The meaning of life is to learn and grow",
+        contentType: "raw",
+        source: { type: "system" },
+        metadata: { importance: 50, tags: ["cross-api"], userId: testUserId },
       });
-
-      _memoryId = result.memories[0]._id;
-
-      expect(result.memories[0].tenantId).toBe(testTenantId);
-      expect(result.memories[0].userId).toBe(testUserId);
+      _memoryId = memory.memoryId;
+      expect(memory.tenantId).toBe(testTenantId);
+      expect(memory.userId).toBe(testUserId);
     });
 
     it("Step 5: Retrieve memory with tenantId (recall)", async () => {
@@ -214,15 +250,17 @@ describeWithConvex("Cross-API TenantId Propagation E2E", () => {
     });
 
     it("Step 10: List operations respect tenantId", async () => {
-      // List conversations
-      const convResult = await cortex.conversations.list({
-        memorySpaceId: testMemorySpaceId,
-        limit: 100,
-      });
-
-      convResult.conversations.forEach((c) => {
-        expect(c.tenantId).toBe(testTenantId);
-      });
+      await expectRefusalNoEffects(
+        () =>
+          queryPublic(runtimeFixtures[0]!, publicApi.conversations.list, {
+            memorySpaceId: testMemorySpaceId,
+            tenantId: testTenantId,
+            limit: 100,
+          }),
+        runtimeFixtures,
+        "conversations",
+        "CAPABILITY_NOT_READY",
+      );
 
       // List facts
       const factList = await cortex.facts.list({
@@ -257,7 +295,21 @@ describeWithConvex("Cross-API TenantId Propagation E2E", () => {
       await cortex.facts.delete(testMemorySpaceId, factId);
 
       // Delete conversation (cascades memories)
-      await cortex.conversations.delete(conversationId);
+      await expectRefusalNoEffects(
+        () =>
+          mutatePublic(
+            runtimeFixtures[0]!,
+            publicApi.conversations.deleteConversation,
+            {
+              memorySpaceId: testMemorySpaceId,
+              tenantId: testTenantId,
+              conversationId,
+            },
+          ),
+        runtimeFixtures,
+        "conversations",
+        "CAPABILITY_NOT_READY",
+      );
 
       // Delete user
       await cortex.users.delete(testUserId, { cascade: false });
@@ -271,12 +323,7 @@ describeWithConvex("Cross-API TenantId Propagation E2E", () => {
   describe("Parallel Operations - Same TenantId", () => {
     it("should maintain tenantId across parallel API calls", async () => {
       // Parallel operations across different APIs
-      const [conv, fact, session, immutable] = await Promise.all([
-        cortex.conversations.create({
-          memorySpaceId: testMemorySpaceId,
-          type: "user-agent",
-          participants: { userId: testUserId, agentId: "test-agent" },
-        }),
+      const [fact, session, immutable] = await Promise.all([
         cortex.facts.store({
           memorySpaceId: testMemorySpaceId,
           fact: "Parallel test fact",
@@ -297,14 +344,23 @@ describeWithConvex("Cross-API TenantId Propagation E2E", () => {
       ]);
 
       // All should have the same tenantId
-      expect(conv.tenantId).toBe(testTenantId);
+      await expectRefusalNoEffects(
+        () =>
+          cortex.conversations.create({
+            memorySpaceId: testMemorySpaceId,
+            type: "user-agent",
+            participants: { userId: testUserId, agentId: "test-agent" },
+          }),
+        runtimeFixtures,
+        "conversations",
+        "CAPABILITY_NOT_READY",
+      );
       expect(fact.tenantId).toBe(testTenantId);
       expect(session.tenantId).toBe(testTenantId);
       expect(immutable.tenantId).toBe(testTenantId);
 
       // Cleanup
       await Promise.all([
-        cortex.conversations.delete(conv.conversationId),
         cortex.facts.delete(testMemorySpaceId, fact.factId),
         cortex.sessions.end(session.sessionId),
       ]);
@@ -353,65 +409,73 @@ describeWithConvex("Cross-API TenantId Propagation E2E", () => {
 
   describe("TenantId Propagation to Related Entities", () => {
     it("should propagate tenantId from conversation to messages", async () => {
-      const conv = await cortex.conversations.create({
-        memorySpaceId: testMemorySpaceId,
-        type: "user-agent",
-        participants: { userId: testUserId, agentId: "test-agent" },
-      });
-
-      // Add message to conversation
-      await cortex.conversations.addMessage({
-        conversationId: conv.conversationId,
-        message: {
-          role: "user",
-          content: "Test message for tenantId propagation",
-        },
-      });
-
-      // Retrieve conversation with messages
-      const retrieved = await cortex.conversations.get(conv.conversationId);
-
-      expect(retrieved?.tenantId).toBe(testTenantId);
-
-      // Cleanup
-      await cortex.conversations.delete(conv.conversationId);
+      await expectRefusalNoEffects(
+        () =>
+          cortex.conversations.create({
+            memorySpaceId: testMemorySpaceId,
+            type: "user-agent",
+            participants: { userId: testUserId, agentId: "test-agent" },
+          }),
+        runtimeFixtures,
+        "conversations",
+        "CAPABILITY_NOT_READY",
+      );
+      await expectRefusalNoEffects(
+        () =>
+          mutatePublic(
+            runtimeFixtures[0]!,
+            publicApi.conversations.addMessage,
+            {
+              memorySpaceId: testMemorySpaceId,
+              tenantId: testTenantId,
+              conversationId: "conv-uncommitted",
+              message: {
+                id: "msg-uncommitted",
+                role: "user",
+                content: "Test message for tenantId propagation",
+              },
+            },
+          ),
+        runtimeFixtures,
+        "conversations",
+        "CAPABILITY_NOT_READY",
+      );
     });
 
-    it("should propagate tenantId from memory to embeddings", async () => {
-      const conv = await cortex.conversations.create({
-        memorySpaceId: testMemorySpaceId,
-        type: "user-agent",
-        participants: { userId: testUserId, agentId: "test-agent" },
+    it("should preserve memory tenant and refuse unqualified embeddings", async () => {
+      const memory = await cortex.vector.store(testMemorySpaceId, {
+        content: "The capital of France is Paris",
+        contentType: "raw",
+        source: { type: "system" },
+        metadata: { importance: 50, tags: ["capital"], userId: testUserId },
       });
-
-      const result = await cortex.memory.remember({
-        memorySpaceId: testMemorySpaceId,
-        conversationId: conv.conversationId,
-        userMessage: "What is the capital of France?",
-        agentResponse: "The capital of France is Paris.",
-        userId: testUserId,
-        userName: "Test User",
-        agentId: "test-agent",
-      });
-
-      // Memory should have tenantId
-      expect(result.memories[0].tenantId).toBe(testTenantId);
-
-      // Recall should also respect tenantId
+      expect(memory.tenantId).toBe(testTenantId);
       const recalled = await cortex.memory.recall({
         memorySpaceId: testMemorySpaceId,
         query: "capital of France",
         limit: 10,
       });
-
-      recalled.items.forEach((item) => {
-        if (item.tenantId) {
-          expect(item.tenantId).toBe(testTenantId);
-        }
-      });
-
-      // Cleanup
-      await cortex.conversations.delete(conv.conversationId);
+      expect(recalled.items.some((item) => item.id === memory.memoryId)).toBe(
+        true,
+      );
+      await expectOwnedRecallItems(recalled.items, runtimeFixtures[0]!);
+      await expectRefusalNoEffects(
+        () =>
+          cortex.vector.store(testMemorySpaceId, {
+            content: "Unqualified embedding must not be published",
+            contentType: "raw",
+            source: { type: "system" },
+            embedding: Array.from({ length: 1536 }, () => 0.01),
+            metadata: {
+              importance: 50,
+              tags: ["embedding-refusal"],
+              userId: testUserId,
+            },
+          }),
+        runtimeFixtures,
+        "memories",
+        "PROFILE_NOT_READY",
+      );
     });
   });
 

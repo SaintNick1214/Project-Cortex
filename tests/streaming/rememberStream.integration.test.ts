@@ -10,8 +10,8 @@
  */
 
 import { describe, it, expect, beforeAll, afterAll } from "@jest/globals";
-import { Cortex } from "../../src";
-import { ConvexClient } from "convex/browser";
+import { Cortex } from "../helpers/deployment-operator";
+import { ConvexClient } from "../helpers/deployment-operator";
 
 // Test configuration
 const CONVEX_URL = process.env.CONVEX_URL || "http://127.0.0.1:3210";

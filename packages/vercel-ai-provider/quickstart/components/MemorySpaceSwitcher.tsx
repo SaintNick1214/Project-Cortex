@@ -1,5 +1,6 @@
 "use client";
 
+import { useAuth } from "./AuthProvider";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -8,18 +9,19 @@ interface MemorySpaceSwitcherProps {
   onChange: (value: string) => void;
 }
 
-const spaces = [
-  { id: "quickstart-demo", name: "Demo", icon: "🧪" },
-  { id: "personal", name: "Personal", icon: "👤" },
-  { id: "work", name: "Work", icon: "💼" },
-];
-
 export function MemorySpaceSwitcher({
   value,
   onChange,
 }: MemorySpaceSwitcherProps) {
+  const { user } = useAuth();
+  const spaces = (user?.allowedMemorySpaceIds || []).map((id, index) => ({
+    id,
+    name: index === 0 ? "My memory" : `Memory ${index + 1}`,
+    icon: "👤",
+  }));
   const [isOpen, setIsOpen] = useState(false);
   const currentSpace = spaces.find((s) => s.id === value) || spaces[0];
+  if (!currentSpace) return null;
 
   return (
     <div className="relative">

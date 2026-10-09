@@ -1,3 +1,5 @@
+import { serverRuntimeOptions } from "./server-credentials";
+import type { CortexServerCredentials } from "./types";
 /**
  * AI SDK v6 Compatibility Layer
  *
@@ -249,7 +251,9 @@ export function defaultMemoryContextFormatter(recallContext: string): string {
  * });
  * ```
  */
-export function createMemoryPrepareCall(config: MemoryInjectionConfig) {
+export function createMemoryPrepareCall(config: MemoryInjectionConfig, credentials?: CortexServerCredentials) {
+  const runtime = serverRuntimeOptions(credentials);
+  const protectedTransport = runtime !== undefined;
   const {
     convexUrl,
     maxMemories = 20,
@@ -297,7 +301,7 @@ export function createMemoryPrepareCall(config: MemoryInjectionConfig) {
 
     // Dynamic import to avoid bundling issues
     const { Cortex } = await import("@cortexmemory/sdk");
-    const cortex = new Cortex({ convexUrl });
+    const cortex = runtime ? new Cortex({ convexUrl }, runtime) : new Cortex({ convexUrl });
 
     try {
       // Use the recall() orchestration API - searches all layers in parallel
@@ -329,14 +333,17 @@ export function createMemoryPrepareCall(config: MemoryInjectionConfig) {
         messages,
       } as T;
     } catch (error) {
+      if (protectedTransport) throw new Error("Cortex protected memory recall failed.");
       // If memory recall fails, continue without augmentation
       console.warn("[Cortex] Memory recall failed:", error);
       return settings;
     } finally {
       // Always close the client to prevent connection/memory leaks
       try {
-        cortex.close();
+        if (protectedTransport) await cortex.shutdown();
+        else cortex.close();
       } catch {
+        if (protectedTransport) throw new Error("Cortex protected memory cleanup failed.");
         // Ignore close errors - best effort cleanup
       }
     }

@@ -14,7 +14,7 @@ import {
 } from "./runtimeAuth";
 import type {
   RuntimeAuthority, RuntimeAuthorityRequirement, RuntimeResource, RuntimeResourceType,
-} from "../src/auth/verified";
+} from "./lib/runtimeDomain/auth/verified";
 
 export type ArtifactRow = Doc<"artifacts">;
 type ArtifactState = Omit<ArtifactRow, "_id" | "_creationTime">;

@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
+import { getPublicShare } from "@/lib/db/queries";
 import { BotIcon, GlobeIcon, UserIcon } from "@/components/icons";
-import { getChatById, getMessagesByChatId } from "@/lib/db/queries";
 
 export const dynamic = "force-dynamic";
 
@@ -10,14 +10,13 @@ export default async function SharePage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const chat = await getChatById({ id });
-
-  // Access check: only show public conversations
-  if (chat?.visibility !== "public") {
-    notFound();
-  }
-
-  const messages = await getMessagesByChatId({ id });
+  const chat = await getPublicShare(id);
+  if (!chat) notFound();
+  const messages = chat.messages.map((message, index) => ({
+    id: String(index),
+    role: message.role,
+    parts: [{ type: "text", text: message.text }],
+  }));
 
   return (
     <div className="min-h-screen bg-background">
@@ -74,9 +73,9 @@ export default async function SharePage({
           <p>
             Shared on{" "}
             {new Date(chat.createdAt).toLocaleDateString("en-US", {
-              day: "numeric",
-              month: "long",
               year: "numeric",
+              month: "long",
+              day: "numeric",
             })}
           </p>
         </footer>

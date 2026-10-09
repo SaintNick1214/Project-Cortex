@@ -6,7 +6,7 @@ import type { MutationCtx, QueryCtx } from "./_generated/server";
 import type {
   RuntimeActorKind, RuntimeAuthority, RuntimeAuthorityReference, RuntimeAuthorityRequirement,
   RuntimeCapability, RuntimeResource, RuntimeResourceAccess, RuntimeResourceType,
-} from "../src/auth/verified";
+} from "./lib/runtimeDomain/auth/verified";
 import {
   runtimeActorKind, runtimeAuthorityReference, runtimeAuthorityRequirement,
   runtimeCapability, runtimeResourceAccess, runtimeResourceType,

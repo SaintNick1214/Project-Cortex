@@ -3,12 +3,10 @@ import { describe, expect, test } from "@jest/globals";
 import { defineTable } from "convex/server";
 import { v } from "convex/values";
 import schema from "../../../convex-dev/schema";
-import fs from "node:fs";
-import path from "node:path";
-import { execFileSync } from "node:child_process";
 
 
 import { fixture, native } from "./fixture";
+import { catalogFixture, historicalRepairSources, repairedHistoricalSources, sha256, withComposedCatalog, type NativeDefinition, type HistoricalRepair } from "../../helpers/backend-catalog";
 
 type NativeIndex = { indexDescriptor: string; fields: string[] };
 function duplicateIndexes(indexes: NativeIndex[]) {
@@ -26,19 +24,33 @@ describe("deployable native schema indexes", () => {
   });
 
   test("all exported tables, including runtime schema fragments, have unique index field sequences", () => {
-    fs.mkdirSync(path.resolve("work/resume/task04-current-catalog-release-c4/test-scratch"), { recursive: true });
-  const directory = fs.mkdtempSync(path.join(path.resolve("work/resume/task04-current-catalog-release-c4/test-scratch"), "cortex-current-schema-composition-"));
-    let baselineNames: string[];
-    try {
-      const composition = JSON.parse(execFileSync(process.execPath, ["_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-release-c4/current-compose.mjs", directory], { encoding: "utf8" }));
-      const baseline = JSON.parse(fs.readFileSync(composition.exactCurrentRepair.nativeWitness, "utf8"));
-      baselineNames = baseline.definitions.map((row: { table: string }) => row.table);
-      expect(composition.currentComposition.baselineProjectionHash).toBe("07df1b0be4647848a3e9fbd1eb9d27d81ad78194f77d3c447c7ee4f2de419b1d");
-      expect(composition.currentComposition.totals).toEqual({ baselineTables: 26, additiveTables: 5, currentTables: 31, indexes: 184, policyInternal: 16 });
-    } finally { fs.rmSync(directory, { recursive: true, force: true }); }
-    expect(fs.existsSync(directory)).toBe(false);
-    expect(baselineNames!).toHaveLength(26);
-    expect(Object.keys(schema.tables).filter(table => baselineNames!.includes(table))).toEqual(baselineNames!);
+    const historical = catalogFixture<{ classification: string; baselineProjectionHash: string; tables: NativeDefinition[]; registrations: Record<string, { isInternal: boolean; isPublic?: boolean }>; totals: Record<string, number> }>("policy-composition-historical.json");
+    expect(historical.classification).toBe("HISTORICAL_CURRENT_COMPOSITION_2026_10_03_ONLY");
+    expect(historical.baselineProjectionHash).toBe("07df1b0be4647848a3e9fbd1eb9d27d81ad78194f77d3c447c7ee4f2de419b1d");
+    expect(sha256(repairedHistoricalSources(historicalRepairSources())["convex-dev/schema.ts"])).toBe(historical.baselineProjectionHash);
+    expect(historical.totals).toEqual({ baselineTables: 26, additiveTables: 5, currentTables: 31, indexes: 184, policyInternal: 16 });
+    const baseline = catalogFixture<HistoricalRepair>("index-repair-historical.json").before.definitions;
+    const repaired = structuredClone(baseline);
+    const artifacts = repaired.find(table => table.table === "artifacts")!;
+    artifacts.exported.indexes = artifacts.exported.indexes.filter(index => index.indexDescriptor !== "by_runtime_scope");
+    expect(repaired).toHaveLength(26);
+    expect(historical.tables).toHaveLength(5);
+    const composed = [...repaired, ...historical.tables];
+    expect(composed).toHaveLength(31);
+    expect(composed.reduce((count, table) => count + table.exported.indexes.length, 0)).toBe(184);
+    for (const table of composed) expect(duplicateIndexes(table.exported.indexes)).toEqual([]);
+    expect(Object.values(historical.registrations)).toHaveLength(16);
+    for (const registration of Object.values(historical.registrations)) {
+      expect(registration.isInternal).toBe(true);
+      expect(registration.isPublic).toBeUndefined();
+    }
+    const baselineNames = baseline.map(table => table.table);
+    expect(Object.keys(schema.tables).filter(table => baselineNames.includes(table))).toEqual(baselineNames);
+    // Historical31 is explicit above. Every newer approved native fragment is
+    // checked below and copied exactly by the maintained current planner.
+    withComposedCatalog((_directory, files) => {
+      expect(files["schema.ts"].toString()).toContain("...runtimePolicyTables");
+    });
     for (const [table, definition] of Object.entries(schema.tables)) {
       expect({ table, duplicates: duplicateIndexes(definition[" indexes"]()) })
         .toEqual({ table, duplicates: [] });

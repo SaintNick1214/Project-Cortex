@@ -12,22 +12,26 @@ export async function proxy(request: NextRequest) {
     return new Response("pong", { status: 200 });
   }
 
-  if (pathname.startsWith("/api/auth")) {
+  if (pathname.startsWith("/api/auth") || pathname.startsWith("/share/")) {
     return NextResponse.next();
   }
 
   const token = await getToken({
     req: request,
     secret: process.env.AUTH_SECRET,
-    secureCookie: (
-      request.headers.get("x-forwarded-proto") ?? new URL(request.url).protocol
-    ).startsWith("https"),
+    // Match Auth.js cookie selection to the configured server origin.
+    secureCookie:
+      new URL(
+        process.env.AUTH_URL || process.env.CORTEX_APP_ORIGIN || request.url
+      ).protocol === "https:",
   });
 
   if (!token && ["/login", "/register"].includes(pathname)) {
     return NextResponse.next();
   }
-
+  if (!token && pathname.startsWith("/api/")) {
+    return Response.json({ error: "Unauthorized" }, { status: 401 });
+  }
   if (!token) {
     const redirectUrl = encodeURIComponent(request.url);
 

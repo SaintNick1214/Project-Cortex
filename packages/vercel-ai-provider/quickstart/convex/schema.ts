@@ -1,20 +1,17 @@
-/**
- * Convex schema for the quickstart demo
- *
- * This extends the Cortex SDK schema to add any demo-specific tables.
- * The actual memory tables (conversations, memories, facts) come from @cortexmemory/sdk.
- */
+// Managed canonical composition v1. App and SDK update channels are independent.
+import { defineSchema } from "convex/server";
+import cortexSchema from "./cortex.schema";
+import appSchema from "./app.schema";
 
-import { defineSchema, defineTable } from "convex/server";
-import { v } from "convex/values";
-
-export default defineSchema({
-  // Demo session tracking (optional, for demo purposes)
-  demoSessions: defineTable({
-    sessionId: v.string(),
-    userId: v.string(),
-    memorySpaceId: v.string(),
-    startedAt: v.number(),
-    messageCount: v.number(),
-  }).index("by_session", ["sessionId"]),
-});
+if (cortexSchema.schemaValidation !== true || appSchema.schemaValidation !== true) {
+  throw new Error("Canonical schemas must enable schema validation");
+}
+for (const name of Object.keys(cortexSchema.tables)) {
+  if (Object.prototype.hasOwnProperty.call(appSchema.tables, name)) {
+    throw new Error(`Duplicate canonical table: ${name}`);
+  }
+}
+export default defineSchema(
+  { ...cortexSchema.tables, ...appSchema.tables },
+  { schemaValidation: true, strictTableNameTypes: true },
+);

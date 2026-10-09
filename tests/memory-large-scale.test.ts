@@ -11,8 +11,8 @@
  * They are essential for validating SDK behavior at scale.
  */
 
-import { Cortex } from "../src";
-import { ConvexClient } from "convex/browser";
+import { Cortex } from "./helpers/deployment-operator";
+import { ConvexClient } from "./helpers/deployment-operator";
 import { createTestRunContext } from "./helpers/isolation";
 import { jest } from "@jest/globals";
 

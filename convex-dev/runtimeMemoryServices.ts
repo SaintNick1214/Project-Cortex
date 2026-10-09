@@ -1,9 +1,9 @@
 /** Modern memory operations share pure domain logic and required backend adapters. */
-import type { MemoryDomainAdapters, SourceLineage, TrustedMemoryScope, DerivedFact } from "../src/domain/contracts";
-import { DEFAULT_EMBEDDING_PROFILE, normalizeSourceText, semanticHash } from "../src/domain/profile";
-import { SOURCE_EXTRACTION_POLICY_VERSION, extractSourceFacts, prepareSourceContent, processingIdentityKey, validateModelEmbeddings } from "../src/domain/sources";
-import { deduplicateResults, factToRecallItem, formatForLLM, rankResults } from "../src/domain/recall";
-import type { RecallItem } from "../src/types/index";
+import type { MemoryDomainAdapters, SourceLineage, TrustedMemoryScope, DerivedFact } from "./lib/runtimeDomain/domain/contracts";
+import { DEFAULT_EMBEDDING_PROFILE, normalizeSourceText, semanticHash } from "./lib/runtimeDomain/domain/profile";
+import { SOURCE_EXTRACTION_POLICY_VERSION, extractSourceFacts, prepareSourceContent, processingIdentityKey, validateModelEmbeddings } from "./lib/runtimeDomain/domain/sources";
+import { deduplicateResults, factToRecallItem, formatForLLM, rankResults } from "./lib/runtimeDomain/domain/recall";
+import type { RecallItem } from "./lib/runtimeDomain/types/index";
 import { canonicalMemoryValue, memoryError } from "./runtimeMemoryRepository";
 
 export function assertMemoryRequestId(requestId: string): void {

@@ -1,445 +1,72 @@
-/**
- * Graph Orphan Detection
- *
- * Sophisticated orphan detection with circular reference protection.
- * Prevents deletion of nodes that are still referenced, even in circular graphs.
- */
-
-import type { GraphAdapter } from "../types";
-
-/**
- * Orphan detection rules for different node types
- */
-export interface OrphanRule {
-  /** Node types that must reference this node to keep it alive */
-  keepIfReferencedBy?: string[];
-
-  /** Never auto-delete this node type */
-  neverDelete?: boolean;
-
-  /** Only delete if explicitly requested (not cascaded) */
-  explicitOnly?: boolean;
+/** Managed orphan cleanup removes only proven derived Entity islands. Primary sources need captured deletion jobs. */
+import {GraphDatabaseError,type GraphAdapter,type GraphScope,type ManagedGraphTransaction} from "../types";
+import {derivedGraphIdentity} from "../identity";
+export interface OrphanRule {keepIfReferencedBy?:string[];neverDelete?:boolean;explicitOnly?:boolean}
+export const ORPHAN_RULES:Record<string,OrphanRule>={User:{neverDelete:true},Agent:{neverDelete:true},Participant:{neverDelete:true},MemorySpace:{neverDelete:true},Memory:{explicitOnly:true},Fact:{explicitOnly:true},Context:{explicitOnly:true},Conversation:{explicitOnly:true},Immutable:{explicitOnly:true},Mutable:{explicitOnly:true},Artifact:{explicitOnly:true},Entity:{keepIfReferencedBy:["Fact"]}};
+export interface DeletionContext {deletedNodeIds:Set<string>;reason:string;timestamp:number;orphanRules?:Record<string,OrphanRule>;scope?:GraphScope}
+export interface OrphanCheckResult {isOrphan:boolean;reason:string;referencedBy:string[];partOfCircularIsland:boolean;islandNodes?:string[]}
+export interface DeleteResult {deletedNodes:string[];deletedEdges:string[];orphanIslands:Array<{nodes:string[];reason:string}>}
+type Properties=Record<string,unknown>;
+const record=(value:unknown):Properties=>value&&typeof value==="object"&&!Array.isArray(value)?value as Properties:{};
+function entity(properties:Properties,scope:GraphScope):string {
+ if(properties.kind!=="Entity"||typeof properties.name!=="string"||typeof properties.type!=="string")throw new GraphDatabaseError("Unknown or non-derived graph node is preserved.","GRAPH_ERASURE_BLOCKED");
+ const expected=derivedGraphIdentity("Entity",properties.name,scope,properties.type);
+ for(const [key,value]of Object.entries(expected.properties))if(properties[key]!==value)throw new GraphDatabaseError("Foreign or legacy Entity is preserved.","GRAPH_ERASURE_BLOCKED");
+ return expected.key;
 }
-
-/**
- * Default orphan rules for each node type
- */
-export const ORPHAN_RULES: Record<string, OrphanRule> = {
-  // Conversations: Keep if referenced by Memory, Fact, or Context
-  Conversation: {
-    keepIfReferencedBy: ["Memory", "Fact", "Context"],
-  },
-
-  // Entities: Keep if referenced by any Fact
-  Entity: {
-    keepIfReferencedBy: ["Fact"],
-  },
-
-  // Users: Never auto-delete (shared across memory spaces)
-  User: {
-    neverDelete: true,
-  },
-
-  // Participants: Never auto-delete (Hive Mode participants)
-  Participant: {
-    neverDelete: true,
-  },
-
-  // Memory Spaces: Never auto-delete (critical isolation boundary)
-  MemorySpace: {
-    neverDelete: true,
-  },
-
-  // Primary entities: Only delete if explicitly requested
-  Memory: { explicitOnly: true },
-  Fact: { explicitOnly: true },
-  Context: { explicitOnly: true },
-};
-
-/**
- * Context for tracking deletions (prevents circular reference issues)
- */
-export interface DeletionContext {
-  /** Set of node IDs being deleted in this operation */
-  deletedNodeIds: Set<string>;
-
-  /** Reason for deletion (for logging/debugging) */
-  reason: string;
-
-  /** Timestamp of deletion */
-  timestamp: number;
-
-  /** Orphan rules to use (can be customized) */
-  orphanRules?: Record<string, OrphanRule>;
+async function selected(nodeId:string,nodeLabel:string,context:DeletionContext,adapter:GraphAdapter):Promise<{key:string;scope:GraphScope}|null> {
+ if(nodeLabel!=="Entity")return null;
+ if(context.orphanRules?.Entity?.neverDelete||context.orphanRules?.Entity?.explicitOnly)return null;
+ if(!context.scope||context.scope.tenantKnown!==true||typeof context.scope.memorySpaceId!=="string")throw new GraphDatabaseError("Derived orphan cleanup needs exact known tenant and space selection.","GRAPH_IDENTITY_REQUIRED");
+ const node=await adapter.getNode(nodeId);if(!node)return null;
+ return {key:entity(node.properties,context.scope),scope:context.scope};
 }
-
-/**
- * Result of orphan detection
- */
-export interface OrphanCheckResult {
-  /** Is this node an orphan? */
-  isOrphan: boolean;
-
-  /** Reason for orphan status */
-  reason: string;
-
-  /** IDs of nodes that reference this node */
-  referencedBy: string[];
-
-  /** Is this part of a circular orphan island? */
-  partOfCircularIsland: boolean;
-
-  /** If part of island, the full island node IDs */
-  islandNodes?: string[];
-}
-
-/**
- * Result of cascading delete operation
- */
-export interface DeleteResult {
-  /** IDs of all nodes deleted (including cascaded orphans) */
-  deletedNodes: string[];
-
-  /** IDs of all edges deleted */
-  deletedEdges: string[];
-
-  /** Orphan islands that were removed */
-  orphanIslands: Array<{
-    nodes: string[];
-    reason: string;
-  }>;
-}
-
-/**
- * Detect if a node is an orphan (safe for circular references)
- *
- * Algorithm:
- * 1. Check orphan rules (neverDelete, explicitOnly)
- * 2. Find all incoming references
- * 3. Filter out nodes being deleted and self-references
- * 4. Check if remaining references include "anchor" types
- * 5. If no external refs, check for circular orphan island
- *
- * @param nodeId Node ID to check
- * @param nodeLabel Node label (e.g., 'Conversation', 'Entity')
- * @param deletionContext Context of current deletion operation
- * @param adapter Graph database adapter
- * @returns Orphan check result
- */
-export async function detectOrphan(
-  nodeId: string,
-  nodeLabel: string,
-  deletionContext: DeletionContext,
-  adapter: GraphAdapter,
-): Promise<OrphanCheckResult> {
-  const rules = deletionContext.orphanRules ?? ORPHAN_RULES;
-  const rule: OrphanRule | undefined = rules[nodeLabel];
-
-  // Rule 1: Never delete certain node types
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  if (rule !== undefined && rule.neverDelete) {
-    return {
-      isOrphan: false,
-      reason: "Never delete rule",
-      referencedBy: [],
-      partOfCircularIsland: false,
-    };
+/** Lock selected derived nodes, inspect every incident edge, and refuse incomplete traversal. No primary cascade. */
+async function island(tx:ManagedGraphTransaction,start:string,scope:GraphScope,lock:boolean):Promise<{keys:string[];edges:string[];anchors:string[];circular:boolean}> {
+ const queue=[{key:start,depth:0}],seen=new Set<string>(),edges=new Set<string>(),anchors=new Set<string>();let circular=false;
+ while(queue.length) {
+  const next=queue.shift()!;if(seen.has(next.key)){circular=true;continue;}
+  if(seen.size>=64||next.depth>10)throw new GraphDatabaseError("Derived island exceeds the bounded traversal; no truncated cleanup is allowed.","GRAPH_QUERY_BUDGET");
+  const found=await tx.query(`MATCH (n:CortexV2Entity {key:$key}) ${lock?"SET n.key=n.key":""} RETURN properties(n) AS node`,{key:next.key});
+  if(found.count===0){if(next.key===start)return {keys:[],edges:[],anchors:[],circular:false};throw new GraphDatabaseError("Derived island changed during traversal.","GRAPH_ERASURE_BLOCKED");}
+  if(found.count!==1||entity(record(found.records[0].node),scope)!==next.key)throw new GraphDatabaseError("Derived identity is ambiguous.","GRAPH_ERASURE_BLOCKED");
+  seen.add(next.key);
+  const links=await tx.query("MATCH (n:CortexV2Entity {key:$key})-[r]-(other) RETURN properties(r) AS edge,properties(startNode(r)) AS source,properties(endNode(r)) AS target,properties(other) AS other,type(r) AS type LIMIT 65",{key:next.key});
+  if(links.count>64)throw new GraphDatabaseError("Derived incident degree exceeds the cleanup guard.","GRAPH_QUERY_BUDGET");
+  for(const row of links.records) {
+   const edge=record(row.edge),source=record(row.source),target=record(row.target),other=record(row.other);
+   if(edge.schemaVersion!==2||typeof edge.edgeKey!=="string"||typeof edge.ownerKey!=="string"||typeof edge.ownerTuple!=="string"||edge.sourceKey!==source.key||edge.sourceTuple!==source.tupleJson||edge.targetKey!==target.key||edge.targetTuple!==target.tupleJson)throw new GraphDatabaseError("Manual, foreign or legacy edge is preserved.","GRAPH_ERASURE_BLOCKED");
+   edges.add(edge.edgeKey as string);if(edges.size>128)throw new GraphDatabaseError("Derived island edge budget exceeded.","GRAPH_QUERY_BUDGET");
+   if(other.kind!=="Entity") {anchors.add(String(other.key));continue;}
+   const otherKey=entity(other,scope);
+   if(row.type!=="ENTITY_RELATION")throw new GraphDatabaseError("Unsupported derived relationship is preserved.","GRAPH_ERASURE_BLOCKED");
+   const owner=await tx.query("MATCH (s:CortexV2SourceState {key:$key}) RETURN properties(s) AS state",{key:edge.ownerKey});
+   if(owner.count!==1||record(owner.records[0].state).tupleJson!==edge.ownerTuple)throw new GraphDatabaseError("Relationship owner is unresolved; preserve the island.","GRAPH_ERASURE_BLOCKED");
+   if(record(owner.records[0].state).tombstoned!==true)anchors.add(edge.ownerKey as string);
+   if(seen.has(otherKey))circular=true;else queue.push({key:otherKey,depth:next.depth+1});
   }
-
-  // Rule 2: Only delete if explicitly requested (not cascaded)
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  if (rule !== undefined && rule.explicitOnly) {
-    return {
-      isOrphan: false,
-      reason: "Explicit delete only",
-      referencedBy: [],
-      partOfCircularIsland: false,
-    };
-  }
-
-  // Find all incoming references (nodes pointing TO this node)
-  type ReferenceRecord = {
-    referrerId: string;
-    refererLabel: string;
-    relationshipType: string;
-  };
-
-  const incoming = await adapter.query(
-    `
-    MATCH (referrer)-[r]->(target)
-    WHERE id(target) = $nodeId
-    RETURN id(referrer) as referrerId, 
-           labels(referrer)[0] as refererLabel,
-           type(r) as relationshipType
-  `,
-    { nodeId },
-  );
-
-  // Filter to external references (not being deleted, not self-reference)
-  const externalRefs = (
-    incoming.records as unknown as ReferenceRecord[]
-  ).filter(
-    (r) =>
-      !deletionContext.deletedNodeIds.has(r.referrerId) &&
-      r.referrerId !== nodeId,
-  );
-
-  // If no external references, check for circular island
-  if (externalRefs.length === 0) {
-    const islandCheck = await checkCircularIsland(
-      nodeId,
-      nodeLabel,
-      deletionContext,
-      adapter,
-    );
-
-    return {
-      isOrphan: true,
-      reason: islandCheck.isIsland ? "Circular orphan island" : "No references",
-      referencedBy: [],
-      partOfCircularIsland: islandCheck.isIsland,
-      islandNodes: islandCheck.islandNodes,
-    };
-  }
-
-  // Has external references - check if they're "anchor" types
-  const defaultAnchors: string[] = ["Memory", "Fact", "Context"];
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  const anchorLabels: string[] = rule
-    ? rule.keepIfReferencedBy || defaultAnchors
-    : defaultAnchors;
-  const hasAnchorRef = externalRefs.some((r) =>
-    anchorLabels.includes(r.refererLabel),
-  );
-
-  if (!hasAnchorRef) {
-    // Referenced only by non-anchor types
-    return {
-      isOrphan: true,
-      reason: "No anchor references",
-      referencedBy: externalRefs.map((r) => r.referrerId),
-      partOfCircularIsland: false,
-    };
-  }
-
-  return {
-    isOrphan: false,
-    reason: "Has anchor references",
-    referencedBy: externalRefs.map((r) => r.referrerId),
-    partOfCircularIsland: false,
-  };
+ }
+ return {keys:[...seen],edges:[...edges],anchors:[...anchors],circular};
 }
-
-/**
- * Check if node is part of a circular orphan island
- *
- * An orphan island is a group of nodes that reference each other (circular)
- * but have no external references to "anchor" nodes (Memory, Fact, Context).
- *
- * Example:
- *   Entity A -[:KNOWS]-> Entity B
- *   Entity B -[:KNOWS]-> Entity A
- *   Fact F1 -[:MENTIONS]-> Entity A
- *
- *   If F1 is deleted, A and B form an orphan island (circular but no anchor).
- *
- * @param nodeId Starting node
- * @param nodeLabel Node label
- * @param deletionContext Deletion context
- * @param adapter Graph adapter
- * @returns Island check result
- */
-async function checkCircularIsland(
-  nodeId: string,
-  nodeLabel: string,
-  deletionContext: DeletionContext,
-  adapter: GraphAdapter,
-): Promise<{ isIsland: boolean; islandNodes: string[] }> {
-  const visited = new Set<string>();
-  const islandNodes = new Set<string>([nodeId]);
-  const queue = [nodeId];
-  const maxDepth = 10; // Prevent infinite loops
-
-  // BFS to explore connected component
-  let depth = 0;
-  while (queue.length > 0 && depth < maxDepth) {
-    const currentBatch = [...queue];
-    queue.length = 0;
-
-    for (const current of currentBatch) {
-      if (visited.has(current)) continue;
-      visited.add(current);
-
-      // Find all neighbors (undirected - both incoming and outgoing)
-      type NeighborRecord = { neighborId: string; neighborLabel: string };
-
-      const neighbors = await adapter.query(
-        `
-        MATCH (n)--(neighbor)
-        WHERE id(n) = $currentId
-        RETURN DISTINCT id(neighbor) as neighborId,
-               labels(neighbor)[0] as neighborLabel
-      `,
-        { currentId: current },
-      );
-
-      for (const neighbor of neighbors.records as unknown as NeighborRecord[]) {
-        // Skip if being deleted
-        if (deletionContext.deletedNodeIds.has(neighbor.neighborId)) {
-          continue;
-        }
-
-        // Check if neighbor is an anchor type (Memory, Fact, Context)
-        if (["Memory", "Fact", "Context"].includes(neighbor.neighborLabel)) {
-          // Found anchor! This is NOT an orphan island
-          return { isIsland: false, islandNodes: [] };
-        }
-
-        // Add to island and continue BFS
-        if (!visited.has(neighbor.neighborId)) {
-          islandNodes.add(neighbor.neighborId);
-          queue.push(neighbor.neighborId);
-        }
-      }
-    }
-
-    depth++;
-  }
-
-  // Completed BFS with no anchors found = orphan island
-  return {
-    isIsland: true,
-    islandNodes: Array.from(islandNodes),
-  };
+export async function detectOrphan(nodeId:string,nodeLabel:string,context:DeletionContext,adapter:GraphAdapter):Promise<OrphanCheckResult> {
+ const target=await selected(nodeId,nodeLabel,context,adapter);
+ if(!target)return {isOrphan:false,reason:"Primary, protected or absent node; captured primary erasure is separate",referencedBy:[],partOfCircularIsland:false};
+ if(!adapter.managedRead)throw new GraphDatabaseError("Managed bounded graph reads are required.","GRAPH_SCHEMA_MIGRATION_REQUIRED");
+ const found=await island({query:adapter.managedRead.bind(adapter)},target.key,target.scope,false);
+ return {isOrphan:found.keys.length>0&&found.anchors.length===0,reason:found.anchors.length?"Preserved live references":"Proven derived island",referencedBy:found.anchors,partOfCircularIsland:found.circular,islandNodes:found.keys};
 }
-
-/**
- * Delete a node and cascade to orphaned references
- *
- * Uses sophisticated orphan detection to safely clean up related nodes
- * while protecting against circular references.
- *
- * @param nodeId Node to delete
- * @param nodeLabel Node label
- * @param deletionContext Deletion context
- * @param adapter Graph adapter
- * @returns Delete result with all cascaded deletions
- */
-export async function deleteWithOrphanCleanup(
-  nodeId: string,
-  nodeLabel: string,
-  deletionContext: DeletionContext,
-  adapter: GraphAdapter,
-): Promise<DeleteResult> {
-  const deletedNodes: string[] = [nodeId];
-  const deletedEdges: string[] = [];
-  const orphanIslands: Array<{ nodes: string[]; reason: string }> = [];
-
-  // Add this node to deletion context
-  deletionContext.deletedNodeIds.add(nodeId);
-
-  // 1. Get all nodes this node references (outgoing edges)
-  type ReferencedNodeRecord = {
-    refId: string;
-    refLabel: string;
-    edgeId: string;
-  };
-
-  const referencedNodes = await adapter.query(
-    `
-    MATCH (n)-[r]->(referenced)
-    WHERE id(n) = $nodeId
-    RETURN id(referenced) as refId, 
-           labels(referenced)[0] as refLabel,
-           id(r) as edgeId
-  `,
-    { nodeId },
-  );
-
-  // 2. Delete the primary node (detach delete removes all edges)
-  await adapter.deleteNode(nodeId, true);
-
-  // 3. Check each referenced node for orphan status
-  for (const ref of referencedNodes.records as unknown as ReferencedNodeRecord[]) {
-    const orphanCheck = await detectOrphan(
-      ref.refId,
-      ref.refLabel,
-      deletionContext,
-      adapter,
-    );
-
-    if (orphanCheck.isOrphan) {
-      if (orphanCheck.partOfCircularIsland && orphanCheck.islandNodes) {
-        // Delete entire orphan island
-        for (const islandNodeId of orphanCheck.islandNodes) {
-          if (!deletionContext.deletedNodeIds.has(islandNodeId)) {
-            await adapter.deleteNode(islandNodeId, true);
-            deletedNodes.push(islandNodeId);
-            deletionContext.deletedNodeIds.add(islandNodeId);
-          }
-        }
-
-        orphanIslands.push({
-          nodes: orphanCheck.islandNodes,
-          reason: orphanCheck.reason,
-        });
-      } else {
-        // Single orphan node - recursive delete with cascade
-        const cascadeResult = await deleteWithOrphanCleanup(
-          ref.refId,
-          ref.refLabel,
-          deletionContext,
-          adapter,
-        );
-
-        deletedNodes.push(...cascadeResult.deletedNodes);
-        deletedEdges.push(...cascadeResult.deletedEdges);
-        orphanIslands.push(...cascadeResult.orphanIslands);
-      }
-    }
-  }
-
-  return {
-    deletedNodes,
-    deletedEdges,
-    orphanIslands,
-  };
+export async function deleteWithOrphanCleanup(nodeId:string,nodeLabel:string,context:DeletionContext,adapter:GraphAdapter):Promise<DeleteResult> {
+ const target=await selected(nodeId,nodeLabel,context,adapter);
+ if(!target)throw new GraphDatabaseError("Orphan cleanup cannot delete a primary, protected or unknown node. Use its original captured delete job.","GRAPH_ERASURE_BLOCKED");
+ if(!adapter.managedTransaction)throw new GraphDatabaseError("Managed explicit transaction is required.","GRAPH_SCHEMA_MIGRATION_REQUIRED");
+ const result=await adapter.managedTransaction(async tx=>{
+  const found=await island(tx,target.key,target.scope,true);
+  if(found.anchors.length)throw new GraphDatabaseError("Live references preserve the derived island.","GRAPH_ERASURE_BLOCKED");
+  if(found.keys.length)await tx.query("MATCH (n:CortexV2Entity) WHERE n.key IN $keys AND n.schemaVersion=2 AND n.tenantTag=$tenantTag AND n.tenantValue=$tenantValue AND n.spaceTag='space' AND n.spaceValue=$space DETACH DELETE n",{keys:found.keys,tenantTag:target.scope.tenantId===null?"knownTenantless":"tenant",tenantValue:target.scope.tenantId??"",space:target.scope.memorySpaceId});
+  return {deletedNodes:found.keys,deletedEdges:found.edges,orphanIslands:found.circular?[{nodes:found.keys,reason:"Proven scoped derived island"}]:[]};
+ });
+ // V2 receipts use canonical derived keys; no engine-specific id arithmetic or primary identity substitution.
+ for(const key of result.deletedNodes)context.deletedNodeIds.add(key);return result;
 }
-
-/**
- * Create deletion context for tracking cascading deletes
- *
- * @param reason Reason for deletion
- * @param orphanRules Optional custom orphan rules
- * @returns Deletion context
- */
-export function createDeletionContext(
-  reason: string,
-  orphanRules?: Record<string, OrphanRule>,
-): DeletionContext {
-  return {
-    deletedNodeIds: new Set(),
-    reason,
-    timestamp: Date.now(),
-    orphanRules,
-  };
-}
-
-/**
- * Check if orphan cleanup is safe to run
- *
- * Validates that the graph database is accessible and ready for cleanup.
- *
- * @param adapter Graph adapter
- * @returns True if safe to run cleanup
- */
-export async function canRunOrphanCleanup(
-  adapter: GraphAdapter,
-): Promise<boolean> {
-  try {
-    const connected = await adapter.isConnected();
-    return connected;
-  } catch {
-    return false;
-  }
-}
+export function createDeletionContext(reason:string,orphanRules?:Record<string,OrphanRule>,scope?:GraphScope):DeletionContext {return {deletedNodeIds:new Set(),reason,timestamp:Date.now(),orphanRules,scope};}
+export async function canRunOrphanCleanup(adapter:GraphAdapter):Promise<boolean>{try{return !!adapter.managedTransaction&&await adapter.isConnected();}catch{return false;}}

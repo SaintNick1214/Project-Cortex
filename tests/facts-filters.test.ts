@@ -10,7 +10,7 @@
  */
 
 import { describe, it, expect, beforeAll, afterAll } from "@jest/globals";
-import { Cortex } from "../src/index";
+import { Cortex } from "./helpers/deployment-operator";
 
 // All valid factTypes as per schema
 const ALL_FACT_TYPES = [

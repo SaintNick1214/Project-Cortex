@@ -9,55 +9,40 @@
  */
 
 import { Cortex } from "../../src";
+import { createRuntimeFixture } from "../helpers/runtime-fixture";
 import { createTestRunContext } from "../helpers/isolation";
 import {
   generateTenantId,
   generateTenantUserId,
-  createTenantAuthContext,
 } from "../helpers/tenancy";
+import { expectConvexRefusal } from "../helpers/public-contract";
 
 // Test context for isolation
 const ctx = createTestRunContext();
 
-// Skip tests if no Convex URL configured
-const describeWithConvex = process.env.CONVEX_URL ? describe : describe.skip;
-
-describeWithConvex("Sessions Workflow E2E", () => {
+describe("Sessions Workflow E2E", () => {
   let cortex: Cortex;
-  let testTenantId: string;
-  let testUserId: string;
-  let testMemorySpaceId: string;
-
+  const testTenantId = generateTenantId("sess-e2e");
+  const testUserId = generateTenantUserId(testTenantId);
+  const testMemorySpaceId = `space_${ctx.runId}`;
+  // Every identity and owned space is fixed before provisioning. Actor changes
+  // require their own verified transport, never a userId argument as authority.
+  const actorPlans = {
+    main: { userId: testUserId, space: testMemorySpaceId },
+    returning: { userId: `${testUserId}-returning`, space: `${testMemorySpaceId}-returning` },
+    renewed: { userId: `${testUserId}-renewed`, space: `${testMemorySpaceId}-renewed` },
+    filtering: { userId: `${testUserId}-filtering`, space: `${testMemorySpaceId}-filtering` },
+    concurrent: { userId: `${testUserId}-concurrent`, space: `${testMemorySpaceId}-concurrent` },
+  };
+  const fixtures = new Map<keyof typeof actorPlans, Awaited<ReturnType<typeof createRuntimeFixture>>>();
+  const owned = (actor: keyof typeof actorPlans) => fixtures.get(actor)!;
   beforeAll(async () => {
-    testTenantId = generateTenantId("sess-e2e");
-    testUserId = generateTenantUserId(testTenantId);
-    testMemorySpaceId = `space_${ctx.runId}`;
-
-    const authContext = createTenantAuthContext(testTenantId, testUserId);
-
-    cortex = new Cortex({
-      convexUrl: process.env.CONVEX_URL!,
-      auth: authContext,
-    });
-
-    // Register memory space
-    await cortex.memorySpaces.register({
-      memorySpaceId: testMemorySpaceId,
-      name: "Sessions E2E Test Space",
-      type: "custom",
-    });
-  });
-
-  afterAll(async () => {
-    try {
-      await cortex.memorySpaces.delete(testMemorySpaceId, {
-        cascade: true,
-        reason: "Test cleanup",
-      });
-    } catch {
-      // Ignore cleanup errors
+    for (const [actor, plan] of Object.entries(actorPlans)) {
+      fixtures.set(actor as keyof typeof actorPlans, await createRuntimeFixture(testTenantId, plan.space, plan.userId));
     }
+    cortex = owned("main").cortex;
   });
+  afterAll(async () => { for (const fixture of fixtures.values()) await fixture.close(); });
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // Scenario 1: Basic User Session Lifecycle
@@ -80,26 +65,22 @@ describeWithConvex("Sessions Workflow E2E", () => {
       expect(session.status).toBe("active");
       expect(session.messageCount).toBe(0);
 
-      // Step 2: User performs activity
-      const conv = await cortex.conversations.create({
-        memorySpaceId: testMemorySpaceId,
-        type: "user-agent",
+      // Public transcript dispatch was deliberately closed in 9b811b04d.
+      // Session activity remains supported and does not imply transcript effects.
+      const beforeConversations = await owned("main").ownedRows("conversations");
+      const beforeMemories = await owned("main").ownedRows("memories");
+      await expectConvexRefusal(cortex.conversations.create({
+        memorySpaceId: testMemorySpaceId, type: "user-agent",
         participants: { userId: testUserId, agentId: "test-agent" },
-      });
-
-      // Touch session to record activity
+      }), "CAPABILITY_NOT_READY");
+      await expectConvexRefusal(cortex.memory.remember({
+        memorySpaceId: testMemorySpaceId, conversationId: `unavailable-${ctx.runId}`,
+        userMessage: "What's the weather like?", agentResponse: "I can help you check the weather!",
+        userId: testUserId, userName: "Test User", agentId: "test-agent",
+      }), "CAPABILITY_NOT_READY");
+      expect(await owned("main").ownedRows("conversations")).toEqual(beforeConversations);
+      expect(await owned("main").ownedRows("memories")).toEqual(beforeMemories);
       await cortex.sessions.touch(session.sessionId);
-
-      // Step 3: User sends messages
-      await cortex.memory.remember({
-        memorySpaceId: testMemorySpaceId,
-        conversationId: conv.conversationId,
-        userMessage: "What's the weather like?",
-        agentResponse: "I can help you check the weather!",
-        userId: testUserId,
-        userName: "Test User",
-        agentId: "test-agent",
-      });
 
       // Step 4: Verify session was updated
       const updatedSession = await cortex.sessions.get(session.sessionId);
@@ -115,8 +96,7 @@ describeWithConvex("Sessions Workflow E2E", () => {
       expect(endedSession?.status).toBe("ended");
       expect(endedSession?.endedAt).toBeDefined();
 
-      // Cleanup
-      await cortex.conversations.delete(conv.conversationId);
+
     });
   });
 
@@ -271,12 +251,12 @@ describeWithConvex("Sessions Workflow E2E", () => {
         memorySpaceId: testMemorySpaceId,
       });
 
-      // Create conversation in this session
-      const conv = await cortex.conversations.create({
-        memorySpaceId: testMemorySpaceId,
-        type: "user-agent",
+      const beforeConversations = await owned("main").ownedRows("conversations");
+      const beforeMemories = await owned("main").ownedRows("memories");
+      await expectConvexRefusal(cortex.conversations.create({
+        memorySpaceId: testMemorySpaceId, type: "user-agent",
         participants: { userId: testUserId, agentId: "test-agent" },
-      });
+      }), "CAPABILITY_NOT_READY");
 
       // Multiple interactions within the session
       const interactions = [
@@ -286,20 +266,22 @@ describeWithConvex("Sessions Workflow E2E", () => {
       ];
 
       for (const interaction of interactions) {
-        await cortex.memory.remember({
+        await expectConvexRefusal(cortex.memory.remember({
           memorySpaceId: testMemorySpaceId,
-          conversationId: conv.conversationId,
+          conversationId: `unavailable-${ctx.runId}`,
           userMessage: interaction.user,
           agentResponse: interaction.assistant,
           userId: testUserId,
           userName: "Test User",
           agentId: "test-agent",
-        });
+        }), "CAPABILITY_NOT_READY");
 
         // Touch session after each interaction
         await cortex.sessions.touch(session.sessionId);
       }
 
+      expect(await owned("main").ownedRows("conversations")).toEqual(beforeConversations);
+      expect(await owned("main").ownedRows("memories")).toEqual(beforeMemories);
       // Verify session activity
       const finalSession = await cortex.sessions.get(session.sessionId);
       expect(finalSession?.status).toBe("active");
@@ -308,8 +290,7 @@ describeWithConvex("Sessions Workflow E2E", () => {
       // End session
       await cortex.sessions.end(session.sessionId);
 
-      // Cleanup
-      await cortex.conversations.delete(conv.conversationId);
+
     });
   });
 
@@ -319,7 +300,8 @@ describeWithConvex("Sessions Workflow E2E", () => {
 
   describe("Scenario 5: Returning User (getOrCreate)", () => {
     it("should reuse existing active session for returning user", async () => {
-      const returningUserId = generateTenantUserId(testTenantId);
+      const returningUserId = actorPlans.returning.userId;
+      const cortex = owned("returning").cortex;
 
       // First visit - creates new session
       const firstVisit = await cortex.sessions.getOrCreate(returningUserId);
@@ -344,7 +326,8 @@ describeWithConvex("Sessions Workflow E2E", () => {
     });
 
     it("should create new session after previous was ended", async () => {
-      const userId = generateTenantUserId(testTenantId);
+      const userId = actorPlans.renewed.userId;
+      const cortex = owned("renewed").cortex;
 
       // First session
       const session1 = await cortex.sessions.getOrCreate(userId);
@@ -370,12 +353,13 @@ describeWithConvex("Sessions Workflow E2E", () => {
 
   describe("Scenario 6: Session Listing and Filtering", () => {
     const testSessions: Array<{ sessionId: string; status: string }> = [];
-    const scenarioUserId = generateTenantUserId(testTenantId);
+    const scenarioUserId = actorPlans.filtering.userId;
+    const sessions = () => owned("filtering").cortex.sessions;
 
     beforeAll(async () => {
       // Create multiple sessions with different states
       for (let i = 0; i < 5; i++) {
-        const session = await cortex.sessions.create({
+        const session = await sessions().create({
           userId: scenarioUserId,
           tenantId: testTenantId,
           metadata: { index: i },
@@ -384,15 +368,15 @@ describeWithConvex("Sessions Workflow E2E", () => {
       }
 
       // End some sessions
-      await cortex.sessions.end(testSessions[0].sessionId);
-      await cortex.sessions.end(testSessions[1].sessionId);
+      await sessions().end(testSessions[0].sessionId);
+      await sessions().end(testSessions[1].sessionId);
     });
 
     afterAll(async () => {
       // Cleanup remaining active sessions
       for (const session of testSessions) {
         try {
-          await cortex.sessions.end(session.sessionId);
+          await sessions().end(session.sessionId);
         } catch {
           // Ignore
         }
@@ -400,7 +384,7 @@ describeWithConvex("Sessions Workflow E2E", () => {
     });
 
     it("should list all sessions for user", async () => {
-      const allSessions = await cortex.sessions.list({
+      const allSessions = await sessions().list({
         userId: scenarioUserId,
       });
 
@@ -408,7 +392,7 @@ describeWithConvex("Sessions Workflow E2E", () => {
     });
 
     it("should filter by active status", async () => {
-      const activeSessions = await cortex.sessions.list({
+      const activeSessions = await sessions().list({
         userId: scenarioUserId,
         status: "active",
       });
@@ -419,7 +403,7 @@ describeWithConvex("Sessions Workflow E2E", () => {
     });
 
     it("should filter by ended status", async () => {
-      const endedSessions = await cortex.sessions.list({
+      const endedSessions = await sessions().list({
         userId: scenarioUserId,
         status: "ended",
       });
@@ -430,12 +414,12 @@ describeWithConvex("Sessions Workflow E2E", () => {
     });
 
     it("should count sessions by status", async () => {
-      const activeCount = await cortex.sessions.count({
+      const activeCount = await sessions().count({
         userId: scenarioUserId,
         status: "active",
       });
 
-      const endedCount = await cortex.sessions.count({
+      const endedCount = await sessions().count({
         userId: scenarioUserId,
         status: "ended",
       });
@@ -451,7 +435,8 @@ describeWithConvex("Sessions Workflow E2E", () => {
 
   describe("Scenario 7: Concurrent Session Operations", () => {
     it("should handle concurrent session creations", async () => {
-      const concurrentUserId = generateTenantUserId(testTenantId);
+      const concurrentUserId = actorPlans.concurrent.userId;
+      const cortex = owned("concurrent").cortex;
 
       // Simulate concurrent logins (e.g., user clicks login multiple times)
       const createPromises = Array(5)
@@ -498,4 +483,15 @@ describeWithConvex("Sessions Workflow E2E", () => {
       await cortex.sessions.end(session.sessionId);
     });
   });
+  it("refuses forged session actors and conceals another owned actor's space", async () => {
+    const before = await owned("main").ownedRows("sessions");
+    await expect(cortex.sessions.create({ userId: actorPlans.returning.userId, memorySpaceId: testMemorySpaceId }))
+      .rejects.toMatchObject({ data: { code: "FORBIDDEN" } });
+    expect(await owned("main").ownedRows("sessions")).toEqual(before);
+    const foreign = await owned("returning").cortex.sessions.create({ userId: actorPlans.returning.userId, memorySpaceId: actorPlans.returning.space });
+    expect(await cortex.sessions.get(foreign.sessionId)).toBeNull();
+    expect(await owned("returning").cortex.sessions.get(foreign.sessionId)).toMatchObject({ status: "active" });
+    await owned("returning").cortex.sessions.end(foreign.sessionId);
+  });
+
 });

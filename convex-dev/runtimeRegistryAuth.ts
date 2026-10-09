@@ -2,7 +2,7 @@
 import { ConvexError, v, convexToJson, type GenericValidator, type Value, type JSONValue } from "convex/values";
 import type { QueryCtx, MutationCtx } from "./_generated/server";
 import type { Doc } from "./_generated/dataModel";
-import type { RuntimeAuthority, RuntimeAuthorityRequirement, RuntimeCapability, RuntimeResource } from "../src/auth/verified";
+import type { RuntimeAuthority, RuntimeAuthorityRequirement, RuntimeCapability, RuntimeResource } from "./lib/runtimeDomain/auth/verified";
 import { resolveAuthority, resolveAuthorityReference, createAuthorityReader, type AuthorityReader, type TombstoneKey } from "./runtimeAuth";
 import schema from "./schema";
 

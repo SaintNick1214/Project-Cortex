@@ -6,7 +6,7 @@
 
 import { internalMutation, mutation, query, type QueryCtx } from "./_generated/server";
 import type { Doc } from "./_generated/dataModel";
-import type { RuntimeAuthority } from "../src/auth/verified";
+import type { RuntimeAuthority } from "./lib/runtimeDomain/auth/verified";
 import { requireAuthority, recheckAuthority } from "./runtimeAuth";
 import { authorityReference, boundedInteger, deleteMaintenanceRecord, matchesValidator, workerDeny } from "./runtimeWorkerAuth";
 import { v, type Infer } from "convex/values";

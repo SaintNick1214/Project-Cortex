@@ -6,16 +6,16 @@ import { createDocumentHandler } from "@/lib/artifacts/server";
 
 export const sheetDocumentHandler = createDocumentHandler<"sheet">({
   kind: "sheet",
-  onCreateDocument: async ({ title, dataStream }) => {
+  onCreateDocument: async ({ title, instructions, dataStream }) => {
     let draftContent = "";
 
     const { fullStream } = streamObject({
       model: getArtifactModel(),
-      prompt: title,
+      system: sheetPrompt,
+      prompt: instructions?.trim() ? `Title: ${title}\n\nRequested content and requirements:\n${instructions}` : title,
       schema: z.object({
         csv: z.string().describe("CSV data"),
       }),
-      system: sheetPrompt,
     });
 
     for await (const delta of fullStream) {
@@ -27,9 +27,9 @@ export const sheetDocumentHandler = createDocumentHandler<"sheet">({
 
         if (csv) {
           dataStream.write({
+            type: "data-sheetDelta",
             data: csv,
             transient: true,
-            type: "data-sheetDelta",
           });
 
           draftContent = csv;
@@ -38,9 +38,9 @@ export const sheetDocumentHandler = createDocumentHandler<"sheet">({
     }
 
     dataStream.write({
+      type: "data-sheetDelta",
       data: draftContent,
       transient: true,
-      type: "data-sheetDelta",
     });
 
     return draftContent;
@@ -50,11 +50,11 @@ export const sheetDocumentHandler = createDocumentHandler<"sheet">({
 
     const { fullStream } = streamObject({
       model: getArtifactModel(),
+      system: updateDocumentPrompt(document.content, "sheet"),
       prompt: description,
       schema: z.object({
         csv: z.string(),
       }),
-      system: updateDocumentPrompt(document.content, "sheet"),
     });
 
     for await (const delta of fullStream) {
@@ -66,9 +66,9 @@ export const sheetDocumentHandler = createDocumentHandler<"sheet">({
 
         if (csv) {
           dataStream.write({
+            type: "data-sheetDelta",
             data: csv,
             transient: true,
-            type: "data-sheetDelta",
           });
 
           draftContent = csv;

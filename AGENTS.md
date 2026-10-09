@@ -23,7 +23,7 @@ do not restore the removed `Documentation/` tree or edit the website without tas
 | `packages/vercel-ai-provider/quickstart/` | Canonical Next.js demo; separate install outside npm workspaces |
 | `packages/cortex-cli/templates/basic/` | Basic scaffold; separate checks/install |
 | `packages/cortex-cli/templates/chat-sdk-quickstart/` | Chat scaffold; separate checks/install |
-| `packages/cortex-cli/templates/vercel-ai-quickstart/` | Generated mirror of the canonical demo |
+| `packages/cortex-templates/` | Independently versioned canonical application catalog |
 
 Root npm workspaces include the root and `packages/*`. Current active manifests require
 Node >=24.15.0 and declare npm 12.2.0. Use their current scripts and lockfiles. The current
@@ -51,11 +51,13 @@ an automatic backend deployment. Do not initialize a deployment or regenerate bi
 just to satisfy an unrelated check. Verify generated imports when changing backend APIs.
 
 - Root: `npm run lint`, `npm run build`, and `npm run test:contracts`.
-- CLI: its own lint, build and `test:unit` scripts. Its `prebuild` synchronizes the demo
-  mirror, so inspect generated diffs and protect unrelated template work.
+- CLI: its own lint, build and `test:unit` scripts. Build compiles without synchronizing
+  templates; SDK and application-template updates use separate channels.
+- Catalog: `npm run assemble` deliberately refreshes canonical payloads for a release;
+  `npm test`, `npm run typecheck` and `npm run lint` validate the catalog package.
 - Provider: its own lint, build and `test:unit` scripts, including React exports.
 - Demo/templates: inspect each package's scripts; they are separate installs. Chat scaffold
-  uses npm/Vitest. The basic scaffold's `build` runs offline TypeScript; its separate
+  uses pnpm/Vitest. The basic scaffold's `build` runs offline TypeScript; its separate
   `build:convex` deploys Convex and requires deployment authorization.
 
 After behavior changes run affected code-quality and applicable module/UI QA. A requested

@@ -461,6 +461,8 @@ export function validateDeleteUserOptions(
       "options.dryRun",
     );
   }
+  resolveDomainScope(undefined, options.tenantId);
+  if(options.signal!==undefined && !(options.signal instanceof AbortSignal))throw new UserValidationError("options.signal must be an AbortSignal","INVALID_DELETE_OPTIONS","signal");
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -647,5 +649,44 @@ export function validateExportOptions(
   // Validate filters if provided
   if (options.filters !== undefined) {
     validateUserFilters(options.filters);
+  }
+}
+
+/** Preserve exact caller-selected scope; caller context is not authentication. */
+export function resolveDomainScope(context: string | undefined, selected?: string): string | undefined {
+  for (const tenant of [context, selected]) {
+    if (tenant !== undefined && (typeof tenant !== "string" || tenant.trim().length === 0 || tenant.length > 256)) {
+      throw new UserValidationError("Invalid tenant scope", "INVALID_TENANT_ID", "tenantId");
+    }
+  }
+  if (context !== undefined && selected !== undefined && context !== selected) {
+    throw new UserValidationError("Tenant scope conflicts with current context", "TENANT_SCOPE_MISMATCH", "tenantId");
+  }
+  return selected ?? context;
+}
+
+/** Count supports only the flat profile scope and four numeric date cutoffs. */
+export function validateUserCountFilter(filters: UserFilters | undefined): void {
+  if (filters === undefined) return;
+  if (filters === null || typeof filters !== "object" || Array.isArray(filters) || Object.getPrototypeOf(filters) !== Object.prototype) {
+    throw new UserValidationError("Count filters must be a plain object", "INVALID_COUNT_FILTER", "filters");
+  }
+  const allowed = new Set(["tenantId", "createdAfter", "createdBefore", "updatedAfter", "updatedBefore"]);
+  for (const key of Reflect.ownKeys(filters)) {
+    if (typeof key !== "string" || !allowed.has(key)) throw new UserValidationError("Unsupported count filter", "INVALID_COUNT_FILTER", "filters");
+  }
+  for (const key of ["createdAfter", "createdBefore", "updatedAfter", "updatedBefore"] as const) {
+    if (filters[key] !== undefined) validateTimestamp(filters[key], key);
+  }
+  for (const [after, before] of [["createdAfter", "createdBefore"], ["updatedAfter", "updatedBefore"]] as const) {
+    if (filters[after] !== undefined && filters[before] !== undefined && filters[after] >= filters[before]) {
+      throw new UserValidationError("Invalid count date range", "INVALID_DATE_RANGE", after);
+    }
+  }
+}
+
+export function validateUserCountResult(result: unknown): asserts result is number {
+  if (typeof result !== "number" || !Number.isFinite(result) || !Number.isInteger(result) || result < 0) {
+    throw new UserValidationError("Invalid profile count response", "INVALID_COUNT_RESPONSE");
   }
 }
