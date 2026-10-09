@@ -1,0 +1,1159 @@
+{
+  "schema": "cortex.finite-checkpoint.v1",
+  "checkpoint": 63,
+  "createdAtUtc": "2026-10-09T02:37:38.481Z",
+  "parentHead": "d872f768548be3da1783ac9ee613baa187cbd7d3",
+  "sourceFiles": 7,
+  "selectedFiles": 227,
+  "closedEvidenceIndices": [
+    "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/cli-native-index1.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/basic-native-index1.json",
+    "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task14-client-functional-v2-20261008/native-actual/current-native-successor-index2.json"
+  ],
+  "coverage": "P8 legacy-search hydration/action/SDK expiry repair with unchanged independent regression; four previously granted original13/14 criteria and current43/61 tracker; closed installedCLI+Basic/current14 successor evidence; modern source docs with exact compiled examples. Static/control and actual scopes remain distinct.",
+  "excluded": [
+    "Active15C content/client/template source and open evidence",
+    "Active16 CI source and open evidence",
+    "Primary dirty checkout and unrelated sibling work",
+    "Private credentials, temporary packages and historical only-copy backing"
+  ],
+  "fullGoalComplete": false,
+  "sensitivePatternHits": [],
+  "files": [
+    {
+      "path": "README.md",
+      "bytes": 8563,
+      "sha256": "3af8bcec12b586100dc6da6ec2a6da9666bf1ed18e5bc09b3135a6c5208fad0c"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/completion-current.json",
+      "bytes": 21750,
+      "sha256": "11adb5357216e41e39d9ca4fb3edb36c67e135984847aa3245797f16fb2b0b1a"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/completion-milestones.jsonl",
+      "bytes": 251731,
+      "sha256": "ddf67d0e00cbaed3b0e647c4c064f8eec0aeb4501dfd41e01f9e7477fd3cbd16"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/completion-tracking-validation.json",
+      "bytes": 12880,
+      "sha256": "f96e51025cb5a10118823c190f14b1d6358b3082e4c613867cfd36ed0e997ea6"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/execution-progress.md",
+      "bytes": 387804,
+      "sha256": "d63575fcc133350fa2f3b4c341d713e8a2319be45dab9e9cee71d2159a32dc4f"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-media-functional-v2-20261008/native-actual/actual-agent-media-v2-qualification-record1.json",
+      "bytes": 154958,
+      "sha256": "1c0c6f88a69c1f37e46a3efebc0960e290695451e1a4723724ea0c5c5bfe2101"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-media-functional-v2-20261008/native-actual/agent-media-native-addendum1.json",
+      "bytes": 11129,
+      "sha256": "a42a5461340a2b008365c3a8cfad61e10e60d5d49901badd5e745b2e0b745b18"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-media-functional-v2-20261008/native-actual/async-docs-refresh-20261009.json",
+      "bytes": 841,
+      "sha256": "b4c80bd22234fb99518a330443d0bca62600459a365d2eaacb43d32bf3def22d"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-media-functional-v2-20261008/native-actual/deploy-agent-media-restored1.json",
+      "bytes": 644,
+      "sha256": "79b5c6cdc5c06d1f9dc683f349e55c41901f3e26384fed98e52c5e9a4a3b9f45"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-media-functional-v2-20261008/native-actual/installed-agent-media-restored1-source-manifest.json",
+      "bytes": 29284,
+      "sha256": "d0687fac4c47736c95f6d4875b00cb4dc90ac762a1e56f4a85a7f0abfe35f01d"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-anchor-finding1.json",
+      "bytes": 2983,
+      "sha256": "5882c3c26a9db613804f16279e866c1d8a1c50b90ccd08228943d540a5961660"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-anchor-independent1.test.ts",
+      "bytes": 1723,
+      "sha256": "f7e0d1cd5e7d1be087b2fe49a1b2d0f5a94a148ae5ca5b19fb1bedc1d056cbd3"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-anchor-independent2.test.ts",
+      "bytes": 1980,
+      "sha256": "29686674eeec8261d125ff5061d1bf474bd9b6f476aeb1bb3d0b70e10fe7d460"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-anchor-run1.command.json",
+      "bytes": 1756,
+      "sha256": "4a421709b21a74756b35f050f4445e7c94597da4d959c055df58e420c1d7ad26"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-anchor-run1.results.json",
+      "bytes": 4550,
+      "sha256": "4a4ce111d455f032e3d558e95f989cd2825b21c18a32f3bc88486f787d391a53"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-anchor-run1.stderr.txt",
+      "bytes": 2603,
+      "sha256": "93f2ba3893570654e8c5c28fad65085fae26e9493556356e36176105b0bd24d0"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-anchor-run1.stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-anchor-run2.command.json",
+      "bytes": 1757,
+      "sha256": "2484262eca290ee67ac60f11e35a390841df4e0c443fa4cb9f3f1ae8d48f55db"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-anchor-run2.results.json",
+      "bytes": 3300,
+      "sha256": "41a9b806f4c07b3dfb469793b5a789416065016b09cfbb94539ad8a8902064f7"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-anchor-run2.stderr.txt",
+      "bytes": 1952,
+      "sha256": "9c2059d919038aa2bc8b43aa17308048526c17db6cbffbb05a9a676c923d74e8"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-anchor-run2.stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-anchor-run3.command.json",
+      "bytes": 1756,
+      "sha256": "7cfb7bc32e09e4c09ad16620ee4efac6afe953e646a3899f5b208d85ca4b085e"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-anchor-run3.results.json",
+      "bytes": 1344,
+      "sha256": "32e650b9f99118782a09e56717424930daa67a93998c0584d2cfea12cd7a61f0"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-anchor-run3.stderr.txt",
+      "bytes": 988,
+      "sha256": "7284a80fc21644b50f812c63ad7e6f8d3c431936a4b7994123fb8b4af3fb3c7c"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-anchor-run3.stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-currentness-independent1.test.ts",
+      "bytes": 1646,
+      "sha256": "7f26632494ce9b43ac93cff229bbd0b7bc5fdc4245b61ad1b79d33f579dd2a54"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-currentness-independent2.test.ts",
+      "bytes": 1656,
+      "sha256": "0f10d9bd2728aa0e47e166b3445b069fbf109902e786a315c8e644d7e9a6731f"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-currentness-run1.command.json",
+      "bytes": 1757,
+      "sha256": "ee6394435a545ce5d40643f9837ce6be1ccb0b3cdd52ad670f80abdb3f8d596e"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-currentness-run1.results.json",
+      "bytes": 6911,
+      "sha256": "a4eb5b005103ddd559f9caea52f2e215fa890eee861278266d9f5b7f18ec4fc9"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-currentness-run1.stderr.txt",
+      "bytes": 2598,
+      "sha256": "003ce1a00192360aa60eb65d757963223628233bf0a2b007bda3e881fadd50f5"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-currentness-run1.stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-currentness-run2.command.json",
+      "bytes": 1758,
+      "sha256": "c1562b87a5d7d27902fb4ad244f93b444c2a0049d7c4896e3414cfb36527a2b7"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-currentness-run2.results.json",
+      "bytes": 2862,
+      "sha256": "9dc6e8e6767acf79107d01f7dace9b97bee32929392fa051d353fb475c81b304"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-currentness-run2.stderr.txt",
+      "bytes": 1847,
+      "sha256": "00591a0e8b0deabefcd2cfb81e40e873a7b1e32dfbb96e1265f29f95a408e569"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-currentness-run2.stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-currentness-run3.command.json",
+      "bytes": 1759,
+      "sha256": "357a5aca4f42bdf252334121010bc12745c190ac3d199ea5b212087d9a02ddc0"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-currentness-run3.results.json",
+      "bytes": 1357,
+      "sha256": "86009cbabb0f0fa054b64e903aab59e5cf1271272728010c45974b21cd498afe"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-currentness-run3.stderr.txt",
+      "bytes": 1013,
+      "sha256": "05406a4600d68869866485bb9d7d7b23f3cc245e8a0a892dfb0ba751aa5256a2"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-currentness-run3.stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-finding1.json",
+      "bytes": 3847,
+      "sha256": "c556aaa22aac3b0af5ada3c9e6d92d2b5a8ae9cbb8b0c118585c47901afe56fa"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-permission-independent1.test.ts",
+      "bytes": 2491,
+      "sha256": "78925d5e0d5392212ffb2ee15b060853c991490308663a84addd55616a425d7d"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-permission-run1.command.json",
+      "bytes": 1764,
+      "sha256": "bfea3e0a4fa355c979ff66b6141ceb2da5ed7b7b622247075605474dc2ffbed8"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-permission-run1.results.json",
+      "bytes": 3397,
+      "sha256": "4163c9bd64efd96964dce65046b9e38ed29003776757a45ffecf8a29f15ed35f"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-permission-run1.stderr.txt",
+      "bytes": 2051,
+      "sha256": "1df196c261cd36590230c07b721916e173f75093d2a3822f99b1cd5111f91f7c"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-permission-run1.stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-permission-run2.command.json",
+      "bytes": 1764,
+      "sha256": "c4ad4cf68bc23a24a054af852593296f2321198125daf6d6ab3de841053b2527"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-permission-run2.results.json",
+      "bytes": 1356,
+      "sha256": "226760e11d8bc70d2539e8826f65a4164472ae043f3fe7e707d5ce7c02a77038"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-permission-run2.stderr.txt",
+      "bytes": 1010,
+      "sha256": "bc3ec106b25d8ed0817d9cf1f58c926a619e08e98a36e0898dbe867fe724a43a"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-permission-run2.stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/findings1.json",
+      "bytes": 4013,
+      "sha256": "a46a47994b556f0fb7e06f5b34c43ffe2c1787f83340678ea9ce9ed017be31a2"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/independent.config.mjs",
+      "bytes": 493,
+      "sha256": "e174005e8715316f23ff1c37128e58984129a4c20e8f3ba63c9e03bdc624707c"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/legacy-search-action-expiry-finding1.json",
+      "bytes": 3264,
+      "sha256": "357250c85fd689c4316f4bca2961fbeb84b3699eb643dc778fc5f434ffdd4fc0"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/legacy-search-action-expiry-independent1.test.ts",
+      "bytes": 2007,
+      "sha256": "46e4d4843a3bc052b5ba84e4ca38dc7ef2aa7da344095cf5a7831ed1b3a3aa9e"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/legacy-search-action-expiry-repair-outcome1.json",
+      "bytes": 7504,
+      "sha256": "eb53d0d239794be73647bc70d39f87f527444738753ac22555c02ebbe870c494"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/legacy-search-action-expiry-repair-outcome1.md",
+      "bytes": 1460,
+      "sha256": "d643fd7b4b85c0abb29b45c91b8f69785e538bbdf16a9eab78578ddcbdf44aae"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/legacy-search-action-expiry-run1.command.json",
+      "bytes": 1744,
+      "sha256": "02060303dade7a1909ec0b9f6b3619694d2f749b7dd218bb4d3cb3b587c8486d"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/legacy-search-action-expiry-run1.results.json",
+      "bytes": 6434,
+      "sha256": "352d898886b9835d34a39c5a3229152c3ff5dfc46fb927ff8d9ebb9119213be2"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/legacy-search-action-expiry-run1.stderr.txt",
+      "bytes": 3339,
+      "sha256": "adf70d1f9c08f046cfc78277d9cf1d06c30c7aa497ade1c311865d099e1df5fc"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/legacy-search-action-expiry-run1.stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/legacy-search-action-expiry-run2.command.json",
+      "bytes": 1745,
+      "sha256": "35d4f13ae4c795334ad333f30815da6eb92889e09594c39b284c6602a9c60e87"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/legacy-search-action-expiry-run2.results.json",
+      "bytes": 1757,
+      "sha256": "3350f3563e58d183a3991292ea2ba5b4600c1ec8f6c151a3af6f8e3fcd80f7b7"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/legacy-search-action-expiry-run2.stderr.txt",
+      "bytes": 1537,
+      "sha256": "465ca801b551fc79096ee891b9b084777102a05029937f4d779e1375d24d76d6"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/legacy-search-action-expiry-run2.stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/media-cursor-currentness-independent1.test.ts",
+      "bytes": 1987,
+      "sha256": "5a468c50220756bfbf0d09dacd4d706b66d5b6ed984f06374524a2f66057a309"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/media-cursor-currentness-run1.command.json",
+      "bytes": 1746,
+      "sha256": "c3b85f72d1a3fe58c16fc58ddba6742b8d13f86504e67a24a4fce9045459cdf7"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/media-cursor-currentness-run1.results.json",
+      "bytes": 5756,
+      "sha256": "27f0aa6b7555c37d2d2a047d492385a2a28cb84d3ab6f3870f344865edf0b5cf"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/media-cursor-currentness-run1.stderr.txt",
+      "bytes": 2798,
+      "sha256": "8466f47f5c977d1b2836abc1422b37010b7b96c026ae9191857af2057a0c9577"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/media-cursor-currentness-run1.stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/media-cursor-currentness-run2.command.json",
+      "bytes": 1746,
+      "sha256": "3ae99d28a53c9d7ec7918388171413420f06533004c754bcbfbed36189230cb3"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/media-cursor-currentness-run2.results.json",
+      "bytes": 1352,
+      "sha256": "160e2d13f775f2731dcdbfa7c3efb37a969cdb829411ce0c08e882fc5f69152a"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/media-cursor-currentness-run2.stderr.txt",
+      "bytes": 993,
+      "sha256": "608dc071b11116978e38bf4336323ed9010500a5766a660fd4c24aea8c27006e"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/media-cursor-currentness-run2.stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/media-expiry-independent1.test.ts",
+      "bytes": 3217,
+      "sha256": "7f3ccf8d9527572accc65f12c423b12173bbd49cdd67868dd797ed5c05b5a66f"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/media-expiry-independent2.test.ts",
+      "bytes": 3208,
+      "sha256": "552b14d4e3d091e847d61fe76de7b8612bfa83c5f4bbd6706abf6eef8c0ce75c"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/media-expiry-run1.command.json",
+      "bytes": 2720,
+      "sha256": "4250f4f4e4f222c20a9b4b8e848f907db8bc6d85043b6b751ee9c967cbdeb8a2"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/media-expiry-run1.results.json",
+      "bytes": 1265,
+      "sha256": "603749c3b2fd5fa85357462f98828a2a80cdb9edc142166b22ecef95d6f3f952"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/media-expiry-run1.stderr.txt",
+      "bytes": 1185,
+      "sha256": "fb023398ec306cf752c0bf1a469985d1d1d53ecbd8da2e8f6d89182d7bd54c5c"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/media-expiry-run1.stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/media-expiry-run2.command.json",
+      "bytes": 1730,
+      "sha256": "f12cbae9b2ed32fdc870cb1c00785157fa8819ec689c284dba6858ae869f45e6"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/media-expiry-run2.results.json",
+      "bytes": 4883,
+      "sha256": "3e344d49ac0959b4d0e6d890fe1ca26bd5aaad4aff110732ad79a0185e8fefaa"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/media-expiry-run2.stderr.txt",
+      "bytes": 2795,
+      "sha256": "527b42e9064fdd9943bdf8cc8ae7cf0238c1ac07c2a856b02db4f001558dedb0"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/media-expiry-run2.stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/media-expiry-run3.command.json",
+      "bytes": 1730,
+      "sha256": "436f8da4db0be94c62bd42e3027cd8abcae415db5270fc9e762c8ecf6db1f156"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/media-expiry-run3.results.json",
+      "bytes": 2194,
+      "sha256": "f63118c2a3dda3e6b3eef23e2b5a6daa731609402facf7c4e3ea8ee549976ea0"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/media-expiry-run3.stderr.txt",
+      "bytes": 1178,
+      "sha256": "829070d0884fc62914a57c0c34e7fc3c2605e427c2dbbeeafb8729bd63db756f"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/media-expiry-run3.stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/media-metadata-expiry-independent1.test.ts",
+      "bytes": 1314,
+      "sha256": "cf2efb069a8f4cb80d3fb14d7cefe2d9bd375cb44e4805102890c46bc87d5b82"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/media-metadata-expiry-independent2.test.ts",
+      "bytes": 1428,
+      "sha256": "1743f904b24c3cc4f4c3950e4d9f08563790b21952bbd91ceb8cbbfe8dd2001a"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/media-metadata-expiry-run1.command.json",
+      "bytes": 1749,
+      "sha256": "ac7fee4a4f1a112c9b3058817b51eb7b5e0e6e898ff420de2e7a41c0d0b45d6e"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/media-metadata-expiry-run1.results.json",
+      "bytes": 1097,
+      "sha256": "abe8045806dc30d3669b402f663dca70c2d79adac9c5d05eb3fe57ce5cc01095"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/media-metadata-expiry-run1.stderr.txt",
+      "bytes": 1034,
+      "sha256": "138fe13f0506342907d8cd2c10bcdec37ac4bd8fedc3785defb988f9a2407d62"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/media-metadata-expiry-run1.stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/media-metadata-expiry-run2.command.json",
+      "bytes": 1748,
+      "sha256": "9d9739f28fd0e8696681fe3e23d8fde40aecff9754c60d75d9069c7337989255"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/media-metadata-expiry-run2.results.json",
+      "bytes": 3918,
+      "sha256": "8c97e51a448138d4ee3e3d7c91603552bbd92f57eec4b13136bfb8a8fa0a9b3d"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/media-metadata-expiry-run2.stderr.txt",
+      "bytes": 2103,
+      "sha256": "a49f1d74a25e3666d316369f8185c72183360f6e974a70ec95bef20a62a98f8d"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/media-metadata-expiry-run2.stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/media-metadata-expiry-run3.command.json",
+      "bytes": 1749,
+      "sha256": "25e7758c4101bd40154cd2d12fc804952f41df6325e1a777a775b4334f328fe5"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/media-metadata-expiry-run3.results.json",
+      "bytes": 1331,
+      "sha256": "4343bb830f919cc63d5b360ac9d12acb1c9bf7b442494a436329bc0af26004a4"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/media-metadata-expiry-run3.stderr.txt",
+      "bytes": 986,
+      "sha256": "122251312483a39d80751e6b46277b5e3bb08b8d319052d3ad01cb4e88017c05"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/media-metadata-expiry-run3.stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/media-publication-budget-independent1.test.ts",
+      "bytes": 1562,
+      "sha256": "350090af4ac398d0ca0bf6bbdcddcb1ca9765b96057303a6e5b6b8b0e81f5bb6"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/media-publication-budget-run1.command.json",
+      "bytes": 1755,
+      "sha256": "7d51c783d45bce644f31f9febaa1ad72bdd2886a6f4644f7057feb157b704243"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/media-publication-budget-run1.results.json",
+      "bytes": 1346,
+      "sha256": "ee1cb9151695b31da761eeeaf017443ba0837044c31a9d26d35cc58cc0d36425"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/media-publication-budget-run1.stderr.txt",
+      "bytes": 990,
+      "sha256": "d7ab3fe5de303e31004759f1959d47285d60db3e719803d88c4977171e47ed29"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/media-publication-budget-run1.stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/recall-final-share-expiry-independent1.test.ts",
+      "bytes": 4199,
+      "sha256": "17d0356d5695d154efaf540eee695f904353e575834ea0379bd3c160a814f795"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/recall-final-share-expiry-run1.command.json",
+      "bytes": 1770,
+      "sha256": "b227ed00c98ce387e98abc77cb4e348bd0af096828b6861e51c6627baef5cad3"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/recall-final-share-expiry-run1.results.json",
+      "bytes": 2783,
+      "sha256": "29c00f7d828c87bd3dbb2ece98c7bb9895df56db21abd6476a4af5605bcc0436"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/recall-final-share-expiry-run1.stderr.txt",
+      "bytes": 1768,
+      "sha256": "6c7209d2c034b8567e052484536d22e45e8a0f585e3c28911fc4d84fbaf08076"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/recall-final-share-expiry-run1.stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/repair-and-findings2.json",
+      "bytes": 12227,
+      "sha256": "3be9e5b5581c6f5660da54e3e1a44f8f157ab32a2ded4129690070111d23fafa"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/repair-outcomes1.json",
+      "bytes": 3280,
+      "sha256": "fd1963445f3aa57ee8977ab94b14b440b60fac8ec4aaa80b8555abae533f8634"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/repair-outcomes3.json",
+      "bytes": 2990,
+      "sha256": "a01746ce3fa6379d4e0d7ec93411364b98f39f248cd0b30b2fcd40295bd5dca8"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/repair-outcomes4.json",
+      "bytes": 4211,
+      "sha256": "34d043675c13f0a9ac133cb964ee0c523e583ab7890f310a9f9563ff741e26d1"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/report1.md",
+      "bytes": 7121,
+      "sha256": "0c8c9afc5685cfd8c2e168e34074053b947b838b46ae4d86f0f6e6c9e091b472"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/review-evidence-index1.json",
+      "bytes": 13555,
+      "sha256": "26974b3087ad46f3cf2f26624c94ff5400a924dd45f698450e67d341cc8cd880"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/run-independent.py",
+      "bytes": 2125,
+      "sha256": "583e0798b9803c81fe525615a6940bf04258e6802e45b15337dbdea471482a2b"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/verdict1.json",
+      "bytes": 17931,
+      "sha256": "dacf9a03e5b944ee40e3af9353f3dd47f4c224b6b2e67d368c713e191ba417c8"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task14-client-functional-v2-20261008/native-actual/current-native-successor-index2.json",
+      "bytes": 11028,
+      "sha256": "fa2497a58d8467ac92fc7cc489d0d0fc4b3c9995b1d1e4bc94658df26261f367"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task14-client-functional-v2-20261008/native-actual/current-native-successor-report2.json",
+      "bytes": 7607,
+      "sha256": "e91d48e206bbe646c4c01caad282f8e74e9f5ba91c6665e3306fbe5aeaed734d"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task14-client-functional-v2-20261008/native-actual/sdk-auth-successor2-command.json",
+      "bytes": 711,
+      "sha256": "dee7753ee93d1ab9f36a169ddf601040f2277f16b0aab962325928a5e410fcd5"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task14-client-functional-v2-20261008/native-actual/sdk-auth-successor2-outcomes.json",
+      "bytes": 3624,
+      "sha256": "623bcb01ed5197e5881accd34d2b0c84e28067818df6155ecffd951fc8934a42"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task14-client-functional-v2-20261008/native-actual/sdk-controls1-outcomes.json",
+      "bytes": 2590,
+      "sha256": "8bc3370c28c395f45d5161ae818282441f93e8f39053c9fdf158335fddd18cf5"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task14-client-functional-v2-20261008/native-actual/sdk-expired-refresh-diagnosis1.json",
+      "bytes": 1441,
+      "sha256": "116327f50b1f82753bb17c5a60d909b4b6e94d561245437e08af32350919fec1"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task14-client-functional-v2-20261008/root-ui1/browser-v2-cleanup1.json",
+      "bytes": 315,
+      "sha256": "f6c9cb8e17cb51eee9922d07f6a049916b9e16cdcab971b24a4c4b077c5bc9fd"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task14-client-functional-v2-20261008/root-ui1/browser-v2-console1.json",
+      "bytes": 37,
+      "sha256": "48cdd3fd87052d34e7b056782731a965851ba9b25a7dac4592533bc00ca169ee"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task14-client-functional-v2-20261008/root-ui1/browser-v2-disconnected1.png",
+      "bytes": 46022,
+      "sha256": "09878c01005ba19c1359e65f6f00384c5007cdbee903cec03ad8ed1be92881c0"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task14-client-functional-v2-20261008/root-ui1/browser-v2-disconnected1.txt",
+      "bytes": 3437,
+      "sha256": "158c255e3c75d597b78202032abc115ce049f7e0f717f9569bf51c431479ff4b"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task14-client-functional-v2-20261008/root-ui1/browser-v2-expired-refresh1.json",
+      "bytes": 196,
+      "sha256": "92afc4500d7bd2df38989b7738e46a93a394a90252810e52113147cf937bb59f"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task14-client-functional-v2-20261008/root-ui1/browser-v2-expired-refresh1.png",
+      "bytes": 29039,
+      "sha256": "9c83ceef38704e0857d2e3ff230f3760a258ceb4b8175a4fca153e358cd33417"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task14-client-functional-v2-20261008/root-ui1/browser-v2-expired-refresh1.txt",
+      "bytes": 699,
+      "sha256": "8896dda32cd28c522c94be0d19dae048e3117051539bc2730192b0739eb425f2"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task14-client-functional-v2-20261008/root-ui1/browser-v2-final-pending-memory1.png",
+      "bytes": 59193,
+      "sha256": "bfc1e3f74862125cec00b28adacc771ea8872b1e8e49639a4eb5052db57c9903"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task14-client-functional-v2-20261008/root-ui1/browser-v2-final-pending-memory1.txt",
+      "bytes": 5420,
+      "sha256": "0a48d414d374422fbfcae9657305ee363513bfc88f51f3f5be132f99df73a013"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task14-client-functional-v2-20261008/root-ui1/browser-v2-foreign-refresh1.json",
+      "bytes": 289,
+      "sha256": "bc46a34c8bad5994f5c42540bf76cf1f561a4ea03c74462e51d37c02dd831b2c"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task14-client-functional-v2-20261008/root-ui1/browser-v2-foreign-refresh1.png",
+      "bytes": 28617,
+      "sha256": "49de924f0e385dfd0e4f1d164a0a7b08172c3022240c39b917cef18d565bbd44"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task14-client-functional-v2-20261008/root-ui1/browser-v2-foreign-refresh1.txt",
+      "bytes": 697,
+      "sha256": "1f44d0972fd3f58623e6c776c7371316496abfe966febd443044406459fb2da0"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task14-client-functional-v2-20261008/root-ui1/browser-v2-fresh-restore1.json",
+      "bytes": 284,
+      "sha256": "01dde572bf8d21b04c66e623f84495a6682e6f68292b031b57a1f3e1c811e81d"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task14-client-functional-v2-20261008/root-ui1/browser-v2-fresh-restore1.png",
+      "bytes": 57175,
+      "sha256": "e8a75c2c276e616661af4320bb31a9a449a6ab10505c29c41ef665edeafd6bc5"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task14-client-functional-v2-20261008/root-ui1/browser-v2-fresh-restore1.txt",
+      "bytes": 3728,
+      "sha256": "75c3338b071ce3d4bf587d59b8074f05fa1635cb4e033bf9eaef1b7058202d15"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task14-client-functional-v2-20261008/root-ui1/browser-v2-private-image1.json",
+      "bytes": 257,
+      "sha256": "537781fb84670d536fd331ded8469ae3625df1c5929676768fd608d8736e11a5"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task14-client-functional-v2-20261008/root-ui1/browser-v2-private-image1.png",
+      "bytes": 49148,
+      "sha256": "29134ae638a56e8b416e0be4587d5aaca04bb5178e2ff5f17bd2ed9a87b5a2d8"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task14-client-functional-v2-20261008/root-ui1/browser-v2-private-image1.txt",
+      "bytes": 5751,
+      "sha256": "4c357929ef31bd474f2abcb52729e6f91e0a42c94306ee0ab042d08d11955a27"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task14-client-functional-v2-20261008/root-ui1/browser-v2-report1.json",
+      "bytes": 8508,
+      "sha256": "38f6f938141132d6e40f5f3b0319ce8e5ba088ab3b446d90de8c5daf70cb316d"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task14-client-functional-v2-20261008/root-ui1/browser-v2-same-principal-refresh1.txt",
+      "bytes": 5713,
+      "sha256": "7c5eb2554c4777aabd4933cc003a2baee2d947e1b2b4cf45c28fb248603a1dca"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task14-client-functional-v2-20261008/root-ui1/browser-v2-strict-ready1.txt",
+      "bytes": 5713,
+      "sha256": "7c5eb2554c4777aabd4933cc003a2baee2d947e1b2b4cf45c28fb248603a1dca"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task14-client-functional-v2-20261008/root-ui1/source-ready5.json",
+      "bytes": 2458,
+      "sha256": "652720490279985d96065280e71ebac6b7c9b90ce2901f1480e4b34dab5582c7"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/basic-e2e1-command.json",
+      "bytes": 796,
+      "sha256": "5e035ceaee3c0db835ccd76f42deb718ee89068498a58eb2e802eff656cb9bca"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/basic-e2e1-results.json",
+      "bytes": 2173,
+      "sha256": "4905dc510a01f0c68fedbba024c7e2df44430ef152a5e8bcd2a2308d79b10a7b"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/basic-install1-command.json",
+      "bytes": 600,
+      "sha256": "33070c99b726b52e38478509b41c9835e6a6a47c99bc77448e8a8ccab032c735"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/basic-installed1-after.json",
+      "bytes": 261953,
+      "sha256": "a0e471ec50b2b5f58bb8c03a41f26aacf035c80f4ebd24dada5bb37bb2bab48c"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/basic-installed1-before.json",
+      "bytes": 261953,
+      "sha256": "a0e471ec50b2b5f58bb8c03a41f26aacf035c80f4ebd24dada5bb37bb2bab48c"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/basic-installed1-cleanup.json",
+      "bytes": 1323,
+      "sha256": "c0705b0b76a1eea55da057d7d8fc020c55e2e4d6ce44e3831caa43c24ff2ba0b"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/basic-installed1-command.json",
+      "bytes": 764,
+      "sha256": "32f1c44d2533a7992baf5dab8bee91206f1052579aec2e7287a43ddbde7f3a4e"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/basic-installed1-fixture.json",
+      "bytes": 7364,
+      "sha256": "11a5aa4e0cb0843c3b9280ba2120e6ab402502a61817ab7633a95cae1fccef80"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/basic-installed1-outcomes.json",
+      "bytes": 3512,
+      "sha256": "752de2f10850381efa8739d3b289041d44062cbf5b379533557812fbb04e70ba"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/basic-native-index1.json",
+      "bytes": 4038,
+      "sha256": "cf9466a2079acde4f0d85b39d074f22a73789178ec2533dac36968db1bfbef2a"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/basic-server1-cleanup.json",
+      "bytes": 213,
+      "sha256": "f39c06f1dab0f485b03dbc5de9b226bf7d1cb97b64a35fe7820ed698d8fff411"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/basic-server1-ready.json",
+      "bytes": 244,
+      "sha256": "114ef9778b922458068acbb9734388c3a7761bdbb27394c153d2cddb4c5acd40"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/cli-core-register-retry3-command.json",
+      "bytes": 715,
+      "sha256": "c247013377656349d5aee7b0f057475e4fb706d685c56912fcbaf027863f0786"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/cli-core-register1-command.json",
+      "bytes": 716,
+      "sha256": "5d5a71e35085417bf3fde50a1979dd0356ac1678f60f5934c25202a9f46df1d6"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/cli-current-checks1.json",
+      "bytes": 1281,
+      "sha256": "b6e081ede3ff269089942252616f5fb9ce1653dcca16c039a4091332ea3e0fd3"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/cli-current-source-manifest1.json",
+      "bytes": 9476,
+      "sha256": "e121b1a60c0f3172e5d3de541ed76f54f0807cefe574cb19b3e7ac9e6dfaabf0"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/cli-current1-results.json",
+      "bytes": 43292,
+      "sha256": "b964ce770b35e8edce3a99c2b2cd4087d737f73b496b0afd28f631a623ae7829"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/cli-custom-component-fixture-repair2.json",
+      "bytes": 927,
+      "sha256": "7894ce102674c054df34c75452049d5ec81a6c8d3b10b3f2de5ed462c15a781c"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/cli-foreign-provision2-command.json",
+      "bytes": 831,
+      "sha256": "b2a7c07d9cec68d0d282f830223b1da5ad83361d56617f6607156e11e39817c2"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/cli-installed-native1-outcomes.json",
+      "bytes": 379,
+      "sha256": "da619e68760db12f6c910dbc7a7208a1abc9fdc58bbacc3339ee9a82ff07be8e"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/cli-installed-native2-outcomes.json",
+      "bytes": 2418,
+      "sha256": "61731331188388d60645c601dcab61e98596d70e6bd649011494e498cc32e6f9"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/cli-installed-native3-outcomes.json",
+      "bytes": 6107,
+      "sha256": "9d2cba057826df3245875d3ffc14a48c5cc5043fd250222b6cec66aac9549ab2"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/cli-installed-native3-readback.json",
+      "bytes": 7419,
+      "sha256": "e5fa4d4948994e4b9104213b7bf6e0ce3ccf946647457d040616b27df18cdea2"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/cli-local1-outcomes.json",
+      "bytes": 455,
+      "sha256": "9b8d073109091753c860ba0d76614a9ce5debfb4fc77be47732485534111a83a"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/cli-local2-outcomes.json",
+      "bytes": 1024,
+      "sha256": "b21b5449f3cb0e50bef9b11c562c4f1710a3c01e7f3f8db043778c2310b3dc92"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/cli-native-cleanup1.json",
+      "bytes": 4180,
+      "sha256": "10aae7a1aa87bdd8f3a7eeb100240325d36dce955b4096273085c5d9976c202b"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/cli-native-core-apply1.stdout.log",
+      "bytes": 14635,
+      "sha256": "d00cb7b583e9a901d1bd1d4c13c4d6369522ae1f2821a8f7259d8d7532ad4995"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/cli-native-core-plan1.stdout.log",
+      "bytes": 14635,
+      "sha256": "d00cb7b583e9a901d1bd1d4c13c4d6369522ae1f2821a8f7259d8d7532ad4995"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/cli-native-env-oracle-correction2.json",
+      "bytes": 850,
+      "sha256": "5e6f1f73eb1d32852323e1c2502c785a808fdb54e587af5bde1ea1b24fd58561"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/cli-native-index1.json",
+      "bytes": 11400,
+      "sha256": "9e62cc450349220ceb77de684e3a41c1c1548fbe3172fca3be4f7e3a81b7d5b6"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/cli-native-install-retry3-command.json",
+      "bytes": 725,
+      "sha256": "4b0cfb056e7749b87f4785e5b09efb2d01882bfeb84ba9b56bf9d265c673decd"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/cli-native-plan1.json",
+      "bytes": 3064,
+      "sha256": "b5c9a4be43aa85da853b2bc39fa762486867210f133ba309c377fb642564296b"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/cli-native-readonly-fixture1.json",
+      "bytes": 275,
+      "sha256": "31510c38688ff0eaff391242b2145ccc14f6dfe3c9798e6eba5af8fe4af42426"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/cli-native-report1.json",
+      "bytes": 82351,
+      "sha256": "471bafd598a1c7397c139445ce9d35a5445cafc0a9a4065e83f5e0a1edb3854a"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/cli-owner-provision2-command.json",
+      "bytes": 829,
+      "sha256": "5dacab3a3b94a72f75991e9f839d471f628c0b05f755cd3f9db15245c71e8671"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/cli-pack-current1-reader-failure.json",
+      "bytes": 384,
+      "sha256": "2613f1d981b0ab9f3c2271d315de164137c70587f10b006db2216a4819dc8769"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/cli-packed-current1.json",
+      "bytes": 58687,
+      "sha256": "612dcfe1048d967357f4e9d94b960f333c5c4b4c6caf8faaa848ed45a70191eb"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/cli-stock-native1-baseline.json",
+      "bytes": 874,
+      "sha256": "d315d5859f1646e7c535be6bce0dee9e20827612ee44387957b682e50b36e2ea"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/cli-stock-native1-outcomes.json",
+      "bytes": 708,
+      "sha256": "f6b000b5b1b05c312cabd645228facca967bcf38bf61b5758c7638eb00afc6b1"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/project-create.json",
+      "bytes": 284,
+      "sha256": "e07fa420379ac18fe5a40ece4c17aaf86aed528d81f5af798bc0d67e0f3e491a"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/retirement-delete.json",
+      "bytes": 201,
+      "sha256": "2fb05524af5abf4e0ad53a06812daafa767b0a479a2561583de762c24776ec2a"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/retirement.json",
+      "bytes": 288,
+      "sha256": "a85cfe09405c891b673520fc3eb46288491080648ffe999af3a3720475fdaf82"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/target-isolation.json",
+      "bytes": 1179,
+      "sha256": "63feaad998ac2569a6ce1d0138d9fc9d84c6c17a791cf15c16c643346049d029"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/native-actual/target-provision.json",
+      "bytes": 462,
+      "sha256": "ced4973f584bbdab0274da81625a6b73eded7c58867b05b7baedba1d9a840808"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/root-content1/checks2.json",
+      "bytes": 6146,
+      "sha256": "190a41126ce125594aaa1082acfa20efe462ae827050a798581c96ee54263229"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/root-content1/content-and-search-tests2.json",
+      "bytes": 139640,
+      "sha256": "0c18a9a3616e71b6a158207570aca4a61f5543aa2b4c15b74085babee49156b5"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task15-integration-functional-v2-20261008/root-content1/content-and-search-tests2.log",
+      "bytes": 18663,
+      "sha256": "aec61d4f510938cbbdf58c620b8dc3b6c772ecf5183dcf872bb0e70ea4c55edf"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task17-docs-functional-v2-20261008/readmes1/checks1.json",
+      "bytes": 1103,
+      "sha256": "1043319405ab93ac07b15d34ef8e426ca27280f792d712c1670f72937559b096"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task17-docs-functional-v2-20261008/readmes1/provider-example.ts",
+      "bytes": 1549,
+      "sha256": "072354b99bed19bb22f65ef5e327f88da48839180085ad473cbb803fa24e30c0"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task17-docs-functional-v2-20261008/readmes1/provider-postimage.md",
+      "bytes": 6833,
+      "sha256": "0d4bd11040f8c54f1f43f5ea7bd38c09afad1a2ed22d36710c9e881c47c9fc4f"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task17-docs-functional-v2-20261008/readmes1/provider-preimage.md",
+      "bytes": 16264,
+      "sha256": "e5409655595f26319594beb116ea3923b73290967d3229fa1d4fafae86d3000d"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task17-docs-functional-v2-20261008/readmes1/root-example.ts",
+      "bytes": 1554,
+      "sha256": "f78208b2c334610ca7c30e2f2badbf987c99793e4f8f735685f94628bcc9b4e3"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task17-docs-functional-v2-20261008/readmes1/root-postimage.md",
+      "bytes": 8563,
+      "sha256": "3af8bcec12b586100dc6da6ec2a6da9666bf1ed18e5bc09b3135a6c5208fad0c"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task17-docs-functional-v2-20261008/readmes1/root-preimage.md",
+      "bytes": 23916,
+      "sha256": "6a1526aa223cc1eeb4151fc76e39436605a126680aade1babfa7ddd52bbeba57"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task17-docs-functional-v2-20261008/readmes1/source1.json",
+      "bytes": 968,
+      "sha256": "a742e39b0e04237a5d7dc68303197f1f74aa4edb79af35a47f61ede32019acb0"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task17-docs-functional-v2-20261008/readmes1/tsconfig.json",
+      "bytes": 1083,
+      "sha256": "3d248037eed4b257d3fbe892e4233d957476763b8ba92ff4824095b755a203a8"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task17-docs-functional-v2-20261008/readmes1/typescript1.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task17-docs-functional-v2-20261008/website1/backend-runtime-preimage2.mdx",
+      "bytes": 12109,
+      "sha256": "d27b1f36a1e40cfda31297ae1fbe485893f89774dfe3270934a0002590c01625"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task17-docs-functional-v2-20261008/website1/backend-runtime.mdx",
+      "bytes": 12109,
+      "sha256": "d27b1f36a1e40cfda31297ae1fbe485893f89774dfe3270934a0002590c01625"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task17-docs-functional-v2-20261008/website1/backend-runtime2.mdx",
+      "bytes": 15847,
+      "sha256": "d10c951211281fe486ef537e7093a4877800613e8272f8dd81d48129a681a29b"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task17-docs-functional-v2-20261008/website1/checks1.json",
+      "bytes": 2209,
+      "sha256": "0c6aa69a102bb6a2b322623b38a64e48d375cd5108230c72f5e452ea03c582a5"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task17-docs-functional-v2-20261008/website1/checks2.json",
+      "bytes": 2203,
+      "sha256": "d254adfb47360405a93c64b289dff5ee9cc734d6411f75dc82f8b7cb083951ef"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task17-docs-functional-v2-20261008/website1/example1.ts",
+      "bytes": 1487,
+      "sha256": "b028598067c5afa9a15122f2b51f64493fdebe1da419bd91aab63a3fed51fb4a"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task17-docs-functional-v2-20261008/website1/example2.ts",
+      "bytes": 314,
+      "sha256": "ffb28dc3b90d8e4166aa20a300e3c14cdb731fdb1e7375f6512c83ee52698847"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task17-docs-functional-v2-20261008/website1/example3.ts",
+      "bytes": 383,
+      "sha256": "ebc178c4602d9140ff309854b4c5457bba880a6caa8e207404a5be15a031122f"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task17-docs-functional-v2-20261008/website1/examples-tsconfig.json",
+      "bytes": 882,
+      "sha256": "bcce9cd0366722bd2b40752fc50013c9f62b0536ecc7017c6755f920269332ec"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task17-docs-functional-v2-20261008/website1/examples-tsconfig2.json",
+      "bytes": 1084,
+      "sha256": "fee5b8daba2e8533c0bdcbf5d27b26c2e048a8afd6b2597571439359511b44e4"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task17-docs-functional-v2-20261008/website1/sidebars-preimage.ts",
+      "bytes": 6277,
+      "sha256": "7e58a8696d9efa2aa09f06b26cb2f99b5cc2f5ff7313964d9e26af5fe6e18475"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task17-docs-functional-v2-20261008/website1/typescript-examples1.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task17-docs-functional-v2-20261008/website1/typescript-examples2.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task17-docs-functional-v2-20261008/website1/website-build1.log",
+      "bytes": 1903,
+      "sha256": "6d8a4717cdbf0a362c1c4a3000ce3e9a50344f7e86e6d79045808cad80afe188"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task17-docs-functional-v2-20261008/website1/website-build2.log",
+      "bytes": 1711,
+      "sha256": "def2a1f8fdbce57956ec88c6a87b643d2fca8c87c49651ea82f5ce0a2f737116"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task17-docs-functional-v2-20261008/website1/website-context1.json",
+      "bytes": 941,
+      "sha256": "57aa28c2d337e01722102c602779f3e6c3a518a2aadacb405c2e7f8cc0829ccc"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task17-docs-functional-v2-20261008/website1/website-context2.json",
+      "bytes": 630,
+      "sha256": "45e5edc8d1a3dd57c1001baecaafcd459ba06f268cf9210990649abbed909db4"
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/outcome-matrix.md",
+      "bytes": 159531,
+      "sha256": "eb26a15e459cdede36c5692b693b48527bba95ecfaf055f074084119fb37fdd0"
+    },
+    {
+      "path": "convex-dev/memories.ts",
+      "bytes": 34483,
+      "sha256": "e3beb9da05a5d6bc5f71e7a0f5d947ecdc707d6e27f1dd45aa81c8e701bd1d2a"
+    },
+    {
+      "path": "convex-dev/runtimeDataAuth.ts",
+      "bytes": 69292,
+      "sha256": "a0f637ab028b7e499681844a622d5d08055927408c7881f55e124985dae16ad0"
+    },
+    {
+      "path": "packages/vercel-ai-provider/README.md",
+      "bytes": 6833,
+      "sha256": "0d4bd11040f8c54f1f43f5ea7bd38c09afad1a2ed22d36710c9e881c47c9fc4f"
+    },
+    {
+      "path": "src/vector/index.ts",
+      "bytes": 18680,
+      "sha256": "60639398abe20d4152487765654e6ce1c64cff0271e45d7b8eee08ec230dd811"
+    },
+    {
+      "path": "tests/unit/runtimeDelivery/legacy-search.test.ts",
+      "bytes": 2565,
+      "sha256": "b0850130c753b3ab8f824ff33b4857386bc159ee5e5942b530ddd9816cd82146"
+    },
+    {
+      "path": "tests/unit/runtimeEndpointAuth/sharedfixtures.ts",
+      "bytes": 13100,
+      "sha256": "3ee2a83aaf381299acbcaf774aeed6fc090c1cddc7d4b9087a54579b733b3be0"
+    }
+  ]
+}

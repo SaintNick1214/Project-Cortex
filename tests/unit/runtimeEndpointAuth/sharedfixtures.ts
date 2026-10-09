@@ -107,14 +107,16 @@ export function harness() {
   const registrations: Record<string, unknown> = { "runtimeAuth:authorize": authorize, "runtimeAuth:recheck": recheck,
     "memories:keywordSearchMemories": memories.keywordSearchMemories, "memories:fetchMemoriesByIds": memories.fetchMemoriesByIds,
     "facts:fetchFactsByIds": facts.fetchFactsByIds };
-  const actionCtx = { auth: ctx.auth, runQuery: async (reference: Parameters<typeof getFunctionName>[0], args: Record<string, unknown>) => {
+  const runInternal = async (reference: Parameters<typeof getFunctionName>[0], args: Record<string, unknown>) => {
     const name = getFunctionName(reference);
     await internalHook?.(name, "before", args);
     const registration = registrations[name]; if (!registration) throw new Error("Unknown actual internal registration");
     const result = await handler(registration)(ctx, args);
     await internalHook?.(name, "after", args);
     return result;
-  }, vectorSearch: async () => { vectorCalls++; throw new Error("Unqualified legacy vector dispatch must not occur"); } } as unknown as ActionCtx;
+  };
+  const actionCtx = { auth: ctx.auth, runQuery: runInternal, runMutation: runInternal,
+    vectorSearch: async () => { vectorCalls++; throw new Error("Unqualified legacy vector dispatch must not occur"); } } as unknown as ActionCtx;
   const invoke = async <T = unknown>(registration: unknown, args: Record<string, unknown> = {}): Promise<T> =>
     await db.transaction(async () => await handler(registration)((registration as { isAction?: boolean }).isAction ? actionCtx : ctx, args) as T);
   const provisionScope = async (options: { tenantId?: string; memorySpaceId?: string; subject?: string; capabilities?: RuntimeCapability[]; resourceAccess?: RuntimeResourceAccess } = {}) =>

@@ -1,0 +1,454 @@
+{
+  "version": 1,
+  "distributionId": "cortex-backend-v1-sdk-0.37.0",
+  "functionsDirectory": "custom/backend/",
+  "changes": [
+    {
+      "path": "custom/backend/_cortex/components.config.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/_cortex/http.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/_cortex/schema.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/_cortex/shared/auth/types.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/_cortex/shared/auth/verified.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/_cortex/shared/domain/agent_language.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/_cortex/shared/domain/agent_tools.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/_cortex/shared/domain/artifact_context.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/_cortex/shared/domain/assets.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/_cortex/shared/domain/belief_plan.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/_cortex/shared/domain/clock.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/_cortex/shared/domain/conflicts.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/_cortex/shared/domain/context_witness.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/_cortex/shared/domain/contracts.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/_cortex/shared/domain/deduplication.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/_cortex/shared/domain/extraction.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/_cortex/shared/domain/graph_projection.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/_cortex/shared/domain/ingestion.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/_cortex/shared/domain/media_input.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/_cortex/shared/domain/media_jobs.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/_cortex/shared/domain/media_schemas.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/_cortex/shared/domain/memory_context.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/_cortex/shared/domain/model_policy.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/_cortex/shared/domain/profile.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/_cortex/shared/domain/recall.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/_cortex/shared/domain/sources.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/_cortex/shared/domain/transcript.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/_cortex/shared/sessions/types.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/_cortex/shared/types/index.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/_cortex/shared/types/streaming.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/a2a.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/admin.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/agentDefinitions.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/agents.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/artifacts.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/attachments.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/contexts.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/conversations.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/conversationShares.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/conversationSnapshots.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/factHistory.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/facts.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/governance.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/graphSync.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/immutable.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/memories.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/memorySpaces.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/mutable.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/runs.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/runtimeAgent.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/runtimeAgentFence.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/runtimeAgentReferences.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/runtimeAgentSchema.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/runtimeAgentTools.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/runtimeArtifactAuth.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/runtimeArtifactContext.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/runtimeArtifactContextSchema.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/runtimeAssetCatalog.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/runtimeAssets.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/runtimeAssetsHttp.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/runtimeAssetsSchema.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/runtimeAssetUnavailableAuth.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/runtimeAuth.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/runtimeAuthSchema.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/runtimeBeliefs.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/runtimeClient.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/runtimeClientExtensions.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/runtimeContextWitness.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/runtimeContextWitnessSchema.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/runtimeDataAuth.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/runtimeDelivery.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/runtimeGateway.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/runtimeGatewayBackend.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/runtimeGatewayQualifications.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/runtimeGraph.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/runtimeGraphSchema.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/runtimeIngestion.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/runtimeIngestionSchema.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/runtimeMediaFence.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/runtimeMediaGateway.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/runtimeMediaHttp.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/runtimeMediaJobs.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/runtimeMediaJobsSchema.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/runtimeMemory.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/runtimeMemoryContext.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/runtimeMemoryGateway.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/runtimeMemoryRepository.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/runtimeMemorySchema.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/runtimeMemoryServices.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/runtimeMetadataAuth.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/runtimeModelPolicy.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/runtimeModelPolicyBootstrap.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/runtimeOutputProjection.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/runtimePolicySchema.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/runtimeRegistryAuth.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/runtimeRegistryStats.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/runtimeTranscript.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/runtimeTranscriptSchema.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/runtimeUnavailableAuth.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/runtimeWorkerAuth.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/sessions.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/users.ts",
+      "reason": "versioned Cortex backend source"
+    },
+    {
+      "path": "custom/backend/schema.ts",
+      "reason": "add Cortex table map while preserving host tables and options"
+    },
+    {
+      "path": "custom/backend/convex.config.ts",
+      "reason": "register qualified Cortex components with direct root imports alongside host components"
+    },
+    {
+      "path": "custom/backend/http.ts",
+      "reason": "register authenticated Cortex HTTP routes while preserving host routes"
+    },
+    {
+      "path": "custom/backend/auth.config.ts",
+      "reason": "integrate explicitly selected verified JWT provider"
+    }
+  ],
+  "unchanged": [],
+  "conflicts": [],
+  "requiredDependencies": {
+    "convex": "^1.46.0",
+    "@convex-dev/agent": "0.7.3",
+    "@convex-dev/ai-sdk-provider": "0.2.1",
+    "@convex-dev/workflow": "0.4.8",
+    "@convex-dev/workpool": "0.4.13",
+    "ai": "7.0.127",
+    "neo4j-driver": "^6.2.0",
+    "zod": "4.6.5"
+  },
+  "authConfigPresent": true,
+  "registered": false,
+  "grantProvisioned": false
+}
+Backend setup readiness:
+1. Install the reported dependencies; additive install preserves custom functions/schema/auth/http and refuses merge ambiguity.
+2. Register only an explicitly verified disposable cloud-development target with backend register; production deployment is a separate operator action.
+3. Configure a host JWT issuer/JWKS/audience and provision current identity/grants with backend provision. Supply fresh host tokens in memory, never labels as authority.
+4. Publish a current executable Agent definition; Agent and Workflow components and qualified Gateway operation policies must be registered. Existing qualification covers only its exact model/envelope; unqualified image/video/tool options fail closed.
+5. Configure public runtime/HTTP endpoints and agent metadata with backend configure. No application inference keys are required. Gateway billing/model eligibility and async-video configuration belong to the backend; unavailable is not ready.
+6. Assets use authenticated private HTTP, immutable references and a 20,000,000-byte cap. No public storage URLs or external fallback.
+7. Optional graph projection uses the Node-only @cortexmemory/sdk/runtime/graph trusted service-JWT worker and scoped Neo4j/Memgraph connector; Bolt credentials stay on that host. Graph lag/strict barriers remain separate from facts/vectors readiness.

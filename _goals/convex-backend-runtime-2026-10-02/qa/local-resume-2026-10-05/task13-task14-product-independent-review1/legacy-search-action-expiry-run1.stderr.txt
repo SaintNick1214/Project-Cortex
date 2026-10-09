@@ -1,0 +1,36 @@
+watchman warning: Recrawled this watch 1 time, most recently because:
+MustScanSubDirs UserDroppedTo resolve, please review the information on
+https://facebook.github.io/watchman/docs/troubleshooting.html#recrawl
+To clear this warning, run:
+`watchman watch-del '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion' ; watchman watch-project '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion'`
+
+(node:62490) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/legacy-search-action-expiry-independent1.test.ts
+  ✓ the actual public search action delivers a current authorized memory without effects (6 ms)
+  ✕ action delivery withholds private payload when the grant expires after the final query RPC (2 ms)
+
+  ● action delivery withholds private payload when the grant expires after the final query RPC
+
+    expect(received).rejects.toMatchObject()
+
+    Received promise resolved instead of rejected
+    Resolved to value: [{"_creationTime": 8, "_id": "memories/7", "accessCount": 0, "content": "tenant-a private expiry-sentinel", "contentType": "raw", "createdAt": 1000, "importance": 50, "lineage": {"role": "user", "sourceEventId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"expiry-sentinel\"]", "sourceId": "manual:[\"tenant-a\",\"space-a\",\"memory\",\"expiry-sentinel\"]", "sourceRevision": 1, "trust": "user_assertion"}, "manualSourceBinding": {"resourceId": "expiry-sentinel", "resourceType": "memory"}, "memoryId": "expiry-sentinel", "memorySpaceId": "space-a", "ownerPrincipalId": "runtimeAuthPrincipals/3", "participantId": "metadata-alice", "previousVersions": [], "runtimeEditor": {"editedAt": 1000, "principalId": "runtimeAuthPrincipals/3", "userId": "metadata-alice"}, "sourceTimestamp": 1000, "sourceType": "system", "tags": [], "tenantId": "tenant-a", "updatedAt": 1000, "userId": "metadata-alice", "version": 1}]
+
+      35 |   });
+      36 |   h.db.attemptedWrites = [];
+    > 37 |   await expect(h.invoke(memories.search, { memorySpaceId: 'space-a', query: 'expiry-sentinel' }))
+         |         ^
+      38 |     .rejects.toMatchObject({ data: { code: 'FORBIDDEN' } });
+      39 |   expect(finalRpcReturned).toBe(true);
+      40 |   await expect(h.invoke(memories.get, { memorySpaceId: 'space-a', memoryId: 'expiry-sentinel' }))
+
+      at expect (node_modules/expect/build/index.js:2116:15)
+      at Object.<anonymous> (_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/legacy-search-action-expiry-independent1.test.ts:37:9)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 1 passed, 2 total
+Snapshots:   0 total
+Time:        4.417 s
+Ran all test suites within paths "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/legacy-search-action-expiry-independent1.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/legacy-search-action-expiry-run1.results.json

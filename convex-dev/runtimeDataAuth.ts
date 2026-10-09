@@ -1,4 +1,5 @@
 import { checkArtifactContextWitnesses } from "./runtimeArtifactContext";
+import { deliveryExpiresAt } from "./runtimeDelivery";
 /** Scoped data selections for alternate public endpoints. Caller labels are never grants. */
 import { ConvexError } from "convex/values";
 import { makeFunctionReference } from "convex/server";
@@ -357,6 +358,16 @@ export async function finalizeDataRead(ctx: ReadCtx, authority: ScopedDataAuthor
     await assertOwnedResource(ctx, authority, "read", resource(row));
   }
   await recheckSourceWitnesses(ctx, authority, "read", witnesses);
+}
+/** Final action hydration returns the exact grant/share/retention bounds it consumed. */
+export async function finalizeDataReadDelivery(ctx: ReadCtx, authority: ScopedDataAuthority,
+  witnesses: readonly CanonicalSourceWitness[], rows: readonly DataRow[]): Promise<number | undefined> {
+  await finalizeDataRead(ctx, authority, witnesses, rows);
+  const deadlines: number[] = [];
+  for (const witness of uniqueSourceWitnesses(witnesses)) {
+    if (!await managedSourceIsCurrent(ctx, authority, witness, "read", sourcePermissions.get(witness), deadlines)) dataDenied("STALE_SOURCE");
+  }
+  return await deliveryExpiresAt(ctx, dataAuthorityReference(authority), deadlines);
 }
 function sourceTimestamp(value: number): boolean { return Number.isFinite(value) && value >= 0 && value <= 8.64e15; }
 function manualSourceText(text: string): string {

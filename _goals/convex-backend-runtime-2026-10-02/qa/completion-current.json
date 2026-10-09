@@ -1,6 +1,6 @@
 {
   "schema": "cortex.completion-current.v1",
-  "timestamp_utc": "2026-10-09T01:49:54.425Z",
+  "timestamp_utc": "2026-10-09T02:27:04.121Z",
   "assessment_basis": "Original product criteria plus functional non-author acceptance under user-approved policyv2; no Source/controller subgate or source/mock rate acceptance",
   "goal_tasks_complete": 11,
   "goal_tasks_total": 17,
@@ -173,23 +173,47 @@
     },
     {
       "task_id": "13",
-      "percent_complete": 0,
-      "criteria_accepted": 0,
+      "percent_complete": 25,
+      "criteria_accepted": 1,
       "criteria_total": 4,
-      "accepted_scope": null,
-      "independent_acceptance_evidence": [],
+      "accepted_scope": "Original13A3 oversize/unknown/cancel safety accepted within coherent observed source/actual image scope. Async13A1 BLOCKED;13A2/A4 PARTIAL. Full13 remains open.",
+      "independent_acceptance_evidence": [
+        {
+          "path": "local-resume-2026-10-05/task13-task14-product-independent-review1/verdict1.json",
+          "bytes": 17931,
+          "sha256": "dacf9a03e5b944ee40e3af9353f3dd47f4c224b6b2e67d368c713e191ba417c8",
+          "scope": "Original criterion-level partial acceptance; zero full-task grants",
+          "candidateBackendManifest": "9218fe05fbfd1b76b82fcc711189a2bb250c9c3553e5abbb711955aa4d928d19"
+        }
+      ],
       "original_task_file": "tasks/13-media-jobs.md",
-      "task_file_sha256": "8455cc9fd5ba41db0a4219937439b3d21fb51aaa7054dbe2552d544cda6fa28e"
+      "task_file_sha256": "8455cc9fd5ba41db0a4219937439b3d21fb51aaa7054dbe2552d544cda6fa28e",
+      "accepted_criteria": [
+        "13A3"
+      ]
     },
     {
       "task_id": "14",
-      "percent_complete": 0,
-      "criteria_accepted": 0,
+      "percent_complete": 75,
+      "criteria_accepted": 3,
       "criteria_total": 4,
-      "accepted_scope": null,
-      "independent_acceptance_evidence": [],
+      "accepted_scope": "Original14A2 persisted React reconnect,14A3 final before real delayed memory/backend-only effects/no provider keys and14A4 browser/package boundaries accepted.14A1 full async TS parity and original13 dependency remain open; full14 not accepted.",
+      "independent_acceptance_evidence": [
+        {
+          "path": "local-resume-2026-10-05/task13-task14-product-independent-review1/verdict1.json",
+          "bytes": 17931,
+          "sha256": "dacf9a03e5b944ee40e3af9353f3dd47f4c224b6b2e67d368c713e191ba417c8",
+          "scope": "Original criterion-level partial acceptance; zero full-task grants",
+          "candidateBackendManifest": "9218fe05fbfd1b76b82fcc711189a2bb250c9c3553e5abbb711955aa4d928d19"
+        }
+      ],
       "original_task_file": "tasks/14-client-extensions.md",
-      "task_file_sha256": "cfe2c8020b31c4862cca2e09dcc490b037bac6b383114ebac7e710d966925ba9"
+      "task_file_sha256": "cfe2c8020b31c4862cca2e09dcc490b037bac6b383114ebac7e710d966925ba9",
+      "accepted_criteria": [
+        "14A2",
+        "14A3",
+        "14A4"
+      ]
     },
     {
       "task_id": "15",
@@ -223,7 +247,7 @@
     }
   ],
   "milestone_history": "qa/completion-milestones.jsonl",
-  "latest_milestone_id": "functional_v2_milestone176_actual_agent_image_delayed_memory_browser_and_basic_source",
+  "latest_milestone_id": "functional_v2_milestone178_installed_cli_closed_and_modern_docs_compiled",
   "acceptance_policy_version": 2,
   "acceptance_policy": "acceptance-policy.md",
   "assessment_basis_changed_without_denominator_change": true,
@@ -258,14 +282,14 @@
     "task10": "Original Task10 accepted by one non-author PASS4.0: all 5 requirements and 4 criteria. Both actual managed profiles retrieve identical canonical source/chunks with separate matching 1536/3072 generations; current policy, tracked edit, deletion, revocation and replay fences pass. Five governed calls retain full 500000 uncertain liability and release terminal slots. Shipped revision9 preserves exact V5/four proofs/default-small settings. Task10 scopes are cleaned; owned development target3174742 is retained prospectively for Task11, with final retirement open. Historical failures and scoped limits remain unchanged. No Task11+,03-final or full-goal acceptance.",
     "task11": "Original Task11 accepted by one nonauthor PASS4.0: all4 requirements/3criteria; installed Node worker and actual Neo4j/Memgraph ordered retry/dedup, stale revision/source/profile/expiry/revocation/tombstone fences, transitive dependency retirement, real network timeout recovery, explicit exhausted strict failure and app-independent execution. Author369, Root26 and independent16 controlled cases are separate scopes. Cleanup leaves content0/12tombstone fences/11scopes retired; prior5attempts/full500000 uncertain liability unchanged, slots0. Dev3174742 and2graphs explicitly retained for later qualification/final retirement. Historical failures preserved; no12+/03-final/full-goal acceptance.",
     "task12": "All original Task12 six requirements/four criteria, one non-author PASS4.0: real authenticated storage/HTTP and 20M boundary, immutable artifact/attachment/Agent owners and tracked history/export, deletion/revocation/tombstone/orphan/cancellation cleanup, genuine governed private-frame synchronous MP4 input/output materialization and matching SDK byte delivery. Asset bytes/jobs0 and clients/processes closed. Two media financial slots/full4m plus prior500k uncertainty remain conservatively retained in retired scopes; no refund/result/retry. Development target3174742 and prior graphs retained13/final. Async503 remains an external13 capability blocker; historical failures/C7 missing backing unchanged. No13+/03-final/full-goal acceptance.",
-    "task13": "Current coherent actual V2 streamed Agent image completes once on original shared run account, native private byte/hash/auth/replay closure PASS4. V2 qualification private/provisional; async video503 remains missing external capability. Canonical registration restored. Scope retained for Basic/ChatSDK qualification, no full13 acceptance.",
-    "ci": "Prior run37851250623 now completed:cancelled. Current pushed317af92f run37859958849 guard blocked production-type deployment/purge, downstream service jobs skipped. Safe disposable CI targets/auth fixtures remain16/final; chat-SDK video-kind typing failure remains15. No fullCI acceptance.",
-    "task14": "Current installed SDK auth/watch real successor PASS4; ordinary AI SDK7 browser Send/disconnect/reconnect/final-with-pending-real-memory, private image preview/fresh restore/auth clearing/strict2of2 readiness pass. Browser/server resources closed. Foreign CLIENT_CLOSED caption debt disclosed; no async UI coverage/full14 acceptance; existing coherent independent review is closing.",
-    "task17": "Canonical website backend-runtime development guide plus sidebar are written in the separate available docs repository, exact TypeScript examples and Docusaurus build pass. Released setup docs and unrelated website work preserved; final integration/audit acceptance pending.",
-    "task03": "Root SDK318/318 controlled outcomes across6suites plus types/lint pass: direct asset-share deadlines revoke retained Blob URLs even with permanent actor grants; immutable asset comparisons exclude only reader deadline; recall withholds expired action results. Backend author83-path candidate7c2ce98e closes fresh private delivery and exact consumed artifact/current canonical anchor parity; replaced affected selection2974instances/56suites and latest114 focused outcomes have0fail/skip, quality clean. Independent unchanged anchor/canExport regressions pass; no additional breaking source finding, coherent installed review remains pending. Correction to milestone174: Convex freezes time within each query/mutation, so injected intra-mutation clock changes are optional hardening, not native breaking findings; final action and client boundaries remain real and covered. CLI HTTP configuration now writes the key consumed by the actual UI,126/126 setup controls/types/lint pass. Canonical mirror applied four changed files only, retained dirty preimages, zero deletions; Basic remote-run migration now active. One coherent SDK/backend build/package4 complete, manifest9218fe05 and SDKbec463e7; current installed auth/watch/UI and ONE prospective V2 streamed image remain pending. No new paid call or async resubmission at this milestone.11/17=64.7%,39/61=63.9%,0/12 full outcomes; full goal open.",
-    "task15": "CLI backend init/configure public HTTP metadata and host env preservation pass127 controlled cases/types/lint. Finite four-file canonical mirror sync and scripts-disabled install/declaration build pass. Basic remote authenticated implementation closes26 paths with108 controlled unit/Hono instances/build/type checks; installed actual read-only E2E in progress. ChatSDK/backend governed secondary title/artifact implementation active in separate namespace, not in checkpoint62."
+    "task13": "Original13A3 oversize/unknown/cancel safety accepted within coherent observed source/actual image scope. Async13A1 BLOCKED;13A2/A4 PARTIAL. Full13 remains open.",
+    "ci": "16 new safe CI target/auth/cleanup/actual fixture source qualifying offline; new development targets and repository selectors not activated. Historical production-type keys unused; four historical secret names retained.",
+    "task14": "Original14A2 persisted React reconnect,14A3 final before real delayed memory/backend-only effects/no provider keys and14A4 browser/package boundaries accepted.14A1 full async TS parity and original13 dependency remain open; full14 not accepted.",
+    "task17": "Canonical website revised guide build and3exact TypeScript examples pass; root/provider README modern remote examples2compile. Unpublished source/handoff only; final original17 quality and independent audit pending.",
+    "task03": "P8 action-after-RPC legacy search expiry source repair and permanent5-case regression pass; unchanged independent reproducer2/2 green. No installed actual successor or full03-final acceptance yet.",
+    "task15": "15A real installed CLI scoped PASS closed and target retired200/404;15B own installed Hono/auth/e2e scoped PASS;15C backend governed content/ChatSDK source closing and exact doGenerate actual qualification pending. Coherent independent original15 review pending."
   },
-  "goal_task_criteria_accepted": 39,
+  "goal_task_criteria_accepted": 43,
   "goal_task_criteria_total": 61,
-  "goal_task_criteria_percent_complete": 63.9
+  "goal_task_criteria_percent_complete": 70.5
 }

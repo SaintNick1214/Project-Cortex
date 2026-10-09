@@ -1,0 +1,372 @@
+{
+  "version": 1,
+  "createdAt": "2026-10-09T01:59:44.108858+00:00",
+  "reviewer": "Reused non-author task03_linux_source_adapter_judge1; no implementation authorship",
+  "policy": "Goal acceptance-policyv2; original Task13 five requirements/four criteria and Task14 three requirements/four criteria retained",
+  "result": "PARTIAL_ACCEPTANCE_ORIGINAL_TASKS_OPEN",
+  "boundedWork": {
+    "result": "ACCEPTED_OBSERVED_IMAGE_AND_CLIENT_IMPLEMENTATION_SLICE",
+    "scores": {
+      "requirementFulfillment": 4,
+      "testQuality": 4,
+      "completeness": 4,
+      "codeQuality": 3.5,
+      "patternAdherence": 4,
+      "mean": 3.9
+    },
+    "scope": "Implemented media safety and observed image/client/React/package paths only; no video capability, production proof, full security or full-task grant."
+  },
+  "task13": {
+    "result": "NOT_FULLY_ACCEPTED",
+    "mandatoryRequirementsFulfilled": false,
+    "scores": {
+      "requirementFulfillment": 3,
+      "testQuality": 4,
+      "completeness": 2.5,
+      "codeQuality": 3.5,
+      "patternAdherence": 4,
+      "mean": 3.4
+    },
+    "requirements": [
+      {
+        "id": "13R1",
+        "status": "BLOCKED",
+        "conclusion": "Images actually observed; async availability/callback/poll/download required and unavailable."
+      },
+      {
+        "id": "13R2",
+        "status": "PARTIAL",
+        "conclusion": "Stable governed adapter/options/reserves implemented; image native fixture observed; async qualifications and shipped promotion absent."
+      },
+      {
+        "id": "13R3",
+        "status": "PARTIAL",
+        "conclusion": "Job/artifact/account before dispatch and private raw-signed/dedup/poll controls present; actual native async protocol not qualified."
+      },
+      {
+        "id": "13R4",
+        "status": "PARTIAL",
+        "conclusion": "Honest no-paid-retry/cancel/unknown/expiry/one-output controls plus actual image replay; full video lifecycle not observed."
+      },
+      {
+        "id": "13R5",
+        "status": "ACCEPTED_IMPLEMENTATION",
+        "conclusion": "Backend durable job/artifact refs, real streamed Agent image effect, canonical metadata-only transcript and20M bound/cleanup controls demonstrated; async functional part remains governed byR1/R2."
+      }
+    ],
+    "criteria": [
+      {
+        "id": "13A1",
+        "status": "BLOCKED",
+        "criterion": "Actual qualified image/video jobs create typed ready artifacts with model/input/usage/provenance and authorized download.",
+        "conclusion": "Actual standalone and streamed-Agent images produce governed ready artifacts/current private delivery, but async video503 remains unavailable; no actual video ready/callback/poll/download qualification. Image serving identity is requested-only and aggregate cost unavailable. Private provisional trust is unpromoted.",
+        "evidence": [
+          "actual-image-qualification-record1.json",
+          "actual-agent-media-v2-qualification-record1.json",
+          "agent-media-closure1-outcomes.json"
+        ]
+      },
+      {
+        "id": "13A2",
+        "status": "PARTIAL",
+        "criterion": "Missed/duplicate/out-of-order callback and download retries produce one owned version; forged callback cannot mutate a job.",
+        "conclusion": "Real registered handler controls exercise official raw signature verification, callback identity/freshness/dedup/out-of-order signals, poll/download retry and one owned version. Actual fifth HTTP route rejects unbound/forged callback409 without effect; valid native provider callback/poll/download behavior remains unqualified.",
+        "evidence": [
+          "tests/unit/runtimeMedia/recovery.test.ts",
+          "author/checks2.json",
+          "native-media-controls1-outcomes.json"
+        ]
+      },
+      {
+        "id": "13A3",
+        "status": "ACCEPTED",
+        "criterion": "Oversize generated output cannot become ready/delivered; error/cost/cleanup; lost submission remains uncertain without duplicate paid request; cancel makes no upstream/refund promise.",
+        "conclusion": "Controlled real handler paths verify20000001-byte typed ASSET_TOO_LARGE/no store, preserved incurred_unknown/released genuine-terminal slot, lost start one-call dispatch_pending/no refund/readmission, cancelled/expired stored-output cleanup and late withholding. Independent atomic expiry/recovery/budget/cursor negatives pass. Actual registered cancellation/reconcile has zero model effects; genuine ready image replay/reconcile adds zero dispatch and full unknown liability remains. This accepts the safety criterion without asserting native async availability or a real oversized provider response.",
+        "evidence": [
+          "tests/unit/runtimeMedia/jobs.test.ts",
+          "tests/unit/runtimeMedia/recovery.test.ts",
+          "repair-outcomes4.json",
+          "native-media-controls1-outcomes.json",
+          "agent-media-closure1-outcomes.json"
+        ]
+      },
+      {
+        "id": "13A4",
+        "status": "PARTIAL",
+        "criterion": "Linked-local polling and unavailable async-video configuration produce documented behavior/error.",
+        "conclusion": "Unavailable async503 history is preserved and current missing proof denies before job/attempt; no blind resubmission. Bounded saved-handle polling is controlled-tested and documented. A genuine linked-local native polling positive remains absent.",
+        "evidence": [
+          "author/CONTRACTS.md",
+          "tests/unit/runtimeMedia/jobs.test.ts",
+          "native-media-controls1-outcomes.json",
+          "agent-media-native-addendum1.json"
+        ]
+      }
+    ],
+    "acceptedOriginalCriteria": [
+      "13A3"
+    ],
+    "blockedOriginalCriteria": [
+      "13A1"
+    ],
+    "partialOriginalCriteria": [
+      "13A2",
+      "13A4"
+    ]
+  },
+  "task14": {
+    "result": "NOT_FULLY_ACCEPTED",
+    "mandatoryRequirementsFulfilled": false,
+    "dependency13Open": true,
+    "scores": {
+      "requirementFulfillment": 3.5,
+      "testQuality": 4,
+      "completeness": 3,
+      "codeQuality": 3.5,
+      "patternAdherence": 4,
+      "mean": 3.6
+    },
+    "requirements": [
+      {
+        "id": "14R1",
+        "status": "PARTIAL",
+        "conclusion": "Versioned profile/media/asset/barrier/typed capability APIs and retained cursor semantics implemented; missing async native capability prevents all-media functional fulfillment."
+      },
+      {
+        "id": "14R2",
+        "status": "ACCEPTED",
+        "conclusion": "Persisted AI7 text/tool/media/artifact projection, actual restart/reconnect/private preview, one backend tool/memory writer."
+      },
+      {
+        "id": "14R3",
+        "status": "ACCEPTED",
+        "conclusion": "Config/auth propagation, bounded auth/RPC observations/generation fencing/current metadata deadlines, browser-safe exports and explicit unsupported errors."
+      }
+    ],
+    "criteria": [
+      {
+        "id": "14A1",
+        "status": "PARTIAL",
+        "criterion": "TypeScript clients create/observe same backend outcomes with equivalent scope/error/cancel/media behavior and token refresh.",
+        "conclusion": "Installed image/job/artifact/private asset, same-principal refresh, expired auth bounded timeout, foreign/noJWT denial and no-effect cancel/reconcile are demonstrated. Async video parity/terminal outcomes remain unqualified.",
+        "evidence": [
+          "sdk-auth-successor2-outcomes.json",
+          "native-media-controls1-outcomes.json",
+          "agent-media-closure1-outcomes.json",
+          "root-client1/fresh-checks5.json"
+        ]
+      },
+      {
+        "id": "14A2",
+        "status": "ACCEPTED",
+        "criterion": "React reconnect rebuilds text/tool/artifact state without duplicate messages or local-only artifact loss.",
+        "conclusion": "Actual AI7 disconnect/reconnect follows the same submitted run; a fresh authenticated instance restores the same one canonical final and durable tool/media reference without another submit. Current authorized image/job/artifact is reopened and previewed from private HTTP bytes. Initial locator wait failure is retained; eventual visible restore is evidenced.",
+        "evidence": [
+          "root-ui1/browser-v2-report1.json",
+          "root-ui1/browser-v2-fresh-restore1.txt",
+          "root-ui1/browser-v2-fresh-restore1.png",
+          "agent-media-closure1-outcomes.json"
+        ]
+      },
+      {
+        "id": "14A3",
+        "status": "ACCEPTED",
+        "criterion": "AI SDK UI finishes before delayed memory, tools execute only in backend and factories require no provider keys.",
+        "conclusion": "One genuine AI7 Send invokes one backend media_image_generate with two streamed model steps and one canonical final/ingestion receipt. UI responsecomplete/memorypending while real initial extraction is held. Explicit one-issued release before300s watchdog cancels fallback and real worker alone adds extract+embedding, stages2/2. Factories use host JWT/config, not provider/action credentials.",
+        "evidence": [
+          "root-ui1/browser-v2-final-pending-memory1.txt",
+          "root-ui1/browser-v2-report1.json",
+          "agent-media-observe1-readback.json",
+          "agent-media-release-ingestion1-readback.json",
+          "agent-media-native-addendum1.json"
+        ]
+      },
+      {
+        "id": "14A4",
+        "status": "ACCEPTED",
+        "criterion": "Package exports/browser builds expose neither action credentials nor Node graph modules; unsupported deployments fail inference explicitly.",
+        "conclusion": "Current SDK/provider/package/browser checks and source export boundaries pass. Browser accepts host JWT in memory only; official opaque signal carries no private payload and protected replies use fresh mutations. Current missing async proof returns explicit CAPABILITY_UNAVAILABLE before job/dispatch. No shipped media/V2 proof or unsupported capability is promoted.",
+        "evidence": [
+          "root-client1/fresh-checks5.json",
+          "root-client1/provider-current4-checks1.json",
+          "root-ui1/source-ready5.json",
+          "native-media-controls1-outcomes.json"
+        ]
+      }
+    ],
+    "acceptedOriginalCriteria": [
+      "14A2",
+      "14A3",
+      "14A4"
+    ],
+    "partialOriginalCriteria": [
+      "14A1"
+    ]
+  },
+  "criterionArithmetic": {
+    "accepted": 4,
+    "partial": 3,
+    "blocked": 1,
+    "originalTotal": 8,
+    "fullTasksAccepted": 0,
+    "note": "Parent alone owns metric/tracker changes. No new or narrowed criteria."
+  },
+  "candidateScope": {
+    "nativeDistributionManifestSha256": "9218fe05fbfd1b76b82fcc711189a2bb250c9c3553e5abbb711955aa4d928d19",
+    "sdkTarballSha256": "bec463e75a21c6d46c032ec6dc09b65645d6061e39137c04be9b49acd3c0759a",
+    "canonicalRestoredManifest": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-media-functional-v2-20261008/native-actual/installed-agent-media-restored1-source-manifest.json",
+      "bytes": 29284,
+      "sha256": "d0687fac4c47736c95f6d4875b00cb4dc90ac762a1e56f4a85a7f0abfe35f01d"
+    },
+    "rootUiSourceReady": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task14-client-functional-v2-20261008/root-ui1/source-ready5.json",
+      "bytes": 2458,
+      "sha256": "652720490279985d96065280e71ebac6b7c9b90ce2901f1480e4b34dab5582c7"
+    },
+    "backend03AuthorCandidateSha256": "7c2ce98eaeef41d2cbe4bb893339ba79bf285bf1727191ceebe71b6c7acc88cc",
+    "legacySearchRedSource": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/memories.ts",
+      "bytes": 33978,
+      "sha256": "f09649e343ee58f1a0aa4b4bf01880b32666b016acd573ba0f77f89efe515360"
+    },
+    "qualification": "Private exact-object provisional V2 fixture only; no shipped V2/media qualification promotion; V1/five historical proof objects preserved."
+  },
+  "checks": {
+    "authorMediaBaseline": {
+      "passedInstances": 710,
+      "distinctLabels": 706,
+      "scope": "Historical author source-ready selection; later affected replacements are separate, not additive."
+    },
+    "currentRootSdkGateway": {
+      "suites": 6,
+      "passed": 318,
+      "failed": 0,
+      "skipped": 0
+    },
+    "currentProvider": {
+      "suites": 7,
+      "passed": 225,
+      "failed": 0,
+      "skipped": 0
+    },
+    "backend03Author": {
+      "suites": 56,
+      "passedInstances": 2974,
+      "distinctLabels": 2930,
+      "scope": "Reported current selected suite union; overlaps media/client paths, not added to totals."
+    },
+    "independentRelevantPassedAssertions": 8,
+    "injectedClockHardeningPassedAssertions": 1,
+    "newLegacySearchBoundary": {
+      "passed": 1,
+      "failed": 1,
+      "scope": "Separate03-final open finding; controlled afterRPC action clock, no within-query time advance"
+    },
+    "buildTypesLint": "Current affected SDK/backend/provider/UI/build/type/lint receipts pass; no unchanged whole suite repeated."
+  },
+  "actual": {
+    "standaloneImage": {
+      "bytes": 1116726,
+      "sha256": "b398f6084152795dc90784414466854a65810ecf04b9429f45098e10fe074bb5",
+      "height": 1024,
+      "width": 1024,
+      "servingIdentity": "requested-only"
+    },
+    "agentImage": {
+      "bytes": 1073033,
+      "sha256": "97bb24e1bf77145f8f3601cff86d3d0541a3423434653329ce1dc072471b7295",
+      "height": 1024,
+      "width": 1024,
+      "ordinaryAi7Sends": 1,
+      "toolEffects": 1,
+      "modelStreams": 2,
+      "canonicalFinals": 1,
+      "ingestionReceipts": 1
+    },
+    "delayedMemory": {
+      "responseCompleteWhileMemoryPending": true,
+      "manualReleaseIssuedAt": 1791509593783,
+      "fallbackDeadlineAt": 1791509727620,
+      "fallbackExecuted": false,
+      "watchdogCancelledAtomically": true,
+      "realWorkerAddedOperations": [
+        "memory.extract",
+        "embedding.memory"
+      ],
+      "factsVectorsThrough": 2,
+      "canonicalSubmitRestored": true
+    },
+    "newScopePaidAttempts": 7,
+    "newScopeFullUnknownUnits": 2600000,
+    "newFinishedSlotsReleased": true,
+    "priorFullUnknownUnits": 7500000,
+    "priorHeldUnknownSlots": 2,
+    "aggregateFullUnknownUnits": 10100000,
+    "noRefundResetOrAuthorityRestoration": true
+  },
+  "findings": {
+    "repairedRelevant": [
+      "P1 atomic expired output/recovery",
+      "P2 exhausted observer media witness",
+      "P3 artifact_read durable current metadata",
+      "P5 canExport permission parity",
+      "P7 exact canonical artifact message anchor"
+    ],
+    "positiveAdjacent": "Current cancelled budget prevents saved-output publication.",
+    "injectedClockOnly": [
+      "P4 publicMediaJob last-await expiry",
+      "P6 recall advancing clock inside final mutation"
+    ],
+    "openGoalSecurityFinding": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/legacy-search-action-expiry-finding1.json",
+      "bytes": 3264,
+      "sha256": "357250c85fd689c4316f4bca2961fbeb84b3699eb643dc778fc5f434ffdd4fc0"
+    },
+    "noKnownUnresolvedBreakingFindingInObserved13_14PositivePaths": true,
+    "full03SecurityAccepted": false
+  },
+  "cleanup": {
+    "reviewerOwnedProcesses": 0,
+    "reviewerOwnedChildrenWaited": true,
+    "rootBrowserTabsClosed": [
+      "5",
+      "6"
+    ],
+    "rootUiControllerExit": 0,
+    "rootUiServerExit": 143,
+    "rootBrowserSavedTokens": false,
+    "rootBrowserCleanup": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task14-client-functional-v2-20261008/root-ui1/browser-v2-cleanup1.json",
+      "bytes": 315,
+      "sha256": "f6c9cb8e17cb51eee9922d07f6a049916b9e16cdcab971b24a4c4b077c5bc9fd"
+    },
+    "nativeScopeAssetsGrantsRetained": true,
+    "nativeDevTarget": "3174742/formal-husky-914 retained for subsequent work",
+    "retentionSource": "Native addendum says cleanup pending; subsequent Basic handoff explicitly retains target/scope/image/grants for ChatSDK. No native scope retirement or full final-goal cleanup claimed.",
+    "financialUnknownRetention": "Old held2/full liability remains conservative; no deadline-only release requirement introduced."
+  },
+  "limits": [
+    "Async official503 remains an external capability blocker; no async provider terminal/callback/poll/download positive.",
+    "No native V2 doGenerate observation and no shipped V2/media proof promotion.",
+    "Private provisional operator trust and explicit fixture scheduler overlay disclosed; canonical runs.submit restored and enabled deployed.",
+    "Actual browser Blob preview is not a clicked/downloaded file; browser download unexercised.",
+    "Foreign refresh clears private state but displays CLIENT_CLOSED; raw Markdown and initial restore wait debt retained.",
+    "Earlier upload/oversize/narrow viewport and old14 browser evidence remain prior-candidate scoped.",
+    "P8 legacy public search action-time expiry must be fixed for03-final/final-goal acceptance.",
+    "Retained scope/assets/grants/dev/private resources require later explicit cleanup; browser/reviewer process closure does not imply native retirement."
+  ],
+  "evidenceIndex": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/review-evidence-index1.json",
+    "bytes": 13555,
+    "sha256": "26974b3087ad46f3cf2f26624c94ff5400a924dd45f698450e67d341cc8cd880"
+  },
+  "noNewReviewLayer": true,
+  "effects": {
+    "productEdits": 0,
+    "gitEdits": 0,
+    "serviceCalls": 0,
+    "paidCalls": 0
+  },
+  "remainingReviewerProcess": false
+}

@@ -1,0 +1,128 @@
+{
+  "version": 1,
+  "createdAt": "2026-10-09T02:02:58.411532+00:00",
+  "status": "P8_REPAIR_VERIFIED_CONTROLLED_SOURCE",
+  "id": "P8",
+  "originalFindingStatusAtThisSuccessor": "REPAIRED_CONTROLLED_CODE",
+  "reviewer": "Existing reused non-author13/14 reviewer; Root implementation ownership",
+  "unchangedOracle": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/legacy-search-action-expiry-independent1.test.ts",
+    "bytes": 2007,
+    "sha256": "46e4d4843a3bc052b5ba84e4ca38dc7ef2aa7da344095cf5a7831ed1b3a3aa9e"
+  },
+  "originalFailure": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/legacy-search-action-expiry-run1.results.json",
+    "bytes": 6434,
+    "sha256": "352d898886b9835d34a39c5a3229152c3ff5dfc46fb927ff8d9ebb9119213be2"
+  },
+  "originalFinding": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/legacy-search-action-expiry-finding1.json",
+    "bytes": 3264,
+    "sha256": "357250c85fd689c4316f4bca2961fbeb84b3699eb643dc778fc5f434ffdd4fc0"
+  },
+  "priorTaskVerdictUnchanged": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/verdict1.json",
+    "bytes": 17931,
+    "sha256": "dacf9a03e5b944ee40e3af9353f3dd47f4c224b6b2e67d368c713e191ba417c8"
+  },
+  "newOutcome": {
+    "passed": 2,
+    "failed": 0,
+    "skipped": 0,
+    "healthyAuthorizedPositiveRetained": true,
+    "expiredAfterFinalRPCPrivatePayloadWithheld": true,
+    "directExpiredGetContrastAlsoReached": true,
+    "actualServiceCalls": 0,
+    "paidCalls": 0
+  },
+  "runtime": {
+    "node": "24.15.0",
+    "npmInvoked": false,
+    "pid": 66957,
+    "exitCode": 0,
+    "elapsedSeconds": 12.021594541991362,
+    "ownedChildWaited": true,
+    "remainingOwnedProcess": false,
+    "timedOut": false
+  },
+  "receipts": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/legacy-search-action-expiry-run2.results.json",
+      "bytes": 1757,
+      "sha256": "3350f3563e58d183a3991292ea2ba5b4600c1ec8f6c151a3af6f8e3fcd80f7b7"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/legacy-search-action-expiry-run2.command.json",
+      "bytes": 1745,
+      "sha256": "35d4f13ae4c795334ad333f30815da6eb92889e09594c39b284c6602a9c60e87"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/legacy-search-action-expiry-run2.stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/legacy-search-action-expiry-run2.stderr.txt",
+      "bytes": 1537,
+      "sha256": "465ca801b551fc79096ee891b9b084777102a05029937f4d779e1375d24d76d6"
+    }
+  ],
+  "sourceDuringRerun": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/memories.ts",
+    "bytes": 34483,
+    "sha256": "e3beb9da05a5d6bc5f71e7a0f5d947ecdc707d6e27f1dd45aa81c8e701bd1d2a"
+  },
+  "inspectedSource": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/memories.ts",
+      "bytes": 34483,
+      "sha256": "e3beb9da05a5d6bc5f71e7a0f5d947ecdc707d6e27f1dd45aa81c8e701bd1d2a"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeDataAuth.ts",
+      "bytes": 69292,
+      "sha256": "a0f637ab028b7e499681844a622d5d08055927408c7881f55e124985dae16ad0"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeDelivery.ts",
+      "bytes": 1431,
+      "sha256": "a5df1dfc8eed79775d55688058db234fe33d6fdfbec33efc15b380ed77d35e09"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/src/vector/index.ts",
+      "bytes": 18680,
+      "sha256": "60639398abe20d4152487765654e6ce1c64cff0271e45d7b8eee08ec230dd811"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeEndpointAuth/sharedfixtures.ts",
+      "bytes": 13100,
+      "sha256": "3ee2a83aaf381299acbcaf774aeed6fc090c1cddc7d4b9087a54579b733b3be0"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeDelivery/legacy-search.test.ts",
+      "bytes": 2565,
+      "sha256": "b0850130c753b3ab8f824ff33b4857386bc159ee5e5942b530ddd9816cd82146"
+    }
+  ],
+  "review": [
+    "fetchMemoriesByIds retains its internal-only name but is now a fresh internalMutation; current authority/row/source/linked-resource final validation runs before returning data.",
+    "finalizeDataReadDelivery calls established final data rechecks, walks unique captured source witnesses with their actual canViewMemories/canViewFacts permissions and managed ancestry/artifact witnesses, and returns the minimum actual grant/share/retention deadline through runtimeDelivery.",
+    "Search final RPC uses runMutation. Its return remains an array; optional deliveryExpiresAt is attached to returned copies, never written into stored memory/canonical source. Action real time is checked immediately afterawait without later I/O.",
+    "Legacy VectorAPI checks any returned deliveryExpiresAt after transport, rejecting nonfinite/expired deadlines as AUTHORITY_EXPIRED/uncertain without replaying the action.",
+    "Initial keyword candidates remain an internal query only; final fresh hydration is required before public payload delivery. Cached candidate selection cannot substitute for this final fence.",
+    "Fixture runMutation routing uses the actual registered handlers. The unchanged oracle advances only surrounding action time after the final RPC; no advancing clock inside query/mutation is used."
+  ],
+  "limits": [
+    "Controlled real-handler/API inspection and red-to-green regression only; no native installed successor result claimed.",
+    "Original run1 and report1/verdict1 remain unchanged history; this successor closes the specific P8 code defect rather than rewriting the original failure.",
+    "Full03-final remains its later aggregate16/final audit. Original13 async capability and14 mandatory dependency/full-task status remain open; original criterion decisions unchanged.",
+    "Root owns permanent affected suite/types/lint/install receipt closure; no unverifiable author test totals are added here."
+  ],
+  "effects": {
+    "productEdits": 0,
+    "gitEdits": 0,
+    "serviceCalls": 0,
+    "paidCalls": 0
+  },
+  "newReviewLayer": false
+}

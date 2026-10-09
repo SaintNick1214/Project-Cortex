@@ -13,7 +13,7 @@ import type { RuntimeAuthorityReference } from "../src/auth/verified";
 import type { DataDeletionProof } from "./runtimeDataAuth";
 import { runtimeAuthorityReference } from "./runtimeAuthSchema";
 import type { CanonicalSourceWitness } from "./runtimeDataAuth";
-import { finalizeDataRead, prepareMutationRowsWrite, memoryMutationResult, canReadMutationRows, finalizeMutationRowsRead, dataEditor, assertDataLinks, bindDataActor, dataDenied, getScopedMemory,
+import { finalizeDataReadDelivery, prepareMutationRowsWrite, memoryMutationResult, canReadMutationRows, finalizeMutationRowsRead, dataEditor, assertDataLinks, bindDataActor, dataDenied, getScopedMemory,
   listScopedMemories, manualDataSource, recheckDataAuthority, dataAuthorityReference,
   requireDataAuthority, requireActionDataAuthority, recheckActionDataAuthority,
   getScopedMemoryDocument, rejectUnqualifiedEmbedding, reviseDataSource, searchScopedMemories, tombstoneDataRow,
@@ -340,11 +340,11 @@ export const get = mutation({
 });
 
 /**
- * Internal query to fetch memories by their IDs (used by search action)
+ * Fresh transaction to fetch memories by their IDs (used by search action)
  */
-export const fetchMemoriesByIds = internalQuery({
+export const fetchMemoriesByIds = internalMutation({
   args: { ids: v.array(v.id("memories")), reference: runtimeAuthorityReference },
-  handler: async (ctx, args): Promise<Doc<"memories">[]> => {
+  handler: async (ctx, args): Promise<Array<Doc<"memories"> & { deliveryExpiresAt?: number }>> => {
     const authority = await recheckDataAuthority(ctx, args.reference, "read");
     const results: Doc<"memories">[] = []; const witnesses: CanonicalSourceWitness[] = [];
     for (const id of args.ids) {
@@ -352,8 +352,8 @@ export const fetchMemoriesByIds = internalQuery({
       if (!row) dataDenied();
       results.push(row);
     }
-    await finalizeDataRead(ctx, authority, witnesses, results);
-    return results;
+    const deliveryExpiresAt = await finalizeDataReadDelivery(ctx, authority, witnesses, results);
+    return deliveryExpiresAt === undefined ? results : results.map(row => ({ ...row, deliveryExpiresAt }));
   },
 });
 
@@ -410,10 +410,13 @@ export const search = action({
     if (args.tags?.length) results = results.filter(m => args.tags!.some(tag => m.tags.includes(tag)));
     if (args.sourceType) results = results.filter(m => m.sourceType === args.sourceType);
     if (args.minImportance !== undefined) results = results.filter(m => m.importance >= args.minImportance!);
-    const hydrate = makeFunctionReference<"query", { reference: RuntimeAuthorityReference; ids: Doc<"memories">["_id"][] }, Doc<"memories">[]>(
-      "memories:fetchMemoriesByIds") as unknown as FunctionReference<"query", "internal", { reference: RuntimeAuthorityReference; ids: Doc<"memories">["_id"][] }, Doc<"memories">[]>;
+    const hydrate = makeFunctionReference<"mutation", { reference: RuntimeAuthorityReference; ids: Doc<"memories">["_id"][] }, Array<Doc<"memories"> & { deliveryExpiresAt?: number }>>(
+      "memories:fetchMemoriesByIds") as unknown as FunctionReference<"mutation", "internal", { reference: RuntimeAuthorityReference; ids: Doc<"memories">["_id"][] }, Array<Doc<"memories"> & { deliveryExpiresAt?: number }>>;
     // Final scoped hydration rechecks each source/resource fence after candidate selection.
-    return await ctx.runQuery(hydrate, { reference: pinnedAuthority, ids: results.slice(0, limit).map(row => row._id) });
+    const hydrated = await ctx.runMutation(hydrate, { reference: pinnedAuthority, ids: results.slice(0, limit).map(row => row._id) });
+    // Action time is real after the RPC; Convex transaction time was frozen inside hydration.
+    if (hydrated.some(row => row.deliveryExpiresAt !== undefined && Date.now() >= row.deliveryExpiresAt)) dataDenied();
+    return hydrated;
   },
 });
 

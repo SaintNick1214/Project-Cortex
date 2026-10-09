@@ -38,6 +38,7 @@ import {
 import type { ResilienceLayer } from "../resilience";
 import type { AuthContext } from "../auth/types";
 import { resolveTenantId } from "../auth/tenant";
+import { CortexRuntimeError } from "../client-runtime/validation";
 
 export class VectorAPI {
   constructor(
@@ -238,6 +239,13 @@ export class VectorAPI {
       "vector:search",
     );
 
+    // A server action returns the exact grant/share deadline from its final
+    // fresh hydration; network delivery cannot extend that authorization.
+    for (const row of result as Array<{ deliveryExpiresAt?: number }>) {
+      if (row.deliveryExpiresAt !== undefined && (!Number.isFinite(row.deliveryExpiresAt) || Date.now() >= row.deliveryExpiresAt)) {
+        throw new CortexRuntimeError("AUTHORITY_EXPIRED", "uncertain");
+      }
+    }
     return result as MemoryEntry[];
   }
 
