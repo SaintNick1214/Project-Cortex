@@ -28,6 +28,15 @@ test("consumer-before-source with root and detachments last",()=>{
   expect(orderErasure([root,c,m,detach,f]).map(row=>row.id)).toEqual(["F","M","C","D","R"]);
 });
 test("hard cycle refuses before any effect",()=>expect(()=>orderErasure([node("M","memories","delete",[{id:"F",kind:"hard"}]),node("F","facts","delete",[{id:"M",kind:"hard"}])])).toThrow("ERASURE_DEPENDENCY_CYCLE"));
+test("discovery and verification request the existing native 128-row bound without mutation",async()=>{
+  const f=fixture([node("selected")]),read=f.transport.discoverPage,requests:Record<string,unknown>[]=[];
+  f.transport.discoverPage=async r=>{requests.push(r);return read(r);};
+  expect((await discoverErasure(domain,f.transport,{})).map(row=>row.id)).toEqual(["selected"]);
+  expect((await discoverErasure(domain,f.transport,{},true)).map(row=>row.id)).toEqual(["selected"]);
+  expect(requests).toHaveLength(2*ERASURE_TABLES.length);
+  expect(requests.every(request=>request.numItems===128)).toBe(true);
+  expect(f.sent).toEqual([]);
+});
 test("split provisional data is discarded while exact left/right and sparse original tail exhaust",async()=>{
   const f=fixture([]),base=f.transport.discoverPage,ranges:unknown[]=[];
   f.transport.discoverPage=async(r)=>{if(r.table!=="memories")return base(r);ranges.push([r.cursor,r.endCursor]);const page={protocolVersion:1 as const,domain,table:"memories",observationTime:1};if(r.cursor===null&&r.endCursor===null)return {...page,page:[node("poison")],pageStatus:"SplitRequired",splitCursor:"middle",continueCursor:"tail",isDone:false};if(r.cursor===null)return {...page,page:[node("left")],continueCursor:"middle",isDone:true};if(r.cursor==="middle")return {...page,page:[node("right")],continueCursor:"tail",isDone:true};if(r.cursor==="tail")return {...page,page:[],continueCursor:"sparse",isDone:false};return {...page,page:[node("last")],continueCursor:"done",isDone:true};};
@@ -39,6 +48,46 @@ test("nonprogress and contradictory repeated physical fingerprints refuse before
   await expect(discoverErasure(domain,f.transport,{})).rejects.toThrow("ERASURE_PAGE_NONPROGRESS");
   f.transport.discoverPage=async(r)=>r.table!=="memories"?base(r):({protocolVersion:1,domain,table:"memories",observationTime:1,page:[{...node("same"),fingerprint:String(iteration++)}],continueCursor:"next",isDone:iteration===2});
   await expect(discoverErasure(domain,f.transport,{})).rejects.toThrow("ERASURE_SELECTION_CHANGED");expect(f.sent).toEqual([]);
+});
+test("bounded split ranges stop at their exact end even while the native table has more rows",async()=>{
+  const f=fixture([]),base=f.transport.discoverPage,ranges:unknown[]=[];
+  f.transport.discoverPage=async r=>{
+    if(r.table!=="memories")return base(r);
+    ranges.push([r.cursor,r.endCursor]);
+    const page={protocolVersion:1 as const,domain,table:"memories",observationTime:1};
+    if(r.cursor===null&&r.endCursor===null)return {...page,page:[node("provisional")],pageStatus:"SplitRecommended",splitCursor:"middle",continueCursor:"tail",isDone:false};
+    if(r.cursor===null)return {...page,page:[node("left")],continueCursor:"middle",isDone:false};
+    if(r.cursor==="middle")return {...page,page:[node("right")],continueCursor:"tail",isDone:false};
+    if(r.cursor==="tail")return {...page,page:[],continueCursor:"sparse",isDone:false};
+    return {...page,page:[node("last")],continueCursor:"done",isDone:true};
+  };
+  expect((await discoverErasure(domain,f.transport,{})).map(row=>row.id)).toEqual(["left","right","last"]);
+  expect(ranges).toEqual([[null,null],[null,"middle"],["middle","tail"],["tail",null],["sparse",null]]);
+  expect(f.sent).toEqual([]);
+});
+test.each([null,"","tail"])("malformed split cursor %p refuses without accepting provisional data or effects",async splitCursor=>{
+  const f=fixture([]),base=f.transport.discoverPage;
+  f.transport.discoverPage=async r=>r.table!=="memories"?base(r):({protocolVersion:1,domain,table:"memories",observationTime:1,page:[node("provisional")],pageStatus:"SplitRequired",splitCursor,continueCursor:"tail",isDone:false});
+  await expect(discoverErasure(domain,f.transport,{})).rejects.toThrow("ERASURE_PAGE_NONPROGRESS");
+  expect(f.sent).toEqual([]);
+});
+test("nested bounded split discards provisional data and never schedules an empty bounded tail",async()=>{
+  const f=fixture([]),base=f.transport.discoverPage,ranges:unknown[]=[];
+  f.transport.discoverPage=async r=>{
+    if(r.table!=="memories")return base(r);
+    ranges.push([r.cursor,r.endCursor]);
+    const page={protocolVersion:1 as const,domain,table:"memories",observationTime:1};
+    if(r.cursor===null&&r.endCursor===null)return {...page,page:[node("outer-provisional")],pageStatus:"SplitRequired",splitCursor:"middle",continueCursor:"tail",isDone:false};
+    if(r.cursor===null&&r.endCursor==="middle")return {...page,page:[node("inner-provisional")],pageStatus:"SplitRecommended",splitCursor:"quarter",continueCursor:"middle",isDone:false};
+    if(r.cursor===null)return {...page,page:[node("left")],continueCursor:"quarter",isDone:false};
+    if(r.cursor==="quarter")return {...page,page:[node("right")],continueCursor:"middle",isDone:false};
+    if(r.cursor===r.endCursor)return {...page,page:[],continueCursor:r.cursor as string,isDone:false};
+    if(r.cursor==="middle")return {...page,page:[node("sibling")],continueCursor:"tail",isDone:false};
+    return {...page,page:[node("last")],continueCursor:"done",isDone:true};
+  };
+  expect((await discoverErasure(domain,f.transport,{})).map(row=>row.id)).toEqual(["left","right","sibling","last"]);
+  expect(ranges).toEqual([[null,null],[null,"middle"],[null,"quarter"],["quarter","middle"],["middle","tail"],["tail",null]]);
+  expect(f.sent).toEqual([]);
 });
 test("server-proven pure data SCC has stable order",()=>expect(orderErasure([node("M","memories","delete",[{id:"F",kind:"data"}]),node("F","facts","delete",[{id:"M",kind:"data"}])]).map(row=>row.id)).toEqual(["M","F"]));
 test("eleven-hop hard chain has no two-hop cutoff",()=>{const records=Array.from({length:12},(_,i)=>node(String(i),"memories","delete",i<11?[{id:String(i+1),kind:"hard"}]:[]));expect(orderErasure(records.reverse()).map(row=>row.id)).toEqual(Array.from({length:12},(_,i)=>String(i)));});

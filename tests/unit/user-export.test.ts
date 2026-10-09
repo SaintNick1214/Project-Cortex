@@ -267,7 +267,7 @@ it("refuses malformed scope/protocol/identity echoes, arbitrary paths and missin
   }
 });
 it.each(["stall", "stream"])(
-  "cancel/deadline closes actual owned %s response before returning",
+  "cancel/deadline closes actual owned %s response within its cleanup deadline",
   async (state) => {
     mode = state;
     const t = createUserExportTransport({
@@ -280,7 +280,22 @@ it.each(["stall", "stream"])(
     await new Promise((resolve) => setTimeout(resolve, 40));
     controller.abort();
     await expect(pending).rejects.toThrow("EXPORT_CANCELLED");
-    await new Promise((resolve) => setTimeout(resolve, 20));
+    // Observe peer closure instead of assuming its event arrives within 20ms.
+    let deadline: ReturnType<typeof setTimeout> | undefined;
+    try {
+      await Promise.race([
+        Promise.all(
+          [...requestSockets].filter((socket) => !socket.destroyed).map(
+            (socket) => new Promise<void>((resolve) => socket.once("close", () => resolve())),
+          ),
+        ),
+        new Promise((_, reject) => {
+          deadline = setTimeout(() => reject(new Error("owned response socket leak")), 1000);
+        }),
+      ]);
+    } finally {
+      clearTimeout(deadline);
+    }
     expect([...requestSockets].filter((s) => !s.destroyed)).toHaveLength(0);
     await expect(t.inspect(identity)).rejects.toThrow("EXPORT_DEADLINE");
   },
@@ -1310,8 +1325,9 @@ it("freezes scope selection and protects internal state from mutations to emitte
     }),
   ).toThrow("EXPORT_SCOPE");
 });
-it("cancellation during an actual blocked binary read closes its socket before the rejected next returns", async () => {
+it("cancellation during an actual blocked binary read closes its requested socket within the cleanup deadline", async () => {
   const sockets = new Set<Socket>();
+  let requestedSocket: Socket | undefined;
   let received!: () => void;
   const requested = new Promise<void>((r) => {
     received = r;
@@ -1320,7 +1336,8 @@ it("cancellation during an actual blocked binary read closes its socket before t
   const connectionClosed = new Promise<void>((r) => {
     closed = r;
   });
-  const local = createServer((_request, response) => {
+  const local = createServer((request, response) => {
+    requestedSocket = request.socket;
     response.writeHead(200);
     response.flushHeaders();
     received();
@@ -1329,7 +1346,7 @@ it("cancellation during an actual blocked binary read closes its socket before t
     sockets.add(s);
     s.on("close", () => {
       sockets.delete(s);
-      closed();
+      if (s === requestedSocket) closed();
     });
   });
   await new Promise<void>((r) => local.listen(0, "127.0.0.1", r));
@@ -1369,7 +1386,10 @@ it("cancellation during an actual blocked binary read closes its socket before t
         setTimeout(() => reject(new Error("socket leak")), 1000),
       ),
     ]);
-    expect(sockets.size).toBe(0);
+    // Native fetch can preconnect a new idle pool socket after aborting this
+    // request. Only the socket that served the blocked read belongs to it.
+    expect(requestedSocket?.destroyed).toBe(true);
+    expect([...sockets].filter((socket) => socket === requestedSocket)).toHaveLength(0);
   } finally {
     for (const socket of sockets) socket.destroy();
     await new Promise<void>((r) => local.close(() => r()));

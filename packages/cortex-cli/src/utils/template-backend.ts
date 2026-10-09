@@ -1495,7 +1495,7 @@ const SDK_CONTRACT: Record<string, SourceContract> = {
     ]
   },
   "domainErasure.ts": {
-    "hash": "c54a56843be91579b7716f0ca1eb22e5cb3a7a84493429a59d4bf9b18debb78a",
+    "hash": "f125bf879e8195f073a0011e3285213dc8b07edc3b011088fd2d3fb99af495c7",
     "imports": [
       {
         "statement": "import { internalQuery, internalMutation, type QueryCtx, type MutationCtx } from \"./_generated/server\";",
@@ -1859,7 +1859,7 @@ const SDK_CONTRACT: Record<string, SourceContract> = {
     ]
   },
   "lib/domainErasureScope.ts": {
-    "hash": "efd6bb252649ddfb0cde55544314e164dcadad11448338208e37de36ea608db4",
+    "hash": "8e522d40d9c56b75bd41084a45cb67729ca07afaca8ccaa7c585b532af6d1a90",
     "imports": [
       {
         "statement": "import type { QueryCtx, MutationCtx } from \"../_generated/server\";",

@@ -15,6 +15,7 @@ import {
   generateTenantId,
   generateTenantUserId,
 } from "../helpers/tenancy";
+import { expectConvexRefusal } from "../helpers/public-contract";
 
 // Test context for isolation
 const ctx = createTestRunContext();
@@ -68,15 +69,15 @@ describe("Sessions Workflow E2E", () => {
       // Session activity remains supported and does not imply transcript effects.
       const beforeConversations = await owned("main").ownedRows("conversations");
       const beforeMemories = await owned("main").ownedRows("memories");
-      await expect(cortex.conversations.create({
+      await expectConvexRefusal(cortex.conversations.create({
         memorySpaceId: testMemorySpaceId, type: "user-agent",
         participants: { userId: testUserId, agentId: "test-agent" },
-      })).rejects.toThrow("CAPABILITY_NOT_READY");
-      await expect(cortex.memory.remember({
+      }), "CAPABILITY_NOT_READY");
+      await expectConvexRefusal(cortex.memory.remember({
         memorySpaceId: testMemorySpaceId, conversationId: `unavailable-${ctx.runId}`,
         userMessage: "What's the weather like?", agentResponse: "I can help you check the weather!",
         userId: testUserId, userName: "Test User", agentId: "test-agent",
-      })).rejects.toThrow("CAPABILITY_NOT_READY");
+      }), "CAPABILITY_NOT_READY");
       expect(await owned("main").ownedRows("conversations")).toEqual(beforeConversations);
       expect(await owned("main").ownedRows("memories")).toEqual(beforeMemories);
       await cortex.sessions.touch(session.sessionId);
@@ -252,10 +253,10 @@ describe("Sessions Workflow E2E", () => {
 
       const beforeConversations = await owned("main").ownedRows("conversations");
       const beforeMemories = await owned("main").ownedRows("memories");
-      await expect(cortex.conversations.create({
+      await expectConvexRefusal(cortex.conversations.create({
         memorySpaceId: testMemorySpaceId, type: "user-agent",
         participants: { userId: testUserId, agentId: "test-agent" },
-      })).rejects.toThrow("CAPABILITY_NOT_READY");
+      }), "CAPABILITY_NOT_READY");
 
       // Multiple interactions within the session
       const interactions = [
@@ -265,7 +266,7 @@ describe("Sessions Workflow E2E", () => {
       ];
 
       for (const interaction of interactions) {
-        await expect(cortex.memory.remember({
+        await expectConvexRefusal(cortex.memory.remember({
           memorySpaceId: testMemorySpaceId,
           conversationId: `unavailable-${ctx.runId}`,
           userMessage: interaction.user,
@@ -273,7 +274,7 @@ describe("Sessions Workflow E2E", () => {
           userId: testUserId,
           userName: "Test User",
           agentId: "test-agent",
-        })).rejects.toThrow("CAPABILITY_NOT_READY");
+        }), "CAPABILITY_NOT_READY");
 
         // Touch session after each interaction
         await cortex.sessions.touch(session.sessionId);

@@ -12,7 +12,10 @@
  * Test IDs: INT-MT-001, INT-MT-002
  */
 
-import { expectRefusalNoEffects } from "../../helpers/public-contract";
+import {
+  expectConvexRefusal,
+  expectRefusalNoEffects,
+} from "../../helpers/public-contract";
 import { createRuntimeFixture } from "../../helpers/runtime-fixture";
 const runtimeFixtures: Array<Awaited<ReturnType<typeof createRuntimeFixture>>> =
   [];
@@ -185,9 +188,7 @@ describeWithConvex("Artifacts Multi-tenancy Integration", () => {
       });
 
       // Tenant B cannot update it
-      await expect(
-        tenantB.cortex.artifacts.update(artifact.artifactId, "Hacked content!"),
-      ).rejects.toThrow("FORBIDDEN");
+      await expectConvexRefusal(tenantB.cortex.artifacts.update(artifact.artifactId, "Hacked content!"), "FORBIDDEN");
 
       // Verify content is unchanged
       const original = await tenantA.cortex.artifacts.get(artifact.artifactId);
@@ -204,9 +205,7 @@ describeWithConvex("Artifacts Multi-tenancy Integration", () => {
       });
 
       // Tenant B cannot delete it
-      await expect(
-        tenantB.cortex.artifacts.delete(artifact.artifactId),
-      ).rejects.toThrow("FORBIDDEN");
+      await expectConvexRefusal(tenantB.cortex.artifacts.delete(artifact.artifactId), "FORBIDDEN");
 
       // Verify artifact still exists for Tenant A
       const stillExists = await tenantA.cortex.artifacts.get(
@@ -338,13 +337,11 @@ describeWithConvex("Artifacts Multi-tenancy Integration", () => {
 
     beforeAll(async () => {
       globalSpaceId = `${ctx.runId}-global-space`;
-      await expect(
-        globalCortex.memorySpaces.register({
+      await expectConvexRefusal(globalCortex.memorySpaces.register({
           memorySpaceId: globalSpaceId,
           name: "Global Test Space",
           type: "project",
-        }),
-      ).rejects.toThrow("UNAUTHENTICATED");
+        }), "UNAUTHENTICATED");
     });
 
     it("should create global artifacts without tenant context", async () => {
@@ -408,21 +405,17 @@ describeWithConvex("Artifacts Multi-tenancy Integration", () => {
       });
 
       // Tenant B cannot append to it (even with session ID)
-      await expect(
-        tenantB.cortex.artifacts.appendContent({
+      await expectConvexRefusal(tenantB.cortex.artifacts.appendContent({
           artifactId: artifact.artifactId,
           sessionId,
           chunk: "Malicious content",
-        }),
-      ).rejects.toThrow("FORBIDDEN");
+        }), "FORBIDDEN");
 
       // Tenant B cannot finalize it
-      await expect(
-        tenantB.cortex.artifacts.finalizeStreaming({
+      await expectConvexRefusal(tenantB.cortex.artifacts.finalizeStreaming({
           artifactId: artifact.artifactId,
           sessionId,
-        }),
-      ).rejects.toThrow("FORBIDDEN");
+        }), "FORBIDDEN");
 
       // Cleanup - Tenant A finalizes
       await tenantA.cortex.artifacts.cancelStreaming({
@@ -442,11 +435,9 @@ describeWithConvex("Artifacts Multi-tenancy Integration", () => {
       });
 
       // Tenant B cannot start streaming
-      await expect(
-        tenantB.cortex.artifacts.startStreaming({
+      await expectConvexRefusal(tenantB.cortex.artifacts.startStreaming({
           artifactId: artifact.artifactId,
-        }),
-      ).rejects.toThrow("FORBIDDEN");
+        }), "FORBIDDEN");
     });
   });
 
@@ -497,17 +488,13 @@ describeWithConvex("Artifacts Multi-tenancy Integration", () => {
       await tenantA.cortex.artifacts.update(artifact.artifactId, "v2");
 
       // Tenant B cannot undo
-      await expect(
-        tenantB.cortex.artifacts.undo(artifact.artifactId),
-      ).rejects.toThrow("FORBIDDEN");
+      await expectConvexRefusal(tenantB.cortex.artifacts.undo(artifact.artifactId), "FORBIDDEN");
 
       // Tenant A can undo
       await tenantA.cortex.artifacts.undo(artifact.artifactId);
 
       // Tenant B cannot redo
-      await expect(
-        tenantB.cortex.artifacts.redo(artifact.artifactId),
-      ).rejects.toThrow("FORBIDDEN");
+      await expectConvexRefusal(tenantB.cortex.artifacts.redo(artifact.artifactId), "FORBIDDEN");
     });
 
     it("should prevent Tenant B from getting specific version of Tenant A artifact", async () => {

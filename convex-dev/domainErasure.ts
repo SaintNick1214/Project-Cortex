@@ -4,7 +4,7 @@ import { v } from "convex/values";
 import { digest, byteSize, clean } from "./lib/factHistoryProvenance";
 import { requireLifecycleReady, reserveLifecycle, reconcileRow, markDeletedRow, deleteUnreferencedStorage, pruneOrphanIdentity, type Primary } from "./lib/referenceLifecycle";
 import { captureGraphErasure, graphTables } from "./lib/graphSync";
-import { erasureTables, erasureRoot, validateErasureDomain, erasureFail, projectErasure, checkErasureIncoming, normalizeErasureId, erasureTarget, type ErasureDomain, type ErasureRow } from "./lib/domainErasureScope";
+import { erasureTables, erasureRoot, validateErasureDomain, erasureFail, erasureAction, projectErasure, checkErasureIncoming, normalizeErasureId, erasureTarget, type ErasureDomain, type ErasureRow } from "./lib/domainErasureScope";
 
 const domainValidator = v.object({kind:v.union(v.literal("user"),v.literal("space")),tenantId:v.optional(v.string()),userId:v.optional(v.string()),memorySpaceId:v.optional(v.string()),rootDocumentId:v.optional(v.string())});
 const tableValidator = v.union(...erasureTables.map(table=>v.literal(table)));
@@ -79,8 +79,11 @@ async function guardRoot(ctx:MutationCtx,domain:ErasureDomain,rootId:string) {
     // checks; it never turns a page boundary into permission to remove a root.
     for await (const row of ctx.db.query(table)) {
         if(row._id===rootId)continue;
-        const projection=await projectErasure(ctx,table,row as unknown as ErasureRow,domain);
-        if(["delete","detach","root","block"].includes(projection.action))erasureFail("ERASURE_REMAINING_PRIMARY");
+        // Closure needs authoritative membership, not a deletion projection for
+        // every unrelated row. Ambiguous membership still resolves its physical
+        // source through erasureAction before a root can be removed.
+        const membership=await erasureAction(ctx,table,row as unknown as ErasureRow,domain);
+        if(["delete","detach","root","block"].includes(membership.action))erasureFail("ERASURE_REMAINING_PRIMARY");
         await reserveLifecycle(ctx,2048);
     }
   }

@@ -17,7 +17,8 @@ async function inspect(adapter: GraphAdapter) {
   return {dialect, constraints, indexes};
 }
 function constraintMatches(r: Record<string, unknown>, label: string, dialect: string) {
-  return dialect === "neo4j" ? r.type === "NODE_PROPERTY_UNIQUENESS" && r.entityType === "NODE" &&
+  // Neo4j 5 reports UNIQUENESS; Cypher 25 names the same node constraint NODE_PROPERTY_UNIQUENESS.
+  return dialect === "neo4j" ? (r.type === "UNIQUENESS" || r.type === "NODE_PROPERTY_UNIQUENESS") && r.entityType === "NODE" &&
     JSON.stringify(list(r.labelsOrTypes)) === JSON.stringify([label]) && JSON.stringify(list(r.properties)) === '["key"]' :
     r["constraint type"] === "unique" && r.label === label && JSON.stringify(list(r.properties)) === '["key"]';
 }

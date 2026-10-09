@@ -151,9 +151,11 @@ export function erasureEdgeKind(role: string, authority: boolean): "hard" | "dat
   return "data";
 }
 export async function projectErasure(ctx: Reader, table: Primary, row: ErasureRow, domain: ErasureDomain): Promise<ErasureProjection> {
-  const action = await erasureAction(ctx, table, row, domain), target = await erasureTarget(ctx, table, row);
+  const action = await erasureAction(ctx, table, row, domain);
   const result: ErasureProjection = {table,id:String(row._id),fingerprint:digest(row),...action,dependencies:[],retainedVersions:Array.isArray(row.previousVersions) ? row.previousVersions.length : Array.isArray(row.versionHistory) ? row.versionHistory.length : 0,messages:Array.isArray(row.messages) ? row.messages.length : 0,serializedBytes:byteSize(row),storageIds:[]};
-  if (!target || !["delete", "root", "detach"].includes(action.action)) return result;
+  if (!["delete", "root", "detach"].includes(action.action)) return result;
+  const target = await erasureTarget(ctx, table, row);
+  if (!target) return result;
   if(table==="contexts"&&action.action==="delete") {
     const duplicates=await ctx.db.query("contexts").withIndex("by_tenant_contextId",q=>q.eq("tenantId",domain.tenantId).eq("contextId",String(row.contextId))).take(2);
     if(duplicates.length!==1)erasureFail("ERASURE_CONTEXT_AMBIGUOUS");

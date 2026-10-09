@@ -122,6 +122,10 @@ jobs:
     services:
       convex:
         image: ghcr.io/get-convex/convex-backend@sha256:d715e9ec088784407ca4ba2d3db592702cd328d02c76cdca3852c0018f2a76b4
+        env:
+          CONVEX_CLOUD_ORIGIN: http://127.0.0.1:3210
+          CONVEX_SITE_ORIGIN: http://127.0.0.1:3211
+          DISABLE_BEACON: "true"
         ports: [3210:3210, 3211:3211]
         options: --health-cmd "curl -f http://localhost:3210/version" --health-interval 5s --health-start-period 10s --health-retries 30
       neo4j:
@@ -211,6 +215,10 @@ jobs:
     services:
       convex:
         image: ghcr.io/get-convex/convex-backend@sha256:d715e9ec088784407ca4ba2d3db592702cd328d02c76cdca3852c0018f2a76b4
+        env:
+          CONVEX_CLOUD_ORIGIN: http://127.0.0.1:3210
+          CONVEX_SITE_ORIGIN: http://127.0.0.1:3211
+          DISABLE_BEACON: "true"
         ports: [3210:3210, 3211:3211]
         options: --health-cmd "curl -f http://localhost:3210/version" --health-interval 5s --health-start-period 10s --health-retries 30
     env:
@@ -676,6 +684,9 @@ jobs:
       - name: Build main SDK first
         run: npm run build
 
+      - name: Build CLI
+        run: npm run build --workspace=@cortexmemory/cli
+
       - name: Run CLI unit tests
         run: npm run test:unit --workspace=@cortexmemory/cli
 
@@ -689,9 +700,6 @@ jobs:
 
       - name: Lint CLI
         run: npm run lint --workspace=@cortexmemory/cli
-
-      - name: Build CLI
-        run: npm run build --workspace=@cortexmemory/cli
 
       - name: Verify CLI version matches package.json
         run: |

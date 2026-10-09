@@ -7,7 +7,10 @@
  * - Cross-tenant queries return only appropriate data
  */
 
-import { expectRefusalNoEffects } from "./helpers/public-contract";
+import {
+  expectConvexRefusal,
+  expectRefusalNoEffects,
+} from "./helpers/public-contract";
 import { createRuntimeFixture } from "./helpers/runtime-fixture";
 const runtimeFixtures: Array<Awaited<ReturnType<typeof createRuntimeFixture>>> =
   [];
@@ -613,9 +616,7 @@ describeWithConvex("Tenant Isolation", () => {
       const before = await tenantA.cortex.memorySpaces.get(
         tenantA.memorySpaceId,
       );
-      await expect(
-        tenantB.cortex.memorySpaces.get(tenantA.memorySpaceId),
-      ).rejects.toThrow("FORBIDDEN");
+      await expectConvexRefusal(tenantB.cortex.memorySpaces.get(tenantA.memorySpaceId), "FORBIDDEN");
       expect(
         await tenantA.cortex.memorySpaces.get(tenantA.memorySpaceId),
       ).toEqual(before);

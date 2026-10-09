@@ -8,9 +8,14 @@
  */
 
 import {
+  expectConvexRefusal,
   expectRefusalNoEffects,
   expectOwnedRecallItems,
+  type RuntimeFixture,
 } from "./helpers/public-contract";
+import { ConvexError } from "convex/values";
+import { CascadeDeletionError } from "../src/users";
+import { ErasureError } from "../src/users/erasure";
 import { createRuntimeFixture } from "./helpers/runtime-fixture";
 import { Cortex } from "../src";
 import { createAuthContext } from "../src/auth/context";
@@ -26,6 +31,139 @@ const ctx = createTestRunContext();
 
 // Skip tests if no Convex URL configured
 const describeWithConvex = process.env.CONVEX_URL ? describe : describe.skip;
+
+describe("Typed public refusal assertion controls", () => {
+  const data = { code: "CAPABILITY_NOT_READY", outcome: "not_dispatched" };
+  it.each([
+    ["CAPABILITY_NOT_READY", "native"],
+    ["FORBIDDEN", "native"],
+    ["CAPABILITY_NOT_READY", "serialized"],
+    ["FORBIDDEN", "serialized"],
+  ])(
+    "accepts exact %s %s data while dispatching once and inspecting unchanged rows",
+    async (code, representation) => {
+      const error =
+        representation === "native"
+          ? new ConvexError({ ...data, code })
+          : new Error(JSON.stringify({ ...data, code, message: "Access denied" }));
+      if (representation === "native") {
+        error.message = "[CONVEX M] Server Error\nCalled by client";
+        expect(error.message).not.toContain(code);
+      }
+      const rows = [{ factId: "owned", content: "retained" }];
+      let dispatches = 0;
+      let inspections = 0;
+      const fixture = {
+        ownedRows: async () => {
+          inspections++;
+          return rows;
+        },
+      } as unknown as RuntimeFixture;
+      await expectRefusalNoEffects(
+        async () => { dispatches++; throw error; },
+        [fixture],
+        "facts",
+        code,
+      );
+      expect(dispatches).toBe(1);
+      expect(inspections).toBe(2);
+    },
+  );
+  it.each([
+    new Error("CAPABILITY_NOT_READY: network failure"),
+    Object.assign(new Error("Server Error"), { data }),
+    new ConvexError("CAPABILITY_NOT_READY"),
+    new ConvexError({ ...data, code: "FORBIDDEN" }),
+    new Error(JSON.stringify({ ...data, code: "FORBIDDEN", message: "Access denied" })),
+    new Error(`Server Error: ${JSON.stringify({ ...data, message: "Access denied" })}`),
+  ])("rejects an untyped or different refusal: %p", async (error) => {
+    await expect(
+      expectConvexRefusal(Promise.reject(error), data.code),
+    ).rejects.toThrow();
+  });
+  it.each([undefined, "executed", "unknown"])(
+    "rejects a capability outcome other than not_dispatched: %p",
+    async (outcome) => {
+      const error = new ConvexError(
+        outcome === undefined ? { code: data.code } : { code: data.code, outcome },
+      );
+      await expect(
+        expectConvexRefusal(Promise.reject(error), data.code),
+      ).rejects.toThrow();
+      const serialized = new Error(
+        JSON.stringify({ code: data.code, outcome, message: "Access denied" }),
+      );
+      await expect(
+        expectConvexRefusal(Promise.reject(serialized), data.code),
+      ).rejects.toThrow();
+    },
+  );
+  it("rejects a successful response even if it is shaped like a native error", async () => {
+    await expect(
+      expectConvexRefusal(Promise.resolve(new ConvexError(data)), data.code),
+    ).rejects.toThrow();
+  });
+  it("fails when a typed refusal accompanies a persisted row change", async () => {
+    let inspections = 0;
+    const fixture = {
+      ownedRows: async () => [{
+        factId: "owned",
+        content: inspections++ === 0 ? "original" : "changed",
+      }],
+    } as unknown as RuntimeFixture;
+    await expect(
+      expectRefusalNoEffects(
+        async () => { throw new ConvexError(data); },
+        [fixture],
+        "facts",
+        data.code,
+      ),
+    ).rejects.toThrow();
+    expect(inspections).toBe(2);
+  });
+  it.each([
+    new ErasureError("ERASURE_ADMIN_TRANSPORT_REQUIRED"),
+    new CascadeDeletionError(
+      "Supported erasure stopped",
+      new ErasureError("ERASURE_ADMIN_TRANSPORT_REQUIRED"),
+    ),
+  ])("accepts only the typed local erasure pre-dispatch contract: %p", async (error) => {
+    let inspections = 0;
+    let dispatches = 0;
+    const fixture = {
+      ownedRows: async () => {
+        inspections++;
+        return [{ factId: "owned" }];
+      },
+    } as unknown as RuntimeFixture;
+    await expectRefusalNoEffects(
+      async () => { dispatches++; throw error; },
+      [fixture],
+      "facts",
+      "ERASURE_ADMIN_TRANSPORT_REQUIRED",
+    );
+    expect(dispatches).toBe(1);
+    expect(inspections).toBe(2);
+  });
+  it.each([
+    new Error("ERASURE_ADMIN_TRANSPORT_REQUIRED"),
+    new CascadeDeletionError(
+      "ERASURE_ADMIN_TRANSPORT_REQUIRED",
+      new Error("ERASURE_ADMIN_TRANSPORT_REQUIRED"),
+    ),
+    new ErasureError("ERASURE_CANCELLED"),
+  ])("rejects an untyped or different local erasure failure: %p", async (error) => {
+    const fixture = { ownedRows: async () => [] } as unknown as RuntimeFixture;
+    await expect(
+      expectRefusalNoEffects(
+        async () => { throw error; },
+        [fixture],
+        "facts",
+        "ERASURE_ADMIN_TRANSPORT_REQUIRED",
+      ),
+    ).rejects.toThrow();
+  });
+});
 
 describeWithConvex("Auth Context Injection", () => {
   let testTenantId: string;

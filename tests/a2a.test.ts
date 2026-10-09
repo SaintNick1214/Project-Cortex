@@ -5,6 +5,7 @@ import { ConvexHttpClient } from "convex/browser";
 import { makeFunctionReference } from "convex/server";
 import { createRuntimeFixture } from "./helpers/runtime-fixture";
 import { createTestRunContext } from "./helpers/isolation";
+import { expectConvexRefusal } from "./helpers/public-contract";
 
 describe("A2A current public contract", () => {
   const run = createTestRunContext();
@@ -34,10 +35,10 @@ describe("A2A current public contract", () => {
   });
   it("retains the capability refusal through all four SDK entry points", async () => {
     const before = await rows();
-    await expect(cortex.a2a.send({ from: "agent-1", to: "agent-2", message: "owned message" })).rejects.toThrow("CAPABILITY_NOT_READY");
-    await expect(cortex.a2a.request({ from: "agent-1", to: "agent-2", message: "owned request", timeout: 1000 })).rejects.toThrow("CAPABILITY_NOT_READY");
-    await expect(cortex.a2a.broadcast({ from: "agent-1", to: ["agent-2"], message: "owned broadcast" })).rejects.toThrow("CAPABILITY_NOT_READY");
-    await expect(cortex.a2a.getConversation("agent-1", "agent-2", { limit: 100 })).rejects.toThrow("CAPABILITY_NOT_READY");
+    await expectConvexRefusal(cortex.a2a.send({ from: "agent-1", to: "agent-2", message: "owned message" }), "CAPABILITY_NOT_READY");
+    await expectConvexRefusal(cortex.a2a.request({ from: "agent-1", to: "agent-2", message: "owned request", timeout: 1000 }), "CAPABILITY_NOT_READY");
+    await expectConvexRefusal(cortex.a2a.broadcast({ from: "agent-1", to: ["agent-2"], message: "owned broadcast" }), "CAPABILITY_NOT_READY");
+    await expectConvexRefusal(cortex.a2a.getConversation("agent-1", "agent-2", { limit: 100 }), "CAPABILITY_NOT_READY");
     expect(await rows()).toEqual(before);
   });
   it("does not reveal capability or create transcript effects for an unauthenticated client", async () => {

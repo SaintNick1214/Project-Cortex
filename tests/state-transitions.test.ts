@@ -13,6 +13,7 @@ import { createRuntimeFixture } from "./helpers/runtime-fixture";
 import { describe, it, expect, beforeAll, afterAll, jest } from "@jest/globals";
 import { Cortex } from "./helpers/deployment-operator";
 import { createNamedTestRunContext, waitForCondition } from "./helpers";
+import { expectConvexRefusal } from "./helpers/public-contract";
 
 // Retry failed tests once - Convex backend can have transient errors under parallel load
 jest.retryTimes(1, { logErrorsBeforeRetry: true });
@@ -1125,12 +1126,10 @@ describe("State Transition Testing", () => {
         status: "active",
       });
 
-      await expect(
-        cortex.contexts.update(testCtx.contextId, {
+      await expectConvexRefusal(cortex.contexts.update(testCtx.contextId, {
           status: "active",
           completedAt: testCtx.createdAt - 1,
-        }),
-      ).rejects.toThrow("INVALID_INPUT");
+        }), "INVALID_INPUT");
       expect(await cortex.contexts.get(testCtx.contextId)).toEqual(testCtx);
     });
   });

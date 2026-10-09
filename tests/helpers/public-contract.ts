@@ -1,6 +1,9 @@
 /** Native persisted-state assertions for public refusals. Provisioning stays in the
  * caller's fixed runtime fixture plan; caller labels never create authority. */
 import { ConvexClient } from "convex/browser";
+import { ConvexError } from "convex/values";
+import { CascadeDeletionError } from "../../src/users";
+import { ErasureError } from "../../src/users/erasure";
 import type {
   FunctionReference,
   FunctionArgs,
@@ -9,6 +12,36 @@ import type {
 import type { createRuntimeFixture } from "./runtime-fixture";
 
 export type RuntimeFixture = Awaited<ReturnType<typeof createRuntimeFixture>>;
+
+/** Managed deployments redact diagnostics, but retain native errorData. Some SDK
+ * APIs serialize that data into a complete JSON Error.message. Validate the exact
+ * structured code in either representation; diagnostic substrings never suffice. */
+export async function expectConvexRefusal(result: Promise<unknown>, code: string) {
+  const outcome = await result.then(
+    () => ({ fulfilled: true as const }),
+    (error: unknown) => ({ fulfilled: false as const, error }),
+  );
+  expect(outcome.fulfilled).toBe(false);
+  if (outcome.fulfilled) throw new Error("Expected a typed native Convex refusal");
+  let data: unknown;
+  if (outcome.error instanceof ConvexError) {
+    data = outcome.error.data;
+  } else {
+    expect(outcome.error).toBeInstanceOf(Error);
+    if (!(outcome.error instanceof Error))
+      throw new Error("Expected structured native refusal data");
+    try {
+      data = JSON.parse(outcome.error.message);
+    } catch {
+      throw new Error("Expected structured native refusal data");
+    }
+    expect(data).toMatchObject({ message: expect.any(String) });
+  }
+  expect(data).toMatchObject({ code });
+  if (code === "CAPABILITY_NOT_READY")
+    expect(data).toMatchObject({ outcome: "not_dispatched" });
+}
+
 export async function expectRefusalNoEffects(
   run: () => Promise<unknown>,
   fixtures: RuntimeFixture[],
@@ -18,11 +51,25 @@ export async function expectRefusalNoEffects(
   const before = await Promise.all(
     fixtures.map((fixture) => fixture.ownedRows(table)),
   );
-  const result = run();
-  await expect(result).rejects.toThrow(code);
-  if (code === "CAPABILITY_NOT_READY") {
-    const error: unknown = await result.catch((failure: unknown) => failure);
-    expect((error as Error).message).toContain('"outcome":"not_dispatched"');
+  if (code === "ERASURE_ADMIN_TRANSPORT_REQUIRED") {
+    // This is a local pre-dispatch contract, not a server ConvexError. User
+    // cascade wraps only the genuine ErasureError in CascadeDeletionError.
+    const result = await run().then(
+      () => ({ fulfilled: true as const }),
+      (error: unknown) => ({ fulfilled: false as const, error }),
+    );
+    expect(result.fulfilled).toBe(false);
+    if (result.fulfilled) throw new Error("Expected an erasure transport refusal");
+    const error =
+      result.error instanceof CascadeDeletionError
+        ? result.error.cause
+        : result.error;
+    expect(error).toBeInstanceOf(ErasureError);
+    if (!(error instanceof ErasureError))
+      throw new Error("Expected a typed erasure transport refusal");
+    expect(error.code).toBe(code);
+  } else {
+    await expectConvexRefusal(run(), code);
   }
   expect(
     await Promise.all(fixtures.map((fixture) => fixture.ownedRows(table))),

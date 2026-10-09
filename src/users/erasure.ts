@@ -115,18 +115,21 @@ export async function discoverErasure(domain:ErasureDomain,transport:ErasureTran
     const ranges:{cursor:string|null;endCursor:string|null}[]=[{cursor:null,endCursor:null}];const visited=new Set<string>();
     while(ranges.length) {
       active(options);const range=ranges.shift()!,key=JSON.stringify(range);if(visited.has(key))throw new ErasureError("ERASURE_PAGE_NONPROGRESS");visited.add(key);
-      const page=await transport[verify?"verifyPage":"discoverPage"]({domain,table,...range,numItems:16},{signal:options.signal});
+      const page=await transport[verify?"verifyPage":"discoverPage"]({domain,table,...range,numItems:128},{signal:options.signal});
       if(page.table!==table||!Array.isArray(page.page)||typeof page.continueCursor!=="string"||typeof page.isDone!=="boolean")throw new ErasureError("ERASURE_PROTOCOL");
+      // Native isDone describes the whole query. Reaching a bounded end
+      // exhausts this range; split children still run, but no empty tail does.
+      const rangeDone=range.endCursor!==null&&page.continueCursor===range.endCursor;
       if(page.pageStatus==="SplitRequired"||page.pageStatus==="SplitRecommended") {
         if(!page.splitCursor||page.splitCursor===range.cursor||page.splitCursor===range.endCursor||page.splitCursor===page.continueCursor)throw new ErasureError("ERASURE_PAGE_NONPROGRESS");
         ranges.unshift({cursor:range.cursor,endCursor:page.splitCursor},{cursor:page.splitCursor,endCursor:page.continueCursor});
-        if(!page.isDone)ranges.splice(2,0,{cursor:page.continueCursor,endCursor:range.endCursor});continue;
+        if(!page.isDone&&!rangeDone)ranges.splice(2,0,{cursor:page.continueCursor,endCursor:range.endCursor});continue;
       }
       for(const record of page.page) {
         if(record.table!==table||!record.id||!record.fingerprint||!Array.isArray(record.dependencies))throw new ErasureError("ERASURE_PROTOCOL");
         const previous=found.get(record.id);if(previous&&digest(previous)!==digest(record))throw new ErasureError("ERASURE_SELECTION_CHANGED");found.set(record.id,record);
       }
-      if(!page.isDone) {if(page.continueCursor===range.cursor)throw new ErasureError("ERASURE_PAGE_NONPROGRESS");ranges.unshift({cursor:page.continueCursor,endCursor:range.endCursor});}
+      if(!page.isDone&&!rangeDone) {if(page.continueCursor===range.cursor)throw new ErasureError("ERASURE_PAGE_NONPROGRESS");ranges.unshift({cursor:page.continueCursor,endCursor:range.endCursor});}
     }
   }
   return [...found.values()];

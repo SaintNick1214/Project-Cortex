@@ -24,6 +24,7 @@ const ctx = createTestRunContext();
 
 describe("GDPR: Cascade Deletion", () => {
   let cortex: Cortex;
+  const ownedTenantClients: Cortex[] = [];
   let runtime: Awaited<ReturnType<typeof createRuntimeFixture>>;
   let governance: Awaited<ReturnType<typeof createRuntimeFixture>>;
   let erasureTransport: ErasureTransport;
@@ -47,6 +48,10 @@ describe("GDPR: Cascade Deletion", () => {
     client = new ConvexClient(CONVEX_URL);
     _cleanup = new TestCleanup(client);
     // NOTE: Removed purgeAll() for parallel execution compatibility.
+  });
+
+  afterEach(async () => {
+    await Promise.all(ownedTenantClients.splice(0).map((sdk) => sdk.shutdown()));
   });
 
   afterAll(async () => {
@@ -814,10 +819,12 @@ describe("GDPR: Cascade Deletion", () => {
         convexUrl: CONVEX_URL,
         auth: createTenantAuthContext(tenantA, userA),
       });
+      ownedTenantClients.push(cortexA);
       const cortexB = new Cortex({
         convexUrl: CONVEX_URL,
         auth: createTenantAuthContext(tenantB, userB),
       });
+      ownedTenantClients.push(cortexB);
 
       // Register spaces for each tenant
       await cortexA.memorySpaces.register({
@@ -901,10 +908,12 @@ describe("GDPR: Cascade Deletion", () => {
         convexUrl: CONVEX_URL,
         auth: createTenantAuthContext(tenantA, userA),
       });
+      ownedTenantClients.push(cortexA);
       const cortexB = new Cortex({
         convexUrl: CONVEX_URL,
         auth: createTenantAuthContext(tenantB, userB),
       });
+      ownedTenantClients.push(cortexB);
 
       // Setup: Create spaces and data
       await cortexA.memorySpaces.register({
