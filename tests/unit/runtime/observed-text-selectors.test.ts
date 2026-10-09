@@ -28,7 +28,7 @@ function fixture() {
   const read = registeredHandler<{ reference: typeof f.reference; operationKey: ModelOperationKey; runBudgetId: string; source?: Source },
     { snapshot: ModelPolicySnapshotV1; dispatchEvidence: QualifiedDispatchEvidence }>(resolve);
   const installRevision = (revision: number) => install(f.ctx, { manifestId: current.manifestId, expectedRevision: revision });
-  const bindRequest = (operationKey: ModelOperationKey, requestId = operationKey) => bind(f.ctx, { reference: f.reference, operationKey, requestId,
+  const bindRequest = (operationKey: ModelOperationKey, requestId: string = operationKey) => bind(f.ctx, { reference: f.reference, operationKey, requestId,
     requestCanonical: canonicalModelJson({ text: "Owned ordinary operation" }) });
   const source = async () => {
     const contentHash = await semanticHash("Owned ordinary source");

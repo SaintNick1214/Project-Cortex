@@ -1,6 +1,6 @@
 # Task 13: Gateway image and durable asynchronous video jobs
 
-**Status:** Execution authorized — pending prerequisite implementation and independent acceptance.
+**Status:** Partial independent acceptance: 1/4 original criteria accepted; genuine async-service outcomes and full task remain incomplete.
 **Goal:** [Cortex-owned backend runs](../goal.md)
 **Depends on:** [09 accepted actual text/UI slice](09-text-client-slice.md), [04 Per-function model policy and admission budgets](04-model-policy.md), [07 Agent execution and durable reactive output](07-agent-streams.md), [12 Convex-owned assets and bounded private delivery](12-asset-lifecycle.md)
 
@@ -21,7 +21,7 @@ Generate media through governed backend jobs and materialize owned artifact outp
 
 - [ ] Actual qualified image/video jobs create typed ready artifacts with model/input/usage/provenance and authorized download.
 - [ ] Missed/duplicate/out-of-order callback and download retries produce one owned version; forged callback cannot mutate a job.
-- [ ] Oversized generated output cannot become a ready artifact or be delivered; verify error/cost/cleanup. Lost submission response remains uncertain rather than duplicate paid request; cancel does not promise upstream cancellation or refund.
+- [x] Oversized generated output cannot become a ready artifact or be delivered; verify error/cost/cleanup. Lost submission response remains uncertain rather than duplicate paid request; cancel does not promise upstream cancellation or refund.
 - [ ] Linked-local polling and unavailable async-video configuration produce the documented behavior/error.
 
 ## Context and Research
@@ -35,3 +35,8 @@ Generate media through governed backend jobs and materialize owned artifact outp
 Task 16 uses bounded paid fixtures only after execution request and disposable prerequisites. Standalone audio/edit APIs remain excluded.
 
 No implementation, installation, paid inference, deployment or application testing is authorized by this task's presence. Re-read target AGENTS.md, Git status and manifests at execution. Use explicit working directories, preserve local work and record meaningful outcomes under this goal's qa/ directory.
+
+
+### Recorded partial acceptance
+
+Checkboxes reflect the already recorded non-author [criterion verdict](../qa/local-resume-2026-10-05/task13-task14-product-independent-review1/verdict1.json). No new grant or unavailable-capability success is implied. Original criteria, failed intervals and service blockers remain unchanged.

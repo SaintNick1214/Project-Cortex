@@ -1,0 +1,132 @@
+{
+  "version": 1,
+  "status": "TASK06_A1_PASS_FINAL_SOURCE_AND_ACTUAL_AUDIT_OPEN",
+  "sameCoherentNonAuthorReview": true,
+  "head": "319a06924330fb931866c7bc537890f7e6fa991c",
+  "runId": 37921734326,
+  "policy": "acceptance-policy.md v2",
+  "criterion": {
+    "id": "06A1",
+    "originalText": "Fresh-host and customized-host-without-Cortex fixtures register core components/schema/routes without removing unrelated objects or changing the host functions directory.",
+    "verdict": "PASS",
+    "newGrant": true
+  },
+  "task06": {
+    "verdict": "PASS",
+    "requirements": 4,
+    "criteria": 3,
+    "retainedCriteria": [
+      "06A2",
+      "06A3"
+    ]
+  },
+  "dimensions": {
+    "requirement": 4,
+    "code": 4,
+    "test": 4,
+    "pattern": 4,
+    "completeness": 4,
+    "mean": 4
+  },
+  "report": {
+    "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor3/independent-review1/report1.md",
+    "bytes": 10709,
+    "sha256": "e8f61a22e3cf049a5c092c1b9757ce3ee514b08ceb8c1e7d2cd15f66763a2904"
+  },
+  "actualInstallJobs": [
+    {
+      "id": 113791019749,
+      "name": "basic",
+      "conclusion": "success",
+      "officialTypecheck": "enable",
+      "components": [
+        "agent",
+        "workflow"
+      ],
+      "appBuild": "success",
+      "ownedContainersStop": "success",
+      "rawLog": {
+        "path": "../installer-actual1/basic-job1.log",
+        "bytes": 481497,
+        "sha256": "d2fdc453643c05b55e7e305d4a9b5b79fe26c6b504695f4743edb75f402bfb38"
+      }
+    },
+    {
+      "id": 113791019833,
+      "name": "canonical",
+      "conclusion": "success",
+      "officialTypecheck": "enable",
+      "components": [
+        "agent",
+        "workflow"
+      ],
+      "appBuild": "success",
+      "ownedContainersStop": "success",
+      "rawLog": {
+        "path": "../installer-actual1/canonical-job1.log",
+        "bytes": 494080,
+        "sha256": "352dc3980024e99cfd81de60869f934a2a063676e041661654be7c5892cca274"
+      }
+    },
+    {
+      "id": 113791019782,
+      "name": "chat",
+      "conclusion": "success",
+      "officialTypecheck": "enable",
+      "components": [
+        "agent",
+        "workflow"
+      ],
+      "appBuild": "success",
+      "ownedContainersStop": "success",
+      "rawLog": {
+        "path": "../installer-actual1/chat-job1.log",
+        "bytes": 501967,
+        "sha256": "f540d69677717ab81f75ec6a48a21a4396e47187b283f45838c405ccef30cb60"
+      }
+    }
+  ],
+  "sourceApplicability": {
+    "priorSourceHandoff": "../../successor2/independent-review2/handoff2.json",
+    "sourceDigest": "745f93caeb4263df25c8ce133d5fd0e94fd25eb92294ba19f2b85b70baf86356",
+    "allReviewedSourcePinsMatchHead": true,
+    "customConfigControls": "../../successor2/installer-repair4/full-runtime-successor4.log",
+    "fullTypedCases": 8,
+    "skipped": 0,
+    "allGeneratedSourceFilesReached": 156,
+    "priorCustomActual": "../../../task16-dev-integration1/native-actual1/deploy-merged4.json",
+    "historicalFailuresPreserved": true
+  },
+  "acceptance": {
+    "tasks": 13,
+    "taskDenominator": 17,
+    "criteria": 55,
+    "criterionDenominator": 61,
+    "productDenominator": 12,
+    "newCriterionGrants": [
+      "06A1"
+    ],
+    "remainingOriginalExtensionCriteria": [
+      "13A1",
+      "13A2",
+      "13A4",
+      "14A1",
+      "16A3",
+      "17A2"
+    ],
+    "wholeCurrentCI": "PENDING",
+    "finalNativeCleanupFinancial": "PENDING",
+    "finalGoalAudit": "OPEN_INCOMPLETE_REQUIRED_ASYNC",
+    "fullGoalComplete": false
+  },
+  "effects": {
+    "product": 0,
+    "gitMutation": 0,
+    "service": 0,
+    "model": 0,
+    "browser": 0,
+    "settings": 0,
+    "trackerCount": 0
+  },
+  "next": "Continue same coherent current-source actual/final audit when whole CI, owned cleanup and final Native financial/authority evidence close. No new review/preparation gate."
+}

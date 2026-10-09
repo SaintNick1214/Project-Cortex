@@ -1,0 +1,25 @@
+{
+  "bindingSha256": "7535ae57928ece80905bc9edadcf483ace240b8d375104c8c54bfb767fbb13f5",
+  "recipe": {
+    "version": 1,
+    "kind": "memory-extraction-response-instance-clarity",
+    "predecessorManifestRevision": 15,
+    "successorManifestRevision": 16,
+    "manifestId": "cortex-gateway-agent-defaults-2026-10-08",
+    "operationKey": "memory.extract",
+    "oldPromptVersion": "memory-schema-prompt-v2",
+    "newPromptVersion": "memory-extraction-instance-prompt-v3",
+    "assemblySelection": "trusted snapshot exact promptVersion and operationKey",
+    "instruction": "Return ONLY a JSON object. Return a JSON data instance, not a JSON Schema definition. The required top-level response shape is { \"facts\": [...] }; replace ... with zero or more fact objects described by the validation schema. For no facts, return { \"facts\": [] }. The schema below is validation metadata, not response data. Do not copy schema keywords additionalProperties, properties, or required into the response. Do not use Markdown fences or add other fields.\nValidation schema:",
+    "unchanged": [
+      "parser",
+      "schema",
+      "proof arrays/content/dates",
+      "native plain-chat transformation and complete request bounds",
+      "all other policy selectors/rules",
+      "cost ceilings",
+      "security/currentness/checkpoint/replay",
+      "historic V15/V14 roots"
+    ]
+  }
+}

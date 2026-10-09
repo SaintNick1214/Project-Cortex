@@ -1,0 +1,89 @@
+{
+  "status": "BOUNDED_PROMPT_REPAIR_SOURCE_READY",
+  "closedAt": "2026-10-09T11:41:41.664624+00:00",
+  "candidateDigest": "7ae2c16daa046fdded0671bf682b05c5768db5410f2a78c8d41a37225ded1c4c",
+  "cause": "Confirmed real extraction returned one valid fact plus forbidden top-level additionalProperties:false. Strict parser correctly refused before embedding/commit. Clarify the instance-versus-schema instruction; no output stripping or historic retry.",
+  "historicalDiagnosis": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor3/memory-failure-diagnosis1/handoff1.json",
+    "bytes": 1455,
+    "sha256": "ff5d0e4142d05d0ccc7d80d9598bfed41ffd708a9f3c40f5034091573d5feff2"
+  },
+  "behavior": {
+    "selection": "memory.extract only, exact trusted snapshot promptVersion memory-extraction-instance-prompt-v3",
+    "instanceInstruction": "Required response { \"facts\": [...] }; empty response { \"facts\": [] }; schema metadata must not be echoed, including additionalProperties/properties/required.",
+    "oldPins": "V14/V15 memory-schema-prompt-v2 and other pins retain exact historical native prompt assembly.",
+    "conflict": "Original conflict instruction/schema/parser byte exact, even under v3 fixture pin.",
+    "strictRefusal": "Same invalid shape still throws INVALID_INPUT; no field stripping/embedding/derived commit/retry.",
+    "completeInputBound": "Full new system/schema/request bytes measured under unchanged qualified8192 input/output512 envelope."
+  },
+  "manifest": {
+    "manifestId": "cortex-gateway-agent-defaults-2026-10-08",
+    "revision": 16,
+    "promptVersion": "memory-extraction-instance-prompt-v3",
+    "bindingSha256": "7535ae57928ece80905bc9edadcf483ace240b8d375104c8c54bfb767fbb13f5",
+    "delta": "Only memory.extract prompt pin plus required successor16 policy identities/root binding. All price/bound/profile/content/facts/title/Agent/media selections and financial limits unchanged.",
+    "qualification": "Existing genuine ACTUAL-memory-extract-20261009 plain-chat full-request proof reused with unchanged dates/content, not a new attestation or new actual corrected-extraction outcome.",
+    "history": "V15/V14/DEFAULT9/V5/TEXTV3 lookup and proof objects preserved."
+  },
+  "checks": {
+    "status": "PASS",
+    "controlledChecks": {
+      "latestPassed": 160,
+      "latestFailed": 0,
+      "latestSkipped": 0,
+      "suites": 7,
+      "processClosure": "All Jest children naturally exited with forceExit=false; controlled ports only/no service/model calls.",
+      "latestResults": [
+        "results1.json (six unchanged passing suites)",
+        "results2.json (replacement five registered-handler cases)"
+      ]
+    },
+    "rootFullTypecheck": {
+      "command": "tsc -p tsconfig.json --noEmit",
+      "includes": "src/**/* and tests/**/*; not lint-only tsconfig",
+      "exitCode": 0,
+      "log": "root-types1.log"
+    },
+    "backendTypecheck": {
+      "command": "tsc -p convex-dev/tsconfig.json --noEmit",
+      "exitCode": 0,
+      "log": "backend-types1.log"
+    },
+    "scopedLint": {
+      "exitCode": 0,
+      "log": "lint1.log"
+    },
+    "preservedFailures": [
+      {
+        "scope": "new missing-instance-instruction regression before product correction",
+        "passed": 65,
+        "failed": 1,
+        "result": "red-results1.json"
+      },
+      {
+        "scope": "first successor selection had an invalid local-pin assumption; prior V15 extraction override inherits the default prompt pin",
+        "passed": 159,
+        "failed": 1,
+        "result": "results1.json",
+        "correction": "Compare the actual resolved V15 prompt pin; product unchanged.",
+        "replacement": "results2.json"
+      }
+    ],
+    "typeLintApplicability": "Final test-only correction changes one assertion from an absent override-local field to the typed resolved field. All product and other test bytes were checked; no runtime behavior/type contract changed by that assertion correction."
+  },
+  "financialClosure": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor3/native-actual1/final-native-report1.json",
+    "bytes": 22685,
+    "sha256": "96f9117544166016aab1ff3e3bd22d6105437d264f11f4eaeeb5c48eb7e5f413"
+  },
+  "effects": {
+    "gitMutation": 0,
+    "deployment": 0,
+    "serviceMutation": 0,
+    "modelRequest": 0,
+    "retryHistoricPaidRequest": 0,
+    "proofDateChange": 0
+  },
+  "acceptance": false,
+  "next": "Root owns regenerated distribution/package and next current-head CI; corrected real extraction success remains unobserved until that genuine run."
+}

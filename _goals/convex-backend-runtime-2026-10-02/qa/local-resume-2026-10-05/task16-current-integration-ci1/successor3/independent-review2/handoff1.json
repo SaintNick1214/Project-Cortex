@@ -1,0 +1,132 @@
+{
+  "schemaVersion": 1,
+  "capturedAt": "2026-10-09T11:51:33.344Z",
+  "reviewer": "/root/fresh_goal_review",
+  "reviewKind": "continuing-nonauthor-bounded-source-and-actual-review",
+  "acceptancePolicy": "_goals/convex-backend-runtime-2026-10-02/acceptance-policy.md",
+  "baseCommit": "319a06924330fb931866c7bc537890f7e6fa991c",
+  "sourceVerdict": "PASS",
+  "sourceDigest": "6193b4595a5cd94bc42f391a32b2dac5685ad1daf721270f2d48f942abfbda5d",
+  "sourceManifest": {
+    "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor3/root-batch1/source-manifest1.json",
+    "sha256": "603a3b6e10d1a0bf5318829c7a65c5308ac2fecfc71dc6b260b2f1e4c277639b"
+  },
+  "reviewedEntries": [
+    {
+      "file": "convex-dev/runtimeMemoryGateway.ts",
+      "bytes": 11111,
+      "sha256": "44a81d849b33ea711138da945dfadbe422b5e75508db0c738fd05bd550bea5a5"
+    },
+    {
+      "file": "convex-dev/runtimeGatewayMediaQualifications.ts",
+      "bytes": 21248,
+      "sha256": "b2456f3da30bc6d7fed940c4ccc3a206e9364f574ebf0fc2b7deded902311ba7"
+    },
+    {
+      "file": "convex-dev/runtimeModelPolicyBootstrap.ts",
+      "bytes": 4964,
+      "sha256": "22e3e1d9ce7cca619345503701e41bec94e4237dd69bfbd38d8d69df8f56626e"
+    },
+    {
+      "file": "tests/unit/runtime/memory-gateway.test.ts",
+      "bytes": 51701,
+      "sha256": "8f64b208ca9191e52b5d4c4aefd412a473179d96b0437e2329930876c6fe56ae"
+    },
+    {
+      "file": "tests/unit/runtime/observed-extraction-prompt.test.ts",
+      "bytes": 9437,
+      "sha256": "42c4ff24253676ee7f2bd21ac64e4690f5426b428b46c15ff466ebcd521cfa2a"
+    },
+    {
+      "file": "tests/unit/runtime/observed-text-selectors.test.ts",
+      "bytes": 9109,
+      "sha256": "3335d028613485628c9b57220f64f9de292c10ac050cd5fb5cf8542dd80932c1"
+    }
+  ],
+  "sourcePinsMatchAtHandoff": true,
+  "scores": {
+    "requirementCoverage": 4,
+    "codeQuality": 4,
+    "testing": 4,
+    "patternAdherence": 4,
+    "completeness": 4,
+    "mean": 4
+  },
+  "knownReachableBreakingFindings": [],
+  "report": {
+    "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor3/independent-review2/report1.md",
+    "bytes": 6628,
+    "sha256": "7c4634f2d16b93e4aca99b27037adaeb21506f49357733d8e91331d43d2f784e"
+  },
+  "packageEvidence": {
+    "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor3/root-package2/package-archive7.json",
+    "archiveSha256": "a4533b6d3a6fa9f9b53980c304443a7b1549af7be4338dc37a2db2ff14658f86",
+    "manifestSha256": "724d853e7211cb7293624c547d29576ab3860ab33f5a2eddea5efabcbaffbbe0",
+    "selectedPayloadSourceHashesMatch": true
+  },
+  "controlledEvidence": {
+    "authorHandoff": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor3/extraction-prompt-repair2/handoff1.json",
+    "rootTypeRepair": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor3/type-repair1/checks1.json",
+    "rootPackageChecks": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor3/root-package2/checks7.json",
+    "distinctPassingCases": 160,
+    "preservedPriorReds": true,
+    "reviewerReranUnchangedControls": false
+  },
+  "historicalActual": {
+    "runId": "37921734326",
+    "head": "319a06924330fb931866c7bc537890f7e6fa991c",
+    "wholeRun": "FAILED",
+    "ownedCleanup": "SUCCESS",
+    "sdkActual": {
+      "passed": 6,
+      "total": 7,
+      "failedPositivePreserved": true,
+      "rejection": "INVALID_INPUT before embedding admission"
+    },
+    "cliActual": {
+      "passed": 7,
+      "total": 7,
+      "separateTargetAndReceipt": true
+    },
+    "provider": "SKIPPED",
+    "nativeClosure": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor3/native-actual1/final-native-report1.json",
+    "aggregateUncertaintyMicrousd": 4300000,
+    "activeSlots": 0,
+    "retainedPriorFinancialRowsUnchanged": true,
+    "financialRefundOrRootReset": false
+  },
+  "actualCorrectedExtractionProviderAndCurrentHeadWholeCiVerdict": "PENDING",
+  "criterionDisposition": {
+    "newGrants": [],
+    "retainedTask06A1": "PASS",
+    "acceptedTasks": 13,
+    "totalTasks": 17,
+    "acceptedTaskCriteria": 55,
+    "totalTaskCriteria": 61,
+    "totalGoalCriteria": 12,
+    "originalUngranteds": [
+      "13A1",
+      "13A2",
+      "13A4",
+      "14A1",
+      "16A3",
+      "17A2"
+    ],
+    "fullGoalComplete": false,
+    "unavailableAsyncPromotedToFunctionalPass": false,
+    "historicalFailuresAndC7MissingBackingPreserved": true
+  },
+  "reviewerEffects": {
+    "writes": [
+      "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor3/independent-review2/report1.md",
+      "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor3/independent-review2/handoff1.json"
+    ],
+    "productEdits": 0,
+    "gitActions": 0,
+    "serviceActions": 0,
+    "paidCalls": 0,
+    "browserActions": 0,
+    "settingsChanges": 0,
+    "trackerMutations": 0
+  }
+}

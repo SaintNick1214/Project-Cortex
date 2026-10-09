@@ -530,3 +530,21 @@ export const OBSERVED_GATEWAY_POLICY_MANIFEST_V15 = {
     };
   }),
 } as const satisfies DeploymentPolicyManifest;
+
+/** Versioned extraction clarity only. V15/V14 and every genuine proof remain
+ * immutable; the unchanged full-request plain-chat envelope covers these bytes.
+ * Strict response parsing, conflict semantics and all other selectors stay intact.
+ */
+export const OBSERVED_GATEWAY_POLICY_MANIFEST_V16 = {
+  ...OBSERVED_GATEWAY_POLICY_MANIFEST_V15,
+  revision: 16,
+  artifactRevision: "7535ae57928ece80905bc9edadcf483ace240b8d375104c8c54bfb767fbb13f5",
+  evidenceHash: "7535ae57928ece80905bc9edadcf483ace240b8d375104c8c54bfb767fbb13f5",
+  acceptanceHash: "7535ae57928ece80905bc9edadcf483ace240b8d375104c8c54bfb767fbb13f5",
+  policies: OBSERVED_GATEWAY_POLICY_MANIFEST_V15.policies.map(policy => {
+    const successor = { ...policy, policyId: policy.policyId.replace(/-v15$/, "-v16"), version: 16 };
+    if (!("operationKey" in policy) || policy.operationKey !== "memory.extract") return successor;
+    return { ...successor, rules: { ...policy.rules, pins: { ...policy.rules.pins,
+      promptVersion: "memory-extraction-instance-prompt-v3" } } };
+  }),
+} as const satisfies DeploymentPolicyManifest;

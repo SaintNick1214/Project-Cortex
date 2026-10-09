@@ -86,12 +86,12 @@ function assertNativeModelSource(registration: unknown, args: unknown): void {
   }
 }
 
-function resolution(binding: GatewayBinding, policyCap: number, evidenceCap: number, allowFallback = false, inputCap = 10000): GatewayResolution {
+function resolution(binding: GatewayBinding, policyCap: number, evidenceCap: number, allowFallback = false, inputCap = 10000, promptVersion = "p1"): GatewayResolution {
   const embedding = binding.operationKey.startsWith("embedding.");
   const modelId = embedding ? DEFAULT_EMBEDDING_PROFILE.modelId : DEFAULT_CHAT_MODEL_ID;
   const nativeInterface = embedding ? "embedding" as const : "chat" as const;
   const capabilities = embedding ? ["embedding" as const] : ["text" as const, "structured" as const];
-  const pins = { promptVersion: "p1", schemaVersion: binding.operationKey === "memory.extract" ? "facts-v1"
+  const pins = { promptVersion, schemaVersion: binding.operationKey === "memory.extract" ? "facts-v1"
     : binding.operationKey === "facts.resolve" ? "conflicts-v1" : "s1", extractionVersion: "e1", toolRegistryVersion: "t1", priceRevision: "fixture-price", boundRevision: "fixture-bound" };
   const limits = { inputTokens: inputCap, contextTokens: 11000, outputTokens: policyCap, toolSteps: 0, timeoutMs: 1000,
     operationBudgetUnits: 10000, runBudgetUnits: 100000, tenantBudgetUnits: 100000, concurrency: 4 };
@@ -129,14 +129,14 @@ function fixture(allowFallback = false) {
   const admissions: (GatewayBinding & { requestCanonical: string })[] = [];
   const chatCalls: LanguageModelV4CallOptions[] = [];
   const embeddingCalls: Parameters<EmbeddingModelV4["doEmbed"]>[0][] = [];
-  let policyCap = 64; let evidenceCap = 64; let inputCap = 10000;
+  let policyCap = 64; let evidenceCap = 64; let inputCap = 10000; let promptVersion = "p1";
   let replay: unknown; let replayEnabled = false; let admissionFailure: Error | undefined;
   let nativeFailure: Error | undefined; let text = JSON.stringify(extracted); let vectors = [vector()];
   let afterNative: (() => void) | undefined;
   let admittedId: ((binding: GatewayBinding) => Id<"runtimeModelOperations">) | undefined;
-  const resolved = jest.fn<GatewayComposition["ledger"]["resolve"]>(async (binding) => resolution(binding as GatewayBinding, policyCap, evidenceCap, allowFallback, inputCap));
+  const resolved = jest.fn<GatewayComposition["ledger"]["resolve"]>(async (binding) => resolution(binding as GatewayBinding, policyCap, evidenceCap, allowFallback, inputCap, promptVersion));
   const checkpoint = jest.fn<GatewayComposition["ledger"]["checkpoint"]>(async (args) => ({ dispatchPermit: true,
-    dispatchIdentity: `dispatch-${admissions.length}`, snapshot: resolution(admissions.at(-1)!, policyCap, evidenceCap, allowFallback, inputCap).snapshot, requestCanonical: args.requestCanonical }));
+    dispatchIdentity: `dispatch-${admissions.length}`, snapshot: resolution(admissions.at(-1)!, policyCap, evidenceCap, allowFallback, inputCap, promptVersion).snapshot, requestCanonical: args.requestCanonical }));
   const capture = jest.fn<GatewayComposition["terminalSink"]["capture"]>().mockResolvedValue({ evidenceId: "durable-offline-fixture" });
   const attach = jest.fn<GatewayComposition["ledger"]["attachTerminalResult"]>().mockResolvedValue({ attached: true, resultWithheld: false });
   const composition: GatewayComposition = { now: () => 1000, terminalSink: { capture }, ledger: {
@@ -147,7 +147,7 @@ function fixture(allowFallback = false) {
       const operationId = admittedId?.(args) ?? `admitted-${args.operationKey}-${args.ordinal}` as Id<"runtimeModelOperations">;
       if (replayEnabled) return { status: "replay", operationId, resultCanonical: canonicalModelJson(replay) };
       return { status: "reserved", operationId, attemptId: `attempt-${admissions.length}` as Id<"runtimeModelAttempts">,
-        snapshot: resolution(args, policyCap, evidenceCap, allowFallback, inputCap).snapshot, requestCanonical: args.requestCanonical };
+        snapshot: resolution(args, policyCap, evidenceCap, allowFallback, inputCap, promptVersion).snapshot, requestCanonical: args.requestCanonical };
     },
     checkpoint, markVisible: async () => ({ recorded: true }), attachTerminalResult: attach,
   } };
@@ -180,6 +180,7 @@ function fixture(allowFallback = false) {
     failAdmission: () => { admissionFailure = new Error("Authority revoked before checkpoint"); },
     caps: (policy: number, evidence: number) => { policyCap = policy; evidenceCap = evidence; },
     inputCap: (value: number) => { inputCap = value; },
+    promptVersion: (value: string) => { promptVersion = value; },
     afterNative: (callback: () => void) => { afterNative = callback; },
   };
 }
@@ -193,6 +194,69 @@ afterEach(() => {
 });
 
 describe("governed backend memory adapter (offline)", () => {
+  it("selects the response-instance clarity instruction only for the new extraction pin, retaining the strict schema echo refusal", async () => {
+    const f = fixture(); f.promptVersion("memory-extraction-instance-prompt-v3");
+    // Same observed invalid shape, with harmless controlled content. Schema metadata
+    // remains invalid response data; the adapter never strips it or retries.
+    f.text(JSON.stringify({ ...extracted, additionalProperties: false }));
+    const model = createGatewayMemoryModel(ctx, f.repository);
+    await expect(extractSourceFacts(source, model, operation)).rejects.toThrow("INVALID_INPUT: unknown extraction output fields");
+    const system = f.chatCalls[0]!.prompt[0]!;
+    expect(system).toMatchObject({ role: "system" });
+    if (system.role !== "system") throw new Error("Expected system prompt");
+    expect(system.content).toContain("Return a JSON data instance, not a JSON Schema definition.");
+    expect(system.content).toContain('The required top-level response shape is { "facts": [...] }');
+    expect(system.content).toContain('For no facts, return { "facts": [] }.');
+    expect(system.content).toContain("Do not copy schema keywords additionalProperties, properties, or required into the response.");
+    expect(system.content).toContain(canonicalModelJson(FACTS_JSON_SCHEMA));
+    expect(f.chatCalls[0]!.responseFormat).toBeUndefined();
+    const admitted = JSON.parse(f.admissions[0]!.requestCanonical) as { texts: string[]; inputTokens: number; options: unknown; outputSchema: unknown };
+    expect(admitted.texts[0]).toBe(system.content);
+    expect(admitted.inputTokens).toBeGreaterThanOrEqual(Buffer.byteLength(admitted.texts.join(""), "utf8"));
+    expect(admitted).toMatchObject({ options: { maxRetries: 0 }, outputSchema: FACTS_JSON_SCHEMA });
+    expect(f.admissions).toHaveLength(1); expect(f.chatCalls).toHaveLength(1); expect(f.embeddingCalls).toEqual([]);
+    expect(f.capture).toHaveBeenCalledTimes(1); expect(f.attach).toHaveBeenCalledTimes(1);
+  });
+
+  it("accepts a valid extraction instance on v3 while leaving the conflict prompt byte exact under the same pin", async () => {
+    const f = fixture(); f.promptVersion("memory-extraction-instance-prompt-v3");
+    const model = createGatewayMemoryModel(ctx, f.repository);
+    expect(await extractSourceFacts(source, model, operation)).toHaveLength(1);
+    f.text(JSON.stringify(decision));
+    expect(await model.resolve(resolveRequest())).toEqual(decision);
+    expect(f.chatCalls[1]!.prompt[0]).toEqual({ role: "system", content: `${resolveRequest().system}\n\nReturn ONLY a JSON object conforming to this schema. Do not use Markdown fences or add other fields:\n${canonicalModelJson(CONFLICT_DECISION_JSON_SCHEMA)}` });
+    expect(f.admissions.map(a => a.operationKey)).toEqual(["memory.extract", "facts.resolve"]);
+    expect(f.admissions[1]!.parentOperationId).toBe("admitted-memory.extract-0");
+    expect(ensureBudget).toHaveBeenCalledTimes(1); expect(f.chatCalls).toHaveLength(2);
+  });
+
+  it("replays retained extraction on v3 without a second native call or capture", async () => {
+    const f = fixture(); f.promptVersion("memory-extraction-instance-prompt-v3");
+    const model = createGatewayMemoryModel(ctx, f.repository);
+    expect(await model.extract(extractRequest())).toEqual(extracted);
+    f.replay({ text: JSON.stringify(extracted) });
+    expect(await model.extract(extractRequest())).toEqual(extracted);
+    expect(f.chatCalls).toHaveLength(1); expect(f.admissions).toHaveLength(2);
+    expect(f.admissions[1]!.requestCanonical).toBe(f.admissions[0]!.requestCanonical);
+    expect(f.capture).toHaveBeenCalledTimes(1); expect(f.attach).toHaveBeenCalledTimes(1);
+    expect(ensureBudget).toHaveBeenCalledTimes(1);
+  });
+
+  it("counts the clarified instruction in the unchanged full-input bound before admission", async () => {
+    const f = fixture(); f.promptVersion("memory-extraction-instance-prompt-v3");
+    f.inputCap(Buffer.byteLength(extractRequest().system + extractRequest().prompt + canonicalModelJson(FACTS_JSON_SCHEMA), "utf8") + 100);
+    await expect(createGatewayMemoryModel(ctx, f.repository).extract(extractRequest())).rejects.toThrow("request exceeds bounded limits");
+    expect(f.admissions).toEqual([]); expect(f.chatCalls).toEqual([]); expect(f.capture).not.toHaveBeenCalled();
+  });
+
+  it.each(["memory-schema-prompt-v2", "p1"])("retains the exact historical extraction assembly for %s", async (pin) => {
+    const f = fixture(); f.promptVersion(pin);
+    const model = createGatewayMemoryModel(ctx, f.repository);
+    await model.extract(extractRequest());
+    expect(f.chatCalls[0]!.prompt[0]).toEqual({ role: "system", content: `${extractRequest().system}\n\nReturn ONLY a JSON object conforming to this schema. Do not use Markdown fences or add other fields:\n${canonicalModelJson(FACTS_JSON_SCHEMA)}` });
+    expect(f.chatCalls).toHaveLength(1);
+  });
+
   it.each(["user", "tool"] as const)("projects actual %s extraction lineage through strict native resolve/admit and preserves embedding parent", async (role) => {
     const f = fixture();
     const lineage = role === "user" ? source.lineage : { ...sourceReference, role: "tool" as const,

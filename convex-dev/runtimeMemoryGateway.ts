@@ -87,7 +87,13 @@ export function createGatewayMemoryModel(
         // Semantic admission metadata is not sent as native response_format.
         // Include the trusted schema in the actual prompt, so its bytes are also
         // measured, admitted and recorded by the governed model middleware.
-        const system = `${request.system}\n\nReturn ONLY a JSON object conforming to this schema. Do not use Markdown fences or add other fields:\n${canonicalModelJson(schema)}`;
+        // This is a versioned semantic prompt correction, not output repair.
+        // Historical pins retain their exact request bytes and replay identity.
+        const instruction = request.purpose === "memory.extract"
+          && call.resolution.snapshot.pins.promptVersion === "memory-extraction-instance-prompt-v3"
+          ? 'Return ONLY a JSON object. Return a JSON data instance, not a JSON Schema definition. The required top-level response shape is { "facts": [...] }; replace ... with zero or more fact objects described by the validation schema. For no facts, return { "facts": [] }. The schema below is validation metadata, not response data. Do not copy schema keywords additionalProperties, properties, or required into the response. Do not use Markdown fences or add other fields.\nValidation schema:'
+          : "Return ONLY a JSON object conforming to this schema. Do not use Markdown fences or add other fields:";
+        const system = `${request.system}\n\n${instruction}\n${canonicalModelJson(schema)}`;
         const result = await (call.model as LanguageModelV4).doGenerate({
           prompt: [{ role: "system", content: system },
             { role: "user", content: [{ type: "text", text: request.prompt }] }],

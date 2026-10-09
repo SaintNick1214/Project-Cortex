@@ -1,0 +1,257 @@
+(node:27054) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtime/memory-gateway.test.ts (5.062 s)
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+FAIL tests/unit/runtime/observed-extraction-prompt.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+  ● immutable extraction prompt successor16 › keeps all historical manifests and proofs exact; changes only the extraction prompt and required successor policy identities
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "memory-schema-prompt-v2"
+    Received: undefined
+
+      57 |       expect(policy.policyId).toBe(previous.policyId.replace(/-v15$/, "-v16")); expect(policy.version).toBe(16);
+      58 |       if (policy.operationKey === "memory.extract") {
+    > 59 |         expect(previous.rules.pins?.promptVersion).toBe("memory-schema-prompt-v2");
+         |                                                    ^
+      60 |         expect(policy.rules).toEqual({ ...previous.rules, pins: { ...previous.rules.pins, promptVersion: "memory-extraction-instance-prompt-v3" } });
+      61 |       } else expect(policy.rules).toBe(previous.rules);
+      62 |     });
+
+      at tests/unit/runtime/observed-extraction-prompt.test.ts:59:52
+          at Array.forEach (<anonymous>)
+      at Object.<anonymous> (tests/unit/runtime/observed-extraction-prompt.test.ts:55:22)
+
+PASS tests/unit/runtime/observed-text-selectors.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtime/gateway-backend.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtime/observed-facts-selector.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtime/observed-media-qualifications.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/domain/sources.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     5.1s | 68/68 passed | /tests/unit/runtime/memory-gateway.test.ts
+  ✅     1.7s | 42/42 passed | /tests/unit/runtime/gateway-backend.test.ts
+  ❌     1.6s | 4/5 passed | /tests/unit/runtime/observed-extraction-prompt.test.ts
+  ✅     1.4s | 22/22 passed | /tests/unit/runtime/observed-text-selectors.test.ts
+  ✅     1.0s | 6/6 passed | /tests/unit/runtime/observed-facts-selector.test.ts
+  ✅     0.9s | 5/5 passed | /tests/unit/runtime/observed-media-qualifications.test.ts
+  ✅     0.2s | 12/12 passed | /tests/unit/domain/sources.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.07s ( 0.6%) - immutable extraction prompt successor16 installs15→16 without changing old accounting/root/window/holds or allowing a tenant reset
+    /tests/unit/runtime/observed-extraction-prompt.test.ts
+
+ 2. [32m✓[0m    0.05s ( 0.4%) - confirmed result with intentionally unavailable cost — native and middleware an exact-parent secondary call consumes the same uncertain run ceiling and a later child cannot bypass quota
+    /tests/unit/runtime/gateway-backend.test.ts
+
+ 3. [32m✓[0m    0.05s ( 0.4%) - governed backend memory adapter (offline) routes extraction, conflict, memory and query embeddings through one budget with admitted parent and per-value ordinals
+    /tests/unit/runtime/memory-gateway.test.ts
+
+ 4. [32m✓[0m    0.05s ( 0.4%) - governed backend memory adapter (offline) correlates multiple fresh extractions with their own embedding and conflict parents
+    /tests/unit/runtime/memory-gateway.test.ts
+
+ 5. [32m✓[0m    0.04s ( 0.4%) - confirmed result with intentionally unavailable cost — native and middleware retains and narrowly replays a matching complete result without discounting any liability
+    /tests/unit/runtime/gateway-backend.test.ts
+
+ 6. [32m✓[0m    0.04s ( 0.4%) - observed facts selector successor15 installs monotonically without changing historical account roots, uncertainty, windows or counters
+    /tests/unit/runtime/observed-facts-selector.test.ts
+
+ 7. [32m✓[0m    0.04s ( 0.3%) - actual-service regressions — native terminal identity and semantic schemas retains default-profile vector replay under intentionally unknown cost without another dispatch or liability refund
+    /tests/unit/runtime/gateway-backend.test.ts
+
+ 8. [32m✓[0m    0.04s ( 0.3%) - qualified profile-specific native embedding envelopes (offline) pins native profile/dimensions, terminal alias and replay bytes (large=true)
+    /tests/unit/runtime/gateway-backend.test.ts
+
+ 9. [32m✓[0m    0.04s ( 0.3%) - observed native manifest14 registration registered monotone install preserves prior accounts and resolves fresh selected evidence after unused historical expiry
+    /tests/unit/runtime/observed-media-qualifications.test.ts
+
+10. [32m✓[0m    0.04s ( 0.3%) - governed backend memory adapter (offline) correlates multiple replay extractions with their own embedding and conflict parents
+    /tests/unit/runtime/memory-gateway.test.ts
+
+11. [32m✓[0m    0.04s ( 0.3%) - actual-service regressions — native terminal identity and semantic schemas requires the exact trusted wire identity text-embedding-3-small / text-embedding-3-small
+    /tests/unit/runtime/gateway-backend.test.ts
+
+12. [32m✓[0m    0.04s ( 0.3%) - observed generic text selectors successor15 refuses selected fresh artifact.suggestions proof at its real expiry without financial mutation
+    /tests/unit/runtime/observed-text-selectors.test.ts
+
+13. [32m✓[0m    0.03s ( 0.3%) - observed generic text selectors successor15 resolves ordinary memory.summarize through current registered budget and resolver handlers using the same generic chat proof
+    /tests/unit/runtime/observed-text-selectors.test.ts
+
+14. [32m✓[0m    0.03s ( 0.3%) - backend ActionCtx Gateway adapter — offline native composition uses a distinct secondary function policy and parent identity while sharing the trusted run quota
+    /tests/unit/runtime/gateway-backend.test.ts
+
+15. [32m✓[0m    0.03s ( 0.3%) - immutable extraction prompt successor16 resolves the registered v3 pin and reuses the same budget without model or reservation effects
+    /tests/unit/runtime/observed-extraction-prompt.test.ts
+
+16. [32m✓[0m    0.03s ( 0.3%) - observed generic text selectors successor15 resolves ordinary artifact.text through current registered budget and resolver handlers using the same generic chat proof
+    /tests/unit/runtime/observed-text-selectors.test.ts
+
+17. [32m✓[0m    0.03s ( 0.2%) - observed facts selector successor15 keeps the V14 expired facts selector refusing resolution and new binding before any write or model effect
+    /tests/unit/runtime/observed-facts-selector.test.ts
+
+18. [32m✓[0m    0.03s ( 0.2%) - governed backend memory adapter (offline) selects the response-instance clarity instruction only for the new extraction pin, retaining the strict schema echo refusal
+    /tests/unit/runtime/memory-gateway.test.ts
+
+19. [32m✓[0m    0.03s ( 0.2%) - qualified profile-specific native embedding envelopes (offline) pins native profile/dimensions, terminal alias and replay bytes (large=false)
+    /tests/unit/runtime/gateway-backend.test.ts
+
+20. [32m✓[0m    0.03s ( 0.2%) - observed generic text selectors successor15 resolves ordinary artifact.sheet through current registered budget and resolver handlers using the same generic chat proof
+    /tests/unit/runtime/observed-text-selectors.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.79s (6.5% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      12.17s
+  Test suites:        7
+  Individual tests:   146
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 7
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 1 failed, 6 passed, 7 total
+Tests:       1 failed, 159 passed, 160 total
+Snapshots:   0 total
+Time:        12.166 s
+Ran all test suites within paths "tests/unit/runtime/memory-gateway.test.ts", "tests/unit/runtime/observed-extraction-prompt.test.ts", "tests/unit/runtime/observed-facts-selector.test.ts", "tests/unit/runtime/observed-text-selectors.test.ts", "tests/unit/runtime/observed-media-qualifications.test.ts", "tests/unit/runtime/gateway-backend.test.ts", "tests/unit/domain/sources.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor3/extraction-prompt-repair2/results1.json
