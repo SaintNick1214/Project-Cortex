@@ -1,0 +1,5 @@
+Saved-operation lease recovery source is closed. Successful download and poll claims now commit120-second recovery schedules; polling uses an internal token-fenced watchdog, while normal completion retains the original backoff as its only successor. A failed poll token check, charge-only ledger evidence and terminal transition share one mutation transaction. No fresh generation path was added.
+
+Ten affected suites passed182/182 unique assertions, zero skipped, with natural exit and explicit `--forceExit=false` (9.134seconds). Backend/root types, scoped lint and diff check passed. Root cost9 is included once. The14 original recovery assertions remain byte-exact;22 new cases cover hard interruption, stale leases, bounds, authority/deletion, saved output and transactional acknowledgement gaps.
+
+Original five interruption reds and the stale failed-poll red remain in their raw logs. Synthetic proof/clock/type and new refusal-oracle corrections remain documented as intermediate failures. These are controlled registered-handler results. Live async availability and full Task13 acceptance remain pending; no external services or Git were changed.

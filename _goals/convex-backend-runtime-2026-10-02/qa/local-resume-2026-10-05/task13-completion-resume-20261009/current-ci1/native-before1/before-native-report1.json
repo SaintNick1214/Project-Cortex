@@ -1,0 +1,162 @@
+{
+  "schemaVersion": 1,
+  "status": "PROSPECTIVE_READONLY_CI_FINANCIAL_BASELINE_CLOSED",
+  "closedAt": "2026-10-09T22:07:33.041261Z",
+  "snapshotStartedAt": "2026-10-09T22:06:18.671Z",
+  "snapshotCompletedAt": "2026-10-09T22:06:22.324Z",
+  "timing": "Captured before Parent next product commit/push and before new current-CI deployment/model effects; no transactional snapshot claimed. Future workflow ID/head not invented.",
+  "priorBaseline": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor4/native-actual1/final-native-report1.json",
+    "bytes": 22666,
+    "sha256": "32e7a610cf73d137f172499597d3a200de9345f862fe55eae4585756bab05ebe"
+  },
+  "collectorReuse": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-completion-resume-20261009/current-ci1/native-before1/collector-source1.json",
+    "bytes": 1035,
+    "sha256": "77e3476bdd651b3df7dc817ca792afac50a8844643365a55bd95bfdbb0234bf1"
+  },
+  "targets": [
+    {
+      "kind": "sdk",
+      "identity": {
+        "projectId": 3176493,
+        "deploymentName": "steady-snake-253",
+        "teamId": 325340,
+        "production": false,
+        "soleCloudDev": true,
+        "identityCheckedAt": "2026-10-09T22:06:19.209Z"
+      },
+      "completedAt": "2026-10-09T22:06:20.894Z",
+      "financialComparison": {
+        "runtimeBudgetAccounts": {
+          "baselineRows": 28,
+          "currentRows": 28,
+          "allOldExactCapturedIdsAndFieldsRetained": true,
+          "oldMissingIds": [],
+          "newIds": [],
+          "changed": [],
+          "retainedRowsSha256": "7b7182730816b8efff22814c2bba58aafd2d033f925feffcd653943a249aa93e"
+        },
+        "runtimeModelOperations": {
+          "baselineRows": 39,
+          "currentRows": 39,
+          "allOldExactCapturedIdsAndFieldsRetained": true,
+          "oldMissingIds": [],
+          "newIds": [],
+          "changed": [],
+          "retainedRowsSha256": "3612b97a891179be4df3263e0599b92f715a3e42ef836d90a8857e258b750104"
+        },
+        "runtimeModelAttempts": {
+          "baselineRows": 39,
+          "currentRows": 39,
+          "allOldExactCapturedIdsAndFieldsRetained": true,
+          "oldMissingIds": [],
+          "newIds": [],
+          "changed": [],
+          "retainedRowsSha256": "5ec98d4a6298745ca4b61996500deb2702c083232413a87c820b291cee032d25"
+        }
+      },
+      "accounting": {
+        "tenantUncertainMicroUsd": 3900000,
+        "tenantReservedMicroUsd": 0,
+        "tenantSettledMicroUsd": 0,
+        "allAccountsActiveConcurrency": 0,
+        "attemptsWithUnreleasedSlots": 0,
+        "costAvailability": "Retained uncertainty is not reported zero cost."
+      },
+      "retainedScopeMetadataRows": 24,
+      "captured": {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-completion-resume-20261009/current-ci1/native-before1/before1-sdk.json",
+        "bytes": 203812,
+        "sha256": "895feaab358b4404fe089b2ce79f9b3c434012ce9188d302b433f32d0a47ff52"
+      },
+      "previous": {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor4/native-actual1/after1-sdk.json",
+        "bytes": 383747,
+        "sha256": "5b5dcca92240948ffc8710444f778df3058a79d5dc97c55f4f84089449b7b731"
+      }
+    },
+    {
+      "kind": "cli",
+      "identity": {
+        "projectId": 3176494,
+        "deploymentName": "usable-sheep-908",
+        "teamId": 325340,
+        "production": false,
+        "soleCloudDev": true,
+        "identityCheckedAt": "2026-10-09T22:06:21.095Z"
+      },
+      "completedAt": "2026-10-09T22:06:22.323Z",
+      "financialComparison": {
+        "runtimeBudgetAccounts": {
+          "baselineRows": 16,
+          "currentRows": 16,
+          "allOldExactCapturedIdsAndFieldsRetained": true,
+          "oldMissingIds": [],
+          "newIds": [],
+          "changed": [],
+          "retainedRowsSha256": "fe6a4fd763ce7ad91a1dc3e3690c8abeeb4cc36e3bd011746d61025c69afb233"
+        },
+        "runtimeModelOperations": {
+          "baselineRows": 20,
+          "currentRows": 20,
+          "allOldExactCapturedIdsAndFieldsRetained": true,
+          "oldMissingIds": [],
+          "newIds": [],
+          "changed": [],
+          "retainedRowsSha256": "e20e2248de04c900875e23bf7444a28a51a87fcc2b7f8d57643f2e77592a9441"
+        },
+        "runtimeModelAttempts": {
+          "baselineRows": 20,
+          "currentRows": 20,
+          "allOldExactCapturedIdsAndFieldsRetained": true,
+          "oldMissingIds": [],
+          "newIds": [],
+          "changed": [],
+          "retainedRowsSha256": "e465fc2934d3f4cac767d42b6b18786a721f5fc43f2c3679869575561139249f"
+        }
+      },
+      "accounting": {
+        "tenantUncertainMicroUsd": 2000000,
+        "tenantReservedMicroUsd": 0,
+        "tenantSettledMicroUsd": 0,
+        "allAccountsActiveConcurrency": 0,
+        "attemptsWithUnreleasedSlots": 0,
+        "costAvailability": "Retained uncertainty is not reported zero cost."
+      },
+      "retainedScopeMetadataRows": 28,
+      "captured": {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-completion-resume-20261009/current-ci1/native-before1/before1-cli.json",
+        "bytes": 113219,
+        "sha256": "d4aa7d650fe9af5884f9016f36cfed4bc7be090cb995b0eb784ead83275de4a8"
+      },
+      "previous": {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor4/native-actual1/after1-cli.json",
+        "bytes": 245528,
+        "sha256": "a6a65d1e49328394c987931ef238f1ce5552633fa3f8c4d530161df157ed7490"
+      }
+    }
+  ],
+  "aggregateRetainedUncertainMicroUsd": 5900000,
+  "newFinancialRows": 0,
+  "expiredOrCurrentProofCensusPerformed": false,
+  "publicRoleProbePerformed": false,
+  "authorityProvisionOrRestorePerformed": false,
+  "currentDeployedPolicyOrFreshJWTReadinessNotAsserted": true,
+  "effects": {
+    "deployment": 0,
+    "rootReset": 0,
+    "provision": 0,
+    "model": 0,
+    "setting": 0,
+    "secret": 0,
+    "retirement": 0
+  },
+  "resourcesUntouched": [
+    "Main retained media development target3174742 and its old held2/financial history",
+    "Stopped owned graph volumes",
+    "Git/product source and private credential/settings custody"
+  ],
+  "nextRead": "One final read-only effect/accounting/cleanup comparison after Parent explicitly confirms whole CI and owned cleanup complete.",
+  "acceptanceGranted": false
+}

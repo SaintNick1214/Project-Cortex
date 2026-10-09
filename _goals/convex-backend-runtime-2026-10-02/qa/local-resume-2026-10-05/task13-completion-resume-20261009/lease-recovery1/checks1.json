@@ -1,0 +1,120 @@
+{
+  "status": "PASS_CONTROLLED_SOURCE",
+  "toolchain": {
+    "node": "v24.15.0",
+    "npm": "12.2.0"
+  },
+  "affectedTests": {
+    "numTotalTestSuites": 10,
+    "numPassedTestSuites": 10,
+    "numFailedTestSuites": 0,
+    "numTotalTests": 182,
+    "numPassedTests": 182,
+    "numFailedTests": 0,
+    "numPendingTests": 0
+  },
+  "run": {
+    "argv": [
+      "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+      "--experimental-vm-modules",
+      "node_modules/jest/bin/jest.js",
+      "--runTestsByPath",
+      "tests/unit/runtimeMedia/artifact-context.test.ts",
+      "tests/unit/runtimeMedia/import-order.test.ts",
+      "tests/unit/runtimeMedia/jobs.test.ts",
+      "tests/unit/runtimeMedia/native-cost.test.ts",
+      "tests/unit/runtimeMedia/recovery.test.ts",
+      "tests/unit/runtimeAssets/lifecycle.test.ts",
+      "tests/unit/runtimeAssets/action-delivery.test.ts",
+      "tests/unit/runtimeAgent/execution.test.ts",
+      "tests/unit/runtimeAgent/model-owner.test.ts",
+      "tests/unit/runtimeAgent/tool-context.test.ts",
+      "--runInBand",
+      "--forceExit=false",
+      "--watchman=false",
+      "--json",
+      "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-completion-resume-20261009/lease-recovery1/affected-results4.json"
+    ],
+    "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+    "pid": 98501,
+    "exit": 0,
+    "seconds": 9.134,
+    "forced": false,
+    "environmentNames": [
+      "CI",
+      "CONVEX_URL",
+      "CORTEX_TEST_ENV_MODE",
+      "GRAPH_TESTING_ENABLED",
+      "HOME",
+      "LANG",
+      "PATH"
+    ],
+    "environmentSelection": "explicit synthetic unit fixtures; no inherited secrets"
+  },
+  "backendTypes": {
+    "name": "backend-types3",
+    "argv": [
+      "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+      "node_modules/typescript/bin/tsc",
+      "--project",
+      "convex-dev/tsconfig.json",
+      "--noEmit"
+    ],
+    "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+    "pid": 98021,
+    "exit": 0,
+    "seconds": 9.418,
+    "forced": false
+  },
+  "rootTypesAndScopedLint": [
+    {
+      "name": "root-types4",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "pid": 98500,
+      "exit": 0,
+      "seconds": 12.211,
+      "forced": false
+    },
+    {
+      "name": "scoped-lint4",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/eslint/bin/eslint.js",
+        "convex-dev/runtimeMediaJobs.ts",
+        "convex-dev/runtimeMediaJobsSchema.ts",
+        "convex-dev/runtimeMediaGateway.ts",
+        "tests/unit/runtimeMedia/recovery.test.ts",
+        "tests/unit/runtimeMedia/fixture.ts"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "pid": 98569,
+      "exit": 0,
+      "seconds": 5.171,
+      "forced": false
+    }
+  ],
+  "diffCheck": {
+    "argv": [
+      "git",
+      "diff",
+      "--check",
+      "--",
+      "convex-dev/runtimeMediaJobs.ts",
+      "convex-dev/runtimeMediaJobsSchema.ts",
+      "convex-dev/runtimeMediaGateway.ts",
+      "tests/unit/runtimeMedia/recovery.test.ts",
+      "tests/unit/runtimeMedia/fixture.ts"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  "counts": "182 unique assertions; Root native-cost9 included once; 36 recovery assertions include14 preserved originals +22 new cases; no inherited forceExit",
+  "fullGoalAcceptance": false,
+  "liveAsyncQualification": false
+}

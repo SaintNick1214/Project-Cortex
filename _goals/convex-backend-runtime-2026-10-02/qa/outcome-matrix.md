@@ -773,3 +773,12 @@ Exactcacdb4b8c PRworkflow37926572786 all19jobs SUCCESS; Security37926572939 SUCC
 ## Milestone204 — 2026-10-09T12:35:45.352Z
 
 One continuing independent final audit at exactcacdb4b8c accepts completed integrated scopePASS4.0/allfive4/zero known reachable breaking findings. Current19-jobCI+SecuritySUCCESS, SDK7/7 CLI7/7 provider1/1 actual0skip, fresh enabled installed consumers and exact retained financial rows/retired scopes/currentCI slots0 all verified. Task06 and16A1/A2/A4 and17A1/A3 applicability confirmed. Full original goal auditISSUES_FOUND/Tasks16-17NEEDS_REVISION: original13A1/A2/A4,14A1,16A3,17A2 require genuine async service qualification. No new grants or denominator changes;13/17=76.5%,55/61=90.2%,0/12holistic final grants/fullfalse. Historical279/319 failures/C7 missing backing remain; no production/release/merge/website publication.
+
+
+## Milestone205 — 2026-10-09T22:01:48.385Z
+
+Continued originalasyncslice after unchanged remote refs. Verified retainedmain3174742 soleownedclouddev; officialdocs stillrequireConvexsupportforunconfigured async, no probe/replay. Coherent source review found download/poll hard-action-loss wakeup gaps plus nativeUSD/errorreason omissions. Rootcost/error repair passes9focusedcontrolled officialprovider-method+registeredledger cases inclknown20-unit settlement/replay and unavailableproof fulluncertainty/noresubmit; noactualservicepositive/qualification/rootchange. Executor durable saved-handle recovery in progress. Historical redsetup/4semanticfail/fixturefieldred preserved. Countsunchanged13/17=76.5%,55/61=90.2%,0/12holistic finalgrants/fullfalse; requiredserviceenablementquestionpending.
+
+### Milestone206 — async lifecycle source repair accepted; current Linux qualification pending
+
+Four concrete source defects are repaired: durable download/poll recovery after worker interruption, stale failed-poll capture fencing with atomic charge/state mutation, official native aggregate USD restricted to its qualified proof, and the documented configuration error mapped without resubmission. One continuing non-author source review gives PASS4.0; affected182/182 assertions0skip close naturally, with root/backend types, scoped/full lint, build and packed/browser contracts passing. Historical failures remain raw and scoped. Current Linux CI and financial closure follow the incremental push; priorcac CI does not certify new source. Genuine async support enablement is still required. Completion stays13/17tasks(76.5%),55/61criteria(90.2%),0/12holistic final grants/fullfalse.

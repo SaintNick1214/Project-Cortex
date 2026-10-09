@@ -1,0 +1,227 @@
+watchman warning: Recrawled this watch 7 times, most recently because:
+MustScanSubDirs UserDroppedTo resolve, please review the information on
+https://facebook.github.io/watchman/docs/troubleshooting.html#recrawl
+To clear this warning, run:
+`watchman watch-del '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion' ; watchman watch-project '/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion'`
+
+  console.error
+    ◇ injected env (0) from .env.test
+
+      15 |
+      16 | // CI/actual qualification selectors must not be redirected by a developer's .env.local.
+    > 17 | const explicitEnvironment = process.env.CORTEX_TEST_ENV_MODE === "explicit" || process.env.CI === "true";
+         |            ^
+      18 | if (!explicitEnvironment) {
+      19 |   dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+      20 |   dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:12
+
+  console.error
+    ◇ injected env (0) from .env.local
+
+      16 | // CI/actual qualification selectors must not be redirected by a developer's .env.local.
+      17 | const explicitEnvironment = process.env.CORTEX_TEST_ENV_MODE === "explicit" || process.env.CI === "true";
+    > 18 | if (!explicitEnvironment) {
+         |            ^
+      19 |   dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+      20 |   dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+      21 | }
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:18:12
+
+  console.log
+    
+    🧪 Testing against LOCAL Convex: http://127.0.0.1:1
+
+      at tests/env.ts:37:13
+
+  console.log
+       Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:38:13
+
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+(node:94900) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeMedia/native-cost.test.ts
+  ✕ preserves official video download cost 0.25 with conservative decimal precision (5 ms)
+  ✕ preserves official video download cost 0 with conservative decimal precision (1 ms)
+  ✓ keeps absent or unsupported native video cost undefined unavailable (1 ms)
+  ✓ keeps absent or unsupported native video cost -1 unavailable (1 ms)
+  ✓ keeps absent or unsupported native video cost 0.25 unavailable
+  ✓ keeps absent or unsupported native video cost null unavailable (1 ms)
+  ✕ unqualified native cost cannot settle a reservation or withhold a qualified unknown-cost media result (39 ms)
+  ✕ reports official async configuration refusal without weakening uncertain charge or resubmitting (18 ms)
+
+  ● preserves official video download cost 0.25 with conservative decimal precision
+
+    expect(received).toMatchObject(expected)
+
+    - Expected  - 1
+    + Received  + 0
+
+      Object {
+    -   "aggregateCostUsd": "0.250001",
+        "mimeType": "video/mp4",
+      }
+
+      13 |   }), { status: 200, headers: { "Content-Type": "application/json" } }));
+      14 |   const output = await gateway.officialMediaFactory("google/veo-3.1").download("controlled-operation", new AbortController().signal);
+    > 15 |   expect(output).toMatchObject({ mimeType: "video/mp4", aggregateCostUsd: expected });
+         |                  ^
+      16 |   expect(output.actualModel).toBeUndefined(); expect(output.usage).toBeUndefined();
+      17 |   expect(fetcher).toHaveBeenCalledTimes(1);
+      18 |   const [url, init] = fetcher.mock.calls[0]!;
+
+      at tests/unit/runtimeMedia/native-cost.test.ts:15:18
+
+  ● preserves official video download cost 0 with conservative decimal precision
+
+    expect(received).toMatchObject(expected)
+
+    - Expected  - 1
+    + Received  + 0
+
+      Object {
+    -   "aggregateCostUsd": "0",
+        "mimeType": "video/mp4",
+      }
+
+      13 |   }), { status: 200, headers: { "Content-Type": "application/json" } }));
+      14 |   const output = await gateway.officialMediaFactory("google/veo-3.1").download("controlled-operation", new AbortController().signal);
+    > 15 |   expect(output).toMatchObject({ mimeType: "video/mp4", aggregateCostUsd: expected });
+         |                  ^
+      16 |   expect(output.actualModel).toBeUndefined(); expect(output.usage).toBeUndefined();
+      17 |   expect(fetcher).toHaveBeenCalledTimes(1);
+      18 |   const [url, init] = fetcher.mock.calls[0]!;
+
+      at tests/unit/runtimeMedia/native-cost.test.ts:15:18
+
+  ● unqualified native cost cannot settle a reservation or withhold a qualified unknown-cost media result
+
+    expect(received).toMatchObject(expected)
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+    -   "resultAttachmentState": "attached",
+    +   "resultAttachmentState": "closed",
+        "slotReleased": true,
+        "state": "uncertain",
+      }
+
+      37 |   }));
+      38 |   const attempt = f.db.table("runtimeModelAttempts")[0];
+    > 39 |   expect(attempt).toMatchObject({ state: "uncertain", slotReleased: true, resultAttachmentState: "attached" });
+         |                   ^
+      40 |   expect(JSON.parse(attempt.terminalEvidenceCanonical as string)).toMatchObject({ costSource: "unavailable" });
+      41 |   expect(JSON.parse(attempt.terminalEvidenceCanonical as string).aggregateCostUsd).toBeUndefined();
+      42 |   expect(f.db.table("runtimeMediaJobs")[0]).toMatchObject({ state: "ready", costStatus: "incurred_unknown" });
+
+      at Object.<anonymous> (tests/unit/runtimeMedia/native-cost.test.ts:39:19)
+
+  ● reports official async configuration refusal without weakening uncertain charge or resubmitting
+
+    expect(received).toMatchObject(expected)
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+        "costStatus": "incurred_unknown",
+    -   "failureCode": "MEDIA_CAPABILITY_UNAVAILABLE",
+    +   "failureCode": "MEDIA_SUBMISSION_UNKNOWN",
+        "state": "submission_unknown",
+      }
+
+      50 |   } });
+      51 |   await gateway.processSubmissionHandler(f.action, { jobId: job.jobId }, factory);
+    > 52 |   expect(f.db.table("runtimeMediaJobs")[0]).toMatchObject({ state: "submission_unknown", failureCode: "MEDIA_CAPABILITY_UNAVAILABLE", costStatus: "incurred_unknown" });
+         |                                             ^
+      53 |   expect(f.db.table("runtimeModelAttempts")[0]).toMatchObject({ state: "dispatch_pending", slotReleased: false });
+      54 |   await f.call(media.reconcile, { jobId: job.jobId });
+      55 |   await gateway.processSubmissionHandler(f.action, { jobId: job.jobId }, factory);
+
+      at Object.<anonymous> (tests/unit/runtimeMedia/native-cost.test.ts:52:45)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     3.3s | 4/8 passed | /tests/unit/runtimeMedia/native-cost.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [31m✗[0m    0.04s ( 1.1%) - unqualified native cost cannot settle a reservation or withhold a qualified unknown-cost media result
+    /tests/unit/runtimeMedia/native-cost.test.ts
+
+ 2. [31m✗[0m    0.02s ( 0.5%) - reports official async configuration refusal without weakening uncertain charge or resubmitting
+    /tests/unit/runtimeMedia/native-cost.test.ts
+
+ 3. [31m✗[0m    0.01s ( 0.1%) - preserves official video download cost 0.25 with conservative decimal precision
+    /tests/unit/runtimeMedia/native-cost.test.ts
+
+ 4. [31m✗[0m    0.00s ( 0.0%) - preserves official video download cost 0 with conservative decimal precision
+    /tests/unit/runtimeMedia/native-cost.test.ts
+
+ 5. [32m✓[0m    0.00s ( 0.0%) - keeps absent or unsupported native video cost undefined unavailable
+    /tests/unit/runtimeMedia/native-cost.test.ts
+
+ 6. [32m✓[0m    0.00s ( 0.0%) - keeps absent or unsupported native video cost -1 unavailable
+    /tests/unit/runtimeMedia/native-cost.test.ts
+
+ 7. [32m✓[0m    0.00s ( 0.0%) - keeps absent or unsupported native video cost null unavailable
+    /tests/unit/runtimeMedia/native-cost.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.07s (1.9% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      3.46s
+  Test suites:        1
+  Individual tests:   7
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 failed, 1 total
+Tests:       4 failed, 4 passed, 8 total
+Snapshots:   0 total
+Time:        3.457 s
+Ran all test suites matching tests/unit/runtimeMedia/native-cost.test.ts.
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-completion-resume-20261009/native-cost1/red2-results.json
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

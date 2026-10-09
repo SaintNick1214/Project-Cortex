@@ -6,7 +6,247 @@ import { clock, transcript } from "../runtimeTranscript/fixture";
 import type { MutationCtx } from "../../../convex-dev/_generated/server";
 import type { MediaNativeFactory } from "../../../convex-dev/runtimeMediaGateway";
 import type { MessageDoc } from "@convex-dev/agent";
+import { MEDIA_LEASE_MS, MEDIA_MAX_POLLS } from "../../../src/domain/media-jobs";
 beforeEach(() => { installMediaMockRoot(); }); afterEach(() => { jest.restoreAllMocks(); });
+
+/** Omit the action after a real registered mutation commits: no catch/finally or client reconciliation. */
+async function interruptedClaim(f: Awaited<ReturnType<typeof mediaFixture>>, jobId: string, kind: "download" | "poll") {
+  const original = f.ctx.runMutation.bind(f.ctx);
+  let stopped = false;
+  f.ctx.runMutation = (async (reference, args) => {
+    const result = await original(reference, args);
+    if (!stopped && result && getFunctionName(reference) === `runtimeMediaJobs:${kind === "download" ? "claimDownload" : "pollCheckpoint"}`) {
+      stopped = true; throw new Error("HARD_ACTION_INTERRUPTED_AFTER_COMMIT");
+    }
+    return result;
+  }) as MutationCtx["runMutation"];
+  try { await expect(f.runScheduled({ name: `runtimeMediaJobs:${kind === "download" ? "processDownload" : "processPoll"}`, args: { jobId } })).rejects.toThrow("HARD_ACTION_INTERRUPTED_AFTER_COMMIT"); }
+  finally { f.ctx.runMutation = original; }
+}
+function scheduledCall(spy: jest.SpiedFunction<MutationCtx["scheduler"]["runAfter"]>, name: string, delay: number) {
+  const row = spy.mock.calls.find(([time, reference]) => time === delay && getFunctionName(reference) === `runtimeMediaJobs:${name}`);
+  expect(row).toBeDefined();
+  return { name: `runtimeMediaJobs:${name}`, args: row![2] };
+}
+async function processingVideo() {
+  // Synthetic proof lifetime chosen before admission, solely for this controlled
+  // lease interval. Production qualification and expiry fences are unchanged.
+  const bootstrap = await import("../../../convex-dev/runtimeModelPolicyBootstrap");
+  const root = bootstrap.lookupDeploymentManifest("transcript-offline-root", 1)!;
+  for (const proof of root.dispatchEvidence.filter(value => value.nativeInterface === "video")) Object.assign(proof, { expiresAt: clock + MEDIA_LEASE_MS * 10 });
+  const f = await mediaFixture(); const job = await f.submit("video");
+  await gateway.processSubmissionHandler(f.action, { jobId: job.jobId }, f.factory);
+  return { f, job };
+}
+async function downloadingVideo() {
+  const { f, job } = await processingVideo();
+  f.status("completed"); await gateway.processPollHandler(f.action, { jobId: job.jobId }, f.factory);
+  return { f, job };
+}
+it("a hard download action interruption recovers automatically from the committed lease without another generation", async () => {
+  const { f, job } = await downloadingVideo(); const spy = jest.spyOn(f.ctx.scheduler, "runAfter");
+  await interruptedClaim(f, job.jobId, "download");
+  const wake = scheduledCall(spy, "processDownload", MEDIA_LEASE_MS);
+  expect(f.db.table("runtimeMediaJobs")[0]).toMatchObject({ state: "downloading", downloadAttempt: 1 });
+  jest.spyOn(Date, "now").mockReturnValue(clock + MEDIA_LEASE_MS - 1); await f.runScheduled(wake);
+  expect(f.counts()).toMatchObject({ starts: 1, downloads: 0 });
+  jest.spyOn(Date, "now").mockReturnValue(clock + MEDIA_LEASE_MS); await f.runScheduled(wake);
+  await f.runScheduled(wake);
+  expect(f.db.table("runtimeMediaJobs")[0]).toMatchObject({ state: "ready", downloadAttempt: 2, costStatus: "incurred_unknown" });
+  expect(f.counts()).toMatchObject({ starts: 1, downloads: 1 }); expect(f.db.table("runtimeAssetVersions")).toHaveLength(1);
+  expect(f.db.table("artifacts")[0].version).toBe(2);
+});
+it("download lease and recovery schedule commit atomically or neither does", async () => {
+  const { f, job } = await downloadingVideo(); const before = { ...f.db.table("runtimeMediaJobs")[0] }; const schedules = [...f.scheduled];
+  jest.spyOn(f.ctx.scheduler, "runAfter").mockRejectedValueOnce(new Error("SCHEDULER_UNAVAILABLE"));
+  await expect(f.call(media.claimDownload, { jobId: job.jobId })).rejects.toThrow("SCHEDULER_UNAVAILABLE");
+  expect(f.db.table("runtimeMediaJobs")[0]).toEqual(before); expect(f.scheduled).toEqual(schedules); expect(f.counts().downloads).toBe(0);
+});
+it("an older download wake preserves a newer active third lease, then stops at the real attempt limit without refund", async () => {
+  const { f, job } = await downloadingVideo(); const spy = jest.spyOn(f.ctx.scheduler, "runAfter");
+  for (let attempt = 0; attempt < 3; attempt++) {
+    jest.spyOn(Date, "now").mockReturnValue(clock + attempt * 1000); await interruptedClaim(f, job.jobId, "download");
+    if (attempt < 2) await f.call(media.downloadFailed, { jobId: job.jobId, leaseToken: f.db.table("runtimeMediaJobs")[0].leaseToken });
+  }
+  const wake = scheduledCall(spy, "processDownload", MEDIA_LEASE_MS);
+  jest.spyOn(Date, "now").mockReturnValue(clock + MEDIA_LEASE_MS); await f.runScheduled(wake);
+  expect(f.db.table("runtimeMediaJobs")[0]).toMatchObject({ state: "downloading", downloadAttempt: 3 });
+  jest.spyOn(Date, "now").mockReturnValue(clock + MEDIA_LEASE_MS + 2000); await f.runScheduled(wake); await f.runScheduled(wake);
+  expect(f.db.table("runtimeMediaJobs")[0]).toMatchObject({ state: "failed", failureCode: "MEDIA_DOWNLOAD_FAILED", downloadAttempt: 3, costStatus: "incurred_unknown" });
+  expect(f.counts()).toMatchObject({ starts: 1, downloads: 0 }); expect(f.db.table("runtimeAssetVersions")).toHaveLength(0);
+  expect(f.db.table("runtimeModelAttempts")[0]).toMatchObject({ state: "dispatch_pending", slotReleased: false });
+});
+it("lease recovery joins an already saved output before any additional download or artifact version", async () => {
+  const { f, job } = await downloadingVideo(); const spy = jest.spyOn(f.ctx.scheduler, "runAfter"); const original = f.ctx.runMutation.bind(f.ctx); let gap = true;
+  f.ctx.runMutation = (async (reference, args) => { if (gap && getFunctionName(reference) === "runtimeMediaJobs:materialized") { gap = false; throw new Error("SAVED_OUTPUT_ACK_GAP"); } return original(reference, args); }) as MutationCtx["runMutation"];
+  await gateway.processDownloadHandler(f.action, { jobId: job.jobId }, f.factory); f.ctx.runMutation = original;
+  const wake = scheduledCall(spy, "processDownload", MEDIA_LEASE_MS);
+  expect(f.db.table("runtimeAssetVersions")).toHaveLength(1);
+  jest.spyOn(Date, "now").mockReturnValue(clock + MEDIA_LEASE_MS); await f.runScheduled(wake); await f.runScheduled(wake);
+  expect(f.db.table("runtimeMediaJobs")[0].state).toBe("ready"); expect(f.counts()).toMatchObject({ starts: 1, downloads: 1 });
+  expect(f.db.table("runtimeAssetVersions")).toHaveLength(1); expect(f.db.table("artifacts")[0].version).toBe(2);
+});
+it("a hard poll action interruption resumes only the saved operation through a token-fenced durable wake", async () => {
+  const { f, job } = await processingVideo();
+  const spy = jest.spyOn(f.ctx.scheduler, "runAfter"); await interruptedClaim(f, job.jobId, "poll");
+  const wake = scheduledCall(spy, "expirePoll", MEDIA_LEASE_MS);
+  expect(f.counts()).toMatchObject({ starts: 1, statuses: 0 });
+  jest.spyOn(Date, "now").mockReturnValue(clock + MEDIA_LEASE_MS - 1); await f.runScheduled(wake);
+  expect(spy.mock.calls.filter(([delay, reference]) => delay === 0 && getFunctionName(reference) === "runtimeMediaJobs:processPoll")).toHaveLength(0);
+  jest.spyOn(Date, "now").mockReturnValue(clock + MEDIA_LEASE_MS); await f.runScheduled(wake); await f.runScheduled(wake);
+  const successor = scheduledCall(spy, "processPoll", 0); f.status("completed"); await f.runScheduled(successor);
+  await f.runScheduled(scheduledCall(spy, "processDownload", 0));
+  expect(f.counts()).toMatchObject({ starts: 1, statuses: 1, downloads: 1 }); expect(f.db.table("runtimeAssetVersions")).toHaveLength(1);
+  expect(f.db.table("runtimeMediaJobs")[0]).toMatchObject({ state: "ready", pollCount: 2 });
+});
+it("normal poll backoff has one successor and stale watchdogs or finishes cannot compete with a newer lease", async () => {
+  const { f, job } = await processingVideo();
+  const spy = jest.spyOn(f.ctx.scheduler, "runAfter"); await f.runScheduled({ name: "runtimeMediaJobs:processPoll", args: { jobId: job.jobId } });
+  const oldWake = scheduledCall(spy, "expirePoll", MEDIA_LEASE_MS); const oldToken = (oldWake.args as { leaseToken: string }).leaseToken;
+  const backoff = scheduledCall(spy, "processPoll", 2000);
+  await f.call(media.pollAgain, { jobId: job.jobId, leaseToken: oldToken });
+  expect(spy.mock.calls.filter(([, reference]) => getFunctionName(reference) === "runtimeMediaJobs:processPoll")).toHaveLength(1);
+  jest.spyOn(Date, "now").mockReturnValue(clock + 2000); await interruptedClaim(f, job.jobId, "poll");
+  const current = f.db.table("runtimeMediaJobs")[0]; const currentToken = current.pollLeaseToken;
+  expect(currentToken).not.toBe(oldToken); expect(backoff.args).toEqual({ jobId: job.jobId });
+  await f.runScheduled(backoff); expect(f.counts().statuses).toBe(1); expect(current.pollCount).toBe(2);
+  jest.spyOn(Date, "now").mockReturnValue(clock + MEDIA_LEASE_MS); await f.runScheduled(oldWake);
+  await f.call(media.pollAgain, { jobId: job.jobId, leaseToken: oldToken });
+  await f.call(media.providerTerminal, { jobId: job.jobId, pollLeaseToken: oldToken, status: "completed" });
+  expect(f.db.table("runtimeMediaJobs")[0]).toMatchObject({ state: "processing", pollLeaseToken: currentToken, pollCount: 2 });
+  expect(spy.mock.calls.filter(([delay, reference]) => delay === 0 && getFunctionName(reference) === "runtimeMediaJobs:processPoll")).toHaveLength(0);
+  const currentWake = { name: "runtimeMediaJobs:expirePoll", args: { jobId: job.jobId, leaseToken: currentToken } };
+  jest.spyOn(Date, "now").mockReturnValue(clock + MEDIA_LEASE_MS + 2000); await f.runScheduled(currentWake); await f.runScheduled(currentWake);
+  await f.call(media.providerTerminal, { jobId: job.jobId, pollLeaseToken: currentToken, status: "completed" });
+  expect(f.db.table("runtimeMediaJobs")[0].state).toBe("processing");
+  expect(spy.mock.calls.filter(([delay, reference]) => delay === 0 && getFunctionName(reference) === "runtimeMediaJobs:processPoll")).toHaveLength(1);
+  expect(f.counts()).toMatchObject({ starts: 1, statuses: 1, downloads: 0 });
+});
+it("poll lease and its watchdog roll back together on scheduling failure", async () => {
+  const { f, job } = await processingVideo();
+  const before = { ...f.db.table("runtimeMediaJobs")[0] }; const schedules = [...f.scheduled];
+  jest.spyOn(f.ctx.scheduler, "runAfter").mockRejectedValueOnce(new Error("SCHEDULER_UNAVAILABLE"));
+  await expect(f.call(media.pollCheckpoint, { jobId: job.jobId })).rejects.toThrow("SCHEDULER_UNAVAILABLE");
+  expect(f.db.table("runtimeMediaJobs")[0]).toEqual(before); expect(f.scheduled).toEqual(schedules); expect(f.counts().statuses).toBe(0);
+});
+it("poll watchdog scheduling failure retains its token for the same durable successor to retry", async () => {
+  const { f, job } = await processingVideo();
+  const spy = jest.spyOn(f.ctx.scheduler, "runAfter"); await interruptedClaim(f, job.jobId, "poll"); const wake = scheduledCall(spy, "expirePoll", MEDIA_LEASE_MS);
+  jest.spyOn(Date, "now").mockReturnValue(clock + MEDIA_LEASE_MS); const before = { ...f.db.table("runtimeMediaJobs")[0] };
+  spy.mockRejectedValueOnce(new Error("SCHEDULER_UNAVAILABLE")); await expect(f.runScheduled(wake)).rejects.toThrow("SCHEDULER_UNAVAILABLE");
+  expect(f.db.table("runtimeMediaJobs")[0]).toEqual(before); await f.runScheduled(wake); await f.runScheduled(wake);
+  expect(spy.mock.calls.filter(([delay, reference]) => delay === 0 && getFunctionName(reference) === "runtimeMediaJobs:processPoll")).toHaveLength(2); // one rejected call, one committed successor
+  expect(f.scheduled.filter(row => row.name === "runtimeMediaJobs:processPoll")).toHaveLength(2); // original admission and one recovery
+  expect(f.counts()).toMatchObject({ starts: 1, statuses: 0, downloads: 0 });
+});
+it("the final allowed poll claim stays active until its lease expires, then expires without another poll or refund", async () => {
+  const { f, job } = await processingVideo();
+  await f.db.patch("runtimeMediaJobs", f.db.table("runtimeMediaJobs")[0]._id as string, { pollCount: MEDIA_MAX_POLLS - 1 });
+  const spy = jest.spyOn(f.ctx.scheduler, "runAfter"); await interruptedClaim(f, job.jobId, "poll"); const wake = scheduledCall(spy, "expirePoll", MEDIA_LEASE_MS);
+  await f.runScheduled({ name: "runtimeMediaJobs:processPoll", args: { jobId: job.jobId } });
+  expect(f.db.table("runtimeMediaJobs")[0]).toMatchObject({ state: "processing", pollCount: MEDIA_MAX_POLLS });
+  jest.spyOn(Date, "now").mockReturnValue(clock + MEDIA_LEASE_MS); await f.runScheduled(wake); await f.runScheduled(wake);
+  expect(f.db.table("runtimeMediaJobs")[0]).toMatchObject({ state: "expired", failureCode: "MEDIA_JOB_EXPIRED", costStatus: "incurred_unknown" });
+  expect(f.counts()).toMatchObject({ starts: 1, statuses: 0, downloads: 0 }); expect(f.db.table("runtimeAssetVersions")).toHaveLength(0);
+  expect(f.db.table("runtimeModelAttempts")[0]).toMatchObject({ state: "dispatch_pending", slotReleased: false });
+  expect(spy.mock.calls.filter(([delay, reference]) => delay === 0 && getFunctionName(reference) === "runtimeMediaJobs:processPoll")).toHaveLength(0);
+});
+it.each(["download", "poll"] as const)("%s wake requires current authority and cannot recover after scope revocation", async kind => {
+  const { f, job } = kind === "download" ? await downloadingVideo() : await processingVideo();
+  const spy = jest.spyOn(f.ctx.scheduler, "runAfter"); await interruptedClaim(f, job.jobId, kind);
+  const wake = scheduledCall(spy, kind === "download" ? "processDownload" : "expirePoll", MEDIA_LEASE_MS);
+  await f.db.patch("runtimeAuthGrants", f.reference.grantId, { revokedAt: clock }); jest.spyOn(Date, "now").mockReturnValue(clock + MEDIA_LEASE_MS);
+  await expect(f.runScheduled(wake)).rejects.toMatchObject({ data: { code: "FORBIDDEN" } });
+  expect(f.counts()).toMatchObject({ starts: 1, downloads: 0 }); expect(f.db.table("runtimeAssetVersions")).toHaveLength(0);
+  expect(f.db.table("runtimeModelAttempts")[0]).toMatchObject({ state: "dispatch_pending", slotReleased: false });
+});
+it.each(["download", "poll"] as const)("%s wake cannot publish or poll after the artifact is deleted", async kind => {
+  const { f, job } = kind === "download" ? await downloadingVideo() : await processingVideo();
+  const spy = jest.spyOn(f.ctx.scheduler, "runAfter"); await interruptedClaim(f, job.jobId, kind);
+  const wake = scheduledCall(spy, kind === "download" ? "processDownload" : "expirePoll", MEDIA_LEASE_MS);
+  await f.db.patch("artifacts", f.db.table("artifacts")[0]._id as string, { isDeleted: true }); jest.spyOn(Date, "now").mockReturnValue(clock + MEDIA_LEASE_MS);
+  await expect(f.runScheduled(wake)).rejects.toMatchObject({ data: { code: "FORBIDDEN" } });
+  expect(f.counts()).toMatchObject({ starts: 1, downloads: 0 }); expect(f.db.table("runtimeAssetVersions")).toHaveLength(0);
+});
+it.each([["download", "cancel"], ["download", "expire"], ["poll", "cancel"], ["poll", "expire"]] as const)("%s wake is inert after %s", async (kind, end) => {
+    const { f, job } = kind === "download" ? await downloadingVideo() : await processingVideo();
+    const spy = jest.spyOn(f.ctx.scheduler, "runAfter"); await interruptedClaim(f, job.jobId, kind);
+    const wake = scheduledCall(spy, kind === "download" ? "processDownload" : "expirePoll", MEDIA_LEASE_MS);
+    if (end === "cancel") await f.call(media.cancel, { jobId: job.jobId });
+    else { jest.spyOn(Date, "now").mockReturnValue(f.db.table("runtimeMediaJobs")[0].expiresAt as number); await f.call(media.expireJob, { jobId: job.jobId }); }
+    jest.spyOn(Date, "now").mockReturnValue(clock + MEDIA_LEASE_MS); const schedules = [...f.scheduled]; await f.runScheduled(wake); await f.runScheduled(wake);
+    expect(f.scheduled).toEqual(schedules); expect(f.db.table("runtimeMediaJobs")[0].state).toBe(end === "cancel" ? "cancelled" : "expired");
+    expect(f.counts()).toMatchObject({ starts: 1, downloads: 0 }); expect(f.db.table("runtimeAssetVersions")).toHaveLength(0);
+    expect(f.db.table("runtimeModelAttempts")[0]).toMatchObject({ state: "dispatch_pending", slotReleased: false });
+});
+it("download recovery with expired proof remains withheld, without another generation or manufactured qualification", async () => {
+  // Original short-lived synthetic proof: the lease outlives it by20seconds.
+  const f = await mediaFixture(); const job = await f.submit("video"); await gateway.processSubmissionHandler(f.action, { jobId: job.jobId }, f.factory);
+  f.status("completed"); await gateway.processPollHandler(f.action, { jobId: job.jobId }, f.factory);
+  const spy = jest.spyOn(f.ctx.scheduler, "runAfter"); await interruptedClaim(f, job.jobId, "download"); const wake = scheduledCall(spy, "processDownload", MEDIA_LEASE_MS);
+  const attachments: unknown[] = []; const original = f.ctx.runMutation.bind(f.ctx);
+  f.ctx.runMutation = (async (reference, args) => { const result = await original(reference, args); if (getFunctionName(reference) === "runtimeModelPolicy:attachTerminalResult") attachments.push(result); return result; }) as MutationCtx["runMutation"];
+  jest.spyOn(Date, "now").mockReturnValue(clock + MEDIA_LEASE_MS); await f.runScheduled(wake); await f.runScheduled(wake);
+  expect(attachments).toContainEqual({ attached: false, resultWithheld: true });
+  expect(JSON.parse(f.db.table("runtimeMediaJobs")[0].proofCanonical as string).expiresAt).toBe(clock + 100_000);
+  expect(f.db.table("runtimeModelAttempts")[0]).toMatchObject({ state: "uncertain", slotReleased: true, resultAttachmentState: "closed", resultWithheld: true });
+  expect(f.db.table("runtimeMediaJobs")[0]).toMatchObject({ state: "failed", failureCode: "MEDIA_PROVIDER_FAILED", costStatus: "incurred_unknown" });
+  expect(f.counts()).toMatchObject({ starts: 1, downloads: 1 }); expect(f.db.table("runtimeAssetVersions")).toHaveLength(0);
+});
+it("a late failed real poll action cannot capture ledger evidence after its lease is replaced", async () => {
+  const { f, job } = await processingVideo(); const before = { attempts: JSON.stringify(f.db.table("runtimeModelAttempts")), accounts: JSON.stringify(f.db.table("runtimeBudgetAccounts")) };
+  const factory: MediaNativeFactory = model => ({ ...f.factory(model), status: async (operation, signal) => {
+    await f.factory(model).status(operation, signal);
+    const oldToken = f.db.table("runtimeMediaJobs")[0].pollLeaseToken;
+    jest.spyOn(Date, "now").mockReturnValue(clock + MEDIA_LEASE_MS);
+    await f.call(media.expirePoll, { jobId: job.jobId, leaseToken: oldToken });
+    await interruptedClaim(f, job.jobId, "poll"); return "failed";
+  } });
+  await gateway.processPollHandler(f.action, { jobId: job.jobId }, factory);
+  expect(JSON.stringify(f.db.table("runtimeModelAttempts"))).toBe(before.attempts); expect(JSON.stringify(f.db.table("runtimeBudgetAccounts"))).toBe(before.accounts);
+  expect(f.db.table("runtimeMediaJobs")[0]).toMatchObject({ state: "processing", pollCount: 2 });
+  expect(f.db.table("runtimeMediaJobs")[0].terminalStatus).toBeUndefined(); expect(f.counts()).toMatchObject({ starts: 1, statuses: 1, downloads: 0 });
+});
+it("a current failed poll preserves the charge-only terminal evidence and conservative accounting", async () => {
+  const { f, job } = await processingVideo(); f.status("failed"); await f.runScheduled({ name: "runtimeMediaJobs:processPoll", args: { jobId: job.jobId } });
+  expect(f.db.table("runtimeMediaJobs")[0]).toMatchObject({ state: "failed", terminalStatus: "failed", costStatus: "incurred_unknown" });
+  const attempt = f.db.table("runtimeModelAttempts")[0]; expect(attempt).toMatchObject({ state: "uncertain", slotReleased: true });
+  expect(JSON.parse(attempt.terminalEvidenceCanonical as string)).toMatchObject({ outcome: "confirmed_rejected", costSource: "unavailable" });
+  expect(f.counts()).toMatchObject({ starts: 1, statuses: 1, downloads: 0 }); expect(f.db.table("runtimeAssetVersions")).toHaveLength(0);
+});
+it("nested terminal capture failure rolls back ledger and job together, leaving the committed poll watchdog", async () => {
+  const { f, job } = await processingVideo(); const spy = jest.spyOn(f.ctx.scheduler, "runAfter"); await interruptedClaim(f, job.jobId, "poll");
+  const row = f.db.table("runtimeMediaJobs")[0]; const before = JSON.stringify({ jobs: f.db.table("runtimeMediaJobs"), attempts: f.db.table("runtimeModelAttempts"), accounts: f.db.table("runtimeBudgetAccounts") });
+  const original = f.ctx.runMutation.bind(f.ctx); let failOnce = true;
+  f.ctx.runMutation = (async (reference, args) => {
+    const result = await original(reference, args);
+    if (failOnce && getFunctionName(reference) === "runtimeModelPolicy:captureTerminalEvidence") { failOnce = false; throw new Error("NESTED_CAPTURE_ACK_LOST"); }
+    return result;
+  }) as MutationCtx["runMutation"];
+  await expect(f.call(media.providerTerminal, { jobId: job.jobId, pollLeaseToken: row.pollLeaseToken, status: "failed" })).rejects.toThrow("NESTED_CAPTURE_ACK_LOST");
+  f.ctx.runMutation = original;
+  expect(JSON.stringify({ jobs: f.db.table("runtimeMediaJobs"), attempts: f.db.table("runtimeModelAttempts"), accounts: f.db.table("runtimeBudgetAccounts") })).toBe(before);
+  jest.spyOn(Date, "now").mockReturnValue(clock + MEDIA_LEASE_MS); await f.runScheduled(scheduledCall(spy, "expirePoll", MEDIA_LEASE_MS));
+  f.status("failed"); await f.runScheduled(scheduledCall(spy, "processPoll", 0));
+  expect(f.db.table("runtimeMediaJobs")[0]).toMatchObject({ state: "failed", terminalStatus: "failed" });
+  expect(f.db.table("runtimeModelAttempts")[0]).toMatchObject({ state: "uncertain", slotReleased: true });
+  expect(f.counts()).toMatchObject({ starts: 1, statuses: 1, downloads: 0 });
+});
+it("committed terminal acknowledgement loss cannot capture twice or start another poll chain", async () => {
+  const { f, job } = await processingVideo(); f.status("failed"); const spy = jest.spyOn(f.ctx.scheduler, "runAfter"); const original = f.ctx.runMutation.bind(f.ctx); let loseOnce = true;
+  f.ctx.runMutation = (async (reference, args) => {
+    const result = await original(reference, args);
+    if (loseOnce && getFunctionName(reference) === "runtimeMediaJobs:providerTerminal") { loseOnce = false; throw new Error("COMMITTED_TERMINAL_ACK_LOST"); }
+    return result;
+  }) as MutationCtx["runMutation"];
+  await f.runScheduled({ name: "runtimeMediaJobs:processPoll", args: { jobId: job.jobId } }); f.ctx.runMutation = original;
+  const before = JSON.stringify({ jobs: f.db.table("runtimeMediaJobs"), attempts: f.db.table("runtimeModelAttempts"), accounts: f.db.table("runtimeBudgetAccounts") });
+  jest.spyOn(Date, "now").mockReturnValue(clock + MEDIA_LEASE_MS); await f.runScheduled(scheduledCall(spy, "expirePoll", MEDIA_LEASE_MS));
+  await f.runScheduled({ name: "runtimeMediaJobs:processPoll", args: { jobId: job.jobId } });
+  expect(JSON.stringify({ jobs: f.db.table("runtimeMediaJobs"), attempts: f.db.table("runtimeModelAttempts"), accounts: f.db.table("runtimeBudgetAccounts") })).toBe(before);
+  expect(f.counts()).toMatchObject({ starts: 1, statuses: 1, downloads: 0 });
+  expect(spy.mock.calls.filter(([, reference]) => getFunctionName(reference) === "runtimeMediaJobs:processPoll")).toHaveLength(0);
+});
 async function signed(body: string, secret = "PRIVATE_SECRET", timestamp = Math.floor(Date.now() / 1000)) {
   const key = await crypto.subtle.importKey("raw", new TextEncoder().encode(secret), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
   const mac = new Uint8Array(await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(`${timestamp},${body}`)));

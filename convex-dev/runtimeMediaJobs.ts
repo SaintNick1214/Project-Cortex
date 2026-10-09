@@ -159,13 +159,43 @@ export const markFailure = internalMutation({ args: { jobId: v.string(), code: v
 } });
 export const pollCheckpoint = internalMutation({ args: { jobId: v.string() }, handler: async (ctx, args) => {
   const job = await mediaJob(ctx, args.jobId); if (job.state !== "processing" || !job.operation) return null; await checkMediaJob(ctx, job, job.reference, true);
-  if (Date.now() >= job.expiresAt || job.pollCount >= MEDIA_MAX_POLLS) { await transition(ctx, job, "expired", "MEDIA_JOB_EXPIRED"); return null; }
-  await ctx.db.patch("runtimeMediaJobs", job._id, { pollCount: job.pollCount + 1 }); return job;
+  if (Date.now() >= job.expiresAt) { await transition(ctx, job, "expired", "MEDIA_JOB_EXPIRED"); return null; }
+  if (job.pollLeaseExpiresAt !== undefined && Date.now() < job.pollLeaseExpiresAt) return null;
+  if (job.pollCount >= MEDIA_MAX_POLLS) { await transition(ctx, job, "expired", "MEDIA_JOB_EXPIRED"); return null; }
+  const pollLeaseToken = crypto.randomUUID(); const pollLeaseExpiresAt = Date.now() + MEDIA_LEASE_MS;
+  await ctx.db.patch("runtimeMediaJobs", job._id, { pollCount: job.pollCount + 1, pollLeaseToken, pollLeaseExpiresAt });
+  // The lease and its saved-handle watchdog commit together, including when
+  // the action disappears before it can schedule the ordinary backoff.
+  await ctx.scheduler.runAfter(MEDIA_LEASE_MS, ref("expirePoll"), { jobId: job.jobId, leaseToken: pollLeaseToken });
+  return { ...job, pollCount: job.pollCount + 1, pollLeaseToken, pollLeaseExpiresAt };
 } });
-export const pollAgain = internalMutation({ args: { jobId: v.string() }, handler: async (ctx, args) => { const job = await mediaJob(ctx, args.jobId); if (job.state === "processing") await ctx.scheduler.runAfter(Math.min(300_000, 1000 * 2 ** Math.min(job.pollCount, 8)), action("processPoll"), { jobId: job.jobId }); return null; } });
-export const providerTerminal = internalMutation({ args: { jobId: v.string(), status: v.union(v.literal("completed"), v.literal("failed"), v.literal("cancelled"), v.literal("expired")) }, handler: async (ctx, args) => {
+export const pollAgain = internalMutation({ args: { jobId: v.string(), leaseToken: v.string() }, handler: async (ctx, args) => {
+  const job = await mediaJob(ctx, args.jobId);
+  if (job.state !== "processing" || job.pollLeaseToken !== args.leaseToken || Date.now() >= (job.pollLeaseExpiresAt ?? 0)) return null;
+  await ctx.db.patch("runtimeMediaJobs", job._id, { pollLeaseToken: undefined, pollLeaseExpiresAt: undefined });
+  await ctx.scheduler.runAfter(Math.min(300_000, 1000 * 2 ** Math.min(job.pollCount, 8)), action("processPoll"), { jobId: job.jobId }); return null;
+} });
+export const expirePoll = internalMutation({ args: { jobId: v.string(), leaseToken: v.string() }, handler: async (ctx, args) => {
+  const job = await mediaJob(ctx, args.jobId);
+  if (job.state !== "processing" || job.pollLeaseToken !== args.leaseToken || Date.now() < (job.pollLeaseExpiresAt ?? 0)) return null;
+  await checkMediaJob(ctx, job, job.reference, true);
+  if (Date.now() >= job.expiresAt || job.pollCount >= MEDIA_MAX_POLLS) { await transition(ctx, job, "expired", "MEDIA_JOB_EXPIRED"); return null; }
+  await ctx.db.patch("runtimeMediaJobs", job._id, { pollLeaseToken: undefined, pollLeaseExpiresAt: undefined });
+  await ctx.scheduler.runAfter(0, action("processPoll"), { jobId: job.jobId }); return null;
+} });
+export const providerTerminal = internalMutation({ args: { jobId: v.string(), pollLeaseToken: v.optional(v.string()), status: v.union(v.literal("completed"), v.literal("failed"), v.literal("cancelled"), v.literal("expired")) }, handler: async (ctx, args) => {
   const job = await mediaJob(ctx, args.jobId); if (terminal(job.state) || job.terminalStatus) return null;
+  if (args.pollLeaseToken !== undefined && (job.state !== "processing" || job.pollLeaseToken !== args.pollLeaseToken || Date.now() >= (job.pollLeaseExpiresAt ?? 0))) return null;
   if (!job.attemptId || !job.dispatchIdentity || !job.modelOperationId) mediaDenied("MEDIA_RESULT_WITHHELD");
+  if (args.pollLeaseToken !== undefined && args.status === "failed") {
+    const snapshot = JSON.parse(job.snapshotCanonical!) as import("../src/domain/model-policy").ModelPolicySnapshotV1;
+    // A mutation's nested runMutation shares its transaction: the token fence,
+    // charge-only evidence and terminal transition cannot leave an RPC gap.
+    await ctx.runMutation(makeFunctionReference<"mutation">("runtimeModelPolicy:captureTerminalEvidence"), {
+      attemptId: job.attemptId, dispatchIdentity: job.dispatchIdentity,
+      receiptCanonical: canonicalModelJson({ version: 1, dispatchIdentity: job.dispatchIdentity, receiptId: `${job.jobId}:terminal`, modelId: snapshot.modelId, nativeInterface: "video", outcome: "confirmed_rejected", proof: "provider-terminal-v1", costSource: "unavailable", media: { jobId: job.jobId, status: "failed" } }),
+    });
+  }
   // Trusted producer metadata cannot grant output access. Current authority is
   // checked after charge capture, again at attachment and materialization.
   await ctx.db.patch("runtimeMediaJobs", job._id, { terminalStatus: args.status, state: args.status === "completed" ? "downloading" : args.status === "expired" ? "expired" : "failed", ...(job.kind === "video" ? { leaseExpiresAt: Date.now() } : {}), revision: job.revision + 1, updatedAt: Date.now(), ...(args.status !== "completed" ? { failureCode: "MEDIA_PROVIDER_FAILED" } : {}) });
@@ -174,9 +204,11 @@ export const providerTerminal = internalMutation({ args: { jobId: v.string(), st
 export const claimDownload = internalMutation({ args: { jobId: v.string() }, handler: async (ctx, args) => {
   const job = await mediaJob(ctx, args.jobId); if (job.state !== "downloading" || !job.modelOperationId || !job.attemptId) return null;
   await checkMediaJob(ctx, job, job.reference, true);
-  if (Date.now() >= job.expiresAt || job.downloadAttempt >= MEDIA_MAX_DOWNLOAD_ATTEMPTS) { await transition(ctx, job, "failed", "MEDIA_DOWNLOAD_FAILED"); return null; }
+  if (Date.now() >= job.expiresAt) { await transition(ctx, job, "failed", "MEDIA_DOWNLOAD_FAILED"); return null; }
   if (job.leaseExpiresAt && Date.now() < job.leaseExpiresAt) return null;
-  const leaseToken = crypto.randomUUID(); await ctx.db.patch("runtimeMediaJobs", job._id, { leaseToken, leaseExpiresAt: Date.now() + MEDIA_LEASE_MS, downloadAttempt: job.downloadAttempt + 1 }); return { ...job, leaseToken };
+  if (job.downloadAttempt >= MEDIA_MAX_DOWNLOAD_ATTEMPTS) { await transition(ctx, job, "failed", "MEDIA_DOWNLOAD_FAILED"); return null; }
+  const leaseToken = crypto.randomUUID(); await ctx.db.patch("runtimeMediaJobs", job._id, { leaseToken, leaseExpiresAt: Date.now() + MEDIA_LEASE_MS, downloadAttempt: job.downloadAttempt + 1 });
+  await ctx.scheduler.runAfter(MEDIA_LEASE_MS, action("processDownload"), { jobId: job.jobId }); return { ...job, leaseToken };
 } });
 export const downloadFailed = internalMutation({ args: { jobId: v.string(), leaseToken: v.string() }, handler: async (ctx, args) => {
   const job = await mediaJob(ctx, args.jobId); if (job.state !== "downloading" || job.leaseToken !== args.leaseToken) return null;

@@ -1,0 +1,221 @@
+(node:97597) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeMedia/recovery.test.ts (5.119 s)
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+  ● download recovery with expired proof remains withheld, without another generation or manufactured qualification
+
+    expect(received).toMatchObject(expected)
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+        "costStatus": "incurred_unknown",
+    -   "failureCode": "MEDIA_RESULT_WITHHELD",
+    +   "failureCode": "MEDIA_PROVIDER_FAILED",
+        "state": "failed",
+      }
+
+    [0m [90m 186 |[39m   [36mconst[39m spy [33m=[39m jest[33m.[39mspyOn(f[33m.[39mctx[33m.[39mscheduler[33m,[39m [32m"runAfter"[39m)[33m;[39m [36mawait[39m interruptedClaim(f[33m,[39m job[33m.[39mjobId[33m,[39m [32m"download"[39m)[33m;[39m [36mconst[39m wake [33m=[39m scheduledCall(spy[33m,[39m [32m"processDownload"[39m[33m,[39m [33mMEDIA_LEASE_MS[39m)[33m;[39m
+     [90m 187 |[39m   jest[33m.[39mspyOn([33mDate[39m[33m,[39m [32m"now"[39m)[33m.[39mmockReturnValue(clock [33m+[39m [33mMEDIA_LEASE_MS[39m)[33m;[39m [36mawait[39m f[33m.[39mrunScheduled(wake)[33m;[39m [36mawait[39m f[33m.[39mrunScheduled(wake)[33m;[39m
+    [31m[1m>[22m[39m[90m 188 |[39m   expect(f[33m.[39mdb[33m.[39mtable([32m"runtimeMediaJobs"[39m)[[35m0[39m])[33m.[39mtoMatchObject({ state[33m:[39m [32m"failed"[39m[33m,[39m failureCode[33m:[39m [32m"MEDIA_RESULT_WITHHELD"[39m[33m,[39m costStatus[33m:[39m [32m"incurred_unknown"[39m })[33m;[39m
+     [90m     |[39m                                             [31m[1m^[22m[39m
+     [90m 189 |[39m   expect(f[33m.[39mcounts())[33m.[39mtoMatchObject({ starts[33m:[39m [35m1[39m[33m,[39m downloads[33m:[39m [35m1[39m })[33m;[39m expect(f[33m.[39mdb[33m.[39mtable([32m"runtimeAssetVersions"[39m))[33m.[39mtoHaveLength([35m0[39m)[33m;[39m
+     [90m 190 |[39m })[33m;[39m
+     [90m 191 |[39m it([32m"a late failed real poll action cannot capture ledger evidence after its lease is replaced"[39m[33m,[39m [36masync[39m () [33m=>[39m {[0m
+
+      at Object.<anonymous> (tests/unit/runtimeMedia/recovery.test.ts:188:45)
+
+PASS tests/unit/runtimeMedia/artifact-context.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeMedia/jobs.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeMedia/native-cost.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeMedia/import-order.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     5.1s | 33/34 passed | /tests/unit/runtimeMedia/recovery.test.ts
+  ✅     1.1s | 9/9 passed | /tests/unit/runtimeMedia/artifact-context.test.ts
+  ✅     1.0s | 12/12 passed | /tests/unit/runtimeMedia/jobs.test.ts
+  ✅     1.0s | 9/9 passed | /tests/unit/runtimeMedia/native-cost.test.ts
+  ✅     0.6s | 3/3 passed | /tests/unit/runtimeMedia/import-order.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.46s ( 5.1%) - exhausted observer cursor reauthorizes retained media references before any cached projection replay
+    /tests/unit/runtimeMedia/recovery.test.ts
+
+ 2. [32m✓[0m    0.13s ( 1.5%) - fresh native ESM evaluation from media-jobs initializes the exact media schemas
+    /tests/unit/runtimeMedia/import-order.test.ts
+
+ 3. [32m✓[0m    0.09s ( 1.0%) - fresh native ESM evaluation from model-policy initializes the exact media schemas
+    /tests/unit/runtimeMedia/import-order.test.ts
+
+ 4. [32m✓[0m    0.08s ( 0.9%) - fresh native ESM evaluation from transcript initializes the exact media schemas
+    /tests/unit/runtimeMedia/import-order.test.ts
+
+ 5. [32m✓[0m    0.07s ( 0.7%) - a hard download action interruption recovers automatically from the committed lease without another generation
+    /tests/unit/runtimeMedia/recovery.test.ts
+
+ 6. [32m✓[0m    0.05s ( 0.5%) - unqualified native cost cannot settle a reservation or withhold a qualified unknown-cost media result
+    /tests/unit/runtimeMedia/native-cost.test.ts
+
+ 7. [32m✓[0m    0.04s ( 0.5%) - durable governed media persists pending artifact/budget before one image call; one immutable version and unknown liability survive replay
+    /tests/unit/runtimeMedia/jobs.test.ts
+
+ 8. [32m✓[0m    0.04s ( 0.5%) - canonical tool-result bridge delivers only exact current media reference and text; private handles never escape
+    /tests/unit/runtimeMedia/recovery.test.ts
+
+ 9. [32m✓[0m    0.04s ( 0.5%) - generated byte delivery rechecks the job's consumed source permissions after output was ready
+    /tests/unit/runtimeMedia/recovery.test.ts
+
+10. [32m✓[0m    0.04s ( 0.4%) - raw signed callback is a deduplicated signal; forged, stale, wrong identity and early callbacks never grant readiness
+    /tests/unit/runtimeMedia/recovery.test.ts
+
+11. [32m✓[0m    0.04s ( 0.4%) - download retry reuses saved operation and expiry never readmits generation
+    /tests/unit/runtimeMedia/recovery.test.ts
+
+12. [32m✓[0m    0.04s ( 0.4%) - lease recovery joins an already saved output before any additional download or artifact version
+    /tests/unit/runtimeMedia/recovery.test.ts
+
+13. [32m✓[0m    0.04s ( 0.4%) - confirmed image save gap reconciles once with no new image call; committed acknowledgement loss preserves output
+    /tests/unit/runtimeMedia/recovery.test.ts
+
+14. [32m✓[0m    0.04s ( 0.4%) - cost-qualified media settles exact reported units once and preserves one version on replay
+    /tests/unit/runtimeMedia/native-cost.test.ts
+
+15. [32m✓[0m    0.03s ( 0.4%) - a hard poll action interruption resumes only the saved operation through a token-fenced durable wake
+    /tests/unit/runtimeMedia/recovery.test.ts
+
+16. [32m✓[0m    0.03s ( 0.3%) - durable governed media polling and repeated download create one asset and preserve saved private handle
+    /tests/unit/runtimeMedia/jobs.test.ts
+
+17. [32m✓[0m    0.03s ( 0.3%) - lost returned image buffer fails download truthfully without another inference or a download loop
+    /tests/unit/runtimeMedia/recovery.test.ts
+
+18. [32m✓[0m    0.03s ( 0.3%) - durable governed media late image after cancellation charges terminal evidence but cannot become ready
+    /tests/unit/runtimeMedia/jobs.test.ts
+
+19. [32m✓[0m    0.03s ( 0.3%) - same-run hydration, native paid guard and exhausted observers recheck consumed artifact metadata
+    /tests/unit/runtimeMedia/artifact-context.test.ts
+
+20. [32m✓[0m    0.03s ( 0.3%) - cancelled saved-output gap removes only unjoined owned bytes, without resetting terminal liability
+    /tests/unit/runtimeMedia/recovery.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 1.37s (15.2% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      9.01s
+  Test suites:        5
+  Individual tests:   64
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 5
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 1 failed, 4 passed, 5 total
+Tests:       1 failed, 66 passed, 67 total
+Snapshots:   0 total
+Time:        9.007 s
+Ran all test suites within paths "tests/unit/runtimeMedia/artifact-context.test.ts", "tests/unit/runtimeMedia/import-order.test.ts", "tests/unit/runtimeMedia/jobs.test.ts", "tests/unit/runtimeMedia/native-cost.test.ts", "tests/unit/runtimeMedia/recovery.test.ts".

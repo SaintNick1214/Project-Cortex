@@ -11,7 +11,7 @@ import type { ModelCallRequest, ModelPolicySnapshotV1 } from "../src/domain/mode
 import { decodeMediaBytes, assertMediaBytes, mediaInputBound, mediaContractSchema } from "../src/domain/media-jobs";
 import type { MediaEnvelopeV1, MediaResultV1 } from "../src/domain/media-jobs";
 import { createBackendGatewayComposition } from "./runtimeGatewayBackend";
-import type { GatewayBinding, GatewayResolution } from "./runtimeGateway";
+import { conservativeUsdDecimal, type GatewayBinding, type GatewayResolution } from "./runtimeGateway";
 import { storeGeneratedAsset, readPrivateProviderAsset } from "./runtimeAssets";
 import { mediaDenied } from "./runtimeMediaFence";
 type Job = Doc<"runtimeMediaJobs">;
@@ -50,7 +50,9 @@ export const officialMediaFactory: MediaNativeFactory = modelId => {
     download: async (operation, signal) => {
       const result = await video.download({ operation, abortSignal: signal });
       if (result.videos.length !== 1 || !["video/mp4", "video/webm"].includes(result.videos[0]!.mediaType)) throw new Error("MEDIA_OUTPUT_INVALID");
-      return { data: result.videos[0]!.data, mimeType: result.videos[0]!.mediaType as "video/mp4" | "video/webm" };
+      const aggregateCostUsd = conservativeUsdDecimal(result.providerMetadata?.convexGateway?.cost);
+      return { data: result.videos[0]!.data, mimeType: result.videos[0]!.mediaType as "video/mp4" | "video/webm",
+        ...(aggregateCostUsd === undefined ? {} : { aggregateCostUsd }) };
     },
   };
 };
@@ -76,7 +78,9 @@ function request(job: Job, snapshot: ModelPolicySnapshotV1, value: MediaEnvelope
 async function checkpoint(ctx: ActionCtx, job: Job, leaseToken?: string): Promise<Job> { return ctx.runMutation(ref<{ jobId: string; leaseToken?: string }, Job>("checkpoint"), { jobId: job.jobId, ...(leaseToken ? { leaseToken } : {}) }); }
 async function fail(ctx: ActionCtx, jobId: string, error: unknown, uncertain: boolean) {
   const text = error instanceof Error ? error.message : "";
-  const code = text === "ASSET_TOO_LARGE" ? text : text === "MEDIA_OUTPUT_INVALID" || text === "MEDIA_DOWNLOAD_FAILED" ? text : text.includes("CAPABILITY_UNAVAILABLE") ? "MEDIA_CAPABILITY_UNAVAILABLE" : uncertain ? "MEDIA_SUBMISSION_UNKNOWN" : "MEDIA_PROVIDER_FAILED";
+  const code = text === "ASSET_TOO_LARGE" ? text : text === "MEDIA_OUTPUT_INVALID" || text === "MEDIA_DOWNLOAD_FAILED" ? text
+    : text.includes("CAPABILITY_UNAVAILABLE") || text === "Asynchronous video generation is not configured" ? "MEDIA_CAPABILITY_UNAVAILABLE"
+    : uncertain ? "MEDIA_SUBMISSION_UNKNOWN" : "MEDIA_PROVIDER_FAILED";
   await ctx.runMutation(ref("markFailure"), { jobId, code, uncertain });
 }
 function timer(timeoutMs: number) { const controller = new AbortController(); const id = setTimeout(() => controller.abort(), Math.min(120_000, timeoutMs)); return { signal: controller.signal, close: () => clearTimeout(id) }; }
@@ -93,9 +97,12 @@ async function captureOutput(ctx: ActionCtx, job: Job, output: MediaNativeOutput
     throw error;
   }
   const result: MediaResultV1 = { version: 1, kind: "media", jobId: job.jobId, contentHash: await assetContentHash(bytes.buffer), sizeBytes: bytes.byteLength, mimeType: output.mimeType };
+  // Native metadata cannot upgrade an unavailable-cost qualification. Preserve
+  // full uncertainty unless this exact dispatch proof authorizes aggregate USD.
+  const aggregateCostUsd = proof.terminalCost === "gateway-aggregate-usd-v1" ? output.aggregateCostUsd : undefined;
   const receipt = { version: 1, dispatchIdentity: job.dispatchIdentity, receiptId: `${job.jobId}:terminal`, modelId: resolution.snapshot.modelId,
-    nativeInterface: job.kind, outcome: "confirmed", proof: "provider-terminal-v1", costSource: output.aggregateCostUsd === undefined ? "unavailable" : "gateway-aggregate-usd-v1",
-    ...(output.aggregateCostUsd === undefined ? {} : { aggregateCostUsd: output.aggregateCostUsd }), ...(output.usage ? { usage: output.usage } : {}),
+    nativeInterface: job.kind, outcome: "confirmed", proof: "provider-terminal-v1", costSource: aggregateCostUsd === undefined ? "unavailable" : "gateway-aggregate-usd-v1",
+    ...(aggregateCostUsd === undefined ? {} : { aggregateCostUsd }), ...(output.usage ? { usage: output.usage } : {}),
     ...(output.actualModel ? { actualModel: output.actualModel } : {}), media: { jobId: job.jobId, status: "completed", contentHash: result.contentHash, sizeBytes: result.sizeBytes, mimeType: result.mimeType } };
   const evidence = await composition.terminalSink.capture({ attemptId: job.attemptId, dispatchIdentity: job.dispatchIdentity, receiptCanonical: canonicalModelJson(receipt) });
   const attached = await composition.ledger.attachTerminalResult({ reference: job.reference, attemptId: job.attemptId, evidenceId: evidence.evidenceId, privateResultCanonical: canonicalModelJson(result) });
@@ -144,18 +151,16 @@ export async function processSubmissionHandler(ctx: ActionCtx, args: { jobId: st
   return null;
 }
 export async function processPollHandler(ctx: ActionCtx, args: { jobId: string }, factory: MediaNativeFactory = officialMediaFactory): Promise<null> {
-  const job = await ctx.runMutation(ref<{ jobId: string }, Job | null>("pollCheckpoint"), args); if (!job) return null;
+  const job = await ctx.runMutation(ref<{ jobId: string }, (Job & { pollLeaseToken: string }) | null>("pollCheckpoint"), args); if (!job) return null;
   const clock = timer(30_000);
   try {
     const snapshot = JSON.parse(job.snapshotCanonical!) as ModelPolicySnapshotV1;
     const status = await factory(snapshot.modelId).status(job.operation!, clock.signal);
-    if (status === "pending") { await checkpoint(ctx, job); await ctx.runMutation(ref("pollAgain"), args); }
+    if (status === "pending") { await checkpoint(ctx, job); await ctx.runMutation(ref("pollAgain"), { ...args, leaseToken: job.pollLeaseToken }); }
     else {
-      if (status === "failed" && job.attemptId && job.dispatchIdentity) await createBackendGatewayComposition(ctx).terminalSink.capture({ attemptId: job.attemptId, dispatchIdentity: job.dispatchIdentity,
-        receiptCanonical: canonicalModelJson({ version: 1, dispatchIdentity: job.dispatchIdentity, receiptId: `${job.jobId}:terminal`, modelId: snapshot.modelId, nativeInterface: "video", outcome: "confirmed_rejected", proof: "provider-terminal-v1", costSource: "unavailable", media: { jobId: job.jobId, status: "failed" } }) });
-      await ctx.runMutation(ref("providerTerminal"), { jobId: job.jobId, status: status === "completed" ? "completed" : "failed" });
+      await ctx.runMutation(ref("providerTerminal"), { jobId: job.jobId, pollLeaseToken: job.pollLeaseToken, status: status === "completed" ? "completed" : "failed" });
     }
-  } catch { await ctx.runMutation(ref("pollAgain"), args); }
+  } catch { await ctx.runMutation(ref("pollAgain"), { ...args, leaseToken: job.pollLeaseToken }); }
   finally { clock.close(); } return null;
 }
 export async function processDownloadHandler(ctx: ActionCtx, args: { jobId: string }, factory: MediaNativeFactory = officialMediaFactory): Promise<null> {

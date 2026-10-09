@@ -1,0 +1,192 @@
+{
+  "schemaVersion": 1,
+  "status": "READONLY_READINESS_CLOSED_ASYNC_ENABLEMENT_REQUIRED",
+  "closedAt": "2026-10-09T22:00:11.472553Z",
+  "target": {
+    "projectId": 3174742,
+    "teamId": 325340,
+    "projectName": "cortex-task10-embedding-v2-fe3a2599d6fd",
+    "deploymentName": "formal-husky-914",
+    "deploymentType": "dev",
+    "kind": "cloud",
+    "production": false,
+    "soleCloudDev": true,
+    "cloudUrl": "https://formal-husky-914.convex.cloud",
+    "siteOrigin": "https://formal-husky-914.convex.site",
+    "verifiedAt": "2026-10-09T21:53:50.735Z",
+    "credentialFileMode": "0600",
+    "credentialValuesExposed": false
+  },
+  "serviceCheck": {
+    "managementIdentity": "verified",
+    "managementReads": 3,
+    "policyDataReads": 2,
+    "policyReadExitCode": 1,
+    "policyRowsCaptured": 0,
+    "installedCurrentPolicy": "UNKNOWN",
+    "failureCause": "Not captured; no auth/expiry explanation inferred; no repeat"
+  },
+  "installedApplicability": {
+    "lastObservedMainManifest": {
+      "manifestId": "cortex-gateway-agent-defaults-2026-10-08",
+      "revision": 14,
+      "alreadyCommittedBy": "manifest14-installed-readback1.mjs"
+    },
+    "lastObservedReadback": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-dev-integration1/native-actual1/manifest14-installed-readback2-outcomes.json",
+    "currentSourceRevision": 16,
+    "currentSourceNotClaimedInstalledOnMain": true,
+    "credentialExpiry": "UNKNOWN; opaque credentials, not validated by local metadata"
+  },
+  "externalGate": {
+    "officialDocumentation": "https://docs.convex.dev/ai-gateway/images-and-videos#async-videos",
+    "recordedHTTPStatus": 503,
+    "recordedErrorCode": "Asynchronous video generation is not configured",
+    "recordedNativeStartRequests": 1,
+    "confirmedModelCalls": null,
+    "supportEnablementRequired": true,
+    "enablementScope": "UNKNOWN: documentation does not specify team/Gateway/deployment configuration granularity",
+    "undocumentedToggleAssumed": false,
+    "refreshedAvailabilityProbe": false,
+    "oldUnknownStartNeverReplayed": true
+  },
+  "compiledSelectionsAtOfflineInspection": {
+    "observedAt": "2026-10-09T21:56:12.916Z",
+    "manifestId": "cortex-gateway-agent-defaults-2026-10-08",
+    "revision": 16,
+    "selections": [
+      {
+        "operationKey": "media.image.generate",
+        "status": "COMPILED_SELECTION_ONLY",
+        "modelId": "openai/gpt-image-1",
+        "qualificationReceiptId": "ACTUAL-image-v4-requested-only-20261009",
+        "expiresAtUtc": "2026-10-10T00:17:32.086Z",
+        "currentAtInspection": true
+      },
+      {
+        "operationKey": "media.video.generate",
+        "status": "COMPILED_CAPABILITY_UNAVAILABLE"
+      },
+      {
+        "operationKey": "agent.respond",
+        "status": "COMPILED_SELECTION_ONLY",
+        "modelId": "openai/gpt-4o-mini",
+        "qualificationReceiptId": "ACTUAL-agent-v2-generate-stream-20261009",
+        "expiresAtUtc": "2026-10-10T01:37:31.763Z",
+        "currentAtInspection": true
+      },
+      {
+        "operationKey": "memory.extract",
+        "status": "COMPILED_SELECTION_ONLY",
+        "modelId": "openai/gpt-4o-mini",
+        "qualificationReceiptId": "ACTUAL-memory-extract-20261009",
+        "expiresAtUtc": "2026-10-10T08:09:44.235Z",
+        "currentAtInspection": true
+      },
+      {
+        "operationKey": "facts.resolve",
+        "status": "COMPILED_SELECTION_ONLY",
+        "modelId": "openai/gpt-4o-mini",
+        "qualificationReceiptId": "ACTUAL-memory-extract-20261009",
+        "expiresAtUtc": "2026-10-10T08:09:44.235Z",
+        "currentAtInspection": true
+      },
+      {
+        "operationKey": "conversation.title",
+        "status": "COMPILED_SELECTION_ONLY",
+        "modelId": "openai/gpt-4o",
+        "qualificationReceiptId": "ACTUAL-ci-conversation-title-20261009",
+        "expiresAtUtc": "2026-10-10T06:08:39.789Z",
+        "currentAtInspection": true
+      },
+      {
+        "operationKey": "embedding.memory",
+        "status": "COMPILED_SELECTION_ONLY",
+        "modelId": "openai/text-embedding-3-small",
+        "qualificationReceiptId": "ACTUAL-small1536-memory-query-20261009",
+        "expiresAtUtc": "2026-10-10T08:09:48.910Z",
+        "currentAtInspection": true
+      },
+      {
+        "operationKey": "embedding.query",
+        "status": "COMPILED_SELECTION_ONLY",
+        "modelId": "openai/text-embedding-3-small",
+        "qualificationReceiptId": "ACTUAL-small1536-memory-query-20261009",
+        "expiresAtUtc": "2026-10-10T08:09:48.910Z",
+        "currentAtInspection": true
+      }
+    ],
+    "videoCapability": "CAPABILITY_UNAVAILABLE: no compiled observed async proof",
+    "proofDatesModified": false,
+    "expiryExtension": false
+  },
+  "harnessReuse": {
+    "oldAsyncReferenceOnly": [
+      "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/native-media-commission1.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task12-asset-functional-v2-20261008/native-actual/mediaProbe.fixture.ts"
+    ],
+    "governedProduct": [
+      "convex-dev/runtimeMediaJobs.ts",
+      "convex-dev/runtimeMediaGateway.ts",
+      "convex-dev/runtimeMediaHttp.ts"
+    ],
+    "trustedCollectorPrecedent": [
+      "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-media-functional-v2-20261008/native-actual/native-image-commission1.mjs",
+      "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-media-functional-v2-20261008/native-actual/task13ImageCommission.fixture.ts",
+      "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-media-functional-v2-20261008/native-actual/imageCollector.fixture.ts"
+    ],
+    "reuseLimits": "Old roots, request keys and scopes remain retired/historical. Locate and adapt the existing guarded seams only after enablement and authorized current setup; no old controller execution or archive copy occurred. Callback-enabled async qualification is separate from the old no-callback private-frame commissioning envelope."
+  },
+  "remainingPositivePlan": [
+    {
+      "requirement": "Task13 genuine async media job",
+      "remaining": "After verified enablement, commission the exact native video start/status/download/callback envelope through the existing governed factory and durable ledger. Then an ordinary product job must save its real handle, reach terminal completion, materialize bounded real video once, and deliver the authorized immutable asset.",
+      "currentlyMissing": "Service enablement and genuine async terminal/download/callback evidence; compiled video qualification absent."
+    },
+    {
+      "requirement": "Task13 callback/recovery/currentness",
+      "remaining": "Use the same issued job/operation to demonstrate polling after missed callback, genuine signed callback and duplicate/out-of-order idempotence, download recovery without duplicate version, and current authorization/delete/cancel fences.",
+      "boundary": "Never resubmit an unknown start, manufacture terminal evidence, or infer upstream cancellation/refund."
+    },
+    {
+      "requirement": "Task14 client media outcome",
+      "remaining": "Exercise client/UI get/reconcile/reconnect/restart and private rendering against that same genuine job and immutable version.",
+      "boundary": "Existing text/image and synchronous private-input evidence does not prove async availability."
+    },
+    {
+      "requirement": "Task16 actual cross-layer outcome",
+      "remaining": "Bind the real async job to admitted primary/secondary operations, conservative costs, asset/reference/current grant fences, and owned retirement.",
+      "boundary": "Successful current Linux CI is scoped text/auth/memory/provider evidence, not an async media positive."
+    },
+    {
+      "requirement": "Task17 whole-goal closure",
+      "remaining": "Use the coherent current source and actual required async outcomes in the existing independent review and final quality/resource closure.",
+      "boundary": "This readiness handoff grants no acceptance."
+    }
+  ],
+  "independentWorkPossible": [
+    "Review current media job/factory/callback and existing controlled lifecycle paths without model calls.",
+    "Prepare the narrow support metadata request and future guarded async qualification/ordinary job plan using existing seams.",
+    "Reuse genuine current image/text evidence within its exact interface/source/expiry scope; do not regenerate images or promote sync/503 receipts into async proof."
+  ],
+  "resourceDisposition": {
+    "mainTarget": "retained for async support enablement",
+    "historicalTask12HeldSlots": 2,
+    "historicalTask12RetainedUnits": 4500000,
+    "financialScope": "Historical receipt only; current total main-target accounting was not queried or adopted during resume. No release/refund/reset or authority restoration.",
+    "privateCredentialsAndOnlyCopies": "untouched",
+    "stoppedGraphVolumes": "untouched"
+  },
+  "effects": {
+    "deployment": 0,
+    "modelRequests": 0,
+    "mutation": 0,
+    "settings": 0,
+    "credentials": 0,
+    "oldOperationReplay": 0
+  },
+  "acceptanceGranted": false,
+  "supportMessageSent": false,
+  "productOrGitWrites": 0,
+  "supportDraft": "support-target1.md",
+  "evidenceIndex": "evidence-index1.json"
+}

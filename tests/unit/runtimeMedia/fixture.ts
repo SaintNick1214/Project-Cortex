@@ -27,6 +27,19 @@ export async function mediaFixture() {
     status: async () => { statuses++; return status; },
     download: async () => { downloads++; return { data: mp4, mimeType: "video/mp4" }; },
   });
+  async function runScheduled(row: { name: string; args: unknown }) {
+    if (!row.name.startsWith("runtimeMediaJobs:")) throw new Error("Unexpected media schedule");
+    const registration = media[row.name.split(":")[1] as keyof typeof media];
+    if (!(registration as { isInternal?: boolean }).isInternal) throw new Error("Scheduled media endpoint must be internal");
+    assertNativeArgs(registration, row.args);
+    if (["runtimeMediaJobs:processDownload", "runtimeMediaJobs:processPoll"].includes(row.name)) {
+      // Actual registered action handler, with only the existing native factory
+      // port injected. Each internal mutation retains its own transaction.
+      return (registration as unknown as { _handler(ctx: ActionCtx, args: unknown, factory: MediaNativeFactory): Promise<null> })._handler(f.ctx as unknown as ActionCtx, row.args, factory);
+    }
+    return f.call(registration, row.args);
+  }
   return { ...f, action: f.ctx as unknown as ActionCtx, factory, status: (value: typeof status) => { status = value; }, counts: () => ({ images, starts, downloads, statuses }),
+    runScheduled,
     submit: async (kind: "image" | "video" = "image", requestId = "media-1") => f.call<import("../../../src/domain/media-jobs").RuntimeMediaJobV1>(media.submit, { kind, requestId, prompt: "A simple solid circle." }) };
 }

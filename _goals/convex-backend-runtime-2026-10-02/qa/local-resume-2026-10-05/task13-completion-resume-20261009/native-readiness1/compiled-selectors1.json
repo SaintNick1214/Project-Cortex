@@ -1,0 +1,365 @@
+{
+  "status": "OFFLINE_CURRENTNESS_METADATA_ONLY",
+  "observedAt": "2026-10-09T21:56:12.916Z",
+  "manifests": [
+    {
+      "manifestId": "cortex-gateway-agent-defaults-2026-10-08",
+      "revision": 14,
+      "applicability": "Last observed installed main-target baseline; current server metadata unconfirmed",
+      "selections": [
+        {
+          "operationKey": "media.image.generate",
+          "status": "COMPILED_SELECTION_ONLY",
+          "modelId": "openai/gpt-image-1",
+          "nativeInterface": "image",
+          "qualificationReceiptId": "ACTUAL-image-v4-requested-only-20261009",
+          "pins": {
+            "promptVersion": "memory-schema-prompt-v2",
+            "schemaVersion": "facts-v1",
+            "extractionVersion": "task04-qualification-e1",
+            "toolRegistryVersion": "none-v1",
+            "priceRevision": "convex-gateway-2026-10-08-image-low",
+            "boundRevision": "media-image-1024-low-png-shared3m-v1"
+          },
+          "checkedAt": 1791505052086,
+          "expiresAt": 1791591452086,
+          "expiresAtUtc": "2026-10-10T00:17:32.086Z",
+          "currentAtInspection": true,
+          "costCeilingMicroUsd": 2000000,
+          "terminalCost": "unavailable",
+          "mediaContract": {
+            "version": 1,
+            "options": {
+              "kind": "image",
+              "n": 1,
+              "size": "1024x1024",
+              "quality": "low",
+              "outputFormat": "png"
+            },
+            "inputProtocol": "none",
+            "maximumInputAssetBytes": 0,
+            "maximumResultBytes": 20000000,
+            "callbacks": false,
+            "terminalIdentity": "requested-only",
+            "usage": "optional"
+          }
+        },
+        {
+          "operationKey": "media.video.generate",
+          "status": "COMPILED_CAPABILITY_UNAVAILABLE",
+          "staticCode": "CAPABILITY_UNAVAILABLE"
+        },
+        {
+          "operationKey": "agent.respond",
+          "status": "COMPILED_SELECTION_ONLY",
+          "modelId": "openai/gpt-4o-mini",
+          "nativeInterface": "chat",
+          "qualificationReceiptId": "ACTUAL-agent-v2-generate-stream-20261009",
+          "pins": {
+            "promptVersion": "memory-schema-prompt-v2",
+            "schemaVersion": "facts-v1",
+            "extractionVersion": "task04-qualification-e1",
+            "toolRegistryVersion": "cortex-media-tools-v2",
+            "priceRevision": "openrouter-2026-10-08-candidate",
+            "boundRevision": "agent-tools-v2-32768-256-shared3m-v1"
+          },
+          "checkedAt": 1791509851763,
+          "expiresAt": 1791596251763,
+          "expiresAtUtc": "2026-10-10T01:37:31.763Z",
+          "currentAtInspection": true,
+          "costCeilingMicroUsd": 100000,
+          "terminalCost": "unavailable"
+        },
+        {
+          "operationKey": "memory.extract",
+          "status": "COMPILED_SELECTION_ONLY",
+          "modelId": "openai/gpt-4o-mini",
+          "nativeInterface": "chat",
+          "qualificationReceiptId": "ACTUAL-memory-extract-20261009",
+          "pins": {
+            "promptVersion": "memory-schema-prompt-v2",
+            "schemaVersion": "facts-v1",
+            "extractionVersion": "task04-qualification-e1",
+            "toolRegistryVersion": "none-v1",
+            "priceRevision": "gateway-2026-10-09-observed-default",
+            "boundRevision": "text-8192-512-schema-observed-20261009"
+          },
+          "checkedAt": 1791533384235,
+          "expiresAt": 1791619784235,
+          "expiresAtUtc": "2026-10-10T08:09:44.235Z",
+          "currentAtInspection": true,
+          "costCeilingMicroUsd": 100000,
+          "terminalCost": "unavailable"
+        },
+        {
+          "operationKey": "facts.resolve",
+          "status": "COMPILED_SELECTION_ONLY",
+          "modelId": "openai/gpt-4o-mini",
+          "nativeInterface": "chat",
+          "qualificationReceiptId": "gateway-gpt4omini-chat-20261008-v3",
+          "pins": {
+            "promptVersion": "memory-schema-prompt-v2",
+            "schemaVersion": "conflicts-v1",
+            "extractionVersion": "task04-qualification-e1",
+            "toolRegistryVersion": "none-v1",
+            "priceRevision": "openrouter-2026-10-08-candidate",
+            "boundRevision": "text-8192-512-schema-v2"
+          },
+          "checkedAt": 1791449412383,
+          "expiresAt": 1791535812383,
+          "expiresAtUtc": "2026-10-09T08:50:12.383Z",
+          "currentAtInspection": false,
+          "costCeilingMicroUsd": 100000,
+          "terminalCost": "unavailable"
+        },
+        {
+          "operationKey": "conversation.title",
+          "status": "COMPILED_SELECTION_ONLY",
+          "modelId": "openai/gpt-4o",
+          "nativeInterface": "chat",
+          "qualificationReceiptId": "ACTUAL-ci-conversation-title-20261009",
+          "pins": {
+            "promptVersion": "memory-schema-prompt-v2",
+            "schemaVersion": "facts-v1",
+            "extractionVersion": "task04-qualification-e1",
+            "toolRegistryVersion": "none-v1",
+            "priceRevision": "gateway-2026-10-09-observed-default",
+            "boundRevision": "title-8192-512-observed-20261009"
+          },
+          "checkedAt": 1791526119789,
+          "expiresAt": 1791612519789,
+          "expiresAtUtc": "2026-10-10T06:08:39.789Z",
+          "currentAtInspection": true,
+          "costCeilingMicroUsd": 100000,
+          "terminalCost": "unavailable"
+        },
+        {
+          "operationKey": "embedding.memory",
+          "status": "COMPILED_SELECTION_ONLY",
+          "modelId": "openai/text-embedding-3-small",
+          "nativeInterface": "embedding",
+          "qualificationReceiptId": "ACTUAL-small1536-memory-query-20261009",
+          "pins": {
+            "promptVersion": "memory-schema-prompt-v2",
+            "schemaVersion": "facts-v1",
+            "extractionVersion": "task04-qualification-e1",
+            "toolRegistryVersion": "none-v1",
+            "priceRevision": "gateway-2026-10-09-observed-default",
+            "boundRevision": "small-8192-1536-observed-20261009"
+          },
+          "checkedAt": 1791533388910,
+          "expiresAt": 1791619788910,
+          "expiresAtUtc": "2026-10-10T08:09:48.910Z",
+          "currentAtInspection": true,
+          "costCeilingMicroUsd": 100000,
+          "terminalCost": "unavailable"
+        },
+        {
+          "operationKey": "embedding.query",
+          "status": "COMPILED_SELECTION_ONLY",
+          "modelId": "openai/text-embedding-3-small",
+          "nativeInterface": "embedding",
+          "qualificationReceiptId": "ACTUAL-small1536-memory-query-20261009",
+          "pins": {
+            "promptVersion": "memory-schema-prompt-v2",
+            "schemaVersion": "facts-v1",
+            "extractionVersion": "task04-qualification-e1",
+            "toolRegistryVersion": "none-v1",
+            "priceRevision": "gateway-2026-10-09-observed-default",
+            "boundRevision": "small-8192-1536-observed-20261009"
+          },
+          "checkedAt": 1791533388910,
+          "expiresAt": 1791619788910,
+          "expiresAtUtc": "2026-10-10T08:09:48.910Z",
+          "currentAtInspection": true,
+          "costCeilingMicroUsd": 100000,
+          "terminalCost": "unavailable"
+        }
+      ]
+    },
+    {
+      "manifestId": "cortex-gateway-agent-defaults-2026-10-08",
+      "revision": 16,
+      "applicability": "Current source candidate used on the separate CI dev targets, not claimed installed on main",
+      "selections": [
+        {
+          "operationKey": "media.image.generate",
+          "status": "COMPILED_SELECTION_ONLY",
+          "modelId": "openai/gpt-image-1",
+          "nativeInterface": "image",
+          "qualificationReceiptId": "ACTUAL-image-v4-requested-only-20261009",
+          "pins": {
+            "promptVersion": "memory-schema-prompt-v2",
+            "schemaVersion": "facts-v1",
+            "extractionVersion": "task04-qualification-e1",
+            "toolRegistryVersion": "none-v1",
+            "priceRevision": "convex-gateway-2026-10-08-image-low",
+            "boundRevision": "media-image-1024-low-png-shared3m-v1"
+          },
+          "checkedAt": 1791505052086,
+          "expiresAt": 1791591452086,
+          "expiresAtUtc": "2026-10-10T00:17:32.086Z",
+          "currentAtInspection": true,
+          "costCeilingMicroUsd": 2000000,
+          "terminalCost": "unavailable",
+          "mediaContract": {
+            "version": 1,
+            "options": {
+              "kind": "image",
+              "n": 1,
+              "size": "1024x1024",
+              "quality": "low",
+              "outputFormat": "png"
+            },
+            "inputProtocol": "none",
+            "maximumInputAssetBytes": 0,
+            "maximumResultBytes": 20000000,
+            "callbacks": false,
+            "terminalIdentity": "requested-only",
+            "usage": "optional"
+          }
+        },
+        {
+          "operationKey": "media.video.generate",
+          "status": "COMPILED_CAPABILITY_UNAVAILABLE",
+          "staticCode": "CAPABILITY_UNAVAILABLE"
+        },
+        {
+          "operationKey": "agent.respond",
+          "status": "COMPILED_SELECTION_ONLY",
+          "modelId": "openai/gpt-4o-mini",
+          "nativeInterface": "chat",
+          "qualificationReceiptId": "ACTUAL-agent-v2-generate-stream-20261009",
+          "pins": {
+            "promptVersion": "memory-schema-prompt-v2",
+            "schemaVersion": "facts-v1",
+            "extractionVersion": "task04-qualification-e1",
+            "toolRegistryVersion": "cortex-media-tools-v2",
+            "priceRevision": "openrouter-2026-10-08-candidate",
+            "boundRevision": "agent-tools-v2-32768-256-shared3m-v1"
+          },
+          "checkedAt": 1791509851763,
+          "expiresAt": 1791596251763,
+          "expiresAtUtc": "2026-10-10T01:37:31.763Z",
+          "currentAtInspection": true,
+          "costCeilingMicroUsd": 100000,
+          "terminalCost": "unavailable"
+        },
+        {
+          "operationKey": "memory.extract",
+          "status": "COMPILED_SELECTION_ONLY",
+          "modelId": "openai/gpt-4o-mini",
+          "nativeInterface": "chat",
+          "qualificationReceiptId": "ACTUAL-memory-extract-20261009",
+          "pins": {
+            "promptVersion": "memory-extraction-instance-prompt-v3",
+            "schemaVersion": "facts-v1",
+            "extractionVersion": "task04-qualification-e1",
+            "toolRegistryVersion": "none-v1",
+            "priceRevision": "gateway-2026-10-09-observed-default",
+            "boundRevision": "text-8192-512-schema-observed-20261009"
+          },
+          "checkedAt": 1791533384235,
+          "expiresAt": 1791619784235,
+          "expiresAtUtc": "2026-10-10T08:09:44.235Z",
+          "currentAtInspection": true,
+          "costCeilingMicroUsd": 100000,
+          "terminalCost": "unavailable"
+        },
+        {
+          "operationKey": "facts.resolve",
+          "status": "COMPILED_SELECTION_ONLY",
+          "modelId": "openai/gpt-4o-mini",
+          "nativeInterface": "chat",
+          "qualificationReceiptId": "ACTUAL-memory-extract-20261009",
+          "pins": {
+            "promptVersion": "memory-schema-prompt-v2",
+            "schemaVersion": "conflicts-v1",
+            "extractionVersion": "task04-qualification-e1",
+            "toolRegistryVersion": "none-v1",
+            "priceRevision": "gateway-2026-10-09-observed-default",
+            "boundRevision": "text-8192-512-schema-observed-20261009"
+          },
+          "checkedAt": 1791533384235,
+          "expiresAt": 1791619784235,
+          "expiresAtUtc": "2026-10-10T08:09:44.235Z",
+          "currentAtInspection": true,
+          "costCeilingMicroUsd": 100000,
+          "terminalCost": "unavailable"
+        },
+        {
+          "operationKey": "conversation.title",
+          "status": "COMPILED_SELECTION_ONLY",
+          "modelId": "openai/gpt-4o",
+          "nativeInterface": "chat",
+          "qualificationReceiptId": "ACTUAL-ci-conversation-title-20261009",
+          "pins": {
+            "promptVersion": "memory-schema-prompt-v2",
+            "schemaVersion": "facts-v1",
+            "extractionVersion": "task04-qualification-e1",
+            "toolRegistryVersion": "none-v1",
+            "priceRevision": "gateway-2026-10-09-observed-default",
+            "boundRevision": "title-8192-512-observed-20261009"
+          },
+          "checkedAt": 1791526119789,
+          "expiresAt": 1791612519789,
+          "expiresAtUtc": "2026-10-10T06:08:39.789Z",
+          "currentAtInspection": true,
+          "costCeilingMicroUsd": 100000,
+          "terminalCost": "unavailable"
+        },
+        {
+          "operationKey": "embedding.memory",
+          "status": "COMPILED_SELECTION_ONLY",
+          "modelId": "openai/text-embedding-3-small",
+          "nativeInterface": "embedding",
+          "qualificationReceiptId": "ACTUAL-small1536-memory-query-20261009",
+          "pins": {
+            "promptVersion": "memory-schema-prompt-v2",
+            "schemaVersion": "facts-v1",
+            "extractionVersion": "task04-qualification-e1",
+            "toolRegistryVersion": "none-v1",
+            "priceRevision": "gateway-2026-10-09-observed-default",
+            "boundRevision": "small-8192-1536-observed-20261009"
+          },
+          "checkedAt": 1791533388910,
+          "expiresAt": 1791619788910,
+          "expiresAtUtc": "2026-10-10T08:09:48.910Z",
+          "currentAtInspection": true,
+          "costCeilingMicroUsd": 100000,
+          "terminalCost": "unavailable"
+        },
+        {
+          "operationKey": "embedding.query",
+          "status": "COMPILED_SELECTION_ONLY",
+          "modelId": "openai/text-embedding-3-small",
+          "nativeInterface": "embedding",
+          "qualificationReceiptId": "ACTUAL-small1536-memory-query-20261009",
+          "pins": {
+            "promptVersion": "memory-schema-prompt-v2",
+            "schemaVersion": "facts-v1",
+            "extractionVersion": "task04-qualification-e1",
+            "toolRegistryVersion": "none-v1",
+            "priceRevision": "gateway-2026-10-09-observed-default",
+            "boundRevision": "small-8192-1536-observed-20261009"
+          },
+          "checkedAt": 1791533388910,
+          "expiresAt": 1791619788910,
+          "expiresAtUtc": "2026-10-10T08:09:48.910Z",
+          "currentAtInspection": true,
+          "costCeilingMicroUsd": 100000,
+          "terminalCost": "unavailable"
+        }
+      ]
+    }
+  ],
+  "effects": {
+    "model": 0,
+    "reserve": 0,
+    "budgetAccount": 0,
+    "auth": 0,
+    "service": 0,
+    "proofDateChange": 0
+  },
+  "currentInstalledRootNotClaimed": true
+}
