@@ -10,6 +10,7 @@
 
 import type { ConvexClient } from "convex/browser";
 import { api } from "../../convex-dev/_generated/api";
+import { api as operatorReadApi } from "../../src/common/backendApi";
 import type { TestRunContext } from "./isolation";
 
 /** Global purges require an operator executing inside the trusted backend. */
@@ -32,7 +33,7 @@ export class TestCleanup {
     console.log("🧹 Purging conversations table...");
 
     // Get all conversations
-    const result = await this.client.mutation(api.conversations.list, {});
+    const result = await this.client.query(operatorReadApi.conversations.list, {});
     const conversations = result.conversations;
 
     // Delete each one (ignore errors if already deleted)
@@ -103,7 +104,7 @@ export class TestCleanup {
    * Verify conversations table is empty
    */
   async verifyConversationsEmpty(): Promise<boolean> {
-    const count = await this.client.mutation(api.conversations.count, {});
+    const count = await this.client.query(operatorReadApi.conversations.count, {});
 
     if (count > 0) {
       console.warn(`⚠️  Conversations table not empty: ${count} records found`);
@@ -122,7 +123,7 @@ export class TestCleanup {
     count: number;
     conversations: unknown[];
   }> {
-    const result = await this.client.mutation(api.conversations.list, {});
+    const result = await this.client.query(operatorReadApi.conversations.list, {});
 
     return {
       count: result.conversations.length,
@@ -215,7 +216,7 @@ export class ScopedCleanup {
     this.log(`🧹 Cleaning up conversations for run ${this.runId}...`);
 
     try {
-      const result = await this.client.mutation(api.conversations.list, {});
+      const result = await this.client.query(operatorReadApi.conversations.list, {});
       let deleted = 0;
 
       for (const conv of result.conversations) {
@@ -249,7 +250,7 @@ export class ScopedCleanup {
     this.log(`🧹 Cleaning up memory spaces for run ${this.runId}...`);
 
     try {
-      const result = await this.client.mutation(api.memorySpaces.list, {});
+      const result = await this.client.query(operatorReadApi.memorySpaces.list, {});
       let deleted = 0;
 
       for (const space of result.spaces) {
@@ -283,14 +284,14 @@ export class ScopedCleanup {
 
     try {
       // We need to find memories in our memory spaces
-      const spacesResult = await this.client.mutation(api.memorySpaces.list, {});
+      const spacesResult = await this.client.query(operatorReadApi.memorySpaces.list, {});
       let deleted = 0;
 
       for (const space of spacesResult.spaces) {
         if (this.belongsToRun(space.memorySpaceId)) {
           try {
             // List memories in this space
-            const memories = await this.client.mutation(api.memories.list, {
+            const memories = await this.client.query(operatorReadApi.memories.list, {
               memorySpaceId: space.memorySpaceId,
             });
 
@@ -325,13 +326,13 @@ export class ScopedCleanup {
     this.log(`🧹 Cleaning up facts for run ${this.runId}...`);
 
     try {
-      const spacesResult = await this.client.mutation(api.memorySpaces.list, {});
+      const spacesResult = await this.client.query(operatorReadApi.memorySpaces.list, {});
       let deleted = 0;
 
       for (const space of spacesResult.spaces) {
         if (this.belongsToRun(space.memorySpaceId)) {
           try {
-            const facts = await this.client.mutation(api.facts.list, {
+            const facts = await this.client.query(operatorReadApi.facts.list, {
               memorySpaceId: space.memorySpaceId,
             });
 
@@ -400,7 +401,7 @@ export class ScopedCleanup {
     this.log(`🧹 Cleaning up users for run ${this.runId}...`);
 
     try {
-      const result = await this.client.mutation(api.immutable.list, {
+      const result = await this.client.query(operatorReadApi.immutable.list, {
         type: "user",
       });
       let deleted = 0;
@@ -433,7 +434,7 @@ export class ScopedCleanup {
     this.log(`🧹 Cleaning up agents for run ${this.runId}...`);
 
     try {
-      const agents = await this.client.mutation(api.agents.list, {});
+      const agents = await this.client.query(operatorReadApi.agents.list, {});
       let deleted = 0;
 
       for (const agent of agents) {
@@ -465,7 +466,7 @@ export class ScopedCleanup {
 
     try {
       // Get all immutable records
-      const result = await this.client.mutation(api.immutable.list, {});
+      const result = await this.client.query(operatorReadApi.immutable.list, {});
       let deleted = 0;
 
       for (const record of result.entries) {
@@ -633,8 +634,8 @@ export class ScopedCleanup {
 
     try {
       // Count conversations
-      const conversationsResult = await this.client.mutation(
-        api.conversations.list,
+      const conversationsResult = await this.client.query(
+        operatorReadApi.conversations.list,
         {},
       );
       counts.conversations = conversationsResult.conversations.filter(
@@ -644,7 +645,7 @@ export class ScopedCleanup {
       ).length;
 
       // Count memory spaces
-      const spacesResult = await this.client.mutation(api.memorySpaces.list, {});
+      const spacesResult = await this.client.query(operatorReadApi.memorySpaces.list, {});
       counts.memorySpaces = spacesResult.spaces.filter(
         (s: { memorySpaceId: string }) => this.belongsToRun(s.memorySpaceId),
       ).length;
@@ -657,7 +658,7 @@ export class ScopedCleanup {
       ).length;
 
       // Count users
-      const usersResult = await this.client.mutation(api.immutable.list, {
+      const usersResult = await this.client.query(operatorReadApi.immutable.list, {
         type: "user",
       });
       counts.users = usersResult.entries.filter((u: { id: string }) =>
@@ -665,13 +666,13 @@ export class ScopedCleanup {
       ).length;
 
       // Count agents
-      const agents = await this.client.mutation(api.agents.list, {});
+      const agents = await this.client.query(operatorReadApi.agents.list, {});
       counts.agents = agents.filter((a: { agentId: string }) =>
         this.belongsToRun(a.agentId),
       ).length;
 
       // Count immutable (excluding users)
-      const immutableResult = await this.client.mutation(api.immutable.list, {});
+      const immutableResult = await this.client.query(operatorReadApi.immutable.list, {});
       counts.immutable = immutableResult.entries.filter(
         (r: { type: string; id: string }) =>
           r.type !== "user" &&

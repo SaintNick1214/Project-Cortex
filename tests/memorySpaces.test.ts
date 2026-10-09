@@ -13,7 +13,7 @@
 import { Cortex } from "./helpers/deployment-operator";
 import { createErasureTransport, type ErasureTransport } from "../src/users/erasure";
 import { ConvexClient } from "./helpers/deployment-operator";
-import { api } from "../convex-dev/_generated/api";
+import { api as operatorReadApi } from "../src/common/backendApi";
 import { createNamedTestRunContext, ScopedCleanup } from "./helpers";
 
 describe("Memory Spaces Registry API", () => {
@@ -1466,7 +1466,7 @@ describe("Memory Spaces Registry API", () => {
       });
 
       // Direct database query
-      const stored = await client.mutation(api.memorySpaces.get, {
+      const stored = await client.query(operatorReadApi.memorySpaces.get, {
         memorySpaceId: validationSpaceId,
       });
 

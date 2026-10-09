@@ -431,7 +431,7 @@ describe("additive fixed media webhook", () => {
 describe("generated Convex module layout", () => {
   async function buildFixture(entry: string, shared: Record<string, string>) {
     const source = path.join(root, "generator-source");
-    await fs.outputJson(path.join(source, "package.json"), { version: "test", peerDependencies: { convex: "^1.46.0" }, dependencies: { "@convex-dev/agent": "0.7.3" } });
+    await fs.outputJson(path.join(source, "package.json"), { version: "test", peerDependencies: { convex: "^1.46.0" }, dependencies: { "@convex-dev/agent": "0.7.3" }, devDependencies: { "@types/node": "^26.6.4" } });
     await fs.outputFile(path.join(source, "convex-dev/schema.ts"), 'import { defineSchema, defineTable } from "convex/server"; export default defineSchema({ runtimeRuns: defineTable({}) });\n');
     await fs.outputFile(path.join(source, "convex-dev/convex.config.ts"), 'import { defineApp } from "convex/server"; import agent from "@convex-dev/agent/convex.config"; const app = defineApp(); app.use(agent, { name: "agent" }); export default app;\n');
     await fs.outputFile(path.join(source, "convex-dev/runs.ts"), entry);
@@ -442,6 +442,22 @@ describe("generated Convex module layout", () => {
     // Invoke the real generator with explicit fixture roots; importing it must not build the checkout.
     return execute(process.execPath, ["--input-type=module", "--eval", `import { buildBackendDistribution } from ${JSON.stringify(pathToFileURL(builder).href)}; await buildBackendDistribution(${JSON.stringify({ sourceRoot: source, outputRoot: output })});`], { timeout: 20_000, maxBuffer: 262_144 });
   }
+  it("pins the required Node declarations to the existing SDK declaration base version", async () => {
+    const { source, output } = await buildFixture('export const value = process.version;\n', {});
+    await build(source, output);
+    expect((await fs.readJson(path.join(output, "manifest.json"))).dependencies["@types/node"]).toBe("26.6.4");
+  });
+  it.each([null, "*", ">=26.6.4"])("refuses a missing or ambiguous Node declaration before replacing the previous distribution: %s", async (declaration) => {
+    const { source, output } = await buildFixture('export const value = process.version;\n', {});
+    await build(source, output);
+    const previous = await fs.readFile(path.join(output, "manifest.json"));
+    const pkg = await fs.readJson(path.join(source, "package.json"));
+    if (declaration === null) delete pkg.devDependencies["@types/node"];
+    else pkg.devDependencies["@types/node"] = declaration;
+    await fs.writeJson(path.join(source, "package.json"), pkg);
+    await expect(build(source, output)).rejects.toThrow("Backend distribution requires a deterministic SDK @types/node declaration");
+    expect(await fs.readFile(path.join(output, "manifest.json"))).toEqual(previous);
+  });
   it("installs valid shared paths with working rewritten imports, original provenance and unchanged public/host bindings", async () => {
     const entry = '"use node";\nimport type { QueryCtx } from "./_generated/server";\nimport { base } from "../src/domain/model-policy.js";\nimport { increment } from "../src/type space/with-á.js";\nexport { base } from "../src/domain/model-policy.js";\nexport type Witness = import("../src/domain/model-policy.js").Witness;\nexport const answer = () => increment(base);\nexport const load = () => import("../src/domain/model-policy.js");\n';
     const shared = { "src/domain/model-policy.ts": 'export const base = 41; export type Witness = { exact: true };\n',

@@ -203,6 +203,7 @@ jobs:
           npm ci
       - run: npm run build
       - run: npm run test:contracts
+      - run: npm run build --workspace=@cortexmemory/cli
       - name: Exercise CI target, JWT, lifecycle and explicit-environment guards offline
         run: node --test scripts/ci/*.test.mjs
       - run: npm run test:release
@@ -256,7 +257,7 @@ jobs:
           for file in tests/user-export.test.ts tests/fact-history-provenance.test.ts \
             tests/facts-revision-scope.test.ts tests/domain-scope.test.ts tests/domain-operations.test.ts tests/memorySpaces.test.ts tests/operation-sequences.test.ts tests/gdprCascade.test.ts; do
             npx tsx scripts/cleanup-test-data.ts native
-            node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand --runTestsByPath "$file"
+            node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand --runTestsByPath "$file" --forceExit=false
           done
 
   # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -773,11 +774,30 @@ jobs:
           CONVEX_URL: https://unit.invalid
           CONVEX_URL_CLI: https://unit.invalid
 
+      - name: Build the CLI executable before command contracts
+        run: npm run build --workspace=@cortexmemory/cli
+
+      - name: Install supported completion shells for command contracts
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes zsh fish
+
+      - name: Prepare isolated command fixtures from current built dependencies
+        run: node scripts/ci/command-fixtures.mjs prepare --directory "$RUNNER_TEMP/cortex-cli-command-fixtures" --env-file "$GITHUB_ENV"
+        env:
+          CORTEX_CI_AUTH_PRIVATE_KEY: ""
+
       - name: Run CLI unit and command contracts without live credentials
         run: npm run test:fast --workspace=@cortexmemory/cli -- --runInBand
         env:
           CONVEX_URL: https://unit.invalid
           CONVEX_URL_CLI: https://unit.invalid
+          CORTEX_CI_AUTH_PRIVATE_KEY: ""
+
+      - name: Remove owned offline command fixtures after success or failure
+        if: always()
+        run: node scripts/ci/command-fixtures.mjs cleanup --directory "$RUNNER_TEMP/cortex-cli-command-fixtures"
+        env:
           CORTEX_CI_AUTH_PRIVATE_KEY: ""
 
       - name: Issue scoped verified-host JWTs into private runner environment

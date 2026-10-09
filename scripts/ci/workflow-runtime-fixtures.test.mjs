@@ -61,6 +61,8 @@ test("legacy direct-provider and unauthenticated CLI loops cannot be activated b
 });
 
 test("selected Jest suites must close naturally rather than inherit forced exit", () => {
+  const native = jobs["native-proof-contracts"].steps.find(step => /--runTestsByPath/.test(step.run ?? ""));
+  assert.ok(native.run.includes("--forceExit=false"), "native privacy proofs must also close their clients naturally");
   const selected = ["test-typescript", "test-cli", "test-vercel-ai-provider"]
     .flatMap(name => jobs[name].steps)
     .flatMap(step => (step.run ?? "").split("\n"))
@@ -76,6 +78,27 @@ test("selected Jest suites must close naturally rather than inherit forced exit"
       assert.equal(/--force(?:Exit|-exit)(?:=|\s|$)/.test(command), false, command);
     } else assert.ok(command.includes("--forceExit=false"), command);
   }
+});
+
+test("CLI command fixtures consume the built executable and are cleaned before authenticated integration", () => {
+  const publicSteps = jobs["public-contracts"].steps;
+  const publicCli = publicSteps.findIndex(step => step.run === "npm run build --workspace=@cortexmemory/cli");
+  const helperTests = publicSteps.findIndex(step => /node --test scripts\/ci\/\*.test.mjs/.test(step.run ?? ""));
+  assert.ok(publicCli >= 0 && helperTests > publicCli, "offline helper contracts also consume the genuine built CLI");
+  const steps = jobs["test-cli"].steps;
+  const sdk = steps.findIndex(step => step.run === "npm run build");
+  const cli = steps.findIndex(step => step.run === "npm run build --workspace=@cortexmemory/cli");
+  const prepare = steps.findIndex(step => /command-fixtures.mjs prepare/.test(step.run ?? ""));
+  const contracts = steps.findIndex(step => /npm run test:fast/.test(step.run ?? ""));
+  const cleanup = steps.findIndex(step => /command-fixtures.mjs cleanup/.test(step.run ?? ""));
+  const tokens = steps.findIndex(step => /runtime-fixtures.mjs tokens cli/.test(step.run ?? ""));
+  assert.ok(sdk >= 0 && cli > sdk && prepare > cli && contracts > prepare && cleanup > contracts && tokens > cleanup);
+  assert.ok(steps.some(step => /apt-get install --yes zsh fish/.test(step.run ?? "")));
+  assert.equal(steps[prepare].env.CORTEX_CI_AUTH_PRIVATE_KEY, "");
+  assert.equal(steps[cleanup].if, "always()");
+  assert.equal(steps[cleanup].env.CORTEX_CI_AUTH_PRIVATE_KEY, "");
+  assert.ok(steps[prepare].run.includes('"$RUNNER_TEMP/cortex-cli-command-fixtures"'));
+  assert.ok(steps[cleanup].run.includes('"$RUNNER_TEMP/cortex-cli-command-fixtures"'));
 });
 
 test("provider actual path is isolated from old E2E and uses public scoped Agent publication before one bounded contract", () => {

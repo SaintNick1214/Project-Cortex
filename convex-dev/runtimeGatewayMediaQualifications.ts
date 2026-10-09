@@ -500,3 +500,33 @@ export const OBSERVED_GATEWAY_POLICY_MANIFEST_V14 = {
   }
 ]],
 } as const satisfies DeploymentPolicyManifest;
+
+/** Policy-selector correction only: the existing generic plain-chat proof covers
+ * ordinary bounded text and structured content, including conflict decisions.
+ * Operation-specific semantic schemas, prompts and output parsers are unchanged.
+ * No proof, expiry, price attestation or historical financial root is rewritten.
+ */
+export const OBSERVED_GATEWAY_POLICY_MANIFEST_V15 = {
+  ...OBSERVED_GATEWAY_POLICY_MANIFEST_V14,
+  revision: 15,
+  artifactRevision: "c6dbe992f64330991e652c34da2522fae2f1af6970fd3d9de8f39bf2568e0a58",
+  evidenceHash: "c6dbe992f64330991e652c34da2522fae2f1af6970fd3d9de8f39bf2568e0a58",
+  acceptanceHash: "c6dbe992f64330991e652c34da2522fae2f1af6970fd3d9de8f39bf2568e0a58",
+  policies: OBSERVED_GATEWAY_POLICY_MANIFEST_V14.policies.map(policy => {
+    // Policy rows are immutable within their financial root. Give unchanged
+    // rules successor identities so installing V15 never rewrites V14 rows.
+    const successor = { ...policy, policyId: policy.policyId.replace(/-v14$/, "-v15"), version: 15 };
+    if ("operationKey" in policy && policy.operationKey !== "facts.resolve") return successor;
+    return {
+      ...successor,
+      rules: {
+        ...policy.rules,
+        pins: {
+          ...policy.rules.pins,
+          priceRevision: "gateway-2026-10-09-observed-default",
+          boundRevision: "text-8192-512-schema-observed-20261009",
+        },
+      },
+    };
+  }),
+} as const satisfies DeploymentPolicyManifest;

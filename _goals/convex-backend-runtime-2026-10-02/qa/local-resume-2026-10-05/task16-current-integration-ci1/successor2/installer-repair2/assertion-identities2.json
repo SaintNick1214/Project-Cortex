@@ -1,0 +1,507 @@
+[
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+    "assertion": "additive backend installation registers a fresh host with explicit verified JWT settings and keeps runtime directives",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+    "assertion": "additive backend installation rejects an ordinary scanned component helper before host writes",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+    "assertion": "additive backend installation preserves a custom directory, unrelated tables/indexes, schema options, functions, auth, HTTP and components",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+    "assertion": "additive backend installation retries a complete installation without writes, duplicate schema spreads or duplicate providers",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+    "assertion": "additive backend installation imports every declared component directly from the root config, including Workflow",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+    "assertion": "additive backend installation preserves an ambiguous component configuration and emits a concrete merge proposal",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+    "assertion": "additive backend installation preserves an ambiguous component configuration and emits a concrete merge proposal",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+    "assertion": "additive backend installation preserves an ambiguous component configuration and emits a concrete merge proposal",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+    "assertion": "additive backend installation preserves an ambiguous component configuration and emits a concrete merge proposal",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+    "assertion": "additive backend installation an atomic schema-write failure retains the original host schema and supports partial retry",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+    "assertion": "additive backend installation recovers an interrupted per-file install by replanning identical completed files",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+    "assertion": "additive backend installation refuses schema.ts conflicts before product writes and publishes a precise merge proposal",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+    "assertion": "additive backend installation refuses schema.ts conflicts before product writes and publishes a precise merge proposal",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+    "assertion": "additive backend installation refuses schema.ts conflicts before product writes and publishes a precise merge proposal",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+    "assertion": "additive backend installation refuses convex.config.ts conflicts before product writes and publishes a precise merge proposal",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+    "assertion": "additive backend installation refuses convex.config.ts conflicts before product writes and publishes a precise merge proposal",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+    "assertion": "additive backend installation refuses convex.config.ts conflicts before product writes and publishes a precise merge proposal",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+    "assertion": "additive backend installation refuses runs.ts conflicts before product writes and publishes a precise merge proposal",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+    "assertion": "additive backend installation preserves existing provider configuration on conflicting issuer settings",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+    "assertion": "additive backend installation detects a host edit after planning before any installation writes",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+    "assertion": "additive backend installation refuses out-of-project custom directories and symbolic links",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+    "assertion": "additive backend installation refuses tampered distribution sources before product writes",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+    "assertion": "additive backend installation supports official inline public JWKS while retaining the explicit audience",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+    "assertion": "additive backend installation rejects private material in inline JWKS before any installation writes",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+    "assertion": "additive backend installation requires an explicit application audience for a new Cortex provider",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+    "assertion": "additive backend installation reports absent auth as incomplete capability rather than installing permissive auth",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+    "assertion": "additive backend installation createConvexJson preserves existing custom configuration byte-for-byte",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+    "assertion": "additive authenticated HTTP routes installs a fresh real Convex router and retries without duplicate routes or writes",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+    "assertion": "additive authenticated HTTP routes preserves custom host HTTP handlers and permits a different method on the same path",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+    "assertion": "additive authenticated HTTP routes refuses ambiguous or overlapping host HTTP before any installation write",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+    "assertion": "additive authenticated HTTP routes refuses ambiguous or overlapping host HTTP before any installation write",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+    "assertion": "additive authenticated HTTP routes refuses ambiguous or overlapping host HTTP before any installation write",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+    "assertion": "additive authenticated HTTP routes refuses ambiguous or overlapping host HTTP before any installation write",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+    "assertion": "additive authenticated HTTP routes refuses ambiguous or overlapping host HTTP before any installation write",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+    "assertion": "additive authenticated HTTP routes refuses ambiguous or overlapping host HTTP before any installation write",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+    "assertion": "additive authenticated HTTP routes refuses ambiguous or overlapping host HTTP before any installation write",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+    "assertion": "additive authenticated HTTP routes refuses ambiguous or overlapping host HTTP before any installation write",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+    "assertion": "additive authenticated HTTP routes refuses ambiguous or overlapping host HTTP before any installation write",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+    "assertion": "additive authenticated HTTP routes refuses ambiguous or overlapping host HTTP before any installation write",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+    "assertion": "additive authenticated HTTP routes rejects wrong, duplicate or deferred managed registration without adopting it",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+    "assertion": "additive authenticated HTTP routes rejects wrong, duplicate or deferred managed registration without adopting it",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+    "assertion": "additive authenticated HTTP routes rejects wrong, duplicate or deferred managed registration without adopting it",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+    "assertion": "additive authenticated HTTP routes requires the digest-checked static helper to match every manifest route before writes",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+    "assertion": "additive authenticated HTTP routes requires the digest-checked static helper to match every manifest route before writes",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+    "assertion": "additive authenticated HTTP routes requires the digest-checked static helper to match every manifest route before writes",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+    "assertion": "additive authenticated HTTP routes requires the digest-checked static helper to match every manifest route before writes",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+    "assertion": "additive authenticated HTTP routes rejects computed helper handlers instead of executing arbitrary router mutations",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+    "assertion": "additive authenticated HTTP routes retains host HTTP after atomic write failure and recovers a partial install once",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+    "assertion": "additive authenticated HTTP routes checks the host HTTP preimage before installing any source",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+    "assertion": "additive fixed media webhook composes all five real router registrations while preserving a custom host and zero-write retry",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+    "assertion": "additive fixed media webhook accepts a direct named alias of only the fixed webhook export",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+    "assertion": "additive fixed media webhook rejects an unqualified media import before any host write: import { arbitrary as videoWebhook } from \"../runtimeMediaHttp\";",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+    "assertion": "additive fixed media webhook rejects an unqualified media import before any host write: import videoWebhook from \"../runtimeMediaHttp\";",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+    "assertion": "additive fixed media webhook rejects an unqualified media import before any host write: import * as videoWebhook from \"../runtimeMediaHttp\";",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+    "assertion": "additive fixed media webhook rejects an unqualified media import before any host write: import { videoWebhook } from \"../foreign\";",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+    "assertion": "additive fixed media webhook binds the new handler exclusively to its fixed route: GET /cortex/media/video/webhook",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+    "assertion": "additive fixed media webhook binds the new handler exclusively to its fixed route: POST /cortex/arbitrary",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+    "assertion": "additive fixed media webhook binds the new handler exclusively to its fixed route: POST /cortex/media/video/webhook",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+    "assertion": "additive fixed media webhook rejects overlapping local bindings from the asset and media modules",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+    "assertion": "additive fixed media webhook preserves a conflicting host exact or prefix route before all source writes",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+    "assertion": "additive fixed media webhook preserves a conflicting host exact or prefix route before all source writes",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+    "assertion": "additive fixed media webhook rejects a manifest omitting the fifth helper route before installation",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+    "assertion": "additive fixed media webhook rejects a webhook module missing from the digest-bound source manifest",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+    "assertion": "generated Convex module layout pins the required Node declarations to the existing SDK declaration base version",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+    "assertion": "generated Convex module layout refuses a missing or ambiguous Node declaration before replacing the previous distribution: null",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+    "assertion": "generated Convex module layout refuses a missing or ambiguous Node declaration before replacing the previous distribution: *",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+    "assertion": "generated Convex module layout refuses a missing or ambiguous Node declaration before replacing the previous distribution: >=26.6.4",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+    "assertion": "generated Convex module layout installs valid shared paths with working rewritten imports, original provenance and unchanged public/host bindings",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+    "assertion": "generated Convex module layout rejects a file normalization collision before replacing any previous distribution",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+    "assertion": "generated Convex module layout rejects a directory normalization collision before replacing any previous distribution",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+    "assertion": "prospective app-private schema composition plans without creating an absent destination and composes private app tables without changing registrations",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+    "assertion": "prospective app-private schema composition rejects a hidden private-app collision and dynamic spread before any installation",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-runtime-typecheck.test.ts",
+    "assertion": "the full installed runtime typechecks with fresh defaults and still rejects a bad app function",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-runtime-typecheck.test.ts",
+    "assertion": "a plain existing host receives the selected Node declaration edge while unrelated dependencies survive",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-runtime-typecheck.test.ts",
+    "assertion": "a conflicting Node declaration override refuses installation before host writes: {\"overrides\":{\"@types/node\":\"20.0.0\"}}",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-runtime-typecheck.test.ts",
+    "assertion": "a conflicting Node declaration override refuses installation before host writes: {\"pnpm\":{\"overrides\":{\"parent>@types/node\":\"20.0.0\"}}}",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-runtime-typecheck.test.ts",
+    "assertion": "the full runtime composer retains an existing custom host config byte for byte",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-tsconfig.test.ts",
+    "assertion": "plans an absent config without writes and actually enables strict TypeScript checking",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-tsconfig.test.ts",
+    "assertion": "initializes the selected custom functions root and preserves unrelated host bytes",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-tsconfig.test.ts",
+    "assertion": "preserves existing commented custom config bytes and observes them for idempotence",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-tsconfig.test.ts",
+    "assertion": "refuses a config created after planning before any backend source is written",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-tsconfig.test.ts",
+    "assertion": "refuses an existing config edited after planning before source writes",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-tsconfig.test.ts",
+    "assertion": "refuses an existing config deleted after planning before source writes",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-tsconfig.test.ts",
+    "assertion": "refuses a config symlink before planning without touching its target",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-tsconfig.test.ts",
+    "assertion": "refuses a config symlink before apply without touching its target",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-tsconfig.test.ts",
+    "assertion": "refuses a directory at the config path instead of replacing it",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/additive-tsconfig.test.ts",
+    "assertion": "preserves a prospective template config after its exact bytes are staged",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/runtime-backend.test.ts",
+    "assertion": "the actual built distribution composes private app tables and guarded public runtime without raw SDK rewrite",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/runtime-backend.test.ts",
+    "assertion": "changed current distribution bytes fail validation before destination writes",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/runtime-backend.test.ts",
+    "assertion": "a private app-schema edit after planning cannot conceal a runtime collision or write any backend source",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/runtime-backend.test.ts",
+    "assertion": "an existing host cannot shadow qualified runtime dependencies with dev or optional versions",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/runtime-backend.test.ts",
+    "assertion": "a selected runtime override refuses the actual installer before any host write: {\"overrides\":{\"ai\":\"6.0.0\"}}",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/runtime-backend.test.ts",
+    "assertion": "a selected runtime override refuses the actual installer before any host write: {\"overrides\":{\"ai@^7.0.0\":{\".\":\"6.0.0\"}}}",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/runtime-backend.test.ts",
+    "assertion": "a selected runtime override refuses the actual installer before any host write: {\"overrides\":{\"unrelated\":{\"ai\":\"6.0.0\"}}}",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/runtime-backend.test.ts",
+    "assertion": "a selected runtime override refuses the actual installer before any host write: {\"pnpm\":{\"overrides\":{\"parent>ai\":\"6.0.0\"}}}",
+    "status": "passed"
+  },
+  {
+    "file": "packages/cortex-cli/src/utils/__tests__/runtime-backend.test.ts",
+    "assertion": "qualified exact and direct-reference overrides preserve unrelated host override configuration",
+    "status": "passed"
+  },
+  {
+    "file": "tests/unit/runtimeAssets/distribution.test.ts",
+    "assertion": "digest-bound additive private HTTP distribution the real generator preserves exact routes, fixed handler closure and original provenance",
+    "status": "passed"
+  },
+  {
+    "file": "tests/unit/runtimeAssets/distribution.test.ts",
+    "assertion": "digest-bound additive private HTTP distribution an unsupported route is rejected before replacing the last complete distribution",
+    "status": "passed"
+  },
+  {
+    "file": "tests/unit/runtimeAssets/distribution.test.ts",
+    "assertion": "digest-bound additive private HTTP distribution a webhook mapped to an asset handler denies before publishing",
+    "status": "passed"
+  },
+  {
+    "file": "tests/unit/dev-integration-distribution.test.ts",
+    "assertion": "merged backend recursive additive distribution includes nested operator registration, binds host codegen and derives canonical current shared source",
+    "status": "passed"
+  },
+  {
+    "file": "tests/unit/dev-integration-distribution.test.ts",
+    "assertion": "merged backend recursive additive distribution preserves the prior complete manifest when a nested source has an unresolved import",
+    "status": "passed"
+  }
+]

@@ -1,0 +1,99 @@
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+(node:11112) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/scoped-cleanup-routing.test.ts (6.497 s)
+  ✕ uses registered operator Query reads and fresh context Mutations while deleting only its prefix (4 ms)
+
+  ● uses registered operator Query reads and fresh context Mutations while deleting only its prefix
+
+    expect(received).resolves.toEqual(expected) // deep equality
+
+    - Expected  - 8
+    + Received  + 8
+
+      Object {
+    -   "agents": 1,
+    +   "agents": 0,
+        "contexts": 1,
+    -   "conversations": 1,
+    -   "facts": 1,
+    -   "immutable": 1,
+    -   "memories": 1,
+    -   "memorySpaces": 1,
+    +   "conversations": 0,
+    +   "facts": 0,
+    +   "immutable": 0,
+    +   "memories": 0,
+    +   "memorySpaces": 0,
+        "mutable": 0,
+    -   "total": 8,
+    -   "users": 1,
+    +   "total": 1,
+    +   "users": 0,
+      }
+
+      69 |   enableDeploymentOperator(client);
+      70 |   const cleanup = new ScopedCleanup(client, ctx);
+    > 71 |   await expect(cleanup.cleanupAll()).resolves.toEqual({ conversations: 1, memories: 1, facts: 1, contexts: 1, memorySpaces: 1, users: 1, agents: 1, immutable: 1, mutable: 0, total: 8 });
+         |                                               ^
+      72 |   await expect(cleanup.verifyCleanup()).resolves.toBe(true);
+      73 |   expect(rows).toEqual({ conversations: [foreign.conversations], spaces: [foreign.spaces], contexts: [foreign.contexts], immutable: [foreign.immutable, foreign.user], agents: [foreign.agent], memories: [], facts: [] });
+      74 |   expect(calls.filter(call => call.kind === "query").map(call => call.name)).toContain("cliOperator/memorySpaces:list");
+
+      at Object.toEqual (node_modules/expect/build/index.js:2140:20)
+      at Object.<anonymous> (tests/unit/scoped-cleanup-routing.test.ts:71:47)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     6.5s | 0/1 passed | /tests/unit/scoped-cleanup-routing.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [31m✗[0m    0.00s ( 0.1%) - uses registered operator Query reads and fresh context Mutations while deleting only its prefix
+    /tests/unit/scoped-cleanup-routing.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.00s (0.1% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      6.61s
+  Test suites:        1
+  Individual tests:   1
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 1 total
+Snapshots:   0 total
+Time:        6.611 s
+Ran all test suites within paths "tests/unit/scoped-cleanup-routing.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor2/native-proof-repair2/controlled-red1.results.json

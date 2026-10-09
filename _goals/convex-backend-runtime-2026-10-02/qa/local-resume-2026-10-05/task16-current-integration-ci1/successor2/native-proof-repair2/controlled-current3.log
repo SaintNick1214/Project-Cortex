@@ -1,0 +1,149 @@
+(node:12584) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeRegistryClient/registry-bridge.test.ts (7.256 s)
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+PASS tests/unit/scoped-cleanup-routing.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/deployment-operator.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     7.3s | 39/39 passed | /tests/unit/runtimeRegistryClient/registry-bridge.test.ts
+  ✅     2.5s | 1/1 passed | /tests/unit/scoped-cleanup-routing.test.ts
+  ✅     0.2s | 11/11 passed | /tests/unit/deployment-operator.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.01s ( 0.1%) - registry bridge resilience=absent backend failure remains failure without local poststeps
+    /tests/unit/runtimeRegistryClient/registry-bridge.test.ts
+
+ 2. [32m✓[0m    0.00s ( 0.0%) - uses registered operator Query reads and fresh context Mutations while deleting only its prefix
+    /tests/unit/scoped-cleanup-routing.test.ts
+
+ 3. [32m✓[0m    0.00s ( 0.0%) - registry bridge resilience=absent register receipt is committed, exact and never retried or hydrated
+    /tests/unit/runtimeRegistryClient/registry-bridge.test.ts
+
+ 4. [32m✓[0m    0.00s ( 0.0%) - registry bridge resilience=absent update receipt is committed, exact and never retried or hydrated
+    /tests/unit/runtimeRegistryClient/registry-bridge.test.ts
+
+ 5. [32m✓[0m    0.00s ( 0.0%) - registry bridge resilience=absent invalid input and conflicting tenant reject before transport
+    /tests/unit/runtimeRegistryClient/registry-bridge.test.ts
+
+ 6. [32m✓[0m    0.00s ( 0.0%) - registry bridge resilience=absent single and bulk cascade fail before discovering or deleting children
+    /tests/unit/runtimeRegistryClient/registry-bridge.test.ts
+
+ 7. [32m✓[0m    0.00s ( 0.0%) - registry bridge resilience=absent explicit bulk IDs and simple unregister preserve server-confirmed results
+    /tests/unit/runtimeRegistryClient/registry-bridge.test.ts
+
+ 8. [32m✓[0m    0.00s ( 0.0%) - registry bridge resilience=disabled register receipt is committed, exact and never retried or hydrated
+    /tests/unit/runtimeRegistryClient/registry-bridge.test.ts
+
+ 9. [32m✓[0m    0.00s ( 0.0%) - registry bridge resilience=disabled register maps the readable official row and runs poststeps once
+    /tests/unit/runtimeRegistryClient/registry-bridge.test.ts
+
+10. [32m✓[0m    0.00s ( 0.0%) - registry bridge resilience=disabled backend failure remains failure without local poststeps
+    /tests/unit/runtimeRegistryClient/registry-bridge.test.ts
+
+11. [32m✓[0m    0.00s ( 0.0%) - registry bridge resilience=disabled explicit bulk IDs and simple unregister preserve server-confirmed results
+    /tests/unit/runtimeRegistryClient/registry-bridge.test.ts
+
+12. [32m✓[0m    0.00s ( 0.0%) - registry bridge resilience=enabled update receipt is committed, exact and never retried or hydrated
+    /tests/unit/runtimeRegistryClient/registry-bridge.test.ts
+
+13. [32m✓[0m    0.00s ( 0.0%) - registry bridge resilience=enabled backend failure remains failure without local poststeps
+    /tests/unit/runtimeRegistryClient/registry-bridge.test.ts
+
+14. [32m✓[0m    0.00s ( 0.0%) - global cleanup public-client capability scoped operator memory cleanup uses Query reads and deletes only owned per-ID targets
+    /tests/unit/runtimeRegistryClient/registry-bridge.test.ts
+
+15. [32m✓[0m    0.00s ( 0.0%) - explicit deployment operator contract routes only allowlisted legacy references and preserves arguments/results
+    /tests/unit/deployment-operator.test.ts
+
+16. [32m✓[0m    0.00s ( 0.0%) - explicit deployment operator contract refuses runtime ownerPrincipalId before any persisted effect
+    /tests/unit/deployment-operator.test.ts
+
+17. [32m✓[0m    0.00s ( 0.0%) - explicit deployment operator contract refuses runtime authority before any persisted effect
+    /tests/unit/deployment-operator.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.03s (0.3% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      10.03s
+  Test suites:        3
+  Individual tests:   17
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 3
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 3 passed, 3 total
+Tests:       51 passed, 51 total
+Snapshots:   0 total
+Time:        10.036 s
+Ran all test suites within paths "tests/unit/scoped-cleanup-routing.test.ts", "tests/unit/runtimeRegistryClient/registry-bridge.test.ts", "tests/unit/deployment-operator.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor2/native-proof-repair2/controlled-current3.results.json

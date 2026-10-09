@@ -1,0 +1,5 @@
+CLI CI job 113769927816 failed its unchanged command prerequisites, before authenticated runtime integration. The original 62-suite/1828-assertion failure is retained in cli-actual1.log.
+
+The new bounded helper supplies current compiled CLI-selected dependency links, hashes current SDK distribution bytes, selects exact npm12.2, and obtains genuine Node20.0.0/20.20.2 binaries from official checksum-verified distributions for negative runtime checks only. It exports seven public tool paths and cleans only its private marked output. It performs no install or Convex/model operation. Root owns CLI build/shell/workflow wiring.
+
+Complete safe CLI fast: 63/63 suites and 1837/1837 assertions PASS, zero skips, natural exit in225.51s. All five original failing suites passed. The separately added Node-ambient installation regression explains the extra one suite/nine assertions. Final helper controls8/8, scoped JS lint, all source syntax and CLI types PASS. Owned fixture/working roots and all recorded PIDs are absent. Fresh Linux CI and authenticated/runtime-provider outcomes remain separate pending work.

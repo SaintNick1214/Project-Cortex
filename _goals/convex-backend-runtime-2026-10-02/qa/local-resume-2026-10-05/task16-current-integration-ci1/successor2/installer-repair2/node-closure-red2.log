@@ -1,0 +1,128 @@
+Running one project: unit
+(node:9634) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL unit src/utils/__tests__/additive-tsconfig.test.ts
+  ✕ plans an absent config without writes and actually enables strict TypeScript checking (13 ms)
+  ✓ initializes the selected custom functions root and preserves unrelated host bytes (8 ms)
+  ✓ preserves existing commented custom config bytes and observes them for idempotence (5 ms)
+  ✓ refuses a config created after planning before any backend source is written (5 ms)
+  ✓ refuses an existing config edited after planning before source writes (3 ms)
+  ✓ refuses an existing config deleted after planning before source writes (3 ms)
+  ✓ refuses a config symlink before planning without touching its target (3 ms)
+  ✓ refuses a config symlink before apply without touching its target (2 ms)
+  ✓ refuses a directory at the config path instead of replacing it (2 ms)
+  ✓ preserves a prospective template config after its exact bytes are staged (4 ms)
+
+  ● plans an absent config without writes and actually enables strict TypeScript checking
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 0
+
+    @@ -13,13 +13,10 @@
+          "moduleResolution": "Bundler",
+          "noEmit": true,
+          "skipLibCheck": true,
+          "strict": true,
+          "target": "ESNext",
+    -     "types": Array [
+    -       "node",
+    -     ],
+        },
+        "exclude": Array [
+          "./_generated",
+        ],
+        "include": Array [
+
+      42 |   await applyAdditiveBackendInstallation(plan);
+      43 |   const config = await fs.readJson(path.join(host, "convex/tsconfig.json"));
+    > 44 |   expect(config).toEqual({
+         |                  ^
+      45 |     compilerOptions: {
+      46 |       allowJs: true, strict: true, moduleResolution: "Bundler", jsx: "react-jsx",
+      47 |       skipLibCheck: true, allowSyntheticDefaultImports: true, target: "ESNext",
+
+      at Object.<anonymous> (src/utils/__tests__/additive-tsconfig.test.ts:44:18)
+
+FAIL unit src/utils/__tests__/additive-runtime-typecheck.test.ts (10.797 s)
+  ✕ the full installed runtime typechecks with fresh defaults and still rejects a bad app function (8074 ms)
+  ✕ a plain existing host receives the selected Node declaration edge while unrelated dependencies survive (672 ms)
+  ✕ a conflicting Node declaration override refuses installation before host writes: {"overrides":{"@types/node":"20.0.0"}} (593 ms)
+  ✕ a conflicting Node declaration override refuses installation before host writes: {"pnpm":{"overrides":{"parent>@types/node":"20.0.0"}}} (589 ms)
+  ✓ the full runtime composer retains an existing custom host config byte for byte (590 ms)
+
+  ● the full installed runtime typechecks with fresh defaults and still rejects a bad app function
+
+    Command failed: /Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/node/bin/node /Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules/typescript/bin/tsc --project /Users/SaintNick/.codex/tmp/cortex-installer-repair-rl1s_9ek/cortex-cli-tests-uzuSzT/tmp/cortex-full-runtime-types-yKQSlw/host/convex --pretty false
+
+  ● a plain existing host receives the selected Node declaration edge while unrelated dependencies survive
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "26.6.4"
+    Received: undefined
+
+      94 |   await installSdk(host, { sdkPackage: candidate, install: false, deploy: false });
+      95 |   const manifest = await fs.readJson(path.join(host, "package.json"));
+    > 96 |   expect(manifest.dependencies["@types/node"]).toBe("26.6.4");
+         |                                                ^
+      97 |   expect(manifest.dependencies.unrelated).toBe("^1.0.0");
+      98 |   expect(manifest.devDependencies).toEqual({ typescript: "~6.0.3" });
+      99 |   expect(manifest.optionalDependencies).toEqual({ unrelatedOptional: "^2.0.0" });
+
+      at Object.<anonymous> (src/utils/__tests__/additive-runtime-typecheck.test.ts:96:48)
+
+  ● a conflicting Node declaration override refuses installation before host writes: {"overrides":{"@types/node":"20.0.0"}}
+
+    expect(received).rejects.toThrow()
+
+    Received promise resolved instead of rejected
+    Resolved to value: {"additions": ["_cortex/components.config.ts", "_cortex/http.ts", "_cortex/schema.ts", "_cortex/shared/auth/types.ts", "_cortex/shared/auth/validators.ts", "_cortex/shared/auth/verified.ts", "_cortex/shared/common/backendApi.ts", "_cortex/shared/common/crypto.ts", "_cortex/shared/common/deploymentOperator.ts", "_cortex/shared/common/domainPaging.ts", …], "backupPath": undefined, "conflicts": [], "convexVersion": "1.46.0", "deployment": "staged", "dryRun": false, "functions": "convex", "packageManager": "npm", "projectPath": "/Users/SaintNick/.codex/tmp/cortex-installer-repair-rl1s_9ek/cortex-cli-tests-uzuSzT/tmp/cortex-full-runtime-types-2KZ2Fa/host", "sdkVersion": "0.38.0", "updates": [], "writes": ["package.json", "convex.json"]}
+
+      108 |   await fs.writeFile(path.join(host, "package.json"), original);
+      109 |   await fs.writeFile(path.join(host, "sentinel.txt"), "preserve\n");
+    > 110 |   await expect(installSdk(host, { sdkPackage: candidate, install: false, deploy: false })).rejects.toThrow("RUNTIME_DEPENDENCY_OVERRIDE");
+          |         ^
+      111 |   expect(await fs.readFile(path.join(host, "package.json"), "utf8")).toBe(original);
+      112 |   expect((await fs.readdir(host)).sort()).toEqual(["package.json", "sentinel.txt"]);
+      113 | });
+
+      at expect (../../node_modules/expect/build/index.js:2116:15)
+      at src/utils/__tests__/additive-runtime-typecheck.test.ts:110:9
+
+  ● a conflicting Node declaration override refuses installation before host writes: {"pnpm":{"overrides":{"parent>@types/node":"20.0.0"}}}
+
+    expect(received).rejects.toThrow()
+
+    Received promise resolved instead of rejected
+    Resolved to value: {"additions": ["_cortex/components.config.ts", "_cortex/http.ts", "_cortex/schema.ts", "_cortex/shared/auth/types.ts", "_cortex/shared/auth/validators.ts", "_cortex/shared/auth/verified.ts", "_cortex/shared/common/backendApi.ts", "_cortex/shared/common/crypto.ts", "_cortex/shared/common/deploymentOperator.ts", "_cortex/shared/common/domainPaging.ts", …], "backupPath": undefined, "conflicts": [], "convexVersion": "1.46.0", "deployment": "staged", "dryRun": false, "functions": "convex", "packageManager": "npm", "projectPath": "/Users/SaintNick/.codex/tmp/cortex-installer-repair-rl1s_9ek/cortex-cli-tests-uzuSzT/tmp/cortex-full-runtime-types-o16lPt/host", "sdkVersion": "0.38.0", "updates": [], "writes": ["package.json", "convex.json"]}
+
+      108 |   await fs.writeFile(path.join(host, "package.json"), original);
+      109 |   await fs.writeFile(path.join(host, "sentinel.txt"), "preserve\n");
+    > 110 |   await expect(installSdk(host, { sdkPackage: candidate, install: false, deploy: false })).rejects.toThrow("RUNTIME_DEPENDENCY_OVERRIDE");
+          |         ^
+      111 |   expect(await fs.readFile(path.join(host, "package.json"), "utf8")).toBe(original);
+      112 |   expect((await fs.readdir(host)).sort()).toEqual(["package.json", "sentinel.txt"]);
+      113 | });
+
+      at expect (../../node_modules/expect/build/index.js:2116:15)
+      at src/utils/__tests__/additive-runtime-typecheck.test.ts:110:9
+
+PASS unit src/utils/__tests__/runtime-backend.test.ts
+  ✓ the actual built distribution composes private app tables and guarded public runtime without raw SDK rewrite (187 ms)
+  ✓ changed current distribution bytes fail validation before destination writes (30 ms)
+  ✓ a private app-schema edit after planning cannot conceal a runtime collision or write any backend source (50 ms)
+  ✓ an existing host cannot shadow qualified runtime dependencies with dev or optional versions (114 ms)
+  ✓ a selected runtime override refuses the actual installer before any host write: {"overrides":{"ai":"6.0.0"}} (55 ms)
+  ✓ a selected runtime override refuses the actual installer before any host write: {"overrides":{"ai@^7.0.0":{".":"6.0.0"}}} (54 ms)
+  ✓ a selected runtime override refuses the actual installer before any host write: {"overrides":{"unrelated":{"ai":"6.0.0"}}} (56 ms)
+  ✓ a selected runtime override refuses the actual installer before any host write: {"pnpm":{"overrides":{"parent>ai":"6.0.0"}}} (57 ms)
+  ✓ qualified exact and direct-reference overrides preserve unrelated host override configuration (119 ms)
+
+Test Suites: 2 failed, 1 passed, 3 total
+Tests:       5 failed, 19 passed, 24 total
+Snapshots:   0 total
+Time:        12.307 s
+Ran all test suites within paths "src/utils/__tests__/additive-tsconfig.test.ts", "src/utils/__tests__/runtime-backend.test.ts", "src/utils/__tests__/additive-runtime-typecheck.test.ts".
+Test results written to: ../../_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor2/installer-repair2/node-closure-red2-results.json

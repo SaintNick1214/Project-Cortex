@@ -1,0 +1,178 @@
+(node:21214) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtime/observed-text-selectors.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:123:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:124:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:125:13
+
+PASS tests/unit/runtime/observed-facts-selector.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtimeContent/jobs.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+PASS tests/unit/runtime/observed-media-qualifications.test.ts
+  ● Console
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:148:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:151:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:152:11
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     4.7s | 28/28 passed | /tests/unit/runtimeContent/jobs.test.ts
+  ✅     3.4s | 22/22 passed | /tests/unit/runtime/observed-text-selectors.test.ts
+  ✅     1.1s | 6/6 passed | /tests/unit/runtime/observed-facts-selector.test.ts
+  ✅     1.0s | 5/5 passed | /tests/unit/runtime/observed-media-qualifications.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.19s ( 1.9%) - ready derived content rechecks consumed artifact metadata independently of its own output version
+    /tests/unit/runtimeContent/jobs.test.ts
+
+ 2. [32m✓[0m    0.19s ( 1.8%) - automatic conversation title binds a genuine active parent model and shares its existing financial account
+    /tests/unit/runtimeContent/jobs.test.ts
+
+ 3. [32m✓[0m    0.13s ( 1.2%) - suggestions remain unapplied until one exact user choice; replay never pays or edits twice
+    /tests/unit/runtimeContent/jobs.test.ts
+
+ 4. [32m✓[0m    0.12s ( 1.2%) - updates an exact retained artifact version while preserving the original history and title
+    /tests/unit/runtimeContent/jobs.test.ts
+
+ 5. [32m✓[0m    0.11s ( 1.1%) - creates text with a real secondary title and one shared native account
+    /tests/unit/runtimeContent/jobs.test.ts
+
+ 6. [32m✓[0m    0.09s ( 0.9%) - creates code with a real secondary title and one shared native account
+    /tests/unit/runtimeContent/jobs.test.ts
+
+ 7. [32m✓[0m    0.09s ( 0.9%) - creates sheet with a real secondary title and one shared native account
+    /tests/unit/runtimeContent/jobs.test.ts
+
+ 8. [32m✓[0m    0.08s ( 0.8%) - recovers a confirmed malformed secondary before its save without paying or publishing twice
+    /tests/unit/runtimeContent/jobs.test.ts
+
+ 9. [32m✓[0m    0.08s ( 0.8%) - recovers two confirmed durable drafts exactly once without another native attempt
+    /tests/unit/runtimeContent/jobs.test.ts
+
+10. [32m✓[0m    0.08s ( 0.8%) - publishes confirmed code with a deterministic warning title after rejected multiline secondary
+    /tests/unit/runtimeContent/jobs.test.ts
+
+11. [32m✓[0m    0.08s ( 0.8%) - publishes confirmed sheet with a deterministic warning title after rejected multiline secondary
+    /tests/unit/runtimeContent/jobs.test.ts
+
+12. [32m✓[0m    0.08s ( 0.8%) - the unchanged Workflow publishes a confirmed primary despite rejected secondary title formatting
+    /tests/unit/runtimeContent/jobs.test.ts
+
+13. [32m✓[0m    0.08s ( 0.8%) - publishes confirmed text with a deterministic warning title after rejected multiline secondary
+    /tests/unit/runtimeContent/jobs.test.ts
+
+14. [32m✓[0m    0.08s ( 0.7%) - denies rejected-title publication with wrong-parent secondary evidence
+    /tests/unit/runtimeContent/jobs.test.ts
+
+15. [32m✓[0m    0.07s ( 0.7%) - deletion after paid draft prevents atomic publication with retained liability
+    /tests/unit/runtimeContent/jobs.test.ts
+
+16. [32m✓[0m    0.07s ( 0.7%) - retains confirmed-title liability and refuses fallback after deleted
+    /tests/unit/runtimeContent/jobs.test.ts
+
+17. [32m✓[0m    0.07s ( 0.7%) - denies rejected-title publication with withheld secondary evidence
+    /tests/unit/runtimeContent/jobs.test.ts
+
+18. [32m✓[0m    0.07s ( 0.7%) - denies rejected-title publication with unconfirmed secondary evidence
+    /tests/unit/runtimeContent/jobs.test.ts
+
+19. [32m✓[0m    0.07s ( 0.7%) - retains confirmed-title liability and refuses fallback after revoked
+    /tests/unit/runtimeContent/jobs.test.ts
+
+20. [32m✓[0m    0.07s ( 0.7%) - retains confirmed-title liability and refuses fallback after expired
+    /tests/unit/runtimeContent/jobs.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 1.93s (18.8% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      10.27s
+  Test suites:        4
+  Individual tests:   61
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 4
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 4 passed, 4 total
+Tests:       61 passed, 61 total
+Snapshots:   0 total
+Time:        10.27 s
+Ran all test suites within paths "tests/unit/runtime/observed-text-selectors.test.ts", "tests/unit/runtime/observed-facts-selector.test.ts", "tests/unit/runtime/observed-media-qualifications.test.ts", "tests/unit/runtimeContent/jobs.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor2/text-selectors-repair4/controlled-current1.results.json

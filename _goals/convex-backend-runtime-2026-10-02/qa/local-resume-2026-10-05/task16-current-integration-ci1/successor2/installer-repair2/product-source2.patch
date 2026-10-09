@@ -1,0 +1,670 @@
+diff --git a/packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts b/packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts
+index 8fc3e5579..05bbfcd6c 100644
+--- a/packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts
++++ b/packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts
+@@ -431,7 +431,7 @@ describe("additive fixed media webhook", () => {
+ describe("generated Convex module layout", () => {
+   async function buildFixture(entry: string, shared: Record<string, string>) {
+     const source = path.join(root, "generator-source");
+-    await fs.outputJson(path.join(source, "package.json"), { version: "test", peerDependencies: { convex: "^1.46.0" }, dependencies: { "@convex-dev/agent": "0.7.3" } });
++    await fs.outputJson(path.join(source, "package.json"), { version: "test", peerDependencies: { convex: "^1.46.0" }, dependencies: { "@convex-dev/agent": "0.7.3" }, devDependencies: { "@types/node": "^26.6.4" } });
+     await fs.outputFile(path.join(source, "convex-dev/schema.ts"), 'import { defineSchema, defineTable } from "convex/server"; export default defineSchema({ runtimeRuns: defineTable({}) });\n');
+     await fs.outputFile(path.join(source, "convex-dev/convex.config.ts"), 'import { defineApp } from "convex/server"; import agent from "@convex-dev/agent/convex.config"; const app = defineApp(); app.use(agent, { name: "agent" }); export default app;\n');
+     await fs.outputFile(path.join(source, "convex-dev/runs.ts"), entry);
+@@ -442,6 +442,22 @@ describe("generated Convex module layout", () => {
+     // Invoke the real generator with explicit fixture roots; importing it must not build the checkout.
+     return execute(process.execPath, ["--input-type=module", "--eval", `import { buildBackendDistribution } from ${JSON.stringify(pathToFileURL(builder).href)}; await buildBackendDistribution(${JSON.stringify({ sourceRoot: source, outputRoot: output })});`], { timeout: 20_000, maxBuffer: 262_144 });
+   }
++  it("pins the required Node declarations to the existing SDK declaration base version", async () => {
++    const { source, output } = await buildFixture('export const value = process.version;\n', {});
++    await build(source, output);
++    expect((await fs.readJson(path.join(output, "manifest.json"))).dependencies["@types/node"]).toBe("26.6.4");
++  });
++  it.each([null, "*", ">=26.6.4"])("refuses a missing or ambiguous Node declaration before replacing the previous distribution: %s", async (declaration) => {
++    const { source, output } = await buildFixture('export const value = process.version;\n', {});
++    await build(source, output);
++    const previous = await fs.readFile(path.join(output, "manifest.json"));
++    const pkg = await fs.readJson(path.join(source, "package.json"));
++    if (declaration === null) delete pkg.devDependencies["@types/node"];
++    else pkg.devDependencies["@types/node"] = declaration;
++    await fs.writeJson(path.join(source, "package.json"), pkg);
++    await expect(build(source, output)).rejects.toThrow("Backend distribution requires a deterministic SDK @types/node declaration");
++    expect(await fs.readFile(path.join(output, "manifest.json"))).toEqual(previous);
++  });
+   it("installs valid shared paths with working rewritten imports, original provenance and unchanged public/host bindings", async () => {
+     const entry = '"use node";\nimport type { QueryCtx } from "./_generated/server";\nimport { base } from "../src/domain/model-policy.js";\nimport { increment } from "../src/type space/with-á.js";\nexport { base } from "../src/domain/model-policy.js";\nexport type Witness = import("../src/domain/model-policy.js").Witness;\nexport const answer = () => increment(base);\nexport const load = () => import("../src/domain/model-policy.js");\n';
+     const shared = { "src/domain/model-policy.ts": 'export const base = 41; export type Witness = { exact: true };\n',
+diff --git a/packages/cortex-cli/src/utils/__tests__/additive-tsconfig.test.ts b/packages/cortex-cli/src/utils/__tests__/additive-tsconfig.test.ts
+index 926132b64..a16e650ba 100644
+--- a/packages/cortex-cli/src/utils/__tests__/additive-tsconfig.test.ts
++++ b/packages/cortex-cli/src/utils/__tests__/additive-tsconfig.test.ts
+@@ -46,7 +46,7 @@ it("plans an absent config without writes and actually enables strict TypeScript
+       allowJs: true, strict: true, moduleResolution: "Bundler", jsx: "react-jsx",
+       skipLibCheck: true, allowSyntheticDefaultImports: true, target: "ESNext",
+       lib: ["ES2023", "dom"], forceConsistentCasingInFileNames: true,
+-      module: "ESNext", isolatedModules: true, noEmit: true,
++      module: "ESNext", isolatedModules: true, noEmit: true, types: ["node"],
+     },
+     include: ["./**/*"], exclude: ["./_generated"],
+   });
+diff --git a/packages/cortex-cli/src/utils/init/additive-backend.ts b/packages/cortex-cli/src/utils/init/additive-backend.ts
+index 61ab301db..d5c3e83a4 100644
+--- a/packages/cortex-cli/src/utils/init/additive-backend.ts
++++ b/packages/cortex-cli/src/utils/init/additive-backend.ts
+@@ -38,7 +38,8 @@ export interface BackendInstallationPlan {
+ const digest = (text: string | Buffer) => createHash("sha256").update(text).digest("hex");
+ const parse = (name: string, text: string) => ts.createSourceFile(name, text, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
+ const safeRelative = (value: string): boolean => Boolean(value) && !path.isAbsolute(value) && !value.split(/[\\/]/).some((piece) => !piece || piece === "." || piece === "..");
+-// Convex 1.46's functions-root defaults, compatible with TypeScript 6.
++// Convex 1.46's functions-root defaults plus the runtime's explicit Node
++// ambient declarations, which TypeScript 6 no longer includes automatically.
+ // Existing host configs remain owned by the host, including comments and formatting.
+ const defaultFunctionsTsconfig = JSON.stringify({
+   compilerOptions: {
+@@ -54,6 +55,7 @@ const defaultFunctionsTsconfig = JSON.stringify({
+     module: "ESNext",
+     isolatedModules: true,
+     noEmit: true,
++    types: ["node"],
+   },
+   include: ["./**/*"],
+   exclude: ["./_generated"],
+diff --git a/scripts/backend/build-distribution.mjs b/scripts/backend/build-distribution.mjs
+index 39b28a994..4df65e0ff 100644
+--- a/scripts/backend/build-distribution.mjs
++++ b/scripts/backend/build-distribution.mjs
+@@ -183,7 +183,13 @@ export async function buildBackendDistribution({ sourceRoot, outputRoot }) {
+     entries.set("_cortex/http.ts", helper); origins.set("_cortex/http.ts", "convex-dev/http.ts"); sources.set("convex-dev/http.ts", httpSource);
+   }
+   const pkg = JSON.parse(await fs.readFile(path.join(root, "package.json"), "utf8"));
+-  const manifest = { formatVersion: 1, distributionId: `cortex-backend-v1-sdk-${pkg.version}`, sdkVersion: pkg.version, tables: [...tableNames].sort(), components: componentNames, httpRoutes: httpRoutes.sort(), dependencies: { convex: pkg.peerDependencies.convex, ...pkg.dependencies }, files: [...entries].sort(([a], [b]) => a.localeCompare(b)).map(([name, text]) => ({ path: name, sha256: hash(text), sourcePath: origins.get(name), sourceSha256: hash(sources.get(origins.get(name))) })) };
++  // Installed functions compile in the host, so its Node declarations are a
++  // required direct dependency too. Bind the approved SDK declaration's base
++  // version; ambiguous ranges fail before replacing the previous distribution.
++  const nodeTypesDeclaration = pkg.devDependencies?.["@types/node"];
++  const nodeTypes = typeof nodeTypesDeclaration === "string" ? /^(?:[~^])?((?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*))$/.exec(nodeTypesDeclaration) : null;
++  if (!nodeTypes) throw new Error("Backend distribution requires a deterministic SDK @types/node declaration (exact, caret or tilde base version).");
++  const manifest = { formatVersion: 1, distributionId: `cortex-backend-v1-sdk-${pkg.version}`, sdkVersion: pkg.version, tables: [...tableNames].sort(), components: componentNames, httpRoutes: httpRoutes.sort(), dependencies: { convex: pkg.peerDependencies.convex, ...pkg.dependencies, "@types/node": nodeTypes[1] }, files: [...entries].sort(([a], [b]) => a.localeCompare(b)).map(([name, text]) => ({ path: name, sha256: hash(text), sourcePath: origins.get(name), sourceSha256: hash(sources.get(origins.get(name))) })) };
+   await fs.rm(output, { recursive: true, force: true });
+   for (const [name, text] of entries) { await fs.mkdir(path.dirname(path.join(output, name)), { recursive: true }); await fs.writeFile(path.join(output, name), text); }
+   await fs.writeFile(path.join(output, "manifest.json"), JSON.stringify(manifest, null, 2) + "\n");
+diff --git a/tests/unit/dev-integration-distribution.test.ts b/tests/unit/dev-integration-distribution.test.ts
+index d6c36debc..45dcdee60 100644
+--- a/tests/unit/dev-integration-distribution.test.ts
++++ b/tests/unit/dev-integration-distribution.test.ts
+@@ -12,7 +12,7 @@ async function fixture() {
+   const root = await mkdtemp(join(tmpdir(), "cortex-merged-closure-")); owned.push(root);
+   const source = join(root, "source"), output = join(root, "output");
+   async function save(path: string, text: string) {await mkdir(join(source, path, ".."), {recursive: true}); await writeFile(join(source, path), text);}
+-  await save("package.json", JSON.stringify({version: "0.38.0", peerDependencies: {convex: "^1.46.0"}, dependencies: {}}));
++  await save("package.json", JSON.stringify({version: "0.38.0", peerDependencies: {convex: "^1.46.0"}, dependencies: {}, devDependencies: {"@types/node": "^26.6.4"}}));
+   await save("convex-dev/schema.ts", 'import { defineSchema, defineTable } from "convex/server"; import { tables } from "./lib/provenance"; export default defineSchema({ runtime: defineTable({}), ...tables });');
+   await save("convex-dev/lib/provenance.ts", 'import { defineTable } from "convex/server"; export const tables = { references: defineTable({}) };');
+   await save("convex-dev/convex.config.ts", 'import { defineApp } from "convex/server"; import agent from "@convex-dev/agent/convex.config"; const app = defineApp(); app.use(agent, {name: "agent"}); export default app;');
+diff --git a/tests/unit/runtimeAssets/distribution.test.ts b/tests/unit/runtimeAssets/distribution.test.ts
+index d53ac42c2..53cbb886d 100644
+--- a/tests/unit/runtimeAssets/distribution.test.ts
++++ b/tests/unit/runtimeAssets/distribution.test.ts
+@@ -11,7 +11,7 @@ afterEach(async () => { await Promise.all(owned.splice(0).map(path => rm(path, {
+ async function fixture() {
+   const root = await mkdtemp(join(tmpdir(), "cortex-assets-distribution-")); owned.push(root);
+   const source = join(root, "source"); const output = join(root, "output"); await mkdir(join(source, "convex-dev"), { recursive: true });
+-  await writeFile(join(source, "package.json"), JSON.stringify({ version: "fixture", peerDependencies: { convex: "^1.46.0" }, dependencies: { "@convex-dev/agent": "0.7.3" } }));
++  await writeFile(join(source, "package.json"), JSON.stringify({ version: "fixture", peerDependencies: { convex: "^1.46.0" }, dependencies: { "@convex-dev/agent": "0.7.3" }, devDependencies: { "@types/node": "^26.6.4" } }));
+   await writeFile(join(source, "convex-dev/schema.ts"), 'import { defineSchema, defineTable } from "convex/server"; export default defineSchema({ assets: defineTable({}) });');
+   await writeFile(join(source, "convex-dev/convex.config.ts"), 'import { defineApp } from "convex/server"; import agent from "@convex-dev/agent/convex.config"; const app = defineApp(); app.use(agent, { name: "agent" }); export default app;');
+   await writeFile(join(source, "convex-dev/runtimeAssetsHttp.ts"), 'export const uploadAsset = "upload"; export const downloadAsset = "download"; export const assetOptions = "options";');
+diff --git a/packages/cortex-cli/src/utils/__tests__/additive-runtime-typecheck.test.ts b/packages/cortex-cli/src/utils/__tests__/additive-runtime-typecheck.test.ts
+new file mode 100644
+index 000000000..247a107d8
+--- /dev/null
++++ b/packages/cortex-cli/src/utils/__tests__/additive-runtime-typecheck.test.ts
+@@ -0,0 +1,124 @@
++import { afterEach, beforeEach, expect, it } from "@jest/globals";
++import fs from "fs-extra";
++import path from "node:path";
++import os from "node:os";
++import { createHash } from "node:crypto";
++import { execFile } from "node:child_process";
++import { promisify } from "node:util";
++import { fileURLToPath, pathToFileURL } from "node:url";
++import ts from "typescript";
++import { installSdk } from "../install.js";
++import { installAdditiveBackend } from "../init/additive-backend.js";
++
++const repository = fileURLToPath(new URL("../../../../../", import.meta.url));
++const fixture = fileURLToPath(new URL("./fixtures/runtime-typecheck-bindings/", import.meta.url));
++const execute = promisify(execFile);
++let root: string;
++let candidate: string;
++let host: string;
++let runtimeFiles: string[];
++beforeEach(async () => {
++  root = await fs.mkdtemp(path.join(os.tmpdir(), "cortex-full-runtime-types-"));
++  candidate = path.join(root, "candidate");
++  host = path.join(root, "host");
++  // The actual generator builds the complete current source closure in this
++  // owned candidate. No root dist, application payload or service is mutated.
++  await execute(process.execPath, ["--input-type=module", "--eval", `import { buildBackendDistribution } from ${JSON.stringify(pathToFileURL(path.join(repository, "scripts/backend/build-distribution.mjs")).href)}; await buildBackendDistribution(${JSON.stringify({ sourceRoot: repository, outputRoot: path.join(candidate, "dist/backend/v1") })});`], { timeout: 30000 });
++  await fs.copyFile(path.join(repository, "package.json"), path.join(candidate, "package.json"));
++  for (const name of ["schema.ts", "admin.ts"]) {
++    await fs.ensureDir(path.join(candidate, "convex-dev"));
++    await fs.copyFile(path.join(repository, "convex-dev", name), path.join(candidate, "convex-dev", name));
++  }
++  const manifest = await fs.readJson(path.join(candidate, "dist/backend/v1/manifest.json"));
++  runtimeFiles = manifest.files.map((entry: { path: string }) => entry.path);
++  expect(runtimeFiles).toEqual(expect.arrayContaining(["runtimeGateway.ts", "runtimeMediaGateway.ts", "cliOperator/attachments.ts", "_cortex/shared/common/crypto.ts"]));
++  expect(manifest.components).toEqual(["agent", "workflow"]);
++  await fs.ensureDir(host);
++});
++afterEach(async () => { await fs.remove(root); });
++
++/** Use the installed official pure template, not a permissive handwritten API. */
++async function generatedApi(): Promise<string> {
++  type OfficialApiCodegen = (paths: string[]) => { DTS: string; JS: string };
++  const exportsByName = new Map<string, Record<string, unknown>>();
++  async function load(name: string): Promise<Record<string, unknown>> {
++    const source = await fs.readFile(path.join(repository, "node_modules/convex/src/cli/codegen_templates", `${name}.ts`), "utf8");
++    const output = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.CommonJS } }).outputText;
++    const module = { exports: {} as Record<string, unknown> };
++    new Function("require", "module", "exports", output)((specifier: string) => {
++      if (specifier !== "./common.js") throw new Error(`Unexpected official template dependency: ${specifier}`);
++      return exportsByName.get("common");
++    }, module, module.exports);
++    exportsByName.set(name, module.exports);
++    return module.exports;
++  }
++  await load("common");
++  const official = await load("api");
++  const api = (official.apiCodegen as OfficialApiCodegen)(runtimeFiles.filter(name => !name.endsWith(".config.ts")));
++  return api.DTS + await fs.readFile(path.join(fixture, "components.d.ts.txt"), "utf8");
++}
++
++async function positionOfflineBindings(): Promise<void> {
++  const provenance = await fs.readJson(path.join(fixture, "provenance.json"));
++  for (const entry of provenance.files) {
++    const bytes = await fs.readFile(path.join(fixture, `${entry.path}.txt`));
++    expect(createHash("sha256").update(bytes).digest("hex")).toBe(entry.sha256);
++    if (entry.path !== "components.d.ts") await fs.outputFile(path.join(host, "convex/_generated", entry.path), bytes);
++  }
++  await fs.outputFile(path.join(host, "convex/_generated/api.d.ts"), await generatedApi());
++  await fs.symlink(path.join(repository, "node_modules"), path.join(host, "node_modules"), "dir");
++}
++
++it("the full installed runtime typechecks with fresh defaults and still rejects a bad app function", async () => {
++  await fs.writeJson(path.join(host, "package.json"), { name: "fresh-runtime-host" });
++  await installSdk(host, { sdkPackage: candidate, install: false, deploy: false });
++  await positionOfflineBindings();
++  // Reused genuine typed server/data model/component bytes plus the official
++  // current API template are an offline oracle. Actual enabled codegen remains
++  // required in CI; this check does not claim to have run it or deployed.
++  const args = [path.join(repository, "node_modules/typescript/bin/tsc"), "--project", path.join(host, "convex"), "--pretty", "false"];
++  const checked = await execute(process.execPath, args, { cwd: host, timeout: 60000 })
++    .then(result => ({ code: 0, ...result }), (error: { code: number; stdout: string; stderr: string }) => ({ code: error.code, stdout: error.stdout, stderr: error.stderr }));
++  expect(checked).toEqual({ code: 0, stdout: "", stderr: "" });
++  await fs.writeFile(path.join(host, "convex/invalidApp.ts"), 'import { query } from "./_generated/server"; export const bad = query({ args: {}, handler: () => { const value: string = 42; return value; } });\n');
++  await expect(execute(process.execPath, args, { cwd: host, timeout: 60000 })).rejects.toMatchObject({
++    code: 2, stdout: expect.stringContaining("Type 'number' is not assignable to type 'string'"),
++  });
++  expect(await fs.pathExists(path.join(host, "convex/invalidApp.js"))).toBe(false);
++}, 120000);
++
++it("a plain existing host receives the selected Node declaration edge while unrelated dependencies survive", async () => {
++  await fs.writeJson(path.join(host, "package.json"), {
++    name: "dependency-host", dependencies: { unrelated: "^1.0.0" },
++    devDependencies: { "@types/node": "^20.0.0", typescript: "~6.0.3" },
++    optionalDependencies: { "@types/node": "^18.0.0", unrelatedOptional: "^2.0.0" },
++  });
++  await installSdk(host, { sdkPackage: candidate, install: false, deploy: false });
++  const manifest = await fs.readJson(path.join(host, "package.json"));
++  expect(manifest.dependencies["@types/node"]).toBe("26.6.4");
++  expect(manifest.dependencies.unrelated).toBe("^1.0.0");
++  expect(manifest.devDependencies).toEqual({ typescript: "~6.0.3" });
++  expect(manifest.optionalDependencies).toEqual({ unrelatedOptional: "^2.0.0" });
++  expect((await fs.readJson(path.join(host, "convex/tsconfig.json"))).compilerOptions.types).toEqual(["node"]);
++});
++
++it.each([
++  { overrides: { "@types/node": "20.0.0" } },
++  { pnpm: { overrides: { "parent>@types/node": "20.0.0" } } },
++])("a conflicting Node declaration override refuses installation before host writes: %j", async (overrides) => {
++  const original = JSON.stringify({ name: "preserved-host", ...overrides }) + "\n";
++  await fs.writeFile(path.join(host, "package.json"), original);
++  await fs.writeFile(path.join(host, "sentinel.txt"), "preserve\n");
++  await expect(installSdk(host, { sdkPackage: candidate, install: false, deploy: false })).rejects.toThrow("RUNTIME_DEPENDENCY_OVERRIDE");
++  expect(await fs.readFile(path.join(host, "package.json"), "utf8")).toBe(original);
++  expect((await fs.readdir(host)).sort()).toEqual(["package.json", "sentinel.txt"]);
++});
++
++it("the full runtime composer retains an existing custom host config byte for byte", async () => {
++  const bytes = Buffer.from('\uFEFF{\r\n // host types stay explicit\r\n "compilerOptions": { "types": ["node", "custom"], "strict": true }\r\n}\r\n');
++  await fs.writeFile(path.join(host, "convex.json"), '{"functions":"functions/private/"}\n');
++  await fs.outputFile(path.join(host, "functions/private/tsconfig.json"), bytes);
++  await installAdditiveBackend(host, candidate);
++  expect(await fs.readFile(path.join(host, "functions/private/tsconfig.json"))).toEqual(bytes);
++  expect(await fs.pathExists(path.join(host, "convex"))).toBe(false);
++});
+diff --git a/packages/cortex-cli/src/utils/__tests__/fixtures/runtime-typecheck-bindings/api.js.txt b/packages/cortex-cli/src/utils/__tests__/fixtures/runtime-typecheck-bindings/api.js.txt
+new file mode 100644
+index 000000000..44bf98583
+--- /dev/null
++++ b/packages/cortex-cli/src/utils/__tests__/fixtures/runtime-typecheck-bindings/api.js.txt
+@@ -0,0 +1,23 @@
++/* eslint-disable */
++/**
++ * Generated `api` utility.
++ *
++ * THIS CODE IS AUTOMATICALLY GENERATED.
++ *
++ * To regenerate, run `npx convex dev`.
++ * @module
++ */
++
++import { anyApi, componentsGeneric } from "convex/server";
++
++/**
++ * A utility for referencing Convex functions in your app's API.
++ *
++ * Usage:
++ * ```js
++ * const myFunctionReference = api.myModule.myFunction;
++ * ```
++ */
++export const api = anyApi;
++export const internal = anyApi;
++export const components = componentsGeneric();
+diff --git a/packages/cortex-cli/src/utils/__tests__/fixtures/runtime-typecheck-bindings/components.d.ts.txt b/packages/cortex-cli/src/utils/__tests__/fixtures/runtime-typecheck-bindings/components.d.ts.txt
+new file mode 100644
+index 000000000..556afec95
+--- /dev/null
++++ b/packages/cortex-cli/src/utils/__tests__/fixtures/runtime-typecheck-bindings/components.d.ts.txt
+@@ -0,0 +1,4 @@
++export declare const components: {
++  agent: import("@convex-dev/agent/_generated/component.js").ComponentApi<"agent">;
++  workflow: import("@convex-dev/workflow/_generated/component.js").ComponentApi<"workflow">;
++};
+diff --git a/packages/cortex-cli/src/utils/__tests__/fixtures/runtime-typecheck-bindings/dataModel.d.ts.txt b/packages/cortex-cli/src/utils/__tests__/fixtures/runtime-typecheck-bindings/dataModel.d.ts.txt
+new file mode 100644
+index 000000000..f97fd1942
+--- /dev/null
++++ b/packages/cortex-cli/src/utils/__tests__/fixtures/runtime-typecheck-bindings/dataModel.d.ts.txt
+@@ -0,0 +1,60 @@
++/* eslint-disable */
++/**
++ * Generated data model types.
++ *
++ * THIS CODE IS AUTOMATICALLY GENERATED.
++ *
++ * To regenerate, run `npx convex dev`.
++ * @module
++ */
++
++import type {
++  DataModelFromSchemaDefinition,
++  DocumentByName,
++  TableNamesInDataModel,
++  SystemTableNames,
++} from "convex/server";
++import type { GenericId } from "convex/values";
++import schema from "../schema.js";
++
++/**
++ * The names of all of your Convex tables.
++ */
++export type TableNames = TableNamesInDataModel<DataModel>;
++
++/**
++ * The type of a document stored in Convex.
++ *
++ * @typeParam TableName - A string literal type of the table name (like "users").
++ */
++export type Doc<TableName extends TableNames> = DocumentByName<
++  DataModel,
++  TableName
++>;
++
++/**
++ * An identifier for a document in Convex.
++ *
++ * Convex documents are uniquely identified by their `Id`, which is accessible
++ * on the `_id` field. To learn more, see [Document IDs](https://docs.convex.dev/using/document-ids).
++ *
++ * Documents can be loaded using `db.get(tableName, id)` in query and mutation functions.
++ *
++ * IDs are just strings at runtime, but this type can be used to distinguish them from other
++ * strings when type checking.
++ *
++ * @typeParam TableName - A string literal type of the table name (like "users").
++ */
++export type Id<TableName extends TableNames | SystemTableNames> =
++  GenericId<TableName>;
++
++/**
++ * A type describing your Convex data model.
++ *
++ * This type includes information about what tables you have, the type of
++ * documents stored in those tables, and the indexes defined on them.
++ *
++ * This type is used to parameterize methods like `queryGeneric` and
++ * `mutationGeneric` to make them type-safe.
++ */
++export type DataModel = DataModelFromSchemaDefinition<typeof schema>;
+diff --git a/packages/cortex-cli/src/utils/__tests__/fixtures/runtime-typecheck-bindings/provenance.json b/packages/cortex-cli/src/utils/__tests__/fixtures/runtime-typecheck-bindings/provenance.json
+new file mode 100644
+index 000000000..f9bb980b8
+--- /dev/null
++++ b/packages/cortex-cli/src/utils/__tests__/fixtures/runtime-typecheck-bindings/provenance.json
+@@ -0,0 +1,38 @@
++{
++  "purpose": "Offline installed-full-runtime compile control only. API module map is generated from official Convex apiCodegen for current installed source paths. No anyApi declaration/stub and no new actual codegen claim.",
++  "origin": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-dev-integration1/native-actual1/codegen-merged4-generated.json",
++  "generatedByOfficialCliOriginally": true,
++  "components": [
++    "agent",
++    "workflow"
++  ],
++  "files": [
++    {
++      "path": "api.js",
++      "sha256": "f513058549831e85376f8d19cafaf2a4a770b6eb1b859fb371141f2c9dec0d70",
++      "bytes": 480
++    },
++    {
++      "path": "server.d.ts",
++      "sha256": "2b536ee08d434dd044efe0302aeaf4ccb00cd08af10c9f8c7bc7a6734e4aa49b",
++      "bytes": 6008
++    },
++    {
++      "path": "server.js",
++      "sha256": "0cdd1d842b9458d8a6f2444c35eb9929312316a384ca76a4b1d964bedde8a6f2",
++      "bytes": 3872
++    },
++    {
++      "path": "dataModel.d.ts",
++      "sha256": "db177073d16a4393c7a96bcdc3a2a904e88c2432d54d138ca7715cc431982c17",
++      "bytes": 1736
++    },
++    {
++      "path": "components.d.ts",
++      "sha256": "6543b971f0dd90b2a86b4e8829355fa1539c5a6e917ed4f92ff393619d298fdc",
++      "bytes": 215,
++      "extractedFrom": "api.d.ts",
++      "sourceSha256": "810d9691ee1e778c52d823cd594683e872b9c56245286d7c889c5f2ba533695b"
++    }
++  ]
++}
+diff --git a/packages/cortex-cli/src/utils/__tests__/fixtures/runtime-typecheck-bindings/server.d.ts.txt b/packages/cortex-cli/src/utils/__tests__/fixtures/runtime-typecheck-bindings/server.d.ts.txt
+new file mode 100644
+index 000000000..f235db4a1
+--- /dev/null
++++ b/packages/cortex-cli/src/utils/__tests__/fixtures/runtime-typecheck-bindings/server.d.ts.txt
+@@ -0,0 +1,162 @@
++/* eslint-disable */
++/**
++ * Generated utilities for implementing server-side Convex query and mutation functions.
++ *
++ * THIS CODE IS AUTOMATICALLY GENERATED.
++ *
++ * To regenerate, run `npx convex dev`.
++ * @module
++ */
++
++import {
++  ActionBuilder,
++  HttpActionBuilder,
++  MutationBuilder,
++  QueryBuilder,
++  GenericActionCtx,
++  GenericMutationCtx,
++  GenericQueryCtx,
++  GenericDatabaseReader,
++  GenericDatabaseWriter,
++} from "convex/server";
++import type { DataModel } from "./dataModel.js";
++
++/**
++ * Typesafe environment variables.
++ *
++ * This includes platform-provided env vars and any variables declared in
++ * `convex.config.ts`.
++ */
++type Env = {
++  readonly CONVEX_CLOUD_URL: string;
++  readonly CONVEX_SITE_URL: string;
++};
++
++/**
++ * Define a query in this Convex app's public API.
++ *
++ * This function will be allowed to read your Convex database and will be accessible from the client.
++ *
++ * @param func - The query function. It receives a {@link QueryCtx} as its first argument.
++ * @returns The wrapped query. Include this as an `export` to name it and make it accessible.
++ */
++export declare const query: QueryBuilder<DataModel, "public">;
++
++/**
++ * Define a query that is only accessible from other Convex functions (but not from the client).
++ *
++ * This function will be allowed to read from your Convex database. It will not be accessible from the client.
++ *
++ * @param func - The query function. It receives a {@link QueryCtx} as its first argument.
++ * @returns The wrapped query. Include this as an `export` to name it and make it accessible.
++ */
++export declare const internalQuery: QueryBuilder<DataModel, "internal">;
++
++/**
++ * Define a mutation in this Convex app's public API.
++ *
++ * This function will be allowed to modify your Convex database and will be accessible from the client.
++ *
++ * @param func - The mutation function. It receives a {@link MutationCtx} as its first argument.
++ * @returns The wrapped mutation. Include this as an `export` to name it and make it accessible.
++ */
++export declare const mutation: MutationBuilder<DataModel, "public">;
++
++/**
++ * Define a mutation that is only accessible from other Convex functions (but not from the client).
++ *
++ * This function will be allowed to modify your Convex database. It will not be accessible from the client.
++ *
++ * @param func - The mutation function. It receives a {@link MutationCtx} as its first argument.
++ * @returns The wrapped mutation. Include this as an `export` to name it and make it accessible.
++ */
++export declare const internalMutation: MutationBuilder<DataModel, "internal">;
++
++/**
++ * Define an action in this Convex app's public API.
++ *
++ * An action is a function which can execute any JavaScript code, including non-deterministic
++ * code and code with side-effects, like calling third-party services.
++ * They can be run in Convex's JavaScript environment or in Node.js using the "use node" directive.
++ * They can interact with the database indirectly by calling queries and mutations using the {@link ActionCtx}.
++ *
++ * @param func - The action. It receives an {@link ActionCtx} as its first argument.
++ * @returns The wrapped action. Include this as an `export` to name it and make it accessible.
++ */
++export declare const action: ActionBuilder<DataModel, "public">;
++
++/**
++ * Define an action that is only accessible from other Convex functions (but not from the client).
++ *
++ * @param func - The function. It receives an {@link ActionCtx} as its first argument.
++ * @returns The wrapped function. Include this as an `export` to name it and make it accessible.
++ */
++export declare const internalAction: ActionBuilder<DataModel, "internal">;
++
++/**
++ * Define an HTTP action.
++ *
++ * The wrapped function will be used to respond to HTTP requests received
++ * by a Convex deployment if the requests matches the path and method where
++ * this action is routed. Be sure to route your httpAction in `convex/http.js`.
++ *
++ * @param func - The function. It receives an {@link ActionCtx} as its first argument
++ * and a Fetch API `Request` object as its second.
++ * @returns The wrapped function. Import this function from `convex/http.js` and route it to hook it up.
++ */
++export declare const httpAction: HttpActionBuilder;
++
++/**
++ * Typesafe environment variables.
++ *
++ * This includes platform-provided env vars and any variables declared in
++ * `convex.config.ts`.
++ */
++export declare const env: Env;
++
++/**
++ * A set of services for use within Convex query functions.
++ *
++ * The query context is passed as the first argument to any Convex query
++ * function run on the server.
++ *
++ * This differs from the {@link MutationCtx} because all of the services are
++ * read-only.
++ */
++export type QueryCtx = GenericQueryCtx<DataModel>;
++
++/**
++ * A set of services for use within Convex mutation functions.
++ *
++ * The mutation context is passed as the first argument to any Convex mutation
++ * function run on the server.
++ */
++export type MutationCtx = GenericMutationCtx<DataModel>;
++
++/**
++ * A set of services for use within Convex action functions.
++ *
++ * The action context is passed as the first argument to any Convex action
++ * function run on the server.
++ */
++export type ActionCtx = GenericActionCtx<DataModel>;
++
++/**
++ * An interface to read from the database within Convex query functions.
++ *
++ * The two entry points are {@link DatabaseReader.get}, which fetches a single
++ * document by its {@link Id}, or {@link DatabaseReader.query}, which starts
++ * building a query.
++ */
++export type DatabaseReader = GenericDatabaseReader<DataModel>;
++
++/**
++ * An interface to read from and write to the database within Convex mutation
++ * functions.
++ *
++ * Convex guarantees that all writes within a single mutation are
++ * executed atomically, so you never have to worry about partial writes leaving
++ * your data in an inconsistent state. See [the Convex Guide](https://docs.convex.dev/understanding/convex-fundamentals/functions#atomicity-and-optimistic-concurrency-control)
++ * for the guarantees Convex provides your functions.
++ */
++export type DatabaseWriter = GenericDatabaseWriter<DataModel>;
+diff --git a/packages/cortex-cli/src/utils/__tests__/fixtures/runtime-typecheck-bindings/server.js.txt b/packages/cortex-cli/src/utils/__tests__/fixtures/runtime-typecheck-bindings/server.js.txt
+new file mode 100644
+index 000000000..2dbe0dbd4
+--- /dev/null
++++ b/packages/cortex-cli/src/utils/__tests__/fixtures/runtime-typecheck-bindings/server.js.txt
+@@ -0,0 +1,101 @@
++/* eslint-disable */
++/**
++ * Generated utilities for implementing server-side Convex query and mutation functions.
++ *
++ * THIS CODE IS AUTOMATICALLY GENERATED.
++ *
++ * To regenerate, run `npx convex dev`.
++ * @module
++ */
++
++import {
++  actionGeneric,
++  httpActionGeneric,
++  queryGeneric,
++  mutationGeneric,
++  internalActionGeneric,
++  internalMutationGeneric,
++  internalQueryGeneric,
++} from "convex/server";
++
++/**
++ * Define a query in this Convex app's public API.
++ *
++ * This function will be allowed to read your Convex database and will be accessible from the client.
++ *
++ * @param func - The query function. It receives a {@link QueryCtx} as its first argument.
++ * @returns The wrapped query. Include this as an `export` to name it and make it accessible.
++ */
++export const query = queryGeneric;
++
++/**
++ * Define a query that is only accessible from other Convex functions (but not from the client).
++ *
++ * This function will be allowed to read from your Convex database. It will not be accessible from the client.
++ *
++ * @param func - The query function. It receives a {@link QueryCtx} as its first argument.
++ * @returns The wrapped query. Include this as an `export` to name it and make it accessible.
++ */
++export const internalQuery = internalQueryGeneric;
++
++/**
++ * Define a mutation in this Convex app's public API.
++ *
++ * This function will be allowed to modify your Convex database and will be accessible from the client.
++ *
++ * @param func - The mutation function. It receives a {@link MutationCtx} as its first argument.
++ * @returns The wrapped mutation. Include this as an `export` to name it and make it accessible.
++ */
++export const mutation = mutationGeneric;
++
++/**
++ * Define a mutation that is only accessible from other Convex functions (but not from the client).
++ *
++ * This function will be allowed to modify your Convex database. It will not be accessible from the client.
++ *
++ * @param func - The mutation function. It receives a {@link MutationCtx} as its first argument.
++ * @returns The wrapped mutation. Include this as an `export` to name it and make it accessible.
++ */
++export const internalMutation = internalMutationGeneric;
++
++/**
++ * Define an action in this Convex app's public API.
++ *
++ * An action is a function which can execute any JavaScript code, including non-deterministic
++ * code and code with side-effects, like calling third-party services.
++ * They can be run in Convex's JavaScript environment or in Node.js using the "use node" directive.
++ * They can interact with the database indirectly by calling queries and mutations using the {@link ActionCtx}.
++ *
++ * @param func - The action. It receives an {@link ActionCtx} as its first argument.
++ * @returns The wrapped action. Include this as an `export` to name it and make it accessible.
++ */
++export const action = actionGeneric;
++
++/**
++ * Define an action that is only accessible from other Convex functions (but not from the client).
++ *
++ * @param func - The function. It receives an {@link ActionCtx} as its first argument.
++ * @returns The wrapped function. Include this as an `export` to name it and make it accessible.
++ */
++export const internalAction = internalActionGeneric;
++
++/**
++ * Define an HTTP action.
++ *
++ * The wrapped function will be used to respond to HTTP requests received
++ * by a Convex deployment if the requests matches the path and method where
++ * this action is routed. Be sure to route your httpAction in `convex/http.js`.
++ *
++ * @param func - The function. It receives an {@link ActionCtx} as its first argument
++ * and a Fetch API `Request` object as its second.
++ * @returns The wrapped function. Import this function from `convex/http.js` and route it to hook it up.
++ */
++export const httpAction = httpActionGeneric;
++
++/**
++ * Typesafe environment variables.
++ *
++ * This includes platform-provided env vars and any variables declared in
++ * `convex.config.ts`.
++ */
++export const env = process.env;

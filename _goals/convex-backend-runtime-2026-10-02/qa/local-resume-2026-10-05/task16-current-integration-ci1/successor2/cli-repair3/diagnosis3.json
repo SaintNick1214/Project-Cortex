@@ -1,0 +1,44 @@
+{
+  "run": 37914802753,
+  "job": 113769927816,
+  "rawLog": "cli-actual1.log",
+  "historicalResult": {
+    "suites": 62,
+    "passedSuites": 57,
+    "failedSuites": 5,
+    "assertions": 1828,
+    "passed": 1640,
+    "failed": 188
+  },
+  "failures": [
+    {
+      "file": "tests/commands/bootstrap-admission-real.test.ts",
+      "line": 680,
+      "cause": "Missing CORTEX_BOOTSTRAP_NPM_ROOT (and required selected dependency view/binding)."
+    },
+    {
+      "file": "tests/commands/install-real.test.ts",
+      "line": 4990,
+      "cause": "dist/index.js was not built before fast command contracts."
+    },
+    {
+      "file": "src/utils/__tests__/native-short-options.test.ts",
+      "line": 5384,
+      "cause": "Built CLI prerequisite missing; explicit test refuses before command execution."
+    },
+    {
+      "file": "tests/commands/completion-real.test.ts",
+      "line": 6394,
+      "cause": "Built CLI missing; zsh/fish executables also unavailable to subprocesses."
+    },
+    {
+      "file": "tests/commands/node-runtime-real.test.ts",
+      "line": 6686,
+      "cause": "CORTEX_RUNTIME_GUARD and genuine exact Node20 inputs were not supplied."
+    }
+  ],
+  "secondaryCleanupErrors": "afterEach rmSync(undefined) follows missing beforeAll prerequisites; original assertions and hooks are unchanged.",
+  "authenticatedRuntimeReached": false,
+  "providerMemoryFailureExcluded": true,
+  "serviceOperations": 0
+}

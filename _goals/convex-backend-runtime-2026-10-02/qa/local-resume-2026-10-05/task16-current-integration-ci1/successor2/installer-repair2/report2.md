@@ -1,0 +1,9 @@
+Repair2 is source-complete. The absent-only functions config now explicitly selects Node ambient types. The backend generator derives exact @types/node26.6.4 from the existing SDK ^26.6.4 declaration and fails closed for missing/ambiguous declarations before replacing the distribution. Existing host config bytes are preserved.
+
+The full installed156-file runtime reproduces41 TS2591 errors before the repair. Current full typed compilation passes, while a deliberately invalid registered app function still exits2. This is an offline compile control using official current API templates and exact genuine typed server/data-model/component declaration bytes; genuine fresh enabled codegen remains mandatory in CI.
+
+Checks passed: CLI96/96, Root generator5/5 and native staging4/4; no selected green skips. CLI types/build/scoped and full-module lint, generator lint/syntax all0, natural exits. The initial root harness prerequisite exit and QA relative-path error are retained with their meaningful successors. Original CI/installer failures remain unchanged.
+
+The required Node edge is promoted and conflicting npm/pnpm overrides refuse before writes through existing installer mechanisms.156 source/provenance entries are identical to the previous distribution: only the manifest adds @types/node26.6.4. No app/catalog/legacy/version edits were needed. Two synthetic Root generator package fixtures and the existing CLI generator fixture gained the required declaration; assertions were preserved.
+
+See source-manifest2.json, product-source2.patch, generated-current-manifest2.json, generated-dependency-delta2.json, ci-diagnosis2.json and command/raw receipts. Root owns backend regeneration/package, fresh Linux CI and the existing non-author review. No service, Git or acceptance effects by this author.

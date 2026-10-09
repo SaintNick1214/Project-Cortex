@@ -1,0 +1,19 @@
+{
+  "extends": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "declaration": false,
+    "declarationMap": false,
+    "rootDir": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion"
+  },
+  "include": [
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/memorySpaces.test.ts",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/helpers/cleanup.ts",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/runtimeRegistryClient/registry-bridge.test.ts",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/tests/unit/scoped-cleanup-routing.test.ts"
+  ],
+  "exclude": [
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/node_modules",
+    "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/dist"
+  ]
+}

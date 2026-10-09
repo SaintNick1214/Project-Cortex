@@ -1,0 +1,97 @@
+{
+  "node": "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+  "workspace": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+  "workingRoot": "/Users/SaintNick/.codex/tmp/cortex-ci-command-repair3-w_xtomna",
+  "cleanEnvironmentNames": [
+    "CI",
+    "CORTEX_BOOTSTRAP_DEPENDENCY_BINDING",
+    "CORTEX_BOOTSTRAP_DEPENDENCY_ROOT",
+    "CORTEX_BOOTSTRAP_NPM_ROOT",
+    "CORTEX_CI_AUTH_PRIVATE_KEY",
+    "CORTEX_RUNTIME_GUARD",
+    "CORTEX_RUNTIME_NODE20_0",
+    "CORTEX_RUNTIME_NODE20_20",
+    "CORTEX_RUNTIME_NODE_MINIMUM",
+    "CORTEX_TEST_ENV_MODE",
+    "HOME",
+    "LANG",
+    "NO_COLOR",
+    "PATH",
+    "TMPDIR"
+  ],
+  "commands": [
+    {
+      "name": "prepare3",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "scripts/ci/command-fixtures.mjs",
+        "prepare",
+        "--directory",
+        "/Users/SaintNick/.codex/tmp/cortex-ci-command-repair3-w_xtomna/fixtures",
+        "--env-file",
+        "/Users/SaintNick/.codex/tmp/cortex-ci-command-repair3-w_xtomna/exports"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "pid": 14651,
+      "exit": 0,
+      "forced": false,
+      "seconds": 6.39,
+      "pidAbsent": true,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor2/cli-repair3/prepare3.log",
+      "logSHA256": "67a374a27145ca51065326f815dd421ec7739a46388697120da2496fcf817c8f"
+    },
+    {
+      "name": "helper-tests3",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--test",
+        "scripts/ci/command-fixtures.test.mjs"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "pid": 14677,
+      "exit": 0,
+      "forced": false,
+      "seconds": 0.311,
+      "pidAbsent": true,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor2/cli-repair3/helper-tests3.log",
+      "logSHA256": "d16b580cbe547ec349a6a8907f9920a4b85e0c0ffb32e65b36cff8087ded4cfb"
+    },
+    {
+      "name": "cli-fast3",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/npm",
+        "run",
+        "test:fast",
+        "--workspace=@cortexmemory/cli",
+        "--",
+        "--runInBand"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "pid": 14689,
+      "exit": 0,
+      "forced": false,
+      "seconds": 225.51,
+      "pidAbsent": true,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor2/cli-repair3/cli-fast3.log",
+      "logSHA256": "d1b2108b86295f01c9b9566fca0865d92ebd1640a71ac0d32193a65f939a21f5"
+    },
+    {
+      "name": "cleanup3",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "scripts/ci/command-fixtures.mjs",
+        "cleanup",
+        "--directory",
+        "/Users/SaintNick/.codex/tmp/cortex-ci-command-repair3-w_xtomna/fixtures"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "pid": 17799,
+      "exit": 0,
+      "forced": false,
+      "seconds": 0.047,
+      "pidAbsent": true,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor2/cli-repair3/cleanup3.log",
+      "logSHA256": "4850038b32e39841f597cbd2e641510c5c8bb642ce7412ba779be4754df51e2f"
+    }
+  ]
+}

@@ -1,0 +1,108 @@
+{
+  "commands": [
+    {
+      "name": "helper-tests-final3",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--test",
+        "scripts/ci/command-fixtures.test.mjs"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "pid": 18049,
+      "exit": 0,
+      "forced": false,
+      "seconds": 0.594,
+      "pidAbsent": true,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor2/cli-repair3/helper-tests-final3.log",
+      "logSHA256": "4b0fbc470ec55a8552d1bfb2e199d6b8c5c4604df091189da1e9dcb6f4884bd5"
+    },
+    {
+      "name": "helper-lint3",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "node_modules/eslint/bin/eslint.js",
+        "--no-ignore",
+        "--config",
+        "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor2/cli-repair3/lint-config3.mjs",
+        "scripts/ci/command-fixtures.mjs",
+        "scripts/ci/command-fixtures.test.mjs",
+        "scripts/ci/command-runtime-guard.cjs"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "pid": 18061,
+      "exit": 0,
+      "forced": false,
+      "seconds": 0.316,
+      "pidAbsent": true,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor2/cli-repair3/helper-lint3.log",
+      "logSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "cli-types3",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/npm",
+        "run",
+        "typecheck",
+        "--workspace=@cortexmemory/cli"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "pid": 18062,
+      "exit": 0,
+      "forced": false,
+      "seconds": 1.609,
+      "pidAbsent": true,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor2/cli-repair3/cli-types3.log",
+      "logSHA256": "78f5d8500c00df99b5bbb98884e6aadafd0c8358d50eedb100f98211eda0f69e"
+    },
+    {
+      "name": "syntax-command-fixtures.mjs",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--check",
+        "scripts/ci/command-fixtures.mjs"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "pid": 18087,
+      "exit": 0,
+      "forced": false,
+      "seconds": 0.047,
+      "pidAbsent": true,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor2/cli-repair3/syntax-command-fixtures.mjs.log",
+      "logSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "syntax-command-fixtures.test.mjs",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--check",
+        "scripts/ci/command-fixtures.test.mjs"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "pid": 18088,
+      "exit": 0,
+      "forced": false,
+      "seconds": 0.025,
+      "pidAbsent": true,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor2/cli-repair3/syntax-command-fixtures.test.mjs.log",
+      "logSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "syntax-command-runtime-guard.cjs",
+      "argv": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/node",
+        "--check",
+        "scripts/ci/command-runtime-guard.cjs"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+      "pid": 18089,
+      "exit": 0,
+      "forced": false,
+      "seconds": 0.041,
+      "pidAbsent": true,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor2/cli-repair3/syntax-command-runtime-guard.cjs.log",
+      "logSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "credentialsInEnvironment": false,
+  "serviceCalls": 0
+}

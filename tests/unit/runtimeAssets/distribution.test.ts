@@ -11,7 +11,7 @@ afterEach(async () => { await Promise.all(owned.splice(0).map(path => rm(path, {
 async function fixture() {
   const root = await mkdtemp(join(tmpdir(), "cortex-assets-distribution-")); owned.push(root);
   const source = join(root, "source"); const output = join(root, "output"); await mkdir(join(source, "convex-dev"), { recursive: true });
-  await writeFile(join(source, "package.json"), JSON.stringify({ version: "fixture", peerDependencies: { convex: "^1.46.0" }, dependencies: { "@convex-dev/agent": "0.7.3" } }));
+  await writeFile(join(source, "package.json"), JSON.stringify({ version: "fixture", peerDependencies: { convex: "^1.46.0" }, dependencies: { "@convex-dev/agent": "0.7.3" }, devDependencies: { "@types/node": "^26.6.4" } }));
   await writeFile(join(source, "convex-dev/schema.ts"), 'import { defineSchema, defineTable } from "convex/server"; export default defineSchema({ assets: defineTable({}) });');
   await writeFile(join(source, "convex-dev/convex.config.ts"), 'import { defineApp } from "convex/server"; import agent from "@convex-dev/agent/convex.config"; const app = defineApp(); app.use(agent, { name: "agent" }); export default app;');
   await writeFile(join(source, "convex-dev/runtimeAssetsHttp.ts"), 'export const uploadAsset = "upload"; export const downloadAsset = "download"; export const assetOptions = "options";');

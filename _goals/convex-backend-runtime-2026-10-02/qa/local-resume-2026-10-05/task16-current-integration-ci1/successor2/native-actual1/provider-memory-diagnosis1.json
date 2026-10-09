@@ -1,0 +1,263 @@
+{
+  "status": "ACTUAL_MEMORY_ADMISSION_FAILURE_DIAGNOSED",
+  "requestId": "provider-remote-37914802753-1",
+  "runId": "run:4f3ee145dc3c08d5300c2b461c83a0e01d22697446b1fee1eb2f85ad729e118c",
+  "requestIdentityHash": "4f3ee145dc3c08d5300c2b461c83a0e01d22697446b1fee1eb2f85ad729e118c",
+  "requestBindingVerifiedByCurrentCanonicalIdentity": true,
+  "responseStatus": "complete",
+  "memoryStatus": "failed",
+  "definitionHash": "7ad56c5a61ac75c83c6e1705e79fb6426109ef1a0adeebdb18e923511ea2f9ba",
+  "agentOperationCount": 1,
+  "canonicalOutputCount": 1,
+  "agentIngestionCount": 1,
+  "userEvent": {
+    "_id": "r17czw346r2ewrbpry620xbc418fzwr2",
+    "_creationTime": 1791541452173.453,
+    "tenantId": "cortex-ci-37914802753-1-sdk",
+    "memorySpaceId": "cortex-ci-37914802753-1-sdk-space",
+    "ownerPrincipalId": "nh74vbvw8062st9vg0va179jrx8fyj87",
+    "createdAt": 1791541452173,
+    "updatedAt": 1791541456776,
+    "eventId": "ingestion:fbd109abbdd68c2a814c2950611ae311b50dacf55fad1666f2be8d5fad54050b",
+    "sequence": 3,
+    "lineage": {
+      "role": "user",
+      "sourceEventId": "transcript:conversation:4f3ee145dc3c08d5300c2b461c83a0e01d22697446b1fee1eb2f85ad729e118c:kx72kf04ek0peq0jby95ysbffn8fzm5t",
+      "sourceId": "transcript:conversation:4f3ee145dc3c08d5300c2b461c83a0e01d22697446b1fee1eb2f85ad729e118c:kx72kf04ek0peq0jby95ysbffn8fzm5t",
+      "sourceRevision": 1,
+      "trust": "user_assertion"
+    },
+    "contentHash": "59550cbaaf73042e42b9ce61215a3c9386aa3190cfaee50a9742069e80368c4f",
+    "conversationId": "conversation:4f3ee145dc3c08d5300c2b461c83a0e01d22697446b1fee1eb2f85ad729e118c",
+    "nativeMessageId": "kx72kf04ek0peq0jby95ysbffn8fzm5t",
+    "eligibility": "eligible",
+    "factsState": "failed",
+    "vectorsState": "pending",
+    "profile": {
+      "chunking": "codepoint-1600-overlap-200-v1",
+      "dimensions": 1536,
+      "indexName": "by_default_embedding_v1",
+      "modelId": "openai/text-embedding-3-small",
+      "normalization": "text-nfc-lf-v1",
+      "profileId": "cortex-text-small-1536-v1"
+    },
+    "runId": "run:4f3ee145dc3c08d5300c2b461c83a0e01d22697446b1fee1eb2f85ad729e118c"
+  },
+  "assistantEvent": {
+    "_id": "r175q5x48t7d73njd3n33crke58fz56d",
+    "_creationTime": 1791541480632.0745,
+    "tenantId": "cortex-ci-37914802753-1-sdk",
+    "memorySpaceId": "cortex-ci-37914802753-1-sdk-space",
+    "ownerPrincipalId": "nh74vbvw8062st9vg0va179jrx8fyj87",
+    "createdAt": 1791541480632,
+    "updatedAt": 1791541483138,
+    "eventId": "ingestion:5b08741bbc8c47c5e9799c8af4e6b2df172504c99ea3fcd489945366a78174fc",
+    "sequence": 4,
+    "lineage": {
+      "role": "assistant",
+      "sourceEventId": "transcript:conversation:4f3ee145dc3c08d5300c2b461c83a0e01d22697446b1fee1eb2f85ad729e118c:kx73wd4znzqw0kd4je08fm3abh8fzk64",
+      "sourceId": "transcript:conversation:4f3ee145dc3c08d5300c2b461c83a0e01d22697446b1fee1eb2f85ad729e118c:kx73wd4znzqw0kd4je08fm3abh8fzk64",
+      "sourceRevision": 1,
+      "trust": "assistant_claim"
+    },
+    "contentHash": "f8ba6eb72bb20de1eb134fb4f0126b8029131850051d64155bb6cc2b5766cadf",
+    "conversationId": "conversation:4f3ee145dc3c08d5300c2b461c83a0e01d22697446b1fee1eb2f85ad729e118c",
+    "nativeMessageId": "kx73wd4znzqw0kd4je08fm3abh8fzk64",
+    "eligibility": "eligible",
+    "factsState": "skipped",
+    "vectorsState": "complete",
+    "graphState": "pending",
+    "graphProfilesComplete": [],
+    "vectorProfilesComplete": [
+      "cortex-text-small-1536-v1"
+    ],
+    "profile": {
+      "chunking": "codepoint-1600-overlap-200-v1",
+      "dimensions": 1536,
+      "indexName": "by_default_embedding_v1",
+      "modelId": "openai/text-embedding-3-small",
+      "normalization": "text-nfc-lf-v1",
+      "profileId": "cortex-text-small-1536-v1"
+    },
+    "runId": "run:4f3ee145dc3c08d5300c2b461c83a0e01d22697446b1fee1eb2f85ad729e118c"
+  },
+  "stages": [
+    {
+      "_id": "rd7284dz4rtxxh70kxnxw7cxfd8fykhz",
+      "_creationTime": 1791541452173.4536,
+      "tenantId": "cortex-ci-37914802753-1-sdk",
+      "memorySpaceId": "cortex-ci-37914802753-1-sdk-space",
+      "updatedAt": 1791541452173,
+      "eventId": "ingestion:fbd109abbdd68c2a814c2950611ae311b50dacf55fad1666f2be8d5fad54050b",
+      "stage": "vectors",
+      "state": "pending",
+      "attempt": 0,
+      "leaseVersion": 0
+    },
+    {
+      "_id": "rd772rdp3jgx09c28gx7z2rnb98fy4zb",
+      "_creationTime": 1791541452173.4534,
+      "tenantId": "cortex-ci-37914802753-1-sdk",
+      "memorySpaceId": "cortex-ci-37914802753-1-sdk-space",
+      "updatedAt": 1791541456776,
+      "eventId": "ingestion:fbd109abbdd68c2a814c2950611ae311b50dacf55fad1666f2be8d5fad54050b",
+      "stage": "facts",
+      "state": "failed",
+      "attempt": 1,
+      "leaseVersion": 0,
+      "failureCode": "INDEXING_ADMISSION_FAILED"
+    },
+    {
+      "_id": "rd79qyt0jkkeqazpv3e0w2xp8d8fy0gh",
+      "_creationTime": 1791541452173.4531,
+      "tenantId": "cortex-ci-37914802753-1-sdk",
+      "memorySpaceId": "cortex-ci-37914802753-1-sdk-space",
+      "updatedAt": 1791541456233,
+      "eventId": "ingestion:fbd109abbdd68c2a814c2950611ae311b50dacf55fad1666f2be8d5fad54050b",
+      "stage": "extract",
+      "state": "complete",
+      "attempt": 1,
+      "leaseVersion": 1,
+      "leaseExpiresAt": 1791541572730,
+      "receiptId": "stage:cee3c2acbefe129308b973d8d8e4a83f7061050d8b6e051e04d037f0a3c0b578",
+      "policyCanonicalSha256": "d730b7f27bbfda02e3248a3fcbd94e3ca9b713a949a23ef85f0b392b12b23c57",
+      "payloadCanonicalSha256": "52cbef6a73e9ea092978526f7610f2d0e80e2cc7de7be4a8141c8cebfc53aef9"
+    },
+    {
+      "_id": "rd7aa5nttbv9g2e9kna7gfdfh98fzsqx",
+      "_creationTime": 1791541480632.075,
+      "tenantId": "cortex-ci-37914802753-1-sdk",
+      "memorySpaceId": "cortex-ci-37914802753-1-sdk-space",
+      "updatedAt": 1791541480632,
+      "eventId": "ingestion:5b08741bbc8c47c5e9799c8af4e6b2df172504c99ea3fcd489945366a78174fc",
+      "stage": "facts",
+      "state": "skipped",
+      "attempt": 0,
+      "leaseVersion": 0
+    },
+    {
+      "_id": "rd7abfxkgwhp2eab4agnjxkq5h8fyewg",
+      "_creationTime": 1791541480632.0747,
+      "tenantId": "cortex-ci-37914802753-1-sdk",
+      "memorySpaceId": "cortex-ci-37914802753-1-sdk-space",
+      "updatedAt": 1791541480632,
+      "eventId": "ingestion:5b08741bbc8c47c5e9799c8af4e6b2df172504c99ea3fcd489945366a78174fc",
+      "stage": "extract",
+      "state": "skipped",
+      "attempt": 0,
+      "leaseVersion": 0
+    },
+    {
+      "_id": "rd7amqksxk2dbg9dfgs7a7esgx8fzx1v",
+      "_creationTime": 1791541480632.0752,
+      "tenantId": "cortex-ci-37914802753-1-sdk",
+      "memorySpaceId": "cortex-ci-37914802753-1-sdk-space",
+      "updatedAt": 1791541483138,
+      "eventId": "ingestion:5b08741bbc8c47c5e9799c8af4e6b2df172504c99ea3fcd489945366a78174fc",
+      "stage": "vectors",
+      "state": "complete",
+      "attempt": 1,
+      "leaseVersion": 1,
+      "leaseExpiresAt": 1791541601009,
+      "receiptId": "2df9c7964f182a10f1678962c56ee94ef75a4f20bb6efa746348f5be1db058d0",
+      "policyCanonicalSha256": "cd0f746b46dfd3fdf4d3125379f93f76ba00e45a029d53fb4bf131ab37eaf751",
+      "payloadCanonicalSha256": "e740011fe6c6f87a49e27dcb6be8c8932d290a8dcd34393b6ba5ec1edbeb93f6"
+    }
+  ],
+  "underlyingClaimDenial": {
+    "identifier": "runtimeIngestion:claim",
+    "udfType": "Mutation",
+    "timestamp": 1791541456.7747548,
+    "executionTime": 0.26150507,
+    "requestId": "35ec5f32a4af597f",
+    "executionId": "f9eaf1b8-60eb-43ae-a097-1d1845644200",
+    "errorPresent": true,
+    "errorSha256": "27c31bf70f63538001a00d17b912fb0aa9ebb62a7c8c32bc268d87533559778e",
+    "staticCodes": [
+      "CAPABILITY_UNAVAILABLE",
+      "not_dispatched"
+    ],
+    "sourceFrames": [
+      "runtimeModelPolicy.ts:43:0",
+      "runtimeModelPolicy.ts:198:0",
+      "runtimeModelPolicy.ts:266:0",
+      "runtimeModelPolicy.ts:513:2",
+      "runtimeIngestion.ts:239:228"
+    ]
+  },
+  "selectedOperation": "facts.resolve",
+  "selectedProof": {
+    "receiptId": "gateway-gpt4omini-chat-20261008-v3",
+    "modelId": "openai/gpt-4o-mini",
+    "nativeInterface": "chat",
+    "priceRevision": "openrouter-2026-10-08-candidate",
+    "boundRevision": "text-8192-512-schema-v2",
+    "checkedAt": 1791449412383,
+    "expiresAt": 1791535812383,
+    "expiresAtUtc": "2026-10-09T08:50:12.383000+00:00",
+    "compiledProofSha256": "80ad5399b021304d2cdbfdbdb630e766683967a86fcb677975c4cf6aec14b1d0",
+    "qualificationRow": {
+      "_id": "ss74przbrfgzh4pm9j7zvapsax8fze6n",
+      "_creationTime": 1791538103171.8555,
+      "receiptId": "gateway-gpt4omini-chat-20261008-v3",
+      "version": 14,
+      "active": true,
+      "createdAt": 1791538103171,
+      "root": {
+        "manifestId": "cortex-gateway-agent-defaults-2026-10-08",
+        "revision": 14,
+        "hash": "5c82264881e32e95e47935041b2a778f35f3b34dfc1e1bda9a4548a3728bdb83",
+        "artifactRevision": "da3160d9b30cc2db61a072ce8967f8c6dafa689bb3eb857ec057534e544f6224",
+        "evidenceHash": "da3160d9b30cc2db61a072ce8967f8c6dafa689bb3eb857ec057534e544f6224",
+        "acceptanceHash": "da3160d9b30cc2db61a072ce8967f8c6dafa689bb3eb857ec057534e544f6224"
+      },
+      "canonicalSha256": "97bfaa446600adcc512865d78276d0e2c924916ea663524ec0061078d11e9116"
+    }
+  },
+  "sourceExplanation": "Facts claim maps to facts.resolve and calls resolve before planning. V14 keeps its old bound/price selector. The actual failure stack reaches assertCurrentEvidence at line198 after expiry; the claim rolls back, then failUnclaimed records INDEXING_ADMISSION_FAILED. No facts.resolve operation/attempt was admitted. Fresh extraction/query/assistant embedding and Agent completion do not establish complete user indexing.",
+  "sourcePins": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeIngestion.ts",
+      "bytes": 51714,
+      "sha256": "a0175402e2785b79a15b470c588530308101fcbd69f663d86dadd2ac0cbf1bab",
+      "matchesExecutedHead": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicy.ts",
+      "bytes": 109038,
+      "sha256": "31d28813be5b32c4a5a93b42a389d01273ffa368dc27f0f762156aec1c129e19",
+      "matchesExecutedHead": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeGatewayQualifications.ts",
+      "bytes": 25994,
+      "sha256": "ec0bdc4206270dbd4a3bf2aea9ccbbcb8209060ad0d67f182fa5684e1a91a44f",
+      "matchesExecutedHead": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeGatewayMediaQualifications.ts",
+      "bytes": 18693,
+      "sha256": "41737855c394577a6d3118cbdaf135399ae1c7f33beeba5e75517435ba78177d",
+      "matchesExecutedHead": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeModelPolicyBootstrap.ts",
+      "bytes": 4812,
+      "sha256": "6b5f26d513f5ceacb12f67fae7b335d1f183f993f2add4d52212ccbb4a94c1d4",
+      "matchesExecutedHead": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/src/domain/model-policy.ts",
+      "bytes": 29390,
+      "sha256": "7c95e7aeff4a9c4db9ad0af28017cedaa07caeec2914cf9ee46d46716d15eb37",
+      "matchesExecutedHead": true
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/src/domain/transcript.ts",
+      "bytes": 6843,
+      "sha256": "0273f5984e634affbdd77a7980399fd7f2d8ebc96f8b460d4d059c67b3266d13",
+      "matchesExecutedHead": true
+    }
+  ],
+  "noRepairOrRetry": true
+}

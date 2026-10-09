@@ -12,7 +12,7 @@ async function fixture() {
   const root = await mkdtemp(join(tmpdir(), "cortex-merged-closure-")); owned.push(root);
   const source = join(root, "source"), output = join(root, "output");
   async function save(path: string, text: string) {await mkdir(join(source, path, ".."), {recursive: true}); await writeFile(join(source, path), text);}
-  await save("package.json", JSON.stringify({version: "0.38.0", peerDependencies: {convex: "^1.46.0"}, dependencies: {}}));
+  await save("package.json", JSON.stringify({version: "0.38.0", peerDependencies: {convex: "^1.46.0"}, dependencies: {}, devDependencies: {"@types/node": "^26.6.4"}}));
   await save("convex-dev/schema.ts", 'import { defineSchema, defineTable } from "convex/server"; import { tables } from "./lib/provenance"; export default defineSchema({ runtime: defineTable({}), ...tables });');
   await save("convex-dev/lib/provenance.ts", 'import { defineTable } from "convex/server"; export const tables = { references: defineTable({}) };');
   await save("convex-dev/convex.config.ts", 'import { defineApp } from "convex/server"; import agent from "@convex-dev/agent/convex.config"; const app = defineApp(); app.use(agent, {name: "agent"}); export default app;');

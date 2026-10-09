@@ -1,0 +1,101 @@
+{
+  "version": 1,
+  "capturedAt": "2026-10-09T10:30:56.706501+00:00",
+  "candidateDigest": "3867ff1a8e0001de4dda76f2f78ae4b3ecb69b4b0d2761b90a1e50439fec6c76",
+  "currentControlled": {
+    "passed": 51,
+    "failed": 0,
+    "skipped": 0,
+    "processExitCode": 0,
+    "forceExit": false,
+    "scope": "offline mocked transports with real registration-kind checks; no native service acceptance",
+    "result": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor2/native-proof-repair2/controlled-current3.results.json",
+      "bytes": 24259,
+      "sha256": "c32e020eef5b6ec8ce011fd8a0fc863831c80d14dd636eda07203287f1cc892b"
+    },
+    "log": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor2/native-proof-repair2/controlled-current3.log",
+      "bytes": 7720,
+      "sha256": "a9970d23fe91b4eb501cc22b4aad35dcf7d0d6073fbf79e57853e421e78f80ea"
+    }
+  },
+  "focusedTypecheck": {
+    "exitCode": 0,
+    "config": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor2/native-proof-repair2/tsconfig.focused2.json",
+      "bytes": 970,
+      "sha256": "4ffbf5e1a7236598180bea81e9ec8a562a9cb1bd06f588cab8089b796f5d893e"
+    },
+    "log": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor2/native-proof-repair2/focused-types3.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "applicability": "Only subsequent change removed a lint-confirmed unused generated API import; no executable/type contract changed."
+  },
+  "scopedLint": {
+    "exitCode": 0,
+    "errors": 0,
+    "warnings": 2,
+    "log": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor2/native-proof-repair2/scoped-lint4.log",
+      "bytes": 481,
+      "sha256": "a6e5c3639708bffe70528da45aa99e603209335f575e778b7c3b145f0c33e48e"
+    }
+  },
+  "diffCheck": {
+    "exitCode": 0
+  },
+  "preservedFailures": [
+    {
+      "kind": "causal no-fix cleanup control",
+      "passed": 0,
+      "failed": 1,
+      "exitCode": 1,
+      "result": {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor2/native-proof-repair2/controlled-red1.results.json",
+        "bytes": 6969,
+        "sha256": "e231a3ab1a98c87bc7a24015ff3a0bb70a53f84a06603462469bf5722ce2f61a"
+      }
+    },
+    {
+      "kind": "owned mock assertion on wrapped action method",
+      "passed": 50,
+      "failed": 1,
+      "exitCode": 1,
+      "result": {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor2/native-proof-repair2/controlled-current1.results.json",
+        "bytes": 25370,
+        "sha256": "c00ced72830e339565f04bed15dedc333e50052c2f71d3efd005467b2be76c59"
+      }
+    },
+    {
+      "kind": "QA tsconfig missing explicit rootDir",
+      "exitCode": 2,
+      "log": {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor2/native-proof-repair2/focused-types1.log",
+        "bytes": 2268,
+        "sha256": "e4b95b21fb3065a2bcf2ea21bdb8f55c44cb283680a9fbc62ecc4154ada9f529"
+      }
+    },
+    {
+      "kind": "whole import exposed out-of-scope mutable receipt union; resolved by using operatorReadApi only for Query reads",
+      "exitCode": 2,
+      "log": {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor2/native-proof-repair2/focused-types2.log",
+        "bytes": 1342,
+        "sha256": "17c974ee468f42effa27f106e512078812d1ea8fb70ede9ad809f20dd56071ca"
+      }
+    },
+    {
+      "kind": "unused generated API import after correction",
+      "exitCode": 1,
+      "log": {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor2/native-proof-repair2/scoped-lint3.log",
+        "bytes": 625,
+        "sha256": "0d807dc0ccf70ae43c7989a914de41dac453b9c262721147afb2804b20997f20"
+      }
+    }
+  ]
+}

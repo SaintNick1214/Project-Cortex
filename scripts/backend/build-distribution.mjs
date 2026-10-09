@@ -93,6 +93,11 @@ export async function buildBackendDistribution({ sourceRoot, outputRoot }) {
       const tableObject = exported.expression.arguments[0].getText(rewrittenAst);
       result = result.slice(0, exported.getStart(rewrittenAst)) + `export const cortexTablesV1 = ${tableObject};\n`;
       result = result.replace('{ defineSchema, defineTable }', '{ defineTable }');
+      // Imported by the host schema (and genuine generated DataModel), this
+      // source-owned reference supplies the required Node ambient declarations
+      // even when an existing host deliberately has compilerOptions.types: [].
+      // Host tsconfig bytes remain untouched; the manifest binds @types/node.
+      result = `/// <reference types="node" />\n${result}`;
     }
     entries.set(name, result);
   }
@@ -183,7 +188,13 @@ export async function buildBackendDistribution({ sourceRoot, outputRoot }) {
     entries.set("_cortex/http.ts", helper); origins.set("_cortex/http.ts", "convex-dev/http.ts"); sources.set("convex-dev/http.ts", httpSource);
   }
   const pkg = JSON.parse(await fs.readFile(path.join(root, "package.json"), "utf8"));
-  const manifest = { formatVersion: 1, distributionId: `cortex-backend-v1-sdk-${pkg.version}`, sdkVersion: pkg.version, tables: [...tableNames].sort(), components: componentNames, httpRoutes: httpRoutes.sort(), dependencies: { convex: pkg.peerDependencies.convex, ...pkg.dependencies }, files: [...entries].sort(([a], [b]) => a.localeCompare(b)).map(([name, text]) => ({ path: name, sha256: hash(text), sourcePath: origins.get(name), sourceSha256: hash(sources.get(origins.get(name))) })) };
+  // Installed functions compile in the host, so its Node declarations are a
+  // required direct dependency too. Bind the approved SDK declaration's base
+  // version; ambiguous ranges fail before replacing the previous distribution.
+  const nodeTypesDeclaration = pkg.devDependencies?.["@types/node"];
+  const nodeTypes = typeof nodeTypesDeclaration === "string" ? /^(?:[~^])?((?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*))$/.exec(nodeTypesDeclaration) : null;
+  if (!nodeTypes) throw new Error("Backend distribution requires a deterministic SDK @types/node declaration (exact, caret or tilde base version).");
+  const manifest = { formatVersion: 1, distributionId: `cortex-backend-v1-sdk-${pkg.version}`, sdkVersion: pkg.version, tables: [...tableNames].sort(), components: componentNames, httpRoutes: httpRoutes.sort(), dependencies: { convex: pkg.peerDependencies.convex, ...pkg.dependencies, "@types/node": nodeTypes[1] }, files: [...entries].sort(([a], [b]) => a.localeCompare(b)).map(([name, text]) => ({ path: name, sha256: hash(text), sourcePath: origins.get(name), sourceSha256: hash(sources.get(origins.get(name))) })) };
   await fs.rm(output, { recursive: true, force: true });
   for (const [name, text] of entries) { await fs.mkdir(path.dirname(path.join(output, name)), { recursive: true }); await fs.writeFile(path.join(output, name), text); }
   await fs.writeFile(path.join(output, "manifest.json"), JSON.stringify(manifest, null, 2) + "\n");

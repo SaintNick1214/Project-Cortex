@@ -46,7 +46,7 @@ it("plans an absent config without writes and actually enables strict TypeScript
       allowJs: true, strict: true, moduleResolution: "Bundler", jsx: "react-jsx",
       skipLibCheck: true, allowSyntheticDefaultImports: true, target: "ESNext",
       lib: ["ES2023", "dom"], forceConsistentCasingInFileNames: true,
-      module: "ESNext", isolatedModules: true, noEmit: true,
+      module: "ESNext", isolatedModules: true, noEmit: true, types: ["node"],
     },
     include: ["./**/*"], exclude: ["./_generated"],
   });

@@ -38,7 +38,8 @@ export interface BackendInstallationPlan {
 const digest = (text: string | Buffer) => createHash("sha256").update(text).digest("hex");
 const parse = (name: string, text: string) => ts.createSourceFile(name, text, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
 const safeRelative = (value: string): boolean => Boolean(value) && !path.isAbsolute(value) && !value.split(/[\\/]/).some((piece) => !piece || piece === "." || piece === "..");
-// Convex 1.46's functions-root defaults, compatible with TypeScript 6.
+// Convex 1.46's functions-root defaults plus the runtime's explicit Node
+// ambient declarations, which TypeScript 6 no longer includes automatically.
 // Existing host configs remain owned by the host, including comments and formatting.
 const defaultFunctionsTsconfig = JSON.stringify({
   compilerOptions: {
@@ -54,6 +55,7 @@ const defaultFunctionsTsconfig = JSON.stringify({
     module: "ESNext",
     isolatedModules: true,
     noEmit: true,
+    types: ["node"],
   },
   include: ["./**/*"],
   exclude: ["./_generated"],

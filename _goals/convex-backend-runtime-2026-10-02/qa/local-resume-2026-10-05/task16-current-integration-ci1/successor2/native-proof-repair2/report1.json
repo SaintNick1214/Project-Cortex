@@ -1,0 +1,52 @@
+{
+  "version": 1,
+  "closedAt": "2026-10-09T10:30:56.706501+00:00",
+  "status": "OFFLINE_QA_REPAIR_PASS_NATIVE_SUCCESSOR_PENDING",
+  "candidateDigest": "3867ff1a8e0001de4dda76f2f78ae4b3ecb69b4b0d2761b90a1e50439fec6c76",
+  "changes": [
+    "Correct one native memory-space direct get call and 17 cleanup read calls to the actual cliOperator Query RPC kind.",
+    "Retain canonical contexts.list fresh Mutation registration, every delete mutation/argument, ownership prefix/auth/target guards and assertions.",
+    "Use existing concrete operatorReadApi types only for Query reads; preserve original mutation reference types.",
+    "Add real-registration cleanup regression proving eight owned categories removed, foreign rows retained, contexts Mutation preserved and no action called."
+  ],
+  "reviewedUnchanged": [
+    "tests/operation-sequences.test.ts",
+    "tests/gdprCascade.test.ts"
+  ],
+  "currentChecks": {
+    "controlledPassed": 51,
+    "skipped": 0,
+    "typesExitCode": 0,
+    "lintExitCode": 0,
+    "lintWarnings": 2,
+    "naturalOwnedJestExit": true
+  },
+  "historicalNativeFailure": {
+    "runId": 37914802753,
+    "jobId": 113768283048,
+    "passed": 114,
+    "failed": 1,
+    "total": 115,
+    "location": "tests/memorySpaces.test.ts:1469",
+    "raw": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor2/failure1/native-privacy1.log",
+      "bytes": 6366410,
+      "sha256": "bd76f6e959a7d20b080e2db209dc7b1783ce45e7aa83dcdb4d9f9ce33d23da1b"
+    },
+    "forcedJestExitIsNotNaturalCleanupProof": true,
+    "noNativeRerunHere": true
+  },
+  "effects": {
+    "serviceCalls": 0,
+    "modelRequests": 0,
+    "targetReads": 0,
+    "cleanupMutations": 0,
+    "deployments": 0,
+    "gitMutations": 0
+  },
+  "limitations": [
+    "Offline controls do not replace future native privacy CI evidence.",
+    "Separate CI final financial/retirement/provider-memory audit is authorized next and is not a source check."
+  ],
+  "sourceQuiet": true
+}

@@ -6,6 +6,7 @@ import type { Id } from "../../../convex-dev/_generated/dataModel";
 import { api } from "../../../convex-dev/_generated/api";
 import { AgentsAPI, AgentRegistryWriteReceiptError, AgentRegistryCapabilityError, AgentRegistryCommittedResultError } from "../../../src/agents";
 import { ResilienceLayer } from "../../../src/resilience";
+import { enableDeploymentOperator } from "../../../src/common/deploymentOperator";
 import type { GraphAdapter } from "../../../src/graph/types";
 import { createTestRunContext } from "../../helpers/isolation";
 import { TestCleanup, TestCleanupCapabilityError, ScopedCleanup } from "../../helpers/cleanup";
@@ -141,16 +142,19 @@ describe("global cleanup public-client capability", () => {
       expect(query).not.toHaveBeenCalled(); expect(mutation).not.toHaveBeenCalled(); expect(action).not.toHaveBeenCalled();
     } finally { await client.close(); jest.restoreAllMocks(); }
   });
-  it("scoped memory cleanup deletes only owned per-ID targets", async () => {
+  it("scoped operator memory cleanup uses Query reads and deletes only owned per-ID targets", async () => {
     const client = new ConvexClient("https://example.convex.cloud", { disabled: true, logger: false });
     const query = jest.spyOn(client, "query"); const mutation = jest.spyOn(client, "mutation").mockResolvedValue({ deleted: true });
     const context = createTestRunContext(); const owned = context.memorySpaceId("space");
-    mutation.mockResolvedValueOnce({ spaces: [{ memorySpaceId: "foreign-space" }, { memorySpaceId: owned }] }).mockResolvedValueOnce([{ memoryId: "owned-memory" }]);
+    query.mockResolvedValueOnce({ spaces: [{ memorySpaceId: "foreign-space" }, { memorySpaceId: owned }] }).mockResolvedValueOnce([{ memoryId: "owned-memory" }]);
+    enableDeploymentOperator(client);
     try {
       await expect(new ScopedCleanup(client, context).cleanupMemories()).resolves.toBe(1);
-      expect(query).not.toHaveBeenCalled();
-      expect(mutation).toHaveBeenCalledTimes(3);
-      expect(mutation).toHaveBeenCalledWith(api.memories.deleteMemory, { memorySpaceId: owned, memoryId: "owned-memory" });
+      expect(query).toHaveBeenCalledTimes(2);
+      expect(query.mock.calls.map(([ref]) => getFunctionName(ref))).toEqual(["cliOperator/memorySpaces:list", "cliOperator/memories:list"]);
+      expect(mutation).toHaveBeenCalledTimes(1);
+      expect(getFunctionName(mutation.mock.calls[0][0])).toBe("cliOperator/memories:deleteMemory");
+      expect(mutation.mock.calls[0][1]).toEqual({ memorySpaceId: owned, memoryId: "owned-memory" });
     } finally { await client.close(); jest.restoreAllMocks(); }
   });
 
