@@ -1,0 +1,42 @@
+{
+  "status": "CONCRETE_FAILURE_LOCATED_UNDERLYING_CAUSE_UNAVAILABLE",
+  "runId": 37998200336,
+  "headSha": "2a5230f91525fb6e937e213d53886231fcd40f59",
+  "jobId": 114050051813,
+  "rawLog": "logs/collector-pr-job-114050051813.log",
+  "logLines": [
+    495,
+    510,
+    511
+  ],
+  "startedAt": "2026-10-09T22:19:25.9053539Z",
+  "failedAt": "2026-10-09T22:19:51.4307328Z",
+  "failedCommand": "node scripts/ci/runtime-fixtures.mjs provision sdk > ci-sdk-fixtures.json",
+  "publicDiagnostic": "CI_FIXTURE_OPERATOR_CALL_FAILED",
+  "sourceBoundary": "scripts/ci/runtime-fixtures.mjs operator() lines95-101 invokes official Convex CLI run with60s timeout and masks any exec failure; this occurred after~25.5s, so no60s timeout claim is supported. Provision sequence calls runtimeAuth:provision then runtimeAuth:recheck; this generic code alone does not establish which call/identity failed or whether an earlier mutation committed.",
+  "underlyingCause": "Child stdout/stderr/error are not emitted by the catch; no exact backend cause is available in the hosted raw job receipt. Native may separately inspect current deployed diagnostic state under Root authorization.",
+  "dependentSkipped": [
+    {
+      "jobId": 114050893119,
+      "name": "Test TypeScript SDK (Shard ${{ matrix.shard }}/5)",
+      "conclusion": "skipped"
+    },
+    {
+      "jobId": 114050893700,
+      "name": "Test Vercel AI Provider",
+      "conclusion": "skipped"
+    },
+    {
+      "jobId": 114050893744,
+      "name": "Test Cortex CLI",
+      "conclusion": "skipped"
+    },
+    {
+      "jobId": 114050893795,
+      "name": "Code Quality (Lint & Type Check)",
+      "conclusion": "skipped"
+    }
+  ],
+  "cleanup": "closed exact current scope retirement and six fresh role denials; financial state separately owned by Native",
+  "actionsTaken": "Read-only GitHub collection only. No edits/retries/dispatch/credential/config/model/backend calls."
+}

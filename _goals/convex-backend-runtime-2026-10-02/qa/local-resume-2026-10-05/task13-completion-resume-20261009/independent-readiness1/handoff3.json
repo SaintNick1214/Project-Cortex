@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "reviewer": "/root/fresh_goal_review",
+  "continuingCoherentReview": true,
+  "status": "PASS_GRAPH_WORKFLOW_SOURCE_DELTA_ACTUAL_PENDING",
+  "baseHead": "2a5230f91525fb6e937e213d53886231fcd40f59",
+  "source": {
+    "path": ".github/workflows/pr-checks.yml",
+    "sha256": "1ac5fae648009ac47eefb5f75714c0a736ac3c6fec566ca1654a524ac197a0fa",
+    "delta": "Only graph invocations187/190: explicit --forceExit=false plus timeout --kill-after=5s 240s",
+    "subprocessDeadlineSeconds": 240,
+    "stopBoundSeconds": 5,
+    "timeoutIsNotNaturalClose": true
+  },
+  "scores": {
+    "requirementFulfillment": 4,
+    "testQuality": 4,
+    "completeness": 4,
+    "codeQuality": 4,
+    "patternAdherence": 4,
+    "mean": 4
+  },
+  "knownReachableBreakingFindings": [],
+  "sourceAccepted": true,
+  "controls": {
+    "passed": 10,
+    "failed": 0,
+    "skipped": 0,
+    "exit": 0,
+    "naturalExit": true,
+    "seconds": 0.129,
+    "evidence": "../graph-close1/workflow-check-command2.json",
+    "assertionsUnchanged": true
+  },
+  "priorSourceReview": "report2.md",
+  "historicalInterval": {
+    "runId": 37998200336,
+    "conclusion": "FAILURE",
+    "cleanupClosed": true,
+    "cliProvisionSystemTimeoutSeconds": 22.478564468,
+    "underlyingCauseAndTransience": "UNKNOWN",
+    "zeroReportedUserMetricsNotProofOfNoEffect": true,
+    "rootGraph53NaturalClose": "NOT_PROVEN_INHERITED_FORCED_EXIT",
+    "optionalSemgrepCrashAndUnavailableSarifPreserved": true
+  },
+  "afterRead": {
+    "evidence": "../current-ci1/native-after1/handoff1.json",
+    "unchangedFinancialRows": true,
+    "uncertainMicroUsd": 5900000,
+    "activeSlots": 0,
+    "newRows": 0,
+    "prospectiveNextRunBaseline": true,
+    "noNewAdoptionGate": true
+  },
+  "finalActualVerdict": "OPEN_PENDING_FRESH_CURRENT_LINUX_RUN_AND_CLEANUP_AFTER_READ",
+  "originalCriteriaStillUngrantable": [
+    "13A1",
+    "13A2",
+    "13A4",
+    "14A1",
+    "16A3",
+    "17A2"
+  ],
+  "newCriteriaGrants": [],
+  "counts": {
+    "tasksAccepted": 13,
+    "totalTasks": 17,
+    "criteriaAccepted": 55,
+    "totalCriteria": 61,
+    "goalCriteria": 12
+  },
+  "fullGoalComplete": false,
+  "report": "report3.md",
+  "reviewerEffects": {
+    "productEdits": 0,
+    "tests": 0,
+    "gitActions": 0,
+    "serviceQueries": 0,
+    "serviceMutations": 0,
+    "modelCalls": 0,
+    "browserActions": 0,
+    "credentialReads": 0,
+    "newWrites": [
+      "report3.md",
+      "handoff3.json"
+    ]
+  }
+}

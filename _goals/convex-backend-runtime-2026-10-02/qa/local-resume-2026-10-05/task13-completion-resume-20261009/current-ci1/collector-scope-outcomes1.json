@@ -1,0 +1,194 @@
+{
+  "sdkControlled": {
+    "status": "NOT_RUN_UPSTREAM_PREREQUISITE_FAILED",
+    "discovery": "not run; artifact absent",
+    "tests": null
+  },
+  "sdkActual": {
+    "status": "NOT_RUN_UPSTREAM_PREREQUISITE_FAILED",
+    "resultsArtifact": "absent",
+    "tests": null
+  },
+  "cliControlledAndCommand": {
+    "status": "NOT_RUN_UPSTREAM_PREREQUISITE_FAILED",
+    "discovery": "not run; artifact absent",
+    "tests": null
+  },
+  "cliActual": {
+    "status": "NOT_RUN_UPSTREAM_PREREQUISITE_FAILED",
+    "resultsArtifact": "absent",
+    "tests": null
+  },
+  "providerControlled": {
+    "status": "NOT_RUN_UPSTREAM_PREREQUISITE_FAILED",
+    "discovery": "not run; artifact absent",
+    "tests": null
+  },
+  "providerActual": {
+    "status": "NOT_RUN_UPSTREAM_PREREQUISITE_FAILED",
+    "resultsArtifact": "absent",
+    "tests": null
+  },
+  "quality": {
+    "status": "SKIPPED_UPSTREAM_PREREQUISITE_FAILED"
+  },
+  "basicInstalled": {
+    "jobId": 114049494463,
+    "status": "PASS_ENABLED_OFFICIAL_CODEGEN_BUILD_AND_UNITS",
+    "counts": {
+      "tests": 112,
+      "passed": 112,
+      "failed": 0,
+      "skipped": 0
+    },
+    "liveChatPaidExecution": false
+  },
+  "canonicalInstalled": {
+    "jobId": 114049494474,
+    "status": "PASS_ENABLED_OFFICIAL_CODEGEN_AND_NEXT_BUILD",
+    "unitStep": "skipped by Basic-only matrix condition; no Jest count",
+    "liveChatPaidExecution": false
+  },
+  "chatInstalled": {
+    "jobId": 114049494487,
+    "status": "PASS_ENABLED_OFFICIAL_CODEGEN_AND_NEXT_BUILD",
+    "unitStep": "skipped by Basic-only matrix condition; no current auth UI test count",
+    "liveChatPaidExecution": false
+  },
+  "graphs": {
+    "jobId": 114049494278,
+    "status": "PASS_NATIVE_NEO4J_MEMGRAPH_BACKEND_CONTRACTS",
+    "counts": {
+      "tests": 57,
+      "passed": 57,
+      "failed": 0,
+      "skipped": 0
+    },
+    "normalClosure": {
+      "root53": "INHERITED_FORCED_EXIT; raw log line1203",
+      "provider4": "no forced-exit banner observed"
+    }
+  },
+  "privacy": {
+    "jobId": 114049494414,
+    "status": "PASS_NATIVE_SERIALIZED_EXPORT_ERASURE_SCOPE",
+    "counts": {
+      "tests": 217,
+      "passed": 217,
+      "failed": 0,
+      "skipped": 0
+    },
+    "files": [
+      "tests/user-export.test.ts",
+      "tests/fact-history-provenance.test.ts",
+      "tests/facts-revision-scope.test.ts",
+      "tests/domain-scope.test.ts",
+      "tests/domain-operations.test.ts",
+      "tests/memorySpaces.test.ts",
+      "tests/operation-sequences.test.ts",
+      "tests/gdprCascade.test.ts"
+    ]
+  },
+  "catalog": {
+    "jobId": 114049494028,
+    "status": "PASS_LINT_TYPES_AND_CATALOG_CONTRACTS",
+    "counts": {
+      "tests": 24,
+      "passed": 24,
+      "failed": 0,
+      "skipped": 0
+    }
+  },
+  "packedPublicBrowserContracts": {
+    "jobId": 114049494383,
+    "status": "PASS_BUILD_PACKED_BROWSER_OFFLINE_CI_RELEASE_INSTALL_REFUSAL",
+    "counts": {
+      "tests": 77,
+      "passed": 77,
+      "failed": 0,
+      "skipped": 0
+    },
+    "blocks": "53 CI offline guards +10 delivery/release +14 installer controls; separate public/browser contract script success has no assertion total"
+  },
+  "fixtureProvision": {
+    "jobId": 114050051813,
+    "status": "FAIL",
+    "failedStep": "Provision exact scoped JWT fixture identities through the internal operator API",
+    "guardedSdkAndCliDeploy": "PASS",
+    "compiledManifest16Install": "PASS",
+    "sdkProvisionCommandExit": 1,
+    "cliProvisionCommand": "not reached after sdk provision shell failure"
+  },
+  "cleanup": {
+    "jobId": 114050892772,
+    "status": "PASS_EXACT_OWNED_RETIREMENT_AND_FRESH_ROLE_DENIAL",
+    "receipts": [
+      {
+        "path": "artifacts/ci-runtime-cleanup-receipts/ci-cli-cleanup.json",
+        "retirement": {
+          "status": "RETIRED_FIXTURE_AUTHORITY",
+          "kind": "cli",
+          "retired": [
+            "cortex-ci-37998200336-1-cli",
+            "cortex-ci-37998200336-1-cli-other"
+          ],
+          "globalPurge": false,
+          "physicalRowDeletion": false
+        },
+        "verification": {
+          "status": "RETIRED_FIXTURE_READS_DENIED",
+          "kind": "cli",
+          "verifiedRoles": [
+            "owner",
+            "reader",
+            "outsider"
+          ]
+        }
+      },
+      {
+        "path": "artifacts/ci-runtime-cleanup-receipts/ci-sdk-cleanup.json",
+        "retirement": {
+          "status": "RETIRED_FIXTURE_AUTHORITY",
+          "kind": "sdk",
+          "retired": [
+            "cortex-ci-37998200336-1-sdk",
+            "cortex-ci-37998200336-1-sdk-other"
+          ],
+          "globalPurge": false,
+          "physicalRowDeletion": false
+        },
+        "verification": {
+          "status": "RETIRED_FIXTURE_READS_DENIED",
+          "kind": "sdk",
+          "verifiedRoles": [
+            "owner",
+            "reader",
+            "outsider"
+          ]
+        }
+      }
+    ]
+  },
+  "security": {
+    "status": "success",
+    "codeQL": "PASS",
+    "secretScanning": "PASS",
+    "dependencyReview": "PASS",
+    "license": "PASS",
+    "trivy": "completed and uploaded; workflow success is not an assertion of no vulnerabilities",
+    "semgrep": "UNAVAILABLE inherited action1.36.0 invalid severityMEDIUM exception suppressed by continue-on-error; SARIF upload skipped",
+    "stepsSkipped": [
+      {
+        "job": "API Security Scan (Semgrep)",
+        "step": "Upload SARIF file"
+      },
+      {
+        "job": "OpenAPI Security Audit",
+        "step": "Run 42Crunch API Security Audit"
+      }
+    ],
+    "jobsSkipped": [
+      "Supply Chain Security (Scorecard)"
+    ]
+  }
+}

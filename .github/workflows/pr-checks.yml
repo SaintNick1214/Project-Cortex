@@ -184,10 +184,10 @@ jobs:
             } finally { await driver.close(); }
           }
           JS
-          node --experimental-vm-modules node_modules/jest/bin/jest.js --runTestsByPath tests/graph/graphAdapter.test.ts tests/graph/managed-runtime-safety.test.ts --runInBand
+          timeout --kill-after=5s 240s node --experimental-vm-modules node_modules/jest/bin/jest.js --runTestsByPath tests/graph/graphAdapter.test.ts tests/graph/managed-runtime-safety.test.ts --runInBand --forceExit=false
           npx tsx scripts/cleanup-test-data.ts native
           cd packages/vercel-ai-provider
-          node --experimental-vm-modules ../../node_modules/jest/bin/jest.js --selectProjects graph --runInBand
+          timeout --kill-after=5s 240s node --experimental-vm-modules ../../node_modules/jest/bin/jest.js --selectProjects graph --runInBand --forceExit=false
 
   public-contracts:
     name: Packed package and browser contracts

@@ -1,0 +1,142 @@
+{
+  "status": "EXISTING_LOG_RESPONSE_CLEANUP_TIMING_ONLY",
+  "targets": [
+    {
+      "kind": "sdk",
+      "scopeCorrelation": "Function log has no args; exact current-run tenant IDs and role denials are established by the separate cleanup artifact. No args or principal identities inferred from function log.",
+      "capturedCleanupCompletions": [
+        {
+          "identifier": "runtimeAuth:deleteScope",
+          "timestamp": 1791584512.7136896,
+          "executionTimestamp": 1791584512.357,
+          "executionTime": 0.344579627,
+          "userExecutionTime": 0.006197321,
+          "requestId": "43cbd4c991597e34",
+          "executionId": "93708e82-b5c3-4f38-9620-ccff1091949f",
+          "usageStats": {
+            "databaseReadBytes": 343,
+            "databaseWriteBytes": 582,
+            "databaseIoReadBytes": 343,
+            "databaseIoWriteBytes": 582,
+            "databaseReadDocuments": 2,
+            "databaseWriteDocuments": 2,
+            "databaseWriteIndexRows": 6,
+            "storageReadBytes": 0,
+            "storageWriteBytes": 0,
+            "vectorIndexReadBytes": 0,
+            "vectorIndexWriteBytes": 0,
+            "textIndexQueryBytes": 0,
+            "textIndexWriteQueryBytes": 0,
+            "vectorIndexReadQueryBytes": 0,
+            "vectorIndexWriteQueryBytes": 0,
+            "networkEgressBytes": 0,
+            "memoryUsedMb": 64
+          },
+          "willRetry": false,
+          "occInfo": null,
+          "errorPresent": false
+        },
+        {
+          "identifier": "runtimeAuth:deleteScope",
+          "timestamp": 1791584513.6525323,
+          "executionTimestamp": 1791584513.443,
+          "executionTime": 0.201481407,
+          "userExecutionTime": 0.005886074,
+          "requestId": "fa8535491277f9ec",
+          "executionId": "182233d9-85e1-4505-809a-89a0d7902dc1",
+          "usageStats": {
+            "databaseReadBytes": 361,
+            "databaseWriteBytes": 618,
+            "databaseIoReadBytes": 361,
+            "databaseIoWriteBytes": 618,
+            "databaseReadDocuments": 2,
+            "databaseWriteDocuments": 2,
+            "databaseWriteIndexRows": 6,
+            "storageReadBytes": 0,
+            "storageWriteBytes": 0,
+            "vectorIndexReadBytes": 0,
+            "vectorIndexWriteBytes": 0,
+            "textIndexQueryBytes": 0,
+            "textIndexWriteQueryBytes": 0,
+            "vectorIndexReadQueryBytes": 0,
+            "vectorIndexWriteQueryBytes": 0,
+            "networkEgressBytes": 0,
+            "memoryUsedMb": 64
+          },
+          "willRetry": false,
+          "occInfo": null,
+          "errorPresent": false
+        }
+      ]
+    },
+    {
+      "kind": "cli",
+      "scopeCorrelation": "Function log has no args; exact current-run tenant IDs and role denials are established by the separate cleanup artifact. No args or principal identities inferred from function log.",
+      "capturedCleanupCompletions": [
+        {
+          "identifier": "runtimeAuth:deleteScope",
+          "timestamp": 1791584516.2181463,
+          "executionTimestamp": 1791584515.833,
+          "executionTime": 0.37564604,
+          "userExecutionTime": 0.009326931,
+          "requestId": "b2f0b7e083a8910c",
+          "executionId": "5e089223-3192-4523-9fae-8154f22e7b7b",
+          "usageStats": {
+            "databaseReadBytes": 0,
+            "databaseWriteBytes": 323,
+            "databaseIoReadBytes": 0,
+            "databaseIoWriteBytes": 323,
+            "databaseReadDocuments": 0,
+            "databaseWriteDocuments": 1,
+            "databaseWriteIndexRows": 3,
+            "storageReadBytes": 0,
+            "storageWriteBytes": 0,
+            "vectorIndexReadBytes": 0,
+            "vectorIndexWriteBytes": 0,
+            "textIndexQueryBytes": 0,
+            "textIndexWriteQueryBytes": 0,
+            "vectorIndexReadQueryBytes": 0,
+            "vectorIndexWriteQueryBytes": 0,
+            "networkEgressBytes": 0,
+            "memoryUsedMb": 64
+          },
+          "willRetry": false,
+          "occInfo": null,
+          "errorPresent": false
+        },
+        {
+          "identifier": "runtimeAuth:deleteScope",
+          "timestamp": 1791584517.4339583,
+          "executionTimestamp": 1791584517.125,
+          "executionTime": 0.291382662,
+          "userExecutionTime": 0.009367182,
+          "requestId": "954d3e13753e62b8",
+          "executionId": "302918ff-bb51-4539-aa4a-46fd04d01e9d",
+          "usageStats": {
+            "databaseReadBytes": 0,
+            "databaseWriteBytes": 347,
+            "databaseIoReadBytes": 0,
+            "databaseIoWriteBytes": 347,
+            "databaseReadDocuments": 0,
+            "databaseWriteDocuments": 1,
+            "databaseWriteIndexRows": 3,
+            "storageReadBytes": 0,
+            "storageWriteBytes": 0,
+            "vectorIndexReadBytes": 0,
+            "vectorIndexWriteBytes": 0,
+            "textIndexQueryBytes": 0,
+            "textIndexWriteQueryBytes": 0,
+            "vectorIndexReadQueryBytes": 0,
+            "vectorIndexWriteQueryBytes": 0,
+            "networkEgressBytes": 0,
+            "memoryUsedMb": 64
+          },
+          "willRetry": false,
+          "occInfo": null,
+          "errorPresent": false
+        }
+      ]
+    }
+  ],
+  "newServiceReads": 0
+}

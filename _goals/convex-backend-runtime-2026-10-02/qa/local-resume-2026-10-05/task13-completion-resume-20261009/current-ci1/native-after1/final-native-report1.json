@@ -1,0 +1,314 @@
+{
+  "status": "CURRENT_CI_FAILURE_ACCOUNTING_AND_OWNED_RETIREMENT_CLOSED",
+  "workflowRunId": 37998200336,
+  "headSha": "2a5230f91525fb6e937e213d53886231fcd40f59",
+  "closedAt": "2026-10-09T22:29:09.890739Z",
+  "ciConclusion": "FAILURE",
+  "dependentGovernedRuntimeTests": "Skipped after provisioning failure; no actual success claimed.",
+  "wholeCiAndCleanupCompleted": "Explicitly confirmed by Parent before this after-read; cleanup success independently recorded in downloaded role-denial artifacts.",
+  "snapshotStartedAt": "2026-10-09T22:27:10.945Z",
+  "snapshotCompletedAt": "2026-10-09T22:27:15.737Z",
+  "baseline": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-completion-resume-20261009/current-ci1/native-before1/before-native-report1.json",
+    "bytes": 6975,
+    "sha256": "81f00e1cd7a70ac70926f85ee64dec2c757f38dcb9b156e2d68806bbeb7c14fe"
+  },
+  "baselineWindow": [
+    "2026-10-09T22:06:18.671Z",
+    "2026-10-09T22:06:22.324Z"
+  ],
+  "targets": [
+    {
+      "kind": "sdk",
+      "target": {
+        "projectId": 3176493,
+        "deploymentName": "steady-snake-253",
+        "teamId": 325340,
+        "production": false,
+        "soleCloudDev": true,
+        "identityCheckStartedAt": "2026-10-09T22:27:11.138Z",
+        "identityCheckedAt": "2026-10-09T22:27:11.275Z"
+      },
+      "identityReadSeconds": 0.137,
+      "financialComparison": {
+        "runtimeBudgetAccounts": {
+          "beforeRows": 28,
+          "afterRows": 28,
+          "oldExactIdsAndCapturedFieldsRetained": true,
+          "newIds": [],
+          "missingIds": [],
+          "changed": [],
+          "retainedRowsSha256": "7b7182730816b8efff22814c2bba58aafd2d033f925feffcd653943a249aa93e"
+        },
+        "runtimeModelOperations": {
+          "beforeRows": 39,
+          "afterRows": 39,
+          "oldExactIdsAndCapturedFieldsRetained": true,
+          "newIds": [],
+          "missingIds": [],
+          "changed": [],
+          "retainedRowsSha256": "3612b97a891179be4df3263e0599b92f715a3e42ef836d90a8857e258b750104"
+        },
+        "runtimeModelAttempts": {
+          "beforeRows": 39,
+          "afterRows": 39,
+          "oldExactIdsAndCapturedFieldsRetained": true,
+          "newIds": [],
+          "missingIds": [],
+          "changed": [],
+          "retainedRowsSha256": "5ec98d4a6298745ca4b61996500deb2702c083232413a87c820b291cee032d25"
+        }
+      },
+      "uncertainMicroUsd": 3900000,
+      "reservedMicroUsd": 0,
+      "settledMicroUsd": 0,
+      "allAccountsActiveConcurrency": 0,
+      "unreleasedAttemptSlots": 0,
+      "currentRunRetirement": [
+        {
+          "tenantId": "cortex-ci-37998200336-1-sdk",
+          "tenantScopeRows": 1,
+          "tenantScopeDeleted": true,
+          "tenantTombstonePresent": true,
+          "retainedChildSpaceRows": 1,
+          "interpretation": "Parent tenant deletion/tombstone fences retained child records. Absence on CLI is preserved, not reported as provisioned."
+        },
+        {
+          "tenantId": "cortex-ci-37998200336-1-sdk-other",
+          "tenantScopeRows": 1,
+          "tenantScopeDeleted": true,
+          "tenantTombstonePresent": true,
+          "retainedChildSpaceRows": 1,
+          "interpretation": "Parent tenant deletion/tombstone fences retained child records. Absence on CLI is preserved, not reported as provisioned."
+        }
+      ],
+      "roleDenials": {
+        "roles": [
+          "owner",
+          "reader",
+          "outsider"
+        ],
+        "source": {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-completion-resume-20261009/current-ci1/artifacts/ci-runtime-cleanup-receipts/ci-sdk-cleanup.json",
+          "bytes": 309,
+          "sha256": "610d5cdc71d222ca2a0165531e666af789fe23c6b38435063d0169aabd5aeec1"
+        },
+        "duplicatePublicProbes": 0
+      },
+      "dataReadTimings": [
+        {
+          "table": "runtimeAuthScopes",
+          "startedAt": "2026-10-09T22:27:11.278Z",
+          "endedAt": "2026-10-09T22:27:12.237Z",
+          "endToEndSeconds": 0.959,
+          "rows": 28,
+          "status": "READ"
+        },
+        {
+          "table": "runtimeBudgetAccounts",
+          "startedAt": "2026-10-09T22:27:11.275Z",
+          "endedAt": "2026-10-09T22:27:12.303Z",
+          "endToEndSeconds": 1.028,
+          "rows": 28,
+          "status": "READ"
+        },
+        {
+          "table": "runtimeModelOperations",
+          "startedAt": "2026-10-09T22:27:11.277Z",
+          "endedAt": "2026-10-09T22:27:12.316Z",
+          "endToEndSeconds": 1.039,
+          "rows": 39,
+          "status": "READ"
+        },
+        {
+          "table": "runtimeModelAttempts",
+          "startedAt": "2026-10-09T22:27:11.277Z",
+          "endedAt": "2026-10-09T22:27:12.674Z",
+          "endToEndSeconds": 1.397,
+          "rows": 39,
+          "status": "READ"
+        },
+        {
+          "table": "runtimeAuthTombstones",
+          "startedAt": "2026-10-09T22:27:12.674Z",
+          "endedAt": "2026-10-09T22:27:13.547Z",
+          "endToEndSeconds": 0.873,
+          "rows": 14,
+          "status": "READ"
+        }
+      ],
+      "timingInterpretation": "Official CLI process end-to-end includes Node startup; not pure server handler latency.",
+      "snapshot": {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-completion-resume-20261009/current-ci1/native-after1/after1-sdk.json",
+        "bytes": 209372,
+        "sha256": "6c07d825dd949f78d92a3ef470a7aefabcd849334acac31b31139d2278a27538"
+      }
+    },
+    {
+      "kind": "cli",
+      "target": {
+        "projectId": 3176494,
+        "deploymentName": "usable-sheep-908",
+        "teamId": 325340,
+        "production": false,
+        "soleCloudDev": true,
+        "identityCheckStartedAt": "2026-10-09T22:27:13.550Z",
+        "identityCheckedAt": "2026-10-09T22:27:13.663Z"
+      },
+      "identityReadSeconds": 0.113,
+      "financialComparison": {
+        "runtimeBudgetAccounts": {
+          "beforeRows": 16,
+          "afterRows": 16,
+          "oldExactIdsAndCapturedFieldsRetained": true,
+          "newIds": [],
+          "missingIds": [],
+          "changed": [],
+          "retainedRowsSha256": "fe6a4fd763ce7ad91a1dc3e3690c8abeeb4cc36e3bd011746d61025c69afb233"
+        },
+        "runtimeModelOperations": {
+          "beforeRows": 20,
+          "afterRows": 20,
+          "oldExactIdsAndCapturedFieldsRetained": true,
+          "newIds": [],
+          "missingIds": [],
+          "changed": [],
+          "retainedRowsSha256": "e20e2248de04c900875e23bf7444a28a51a87fcc2b7f8d57643f2e77592a9441"
+        },
+        "runtimeModelAttempts": {
+          "beforeRows": 20,
+          "afterRows": 20,
+          "oldExactIdsAndCapturedFieldsRetained": true,
+          "newIds": [],
+          "missingIds": [],
+          "changed": [],
+          "retainedRowsSha256": "e465fc2934d3f4cac767d42b6b18786a721f5fc43f2c3679869575561139249f"
+        }
+      },
+      "uncertainMicroUsd": 2000000,
+      "reservedMicroUsd": 0,
+      "settledMicroUsd": 0,
+      "allAccountsActiveConcurrency": 0,
+      "unreleasedAttemptSlots": 0,
+      "currentRunRetirement": [
+        {
+          "tenantId": "cortex-ci-37998200336-1-cli",
+          "tenantScopeRows": 0,
+          "tenantScopeDeleted": false,
+          "tenantTombstonePresent": true,
+          "retainedChildSpaceRows": 0,
+          "interpretation": "Parent tenant deletion/tombstone fences retained child records. Absence on CLI is preserved, not reported as provisioned."
+        },
+        {
+          "tenantId": "cortex-ci-37998200336-1-cli-other",
+          "tenantScopeRows": 0,
+          "tenantScopeDeleted": false,
+          "tenantTombstonePresent": true,
+          "retainedChildSpaceRows": 0,
+          "interpretation": "Parent tenant deletion/tombstone fences retained child records. Absence on CLI is preserved, not reported as provisioned."
+        }
+      ],
+      "roleDenials": {
+        "roles": [
+          "owner",
+          "reader",
+          "outsider"
+        ],
+        "source": {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-completion-resume-20261009/current-ci1/artifacts/ci-runtime-cleanup-receipts/ci-cli-cleanup.json",
+          "bytes": 309,
+          "sha256": "51e5a8d74b04caa76ca4828618168091c50cfe010831b6f48c54c448cf5c0179"
+        },
+        "duplicatePublicProbes": 0
+      },
+      "dataReadTimings": [
+        {
+          "table": "runtimeAuthScopes",
+          "startedAt": "2026-10-09T22:27:13.666Z",
+          "endedAt": "2026-10-09T22:27:14.565Z",
+          "endToEndSeconds": 0.899,
+          "rows": 28,
+          "status": "READ"
+        },
+        {
+          "table": "runtimeBudgetAccounts",
+          "startedAt": "2026-10-09T22:27:13.663Z",
+          "endedAt": "2026-10-09T22:27:14.571Z",
+          "endToEndSeconds": 0.908,
+          "rows": 16,
+          "status": "READ"
+        },
+        {
+          "table": "runtimeModelOperations",
+          "startedAt": "2026-10-09T22:27:13.664Z",
+          "endedAt": "2026-10-09T22:27:14.617Z",
+          "endToEndSeconds": 0.953,
+          "rows": 20,
+          "status": "READ"
+        },
+        {
+          "table": "runtimeModelAttempts",
+          "startedAt": "2026-10-09T22:27:13.665Z",
+          "endedAt": "2026-10-09T22:27:14.863Z",
+          "endToEndSeconds": 1.198,
+          "rows": 20,
+          "status": "READ"
+        },
+        {
+          "table": "runtimeAuthTombstones",
+          "startedAt": "2026-10-09T22:27:14.863Z",
+          "endedAt": "2026-10-09T22:27:15.737Z",
+          "endToEndSeconds": 0.874,
+          "rows": 16,
+          "status": "READ"
+        }
+      ],
+      "timingInterpretation": "Official CLI process end-to-end includes Node startup; not pure server handler latency.",
+      "snapshot": {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-completion-resume-20261009/current-ci1/native-after1/after1-cli.json",
+        "bytes": 118503,
+        "sha256": "95a830d05b9cb038618ccc6bb22f111b5af8054a8ded932c9e05a6752979bb43"
+      }
+    }
+  ],
+  "aggregateUncertainMicroUsd": 5900000,
+  "newBudgetAccounts": 0,
+  "newModelOperations": 0,
+  "newModelAttempts": 0,
+  "allOldFinancialFieldsRootsWindowsExact": true,
+  "activeConcurrency": 0,
+  "unreleasedAttemptSlots": 0,
+  "uncertaintyInterpretation": "Full5.9m microUSD retained, not zero actual cost; no refund, root/window reset or unknown-slot release performed.",
+  "diagnosis": {
+    "report": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-completion-resume-20261009/current-ci1/native-diagnosis1/cause-report1.json",
+      "bytes": 10256,
+      "sha256": "c81a2a87b529e43dbd0a6e9d14bdc853f943bf032a3a263ed6ea00f75c90376e"
+    },
+    "cause": "CLI first provision native system-operation timeout after22.478564468s; user execution0 and all reported usage0. SDK three provisions and both manifest installs completed without errors.",
+    "underlyingInfrastructureCause": "Unknown; no code/system scalability or transience assertion.",
+    "cleanupTimingFromSameCapturedResponses": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-completion-resume-20261009/current-ci1/native-diagnosis1/cleanup-native-events1.json",
+      "bytes": 5278,
+      "sha256": "c5773cd770a3d77c0907f8c1db7b73b3ff6b1f3f12fdf7788f1455f0961d9e7d"
+    }
+  },
+  "nextCiBaseline": "This exact after snapshot is prospective for Parent ONE next whole CI attempt; no redundant baseline query. Healthy current reads/cleanup do not guarantee a future provision call.",
+  "effects": {
+    "deployment": 0,
+    "rootReset": 0,
+    "provision": 0,
+    "model": 0,
+    "setting": 0,
+    "secret": 0,
+    "retirement": 0
+  },
+  "resourcesUntouched": [
+    "Main3174742 and old held2/full retained financial history",
+    "Stopped graph volumes and original-only-copy files",
+    "Secrets/settings/private credential custody",
+    "Product source and Git"
+  ],
+  "asyncVideoAvailability": "Still externally blocked/unqualified; no native availability probe or old-operation replay.",
+  "acceptanceGranted": false
+}

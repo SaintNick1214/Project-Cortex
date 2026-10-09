@@ -1,0 +1,136 @@
+{
+  "status": "READONLY_PROVISION_DIAGNOSIS_LOGS_CAPTURED",
+  "workflowRunId": 37998200336,
+  "headSha": "2a5230f91525fb6e937e213d53886231fcd40f59",
+  "startedAt": "2026-10-09T22:23:39.099Z",
+  "completedAt": "2026-10-09T22:23:39.689Z",
+  "method": "GET",
+  "path": "/api/stream_function_logs?cursor=0",
+  "selectedWindow": [
+    "2026-10-09T22:18:00Z",
+    "2026-10-09T22:20:30Z"
+  ],
+  "baselineUnchanged": "No new financial read; prospective native-before1 remains separate.",
+  "targets": [
+    {
+      "kind": "cli",
+      "projectId": 3176494,
+      "deploymentName": "usable-sheep-908",
+      "status": "ONE_READONLY_LOG_CAPTURE_COMPLETE",
+      "startedAt": "2026-10-09T22:23:39.105Z",
+      "reads": 1,
+      "httpStatus": 200,
+      "rawPrivate": {
+        "path": "/Users/SaintNick/.codex/tmp/cortex-task16-ci-native-5b5ba39cd23b/resume-ci37998200336-cli-logs1.private.json",
+        "sha256": "d2b1f533b4db4444c55fab63dd8131e1bae1ff15eac038677bde1e23baea52b2",
+        "mode": "0600"
+      },
+      "responseBytes": 783333,
+      "entryCount": 759,
+      "selectedEntries": [
+        {
+          "identifier": "runtimeModelPolicy:installDeploymentPolicy",
+          "udfType": "Mutation",
+          "timestamp": 1791584365.8680112,
+          "executionTime": 0.355766311,
+          "requestId": "ff915b5d6323adc4",
+          "executionId": "57783f01-f420-4fd0-af34-2feaf71230fe",
+          "errorPresent": false,
+          "errorSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "staticCodes": [],
+          "sourceFrames": []
+        },
+        {
+          "identifier": "runtimeAuth:provision",
+          "udfType": "Mutation",
+          "timestamp": 1791584391.4013116,
+          "executionTime": 22.478564468,
+          "requestId": "980641a2369654da",
+          "executionId": "b4f6be8e-1969-46a7-b5fe-1dc2285b3b2b",
+          "errorPresent": true,
+          "errorSha256": "11a713fde33af36aa3cf97ad205ce8d803e902a419b025962997f98899b08edc",
+          "staticCodes": [],
+          "sourceFrames": []
+        }
+      ],
+      "completedAt": "2026-10-09T22:23:39.542Z"
+    },
+    {
+      "kind": "sdk",
+      "projectId": 3176493,
+      "deploymentName": "steady-snake-253",
+      "status": "ONE_READONLY_LOG_CAPTURE_COMPLETE",
+      "startedAt": "2026-10-09T22:23:39.105Z",
+      "reads": 1,
+      "httpStatus": 200,
+      "rawPrivate": {
+        "path": "/Users/SaintNick/.codex/tmp/cortex-task16-ci-native-5b5ba39cd23b/resume-ci37998200336-sdk-logs1.private.json",
+        "sha256": "5d17a263c4a3bd0a0e3379dfedbc677543ba36f9aa603f9a6ad260e8917a678d",
+        "mode": "0600"
+      },
+      "responseBytes": 1006700,
+      "entryCount": 1000,
+      "selectedEntries": [
+        {
+          "identifier": "runtimeModelPolicy:installDeploymentPolicy",
+          "udfType": "Mutation",
+          "timestamp": 1791584364.8292737,
+          "executionTime": 0.367058145,
+          "requestId": "e2ea00772ee26570",
+          "executionId": "aae469eb-6a72-4a96-b12a-43f1d672ce3f",
+          "errorPresent": false,
+          "errorSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "staticCodes": [],
+          "sourceFrames": []
+        },
+        {
+          "identifier": "runtimeAuth:provision",
+          "udfType": "Mutation",
+          "timestamp": 1791584366.7591326,
+          "executionTime": 0.163048514,
+          "requestId": "6ce57d70e2a8ce57",
+          "executionId": "540d3375-8ebb-4d65-b13e-b66b39a092eb",
+          "errorPresent": false,
+          "errorSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "staticCodes": [],
+          "sourceFrames": []
+        },
+        {
+          "identifier": "runtimeAuth:provision",
+          "udfType": "Mutation",
+          "timestamp": 1791584367.4580786,
+          "executionTime": 0.06934129,
+          "requestId": "efd05983b8e31a9c",
+          "executionId": "795ab473-8f42-49f9-bfec-09772d7e34c0",
+          "errorPresent": false,
+          "errorSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "staticCodes": [],
+          "sourceFrames": []
+        },
+        {
+          "identifier": "runtimeAuth:provision",
+          "udfType": "Mutation",
+          "timestamp": 1791584368.0927818,
+          "executionTime": 0.027688272,
+          "requestId": "cd16b33af3277347",
+          "executionId": "132f9bbd-4cdc-4ab4-a59c-fe7bafcf77a1",
+          "errorPresent": false,
+          "errorSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "staticCodes": [],
+          "sourceFrames": []
+        }
+      ],
+      "completedAt": "2026-10-09T22:23:39.678Z"
+    }
+  ],
+  "coverage": "One bounded history response per exact target, no tail retry or provision/recheck.",
+  "effects": {
+    "model": 0,
+    "mutation": 0,
+    "deploy": 0,
+    "repair": 0,
+    "cleanup": 0,
+    "setting": 0,
+    "secret": 0
+  }
+}
