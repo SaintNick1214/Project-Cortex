@@ -60,6 +60,9 @@ jobs:
           node-version: "24"
           cache: "npm"
 
+      - name: Use declared npm version
+        run: npm install --global npm@12.2.0
+
       - name: Install dependencies (for JS/TS)
         if: matrix.language == 'javascript-typescript'
         run: npm ci
@@ -164,6 +167,9 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: "24"
+
+      - name: Use declared npm version
+        run: npm install --global npm@12.2.0
 
       - name: Install dependencies
         run: npm ci
@@ -285,6 +291,8 @@ jobs:
         dependency-scan,
         secret-scan,
         api-security,
+        dependency-review,
+        license-check,
       ]
     # Skip for Dependabot PRs (no security checks run)
     if: always() && github.actor != 'dependabot[bot]'
@@ -300,6 +308,8 @@ jobs:
           echo "  Dependency Scan:      ${{ needs.dependency-scan.result }}"
           echo "  Secret Scan:          ${{ needs.secret-scan.result }}"
           echo "  API Security:         ${{ needs.api-security.result }}"
+          echo "  Dependency Review:    ${{ needs.dependency-review.result }}"
+          echo "  License Compliance:   ${{ needs.license-check.result }}"
           echo ""
           echo "ℹ️  Scorecard (supply chain) and OpenAPI scans run conditionally"
           echo ""
@@ -308,7 +318,9 @@ jobs:
           # API security is continue-on-error, so don't block on it
           if [[ "${{ needs.codeql-analysis.result }}" == "failure" ]] || \
              [[ "${{ needs.dependency-scan.result }}" == "failure" ]] || \
-             [[ "${{ needs.secret-scan.result }}" == "failure" ]]; then
+             [[ "${{ needs.secret-scan.result }}" == "failure" ]] || \
+             [[ "${{ needs.dependency-review.result }}" == "failure" ]] || \
+             [[ "${{ needs.license-check.result }}" == "failure" ]]; then
             echo "❌ Security checks failed"
             exit 1
           fi

@@ -1,3 +1,4 @@
+import { createRuntimeFixture } from "./helpers/runtime-fixture";
 /**
  * Parameter Combination Testing
  *
@@ -10,19 +11,24 @@
  */
 
 import { describe, it, expect, beforeAll, afterAll } from "@jest/globals";
-import { Cortex } from "../src/index";
+import { Cortex } from "./helpers/deployment-operator";
 
 describe("Parameter Combination Testing", () => {
   let cortex: Cortex;
+  let runtimeFixture: Awaited<ReturnType<typeof createRuntimeFixture>>;
   const BASE_ID = `param-test-${Date.now()}`;
   const TEST_USER_ID = "param-test-user";
   const TEST_AGENT_ID = "param-test-agent";
 
-  beforeAll(() => {
+  beforeAll(async () => {
     cortex = new Cortex({ convexUrl: process.env.CONVEX_URL! });
+    // Explicit owned scope/actor fixture; canonical contexts stay public.
+    runtimeFixture = await createRuntimeFixture(BASE_ID, BASE_ID, TEST_USER_ID);
+    Object.defineProperty(cortex, "contexts", { value: runtimeFixture.cortex.contexts });
   });
 
   afterAll(async () => {
+    await runtimeFixture?.close();
     // Cleanup
     try {
       await cortex.memorySpaces.delete(BASE_ID, {
@@ -759,40 +765,13 @@ describe("Parameter Combination Testing", () => {
   // ══════════════════════════════════════════════════════════════════════
 
   describe("contexts.create() Parameter Combinations", () => {
-    it("all parameters provided", async () => {
-      const parent = await cortex.contexts.create({
-        memorySpaceId: BASE_ID,
-        userId: TEST_USER_ID,
-        purpose: "Parent for all params test",
-      });
-
-      const conv = await cortex.conversations.create({
-        type: "user-agent",
-        memorySpaceId: BASE_ID,
-        participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID },
-      });
-
-      const result = await cortex.contexts.create({
-        memorySpaceId: BASE_ID,
-        userId: TEST_USER_ID,
-        purpose: "Context with all params",
-        status: "active",
-        parentId: parent.contextId,
-        conversationRef: {
-          conversationId: conv.conversationId,
-          messageIds: [],
-        },
-        data: {
-          taskId: "task-123",
-          priority: "high",
-        },
-      });
-
-      expect(result.userId).toBe(TEST_USER_ID);
-      expect(result.status).toBe("active");
-      expect(result.parentId).toBe(parent.contextId);
-      expect(result.conversationRef).toBeDefined();
-      expect(result.data?.taskId).toBe("task-123");
+    it("all parameters provided refuses unavailable canonical transcript linking without effects", async () => {
+      const parent = await cortex.contexts.create({ memorySpaceId: BASE_ID, userId: TEST_USER_ID, purpose: "Owned parent" });
+      const conv = await cortex.conversations.create({ type: "user-agent", memorySpaceId: BASE_ID, participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID } });
+      const before = await runtimeFixture.ownedRows("contexts");
+      await expect(cortex.contexts.create({ memorySpaceId: BASE_ID, userId: TEST_USER_ID, purpose: "Requested linked context", status: "active", parentId: parent.contextId, conversationRef: { conversationId: conv.conversationId, messageIds: [] }, data: { taskId: "task-123", linked: true } })).rejects.toThrow("CAPABILITY_NOT_READY");
+      expect(await runtimeFixture.ownedRows("contexts")).toEqual(before);
+      expect(await cortex.contexts.get(parent.contextId)).toMatchObject({ contextId: parent.contextId, childIds: [] });
     });
 
     it("only required parameters", async () => {
@@ -833,29 +812,13 @@ describe("Parameter Combination Testing", () => {
       }
     });
 
-    it("conversationRef + data combination", async () => {
-      const conv = await cortex.conversations.create({
-        type: "user-agent",
-        memorySpaceId: BASE_ID,
-        participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID },
-      });
-
-      const result = await cortex.contexts.create({
-        memorySpaceId: BASE_ID,
-        userId: TEST_USER_ID,
-        purpose: "Context with conv and data",
-        conversationRef: {
-          conversationId: conv.conversationId,
-          messageIds: [],
-        },
-        data: {
-          linked: true,
-          conversationId: conv.conversationId,
-        },
-      });
-
-      expect(result.conversationRef!.conversationId).toBe(conv.conversationId);
-      expect(result.data?.linked).toBe(true);
+    it("conversationRef + data combination refuses unavailable canonical transcript linking without effects", async () => {
+      const parent = await cortex.contexts.create({ memorySpaceId: BASE_ID, userId: TEST_USER_ID, purpose: "Owned parent" });
+      const conv = await cortex.conversations.create({ type: "user-agent", memorySpaceId: BASE_ID, participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID } });
+      const before = await runtimeFixture.ownedRows("contexts");
+      await expect(cortex.contexts.create({ memorySpaceId: BASE_ID, userId: TEST_USER_ID, purpose: "Requested linked context", status: "active", parentId: parent.contextId, conversationRef: { conversationId: conv.conversationId, messageIds: [] }, data: { taskId: "task-123", linked: true } })).rejects.toThrow("CAPABILITY_NOT_READY");
+      expect(await runtimeFixture.ownedRows("contexts")).toEqual(before);
+      expect(await cortex.contexts.get(parent.contextId)).toMatchObject({ contextId: parent.contextId, childIds: [] });
     });
 
     it("status variations with data", async () => {
@@ -994,29 +957,13 @@ describe("Parameter Combination Testing", () => {
       expect(fact2.validUntil).toBe(future);
     });
 
-    it("contexts.update() preserves conversationRef", async () => {
-      const conv = await cortex.conversations.create({
-        type: "user-agent",
-        memorySpaceId: BASE_ID,
-        participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID },
-      });
-
-      const ctx = await cortex.contexts.create({
-        memorySpaceId: BASE_ID,
-        userId: TEST_USER_ID,
-        purpose: "Context with conv ref",
-        conversationRef: {
-          conversationId: conv.conversationId,
-          messageIds: [],
-        },
-      });
-
-      const updated = await cortex.contexts.update(ctx.contextId, {
-        data: { updated: true },
-      });
-
-      expect(updated.conversationRef).toBeDefined();
-      expect(updated.conversationRef!.conversationId).toBe(conv.conversationId);
+    it("contexts.update() preserves conversationRef refuses unavailable canonical transcript linking without effects", async () => {
+      const parent = await cortex.contexts.create({ memorySpaceId: BASE_ID, userId: TEST_USER_ID, purpose: "Owned parent" });
+      const conv = await cortex.conversations.create({ type: "user-agent", memorySpaceId: BASE_ID, participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID } });
+      const before = await runtimeFixture.ownedRows("contexts");
+      await expect(cortex.contexts.create({ memorySpaceId: BASE_ID, userId: TEST_USER_ID, purpose: "Requested linked context", status: "active", parentId: parent.contextId, conversationRef: { conversationId: conv.conversationId, messageIds: [] }, data: { taskId: "task-123", linked: true } })).rejects.toThrow("CAPABILITY_NOT_READY");
+      expect(await runtimeFixture.ownedRows("contexts")).toEqual(before);
+      expect(await cortex.contexts.get(parent.contextId)).toMatchObject({ contextId: parent.contextId, childIds: [] });
     });
 
     it("contexts.update() preserves parentId", async () => {
@@ -1354,37 +1301,13 @@ describe("Parameter Combination Testing", () => {
       expect(fact.sourceRef!.memoryId).toBe(mem.memoryId);
     });
 
-    it("context with parentId + conversationRef + data", async () => {
-      const parent = await cortex.contexts.create({
-        memorySpaceId: BASE_ID,
-        userId: TEST_USER_ID,
-        purpose: "Parent",
-      });
-
-      const conv = await cortex.conversations.create({
-        type: "user-agent",
-        memorySpaceId: BASE_ID,
-        participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID },
-      });
-
-      const child = await cortex.contexts.create({
-        memorySpaceId: BASE_ID,
-        userId: TEST_USER_ID,
-        purpose: "Complex child",
-        parentId: parent.contextId,
-        conversationRef: {
-          conversationId: conv.conversationId,
-          messageIds: [],
-        },
-        data: {
-          taskId: "task-456",
-          inheritedFrom: parent.contextId,
-        },
-      });
-
-      expect(child.parentId).toBe(parent.contextId);
-      expect(child.conversationRef!.conversationId).toBe(conv.conversationId);
-      expect(child.data?.taskId).toBe("task-456");
+    it("context with parentId + conversationRef + data refuses unavailable canonical transcript linking without effects", async () => {
+      const parent = await cortex.contexts.create({ memorySpaceId: BASE_ID, userId: TEST_USER_ID, purpose: "Owned parent" });
+      const conv = await cortex.conversations.create({ type: "user-agent", memorySpaceId: BASE_ID, participants: { userId: TEST_USER_ID, agentId: TEST_AGENT_ID } });
+      const before = await runtimeFixture.ownedRows("contexts");
+      await expect(cortex.contexts.create({ memorySpaceId: BASE_ID, userId: TEST_USER_ID, purpose: "Requested linked context", status: "active", parentId: parent.contextId, conversationRef: { conversationId: conv.conversationId, messageIds: [] }, data: { taskId: "task-123", linked: true } })).rejects.toThrow("CAPABILITY_NOT_READY");
+      expect(await runtimeFixture.ownedRows("contexts")).toEqual(before);
+      expect(await cortex.contexts.get(parent.contextId)).toMatchObject({ contextId: parent.contextId, childIds: [] });
     });
 
     it("vector.store() with embedding + conversationRef + importance", async () => {

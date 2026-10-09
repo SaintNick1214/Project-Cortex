@@ -1,5 +1,6 @@
 import { createHash } from "node:crypto";
 import * as fs from "node:fs/promises";
+import { constants } from "node:fs";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
@@ -108,17 +109,44 @@ async function readSource(selection) {
       if (!stat.isFile()) fail("CATALOG_SOURCE_KIND");
       if (stat.nlink !== 1) fail("CATALOG_SOURCE_LINK");
       if (stat.size > 8 * 1024 * 1024 || files.size >= 10000) fail("CATALOG_PAYLOAD_BUDGET");
-      const bytes = await fs.readFile(absolute);
+      const opened = await readSourceFile(absolute), bytes = opened.bytes;
       total += bytes.length;
       if (bytes.length > 8 * 1024 * 1024 || total > 64 * 1024 * 1024) fail("CATALOG_PAYLOAD_BUDGET");
       if (folded.has(relative.toLowerCase())) fail("CATALOG_DUPLICATE_PATH");
       folded.add(relative.toLowerCase());
-      files.set(relative, { bytes, executable: (stat.mode & 0o111) !== 0 });
+      files.set(relative, { bytes, executable: (opened.stat.mode & 0o111) !== 0 });
     }
   }
   await visit(root, "");
   for (const example of examples) if (!files.has(example)) fail("CATALOG_ENV_EXAMPLE_MISSING");
   return new Map([...files].sort(([a], [b]) => compare(a, b)));
+}
+
+/** All file checks and byte reads use the same descriptor. @param {string} absolute */
+async function readSourceFile(absolute) {
+  let handle;
+  try { handle = await fs.open(absolute, constants.O_RDONLY | constants.O_NOFOLLOW | constants.O_NONBLOCK); }
+  catch (error) {
+    if (/** @type {NodeJS.ErrnoException} */ (error).code === "ELOOP") fail("CATALOG_SOURCE_LINK");
+    throw error;
+  }
+  try {
+    const stat = await handle.stat();
+    if (!stat.isFile()) fail("CATALOG_SOURCE_KIND");
+    if (stat.nlink !== 1) fail("CATALOG_SOURCE_LINK");
+    if (stat.size > 8 * 1024 * 1024) fail("CATALOG_PAYLOAD_BUDGET");
+    const bytes = Buffer.alloc(stat.size);
+    let offset = 0;
+    while (offset < bytes.length) {
+      const { bytesRead } = await handle.read(bytes, offset, bytes.length - offset, offset);
+      if (!bytesRead) fail("CATALOG_SOURCE_CHANGED");
+      offset += bytesRead;
+    }
+    if ((await handle.read(Buffer.alloc(1), 0, 1, offset)).bytesRead) fail("CATALOG_SOURCE_CHANGED");
+    const after = await handle.stat();
+    if (after.size !== stat.size || after.mtimeMs !== stat.mtimeMs || after.ctimeMs !== stat.ctimeMs || after.mode !== stat.mode || after.nlink !== stat.nlink) fail("CATALOG_SOURCE_CHANGED");
+    return { bytes, stat };
+  } finally { await handle.close(); }
 }
 
 /** @param {Buffer} bytes @param {TemplateSource} selection */

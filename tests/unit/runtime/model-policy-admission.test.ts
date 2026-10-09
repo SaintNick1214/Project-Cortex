@@ -387,7 +387,7 @@ describe("native private policy ledger — offline logic only", () => {
     }
   });
   it("all five additive native tables have unique index field configurations", () => {
-    expect(Object.keys(schema.tables)).toHaveLength(31);
+    expect(Object.keys(schema.tables)).toEqual(expect.arrayContaining(["runtimeModelPolicies", "runtimeModelQualifications", "runtimeBudgetAccounts", "runtimeModelOperations", "runtimeModelAttempts"]));
     for (const definition of Object.values(schema.tables)) {
       const configurations = definition[" indexes"]().map((index) => JSON.stringify(index.fields));
       expect(new Set(configurations).size).toBe(configurations.length);

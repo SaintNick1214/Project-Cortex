@@ -5,6 +5,7 @@ import { StringDecoder } from "node:string_decoder";
 import { execFileSync, spawn, type ChildProcess } from "node:child_process";
 import { assertSafePath, resolveProjectDirectory } from "./schema-sync.js";
 import { CONVEX_VERSION } from "./install.js";
+import { readRegularFileSync, UnsafeFileError } from "./safe-file.js";
 import {
   acquireForegroundSignalHandler,
   setupClientCleanup,
@@ -43,10 +44,13 @@ export function resolveInstalledConvex(project: string): string {
   if (!fs.statSync(packageRoot).isDirectory())
     throw new Error("Installed Convex package must be a directory");
   const packagePath = assertSafePath(packageRoot, "package.json");
-  if (!fs.existsSync(packagePath)) throw missing();
-  if (!fs.statSync(packagePath).isFile())
-    throw new Error("Installed Convex manifest must be a regular file");
-  const manifest = JSON.parse(fs.readFileSync(packagePath, "utf8"));
+  let manifest;
+  try { manifest = JSON.parse(readRegularFileSync(packagePath).bytes.toString("utf8")); }
+  catch (error) {
+    if ((error as { code?: string }).code === "ENOENT") throw missing();
+    if (error instanceof UnsafeFileError) throw new Error("Installed Convex manifest must be a regular file", { cause: error });
+    throw error;
+  }
   if (manifest.name !== "convex" || manifest.version !== CONVEX_VERSION)
     throw new Error(
       `Selected project requires installed convex@${CONVEX_VERSION}`,

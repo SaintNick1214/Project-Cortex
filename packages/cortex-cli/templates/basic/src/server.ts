@@ -19,6 +19,7 @@ import { serve } from "@hono/node-server";
 import { Hono } from "hono";
 import { logger } from "hono/logger";
 import { localRequest } from "./local-request.js";
+import { createChatHandler } from "./chat-request.js";
 import { closeCortex, initCortex, CONFIG } from "./cortex.js";
 import { chat, generateConversationId } from "./chat.js";
 import { printWelcome, printInfo, printError, printSuccess } from "./display.js";
@@ -61,35 +62,7 @@ app.get("/health", (c) => {
  * POST /chat
  * Body: { message: string, conversationId?: string }
  */
-app.post("/chat", async (c) => {
-  try {
-    const body = await c.req.json();
-    const { message, conversationId } = body;
-
-    if (!message || typeof message !== "string") {
-      return c.json({ error: "message is required" }, 400);
-    }
-
-    const convId = conversationId || generateConversationId();
-
-    console.log(`\n[Chat] User: ${message.slice(0, 50)}${message.length > 50 ? "..." : ""}`);
-
-    const result = await chat(message, convId);
-
-    console.log(`[Chat] Response sent (${result.memoriesRecalled} memories, ${result.factsRecalled} facts recalled)\n`);
-
-    return c.json({
-      response: result.response,
-      conversationId: result.conversationId,
-      memoriesRecalled: result.memoriesRecalled,
-      factsRecalled: result.factsRecalled,
-    });
-  } catch (error) {
-    const message = error instanceof Error ? error.message : "Unknown error";
-    printError("Chat failed", error instanceof Error ? error : undefined);
-    return c.json({ error: message }, 500);
-  }
-});
+app.post("/chat", createChatHandler(chat, generateConversationId));
 
 /**
  * Recall endpoint

@@ -8,7 +8,9 @@
  * - Session-based authentication
  */
 
+import { expectRefusalNoEffects } from "../helpers/public-contract";
 import { Cortex } from "../../src";
+import { createRuntimeFixture } from "../helpers/runtime-fixture";
 import { createAuthContext } from "../../src/auth/context";
 import { createTestRunContext } from "../helpers/isolation";
 import { generateTenantId, generateTenantUserId } from "../helpers/tenancy";
@@ -21,33 +23,64 @@ const describeWithConvex = process.env.CONVEX_URL ? describe : describe.skip;
 
 describeWithConvex("Auth Integration E2E", () => {
   let testMemorySpaceId: string;
+  const refreshTenantId = generateTenantId("refresh-test");
+  const refreshUserId = generateTenantUserId(refreshTenantId);
+  const fixtures: Array<Awaited<ReturnType<typeof createRuntimeFixture>>> = [];
+  const clients: Cortex[] = [];
+  const publicCortex = (config: ConstructorParameters<typeof Cortex>[0]) => {
+    const selected = fixtures.find(
+      (fixture) =>
+        fixture.userId === config.auth?.userId &&
+        (fixture.tenantId === config.auth.tenantId ||
+          config.auth.tenantId === undefined),
+    );
+    const client = new Cortex(
+      { ...config, resilience: { enabled: false } },
+      selected
+        ? { initializeTransport: selected.initializeTransport }
+        : undefined,
+    );
+    clients.push(client);
+    return client;
+  };
 
   beforeAll(async () => {
     testMemorySpaceId = `space_auth_e2e_${ctx.runId}`;
 
-    // Create a temp Cortex to register memory space
-    const tempCortex = new Cortex({
-      convexUrl: process.env.CONVEX_URL!,
-    });
-
-    await tempCortex.memorySpaces.register({
-      memorySpaceId: testMemorySpaceId,
-      name: "Auth E2E Test Space",
-      type: "custom",
-    });
+    const plans = [
+      ["tenant_clerk_demo", "user_2abc123xyz789"],
+      ["my-auth0-tenant", "auth0|507f1f77bcf86cd799439011"],
+      ["my-firebase-project", "firebase:abc123xyz789"],
+      ["nextauth-demo-app", "cluser123abc456"],
+      ["enterprise_tenant", "api_service_account"],
+      ["acme_enterprise", "emp_12345@acmecorp"],
+      [refreshTenantId, refreshUserId],
+      [`minimal-auth-${ctx.runId}`, "simple_user_123"],
+      ["full_tenant", "full_user_xyz"],
+    ] as const;
+    for (const [tenantId, userId] of plans)
+      fixtures.push(
+        await createRuntimeFixture(tenantId, testMemorySpaceId, userId),
+      );
   });
 
   afterAll(async () => {
+    const tempCortex = new Cortex({
+      convexUrl: process.env.CONVEX_URL!,
+    });
     try {
-      const tempCortex = new Cortex({
-        convexUrl: process.env.CONVEX_URL!,
-      });
       await tempCortex.memorySpaces.delete(testMemorySpaceId, {
         cascade: true,
         reason: "Test cleanup",
       });
     } catch {
       // Ignore cleanup errors
+    } finally {
+      await Promise.all([
+        tempCortex.shutdown(),
+        ...clients.map((client) => client.shutdown()),
+        ...fixtures.map((fixture) => fixture.close()),
+      ]);
     }
   });
 
@@ -85,7 +118,7 @@ describeWithConvex("Auth Integration E2E", () => {
         },
       });
 
-      const cortex = new Cortex({
+      const cortex = publicCortex({
         convexUrl: process.env.CONVEX_URL!,
         auth: clerkAuthContext,
       });
@@ -96,19 +129,34 @@ describeWithConvex("Auth Integration E2E", () => {
       expect(cortex.auth?.authProvider).toBe("clerk");
 
       // Create a conversation with this auth
-      const conv = await cortex.conversations.create({
+      const selected = fixtures.filter(
+        (fixture) => fixture.userId === clerkAuthContext.userId,
+      );
+      await expectRefusalNoEffects(
+        () =>
+          cortex.conversations.create({
+            memorySpaceId: testMemorySpaceId,
+            type: "user-agent",
+            participants: {
+              userId: clerkAuthContext.userId,
+              agentId: "test-agent",
+            },
+          }),
+        selected,
+        "conversations",
+        "CAPABILITY_NOT_READY",
+      );
+      const fact = await cortex.facts.store({
         memorySpaceId: testMemorySpaceId,
-        type: "user-agent",
-        participants: {
-          userId: clerkAuthContext.userId,
-          agentId: "test-agent",
-        },
+        fact: "Authenticated provider scope",
+        factType: "knowledge",
+        confidence: 85,
+        sourceType: "manual",
+        userId: clerkAuthContext.userId,
       });
-
-      expect(conv.tenantId).toBe("tenant_clerk_demo");
-
-      // Cleanup
-      await cortex.conversations.delete(conv.conversationId);
+      expect(fact.tenantId).toBe("tenant_clerk_demo");
+      expect(fact.userId).toBe(clerkAuthContext.userId);
+      await cortex.facts.delete(testMemorySpaceId, fact.factId);
     });
   });
 
@@ -149,7 +197,7 @@ describeWithConvex("Auth Integration E2E", () => {
         },
       });
 
-      const cortex = new Cortex({
+      const cortex = publicCortex({
         convexUrl: process.env.CONVEX_URL!,
         auth: auth0AuthContext,
       });
@@ -212,7 +260,7 @@ describeWithConvex("Auth Integration E2E", () => {
         },
       });
 
-      const cortex = new Cortex({
+      const cortex = publicCortex({
         convexUrl: process.env.CONVEX_URL!,
         auth: firebaseAuthContext,
       });
@@ -265,7 +313,7 @@ describeWithConvex("Auth Integration E2E", () => {
         },
       });
 
-      const cortex = new Cortex({
+      const cortex = publicCortex({
         convexUrl: process.env.CONVEX_URL!,
         auth: nextauthAuthContext,
       });
@@ -322,7 +370,7 @@ describeWithConvex("Auth Integration E2E", () => {
         },
       });
 
-      const cortex = new Cortex({
+      const cortex = publicCortex({
         convexUrl: process.env.CONVEX_URL!,
         auth: apiKeyAuthContext,
       });
@@ -333,19 +381,34 @@ describeWithConvex("Auth Integration E2E", () => {
       expect((cortex.auth?.claims?.scope as string[])?.length).toBe(3);
 
       // Perform operations
-      const conv = await cortex.conversations.create({
+      const selected = fixtures.filter(
+        (fixture) => fixture.userId === apiKeyAuthContext.userId,
+      );
+      await expectRefusalNoEffects(
+        () =>
+          cortex.conversations.create({
+            memorySpaceId: testMemorySpaceId,
+            type: "user-agent",
+            participants: {
+              userId: apiKeyAuthContext.userId,
+              agentId: "test-agent",
+            },
+          }),
+        selected,
+        "conversations",
+        "CAPABILITY_NOT_READY",
+      );
+      const fact = await cortex.facts.store({
         memorySpaceId: testMemorySpaceId,
-        type: "user-agent",
-        participants: {
-          userId: apiKeyAuthContext.userId,
-          agentId: "test-agent",
-        },
+        fact: "Authenticated provider scope",
+        factType: "knowledge",
+        confidence: 85,
+        sourceType: "manual",
+        userId: apiKeyAuthContext.userId,
       });
-
-      expect(conv.tenantId).toBe("enterprise_tenant");
-
-      // Cleanup
-      await cortex.conversations.delete(conv.conversationId);
+      expect(fact.tenantId).toBe("enterprise_tenant");
+      expect(fact.userId).toBe(apiKeyAuthContext.userId);
+      await cortex.facts.delete(testMemorySpaceId, fact.factId);
     });
   });
 
@@ -379,7 +442,7 @@ describeWithConvex("Auth Integration E2E", () => {
         },
       });
 
-      const cortex = new Cortex({
+      const cortex = publicCortex({
         convexUrl: process.env.CONVEX_URL!,
         auth: customAuthContext,
       });
@@ -416,8 +479,8 @@ describeWithConvex("Auth Integration E2E", () => {
 
   describe("Scenario 7: Auth Context Refresh", () => {
     it("should work with refreshed auth context", async () => {
-      const tenantId = generateTenantId("refresh-test");
-      const userId = generateTenantUserId(tenantId);
+      const tenantId = refreshTenantId;
+      const userId = refreshUserId;
 
       // Initial auth context
       const initialAuth = createAuthContext({
@@ -429,16 +492,19 @@ describeWithConvex("Auth Integration E2E", () => {
         authenticatedAt: Date.now() - 3600000, // 1 hour ago
       });
 
-      const cortex1 = new Cortex({
+      const cortex1 = publicCortex({
         convexUrl: process.env.CONVEX_URL!,
         auth: initialAuth,
       });
 
       // Create initial data
-      const conv = await cortex1.conversations.create({
+      const fact = await cortex1.facts.store({
         memorySpaceId: testMemorySpaceId,
-        type: "user-agent",
-        participants: { userId, agentId: "test-agent" },
+        fact: "Same persisted identity after refresh",
+        factType: "knowledge",
+        confidence: 85,
+        sourceType: "manual",
+        userId,
       });
 
       // Simulate token refresh - new auth context
@@ -451,19 +517,32 @@ describeWithConvex("Auth Integration E2E", () => {
         authenticatedAt: Date.now(), // Fresh token
       });
 
-      const cortex2 = new Cortex({
+      const cortex2 = publicCortex({
         convexUrl: process.env.CONVEX_URL!,
         auth: refreshedAuth,
       });
 
       // Should be able to access same data
-      const retrieved = await cortex2.conversations.get(conv.conversationId);
+      const retrieved = await cortex2.facts.get(testMemorySpaceId, fact.factId);
 
       expect(retrieved).not.toBeNull();
-      expect(retrieved?.conversationId).toBe(conv.conversationId);
+      expect(retrieved?.factId).toBe(fact.factId);
+      expect(cortex1.auth?.sessionId).toBe("sess_initial");
+      expect(cortex2.auth?.sessionId).toBe("sess_refreshed");
+      await expectRefusalNoEffects(
+        () =>
+          cortex2.conversations.create({
+            memorySpaceId: testMemorySpaceId,
+            type: "user-agent",
+            participants: { userId, agentId: "test-agent" },
+          }),
+        fixtures.filter((fixture) => fixture.userId === userId),
+        "conversations",
+        "CAPABILITY_NOT_READY",
+      );
 
       // Cleanup
-      await cortex2.conversations.delete(conv.conversationId);
+      await cortex2.facts.delete(testMemorySpaceId, fact.factId);
     });
   });
 
@@ -478,7 +557,7 @@ describeWithConvex("Auth Integration E2E", () => {
         userId: "simple_user_123",
       });
 
-      const cortex = new Cortex({
+      const cortex = publicCortex({
         convexUrl: process.env.CONVEX_URL!,
         auth: minimalAuth,
       });
@@ -488,16 +567,31 @@ describeWithConvex("Auth Integration E2E", () => {
       expect(cortex.auth?.tenantId).toBeUndefined();
 
       // Create data without tenant scoping
-      const conv = await cortex.conversations.create({
+      const selected = fixtures.filter(
+        (fixture) => fixture.userId === minimalAuth.userId,
+      );
+      await expectRefusalNoEffects(
+        () =>
+          cortex.conversations.create({
+            memorySpaceId: testMemorySpaceId,
+            type: "user-agent",
+            participants: { userId: minimalAuth.userId, agentId: "test-agent" },
+          }),
+        selected,
+        "conversations",
+        "CAPABILITY_NOT_READY",
+      );
+      const fact = await cortex.facts.store({
         memorySpaceId: testMemorySpaceId,
-        type: "user-agent",
-        participants: { userId: minimalAuth.userId, agentId: "test-agent" },
+        fact: "Authenticated provider scope",
+        factType: "knowledge",
+        confidence: 85,
+        sourceType: "manual",
+        userId: minimalAuth.userId,
       });
-
-      expect(conv.conversationId).toBeDefined();
-
-      // Cleanup
-      await cortex.conversations.delete(conv.conversationId);
+      expect(fact.tenantId).toBe(`minimal-auth-${ctx.runId}`);
+      expect(fact.userId).toBe(minimalAuth.userId);
+      await cortex.facts.delete(testMemorySpaceId, fact.factId);
     });
   });
 
@@ -553,7 +647,7 @@ describeWithConvex("Auth Integration E2E", () => {
         },
       });
 
-      const cortex = new Cortex({
+      const cortex = publicCortex({
         convexUrl: process.env.CONVEX_URL!,
         auth: fullAuth,
       });

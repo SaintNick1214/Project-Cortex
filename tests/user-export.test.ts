@@ -1,5 +1,5 @@
 /** Checkpoint16C actual fixed internal production handlers and public SDK stream. */
-import { readFileSync } from "node:fs";
+import { nativeAdmin, nativeTarget, proofPrefix } from "./helpers/native-ci";
 import { createHash } from "node:crypto";
 import { ConvexHttpClient } from "convex/browser";
 import { makeFunctionReference } from "convex/server";
@@ -11,39 +11,27 @@ import {
   type UserExportScope,
   type UserExportTransport,
 } from "../src/users/export";
-const proof =
-  "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/cli-sandbox-2026/user-export-16c";
-const inherited =
-  "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/cli-sandbox-2026/fact-history-provenance";
 type Seed = {
   userId: string;
   scope: UserExportScope;
   mode: string;
   ids: Record<string, UserExportNode>;
+  storageIds: string[];
 };
-function owned() {
-  expect(process.env.HOME).toBe(proof + "/home");
-  expect(process.env.CORTEX_TEST_HOME_ROOT).toBe(process.env.HOME);
-  expect(process.env.CONVEX_URL).toBe("http://127.0.0.1:45410");
-  const owner = JSON.parse(readFileSync(inherited + "/ownership.json", "utf8"));
-  expect(owner.owner).toBe("task18-fact-history-provenance");
-  process.kill(owner.pid, 0);
-  return JSON.parse(
-    readFileSync(
-      inherited + "/project/.convex/local/default/config.json",
-      "utf8",
-    ),
-  ).adminKey as string;
-}
+const saved: Seed[] = [];
+const seeds = () => saved;
 function transport(): UserExportTransport {
-  return new UsersAPI({} as never).createExportTransport({
-    url: "http://127.0.0.1:45410",
-    deploymentKey: owned(),
-  });
+  const { url, key } = nativeTarget();
+  return new UsersAPI({} as never).createExportTransport({ url, deploymentKey: key });
 }
-const seeds = () =>
-  (JSON.parse(readFileSync(proof + "/seeds.json", "utf8")) as { saved: Seed[] })
-    .saved;
+beforeAll(async () => {
+  const admin = nativeAdmin(), prefix = proofPrefix("task16c-ci");
+  const { storageIds } = await admin.function("ownedExportPayloadFixture:upload", undefined, {userId:prefix}) as { storageIds:string[] };
+  for (const scope of [{kind:"tenantless"}, {kind:"tenant",tenantId:"A"}, {kind:"tenant",tenantId:"B"}] as UserExportScope[])
+    saved.push(await admin.function("ownedExportPayloadFixture:seed", undefined, {userId:prefix+"-"+(scope.kind === "tenant" ? scope.tenantId : "none"),scope,storageIds,mode:"valid"}) as Seed);
+  for (const mode of ["badSize", "badChecksum"])
+    saved.push(await admin.function("ownedExportPayloadFixture:seed", undefined, {userId:prefix+"-"+mode,scope:{kind:"tenantless"},storageIds,mode}) as Seed);
+}, 30000);
 it.each(["tenantless", "A", "B"])(
   "public administrative export completes exact %s record set and every current/retained binary",
   async (scopeName) => {
@@ -131,15 +119,15 @@ it.each(["badSize", "badChecksum"])(
   },
 );
 it("all five production operations deny ordinary/wrong-key clients before handling, and reject mismatched physical table identity", async () => {
-  owned();
+  nativeTarget();
   const seed = seeds().find(
       (x) => x.mode === "valid" && x.scope.kind === "tenantless",
     )!,
     selected = { userId: seed.userId, scope: seed.scope },
-    ordinary = new ConvexHttpClient("http://127.0.0.1:45410", {
+    ordinary = new ConvexHttpClient(nativeTarget().url, {
       logger: false,
     }),
-    wrong = new ConvexHttpClient("http://127.0.0.1:45410", { logger: false });
+    wrong = new ConvexHttpClient(nativeTarget().url, { logger: false });
   (wrong as unknown as { setAdminAuth(key: string): void }).setAdminAuth(
     "task16c-wrong-key",
   );
@@ -202,4 +190,20 @@ it("all five production operations deny ordinary/wrong-key clients before handli
       expectedFingerprint: fp,
     }),
   ).rejects.toThrow("EXPORT_TRANSPORT");
+});
+
+it("complete export and supported erasure refuse a provisioned runtime scope before any profile effects", async () => {
+  const admin=nativeAdmin(), {url,key}=nativeTarget(), userId=proofPrefix("task16c-ci-runtime"), tenantId=proofPrefix("runtime-native-export");
+  const seed=await admin.function("ownedExportPayloadFixture:seed",undefined,{userId,scope:{kind:"tenant",tenantId},storageIds:seeds()[0].storageIds,mode:"valid"}) as Seed;
+  const before=await admin.function("ownedExportPayloadFixture:profile",undefined,{userId,id:seed.ids.profile.id});
+  await admin.function("runtimeAuth:provision",undefined,{issuer:"https://cortex-ci.test",subject:userId,actorKind:"user",metadataUserId:userId,tenantId,memorySpaceId:userId+"-runtime-space",capabilities:["read","write","admin"],resourceAccess:"space"});
+  const api=new UsersAPI({} as never), events:UserExportEvent[]=[];
+  const erasureTransport=new UsersAPI({} as never).createErasureTransport({url,deploymentKey:key});
+  try {
+    await expect(admin.function("userExport:inspect",undefined,{userId,scope:seed.scope})).rejects.toThrow("UNSUPPORTED_OPERATION");
+    await expect((async()=>{for await(const event of api.exportData(userId,{tenantId,transport:transport()}))events.push(event);})()).rejects.toThrow();
+    expect(events.map(event=>event.type)).toEqual(["header"]);
+    await expect(api.delete(userId,{tenantId,cascade:true,erasureTransport})).rejects.toThrow("UNSUPPORTED_OPERATION");
+    expect(await admin.function("ownedExportPayloadFixture:profile",undefined,{userId,id:seed.ids.profile.id})).toEqual(before);
+  } finally { erasureTransport.close(); }
 });

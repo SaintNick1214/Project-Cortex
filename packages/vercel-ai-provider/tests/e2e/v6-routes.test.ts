@@ -7,7 +7,7 @@
  * Requires: CONVEX_URL, OPENAI_API_KEY
  */
 
-import { Cortex } from "@cortexmemory/sdk";
+import { Cortex, nativeProviderCredentials } from "../helpers/operator-client";
 import {
   createTestMemorySpaceId,
   createTestUserId,
@@ -124,7 +124,7 @@ describe("AI SDK v6 Routes E2E", () => {
         const prepareCall = createMemoryPrepareCall({
           convexUrl: process.env.CONVEX_URL!,
           maxMemories: 10,
-        });
+        }, nativeProviderCredentials(process.env.CONVEX_URL!));
 
         expect(typeof prepareCall).toBe("function");
       });
@@ -134,7 +134,7 @@ describe("AI SDK v6 Routes E2E", () => {
           convexUrl: process.env.CONVEX_URL!,
           maxMemories: 10,
           includeFacts: true,
-        });
+        }, nativeProviderCredentials(process.env.CONVEX_URL!));
 
         // Test prepareCall with a fresh user (no memories stored yet)
         // The function should still work, just return no context

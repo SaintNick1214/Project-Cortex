@@ -19,6 +19,8 @@ import type { Id } from "../../convex-dev/_generated/dataModel";
 import { resolveTenantId } from "../auth/tenant";
 import { ConvexClient } from "convex/browser";
 import { api } from "../common/backendApi";
+import { api as publicApi } from "../../convex-dev/_generated/api";
+import { isDeploymentOperatorClient } from "../common/deploymentOperator";
 import type {
   CountFactsFilter,
   DeleteFactOptions,
@@ -545,7 +547,7 @@ export class FactsAPI {
       validateMetadata(filter.metadata);
     }
 
-    const load = domainLoader(this.client, "facts", {
+    const selection = {
           memorySpaceId: filter.memorySpaceId,
           tenantId: resolveDomainTenant(this.authContext?.tenantId, filter.tenantId), // Tenant isolation
           factType: filter.factType,
@@ -567,7 +569,16 @@ export class FactsAPI {
           includeSuperseded: filter.includeSuperseded,
           validAt: filter.validAt?.getTime(),
           metadata: filter.metadata,
-        });
+        };
+    if (!isDeploymentOperatorClient(this.client)) {
+      // Public handlers return the complete authorized set unless the caller
+      // selects a finite window; native budget failures remain failures.
+      return await this.executeWithResilience(
+        () => this.client.query(publicApi.facts.list, { ...selection, limit: filter.limit, offset: filter.offset, sortBy: filter.sortBy, sortOrder: filter.sortOrder }),
+        "facts:list",
+      );
+    }
+    const load = domainLoader(this.client, "facts", selection);
     const rows = await collectDomain<FactRecord>(load);
     if (filter?.sortBy) {
       const field = filter.sortBy;
@@ -735,7 +746,7 @@ export class FactsAPI {
       }
     }
 
-    const load = domainLoader(this.client, "facts", {
+    const selection = {
           memorySpaceId,
           tenantId: resolveDomainTenant(this.authContext?.tenantId, options?.tenantId), // Tenant isolation
           query,
@@ -758,7 +769,14 @@ export class FactsAPI {
           includeSuperseded: options?.includeSuperseded,
           validAt: options?.validAt?.getTime(),
           metadata: options?.metadata,
-        });
+        };
+    if (!isDeploymentOperatorClient(this.client)) {
+      return await this.executeWithResilience(
+        () => this.client.query(publicApi.facts.search, { ...selection, limit: options?.limit ?? 20, offset: options?.offset, sortBy: options?.sortBy, sortOrder: options?.sortOrder }),
+        "facts:search",
+      );
+    }
+    const load = domainLoader(this.client, "facts", selection);
     const rows = await collectDomain<FactRecord>(load);
     if (options?.sortBy) {
       const field = options.sortBy;
@@ -980,16 +998,14 @@ export class FactsAPI {
     const operationId = _options?.operationId ?? randomUUID();
     let result;
     try {
-      result = await this.executeGraphWrite(
-        () =>
-          this.mutateGraph(api.facts.deleteFact, {
-            memorySpaceId,
-            tenantId,
-            operationId,
-            factId,
-          }, _options?.syncToGraph),
-        "facts:delete", _options?.syncToGraph,
-      );
+      result = isDeploymentOperatorClient(this.client)
+        ? await this.executeGraphWrite(
+          () => this.mutateGraph(api.facts.deleteFact, { memorySpaceId, tenantId, operationId, factId }, _options?.syncToGraph),
+          "facts:delete", _options?.syncToGraph,
+        )
+        // The public handler has no idempotency key. A lost acknowledgement
+        // must remain unresolved rather than replay an already committed delete.
+        : await this.mutateGraph(publicApi.facts.deleteFact, { memorySpaceId, factId }, _options?.syncToGraph);
     } catch (error) {
       this.handleConvexError(error);
     }
@@ -1028,6 +1044,16 @@ export class FactsAPI {
     validateMemorySpaceId(params.memorySpaceId);
     if (params.factType !== undefined) validateFactType(params.factType);
     const tenantId = resolveDomainTenant(this.authContext?.tenantId, params.tenantId);
+    if (!isDeploymentOperatorClient(this.client)) {
+      // The registered public mutation atomically tombstones its complete
+      // authorized selection. It has no candidate-page or retained-history API.
+      if (params.includeSuperseded === false) throw new Error("DOMAIN_PUBLIC_SELECTION_UNSUPPORTED");
+      assertDomainActive(params);
+      if (params.deadlineMs !== undefined && (!Number.isFinite(params.deadlineMs) || params.deadlineMs <= 0)) throw new Error("DOMAIN_INVALID_DEADLINE");
+      return await waitDomainOperation(this.mutateGraph(publicApi.facts.deleteMany, {
+        memorySpaceId: params.memorySpaceId, userId: params.userId, factType: params.factType,
+      }, params.syncToGraph), params);
+    }
     const load = domainLoader(this.client, "facts", {memorySpaceId: params.memorySpaceId, tenantId, userId: params.userId, factType: params.factType, includeSuperseded: params.includeSuperseded ?? true, deleteOperationPrefix: randomUUID()});
     const selected = await selectDomain<FactRecord>(load, params);
     if (!sameSelection(selected, await selectDomain<FactRecord>(load, params))) throw new Error("DOMAIN_SELECTION_CHANGED");
@@ -1192,7 +1218,8 @@ export class FactsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.facts.queryBySubject, {
+        this.client.query(isDeploymentOperatorClient(this.client) ? api.facts.queryBySubject : publicApi.facts.queryBySubject, {
+          ...(isDeploymentOperatorClient(this.client) ? { tenantId: resolveDomainTenant(this.authContext?.tenantId) } : {}),
           memorySpaceId: filter.memorySpaceId,
           subject: filter.subject,
           factType: filter.factType,

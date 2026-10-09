@@ -1,5 +1,6 @@
 import { jest } from "@jest/globals";
 import { getFunctionName } from "convex/server";
+import { enableDeploymentOperator } from "../../src/common/deploymentOperator";
 import type { MemorySpacesAPI as MemorySpacesType } from "../../src/memorySpaces";
 
 
@@ -32,7 +33,8 @@ function fixture(tenantId?: string) {
   const calls: Array<{name: string; args: any}> = [];
   let profile: any = { id: "same-user", tenantId, data: {}, version: 2, createdAt: 1, updatedAt: 2 };
   const invoke = async (ref: any, args: any) => {
-    const name = getFunctionName(ref); calls.push({name, args});
+    const functionName = getFunctionName(ref); calls.push({name: functionName, args});
+    const name = functionName.replace(/^cliOperator\//, "");
     if (name.endsWith(":count")) return 1001;
     if (name === "immutable:get") return profile;
     if (name === "immutable:purge") { profile = null; return {deleted:true}; }
@@ -103,18 +105,33 @@ for (const tenant of scopeCases) describe(`SDK exact ${tenant ?? "tenantless"} s
     const dry=await api.delete("same-user",{dryRun:true});expect(f.calls).toHaveLength(0);expect(dry.totalDeleted).toBe(0);expect(dry.verification).toMatchObject({scope:"user-profile",complete:false});
     const result=await api.delete("same-user");expect(result.verification).toMatchObject({scope:"user-profile",complete:true});expect(f.calls.map(c=>c.name)).toEqual(["immutable:purge","immutable:get"]);
   });
-  it("all selected count callers and MemoryAPI internal vector propagate scope and participant",async()=>{
+  it("explicit operator count callers and MemoryAPI internal vector propagate scope and participant",async()=>{
     const f=fixture(tenant);const v=new VectorAPI(f.client,undefined,undefined,f.auth);
+    enableDeploymentOperator(f.client);
     await v.count({memorySpaceId:"shared",participantId:"p",sourceType:"system",userId:"u"});
     await new ConversationsAPI(f.client,undefined,undefined,f.auth).count({memorySpaceId:"shared",type:"user-agent",userId:"u"});
     await new FactsAPI(f.client,undefined,undefined,f.auth).count({memorySpaceId:"shared",tags:["t"],includeSuperseded:true});
     const m=new MemoryAPI(f.client,undefined,undefined,{authContext:f.auth} as any);await m.count({memorySpaceId:"shared",participantId:"p"});
     for(const call of f.calls) expect(call.args.tenantId).toBe(tenant);expect(f.calls[0].args.participantId).toBe("p");expect(f.calls[3].args.participantId).toBe("p");
   });
-  it("production Cortex.vector and Cortex.memory construction carry the context",async()=>{
-    const cortex=new Cortex({convexUrl:"http://127.0.0.1:45799",auth:createAuthContext({userId:"actor",...(tenant===undefined?{}:{tenantId:tenant})}),graphEnabled:false,resilience:{enabled:false},convexLogger:false});
+  for (const operator of [false, true]) it(`production ${operator ? "operator" : "public"} Cortex.vector and Cortex.memory use the intended scope contract`,async()=>{
+    const cortex=new Cortex({convexUrl:"http://127.0.0.1:45799",auth:createAuthContext({userId:"actor",...(tenant===undefined?{}:{tenantId:tenant})}),graphEnabled:false,resilience:{enabled:false},convexLogger:false}, operator ? {deploymentOperator:true} : undefined);
     const client=(cortex as any).client;const query=jest.spyOn(client,"query").mockResolvedValue(0);
-    try {await cortex.vector.count({memorySpaceId:"shared"});await cortex.memory.count({memorySpaceId:"shared"});expect(query).toHaveBeenCalledTimes(2);for(const call of query.mock.calls)expect((call[1] as any).tenantId).toBe(tenant);}finally{await cortex.shutdown();}
+    try {
+      await cortex.vector.count({memorySpaceId:"shared"});await cortex.memory.count({memorySpaceId:"shared"});
+      expect(query).toHaveBeenCalledTimes(2);
+      for(const call of query.mock.calls) {
+        // The spy observes the logical SDK reference before operator routing.
+        expect(getFunctionName(call[0] as any)).toBe("memories:count");
+        if (operator) expect((call[1] as any).tenantId).toBe(tenant);
+        else expect(call[1]).toEqual({memorySpaceId:"shared"});
+      }
+      if (!operator) {
+        await expect(cortex.vector.count({memorySpaceId:"shared",participantId:"p"})).rejects.toMatchObject({code:"UNSUPPORTED_PUBLIC_SELECTOR"});
+        if (tenant) await expect(cortex.memory.count({memorySpaceId:"shared",tenantId:"foreign"})).rejects.toThrow();
+        expect(query).toHaveBeenCalledTimes(2);
+      }
+    }finally{await cortex.shutdown();}
   });
 });
 for(const selected of ["", " ", null, false, 7]) it(`rejects malformed tenant ${JSON.stringify(selected)} before transport`,async()=>{
@@ -126,6 +143,7 @@ for(const selected of ["", " ", null, false, 7]) it(`rejects malformed tenant ${
 });
 it("retained explicit scope selects without context and refuses conflict in all selected APIs",async()=>{
  for(const tenant of [undefined,"tenant-A"]){const f=fixture(tenant);const expected=tenant?"tenant-B":"tenant-B";
+  enableDeploymentOperator(f.client);
   const invokes=[()=>new MemorySpacesAPI(f.client,undefined,undefined,f.auth).register({memorySpaceId:"shared",type:"team",tenantId:expected}),()=>new MemorySpacesAPI(f.client,undefined,undefined,f.auth).list({tenantId:expected}),()=>new UsersAPI(f.client,undefined,undefined,f.auth).list({tenantId:expected}),()=>new UsersAPI(f.client,undefined,undefined,f.auth).count({tenantId:expected}),()=>new VectorAPI(f.client,undefined,undefined,f.auth).count({memorySpaceId:"shared",tenantId:expected}),()=>new ConversationsAPI(f.client,undefined,undefined,f.auth).count({tenantId:expected}),()=>new FactsAPI(f.client,undefined,undefined,f.auth).count({memorySpaceId:"shared",tenantId:expected})];
   for(const invoke of invokes){if(tenant) await expect(invoke()).rejects.toThrow();else await invoke();}if(tenant)expect(f.calls).toHaveLength(0);else for(const call of f.calls) expect(call.args.tenantId).toBe(expected);
  }

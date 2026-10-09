@@ -7,6 +7,11 @@
  * - Auth context in different API layers
  */
 
+import {
+  expectRefusalNoEffects,
+  expectOwnedRecallItems,
+} from "./helpers/public-contract";
+import { createRuntimeFixture } from "./helpers/runtime-fixture";
 import { Cortex } from "../src";
 import { createAuthContext } from "../src/auth/context";
 import { createTestRunContext } from "./helpers/isolation";
@@ -28,11 +33,41 @@ describeWithConvex("Auth Context Injection", () => {
   let testSessionId: string;
   let testMemorySpaceId: string;
 
-  beforeAll(() => {
+  let fixture: Awaited<ReturnType<typeof createRuntimeFixture>>;
+  let profileFixture: Awaited<ReturnType<typeof createRuntimeFixture>>;
+  const clients: Cortex[] = [];
+  const publicCortex = (config: ConstructorParameters<typeof Cortex>[0]) => {
+    const client = new Cortex(
+      { ...config, resilience: { enabled: false } },
+      config.auth
+        ? { initializeTransport: fixture.initializeTransport }
+        : undefined,
+    );
+    clients.push(client);
+    return client;
+  };
+
+  beforeAll(async () => {
     testTenantId = generateTenantId("auth-inject");
     testUserId = generateTenantUserId(testTenantId);
     testSessionId = `sess_${ctx.runId}`;
     testMemorySpaceId = `space_${ctx.runId}`;
+    fixture = await createRuntimeFixture(
+      testTenantId,
+      testMemorySpaceId,
+      testUserId,
+    );
+    profileFixture = await createRuntimeFixture(
+      testTenantId,
+      `${testMemorySpaceId}-default-profile`,
+      testUserId,
+    );
+  });
+
+  afterAll(async () => {
+    await Promise.all(clients.map((client) => client.shutdown()));
+    await fixture?.close();
+    await profileFixture?.close();
   });
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -47,7 +82,7 @@ describeWithConvex("Auth Context Injection", () => {
         sessionId: testSessionId,
       });
 
-      const cortex = new Cortex({
+      const cortex = publicCortex({
         convexUrl: process.env.CONVEX_URL!,
         auth: authContext,
       });
@@ -60,7 +95,7 @@ describeWithConvex("Auth Context Injection", () => {
     });
 
     it("should initialize Cortex without auth context", () => {
-      const cortex = new Cortex({
+      const cortex = publicCortex({
         convexUrl: process.env.CONVEX_URL!,
       });
 
@@ -87,7 +122,7 @@ describeWithConvex("Auth Context Injection", () => {
         },
       });
 
-      const cortex = new Cortex({
+      const cortex = publicCortex({
         convexUrl: process.env.CONVEX_URL!,
         auth: authContext,
       });
@@ -109,17 +144,12 @@ describeWithConvex("Auth Context Injection", () => {
         sessionId: testSessionId,
       });
 
-      cortex = new Cortex({
+      cortex = publicCortex({
         convexUrl: process.env.CONVEX_URL!,
         auth: authContext,
       });
 
       // Register memory space
-      await cortex.memorySpaces.register({
-        memorySpaceId: testMemorySpaceId,
-        name: "Auth Inject Test Space",
-        type: "custom",
-      });
     });
 
     afterAll(async () => {
@@ -133,33 +163,32 @@ describeWithConvex("Auth Context Injection", () => {
       }
     });
 
-    it("should propagate tenantId when creating conversation", async () => {
-      const conversation = await cortex.conversations.create({
-        memorySpaceId: testMemorySpaceId,
-        type: "user-agent",
-        participants: { userId: testUserId, agentId: "test-agent" },
-      });
-
-      expect(conversation).toBeDefined();
-      expect(conversation.conversationId).toBeDefined();
-      // TenantId should be stored on the conversation
-      expect(conversation.tenantId).toBe(testTenantId);
-
-      // Cleanup
-      await cortex.conversations.delete(conversation.conversationId);
+    it("should refuse unsupported transcript creation without effects", async () => {
+      await expectRefusalNoEffects(
+        () =>
+          cortex.conversations.create({
+            memorySpaceId: testMemorySpaceId,
+            type: "user-agent",
+            participants: { userId: testUserId, agentId: "test-agent" },
+          }),
+        [fixture],
+        "conversations",
+        "CAPABILITY_NOT_READY",
+      );
     });
 
-    it("should propagate userId to participants", async () => {
-      const conversation = await cortex.conversations.create({
-        memorySpaceId: testMemorySpaceId,
-        type: "user-agent",
-        participants: { userId: testUserId, agentId: "test-agent" },
-      });
-
-      expect(conversation.participants.userId).toBe(testUserId);
-
-      // Cleanup
-      await cortex.conversations.delete(conversation.conversationId);
+    it("should preserve the participant-bound transcript refusal", async () => {
+      await expectRefusalNoEffects(
+        () =>
+          cortex.conversations.create({
+            memorySpaceId: testMemorySpaceId,
+            type: "user-agent",
+            participants: { userId: testUserId, agentId: "test-agent" },
+          }),
+        [fixture],
+        "conversations",
+        "CAPABILITY_NOT_READY",
+      );
     });
   });
 
@@ -172,22 +201,13 @@ describeWithConvex("Auth Context Injection", () => {
     let conversationId: string;
 
     beforeAll(async () => {
-      const authContext = createTenantAuthContext(testTenantId, testUserId, {
-        sessionId: testSessionId,
-      });
-
-      cortex = new Cortex({
+      cortex = publicCortex({
         convexUrl: process.env.CONVEX_URL!,
-        auth: authContext,
+        auth: createTenantAuthContext(testTenantId, testUserId, {
+          sessionId: testSessionId,
+        }),
       });
-
-      // Create a conversation for memory tests
-      const conv = await cortex.conversations.create({
-        memorySpaceId: testMemorySpaceId,
-        type: "user-agent",
-        participants: { userId: testUserId, agentId: "test-agent" },
-      });
-      conversationId = conv.conversationId;
+      conversationId = "conv-uncommitted";
     });
 
     afterAll(async () => {
@@ -198,54 +218,57 @@ describeWithConvex("Auth Context Injection", () => {
       }
     });
 
-    it("should propagate auth context to remember", async () => {
-      const result = await cortex.memory.remember({
-        memorySpaceId: testMemorySpaceId,
-        tenantId: testTenantId, // Pass tenantId explicitly to MemoryAPI
-        conversationId,
-        userMessage: "Test message for auth context",
-        agentResponse: "Test response",
-        userId: testUserId,
-        userName: "Test User", // Required when userId is provided
-        agentId: "test-agent", // Required when userId is provided
+    it("should retain memory auth scope while transcript capture refuses", async () => {
+      await expectRefusalNoEffects(
+        () =>
+          cortex.memory.remember({
+            memorySpaceId: testMemorySpaceId,
+            tenantId: testTenantId,
+            conversationId,
+            userMessage: "Test message for auth context",
+            agentResponse: "Test response",
+            userId: testUserId,
+            userName: "Test User",
+            agentId: "test-agent",
+          }),
+        [fixture],
+        "memories",
+        "CAPABILITY_NOT_READY",
+      );
+      const memory = await cortex.vector.store(testMemorySpaceId, {
+        content: "Supported authenticated memory",
+        contentType: "raw",
+        source: { type: "system" },
+        metadata: {
+          importance: 50,
+          tags: ["auth-context"],
+          userId: testUserId,
+        },
       });
-
-      expect(result.memories).toBeDefined();
-      expect(result.memories.length).toBeGreaterThan(0);
-
-      // Memory should have tenantId
-      const memory = result.memories[0];
       expect(memory.tenantId).toBe(testTenantId);
       expect(memory.userId).toBe(testUserId);
     });
 
     it("should filter recall by auth context", async () => {
-      // Create a memory
-      await cortex.memory.remember({
-        memorySpaceId: testMemorySpaceId,
-        tenantId: testTenantId, // Pass tenantId explicitly to MemoryAPI
-        conversationId,
-        userMessage: "Recall filter test",
-        agentResponse: "Recall filter response",
-        userId: testUserId,
-        userName: "Test User", // Required when userId is provided
-        agentId: "test-agent", // Required when userId is provided
+      const memory = await cortex.vector.store(testMemorySpaceId, {
+        content: "Recall filter test",
+        contentType: "raw",
+        source: { type: "system" },
+        metadata: {
+          importance: 50,
+          tags: ["recall-filter"],
+          userId: testUserId,
+        },
       });
-
-      // Recall with same tenant context
       const result = await cortex.memory.recall({
         memorySpaceId: testMemorySpaceId,
-        query: "recall filter test",
+        query: "Recall filter test",
         limit: 10,
       });
-
-      expect(result.items).toBeDefined();
-      // Results should only include items from the same tenant
-      result.items.forEach((item) => {
-        if (item.tenantId) {
-          expect(item.tenantId).toBe(testTenantId);
-        }
-      });
+      expect(result.items.some((item) => item.id === memory.memoryId)).toBe(
+        true,
+      );
+      await expectOwnedRecallItems(result.items, fixture);
     });
   });
 
@@ -262,7 +285,7 @@ describeWithConvex("Auth Context Injection", () => {
         sessionId: testSessionId,
       });
 
-      cortex = new Cortex({
+      cortex = publicCortex({
         convexUrl: process.env.CONVEX_URL!,
         auth: authContext,
       });
@@ -324,7 +347,7 @@ describeWithConvex("Auth Context Injection", () => {
         sessionId: testSessionId,
       });
 
-      cortex = new Cortex({
+      cortex = publicCortex({
         convexUrl: process.env.CONVEX_URL!,
         auth: authContext,
       });
@@ -388,7 +411,7 @@ describeWithConvex("Auth Context Injection", () => {
         sessionId: testSessionId,
       });
 
-      cortex = new Cortex({
+      cortex = publicCortex({
         convexUrl: process.env.CONVEX_URL!,
         auth: authContext,
       });
@@ -434,50 +457,41 @@ describeWithConvex("Auth Context Injection", () => {
 
   describe("Cross-API Auth Consistency", () => {
     let cortex: Cortex;
-    let conversationId: string;
 
     beforeAll(async () => {
-      const authContext = createTenantAuthContext(testTenantId, testUserId, {
-        sessionId: testSessionId,
-      });
-
-      cortex = new Cortex({
+      cortex = publicCortex({
         convexUrl: process.env.CONVEX_URL!,
-        auth: authContext,
+        auth: createTenantAuthContext(testTenantId, testUserId, {
+          sessionId: testSessionId,
+        }),
       });
-
-      // Create test conversation
-      const conv = await cortex.conversations.create({
-        memorySpaceId: testMemorySpaceId,
-        type: "user-agent",
-        participants: { userId: testUserId, agentId: "test-agent" },
-      });
-      conversationId = conv.conversationId;
     });
 
     afterAll(async () => {
       try {
-        await cortex.conversations.delete(conversationId);
+        await expectRefusalNoEffects(
+          () =>
+            cortex.conversations.create({
+              memorySpaceId: testMemorySpaceId,
+              type: "user-agent",
+              participants: { userId: testUserId, agentId: "test-agent" },
+            }),
+          [fixture],
+          "conversations",
+          "CAPABILITY_NOT_READY",
+        );
       } catch {
         // Ignore cleanup errors
       }
     });
 
     it("should maintain consistent tenantId across API calls", async () => {
-      // Create data across multiple APIs
-      const conversation = await cortex.conversations.get(conversationId);
-
-      const memoryResult = await cortex.memory.remember({
-        memorySpaceId: testMemorySpaceId,
-        tenantId: testTenantId, // Pass tenantId explicitly to MemoryAPI
-        conversationId,
-        userMessage: "Cross-API consistency test",
-        agentResponse: "Response",
-        userId: testUserId,
-        userName: "Test User", // Required when userId is provided
-        agentId: "test-agent", // Required when userId is provided
+      const memory = await cortex.vector.store(testMemorySpaceId, {
+        content: "Cross-API consistency test",
+        contentType: "raw",
+        source: { type: "system" },
+        metadata: { importance: 50, tags: ["cross-api"], userId: testUserId },
       });
-
       const fact = await cortex.facts.store({
         memorySpaceId: testMemorySpaceId,
         fact: "Cross-API fact test",
@@ -486,13 +500,19 @@ describeWithConvex("Auth Context Injection", () => {
         sourceType: "manual",
         userId: testUserId,
       });
-
-      // All should have the same tenantId
-      expect(conversation?.tenantId).toBe(testTenantId);
-      expect(memoryResult.memories[0].tenantId).toBe(testTenantId);
+      expect(memory.tenantId).toBe(testTenantId);
       expect(fact.tenantId).toBe(testTenantId);
-
-      // Cleanup
+      await expectRefusalNoEffects(
+        () =>
+          cortex.conversations.create({
+            memorySpaceId: testMemorySpaceId,
+            type: "user-agent",
+            participants: { userId: testUserId, agentId: "test-agent" },
+          }),
+        [fixture],
+        "conversations",
+        "CAPABILITY_NOT_READY",
+      );
       await cortex.facts.delete(testMemorySpaceId, fact.factId);
     });
   });
@@ -502,45 +522,34 @@ describeWithConvex("Auth Context Injection", () => {
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   describe("Auth Context Override", () => {
-    it("should allow userId override in API calls", async () => {
-      const authContext = createTenantAuthContext(testTenantId, testUserId);
-      const cortex = new Cortex({
+    it("should refuse an actor override without persisted effects", async () => {
+      const cortex = publicCortex({
         convexUrl: process.env.CONVEX_URL!,
-        auth: authContext,
+        auth: createTenantAuthContext(testTenantId, testUserId),
       });
-
-      const differentUserId = generateTenantUserId(testTenantId);
-
-      // Create fact for a different user within the same tenant
-      const fact = await cortex.facts.store({
-        memorySpaceId: testMemorySpaceId,
-        fact: "User override test fact",
-        factType: "knowledge",
-        confidence: 85,
-        sourceType: "manual",
-        userId: differentUserId, // Override auth context userId
-      });
-
-      expect(fact.userId).toBe(differentUserId);
-      expect(fact.tenantId).toBe(testTenantId); // Tenant stays the same
-
-      // Cleanup
-      await cortex.facts.delete(testMemorySpaceId, fact.factId);
+      await expectRefusalNoEffects(
+        () =>
+          cortex.facts.store({
+            memorySpaceId: testMemorySpaceId,
+            fact: "User override test fact",
+            factType: "knowledge",
+            confidence: 85,
+            sourceType: "manual",
+            userId: generateTenantUserId(testTenantId),
+          }),
+        [fixture],
+        "facts",
+        "FORBIDDEN",
+      );
     });
 
     it("should use auth context userId when not explicitly provided", async () => {
-      const authContext = createTenantAuthContext(testTenantId, testUserId);
-      const cortex = new Cortex({
-        convexUrl: process.env.CONVEX_URL!,
-        auth: authContext,
-      });
-
-      // Create user profile without specifying userId
+      const cortex = profileFixture.cortex;
       const profile = await cortex.users.update(testUserId, {
         displayName: "Default User Test",
       });
-
       expect(profile.id).toBe(testUserId);
+      expect(profile.tenantId).toBe(testTenantId);
     });
   });
 });

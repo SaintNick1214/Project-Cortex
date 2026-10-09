@@ -1,14 +1,12 @@
 import { describe, expect, it } from "@jest/globals";
-import fs from "node:fs";
 import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
-import path from "node:path";
-import { spawnSync } from "node:child_process";
 import * as admin from "../../../convex-dev/admin";
 import * as graph from "../../../convex-dev/graphSync";
 import * as governance from "../../../convex-dev/governance";
 import schema from "../../../convex-dev/schema";
 import { fixture, invoke, policy, type Registration } from "./fixture";
+import { catalogInventory, withComposedCatalog } from "../../helpers/backend-catalog";
 const internal = [
   ...Object.entries(admin).filter(([key]) => ["listTable", "deleteRecord", "clearTable", "countTable", "getAllCounts"].includes(key)).map(([key, value]) => [`admin:${key}`, value]),
   ...Object.entries(graph).map(([key, value]) => [`graphSync:${key}`, value]),
@@ -146,23 +144,26 @@ describe("actual registered visibility and canonical schema/AST catalog", () => 
     expect(Object.keys(args(admin.getAllCounts).value)).toEqual([]);
     expect(args(governance.setPolicy).value.policy).toMatchObject({ optional: false });
   });
-  it("AST inventory resolves exact 25 frozen paths with seven public and eighteen internal", () => {
-    fs.mkdirSync(path.resolve("work/resume/task04-current-catalog-release-c4/test-scratch"), { recursive: true });
-    const target = fs.mkdtempSync(path.join(path.resolve("work/resume/task04-current-catalog-release-c4/test-scratch"), "cortex-task03b2d-catalog-"));
-    try {
-      const run = spawnSync(process.execPath, ["_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-release-c4/current-compose.mjs", target], { cwd: process.cwd(), encoding: "utf8" });
-      expect({ status: run.status, stderr: run.stderr }).toEqual({ status: 0, stderr: "" });
-      const inventory = JSON.parse(fs.readFileSync(path.join(target, "public-path-inventory.json"), "utf8")) as {
-        completeness: { unresolved: string[] }; endpoints: { path: string; visibility: string }[];
-      };
+  it("catalog inventory resolves imported aliases and refuses re-export or unclassified builder paths", () => {
+    const source = 'import { internalQuery as guarded } from "./_generated/server"; export const closed = guarded({ args: {}, handler: () => null });';
+    expect(catalogInventory({ probe: source })).toEqual({ completeness: { unresolved: [] },
+      endpoints: [{ path: "probe:closed", kind: "internalQuery", visibility: "internal" }] });
+    expect(catalogInventory({ probe: source + ' export { closed as exposed };' }).completeness.unresolved).toEqual(["probe:re-export"]);
+    expect(catalogInventory({ probe: source + ' export { query } from "./other";' }).completeness.unresolved).toEqual(["probe:re-export"]);
+    expect(catalogInventory({ probe: source + ' const hidden = guarded({ args: {}, handler: () => null });' }).completeness.unresolved).toHaveLength(1);
+  });
+  it("maintained backend composition resolves all 25 current paths with seven public and eighteen internal", () => {
+    withComposedCatalog((_directory, files) => {
+      const inventory = catalogInventory(Object.fromEntries(["governance", "admin", "graphSync"]
+        .map(module => [module, files[`${module}.ts`].toString()])));
       expect(inventory.completeness.unresolved).toEqual([]);
-      const selected = inventory.endpoints.filter((entry) => /^(?:governance|admin|graphSync):/.test(entry.path));
-      expect(selected).toHaveLength(25); expect(selected.filter((entry) => entry.visibility === "public")).toHaveLength(7);
-      expect(selected.filter((entry) => entry.visibility === "internal")).toHaveLength(18);
-      for (const [key] of internal) expect(selected.find((entry) => entry.path === key)).toMatchObject({ visibility: "internal" });
-    } finally {
-      fs.rmSync(target, { recursive: true, force: true });
-    }
-    expect(fs.existsSync(target)).toBe(false);
+      const selected = inventory.endpoints.filter(endpoint => /^(governance|admin|graphSync):/.test(endpoint.path));
+      expect(selected).toHaveLength(25);
+      expect(selected.filter(endpoint => endpoint.visibility === "public")).toHaveLength(7);
+      expect(selected.filter(endpoint => endpoint.visibility === "internal")).toHaveLength(18);
+      for (const [key] of internal) expect(selected.find(endpoint => endpoint.path === key)?.visibility).toBe("internal");
+      expect(selected.filter(endpoint => endpoint.visibility === "public").map(endpoint => endpoint.path).sort())
+        .toEqual(publicPaths.map(name => `governance:${name}`).sort());
+    });
   });
 });

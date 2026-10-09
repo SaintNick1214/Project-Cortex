@@ -51,9 +51,21 @@ export async function requireActionDataAuthority(ctx: Pick<ActionCtx, "runQuery"
   return concrete(await ctx.runQuery(dataAuthReferences.authorize, { requirement: { capability,
     tenantId: selectors.tenantId, memorySpaceId: selectors.memorySpaceId } }));
 }
+/** Native internal validators accept pinned control fields, never a full
+ * resolved authority's actor labels/capability metadata. All fences remain. */
+export function dataAuthorityReference(reference: RuntimeAuthorityReference): RuntimeAuthorityReference {
+  return {
+    principalId: reference.principalId, principalVersion: reference.principalVersion,
+    membershipId: reference.membershipId, membershipVersion: reference.membershipVersion,
+    grantId: reference.grantId, grantVersion: reference.grantVersion,
+    tenantId: reference.tenantId, tenantEpoch: reference.tenantEpoch,
+    ...(reference.memorySpaceId !== undefined ? { memorySpaceId: reference.memorySpaceId } : {}),
+    ...(reference.memorySpaceEpoch !== undefined ? { memorySpaceEpoch: reference.memorySpaceEpoch } : {}),
+  };
+}
 export async function recheckActionDataAuthority(ctx: Pick<ActionCtx, "runQuery">,
   reference: RuntimeAuthorityReference, capability: Capability): Promise<void> {
-  await ctx.runQuery(dataAuthReferences.recheck, { reference, requirement: { capability,
+  await ctx.runQuery(dataAuthReferences.recheck, { reference: dataAuthorityReference(reference), requirement: { capability,
     tenantId: reference.tenantId, memorySpaceId: reference.memorySpaceId } });
 }
 /** Actor metadata may narrow/filter requests, but public writes cannot impersonate another actor. */

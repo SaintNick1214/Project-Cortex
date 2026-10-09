@@ -11,6 +11,7 @@ import { setTimeout as pause } from "node:timers/promises";
 import { runCliTests, testEnvironment } from "../../scripts/test-runner.js";
 import {
   cliTestTarget,
+  cliTestCredentials,
   configureCliTestEnvironment,
 } from "./test-environment.js";
 
@@ -106,15 +107,28 @@ it.each([
   },
 );
 it("uses only the explicit valid target, and offline setup removes targets", () => {
-  const env = { ...canaries, CONVEX_URL_CLI: "http://127.0.0.1:3217" };
+  const env = { ...canaries, CONVEX_URL_CLI: "http://127.0.0.1:3217", CORTEX_TEST_EXPECTED_CONVEX_URL: "http://127.0.0.1:3217" };
   configureCliTestEnvironment(env, true);
   expect(env.CONVEX_URL).toBe("http://127.0.0.1:3217");
   expect(env.CONVEX_DEPLOYMENT_TYPE).toBe("local");
   expect(env.LOCAL_CONVEX_URL).toBeUndefined();
-  expect(env.CONVEX_DEPLOY_KEY).toBeUndefined();
+  expect(env.CONVEX_DEPLOY_KEY).toBe(canaries.CONVEX_DEPLOY_KEY);
   configureCliTestEnvironment(env);
   expect(env.CONVEX_URL).toBeUndefined();
   expect(env.CONVEX_URL_CLI).toBeUndefined();
+  expect(env.CONVEX_DEPLOY_KEY).toBeUndefined();
+});
+it.each([
+  {},
+  { CORTEX_TEST_EXPECTED_CONVEX_URL: "https://other.invalid", CONVEX_DEPLOY_KEY: "synthetic-test-key" },
+  { CORTEX_TEST_EXPECTED_CONVEX_URL: "http://127.0.0.1:3217" },
+  { CORTEX_TEST_EXPECTED_CONVEX_URL: "http://127.0.0.1:3217", CONVEX_DEPLOY_KEY: "\nsynthetic-test-key" },
+])("refuses unqualified live administrative credentials before creating a child %j", async (selection) => {
+  const f = await fixture();
+  const environment = { CONVEX_URL_CLI: "http://127.0.0.1:3217", ...selection };
+  expect(() => cliTestCredentials(environment)).toThrow("CONVEX_DEPLOY_KEY");
+  await expect(runCliTests("e2e", ["--trace", f.trace], { environment, jestEntry: f.entry, stdio: "ignore" })).rejects.toThrow("CONVEX_DEPLOY_KEY");
+  expect(fs.existsSync(f.trace)).toBe(false);
 });
 it("drops inherited target/credential/preload canaries and keeps only explicit public tool inputs", () => {
   const env = testEnvironment(
@@ -211,7 +225,7 @@ it("imports real live setup with the explicit target and forwards useful Jest/wa
       "--json",
     ],
     {
-      environment: { ...canaries, CONVEX_URL_CLI: target },
+      environment: { ...canaries, CONVEX_URL_CLI: target, CORTEX_TEST_EXPECTED_CONVEX_URL: target },
       jestEntry: f.entry,
       stdio: "ignore",
     },
@@ -220,6 +234,8 @@ it("imports real live setup with the explicit target and forwards useful Jest/wa
   const observed = JSON.parse(await readFile(f.trace, "utf8"));
   expect(observed.environment.CONVEX_URL).toBe(target);
   expect(observed.environment.CONVEX_URL_CLI).toBe(target);
+  expect(observed.environment.CONVEX_DEPLOY_KEY).toBe(canaries.CONVEX_DEPLOY_KEY);
+  expect(observed.environment.CORTEX_TEST_EXPECTED_CONVEX_URL).toBe(target);
   expect(observed.environment.OPENAI_API_KEY).toBeUndefined();
   expect(observed.envOpens).toEqual([]);
   expect(observed.args).toEqual(expect.arrayContaining(["--watch", "--json"]));

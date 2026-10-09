@@ -4,7 +4,7 @@ import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { createRequire } from "node:module";
 import { fileURLToPath, pathToFileURL } from "node:url";
-import { cliTestTarget } from "../tests/helpers/test-environment.js";
+import { cliTestCredentials } from "../tests/helpers/test-environment.js";
 
 const cli = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const projects = {
@@ -47,7 +47,12 @@ export function testEnvironment(input, root, live) {
     ...toolInputs,
   ])
     if (typeof input[name] === "string") environment[name] = input[name];
-  if (live) environment.CONVEX_URL_CLI = cliTestTarget(input);
+  if (live) {
+    const credentials = cliTestCredentials(input);
+    environment.CONVEX_URL_CLI = credentials.url;
+    environment.CORTEX_TEST_EXPECTED_CONVEX_URL = credentials.url;
+    environment.CONVEX_DEPLOY_KEY = credentials.key;
+  }
   return environment;
 }
 
@@ -69,7 +74,7 @@ export async function runCliTests(
       "Use the canonical test mode/config; forceExit is disabled.",
     );
   const live = mode === "all" || mode === "e2e";
-  if (live) cliTestTarget(environment);
+  if (live) cliTestCredentials(environment);
   const entry =
     jestEntry ?? createRequire(import.meta.url).resolve("jest/bin/jest");
   let root = await mkdtemp(join(tmpdir(), "cortex-cli-tests-"));

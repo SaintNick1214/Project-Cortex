@@ -5,6 +5,7 @@ import { FactsAPI } from "../../src/facts";
 import { VectorAPI } from "../../src/vector";
 import { createAuthContext } from "../../src/auth/context";
 import type { SourceType } from "../../src/types";
+import { enableDeploymentOperator } from "../../src/common/deploymentOperator";
 
 const sources: SourceType[] = ["conversation", "system", "tool", "a2a", "fact-extraction"];
 const filter = { memorySpaceId: "selected-space", tenantId: "selected-tenant", userId: "selected-user", participantId: "selected-participant", sourceType: "fact-extraction" as const };
@@ -12,8 +13,9 @@ function memory(id: string, overrides: Record<string, unknown> = {}) {
   return { _id: id, memoryId: `logical-${id}`, ...filter, content: id, contentType: "raw", sourceTimestamp: 1, importance: 50, tags: [], version: 1, previousVersions: [], createdAt: 1, updatedAt: 1, accessCount: 0, ...overrides };
 }
 
-/** A stateful transport, using the public APIs and their existing paging/selection code. */
-function fixture(count = 129) {
+/** Stateful explicit operator paging/cascade fixture. Public handler cases below
+ * select a separate unmarked transport with a fixed authenticated tenant. */
+function fixture(count = 129, operator = true) {
   const owned = Array.from({ length: count }, (_, index) => memory(`owned-${index}`));
   const controls = [memory("other-source", { sourceType: "system" }), memory("other-tenant", { tenantId: "foreign-tenant" }), memory("other-space", { memorySpaceId: "foreign-space" }), memory("other-user", { userId: "foreign-user" }), memory("other-participant", { participantId: "foreign-participant" })];
   let rows = [...owned, ...controls];
@@ -21,12 +23,16 @@ function fixture(count = 129) {
   let scans = 0;
   const state = { changeOnReselection: false };
   const calls: Array<{ name: string; args: Record<string, any> }> = [];
+  const registrations: string[] = [];
   const selected = (args: Record<string, any>) => rows.filter(row => ["memorySpaceId", "tenantId", "userId", "participantId", "sourceType"].every(key => args[key] === undefined || (row as Record<string, unknown>)[key] === args[key]));
   const client = {
     query: async (reference: unknown, args: Record<string, any>) => {
-      const name = getFunctionName(reference as Parameters<typeof getFunctionName>[0]);
+      const registration = getFunctionName(reference as Parameters<typeof getFunctionName>[0]);
+      registrations.push(registration);
+      const name = registration.replace(/^cliOperator\//, "");
       calls.push({ name, args });
-      if (name === "memories:count") return selected(args).length;
+      if (name === "memories:count") return selected(operator ? args : { ...args, tenantId: filter.tenantId }).length;
+      if (!operator && name === "memories:list") return selected({ ...args, tenantId: filter.tenantId }).slice(0, args.limit ?? 100);
       if (name === "facts:candidatePage") return { page: [], isDone: true, continueCursor: "end" };
       if (name !== "memories:domainPage") throw new Error(`Unexpected query ${name}`);
       if (args.paginationOpts.cursor === null) scans++;
@@ -36,7 +42,9 @@ function fixture(count = 129) {
       return { page, isDone: start + page.length >= matches.length, continueCursor: String(start + page.length), fingerprints: Object.fromEntries(page.map(row => [row._id, (state.changeOnReselection && scans > 1 ? "b" : "a").repeat(64)])) };
     },
     mutation: async (reference: unknown, args: Record<string, any>) => {
-      const name = getFunctionName(reference as Parameters<typeof getFunctionName>[0]);
+      const registration = getFunctionName(reference as Parameters<typeof getFunctionName>[0]);
+      registrations.push(registration);
+      const name = registration.replace(/^cliOperator\//, "");
       calls.push({ name, args });
       if (name === "memories:store") {
         const stored = memory("created-memory", { ...args, userId: args.userId, participantId: args.participantId });
@@ -62,7 +70,8 @@ function fixture(count = 129) {
       return { deleted: true };
     },
   } as unknown as ConvexClient;
-  return { client, calls, state, owned, controls, facts, remaining: () => rows };
+  if (operator) enableDeploymentOperator(client);
+  return { client, calls, registrations, state, owned, controls, facts, remaining: () => rows };
 }
 
 function api(kind: "memory" | "vector", f: ReturnType<typeof fixture>, configured = true) {
@@ -72,13 +81,14 @@ function api(kind: "memory" | "vector", f: ReturnType<typeof fixture>, configure
     : new VectorAPI(f.client, undefined, undefined, authContext);
 }
 
-describe.each(["memory", "vector"] as const)("public %s source filters", kind => {
+describe.each(["memory", "vector"] as const)("explicit operator %s source filters", kind => {
   test.each(sources)("count keeps the supported %s source and exact scope", async sourceType => {
     const f = fixture(1);
     const chosen = { ...filter, sourceType };
     const result = await api(kind, f).count(chosen);
     expect(result).toBe(sourceType === "fact-extraction" || sourceType === "system" ? 1 : 0);
     expect(f.calls).toEqual([{ name: "memories:count", args: chosen }]);
+    expect(f.registrations).toEqual(["cliOperator/memories:count"]);
   });
 
   test.each([true, false])("list/count/clear cross the page boundary and preserve foreign controls (configured=%s)", async configured => {
@@ -133,6 +143,33 @@ describe.each(["memory", "vector"] as const)("public %s source filters", kind =>
     expect(result).toMatchObject({ deleted: 0, memoryIds: [], partial: { confirmedCount: 0, outcomes: [] } });
     expect(f.remaining()).toEqual(f.controls);
     expect(f.calls.some(call => call.name === "memories:eraseSelected")).toBe(false);
+  });
+});
+
+describe.each(["memory", "vector"] as const)("public %s registered source filters", kind => {
+  test.each(sources)("count forwards supported %s without unsupported authority selectors", async sourceType => {
+    const f = fixture(1, false);
+    const chosen = { memorySpaceId: filter.memorySpaceId, userId: filter.userId, sourceType };
+    const result = await api(kind, f).count(chosen);
+    expect(result).toBe(sourceType === "fact-extraction" ? 2 : sourceType === "system" ? 1 : 0);
+    expect(f.calls).toEqual([{ name: "memories:count", args: chosen }]);
+    expect(f.registrations).toEqual(["memories:count"]);
+  });
+  test("list uses the registered scoped handler and preserves foreign controls", async () => {
+    const f = fixture(1, false);
+    const chosen = { memorySpaceId: filter.memorySpaceId, userId: filter.userId, sourceType: filter.sourceType, limit: 20 };
+    const result = await api(kind, f).list(chosen);
+    expect(result).toEqual([f.owned[0], f.controls[4]]);
+    expect(f.registrations).toEqual(["memories:list"]);
+    expect(f.calls[0].args).toMatchObject(chosen);
+    expect(f.calls[0].args).not.toHaveProperty("tenantId");
+    expect(f.calls[0].args).not.toHaveProperty("participantId");
+    expect(f.remaining()).toEqual([...f.owned, ...f.controls]);
+  });
+  test.each(["list", "count"] as const)("%s refuses an explicitly requested participant selector before I/O", async method => {
+    const f = fixture(1, false);
+    await expect(api(kind, f)[method](filter)).rejects.toMatchObject({ code: "UNSUPPORTED_PUBLIC_SELECTOR", selector: "participantId" });
+    expect(f.calls).toEqual([]); expect(f.remaining()).toEqual([...f.owned, ...f.controls]);
   });
 });
 

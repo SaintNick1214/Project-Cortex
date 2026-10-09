@@ -2,7 +2,9 @@ import { mutateGraphSelected } from "../graph/erasure";
 import type { FunctionReference, FunctionArgs, FunctionReturnType } from "convex/server";
 import { writeGraphMutation, type GraphPrimary } from "../graph/erasure";
 import type { GraphSyncPolicy } from "../graph/types";
-import { domainLoader, collectDomain, selectDomain, sameSelection, resolveDomainTenant } from "../common/domainPaging";
+import { domainLoader, collectDomain, selectDomain, sameSelection, resolveDomainTenant, waitDomainOperation, assertDomainActive } from "../common/domainPaging";
+import { isDeploymentOperatorClient } from "../common/deploymentOperator";
+import { api as publicApi } from "../../convex-dev/_generated/api";
 import { memoryExport } from "../common/domainExport";
 import { DomainOperationPartialError, type DomainReadOptions, type DomainPartial } from "../types";
 import { ConvexError } from "convex/values";
@@ -53,6 +55,11 @@ export class VectorAPI {
     private readonly authContext?: AuthContext,
     private readonly graphSyncPolicy?: GraphSyncPolicy,
   ) {}
+  private validatePublicSelectors(selectors: { participantId?: string }): void {
+    if (!isDeploymentOperatorClient(this.client) && selectors.participantId !== undefined)
+      throw Object.assign(new Error("Public memory handlers do not support participantId selectors."), { code: "UNSUPPORTED_PUBLIC_SELECTOR", selector: "participantId" });
+  }
+
   private mutateGraph<M extends FunctionReference<"mutation", "public">>(reference: M, args: FunctionArgs<M>, explicit?: boolean): Promise<GraphPrimary<FunctionReturnType<M>>> {
     return writeGraphMutation(this.client, this.graphAdapter, this.graphSyncPolicy, reference, args, explicit);
   }
@@ -220,14 +227,16 @@ export class VectorAPI {
     // Client-side validation
     validateMemorySpaceId(memorySpaceId);
     validateSearchOptions(options);
+    this.validatePublicSelectors(options ?? {});
 
+    const tenantId = resolveDomainTenant(this.authContext?.tenantId, options?.tenantId);
+    const operator = isDeploymentOperatorClient(this.client);
     // Note: memories.search is an action (not a query) because vector search
     // requires ctx.vectorSearch() which is only available in Convex actions
     const result = await this.executeWithResilience(
       () =>
-        this.client.action(api.memories.search, {
-          tenantId: resolveDomainTenant(this.authContext?.tenantId, options?.tenantId),
-          participantId: options?.participantId,
+        this.client.action(operator ? api.memories.search : publicApi.memories.search, {
+          ...(operator ? { tenantId, participantId: options?.participantId } : {}),
           memorySpaceId,
           query,
           embedding: options?.embedding,
@@ -261,6 +270,11 @@ export class VectorAPI {
   async delete(memorySpaceId: string, memoryId: string, options?: DeleteMemoryOptions & DomainReadOptions): Promise<{deleted: boolean; memoryId: string; partial?: DomainPartial}> {
     validateMemorySpaceId(memorySpaceId); validateMemoryId(memoryId);
     const tenantId = resolveDomainTenant(this.authContext?.tenantId, options?.tenantId);
+    if (!isDeploymentOperatorClient(this.client)) {
+      assertDomainActive(options);
+      if (options?.deadlineMs !== undefined && (!Number.isFinite(options.deadlineMs) || options.deadlineMs <= 0)) throw new Error("DOMAIN_INVALID_DEADLINE");
+      return waitDomainOperation(this.mutateGraph(publicApi.memories.deleteMemory, { memorySpaceId, memoryId }, options?.syncToGraph), options);
+    }
     const selected = (await selectDomain<MemoryEntry>(domainLoader(this.client, "memories", {memorySpaceId, tenantId}), options)).filter(row => row.document.memoryId === memoryId);
     if (selected.length > 1) throw new Error("DOMAIN_SCOPE_AMBIGUOUS");
     if (!selected.length) throw new Error("MEMORY_NOT_FOUND");
@@ -283,8 +297,16 @@ export class VectorAPI {
   async list(filter: ListMemoriesFilter): Promise<MemoryEntry[]> {
     // Client-side validation
     validateListFilter(filter);
+    this.validatePublicSelectors(filter);
 
     const tenantId = resolveDomainTenant(this.authContext?.tenantId, filter.tenantId);
+    if (!isDeploymentOperatorClient(this.client)) {
+      if (filter.limit === 0) return [];
+      const result = await this.executeWithResilience(() => this.client.query(publicApi.memories.list, {
+        memorySpaceId: filter.memorySpaceId, userId: filter.userId, sourceType: filter.sourceType, limit: filter.limit,
+      }), "vector:list") as MemoryEntry[];
+      return result;
+    }
     return collectDomain<MemoryEntry>(domainLoader(this.client, "memories", {memorySpaceId: filter.memorySpaceId, tenantId, userId: filter.userId, participantId: filter.participantId, sourceType: filter.sourceType}), undefined, filter.limit ?? 100);
   }
 
@@ -302,14 +324,14 @@ export class VectorAPI {
   async count(filter: CountMemoriesFilter): Promise<number> {
     // Client-side validation
     validateCountFilter(filter);
+    this.validatePublicSelectors(filter);
     const tenantId = resolveDomainScope(this.authContext?.tenantId, filter.tenantId);
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.memories.count, {
+        this.client.query(isDeploymentOperatorClient(this.client) ? api.memories.count : publicApi.memories.count, {
           memorySpaceId: filter.memorySpaceId,
-          tenantId,
-          participantId: filter.participantId,
+          ...(isDeploymentOperatorClient(this.client) ? { tenantId, participantId: filter.participantId } : {}),
           userId: filter.userId,
           sourceType: filter.sourceType,
         }),
@@ -457,9 +479,21 @@ export class VectorAPI {
    * });
    * ```
    */
-  async deleteMany(filter: {memorySpaceId: string; tenantId?: string; participantId?: string; userId?: string; sourceType?: StoreMemoryInput["source"]["type"]}, options?: DomainReadOptions): Promise<{deleted: number; memoryIds: string[]; partial?: DomainPartial}> {
+  async deleteMany(filter: {memorySpaceId: string; tenantId?: string; participantId?: string; userId?: string; sourceType?: StoreMemoryInput["source"]["type"]}, options?: DomainReadOptions): Promise<{deleted: number; memoryIds?: string[]; mutationReceipt?: true; partial?: DomainPartial}> {
     validateDeleteManyFilter(filter);
+    this.validatePublicSelectors(filter);
     const tenantId = resolveDomainTenant(this.authContext?.tenantId, filter.tenantId);
+    if (!isDeploymentOperatorClient(this.client)) {
+      if (filter.sourceType === "fact-extraction")
+        throw Object.assign(new Error("Public bulk deletion does not support the fact-extraction source selector."), { code: "UNSUPPORTED_PUBLIC_SELECTOR", selector: "sourceType" });
+      assertDomainActive(options);
+      if (options?.deadlineMs !== undefined && (!Number.isFinite(options.deadlineMs) || options.deadlineMs <= 0)) throw new Error("DOMAIN_INVALID_DEADLINE");
+      // Return the server's actual receipt. Write-only grants may confirm a
+      // count while withholding IDs; no read or fabricated ID list is added.
+      return waitDomainOperation(this.mutateGraph(publicApi.memories.deleteMany, {
+        memorySpaceId: filter.memorySpaceId, userId: filter.userId, sourceType: filter.sourceType,
+      }, options?.syncToGraph), options);
+    }
     const load = domainLoader(this.client, "memories", {memorySpaceId: filter.memorySpaceId, tenantId, participantId: filter.participantId, userId: filter.userId, sourceType: filter.sourceType});
     const selected = await selectDomain<MemoryEntry>(load, options);
     if (!sameSelection(selected, await selectDomain<MemoryEntry>(load, options))) throw new Error("DOMAIN_SELECTION_CHANGED");
@@ -488,6 +522,12 @@ export class VectorAPI {
   async export(options: {memorySpaceId: string; tenantId?: string; userId?: string; format: "json" | "csv"; includeEmbeddings?: boolean} & DomainReadOptions): Promise<{format: string; data: string; count: number; exportedAt: number}> {
     validateExportOptions(options);
     const tenantId = resolveDomainTenant(this.authContext?.tenantId, options.tenantId);
+    if (!isDeploymentOperatorClient(this.client)) {
+      assertDomainActive(options);
+      return waitDomainOperation(this.executeWithResilience(() => this.client.query(publicApi.memories.exportMemories, {
+        memorySpaceId: options.memorySpaceId, userId: options.userId, format: options.format, includeEmbeddings: options.includeEmbeddings,
+      }), "vector:export"), options);
+    }
     const memories = await collectDomain<MemoryEntry>(domainLoader(this.client, "memories", {memorySpaceId: options.memorySpaceId, tenantId, userId: options.userId}), options);
     return memoryExport(memories, options);
   }

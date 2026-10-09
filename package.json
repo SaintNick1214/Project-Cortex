@@ -85,7 +85,8 @@
     "test:stress": "npx tsx tests/resilience-stress.manual.ts",
     "update-deps": "node scripts/update-deps.mjs",
     "update-deps:dry": "node scripts/update-deps.mjs --dry-run",
-    "test:contracts": "node scripts/verify-public-contracts.mjs"
+    "test:contracts": "node scripts/verify-public-contracts.mjs",
+    "test:release": "node --test tests/release-pipeline.test.mjs"
   },
   "peerDependencies": {
     "@anthropic-ai/sdk": "^0.131.0",

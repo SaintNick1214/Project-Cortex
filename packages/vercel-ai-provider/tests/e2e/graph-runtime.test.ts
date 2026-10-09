@@ -1,54 +1,84 @@
-/** Graph-only provider runtime proof, with a deterministic local model and no paid calls. */
-import fs from 'node:fs';
-import { randomUUID } from 'node:crypto';
-import { Cortex, CypherGraphAdapter } from '@cortexmemory/sdk';
-import { createCortexMemoryAsync } from '../../src/index';
-import { CortexMemoryProvider } from '../../src/provider';
-import type { GraphConnectionConfig } from '@cortexmemory/sdk';
-const root=process.env.CORTEX_GRAPH_PROOF_ROOT;
-if(!root) throw new Error('Set CORTEX_GRAPH_PROOF_ROOT to the prepared owned graph fixture.');
-if(process.env.HOME!==process.env.CORTEX_TEST_HOME_ROOT || !process.env.HOME?.startsWith(root+'/') || process.env.CONVEX_URL!=='http://127.0.0.1:43210') throw new Error('Unowned provider runtime target refused.');
-const configs:Record<string,GraphConnectionConfig>=JSON.parse(fs.readFileSync(root+'/connection.json','utf8'));
-for(const [engine,connection] of Object.entries(configs)) {
- it(`real ${engine} manual provider adapter stays usable after factory disposal`,async()=>{
-  const adapter=new CypherGraphAdapter(); await adapter.connect(connection);
-  const owner=await createCortexMemoryAsync({convexUrl:process.env.CONVEX_URL!,memorySpaceId:'task15-manual-provider',userId:'task15-manual-user',agentId:'task15-manual-agent',enableGraphMemory:false,graphConfig:{adapter}});
-  await owner.close();
-  const id=await adapter.createNode({label:'Task15Owned',properties:{owner:'task15-manual-provider-'+randomUUID()}});
-  try { expect((await adapter.getNode(id))?.label).toBe('Task15Owned'); }
-  finally { await adapter.deleteNode(id); await adapter.disconnect(); }
- });
- it(`real ${engine} provider async paths sync and persist recall across two borrowed wrappers`,async()=>{
-  if(!['bolt://127.0.0.1:45387','bolt://127.0.0.1:45388'].includes(connection.uri)) throw new Error('Unowned graph target refused.');
-  const space='task15-provider-'+engine+'-'+randomUUID(); const user=space+'-user'; const agent=space+'-agent'; const conversation=space+'-conversation';
-  const config={convexUrl:process.env.CONVEX_URL!,memorySpaceId:space,userId:user,userName:user,agentId:agent,conversationId:conversation,enableGraphMemory:true,graphConfig:connection};
-  const owner=await createCortexMemoryAsync(config);
-  const inspector=new CypherGraphAdapter(); await inspector.connect(connection);
-  const clean=new Cortex({convexUrl:config.convexUrl,convexLogger:false,resilience:{enabled:false}});
-  try {
-   await clean.memorySpaces.register({memorySpaceId:space,type:'personal',name:space});
-   const model={provider:'local-proof',modelId:'task15-deterministic',specificationVersion:'v2',supportedUrls:{}};
-   const one=owner(model); const two=owner(model);
-   await Promise.all([one.close(),two.close(),one.close()]);
-   await owner.remember('Provider sapphire bicycle preference','Provider sapphire bicycle retained');
-   const search=await owner.search('sapphire bicycle');
-   expect(search.length).toBeGreaterThan(0); expect(JSON.stringify(search)).toContain('sapphire');
-   expect(await inspector.findNodes('Memory',{memorySpaceId:space})).toHaveLength(2);
-   expect(await inspector.findNodes('Conversation',{conversationId:conversation})).toHaveLength(1);
-   // Independent provider class factory shares selection rules and owns its instance.
-   const standalone=await CortexMemoryProvider.create(model,config);
-   await Promise.all([standalone.close(),standalone.close()]);
-   expect((await owner.search('sapphire bicycle')).length).toBeGreaterThan(0);
-   await Promise.all([owner.close(),owner.close()]);
-   const recall=await clean.memory.recall({memorySpaceId:space,query:'sapphire bicycle',userId:user});
-   expect(recall.totalResults).toBeGreaterThan(0); expect(recall.context?.toLowerCase()).toContain('sapphire');
-  } finally {
-   await owner.close();
-   await clean.memorySpaces.delete(space,{cascade:true,reason:'task15 provider proof cleanup',confirmId:space});
-   await clean.users.delete(user,{cascade:false}); await clean.agents.unregister(agent);
-   await inspector.query('MATCH(n) WHERE n.memorySpaceId=$space OR n.conversationId=$conversation OR n.userId=$user OR n.agentId=$agent DETACH DELETE n',{space,conversation,user,agent});
-   expect(await clean.memorySpaces.get(space)).toBeNull();
-   await clean.shutdown(); await inspector.disconnect();
-  }
- },30000);
+/** Required isolated graph job: native provider persistence, without paid calls. */
+import { randomUUID } from "node:crypto";
+import { jest, afterAll } from "@jest/globals";
+import { Cortex as SDK, CypherGraphAdapter, initializeGraphSchema, createGraphErasureTransport, type GraphConnectionConfig } from "@cortexmemory/sdk";
+import { createCortexMemoryAsync } from "../../src/index";
+import { CortexMemoryProvider } from "../../src/provider";
+import { Cortex, nativeProviderCredentials } from "../helpers/operator-client";
+
+const url = process.env.CONVEX_URL!;
+const credentials = nativeProviderCredentials(url);
+const created: SDK[] = [], originalCreate = SDK.create.bind(SDK);
+const observedCreate = jest.spyOn(SDK, "create").mockImplementation(async (...args) => {
+  const cortex = await originalCreate(...args); created.push(cortex); return cortex;
+});
+afterAll(() => observedCreate.mockRestore());
+const configs: Record<string, GraphConnectionConfig> = {
+  neo4j: { uri: process.env.NEO4J_URI!, username: process.env.NEO4J_USERNAME!, password: process.env.NEO4J_PASSWORD! },
+  memgraph: { uri: process.env.MEMGRAPH_URI!, username: process.env.MEMGRAPH_USERNAME || "cortex-ci", password: process.env.MEMGRAPH_PASSWORD || "cortex-ci-owned-test" },
+};
+for (const [engine, connection] of Object.entries(configs)) {
+  if (!connection.uri?.startsWith("bolt://127.0.0.1:")) throw new Error("Provider graph proofs require explicit owned loopback services.");
+  it(`real ${engine} manual provider adapter stays usable after factory disposal`, async () => {
+    const adapter = new CypherGraphAdapter(); await adapter.connect(connection); await initializeGraphSchema(adapter);
+    const tag = `provider-manual-${randomUUID()}`;
+    const owner = await createCortexMemoryAsync({ convexUrl: url, memorySpaceId: tag, userId: `${tag}-user`, agentId: `${tag}-agent`,
+      enableGraphMemory: false, graphConfig: { adapter } }, credentials);
+    try {
+      await owner.close();
+      const id = await adapter.createNode({ label: "OwnedProviderSentinel", properties: { tag } });
+      try { expect((await adapter.getNode(id))?.properties.tag).toBe(tag); }
+      finally { await adapter.deleteNode(id); }
+    } finally { await owner.close(); await adapter.disconnect(); }
+  });
+  it(`real ${engine} provider sync persists recall across borrowed wrappers`, async () => {
+    const space = `provider-runtime-${engine}-${randomUUID()}`, user = `${space}-user`, agent = `${space}-agent`, conversation = `${space}-conversation`;
+    const config = { convexUrl: url, memorySpaceId: space, userId: user, userName: user, agentId: agent, conversationId: conversation,
+      enableGraphMemory: true, graphConfig: connection };
+    const clean = new Cortex({ convexUrl: url });
+    const inspector = new CypherGraphAdapter(); await inspector.connect(connection);
+    const owner = await createCortexMemoryAsync(config, credentials);
+    try {
+      // Let the graph-enabled provider capture its own space creation before
+      // dependent conversation/memory jobs. Existing graph-off data needs rebuild.
+      const model = { provider: "local-proof", modelId: "deterministic-owned", specificationVersion: "v2", supportedUrls: {} };
+      const one = owner(model), two = owner(model);
+      await Promise.all([one.close(), two.close(), one.close()]);
+      await owner.remember("Provider sapphire bicycle preference", "Provider sapphire bicycle retained");
+      const search = await owner.search("sapphire bicycle");
+      expect(search.length).toBeGreaterThan(0); expect(JSON.stringify(search)).toContain("sapphire");
+      const memories = await clean.vector.list({ memorySpaceId: space });
+      // Automatic graph configuration delivers the durable queue in background.
+      // Wait for the actual physical projections, and fail if they never arrive.
+      const deadline = Date.now() + 10000;
+      let projected = await inspector.managedRead("MATCH (n:CortexV2Memory {spaceValue:$space, tenantTag:'knownTenantless'}) RETURN n.physicalSourceId AS id", { space });
+      while (projected.count !== 2 && Date.now() < deadline) {
+        await new Promise(resolve => setTimeout(resolve, 50));
+        projected = await inspector.managedRead("MATCH (n:CortexV2Memory {spaceValue:$space, tenantTag:'knownTenantless'}) RETURN n.physicalSourceId AS id", { space });
+      }
+      if (projected.count !== 2) throw new Error(`Native background graph delivery incomplete: ${JSON.stringify(created.at(-1)?.getGraphSyncWorker()?.getMetrics())}`);
+      expect(projected.records.map(row => row.id).sort()).toEqual(memories.map(memory => memory._id).sort());
+      expect(projected.count).toBe(2);
+      const conversations = await inspector.managedRead("MATCH (n:CortexV2Conversation {spaceValue:$space, tenantTag:'knownTenantless'}) RETURN n.physicalSourceId AS id", { space });
+      expect(conversations.count).toBe(1);
+      const standalone = await CortexMemoryProvider.create(model, config, credentials);
+      await Promise.all([standalone.close(), standalone.close()]);
+      expect((await owner.search("sapphire bicycle")).length).toBeGreaterThan(0);
+      await Promise.all([owner.close(), owner.close()]);
+      const recall = await clean.memory.recall({ memorySpaceId: space, query: "sapphire bicycle", userId: user });
+      expect(recall.totalResults).toBeGreaterThan(0); expect(recall.context?.toLowerCase()).toContain("sapphire");
+    } finally {
+      await owner.close();
+      const erasure = clean.memorySpaces.createErasureTransport({ url, deploymentKey: credentials.deploymentKey });
+      const disposal = createGraphErasureTransport({ url, deploymentKey: credentials.deploymentKey });
+      try {
+        await clean.memorySpaces.delete(space, { cascade: true, reason: "owned provider proof cleanup", confirmId: space,
+          erasureTransport: erasure, graphParticipant: { adapter: inspector, disposalTransport: disposal } });
+        await inspector.query("MATCH(n) WHERE n.spaceValue=$space OR n.logicalId IN $ids DETACH DELETE n", { space, ids: [user, agent, conversation] });
+        expect(await clean.memorySpaces.get(space)).toBeNull();
+      } finally {
+        erasure.close(); disposal.close(); await clean.shutdown(); await inspector.disconnect();
+      }
+    }
+  }, 60000);
 }

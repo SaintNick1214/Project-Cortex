@@ -206,6 +206,7 @@ export class ImmutableAPI {
         this.client.query(api.immutable.getHistory, {
           type,
           id,
+          tenantId: this.authContext?.tenantId,
         }),
       "immutable:getHistory",
     );

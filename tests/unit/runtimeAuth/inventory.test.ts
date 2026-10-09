@@ -3,6 +3,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { spawnSync } from "node:child_process";
+import { fileURLToPath } from "node:url";
 
 interface Policy {
   path: string; kind: string; visibility: string; disposition: string; requiredCapability: string;
@@ -12,8 +13,8 @@ interface Inventory {
   completeness: { unresolved: string[]; counts: { registeredBuilderCalls: number; resolvedExports: number } };
   endpoints: Policy[];
 }
-const base = "_goals/convex-backend-runtime-2026-10-02/qa/task03a";
-const runners = [path.resolve(base, "inventory.mjs"), path.resolve(base, "reproduction/inventory.mjs")];
+const runners = ["backend-catalog-policy.mjs", "backend-catalog-policy-reproduction.mjs"]
+  .map(name => fileURLToPath(new URL(`../../helpers/${name}`, import.meta.url)));
 const internalReads = ["facts:fetchFactsByIds", "memories:fetchMemoriesByIds", "memories:keywordSearchMemories"];
 const adminKinds = { listTable: "query", deleteRecord: "mutation", clearTable: "mutation", countTable: "query", getAllCounts: "query" };
 const purges = [

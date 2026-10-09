@@ -8,8 +8,8 @@
     "convex:deploy": "convex deploy",
     "convex:dev": "convex dev",
     "dev": "next dev --webpack",
-    "format": "ultracite fix",
-    "lint": "ultracite check",
+    "format": "biome check --write .",
+    "lint": "biome check .",
     "start": "next start",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
@@ -125,7 +125,6 @@
     "tailwindcss": "^4.3.3",
     "tsx": "^4.23.15",
     "typescript": "~6.0.3",
-    "ultracite": "^7.12.2",
     "vitest": "^5.0.3"
   },
   "packageManager": "pnpm@10.33.0",

@@ -4,8 +4,8 @@
  * Verifies that remember() automatically creates conversations if they don't exist
  */
 
-import { Cortex } from "../src/index.js";
-import { ConvexClient } from "convex/browser";
+import { Cortex } from "./helpers/deployment-operator";
+import { ConvexClient } from "./helpers/deployment-operator";
 import { createNamedTestRunContext } from "./helpers/isolation.js";
 
 describe("Memory API - Auto-Conversation Creation", () => {

@@ -80,10 +80,17 @@ export default {
       ...baseConfig,
       displayName: "e2e",
       testMatch: ["<rootDir>/tests/e2e/**/*.test.ts"],
+      testPathIgnorePatterns: ["/tests/e2e/graph-runtime\\.test\\.ts$"],
       testTimeout: 180000, // 3 minutes for E2E tests hitting real APIs
       testEnvironmentOptions: {
         JEST_PROJECT: "e2e",
       },
+    },
+    {
+      ...baseConfig,
+      displayName: "graph",
+      testMatch: ["<rootDir>/tests/e2e/graph-runtime.test.ts"],
+      testTimeout: 60000,
     },
   ],
   // Coverage thresholds

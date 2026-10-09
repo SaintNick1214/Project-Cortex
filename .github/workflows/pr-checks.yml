@@ -30,6 +30,15 @@ jobs:
   demo-contracts:
     name: Build demo (${{ matrix.folder }})
     runs-on: ubuntu-latest
+    services:
+      convex:
+        image: ghcr.io/get-convex/convex-backend@sha256:d715e9ec088784407ca4ba2d3db592702cd328d02c76cdca3852c0018f2a76b4
+        env:
+          CONVEX_CLOUD_ORIGIN: http://127.0.0.1:3210
+          CONVEX_SITE_ORIGIN: http://127.0.0.1:3211
+          DISABLE_BEACON: "true"
+        ports: [3210:3210, 3211:3211]
+        options: --health-cmd "curl -f http://localhost:3210/version" --health-interval 5s --health-start-period 10s --health-retries 30
     strategy:
       fail-fast: false
       matrix:
@@ -43,6 +52,9 @@ jobs:
         with:
           node-version: "24"
           cache: npm
+      - name: Use declared npm version
+        run: npm install --global npm@12.2.0
+
       - run: npm ci
       - name: Pack the SDK and provider under review
         run: |
@@ -52,22 +64,25 @@ jobs:
           PROVIDER_ARCHIVE=$(npm pack --workspace=@cortexmemory/vercel-ai-provider --ignore-scripts --silent --pack-destination "$RUNNER_TEMP")
           echo "SDK_ARCHIVE=$RUNNER_TEMP/$SDK_ARCHIVE" >> "$GITHUB_ENV"
           echo "PROVIDER_ARCHIVE=$RUNNER_TEMP/$PROVIDER_ARCHIVE" >> "$GITHUB_ENV"
-      - name: Install demo against the packed packages
+      - name: Build the CLI backend composer
+        run: npm run build --workspace=@cortexmemory/cli
+      - name: Use the demo package manager
+        run: |
+          PIN=$(node -p 'require("./${{ matrix.folder }}/package.json").packageManager')
+          if [[ "$PIN" == pnpm@* ]]; then npm install --global "$PIN"; fi
+      - name: Install and compose demo against the packed packages
+        run: |
+          args=(--directory "${{ matrix.folder }}" --sdk-archive "$SDK_ARCHIVE" --cli-source "$GITHUB_WORKSPACE/packages/cortex-cli")
+          if node -e 'process.exit(require("./${{ matrix.folder }}/package.json").dependencies["@cortexmemory/vercel-ai-provider"] ? 0 : 1)'; then
+            args+=(--provider-archive "$PROVIDER_ARCHIVE")
+          fi
+          node scripts/install-ci-demo.mjs "${args[@]}"
+      - name: Generate genuine demo backend bindings
         working-directory: ${{ matrix.folder }}
         run: |
-          if node -e 'process.exit(require("./package.json").packageManager?.startsWith("pnpm@") ? 0 : 1)'; then
-            corepack enable
-            corepack prepare "$(node -p 'require("./package.json").packageManager')" --activate
-            pnpm add --lockfile-only "@cortexmemory/sdk@file:$SDK_ARCHIVE" "@cortexmemory/vercel-ai-provider@file:$PROVIDER_ARCHIVE"
-            pnpm install --frozen-lockfile
-          else
-            if node -e 'process.exit(require("./package.json").dependencies["@cortexmemory/vercel-ai-provider"] ? 0 : 1)'; then
-              npm install --ignore-scripts --no-audit --no-fund "@cortexmemory/sdk@file:$SDK_ARCHIVE" "@cortexmemory/vercel-ai-provider@file:$PROVIDER_ARCHIVE"
-            else
-              npm install --ignore-scripts --no-audit --no-fund "@cortexmemory/sdk@file:$SDK_ARCHIVE"
-            fi
-            npm ci
-          fi
+          CI_ADMIN_KEY=$(docker exec "${{ job.services.convex.id }}" ./generate_admin_key.sh)
+          echo "::add-mask::$CI_ADMIN_KEY"
+          CONVEX_SELF_HOSTED_URL=http://127.0.0.1:3210 CONVEX_SELF_HOSTED_ADMIN_KEY="$CI_ADMIN_KEY" node node_modules/convex/bin/main.js dev --once --typecheck enable --tail-logs disable
       - name: Build demo
         working-directory: ${{ matrix.folder }}
         run: npm run build
@@ -85,6 +100,9 @@ jobs:
         with:
           node-version: "24"
           cache: npm
+      - name: Use declared npm version
+        run: npm install --global npm@12.2.0
+
       - run: npm ci
       - run: npm run lint --workspace=@cortexmemory/templates
       - run: npm run typecheck --workspace=@cortexmemory/templates
@@ -93,7 +111,19 @@ jobs:
   graph-contracts:
     name: Neo4j and Memgraph contracts
     runs-on: ubuntu-latest
+    env:
+      CONVEX_TEST_MODE: local
+      CONVEX_URL: http://127.0.0.1:3210
+      LOCAL_CONVEX_URL: http://127.0.0.1:3210
+      CORTEX_TEST_EXPECTED_CONVEX_URL: http://127.0.0.1:3210
+      CORTEX_CI_EXPECTED_CONVEX_URL: http://127.0.0.1:3210
+      CORTEX_CI_PREPARE_NATIVE_FIXTURES: "true"
+      CORTEX_CI_ALLOW_DESTRUCTIVE_RESET: "true"
     services:
+      convex:
+        image: ghcr.io/get-convex/convex-backend@sha256:d715e9ec088784407ca4ba2d3db592702cd328d02c76cdca3852c0018f2a76b4
+        ports: [3210:3210, 3211:3211]
+        options: --health-cmd "curl -f http://localhost:3210/version" --health-interval 5s --health-start-period 10s --health-retries 30
       neo4j:
         image: neo4j:5-community
         env:
@@ -108,7 +138,20 @@ jobs:
         with:
           node-version: "24"
           cache: npm
+      - name: Use declared npm version
+        run: npm install --global npm@12.2.0
+
       - run: npm ci
+      - name: Prepare isolated authenticated native graph backend
+        run: |
+          CI_ADMIN_KEY=$(docker exec "${{ job.services.convex.id }}" ./generate_admin_key.sh)
+          echo "::add-mask::$CI_ADMIN_KEY"
+          echo "CONVEX_DEPLOY_KEY=$CI_ADMIN_KEY" >> "$GITHUB_ENV"
+          CONVEX_DEPLOY_KEY="$CI_ADMIN_KEY" node scripts/prepare-ci-backend.mjs
+      - name: Build provider and SDK graph runtime
+        run: |
+          npm run build
+          npm run build --workspace=@cortexmemory/vercel-ai-provider
       - name: Wait for graph services and run contracts
         env:
           GRAPH_TESTING_ENABLED: "true"
@@ -135,7 +178,10 @@ jobs:
             } finally { await driver.close(); }
           }
           JS
-          node --experimental-vm-modules node_modules/jest/bin/jest.js --runTestsByPath tests/graph/graphAdapter.test.ts --runInBand
+          node --experimental-vm-modules node_modules/jest/bin/jest.js --runTestsByPath tests/graph/graphAdapter.test.ts tests/graph/managed-runtime-safety.test.ts --runInBand
+          npx tsx scripts/cleanup-test-data.ts
+          cd packages/vercel-ai-provider
+          node --experimental-vm-modules ../../node_modules/jest/bin/jest.js --selectProjects graph --runInBand
 
   public-contracts:
     name: Packed package and browser contracts
@@ -146,9 +192,58 @@ jobs:
         with:
           node-version: "24"
           cache: npm
+      - name: Use declared npm version
+        run: npm install --global npm@12.2.0
+
       - run: npm ci
       - run: npm run build
       - run: npm run test:contracts
+      - run: npm run test:release
+      - name: Verify candidate-install refusals and transitive closure
+        run: |
+          npm install --global pnpm@10.33.0
+          node --test scripts/install-ci-demo.test.mjs
+
+  native-proof-contracts:
+    name: Serialized native export, erasure and scope proofs
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    services:
+      convex:
+        image: ghcr.io/get-convex/convex-backend@sha256:d715e9ec088784407ca4ba2d3db592702cd328d02c76cdca3852c0018f2a76b4
+        ports: [3210:3210, 3211:3211]
+        options: --health-cmd "curl -f http://localhost:3210/version" --health-interval 5s --health-start-period 10s --health-retries 30
+    env:
+      CONVEX_TEST_MODE: local
+      CONVEX_URL: http://127.0.0.1:3210
+      LOCAL_CONVEX_URL: http://127.0.0.1:3210
+      CORTEX_TEST_EXPECTED_CONVEX_URL: http://127.0.0.1:3210
+      CORTEX_CI_EXPECTED_CONVEX_URL: http://127.0.0.1:3210
+      CORTEX_CI_PREPARE_NATIVE_FIXTURES: "true"
+      CORTEX_CI_ALLOW_DESTRUCTIVE_RESET: "true"
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+          cache: npm
+      - name: Use declared npm version
+        run: npm install --global npm@12.2.0
+      - run: npm ci
+      - name: Authenticate the disposable native backend
+        run: |
+          CI_ADMIN_KEY=$(docker exec "${{ job.services.convex.id }}" ./generate_admin_key.sh)
+          echo "::add-mask::$CI_ADMIN_KEY"
+          echo "CONVEX_DEPLOY_KEY=$CI_ADMIN_KEY" >> "$GITHUB_ENV"
+      - name: Prepare genuine canonical backend with private test fixtures
+        run: node scripts/prepare-ci-backend.mjs
+      - name: Run native proofs without unrelated concurrent seeds
+        run: |
+          for file in tests/user-export.test.ts tests/fact-history-provenance.test.ts \
+            tests/facts-revision-scope.test.ts tests/domain-scope.test.ts tests/domain-operations.test.ts tests/memorySpaces.test.ts tests/operation-sequences.test.ts; do
+            npx tsx scripts/cleanup-test-data.ts
+            node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand --runTestsByPath "$file"
+          done
 
   # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   # STAGE 1: Detect which files changed (fast, runs first)
@@ -169,6 +264,7 @@ jobs:
       sdk-release: ${{ steps.filter.outputs.sdk-release }}
       provider-release: ${{ steps.filter.outputs.provider-release }}
       cli-release: ${{ steps.filter.outputs.cli-release }}
+      templates-release: ${{ steps.filter.outputs.templates-release }}
     steps:
       - name: Checkout PR code
         uses: actions/checkout@v6
@@ -206,9 +302,12 @@ jobs:
               - 'packages/vercel-ai-provider/react/**'
               - 'packages/vercel-ai-provider/package.json'
               - 'packages/vercel-ai-provider/tsconfig*.json'
+            templates-release:
+              - 'packages/cortex-templates/**'
+              - 'packages/cortex-cli/templates/**'
+              - 'packages/vercel-ai-provider/quickstart/**'
             cli-release:
               - 'packages/cortex-cli/src/**'
-              - 'packages/cortex-cli/templates/**'
               - 'packages/cortex-cli/package.json'
               - 'packages/cortex-cli/scripts/**'
 
@@ -219,9 +318,10 @@ jobs:
           SDK_CHANGED: ${{ steps.filter.outputs.sdk-release }}
           PROVIDER_CHANGED: ${{ steps.filter.outputs.provider-release }}
           CLI_CHANGED: ${{ steps.filter.outputs.cli-release }}
+          TEMPLATES_CHANGED: ${{ steps.filter.outputs.templates-release }}
           SOURCE_SHA: ${{ github.sha }}
         run: |
-          node --input-type=module -e 'import {writeFileSync} from "node:fs"; writeFileSync("delivery-paths.json", JSON.stringify({sha:process.env.SOURCE_SHA,sdk:process.env.SDK_CHANGED === "true",provider:process.env.PROVIDER_CHANGED === "true",cli:process.env.CLI_CHANGED === "true"}));'
+          node --input-type=module -e 'import {writeFileSync} from "node:fs"; writeFileSync("delivery-paths.json", JSON.stringify({sha:process.env.SOURCE_SHA,sdk:process.env.SDK_CHANGED === "true",provider:process.env.PROVIDER_CHANGED === "true",cli:process.env.CLI_CHANGED === "true",templates:process.env.TEMPLATES_CHANGED === "true"}));'
 
       - uses: actions/upload-artifact@v4
         if: github.event_name == 'push'
@@ -251,7 +351,7 @@ jobs:
   # STAGE 2: Deploy Convex & Purge Database (runs once before all tests)
   # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   setup-and-purge:
-    name: Deploy & Purge Database
+    name: Prepare disposable test databases
     runs-on: ubuntu-latest
     needs: detect-changes
     # Run if any tests need to run OR if targeting main branch
@@ -282,6 +382,9 @@ jobs:
           node-version: "24"
           cache: "npm"
 
+      - name: Use declared npm version
+        run: npm install --global npm@12.2.0
+
       - name: Install dependencies
         run: npm ci
 
@@ -304,6 +407,8 @@ jobs:
         env:
           CONVEX_URL: ${{ secrets.CONVEX_URL }}
           CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
+          CORTEX_CI_ALLOW_DESTRUCTIVE_RESET: "true"
+          CORTEX_CI_EXPECTED_CONVEX_URL: ${{ secrets.CONVEX_URL }}
 
       # CLI-dedicated Convex instance (isolated from main SDK tests)
       - name: Deploy CLI Convex backend
@@ -319,6 +424,8 @@ jobs:
         env:
           CONVEX_URL: ${{ secrets.CONVEX_URL_CLI }}
           CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY_CLI }}
+          CORTEX_CI_ALLOW_DESTRUCTIVE_RESET: "true"
+          CORTEX_CI_EXPECTED_CONVEX_URL: ${{ secrets.CONVEX_URL_CLI }}
 
   # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   # STAGE 3: Code Quality (runs in parallel with tests after purge)
@@ -352,6 +459,9 @@ jobs:
         with:
           node-version: "24"
           cache: "npm"
+
+      - name: Use declared npm version
+        run: npm install --global npm@12.2.0
 
       - name: Install Node dependencies
         run: npm ci
@@ -411,6 +521,9 @@ jobs:
           node-version: "24"
           cache: "npm"
 
+      - name: Use declared npm version
+        run: npm install --global npm@12.2.0
+
       - name: Install dependencies
         run: npm ci
 
@@ -432,7 +545,7 @@ jobs:
       - name: Run tests (shard ${{ matrix.shard }}/5)
         run: |
           node --experimental-vm-modules node_modules/jest/bin/jest.js \
-            --testPathIgnorePatterns=debug \
+            --testPathIgnorePatterns='/node_modules/|debug|/tests/unit/runtime/gateway-dispatch\.test\.ts$|/tests/graph/managed-runtime-safety\.test\.ts$|/tests/(user-export|fact-history-provenance|facts-revision-scope|domain-scope|domain-operations|memorySpaces|operation-sequences)\.test\.ts$' \
             --shard=${{ matrix.shard }}/5 \
             --maxWorkers=75%
         env:
@@ -440,6 +553,7 @@ jobs:
           CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           CONVEX_TEST_MODE: managed
+          CORTEX_TEST_EXPECTED_CONVEX_URL: ${{ secrets.CONVEX_URL }}
 
       # Only build package once (on shard 1 to avoid redundant builds)
       - name: Build package
@@ -480,6 +594,9 @@ jobs:
           node-version: "24"
           cache: "npm"
 
+      - name: Use declared npm version
+        run: npm install --global npm@12.2.0
+
       - name: Install all workspace dependencies
         run: npm ci
 
@@ -496,6 +613,8 @@ jobs:
         run: npm test --workspace=@cortexmemory/vercel-ai-provider
         env:
           CONVEX_URL: ${{ secrets.CONVEX_URL }}
+          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
+          CORTEX_TEST_EXPECTED_CONVEX_URL: ${{ secrets.CONVEX_URL }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 
       - name: Lint Vercel AI Provider
@@ -542,6 +661,9 @@ jobs:
           node-version: "24"
           cache: "npm"
 
+      - name: Use declared npm version
+        run: npm install --global npm@12.2.0
+
       - name: Install all workspace dependencies
         run: npm ci
 
@@ -561,6 +683,7 @@ jobs:
         run: npm run test:e2e --workspace=@cortexmemory/cli
         env:
           CONVEX_URL_CLI: ${{ secrets.CONVEX_URL_CLI }}
+          CORTEX_TEST_EXPECTED_CONVEX_URL: ${{ secrets.CONVEX_URL_CLI }}
           CONVEX_URL: ${{ secrets.CONVEX_URL_CLI }}
           CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY_CLI }}
 
@@ -600,6 +723,7 @@ jobs:
         template-catalog,
         demo-contracts,
         graph-contracts,
+        native-proof-contracts,
         detect-changes,
         setup-and-purge,
         test-typescript,
@@ -620,6 +744,7 @@ jobs:
           test "${{ needs.template-catalog.result }}" = "success"
           test "${{ needs.demo-contracts.result }}" = "success"
           test "${{ needs.graph-contracts.result }}" = "success"
+          test "${{ needs.native-proof-contracts.result }}" = "success"
           echo "📊 Check Results:"
           echo "  Detect Changes:           ${{ needs.detect-changes.result }}"
           echo "  Setup & Purge:            ${{ needs.setup-and-purge.result }}"

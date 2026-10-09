@@ -19,11 +19,13 @@ for (const [id, relative, manager] of [
   const example = ".env.local.example";
   const bytes = await fs.readFile(path.join(source, example), "utf8");
   const envNames = [...new Set([...bytes.matchAll(/^([A-Z][A-Z0-9_]*)\s*=/gm)].map(match => match[1]))].sort();
+  const sourceManifest = JSON.parse(await fs.readFile(path.join(source, "package.json"), "utf8"));
   selections.push({ id: /** @type {import('../contract.js').TemplateId} */ (id),
-    manager: /** @type {import('../contract.js').PackageManager} */ (manager), version: "1.2.0", source,
-    provenance: `${relative}@1.2.0`, envExamples: [example], envNames, backend: true, graph: true });
+    manager: /** @type {import('../contract.js').PackageManager} */ (manager), version: sourceManifest.version, source,
+    provenance: `${relative}@${sourceManifest.version}`, envExamples: [example], envNames, backend: true, graph: true });
 }
-const assembly = await assembleCatalog(selections, "1.1.0");
+const manifest = JSON.parse(await fs.readFile(path.join(packageRoot, "package.json"), "utf8"));
+const assembly = await assembleCatalog(selections, manifest.version);
 const destination = process.argv[2];
 if (destination) {
   const result = await writeAssembly(path.resolve(destination), assembly);

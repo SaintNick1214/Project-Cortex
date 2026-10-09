@@ -56,17 +56,19 @@ export function withAdmissionContext<T>(context: AdmissionContext, action: () =>
 function missing(error: unknown): boolean { return Boolean(error && typeof error === "object" && "code" in error && error.code === "ENOENT"); }
 function refusal(code: string): never { throw new Error(`${code}: use supported JSON configuration and inspect private restore metadata`); }
 function hash(bytes: Buffer): string { return createHash("sha256").update(bytes).digest("hex"); }
-/** Stable bounded reads reject symlinks, special files and unreadable mode before opening. */
+/** Open without following symlinks, then validate and read that same descriptor. */
 export async function readAdmissionFile(path: string, privateFile = false): Promise<{ bytes: Buffer; fingerprint: FileFingerprint } | undefined> {
-  let before;
-  try { before = await lstat(path); } catch (error) { if (missing(error)) return undefined; return refusal("ADMISSION_SOURCE_UNREADABLE"); }
-  if (!before.isFile() || before.isSymbolicLink() || before.size > MAX_ADMISSION_BYTES || !(before.mode & 0o444)) return refusal("ADMISSION_SOURCE_UNSAFE");
-  if (privateFile && ((before.mode & 0o077) || (process.getuid && before.uid !== process.getuid()))) return refusal("ADMISSION_METADATA_PERMISSIONS");
-  if ((await realpath(dirname(path))) !== dirname(path)) return refusal("ADMISSION_SOURCE_UNSAFE");
-  const handle = await open(path, constants.O_RDONLY | constants.O_NOFOLLOW | constants.O_NONBLOCK);
+  let handle;
+  try { handle = await open(path, constants.O_RDONLY | constants.O_NOFOLLOW | constants.O_NONBLOCK); }
+  catch (error) {
+    if (missing(error)) return undefined;
+    return refusal((error as { code?: string }).code === "ELOOP" ? "ADMISSION_SOURCE_UNSAFE" : "ADMISSION_SOURCE_UNREADABLE");
+  }
   try {
-    const started = await handle.stat();
-    if (started.dev !== before.dev || started.ino !== before.ino || started.size !== before.size || !started.isFile()) return refusal("ADMISSION_SOURCE_CHANGED");
+    const before = await handle.stat(), started = before;
+    if (!before.isFile() || before.size > MAX_ADMISSION_BYTES || !(before.mode & 0o444)) return refusal("ADMISSION_SOURCE_UNSAFE");
+    if (privateFile && ((before.mode & 0o077) || (process.getuid && before.uid !== process.getuid()))) return refusal("ADMISSION_METADATA_PERMISSIONS");
+    if ((await realpath(dirname(path))) !== dirname(path)) return refusal("ADMISSION_SOURCE_UNSAFE");
     const bytes = Buffer.alloc(started.size);
     let offset = 0;
     while (offset < bytes.length) {

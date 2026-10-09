@@ -10,7 +10,7 @@
  * - Performance benchmarks
  */
 
-import { Cortex } from "../../../src";
+import { Cortex } from "../../helpers/deployment-operator";
 import { createTestRunContext } from "../../helpers/isolation";
 import {
   generateTenantId,

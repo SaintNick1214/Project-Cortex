@@ -2030,7 +2030,7 @@ const SDK_CONTRACT: Record<string, SourceContract> = {
     "operations": []
   },
   "memories.ts": {
-    "hash": "72cbaf6fceff8999ad3c289a645b2b19f605e05fdb79141fc05a2f9f911861a8",
+    "hash": "35123484567b893824050e585adf8e1ce650f2e6a8c636dcf357c7dfa7863c34",
     "imports": [
       {
         "statement": "import { action, internalMutation, internalQuery, mutation, query } from \"./_generated/server\";",
@@ -2393,7 +2393,7 @@ const SDK_CONTRACT: Record<string, SourceContract> = {
     "operations": []
   },
   "runtimeDataAuth.ts": {
-    "hash": "e9e824c186f49eb0337f522f7c901be02be8925704ad1aa973407969654a9d10",
+    "hash": "718ec85232979594c5022ee25eff79764885b360280508302062e9e622acd459",
     "imports": [
       {
         "statement": "import type { ActionCtx, MutationCtx, QueryCtx } from \"./_generated/server\";",

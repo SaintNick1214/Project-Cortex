@@ -498,7 +498,7 @@ export class CypherGraphAdapter implements GraphAdapter {
       const result = await session.run(query, params);
 
       return result.records.map((record) => ({
-        id: record.get("id"),
+        id: String(record.get("id")),
         label: (record.get("labels") as string[])[0] || label,
         properties: this.deserializeProperties(record.get("n").properties),
       }));
@@ -605,10 +605,10 @@ export class CypherGraphAdapter implements GraphAdapter {
       const result = await session.run(query, params);
 
       return result.records.map((record) => ({
-        id: record.get("id"),
+        id: String(record.get("id")),
         type,
-        from: record.get("fromId"),
-        to: record.get("toId"),
+        from: String(record.get("fromId")),
+        to: String(record.get("toId")),
         properties: this.deserializeProperties(record.get("r").properties),
       }));
     } catch (error) {
@@ -727,7 +727,7 @@ export class CypherGraphAdapter implements GraphAdapter {
       const result = await session.run(query, this.serializeProperties(params));
 
       return result.records.map((record) => ({
-        id: record.get("id"),
+        id: String(record.get("id")),
         label: (record.get("labels") as string[])[0] || "Node",
         properties: this.deserializeProperties(
           record.get("connected").properties,
@@ -753,28 +753,31 @@ export class CypherGraphAdapter implements GraphAdapter {
           ? `:${config.relationshipTypes.join("|")}`
           : "";
 
+      // Engine dialect is independent of the numeric/element ID capability.
+      const memgraph = await this.managedDialect() === "memgraph";
+      const expansion = memgraph ? `*BFS ..${config.maxHops}` : `*..${config.maxHops}`;
       const direction = config.direction || "BOTH";
       let relPattern: string;
 
       if (direction === "OUTGOING") {
-        relPattern = `-[${relTypes}*..${config.maxHops}]->`;
+        relPattern = `-[${relTypes}${expansion}]->`;
       } else if (direction === "INCOMING") {
-        relPattern = `<-[${relTypes}*..${config.maxHops}]-`;
+        relPattern = `<-[${relTypes}${expansion}]-`;
       } else {
-        relPattern = `-[${relTypes}*..${config.maxHops}]-`;
+        relPattern = `-[${relTypes}${expansion}]-`;
       }
 
       const idFunc = this.getIdFunction();
       const query = `
         MATCH (start), (end)
         WHERE ${idFunc}(start) = $fromId AND ${idFunc}(end) = $toId
-        MATCH path = shortestPath((start)${relPattern}(end))
+        ${memgraph ? `MATCH path = (start)${relPattern}(end)` : `MATCH path = shortestPath((start)${relPattern}(end))`}
         RETURN path
       `;
 
       const result = await session.run(query, {
-        fromId: config.fromId,
-        toId: config.toId,
+        fromId: this.convertIdForQuery(config.fromId),
+        toId: this.convertIdForQuery(config.toId),
       });
 
       if (result.records.length === 0) {
@@ -787,7 +790,7 @@ export class CypherGraphAdapter implements GraphAdapter {
       const nodes: GraphNode[] = pathObj.segments.map((segment: any) => {
         const node = segment.start;
         return {
-          id: node.elementId,
+          id: this.useElementId ? node.elementId : String(node.identity),
           label: node.labels[0] || "Node",
           properties: this.deserializeProperties(node.properties),
         };
@@ -798,7 +801,7 @@ export class CypherGraphAdapter implements GraphAdapter {
         const lastSegment = pathObj.segments[pathObj.segments.length - 1];
         const endNode = lastSegment.end;
         nodes.push({
-          id: endNode.elementId,
+          id: this.useElementId ? endNode.elementId : String(endNode.identity),
           label: endNode.labels[0] || "Node",
           properties: this.deserializeProperties(endNode.properties),
         });
@@ -809,10 +812,10 @@ export class CypherGraphAdapter implements GraphAdapter {
         (segment: any) => {
           const rel = segment.relationship;
           return {
-            id: rel.elementId,
+            id: this.useElementId ? rel.elementId : String(rel.identity),
             type: rel.type,
-            from: segment.start.elementId,
-            to: segment.end.elementId,
+            from: this.useElementId ? segment.start.elementId : String(segment.start.identity),
+            to: this.useElementId ? segment.end.elementId : String(segment.end.identity),
             properties: this.deserializeProperties(rel.properties),
           };
         },

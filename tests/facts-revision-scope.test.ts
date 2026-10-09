@@ -1,6 +1,6 @@
 /** Deterministic named matching stages and actual phase receipts. */
-import { readFileSync, writeFileSync } from "node:fs";
-import { ConvexHttpClient, type ConvexClient } from "convex/browser";
+import { nativeAdmin, nativeOperator, operatorClient, proofPrefix, publicFunctionName } from "./helpers/native-ci";
+import { type ConvexClient } from "convex/browser";
 import { ConvexError } from "convex/values";
 import { getFunctionName } from "convex/server";
 import { FactsAPI } from "../src/facts";
@@ -11,35 +11,23 @@ import {
   RevisionAfterCommitError,
 } from "../src/facts/history";
 import type { FactRecord } from "../src/types";
-const proof =
-  "/Users/SaintNick/Documents/Cortex/Project-Cortex-Proofs/cli-sandbox-2026/fact-history-provenance";
-const prefix = "task18-repair3-ts-revision-" + Date.now();
-const client = new ConvexHttpClient("http://127.0.0.1:45410");
-interface OwnedAdmin {
-  setAdminAuth(key: string): void;
-  function(
-    name: string,
-    format: undefined,
-    args: Record<string, unknown>,
-  ): Promise<unknown>;
-}
-const admin = new ConvexHttpClient(
-  "http://127.0.0.1:45410",
-) as ConvexHttpClient & OwnedAdmin;
+const prefix = proofPrefix("task18-repair3-ts-revision");
+const client = nativeOperator();
+const admin = nativeAdmin();
 const calls: Array<{ name: string; args: Record<string, unknown> }> = [];
-const tracked = {
+const tracked = operatorClient({
   query: async (
     reference: Parameters<typeof getFunctionName>[0],
     args: Record<string, unknown>,
   ) => {
-    calls.push({ name: getFunctionName(reference), args });
+    calls.push({ name: publicFunctionName(getFunctionName(reference)), args });
     return client.query(reference as never, args as never);
   },
   mutation: client.mutation.bind(client),
-} as unknown as ConvexClient;
+} as unknown as ConvexClient);
 const sdk = (c = tracked) =>
   new FactsAPI(
-    c,
+    operatorClient(c),
     undefined,
     undefined,
     { userId: "actor", tenantId: "A" },
@@ -51,33 +39,13 @@ const rows = (space: string) =>
   admin.function("ownedHistoryFixture:factsInSpace", undefined, {
     memorySpaceId: space,
   }) as Promise<FactRecord[]>;
-beforeAll(() => {
-  expect(process.env.HOME).toBe(proof + "/home");
-  expect(process.env.HOME).toBe(process.env.CORTEX_TEST_HOME_ROOT);
-  expect(process.env.CONVEX_URL).toBe("http://127.0.0.1:45410");
-  admin.setAdminAuth(
-    (
-      JSON.parse(
-        readFileSync(
-          proof + "/project/.convex/local/default/config.json",
-          "utf8",
-        ),
-      ) as { adminKey: string }
-    ).adminKey,
-  );
-});
-afterAll(() =>
-  writeFileSync(
-    proof + "/repair3/ts-revision-native-expected.json",
-    JSON.stringify(expected, null, 2) + "\n",
-  ),
-);
+
 async function store(
   space: string,
   tenantId: string,
   fact = "User likes blue",
 ) {
-  return new FactsAPI(client as unknown as ConvexClient, undefined, undefined, {
+  return new FactsAPI(operatorClient(client) as unknown as ConvexClient, undefined, undefined, {
     userId: "owner",
     tenantId,
   }).store({
@@ -223,7 +191,7 @@ describe("Task18 native revision discovery and honest committed phase state", ()
           reference: Parameters<typeof getFunctionName>[0],
           args: Record<string, unknown>,
         ) => {
-          if (getFunctionName(reference) === "facts:supersede") {
+          if (publicFunctionName(getFunctionName(reference)) === "facts:supersede") {
             if (kind === "definite")
               throw new ConvexError("FORCED_LINK_ROLLBACK");
             await client.mutation(reference as never, args as never);
@@ -264,7 +232,7 @@ describe("Task18 native revision discovery and honest committed phase state", ()
         kind === "definite" ? "absent" : "known",
       );
       const history = new FactHistoryService(
-        client as unknown as ConvexClient,
+        operatorClient(client) as unknown as ConvexClient,
         undefined,
         { userId: "actor", tenantId: "A" },
       );

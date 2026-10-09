@@ -335,23 +335,34 @@ export class UsersAPI {
 
     if (!cascade) {
       const tenantId = resolveDomainScope(this.authContext?.tenantId, options?.tenantId);
-      // Simple delete: just user profile from immutable
+      // Keep the server-confirmed retirement even when its retained tombstone
+      // intentionally prevents a subsequent verification read.
+      let deleted = false;
       if (!dryRun) {
-        graphOffResult(await this.executeWithResilience(
-          () =>
-            this.client.mutation(api.immutable.purge, {
-              type: "user",
-              id: userId,
-              tenantId, // Multi-tenancy: scope to tenant
-            }),
+        const result: unknown = graphOffResult(await this.executeWithResilience(
+          () => this.client.mutation(api.immutable.purge, { type: "user", id: userId, tenantId }),
           "users:delete",
         ));
+        if (!result || typeof result !== "object" || !("deleted" in result) || typeof result.deleted !== "boolean") {
+          throw new Error("User profile deletion did not return a confirmed receipt.");
+        }
+        deleted = result.deleted;
       }
 
-      const complete = !dryRun && verify ? (await this.executeWithResilience(
-        () => this.client.query(api.immutable.get, {type:"user",id:userId,tenantId}),
-        "users:delete:verify-profile",
-      )) === null : false;
+      let complete = false;
+      const issues: string[] = [];
+      if (!dryRun && verify) {
+        try {
+          const verification: unknown = await this.executeWithResilience(
+            () => this.client.query(api.immutable.get, { type: "user", id: userId, tenantId }),
+            "users:delete:verify-profile",
+          );
+          complete = verification === null;
+        } catch {
+          // A refusal or failed read is not proof of absence. No write is retried.
+          issues.push("USER_PROFILE_VERIFICATION_UNAVAILABLE");
+        }
+      }
 
       return {
         userId,
@@ -366,10 +377,10 @@ export class UsersAPI {
         verification: {
           complete,
           scope: "user-profile",
-          issues: [],
+          issues,
         },
-        totalDeleted: dryRun ? 0 : 1,
-        deletedLayers: dryRun ? [] : ["user-profile"],
+        totalDeleted: deleted ? 1 : 0,
+        deletedLayers: deleted ? ["user-profile"] : [],
       };
     }
 

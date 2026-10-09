@@ -321,6 +321,10 @@ describe("closed recognized template composition", () => {
     ["lib/referenceLifecycle.ts", "missing"],
     ["referenceMaintenance.ts", "modified"],
     ["referenceMaintenance.ts", "missing"],
+    ["memories.ts", "modified"],
+    ["memories.ts", "missing"],
+    ["runtimeDataAuth.ts", "modified"],
+    ["runtimeDataAuth.ts", "missing"],
     ...["domainErasure.ts", "lib/domainErasureScope.ts", "lib/domainPaging.ts", "lib/graphSync.ts", "lib/memoryVectorScope.ts"].flatMap((name) => [[name, "modified"], [name, "missing"]] as const),
   ] as const)(
     "refuses %s when %s before any template writes",

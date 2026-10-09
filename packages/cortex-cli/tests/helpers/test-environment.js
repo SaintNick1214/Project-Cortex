@@ -28,8 +28,18 @@ export function cliTestTarget(environment) {
   return value;
 }
 
+/** Administrative live tests use only a separately qualified explicit key. */
+export function cliTestCredentials(environment) {
+  const url = cliTestTarget(environment);
+  const key = environment.CONVEX_DEPLOY_KEY;
+  if (environment.CORTEX_TEST_EXPECTED_CONVEX_URL !== url ||
+      typeof key !== "string" || !key.trim() || /[\r\n\0]/.test(key))
+    throw new Error("Live CLI tests require CONVEX_DEPLOY_KEY and an exact CORTEX_TEST_EXPECTED_CONVEX_URL match.");
+  return { url, key };
+}
+
 export function configureCliTestEnvironment(environment, live = false) {
-  const target = live ? cliTestTarget(environment) : undefined;
+  const credentials = live ? cliTestCredentials(environment) : undefined;
   for (const name of Object.keys(environment)) {
     if (
       /^(?:CONVEX_|LOCAL_CONVEX_|CLOUD_CONVEX_|NEXT_PUBLIC_CONVEX_)/.test(name)
@@ -37,8 +47,10 @@ export function configureCliTestEnvironment(environment, live = false) {
       delete environment[name];
   }
   if (live) {
+    const target = credentials.url;
     environment.CONVEX_URL_CLI = target;
     environment.CONVEX_URL = target;
+    environment.CONVEX_DEPLOY_KEY = credentials.key;
     environment.CONVEX_DEPLOYMENT_TYPE = [
       "localhost",
       "127.0.0.1",

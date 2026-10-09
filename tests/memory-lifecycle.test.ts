@@ -8,8 +8,8 @@
  * - deleteMany with facts cascade
  */
 
-import { Cortex } from "../src";
-import { ConvexClient } from "convex/browser";
+import { Cortex } from "./helpers/deployment-operator";
+import { ConvexClient } from "./helpers/deployment-operator";
 import { api as _api } from "../convex-dev/_generated/api";
 import { createTestRunContext } from "./helpers/isolation";
 
@@ -217,7 +217,10 @@ describe("Memory Lifecycle Integration", () => {
       // Try to restore - should fail
       await expect(
         cortex.memory.restoreFromArchive(TEST_MEMSPACE_ID, memory.memoryId),
-      ).rejects.toThrow(/MEMORY_NOT_ARCHIVED|not archived/i);
+      ).rejects.toMatchObject({ partial: { confirmedCount: 0, possibleCount: 0,
+        outcomes: [expect.objectContaining({ disposition: "knownRolledBack" })] },
+        originalCause: expect.objectContaining({ data: "MEMORY_NOT_ARCHIVED" }) });
+      expect(await cortex.vector.get(TEST_MEMSPACE_ID, memory.memoryId)).toEqual(memory);
 
       // Cleanup
       await cortex.memory.delete(TEST_MEMSPACE_ID, memory.memoryId);

@@ -5,6 +5,7 @@ import net from "node:net";
 import os from "node:os";
 import { execFile } from "node:child_process";
 import { randomBytes } from "node:crypto";
+import { readRegularFile, UnsafeFileError } from "../safe-file.js";
 import {
   GraphPlanError,
   graphFiles,
@@ -100,17 +101,20 @@ async function safeFile(
   }
   return target;
 }
-async function jsonFile(file: string, privateFile = false): Promise<unknown> {
-  const stat = await fs.lstat(file);
-  if (
-    !stat.isFile() ||
-    stat.isSymbolicLink() ||
-    stat.size > 65536 ||
-    (privateFile && (stat.mode & 0o777) !== 0o600)
-  )
-    fail("GRAPH_FILE_INVALID");
+async function graphFile(file: string, privateFile = false) {
   try {
-    return JSON.parse(await fs.readFile(file, "utf8"));
+    return await readRegularFile(file, { maxBytes: 65536, validate: stat => {
+      if (privateFile && (stat.mode & 0o777) !== 0o600) fail("GRAPH_FILE_INVALID");
+    } });
+  } catch (error) {
+    if (error instanceof UnsafeFileError) fail("GRAPH_FILE_INVALID");
+    throw error;
+  }
+}
+async function jsonFile(file: string, privateFile = false): Promise<unknown> {
+  const { bytes } = await graphFile(file, privateFile);
+  try {
+    return JSON.parse(bytes.toString("utf8"));
   } catch {
     return fail("GRAPH_FILE_INVALID");
   }
@@ -320,19 +324,21 @@ async function observeFiles(project: SelectedGraphProject) {
   let ownership: unknown;
   for (const [key, relative] of Object.entries(graphFiles)) {
     const file = await safeFile(project, relative),
-      stat = await fs.lstat(file).catch((e: { code?: string }) => {
+      observed = await graphFile(file).catch((e: { code?: string }) => {
         if (e.code === "ENOENT") return undefined;
+        if (e instanceof GraphPlanError) fail("GRAPH_USER_FILES_CONFLICT");
         throw e;
       });
-    if (stat) {
-      if (!stat.isFile() || stat.size > 65536)
-        fail("GRAPH_USER_FILES_CONFLICT");
+    if (observed) {
       files[key as keyof typeof graphFiles] = {
         kind: "file",
-        mode: stat.mode & 0o777,
-        hash: graphHash(await fs.readFile(file)),
+        mode: observed.stat.mode & 0o777,
+        hash: graphHash(observed.bytes),
       };
-      if (key === "ownership") ownership = await jsonFile(file);
+      if (key === "ownership") {
+        try { ownership = JSON.parse(observed.bytes.toString("utf8")); }
+        catch { fail("GRAPH_FILE_INVALID"); }
+      }
     }
   }
   return { files, ownership };

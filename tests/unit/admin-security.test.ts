@@ -77,7 +77,7 @@ describe("raw administration registration boundary", () => {
   });
 });
 
-describe("retired sweeping scripts", () => {
+describe("unqualified sweeping script refusals", () => {
   const root = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
   it.each(["cleanup-test-data.ts", "test-memory-openai-20x.mjs"])(
     "%s rejects legacy targets and does not read configuration", (script) => {
@@ -99,8 +99,13 @@ describe("retired sweeping scripts", () => {
         expect(result.error).toBeUndefined();
         expect(result.status).toBe(1);
         expect(result.stdout).toBe("");
-        expect(result.stderr).toContain("is retired");
-        expect(result.stderr).toContain("Documentation/security/admin-operations.mdx");
+        if (script === "cleanup-test-data.ts") {
+          expect(result.stderr).toContain("Native reset requires CI=true and CORTEX_CI_ALLOW_DESTRUCTIVE_RESET=true");
+          expect(result.stderr).toContain("No reset was performed");
+        } else {
+          expect(result.stderr).toContain("is retired");
+          expect(result.stderr).toContain("Documentation/security/admin-operations.mdx");
+        }
         expect(result.stderr).not.toContain(secret);
         expect(result.stderr).not.toContain(url);
       } finally {

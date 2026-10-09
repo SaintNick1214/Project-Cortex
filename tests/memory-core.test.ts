@@ -5,8 +5,7 @@
  * Split from memory.test.ts for parallel execution
  */
 
-import { Cortex } from "../src";
-import { ConvexClient } from "convex/browser";
+import { Cortex, ConvexClient } from "./helpers/deployment-operator";
 import { api } from "../convex-dev/_generated/api";
 import { TestCleanup } from "./helpers/cleanup";
 import { createTestRunContext } from "./helpers/isolation";

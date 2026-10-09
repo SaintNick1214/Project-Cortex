@@ -41,7 +41,8 @@ for (const [path, name] of [
   }) }));
 }
 jest.unstable_mockModule("convex/browser", () => ({ ConvexClient: transportConstructor, ConvexHttpClient }));
-jest.unstable_mockModule("../../src/graph", () => ({ CypherGraphAdapter: adapterConstructor }));
+const actualGraph = await import("../../src/graph/index");
+jest.unstable_mockModule("../../src/graph", () => ({ ...actualGraph, CypherGraphAdapter: adapterConstructor }));
 jest.unstable_mockModule("../../src/graph/worker/GraphSyncWorker", () => ({ GraphSyncWorker: workerConstructor }));
 const { Cortex } = await import("../../src/index");
 const config: CortexConfig = { convexUrl: "http://127.0.0.1:45510", resilience: { enabled: false }, graphEnabled: false };

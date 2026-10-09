@@ -1,4 +1,3 @@
-import { constants } from "node:fs";
 import * as fs from "node:fs/promises";
 import path from "node:path";
 import { createRequire } from "node:module";
@@ -19,6 +18,7 @@ import {
   type TemplateId,
 } from "./contract.js";
 import { exactTemplateVersion, satisfiesTemplateRange } from "./versions.js";
+import { readRegularFile, UnsafeFileError } from "../safe-file.js";
 
 export interface TemplateRuntimeVersions {
   sdk: string;
@@ -53,26 +53,12 @@ async function boundedFile(
   target: string,
   limit = 8 * 1024 * 1024,
 ): Promise<PackageFile> {
-  let handle;
   try {
-    const stat = await fs.lstat(target);
-    if (
-      !stat.isFile() ||
-      stat.isSymbolicLink() ||
-      stat.nlink !== 1 ||
-      stat.size > limit
-    )
-      throw new TemplateError("TEMPLATE_PACKAGE_KIND_OR_BUDGET");
-    handle = await fs.open(target, constants.O_RDONLY | constants.O_NOFOLLOW);
-    const current = await handle.stat();
-    if (!current.isFile() || current.nlink !== 1 || current.size > limit)
-      throw new TemplateError("TEMPLATE_PACKAGE_KIND_OR_BUDGET");
-    const bytes = await handle.readFile();
-    if (bytes.length > limit)
-      throw new TemplateError("TEMPLATE_PACKAGE_KIND_OR_BUDGET");
-    return { bytes, executable: Boolean(current.mode & 0o111) };
-  } finally {
-    await handle?.close();
+    const { bytes, stat } = await readRegularFile(target, { maxBytes: limit, singleLink: true });
+    return { bytes, executable: Boolean(stat.mode & 0o111) };
+  } catch (error) {
+    if (error instanceof UnsafeFileError) throw new TemplateError("TEMPLATE_PACKAGE_KIND_OR_BUDGET");
+    throw error;
   }
 }
 async function sourceReader(source: string): Promise<{

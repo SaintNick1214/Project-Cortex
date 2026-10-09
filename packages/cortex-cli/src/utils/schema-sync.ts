@@ -2,6 +2,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { createHash, randomUUID } from "node:crypto";
+import { readRegularFileSync, UnsafeFileError } from "./safe-file.js";
 
 import {
   appContractHash, isRecognizedAppContractHash, canonicalDependencies, isCanonicalTemplate, backendEntryNames, assertCanonicalSdkTree,
@@ -339,19 +340,23 @@ export function getFunctionsDirectory(project: string, prospective?: Prospective
   return clean;
 }
 function currentHash(file: string): string | null {
-  if (!fs.existsSync(file)) return null;
-  if (!fs.lstatSync(file).isFile())
-    throw new Error(`Expected regular file: ${file}`);
-  return hashBytes(fs.readFileSync(file));
+  const bytes = regularProjectBytes(file, file);
+  return bytes === null ? null : hashBytes(bytes);
+}
+function regularProjectBytes(file: string, label: string): Buffer | null {
+  try { return readRegularFileSync(file).bytes; }
+  catch (error) {
+    if ((error as { code?: string }).code === "ENOENT") return null;
+    if (error instanceof UnsafeFileError) throw new Error(`Expected regular file: ${label}`, { cause: error });
+    throw error;
+  }
 }
 /** An explicit prospective overlay is data only; absent keys retain observed project bytes. */
 export type ProspectiveBackendFiles = ReadonlyMap<string, Buffer | null>;
 export function readBackendProjectFile(project:string, relative:string, prospective?:ProspectiveBackendFiles):Buffer|null {
   const file=assertSafePath(project,relative);
   if(prospective?.has(relative)){const bytes=prospective.get(relative);return bytes===null || bytes===undefined ? null : Buffer.from(bytes);}
-  if(!fs.existsSync(file))return null;
-  if(!fs.lstatSync(file).isFile())throw new Error(`Expected regular file: ${relative}`);
-  return fs.readFileSync(file);
+  return regularProjectBytes(file, relative);
 }
 function projectHash(project:string,relative:string,prospective?:ProspectiveBackendFiles):string|null {
   const bytes=readBackendProjectFile(project,relative,prospective);return bytes===null ? null : hashBytes(bytes);
