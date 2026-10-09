@@ -1,0 +1,99 @@
+{
+  "version": 1,
+  "status": "CURRENT_NONPAID_UI_IDENTITY_READY",
+  "projectId": 3174742,
+  "deploymentUrl": "https://formal-husky-914.convex.cloud",
+  "assetHttpUrl": "https://formal-husky-914.convex.site",
+  "tenantId": "task13-3c1dcff16463",
+  "memorySpaceId": "media-3c1dcff16463",
+  "subject": "ui14-3c1dcff16463",
+  "reference": {
+    "principalId": "n574b8n18wk24yyb8kc19hcqah8fz0y6",
+    "principalVersion": 1,
+    "membershipId": "n171r4cqw0w03wvzyn41arysn18fzjg7",
+    "membershipVersion": 1,
+    "grantId": "mx789grx80xshwzxztx920btnh8fy6rt",
+    "grantVersion": 1,
+    "tenantId": "task13-3c1dcff16463",
+    "tenantEpoch": 1,
+    "memorySpaceId": "media-3c1dcff16463",
+    "memorySpaceEpoch": 1
+  },
+  "capabilities": [
+    "read",
+    "write",
+    "run",
+    "tool",
+    "storage:read",
+    "storage:write"
+  ],
+  "resourceAccess": "space",
+  "browserAdmin": false,
+  "agentId": "agent:50ae75462793f3182b15cae6d747720e2259c787f06f7e9c0c27b500ef40a33d",
+  "agentVersion": 1,
+  "definitionHash": "c8001d150c05f3f05687c74ce2b132225535629cc228e4a8526eba52bc04bb93",
+  "definitionRegistry": "V1_MEMORY_ONLY",
+  "registryHash": "c41fb7c968b1321e952fdaa14e4a5de045ae3333de14641e4d640b3307a64754",
+  "profile": {
+    "profileId": "cortex-text-small-1536-v1",
+    "modelId": "openai/text-embedding-3-small",
+    "dimensions": 1536,
+    "normalization": "text-nfc-lf-v1",
+    "chunking": "codepoint-1600-overlap-200-v1",
+    "indexName": "by_default_embedding_v1"
+  },
+  "readiness": {
+    "version": 1,
+    "cutoff": 0,
+    "graphCutoff": 0,
+    "profile": {
+      "profileId": "cortex-text-small-1536-v1",
+      "modelId": "openai/text-embedding-3-small",
+      "dimensions": 1536,
+      "normalization": "text-nfc-lf-v1",
+      "chunking": "codepoint-1600-overlap-200-v1",
+      "indexName": "by_default_embedding_v1"
+    },
+    "stages": {
+      "facts": {
+        "cutoff": 0,
+        "indexedThrough": 0,
+        "complete": true,
+        "hole": null
+      },
+      "vectors": {
+        "cutoff": 0,
+        "indexedThrough": 0,
+        "complete": true,
+        "hole": null
+      }
+    },
+    "strictStages": []
+  },
+  "savedJobId": "media:84f2270c045038ec853ebd504f7db79f4114a7e2baeb3c46f2413a41d9e05cb0",
+  "savedArtifactId": "artifact:media:84f2270c045038ec853ebd504f7db79f4114a7e2baeb3c46f2413a41d9e05cb0",
+  "savedAsset": {
+    "versionId": "asset:fbcca9c718aef0dfd587416fef9efab52e33cca295a87ec4692950bc1fa0f5d2:version:1",
+    "assetId": "asset:fbcca9c718aef0dfd587416fef9efab52e33cca295a87ec4692950bc1fa0f5d2",
+    "assetVersion": 1,
+    "mimeType": "image/png",
+    "sizeBytes": 1116726,
+    "contentHash": "b398f6084152795dc90784414466854a65810ecf04b9429f45098e10fe074bb5",
+    "width": 1024,
+    "height": 1024,
+    "encodedResponseBytes": 1489308,
+    "lineage": {
+      "kind": "generated",
+      "operationId": "qh7cn6qhp1hm4hem880hk6pnnn8fz53k",
+      "modelId": "openai/gpt-image-1"
+    }
+  },
+  "privateTokenFile": "/Users/SaintNick/.codex/tmp/cortex-task13-media-3c1dcff16463/ui14-current.jwt",
+  "privateCredentialsNotPrinted": true,
+  "modelCalls": 0,
+  "originalImageCallerGrantUnchanged": true,
+  "allFinancialAccountsAndAttemptsUnchanged": true,
+  "privateCommissioningRootRetainedForOriginalScope": true,
+  "changedInstalledExpiryChecksPending": true,
+  "authoritativeServiceSetupOnly": true
+}

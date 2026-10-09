@@ -1,6 +1,6 @@
 import type { ChatTransport, UIMessage, UIMessageChunk } from "ai";
-import { CortexRuntimeError } from "@cortexmemory/sdk/runtime";
-import type { CortexRuntimeClient, RuntimeObservation, RuntimeRunHandle, RuntimeToolApproval, TextSubmitV1 } from "@cortexmemory/sdk/runtime";
+import { CortexRuntimeError, runtimePublicPart } from "@cortexmemory/sdk/runtime";
+import type { CortexRuntimeClient, RuntimeObservation, RuntimePublicPart, RuntimeRunHandle, RuntimeToolApproval, TextSubmitV1 } from "@cortexmemory/sdk/runtime";
 
 export interface CortexRemoteMetadata {
   version: 1; runId: string; conversationId: string; tenantId: string; memorySpaceId: string;
@@ -12,6 +12,8 @@ export interface CortexRemoteMetadata {
 export interface CortexRemoteState {
   version: 1; chatId: string; handle: RuntimeRunHandle; attemptNumber: number; cursor: number;
   text: string; finalText: string; finalTextStarted: boolean;
+  /** Bounded projection of server-authored references. Job/asset state is fetched freshly by the host. */
+  projections?: RuntimePublicPart[];
 }
 export interface CortexRemoteTransportOptions {
   client: CortexRuntimeClient; agentId: string; agentVersion: number; conversationId?: string; finalOnly?: boolean;
@@ -33,12 +35,16 @@ export class CortexRemoteTransport<UI_MESSAGE extends UIMessage = UIMessage> imp
       if (options.state.version !== 1 || options.state.handle.agentId !== options.agentId || options.state.handle.agentVersion !== options.agentVersion
         || options.conversationId !== undefined && options.state.handle.conversationId !== options.conversationId
         || !Number.isSafeInteger(options.state.cursor) || options.state.cursor < 0 || !Number.isSafeInteger(options.state.attemptNumber) || options.state.attemptNumber < 0) throw new CortexRuntimeError("INVALID_RECONNECT_STATE");
-      this.current = { ...options.state, handle: Object.freeze({ ...options.state.handle }) };
+      const projections = options.state.projections ?? [];
+      if (!Array.isArray(projections) || projections.length > 256) throw new CortexRuntimeError("INVALID_RECONNECT_STATE");
+      const restored = projections.map(runtimePublicPart);
+      if (restored.some(part => !["tool", "artifact", "media-job"].includes(part.type))) throw new CortexRuntimeError("INVALID_RECONNECT_STATE");
+      this.current = { ...options.state, handle: Object.freeze({ ...options.state.handle }), projections: restored };
       this.conversationId = options.state.handle.conversationId;
     }
   }
   get run(): RuntimeRunHandle | undefined { return this.current?.handle; }
-  get state(): CortexRemoteState | undefined { return this.current ? { ...this.current, handle: { ...this.current.handle } } : undefined; }
+  get state(): CortexRemoteState | undefined { return this.current ? { ...this.current, handle: { ...this.current.handle }, projections: this.current.projections?.map(part => ({ ...part })) } : undefined; }
   /** Close only this browser observation. The Workflow and other observers continue. */
   disconnect(): void { this.closeObservation?.(); }
   async stop(): Promise<void> { const handle = this.run; if (handle) await this.options.client.cancel(handle); this.disconnect(); }
@@ -110,6 +116,23 @@ export class CortexRemoteTransport<UI_MESSAGE extends UIMessage = UIMessage> imp
         controller.enqueue({ type: "reset-step" }); textOpen = false;
         controller.enqueue({ type: "text-start", id: textId }); textOpen = true;
         if (text) controller.enqueue({ type: "text-delta", id: textId, delta: text });
+        // AI SDK reset-step replaces all message parts, including data parts.
+        // Rebuild authorized server references whenever canonical text replaces deltas.
+        if (authorized) for (const part of state.projections ?? []) project(part);
+      };
+      const project = (part: RuntimePublicPart) => {
+        if (part.type === "tool") controller.enqueue({ type: "data-cortex-tool", id: part.toolCallId, data: { version: 1, runId: handle.runId, ...part } });
+        else if (part.type === "artifact") controller.enqueue({ type: "data-cortex-artifact", id: part.artifactId, data: { version: 1, runId: handle.runId, ...part } });
+        else if (part.type === "media-job") controller.enqueue({ type: "data-cortex-media-job", id: part.jobId, data: { runId: handle.runId, ...part } });
+      };
+      const projectionKey = (part: RuntimePublicPart) => part.type === "tool" ? `tool:${part.toolCallId}`
+        : part.type === "artifact" ? `artifact:${part.artifactId}` : part.type === "media-job" ? `media:${part.jobId}` : "";
+      const remember = (part: RuntimePublicPart) => {
+        const key = projectionKey(part); if (!key) return;
+        const prior = state.projections ?? [], index = prior.findIndex(value => projectionKey(value) === key);
+        if (index >= 0) prior[index] = { ...part };
+        else { if (prior.length >= 256) throw new CortexRuntimeError("PROJECTION_LIMIT_EXCEEDED"); prior.push({ ...part }); }
+        state.projections = prior;
       };
       this.closeObservation = close;
       controller.enqueue({ type: "start", messageId: `cortex:${handle.runId}:assistant` });
@@ -121,10 +144,11 @@ export class CortexRemoteTransport<UI_MESSAGE extends UIMessage = UIMessage> imp
       stop = this.options.client.watchObservation(handle, observation => {
         if (!active) return;
         if (observation.run.attemptNumber !== state.attemptNumber) {
-          state.attemptNumber = observation.run.attemptNumber; state.cursor = 0; state.text = ""; state.finalText = ""; state.finalTextStarted = false; resetText("");
+          state.attemptNumber = observation.run.attemptNumber; state.cursor = 0; state.text = ""; state.finalText = ""; state.finalTextStarted = false; state.projections = []; resetText("");
         } else if (!authorized && state.text) {
           resetText(state.text);
         }
+        if (!authorized) for (const part of state.projections ?? []) project(part);
         authorized = true;
         for (const event of observation.parts) {
           if (event.sequence <= state.cursor) continue;
@@ -136,10 +160,8 @@ export class CortexRemoteTransport<UI_MESSAGE extends UIMessage = UIMessage> imp
             if (!state.finalTextStarted) { state.finalTextStarted = true; state.finalText = ""; resetText(""); }
             state.finalText += part.text; state.text = state.finalText;
             controller.enqueue({ type: "text-delta", id: textId, delta: part.text });
-          } else if (part.type === "tool") {
-            controller.enqueue({ type: "data-cortex-tool", id: part.toolCallId, data: { version: 1, runId: handle.runId, ...part } });
-          } else if (part.type === "artifact") {
-            controller.enqueue({ type: "data-cortex-artifact", id: part.artifactId, data: { version: 1, runId: handle.runId, ...part } });
+          } else if (part.type === "tool" || part.type === "artifact" || part.type === "media-job") {
+            remember(part); project(part);
           } else if (part.type === "error") controller.enqueue({ type: "data-cortex-error", data: { version: 1, code: part.code, runId: handle.runId } });
           state.cursor = event.sequence;
         }

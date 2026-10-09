@@ -1,0 +1,204 @@
+  console.error
+    ◇ injected env (0) from .env.test
+
+      13 | import dotenv from "dotenv";
+      14 | import { resolve } from "path";
+    > 15 |
+         | ^
+      16 | // Load .env.test first (test defaults)
+      17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+      18 |
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:15:8
+
+  console.error
+    ◇ injected env (0) from .env.local
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+  console.log
+    
+    🧪 Testing against LOCAL Convex: http://127.0.0.1:1
+
+      at tests/env.ts:35:13
+
+  console.log
+       Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:36:13
+
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:121:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:122:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:123:13
+
+(node:613) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeMedia/jobs.test.ts
+  durable governed media
+    ✕ persists pending artifact/budget before one image call; one immutable version and unknown liability survive replay (44 ms)
+    ✓ exact request replay reuses pending job; changed request rolls back before another artifact/budget (8 ms)
+    ✓ lost submission becomes unknown, never starts again or silently refunds (15 ms)
+    ✓ polling and repeated download create one asset and preserve saved private handle (28 ms)
+    ✓ cancel before submission has zero model effects and does not claim upstream cancellation (5 ms)
+    ✕ late image after cancellation charges terminal evidence but cannot become ready (18 ms)
+    ✓ expired first-submission lease retires without a second generation (5 ms)
+    ✕ no JWT and current revoked grant deny job metadata and all new dispatch (5 ms)
+    ✓ oversize returned bytes fail typed, release terminal slot and never store a partial object (16 ms)
+    ✓ V1 executable registry/hash remains valid alongside distinct closed V2 (4 ms)
+    ✓ fixed wire proof counts immutable input without persisting base64 and rejects caller options (3 ms)
+
+  ● durable governed media › persists pending artifact/budget before one image call; one immutable version and unknown liability survive replay
+
+    expect(received).not.toMatch(expected)
+
+    Expected pattern: not /PRIVATE_|storageId|operation|webhookSecret/
+    Received string:      "{\"version\":1,\"jobId\":\"media:f8d556e282f7563238bcd41f356e8ac354797f61ce7990e15e63c7f9562c7ca6\",\"artifactId\":\"artifact:media:f8d556e282f7563238bcd41f356e8ac354797f61ce7990e15e63c7f9562c7ca6\",\"kind\":\"image\",\"state\":\"ready\",\"revision\":4,\"createdAt\":1000000,\"updatedAt\":1000000,\"asset\":{\"version\":1,\"assetId\":\"asset:4c1c86080c10f60ff60eca0180c206d291bac56c7d1bf8a8d0191b504062e53c\",\"versionId\":\"asset:4c1c86080c10f60ff60eca0180c206d291bac56c7d1bf8a8d0191b504062e53c:version:1\",\"assetVersion\":1,\"contentHash\":\"4353a1de7e0dcc4e87350e22d5c9ee9f3e70e8ce9c31533ec991bee8870c4814\",\"sizeBytes\":12,\"mimeType\":\"image/png\",\"mediaKind\":\"image\",\"lineage\":{\"kind\":\"generated\",\"operationId\":\"runtimeModelOperations:17\",\"modelId\":\"openai/gpt-image-1\"}},\"costStatus\":\"incurred_unknown\",\"upstreamCancellation\":\"not_requested\"}"
+
+      12 |     await gateway.processSubmissionHandler(f.action, { jobId: job.jobId }, f.factory);
+      13 |     const ready = await f.call(media.get, { jobId: job.jobId }); expect(ready).toMatchObject({ state: "ready", asset: { mimeType: "image/png", sizeBytes: png.length }, costStatus: "incurred_unknown" });
+    > 14 |     expect(JSON.stringify(ready)).not.toMatch(/PRIVATE_|storageId|operation|webhookSecret/);
+         |                                       ^
+      15 |     await gateway.processSubmissionHandler(f.action, { jobId: job.jobId }, f.factory);
+      16 |     await f.call(media.reconcile, { jobId: job.jobId }); expect(f.counts().images).toBe(1); expect(f.db.table("runtimeAssetVersions")).toHaveLength(1);
+      17 |     expect(f.db.table("runtimeModelAttempts")[0]).toMatchObject({ state: "uncertain", slotReleased: true, resultAttachmentState: "attached" });
+
+      at Object.<anonymous> (tests/unit/runtimeMedia/jobs.test.ts:14:39)
+
+  ● durable governed media › late image after cancellation charges terminal evidence but cannot become ready
+
+    expect(received).toMatchObject(expected)
+
+    - Expected  - 3
+    + Received  + 2
+
+      Object {
+    -   "resultAttachmentState": "closed",
+    -   "slotReleased": true,
+    -   "state": "uncertain",
+    +   "slotReleased": false,
+    +   "state": "dispatch_pending",
+      }
+
+      48 |     await gateway.processSubmissionHandler(f.action, { jobId: job.jobId }, factory);
+      49 |     expect(f.db.table("runtimeMediaJobs")[0].state).toBe("cancelled"); expect(f.db.table("runtimeAssetVersions")).toHaveLength(0);
+    > 50 |     expect(f.db.table("runtimeModelAttempts")[0]).toMatchObject({ state: "uncertain", slotReleased: true, resultAttachmentState: "closed" });
+         |                                                   ^
+      51 |   });
+      52 |   it("expired first-submission lease retires without a second generation", async () => {
+      53 |     const f = await mediaFixture(); const job = await f.submit(); const held = await f.call<{ leaseToken: string }>(media.claimSubmission, { jobId: job.jobId });
+
+      at Object.<anonymous> (tests/unit/runtimeMedia/jobs.test.ts:50:51)
+
+  ● durable governed media › no JWT and current revoked grant deny job metadata and all new dispatch
+
+    expect(received).rejects.toMatchObject()
+
+    Received promise resolved instead of rejected
+    Resolved to value: {"artifactId": "artifact:media:f8d556e282f7563238bcd41f356e8ac354797f61ce7990e15e63c7f9562c7ca6", "costStatus": "reserved", "createdAt": 1000000, "jobId": "media:f8d556e282f7563238bcd41f356e8ac354797f61ce7990e15e63c7f9562c7ca6", "kind": "image", "revision": 1, "state": "pending", "updatedAt": 1000000, "upstreamCancellation": "not_requested", "version": 1}
+
+      58 |     const f = await mediaFixture(); const job = await f.submit(); f.identity(null); await expect(f.call(media.get, { jobId: job.jobId })).rejects.toMatchObject({ data: { code: "UNAUTHENTICATED" } });
+      59 |     f.identity({ issuer: "https://host.test", subject: "user-a" }); f.grant.revokedAt = clock;
+    > 60 |     await expect(f.call(media.get, { jobId: job.jobId })).rejects.toMatchObject({ data: { code: "FORBIDDEN" } });
+         |           ^
+      61 |     await expect(gateway.processSubmissionHandler(f.action, { jobId: job.jobId }, f.factory)).rejects.toMatchObject({ data: { code: "FORBIDDEN" } }); expect(f.counts().images).toBe(0);
+      62 |   });
+      63 |   it("oversize returned bytes fail typed, release terminal slot and never store a partial object", async () => {
+
+      at expect (node_modules/expect/build/index.js:2116:15)
+      at Object.<anonymous> (tests/unit/runtimeMedia/jobs.test.ts:60:11)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     2.9s | 8/11 passed | /tests/unit/runtimeMedia/jobs.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [31m✗[0m    0.04s ( 1.4%) - durable governed media persists pending artifact/budget before one image call; one immutable version and unknown liability survive replay
+    /tests/unit/runtimeMedia/jobs.test.ts
+
+ 2. [32m✓[0m    0.03s ( 0.9%) - durable governed media polling and repeated download create one asset and preserve saved private handle
+    /tests/unit/runtimeMedia/jobs.test.ts
+
+ 3. [31m✗[0m    0.02s ( 0.6%) - durable governed media late image after cancellation charges terminal evidence but cannot become ready
+    /tests/unit/runtimeMedia/jobs.test.ts
+
+ 4. [32m✓[0m    0.02s ( 0.5%) - durable governed media oversize returned bytes fail typed, release terminal slot and never store a partial object
+    /tests/unit/runtimeMedia/jobs.test.ts
+
+ 5. [32m✓[0m    0.01s ( 0.5%) - durable governed media lost submission becomes unknown, never starts again or silently refunds
+    /tests/unit/runtimeMedia/jobs.test.ts
+
+ 6. [32m✓[0m    0.01s ( 0.3%) - durable governed media exact request replay reuses pending job; changed request rolls back before another artifact/budget
+    /tests/unit/runtimeMedia/jobs.test.ts
+
+ 7. [32m✓[0m    0.01s ( 0.2%) - durable governed media cancel before submission has zero model effects and does not claim upstream cancellation
+    /tests/unit/runtimeMedia/jobs.test.ts
+
+ 8. [32m✓[0m    0.01s ( 0.2%) - durable governed media expired first-submission lease retires without a second generation
+    /tests/unit/runtimeMedia/jobs.test.ts
+
+ 9. [31m✗[0m    0.01s ( 0.2%) - durable governed media no JWT and current revoked grant deny job metadata and all new dispatch
+    /tests/unit/runtimeMedia/jobs.test.ts
+
+10. [32m✓[0m    0.00s ( 0.1%) - durable governed media V1 executable registry/hash remains valid alongside distinct closed V2
+    /tests/unit/runtimeMedia/jobs.test.ts
+
+11. [32m✓[0m    0.00s ( 0.1%) - durable governed media fixed wire proof counts immutable input without persisting base64 and rejects caller options
+    /tests/unit/runtimeMedia/jobs.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.15s (4.9% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      3.05s
+  Test suites:        1
+  Individual tests:   11
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 failed, 1 total
+Tests:       3 failed, 8 passed, 11 total
+Snapshots:   0 total
+Time:        3.054 s
+Ran all test suites within paths "tests/unit/runtimeMedia/jobs.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-media-functional-v2-20261008/author/jobs-tests3.json

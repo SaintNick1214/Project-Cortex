@@ -26,7 +26,7 @@ class _MutableTestCleanup {
     let totalCount = 0;
 
     for (const ns of namespaces) {
-      const count = await this.client.query(api.mutable.count, {
+      const count = await this.client.mutation(api.mutable.count, {
         namespace: ns,
       });
 
@@ -97,7 +97,7 @@ describe("Mutable Store API (Layer 1c)", () => {
       expect(result.value).toBe(5);
 
       // Verify in storage
-      const stored = await client.query(api.mutable.get, {
+      const stored = await client.mutation(api.mutable.get, {
         namespace: "config",
         key: "max-retries",
       });
@@ -1438,7 +1438,7 @@ describe("Mutable Store API (Layer 1c)", () => {
       expect(final).toBe(10);
 
       // Consistency: Storage matches SDK response
-      const stored = await client.query(api.mutable.get, {
+      const stored = await client.mutation(api.mutable.get, {
         namespace: ns,
         key,
       });

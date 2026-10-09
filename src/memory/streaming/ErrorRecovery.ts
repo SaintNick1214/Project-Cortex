@@ -230,7 +230,7 @@ export class StreamErrorRecovery {
    */
   async validateResumeToken(token: string): Promise<ResumeContext | null> {
     try {
-      const stored = await this.client.query(api.mutable.get, {
+      const stored = await this.client.mutation(api.mutable.get, {
         namespace: "resume-tokens",
         key: token,
       });

@@ -1,0 +1,29 @@
+(node:33532) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/media-metadata-expiry-independent2.test.ts
+  ✕ fresh media metadata denies a grant that expires during its final awaited resource lookup (20 ms)
+
+  ● fresh media metadata denies a grant that expires during its final awaited resource lookup
+
+    expect(received).rejects.toMatchObject()
+
+    Received promise resolved instead of rejected
+    Resolved to value: {"artifactId": "artifact:media:ca4eccf21a510672b55733c026ccbd4a4b31d0c65f56d599f0bbf60f69f7a2cd", "costStatus": "reserved", "createdAt": 1000000, "jobId": "media:ca4eccf21a510672b55733c026ccbd4a4b31d0c65f56d599f0bbf60f69f7a2cd", "kind": "image", "revision": 1, "state": "pending", "updatedAt": 1000000, "upstreamCancellation": "not_requested", "version": 1}
+
+      23 |   } });
+      24 |   const lateCtx = { ...f.ctx, db: lateDb };
+    > 25 |   await expect(invoke(media.get, lateCtx, { jobId: job.jobId })).rejects.toMatchObject({ data: { code: 'FORBIDDEN' } });
+         |         ^
+      26 |   expect(crossedDeadline).toBe(true);
+      27 | });
+      28 |
+
+      at expect (node_modules/expect/build/index.js:2116:15)
+      at Object.<anonymous> (_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/media-metadata-expiry-independent2.test.ts:25:9)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 1 total
+Snapshots:   0 total
+Time:        2.437 s
+Ran all test suites within paths "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/media-metadata-expiry-independent2.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/media-metadata-expiry-run2.results.json

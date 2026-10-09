@@ -1,0 +1,82 @@
+{
+  "status": "LOCAL_ONLY_NOT_PUBLISHED",
+  "definition": {
+    "instructions": {
+      "text": "Create exactly one image with media_image_generate when requested. Use the prompt supplied by the user. After the tool returns, answer briefly with its durable media job and artifact references. Execute one tool effect in this run.",
+      "promptVersion": "task13-agent-media-v2-prompt1"
+    },
+    "tools": [
+      {
+        "toolId": "memory.remember",
+        "toolVersion": 1,
+        "registryHash": "975b0d6ba749d0198c10af7e0457e57f54bbb79a55c5c0f64b11592c0e982631",
+        "requiredCapability": "tool",
+        "approval": "none"
+      },
+      {
+        "toolId": "memory.recall",
+        "toolVersion": 1,
+        "registryHash": "975b0d6ba749d0198c10af7e0457e57f54bbb79a55c5c0f64b11592c0e982631",
+        "requiredCapability": "tool",
+        "approval": "none"
+      },
+      {
+        "toolId": "media.image.generate",
+        "toolVersion": 1,
+        "registryHash": "975b0d6ba749d0198c10af7e0457e57f54bbb79a55c5c0f64b11592c0e982631",
+        "requiredCapability": "tool",
+        "approval": "none"
+      },
+      {
+        "toolId": "media.video.generate",
+        "toolVersion": 1,
+        "registryHash": "975b0d6ba749d0198c10af7e0457e57f54bbb79a55c5c0f64b11592c0e982631",
+        "requiredCapability": "tool",
+        "approval": "none"
+      },
+      {
+        "toolId": "artifact.read",
+        "toolVersion": 1,
+        "registryHash": "975b0d6ba749d0198c10af7e0457e57f54bbb79a55c5c0f64b11592c0e982631",
+        "requiredCapability": "tool",
+        "approval": "none"
+      }
+    ],
+    "context": {
+      "handlerId": "cortex.transcript",
+      "handlerVersion": 1,
+      "registryHash": "975b0d6ba749d0198c10af7e0457e57f54bbb79a55c5c0f64b11592c0e982631",
+      "memoryMode": "indexed-plus-pending",
+      "requiredStages": [],
+      "maxContextTokens": 4096
+    },
+    "policies": [
+      {
+        "policyId": "task13-agent-media-v2-small",
+        "version": 1,
+        "operationKey": "agent.respond",
+        "rules": {
+          "limits": {
+            "outputTokens": 256,
+            "toolSteps": 1
+          }
+        }
+      }
+    ]
+  },
+  "userPrompt": "Create an image of a small blue circle centered on a plain white background, with no text. Use media_image_generate once, then tell me the durable job and artifact references.",
+  "registryV2": {
+    "version": 2,
+    "tools": {
+      "memory.remember": 1,
+      "memory.recall": 1,
+      "media.image.generate": 1,
+      "media.video.generate": 1,
+      "artifact.read": 1
+    },
+    "contexts": {
+      "cortex.transcript": 1
+    }
+  },
+  "registryHash": "975b0d6ba749d0198c10af7e0457e57f54bbb79a55c5c0f64b11592c0e982631"
+}

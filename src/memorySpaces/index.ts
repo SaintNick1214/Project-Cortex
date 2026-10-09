@@ -172,7 +172,7 @@ export class MemorySpacesAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.memorySpaces.get, {
+        this.client.mutation(api.memorySpaces.get, {
           memorySpaceId,
           tenantId: this.authContext?.tenantId, // Multi-tenancy: find space within tenant
         }),
@@ -232,7 +232,7 @@ export class MemorySpacesAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.memorySpaces.list, {
+        this.client.mutation(api.memorySpaces.list, {
           type: filter?.type,
           status: filter?.status,
           participant: filter?.participant,
@@ -269,7 +269,7 @@ export class MemorySpacesAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.memorySpaces.count, {
+        this.client.mutation(api.memorySpaces.count, {
           type: filter?.type,
           status: filter?.status,
         }),
@@ -597,7 +597,7 @@ export class MemorySpacesAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.memorySpaces.findByParticipant, {
+        this.client.mutation(api.memorySpaces.findByParticipant, {
           participantId,
         }),
       "memorySpaces:findByParticipant",
@@ -640,7 +640,7 @@ export class MemorySpacesAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.memorySpaces.search, {
+        this.client.mutation(api.memorySpaces.search, {
           query,
           type: options?.type,
           status: options?.status,

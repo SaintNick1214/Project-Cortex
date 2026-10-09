@@ -154,7 +154,7 @@ describe("Users API (Coordination Layer)", () => {
       expect(result.updatedAt).toBeGreaterThan(0);
 
       // Validate Convex storage
-      const stored = await client.query(api.immutable.get, {
+      const stored = await client.mutation(api.immutable.get, {
         type: "user",
         id: userId,
       });
@@ -205,7 +205,7 @@ describe("Users API (Coordination Layer)", () => {
       expect(result.version).toBe(2);
 
       // Verify storage
-      const stored = await client.query(api.immutable.get, {
+      const stored = await client.mutation(api.immutable.get, {
         type: "user",
         id: userId,
       });

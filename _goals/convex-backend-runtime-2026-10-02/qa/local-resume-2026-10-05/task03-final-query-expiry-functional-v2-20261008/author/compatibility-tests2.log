@@ -1,0 +1,970 @@
+(node:29649) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeRegistryClient/registry-bridge.test.ts
+  ● Console
+
+    console.error
+      ◇ injected env (0) from .env.test
+
+      13 | import dotenv from "dotenv";
+      14 | import { resolve } from "path";
+    > 15 |
+         | ^
+      16 | // Load .env.test first (test defaults)
+      17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+      18 |
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:15:8
+
+    console.error
+      ◇ injected env (0) from .env.local
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+    console.log
+      
+      🧪 Testing against LOCAL Convex: http://127.0.0.1:1
+
+      at tests/env.ts:35:13
+
+    console.log
+         Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:36:13
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:121:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:122:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:123:13
+
+PASS tests/unit/runtimeGraph/projection.test.ts
+  ● Console
+
+    console.error
+      ◇ injected env (0) from .env.test
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+    console.error
+      ◇ injected env (0) from .env.local
+
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+    > 20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+         |        ^
+      21 |
+      22 | // Determine which Convex deployment to test against
+      23 | // Note: In auto mode, the test-runner.mjs script handles detection and orchestration
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:20:8
+
+    console.log
+      
+      🧪 Testing against LOCAL Convex: http://127.0.0.1:1
+
+      at tests/env.ts:44:11
+
+    console.log
+         Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:45:11
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:147:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:150:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:151:11
+
+PASS tests/unit/runtimeRegistryClient/stats-client-bridge.test.ts
+  ● Console
+
+    console.error
+      ◇ injected env (0) from .env.test
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+    console.error
+      ◇ injected env (0) from .env.local
+
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+    > 20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+         |        ^
+      21 |
+      22 | // Determine which Convex deployment to test against
+      23 | // Note: In auto mode, the test-runner.mjs script handles detection and orchestration
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:20:8
+
+    console.log
+      
+      🧪 Testing against LOCAL Convex: http://127.0.0.1:1
+
+      at tests/env.ts:44:11
+
+    console.log
+         Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:45:11
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:147:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:150:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:151:11
+
+FAIL tests/unit/runtimeEndpointAuth/facts.test.ts
+  ● Console
+
+    console.error
+      ◇ injected env (0) from .env.test
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+    console.error
+      ◇ injected env (0) from .env.local
+
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+    > 20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+         |        ^
+      21 |
+      22 | // Determine which Convex deployment to test against
+      23 | // Note: In auto mode, the test-runner.mjs script handles detection and orchestration
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:20:8
+
+    console.log
+      
+      🧪 Testing against LOCAL Convex: http://127.0.0.1:1
+
+      at tests/env.ts:44:11
+
+    console.log
+         Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:45:11
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:147:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:150:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:151:11
+
+  ● actual facts endpoint closure › explicit audited history returns both versions after an update while normal current reads exclude the stale old version
+
+    TypeError: ctx.db.replace is not a function
+
+      194 |     state: failureCode ? "dead_letter" as const : "pending" as const, updatedAt: Date.now() };
+      195 |   const id = old ? old._id : await ctx.db.insert("runtimeGraphSources", value);
+    > 196 |   if (old) await ctx.db.replace("runtimeGraphSources", old._id, value);
+          |                         ^
+      197 |   const row = (await ctx.db.get("runtimeGraphSources", id))!;
+      198 |   const configured = await ctx.db.query("runtimeGraphConnectors").withIndex("by_scope", q => q.eq("tenantId", s.tenantId).eq("memorySpaceId", s.memorySpaceId)).take(3);
+      199 |   if (configured.length > 2) dataDenied("GRAPH_CONNECTOR_LIMIT");
+
+      at writeIntent (convex-dev/runtimeGraph.ts:196:25)
+      at enqueueSourceProjection (convex-dev/runtimeGraph.ts:131:17)
+      at enqueueFactProjection (convex-dev/runtimeGraph.ts:153:16)
+      at projectChangedSources (convex-dev/runtimeGraph.ts:295:11)
+      at handler (convex-dev/facts.ts:259:5)
+      at tests/unit/runtimeEndpointAuth/sharedfixtures.ts:113:38
+      at FixtureDb.transaction (tests/unit/runtimeEndpointAuth/sharedfixtures.ts:85:18)
+      at Object.invoke (tests/unit/runtimeEndpointAuth/sharedfixtures.ts:113:5)
+      at Object.<anonymous> (tests/unit/runtimeEndpointAuth/facts.test.ts:161:21)
+
+  ● actual facts endpoint closure › current and audited historical reads reject canonical hash corruption and edits cannot repair it
+
+    TypeError: ctx.db.replace is not a function
+
+      194 |     state: failureCode ? "dead_letter" as const : "pending" as const, updatedAt: Date.now() };
+      195 |   const id = old ? old._id : await ctx.db.insert("runtimeGraphSources", value);
+    > 196 |   if (old) await ctx.db.replace("runtimeGraphSources", old._id, value);
+          |                         ^
+      197 |   const row = (await ctx.db.get("runtimeGraphSources", id))!;
+      198 |   const configured = await ctx.db.query("runtimeGraphConnectors").withIndex("by_scope", q => q.eq("tenantId", s.tenantId).eq("memorySpaceId", s.memorySpaceId)).take(3);
+      199 |   if (configured.length > 2) dataDenied("GRAPH_CONNECTOR_LIMIT");
+
+      at writeIntent (convex-dev/runtimeGraph.ts:196:25)
+      at enqueueSourceProjection (convex-dev/runtimeGraph.ts:131:17)
+      at enqueueFactProjection (convex-dev/runtimeGraph.ts:153:16)
+      at projectChangedSources (convex-dev/runtimeGraph.ts:295:11)
+      at handler (convex-dev/facts.ts:259:5)
+      at tests/unit/runtimeEndpointAuth/sharedfixtures.ts:113:38
+      at FixtureDb.transaction (tests/unit/runtimeEndpointAuth/sharedfixtures.ts:85:18)
+      at Object.invoke (tests/unit/runtimeEndpointAuth/sharedfixtures.ts:113:5)
+      at tests/unit/runtimeEndpointAuth/facts.test.ts:228:20
+
+  ● actual facts endpoint closure › current and audited historical reads reject canonical normalization corruption and edits cannot repair it
+
+    TypeError: ctx.db.replace is not a function
+
+      194 |     state: failureCode ? "dead_letter" as const : "pending" as const, updatedAt: Date.now() };
+      195 |   const id = old ? old._id : await ctx.db.insert("runtimeGraphSources", value);
+    > 196 |   if (old) await ctx.db.replace("runtimeGraphSources", old._id, value);
+          |                         ^
+      197 |   const row = (await ctx.db.get("runtimeGraphSources", id))!;
+      198 |   const configured = await ctx.db.query("runtimeGraphConnectors").withIndex("by_scope", q => q.eq("tenantId", s.tenantId).eq("memorySpaceId", s.memorySpaceId)).take(3);
+      199 |   if (configured.length > 2) dataDenied("GRAPH_CONNECTOR_LIMIT");
+
+      at writeIntent (convex-dev/runtimeGraph.ts:196:25)
+      at enqueueSourceProjection (convex-dev/runtimeGraph.ts:131:17)
+      at enqueueFactProjection (convex-dev/runtimeGraph.ts:153:16)
+      at projectChangedSources (convex-dev/runtimeGraph.ts:295:11)
+      at handler (convex-dev/facts.ts:259:5)
+      at tests/unit/runtimeEndpointAuth/sharedfixtures.ts:113:38
+      at FixtureDb.transaction (tests/unit/runtimeEndpointAuth/sharedfixtures.ts:85:18)
+      at Object.invoke (tests/unit/runtimeEndpointAuth/sharedfixtures.ts:113:5)
+      at tests/unit/runtimeEndpointAuth/facts.test.ts:228:20
+
+  ● actual facts endpoint closure › editing an extracted fact (explicit sourceRef=false) creates a dedicated assertion without changing the originating memory or siblings
+
+    TypeError: ctx.db.replace is not a function
+
+      194 |     state: failureCode ? "dead_letter" as const : "pending" as const, updatedAt: Date.now() };
+      195 |   const id = old ? old._id : await ctx.db.insert("runtimeGraphSources", value);
+    > 196 |   if (old) await ctx.db.replace("runtimeGraphSources", old._id, value);
+          |                         ^
+      197 |   const row = (await ctx.db.get("runtimeGraphSources", id))!;
+      198 |   const configured = await ctx.db.query("runtimeGraphConnectors").withIndex("by_scope", q => q.eq("tenantId", s.tenantId).eq("memorySpaceId", s.memorySpaceId)).take(3);
+      199 |   if (configured.length > 2) dataDenied("GRAPH_CONNECTOR_LIMIT");
+
+      at writeIntent (convex-dev/runtimeGraph.ts:196:25)
+      at enqueueSourceProjection (convex-dev/runtimeGraph.ts:131:17)
+      at enqueueFactProjection (convex-dev/runtimeGraph.ts:153:16)
+      at projectChangedSources (convex-dev/runtimeGraph.ts:295:11)
+      at handler (convex-dev/facts.ts:259:5)
+      at tests/unit/runtimeEndpointAuth/sharedfixtures.ts:113:38
+      at FixtureDb.transaction (tests/unit/runtimeEndpointAuth/sharedfixtures.ts:85:18)
+      at Object.invoke (tests/unit/runtimeEndpointAuth/sharedfixtures.ts:113:5)
+      at tests/unit/runtimeEndpointAuth/facts.test.ts:339:23
+
+  ● actual facts endpoint closure › editing an extracted fact (explicit sourceRef=true) creates a dedicated assertion without changing the originating memory or siblings
+
+    TypeError: ctx.db.replace is not a function
+
+      194 |     state: failureCode ? "dead_letter" as const : "pending" as const, updatedAt: Date.now() };
+      195 |   const id = old ? old._id : await ctx.db.insert("runtimeGraphSources", value);
+    > 196 |   if (old) await ctx.db.replace("runtimeGraphSources", old._id, value);
+          |                         ^
+      197 |   const row = (await ctx.db.get("runtimeGraphSources", id))!;
+      198 |   const configured = await ctx.db.query("runtimeGraphConnectors").withIndex("by_scope", q => q.eq("tenantId", s.tenantId).eq("memorySpaceId", s.memorySpaceId)).take(3);
+      199 |   if (configured.length > 2) dataDenied("GRAPH_CONNECTOR_LIMIT");
+
+      at writeIntent (convex-dev/runtimeGraph.ts:196:25)
+      at enqueueSourceProjection (convex-dev/runtimeGraph.ts:131:17)
+      at enqueueFactProjection (convex-dev/runtimeGraph.ts:153:16)
+      at projectChangedSources (convex-dev/runtimeGraph.ts:295:11)
+      at handler (convex-dev/facts.ts:259:5)
+      at tests/unit/runtimeEndpointAuth/sharedfixtures.ts:113:38
+      at FixtureDb.transaction (tests/unit/runtimeEndpointAuth/sharedfixtures.ts:85:18)
+      at Object.invoke (tests/unit/runtimeEndpointAuth/sharedfixtures.ts:113:5)
+      at tests/unit/runtimeEndpointAuth/facts.test.ts:339:23
+
+  ● actual facts endpoint closure › historical fact delivery reloads CURRENT canonical source after hashing: tombstone
+
+    TypeError: ctx.db.replace is not a function
+
+      194 |     state: failureCode ? "dead_letter" as const : "pending" as const, updatedAt: Date.now() };
+      195 |   const id = old ? old._id : await ctx.db.insert("runtimeGraphSources", value);
+    > 196 |   if (old) await ctx.db.replace("runtimeGraphSources", old._id, value);
+          |                         ^
+      197 |   const row = (await ctx.db.get("runtimeGraphSources", id))!;
+      198 |   const configured = await ctx.db.query("runtimeGraphConnectors").withIndex("by_scope", q => q.eq("tenantId", s.tenantId).eq("memorySpaceId", s.memorySpaceId)).take(3);
+      199 |   if (configured.length > 2) dataDenied("GRAPH_CONNECTOR_LIMIT");
+
+      at writeIntent (convex-dev/runtimeGraph.ts:196:25)
+      at enqueueSourceProjection (convex-dev/runtimeGraph.ts:131:17)
+      at enqueueFactProjection (convex-dev/runtimeGraph.ts:153:16)
+      at projectChangedSources (convex-dev/runtimeGraph.ts:295:11)
+      at handler (convex-dev/facts.ts:259:5)
+      at tests/unit/runtimeEndpointAuth/sharedfixtures.ts:113:38
+      at FixtureDb.transaction (tests/unit/runtimeEndpointAuth/sharedfixtures.ts:85:18)
+      at Object.invoke (tests/unit/runtimeEndpointAuth/sharedfixtures.ts:113:5)
+      at tests/unit/runtimeEndpointAuth/facts.test.ts:401:21
+
+  ● actual facts endpoint closure › historical fact delivery reloads CURRENT canonical source after hashing: event
+
+    TypeError: ctx.db.replace is not a function
+
+      194 |     state: failureCode ? "dead_letter" as const : "pending" as const, updatedAt: Date.now() };
+      195 |   const id = old ? old._id : await ctx.db.insert("runtimeGraphSources", value);
+    > 196 |   if (old) await ctx.db.replace("runtimeGraphSources", old._id, value);
+          |                         ^
+      197 |   const row = (await ctx.db.get("runtimeGraphSources", id))!;
+      198 |   const configured = await ctx.db.query("runtimeGraphConnectors").withIndex("by_scope", q => q.eq("tenantId", s.tenantId).eq("memorySpaceId", s.memorySpaceId)).take(3);
+      199 |   if (configured.length > 2) dataDenied("GRAPH_CONNECTOR_LIMIT");
+
+      at writeIntent (convex-dev/runtimeGraph.ts:196:25)
+      at enqueueSourceProjection (convex-dev/runtimeGraph.ts:131:17)
+      at enqueueFactProjection (convex-dev/runtimeGraph.ts:153:16)
+      at projectChangedSources (convex-dev/runtimeGraph.ts:295:11)
+      at handler (convex-dev/facts.ts:259:5)
+      at tests/unit/runtimeEndpointAuth/sharedfixtures.ts:113:38
+      at FixtureDb.transaction (tests/unit/runtimeEndpointAuth/sharedfixtures.ts:85:18)
+      at Object.invoke (tests/unit/runtimeEndpointAuth/sharedfixtures.ts:113:5)
+      at tests/unit/runtimeEndpointAuth/facts.test.ts:401:21
+
+  ● actual facts endpoint closure › historical fact delivery reloads CURRENT canonical source after hashing: content
+
+    TypeError: ctx.db.replace is not a function
+
+      194 |     state: failureCode ? "dead_letter" as const : "pending" as const, updatedAt: Date.now() };
+      195 |   const id = old ? old._id : await ctx.db.insert("runtimeGraphSources", value);
+    > 196 |   if (old) await ctx.db.replace("runtimeGraphSources", old._id, value);
+          |                         ^
+      197 |   const row = (await ctx.db.get("runtimeGraphSources", id))!;
+      198 |   const configured = await ctx.db.query("runtimeGraphConnectors").withIndex("by_scope", q => q.eq("tenantId", s.tenantId).eq("memorySpaceId", s.memorySpaceId)).take(3);
+      199 |   if (configured.length > 2) dataDenied("GRAPH_CONNECTOR_LIMIT");
+
+      at writeIntent (convex-dev/runtimeGraph.ts:196:25)
+      at enqueueSourceProjection (convex-dev/runtimeGraph.ts:131:17)
+      at enqueueFactProjection (convex-dev/runtimeGraph.ts:153:16)
+      at projectChangedSources (convex-dev/runtimeGraph.ts:295:11)
+      at handler (convex-dev/facts.ts:259:5)
+      at tests/unit/runtimeEndpointAuth/sharedfixtures.ts:113:38
+      at FixtureDb.transaction (tests/unit/runtimeEndpointAuth/sharedfixtures.ts:85:18)
+      at Object.invoke (tests/unit/runtimeEndpointAuth/sharedfixtures.ts:113:5)
+      at tests/unit/runtimeEndpointAuth/facts.test.ts:401:21
+
+  ● actual facts endpoint closure › historical fact delivery reloads CURRENT canonical source after hashing: role-trust
+
+    TypeError: ctx.db.replace is not a function
+
+      194 |     state: failureCode ? "dead_letter" as const : "pending" as const, updatedAt: Date.now() };
+      195 |   const id = old ? old._id : await ctx.db.insert("runtimeGraphSources", value);
+    > 196 |   if (old) await ctx.db.replace("runtimeGraphSources", old._id, value);
+          |                         ^
+      197 |   const row = (await ctx.db.get("runtimeGraphSources", id))!;
+      198 |   const configured = await ctx.db.query("runtimeGraphConnectors").withIndex("by_scope", q => q.eq("tenantId", s.tenantId).eq("memorySpaceId", s.memorySpaceId)).take(3);
+      199 |   if (configured.length > 2) dataDenied("GRAPH_CONNECTOR_LIMIT");
+
+      at writeIntent (convex-dev/runtimeGraph.ts:196:25)
+      at enqueueSourceProjection (convex-dev/runtimeGraph.ts:131:17)
+      at enqueueFactProjection (convex-dev/runtimeGraph.ts:153:16)
+      at projectChangedSources (convex-dev/runtimeGraph.ts:295:11)
+      at handler (convex-dev/facts.ts:259:5)
+      at tests/unit/runtimeEndpointAuth/sharedfixtures.ts:113:38
+      at FixtureDb.transaction (tests/unit/runtimeEndpointAuth/sharedfixtures.ts:85:18)
+      at Object.invoke (tests/unit/runtimeEndpointAuth/sharedfixtures.ts:113:5)
+      at tests/unit/runtimeEndpointAuth/facts.test.ts:401:21
+
+  ● actual facts endpoint closure › historical fact delivery reloads CURRENT canonical source after hashing: tool-operation
+
+    TypeError: ctx.db.replace is not a function
+
+      194 |     state: failureCode ? "dead_letter" as const : "pending" as const, updatedAt: Date.now() };
+      195 |   const id = old ? old._id : await ctx.db.insert("runtimeGraphSources", value);
+    > 196 |   if (old) await ctx.db.replace("runtimeGraphSources", old._id, value);
+          |                         ^
+      197 |   const row = (await ctx.db.get("runtimeGraphSources", id))!;
+      198 |   const configured = await ctx.db.query("runtimeGraphConnectors").withIndex("by_scope", q => q.eq("tenantId", s.tenantId).eq("memorySpaceId", s.memorySpaceId)).take(3);
+      199 |   if (configured.length > 2) dataDenied("GRAPH_CONNECTOR_LIMIT");
+
+      at writeIntent (convex-dev/runtimeGraph.ts:196:25)
+      at enqueueSourceProjection (convex-dev/runtimeGraph.ts:131:17)
+      at enqueueFactProjection (convex-dev/runtimeGraph.ts:153:16)
+      at projectChangedSources (convex-dev/runtimeGraph.ts:295:11)
+      at handler (convex-dev/facts.ts:259:5)
+      at tests/unit/runtimeEndpointAuth/sharedfixtures.ts:113:38
+      at FixtureDb.transaction (tests/unit/runtimeEndpointAuth/sharedfixtures.ts:85:18)
+      at Object.invoke (tests/unit/runtimeEndpointAuth/sharedfixtures.ts:113:5)
+      at tests/unit/runtimeEndpointAuth/facts.test.ts:401:21
+
+  ● actual facts endpoint closure › current historical source witnesses preserve real audited stale revisions without adopting them for current reads
+
+    TypeError: ctx.db.replace is not a function
+
+      194 |     state: failureCode ? "dead_letter" as const : "pending" as const, updatedAt: Date.now() };
+      195 |   const id = old ? old._id : await ctx.db.insert("runtimeGraphSources", value);
+    > 196 |   if (old) await ctx.db.replace("runtimeGraphSources", old._id, value);
+          |                         ^
+      197 |   const row = (await ctx.db.get("runtimeGraphSources", id))!;
+      198 |   const configured = await ctx.db.query("runtimeGraphConnectors").withIndex("by_scope", q => q.eq("tenantId", s.tenantId).eq("memorySpaceId", s.memorySpaceId)).take(3);
+      199 |   if (configured.length > 2) dataDenied("GRAPH_CONNECTOR_LIMIT");
+
+      at writeIntent (convex-dev/runtimeGraph.ts:196:25)
+      at enqueueSourceProjection (convex-dev/runtimeGraph.ts:131:17)
+      at enqueueFactProjection (convex-dev/runtimeGraph.ts:153:16)
+      at projectChangedSources (convex-dev/runtimeGraph.ts:295:11)
+      at handler (convex-dev/facts.ts:259:5)
+      at tests/unit/runtimeEndpointAuth/sharedfixtures.ts:113:38
+      at FixtureDb.transaction (tests/unit/runtimeEndpointAuth/sharedfixtures.ts:85:18)
+      at Object.invoke (tests/unit/runtimeEndpointAuth/sharedfixtures.ts:113:5)
+      at Object.<anonymous> (tests/unit/runtimeEndpointAuth/facts.test.ts:414:21)
+
+PASS tests/unit/runtimeRegistryAuth/closureRepair.test.ts
+  ● Console
+
+    console.error
+      ◇ injected env (0) from .env.test
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+    console.error
+      ◇ injected env (0) from .env.local
+
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+    > 20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+         |        ^
+      21 |
+      22 | // Determine which Convex deployment to test against
+      23 | // Note: In auto mode, the test-runner.mjs script handles detection and orchestration
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:20:8
+
+    console.log
+      
+      🧪 Testing against LOCAL Convex: http://127.0.0.1:1
+
+      at tests/env.ts:44:11
+
+    console.log
+         Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:45:11
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:147:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:150:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:151:11
+
+PASS tests/unit/runtimeRegistryAuth/failureBoundary.test.ts
+  ● Console
+
+    console.error
+      ◇ injected env (0) from .env.test
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+    console.error
+      ◇ injected env (0) from .env.local
+
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+    > 20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+         |        ^
+      21 |
+      22 | // Determine which Convex deployment to test against
+      23 | // Note: In auto mode, the test-runner.mjs script handles detection and orchestration
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:20:8
+
+    console.log
+      
+      🧪 Testing against LOCAL Convex: http://127.0.0.1:1
+
+      at tests/env.ts:44:11
+
+    console.log
+         Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:45:11
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:147:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:150:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:151:11
+
+PASS tests/unit/runtimeWorkerAuth/admin-catalog.test.ts
+  ● Console
+
+    console.error
+      ◇ injected env (0) from .env.test
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+    console.error
+      ◇ injected env (0) from .env.local
+
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+    > 20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+         |        ^
+      21 |
+      22 | // Determine which Convex deployment to test against
+      23 | // Note: In auto mode, the test-runner.mjs script handles detection and orchestration
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:20:8
+
+    console.log
+      
+      🧪 Testing against LOCAL Convex: http://127.0.0.1:1
+
+      at tests/env.ts:44:11
+
+    console.log
+         Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:45:11
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:147:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:150:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:151:11
+
+PASS tests/unit/runtimeEndpointAuth/optionalReadFailures.test.ts
+  ● Console
+
+    console.error
+      ◇ injected env (0) from .env.test
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+    console.error
+      ◇ injected env (0) from .env.local
+
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+    > 20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+         |        ^
+      21 |
+      22 | // Determine which Convex deployment to test against
+      23 | // Note: In auto mode, the test-runner.mjs script handles detection and orchestration
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:20:8
+
+    console.log
+      
+      🧪 Testing against LOCAL Convex: http://127.0.0.1:1
+
+      at tests/env.ts:44:11
+
+    console.log
+         Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:45:11
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:147:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:150:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:151:11
+
+PASS tests/unit/runtimeAgent/model-owner.test.ts
+  ● Console
+
+    console.error
+      ◇ injected env (0) from .env.test
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+    console.error
+      ◇ injected env (0) from .env.local
+
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+    > 20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+         |        ^
+      21 |
+      22 | // Determine which Convex deployment to test against
+      23 | // Note: In auto mode, the test-runner.mjs script handles detection and orchestration
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:20:8
+
+    console.log
+      
+      🧪 Testing against LOCAL Convex: http://127.0.0.1:1
+
+      at tests/env.ts:44:11
+
+    console.log
+         Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:45:11
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:147:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:150:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:151:11
+
+PASS tests/unit/runtimeRegistryAuth/catalog.test.ts
+  ● Console
+
+    console.error
+      ◇ injected env (0) from .env.test
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+    console.error
+      ◇ injected env (0) from .env.local
+
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+    > 20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+         |        ^
+      21 |
+      22 | // Determine which Convex deployment to test against
+      23 | // Note: In auto mode, the test-runner.mjs script handles detection and orchestration
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:20:8
+
+    console.log
+      
+      🧪 Testing against LOCAL Convex: http://127.0.0.1:1
+
+      at tests/env.ts:44:11
+
+    console.log
+         Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:45:11
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:147:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:150:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:151:11
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅     4.4s | 39/39 passed | /tests/unit/runtimeRegistryClient/registry-bridge.test.ts
+  ✅     3.0s | 43/43 passed | /tests/unit/runtimeRegistryClient/stats-client-bridge.test.ts
+  ✅     2.7s | 34/34 passed | /tests/unit/runtimeGraph/projection.test.ts
+  ❌     1.3s | 100/111 passed | /tests/unit/runtimeEndpointAuth/facts.test.ts
+  ✅     1.2s | 143/143 passed | /tests/unit/runtimeRegistryAuth/closureRepair.test.ts
+  ✅     1.1s | 7/7 passed | /tests/unit/runtimeRegistryAuth/catalog.test.ts
+  ✅     1.0s | 366/366 passed | /tests/unit/runtimeRegistryAuth/failureBoundary.test.ts
+  ✅     1.0s | 6/6 passed | /tests/unit/runtimeAgent/model-owner.test.ts
+  ✅     1.0s | 58/58 passed | /tests/unit/runtimeWorkerAuth/admin-catalog.test.ts
+  ✅     0.9s | 100/100 passed | /tests/unit/runtimeEndpointAuth/optionalReadFailures.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    0.16s ( 0.9%) - portable inventory, actual schema exports and preserved sources ordinary inventory reproduction writes only owned temporary outputs and always removes them
+    /tests/unit/runtimeRegistryAuth/catalog.test.ts
+
+ 2. [32m✓[0m    0.15s ( 0.8%) - actual registered visibility and canonical schema/AST catalog AST inventory resolves exact 25 frozen paths with seven public and eighteen internal
+    /tests/unit/runtimeWorkerAuth/admin-catalog.test.ts
+
+ 3. [32m✓[0m    0.13s ( 0.8%) - scoped durable graph projection authority keysets visit repeated source IDs across scopes and preserve unrelated grants
+    /tests/unit/runtimeGraph/projection.test.ts
+
+ 4. [32m✓[0m    0.13s ( 0.7%) - scoped durable graph projection bounded transitive cleanup fences queued old generations and leaves unrelated current sources intact
+    /tests/unit/runtimeGraph/projection.test.ts
+
+ 5. [32m✓[0m    0.08s ( 0.4%) - cycle2 F2 resulting graph bound before child insertion 99 nodes with READ=false validates the resulting full graph before insert
+    /tests/unit/runtimeRegistryAuth/closureRepair.test.ts
+
+ 6. [32m✓[0m    0.07s ( 0.4%) - cycle2 F2 resulting graph bound before child insertion 99 nodes with READ=true validates the resulting full graph before insert
+    /tests/unit/runtimeRegistryAuth/closureRepair.test.ts
+
+ 7. [32m✓[0m    0.03s ( 0.2%) - the identity failure closes the governed lifecycle once and does not publish a completed operation
+    /tests/unit/runtimeAgent/model-owner.test.ts
+
+ 8. [32m✓[0m    0.03s ( 0.2%) - scoped durable graph projection real derived commit enqueues exact active snapshot; replay is one intent and receipt
+    /tests/unit/runtimeGraph/projection.test.ts
+
+ 9. [32m✓[0m    0.02s ( 0.1%) - scoped durable graph projection fresh expansion delivery mutation retains time-only authority expiry checks
+    /tests/unit/runtimeGraph/projection.test.ts
+
+10. [32m✓[0m    0.02s ( 0.1%) - the whole deferred tool path keeps exact native schemas and its primary model parent; completed tool replay performs no second effect
+    /tests/unit/runtimeAgent/model-owner.test.ts
+
+11. [32m✓[0m    0.02s ( 0.1%) - scoped durable graph projection known failures have bounded backoff and end dead-letter rather than synced
+    /tests/unit/runtimeGraph/projection.test.ts
+
+12. [32m✓[0m    0.02s ( 0.1%) - scoped durable graph projection expansion is reachable through service leases and freshly hydrates canonical authorized facts
+    /tests/unit/runtimeGraph/projection.test.ts
+
+13. [32m✓[0m    0.02s ( 0.1%) - scoped durable graph projection public manual store/edit/delete write the canonical fact and graph snapshot together
+    /tests/unit/runtimeGraph/projection.test.ts
+
+14. [32m✓[0m    0.02s ( 0.1%) - cycle2 F2 resulting graph bound before child insertion 100 nodes with READ=false validates the resulting full graph before insert
+    /tests/unit/runtimeRegistryAuth/closureRepair.test.ts
+
+15. [32m✓[0m    0.02s ( 0.1%) - scoped durable graph projection upstream deletion retires transitive production tool witness projections
+    /tests/unit/runtimeGraph/projection.test.ts
+
+16. [32m✓[0m    0.02s ( 0.1%) - cycle2 F2 resulting graph bound before child insertion 100 nodes with READ=true validates the resulting full graph before insert
+    /tests/unit/runtimeRegistryAuth/closureRepair.test.ts
+
+17. [32m✓[0m    0.02s ( 0.1%) - the whole model path obeys native RPC schemas, uses private pinned history and owns one no-retry stream lifecycle
+    /tests/unit/runtimeAgent/model-owner.test.ts
+
+18. [32m✓[0m    0.02s ( 0.1%) - scoped durable graph projection each enabled connector must acknowledge; a live lease is not reclaimed
+    /tests/unit/runtimeGraph/projection.test.ts
+
+19. [32m✓[0m    0.02s ( 0.1%) - scoped durable graph projection fresh expansion pre-effect mutation retains time-only authority expiry checks
+    /tests/unit/runtimeGraph/projection.test.ts
+
+20. [32m✓[0m    0.02s ( 0.1%) - scoped durable graph projection selective share revoke retires consumed graph evidence but preserves unrelated owner projections
+    /tests/unit/runtimeGraph/projection.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 1.03s (5.8% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      17.62s
+  Test suites:        10
+  Individual tests:   468
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 10
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 1 failed, 9 passed, 10 total
+Tests:       11 failed, 896 passed, 907 total
+Snapshots:   0 total
+Time:        17.623 s, estimated 19 s
+Ran all test suites within paths "tests/unit/runtimeEndpointAuth/facts.test.ts", "tests/unit/runtimeEndpointAuth/optionalReadFailures.test.ts", "tests/unit/runtimeRegistryAuth/closureRepair.test.ts", "tests/unit/runtimeRegistryAuth/failureBoundary.test.ts", "tests/unit/runtimeRegistryAuth/catalog.test.ts", "tests/unit/runtimeRegistryClient/registry-bridge.test.ts", "tests/unit/runtimeRegistryClient/stats-client-bridge.test.ts", "tests/unit/runtimeWorkerAuth/admin-catalog.test.ts", "tests/unit/runtimeGraph/projection.test.ts", "tests/unit/runtimeAgent/model-owner.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-query-expiry-functional-v2-20261008/author/compatibility-tests2.json

@@ -1,6 +1,7 @@
 import { z } from "zod";
 import type { TrustedMemoryScope } from "./contracts.js";
 import { assertProfileMatches, DEFAULT_EMBEDDING_PROFILE, embeddingProfileForModel, normalizeSourceText, semanticHash } from "./profile.js";
+import { mediaEnvelopeSchema } from "./media-schemas.js";
 
 /** Pure contracts: only a verified backend lookup may supply policy and qualifications. */
 export const MODEL_OPERATION_KEYS = Object.freeze([
@@ -16,7 +17,7 @@ export const MODEL_OPERATION_REGISTRY = Object.freeze(Object.fromEntries(MODEL_O
   key,
   capability: key.startsWith("embedding.") ? "embedding" : key.startsWith("media.image") ? "image" : key.startsWith("media.video") ? "video" : key === "memory.extract" || key === "facts.resolve" ? "structured" : "text",
   interfaces: Object.freeze(key.startsWith("embedding.") ? ["embedding"] : key.startsWith("media.image") ? ["image"] : key.startsWith("media.video") ? ["video"] : ["chat", "responses"]),
-  availableInThisPacket: key !== "media.image.generate",
+  availableInThisPacket: true,
 })])) as Readonly<Record<ModelOperationKey, { readonly key: ModelOperationKey; readonly capability: ModelCapability; readonly interfaces: readonly string[]; readonly availableInThisPacket: boolean }>>);
 
 const nonempty = z.string().min(1).max(256).refine((value) => value.trim() === value && value.trim().length > 0);
@@ -143,8 +144,8 @@ export function resolveModelPolicy(input: unknown): ModelPolicySnapshotV1 {
   canonicalModelJson(input);
   const { context, policies, qualifications } = parse(resolutionSchema, input);
   const operation = MODEL_OPERATION_REGISTRY[context.operationKey];
-  if (!operation.availableInThisPacket || context.operationKey === "media.video.generate" && !qualifications.some(receipt =>
-    receipt.nativeInterface === "video" && receipt.capabilities.includes("video"))) {
+  if (!operation.availableInThisPacket || (operation.capability === "video" || operation.capability === "image") && !qualifications.some(receipt =>
+    receipt.nativeInterface === operation.capability && receipt.capabilities.includes(operation.capability))) {
     throw new Error("CAPABILITY_UNAVAILABLE: media qualification belongs to its service gate");
   }
   const seen = new Set<string>();
@@ -299,6 +300,7 @@ const requestSchema = z.object({
     providerOptions: z.object({ openai: z.object({ store: z.literal(false) }).strict() }).strict().optional(),
   }).strict(),
   profile: profileSchema.optional(),
+  media: mediaEnvelopeSchema.optional(),
   batch: z.object({ ordinal: integer, start: integer, end: positive }).strict().optional(),
 }).strict();
 export type ModelCallRequest = z.infer<typeof requestSchema>;
@@ -343,6 +345,10 @@ export function validateModelRequest(snapshot: ModelPolicySnapshotV1, input: unk
     assertProfileMatches(request.profile, snapshot.semanticProfile);
     if (request.batch.end - request.batch.start !== request.texts.length || request.texts.length > 512 || request.outputTokens || request.toolSteps || request.tools.length || request.toolChoice || request.outputSchema || request.messages) deny("invalid embedding batch");
   } else if (request.profile || request.batch) deny("nonembedding request has embedding parameters");
+  const media = snapshot.nativeInterface === "image" || snapshot.nativeInterface === "video";
+  if ((!media && request.media !== undefined) || request.media !== undefined && (request.media.options.kind !== snapshot.nativeInterface
+    || request.outputTokens || request.toolSteps || request.tools.length || request.toolChoice || request.outputSchema
+    || request.texts.length !== 1 || request.media.prompt !== request.texts[0])) deny("media envelope mismatch");
   const texts = request.texts.map(normalizeSourceText);
   const messages = request.messages?.map((message) => ({ ...message, parts: message.parts.map((part) =>
     part.type === "text" ? { ...part, text: normalizeSourceText(part.text) } : part) }));

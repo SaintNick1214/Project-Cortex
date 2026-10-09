@@ -1,3 +1,4 @@
+import { deliveryExpiresAt } from "./runtimeDelivery";
 /** Scoped Convex adapters. Every sensitive operation reloads the persisted grant. */
 import { ConvexError } from "convex/values";
 import { makeFunctionReference } from "convex/server";
@@ -18,6 +19,12 @@ import { enqueueFactProjection } from "./runtimeGraph";
 export type DerivedCommit = Parameters<MemoryRepository["commitDerived"]>[0];
 export type FactQuery = Parameters<MemoryRepository["listFacts"]>[0];
 type ScopedArgs = { reference: RuntimeAuthorityReference; capability: "read" | "write" };
+export interface MemoryDeliveryBindings {
+  sources: { sourceId: string; sourceEventId: string; sourceRevision: number; contentHash: string;
+    ownerPrincipalId: string; permission: "canViewFacts" | "canViewMemories" }[];
+  facts: { factId: string; payloadHash: string }[];
+  vectors: { vectorId: string; profile: EmbeddingProfile; payloadHash: string; chunkHash: string; runBudgetId?: string }[];
+}
 
 /** Explicit references to actual internal registrations; replace by codegen after installation. */
 function internalQueryRef<Args extends Record<string, unknown>, Result>(name: string) {
@@ -35,6 +42,7 @@ export const memoryReferences = {
   profile: internalQueryRef<{ reference: RuntimeAuthorityReference; operationKey: "embedding.memory" | "embedding.query"; runBudgetId?: string }, EmbeddingProfile>("runtimeModelPolicy:embeddingProfile"),
   profileReady: internalQueryRef<ScopedArgs & { profile: EmbeddingProfile; runBudgetId?: string }, null>("runtimeMemory:checkProfileReady"),
   hydrateVectors: internalQueryRef<ScopedArgs & { profile: EmbeddingProfile; runBudgetId?: string; hits: { id: Id<"runtimeMemoryVectors">; score: number }[] }, VectorMatch[]>("runtimeMemory:readVectorMatches"),
+  finalDelivery: internalMutationRef<{ reference: RuntimeAuthorityReference; bindings: MemoryDeliveryBindings }, { version: 1; deliveryExpiresAt?: number }>("runtimeMemory:finalDelivery"),
 };
 
 export function memoryError(code: string, message: string): never {
@@ -101,14 +109,14 @@ export class ConvexMemoryRepository {
     if (!this.writer || this.capability !== "write") memoryError("FORBIDDEN", "A write-authorized mutation is required");
     return this.writer;
   }
-  async getSource(sourceId: string, permission?: ContextSourcePermission): Promise<SourceContent | null> {
+  async getSource(sourceId: string, permission?: ContextSourcePermission, deadlines?: number[]): Promise<SourceContent | null> {
     await this.authority();
     const row = await this.ctx.db.query("runtimeMemorySources").withIndex("by_scope_source", (q) =>
       q.eq("tenantId", this.scope.tenantId).eq("memorySpaceId", this.scope.memorySpaceId).eq("lineage.sourceId", sourceId)).unique();
     if (!row) return null;
     const source = stripSystem(row);
     await this.authority(sourceResource(source));
-    if (source.tombstonedAt !== undefined || !await managedSourceIsCurrent(this.ctx, this.reference, row, this.capability, permission)) memoryError("FORBIDDEN", "Source was deleted or access was revoked");
+    if (source.tombstonedAt !== undefined || !await managedSourceIsCurrent(this.ctx, this.reference, row, this.capability, permission, deadlines)) memoryError("FORBIDDEN", "Source was deleted or access was revoked");
     return source;
   }
   async putSource(source: SourceContent): Promise<{ source: SourceContent; created: boolean }> {
@@ -275,7 +283,7 @@ export class ConvexMemoryRepository {
     return row ? stripSystem(row) : null;
   }
   /** Derived rows whose source was deleted/changed are excluded; grant denial still throws. */
-  private async visibleSource(sourceId: string, authority: RuntimeAuthority, permission: "canViewFacts" | "canViewMemories"): Promise<SourceContent | null> {
+  private async visibleSource(sourceId: string, authority: RuntimeAuthority, permission: "canViewFacts" | "canViewMemories", deadlines?: number[]): Promise<SourceContent | null> {
     const row = await this.ctx.db.query("runtimeMemorySources").withIndex("by_scope_source", (q) =>
       q.eq("tenantId", this.scope.tenantId).eq("memorySpaceId", this.scope.memorySpaceId).eq("lineage.sourceId", sourceId)).unique();
     if (!row || row.tombstonedAt !== undefined || (authority.resourceAccess === "own" && row.ownerPrincipalId !== authority.principalId)) return null;
@@ -284,7 +292,7 @@ export class ConvexMemoryRepository {
       || await reader.hasTombstone({ tenantId: this.scope.tenantId, resourceType: "source", resourceId: sourceId })) return null;
     const source = stripSystem(row);
     try {
-      if (!await managedSourceIsCurrent(this.ctx, this.reference, row, "read", permission)) return null;
+      if (!await managedSourceIsCurrent(this.ctx, this.reference, row, "read", permission, deadlines)) return null;
       await this.authority(sourceResource(source), "read");
     } catch (error) {
       if (!isMemoryResourceDenied(error)) throw error;
@@ -329,7 +337,46 @@ export class ConvexMemoryRepository {
     }
     return facts;
   }
-  async hydrateVectors(hits: { id: Id<"runtimeMemoryVectors">; score: number }[], profile: EmbeddingProfile = DEFAULT_EMBEDDING_PROFILE, runBudgetId?: string): Promise<VectorMatch[]> {
+  /** Bounded exact consumed-row checks; this method is registered only as an internal mutation. */
+  async checkDelivery(bindings: MemoryDeliveryBindings): Promise<{ version: 1; deliveryExpiresAt?: number }> {
+    // Recall admits 100 facts and 100 vectors, plus its one-fact preflight.
+    if (bindings.sources.length > 201 || bindings.facts.length > 101 || bindings.vectors.length > 100
+      || new TextEncoder().encode(canonicalMemoryValue(bindings)).byteLength > 262144) memoryError("INVALID_INPUT", "Recall delivery bindings exceed the bounded envelope");
+    const deadlines: number[] = []; await this.authority(undefined, "read");
+    for (const expected of bindings.sources) {
+      const current = await this.getSource(expected.sourceId, expected.permission, deadlines);
+      if (!current || !sameReference(current.lineage, expected) || current.contentHash !== expected.contentHash
+        || current.ownerPrincipalId !== expected.ownerPrincipalId) memoryError("STALE_SOURCE", "Consumed recall source changed before delivery");
+    }
+    for (const expected of bindings.facts) {
+      const row = await this.ctx.db.query("facts").withIndex("by_runtime_scope_factId", q =>
+        q.eq("tenantId", this.scope.tenantId).eq("memorySpaceId", this.scope.memorySpaceId).eq("factId", expected.factId)).unique();
+      if (!row?.ownerPrincipalId || !row.lineage || !row.extractionPolicyVersion || row.tombstonedAt !== undefined
+        || row.supersededBy || row.sourceType === "fact-extraction" || (row.validUntil !== undefined && row.validUntil <= this.clock.now())) {
+        memoryError("STALE_SOURCE", "Consumed recall fact is no longer current");
+      }
+      await this.authority({ resourceType: "fact", resourceId: row.factId, tenantId: row.tenantId,
+        memorySpaceId: row.memorySpaceId, ownerPrincipalId: row.ownerPrincipalId }, "read");
+      if (row.validUntil !== undefined) deadlines.push(row.validUntil);
+      const source = await this.getSource(row.lineage.sourceId, "canViewFacts", deadlines);
+      if (!source || source.ownerPrincipalId !== row.ownerPrincipalId || source.lineage.role === "assistant"
+        || canonicalMemoryValue(source.lineage) !== canonicalMemoryValue(row.lineage)) memoryError("STALE_SOURCE", "Consumed recall fact lost source attribution");
+      const { _creationTime: _creationTime, tombstonedAt: _tombstone, processingReceiptId: _receipt, ...payload } = row;
+      if (await semanticHash(canonicalMemoryValue(payload)) !== expected.payloadHash) memoryError("STALE_SOURCE", "Consumed recall fact changed before delivery");
+    }
+    for (const expected of bindings.vectors) {
+      const row = await this.ctx.db.query("runtimeMemoryVectors").withIndex("by_scope_vector", q =>
+        q.eq("tenantId", this.scope.tenantId).eq("memorySpaceId", this.scope.memorySpaceId).eq("vectorId", expected.vectorId)).unique();
+      const matches = row ? await this.hydrateVectors([{ id: row._id, score: 0 }], expected.profile, expected.runBudgetId, deadlines) : [];
+      const match = matches[0];
+      if (!match || await semanticHash(canonicalMemoryValue(match.vector)) !== expected.payloadHash
+        || await semanticHash(canonicalMemoryValue(match.chunk)) !== expected.chunkHash) memoryError("STALE_SOURCE", "Consumed recall vector changed before delivery");
+    }
+    // Retain consumed share/source deadlines through the final authority awaits.
+    const expiresAt = await deliveryExpiresAt(this.ctx, this.reference, deadlines);
+    return { version: 1, ...(expiresAt === undefined ? {} : { deliveryExpiresAt: expiresAt }) };
+  }
+  async hydrateVectors(hits: { id: Id<"runtimeMemoryVectors">; score: number }[], profile: EmbeddingProfile = DEFAULT_EMBEDDING_PROFILE, runBudgetId?: string, deadlines?: number[]): Promise<VectorMatch[]> {
     if (hits.length > 100) memoryError("INVALID_INPUT", "Too many vector candidates");
     assertProfileMatches(profile, await this.selectedProfile("embedding.query", runBudgetId));
     const authority = await this.authority(undefined, "read");
@@ -342,7 +389,7 @@ export class ConvexMemoryRepository {
         q.eq("tenantId", this.scope.tenantId).eq("memorySpaceId", this.scope.memorySpaceId).eq("lineage.sourceId", row.sourceId)).unique();
       if (!sourceRow || sourceRow.tombstonedAt !== undefined || row.ownerPrincipalId !== sourceRow.ownerPrincipalId
         || (authority.resourceAccess === "own" && sourceRow.ownerPrincipalId !== authority.principalId)) continue;
-      const source = await this.visibleSource(row.sourceId, authority, "canViewMemories");
+      const source = await this.visibleSource(row.sourceId, authority, "canViewMemories", deadlines);
       const chunk = await this.findChunk(row.chunkId);
       const vector = stripVector(row);
       const receipt = await this.ctx.db.query("runtimeMemoryReceipts").withIndex("by_scope_receipt", (q) =>
@@ -373,13 +420,31 @@ export function createActionMemoryRepository(
 ): MemoryRepository {
   const scope = memoryScope(reference);
   const args = { reference, capability };
+  const bindings: MemoryDeliveryBindings = { sources: [], facts: [], vectors: [] };
+  const captureSource = (source: SourceContent, permission: "canViewFacts" | "canViewMemories") => {
+    const next = { sourceId: source.lineage.sourceId, sourceEventId: source.lineage.sourceEventId,
+      sourceRevision: source.lineage.sourceRevision, contentHash: source.contentHash, ownerPrincipalId: source.ownerPrincipalId, permission };
+    if (!bindings.sources.some(value => canonicalMemoryValue(value) === canonicalMemoryValue(next))) bindings.sources.push(next);
+  };
   return {
     scope,
     recheckAuthority: async () => { await ctx.runQuery(memoryReferences.recheck, args); },
     getSource: async (sourceId) => await ctx.runQuery(memoryReferences.getSource, { ...args, sourceId }),
     putSource: async (source) => await ctx.runMutation(memoryReferences.putSource, { ...args, source }),
     commitDerived: async (input) => await ctx.runMutation(memoryReferences.commitDerived, { ...args, input }),
-    listFacts: async (query) => await ctx.runQuery(memoryReferences.listFacts, { ...args, capability: "read", query }),
+    listFacts: async (query) => {
+      const facts = await ctx.runQuery(memoryReferences.listFacts, { ...args, capability: "read", query });
+      for (const fact of facts) {
+        const source = await ctx.runQuery(memoryReferences.getSource, { ...args, capability: "read", sourceId: fact.lineage.sourceId });
+        if (!source || !sameReference(source.lineage, fact.lineage) || canonicalMemoryValue(source.lineage) !== canonicalMemoryValue(fact.lineage)
+          || source.ownerPrincipalId !== fact.ownerPrincipalId) memoryError("STALE_SOURCE", "Recalled fact source changed during read");
+        captureSource(source, "canViewFacts");
+        const next = { factId: fact.factId, payloadHash: await semanticHash(canonicalMemoryValue(fact)) };
+        if (!bindings.facts.some(value => value.factId === next.factId && value.payloadHash === next.payloadHash)) bindings.facts.push(next);
+      }
+      return facts;
+    },
+    finalDelivery: async () => await ctx.runMutation(memoryReferences.finalDelivery, { reference, bindings }),
     assertProfileReady: async (profile, runBudgetId) => { await ctx.runQuery(memoryReferences.profileReady,
       { ...args, capability: "read", profile, ...(runBudgetId ? { runBudgetId } : {}) }); },
     searchVectors: async (query: ProfiledQuery, limit) => {
@@ -396,7 +461,13 @@ export function createActionMemoryRepository(
           : q.eq("scopeProfileKey", vectorScopeKey(scope.tenantId, scope.memorySpaceId, query.profile.profileId)),
       });
       // A second internal query rechecks revocation and canonical source currentness after search.
-      return await ctx.runQuery(memoryReferences.hydrateVectors, { ...readArgs, profile: query.profile, ...pin, hits: hits.map((hit) => ({ id: hit._id, score: hit._score })) });
+      const matches = await ctx.runQuery(memoryReferences.hydrateVectors, { ...readArgs, profile: query.profile, ...pin, hits: hits.map((hit) => ({ id: hit._id, score: hit._score })) });
+      for (const match of matches) {
+        captureSource(match.source, "canViewMemories");
+        bindings.vectors.push({ vectorId: match.vector.vectorId, profile: query.profile, ...pin,
+          payloadHash: await semanticHash(canonicalMemoryValue(match.vector)), chunkHash: await semanticHash(canonicalMemoryValue(match.chunk)) });
+      }
+      return matches;
     },
   };
 }

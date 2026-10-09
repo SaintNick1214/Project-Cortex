@@ -127,7 +127,8 @@ describe("cycle2 F3 installed native unique and all selected private error paths
     opaque(await rejected(async () => await f.db.transaction(async () => await invoke(entry.registration, f.ctx, nativeArgs(entry))), "REGISTRY_OPERATION_FAILED", "failed"));
     expect(reached).toBe(true); expect(f.db.writes).toBe(0);
   });
-  const mutations = selected.filter((entry) => (entry.registration as { isMutation?: boolean }).isMutation === true);
+  const freshReadPaths = new Set(["agents:get", "agents:exists", "agents:list", "agents:count", "contexts:get", "contexts:list", "contexts:search", "contexts:count", "contexts:getChain", "contexts:getRoot", "contexts:getChildren", "contexts:getByConversation", "contexts:findOrphaned", "contexts:getVersion", "contexts:getHistory", "contexts:getAtTimestamp", "contexts:exportContexts", "memorySpaces:get", "memorySpaces:list", "memorySpaces:count", "memorySpaces:findByParticipant", "memorySpaces:search"]);
+const mutations = selected.filter((entry) => !freshReadPaths.has(entry.path) && (entry.registration as { isMutation?: boolean }).isMutation === true);
   it.each(mutations)("$path sanitizes an actual rejected first write attempt and retains atomic failure", async (entry) => {
     const f = fixture(); seedSpace(f); seedAgent(f); seedContext(f); if (entry.module === "memorySpaces" && entry.name === "register") f.db.rows.set("memorySpaces", []);
     const before = snapshot([...f.db.rows]); let attempts = 0;

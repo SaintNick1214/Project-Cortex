@@ -6,7 +6,7 @@
  */
 
 import { ConvexError, v } from "convex/values";
-import { action, internalMutation, internalQuery, mutation, query } from "./_generated/server";
+import { action, internalMutation, internalQuery, mutation } from "./_generated/server";
 import { makeFunctionReference } from "convex/server";
 import type { FunctionReference } from "convex/server";
 import type { RuntimeAuthorityReference } from "../src/auth/verified";
@@ -315,7 +315,7 @@ export const deleteMemory = mutation({
 /**
  * Get memory by ID
  */
-export const get = query({
+export const get = mutation({
   args: {
     tenantId: v.optional(v.string()),
     memorySpaceId: v.string(),
@@ -420,7 +420,7 @@ export const search = action({
 /**
  * List memories with filters
  */
-export const list = query({
+export const list = mutation({
   args: {
     memorySpaceId: v.string(), // Updated
     userId: v.optional(v.string()),
@@ -456,7 +456,7 @@ export const list = query({
 /**
  * Count memories
  */
-export const count = query({
+export const count = mutation({
   args: {
     memorySpaceId: v.string(), // Updated
     userId: v.optional(v.string()),
@@ -554,7 +554,7 @@ export const update = mutation({
 /**
  * Get specific version
  */
-export const getVersion = query({
+export const getVersion = mutation({
   args: {
     memorySpaceId: v.string(),
     memoryId: v.string(),
@@ -598,7 +598,7 @@ export const getVersion = query({
 /**
  * Get version history
  */
-export const getHistory = query({
+export const getHistory = mutation({
   args: {
     memorySpaceId: v.string(),
     memoryId: v.string(),
@@ -752,7 +752,7 @@ export const purgeAll = internalMutation({
 /**
  * Export memories
  */
-export const exportMemories = query({
+export const exportMemories = mutation({
   args: {
     memorySpaceId: v.string(), // Updated
     userId: v.optional(v.string()),
@@ -969,7 +969,7 @@ export const restoreFromArchive = mutation({
 /**
  * Get version at specific timestamp
  */
-export const getAtTimestamp = query({
+export const getAtTimestamp = mutation({
   args: {
     memorySpaceId: v.string(),
     memoryId: v.string(),

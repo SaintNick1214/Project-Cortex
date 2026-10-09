@@ -1,7 +1,7 @@
 /** Owned executable versions; the discovery registry never supplies execution authority. */
 import { ConvexError, v } from "convex/values";
 import { z } from "zod";
-import { mutation, query } from "./_generated/server";
+import { mutation } from "./_generated/server";
 import type { QueryCtx } from "./_generated/server";
 import type { Doc } from "./_generated/dataModel";
 import type { RuntimeAuthorityReference } from "../src/auth/verified";
@@ -12,12 +12,16 @@ import { assertUnicode, boundedIdentifier, clientRequestKey, utf8Bytes } from ".
 import { requireDataAuthority, dataAuthorityReference } from "./runtimeDataAuth";
 import { recheckAuthority } from "./runtimeAuth";
 import { lookupDeploymentManifest } from "./runtimeModelPolicyBootstrap";
-import { NATIVE_TOOL_NAMES } from "../src/domain/agent-tools";
+import { NATIVE_TOOL_NAMES_V2 as NATIVE_TOOL_NAMES } from "../src/domain/agent-tools";
 
 export const EXECUTABLE_REGISTRY = Object.freeze({ version: 1,
   tools: Object.freeze({ "memory.remember": 1, "memory.recall": 1 }),
   contexts: Object.freeze({ "cortex.transcript": 1 }) });
 export async function executableRegistryHash(): Promise<string> { return await semanticHash(canonicalModelJson(EXECUTABLE_REGISTRY)); }
+export const EXECUTABLE_REGISTRY_V2 = Object.freeze({ version: 2,
+  tools: Object.freeze({ ...EXECUTABLE_REGISTRY.tools, "media.image.generate": 1, "media.video.generate": 1, "artifact.read": 1 }),
+  contexts: EXECUTABLE_REGISTRY.contexts });
+export async function executableRegistryHashV2(): Promise<string> { return await semanticHash(canonicalModelJson(EXECUTABLE_REGISTRY_V2)); }
 function denied(code = "POLICY_DENIED"): never {
   throw new ConvexError({ version: 1, code, message: "Agent definition control failed.", retryable: false, outcome: "not_dispatched" });
 }
@@ -56,11 +60,13 @@ function decodeInput(input: unknown): z.infer<typeof definitionInput> {
   return parsed.data;
 }
 async function registry(input: z.infer<typeof definitionInput>): Promise<void> {
-  const hash = await executableRegistryHash();
+  const hash = input.context.registryHash;
+  const catalog = hash === await executableRegistryHash() ? EXECUTABLE_REGISTRY : hash === await executableRegistryHashV2() ? EXECUTABLE_REGISTRY_V2 : undefined;
+  if (!catalog) denied();
   const seen = new Set<string>();
   for (const tool of input.tools) {
-    if (seen.has(tool.toolId) || !Object.prototype.hasOwnProperty.call(EXECUTABLE_REGISTRY.tools, tool.toolId)
-      || EXECUTABLE_REGISTRY.tools[tool.toolId as keyof typeof EXECUTABLE_REGISTRY.tools] !== tool.toolVersion || tool.registryHash !== hash) denied();
+    if (seen.has(tool.toolId) || !Object.prototype.hasOwnProperty.call(catalog.tools, tool.toolId)
+      || catalog.tools[tool.toolId as keyof typeof catalog.tools] !== tool.toolVersion || tool.registryHash !== hash) denied();
     seen.add(tool.toolId);
   }
   if (!Object.prototype.hasOwnProperty.call(EXECUTABLE_REGISTRY.contexts, input.context.handlerId)
@@ -86,7 +92,7 @@ async function narrowPolicies(ctx: Pick<QueryCtx, "db">, reference: RuntimeAutho
     try {
       const resolved = resolveModelPolicy({ context: { scope: reference, agent: { agentId: definition.agentId, version: definition.agentVersion },
         operationKey: key, runBudgetId: "definition-validation", authorizedOverrides: [] }, policies, qualifications: manifest.qualifications });
-      if (definition.context.maxContextTokens > resolved.limits.contextTokens || definition.tools.some(t => !resolved.allowedTools.includes(NATIVE_TOOL_NAMES[t.toolId as keyof typeof NATIVE_TOOL_NAMES]))) denied();
+      if (key === "agent.respond" && (definition.context.maxContextTokens > resolved.limits.contextTokens || definition.tools.some(t => !resolved.allowedTools.includes(NATIVE_TOOL_NAMES[t.toolId as keyof typeof NATIVE_TOOL_NAMES])))) denied();
     } catch { denied(); }
   }
 }
@@ -175,7 +181,7 @@ export const revokeVersion = mutation({ args: { memorySpaceId: v.string(), agent
       { revokedAt: Date.now(), revocationActorReference: reference, revocationReason: args.reason });
     return { revoked: true as const };
   } });
-export const get = query({ args: { memorySpaceId: v.string(), tenantId: v.optional(v.string()), agentId: v.string(), version: v.number() }, handler: async (ctx, args) => {
+export const get = mutation({ args: { memorySpaceId: v.string(), tenantId: v.optional(v.string()), agentId: v.string(), version: v.number() }, handler: async (ctx, args) => {
   const actor = await requireDataAuthority(ctx, { tenantId: args.tenantId, memorySpaceId: args.memorySpaceId }, "run");
   const current = await readCurrentExecutableDefinition(ctx, dataAuthorityReference(actor), { agentId: args.agentId, version: args.version }, { capability: "run" });
   return { agentId: args.agentId, version: args.version, definitionHash: current.definitionHash,

@@ -101,6 +101,35 @@ describe("AI SDK 7 remote transport", () => {
     expect(chunks.some(part => part.type === "data-cortex-approval")).toBe(true); expect(chunks.some(part => part.type.startsWith("tool-"))).toBe(false);
     expect(chunks.some(part => part.type === "data-cortex-artifact")).toBe(true);
   });
+  it("restores backend tool, artifact and media-job references across restart using the actual UI parser", async () => {
+    const f = fixture(); const first = await f.transport.sendMessages(send());
+    const parts: RuntimeObservation["parts"] = [
+      { sequence: 1, part: { type: "tool", toolCallId: "call", name: "media_image_generate", phase: "succeeded" } },
+      { sequence: 2, part: { type: "artifact", artifactId: "receipt", kind: "memory-receipt" } },
+      { sequence: 3, part: { type: "media-job", version: 1, jobId: "job", artifactId: "image", kind: "image" } },
+    ];
+    f.update(parts); f.transport.disconnect(); await drain(first);
+    const saved = f.transport.state!; expect(saved.projections).toHaveLength(3);
+    const next = new CortexRemoteTransport({ client: f.client as unknown as CortexRuntimeClient, agentId: "agent", agentVersion: 1, state: saved });
+    const resumed = await next.reconnectToStream({ chatId: "chat" }); const messages: UIMessage[] = [];
+    const done = (async () => { for await (const message of readUIMessageStream({ stream: resumed! })) messages.push(message); })();
+    f.update([...parts, { sequence: 4, part: { type: "text", text: "Your image is processing." } }], "complete"); await done;
+    const restored = messages.at(-1)!.parts;
+    expect(restored.filter(part => part.type === "data-cortex-tool")).toHaveLength(1);
+    expect(restored.filter(part => part.type === "data-cortex-artifact")).toHaveLength(1);
+    expect(restored.filter(part => part.type === "data-cortex-media-job")).toHaveLength(1);
+    expect(f.client.submit).toHaveBeenCalledTimes(1); expect(f.client.start).toHaveBeenCalledTimes(1);
+    expect(next.state!.projections).toHaveLength(3);
+  });
+  it("withholds restored job references until current evidence authorization", async () => {
+    const f = fixture(); const transport = new CortexRemoteTransport({ client: f.client as unknown as CortexRuntimeClient, agentId: "agent", agentVersion: 1,
+      state: { version: 1, chatId: "chat", handle, attemptNumber: 1, cursor: 3, text: "", finalText: "", finalTextStarted: false,
+        projections: [{ type: "media-job", version: 1, jobId: "private-job", artifactId: "private-artifact", kind: "video" }] } });
+    const stream = await transport.reconnectToStream({ chatId: "chat" }), reader = stream!.getReader();
+    expect((await reader.read()).value!.type).toBe("start"); expect((await reader.read()).value!.type).toBe("reset-step"); expect((await reader.read()).value!.type).toBe("text-start");
+    f.subscriptions[0].error(new CortexRuntimeError("FORBIDDEN")); await expect(reader.read()).rejects.toMatchObject({ code: "FORBIDDEN" }); reader.releaseLock();
+    expect(f.client.start).not.toHaveBeenCalled(); expect(f.client.submit).not.toHaveBeenCalled();
+  });
   it("explicit input approval resumes same server run rather than submitting a second input", async () => {
     const f = fixture(); const stream = await f.transport.sendMessages(send()); await f.transport.approveInput(); f.transport.disconnect(); await drain(stream);
     expect(f.client.approveInput).toHaveBeenCalledWith(handle); expect(f.client.submit).toHaveBeenCalledTimes(1); expect(f.client.start).toHaveBeenLastCalledWith(handle, { streaming: true });

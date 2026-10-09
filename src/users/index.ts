@@ -162,7 +162,7 @@ export class UsersAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.immutable.get, {
+        this.client.mutation(api.immutable.get, {
           type: "user",
           id: userId,
           tenantId: this.authContext?.tenantId, // Tenant isolation
@@ -412,7 +412,7 @@ export class UsersAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.immutable.list, {
+        this.client.mutation(api.immutable.list, {
           type: "user",
           limit: filters?.limit,
           offset: filters?.offset,
@@ -503,7 +503,7 @@ export class UsersAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.immutable.list, {
+        this.client.mutation(api.immutable.list, {
           type: "user",
           limit: filters.limit,
           offset: filters.offset,
@@ -579,7 +579,7 @@ export class UsersAPI {
 
     return await this.executeWithResilience(
       () =>
-        this.client.query(api.immutable.count, {
+        this.client.mutation(api.immutable.count, {
           type: "user",
           createdAfter: filters?.createdAfter,
           createdBefore: filters?.createdBefore,
@@ -613,7 +613,7 @@ export class UsersAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.immutable.getVersion, {
+        this.client.mutation(api.immutable.getVersion, {
           type: "user",
           id: userId,
           version,
@@ -648,7 +648,7 @@ export class UsersAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.immutable.getHistory, {
+        this.client.mutation(api.immutable.getHistory, {
           type: "user",
           id: userId,
         }),
@@ -685,7 +685,7 @@ export class UsersAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.immutable.getAtTimestamp, {
+        this.client.mutation(api.immutable.getAtTimestamp, {
           type: "user",
           id: userId,
           timestamp: timestamp.getTime(),
@@ -911,7 +911,7 @@ export class UsersAPI {
       // Include conversations if requested
       if (options?.includeConversations) {
         try {
-          const convosResult = await this.client.query(api.conversations.list, {
+          const convosResult = await this.client.mutation(api.conversations.list, {
             userId: user.id,
           });
           // Handle both array and paginated result formats
@@ -943,7 +943,7 @@ export class UsersAPI {
             // Query memories from each memory space
             for (const memorySpaceId of memorySpaceIds) {
               try {
-                const memories = await this.client.query(api.memories.list, {
+                const memories = await this.client.mutation(api.memories.list, {
                   memorySpaceId,
                   userId: user.id,
                 });
@@ -1222,7 +1222,7 @@ export class UsersAPI {
 
     // Collect conversations - single query with userId filter
     try {
-      const convosResult = await this.client.query(api.conversations.list, {
+      const convosResult = await this.client.mutation(api.conversations.list, {
         userId,
       });
       // conversations.list returns { conversations, total, ... } or just array
@@ -1256,7 +1256,7 @@ export class UsersAPI {
 
     // Collect immutable records (excluding user profile itself) - single query
     try {
-      const result = await this.client.query(api.immutable.list, {
+      const result = await this.client.mutation(api.immutable.list, {
         userId,
         tenantId: this.authContext?.tenantId, // Multi-tenancy: scope to tenant
       });
@@ -1283,7 +1283,7 @@ export class UsersAPI {
     // This is more efficient than collecting all facts and filtering client-side
     for (const spaceId of memorySpaceIds) {
       try {
-        const facts = await this.client.query(api.facts.list, {
+        const facts = await this.client.mutation(api.facts.list, {
           memorySpaceId: spaceId,
           userId,
         });
@@ -1334,7 +1334,7 @@ export class UsersAPI {
 
     for (const namespace of commonNamespaces) {
       try {
-        const keys = await this.client.query(api.mutable.list, {
+        const keys = await this.client.mutation(api.mutable.list, {
           namespace,
           userId,
         });
@@ -1719,7 +1719,7 @@ export class UsersAPI {
 
     // Check conversations - single query with userId filter
     try {
-      const remainingConvos = await this.client.query(api.conversations.count, {
+      const remainingConvos = await this.client.mutation(api.conversations.count, {
         userId,
       });
       if (remainingConvos > 0) {
@@ -1731,7 +1731,7 @@ export class UsersAPI {
 
     // Check immutable records - single query with userId filter
     try {
-      const remainingImmutable = await this.client.query(api.immutable.count, {
+      const remainingImmutable = await this.client.mutation(api.immutable.count, {
         userId,
       });
       if (remainingImmutable > 0) {

@@ -469,7 +469,7 @@ describe("Agents API (Coordination Layer)", () => {
       expect(result.stats).toBeDefined();
 
       // Validate Convex storage
-      const stored = await client.query(api.agents.get, { agentId });
+      const stored = await client.mutation(api.agents.get, { agentId });
       expect(stored).not.toBeNull();
       expect(stored!.agentId).toBe(agentId);
       expect(stored!.name).toBe("Test Agent");

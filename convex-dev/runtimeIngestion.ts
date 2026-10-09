@@ -3,7 +3,7 @@ import { makeFunctionReference } from "convex/server";
 import type { FunctionReference } from "convex/server";
 import { ConvexError, v } from "convex/values";
 import { retireGraphSource } from "./runtimeGraph";
-import { internalAction, internalMutation, internalQuery, mutation, query } from "./_generated/server";
+import { internalAction, internalMutation, internalQuery, mutation } from "./_generated/server";
 import type { ActionCtx, MutationCtx, QueryCtx } from "./_generated/server";
 import type { Doc, Id } from "./_generated/dataModel";
 import type { RuntimeAuthorityReference } from "../src/auth/verified";
@@ -322,7 +322,7 @@ export const reconcile = mutation({ args: { tenantId: v.optional(v.string()), me
     throw error;
   }
 } });
-export const status = query({ args: { tenantId: v.optional(v.string()), memorySpaceId: v.optional(v.string()), eventId: v.string() }, handler: async (ctx, args) => {
+export const status = mutation({ args: { tenantId: v.optional(v.string()), memorySpaceId: v.optional(v.string()), eventId: v.string() }, handler: async (ctx, args) => {
   const actor = await requireDataAuthority(ctx, args, "read"); const reference = dataAuthorityReference(actor); const event = await eventById(ctx, reference, args.eventId); if (!event) ingestionDenied();
   // A superseded event remains observable by its currently authorized resource owner.
   await new ConvexMemoryRepository(ctx, reference, "read").authority({ resourceType: "source", resourceId: event.lineage.sourceId, tenantId: event.tenantId, memorySpaceId: event.memorySpaceId, ownerPrincipalId: event.ownerPrincipalId });

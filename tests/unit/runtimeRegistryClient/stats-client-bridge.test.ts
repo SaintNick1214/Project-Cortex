@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it, jest } from "@jest/globals";
 import { ConvexClient } from "convex/browser";
 import { ConvexError } from "convex/values";
+import { getFunctionName } from "convex/server";
 import type { FunctionReturnType } from "convex/server";
 import type { Id } from "../../../convex-dev/_generated/dataModel";
 import { api } from "../../../convex-dev/_generated/api";
@@ -27,40 +28,44 @@ describe.each(["absent", "disabled", "enabled"] as const)("explicit stats bridge
     client = new ConvexClient("https://example.convex.cloud", { disabled: true, logger: false });
     const retry = jest.fn(); const circuitOpen = jest.fn();
     resilience = new ResilienceLayer({ enabled: mode === "enabled", retry: { maxRetries: 2, baseDelayMs: 1, maxDelayMs: 1, jitter: false }, onRetry: retry, onCircuitOpen: circuitOpen });
-    const query = jest.spyOn(client, "query"); const mutation = jest.spyOn(client, "mutation"); const action = jest.spyOn(client, "action");
+    const query = jest.spyOn(client, "query");
+    const read = jest.fn<ConvexClient["mutation"]>(); const mutation = jest.fn<ConvexClient["mutation"]>();
+    jest.spyOn(client, "mutation").mockImplementation((ref, ...args) =>
+      ["agents:get", "agents:list"].includes(getFunctionName(ref)) ? read(ref, ...args) : mutation(ref, ...args));
+    const action = jest.spyOn(client, "action");
     const auth = { userId: "user-a", tenantId: "tenant-a" };
     const layer = mode === "absent" ? undefined : resilience;
-    return { query, mutation, action, retry, circuitOpen, agents: new AgentsAPI(client, undefined, layer, auth), spaces: new MemorySpacesAPI(client, undefined, layer, auth) };
+    return { query, read, mutation, action, retry, circuitOpen, agents: new AgentsAPI(client, undefined, layer, auth), spaces: new MemorySpacesAPI(client, undefined, layer, auth) };
   }
 
   it("get returns official readable profile without implicit stats lookup", async () => {
-    const f = fixture(); f.query.mockResolvedValueOnce(row).mockRejectedValue(unavailable());
+    const f = fixture(); f.read.mockResolvedValueOnce(row).mockRejectedValue(unavailable());
     const result = await f.agents.get("agent-a", { memorySpaceId: "space-a" });
     expect(result).toEqual({ id: row.agentId, tenantId: row.tenantId, memorySpaceId: row.memorySpaceId, name: row.name, description: undefined, metadata: row.metadata, config: row.config, status: row.status, registeredAt: row.registeredAt, updatedAt: row.updatedAt, lastActive: undefined });
     expect(result).not.toHaveProperty("stats");
-    expect(f.query).toHaveBeenCalledTimes(1); expect(f.mutation).not.toHaveBeenCalled(); expect(f.action).not.toHaveBeenCalled();
+    expect(f.read).toHaveBeenCalledTimes(1); expect(f.query).not.toHaveBeenCalled(); expect(f.mutation).not.toHaveBeenCalled(); expect(f.action).not.toHaveBeenCalled();
   });
 
   it("export requested stats preserves exact typed unready failure and selected-row scope", async () => {
-    const f = fixture(); const error = unavailable(); f.query.mockResolvedValueOnce([row]).mockRejectedValue(error);
+    const f = fixture(); const error = unavailable(); f.read.mockResolvedValueOnce([row]); f.query.mockRejectedValue(error);
     await expect(f.agents.export({ format: "json", includeStats: true, filters: { memorySpaceId: "space-a" } })).rejects.toBe(error);
     expect(JSON.parse(JSON.stringify(error.data))).toEqual({ version: 1, code: "CAPABILITY_NOT_READY", message: "Access denied or invalid registry input", retryable: false, outcome: "not_dispatched" });
-    expect(f.query).toHaveBeenCalledTimes(2);
-    expect(f.query.mock.calls[1]).toEqual([api.agents.computeStats, { agentId: "agent-a", tenantId: "tenant-a", memorySpaceId: "space-a" }]);
+    expect(f.read).toHaveBeenCalledTimes(1); expect(f.query).toHaveBeenCalledTimes(1);
+    expect(f.query.mock.calls[0]).toEqual([api.agents.computeStats, { agentId: "agent-a", tenantId: "tenant-a", memorySpaceId: "space-a" }]);
     expect(f.circuitOpen).not.toHaveBeenCalled(); expect(f.retry).not.toHaveBeenCalled(); expect(f.mutation).not.toHaveBeenCalled(); expect(f.action).not.toHaveBeenCalled();
   });
 
   it("export without stats remains a profile-only operation", async () => {
-    const f = fixture(); f.query.mockResolvedValueOnce([row]).mockRejectedValue(unavailable());
+    const f = fixture(); f.read.mockResolvedValueOnce([row]).mockRejectedValue(unavailable());
     const result = await f.agents.export({ format: "json", includeStats: false });
     expect(JSON.parse(result.data)).toEqual([expect.objectContaining({ id: "agent-a", name: "Official profile", memorySpaceId: "space-a" })]);
-    expect(JSON.parse(result.data)[0]).not.toHaveProperty("stats"); expect(f.query).toHaveBeenCalledTimes(1);
+    expect(JSON.parse(result.data)[0]).not.toHaveProperty("stats"); expect(f.read).toHaveBeenCalledTimes(1); expect(f.query).not.toHaveBeenCalled();
   });
 
   it("explicit export denies configured tenant mismatch without stats transport", async () => {
-    const f = fixture(); f.query.mockResolvedValue([{ ...row, tenantId: "tenant-other" }]);
+    const f = fixture(); f.read.mockResolvedValue([{ ...row, tenantId: "tenant-other" }]);
     await expect(f.agents.export({ format: "json", includeStats: true })).rejects.toMatchObject({ code: "TENANT_SCOPE_MISMATCH" });
-    expect(f.query).toHaveBeenCalledTimes(1); expect(f.mutation).not.toHaveBeenCalled();
+    expect(f.read).toHaveBeenCalledTimes(1); expect(f.query).not.toHaveBeenCalled(); expect(f.mutation).not.toHaveBeenCalled();
   });
 
   it("memory-space stats forwards concrete selectors and preserves typed unready", async () => {
@@ -100,7 +105,7 @@ describe.each(["absent", "disabled", "enabled"] as const)("explicit stats bridge
 
   it("unexpected infrastructure errors remain failures rather than fake stats", async () => {
     const f = fixture(); const error = new Error("unexpected statistics infrastructure failure");
-    f.query.mockResolvedValueOnce([row]).mockRejectedValue(error);
+    f.read.mockResolvedValueOnce([row]); f.query.mockRejectedValue(error);
     await expect(f.agents.export({ format: "json", includeStats: true })).rejects.toBe(error);
     f.query.mockRejectedValue(error);
     await expect(f.spaces.getStats("space-a")).rejects.toBe(error);

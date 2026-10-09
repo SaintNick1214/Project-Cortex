@@ -468,7 +468,7 @@ export class BeliefRevisionService {
     }
 
     const { api } = await import("../../convex-dev/_generated/api");
-    const facts = await this.client.query(api.facts.list, {
+    const facts = await this.client.mutation(api.facts.list, {
       memorySpaceId: params.memorySpaceId,
       userId: params.userId,
       subject: params.fact.subject,

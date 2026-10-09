@@ -1,4 +1,4 @@
-import { CortexRuntimeError, identifier, invalid, natural, object } from "./validation.js";
+import { CortexRuntimeError, deliveryDeadline, identifier, invalid, natural, object } from "./validation.js";
 import type { RuntimeAssetReference, RuntimeAssetVersion } from "./types.js";
 
 /** Application cap in decoded bytes, independent of Convex/provider protocol limits. */
@@ -54,7 +54,8 @@ export function assetVersion(input: unknown): RuntimeAssetVersion {
   return Object.freeze({ version: 1, assetId: identifier(value.assetId), versionId: identifier(value.versionId),
     assetVersion: value.assetVersion as number, contentHash: value.contentHash, sizeBytes: value.sizeBytes as number,
     mimeType: assetMime(value.mimeType), mediaKind: value.mediaKind as RuntimeAssetVersion["mediaKind"],
-    ...(value.filename === undefined ? {} : { filename: assetFilename(value.filename) }), lineage });
+    ...(value.filename === undefined ? {} : { filename: assetFilename(value.filename) }),
+    ...(value.deliveryExpiresAt === undefined ? {} : { deliveryExpiresAt: deliveryDeadline(value.deliveryExpiresAt) }), lineage });
 }
 /** Consume a response once and cancel at the first byte above the bound. No unbounded arrayBuffer()/text(). */
 export async function boundedAssetBody(response: Response, maxBytes: number, signal: AbortSignal, oversizeCode = "ASSET_TOO_LARGE"): Promise<Uint8Array<ArrayBuffer>> {

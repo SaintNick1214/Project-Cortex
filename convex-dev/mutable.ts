@@ -1,6 +1,6 @@
 /** Verified mutable metadata. Operations preflight every target and never revive retained keys. */
 import { ConvexError, v } from "convex/values";
-import { mutation, query, internalMutation } from "./_generated/server";
+import { mutation, internalMutation } from "./_generated/server";
 import type { Doc } from "./_generated/dataModel";
 import { scopeArgs, authority, actor, mutableRow, candidates, check, fresh, finalChecks, canonicalFields, newResource, sourceId,
   tombstone, readAuthority, readResourceAuthority, newTarget, resource, response, page, invalid } from "./runtimeMetadataAuth";
@@ -38,14 +38,14 @@ export const update = mutation({ args: { ...keyArgs, operation: v.union(v.litera
   const updated = await ctx.db.get("mutable", row._id); if (!updated) throw new ConvexError("MUTABLE_KEY_NOT_FOUND");
   return await response(ctx, auth, "mutable", updated, read, () => updated, () => ({ updated: true, namespace: args.namespace, key: args.key }));
 } });
-export const get = query({ args: keyArgs, handler: async (ctx, args) => await mutableRow(ctx, await authority(ctx, "read", args), args.namespace, args.key, "read") });
-export const exists = query({ args: keyArgs, handler: async (ctx, args) => (await mutableRow(ctx, await authority(ctx, "read", args), args.namespace, args.key, "read")) !== null });
-export const list = query({ args: { ...filterArgs, limit: v.optional(v.number()), offset: v.optional(v.number()), sortBy: v.optional(v.string()), sortOrder: v.optional(v.string()) }, handler: async (ctx, args) => {
+export const get = mutation({ args: keyArgs, handler: async (ctx, args) => await mutableRow(ctx, await authority(ctx, "read", args), args.namespace, args.key, "read") });
+export const exists = mutation({ args: keyArgs, handler: async (ctx, args) => (await mutableRow(ctx, await authority(ctx, "read", args), args.namespace, args.key, "read")) !== null });
+export const list = mutation({ args: { ...filterArgs, limit: v.optional(v.number()), offset: v.optional(v.number()), sortBy: v.optional(v.string()), sortOrder: v.optional(v.string()) }, handler: async (ctx, args) => {
   const rows = filter(await candidates(ctx, "mutable", await authority(ctx, "read", args), "read"), args);
   rows.sort((a, b) => (args.sortBy === "updatedAt" ? a.updatedAt - b.updatedAt : a.key.localeCompare(b.key)) * (args.sortOrder === "desc" ? -1 : 1));
   const offset = page(args.offset, 0); return rows.slice(offset, offset + page(args.limit, 100));
 } });
-export const count = query({ args: filterArgs, handler: async (ctx, args) => filter(await candidates(ctx, "mutable", await authority(ctx, "read", args), "read"), args).length });
+export const count = mutation({ args: filterArgs, handler: async (ctx, args) => filter(await candidates(ctx, "mutable", await authority(ctx, "read", args), "read"), args).length });
 export const deleteKey = mutation({ args: keyArgs, handler: async (ctx, args) => {
   const auth = await authority(ctx, "write", args); const row = await mutableRow(ctx, auth, args.namespace, args.key, "write"); if (!row) throw new ConvexError("MUTABLE_KEY_NOT_FOUND");
   await check(ctx, "mutable", row, auth, "write"); await tombstone(ctx, "mutable", row); await fresh(ctx, auth, "write");

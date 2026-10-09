@@ -7,6 +7,7 @@ import { spawnSync } from "node:child_process";
 import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 import schema from "../../../convex-dev/schema";
+import { freshReadQa, expectedFreshRegistrationSource } from "../runtimeDelivery/fresh-registration-source";
 import { fixture, seedSpace, seedContext, invoke } from "./fixture";
 import * as spaces from "../../../convex-dev/memorySpaces";
 import * as contexts from "../../../convex-dev/contexts";
@@ -47,7 +48,10 @@ describe("portable inventory, actual schema exports and preserved sources", () =
     const start = source.indexOf(`export const ${name} =`); const end = source.indexOf("\n});", start) + 4;
     expect(source.slice(start, end)).toBe(fs.readFileSync(`${qa}/${frozen}`, "utf8"));
     const later = JSON.parse(fs.readFileSync("_goals/convex-backend-runtime-2026-10-02/qa/task03b2b2-stats/frozen-uniform-closure.json", "utf8")) as Record<string, string>;
-    expect(crypto.createHash("sha256").update(fs.readFileSync(file)).digest("hex")).toBe(later[file]);
+    const baseline = fs.readFileSync(`${freshReadQa}/accepted-query-snapshots/${nameOfFile}.txt`, "utf8");
+    expect(crypto.createHash("sha256").update(baseline).digest("hex")).toBe(later[file]);
+    // Retain every byte/body except the explicit supported read-registration conversion.
+    expect(fs.readFileSync(file, "utf8")).toBe(expectedFreshRegistrationSource(path.basename(file, ".ts"), baseline));
   });
   it("independent helper imports no unreviewed metadata/MF/worker bridge and no unsafe any/ts-ignore", () => {
     const source = fs.readFileSync("convex-dev/runtimeRegistryAuth.ts", "utf8");

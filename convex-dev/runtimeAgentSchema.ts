@@ -1,3 +1,4 @@
+import { artifactContextWitness } from "./runtimeArtifactContextSchema";
 import { defineTable } from "convex/server";
 import { v } from "convex/values";
 import { runtimeAuthorityReference } from "./runtimeAuthSchema";
@@ -14,6 +15,8 @@ export const runtimeAgentTables = {
     contextCanonical: v.optional(v.string()), contextState: v.optional(v.union(v.literal("started"), v.literal("complete"), v.literal("failed"))), sourceWitnesses: v.array(sourceWitness),
     contextCompleteness: v.optional(v.union(v.literal("complete"), v.literal("incomplete"))), contextFailureCode: v.optional(v.string()),
     barrierStartedAt: v.optional(v.number()),
+    artifactContextWitnesses: v.optional(v.array(artifactContextWitness)),
+    mediaJobReferences: v.optional(v.array(v.object({ type: v.literal("media-job"), version: v.literal(1), jobId: v.string(), artifactId: v.string(), kind: v.union(v.literal("image"), v.literal("video")) }))),
     savedMessageIds: v.array(v.string()), savedMessagePins: v.optional(v.array(v.object({ id: v.string(), order: v.number(), stepOrder: v.number(), canonicalContentHash: v.string() }))), finalMessageIds: v.optional(v.array(v.string())),
     ingestionReceiptId: v.optional(v.string()), failureCode: v.optional(v.string()), createdAt: v.number(), updatedAt: v.number(),
   }).index("by_attempt", ["tenantId", "memorySpaceId", "runId", "attemptNumber"]),

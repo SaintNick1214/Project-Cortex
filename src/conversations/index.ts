@@ -218,7 +218,7 @@ export class ConversationsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.conversations.get, {
+        this.client.mutation(api.conversations.get, {
           conversationId,
           tenantId: this.authContext?.tenantId, // Inject tenantId for isolation
           includeMessages: options?.includeMessages,
@@ -358,7 +358,7 @@ export class ConversationsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.conversations.list, {
+        this.client.mutation(api.conversations.list, {
           type: filter?.type,
           userId: filter?.userId,
           memorySpaceId: filter?.memorySpaceId,
@@ -402,7 +402,7 @@ export class ConversationsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.conversations.count, {
+        this.client.mutation(api.conversations.count, {
           type: filter?.type,
           userId: filter?.userId,
           memorySpaceId: filter?.memorySpaceId, // Updated
@@ -532,7 +532,7 @@ export class ConversationsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.conversations.getMessage, {
+        this.client.mutation(api.conversations.getMessage, {
           conversationId,
           messageId,
         }),
@@ -562,7 +562,7 @@ export class ConversationsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.conversations.getMessagesByIds, {
+        this.client.mutation(api.conversations.getMessagesByIds, {
           conversationId,
           messageIds,
         }),
@@ -615,7 +615,7 @@ export class ConversationsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.conversations.findConversation, {
+        this.client.mutation(api.conversations.findConversation, {
           memorySpaceId: params.memorySpaceId,
           type: params.type,
           userId: params.userId,
@@ -722,7 +722,7 @@ export class ConversationsAPI {
     try {
       const result = await this.executeWithResilience(
         () =>
-          this.client.query(api.conversations.getHistory, {
+          this.client.mutation(api.conversations.getHistory, {
             conversationId,
             limit: options?.limit,
             offset: options?.offset,
@@ -788,7 +788,7 @@ export class ConversationsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.conversations.search, {
+        this.client.mutation(api.conversations.search, {
           tenantId: this.authContext?.tenantId,
           query: input.query,
           type: input.filters?.type,
@@ -839,7 +839,7 @@ export class ConversationsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.conversations.exportConversations, {
+        this.client.mutation(api.conversations.exportConversations, {
           userId: options.filters?.userId,
           memorySpaceId: options.filters?.memorySpaceId, // Updated
           conversationIds: options.filters?.conversationIds,
@@ -882,7 +882,7 @@ export class ConversationsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.conversations.checkAccess, {
+        this.client.mutation(api.conversations.checkAccess, {
           conversationId: input.conversationId,
           userId: input.userId,
           memorySpaceId: input.memorySpaceId,
@@ -1067,7 +1067,7 @@ export class ConversationsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.conversationShares.listByConversation, {
+        this.client.mutation(api.conversationShares.listByConversation, {
           conversationId,
           status: filter?.status,
         }),
@@ -1095,7 +1095,7 @@ export class ConversationsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.conversationShares.get, {
+        this.client.mutation(api.conversationShares.get, {
           shareId,
         }),
       "conversationShares:get",
@@ -1129,7 +1129,7 @@ export class ConversationsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.conversationShares.checkAccess, {
+        this.client.mutation(api.conversationShares.checkAccess, {
           conversationId: input.conversationId,
           userId: input.userId,
           memorySpaceId: input.memorySpaceId,
@@ -1194,7 +1194,7 @@ export class ConversationsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.conversationSnapshots.get, {
+        this.client.mutation(api.conversationSnapshots.get, {
           snapshotId,
         }),
       "conversationSnapshots:get",
@@ -1214,7 +1214,7 @@ export class ConversationsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.conversationSnapshots.listByConversation, {
+        this.client.mutation(api.conversationSnapshots.listByConversation, {
           conversationId,
           includeArchived: options?.includeArchived,
         }),

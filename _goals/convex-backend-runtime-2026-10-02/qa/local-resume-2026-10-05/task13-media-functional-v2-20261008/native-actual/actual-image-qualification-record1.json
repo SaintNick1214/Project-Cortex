@@ -1,0 +1,97 @@
+{
+  "version": 1,
+  "status": "ACTUAL_IMAGE_QUALIFICATION_OBSERVATION",
+  "requestedModelId": "openai/gpt-image-1",
+  "nativeInterface": "image",
+  "terminalIdentity": "requested-only",
+  "observedServingModelId": null,
+  "nativeWireModelId": null,
+  "servingIdentityUnqualified": true,
+  "aggregateCostUnavailable": true,
+  "observedNativeUsage": {
+    "completion_tokens": 272,
+    "cost": 0.01098,
+    "cost_details": {
+      "upstream_inference_completions_cost": 0.01088,
+      "upstream_inference_cost": 0.01098,
+      "upstream_inference_prompt_cost": 0.0001
+    },
+    "prompt_tokens": 20,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "total_tokens": 292
+  },
+  "nativeHttpStatus": 200,
+  "request": {
+    "n": 1,
+    "size": "1024x1024",
+    "quality": "low",
+    "output_format": "png",
+    "prompt": "A small blue square centered on a plain white background. No text.",
+    "bytes": 171,
+    "sha256": "85a7891d300ec6c4ab9e499e34c4787038c918fe65a4d3d6db14ba8ef38aa9d2"
+  },
+  "result": {
+    "versionId": "asset:fbcca9c718aef0dfd587416fef9efab52e33cca295a87ec4692950bc1fa0f5d2:version:1",
+    "assetId": "asset:fbcca9c718aef0dfd587416fef9efab52e33cca295a87ec4692950bc1fa0f5d2",
+    "assetVersion": 1,
+    "mimeType": "image/png",
+    "sizeBytes": 1116726,
+    "contentHash": "b398f6084152795dc90784414466854a65810ecf04b9429f45098e10fe074bb5",
+    "width": 1024,
+    "height": 1024,
+    "encodedResponseBytes": 1489308,
+    "lineage": {
+      "kind": "generated",
+      "operationId": "qh7cn6qhp1hm4hem880hk6pnnn8fz53k",
+      "modelId": "openai/gpt-image-1"
+    }
+  },
+  "jobId": "media:84f2270c045038ec853ebd504f7db79f4114a7e2baeb3c46f2413a41d9e05cb0",
+  "artifactId": "artifact:media:84f2270c045038ec853ebd504f7db79f4114a7e2baeb3c46f2413a41d9e05cb0",
+  "attemptId": "qd7dmmsrrjjekacdxhassrgwf18fz5tk",
+  "dispatchIdentity": "72f2c73dc49300e193d0ee14587acdeb6252588578e9f262de42a85ac06c3784",
+  "issuedCount": 1,
+  "reservationBeforeDispatch": {
+    "checkpointAt": 1791505051722,
+    "issuedAt": 1791505052086,
+    "reservationUnits": 2000000
+  },
+  "accounting": {
+    "state": "uncertain",
+    "fullUnknownLiabilityUnits": 2000000,
+    "finishedSlotReleased": true,
+    "resultAttached": true,
+    "newTotalRetainedUnknownUnits": 6500000,
+    "priorHeldSlots": 2
+  },
+  "proof": {
+    "ruleId": "media-native-utf8-v1",
+    "featureEnvelope": "media-image-v1",
+    "priceRevision": "convex-gateway-2026-10-08-image-low",
+    "boundRevision": "media-image-1024-low-png-v1",
+    "maximumWireBytes": 8192,
+    "maximumEncodedResponseBytes": 28000000,
+    "maximumDecodedBytes": 20000000
+  },
+  "candidateManifestSha256": "e0bf7f323c546c8c89f0efb34bb13becf522997272061c63f31772444b1392ca",
+  "fixtureSyntheticCommissioningTrust": true,
+  "shippedImageQualification": false,
+  "asyncVideoQualification": false,
+  "AgentMediatedMediaAcceptance": false,
+  "readOnlyClosure": true,
+  "preservedOriginalHarnessFailure": "native-image-commission1-outcomes.json",
+  "receipts": [
+    "deploy-current3.json",
+    "installed-current2-fixture3-source-manifest.json",
+    "image-commissioning-path1.json",
+    "image-commission-only-manifest1.json",
+    "native-image-commission1-before.json",
+    "native-image-commission1-submitted.json",
+    "native-image-commission1-after.json",
+    "native-image-commission1-prior-money.json",
+    "native-image-commission1-outcomes.json",
+    "native-image-closure2-readback.json"
+  ]
+}

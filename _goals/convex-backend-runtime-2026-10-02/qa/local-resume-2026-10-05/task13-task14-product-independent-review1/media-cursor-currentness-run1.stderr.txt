@@ -1,0 +1,28 @@
+(node:16608) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/media-cursor-currentness-independent1.test.ts
+  ✕ a retained media projection is fenced for both full replay and an exhausted current-attempt cursor (27 ms)
+
+  ● a retained media projection is fenced for both full replay and an exhausted current-attempt cursor
+
+    expect(received).rejects.toMatchObject()
+
+    Received promise resolved instead of rejected
+    Resolved to value: {"approvals": [], "cursor": 1, "parts": [], "run": {"agentId": "agent:cd6f8ff373bb160d14c3dd2c7ef15c6543f70287b8f122abcfde4bf898979da6", "agentVersion": 1, "attemptNumber": 1, "cancellationRequested": false, "contextCompleteness": null, "contextFailureCode": null, "conversationId": "conversation:fe05a2bf3816a53b575eb432d625ead6cc45533e9e885f7d9c0426aa57739f31", "createdAt": 1000000, "definitionHash": "0aa70308e5850967c04396425545650bd45f2ec335d6b0c90d07a668a4e1da09", "failureCode": null, "graphStatus": "not_requested", "inputMessageIds": ["native:2"], "memoryStatus": "pending", "outputMessageIds": [], "queueSequence": 1, "responseStatus": "complete", "runId": "run:fe05a2bf3816a53b575eb432d625ead6cc45533e9e885f7d9c0426aa57739f31", "scope": {"memorySpaceId": "space-a", "tenantId": "tenant-a"}, "updatedAt": 1000000, "version": 1}, "state": "complete"}
+
+      20 |   await f.db.patch('artifacts', artifact._id as string, { isDeleted: true });
+      21 |   await expect(f.call(runtime.observe, { runId: run.runId, afterSequence: 0, finalOnly: true })).rejects.toMatchObject({ data: { code: 'FORBIDDEN' } });
+    > 22 |   await expect(f.call(runtime.observe, { runId: run.runId, afterSequence: 1, finalOnly: true })).rejects.toMatchObject({ data: { code: 'FORBIDDEN' } });
+         |         ^
+      23 | });
+      24 |
+
+      at expect (node_modules/expect/build/index.js:2116:15)
+      at Object.<anonymous> (_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/media-cursor-currentness-independent1.test.ts:22:9)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 1 total
+Snapshots:   0 total
+Time:        4.142 s
+Ran all test suites within paths "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/media-cursor-currentness-independent1.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/media-cursor-currentness-run1.results.json

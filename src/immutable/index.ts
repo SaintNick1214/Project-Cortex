@@ -142,7 +142,7 @@ export class ImmutableAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.immutable.get, {
+        this.client.mutation(api.immutable.get, {
           type,
           id,
           tenantId: this.authContext?.tenantId, // Multi-tenancy filter
@@ -173,7 +173,7 @@ export class ImmutableAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.immutable.getVersion, {
+        this.client.mutation(api.immutable.getVersion, {
           type,
           id,
           version,
@@ -204,7 +204,7 @@ export class ImmutableAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.immutable.getHistory, {
+        this.client.mutation(api.immutable.getHistory, {
           type,
           id,
         }),
@@ -233,7 +233,7 @@ export class ImmutableAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.immutable.list, {
+        this.client.mutation(api.immutable.list, {
           type: filter?.type,
           userId: filter?.userId,
           tenantId: this.authContext?.tenantId, // Multi-tenancy filter
@@ -270,7 +270,7 @@ export class ImmutableAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.immutable.search, {
+        this.client.mutation(api.immutable.search, {
           query: input.query,
           type: input.type,
           userId: input.userId,
@@ -300,7 +300,7 @@ export class ImmutableAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.immutable.count, {
+        this.client.mutation(api.immutable.count, {
           type: filter?.type,
           userId: filter?.userId,
         }),
@@ -378,7 +378,7 @@ export class ImmutableAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.immutable.getAtTimestamp, {
+        this.client.mutation(api.immutable.getAtTimestamp, {
           type,
           id,
           timestamp: ts,

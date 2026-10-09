@@ -1,0 +1,59 @@
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/components/RuntimeMediaPanel.tsx
+  56:5   error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/components/RuntimeMediaPanel.tsx:56:5
+  54 |       } catch (caught) { if (current) { setJobs([]); setLoading(false); fail(caught); } }
+  55 |     }
+> 56 |     setLoading(true); setJobs([]); void refresh();
+     |     ^^^^^^^^^^ Avoid calling setState() directly within an effect
+  57 |     return () => { current = false; clearTimeout(timer); };
+  58 |   }, [client, conversationId, ids, generation, fail]);
+  59 |   async function store(event: FormEvent) {  react-hooks/set-state-in-effect
+  96:16  error  Error: Cannot access refs during render
+
+React refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/components/RuntimeMediaPanel.tsx:96:16
+  94 |         onChange={event => { setFile(event.target.files?.[0] ?? null); setUploaded(null); }} /></label>
+  95 |       <button className={button} disabled={!file || busy}>Upload private file</button>
+> 96 |       {busy && upload.current && <button type="button" className={button} onClick={() => upload.current?.abort()}>Cancel upload</button>}
+     |                ^^^^^^^^^^^^^^ Cannot access ref value during render
+  97 |     </form>
+  98 |     {uploaded && <div className="mt-3 rounded-lg bg-white/5 p-3" data-testid="uploaded-asset">
+  99 |       <p>{uploaded.filename ?? "Private file"} · {uploaded.sizeBytes.toLocaleString()} bytes · version {uploaded.assetVersion}</p>                                                                                       react-hooks/refs
+  96:16  error  Error: Cannot access refs during render
+
+React refs are values that are not needed for rendering. Refs should only be accessed outside of render, such as in event handlers or effects. Accessing a ref value (the `current` property) during render can cause your component not to update as expected (https://react.dev/reference/react/useRef).
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/components/RuntimeMediaPanel.tsx:96:16
+  94 |         onChange={event => { setFile(event.target.files?.[0] ?? null); setUploaded(null); }} /></label>
+  95 |       <button className={button} disabled={!file || busy}>Upload private file</button>
+> 96 |       {busy && upload.current && <button type="button" className={button} onClick={() => upload.current?.abort()}>Cancel upload</button>}
+     |                ^^^^^^^^^^^^^^ Cannot access ref value during render
+  97 |     </form>
+  98 |     {uploaded && <div className="mt-3 rounded-lg bg-white/5 p-3" data-testid="uploaded-asset">
+  99 |       <p>{uploaded.filename ?? "Private file"} · {uploaded.sizeBytes.toLocaleString()} bytes · version {uploaded.assetVersion}</p>                                                                                       react-hooks/refs
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/components/RuntimeQuickstart.tsx
+  161:21  error  Error: This value cannot be modified
+
+Modifying a value previously passed as an argument to a hook is not allowed. Consider moving the modification before calling the hook.
+
+/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart/components/RuntimeQuickstart.tsx:161:21
+  159 |     } }), [connection.client, agentId, agentVersion]);
+  160 |   const chat = useChat({ transport, onError: deny });
+> 161 |   useEffect(() => { chatMessages.current = chat.setMessages; return () => { chatMessages.current = null; }; }, [chat.setMessages]);
+      |                     ^^^^^^^^^^^^ `chatMessages` cannot be modified
+  162 |   useEffect(() => () => transport.disconnect(), [transport]);
+  163 |   useEffect(() => {
+  164 |     let active = true;  react-hooks/immutability
+
+✖ 4 problems (4 errors, 0 warnings)
+

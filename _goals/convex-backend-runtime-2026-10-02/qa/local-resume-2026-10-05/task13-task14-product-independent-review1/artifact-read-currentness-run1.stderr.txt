@@ -1,0 +1,35 @@
+(node:31179) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-currentness-independent1.test.ts (9.317 s)
+  ✕ a saved artifact_read tool result is current while readable and denied after its artifact is deleted (4 ms)
+
+  ● a saved artifact_read tool result is current while readable and denied after its artifact is deleted
+
+    ConvexError: {"version":1,"code":"CAPABILITY_UNAVAILABLE","message":"Model operation control failed.","retryable":false,"outcome":"not_dispatched"}
+
+      40 | const digest = /^[a-f0-9]{64}$/;
+      41 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 42 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      43 | }
+      44 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      45 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:42:9)
+      at validManifest (convex-dev/runtimeModelPolicy.ts:129:172)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:385:86)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:154:92)
+      at tests/unit/runtimeTranscript/fixture.ts:220:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:216:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:220:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:221:9)
+      at assetFixture (tests/unit/runtimeAssets/fixture.ts:14:19)
+      at mediaFixture (tests/unit/runtimeMedia/fixture.ts:14:19)
+      at Object.<anonymous> (_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-currentness-independent1.test.ts:10:19)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 1 total
+Snapshots:   0 total
+Time:        9.523 s
+Ran all test suites within paths "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-currentness-independent1.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-currentness-run1.results.json

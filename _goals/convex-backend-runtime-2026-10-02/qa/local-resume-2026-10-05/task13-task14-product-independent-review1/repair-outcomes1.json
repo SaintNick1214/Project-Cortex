@@ -1,0 +1,60 @@
+{
+  "schema": "cortex.task13-task14.independent-repair-outcomes.v1",
+  "originalTaskAcceptance": false,
+  "scope": "CURRENT_CONTROLLED_HANDLER_CODE_NO_SERVICE",
+  "findings1Sha256": "a46a47994b556f0fb7e06f5b34c43ffe2c1787f83340678ea9ce9ed017be31a2",
+  "P1": "RESOLVED_UNCHANGED_INDEPENDENT_REPLAY_3_PASS",
+  "P2": "RESOLVED_UNCHANGED_INDEPENDENT_REPLAY_1_PASS",
+  "adjacentBudgetCancellation": "1_PASS_CURRENT_NATIVE_CANCEL_BETWEEN_ATTACHED_RESULT_AND_ARTIFACT_PUBLICATION_NO_OLD_RED_CLAIM",
+  "passingDistinctControlledCases": 5,
+  "toolchain": {
+    "node": "v24.15.0",
+    "npm": "12.2.0"
+  },
+  "ownedChildrenWaited": true,
+  "servicesOrPaidCalls": 0,
+  "productEdits": 0,
+  "rawReferences": [
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/media-expiry-run3.results.json",
+      "bytes": 2194,
+      "sha256": "f63118c2a3dda3e6b3eef23e2b5a6daa731609402facf7c4e3ea8ee549976ea0"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/media-expiry-run3.command.json",
+      "bytes": 1730,
+      "sha256": "436f8da4db0be94c62bd42e3027cd8abcae415db5270fc9e762c8ecf6db1f156"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/media-cursor-currentness-run2.results.json",
+      "bytes": 1352,
+      "sha256": "160e2d13f775f2731dcdbfa7c3efb37a969cdb829411ce0c08e882fc5f69152a"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/media-cursor-currentness-run2.command.json",
+      "bytes": 1746,
+      "sha256": "3ae99d28a53c9d7ec7918388171413420f06533004c754bcbfbed36189230cb3"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/media-publication-budget-run1.results.json",
+      "bytes": 1346,
+      "sha256": "ee1cb9151695b31da761eeeaf017443ba0837044c31a9d26d35cc58cc0d36425"
+    },
+    {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/media-publication-budget-run1.command.json",
+      "bytes": 1755,
+      "sha256": "7d51c783d45bce644f31f9febaa1ad72bdd2886a6f4644f7057feb157b704243"
+    }
+  ],
+  "remainingMandatoryActual": [
+    "qualified async video terminal/callback-poll-download",
+    "Agent-mediated media",
+    "Task14 actual browser/client/reconnect/authority/cleanup"
+  ],
+  "historicalFailuresUnchanged": [
+    "media-expiry-run1 import-path setup failure",
+    "media-expiry-run2 two confirmed ready-after-expiry counterexamples",
+    "media-cursor-currentness-run1 exhausted cursor authority counterexample"
+  ],
+  "noNewGate": true
+}

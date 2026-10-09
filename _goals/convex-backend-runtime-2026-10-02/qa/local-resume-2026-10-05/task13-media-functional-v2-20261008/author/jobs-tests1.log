@@ -1,0 +1,399 @@
+  console.error
+    ◇ injected env (0) from .env.test
+
+      13 | import dotenv from "dotenv";
+      14 | import { resolve } from "path";
+    > 15 |
+         | ^
+      16 | // Load .env.test first (test defaults)
+      17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+      18 |
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:15:8
+
+  console.error
+    ◇ injected env (0) from .env.local
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+  console.log
+    
+    🧪 Testing against LOCAL Convex: http://127.0.0.1:1
+
+      at tests/env.ts:35:13
+
+  console.log
+       Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:36:13
+
+  console.log
+    
+    📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:121:13
+
+  console.log
+       To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:122:13
+
+  console.log
+       See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:123:13
+
+(node:196) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/unit/runtimeMedia/jobs.test.ts
+  durable governed media
+    ✕ persists pending artifact/budget before one image call; one immutable version and unknown liability survive replay (3 ms)
+    ✕ exact request replay reuses pending job; changed request rolls back before another artifact/budget (1 ms)
+    ✕ lost submission becomes unknown, never starts again or silently refunds (1 ms)
+    ✕ polling and repeated download create one asset and preserve saved private handle
+    ✕ cancel before submission has zero model effects and does not claim upstream cancellation
+    ✕ late image after cancellation charges terminal evidence but cannot become ready
+    ✕ expired first-submission lease retires without a second generation
+    ✕ no JWT and current revoked grant deny job metadata and all new dispatch
+    ✕ oversize returned bytes fail typed, release terminal slot and never store a partial object (2 ms)
+    ✕ V1 executable registry/hash remains valid alongside distinct closed V2 (1 ms)
+    ✓ fixed wire proof counts immutable input without persisting base64 and rejects caller options (3 ms)
+
+  ● durable governed media › persists pending artifact/budget before one image call; one immutable version and unknown liability survive replay
+
+    ConvexError: {"version":1,"code":"INVALID_INPUT","message":"Model operation control failed.","retryable":false,"outcome":"uncertain"}
+
+      40 | const digest = /^[a-f0-9]{64}$/;
+      41 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 42 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      43 | }
+      44 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      45 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:42:9)
+      at domainControl (convex-dev/runtimeModelPolicy.ts:59:17)
+      at canonicalModelJson (convex-dev/runtimeModelPolicy.ts:67:10)
+      at canonical (convex-dev/runtimeModelPolicy.ts:89:19)
+      at provenance (convex-dev/runtimeModelPolicy.ts:166:19)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:387:22)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:153:92)
+      at tests/unit/runtimeTranscript/fixture.ts:217:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:213:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:217:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:218:9)
+      at assetFixture (tests/unit/runtimeAssets/fixture.ts:14:19)
+      at mediaFixture (tests/unit/runtimeMedia/fixture.ts:13:19)
+      at Object.<anonymous> (tests/unit/runtimeMedia/jobs.test.ts:10:21)
+
+  ● durable governed media › exact request replay reuses pending job; changed request rolls back before another artifact/budget
+
+    ConvexError: {"version":1,"code":"INVALID_INPUT","message":"Model operation control failed.","retryable":false,"outcome":"uncertain"}
+
+      40 | const digest = /^[a-f0-9]{64}$/;
+      41 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 42 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      43 | }
+      44 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      45 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:42:9)
+      at domainControl (convex-dev/runtimeModelPolicy.ts:59:17)
+      at canonicalModelJson (convex-dev/runtimeModelPolicy.ts:67:10)
+      at canonical (convex-dev/runtimeModelPolicy.ts:89:19)
+      at provenance (convex-dev/runtimeModelPolicy.ts:166:19)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:387:22)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:153:92)
+      at tests/unit/runtimeTranscript/fixture.ts:217:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:213:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:217:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:218:9)
+      at assetFixture (tests/unit/runtimeAssets/fixture.ts:14:19)
+      at mediaFixture (tests/unit/runtimeMedia/fixture.ts:13:19)
+      at Object.<anonymous> (tests/unit/runtimeMedia/jobs.test.ts:22:21)
+
+  ● durable governed media › lost submission becomes unknown, never starts again or silently refunds
+
+    ConvexError: {"version":1,"code":"INVALID_INPUT","message":"Model operation control failed.","retryable":false,"outcome":"uncertain"}
+
+      40 | const digest = /^[a-f0-9]{64}$/;
+      41 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 42 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      43 | }
+      44 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      45 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:42:9)
+      at domainControl (convex-dev/runtimeModelPolicy.ts:59:17)
+      at canonicalModelJson (convex-dev/runtimeModelPolicy.ts:67:10)
+      at canonical (convex-dev/runtimeModelPolicy.ts:89:19)
+      at provenance (convex-dev/runtimeModelPolicy.ts:166:19)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:387:22)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:153:92)
+      at tests/unit/runtimeTranscript/fixture.ts:217:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:213:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:217:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:218:9)
+      at assetFixture (tests/unit/runtimeAssets/fixture.ts:14:19)
+      at mediaFixture (tests/unit/runtimeMedia/fixture.ts:13:19)
+      at Object.<anonymous> (tests/unit/runtimeMedia/jobs.test.ts:27:21)
+
+  ● durable governed media › polling and repeated download create one asset and preserve saved private handle
+
+    ConvexError: {"version":1,"code":"INVALID_INPUT","message":"Model operation control failed.","retryable":false,"outcome":"uncertain"}
+
+      40 | const digest = /^[a-f0-9]{64}$/;
+      41 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 42 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      43 | }
+      44 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      45 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:42:9)
+      at domainControl (convex-dev/runtimeModelPolicy.ts:59:17)
+      at canonicalModelJson (convex-dev/runtimeModelPolicy.ts:67:10)
+      at canonical (convex-dev/runtimeModelPolicy.ts:89:19)
+      at provenance (convex-dev/runtimeModelPolicy.ts:166:19)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:387:22)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:153:92)
+      at tests/unit/runtimeTranscript/fixture.ts:217:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:213:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:217:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:218:9)
+      at assetFixture (tests/unit/runtimeAssets/fixture.ts:14:19)
+      at mediaFixture (tests/unit/runtimeMedia/fixture.ts:13:19)
+      at Object.<anonymous> (tests/unit/runtimeMedia/jobs.test.ts:35:21)
+
+  ● durable governed media › cancel before submission has zero model effects and does not claim upstream cancellation
+
+    ConvexError: {"version":1,"code":"INVALID_INPUT","message":"Model operation control failed.","retryable":false,"outcome":"uncertain"}
+
+      40 | const digest = /^[a-f0-9]{64}$/;
+      41 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 42 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      43 | }
+      44 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      45 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:42:9)
+      at domainControl (convex-dev/runtimeModelPolicy.ts:59:17)
+      at canonicalModelJson (convex-dev/runtimeModelPolicy.ts:67:10)
+      at canonical (convex-dev/runtimeModelPolicy.ts:89:19)
+      at provenance (convex-dev/runtimeModelPolicy.ts:166:19)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:387:22)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:153:92)
+      at tests/unit/runtimeTranscript/fixture.ts:217:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:213:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:217:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:218:9)
+      at assetFixture (tests/unit/runtimeAssets/fixture.ts:14:19)
+      at mediaFixture (tests/unit/runtimeMedia/fixture.ts:13:19)
+      at Object.<anonymous> (tests/unit/runtimeMedia/jobs.test.ts:42:21)
+
+  ● durable governed media › late image after cancellation charges terminal evidence but cannot become ready
+
+    ConvexError: {"version":1,"code":"INVALID_INPUT","message":"Model operation control failed.","retryable":false,"outcome":"uncertain"}
+
+      40 | const digest = /^[a-f0-9]{64}$/;
+      41 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 42 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      43 | }
+      44 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      45 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:42:9)
+      at domainControl (convex-dev/runtimeModelPolicy.ts:59:17)
+      at canonicalModelJson (convex-dev/runtimeModelPolicy.ts:67:10)
+      at canonical (convex-dev/runtimeModelPolicy.ts:89:19)
+      at provenance (convex-dev/runtimeModelPolicy.ts:166:19)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:387:22)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:153:92)
+      at tests/unit/runtimeTranscript/fixture.ts:217:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:213:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:217:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:218:9)
+      at assetFixture (tests/unit/runtimeAssets/fixture.ts:14:19)
+      at mediaFixture (tests/unit/runtimeMedia/fixture.ts:13:19)
+      at Object.<anonymous> (tests/unit/runtimeMedia/jobs.test.ts:46:21)
+
+  ● durable governed media › expired first-submission lease retires without a second generation
+
+    ConvexError: {"version":1,"code":"INVALID_INPUT","message":"Model operation control failed.","retryable":false,"outcome":"uncertain"}
+
+      40 | const digest = /^[a-f0-9]{64}$/;
+      41 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 42 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      43 | }
+      44 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      45 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:42:9)
+      at domainControl (convex-dev/runtimeModelPolicy.ts:59:17)
+      at canonicalModelJson (convex-dev/runtimeModelPolicy.ts:67:10)
+      at canonical (convex-dev/runtimeModelPolicy.ts:89:19)
+      at provenance (convex-dev/runtimeModelPolicy.ts:166:19)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:387:22)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:153:92)
+      at tests/unit/runtimeTranscript/fixture.ts:217:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:213:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:217:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:218:9)
+      at assetFixture (tests/unit/runtimeAssets/fixture.ts:14:19)
+      at mediaFixture (tests/unit/runtimeMedia/fixture.ts:13:19)
+      at Object.<anonymous> (tests/unit/runtimeMedia/jobs.test.ts:53:21)
+
+  ● durable governed media › no JWT and current revoked grant deny job metadata and all new dispatch
+
+    ConvexError: {"version":1,"code":"INVALID_INPUT","message":"Model operation control failed.","retryable":false,"outcome":"uncertain"}
+
+      40 | const digest = /^[a-f0-9]{64}$/;
+      41 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 42 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      43 | }
+      44 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      45 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:42:9)
+      at domainControl (convex-dev/runtimeModelPolicy.ts:59:17)
+      at canonicalModelJson (convex-dev/runtimeModelPolicy.ts:67:10)
+      at canonical (convex-dev/runtimeModelPolicy.ts:89:19)
+      at provenance (convex-dev/runtimeModelPolicy.ts:166:19)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:387:22)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:153:92)
+      at tests/unit/runtimeTranscript/fixture.ts:217:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:213:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:217:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:218:9)
+      at assetFixture (tests/unit/runtimeAssets/fixture.ts:14:19)
+      at mediaFixture (tests/unit/runtimeMedia/fixture.ts:13:19)
+      at Object.<anonymous> (tests/unit/runtimeMedia/jobs.test.ts:58:21)
+
+  ● durable governed media › oversize returned bytes fail typed, release terminal slot and never store a partial object
+
+    ConvexError: {"version":1,"code":"INVALID_INPUT","message":"Model operation control failed.","retryable":false,"outcome":"uncertain"}
+
+      40 | const digest = /^[a-f0-9]{64}$/;
+      41 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 42 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      43 | }
+      44 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      45 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:42:9)
+      at domainControl (convex-dev/runtimeModelPolicy.ts:59:17)
+      at canonicalModelJson (convex-dev/runtimeModelPolicy.ts:67:10)
+      at canonical (convex-dev/runtimeModelPolicy.ts:89:19)
+      at provenance (convex-dev/runtimeModelPolicy.ts:166:19)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:387:22)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:153:92)
+      at tests/unit/runtimeTranscript/fixture.ts:217:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:213:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:217:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:218:9)
+      at assetFixture (tests/unit/runtimeAssets/fixture.ts:14:19)
+      at mediaFixture (tests/unit/runtimeMedia/fixture.ts:13:19)
+      at Object.<anonymous> (tests/unit/runtimeMedia/jobs.test.ts:64:21)
+
+  ● durable governed media › V1 executable registry/hash remains valid alongside distinct closed V2
+
+    ConvexError: {"version":1,"code":"INVALID_INPUT","message":"Model operation control failed.","retryable":false,"outcome":"uncertain"}
+
+      40 | const digest = /^[a-f0-9]{64}$/;
+      41 | function fail(code: string, outcome = "not_dispatched"): never {
+    > 42 |   throw new ConvexError({ version: 1, code, message: "Model operation control failed.", retryable: false, outcome });
+         |         ^
+      43 | }
+      44 | /** Only synchronous PURE calls cross this boundary; no auth, DB or handler catch.
+      45 |  * Inspect own data descriptors, never arbitrary error getters or raw user details.
+
+      at fail (convex-dev/runtimeModelPolicy.ts:42:9)
+      at domainControl (convex-dev/runtimeModelPolicy.ts:59:17)
+      at canonicalModelJson (convex-dev/runtimeModelPolicy.ts:67:10)
+      at canonical (convex-dev/runtimeModelPolicy.ts:89:19)
+      at provenance (convex-dev/runtimeModelPolicy.ts:166:19)
+      at Function.handler [as _handler] (convex-dev/runtimeModelPolicy.ts:387:22)
+      at invoke (tests/unit/runtimeTranscript/fixture.ts:153:92)
+      at tests/unit/runtimeTranscript/fixture.ts:217:113
+      at transaction (tests/unit/runtimeTranscript/fixture.ts:213:24)
+      at call (tests/unit/runtimeTranscript/fixture.ts:217:83)
+      at transcriptFixture (tests/unit/runtimeTranscript/fixture.ts:218:9)
+      at assetFixture (tests/unit/runtimeAssets/fixture.ts:14:19)
+      at mediaFixture (tests/unit/runtimeMedia/fixture.ts:13:19)
+      at Object.<anonymous> (tests/unit/runtimeMedia/jobs.test.ts:70:21)
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ❌     4.6s | 1/11 passed | /tests/unit/runtimeMedia/jobs.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [31m✗[0m    0.00s ( 0.1%) - durable governed media persists pending artifact/budget before one image call; one immutable version and unknown liability survive replay
+    /tests/unit/runtimeMedia/jobs.test.ts
+
+ 2. [32m✓[0m    0.00s ( 0.1%) - durable governed media fixed wire proof counts immutable input without persisting base64 and rejects caller options
+    /tests/unit/runtimeMedia/jobs.test.ts
+
+ 3. [31m✗[0m    0.00s ( 0.0%) - durable governed media oversize returned bytes fail typed, release terminal slot and never store a partial object
+    /tests/unit/runtimeMedia/jobs.test.ts
+
+ 4. [31m✗[0m    0.00s ( 0.0%) - durable governed media exact request replay reuses pending job; changed request rolls back before another artifact/budget
+    /tests/unit/runtimeMedia/jobs.test.ts
+
+ 5. [31m✗[0m    0.00s ( 0.0%) - durable governed media lost submission becomes unknown, never starts again or silently refunds
+    /tests/unit/runtimeMedia/jobs.test.ts
+
+ 6. [31m✗[0m    0.00s ( 0.0%) - durable governed media V1 executable registry/hash remains valid alongside distinct closed V2
+    /tests/unit/runtimeMedia/jobs.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 0.01s (0.2% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      4.73s
+  Test suites:        1
+  Individual tests:   6
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 1
+════════════════════════════════════════════════════════════════════════════════
+
+Test Suites: 1 failed, 1 total
+Tests:       10 failed, 1 passed, 11 total
+Snapshots:   0 total
+Time:        4.732 s
+Ran all test suites within paths "tests/unit/runtimeMedia/jobs.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-media-functional-v2-20261008/author/jobs-tests1.json

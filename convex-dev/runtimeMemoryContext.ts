@@ -8,7 +8,7 @@ import type { PendingContextSource } from "../src/domain/memory-context";
 import { DEFAULT_EMBEDDING_PROFILE, SUPPORTED_EMBEDDING_PROFILES } from "../src/domain/profile";
 import { readCurrentEmbeddingProfile } from "./runtimeModelPolicy";
 import { skipsIngestion } from "../src/domain/ingestion";
-import { internalMutation, internalQuery, query } from "./_generated/server";
+import { internalMutation, internalQuery, mutation } from "./_generated/server";
 import type { MutationCtx, QueryCtx } from "./_generated/server";
 import type { Doc } from "./_generated/dataModel";
 import { runtimeAuthorityReference } from "./runtimeAuthSchema";
@@ -178,7 +178,7 @@ export async function readPendingContext(ctx: ReadCtx, args: { reference: Runtim
 }
 export const pendingContext = internalQuery({ args: { reference: runtimeAuthorityReference, cutoff: v.number(),
   alreadyRepresented: v.array(v.string()), maxBytes: v.number(), runBudgetId: v.optional(v.string()), boundary: v.optional(contextBoundary) }, handler: async (ctx, args) => await readPendingContext(ctx, args) });
-export const status = query({ args: { tenantId: v.optional(v.string()), memorySpaceId: v.optional(v.string()) }, handler: async (ctx, args) => {
+export const status = mutation({ args: { tenantId: v.optional(v.string()), memorySpaceId: v.optional(v.string()) }, handler: async (ctx, args) => {
   const actor = await requireDataAuthority(ctx, args, "read"); const reference = dataAuthorityReference(actor);
   if (actor.resourceAccess === "own") ingestionDenied("FORBIDDEN");
   const scope = await readScopeCutoff(ctx, reference); const stages = await readStageProgress(ctx, reference, scope.sequence);

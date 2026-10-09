@@ -9,7 +9,7 @@ import { streamText } from "ai";
 import type { GatewayBinding, GatewayComposition, GatewayLedgerPort, GatewayResolution } from "../../../convex-dev/runtimeGateway";
 import { canonicalModelJson, resolveModelPolicy, validateModelRequest } from "../../../src/domain/model-policy";
 import type { ModelCallRequest } from "../../../src/domain/model-policy";
-import { AGENT_NATIVE_TOOLS, AGENT_TOOL_REGISTRY_VERSION } from "../../../src/domain/agent-tools";
+import { AGENT_NATIVE_TOOLS, AGENT_TOOL_REGISTRY_VERSION, AGENT_NATIVE_TOOLS_V2, AGENT_TOOL_REGISTRY_VERSION_V2 } from "../../../src/domain/agent-tools";
 import { parseAgentLanguageResult } from "../../../src/domain/agent-language";
 import { DEFAULT_EMBEDDING_PROFILE } from "../../../src/domain/profile";
 import type { Id } from "../../../convex-dev/_generated/dataModel";
@@ -298,14 +298,17 @@ describe("C2 owned cancellation and finite RPC lifetime", () => {
     expect(parts).toEqual([]); expect(f.receipts).toHaveLength(1); expect(f.count()).toBe(1); expect(JSON.parse(f.receipts[0]!).aggregateCostUsd).toBe("0.0005");
   });
   it("deadline bounds an unreleased authority RPC; late completion cannot reopen the observer", async () => {
+    jest.useFakeTimers();
+    try {
     const f = fixture(); f.composition.ownedTiming = shortOwnedTiming;
     f.r.snapshot = { ...f.r.snapshot, limits: { ...f.r.snapshot.limits, timeoutMs: 20 } };
     const entered = gate<void>(); const release = gate<void>(); f.composition.ledger.markVisible = async () => { entered.resolve(); await release.promise; return { recorded: true }; };
     const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r); const result = await h.model.doStream(params()); await entered.promise;
     let completed = false; const completion = h.lifecycle.complete().then(() => { completed = true; }, () => { completed = true; });
-    await pause(70); const finishedAtDeadline = completed; release.resolve(); const parts = await collectParts(result.stream); await completion;
+    await jest.advanceTimersByTimeAsync(70); const finishedAtDeadline = completed; release.resolve(); const parts = await collectParts(result.stream); await completion;
     expect(h.lifecycle.signal.aborted).toBe(true); expect({ finishedAtDeadline, parts }).toEqual({ finishedAtDeadline: true, parts: [] });
     expect(f.receipts).toHaveLength(1); expect(f.count()).toBe(1);
+    } finally { jest.useRealTimers(); }
   });
 });
 
@@ -792,6 +795,66 @@ describe("governed Agent tool/stream contract", () => {
   it("never accepts provider metadata or malformed replay envelopes as stored output", () => {
     expect(parseAgentLanguageResult({ version: 1, kind: "language", content: [{ ...toolCall, providerMetadata: {} }], finishReason: "tool-calls" }, ["memory_recall"], 4)).toBeUndefined();
     expect(parseAgentLanguageResult({ version: 1, kind: "language", content: [toolCall], finishReason: "stop" }, ["memory_recall"], 4)).toBeUndefined();
+  });
+});
+
+describe("governed V2 media-tool Gateway parity", () => {
+  const mediaCall = { type: "tool-call" as const, toolCallId: "image-one", toolName: "media_image_generate", input: '{"prompt":"one plain blue square"}' };
+  function mediaFixture() {
+    const f = agentFixture();
+    f.r.snapshot = { ...f.r.snapshot, allowedTools: AGENT_NATIVE_TOOLS_V2.map(tool => tool.name),
+      limits: { ...f.r.snapshot.limits, inputTokens: 32768, contextTokens: 33768 },
+      pins: { ...f.r.snapshot.pins, toolRegistryVersion: AGENT_TOOL_REGISTRY_VERSION_V2 } };
+    f.r.dispatchEvidence = { ...f.r.dispatchEvidence,
+      inputBound: { ...f.r.dispatchEvidence.inputBound, featureEnvelope: "agent-tools-chat-v2" },
+      toolContract: { registryVersion: AGENT_TOOL_REGISTRY_VERSION_V2, toolsCanonical: canonicalModelJson(AGENT_NATIVE_TOOLS_V2), maximumToolCalls: 4 } };
+    return f;
+  }
+  function mediaParams(): LanguageModelV4CallOptions {
+    return { ...params(), tools: JSON.parse(JSON.stringify(AGENT_NATIVE_TOOLS_V2)) as LanguageModelV4CallOptions["tools"],
+      toolChoice: { type: "tool", toolName: "media_image_generate" } };
+  }
+  function mediaResult(): LanguageModelV4GenerateResult {
+    const result = toolResult([mediaCall]);
+    return { ...result, response: { body: { ...raw(), choices: [{ finish_reason: "tool_calls", message: {
+      tool_calls: [{ id: mediaCall.toolCallId, type: "function", function: { name: mediaCall.toolName, arguments: mediaCall.input } }] } }] } } };
+  }
+  it("captures and attaches a canonical media tool call under the exact V2 catalog", async () => {
+    const f = mediaFixture(); f.model.doGenerate = async () => mediaResult();
+    const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r);
+    expect((await h.model.doGenerate(mediaParams())).content).toEqual([mediaCall]); await h.lifecycle.complete();
+    expect(JSON.parse(f.accounting.attached!)).toEqual({ version: 1, kind: "language", content: [mediaCall], finishReason: "tool-calls" });
+    expect(JSON.parse(f.admissions[0]!.requestCanonical).tools.map((tool: { name: string }) => tool.name)).toEqual(AGENT_NATIVE_TOOLS_V2.map(tool => tool.name));
+    expect(f.events.indexOf("capture")).toBeLessThan(f.events.indexOf("attach"));
+  });
+  it("streams media input and publishes only its bounded canonical completed call", async () => {
+    const f = mediaFixture(); f.model.doStream = async () => ({ stream: f.streamParts([
+      { type: "tool-input-start", id: mediaCall.toolCallId, toolName: mediaCall.toolName },
+      { type: "tool-input-delta", id: mediaCall.toolCallId, delta: mediaCall.input }, { type: "tool-input-end", id: mediaCall.toolCallId }, mediaCall,
+      { type: "raw", rawValue: { ...raw(), choices: [{ finish_reason: "tool_calls" }] } },
+      { type: "finish", finishReason: { unified: "tool-calls", raw: "tool_calls" }, usage: generated().usage },
+    ]) });
+    const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r), stream = await h.model.doStream(mediaParams());
+    const output: LanguageModelV4StreamPart[] = []; for await (const part of stream.stream) output.push(part); await h.lifecycle.complete();
+    expect(output.map(part => part.type)).toEqual(["tool-input-start", "tool-input-delta", "tool-input-end", "tool-call", "finish"]);
+    expect(JSON.parse(f.accounting.attached!).content).toEqual([mediaCall]);
+  });
+  it.each([false, true])("validates V2 stored replay against the catalog; foreign=%s", async foreign => {
+    const f = mediaFixture(), content = [{ ...mediaCall, ...(foreign ? { toolName: "unregistered_tool" } : {}) }];
+    const saved = { version: 1, kind: "language", content, finishReason: "tool-calls" };
+    f.composition.ledger.admit = async () => ({ status: "replay", operationId: "op" as Id<"runtimeModelOperations">, resultCanonical: canonicalModelJson(saved) });
+    const h = governGatewayLanguageModel(f.model, f.composition, f.b, f.r);
+    await expect(h.model.doGenerate(mediaParams())).rejects.toMatchObject({ code: "REPLAY_AVAILABLE" });
+    if (foreign) await expect(h.lifecycle.consumeReplay()).rejects.toMatchObject({ code: "INVALID_REPLAY" });
+    else expect(await h.lifecycle.consumeReplay()).toEqual(saved);
+    expect(f.count()).toBe(0); expect(f.receipts).toHaveLength(0); await h.lifecycle.complete();
+  });
+  it.each(["wrong-catalog", "unknown-envelope"])("denies %s before admission or native dispatch", async mismatch => {
+    const f = mediaFixture();
+    f.r.dispatchEvidence = { ...f.r.dispatchEvidence, inputBound: { ...f.r.dispatchEvidence.inputBound,
+      featureEnvelope: mismatch === "wrong-catalog" ? "agent-tools-chat-v1" : "agent-tools-chat-v3" as never } };
+    expect(() => governGatewayLanguageModel(f.model, f.composition, f.b, f.r)).toThrow(expect.objectContaining({ code: "CAPABILITY_UNAVAILABLE" }));
+    expect(f.admissions).toHaveLength(0); expect(f.count()).toBe(0); expect(f.receipts).toHaveLength(0);
   });
 });
 

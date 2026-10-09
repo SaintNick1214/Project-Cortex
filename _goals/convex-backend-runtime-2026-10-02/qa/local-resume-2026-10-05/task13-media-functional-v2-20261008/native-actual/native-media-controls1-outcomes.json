@@ -1,0 +1,104 @@
+{
+  "status": "ACTUAL_REGISTERED_UNPAID_MEDIA_CONTROLS_PASS",
+  "groups": [
+    {
+      "name": "real-parent-pending-artifact-budget-and-same-key-conflict",
+      "status": "PASS",
+      "jobId": "media:d85ccd65ea2ebcf8e201df4e3cb6be4702579496a31f972515435a9332059fae",
+      "artifactId": "artifact:media:d85ccd65ea2ebcf8e201df4e3cb6be4702579496a31f972515435a9332059fae",
+      "fixtureSchedulerHeldBeforeClaim": true,
+      "newAttempts": 0
+    },
+    {
+      "name": "noJWT-media-read-and-cancel-denied",
+      "status": "PASS",
+      "read": {
+        "name": "ConvexError",
+        "message": "[Request ID: 538eccb0e7bd06dd] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"UNAUTHENTICATED\",\"message\":\"Verified identity required\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../custom/backend/runtimeAuth.ts:46:26)\n    at resolveAuthority (../../custom/backend/runtimeAuth.ts:161:47)\n    at requireAuthority (../../custom/backend/runtimeAuth.ts:251:0)\n    at async requireDataAuthority (../../custom/backend/runtimeDataAuth.ts:32:16)\n    at async handler (../../custom/backend/runtimeMediaJobs.ts:93:192)\n",
+        "data": {
+          "code": "UNAUTHENTICATED",
+          "message": "Verified identity required",
+          "outcome": "not_dispatched",
+          "retryable": false,
+          "version": 1
+        }
+      },
+      "cancel": {
+        "name": "ConvexError",
+        "message": "[Request ID: c176b80d9f7cebc4] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"UNAUTHENTICATED\",\"message\":\"Verified identity required\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../custom/backend/runtimeAuth.ts:46:26)\n    at resolveAuthority (../../custom/backend/runtimeAuth.ts:161:47)\n    at requireAuthority (../../custom/backend/runtimeAuth.ts:251:0)\n    at async requireDataAuthority (../../custom/backend/runtimeDataAuth.ts:32:16)\n    at async handler (../../custom/backend/runtimeMediaJobs.ts:123:10)\n",
+        "data": {
+          "code": "UNAUTHENTICATED",
+          "message": "Verified identity required",
+          "outcome": "not_dispatched",
+          "retryable": false,
+          "version": 1
+        }
+      }
+    },
+    {
+      "name": "foreign-media-read-and-cancel-denied",
+      "status": "PASS",
+      "read": {
+        "name": "ConvexError",
+        "message": "[Request ID: d2666a5dfb516e3a] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../custom/backend/runtimeAuth.ts:46:26)\n    at resolveAuthority (../../custom/backend/runtimeAuth.ts:185:0)\n    at async requireAuthority (../../custom/backend/runtimeAuth.ts:251:0)\n    at async requireDataAuthority (../../custom/backend/runtimeDataAuth.ts:32:16)\n    at async handler (../../custom/backend/runtimeMediaJobs.ts:93:192)\n",
+        "data": {
+          "code": "FORBIDDEN",
+          "message": "Access denied",
+          "outcome": "not_dispatched",
+          "retryable": false,
+          "version": 1
+        }
+      },
+      "cancel": {
+        "name": "ConvexError",
+        "message": "[Request ID: 48c600b2a85da2eb] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../../custom/backend/runtimeAuth.ts:46:26)\n    at resolveAuthority (../../custom/backend/runtimeAuth.ts:185:0)\n    at async requireAuthority (../../custom/backend/runtimeAuth.ts:251:0)\n    at async requireDataAuthority (../../custom/backend/runtimeDataAuth.ts:32:16)\n    at async handler (../../custom/backend/runtimeMediaJobs.ts:123:10)\n",
+        "data": {
+          "code": "FORBIDDEN",
+          "message": "Access denied",
+          "outcome": "not_dispatched",
+          "retryable": false,
+          "version": 1
+        }
+      }
+    },
+    {
+      "name": "installed-fifth-route-without-private-callback-credentials-denies-forgery",
+      "status": "PASS",
+      "httpStatus": 409,
+      "response": "{\"version\":1,\"code\":\"MEDIA_CALLBACK_NOT_READY\"}",
+      "validSignedNativeCallbackNotQualified": true
+    },
+    {
+      "name": "pending-cancel-reconcile-processing-and-installed-client-no-model-effect",
+      "status": "PASS",
+      "upstreamCancellation": "not_supported",
+      "newAttempts": 0,
+      "newNativeRequests": 0,
+      "emptyNewAccountsAllowed": true,
+      "optional14JobRoundtrip": true
+    },
+    {
+      "name": "missing-async-qualification-before-job-or-dispatch",
+      "status": "PASS",
+      "denial": {
+        "name": "ConvexError",
+        "message": "[Request ID: 99873d478ece2603] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"CAPABILITY_UNAVAILABLE\",\"message\":\"Model operation control failed.\",\"retryable\":false,\"outcome\":\"uncertain\"}\n    at fail (../../custom/backend/runtimeModelPolicy.ts:42:0)\n    at domainControl (../../custom/backend/runtimeModelPolicy.ts:59:4)\n    at resolveModelPolicy (../../custom/backend/runtimeModelPolicy.ts:70:0)\n    at resolveCurrent (../../custom/backend/runtimeModelPolicy.ts:258:80)\n    at async bindTrustedBudget (../../custom/backend/runtimeModelPolicy.ts:338:32)\n    at async enqueueMediaJob (../../custom/backend/runtimeMediaJobs.ts:65:15)\n",
+        "data": {
+          "code": "CAPABILITY_UNAVAILABLE",
+          "message": "Model operation control failed.",
+          "outcome": "uncertain",
+          "retryable": false,
+          "version": 1
+        }
+      },
+      "nativeVideoRequests": 0,
+      "prior503NeverResubmitted": true
+    }
+  ],
+  "fixtureSetup": "Real scheduler redirected to no-op before native claim; all subsequent cancel/reconcile/HTTP paths are product registrations.",
+  "modelCalls": 0,
+  "providerCallbackPositiveNotQualified": true,
+  "asyncCapabilityUnchanged": true,
+  "prior4_5mAndHeld2Unchanged": true,
+  "allOwnedClientsClosedOnExit": true
+}

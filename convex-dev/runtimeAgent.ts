@@ -1,3 +1,7 @@
+import { checkArtifactContextWitnesses } from "./runtimeArtifactContext";
+import { artifactContextWitness } from "./runtimeArtifactContextSchema";
+import type { ArtifactContextWitness } from "../src/domain/artifact-context";
+import { checkMediaJob } from "./runtimeMediaFence";
 /** Durable backend turns. Workflow journals steps; Agent alone owns canonical messages. */
 import { Agent, saveMessages, abortStream } from "@convex-dev/agent";
 import type { MessageDoc } from "@convex-dev/agent";
@@ -16,7 +20,7 @@ import { canonicalModelJson } from "../src/domain/model-policy";
 import { semanticHash } from "../src/domain/profile";
 import { comparePosition, utf8Bytes } from "../src/domain/transcript";
 import { contextSourceKey, evaluateMemoryBarrier } from "../src/domain/memory-context";
-import { mutation, query, internalAction, internalMutation, internalQuery } from "./_generated/server";
+import { mutation, internalAction, internalMutation, internalQuery } from "./_generated/server";
 import type { ActionCtx, MutationCtx, QueryCtx } from "./_generated/server";
 import type { Doc } from "./_generated/dataModel";
 import { components } from "./_generated/api";
@@ -24,8 +28,9 @@ import { agentAttempt, sourceWitness } from "./runtimeAgentSchema";
 import { checkContextSourceWitnesses } from "./runtimeContextWitness";
 import { runtimeAuthorityReference } from "./runtimeAuthSchema";
 import { currentRun, currentControlRun, activeAttempt, publicRun } from "./runs";
-import { agentComponent, canonicalMessageHash, checkConversation, conversationById, hydratePrivateCutoff, privateModelMessage, registerMessages, singleTranscript, transcriptDenied } from "./runtimeTranscript";
-import { dataAuthorityReference, requireDataAuthority } from "./runtimeDataAuth";
+import { agentComponent, canonicalMessageHash, checkConversation, conversationById, hydratePrivateCutoff, privateModelMessage, registerMessages, singleTranscript, transcriptDenied, checkNativeMediaReferences } from "./runtimeTranscript";
+import { dataAuthorityReference, requireDataAuthority, managedConversationAccess } from "./runtimeDataAuth";
+import { deliveryExpiresAt } from "./runtimeDelivery";
 import { recheckAuthority } from "./runtimeAuth";
 import { createBackendGatewayComposition } from "./runtimeGatewayBackend";
 import { createAgentGatewayCancellationBridge, createGovernedGatewayModel } from "./runtimeGateway";
@@ -46,7 +51,7 @@ type StepResult = { savedMessageIds: string[]; calls: ToolCall[]; final: boolean
 type Witness = ContextSourceWitness;
 function attemptArgs(args: Attempt): Attempt { return { reference: args.reference, runId: args.runId, attemptNumber: args.attemptNumber, leaseVersion: args.leaseVersion }; }
 export type AgentPublicPart = RuntimePublicOutputPart | { type: "status"; state: Doc<"runtimeAgentExecutions">["state"] }
-  | { type: "artifact"; artifactId: string; kind: "memory-receipt" };
+  | { type: "artifact"; artifactId: string; kind: "memory-receipt" } | { type: "media-job"; version: 1; jobId: string; artifactId: string; kind: "image" | "video" };
 function ref<Type extends "mutation" | "query" | "action", Args extends Record<string, unknown>, Result>(type: Type, name: string) {
   void type;
   return makeFunctionReference<Type, Args, Result>(name) as unknown as FunctionReference<Type, "internal", Args, Result>;
@@ -81,14 +86,32 @@ async function operation(ctx: Pick<QueryCtx, "db">, args: Attempt, operationId: 
   if (!row || row.runId !== args.runId || row.attemptNumber !== args.attemptNumber) transcriptDenied();
   return row;
 }
+type ExecutionMediaPart = Extract<AgentPublicPart, { type: "media-job" }>;
+async function executionMediaReferences(ctx: Pick<QueryCtx, "db">, owned: Doc<"runtimeAgentExecutions">): Promise<ExecutionMediaPart[]> {
+  if (owned.mediaJobReferences !== undefined) return owned.mediaJobReferences;
+  // Compatibility for executions written before the durable witness field.
+  // The existing output contract bounds an attempt to 10,000 records; new
+  // executions use the small metadata witness and never scan stream text.
+  const rows = await ctx.db.query("runtimeAgentOutput").withIndex("by_sequence", q => q.eq("tenantId", owned.tenantId).eq("memorySpaceId", owned.memorySpaceId).eq("runId", owned.runId).eq("attemptNumber", owned.attemptNumber)).take(10_001);
+  if (rows.length > 10_000) transcriptDenied("OUTPUT_LIMIT_EXCEEDED");
+  const references = new Map<string, ExecutionMediaPart>();
+  for (const row of rows) {
+    const part = JSON.parse(row.partCanonical) as AgentPublicPart;
+    if (part.type === "media-job") references.set(canonicalModelJson(part), part);
+  }
+  if (references.size > 32) transcriptDenied("OUTPUT_LIMIT_EXCEEDED");
+  return [...references.values()];
+}
 async function writeParts(ctx: MutationCtx, owned: Doc<"runtimeAgentExecutions">, parts: AgentPublicPart[], final = false) {
   let sequence = owned.nextOutputSequence;
+  const media = new Map((await executionMediaReferences(ctx, owned)).map(part => [canonicalModelJson(part), part]));
   for (const part of parts) {
+    if (part.type === "media-job") { media.set(canonicalModelJson(part), part); if (media.size > 32) transcriptDenied("OUTPUT_LIMIT_EXCEEDED"); }
     const partCanonical = canonicalModelJson(part); if (utf8Bytes(partCanonical) > 16_384 || ++sequence > 10_000) transcriptDenied("OUTPUT_LIMIT_EXCEEDED");
     await ctx.db.insert("runtimeAgentOutput", { tenantId: owned.tenantId, memorySpaceId: owned.memorySpaceId, runId: owned.runId,
       attemptNumber: owned.attemptNumber, sequence, partCanonical, final, createdAt: Date.now() });
   }
-  await ctx.db.patch("runtimeAgentExecutions", owned._id, { nextOutputSequence: sequence });
+  await ctx.db.patch("runtimeAgentExecutions", owned._id, { nextOutputSequence: sequence, mediaJobReferences: [...media.values()] });
 }
 async function checkWitnesses(ctx: Pick<QueryCtx, "db" | "runQuery">, args: Attempt, witnesses: Witness[]) {
   await checkContextSourceWitnesses(ctx, args.reference, witnesses);
@@ -101,6 +124,7 @@ async function executionContext(ctx: Pick<QueryCtx, "db" | "runQuery">, args: At
   const snapshot = JSON.parse(row.snapshotCanonical) as CutoffV1;
   const messages = await hydratePrivateCutoff(ctx, conversation, row, snapshot);
   await checkWitnesses(ctx, args, owned.sourceWitnesses);
+  await checkArtifactContextWitnesses(ctx, args.reference, owned.artifactContextWitnesses ?? []);
   const currentMessages: ModelMessage[] = [];
   for (let i = 0; i < owned.savedMessageIds.length; i += 100) {
     const saved = await ctx.runQuery(agentComponent.messages.getMessagesByIds, { messageIds: owned.savedMessageIds.slice(i, i + 100) });
@@ -110,6 +134,7 @@ async function executionContext(ctx: Pick<QueryCtx, "db" | "runQuery">, args: At
       if (!message || message.status !== "success" || message.threadId !== conversation.threadId
         || message._id !== owned.savedMessageIds[i + index] || !pin || pin.order !== message.order || pin.stepOrder !== message.stepOrder || pin.canonicalContentHash !== await canonicalMessageHash(message)
         || message.order !== snapshot.anchor.order || comparePosition(message, snapshot.anchor) <= 0) transcriptDenied("STALE_TRANSCRIPT");
+      await checkNativeMediaReferences(ctx, args.reference, message);
       currentMessages.push(privateModelMessage(message));
     }
   }
@@ -120,7 +145,7 @@ export const hydrateExecution = internalQuery({ args: agentAttempt, handler: asy
 export const checkToolAuthority = internalQuery({ args: { reference: runtimeAuthorityReference, toolName: v.string() }, handler: async (ctx, args) => {
   if (!Object.prototype.hasOwnProperty.call(NATIVE_TOOL_NAMES, args.toolName)) transcriptDenied("TOOL_DENIED");
   await recheckAuthority(ctx, args.reference, { capability: "tool", tenantId: args.reference.tenantId, memorySpaceId: args.reference.memorySpaceId });
-  await recheckAuthority(ctx, args.reference, { capability: args.toolName === "memory.remember" ? "write" : "read", tenantId: args.reference.tenantId, memorySpaceId: args.reference.memorySpaceId });
+  await recheckAuthority(ctx, args.reference, { capability: args.toolName === "memory.remember" || args.toolName.startsWith("media.") ? "write" : "read", tenantId: args.reference.tenantId, memorySpaceId: args.reference.memorySpaceId });
   return null;
 } });
 const selector = { runId: v.string(), memorySpaceId: v.optional(v.string()), tenantId: v.optional(v.string()) };
@@ -149,7 +174,7 @@ async function startExecution(ctx: MutationCtx, reference: RuntimeAuthorityRefer
   const now = Date.now();
   const id = await ctx.db.insert("runtimeAgentExecutions", { tenantId: reference.tenantId, memorySpaceId: reference.memorySpaceId!, ...attempt,
     state: "ready", streaming, nextOutputSequence: 0, nextModelStep: 0, toolCount: 0,
-    sourceWitnesses: [], savedMessageIds: [], savedMessagePins: [], createdAt: now, updatedAt: now });
+    sourceWitnesses: [], mediaJobReferences: [], savedMessageIds: [], savedMessagePins: [], createdAt: now, updatedAt: now });
   const workflowId = await workflow.start(ctx, ref<"mutation", { args: Attempt }, string>("mutation", "runtimeAgent:executeTurn"), attempt,
     { startAsync: true, onComplete: ref<"mutation", { workflowId: WorkflowId; context: Attempt; result: { kind: "success"; returnValue: null } | { kind: "failed"; error: string } | { kind: "canceled" } }, null>("mutation", "runtimeAgent:onWorkflowComplete"), context: attempt });
   await ctx.db.patch("runtimeAgentExecutions", id, { workflowId });
@@ -346,9 +371,11 @@ export const finishOperation = internalMutation({ args: { ...agentAttempt, opera
   await ctx.db.patch("runtimeAgentExecutions", current.execution._id, { savedMessageIds: ids, savedMessagePins: [...pins.values()], nextModelStep: owned.kind === "model" ? owned.ordinal + 1 : current.execution.nextModelStep, updatedAt: Date.now() });
   if (owned.kind === "tool") {
     if (owned.toolName === "memory_remember") await registerCompletedToolSource(ctx, args.reference, owned.operationId);
-    const value = JSON.parse(args.resultCanonical) as { receiptId?: unknown };
+    const value = JSON.parse(args.resultCanonical) as { receiptId?: unknown; version?: unknown; jobId?: unknown; artifactId?: unknown; kind?: unknown };
     await writeParts(ctx, current.execution, [{ type: "tool", toolCallId: owned.toolCallId!, name: owned.toolName!, phase: "succeeded" },
-      ...(owned.toolName === "memory_remember" && typeof value.receiptId === "string" ? [{ type: "artifact" as const, artifactId: value.receiptId, kind: "memory-receipt" as const }] : [])]);
+      ...(owned.toolName === "memory_remember" && typeof value.receiptId === "string" ? [{ type: "artifact" as const, artifactId: value.receiptId, kind: "memory-receipt" as const }] : []),
+      ...(["media_image_generate", "media_video_generate"].includes(owned.toolName ?? "") && value.version === 1 && typeof value.jobId === "string" && typeof value.artifactId === "string" && (value.kind === "image" || value.kind === "video")
+        ? [{ type: "media-job" as const, version: 1 as const, jobId: value.jobId, artifactId: value.artifactId, kind: value.kind as "image" | "video" }] : [])]);
   }
   return null;
 } });
@@ -449,14 +476,14 @@ export async function toolStepHandler(ctx: ActionCtx, args: Attempt & { ordinal:
   await ctx.runMutation(ref<"mutation", Attempt & { operationId: string }, null>("mutation", "runtimeAgent:startOperation"), { ...attempt, operationId: op.operationId });
   const parent = await ctx.runQuery(ref<"query", Attempt & { ordinal: number }, import("./_generated/dataModel").Id<"runtimeModelOperations">>("query", "runtimeAgent:toolParent"), { ...attempt, ordinal: args.ordinal });
   const observed = await executeServerTool(ctx, { reference: args.reference, runBudgetId: current.run.runBudgetId, operationId: op.operationId,
-    parentOperationId: parent,
+    parentOperationId: parent, runAccountId: current.run.runAccountId, conversationId: current.run.conversationId, witnesses: current.execution.sourceWitnesses,
     checkCurrent: async () => { await ctx.runQuery(ref<"query", Attempt & { operationId: string }, null>("query", "runtimeAgent:checkActiveTool"), { ...attempt, operationId: op.operationId }); },
     writeSource: async source => await ctx.runMutation(ref<"mutation", Attempt & { operationId: string; source: import("../src/domain/contracts").SourceContent }, Awaited<ReturnType<import("../src/domain/contracts").MemoryRepository["putSource"]>>>("mutation", "runtimeAgent:writeToolSource"), { ...attempt, operationId: op.operationId, source }),
     commitDerived: async input => await ctx.runMutation(ref<"mutation", Attempt & { operationId: string; input: Parameters<import("../src/domain/contracts").MemoryRepository["commitDerived"]>[0] }, Awaited<ReturnType<import("../src/domain/contracts").MemoryRepository["commitDerived"]>>>("mutation", "runtimeAgent:writeToolDerived"), { ...attempt, operationId: op.operationId, input }),
   },
     semanticToolName(args.call.toolName), JSON.parse(args.call.inputCanonical));
-  await ctx.runMutation(ref<"mutation", Attempt & { operationId: string; witnesses: Witness[] }, null>("mutation", "runtimeAgent:rememberToolSources"),
-    { ...attempt, operationId: op.operationId, witnesses: observed.witnesses });
+  await ctx.runMutation(ref<"mutation", Attempt & { operationId: string; witnesses: Witness[]; artifactWitnesses?: ArtifactContextWitness[] }, null>("mutation", "runtimeAgent:rememberToolSources"),
+    { ...attempt, operationId: op.operationId, witnesses: observed.witnesses, ...("artifactWitnesses" in observed ? { artifactWitnesses: observed.artifactWitnesses } : {}) });
   const result = observed.result;
   const saved = await saveMessages(ctx, agentComponent, { threadId: current.threadId, userId: args.reference.principalId, order: current.snapshot.anchor.order,
     agentName: attemptName(args, args.ordinal), messages: [{ role: "tool", content: [{ type: "tool-result", toolCallId: args.call.toolCallId,
@@ -468,7 +495,7 @@ async function currentToolPermission(ctx: Pick<QueryCtx, "db">, args: Attempt, c
   const definition = current.definition.tools.find(tool => tool.toolId === semanticToolName(op.toolName ?? ""));
   if (!definition) transcriptDenied("TOOL_DENIED");
   await recheckAuthority(ctx, args.reference, { capability: "tool", tenantId: args.reference.tenantId, memorySpaceId: args.reference.memorySpaceId });
-  await recheckAuthority(ctx, args.reference, { capability: definition.toolId === "memory.remember" ? "write" : "read", tenantId: args.reference.tenantId, memorySpaceId: args.reference.memorySpaceId });
+  await recheckAuthority(ctx, args.reference, { capability: definition.toolId === "memory.remember" || definition.toolId.startsWith("media.") ? "write" : "read", tenantId: args.reference.tenantId, memorySpaceId: args.reference.memorySpaceId });
   if (definition.approval === "explicit") {
     if (!op.approvalActor) transcriptDenied("APPROVAL_REQUIRED");
     await recheckAuthority(ctx, op.approvalActor, { capability: "admin", tenantId: args.reference.tenantId, memorySpaceId: args.reference.memorySpaceId });
@@ -493,13 +520,13 @@ export const writeToolSource = internalMutation({ args: { ...agentAttempt, opera
   const expected = serverToolSourceLineage(memoryScope(args.reference), op.operationId);
   if (canonicalModelJson(args.source.lineage) !== canonicalModelJson(expected) || args.source.content !== requested.text.normalize("NFC").replace(/\r\n?/g, "\n").trim()) transcriptDenied("TOOL_DENIED");
   return await new ConvexMemoryRepository(ctx, args.reference, "write", ctx.db).putSource({ ...args.source,
-    contextSourceWitnesses: current.execution.sourceWitnesses });
+    contextSourceWitnesses: current.execution.sourceWitnesses, ...(current.execution.artifactContextWitnesses?.length ? { artifactContextWitnesses: current.execution.artifactContextWitnesses } : {}) });
 } });
 export const writeToolDerived = internalMutation({ args: { ...agentAttempt, operationId: v.string(), input: commitDerivedInput }, handler: async (ctx, args) => {
   await toolWriteFence(ctx, args, args.input.source.sourceId);
   return await new ConvexMemoryRepository(ctx, args.reference, "write", ctx.db).commitDerived(args.input);
 } });
-export const rememberToolSources = internalMutation({ args: { ...agentAttempt, operationId: v.string(), witnesses: v.array(sourceWitness) }, handler: async (ctx, args) => {
+export const rememberToolSources = internalMutation({ args: { ...agentAttempt, operationId: v.string(), witnesses: v.array(sourceWitness), artifactWitnesses: v.optional(v.array(artifactContextWitness)) }, handler: async (ctx, args) => {
   const current = await executionContext(ctx, args); const op = await operation(ctx, args, args.operationId);
   if (op.kind !== "tool" || op.state !== "started") transcriptDenied("INVALID_STATE");
   const merged = new Map(current.execution.sourceWitnesses.map(source => [source.sourceId, source]));
@@ -509,7 +536,14 @@ export const rememberToolSources = internalMutation({ args: { ...agentAttempt, o
   }
   if (merged.size > 32) transcriptDenied("CONTEXT_LIMIT_EXCEEDED");
   const sourceWitnesses = [...merged.values()]; await checkWitnesses(ctx, args, sourceWitnesses);
-  await ctx.db.patch("runtimeAgentExecutions", current.execution._id, { sourceWitnesses, updatedAt: Date.now() }); return null;
+  const artifacts = new Map((current.execution.artifactContextWitnesses ?? []).map(witness => [witness.artifactId, witness]));
+  for (const witness of args.artifactWitnesses ?? []) {
+    const prior = artifacts.get(witness.artifactId);
+    if (prior && canonicalModelJson(prior) !== canonicalModelJson(witness)) transcriptDenied("STALE_CONTEXT");
+    artifacts.set(witness.artifactId, witness);
+  }
+  const artifactContextWitnesses = [...artifacts.values()]; await checkArtifactContextWitnesses(ctx, args.reference, artifactContextWitnesses);
+  await ctx.db.patch("runtimeAgentExecutions", current.execution._id, { sourceWitnesses, artifactContextWitnesses, updatedAt: Date.now() }); return null;
 } });
 export const toolParent = internalQuery({ args: { ...agentAttempt, ordinal: v.number() }, handler: async (ctx, args) => {
   await executionContext(ctx, args);
@@ -581,6 +615,7 @@ export const approveTool = mutation({ args: { ...selector, operationId: v.string
   if (!current.row.snapshotCanonical) transcriptDenied("STALE_TRANSCRIPT");
   await hydratePrivateCutoff(ctx, current.conversation, current.row, JSON.parse(current.row.snapshotCanonical) as CutoffV1);
   await checkWitnesses(ctx, attempt, owned.sourceWitnesses);
+  await checkArtifactContextWitnesses(ctx, owned.reference, owned.artifactContextWitnesses ?? []);
   await recheckAuthority(ctx, owned.reference, { capability: "tool", tenantId: owned.tenantId, memorySpaceId: owned.memorySpaceId });
   await ctx.db.patch("runtimeAgentOperations", op._id, { state: "approved", approvalActor: reference });
   await ctx.db.patch("runtimeRuns", current.row._id, { responseStatus: "running", updatedAt: Date.now() });
@@ -608,7 +643,7 @@ export async function finalizeExecution(ctx: MutationCtx, args: Attempt & { fina
   // All canonical assistant calls/tool results and final text register once in this parent mutation.
   const conversation = await conversationById(ctx, args.reference, current.run.conversationId); if (!conversation) transcriptDenied();
   const pins = await registerMessages(ctx, conversation, args.reference,
-    messages, { runId: args.runId, attemptNumber: args.attemptNumber, trustedToolMessages: true, contextSourceWitnesses: current.execution.sourceWitnesses });
+    messages, { runId: args.runId, attemptNumber: args.attemptNumber, trustedToolMessages: true, contextSourceWitnesses: current.execution.sourceWitnesses, artifactContextWitnesses: current.execution.artifactContextWitnesses });
   const receiptId = `agent-ingestion:${await semanticHash(identityCanonical)}`;
   await ctx.db.insert("runtimeAgentIngestion", { tenantId: args.reference.tenantId, memorySpaceId: args.reference.memorySpaceId!, runId: args.runId,
     attemptNumber: args.attemptNumber, receiptId, identityCanonical, outputMessageIds: args.finalMessageIds,
@@ -690,12 +725,22 @@ export const onWorkflowComplete = internalMutation({ args: { workflowId: v.strin
   const context = args.context as Attempt; const owned = await execution(ctx, context); if (owned.workflowId !== args.workflowId) transcriptDenied();
   if (owned.state !== "complete") await ctx.runMutation(refs.end, { ...context, cancelled: (args.result as { kind?: string }).kind === "canceled" }); return null;
 } });
-export const observe = query({ args: { ...selector, afterSequence: v.optional(v.number()), limit: v.optional(v.number()), finalOnly: v.optional(v.boolean()) }, handler: async (ctx, args) => {
+export async function observeHandler(ctx: QueryCtx, args: { runId: string; tenantId?: string; memorySpaceId?: string; afterSequence?: number; limit?: number; finalOnly?: boolean }) {
   const actor = await requireDataAuthority(ctx, args, "read"); const current = await currentControlRun(ctx, dataAuthorityReference(actor), args.runId, "read");
+  const reference = dataAuthorityReference(actor), deadlines: number[] = [];
+  await managedConversationAccess(ctx, reference, current.conversation, "read", undefined, deadlines);
   const after = args.afterSequence ?? 0, limit = args.limit ?? 100;
   if (!Number.isSafeInteger(after) || after < 0 || !Number.isSafeInteger(limit) || limit < 1 || limit > 100) transcriptDenied("INVALID_INPUT");
   const owned = singleTranscript(await ctx.db.query("runtimeAgentExecutions").withIndex("by_attempt", q => q.eq("tenantId", current.row.tenantId).eq("memorySpaceId", current.row.memorySpaceId).eq("runId", args.runId).eq("attemptNumber", current.row.attemptNumber)).take(2));
-  if (owned) await checkContextSourceWitnesses(ctx, dataAuthorityReference(actor), owned.sourceWitnesses);
+  if (owned) {
+    await checkContextSourceWitnesses(ctx, reference, owned.sourceWitnesses, deadlines);
+    await checkArtifactContextWitnesses(ctx, reference, owned.artifactContextWitnesses ?? [], deadlines);
+    for (const part of await executionMediaReferences(ctx, owned)) {
+      const job = await ctx.db.query("runtimeMediaJobs").withIndex("by_job", q => q.eq("jobId", part.jobId)).unique();
+      if (!job || job.artifactId !== part.artifactId || job.kind !== part.kind) transcriptDenied("STALE_CONTEXT");
+      await checkMediaJob(ctx, job, reference, false, deadlines);
+    }
+  }
   const finalOnly = !owned?.streaming || args.finalOnly;
   const rows = !owned || finalOnly && owned.state !== "complete" ? [] : finalOnly
     ? await ctx.db.query("runtimeAgentOutput").withIndex("by_delivery", q => q.eq("tenantId", owned.tenantId).eq("memorySpaceId", owned.memorySpaceId).eq("runId", args.runId).eq("attemptNumber", owned.attemptNumber).eq("final", true).gt("sequence", after)).take(limit)
@@ -706,9 +751,23 @@ export const observe = query({ args: { ...selector, afterSequence: v.optional(v.
   // disposition; only a nonterminal, unowned run is not_started.
   const status = current.row.responseStatus;
   const state = owned?.state ?? (status === "complete" || status === "failed" || status === "cancelled" ? status : "not_started");
-  return { run: publicRun(current.row), state, parts: rows.map(row => ({ sequence: row.sequence, part: JSON.parse(row.partCanonical) as unknown })),
-    cursor: rows[rows.length - 1]?.sequence ?? after, approvals: await Promise.all(approvals.filter(op => op.state === "waiting_approval").map(async op => ({ operationId: op.operationId, toolName: op.toolName, requestHash: await semanticHash(op.requestCanonical) }))) };
-} });
+  const parts = [];
+  for (const row of rows) {
+    const part = JSON.parse(row.partCanonical) as AgentPublicPart;
+    if (part.type === "media-job") {
+      const job = await ctx.db.query("runtimeMediaJobs").withIndex("by_job", q => q.eq("jobId", part.jobId)).unique();
+      if (!job || job.artifactId !== part.artifactId || job.kind !== part.kind) transcriptDenied("STALE_CONTEXT");
+      await checkMediaJob(ctx, job, dataAuthorityReference(actor));
+    }
+    parts.push({ sequence: row.sequence, part });
+  }
+  const visibleApprovals = await Promise.all(approvals.filter(op => op.state === "waiting_approval").map(async op => ({ operationId: op.operationId, toolName: op.toolName, requestHash: await semanticHash(op.requestCanonical) })));
+  const expiresAt = await deliveryExpiresAt(ctx, reference, deadlines);
+  return { run: publicRun(current.row), state, parts,
+    cursor: rows[rows.length - 1]?.sequence ?? after, approvals: visibleApprovals,
+    ...(expiresAt === undefined ? {} : { deliveryExpiresAt: expiresAt }) };
+}
+export const observe = mutation({ args: { ...selector, afterSequence: v.optional(v.number()), limit: v.optional(v.number()), finalOnly: v.optional(v.boolean()) }, handler: observeHandler });
 export const cancel = mutation({ args: selector, handler: async (ctx, args) => {
   const actor = await requireDataAuthority(ctx, args, "write"); const current = await currentControlRun(ctx, dataAuthorityReference(actor), args.runId, "write");
   await ctx.runMutation(ref<"mutation", typeof args, unknown>("mutation", "runs:cancel"), args);

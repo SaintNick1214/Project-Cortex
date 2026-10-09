@@ -150,7 +150,7 @@ describe("actual registered visibility and canonical schema/AST catalog", () => 
     fs.mkdirSync(path.resolve("work/resume/task04-current-catalog-release-c4/test-scratch"), { recursive: true });
     const target = fs.mkdtempSync(path.join(path.resolve("work/resume/task04-current-catalog-release-c4/test-scratch"), "cortex-task03b2d-catalog-"));
     try {
-      const run = spawnSync(process.execPath, ["_goals/convex-backend-runtime-2026-10-02/qa/task04-current-catalog-release-c4/current-compose.mjs", target], { cwd: process.cwd(), encoding: "utf8" });
+      const run = spawnSync(process.execPath, ["_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-query-expiry-functional-v2-20261008/author/current-worker-inventory1.mjs", target], { cwd: process.cwd(), encoding: "utf8" });
       expect({ status: run.status, stderr: run.stderr }).toEqual({ status: 0, stderr: "" });
       const inventory = JSON.parse(fs.readFileSync(path.join(target, "public-path-inventory.json"), "utf8")) as {
         completeness: { unresolved: string[] }; endpoints: { path: string; visibility: string }[];

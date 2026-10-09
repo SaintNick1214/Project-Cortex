@@ -1,0 +1,179 @@
+{
+  "version": 1,
+  "status": "LOCAL_OPERATOR_RECIPE_NOT_DISPATCH_READY",
+  "target": {
+    "projectId": 3174742,
+    "teamId": 325340,
+    "deploymentName": "formal-husky-914",
+    "production": false
+  },
+  "activationRequires": "Fresh verified target/current authority and coherent03+V2 installed source release; local recipe is not activation authority.",
+  "trust": "Exact private operator-only fixture-synthetic manifest; no fabricated prior actual V2 or independent acceptance.",
+  "newScopeOnly": true,
+  "oldAccountsRootWindowsAndLiabilityUntouched": true,
+  "agent": {
+    "modelId": "openai/gpt-4o-mini",
+    "nativeInterface": "chat",
+    "featureEnvelope": "agent-tools-chat-v2",
+    "ruleId": "agent-tools-chat-utf8-v1",
+    "toolRegistryVersion": "cortex-media-tools-v2",
+    "tools": [
+      {
+        "type": "function",
+        "name": "memory_recall",
+        "description": "Recall authorized Cortex memory.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "text": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            "limit": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10
+            }
+          },
+          "required": [
+            "text",
+            "limit"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "type": "function",
+        "name": "memory_remember",
+        "description": "Remember explicit information in authorized Cortex memory.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "text": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            }
+          },
+          "required": [
+            "text"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "type": "function",
+        "name": "media_image_generate",
+        "description": "Create one governed image and return its durable job and artifact references.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "prompt": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 1024
+            }
+          },
+          "required": [
+            "prompt"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "type": "function",
+        "name": "media_video_generate",
+        "description": "Create one governed video job and return its durable job and artifact references.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "prompt": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 1024
+            }
+          },
+          "required": [
+            "prompt"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "type": "function",
+        "name": "artifact_read",
+        "description": "Read authorized artifact metadata and immutable asset references.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "artifactId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            }
+          },
+          "required": [
+            "artifactId"
+          ],
+          "additionalProperties": false
+        }
+      }
+    ],
+    "streaming": true,
+    "maximumToolEffects": 1,
+    "inputTokens": 32768,
+    "contextTokens": 65536,
+    "outputTokens": 256,
+    "timeoutMs": 60000,
+    "maxRetries": 0,
+    "perCallCeilingUnits": 100000,
+    "priceRevision": "openrouter-2026-10-08-candidate",
+    "boundRevision": "agent-tools-v2-32768-256-shared3m-v1",
+    "noServingOrCostGuarantee": true,
+    "actualNativeV2EvidencePending": true
+  },
+  "image": {
+    "modelId": "openai/gpt-image-1",
+    "nativeInterface": "image",
+    "featureEnvelope": "media-image-v1",
+    "ruleId": "media-native-utf8-v1",
+    "n": 1,
+    "size": "1024x1024",
+    "quality": "low",
+    "outputFormat": "png",
+    "maxRetries": 0,
+    "perCallCeilingUnits": 2000000,
+    "runBudgetUnits": 3000000,
+    "priceRevision": "convex-gateway-2026-10-08-image-low",
+    "boundRevision": "media-image-1024-low-png-shared3m-v1",
+    "actualRecordPath": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-media-functional-v2-20261008/native-actual/actual-image-qualification-record1.json",
+    "actualRecordHash": "2dbb67c944f735f214299304284a8447b6c5ba1d285f1c8bf93c66d677cf218f",
+    "identity": "requested-only; no observed serving model",
+    "aggregateCost": "unavailable; full ceiling retained"
+  },
+  "commonBudget": {
+    "runBudgetUnits": 3000000,
+    "tenantBudgetUnits": 10000000,
+    "concurrency": 2
+  },
+  "expectedSharedRun": {
+    "contextEmbedding": 100000,
+    "firstModel": 100000,
+    "image": 2000000,
+    "finalModel": 100000,
+    "total": 2300000,
+    "notAnActualCallCountOrOutputGuarantee": true
+  },
+  "asyncVideo": "No qualification; existing503 never resubmitted",
+  "terminalReplay": "Only confirmed matching bounded terminal; uncertain cost retains full liability. Lost/ambiguous calls never paid-readmitted.",
+  "privateImageBytes": "Product asset storage only; ledger/transcript store bounded immutable references, not bytes.",
+  "sourceApplicability": {
+    "packedManifestSha256": "9218fe05fbfd1b76b82fcc711189a2bb250c9c3553e5abbb711955aa4d928d19",
+    "coherent03V2Included": true,
+    "mustRebindBeforeActivation": false
+  },
+  "noServiceCalls": true,
+  "noPaidCalls": true,
+  "noRootSwitch": true
+}

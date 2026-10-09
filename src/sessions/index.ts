@@ -152,7 +152,7 @@ export class SessionsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.sessions.get, {
+        this.client.mutation(api.sessions.get, {
           sessionId,
         }),
       "sessions:get",
@@ -333,7 +333,7 @@ export class SessionsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.sessions.list, {
+        this.client.mutation(api.sessions.list, {
           userId: filters.userId,
           tenantId: effectiveTenantId,
           memorySpaceId: filters.memorySpaceId,
@@ -369,7 +369,7 @@ export class SessionsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.sessions.count, {
+        this.client.mutation(api.sessions.count, {
           userId: filters.userId,
           tenantId: effectiveTenantId,
           memorySpaceId: filters.memorySpaceId,

@@ -13,7 +13,7 @@ import type { QualifiedDispatchEvidence } from "./runtimeModelPolicyBootstrap";
 import { qualifiedTerminalModelId } from "./runtimeModelPolicyBootstrap";
 import { FACTS_JSON_SCHEMA } from "../src/domain/extraction";
 import { CONFLICT_DECISION_JSON_SCHEMA } from "../src/domain/conflicts";
-import { AGENT_NATIVE_TOOLS, AGENT_TOOL_REGISTRY_VERSION, agentToolsInputBound } from "../src/domain/agent-tools";
+import { AGENT_TOOL_REGISTRY_VERSION, AGENT_TOOL_REGISTRY_VERSION_V2, agentToolCatalog, agentToolsInputBoundV2, agentToolsInputBound } from "../src/domain/agent-tools";
 import { parseAgentLanguageResult } from "../src/domain/agent-language";
 import type { AgentLanguageResultV1 } from "../src/domain/agent-language";
 import type { Id } from "./_generated/dataModel";
@@ -213,9 +213,10 @@ function proofFor(resolution: GatewayResolution, now: number): void {
     || p.resultBound.maximumPrivateResultBytes < 1 || p.resultBound.maximumPrivateResultBytes > embeddingResultCeiling(p)
     || !count(limits.canonicalBytes) || limits.canonicalBytes < 1 || !count(limits.privateResultBytes) || limits.privateResultBytes < 1 || limits.canonicalBytes > 180_000 || limits.privateResultBytes > embeddingResultCeiling(p) || limits.embeddingValuesPerCall !== 1 || p.resultBound.maximumEmbeddingValues !== 1) fail("CAPABILITY_UNAVAILABLE");
   if (s.nativeInterface === "chat" && p.inputBound.ruleId === "plain-chat-cookbook-utf8-v1" && p.inputBound.featureEnvelope === "plain-chat-v1" && !s.capabilities.includes("tools")) return;
-  if (s.nativeInterface === "chat" && p.inputBound.ruleId === "agent-tools-chat-utf8-v1" && p.inputBound.featureEnvelope === "agent-tools-chat-v1"
-    && s.operationKey === "agent.respond" && s.capabilities.includes("tools") && s.pins.toolRegistryVersion === AGENT_TOOL_REGISTRY_VERSION
-    && p.toolContract?.registryVersion === AGENT_TOOL_REGISTRY_VERSION && p.toolContract.toolsCanonical === canonicalModelJson(AGENT_NATIVE_TOOLS)
+  if (s.nativeInterface === "chat" && p.inputBound.ruleId === "agent-tools-chat-utf8-v1" && ["agent-tools-chat-v1", "agent-tools-chat-v2"].includes(p.inputBound.featureEnvelope)
+    && s.operationKey === "agent.respond" && s.capabilities.includes("tools") && s.pins.toolRegistryVersion === p.toolContract?.registryVersion
+    && !!p.toolContract && !!agentToolCatalog(p.toolContract.registryVersion) && p.toolContract.toolsCanonical === canonicalModelJson(agentToolCatalog(p.toolContract.registryVersion))
+    && ((p.inputBound.featureEnvelope === "agent-tools-chat-v1") === (p.toolContract.registryVersion === AGENT_TOOL_REGISTRY_VERSION))
     && count(p.toolContract.maximumToolCalls) && p.toolContract.maximumToolCalls >= 1 && p.toolContract.maximumToolCalls <= 4
     && s.limits.toolSteps <= p.toolContract.maximumToolCalls) return;
   if (s.nativeInterface === "embedding" && p.inputBound.ruleId === "default-embedding-utf8-v1" && p.inputBound.featureEnvelope === "default-embedding-v1") {
@@ -256,9 +257,12 @@ export function createAgentGatewayCancellationBridge(model: LanguageModelV4, lif
     doGenerate: async params => await model.doGenerate(adapt(params)), doStream: async params => await model.doStream(adapt(params)) },
     dispose: () => { disposed = true; for (const [signal, listener] of listeners) signal.removeEventListener("abort", listener); listeners.clear(); } };
 }
+function agentToolEnvelope(value: string): boolean {
+  return value === "agent-tools-chat-v1" || value === "agent-tools-chat-v2";
+}
 function languageParams(input: LanguageModelV4CallOptions, s: ModelPolicySnapshotV1, p: QualifiedDispatchEvidence, binding: GatewayBinding, signal: AbortSignal): { params: NativeLanguageParams; request: ModelCallRequest } {
   const native = record(input, standardKeys);
-  const agent = p.inputBound.featureEnvelope === "agent-tools-chat-v1";
+  const agent = agentToolEnvelope(p.inputBound.featureEnvelope);
   for (const key of ["topK", "presencePenalty", "frequencyPenalty", "headers", "providerOptions", "reasoning", ...agent ? [] : ["tools", "toolChoice"]]) if (key in native) fail("UNSUPPORTED_NATIVE_FIELD");
   // AI SDK7 always supplies false for ordinary streams. Only the governed
   // wrapper may turn raw observation on; provider chunks never enter public DTOs.
@@ -306,7 +310,7 @@ function languageParams(input: LanguageModelV4CallOptions, s: ModelPolicySnapsho
   if (agent) {
     request.tools = native.tools === undefined ? [] : arrayValues(native.tools).map(value => {
       const tool = record(value, ["type", "name", "description", "inputSchema", "strict", "inputExamples", "providerOptions"]);
-      const expected = AGENT_NATIVE_TOOLS.find(entry => entry.name === tool.name);
+      const expected = agentToolCatalog(s.pins.toolRegistryVersion)?.find(entry => entry.name === tool.name);
       if (!expected || canonicalModelJson(tool) !== canonicalModelJson(expected)) fail("UNQUALIFIED_TOOL_DEFINITION");
       return { name: expected.name, definition: detached({ description: expected.description, inputSchema: expected.inputSchema }) };
     });
@@ -318,7 +322,7 @@ function languageParams(input: LanguageModelV4CallOptions, s: ModelPolicySnapsho
       if (part.type === "tool-result") { if (calls.get(part.toolCallId) !== part.toolName || results.has(part.toolCallId)) fail("INVALID_TOOL_HISTORY"); results.add(part.toolCallId); }
     }
     if (calls.size !== results.size) fail("INVALID_TOOL_HISTORY");
-    request.inputTokens = agentToolsInputBound(canonicalModelJson({ messages, tools: request.tools, ...request.toolChoice ? { toolChoice: request.toolChoice } : {} }), messages.length, request.tools.length);
+    request.inputTokens = (s.pins.toolRegistryVersion === AGENT_TOOL_REGISTRY_VERSION_V2 ? agentToolsInputBoundV2 : agentToolsInputBound)(canonicalModelJson({ messages, tools: request.tools, ...request.toolChoice ? { toolChoice: request.toolChoice } : {} }), messages.length, request.tools.length);
   } else request.inputTokens = 3 + messages.reduce((n, m, index) => n + 3 + utf8(m.role) + utf8(request.texts[index]!), 0);
   request.outputTokens = native.maxOutputTokens;
   // Semantic schemas come from the operation contract, never caller provider options.
@@ -362,7 +366,7 @@ function finishReason(reason: string): AgentLanguageResultV1["finishReason"] {
 }
 function qualifiedReason(reason: unknown, resolution: GatewayResolution): reason is string {
   return typeof reason === "string" && (terminalReasons.includes(reason)
-    || (reason === "tool_calls" && resolution.dispatchEvidence.inputBound.featureEnvelope === "agent-tools-chat-v1"));
+    || (reason === "tool_calls" && agentToolEnvelope(resolution.dispatchEvidence.inputBound.featureEnvelope)));
 }
 function languageOutput(content: unknown, reason: string, request: ModelCallRequest, resolution: GatewayResolution):
   { canonical: string; content: AgentLanguageResultV1["content"] } | undefined {
@@ -378,7 +382,7 @@ function languageOutput(content: unknown, reason: string, request: ModelCallRequ
       fail("UNSUPPORTED_MODEL_OUTPUT");
     });
     const maximum = Math.min(resolution.storageLimits.privateResultBytes, resolution.dispatchEvidence.resultBound.maximumPrivateResultBytes);
-    if (resolution.dispatchEvidence.inputBound.featureEnvelope !== "agent-tools-chat-v1") {
+    if (!agentToolEnvelope(resolution.dispatchEvidence.inputBound.featureEnvelope)) {
       if (!parts.length || parts.some(part => part.type !== "text") || reason === "tool_calls") return undefined;
       const text = parts.map(part => part.type === "text" ? part.text : "").join("");
       return { canonical: json({ text }, maximum), content: [{ type: "text", text }] };
@@ -587,7 +591,7 @@ function stateFor(composition: GatewayComposition, inputBinding: GatewayBinding,
     const result = providerJSON(exactJSON(replay, resolution.storageLimits.privateResultBytes));
     if (!result) fail("INVALID_REPLAY");
     if (resolution.snapshot.nativeInterface === "chat") {
-      if (resolution.dispatchEvidence.inputBound.featureEnvelope === "agent-tools-chat-v1") {
+      if (agentToolEnvelope(resolution.dispatchEvidence.inputBound.featureEnvelope)) {
         const item = parseAgentLanguageResult(result, resolution.snapshot.allowedTools, resolution.snapshot.limits.toolSteps);
         if (!item || canonicalModelJson(item) !== replay) fail("INVALID_REPLAY"); assertDelivery(); return item;
       }
@@ -739,7 +743,7 @@ export function governGatewayLanguageModel(model: LanguageModelV4, composition: 
             } else if (["tool-input-start", "tool-input-delta", "tool-input-end", "tool-call"].includes(part.type)) {
               if (deliveryError) continue;
               try {
-                if (state.resolution.dispatchEvidence.inputBound.featureEnvelope !== "agent-tools-chat-v1") fail("UNSUPPORTED_MODEL_OUTPUT");
+                if (!agentToolEnvelope(state.resolution.dispatchEvidence.inputBound.featureEnvelope)) fail("UNSUPPORTED_MODEL_OUTPUT");
                 const value = detached(part) as Record<string, unknown>;
                 const callId = value.type === "tool-call" ? value.toolCallId : value.id;
                 if (!stableId(callId) || value.providerExecuted === true || value.dynamic === true) fail("UNSUPPORTED_MODEL_OUTPUT");

@@ -25,7 +25,7 @@ export interface CutoffV1 {
   completeness: "complete" | "incomplete";
 }
 export interface PublicTranscriptMessage extends TranscriptPosition {
-  id: string; role: "user" | "assistant" | "tool"; parts: { type: "text"; text: string }[];
+  id: string; role: "user" | "assistant" | "tool"; parts: ({ type: "text"; text: string } | { type: "media-job"; version: 1; jobId: string; artifactId: string; kind: "image" | "video" })[];
   status: "pending" | "success" | "failed"; revision: number; assets?: import("./assets.js").RuntimeAssetVersion[];
 }
 

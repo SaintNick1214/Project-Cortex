@@ -2,12 +2,13 @@
 
 import { useChat } from "@ai-sdk/react";
 import type { UIMessage } from "ai";
-import { CortexRuntimeClient } from "@cortexmemory/sdk/runtime";
+import { CortexRuntimeClient, runtimePublicPart } from "@cortexmemory/sdk/runtime";
 import type { RuntimeRun, RuntimeRunHandle, RuntimeSession, RuntimeObservation, RuntimeToolApproval,
-  RuntimeEmbeddingProfile, RuntimeRecallResult } from "@cortexmemory/sdk/runtime";
+  RuntimeEmbeddingProfile, RuntimeRecallResult, RuntimeMemoryReadiness, RuntimeMemoryStage, RuntimePublicPart } from "@cortexmemory/sdk/runtime";
 import { CortexRemoteTransport } from "@cortexmemory/vercel-ai-provider/remote";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { FormEvent } from "react";
+import { RuntimeMediaPanel } from "./RuntimeMediaPanel";
 
 const button = "rounded-lg border border-white/20 px-3 py-2 hover:bg-white/10 disabled:opacity-40 disabled:cursor-not-allowed focus-visible:outline-2 focus-visible:outline-cortex-400";
 const input = "w-full rounded-lg border border-white/20 bg-gray-950 p-3 text-white focus-visible:outline-2 focus-visible:outline-cortex-400";
@@ -16,6 +17,26 @@ function errorCode(error: unknown): string {
   return typeof code === "string" && /^[A-Z][A-Z0-9_]{0,79}$/.test(code) ? code : "RUNTIME_REQUEST_FAILED";
 }
 type Connection = { client: CortexRuntimeClient; session: RuntimeSession };
+function transcriptParts(parts: readonly unknown[]): UIMessage["parts"] {
+  return parts.flatMap(part => {
+    const value = runtimePublicPart(part);
+    if (value.type === "text") return [value] as UIMessage["parts"];
+    if (value.type === "media-job") return [{ type: "data-cortex-media-job", data: value }] as UIMessage["parts"];
+    if (value.type === "artifact") return [{ type: "data-cortex-artifact", data: value }] as UIMessage["parts"];
+    if (value.type === "tool") return [{ type: "data-cortex-tool", data: value }] as UIMessage["parts"];
+    return [];
+  });
+}
+function RuntimePart({ part, onOpenMedia }: { part: UIMessage["parts"][number]; onOpenMedia: () => void }) {
+  if (part.type === "text") return <p className="whitespace-pre-wrap break-words">{part.text}</p>;
+  if (!["data-cortex-tool", "data-cortex-artifact", "data-cortex-media-job"].includes(part.type) || !("data" in part)) return null;
+  let value: RuntimePublicPart;
+  try { value = runtimePublicPart(part.data); } catch { return null; }
+  if (value.type === "tool") return <p className="mt-2 text-sm text-gray-300">Backend tool: {value.name} · {value.phase}</p>;
+  if (value.type === "artifact") return <p className="mt-2 break-all text-sm text-gray-300">Memory operation receipt: {value.artifactId}</p>;
+  if (value.type === "media-job") return <button className={`${button} mt-3`} onClick={onOpenMedia}>Open saved {value.kind} job</button>;
+  return null;
+}
 
 /** Development auth adapter. Host JWTs are verified only by Convex; tokens never enter storage. */
 export function RuntimeQuickstart() {
@@ -27,11 +48,17 @@ export function RuntimeQuickstart() {
   const [error, setError] = useState<string | null>(null);
   const [chatKey, setChatKey] = useState(0);
   const url = process.env.NEXT_PUBLIC_CONVEX_URL;
+  const assetHttpUrl = process.env.NEXT_PUBLIC_CORTEX_HTTP_URL;
   const [agentId, setAgentId] = useState(process.env.NEXT_PUBLIC_CORTEX_AGENT_ID ?? "");
   const [requestedAgentId, setRequestedAgentId] = useState(process.env.NEXT_PUBLIC_CORTEX_AGENT_ID ?? "");
   const [agentVersion, setAgentVersion] = useState(Number(process.env.NEXT_PUBLIC_CORTEX_AGENT_VERSION ?? "1"));
   const [requestedVersion, setRequestedVersion] = useState(process.env.NEXT_PUBLIC_CORTEX_AGENT_VERSION ?? "1");
   const [memoryMode, setMemoryMode] = useState<string | null>(null);
+  const denyConnection = useCallback((caught: unknown) => {
+    if (!owned.current) return;
+    setError(errorCode(caught)); setConnection(null); token.current = null;
+    const client = owned.current; owned.current = null; void client?.close();
+  }, []);
   useEffect(() => () => { token.current = null; void owned.current?.close(); owned.current = null; }, []);
   async function authenticate(event: FormEvent) {
     event.preventDefault(); if (!url || !credential.trim() || busy) return;
@@ -46,6 +73,7 @@ export function RuntimeQuickstart() {
         await owned.current?.close();
         let candidate: CortexRuntimeClient | undefined;
         const client = new CortexRuntimeClient({ deploymentUrl: url, fetchToken: async () => token.current,
+          ...(assetHttpUrl ? { assetHttpUrl } : {}),
           ...(process.env.NEXT_PUBLIC_CORTEX_MEMORY_SPACE_ID ? { scope: { memorySpaceId: process.env.NEXT_PUBLIC_CORTEX_MEMORY_SPACE_ID } } : {}),
           onAuthChange: authenticated => {
             if (!authenticated && candidate && owned.current === candidate) {
@@ -59,11 +87,13 @@ export function RuntimeQuickstart() {
         setConnection({ client, session }); setChatKey(key => key + 1);
       }
     } catch (caught) {
-      setConnection(null); setError(errorCode(caught)); await owned.current?.close(); owned.current = null; token.current = null;
+      const client = owned.current; owned.current = null; token.current = null;
+      setConnection(null); setError(errorCode(caught)); await client?.close();
     } finally { setBusy(false); }
   }
   async function disconnect() {
-    setConnection(null); setCredential(""); token.current = null; await owned.current?.close(); owned.current = null;
+    const client = owned.current; owned.current = null; token.current = null;
+    setConnection(null); setCredential(""); setError(null); await client?.close();
   }
   async function selectVersion(event: FormEvent) {
     event.preventDefault(); if (!connection || !requestedAgentId.trim()) return;
@@ -93,16 +123,16 @@ export function RuntimeQuickstart() {
       {error && <p role="alert" className="mt-3 text-red-300">{error}</p>}
     </section>
     {connection && <form onSubmit={selectVersion} className="mb-6 flex flex-wrap items-end gap-3" aria-label="Agent configuration">
-      <label className="min-w-0 flex-1">Published agent<input className={input} value={requestedAgentId} onChange={event => setRequestedAgentId(event.target.value)} required /></label>
-      <label>Agent version<input type="number" min={1} step={1} className={input} value={requestedVersion} onChange={event => setRequestedVersion(event.target.value)} /></label>
+      <label className="w-full min-w-0 sm:min-w-64 sm:flex-1">Published agent<input className={input} value={requestedAgentId} onChange={event => setRequestedAgentId(event.target.value)} required /></label>
+      <label className="w-32">Agent version<input type="number" min={1} step={1} className={input} value={requestedVersion} onChange={event => setRequestedVersion(event.target.value)} /></label>
       <button className={button} disabled={busy}>Use agent version</button>
-      <p className="py-2 text-sm text-gray-300">Current version: {agentVersion} · Memory mode: {memoryMode ?? "loading"}</p>
+      <p className="w-full py-2 text-sm text-gray-300">Current version: {agentVersion} · Memory mode: {memoryMode ?? "loading"}</p>
     </form>}
-    {connection && agentId && <RuntimeChat key={chatKey} connection={connection} agentId={agentId} agentVersion={agentVersion} onNewChat={() => setChatKey(key => key + 1)} />}
+    {connection && agentId && <RuntimeChat key={chatKey} connection={connection} agentId={agentId} agentVersion={agentVersion} onNewChat={() => setChatKey(key => key + 1)} onDenied={denyConnection} />}
   </main>;
 }
 
-function RuntimeChat({ connection, agentId, agentVersion, onNewChat }: { connection: Connection; agentId: string; agentVersion: number; onNewChat: () => void }) {
+function RuntimeChat({ connection, agentId, agentVersion, onNewChat, onDenied }: { connection: Connection; agentId: string; agentVersion: number; onNewChat: () => void; onDenied: (error: unknown) => void }) {
   const [prompt, setPrompt] = useState("");
   const [handle, setHandle] = useState<RuntimeRunHandle | null>(null);
   const [run, setRun] = useState<RuntimeRun | null>(null);
@@ -116,8 +146,13 @@ function RuntimeChat({ connection, agentId, agentVersion, onNewChat }: { connect
   const [recall, setRecall] = useState<RuntimeRecallResult | null>(null);
   const [searching, setSearching] = useState(false);
   const [historyIncomplete, setHistoryIncomplete] = useState(false);
+  const [readiness, setReadiness] = useState<RuntimeMemoryReadiness | null>(null);
+  const [stages, setStages] = useState<RuntimeMemoryStage[]>([]);
+  const [checking, setChecking] = useState(false);
+  const [showMedia, setShowMedia] = useState(false);
+  const [mediaRefs, setMediaRefs] = useState<Record<string, Extract<RuntimePublicPart, { type: "media-job" }>>>({});
   const transport = useMemo(() => new CortexRemoteTransport({ client: connection.client, agentId, agentVersion,
-    onRun: value => { setHandle(value); setRunId(value.runId); setTools({}); },
+    onRun: value => { setHandle(value); setRunId(value.runId); setTools({}); setMediaRefs({}); },
     onObservation: (value: RuntimeObservation) => {
       setRun(value.run); setApprovals(value.approvals);
       setTools(old => {
@@ -125,22 +160,34 @@ function RuntimeChat({ connection, agentId, agentVersion, onNewChat }: { connect
         for (const entry of value.parts) if (entry.part.type === "tool") next[entry.part.toolCallId] = `${entry.part.name}: ${entry.part.phase}`;
         return next;
       });
+      setMediaRefs(old => {
+        const next = { ...old };
+        for (const entry of value.parts) if (entry.part.type === "media-job") next[entry.part.jobId] = entry.part;
+        return next;
+      });
     } }), [connection.client, agentId, agentVersion]);
-  const chat = useChat({ transport, onError: caught => setError(errorCode(caught)) });
+  const chat = useChat({ transport, onError: caught => {
+    setError(errorCode(caught));
+    if (["FORBIDDEN", "UNAUTHENTICATED", "SESSION_CHANGED", "AUTHORITY_CHANGED", "AUTHORITY_EXPIRED", "AUTHENTICATION_TIMEOUT", "AUTH_TOKEN_FETCH_FAILED", "RPC_DEADLINE_EXCEEDED", "CLIENT_CLOSED"].includes(errorCode(caught))) onDenied(caught);
+  } });
+  const setMessages = chat.setMessages;
+  const deny = useCallback((caught: unknown) => {
+    setError(errorCode(caught)); setMessages([]); setRecall(null); setApprovals([]); setTools({}); setMediaRefs({}); setReadiness(null); setProfile(null);
+    if (["FORBIDDEN", "UNAUTHENTICATED", "SESSION_CHANGED", "AUTHORITY_CHANGED", "AUTHORITY_EXPIRED", "AUTHENTICATION_TIMEOUT", "AUTH_TOKEN_FETCH_FAILED", "RPC_DEADLINE_EXCEEDED", "CLIENT_CLOSED"].includes(errorCode(caught))) onDenied(caught);
+  }, [onDenied, setMessages]);
   useEffect(() => () => transport.disconnect(), [transport]);
   useEffect(() => {
     let active = true;
-    connection.client.getDefaultProfile().then(value => { if (active) setProfile(value.profile); }).catch(caught => { if (active) setError(errorCode(caught)); });
+    connection.client.getEmbeddingProfile().then(value => { if (active) setProfile(value.profile); }).catch(caught => { if (active) setError(errorCode(caught)); });
     return () => { active = false; };
   }, [connection.client]);
   useEffect(() => {
     if (!handle || disconnected) return;
-    const deny = (caught: unknown) => { setError(errorCode(caught)); chat.setMessages([]); setRecall(null); setApprovals([]); setTools({}); };
     const stopRun = connection.client.watchRun(handle, setRun, deny);
     // Keep final delivery authorization reactive after response completion and while memory catches up.
     const stopDelivery = connection.client.watchObservation(handle, () => {}, deny, { finalOnly: true });
     return () => { stopRun(); stopDelivery(); };
-  }, [connection.client, handle, disconnected, chat.setMessages]);
+  }, [connection.client, handle, disconnected, deny]);
   async function submit(event: FormEvent) {
     event.preventDefault(); if (!prompt.trim()) return;
     setError(null); setDisconnected(false); const text = prompt; setPrompt("");
@@ -157,7 +204,7 @@ function RuntimeChat({ connection, agentId, agentVersion, onNewChat }: { connect
         const history: UIMessage[] = page.page.flatMap(message => {
           if (finalIds.has(message.id) || message.role === "tool" || !message.parts.length
             || message.role === "assistant" && message.status !== "success") return [];
-          return [{ id: message.id, role: message.role, parts: message.parts }];
+          return [{ id: message.id, role: message.role, parts: transcriptParts(message.parts) }];
         });
         transport.attach(value); setHandle(value); chat.setMessages(history); setHistoryIncomplete(!page.isDone);
       }
@@ -169,6 +216,19 @@ function RuntimeChat({ connection, agentId, agentVersion, onNewChat }: { connect
     try { setRecall(await connection.client.recall({ text: query, requestId: crypto.randomUUID(), limit: 5 })); }
     catch (caught) { setError(errorCode(caught)); } finally { setSearching(false); }
   }
+  async function checkReadiness(event: FormEvent) {
+    event.preventDefault(); setChecking(true); setReadiness(null); setError(null);
+    try { setReadiness(await connection.client.memoryReadiness({ strictStages: stages, ...(profile ? { expectedProfileId: profile.profileId } : {}) })); }
+    catch (caught) { setError(errorCode(caught)); }
+    finally { setChecking(false); }
+  }
+  const mediaJobIds = useMemo(() => {
+    const ids = new Set(Object.keys(mediaRefs));
+    for (const message of chat.messages) for (const part of message.parts) if (part.type === "data-cortex-media-job") {
+      try { const value = runtimePublicPart(part.data); if (value.type === "media-job") ids.add(value.jobId); } catch { /* Invalid projections grant no access and are not rendered. */ }
+    }
+    return [...ids].slice(0, 20);
+  }, [mediaRefs, chat.messages]);
   const active = chat.status === "submitted" || chat.status === "streaming";
   const terminal = !!run && ["complete", "failed", "cancelled"].includes(run.responseStatus);
   return <>
@@ -177,7 +237,7 @@ function RuntimeChat({ connection, agentId, agentVersion, onNewChat }: { connect
       <div className="min-h-40 space-y-4" aria-label="Messages" aria-live="polite" aria-relevant="additions text">
         {!chat.messages.length && <p className="text-gray-400">Tell Cortex something you want to remember, or ask about earlier context.</p>}
         {chat.messages.map(message => <article key={message.id} className="rounded-lg bg-white/5 p-4"><p className="mb-2 text-sm font-medium text-cortex-300">{message.role === "user" ? "You" : "Cortex"}</p>
-          {message.parts.map((part, index) => part.type === "text" ? <p key={index} className="whitespace-pre-wrap break-words">{part.text}</p> : null)}</article>)}
+          {message.parts.map((part, index) => <RuntimePart key={index} part={part} onOpenMedia={() => setShowMedia(true)} />)}</article>)}
       </div>
       {historyIncomplete && <p className="mt-3 text-sm text-amber-300">This view contains the first 100 transcript messages. Older or later pages remain available through the paginated transcript API.</p>}
       <form onSubmit={submit} className="mt-5 flex flex-wrap items-end gap-3"><label className="min-w-0 flex-1">Message<textarea className={input} value={prompt} onChange={event => setPrompt(event.target.value)} rows={3} required disabled={active || disconnected} /></label>
@@ -199,6 +259,20 @@ function RuntimeChat({ connection, agentId, agentVersion, onNewChat }: { connect
       <form onSubmit={search} className="mt-4 flex flex-wrap items-end gap-3"><label className="min-w-0 flex-1">Search your memory<input className={input} value={query} onChange={event => setQuery(event.target.value)} required /></label>
         <button className={button} disabled={searching || !query.trim()}>{searching ? "Searching…" : "Search memory"}</button></form>
       {recall && <div className="mt-4" aria-live="polite">{!recall.items.length && <p>No indexed memories match this search.</p>}<ul className="space-y-3">{recall.items.map(item => <li key={`${item.type}:${item.id}`} className="rounded-lg bg-white/5 p-3"><span className="mr-2 text-sm text-cortex-300">{item.type}</span>{item.content}</li>)}</ul></div>}
+      <form onSubmit={checkReadiness} className="mt-5 rounded-lg border border-white/10 p-3">
+        <fieldset><legend className="font-medium">Memory readiness</legend>
+          <p className="mt-2 text-sm text-gray-300">Read current indexing status, or require the selected stages to be complete. This check starts no model call.</p>
+          <div className="my-3 flex flex-wrap gap-4">{(["facts", "vectors", "graph"] as const).map(stage => <label key={stage} className="flex items-center gap-2">
+            <input type="checkbox" checked={stages.includes(stage)} onChange={event => setStages(old => event.target.checked ? [...old, stage] : old.filter(value => value !== stage))} />Require {stage}</label>)}</div>
+        </fieldset>
+        <button className={button} disabled={checking}>{checking ? "Checking readiness…" : "Check memory readiness"}</button>
+        {readiness && <ul className="mt-3 text-sm" data-testid="memory-readiness">{Object.entries(readiness.stages).map(([stage, value]) => <li key={stage}>
+          {stage}: {value.complete ? "complete" : "incomplete"} · indexed through {value.indexedThrough} of {value.cutoff}{value.hole ? ` · ${value.hole.state} at ${value.hole.sequence}` : ""}</li>)}</ul>}
+      </form>
     </section>
+    <button className={`${button} mt-6`} aria-expanded={showMedia} onClick={() => setShowMedia(value => !value)}>
+      {showMedia ? "Hide media tools" : "Show media tools"}{mediaJobIds.length ? ` (${mediaJobIds.length} retained references)` : ""}
+    </button>
+    {showMedia && <RuntimeMediaPanel client={connection.client} conversationId={handle?.conversationId} jobIds={mediaJobIds} onDenied={deny} />}
   </>;
 }

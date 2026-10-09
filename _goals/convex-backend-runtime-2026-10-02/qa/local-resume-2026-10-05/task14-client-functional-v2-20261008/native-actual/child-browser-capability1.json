@@ -1,0 +1,23 @@
+{
+  "status": "CHILD_CONTEXT_IAB_UNAVAILABLE_BEFORE_TAB_CREATION",
+  "inventory": {
+    "tool": "cua.getState",
+    "success": true,
+    "browsers": []
+  },
+  "attempt": {
+    "tool": "cua.createBrowserTab",
+    "browser": "iab",
+    "url": "http://127.0.0.1:32514",
+    "visible": true,
+    "error": "Browser is not available: iab"
+  },
+  "browserTabsCreated": 0,
+  "serviceCalls": 0,
+  "tokenReadOrEntered": false,
+  "screenCaptures": 0,
+  "globalBrowserUnavailableNotClaimed": true,
+  "parentRootPreviouslyHasWorkingIAB": true,
+  "parentFallbackRequested": true,
+  "installedSuccessorReadback": "../../task13-media-functional-v2-20261008/native-actual/installed-publication-cursor-readback4.json"
+}

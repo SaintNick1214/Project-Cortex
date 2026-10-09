@@ -1,0 +1,30 @@
+Browser tab: 3, Title: "Cortex Memory Quickstart", URL: "http://127.0.0.1:32514/".
+The following is a diff from the previous accessibility tree with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+~				60 button (disabled) Checking readiness…
+~		61 button (expanded) Hide media tools, Secondary Actions: Collapse
++		62 container Media and artifacts
++			63 heading Media and artifacts, Value: 2
++				64 text Media and artifacts
++			65 text Cortex saves a pending job and artifact before generation. Jobs remain available after the chat response finishes.
++			66 container
++				67 text Private file (up to 20,000,000 bytes)
++				68 button Private file (up to 20,000,000 bytes)
++				69 button (disabled) Upload private file
++			70 container
++				71 text Generate
++				72 pop up button (collapsed, settable) Generate, Value: Image, Secondary Actions: Expand
++					73 menu
++						74 (selected) Image
++						75 Video
++				76 text Media prompt
++				77 text entry area (settable) Media prompt
++				78 button (disabled) Create media job
++			79 text Models and generation options are set by your administrator. Video can use the uploaded PNG; other uploads remain private files. Missing service capabilities return an explicit error.
++			80 container
++				81 text Observe an existing media job
++				82 text field (settable) Observe an existing media job
++				83 button (disabled) Observe media job
++			84 text A job ID does not grant access. Cortex checks the current job, artifact and file permissions.
++			85 button (disabled) Refresh jobs
++			86 text Loading retained jobs…
+The focused UI element is 61 button (expanded) Hide media tools, Secondary Actions: Collapse

@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "createdAt": "2026-10-09T01:15:26.155261+00:00",
+  "status": "REPRODUCED_OPEN",
+  "formalTaskVerdict": false,
+  "scope": "CONTROLLED_REGISTERED_HANDLER_NO_SERVICE",
+  "finding": "Artifact read bypasses exact linked canonical message currentness",
+  "currentSource": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeArtifactContext.ts",
+    "bytes": 4245,
+    "sha256": "0b5983682fed6eac513656108c0e2825731ebd9d778cf8259f3197f060206985"
+  },
+  "positiveControl": "Both public artifacts.get and trusted readArtifactTrusted return the supported anchored artifact before deletion",
+  "negativeControl": "Real admin setPolicy unlock then real runtimeTranscript.removeMessage removes the anchor; public artifacts.get denies while trusted artifact reader still returns metadata",
+  "notTemporal": true,
+  "noPaidOrServiceEffects": true,
+  "ownedChildWaited": true,
+  "test": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-anchor-independent2.test.ts",
+    "bytes": 1980,
+    "sha256": "29686674eeec8261d125ff5061d1bf474bd9b6f476aeb1bb3d0b70e10fe7d460"
+  },
+  "raw": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-anchor-run2.results.json",
+    "bytes": 3300,
+    "sha256": "41a9b806f4c07b3dfb469793b5a789416065016b09cfbb94539ad8a8902064f7"
+  },
+  "command": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-anchor-run2.command.json",
+    "bytes": 1757,
+    "sha256": "2484262eca290ee67ac60f11e35a390841df4e0c443fa4cb9f3f1ae8d48f55db"
+  },
+  "setupFailurePreserved": {
+    "classification": "OWN_FIXTURE_LOCK_SETUP_FAILURE",
+    "test": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-anchor-independent1.test.ts",
+      "bytes": 1723,
+      "sha256": "f7e0d1cd5e7d1be087b2fe49a1b2d0f5a94a148ae5ca5b19fb1bedc1d056cbd3"
+    },
+    "raw": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-anchor-run1.results.json",
+      "bytes": 4550,
+      "sha256": "4a4ce111d455f032e3d558e95f989cd2825b21c18a32f3bc88486f787d391a53"
+    }
+  },
+  "repairRequested": "Apply the existing exact conversationRef.messageId bridge/current-source checks to trusted artifact metadata and every durable artifact witness use."
+}

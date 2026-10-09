@@ -1,0 +1,50 @@
+{
+  "createdAtUtc": "2026-10-09T01:05:08.607Z",
+  "node": "v24.15.0",
+  "npm": "12.2.0",
+  "publicFixture": "../native-actual/ui14-public-fixture1.json",
+  "publicEnv": {
+    "NEXT_PUBLIC_CONVEX_URL": "https://formal-husky-914.convex.cloud",
+    "NEXT_PUBLIC_CORTEX_HTTP_URL": "https://formal-husky-914.convex.site",
+    "NEXT_PUBLIC_CORTEX_MEMORY_SPACE_ID": "media-3c1dcff16463",
+    "NEXT_PUBLIC_CORTEX_AGENT_ID": "agent:50ae75462793f3182b15cae6d747720e2259c787f06f7e9c0c27b500ef40a33d",
+    "NEXT_PUBLIC_CORTEX_AGENT_VERSION": "1"
+  },
+  "checks": [
+    {
+      "name": "quickstart-declared-lint3",
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/npm",
+        "run",
+        "lint"
+      ],
+      "exit": 0,
+      "signal": null,
+      "timedOut": false,
+      "elapsedMs": 7084,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task14-client-functional-v2-20261008/root-ui1/quickstart-declared-lint3.log",
+      "bytes": 120,
+      "sha256": "c7c81a3fc551a44b52663321a4e7d3a932535f8e869478321c8e1910b6985549",
+      "ownedChildClosed": true
+    },
+    {
+      "name": "quickstart-declared-build3",
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/npm",
+        "run",
+        "build"
+      ],
+      "exit": 0,
+      "signal": null,
+      "timedOut": false,
+      "elapsedMs": 15812,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task14-client-functional-v2-20261008/root-ui1/quickstart-declared-build3.log",
+      "bytes": 1079,
+      "sha256": "1510692be831e5ad6ffaf5010bdc5a28eb16b92a035d49ae3f13ed9c009d62d4",
+      "ownedChildClosed": true
+    }
+  ],
+  "actualUi": false
+}

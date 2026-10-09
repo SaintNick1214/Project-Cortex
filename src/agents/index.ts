@@ -292,7 +292,7 @@ export class AgentsAPI {
     validateAgentId(agentId, "agentId");
 
     const result = await this.executeWithResilience(
-      () => this.client.query(api.agents.get, { tenantId: resolveTenantId(this.authContext?.tenantId, scope?.tenantId), memorySpaceId: scope?.memorySpaceId, agentId }),
+      () => this.client.mutation(api.agents.get, { tenantId: resolveTenantId(this.authContext?.tenantId, scope?.tenantId), memorySpaceId: scope?.memorySpaceId, agentId }),
       "agents:get",
     );
 
@@ -374,7 +374,7 @@ export class AgentsAPI {
 
     const results = await this.executeWithResilience(
       () =>
-        this.client.query(api.agents.list, { tenantId: resolveTenantId(this.authContext?.tenantId, filters?.tenantId),
+        this.client.mutation(api.agents.list, { tenantId: resolveTenantId(this.authContext?.tenantId, filters?.tenantId),
           memorySpaceId: filters?.memorySpaceId,
           status: filters?.status,
           limit: filters?.limit,
@@ -478,7 +478,7 @@ export class AgentsAPI {
 
     return await this.executeWithResilience(
       () =>
-        this.client.query(api.agents.count, { tenantId: resolveTenantId(this.authContext?.tenantId, filters?.tenantId),
+        this.client.mutation(api.agents.count, { tenantId: resolveTenantId(this.authContext?.tenantId, filters?.tenantId),
           memorySpaceId: filters?.memorySpaceId,
           status: filters?.status,
         }),
@@ -589,7 +589,7 @@ export class AgentsAPI {
     validateAgentId(agentId, "agentId");
 
     return await this.executeWithResilience(
-      () => this.client.query(api.agents.exists, { tenantId: resolveTenantId(this.authContext?.tenantId, scope?.tenantId), memorySpaceId: scope?.memorySpaceId, agentId }),
+      () => this.client.mutation(api.agents.exists, { tenantId: resolveTenantId(this.authContext?.tenantId, scope?.tenantId), memorySpaceId: scope?.memorySpaceId, agentId }),
       "agents:exists",
     );
   }
@@ -1066,7 +1066,7 @@ export class AgentsAPI {
     const affectedSpaces = new Set<string>();
 
     // Get all memory spaces
-    const memorySpacesResult = await this.client.query(
+    const memorySpacesResult = await this.client.mutation(
       api.memorySpaces.list,
       {},
     );
@@ -1080,7 +1080,7 @@ export class AgentsAPI {
         Promise.all(
           memorySpacesList.map((space: { memorySpaceId: string }) =>
             this.client
-              .query(api.conversations.list, {
+              .mutation(api.conversations.list, {
                 memorySpaceId: space.memorySpaceId,
               })
               .then((result) => {
@@ -1108,7 +1108,7 @@ export class AgentsAPI {
         Promise.all(
           memorySpacesList.map((space: { memorySpaceId: string }) =>
             this.client
-              .query(api.memories.list, {
+              .mutation(api.memories.list, {
                 memorySpaceId: space.memorySpaceId,
               })
               .then((memories) => ({
@@ -1128,7 +1128,7 @@ export class AgentsAPI {
         Promise.all(
           memorySpacesList.map((space: { memorySpaceId: string }) =>
             this.client
-              .query(api.facts.list, {
+              .mutation(api.facts.list, {
                 memorySpaceId: space.memorySpaceId,
               })
               .then((facts) => ({
@@ -1416,7 +1416,7 @@ export class AgentsAPI {
     const issues: string[] = [];
 
     // Get memory spaces once
-    const memorySpacesResult = await this.client.query(
+    const memorySpacesResult = await this.client.mutation(
       api.memorySpaces.list,
       {},
     );
@@ -1429,7 +1429,7 @@ export class AgentsAPI {
         Promise.all(
           memorySpacesList.map((space: { memorySpaceId: string }) =>
             this.client
-              .query(api.memories.list, { memorySpaceId: space.memorySpaceId })
+              .mutation(api.memories.list, { memorySpaceId: space.memorySpaceId })
               .then(
                 (memories) =>
                   (memories as MemoryEntry[]).filter(
@@ -1444,7 +1444,7 @@ export class AgentsAPI {
         Promise.all(
           memorySpacesList.map((space: { memorySpaceId: string }) =>
             this.client
-              .query(api.conversations.list, {
+              .mutation(api.conversations.list, {
                 memorySpaceId: space.memorySpaceId,
               })
               .then((result) => {
@@ -1466,7 +1466,7 @@ export class AgentsAPI {
         Promise.all(
           memorySpacesList.map((space: { memorySpaceId: string }) =>
             this.client
-              .query(api.facts.list, { memorySpaceId: space.memorySpaceId })
+              .mutation(api.facts.list, { memorySpaceId: space.memorySpaceId })
               .then(
                 (facts) =>
                   (facts as FactRecord[]).filter(

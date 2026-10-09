@@ -1,0 +1,10 @@
+tests/unit/runtimeDelivery/client-signal.test.ts(8,108): error TS2339: Property 'isQuery' does not exist on type 'RegisteredMutation<"public", { memorySpaceId?: string | undefined; tenantId?: string | undefined; }, Promise<{ deliveryExpiresAt?: number | undefined; version: 1; tenantId: string; memorySpaceId: string; principalId: string; userId: string; }>>'.
+tests/unit/runtimeDelivery/client-signal.test.ts(24,22): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(o: {}): string[]', gave the following error.
+    Argument of type 'unknown' is not assignable to parameter of type '{}'.
+  Overload 2 of 2, '(o: object): string[]', gave the following error.
+    Argument of type 'unknown' is not assignable to parameter of type 'object'.
+tests/unit/runtimeDelivery/client-signal.test.ts(24,76): error TS18046: 'first' is of type 'unknown'.
+tests/unit/runtimeDelivery/client-signal.test.ts(28,10): error TS18046: 'next' is of type 'unknown'.
+tests/unit/runtimeDelivery/client-signal.test.ts(28,32): error TS18046: 'first' is of type 'unknown'.
+tests/unit/runtimeMedia/artifact-context.test.ts(81,46): error TS2739: Type 'TranscriptDb' is missing the following properties from type 'GenericDatabaseWriter<{ agents: { document: { _id: Id<"agents">; _creationTime: number; metadata?: any; lastActive?: number | undefined; memorySpaceId?: string | undefined; tenantId?: string | undefined; ... 8 more ...; status: "active" | ... 1 more ... | "inactive"; }; fieldPaths: "_id" | ExtractFieldPaths<...>; in...': vars, system

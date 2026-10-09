@@ -1,6 +1,7 @@
+import { checkArtifactContextWitnesses } from "./runtimeArtifactContext";
 /** Metadata-only native transcript snapshots. No second executable history is persisted. */
 import { v } from "convex/values";
-import { mutation, query } from "./_generated/server";
+import { mutation } from "./_generated/server";
 import type { QueryCtx } from "./_generated/server";
 import type { Doc } from "./_generated/dataModel";
 import type { RuntimeAuthorityReference } from "../src/auth/verified";
@@ -31,6 +32,7 @@ async function hydrate(ctx: Pick<QueryCtx, "db" | "runQuery">, reference: Runtim
         || bridge.contentHash !== pin.contentHash || bridge.order !== pin.order || bridge.stepOrder !== pin.stepOrder) transcriptDenied("STALE_TRANSCRIPT");
       await verifyMessage(ctx, conversation, bridge, natives[i]);
       await checkContextSourceWitnesses(ctx, reference, bridge.contextSourceWitnesses ?? []);
+      await checkArtifactContextWitnesses(ctx, reference, bridge.artifactContextWitnesses ?? []);
       if (row.redactBefore !== undefined && bridge.createdAt < row.redactBefore) continue;
       const parts = publicTextParts(natives[i]!.message!.content);
       const visible = parts.map(p => ({ type: "text" as const, text: row.redactPII ? redact(p.text) : p.text }));
@@ -89,7 +91,7 @@ export const deleteSnapshot = mutation({ args: {
   if (row.tombstonedAt === undefined) await ctx.db.patch("runtimeConversationSnapshots", row._id, { tombstonedAt: Date.now() }); return { deleted: true as const };
 } });
 
-export const get = query({ args: {
+export const get = mutation({ args: {
     tenantId: v.optional(v.string()),
     memorySpaceId: v.optional(v.string()),
     snapshotId: v.string(),
@@ -98,7 +100,7 @@ export const get = query({ args: {
   const row = await snapshotById(ctx, reference, args.snapshotId); if (!row) return null; return await hydrate(ctx, reference, row);
 } });
 
-export const listByConversation = query({ args: {
+export const listByConversation = mutation({ args: {
     tenantId: v.optional(v.string()),
     memorySpaceId: v.optional(v.string()),
     conversationId: v.string(),
@@ -108,7 +110,7 @@ export const listByConversation = query({ args: {
   return (await ctx.db.query("runtimeConversationSnapshots").withIndex("by_conversation", q => q.eq("tenantId", reference.tenantId).eq("memorySpaceId", reference.memorySpaceId!).eq("conversationId", conversation.conversationId)).take(100)).filter(row => row.tombstonedAt === undefined).map(metadata);
 } });
 
-export const listByUser = query({ args: {
+export const listByUser = mutation({ args: {
     tenantId: v.optional(v.string()),
     memorySpaceId: v.optional(v.string()),
     userId: v.string(),

@@ -1,0 +1,67 @@
+- main:
+  - paragraph: Cortex
+  - heading "Memory chat" [level=1]
+  - paragraph: Responses and memory updates stay available across connections.
+  - button "Sign out"
+  - region "Authentication":
+    - heading "Refresh credentials" [level=2]
+    - paragraph: Use an access token issued by your host authentication provider. It stays in memory for this session.
+    - text: Access token
+    - textbox "Access token"
+    - button "Refresh token" [disabled]
+    - paragraph: Connected to media-3c1dcff16463 in task13-3c1dcff16463.
+  - form "Agent configuration":
+    - text: Published agent
+    - textbox "Published agent": agent:50ae75462793f3182b15cae6d747720e2259c787f06f7e9c0c27b500ef40a33d
+    - text: Agent version
+    - spinbutton "Agent version": "1"
+    - button "Use agent version"
+    - paragraph: "Current version: 1 · Memory mode: indexed-plus-pending"
+  - region "Chat":
+    - heading "Conversation" [level=2]
+    - button "New chat"
+    - generic "Messages":
+      - article:
+        - paragraph: You
+        - paragraph: What is my project codeword? Recall memory and answer just the codeword.
+      - article:
+        - paragraph: Cortex
+        - paragraph: Your project codeword is BLUEBIRD_3c1dcff1.
+        - paragraph: "Backend tool: memory_recall · succeeded"
+    - text: Message
+    - textbox "Message"
+    - button "Send" [disabled]
+    - paragraph:
+      - text: "Response:"
+      - strong: complete
+    - paragraph:
+      - text: "Memory:"
+      - strong: complete
+    - paragraph: "Context: complete"
+    - paragraph: "Run: run:2eba9c812325eb3d8449c43730fb4f843c7fd6e716d75183b9ea63a8f8780903"
+    - list "Backend tool activity":
+      - listitem: "memory_recall: succeeded"
+    - button "Disconnect observer" [disabled]
+    - button "Reconnect observer" [disabled]
+    - button "Cancel run" [disabled]
+    - text: Observe an existing run
+    - textbox "Observe an existing run": run:2eba9c812325eb3d8449c43730fb4f843c7fd6e716d75183b9ea63a8f8780903
+    - button "Observe run"
+  - region "Memory search":
+    - heading "Memory search" [level=2]
+    - paragraph: cortex-text-small-1536-v1 · 1536 dimensions
+    - text: Search your memory
+    - textbox "Search your memory"
+    - button "Search memory" [disabled]
+    - group "Memory readiness":
+      - generic: Memory readiness
+      - paragraph: Read current indexing status, or require the selected stages to be complete. This check starts no model call.
+      - checkbox "Require facts"
+      - text: Require facts
+      - checkbox "Require vectors"
+      - text: Require vectors
+      - checkbox "Require graph"
+      - text: Require graph
+    - button "Check memory readiness"
+  - button "Show media tools"
+- alert

@@ -181,7 +181,7 @@ export class VectorAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.memories.get, {
+        this.client.mutation(api.memories.get, {
           memorySpaceId,
           memoryId,
           tenantId: this.authContext?.tenantId,
@@ -307,7 +307,7 @@ export class VectorAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.memories.list, {
+        this.client.mutation(api.memories.list, {
           memorySpaceId: filter.memorySpaceId,
           userId: filter.userId,
           sourceType: filter.sourceType,
@@ -336,7 +336,7 @@ export class VectorAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.memories.count, {
+        this.client.mutation(api.memories.count, {
           memorySpaceId: filter.memorySpaceId,
           userId: filter.userId,
           sourceType: filter.sourceType,
@@ -415,7 +415,7 @@ export class VectorAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.memories.getVersion, {
+        this.client.mutation(api.memories.getVersion, {
           memorySpaceId,
           memoryId,
           version,
@@ -458,7 +458,7 @@ export class VectorAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.memories.getHistory, {
+        this.client.mutation(api.memories.getHistory, {
           memorySpaceId,
           memoryId,
         }),
@@ -533,7 +533,7 @@ export class VectorAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.memories.exportMemories, {
+        this.client.mutation(api.memories.exportMemories, {
           memorySpaceId: options.memorySpaceId,
           userId: options.userId,
           format: options.format,
@@ -686,7 +686,7 @@ export class VectorAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.memories.getAtTimestamp, {
+        this.client.mutation(api.memories.getAtTimestamp, {
           memorySpaceId,
           memoryId,
           timestamp: ts,

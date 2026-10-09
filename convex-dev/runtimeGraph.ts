@@ -1,7 +1,7 @@
 /** Durable external graph intent, trusted worker leases and current-authorized reads. */
 import { ConvexError, v } from "convex/values";
 import { makeFunctionReference } from "convex/server";
-import { internalMutation, mutation, query } from "./_generated/server";
+import { internalMutation, mutation } from "./_generated/server";
 import type { MutationCtx, QueryCtx } from "./_generated/server";
 import type { Doc } from "./_generated/dataModel";
 import type { RuntimeAuthorityReference } from "../src/auth/verified";
@@ -500,7 +500,7 @@ export async function refreshGraphWatermarks(ctx: MutationCtx, reference: Runtim
   return refreshGraphScope(ctx, scope(reference));
 }
 export const refreshScoped = internalMutation({ args: selectors, handler: async (ctx, args) => refreshGraphScope(ctx, args) });
-export const status = query({ args: { tenantId: v.optional(v.string()), memorySpaceId: v.optional(v.string()), sourceId: v.optional(v.string()) }, handler: async (ctx, args) => {
+export const status = mutation({ args: { tenantId: v.optional(v.string()), memorySpaceId: v.optional(v.string()), sourceId: v.optional(v.string()) }, handler: async (ctx, args) => {
   const actor = await requireDataAuthority(ctx, args, "read"); const reference = dataAuthorityReference(actor);
   if (args.sourceId) {
     await currentSource(ctx, reference, args.sourceId, "read"); const row = await intent(ctx, scope(reference), args.sourceId);

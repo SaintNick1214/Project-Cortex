@@ -1,0 +1,25 @@
+{
+  "scope": "QA_ONLY_SYNTHETIC_COLLECTOR_CONTROLS_NOT_PROVIDER_QUALIFICATION",
+  "status": "PASS",
+  "pid": 96639,
+  "deadlineMs": 30000,
+  "elapsedMs": 201.476625,
+  "sourceSha256": "d0fa9223e2c2f8f853a04adf8b67edef98274ddc86b1b6b55a4605c2c91bd544",
+  "checks": [
+    {
+      "name": "exact body forwards one issued request only and preserves raw unqualified metadata",
+      "status": "PASS"
+    },
+    {
+      "name": "unqualified options deny before checkpoint and native dispatch",
+      "status": "PASS"
+    },
+    {
+      "name": "encoded oversize cancels reader before native parser and restores isolate fetch",
+      "status": "PASS"
+    }
+  ],
+  "realServiceCalls": 0,
+  "realModelCalls": 0,
+  "sourceProductChanged": false
+}

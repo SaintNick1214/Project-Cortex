@@ -20,6 +20,7 @@ const filters = {
   field: (path: string): Expr => row => field(row, path),
   eq: (a: unknown, b: unknown): Expr => row => value(a, row) === value(b, row),
   neq: (a: unknown, b: unknown): Expr => row => value(a, row) !== value(b, row),
+  gt: (a: unknown, b: unknown): Expr => row => (value(a, row) as number) > (value(b, row) as number),
   and: (...expressions: Expr[]): Expr => row => expressions.every(expression => expression(row)),
   or: (...expressions: Expr[]): Expr => row => expressions.some(expression => expression(row)),
 };
@@ -78,6 +79,12 @@ export class FixtureDb {
   }
   async delete(id: string) {
     const table = id.split("/")[0]; this.rows.set(table, (this.rows.get(table) ?? []).filter(row => row._id !== id)); this.attemptedWrites.push(`delete:${id}`);
+  }
+  async replace(table: string, id: string, fields: Record<string, unknown>) {
+    const rows = this.rows.get(table) ?? []; const index = rows.findIndex(row => row._id === id);
+    if (index < 0) throw new Error("Missing row");
+    rows[index] = { ...fields, _id: id, _creationTime: rows[index]!._creationTime };
+    this.attemptedWrites.push(`replace:${id}`);
   }
   async transaction<T>(operation: () => Promise<T>): Promise<T> {
     const before = structuredClone(this.rows);

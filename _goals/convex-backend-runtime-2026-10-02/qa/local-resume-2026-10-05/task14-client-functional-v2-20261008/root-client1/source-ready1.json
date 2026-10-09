@@ -1,0 +1,97 @@
+{
+  "schema": "cortex.task14.partial-source.v1",
+  "createdAtUtc": "2026-10-08T23:52:45.006Z",
+  "author": "Root",
+  "status": "SOURCE_READY_BUILD_BOUNDARY_NOT_ORIGINAL_ACCEPTANCE",
+  "files": [
+    {
+      "path": "convex-dev/runtimeClientExtensions.ts",
+      "bytes": 3885,
+      "sha256": "a4fe8b555f9fc24d0bf618d19fcde482b2ea8c86cc9a4776697f32134de228a3"
+    },
+    {
+      "path": "src/client-runtime/client.ts",
+      "bytes": 29950,
+      "sha256": "9fe11c4198f45bbc9eeab0d33c2c028fe4960935ec3518049fdaf5adc502a02e"
+    },
+    {
+      "path": "src/client-runtime/types.ts",
+      "bytes": 7156,
+      "sha256": "4320f45ce330cdc60cc76ee8a87dc824b87efe88e72e060b808c3aef22be82ec"
+    },
+    {
+      "path": "src/client-runtime/index.ts",
+      "bytes": 507,
+      "sha256": "63e49a98b3666cf32f5416220603e1f693405a0c732f3d2109991ff6de2c5b83"
+    },
+    {
+      "path": "src/client-runtime/validation.ts",
+      "bytes": 8641,
+      "sha256": "0fd6c9c2f73fd8c25ea5ecd30d0a62536c4b3a584a4264ad89420eabb4378909"
+    },
+    {
+      "path": "src/client-runtime/extensions.ts",
+      "bytes": 6649,
+      "sha256": "7dc7d22bb555df1bc199522c1066831f7751df93541fd91bb7b1c118addbd5d8"
+    },
+    {
+      "path": "src/client-runtime/media.ts",
+      "bytes": 3560,
+      "sha256": "935f2567bc7804c09995d231bbe3048a59c861156ea63ce9274d8643b77aa37e"
+    },
+    {
+      "path": "src/domain/profile.ts",
+      "bytes": 4266,
+      "sha256": "45691e76e6f6727874b7f6285aa173b28059acf9ffaf7dc360360a72778f6972"
+    },
+    {
+      "path": "tests/unit/client-runtime/extensions.test.ts",
+      "bytes": 9728,
+      "sha256": "afa360fde1d0c7074d5385516f5a96ad7d094b733074a4330fcf19b750ad2c01"
+    },
+    {
+      "path": "tests/unit/client-runtime/media.test.ts",
+      "bytes": 7214,
+      "sha256": "31f4daf5bb81c0f6076cdd80e95843911831b63315019a4b6198d603dd741181"
+    },
+    {
+      "path": "tests/unit/runtimeIngestion/client-extensions.test.ts",
+      "bytes": 4225,
+      "sha256": "d919ae8fdbf2d7f26155b8672828c3db784151265a117f1846e4b46364911496"
+    },
+    {
+      "path": "packages/vercel-ai-provider/src/remote/index.ts",
+      "bytes": 15231,
+      "sha256": "4fd6cde22e7ff85db99bbc1c09d2f850f02a4f75ffddae3a863311110fae88a4"
+    },
+    {
+      "path": "packages/vercel-ai-provider/tests/unit/remote.test.ts",
+      "bytes": 17626,
+      "sha256": "6d142f2e6e2fb609ec984affb4170d5525b9041565d7a472801e761d84351530"
+    }
+  ],
+  "controlledCurrent": {
+    "cases": 150,
+    "suites": 7,
+    "failures": 0,
+    "skips": 0,
+    "actualServiceCalls": 0
+  },
+  "checks": "checks5.json",
+  "limits": [
+    "No actual Task14 browser/service qualification yet",
+    "Root eslint ignores provider package; declared provider lint is TypeScript-only and source-mapped provider typecheck passes, actual packed declared lint remains needed",
+    "Source-only Artifact kind alias repair in Task15 template is separate, not in this frozen14 batch; full template build remains required",
+    "Async13 capability remains genuinely unavailable; no native503 retry or functional success claim",
+    "03-final cached payload/time-only expiry class remains a cross-layer follow-up"
+  ],
+  "repairedFindings": [
+    "Actual AI SDK7 reset-step dropped restored tool/artifact/media-job projections; replay authorized references after every canonical reset",
+    "Incomplete source watermark with a missing hole rejected",
+    "No accessor stage/options invocation",
+    "Exact managed profile/index provenance enforced"
+  ],
+  "noUserProviderKeys": true,
+  "noAppToolOrMemoryWriter": true,
+  "buildBoundaryReleased": true
+}

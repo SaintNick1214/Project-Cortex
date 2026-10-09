@@ -79,7 +79,7 @@ export async function rememberMemory(
 
 export async function recallMemory(
   adapters: MemoryDomainAdapters, input: { text: string; requestId: string; limit: number },
-): Promise<{ items: RecallItem[]; context: string; profileId: string }> {
+): Promise<{ items: RecallItem[]; context: string; profileId: string; deliveryExpiresAt?: number }> {
   assertMemoryRequestId(input.requestId);
   if (!Number.isSafeInteger(input.limit) || input.limit < 1 || input.limit > 100) memoryError("INVALID_INPUT", "Limit must be between 1 and 100");
   const { repository, model, clock } = adapters;
@@ -108,7 +108,12 @@ export async function recallMemory(
     }, graphContext: { connectedEntities: [] } }));
   await repository.recheckAuthority();
   const items = rankResults(deduplicateResults([...vectorItems, ...facts.map((fact) => factToRecallItem(fact, "facts", 0.7))]), clock).slice(0, input.limit);
-  return { items, context: formatForLLM(items, clock), profileId: profile.profileId };
+  const delivery = await repository.finalDelivery?.();
+  const expiresAt = delivery?.deliveryExpiresAt;
+  // Actions have a real clock across RPC awaits. Never deliver a response whose
+  // actual grant/consumed source deadline elapsed while its final RPC returned.
+  if (expiresAt !== undefined && (!Number.isFinite(expiresAt) || clock.now() >= expiresAt)) memoryError("FORBIDDEN", "Recall delivery authority expired");
+  return { items, context: formatForLLM(items, clock), profileId: profile.profileId, ...(expiresAt === undefined ? {} : { deliveryExpiresAt: expiresAt }) };
 }
 
 /** One current source, one new profile-specific generation. No history scan,

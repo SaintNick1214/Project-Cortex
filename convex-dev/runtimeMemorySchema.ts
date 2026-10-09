@@ -1,3 +1,4 @@
+import { artifactContextWitness } from "./runtimeArtifactContextSchema";
 /** Fresh logical source/chunk/vector stores; no legacy vector adoption. */
 import { defineTable } from "convex/server";
 import { v } from "convex/values";
@@ -17,6 +18,7 @@ export const sourceContent = v.object({
   tenantId: v.string(), memorySpaceId: v.string(), ownerPrincipalId: v.string(),
   lineage: sourceLineage, content: v.string(), contentHash: v.string(), createdAt: v.number(),
   tombstonedAt: v.optional(v.number()),
+  artifactContextWitnesses: v.optional(v.array(artifactContextWitness)),
   contextSourceWitnesses: v.optional(v.array(contextSourceWitness)),
   transcriptOrigin: v.optional(v.object({ conversationId: v.string(), conversationEpoch: v.number(), nativeMessageId: v.string() })),
 });
@@ -53,6 +55,15 @@ export const commitDerivedInput = v.object({
   source: v.object(sourceReference), identity: processingIdentity,
   chunks: v.optional(v.array(sourceChunk)), vectors: v.optional(v.array(derivedVector)), embeddingRunBudgetId: v.optional(v.string()),
   facts: v.optional(v.array(derivedFact)), expectedFactVersions: v.optional(v.record(v.string(), v.number())),
+});
+
+/** Internal action delivery bindings contain identifiers and hashes, never recalled text. */
+export const memoryDeliveryBindings = v.object({
+  sources: v.array(v.object({ ...sourceReference, contentHash: v.string(), ownerPrincipalId: v.string(),
+    permission: v.union(v.literal("canViewFacts"), v.literal("canViewMemories")) })),
+  facts: v.array(v.object({ factId: v.string(), payloadHash: v.string() })),
+  vectors: v.array(v.object({ vectorId: v.string(), profile: embeddingProfile, payloadHash: v.string(),
+    chunkHash: v.string(), runBudgetId: v.optional(v.string()) })),
 });
 
 export const runtimeMemoryTables = {

@@ -1,0 +1,52 @@
+{
+  "createdAtUtc": "2026-10-09T01:28:34.860Z",
+  "toolchain": {
+    "node": "v24.15.0",
+    "npm": "12.2.0"
+  },
+  "sdkManifest": "9218fe05fbfd1b76b82fcc711189a2bb250c9c3553e5abbb711955aa4d928d19",
+  "sdkTarballSha256": "bec463e75a21c6d46c032ec6dc09b65645d6061e39137c04be9b49acd3c0759a",
+  "providerChecks": "../root-client1/provider-current4-checks1.json",
+  "publicEnv": {
+    "NEXT_PUBLIC_CONVEX_URL": "https://formal-husky-914.convex.cloud",
+    "NEXT_PUBLIC_CORTEX_MEMORY_SPACE_ID": "agent-media-v2-3c1dcff16463",
+    "NEXT_PUBLIC_CORTEX_AGENT_ID": "agent:4ffe5befa47a82cf6f6fc0c02ec6b360316783fd589dfc87eba5d79fd5fbfe08",
+    "NEXT_PUBLIC_CORTEX_AGENT_VERSION": "1",
+    "NEXT_PUBLIC_CORTEX_HTTP_URL": "https://formal-husky-914.convex.site"
+  },
+  "checks": [
+    {
+      "name": "current4-canonical-build1",
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider/quickstart",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/npm",
+        "run",
+        "build"
+      ],
+      "exit": 0,
+      "signal": null,
+      "timedOut": false,
+      "elapsedMs": 9622,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task14-client-functional-v2-20261008/root-ui1/current4-canonical-build1.log",
+      "sha256": "7c9b8e051b0189edc2d3f74a3568d6b82973615b5c75e8d20ea1922a70a357a3",
+      "ownedChildClosed": true
+    },
+    {
+      "name": "current4-mirror-build1",
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli/templates/vercel-ai-quickstart",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/npm",
+        "run",
+        "build"
+      ],
+      "exit": 127,
+      "signal": null,
+      "timedOut": false,
+      "elapsedMs": 172,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task14-client-functional-v2-20261008/root-ui1/current4-mirror-build1.log",
+      "sha256": "74f2e9d03fbd310169126c57e7e772568c488d571311288601e74e73626fd851",
+      "ownedChildClosed": true
+    }
+  ],
+  "actualBrowser": false
+}

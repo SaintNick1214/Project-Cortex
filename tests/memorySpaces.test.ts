@@ -1449,7 +1449,7 @@ describe("Memory Spaces Registry API", () => {
       });
 
       // Direct database query
-      const stored = await client.query(api.memorySpaces.get, {
+      const stored = await client.mutation(api.memorySpaces.get, {
         memorySpaceId: validationSpaceId,
       });
 

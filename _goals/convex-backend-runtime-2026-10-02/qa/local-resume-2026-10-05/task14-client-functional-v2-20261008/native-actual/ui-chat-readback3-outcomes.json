@@ -1,0 +1,43 @@
+{
+  "status": "ACTUAL_INSTALLED_READ_ONLY_BROWSER_TURN_PASS",
+  "groups": [
+    {
+      "name": "single-browser-turn-one-canonical-final-and-one-ingestion-identity",
+      "status": "PASS",
+      "runId": "run:2eba9c812325eb3d8449c43730fb4f843c7fd6e716d75183b9ea63a8f8780903",
+      "attemptNumber": 1,
+      "finalMessageIds": [
+        "kx787k1nt7zk8jpvk1rqfqy3c98fyvcq"
+      ],
+      "ingestionReceiptId": "agent-ingestion:4683b1268e2377a4a3567385cb79d7f26ec720d10cd247fd0dd3304d5e0d8cac",
+      "modelSteps": 2,
+      "memoryRecallInvocations": 1
+    },
+    {
+      "name": "same-existing-handle-read-only-observation-does-not-add-model-or-tool-operation",
+      "status": "PASS",
+      "newProviderRequests": 0,
+      "attemptCount": 11,
+      "operationCount": 11
+    },
+    {
+      "name": "shared-run-model-context-query-and-recall-query-full-unknown-liability-finished-slots",
+      "status": "PASS",
+      "operationKeys": [
+        "embedding.query",
+        "embedding.query",
+        "agent.respond",
+        "agent.respond"
+      ],
+      "actualAttempts": 4,
+      "fullUnknownLiabilityUnits": 400000,
+      "queryEmbeddingCalls": 2,
+      "contextRecall": 1,
+      "explicitServerToolRecall": 1,
+      "finishedSlotsReleased": true,
+      "aggregateCostUnavailable": true
+    }
+  ],
+  "newProviderRequests": 0,
+  "ownedClientClosed": true
+}

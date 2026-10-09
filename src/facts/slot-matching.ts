@@ -123,7 +123,7 @@ export class SlotMatchingService {
     try {
       // Dynamic import to avoid ESM issues in test environments
       const { api } = await import("../../convex-dev/_generated/api");
-      const facts = await this.client.query(api.facts.queryBySubject, {
+      const facts = await this.client.mutation(api.facts.queryBySubject, {
         memorySpaceId,
         subject: normalizeSubject(subject),
         userId,

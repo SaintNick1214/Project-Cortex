@@ -1,0 +1,9 @@
+npm notice run {{PROJECT_NAME}}@1.0.0 build
+npm notice run tsc
+src/server.ts(27,84): error TS2769: No overload matches this call.
+  Overload 1 of 2, '(object: { version: number; code: string; }, status?: ContentfulStatusCode | undefined, headers?: HeaderRecord | undefined): JSONRespondReturn<{ version: number; code: string; }, ContentfulStatusCode>', gave the following error.
+    Argument of type '400 | 401 | 403 | 413 | 499 | 504' is not assignable to parameter of type 'ContentfulStatusCode | undefined'.
+      Type '499' is not assignable to type 'ContentfulStatusCode | undefined'.
+  Overload 2 of 2, '(object: { version: number; code: string; }, init?: ResponseOrInit<ContentfulStatusCode> | undefined): JSONRespondReturn<{ version: number; code: string; }, ContentfulStatusCode>', gave the following error.
+    Argument of type '400 | 401 | 403 | 413 | 499 | 504' is not assignable to parameter of type 'ResponseOrInit<ContentfulStatusCode> | undefined'.
+      Type '400' is not assignable to type 'ResponseOrInit<ContentfulStatusCode> | undefined'.

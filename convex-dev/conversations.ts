@@ -1,6 +1,6 @@
 /** Legacy API names route to the one managed Agent transcript; no legacy executable message array is written. */
 import { ConvexError, v } from "convex/values";
-import { mutation, query, internalMutation } from "./_generated/server";
+import { mutation, internalMutation } from "./_generated/server";
 import type { QueryCtx } from "./_generated/server";
 import type { RuntimeAuthorityReference } from "../src/auth/verified";
 import type { ManagedConversation } from "./runtimeTranscript";
@@ -33,7 +33,7 @@ async function history(ctx: ReadCtx, conversation: ManagedConversation, referenc
   const messages: (import("../src/types").Message & { revision: number })[] = []; let cursor: string | null = null;
   do { const page = await readTranscriptPage(ctx, conversation, reference, cursor, 100);
     for (const message of page.page) { const bridge = await bridgeFor(ctx, conversation, message.id); if (!bridge) transcriptDenied("STALE_TRANSCRIPT");
-      messages.push({ id: bridge.legacyMessageId ?? message.id, role: message.role === "assistant" ? "agent" : "user", content: message.parts.map(part => part.text).join("\n"), timestamp: bridge.createdAt,
+      messages.push({ id: bridge.legacyMessageId ?? message.id, role: message.role === "assistant" ? "agent" : "user", content: message.parts.flatMap(part => part.type === "text" ? [part.text] : []).join("\n"), timestamp: bridge.createdAt,
         approvalStatus: bridge.approved ? "approved" : "pending", revision: bridge.revision }); }
     if (messages.length > 1000 || utf8Bytes(canonicalModelJson(messages)) > 1_000_000) transcriptDenied("QUERY_TOO_BROAD"); cursor = page.continueCursor;
   } while (cursor !== null); return messages;
@@ -122,7 +122,7 @@ export const setMetadata = mutation({ args: {
   const metadataCanonical = metadataInput(args.metadata); await ctx.db.patch("runtimeConversations", conversation._id, { metadataCanonical, updatedAt: Date.now() }); return view((await ctx.db.get("runtimeConversations", conversation._id))!);
 } });
 
-export const checkAccess = query({ args: {
+export const checkAccess = mutation({ args: {
     tenantId: v.optional(v.string()),
     conversationId: v.string(),
     userId: v.optional(v.string()),
@@ -218,7 +218,7 @@ export const purgeAll = internalMutation({ args: {}, handler: async (_ctx, _args
   return await internalUnavailable();
 } });
 
-export const getMessage = query({ args: {
+export const getMessage = mutation({ args: {
     tenantId: v.optional(v.string()),
     memorySpaceId: v.optional(v.string()),
     conversationId: v.string(),
@@ -228,7 +228,7 @@ export const getMessage = query({ args: {
   return (await history(ctx, conversation, reference)).find(m => m.id === (bridge.legacyMessageId ?? bridge.nativeMessageId)) ?? null;
 } });
 
-export const getMessagesByIds = query({ args: {
+export const getMessagesByIds = mutation({ args: {
     tenantId: v.optional(v.string()),
     memorySpaceId: v.optional(v.string()),
     conversationId: v.string(),
@@ -279,7 +279,7 @@ export const getOrCreate = mutation({ args: {
   return view((await ctx.db.get("runtimeConversations", row._id))!);
 } });
 
-export const findConversation = query({ args: {
+export const findConversation = mutation({ args: {
     tenantId: v.optional(v.string()),
     memorySpaceId: v.string(), // NEW: Required
     type: v.union(v.literal("user-agent"), v.literal("agent-agent")),
@@ -289,7 +289,7 @@ export const findConversation = query({ args: {
   if (args.memorySpaceIds?.some(id => id !== args.memorySpaceId)) transcriptDenied(); const { rows } = await visible(ctx, args); return rows[0] ? view(rows[0]) : null;
 } });
 
-export const get = query({ args: {
+export const get = mutation({ args: {
     memorySpaceId: v.optional(v.string()),
     conversationId: v.string(),
     tenantId: v.optional(v.string()), // Multi-tenancy: filter by tenant
@@ -300,7 +300,7 @@ export const get = query({ args: {
   const result = view(conversation); if (args.includeMessages !== false) { const limit = args.messageLimit ?? 1000; if (!Number.isSafeInteger(limit) || limit < 1 || limit > 1000) transcriptDenied("INVALID_INPUT"); result.messages = (await history(ctx, conversation, reference)).slice(-limit); } return result;
 } });
 
-export const list = query({ args: {
+export const list = mutation({ args: {
     type: v.optional(
       v.union(v.literal("user-agent"), v.literal("agent-agent")),
     ),
@@ -340,7 +340,7 @@ export const list = query({ args: {
   return { conversations: result, total: selected.length, hasMore: offset + limit < selected.length, offset, limit };
 } });
 
-export const count = query({ args: {
+export const count = mutation({ args: {
     tenantId: v.optional(v.string()),
     userId: v.optional(v.string()),
     memorySpaceId: v.optional(v.string()), // NEW
@@ -351,7 +351,7 @@ export const count = query({ args: {
   return (await visible(ctx, args)).rows.length;
 } });
 
-export const getHistory = query({ args: {
+export const getHistory = mutation({ args: {
     tenantId: v.optional(v.string()),
     memorySpaceId: v.optional(v.string()),
     conversationId: v.string(),
@@ -372,7 +372,7 @@ export const getHistory = query({ args: {
   if (args.sortOrder === "desc") messages.reverse(); return { messages: messages.slice(offset, offset + limit), total: messages.length, hasMore: offset + limit < messages.length, conversationId: conversation.conversationId };
 } });
 
-export const search = query({ args: {
+export const search = mutation({ args: {
     tenantId: v.optional(v.string()),
     query: v.string(),
     type: v.optional(
@@ -396,7 +396,7 @@ export const search = query({ args: {
     const matches = (await history(ctx, row, reference)).filter(m => args.matchMode === "exact" ? m.content === args.query : m.content.toLowerCase().includes(args.query.toLowerCase())); if (matches.length) results.push({ conversation: view(row), matchedMessages: matches, highlights: matches.map(m => m.content), score: matches.length }); if (results.length >= limit) break; } return results;
 } });
 
-export const exportConversations = query({ args: {
+export const exportConversations = mutation({ args: {
     tenantId: v.optional(v.string()),
     userId: v.optional(v.string()),
     memorySpaceId: v.optional(v.string()), // NEW: Filter by memory space

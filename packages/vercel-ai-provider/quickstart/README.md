@@ -12,6 +12,9 @@ For a local monorepo checkout, build the root SDK and provider before starting i
 Copy `.env.local.example` to `.env.local` and configure:
 
 - `NEXT_PUBLIC_CONVEX_URL`: your installed Cortex development backend.
+- `NEXT_PUBLIC_CORTEX_HTTP_URL`: the same installation's HTTP action origin, required
+  for private uploads, downloads and media previews. Obtain it from the installation;
+  the app does not guess a storage origin or use public file URLs.
 - `NEXT_PUBLIC_CORTEX_AGENT_ID`: a published executable agent.
 - `NEXT_PUBLIC_CORTEX_AGENT_VERSION`: the pinned version, initially `1`.
 - Optional `NEXT_PUBLIC_CORTEX_MEMORY_SPACE_ID`: narrows the verified actor's grants.
@@ -56,11 +59,35 @@ sources while indexing catches up.
 The old `/api/chat` and `/api/chat-v6` app-side inference routes return
 `410 REMOTE_RUN_TRANSPORT_REQUIRED`. The home page uses the remote transport.
 
+**Memory readiness** reads fresh administrator-selected profile/index metadata and
+the contiguous facts, vectors and optional graph watermarks. Selecting a required
+stage checks an explicit barrier; an incomplete or unavailable stage returns a
+capability/context error. This check makes no model call. Scope-wide counters
+require an appropriate space or tenant grant; an own-only grant can still use its
+run's memory/graph status but cannot read the whole space's counters.
+
+**Media and artifacts** uploads raw private files with the application limit of
+20,000,000 bytes. The backend also enforces its protocol and provider limits;
+smaller files can fail a particular provider input contract. A video input must be
+a PNG for the currently supported profile. Image generation uses a text prompt.
+The administrator chooses qualified models, options and budgets. A missing media
+service fails explicitly rather than falling back to an app-side model.
+
+The job list reloads retained state, including canonical chat media references.
+**Recover job status** polls an existing acknowledged operation and can recover
+missed callbacks. It never resubmits an unknown generation. **Cancel local job**
+fences delivery; the UI separately reports unsupported upstream cancellation and
+retained unknown incurred costs. **Open retained artifact** reads the current
+authorized version. Previews and downloads use authenticated, hash-checked bytes
+through the configured HTTP action origin and temporary local Blob URLs. Closing
+a preview, signing out or unmounting releases the local URL. No media bytes,
+upstream URLs or credentials are stored in transcript or reconnect state.
+
 ## Integrate with a host auth provider
 
 Import `CortexRuntimeClient` from `@cortexmemory/sdk/runtime` and supply your host
 provider's `fetchToken` callback. The client uses official Convex token refresh and
-reactive subscriptions. Import `CortexRemoteTransport` from
+reactive invalidation subscriptions. Private payloads are fetched by fresh mutations; subscription caches carry only opaque change markers. The client bounds authentication to10 seconds and RPC observation to12 seconds by default (host options `authTimeoutMs` and `requestTimeoutMs`). A local timeout reports uncertainty for an issued mutation; it does not cancel, refund or retry backend work. Server-derived grant/resource deadlines revoke retained previews and close expired observations. Import `CortexRemoteTransport` from
 `@cortexmemory/vercel-ai-provider/remote` and pass it to AI SDK 7's `useChat`.
 These entry points are browser safe and do not import the Node graph or backend
 implementation. The masked token form is the minimal development adapter; a host

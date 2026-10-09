@@ -1,0 +1,28 @@
+(node:37075) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-permission-independent1.test.ts (5.981 s)
+  ✕ artifact_read preserves the linked conversation export permission used by the public artifact reader (107 ms)
+
+  ● artifact_read preserves the linked conversation export permission used by the public artifact reader
+
+    expect(received).rejects.toThrow()
+
+    Received promise resolved instead of rejected
+    Resolved to value: {"artifactId": "linked-artifact", "artifactVersion": 1, "kind": "text", "streamingState": "draft", "title": "linked private metadata", "version": 1}
+
+      22 |   await f.db.patch('runtimeConversationShares', share._id, { permissions: { ...(share.permissions as object), canExport: false } });
+      23 |   await expect(f.call(artifacts.get, { artifactId: 'linked-artifact' })).rejects.toThrow();
+    > 24 |   await expect(f.call(media.readArtifactTrusted, { reference, artifactId: 'linked-artifact' })).rejects.toThrow();
+         |         ^
+      25 | });
+      26 |
+
+      at expect (node_modules/expect/build/index.js:2116:15)
+      at Object.<anonymous> (_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-permission-independent1.test.ts:24:9)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 1 total
+Snapshots:   0 total
+Time:        6.221 s
+Ran all test suites within paths "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-permission-independent1.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-permission-run1.results.json

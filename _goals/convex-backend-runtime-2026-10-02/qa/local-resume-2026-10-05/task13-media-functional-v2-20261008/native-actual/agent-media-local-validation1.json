@@ -1,0 +1,240 @@
+{
+  "status": "LOCAL_CONTRACT_PARSE_PASS_NOT_NATIVE_QUALIFICATION",
+  "newServiceCalls": 0,
+  "newPaidCalls": 0,
+  "newRootSwitches": 0,
+  "sourceManifestSha256": "b61d9bb5e99d8e9f025be9d811e7a27baed4b0b9978fef5db1f161446273d90f",
+  "mustRebindToCoherentSource": true,
+  "allFiveOldQualificationAndEvidenceObjectsPreserved": true,
+  "newV2AgentEvidence": "PROVISIONAL_NOT_ACTUAL",
+  "imageEvidenceHash": "2dbb67c944f735f214299304284a8447b6c5ba1d285f1c8bf93c66d677cf218f",
+  "initialSampleInputBound": 13580,
+  "imageSampleInputBound": 171,
+  "actualNativePromptMayDiffer": true,
+  "resolved": {
+    "agent": {
+      "version": 1,
+      "operationKey": "agent.respond",
+      "requestedModelId": "openai/gpt-4o-mini",
+      "modelId": "openai/gpt-4o-mini",
+      "nativeInterface": "chat",
+      "capabilities": [
+        "text",
+        "tools"
+      ],
+      "allowedModels": [
+        "openai/gpt-4o-mini",
+        "openai/gpt-4o",
+        "openai/text-embedding-3-small",
+        "openai/text-embedding-3-large",
+        "openai/gpt-image-1"
+      ],
+      "allowedOptions": [],
+      "allowedTools": [
+        "memory_recall",
+        "memory_remember",
+        "media_image_generate",
+        "media_video_generate",
+        "artifact_read"
+      ],
+      "limits": {
+        "inputTokens": 32768,
+        "contextTokens": 65536,
+        "outputTokens": 256,
+        "toolSteps": 1,
+        "timeoutMs": 60000,
+        "operationBudgetUnits": 100000,
+        "runBudgetUnits": 3000000,
+        "tenantBudgetUnits": 10000000,
+        "concurrency": 2
+      },
+      "pins": {
+        "promptVersion": "memory-schema-prompt-v2",
+        "schemaVersion": "facts-v1",
+        "extractionVersion": "task04-qualification-e1",
+        "toolRegistryVersion": "cortex-media-tools-v2",
+        "priceRevision": "openrouter-2026-10-08-candidate",
+        "boundRevision": "agent-tools-v2-32768-256-shared3m-v1"
+      },
+      "policyVersions": [
+        {
+          "policyId": "cortex-model-defaults-v9-agent-media-v2",
+          "version": 13
+        },
+        {
+          "policyId": "cortex-agent-response-v9-agent-media-v2",
+          "version": 13
+        }
+      ],
+      "qualificationReceiptId": "PROVISIONAL-task13-agent-media-v2-3c1dcff16463",
+      "costBound": {
+        "kind": "qualified-call-ceiling",
+        "maximumCostUnits": 100000,
+        "provenance": "Private prospective V2 five-tool mini envelope;32768 conservative input/output256,100000 full-call ceiling,maxRetries0. Actual native V2 evidence pending; no aggregate-cost attestation.",
+        "coversAllProviderCharges": true
+      },
+      "scope": {
+        "tenantId": "prospective-task13-agent-media-v2",
+        "tenantEpoch": 1,
+        "memorySpaceId": "prospective-media-v2",
+        "memorySpaceEpoch": 1,
+        "principalId": "LOCAL_NOT_PROVISIONED",
+        "principalVersion": 1,
+        "membershipId": "LOCAL_NOT_PROVISIONED",
+        "membershipVersion": 1,
+        "grantId": "LOCAL_NOT_PROVISIONED",
+        "grantVersion": 1
+      },
+      "runBudgetId": "LOCAL_SHARED_3M_NOT_ADMITTED",
+      "fallbackCandidates": [],
+      "currency": "USD",
+      "monetaryUnit": "micro-USD"
+    },
+    "image": {
+      "version": 1,
+      "operationKey": "media.image.generate",
+      "requestedModelId": "openai/gpt-image-1",
+      "modelId": "openai/gpt-image-1",
+      "nativeInterface": "image",
+      "capabilities": [
+        "image"
+      ],
+      "allowedModels": [
+        "openai/gpt-image-1"
+      ],
+      "allowedOptions": [],
+      "allowedTools": [],
+      "limits": {
+        "inputTokens": 8192,
+        "contextTokens": 16384,
+        "outputTokens": 1,
+        "toolSteps": 0,
+        "timeoutMs": 60000,
+        "operationBudgetUnits": 2000000,
+        "runBudgetUnits": 3000000,
+        "tenantBudgetUnits": 10000000,
+        "concurrency": 2
+      },
+      "pins": {
+        "promptVersion": "memory-schema-prompt-v2",
+        "schemaVersion": "facts-v1",
+        "extractionVersion": "task04-qualification-e1",
+        "toolRegistryVersion": "none-v1",
+        "priceRevision": "convex-gateway-2026-10-08-image-low",
+        "boundRevision": "media-image-1024-low-png-shared3m-v1"
+      },
+      "policyVersions": [
+        {
+          "policyId": "cortex-model-defaults-v9-agent-media-v2",
+          "version": 13
+        },
+        {
+          "policyId": "task13-agent-image-shared3m",
+          "version": 13
+        }
+      ],
+      "qualificationReceiptId": "OBSERVED-task13-image-shared3m-task13-agent-media-v2-3c1dcff16463",
+      "costBound": {
+        "kind": "qualified-call-ceiling",
+        "maximumCostUnits": 2000000,
+        "provenance": "Genuine image record 2dbb67c944f735f214299304284a8447b6c5ba1d285f1c8bf93c66d677cf218f;n1/1024low/png;serving requested-only;2m full liability,no aggregate-cost attestation;prospective shared run3m.",
+        "coversAllProviderCharges": true
+      },
+      "scope": {
+        "tenantId": "prospective-task13-agent-media-v2",
+        "tenantEpoch": 1,
+        "memorySpaceId": "prospective-media-v2",
+        "memorySpaceEpoch": 1,
+        "principalId": "LOCAL_NOT_PROVISIONED",
+        "principalVersion": 1,
+        "membershipId": "LOCAL_NOT_PROVISIONED",
+        "membershipVersion": 1,
+        "grantId": "LOCAL_NOT_PROVISIONED",
+        "grantVersion": 1
+      },
+      "runBudgetId": "LOCAL_SHARED_3M_NOT_ADMITTED",
+      "fallbackCandidates": [],
+      "currency": "USD",
+      "monetaryUnit": "micro-USD"
+    },
+    "query": {
+      "version": 1,
+      "operationKey": "embedding.query",
+      "requestedModelId": "openai/text-embedding-3-small",
+      "modelId": "openai/text-embedding-3-small",
+      "nativeInterface": "embedding",
+      "capabilities": [
+        "embedding"
+      ],
+      "allowedModels": [
+        "openai/gpt-4o-mini",
+        "openai/gpt-4o",
+        "openai/text-embedding-3-small",
+        "openai/text-embedding-3-large",
+        "openai/gpt-image-1"
+      ],
+      "allowedOptions": [],
+      "allowedTools": [],
+      "limits": {
+        "inputTokens": 8192,
+        "contextTokens": 16384,
+        "outputTokens": 512,
+        "toolSteps": 0,
+        "timeoutMs": 60000,
+        "operationBudgetUnits": 200000,
+        "runBudgetUnits": 2000000,
+        "tenantBudgetUnits": 10000000,
+        "concurrency": 2
+      },
+      "pins": {
+        "promptVersion": "memory-schema-prompt-v2",
+        "schemaVersion": "facts-v1",
+        "extractionVersion": "task04-qualification-e1",
+        "toolRegistryVersion": "none-v1",
+        "priceRevision": "openrouter-2026-10-08-candidate",
+        "boundRevision": "text-8192-512-schema-v2"
+      },
+      "policyVersions": [
+        {
+          "policyId": "cortex-model-defaults-v9-agent-media-v2",
+          "version": 13
+        }
+      ],
+      "qualificationReceiptId": "gateway-text-embedding-small-20261008-v3",
+      "costBound": {
+        "kind": "qualified-call-ceiling",
+        "maximumCostUnits": 100000,
+        "provenance": "Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras",
+        "coversAllProviderCharges": true
+      },
+      "scope": {
+        "tenantId": "prospective-task13-agent-media-v2",
+        "tenantEpoch": 1,
+        "memorySpaceId": "prospective-media-v2",
+        "memorySpaceEpoch": 1,
+        "principalId": "LOCAL_NOT_PROVISIONED",
+        "principalVersion": 1,
+        "membershipId": "LOCAL_NOT_PROVISIONED",
+        "membershipVersion": 1,
+        "grantId": "LOCAL_NOT_PROVISIONED",
+        "grantVersion": 1
+      },
+      "runBudgetId": "LOCAL_SHARED_3M_NOT_ADMITTED",
+      "semanticProfile": {
+        "profileId": "cortex-text-small-1536-v1",
+        "modelId": "openai/text-embedding-3-small",
+        "dimensions": 1536,
+        "normalization": "text-nfc-lf-v1",
+        "chunking": "codepoint-1600-overlap-200-v1",
+        "indexName": "by_default_embedding_v1"
+      },
+      "fallbackCandidates": [],
+      "currency": "USD",
+      "monetaryUnit": "micro-USD"
+    }
+  },
+  "commonRunPlanned2300000": true,
+  "installedV2TerminalParityRepairPending": true,
+  "expiredSdkHandshakeRepairPending": true,
+  "artifactReadWitnessRepairPending": true
+}

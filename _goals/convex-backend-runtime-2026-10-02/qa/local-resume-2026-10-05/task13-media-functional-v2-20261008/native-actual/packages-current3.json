@@ -1,0 +1,37 @@
+{
+  "directory": "/Users/SaintNick/.codex/tmp/cortex-task13-pack-9ea35cd0-178e-417d-85aa-54ebe4758cb9",
+  "sdk": {
+    "file": "/Users/SaintNick/.codex/tmp/cortex-task13-pack-9ea35cd0-178e-417d-85aa-54ebe4758cb9/cortexmemory-sdk-0.37.0.tgz",
+    "bytes": 1005575,
+    "sha256": "ec2bafd491f0b6c70d85050f82d0047793d99d6bac646e1f177a5cd08e455f7c",
+    "package": "@cortexmemory/sdk",
+    "version": "0.37.0",
+    "unpackedBackend": "/Users/SaintNick/.codex/tmp/cortex-task13-pack-9ea35cd0-178e-417d-85aa-54ebe4758cb9/unpacked/package/dist/backend/v1",
+    "manifestSha256": "b61d9bb5e99d8e9f025be9d811e7a27baed4b0b9978fef5db1f161446273d90f"
+  },
+  "cli": {
+    "file": "/Users/SaintNick/.codex/tmp/cortex-task13-pack-c7f61a42-5fa8-4292-8f98-e9c70436a0c0/cortexmemory-cli-0.37.0.tgz",
+    "bytes": 929887,
+    "sha256": "29d769d2611e6d5af1039b995aa61df103c10e2eafd5e34fb3674c2e55425585",
+    "package": "@cortexmemory/cli",
+    "version": "0.37.0"
+  },
+  "sourceFileCount": 98,
+  "tableCount": 67,
+  "components": [
+    "agent",
+    "workflow"
+  ],
+  "httpRoutes": [
+    "GET /cortex/assets/download",
+    "OPTIONS /cortex/assets/download",
+    "OPTIONS /cortex/assets/upload",
+    "POST /cortex/assets/upload",
+    "POST /cortex/media/video/webhook"
+  ],
+  "packIgnoredScripts": true,
+  "cliTemplateLifecycleSkipped": true,
+  "reason": "Canonical UI writer is separate; Task15 owns mirror synchronization.",
+  "cliReusedFromCurrent1": true,
+  "noTargetEffects": true
+}

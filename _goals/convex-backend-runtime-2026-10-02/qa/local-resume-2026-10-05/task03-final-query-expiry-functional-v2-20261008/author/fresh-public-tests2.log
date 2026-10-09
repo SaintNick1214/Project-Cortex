@@ -1,0 +1,287 @@
+(node:26036) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/runtimeDelivery/public-payload.test.ts (11.705 s)
+  ● Console
+
+    console.error
+      ◇ injected env (0) from .env.test
+
+      13 | import dotenv from "dotenv";
+      14 | import { resolve } from "path";
+    > 15 |
+         | ^
+      16 | // Load .env.test first (test defaults)
+      17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+      18 |
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:15:8
+
+    console.error
+      ◇ injected env (0) from .env.local
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+    console.log
+      
+      🧪 Testing against LOCAL Convex: http://127.0.0.1:1
+
+      at tests/env.ts:35:13
+
+    console.log
+         Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:36:13
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:121:13
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:122:13
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:123:13
+
+PASS tests/unit/runtimeWorkerClient/metadata-consumers.test.ts
+  ● Console
+
+    console.error
+      ◇ injected env (0) from .env.test
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+    console.error
+      ◇ injected env (0) from .env.local
+
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+    > 20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+         |        ^
+      21 |
+      22 | // Determine which Convex deployment to test against
+      23 | // Note: In auto mode, the test-runner.mjs script handles detection and orchestration
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:20:8
+
+    console.log
+      
+      🧪 Testing against LOCAL Convex: http://127.0.0.1:1
+
+      at tests/env.ts:44:11
+
+    console.log
+         Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:45:11
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:147:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:150:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:151:11
+
+PASS tests/unit/runtimeMemory/services.test.ts
+  ● Console
+
+    console.error
+      ◇ injected env (0) from .env.test
+
+      15 |
+      16 | // Load .env.test first (test defaults)
+    > 17 | dotenv.config({ path: resolve(process.cwd(), ".env.test") });
+         |        ^
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+      20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:17:8
+
+    console.error
+      ◇ injected env (0) from .env.local
+
+      18 |
+      19 | // Load .env.local second with override=true (local development overrides for test defaults AND system env vars)
+    > 20 | dotenv.config({ path: resolve(process.cwd(), ".env.local"), override: true });
+         |        ^
+      21 |
+      22 | // Determine which Convex deployment to test against
+      23 | // Note: In auto mode, the test-runner.mjs script handles detection and orchestration
+
+      at se (node_modules/dotenv/dist/index.cjs:7:155)
+      at Object.ce [as configDotenv] (node_modules/dotenv/dist/index.cjs:7:1059)
+      at Object.ae [as config] (node_modules/dotenv/dist/index.cjs:7:1168)
+      at tests/env.ts:20:8
+
+    console.log
+      
+      🧪 Testing against LOCAL Convex: http://127.0.0.1:1
+
+      at tests/env.ts:44:11
+
+    console.log
+         Note: Vector search (.similar()) not supported in local mode
+
+      at tests/env.ts:45:11
+
+    console.log
+      
+      📊 Graph database testing DISABLED (no graph DB URIs configured)
+
+      at tests/env.ts:147:11
+
+    console.log
+         To enable: Set NEO4J_URI and/or MEMGRAPH_URI in .env.local
+
+      at tests/env.ts:150:11
+
+    console.log
+         See: https://docs.cortexmemory.dev/advanced-topics/graph-database-integration
+
+      at tests/env.ts:151:11
+
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 TEST SUITE PERFORMANCE REPORT
+════════════════════════════════════════════════════════════════════════════════
+
+🟢 SHORT SUITES (<30s) - Fast!
+--------------------------------------------------------------------------------
+  ✅    11.7s | 7/7 passed | /tests/unit/runtimeDelivery/public-payload.test.ts
+  ✅     2.9s | 79/79 passed | /tests/unit/runtimeWorkerClient/metadata-consumers.test.ts
+  ✅     0.9s | 17/17 passed | /tests/unit/runtimeMemory/services.test.ts
+
+
+════════════════════════════════════════════════════════════════════════════════
+⏱️  TOP 20 SLOWEST INDIVIDUAL TESTS
+════════════════════════════════════════════════════════════════════════════════
+
+ 1. [32m✓[0m    2.31s (14.7%) - every inventoried supported payload registration is a fresh mutation, rather than a subscription payload
+    /tests/unit/runtimeDelivery/public-payload.test.ts
+
+ 2. [32m✓[0m    0.03s ( 0.2%) - canonical run/history reads and exhausted observer deny the unchanged grant at its actual delivery deadline
+    /tests/unit/runtimeDelivery/public-payload.test.ts
+
+ 3. [32m✓[0m    0.03s ( 0.2%) - modern backend memory services persists normalized source/chunks/vectors and authoritative facts with one confidence conversion
+    /tests/unit/runtimeMemory/services.test.ts
+
+ 4. [32m✓[0m    0.01s ( 0.1%) - observer lifetime includes the consumed fact-share deadline even with a separate permanent view share
+    /tests/unit/runtimeDelivery/public-payload.test.ts
+
+ 5. [32m✓[0m    0.01s ( 0.1%) - owner conversation retention bounds observation without emitting an undefined Convex field
+    /tests/unit/runtimeDelivery/public-payload.test.ts
+
+ 6. [32m✓[0m    0.01s ( 0.0%) - modern backend memory services uses actual scoped internal selection and shared ranking/context for recall
+    /tests/unit/runtimeMemory/services.test.ts
+
+ 7. [32m✓[0m    0.00s ( 0.0%) - same-argument immutable metadata read denies time-only grant expiry without changing stored payload
+    /tests/unit/runtimeDelivery/public-payload.test.ts
+
+ 8. [32m✓[0m    0.00s ( 0.0%) - modern backend memory services replays identical normalized source/derived payload without duplicate facts or receipts
+    /tests/unit/runtimeMemory/services.test.ts
+
+ 9. [32m✓[0m    0.00s ( 0.0%) - metadata consumers (resilience=enabled) bulk updates preserve ordinary failures, missing rows and successful counts
+    /tests/unit/runtimeWorkerClient/metadata-consumers.test.ts
+
+10. [32m✓[0m    0.00s ( 0.0%) - preserves actual resilience retry behavior for an ordinary transient mutation failure
+    /tests/unit/runtimeWorkerClient/metadata-consumers.test.ts
+
+11. [32m✓[0m    0.00s ( 0.0%) - modern backend memory services rejects source key reuse with different normalized content before a second model call
+    /tests/unit/runtimeMemory/services.test.ts
+
+12. [32m✓[0m    0.00s ( 0.0%) - remember write permission write-only memory admission returns only this successful commit's facts without a general read query
+    /tests/unit/runtimeMemory/services.test.ts
+
+13. [32m✓[0m    0.00s ( 0.0%) - metadata consumers (resilience=absent) maps only the hydrated backend profile and preserves deep merge and tenant injection
+    /tests/unit/runtimeWorkerClient/metadata-consumers.test.ts
+
+14. [32m✓[0m    0.00s ( 0.0%) - modern backend memory services embeds attributed assistant context without extracting assistant claims as facts
+    /tests/unit/runtimeMemory/services.test.ts
+
+15. [32m✓[0m    0.00s ( 0.0%) - modern backend memory services fails closed on incompatible model profile/dimensions before committing vectors
+    /tests/unit/runtimeMemory/services.test.ts
+
+16. [32m✓[0m    0.00s ( 0.0%) - same-argument mutable metadata read denies time-only grant expiry without changing stored payload
+    /tests/unit/runtimeDelivery/public-payload.test.ts
+
+17. [32m✓[0m    0.00s ( 0.0%) - same-argument sessions metadata read denies time-only grant expiry without changing stored payload
+    /tests/unit/runtimeDelivery/public-payload.test.ts
+
+18. [32m✓[0m    0.00s ( 0.0%) - metadata consumers (resilience=absent) reports a committed receipt without fabricating a profile or rereading ({"updated":true,"type":"user","id":"server-user","tenantId":"tenant-a","memorySpaceId":"space-a"})
+    /tests/unit/runtimeWorkerClient/metadata-consumers.test.ts
+
+19. [32m✓[0m    0.00s ( 0.0%) - metadata consumers (resilience=absent) reports a committed receipt without fabricating a profile or rereading ({"updated":true,"type":"user","id":"server-user","tenantId":"tenant-a","memorySpaceId":"space-a","createdId":"owned-immutable-document"})
+    /tests/unit/runtimeWorkerClient/metadata-consumers.test.ts
+
+20. [32m✓[0m    0.00s ( 0.0%) - metadata consumers (resilience=absent) propagates the committed outcome from getOrCreate without rereading after the write
+    /tests/unit/runtimeWorkerClient/metadata-consumers.test.ts
+
+--------------------------------------------------------------------------------
+Top 20 tests: 2.42s (15.4% of runtime)
+
+
+════════════════════════════════════════════════════════════════════════════════
+📈 SUMMARY
+════════════════════════════════════════════════════════════════════════════════
+  Total runtime:      15.75s
+  Test suites:        3
+  Individual tests:   36
+  Long suites (>2m):  0
+  Medium suites:      0
+  Short suites (<30s): 3
+════════════════════════════════════════════════════════════════════════════════
+
+
+Test Suites: 3 passed, 3 total
+Tests:       103 passed, 103 total
+Snapshots:   0 total
+Time:        15.754 s
+Ran all test suites within paths "tests/unit/runtimeDelivery/public-payload.test.ts", "tests/unit/runtimeWorkerClient/metadata-consumers.test.ts", "tests/unit/runtimeMemory/services.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task03-final-query-expiry-functional-v2-20261008/author/fresh-public-tests2.json

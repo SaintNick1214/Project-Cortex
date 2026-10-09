@@ -1,4 +1,7 @@
+import { artifactMetadataWitness, checkArtifactContextWitnesses, readArtifactContext } from "./runtimeArtifactContext";
+import type { ArtifactContextWitness } from "../src/domain/artifact-context";
 import { bindNativeAssetReferences, publicMessageAssets, releaseAssetReferences } from "./runtimeAssetCatalog";
+import { checkMediaJob } from "./runtimeMediaFence";
 /** One private Agent store, with scoped Cortex metadata and current source fences. */
 import { makeFunctionReference } from "convex/server";
 import type { FunctionReference } from "convex/server";
@@ -6,7 +9,7 @@ import { createThread, saveMessages } from "@convex-dev/agent";
 import type { AgentComponent, MessageDoc } from "@convex-dev/agent";
 import type { ModelMessage } from "ai";
 import { ConvexError, v } from "convex/values";
-import { mutation, query, internalMutation } from "./_generated/server";
+import { mutation, internalMutation } from "./_generated/server";
 import type { MutationCtx, QueryCtx } from "./_generated/server";
 import type { Doc } from "./_generated/dataModel";
 import { components } from "./_generated/api";
@@ -173,7 +176,7 @@ async function messageOutbox(ctx: MutationCtx, conversation: ManagedConversation
 }
 export async function registerMessages(ctx: MutationCtx, conversation: ManagedConversation, reference: RuntimeAuthorityReference,
   messages: MessageDoc[], options: { runId?: string; queueSequence?: number; attemptNumber?: number; approved?: boolean; invalidateExecution?: boolean; trustedToolMessages?: boolean;
-    contextSourceWitnesses?: ContextSourceWitness[] } = {}) {
+    contextSourceWitnesses?: ContextSourceWitness[]; artifactContextWitnesses?: ArtifactContextWitness[] } = {}) {
   const pins: MessagePin[] = [];
   for (const message of messages) {
     if (message.threadId !== conversation.threadId || message.status !== "success") transcriptDenied("TRANSCRIPT_CONFLICT");
@@ -183,11 +186,16 @@ export async function registerMessages(ctx: MutationCtx, conversation: ManagedCo
     const event = `transcript:${conversation.conversationId}:${message._id}`;
     const text = typed.parts.map(part => part.text).join("\n");
     const hash = await contentHash(message); const sourceHash = await semanticHash(text.trim() ? normalizeSourceText(text) : "");
+    const mediaJobReferences = await checkNativeMediaReferences(ctx, reference, message);
+    const artifactContextWitnesses = [...new Map([...(options.artifactContextWitnesses ?? []), ...await nativeArtifactWitnesses(ctx, reference, message)].map(witness => [canonicalModelJson(witness), witness])).values()];
+    await checkArtifactContextWitnesses(ctx, reference, artifactContextWitnesses);
     const bridge = { tenantId: conversation.tenantId, memorySpaceId: conversation.memorySpaceId, ownerPrincipalId: reference.principalId,
       conversationId: conversation.conversationId, nativeMessageId: message._id, order: message.order, stepOrder: message.stepOrder,
       role: typed.role, revision: 1, contentHash: hash, sourceEventId: event, sourceId: event, sourceContentHash: sourceHash,
       actorReference: reference, approved: options.approved ?? true,
       ...(options.contextSourceWitnesses?.length ? { contextSourceWitnesses: options.contextSourceWitnesses } : {}),
+      ...(mediaJobReferences.length ? { mediaJobReferences } : {}),
+      ...(artifactContextWitnesses.length ? { artifactContextWitnesses } : {}),
       ...(options.runId === undefined ? {} : { runId: options.runId }), ...(options.attemptNumber === undefined ? {} : { attemptNumber: options.attemptNumber }), createdAt: now, updatedAt: now };
     const bridgeId = await ctx.db.insert("runtimeTranscriptMessages", bridge);
     await bindNativeAssetReferences(ctx, reference, (await ctx.db.get("runtimeTranscriptMessages", bridgeId))!, message);
@@ -199,6 +207,40 @@ export async function registerMessages(ctx: MutationCtx, conversation: ManagedCo
     executionRevision: executionRevision(conversation) + (options.invalidateExecution === false ? 0 : 1),
     messageCount: conversation.messageCount + messages.length, updatedAt: Date.now() });
   return pins;
+}
+async function nativeArtifactWitnesses(ctx: Pick<ReadCtx, "db">, reference: RuntimeAuthorityReference, message: MessageDoc): Promise<ArtifactContextWitness[]> {
+  const parts = message.message?.content;
+  if (message.message?.role !== "tool" || !Array.isArray(parts)) return [];
+  const witnesses: ArtifactContextWitness[] = [];
+  for (const part of parts) {
+    if (part.type !== "tool-result" || part.toolName !== "artifact_read") continue;
+    const output = part.output;
+    if (!output || output.type !== "json") transcriptDenied("INVALID_MODEL_OUTPUT");
+    const value = output.value;
+    if (!value || typeof value !== "object" || Array.isArray(value) || value.version !== 1 || typeof value.artifactId !== "string") transcriptDenied("INVALID_MODEL_OUTPUT");
+    const current = await readArtifactContext(ctx, reference, value.artifactId);
+    if (canonicalModelJson(current) !== canonicalModelJson(value)) transcriptDenied("STALE_CONTEXT");
+    witnesses.push(await artifactMetadataWitness(current));
+  }
+  if (witnesses.length > 32) transcriptDenied("TOOL_STEP_LIMIT"); return witnesses;
+}
+/** Canonical private tool results carry references, never binary data or provider handles. */
+export async function checkNativeMediaReferences(ctx: Pick<ReadCtx, "db">, reference: RuntimeAuthorityReference, message: MessageDoc) {
+  await nativeArtifactWitnesses(ctx, reference, message);
+  const references: NonNullable<Doc<"runtimeTranscriptMessages">["mediaJobReferences"]> = [];
+  const parts = message.message?.content;
+  if (message.message?.role !== "tool" || !Array.isArray(parts)) return references;
+  for (const part of parts) {
+    if (part.type !== "tool-result" || !["media_image_generate", "media_video_generate"].includes(part.toolName)) continue;
+    const output = part.output; if (!output || output.type !== "json") continue;
+    const value = output.value;
+    if (!value || typeof value !== "object" || Array.isArray(value) || value.version !== 1 || typeof value.jobId !== "string" || typeof value.artifactId !== "string" || (value.kind !== "image" && value.kind !== "video")) transcriptDenied("INVALID_MODEL_OUTPUT");
+    const job = await ctx.db.query("runtimeMediaJobs").withIndex("by_job", q => q.eq("jobId", value.jobId as string)).unique();
+    if (!job || job.artifactId !== value.artifactId || job.kind !== value.kind) transcriptDenied("STALE_CONTEXT");
+    await checkMediaJob(ctx, job, reference);
+    references.push({ type: "media-job", version: 1, jobId: job.jobId, artifactId: job.artifactId, kind: job.kind });
+  }
+  if (references.length > 4) transcriptDenied("TOOL_STEP_LIMIT"); return references;
 }
 async function currentPrivateSources(ctx: ReadCtx, reference: RuntimeAuthorityReference,
   witnesses: readonly ContextSourceWitness[]) {
@@ -242,8 +284,14 @@ export async function readTranscriptPage(ctx: ReadCtx, conversation: ManagedConv
     if (!bridge || bridge.tombstonedAt !== undefined) continue;
     await verifyMessage(ctx, conversation, bridge, native);
     await currentPrivateSources(ctx, reference, bridge.contextSourceWitnesses ?? []);
+    await checkArtifactContextWitnesses(ctx, reference, bridge.artifactContextWitnesses ?? []);
     const typed = content(native);
-    page.push({ id: native._id, order: native.order, stepOrder: native.stepOrder, role: typed.role, parts: typed.parts,
+    for (const item of bridge.mediaJobReferences ?? []) {
+      const job = await ctx.db.query("runtimeMediaJobs").withIndex("by_job", q => q.eq("jobId", item.jobId)).unique();
+      if (!job || job.artifactId !== item.artifactId || job.kind !== item.kind) transcriptDenied("STALE_CONTEXT");
+      await checkMediaJob(ctx, job, reference);
+    }
+    page.push({ id: native._id, order: native.order, stepOrder: native.stepOrder, role: typed.role, parts: [...typed.parts, ...(bridge.mediaJobReferences ?? [])],
       status: !bridge.approved ? "pending" : native.status, revision: bridge.revision, ...(bridge.assetVersionIds?.length ? { assets: await publicMessageAssets(ctx, reference, bridge) } : {}) });
   }
   return { page, isDone: result.isDone, continueCursor: result.isDone ? null : canonicalModelJson({ conversationId: conversation.conversationId,
@@ -318,6 +366,8 @@ export async function hydrateCutoff(ctx: ReadCtx, conversation: ManagedConversat
         || bridge.contentHash !== pin.contentHash || comparePosition(bridge, pin) !== 0) transcriptDenied("STALE_TRANSCRIPT");
       const checked = await verifyMessage(ctx, conversation, bridge, native[i]);
       if (pin.canonicalContentHash !== undefined && await canonicalMessageHash(checked) !== pin.canonicalContentHash) transcriptDenied("STALE_TRANSCRIPT");
+      await checkNativeMediaReferences(ctx, run.authorityReference, checked);
+      await checkArtifactContextWitnesses(ctx, run.authorityReference, bridge.artifactContextWitnesses ?? []);
       result.push(content(checked));
     }
   }
@@ -338,6 +388,8 @@ export async function hydratePrivateCutoff(ctx: ReadCtx, conversation: ManagedCo
       // must not resurrect stale recalled context merely because its bytes match.
       const bridge = await bridgeFor(ctx, conversation, message._id);
       if (bridge?.contextSourceWitnesses?.length) await currentPrivateSources(ctx, run.authorityReference, bridge.contextSourceWitnesses);
+      await checkNativeMediaReferences(ctx, run.authorityReference, message);
+      await checkArtifactContextWitnesses(ctx, run.authorityReference, bridge?.artifactContextWitnesses ?? []);
       const label = message.agentName?.match(/^cortex:(.+):([1-9]\d*):(\d+)$/);
       const ownerRunId = bridge?.runId ?? label?.[1]; const ownerAttempt = bridge?.attemptNumber ?? (label ? Number(label[2]) : undefined);
       if (ownerRunId && ownerAttempt !== undefined) {
@@ -355,6 +407,7 @@ export async function hydratePrivateCutoff(ctx: ReadCtx, conversation: ManagedCo
           if (!checkedAttempts.has(ownerKey)) {
             checkedAttempts.add(ownerKey);
             await currentPrivateSources(ctx, run.authorityReference, owner.sourceWitnesses);
+            await checkArtifactContextWitnesses(ctx, run.authorityReference, owner.artifactContextWitnesses ?? []);
           }
         }
       }
@@ -373,8 +426,8 @@ export const create = mutation({ args: { memorySpaceId: v.optional(v.string()), 
     const options = Object.fromEntries(Object.entries(args).filter(([key, value]) => key !== "memorySpaceId" && key !== "clientRequestId" && value !== undefined));
     return publicConversation(await createManagedConversation(ctx, actor, identity, canonicalModelJson(options), options));
   } });
-export const get = query({ args: selector, handler: async (ctx, args) => publicConversation((await requireConversation(ctx, args, args.conversationId, "read")).conversation) });
-export const list = query({ args: { memorySpaceId: v.optional(v.string()), tenantId: v.optional(v.string()), limit: v.optional(v.number()) }, handler: async (ctx, args) => {
+export const get = mutation({ args: selector, handler: async (ctx, args) => publicConversation((await requireConversation(ctx, args, args.conversationId, "read")).conversation) });
+export const list = mutation({ args: { memorySpaceId: v.optional(v.string()), tenantId: v.optional(v.string()), limit: v.optional(v.number()) }, handler: async (ctx, args) => {
   const actor = await requireDataAuthority(ctx, args, "read"); const reference = dataAuthorityReference(actor);
   const limit = args.limit ?? 100; if (!Number.isSafeInteger(limit) || limit < 1 || limit > 100) transcriptDenied("INVALID_INPUT");
   const rows = await ctx.db.query("runtimeConversations").withIndex("by_scope", q => q.eq("tenantId", actor.tenantId).eq("memorySpaceId", actor.memorySpaceId)).order("desc").take(1000);
@@ -385,7 +438,7 @@ export const list = query({ args: { memorySpaceId: v.optional(v.string()), tenan
   }
   return visible;
 } });
-export const messages = query({ args: { ...selector, cursor: v.optional(v.union(v.string(), v.null())), limit: v.optional(v.number()) }, handler: async (ctx, args) => {
+export const messages = mutation({ args: { ...selector, cursor: v.optional(v.union(v.string(), v.null())), limit: v.optional(v.number()) }, handler: async (ctx, args) => {
   const { conversation, reference } = await requireConversation(ctx, args, args.conversationId, "read");
   return await readTranscriptPage(ctx, conversation, reference, args.cursor ?? null, args.limit);
 } });
@@ -446,7 +499,7 @@ export async function reviseMessage(ctx: MutationCtx, args: { conversationId: st
     const parts = normalizeTextSubmit({ version: 1, agentId: "manual", agentVersion: 1, clientRequestId: "manual", parts: args.parts }).userInput.parts;
     const changed = await ctx.runMutation(agentComponent.messages.updateMessage, { messageId: args.messageId, patch: { message: { role: bridge.role, content: parts } } });
     const hash = await contentHash(changed); const sourceHash = await semanticHash(normalizeSourceText(parts.map(part => part.text).join("\n")));
-    await ctx.db.patch("runtimeTranscriptMessages", bridge._id, { revision, contentHash: hash, sourceContentHash: sourceHash, contextSourceWitnesses: undefined, assetVersionIds: undefined, actorReference: reference, updatedAt: now });
+    await ctx.db.patch("runtimeTranscriptMessages", bridge._id, { revision, contentHash: hash, sourceContentHash: sourceHash, contextSourceWitnesses: undefined, artifactContextWitnesses: undefined, assetVersionIds: undefined, actorReference: reference, updatedAt: now });
     await sourceWrite(ctx, conversation, { ...bridge, revision, sourceContentHash: sourceHash }, parts.map(part => part.text).join("\n"));
   }
   await messageOutbox(ctx, conversation, bridge, "tombstoned");
@@ -512,12 +565,12 @@ export const cleanupDeleted = internalMutation({ args: { reference: runtimeAutho
   return { processed: true as const };
 } });
 export const remove = mutation({ args: selector, handler: deleteManagedConversation });
-export const exportPage = query({ args: { ...selector, cursor: v.optional(v.union(v.string(), v.null())), limit: v.optional(v.number()) }, handler: async (ctx, args) => {
+export const exportPage = mutation({ args: { ...selector, cursor: v.optional(v.union(v.string(), v.null())), limit: v.optional(v.number()) }, handler: async (ctx, args) => {
   const { conversation, reference } = await requireConversation(ctx, args, args.conversationId, "read");
   await managedConversationAccess(ctx, reference, conversation, "read", "canExport");
   return await readTranscriptPage(ctx, conversation, reference, args.cursor ?? null, args.limit);
 } });
-export const stats = query({ args: selector, handler: async (ctx, args) => {
+export const stats = mutation({ args: selector, handler: async (ctx, args) => {
   const { conversation } = await requireConversation(ctx, args, args.conversationId, "read");
   return { conversationId: conversation.conversationId, messageCount: conversation.messageCount, historyRevision: conversation.historyRevision, createdAt: conversation.createdAt, updatedAt: conversation.updatedAt };
 } });
@@ -541,9 +594,10 @@ export const fork = mutation({ args: { ...selector, clientRequestId: v.string(),
       if (!sourceBridge || !native) transcriptDenied("STALE_TRANSCRIPT");
       await verifyMessage(ctx, conversation, sourceBridge, native);
       await currentPrivateSources(ctx, reference, sourceBridge.contextSourceWitnesses ?? []);
+      await checkArtifactContextWitnesses(ctx, reference, sourceBridge.artifactContextWitnesses ?? []);
       const saved = await saveMessages(ctx, agentComponent, { threadId: target.threadId, userId: actor.principalId, order: "next",
         messages: [privateModelMessage(native)], failPendingSteps: false });
-      await registerMessages(ctx, target, reference, saved.messages, { trustedToolMessages: true, contextSourceWitnesses: sourceBridge.contextSourceWitnesses }); target = (await ctx.db.get("runtimeConversations", target._id))!;
+      await registerMessages(ctx, target, reference, saved.messages, { trustedToolMessages: true, contextSourceWitnesses: sourceBridge.contextSourceWitnesses, artifactContextWitnesses: sourceBridge.artifactContextWitnesses }); target = (await ctx.db.get("runtimeConversations", target._id))!;
     }
     cursor = page.continueCursor;
   } while (cursor !== null);

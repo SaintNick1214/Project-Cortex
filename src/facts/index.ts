@@ -437,7 +437,7 @@ export class FactsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.facts.get, {
+        this.client.mutation(api.facts.get, {
           memorySpaceId,
           factId,
           tenantId: this.authContext?.tenantId, // Inject tenantId for tenant isolation
@@ -515,7 +515,7 @@ export class FactsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.facts.list, {
+        this.client.mutation(api.facts.list, {
           memorySpaceId: filter.memorySpaceId,
           tenantId: this.authContext?.tenantId, // Tenant isolation
           factType: filter.factType,
@@ -602,7 +602,7 @@ export class FactsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.facts.count, {
+        this.client.mutation(api.facts.count, {
           memorySpaceId: filter.memorySpaceId,
           tenantId: this.authContext?.tenantId, // Tenant isolation
           factType: filter.factType,
@@ -704,7 +704,7 @@ export class FactsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.facts.search, {
+        this.client.mutation(api.facts.search, {
           memorySpaceId,
           tenantId: this.authContext?.tenantId, // Tenant isolation
           query,
@@ -1004,7 +1004,7 @@ export class FactsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.facts.getHistory, {
+        this.client.mutation(api.facts.getHistory, {
           memorySpaceId,
           factId,
         }),
@@ -1082,7 +1082,7 @@ export class FactsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.facts.queryBySubject, {
+        this.client.mutation(api.facts.queryBySubject, {
           memorySpaceId: filter.memorySpaceId,
           subject: filter.subject,
           factType: filter.factType,
@@ -1185,7 +1185,7 @@ export class FactsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.facts.queryByRelationship, {
+        this.client.mutation(api.facts.queryByRelationship, {
           memorySpaceId: filter.memorySpaceId,
           subject: filter.subject,
           predicate: filter.predicate,
@@ -1254,7 +1254,7 @@ export class FactsAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.facts.exportFacts, {
+        this.client.mutation(api.facts.exportFacts, {
           memorySpaceId: options.memorySpaceId,
           format: options.format,
           factType: options.factType,

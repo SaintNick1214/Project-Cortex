@@ -18,8 +18,17 @@ npm install --save-dev @cortexmemory/cli
 ## Quick Start
 
 ```bash
-# Run interactive setup
-cortex setup
+# Review and install the backend runtime without replacing host functions
+cortex backend install . --plan --jwt-provider ./jwt-provider.json
+cortex backend install . --jwt-provider ./jwt-provider.json
+
+# Register/provision only an explicitly verified disposable development target
+cortex backend register . --target ./development-target.json
+cortex backend provision . --target ./development-target.json --principal ./principal.json
+
+# Configure public app metadata; host-issued JWTs remain in memory
+cortex backend configure . --url https://my-dev.convex.cloud --http-url https://my-dev.convex.site --agent-id published-agent --agent-version 1
+cortex backend guide
 
 # Check database statistics
 cortex db stats
@@ -30,6 +39,40 @@ cortex spaces list
 # Search memories
 cortex memory search "password" --space agent-1
 ```
+
+`cortex init . --backend` provides the same additive local installation. Neither
+installation command registers a deployment, publishes an Agent, provisions a grant,
+or proves model/media eligibility. Existing custom functions directories, schema,
+component configuration, auth and HTTP routes are retained; ambiguous compositions
+produce a merge proposal before source files are installed. Existing environment values
+and scripts are preserved. Install the printed package dependencies with the host's
+package manager after reviewing the plan.
+
+Registration and provisioning use the accepted development verifier. Supply an exact
+`development-target.json` with `teamId`, `projectId`, `deploymentName`, `deploymentUrl`
+and `disposable: true`. The management API must confirm that identity and a cloud
+development deployment. Credentials come only from `CONVEX_ACCESS_TOKEN` and a matching
+`CONVEX_DEPLOY_KEY` (or explicitly named environment variables). Production targets are
+refused. A principal file names the issuer, subject, actor kind, tenant, memory space,
+capabilities and own/space/tenant resource access; it contains no JWT or provider key.
+An optional expiry must be in the future. These operator files are explicit inputs and
+are never copied into app configuration.
+
+A fresh host may supply a `jwt-provider.json` custom-JWT configuration with `type`,
+`issuer`, `jwks`, `algorithm` and `applicationID`. Existing host auth remains
+the authority. Configure a published Agent/version and current server-verified grant,
+then use the browser runtime entry and remote transport. Agent/Workflow component
+registration and Gateway model qualification are separate prerequisites; unsupported
+or unqualified model/media operations remain unavailable. App clients require no
+OpenAI, Anthropic or Gateway inference key.
+
+Private asset upload/download routes require current identity and storage capabilities;
+their limit is 20,000,000 bytes. Provider input protocols have separate, stricter caps.
+Optional graph projection uses a trusted Node worker with service JWT and private Bolt
+credentials; graph lag/strict barriers remain distinct from text completion. The
+quickstart installer copies the app without a second Convex backend or graph credentials.
+`cortex start` starts development services and never performs an implicit production
+deployment or inherits a production deploy key.
 
 ## Commands
 

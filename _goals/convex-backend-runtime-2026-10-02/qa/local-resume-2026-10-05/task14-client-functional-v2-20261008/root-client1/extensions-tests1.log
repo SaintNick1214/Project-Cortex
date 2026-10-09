@@ -1,0 +1,47 @@
+(node:94110) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/unit/client-runtime/client.test.ts
+PASS tests/unit/runtimeIngestion/context.test.ts
+FAIL tests/unit/client-runtime/extensions.test.ts
+  ● fresh browser profile and stage APIs › passes only the requested strict stage and checks the returned barrier
+
+    expect(received).toMatchObject(expected)
+
+    Matcher error: received value must be a non-null object
+
+    Received has value: undefined
+
+      41 |     const f = fixture(); f.mutation.mockResolvedValueOnce({ ...result, strictStages: ["vectors"] } as never);
+      42 |     expect((await f.client.memoryReadiness({ strictStages: ["vectors"] })).stages.facts!.complete).toBe(false);
+    > 43 |     expect(f.calls[0]).toMatchObject({ args: { strictStages: ["vectors"] } });
+         |                        ^
+      44 |     f.mutation.mockResolvedValueOnce({ ...result, strictStages: ["facts"] } as never);
+      45 |     await expect(f.client.memoryReadiness({ strictStages: ["facts"] })).rejects.toMatchObject({ code: "INVALID_RESPONSE" }); await f.client.close();
+      46 |   });
+
+      at Object.<anonymous> (tests/unit/client-runtime/extensions.test.ts:43:24)
+
+  ● fresh browser profile and stage APIs › rejects contradictory public response metadata 1
+
+    expect(received).toThrow()
+
+    Received function did not throw
+
+      70 |     { ...result, stages: { facts: complete, vectors: { ...pending, hole: null } } },
+      71 |     { ...result, stages: { facts: complete } },
+    > 72 |   ])("rejects contradictory public response metadata %#", value => { expect(() => memoryReadiness(value)).toThrow(); });
+         |                                                                                                           ^
+      73 |   it("withholds mismatching profile or captured cutoffs", async () => {
+      74 |     const f = fixture(); await expect(f.client.getEmbeddingProfile({ expectedProfileId: LARGE_EMBEDDING_PROFILE.profileId })).rejects.toMatchObject({ code: "INVALID_RESPONSE" });
+      75 |     await expect(f.client.memoryReadiness({ cutoff: 1 })).rejects.toMatchObject({ code: "INVALID_RESPONSE" }); await f.client.close();
+
+      at tests/unit/client-runtime/extensions.test.ts:72:107
+
+PASS tests/unit/runtimeIngestion/client-extensions.test.ts
+
+Test Suites: 1 failed, 3 passed, 4 total
+Tests:       2 failed, 65 passed, 67 total
+Snapshots:   0 total
+Time:        7.615 s
+Ran all test suites.
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task14-client-functional-v2-20261008/root-client1/unit-results1.json

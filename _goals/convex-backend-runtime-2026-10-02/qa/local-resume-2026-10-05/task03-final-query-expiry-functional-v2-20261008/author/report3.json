@@ -1,0 +1,169 @@
+{
+  "version": 3,
+  "status": "AUTHOR_SOURCE_READY_ACTUAL_AND_COHERENT_NONAUTHOR_REVIEW_PENDING",
+  "candidateSha256": "7c2ce98eaeef41d2cbe4bb893339ba79bf285bf1727191ceebe71b6c7acc88cc",
+  "sourceManifest": "source-manifest3.json",
+  "checks": "checks3.json",
+  "inventory": "read-inventory3.json",
+  "sourceFileCount": 83,
+  "implementation": [
+    {
+      "requirement": "Fresh supported public sensitive payloads after time-only expiry",
+      "change": "95 query registrations become mutations, plus runs:exportRecord alias; exact DTO/resource guards preserved. 100 legacy SDK call sites in15 modules invoke mutations. Root-owned fresh session and opaque query signal are separate.",
+      "evidence": [
+        "read-inventory3.json",
+        "fresh-public-tests2.json",
+        "assertion-identities1.json"
+      ]
+    },
+    {
+      "requirement": "Late governed recall delivery rechecks consumed evidence after all action awaits",
+      "change": "Internal runtimeMemory:finalDelivery validates captured source tuples/permissions and exact fact/vector/chunk binding hashes, current resource/profile/ancestry/receipt, then final authority. Internal initial metadata queries and financial/effect paths are unchanged. It returns {version:1,deliveryExpiresAt?} from the actual consumed grant/share/retention/fact deadlines; the recall action checks it immediately after the awaited RPC with no further I/O and exposes the optional response deadline.",
+      "evidence": [
+        "recall-tests3.json",
+        "artifact-compatibility4.json",
+        "delivery-artifact7.json",
+        "delivery-compatibility8.json"
+      ]
+    },
+    {
+      "requirement": "Reactive output and media replies expose true server delivery limits",
+      "change": "observeHandler is shared read-only logic for mutation and Root opaque signal. It collects actual relied-on share/retention/source/asset deadlines and ends with fresh deliveryExpiresAt; publicMediaJob does the same with an optional DTO deadline. Ready-job generation expiry is not an asset-retention deadline. Fresh runtimeAssets:get also exposes the actual consumed canExport/storage deadline and preserves storage-only grants. Canonical publicAsset/model tool metadata hashes are unchanged.",
+      "evidence": [
+        "artifact-final5.json",
+        "artifact-tests3.json",
+        "delivery-artifact7.json",
+        "delivery-compatibility8.json"
+      ]
+    },
+    {
+      "requirement": "Consumed artifact metadata remains authorized across every later execution/delivery path",
+      "change": "artifact.read captures a private version/hash witness; exact current artifact and immutable asset metadata is reauthorized before native replay, saved-message hydration, paid guard, approval, finalization, every observer cursor, transcript/snapshot/fork and derived source reads. V1/V2 tool definitions and all proof/financial objects are untouched. Linked artifact reads retain the established canExport boundary; a current canView-only share cannot authorize metadata export. A selected conversationRef.messageId now checks the exact canonical bridge/native message and its consumed source witnesses, matching the existing public artifact reader after anchor deletion.",
+      "evidence": [
+        "artifact-final5.json",
+        "artifact-compatibility4.json",
+        "artifact-tests3.json",
+        "artifact-permission6.json",
+        "delivery-artifact7.json"
+      ]
+    }
+  ],
+  "currentControlledSelection": {
+    "suites": 56,
+    "passedAssertionInstances": 2974,
+    "distinctSuiteTitleLabels": 2930,
+    "failed": 0,
+    "skipped": 0,
+    "identityReceipt": "assertion-identities3.json"
+  },
+  "remainingPublicQueries": [
+    {
+      "endpoint": "a2a:getConversation",
+      "kind": "query",
+      "origin": "a2a:getConversation",
+      "line": 640,
+      "visibility": "public",
+      "alias": false,
+      "disposition": "Always-denying unavailable capability"
+    },
+    {
+      "endpoint": "agents:computeStats",
+      "kind": "query",
+      "origin": "agents:computeStats",
+      "line": 91,
+      "visibility": "public",
+      "alias": false,
+      "disposition": "Always-denying unavailable capability"
+    },
+    {
+      "endpoint": "factHistory:countByAction",
+      "kind": "query",
+      "origin": "factHistory:countByAction",
+      "line": 301,
+      "visibility": "public",
+      "alias": false,
+      "disposition": "Always-denying unavailable capability"
+    },
+    {
+      "endpoint": "factHistory:getActivitySummary",
+      "kind": "query",
+      "origin": "factHistory:getActivitySummary",
+      "line": 397,
+      "visibility": "public",
+      "alias": false,
+      "disposition": "Always-denying unavailable capability"
+    },
+    {
+      "endpoint": "factHistory:getChangesByTimeRange",
+      "kind": "query",
+      "origin": "factHistory:getChangesByTimeRange",
+      "line": 247,
+      "visibility": "public",
+      "alias": false,
+      "disposition": "Always-denying unavailable capability"
+    },
+    {
+      "endpoint": "factHistory:getEvent",
+      "kind": "query",
+      "origin": "factHistory:getEvent",
+      "line": 225,
+      "visibility": "public",
+      "alias": false,
+      "disposition": "Always-denying unavailable capability"
+    },
+    {
+      "endpoint": "factHistory:getHistory",
+      "kind": "query",
+      "origin": "factHistory:getHistory",
+      "line": 198,
+      "visibility": "public",
+      "alias": false,
+      "disposition": "Always-denying unavailable capability"
+    },
+    {
+      "endpoint": "factHistory:getSupersessionChain",
+      "kind": "query",
+      "origin": "factHistory:getSupersessionChain",
+      "line": 348,
+      "visibility": "public",
+      "alias": false,
+      "disposition": "Always-denying unavailable capability"
+    },
+    {
+      "endpoint": "memorySpaces:getStats",
+      "kind": "query",
+      "origin": "memorySpaces:getStats",
+      "line": 106,
+      "visibility": "public",
+      "alias": false,
+      "disposition": "Always-denying unavailable capability"
+    },
+    {
+      "endpoint": "runtimeClient:signal",
+      "kind": "query",
+      "origin": "runtimeClient:signal",
+      "line": 22,
+      "visibility": "public",
+      "alias": false,
+      "disposition": "Root-owned opaque change signal"
+    }
+  ],
+  "preservedFailures": [
+    "Initial converted-reference typing and read/mock runner failures; original receipts remain.",
+    "recall-tests1/2 used an incomplete controlled fact shape; successor provides the required structured fields without changing assertions.",
+    "compatibility-tests1/2 exposed obsolete query mocks, read-as-write matrix selection, immutable prior source expectations and missing fixture DB methods; replacements retain the business/negative assertions and original accepted source hashes.",
+    "artifact-tests1 had a wrong fork argument in the new test; artifact-tests2 corrected native ABI.",
+    "artifact-tests3 contains an ENOENT runner setup failure for a nonexistent transcript.test.ts. Its six executed suites passed; the real managed.test.ts passes in artifact-compatibility4. No failed suite is silently excluded from acceptance accounting.",
+    "SDK-types6/7 and backend-types4 preserve in-flight new narrowing/test typing plus Root-owned WIP test errors; final SDK/backend/lint types are clean.",
+    "Independent linked-artifact canView-vs-canExport red is preserved by the reviewer. This successor restores canExport with an actual public artifact-reader positive/negative contrast; only two author paths changed after report1.",
+    "Independent message-anchor artifact reader mismatch is retained by the reviewer; this successor reuses the established canonical verification and adds a positive/deleted-anchor contrast."
+  ],
+  "limits": [
+    "These are controlled code/SDK checks. Native same-argument expiry, deployed registration kinds, official browser subscriptions/refresh and Agent-mediated media still require the sole actual lane.",
+    "OriginalTask13 remains incomplete pending genuine async-video and Agent-mediated outcomes; existing image evidence stays source/qualification scoped, constructor model echo is not serving-ID proof.",
+    "No build, package, service, paid call, Git index/commit, production or credentials change was made by this lane.",
+    "Convex freezes Date.now for one query/mutation. Advancing-clock intra-mutation controls are code hardening, not native failure evidence. The new recall control advances action time only after the real finalDelivery RPC returns."
+  ],
+  "ownership": "Root owns runtimeAuth/runtimeClient/runtimeDelivery/client-runtime/provider/UI/Gateway guard changes and trackers/Git. This 83-file author manifest excludes those ownership paths.",
+  "supersedes": "report2.json"
+}

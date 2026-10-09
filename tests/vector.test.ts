@@ -1190,7 +1190,7 @@ describe("Vector Memory API (Layer 2)", () => {
       });
 
       // Verify all fields stored correctly
-      const stored = await client.query(api.memories.get, {
+      const stored = await client.mutation(api.memories.get, {
         memorySpaceId: "memspace-test",
         memoryId: memory.memoryId,
       });

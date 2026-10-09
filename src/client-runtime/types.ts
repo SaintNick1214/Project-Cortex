@@ -1,6 +1,6 @@
 /** Browser-only v1 contracts. Selectors are verified by the backend, never authority. */
 export interface RuntimeScope { readonly tenantId: string; readonly memorySpaceId: string }
-export interface RuntimeSession extends RuntimeScope { readonly version: 1; readonly principalId: string; readonly userId: string }
+export interface RuntimeSession extends RuntimeScope { readonly version: 1; readonly principalId: string; readonly userId: string; readonly deliveryExpiresAt?: number }
 export interface TextSubmitV1 {
   version: 1; agentId: string; agentVersion: number; conversationId?: string;
   clientRequestId: string; parts: { type: "text"; text: string }[];
@@ -27,24 +27,40 @@ export type RuntimePublicPart =
   | { type: "tool"; toolCallId: string; name: string; phase: "requested" | "approved" | "running" | "succeeded" | "failed" }
   | { type: "error"; code: "RUNTIME_OUTPUT_FAILED" }
   | { type: "artifact"; artifactId: string; kind: "memory-receipt" }
+  | { type: "media-job"; version: 1; jobId: string; artifactId: string; kind: "image" | "video" }
   | { type: "status"; state: string };
 export interface RuntimeToolApproval { operationId: string; toolName: string; requestHash: string }
 export interface RuntimeOutputCursor { readonly attemptNumber: number; readonly sequence: number }
 export interface RuntimeObservation {
   run: RuntimeRun; state: string; parts: { sequence: number; part: RuntimePublicPart }[];
-  cursor: number; approvals: RuntimeToolApproval[];
+  cursor: number; approvals: RuntimeToolApproval[]; deliveryExpiresAt?: number;
 }
 export interface RuntimeEmbeddingProfile {
   profileId: string; modelId: string; dimensions: number; normalization: string; chunking: string; indexName: string;
+}
+export type RuntimeMemoryStage = "facts" | "vectors" | "graph";
+export interface RuntimeStageWatermark {
+  readonly cutoff: number; readonly indexedThrough: number; readonly complete: boolean;
+  readonly hole: Readonly<{ sequence: number; state: "pending" | "failed" | "missing" }> | null;
+}
+/** Point-in-time status of captured counters. It does not change an Agent's administrator-selected memory mode. */
+export interface RuntimeMemoryReadiness {
+  readonly version: 1; readonly cutoff: number; readonly graphCutoff: number; readonly profile: RuntimeEmbeddingProfile;
+  readonly stages: Readonly<Partial<Record<RuntimeMemoryStage, RuntimeStageWatermark>>>;
+  readonly strictStages: readonly RuntimeMemoryStage[];
+}
+export interface RuntimeMemoryReadinessOptions {
+  cutoff?: number; graphCutoff?: number; expectedProfileId?: string; strictStages?: RuntimeMemoryStage[];
 }
 export interface RuntimeRecallItem {
   type: "memory" | "fact"; id: string; content: string; score: number; source: string;
   /** Additional attributed, public retrieval metadata; never a model request. */
   memory?: Readonly<Record<string, unknown>>; fact?: Readonly<Record<string, unknown>>;
 }
-export interface RuntimeRecallResult { items: RuntimeRecallItem[]; context: string; profileId: string }
+export interface RuntimeRecallResult { items: RuntimeRecallItem[]; context: string; profileId: string; deliveryExpiresAt?: number }
 export interface RuntimeTranscriptMessage {
-  id: string; role: "user" | "assistant" | "tool"; parts: { type: "text"; text: string }[];
+  id: string; role: "user" | "assistant" | "tool";
+  parts: Extract<RuntimePublicPart, { type: "text" | "tool" | "artifact" | "media-job" }>[];
   order: number; stepOrder: number; status: "pending" | "success" | "failed"; revision: number;
 }
 export interface RuntimeTranscriptPage { page: RuntimeTranscriptMessage[]; isDone: boolean; continueCursor: string | null }
@@ -59,7 +75,28 @@ export interface RuntimeConversation {
 export interface RuntimeAssetReference { assetId: string; version: number }
 export interface RuntimeAssetVersion {
   readonly version: 1; readonly assetId: string; readonly versionId: string; readonly assetVersion: number;
-  readonly contentHash: string; readonly sizeBytes: number; readonly mimeType: string;
+  readonly contentHash: string; readonly sizeBytes: number; readonly mimeType: string; readonly deliveryExpiresAt?: number;
   readonly mediaKind: "image" | "video" | "audio" | "document" | "binary"; readonly filename?: string;
   readonly lineage: Readonly<{ kind: "upload"; requestId: string } | { kind: "generated"; operationId: string; modelId: string; sourceVersionIds?: readonly string[] }>;
+}
+export type RuntimeMediaJobState = "pending" | "submitting" | "submission_unknown" | "processing" | "downloading" | "ready" | "failed" | "cancelled" | "expired";
+/** Public durable job metadata; no callback secrets, upstream URLs, encoded output or model overrides. */
+export interface RuntimeMediaJob {
+  readonly version: 1; readonly jobId: string; readonly artifactId: string; readonly kind: "image" | "video";
+  readonly state: RuntimeMediaJobState; readonly revision: number; readonly createdAt: number; readonly updatedAt: number;
+  readonly asset?: RuntimeAssetVersion; readonly failureCode?: string;
+  readonly deliveryExpiresAt?: number;
+  readonly costStatus: "reserved" | "incurred_unknown" | "settled";
+  readonly upstreamCancellation: "not_requested" | "not_supported";
+}
+export interface RuntimeMediaSubmit {
+  requestId: string; kind: "image" | "video"; prompt: string; inputAsset?: RuntimeAssetReference; conversationId?: string;
+}
+/** Browser projection of a retained artifact. Files remain immutable selectors served through authenticated HTTP. */
+export interface RuntimeArtifact {
+  readonly contractVersion: 1; readonly artifactId: string; readonly artifactVersion: number; readonly versionPointer: number;
+  readonly kind: "text" | "code" | "sheet" | "image" | "video" | "diagram" | "html" | "custom";
+  readonly title: string; readonly content?: string; readonly deliveryExpiresAt?: number; readonly streamingState: "draft" | "streaming" | "paused" | "final" | "error";
+  readonly file?: Readonly<RuntimeAssetReference & { versionId: string; contentHash: string; sizeBytes: number; mimeType: string }>;
+  readonly conversationId?: string; readonly createdAt: number; readonly updatedAt: number;
 }

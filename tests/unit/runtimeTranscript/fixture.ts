@@ -9,6 +9,7 @@ import { semanticHash } from "../../../src/domain/profile";
 import { LARGE_EMBEDDING_PROFILE } from "../../../src/domain/profile";
 import { DEFAULT_GATEWAY_POLICY_MANIFEST } from "../../../convex-dev/runtimeGatewayQualifications";
 import { AGENT_NATIVE_TOOLS, AGENT_TOOL_REGISTRY_VERSION } from "../../../src/domain/agent-tools";
+import { AGENT_NATIVE_TOOLS_V2, AGENT_TOOL_REGISTRY_VERSION_V2 } from "../../../src/domain/agent-tools";
 
 const lookup = jest.fn<(id: string, revision: number) => DeploymentPolicyManifest | undefined>();
 const bootstrap = await import("../../../convex-dev/runtimeModelPolicyBootstrap");
@@ -40,6 +41,25 @@ export function installMockRoot(options: { tools?: boolean } = {}) {
       checkedAt: clock - 1, expiresAt: clock + 100_000, terminalCost: "gateway-aggregate-usd-v1", terminalProof: "provider-terminal-v1", priceRevision: "price-1", boundRevision: "bound-1" }] };
   lookup.mockReset(); lookup.mockImplementation((id, revision) => id === root.manifestId && revision === root.revision ? root : undefined);
   jest.spyOn(Date, "now").mockReturnValue(clock);
+}
+/** Provisional CODE-only envelope. Never an installed production qualification. */
+export function installMediaMockRoot(options: { callbacks?: boolean; v2?: boolean } = {}) {
+  installMockRoot({ tools: true }); const hash = "a".repeat(64);
+  const image = "openai/gpt-image-1", video = "google/veo-3.1-fast-generate-preview";
+  const toolVersion = options.v2 ? AGENT_TOOL_REGISTRY_VERSION_V2 : AGENT_TOOL_REGISTRY_VERSION;
+  const catalog = options.v2 ? AGENT_NATIVE_TOOLS_V2 : AGENT_NATIVE_TOOLS;
+  root = { ...root, policies: root.policies.map(item => ({ ...item, rules: { ...item.rules, allowedModels: [...item.rules.allowedModels!, image, video],
+    interfaces: ["chat", "image", "video"], capabilities: ["text", "tools", "image", "video"], allowedTools: catalog.map(tool => tool.name), pins: { ...item.rules.pins, toolRegistryVersion: toolVersion } } })),
+    dispatchEvidence: root.dispatchEvidence.map(proof => ({ ...proof, inputBound: { ...proof.inputBound, featureEnvelope: options.v2 ? "agent-tools-chat-v2" : "agent-tools-chat-v1" }, toolContract: { ...proof.toolContract!, registryVersion: toolVersion, toolsCanonical: canonicalModelJson(catalog) } })),
+    qualifications: [...root.qualifications, ...(["image", "video"] as const).map(kind => ({ ...root.qualifications[0]!, receiptId: `offline-${kind}`, modelId: kind === "image" ? image : video, nativeInterface: kind, capabilities: [kind] }))] };
+  root = { ...root, policies: [...root.policies, ...(["image", "video"] as const).map(kind => ({ policyId: `offline-${kind}`, version: 1, scope: "deployment" as const, operationKey: kind === "image" ? "media.image.generate" as const : "media.video.generate" as const,
+    rules: { modelId: kind === "image" ? image : video, nativeInterface: kind, capabilities: [kind], allowedTools: [], limits: { toolSteps: 0 } } }))],
+    dispatchEvidence: [...root.dispatchEvidence, ...(["image", "video"] as const).map(kind => ({ ...root.dispatchEvidence[0]!, receiptId: `offline-${kind}`, modelId: kind === "image" ? image : video, nativeInterface: kind, toolContract: undefined,
+      inputBound: { ruleId: "media-native-utf8-v1" as const, revision: 1, featureEnvelope: kind === "image" ? "media-image-v1" as const : "media-video-async-v1" as const, nativeTransformHash: hash, documentHash: hash, proofHash: hash },
+      resultBound: { ...root.dispatchEvidence[0]!.resultBound, maximumOutputTokens: 0 }, terminalCost: "unavailable" as const,
+      mediaContract: { version: 1 as const, options: kind === "image" ? { kind, n: 1 as const, size: "1024x1024" as const, quality: "low" as const, outputFormat: "png" as const } : { kind, n: 1 as const, duration: 4 as const, resolution: "720p" as const, generateAudio: false as const },
+        inputProtocol: "none" as const, maximumInputAssetBytes: 0, maximumResultBytes: 20_000_000, callbacks: kind === "video" && !!options.callbacks, terminalIdentity: "requested-only" as const, usage: "optional" as const } }))] };
+  root = JSON.parse(JSON.stringify(root)) as DeploymentPolicyManifest;
 }
 /** Same native policy handlers with controlled installed-manifest time; no service/model claim. */
 export function installIngestionMockRoot(options: { large?: boolean } = {}) {
@@ -182,6 +202,8 @@ export async function transcriptFixture(options: { maxContextTokens?: number } =
     if (path?.endsWith("/deleteByIds")) { effects.deletes++; for (const id of args.messageIds as string[]) native.messages.delete(id); return null; }
     if (path?.endsWith("/deleteAllForThreadIdAsync")) { effects.deletes++; for (const [id, m] of native.messages) if (m.threadId === args.threadId) native.messages.delete(id); native.threads.delete(args.threadId as string); return null; }
     const name = getFunctionName(ref as Parameters<typeof getFunctionName>[0]);
+    if (name === "runtimeMemory:finalDelivery") return await invoke((await import("../../../convex-dev/runtimeMemory")).finalDelivery, ctx, args);
+    if (name === "runtimeAssets:retireAuthority") return await invoke((await import("../../../convex-dev/runtimeAssets")).retireAuthority, ctx, args);
     if (name === "runtimeGraph:retireAuthority") return await invoke((await import("../../../convex-dev/runtimeGraph")).retireAuthority, ctx, args);
     if (name === "runtimeGraph:reconcileScoped") return await invoke((await import("../../../convex-dev/runtimeGraph")).reconcileScoped, ctx, args);
     if (name === "runtimeModelPolicy:cancelBudget") return await invoke(ledger.cancelBudget, ctx, args);

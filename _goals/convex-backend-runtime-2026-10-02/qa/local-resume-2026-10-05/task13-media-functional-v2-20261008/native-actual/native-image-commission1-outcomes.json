@@ -1,0 +1,51 @@
+{
+  "status": "FAIL_OR_UNKNOWN",
+  "groups": [
+    {
+      "name": "noJWT-fixed-commissioning-denied",
+      "status": "PASS",
+      "error": {
+        "name": "ConvexError",
+        "message": "[Request ID: bd840e29840a24dc] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Commissioning denied.\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../custom/backend/task13ImageCommission.ts:14:147)\n    at handler (../custom/backend/task13ImageCommission.ts:18:60)\n",
+        "data": {
+          "code": "FORBIDDEN",
+          "message": "Commissioning denied.",
+          "outcome": "not_dispatched",
+          "retryable": false,
+          "version": 1
+        }
+      }
+    },
+    {
+      "name": "foreign-fixed-commissioning-denied",
+      "status": "PASS",
+      "error": {
+        "name": "ConvexError",
+        "message": "[Request ID: 46bc51556021ec35] Server Error\nUncaught ConvexError: {\"version\":1,\"code\":\"FORBIDDEN\",\"message\":\"Commissioning denied.\",\"retryable\":false,\"outcome\":\"not_dispatched\"}\n    at deny (../custom/backend/task13ImageCommission.ts:14:147)\n    at handler (../custom/backend/task13ImageCommission.ts:18:60)\n",
+        "data": {
+          "code": "FORBIDDEN",
+          "message": "Commissioning denied.",
+          "outcome": "not_dispatched",
+          "retryable": false,
+          "version": 1
+        }
+      }
+    },
+    {
+      "name": "durable-job-artifact-reservation-before-one-native-request",
+      "status": "PASS",
+      "jobId": "media:84f2270c045038ec853ebd504f7db79f4114a7e2baeb3c46f2413a41d9e05cb0",
+      "artifactId": "artifact:media:84f2270c045038ec853ebd504f7db79f4114a7e2baeb3c46f2413a41d9e05cb0",
+      "attemptId": "qd7dmmsrrjjekacdxhassrgwf18fz5tk",
+      "issuedCount": 1,
+      "checkpointAt": 1791505051722,
+      "issuedAt": 1791505052086
+    }
+  ],
+  "error": {
+    "name": "CortexRuntimeError",
+    "message": "Cortex runtime: FORBIDDEN"
+  },
+  "noBlindPaidRepeat": true,
+  "shippedImageQualification": false
+}

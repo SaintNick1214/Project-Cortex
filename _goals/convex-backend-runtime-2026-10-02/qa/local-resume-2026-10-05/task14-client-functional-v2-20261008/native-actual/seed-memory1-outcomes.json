@@ -1,0 +1,65 @@
+{
+  "status": "ACTUAL_GOVERNED_MEMORY_SEED_PASS",
+  "codeword": "BLUEBIRD_3c1dcff1",
+  "requestId": "task14-seed-3c1dcff1-6463-4018-8600-b7aac15b5cf7",
+  "result": {
+    "created": true,
+    "facts": [
+      {
+        "confidence": 100,
+        "createdAt": 1791505926786,
+        "entities": [
+          {
+            "name": "BLUEBIRD_3c1dcff1",
+            "type": "concept"
+          }
+        ],
+        "extractionPolicyVersion": "source-attributed-facts-v1",
+        "fact": "User has a project codeword BLUEBIRD_3c1dcff1.",
+        "factId": "438226e01db3d596ac604514b02d753097e5ea1273b155c599a4e6f246619daa",
+        "factType": "custom",
+        "lineage": {
+          "role": "user",
+          "sourceEventId": "explicit:[\"task13-3c1dcff16463\",\"media-3c1dcff16463\",\"n574b8n18wk24yyb8kc19hcqah8fz0y6\",\"task14-seed-3c1dcff1-6463-4018-8600-b7aac15b5cf7\"]",
+          "sourceId": "explicit:[\"task13-3c1dcff16463\",\"media-3c1dcff16463\",\"n574b8n18wk24yyb8kc19hcqah8fz0y6\",\"task14-seed-3c1dcff1-6463-4018-8600-b7aac15b5cf7\"]",
+          "sourceRevision": 1,
+          "trust": "user_assertion"
+        },
+        "memorySpaceId": "media-3c1dcff16463",
+        "object": "BLUEBIRD_3c1dcff1",
+        "ownerPrincipalId": "n574b8n18wk24yyb8kc19hcqah8fz0y6",
+        "predicate": "has_project_codeword",
+        "sourceType": "manual",
+        "subject": "User",
+        "tags": [],
+        "tenantId": "task13-3c1dcff16463",
+        "updatedAt": 1791505926786,
+        "version": 1
+      }
+    ],
+    "receiptId": "d64dcfe02c8ea2a614cdc1ecee11c8a5bda0f1214ae2a92f7b6f7001fc7d2928",
+    "sourceId": "explicit:[\"task13-3c1dcff16463\",\"media-3c1dcff16463\",\"n574b8n18wk24yyb8kc19hcqah8fz0y6\",\"task14-seed-3c1dcff1-6463-4018-8600-b7aac15b5cf7\"]",
+    "sourceRevision": 1
+  },
+  "newAttempts": [
+    {
+      "attemptId": "qd71mpmbwx908yv08v5xrgxzdn8fzjyq",
+      "state": "uncertain",
+      "slotReleased": true,
+      "reservationUnits": 100000
+    },
+    {
+      "attemptId": "qd79fdx18yxjkrdczs9wp42y698fzesq",
+      "state": "uncertain",
+      "slotReleased": true,
+      "reservationUnits": 100000
+    }
+  ],
+  "actualExtractAndEmbeddingCalls": 2,
+  "unknownCostRetained": true,
+  "noPaidRepeat": true,
+  "sourceFromPublicRemember": true,
+  "modelCallsAreNativeSetupNotUI": true,
+  "originalImageAttemptAndCostRetained": true,
+  "existingTenantAccountRootWindowNotReset": true
+}

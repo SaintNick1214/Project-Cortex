@@ -19,8 +19,10 @@ import { isTrustedDeploymentManifest, lookupDeploymentManifest, qualifiedTermina
 import type { DeploymentPolicyManifest, QualifiedDispatchEvidence } from "./runtimeModelPolicyBootstrap";
 import { modelOperationKey, modelSource, visibilityFields } from "./runtimePolicySchema";
 import { readCurrentExecutableDefinition } from "./agentDefinitions";
-import { AGENT_NATIVE_TOOLS, AGENT_TOOL_REGISTRY_VERSION, agentToolsInputBound } from "../src/domain/agent-tools";
+import { AGENT_TOOL_REGISTRY_VERSION, AGENT_TOOL_REGISTRY_VERSION_V2, agentToolCatalog, agentToolsInputBoundV2, agentToolsInputBound } from "../src/domain/agent-tools";
 import { privateFrameVideoInputBound } from "../src/domain/media-input";
+import { mediaContractSchema, mediaInputBound, mediaResultSchema } from "../src/domain/media-jobs";
+import { allowMediaCompletion } from "./runtimeMediaFence";
 import { parseAgentLanguageResult } from "../src/domain/agent-language";
 import { guardAgentRunBudget } from "./runtimeAgentFence";
 import { currentControlRun } from "./runs";
@@ -145,9 +147,16 @@ function validManifest(manifest: DeploymentPolicyManifest | undefined): asserts 
     integer(proof.resultBound.maximumPrivateResultBytes, 1); integer(proof.resultBound.maximumOutputTokens);
     integer(proof.inputBound.revision, 1); integer(proof.checkedAt); integer(proof.expiresAt, 1);
     if (proof.checkedAt >= proof.expiresAt) fail("CAPABILITY_UNAVAILABLE");
-    if (proof.inputBound.featureEnvelope === "agent-tools-chat-v1") {
+    if (proof.inputBound.featureEnvelope === "media-image-v1" || proof.inputBound.featureEnvelope === "media-video-async-v1") {
+      const media = mediaContractSchema.safeParse(proof.mediaContract);
+      if (!media.success || proof.inputBound.ruleId !== "media-native-utf8-v1" || proof.inputBound.revision !== 1
+        || media.data.options.kind !== proof.nativeInterface || !qualification.capabilities.includes(media.data.options.kind)
+        || (media.data.options.kind === "image") !== (proof.inputBound.featureEnvelope === "media-image-v1")) fail("CAPABILITY_UNAVAILABLE");
+    } else if (proof.mediaContract) fail("CAPABILITY_UNAVAILABLE");
+    if (["agent-tools-chat-v1", "agent-tools-chat-v2"].includes(proof.inputBound.featureEnvelope)) {
       if (proof.nativeInterface !== "chat" || proof.inputBound.ruleId !== "agent-tools-chat-utf8-v1" || !qualification.capabilities.includes("tools")
-        || proof.toolContract?.registryVersion !== AGENT_TOOL_REGISTRY_VERSION || proof.toolContract.toolsCanonical !== canonical(AGENT_NATIVE_TOOLS)
+        || !proof.toolContract || !agentToolCatalog(proof.toolContract.registryVersion) || proof.toolContract.toolsCanonical !== canonical(agentToolCatalog(proof.toolContract.registryVersion))
+        || ((proof.inputBound.featureEnvelope === "agent-tools-chat-v1") !== (proof.toolContract.registryVersion === AGENT_TOOL_REGISTRY_VERSION))
         || proof.toolContract.maximumToolCalls < 1 || proof.toolContract.maximumToolCalls > 4) fail("CAPABILITY_UNAVAILABLE");
       integer(proof.toolContract.maximumToolCalls, 1);
     } else if (proof.toolContract || qualification.capabilities.includes("tools")) fail("CAPABILITY_UNAVAILABLE");
@@ -254,7 +263,7 @@ function snapshotOf(record: Pick<Operation, "resolutionCanonical" | "snapshotCan
   if (canonical(snapshot) !== record.snapshotCanonical) fail("POLICY_DENIED");
   return snapshot;
 }
-async function currentOperation(ctx: ReadCtx, reference: RuntimeAuthorityReference, operation: Operation, permitCancelled = false, asParent = false) {
+async function currentOperation(ctx: ReadCtx, reference: RuntimeAuthorityReference, operation: Operation, permitCancelled = false, asParent = false, mediaCompletion = false) {
   if (!sameAuthority(reference, operation.reference)) fail("FORBIDDEN");
   await currentAuthority(ctx, reference, operation.operationKey);
   await checkSource(ctx, reference, operation.operationKey, operation.source);
@@ -262,7 +271,7 @@ async function currentOperation(ctx: ReadCtx, reference: RuntimeAuthorityReferen
   const run = await ctx.db.get("runtimeBudgetAccounts", operation.runAccountId);
   if (!run || !run.reference || !sameAuthority(run.reference, reference) || run.tenantId !== reference.tenantId || (run.cancelled && !permitCancelled)) fail("FORBIDDEN");
   if (!permitCancelled) {
-    await guardAgentRunBudget(ctx, reference, run._id);
+    if (!mediaCompletion) await guardAgentRunBudget(ctx, reference, run._id);
     await guardIngestionRunBudget(ctx, reference, run._id);
   }
   let parentId = operation.parentOperationId;
@@ -501,6 +510,13 @@ export const resolve = internalQuery({ args: resolveArgs, handler: async (ctx, a
 /** Full final request bytes, not caller estimates. Proof exists only in reviewed compiled root. */
 export function deriveQualifiedInputBound(proof: QualifiedDispatchEvidence, request: ReturnType<typeof validateModelRequest>["request"]): number {
   if (request.outputTokens > proof.resultBound.maximumOutputTokens || (proof.nativeInterface === "embedding" && request.texts.length > proof.resultBound.maximumEmbeddingValues)) fail("POLICY_DENIED");
+  if (proof.inputBound.ruleId === "media-native-utf8-v1" && (proof.inputBound.featureEnvelope === "media-image-v1" || proof.inputBound.featureEnvelope === "media-video-async-v1")) {
+    if (!request.media || !proof.mediaContract || request.messages?.length !== 1 || request.messages[0].role !== "user"
+      || request.messages[0].parts.length !== 1 || request.messages[0].parts[0].type !== "text" || request.messages[0].parts[0].text !== request.media.prompt
+      || canonical(request.options) !== canonical({ maxRetries: 0 })) fail("POLICY_DENIED");
+    return domainControl(() => mediaInputBound(request.media, proof.mediaContract, proof.modelId));
+  }
+  if (request.media) fail("CAPABILITY_UNAVAILABLE");
   if (proof.nativeInterface === "video" && proof.inputBound.ruleId === "private-frame-video-json-v1"
     && proof.inputBound.featureEnvelope === "private-frame-video-v1" && proof.inputBound.revision === 1) {
     if (request.texts.length !== 1 || request.messages?.length !== 1 || request.messages[0].role !== "user"
@@ -522,15 +538,16 @@ export function deriveQualifiedInputBound(proof: QualifiedDispatchEvidence, requ
     if (counts.some((n) => n > 8192) || add(...counts) > 300_000) fail("POLICY_DENIED");
     return add(...counts);
   }
-  if (proof.inputBound.ruleId === "agent-tools-chat-utf8-v1" && proof.inputBound.featureEnvelope === "agent-tools-chat-v1" && proof.nativeInterface === "chat") {
-    if (!request.messages || request.outputSchema || request.options.providerOptions || request.toolRegistryVersion !== AGENT_TOOL_REGISTRY_VERSION
-      || proof.toolContract?.registryVersion !== AGENT_TOOL_REGISTRY_VERSION || proof.toolContract.toolsCanonical !== canonical(AGENT_NATIVE_TOOLS)
+  if (proof.inputBound.ruleId === "agent-tools-chat-utf8-v1" && ["agent-tools-chat-v1", "agent-tools-chat-v2"].includes(proof.inputBound.featureEnvelope) && proof.nativeInterface === "chat") {
+    if (!request.messages || request.outputSchema || request.options.providerOptions || request.toolRegistryVersion !== proof.toolContract?.registryVersion
+      || !proof.toolContract || !agentToolCatalog(proof.toolContract.registryVersion) || proof.toolContract.toolsCanonical !== canonical(agentToolCatalog(proof.toolContract.registryVersion))
+        || ((proof.inputBound.featureEnvelope === "agent-tools-chat-v1") !== (proof.toolContract.registryVersion === AGENT_TOOL_REGISTRY_VERSION))
       || request.toolSteps > proof.toolContract.maximumToolCalls) fail("CAPABILITY_UNAVAILABLE");
     for (const tool of request.tools) {
-      const expected = AGENT_NATIVE_TOOLS.find(entry => entry.name === tool.name);
+      const expected = agentToolCatalog(request.toolRegistryVersion)?.find(entry => entry.name === tool.name);
       if (!expected || canonical(tool.definition) !== canonical({ description: expected.description, inputSchema: expected.inputSchema })) fail("POLICY_DENIED");
     }
-    return agentToolsInputBound(canonical({ messages: request.messages, tools: request.tools, ...request.toolChoice ? { toolChoice: request.toolChoice } : {} }), request.messages.length, request.tools.length);
+    return (request.toolRegistryVersion === AGENT_TOOL_REGISTRY_VERSION_V2 ? agentToolsInputBoundV2 : agentToolsInputBound)(canonical({ messages: request.messages, tools: request.tools, ...request.toolChoice ? { toolChoice: request.toolChoice } : {} }), request.messages.length, request.tools.length);
   }
   if (proof.inputBound.ruleId !== "plain-chat-cookbook-utf8-v1" || proof.inputBound.featureEnvelope !== "plain-chat-v1" || proof.nativeInterface !== "chat"
     || !request.messages || request.tools.length || request.options.providerOptions) fail("CAPABILITY_UNAVAILABLE");
@@ -711,6 +728,7 @@ const receiptSchema = z.object({ version: z.literal(1), dispatchIdentity: termin
   nativeInterface, outcome: z.enum(["confirmed", "confirmed_rejected"]), proof: z.literal("provider-terminal-v1"),
   costSource: z.enum(["gateway-aggregate-usd-v1", "unavailable"]), aggregateCostUsd: z.string().regex(/^\d+(?:\.\d+)?$/).optional(),
   usage: z.object({ inputTokens: count.optional(), outputTokens: count.optional(), totalTokens: count.optional(), cachedInputTokens: count.optional(), reasoningTokens: count.optional() }).strict().optional(),
+  media: z.object({ jobId: terminalIdentifier, status: z.enum(["completed", "failed", "cancelled", "expired"]), contentHash: z.string().regex(/^[a-f0-9]{64}$/).optional(), sizeBytes: count.optional(), mimeType: z.enum(["image/png", "video/mp4", "video/webm"]).optional() }).strict().optional(),
   actualModel: terminalIdentifier.optional(), privateResultCanonical: z.string().optional() }).strict();
 /** Decimal exact arithmetic, round liability upward to a micro-USD. */
 export function costMicroUnits(usd: string): number {
@@ -778,6 +796,14 @@ function validatedPrivateResult(snapshot: ModelPolicySnapshotV1, attempt: Attemp
       const request = validateModelRequest(snapshot, (original as Record<string, unknown>).request).request;
       if (parsed.data.vectors.length !== request.texts.length) return undefined;
       parsed.data.vectors.forEach((vector) => assertEmbeddingVector(vector, snapshot.semanticProfile));
+    } else if (snapshot.nativeInterface === "image" || snapshot.nativeInterface === "video") {
+      const parsed = mediaResultSchema.safeParse(result);
+      const terminal = attempt.terminalEvidenceCanonical && receiptSchema.safeParse(decode(attempt.terminalEvidenceCanonical));
+      const original = decode(attempt.canonical) as { request?: { semanticId?: string } };
+      if (!parsed.success || !terminal || !terminal.success || terminal.data.media?.status !== "completed"
+        || parsed.data.jobId !== original.request?.semanticId || parsed.data.jobId !== terminal.data.media.jobId
+        || parsed.data.contentHash !== terminal.data.media.contentHash || parsed.data.sizeBytes !== terminal.data.media.sizeBytes
+        || parsed.data.mimeType !== terminal.data.media.mimeType || (snapshot.nativeInterface === "image") !== (parsed.data.mimeType === "image/png")) return undefined;
     } else return undefined;
     return encoded;
   } catch { return undefined; }
@@ -822,6 +848,22 @@ function knownCost(receipt: TerminalReceipt, proof: QualifiedDispatchEvidence): 
  * intentionally unavailable-cost proof with a qualified full-call ceiling can
  * retain output; a lost expected-known cost or ambiguous terminal cannot. */
 function confirmedUnknownResult(attempt: Attempt, snapshot: ModelPolicySnapshotV1, receipt: TerminalReceipt, proof: QualifiedDispatchEvidence): boolean {
+  if (snapshot.nativeInterface === "image" || snapshot.nativeInterface === "video") {
+    const contract = proof.mediaContract;
+    const original = decode(attempt.canonical) as { request?: { semanticId?: string; media?: unknown } };
+    const media = receipt.media;
+    return !!contract && !!media && original.request?.media !== undefined && media.jobId === original.request.semanticId
+      && media.status === "completed" && media.contentHash !== undefined && media.sizeBytes !== undefined
+      && media.sizeBytes > 0 && media.sizeBytes <= contract.maximumResultBytes
+      && (snapshot.nativeInterface === "image" ? media.mimeType === "image/png" : ["video/mp4", "video/webm"].includes(media.mimeType ?? ""))
+      && (contract.terminalIdentity === "requested-only" ? receipt.actualModel === undefined : receipt.actualModel === qualifiedTerminalModelId(proof))
+      && (contract.usage === "optional" || receipt.usage?.inputTokens !== undefined)
+      && proof.terminalCost === "unavailable" && receipt.costSource === "unavailable" && receipt.aggregateCostUsd === undefined
+      && snapshot.costBound.coversAllProviderCharges && snapshot.costBound.maximumCostUnits === attempt.reservationUnits
+      && proof.checkedAt <= Date.now() && Date.now() < proof.expiresAt && receipt.outcome === "confirmed" && receipt.proof === proof.terminalProof
+      && receipt.dispatchIdentity === attempt.dispatchIdentity && receipt.modelId === snapshot.modelId && receipt.nativeInterface === snapshot.nativeInterface
+      && !observationViolation(attempt, snapshot, receipt, proof);
+  }
   return proof.terminalCost === "unavailable" && receipt.costSource === "unavailable" && receipt.aggregateCostUsd === undefined
     && snapshot.costBound.coversAllProviderCharges && snapshot.costBound.maximumCostUnits === attempt.reservationUnits
     && proof.checkedAt <= Date.now() && Date.now() < proof.expiresAt
@@ -936,13 +978,14 @@ function attachmentDenied(error: unknown): boolean {
     const code = ownValue("code");
     return typeof code === "string" && ["FORBIDDEN", "UNAUTHENTICATED", "AUTHORITY_LOOKUP_AMBIGUOUS", "RUN_CANCELLED",
       "INVALID_INPUT", "POLICY_DENIED", "CAPABILITY_UNAVAILABLE", "CAPABILITY_UNSUPPORTED", "PROFILE_NOT_READY", "IDEMPOTENCY_CONFLICT", "INVALID_STATE", "STALE_CONTEXT", "TOOL_STEP_LIMIT", "TOOL_DENIED",
-      "APPROVAL_REQUIRED", "STALE_TRANSCRIPT", "TRANSCRIPT_CONFLICT", "LEASE_EXPIRED"].includes(code);
+      "APPROVAL_REQUIRED", "STALE_TRANSCRIPT", "TRANSCRIPT_CONFLICT", "LEASE_EXPIRED", "MEDIA_JOB_EXPIRED", "STALE_MEDIA_INPUT"].includes(code);
   } catch { return false; }
 }
 async function permittedAttachment(ctx: ReadCtx, reference: RuntimeAuthorityReference, state: AttemptContext): Promise<boolean> {
   try {
     if (storedObservationViolation(state.attempt, state.snapshot, state.proof)) return false;
-    const checked = await currentOperation(ctx, reference, state.operation);
+    const mediaCompletion = await allowMediaCompletion(ctx, reference, state.operation);
+    const checked = await currentOperation(ctx, reference, state.operation, false, false, mediaCompletion);
     const current = checked.current.snapshot;
     if (state.proof.checkedAt > Date.now() || Date.now() >= state.proof.expiresAt) return false;
     if (state.operation.overrun || state.run.overrun || state.tenant.overrun || !current.allowedModels.includes(state.snapshot.modelId)
@@ -957,6 +1000,16 @@ async function permittedAttachment(ctx: ReadCtx, reference: RuntimeAuthorityRefe
     if (attachmentDenied(error)) return false;
     throw error;
   }
+}
+/** Artifact publication reuses the exact current attachment authority after the
+ * asynchronous storage gap. This check never reserves or changes accounting. */
+export async function mediaResultPublicationAllowed(ctx: ReadCtx, reference: RuntimeAuthorityReference,
+  attemptId: Id<"runtimeModelAttempts">, operationId: Id<"runtimeModelOperations">, resultCanonical: string): Promise<boolean> {
+  const state = await attemptContext(ctx, attemptId);
+  if (state.operation._id !== operationId || !["media.image.generate", "media.video.generate"].includes(state.operation.operationKey)
+    || state.attempt.resultAttachmentState !== "attached" || state.attempt.resultWithheld
+    || state.attempt.privateResultCanonical !== resultCanonical) return false;
+  return permittedAttachment(ctx, reference, state);
 }
 /** Trusted compiled terminal producers only. This authority accounts liability, never grants data access. */
 export const captureTerminalEvidence = internalMutation({ args: { attemptId: v.id("runtimeModelAttempts"), dispatchIdentity: v.string(), receiptCanonical: v.string() }, handler: async (ctx, args) => {

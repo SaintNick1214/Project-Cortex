@@ -1,0 +1,43 @@
+{
+  "createdAtUtc": "2026-10-09T00:11:41.943Z",
+  "author": "Root",
+  "status": "DECLARED_BUILDS_LINT_PASS_ACTUAL_UI_NOT_ACCEPTED",
+  "files": [
+    {
+      "path": "packages/vercel-ai-provider/quickstart/components/RuntimeQuickstart.tsx",
+      "bytes": 21410,
+      "sha256": "0aefb1b283b90d404f941dc29102d907652a7c8d4414f25ed93ef95dc6ceb6ac"
+    },
+    {
+      "path": "packages/vercel-ai-provider/quickstart/components/RuntimeMediaPanel.tsx",
+      "bytes": 13807,
+      "sha256": "00098625bad0e81a588cbfbf3b362aee42bb26c601d722a5c1a778872d8b88c4"
+    },
+    {
+      "path": "packages/vercel-ai-provider/quickstart/.env.local.example",
+      "bytes": 885,
+      "sha256": "c524c65e267c03e1ab431f490d376666528321ff662c82fb4b082e9a809e944d"
+    },
+    {
+      "path": "packages/vercel-ai-provider/quickstart/README.md",
+      "bytes": 5899,
+      "sha256": "42c6f7f741c3407cc0abd0264c96bb6406275106a89216da2a4a44b14d6eb6b5"
+    }
+  ],
+  "checks": "checks3.json",
+  "browserPlan": "flow-plan1.md",
+  "actualServiceCalls": 0,
+  "actualBrowser": false,
+  "limits": [
+    "Original13 async service genuinely unavailable",
+    "First native13 backend install rejected400 by actual schema import cycle; narrow leaf fix/redeploy required before real13/image/client/browser outcomes",
+    "Broader03-final cached-query/time-only expiry qualification remains open"
+  ],
+  "repairedFindings": [
+    "Initial UI React effect/ref/immutability lint errors fixed; earlier failing receipts preserved"
+  ],
+  "backendOnlyInferenceAndMemory": true,
+  "providerKeysInClient": false,
+  "declaredChecks": "declared-checks1.json",
+  "optionalMediaControls": true
+}

@@ -1,3 +1,4 @@
+import { deliveryExpiresAt } from "./runtimeDelivery";
 /** Durable private asset jobs and immutable catalog commits. */
 import { v } from "convex/values";
 import type { AgentComponent } from "@convex-dev/agent";
@@ -84,7 +85,13 @@ export const finalize = internalMutation({ args: { jobId: v.string() }, handler:
   const head = await ctx.db.query("runtimeAssets").withIndex("by_asset", q => q.eq("tenantId", job.tenantId).eq("memorySpaceId", job.memorySpaceId).eq("assetId", job.assetId)).unique(); if (!head) assetDenied(); await ctx.db.patch("runtimeAssets", head._id, { latestVersion: job.assetVersion });
   await addAssetReference(ctx, value, { kind: "upload", ownerId: job.assetId, ownerVersion: String(job.assetVersion), ownerPrincipalId: job.ownerPrincipalId }); await ctx.db.patch("runtimeAssetJobs", job._id, { state: "ready" }); return publicAsset(value);
 } });
-export const get = mutation({ args: { ...scopeArgs, assetId: v.string(), version: v.number() }, handler: async (ctx, args) => { const actor = await requireDataAuthority(ctx, args, "storage:read"); const value = await assetVersion(ctx, scope(actor), args.assetId, args.version); if (!value) assetDenied(); await authorizeAsset(ctx, dataAuthorityReference(actor), value); return publicAsset(value); } });
+export const get = mutation({ args: { ...scopeArgs, assetId: v.string(), version: v.number() }, handler: async (ctx, args) => {
+  const actor = await requireDataAuthority(ctx, args, "storage:read"), reference = dataAuthorityReference(actor), deadlines: number[] = [];
+  const value = await assetVersion(ctx, scope(actor), args.assetId, args.version); if (!value) assetDenied();
+  await authorizeAsset(ctx, reference, value, "storage:read", new Set(), deadlines);
+  const expiresAt = await deliveryExpiresAt(ctx, reference, deadlines, "storage:read");
+  return { ...publicAsset(value), ...(expiresAt === undefined ? {} : { deliveryExpiresAt: expiresAt }) };
+} });
 export const downloadAuthorization = internalMutation({ args: { ...scopeArgs, assetId: v.string(), version: v.number() }, handler: async (ctx, args) => { const actor = await requireDataAuthority(ctx, args, "storage:read"); const reference = dataAuthorityReference(actor); const value = await assetVersion(ctx, scope(actor), args.assetId, args.version); if (!value) assetDenied(); await authorizeAsset(ctx, reference, value); return { metadata: publicAsset(value), storageId: value.storageId, reference }; } });
 export const downloadCheckpoint = internalMutation({ args: { reference: runtimeAuthorityReference, assetId: v.string(), version: v.number(), contentHash: v.string() }, handler: async (ctx, args) => { const value = await assetVersion(ctx, scope(args.reference), args.assetId, args.version); if (!value || value.contentHash !== args.contentHash) assetDenied(); await authorizeAsset(ctx, args.reference, value); return null; } });
 export const remove = mutation({ args: { ...scopeArgs, assetId: v.string() }, handler: async (ctx, args) => {

@@ -1,0 +1,76 @@
+▌ Developing against deployment:
+▌ [Development] nicholasgeil:cortex-task10-embedding-v2-fe3a2599d6fd:dev/nicholasgeil (dev) (dashboard: https://dashboard.convex.dev/t/nicholasgeil/cortex-task10-embedding-v2-fe3a2599d6fd/formal-husky-914)
+▌ └─ https://formal-husky-914.convex.cloud
+- Preparing Convex functions...
+
+Convex AI files are not installed. Run npx convex ai-files install to get started or npx convex ai-files disable to hide this message.
+✖ TypeScript typecheck via `tsc` failed.
+To ignore failing typecheck, use `--typecheck=disable`.
+- Collecting TypeScript errors
+
+[96mcustom/backend/task13ImageCommission.ts[0m:[93m23[0m:[93m52[0m - [91merror[0m[90m TS2322: [0mType 'unknown' is not assignable to type 'string'.
+
+[7m23[0m    return ctx.scheduler.runAfter(delay,processRef,{jobId:value.jobId});
+[7m  [0m [91m                                                   ~~~~~[0m
+
+  [96mcustom/backend/task13ImageCommission.ts[0m:[93m14[0m:[93m50[0m
+    [7m14[0m const processRef=makeFunctionReference<'action',{jobId:string},null>('task13ImageCommission:process');
+    [7m  [0m [96m                                                 ~~~~~[0m
+    The expected type comes from property 'jobId' which is declared here on type '{ jobId: string; }'
+[96mcustom/backend/task13ImageCommission.ts[0m:[93m23[0m:[93m58[0m - [91merror[0m[90m TS18048: [0m'value' is possibly 'undefined'.
+
+[7m23[0m    return ctx.scheduler.runAfter(delay,processRef,{jobId:value.jobId});
+[7m  [0m [91m                                                         ~~~~~[0m
+
+[96mcustom/backend/task13ImageCommission.ts[0m:[93m28[0m:[93m128[0m - [91merror[0m[90m TS2345: [0mArgument of type '{ _id: Id<"runtimeMediaJobs">; _creationTime: number; attemptId?: Id<"runtimeModelAttempts"> | undefined; dispatchIdentity?: string | undefined; operation?: string | undefined; ... 36 more ...; pollCount: number; } | null' is not assignable to parameter of type '{ _id: Id<"runtimeMediaJobs">; _creationTime: number; attemptId?: Id<"runtimeModelAttempts"> | undefined; dispatchIdentity?: string | undefined; operation?: string | undefined; ... 36 more ...; pollCount: number; }'.
+  Type 'null' is not assignable to type '{ _id: Id<"runtimeMediaJobs">; _creationTime: number; attemptId?: Id<"runtimeModelAttempts"> | undefined; dispatchIdentity?: string | undefined; operation?: string | undefined; ... 36 more ...; pollCount: number; }'.
+
+[7m28[0m  const job=await ctx.db.query('runtimeMediaJobs').withIndex('by_job',q=>q.eq('jobId',dto.jobId)).unique();if(!job)deny();exact(job);
+[7m  [0m [91m                                                                                                                               ~~~[0m
+[96mcustom/backend/task13ImageCommission.ts[0m:[93m29[0m:[93m87[0m - [91merror[0m[90m TS18047: [0m'job' is possibly 'null'.
+
+[7m29[0m  const old=await ctx.db.query('task13ImageProbes').withIndex('by_job',q=>q.eq('jobId',job.jobId)).unique();
+[7m  [0m [91m                                                                                      ~~~[0m
+[96mcustom/backend/task13ImageCommission.ts[0m:[93m30[0m:[93m57[0m - [91merror[0m[90m TS18047: [0m'job' is possibly 'null'.
+
+[7m30[0m  if(!old)await ctx.db.insert('task13ImageProbes',{jobId:job.jobId,tenantId:TENANT,memorySpaceId:SPACE,requestId:KEY,issuedCount:0,createdAt:Date.now()});
+[7m  [0m [91m                                                        ~~~[0m
+[96mcustom/backend/task13ImageCommission.ts[0m:[93m37[0m:[93m142[0m - [91merror[0m[90m TS2322: [0mType 'string | undefined' is not assignable to type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+
+[7m37[0m  await ctx.runMutation(mutationRef<{jobId:string;leaseToken:string},Doc<'runtimeMediaJobs'>>('runtimeMediaJobs:checkpoint'),{jobId:job.jobId,leaseToken:job.leaseToken});
+[7m  [0m [91m                                                                                                                                             ~~~~~~~~~~[0m
+
+  [96mcustom/backend/task13ImageCommission.ts[0m:[93m37[0m:[93m50[0m
+    [7m37[0m  await ctx.runMutation(mutationRef<{jobId:string;leaseToken:string},Doc<'runtimeMediaJobs'>>('runtimeMediaJobs:checkpoint'),{jobId:job.jobId,leaseToken:job.leaseToken});
+    [7m  [0m [96m                                                 ~~~~~~~~~~[0m
+    The expected type comes from property 'leaseToken' which is declared here on type '{ jobId: string; leaseToken: string; }'
+[96mcustom/backend/task13ImageCommission.ts[0m:[93m39[0m:[93m56[0m - [91merror[0m[90m TS2345: [0mArgument of type 'Id<"runtimeModelAttempts"> | undefined' is not assignable to parameter of type 'Id<"runtimeModelAttempts">'.
+  Type 'undefined' is not assignable to type 'Id<"runtimeModelAttempts">'.
+    Type 'undefined' is not assignable to type 'string'.
+
+[7m39[0m  const attempt=await ctx.db.get('runtimeModelAttempts',job.attemptId);if(!row||row.issuedCount!==0||!attempt||attempt.state!=='dispatch_pending'||attempt.dispatchIdentity!==job.dispatchIdentity||attempt.operationDocumentId!==job.modelOperationId)deny();
+[7m  [0m [91m                                                       ~~~~~~~~~~~~~[0m
+[96mcustom/backend/task13ImageCommission.ts[0m:[93m40[0m:[93m26[0m - [91merror[0m[90m TS18047: [0m'attempt' is possibly 'null'.
+
+[7m40[0m  const stored=JSON.parse(attempt.inputProofCanonical) as {requestCanonical?:unknown};if(typeof stored.requestCanonical!=='string')deny();
+[7m  [0m [91m                         ~~~~~~~[0m
+[96mcustom/backend/task13ImageCommission.ts[0m:[93m41[0m:[93m258[0m - [91merror[0m[90m TS2322: [0mType 'unknown' is not assignable to type 'string'.
+
+[7m41[0m  const guard=await ctx.runMutation(mutationRef<{reference:typeof job.reference;attemptId:typeof job.attemptId;requestCanonical:string},{dispatchPermit:boolean;state?:string}>('runtimeModelPolicy:checkpoint'),{reference:job.reference,attemptId:job.attemptId,requestCanonical:stored.requestCanonical});
+[7m  [0m [91m                                                                                                                                                                                                                                                                 ~~~~~~~~~~~~~~~~[0m
+
+  [96mcustom/backend/task13ImageCommission.ts[0m:[93m41[0m:[93m111[0m
+    [7m41[0m  const guard=await ctx.runMutation(mutationRef<{reference:typeof job.reference;attemptId:typeof job.attemptId;requestCanonical:string},{dispatchPermit:boolean;state?:string}>('runtimeModelPolicy:checkpoint'),{reference:job.reference,attemptId:job.attemptId,requestCanonical:stored.requestCanonical});
+    [7m  [0m [96m                                                                                                              ~~~~~~~~~~~~~~~~[0m
+    The expected type comes from property 'requestCanonical' which is declared here on type '{ reference: { memorySpaceId?: string | undefined; memorySpaceEpoch?: number | undefined; tenantId: string; principalId: string; principalVersion: number; membershipId: string; membershipVersion: number; grantId: string; grantVersion: number; tenantEpoch: number; }; attemptId: Id<...> | undefined; requestCanonical: ...'
+[96mcustom/backend/task13ImageCommission.ts[0m:[93m43[0m:[93m41[0m - [91merror[0m[90m TS18047: [0m'row' is possibly 'null'.
+
+[7m43[0m  await ctx.db.patch('task13ImageProbes',row._id,{issuedCount:1,attemptId:job.attemptId,dispatchIdentity:job.dispatchIdentity,issuedAt:Date.now()});
+[7m  [0m [91m                                        ~~~[0m
+[96mcustom/backend/task13ImageCommission.ts[0m:[93m51[0m:[93m41[0m - [91merror[0m[90m TS18047: [0m'row' is possibly 'null'.
+
+[7m51[0m  await ctx.db.patch('task13ImageProbes',row._id,{observation:value,observedAt:Date.now()});return null;
+[7m  [0m [91m                                        ~~~[0m
+
+Found 11 errors in the same file, starting at: custom/backend/task13ImageCommission.ts[90m:23[0m

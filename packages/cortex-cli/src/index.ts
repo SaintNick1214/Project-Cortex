@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { registerBackendCommands } from "./commands/backend.js";
 /**
  * Cortex CLI - Command Line Interface for Cortex Memory SDK
  *
@@ -84,6 +85,7 @@ async function main() {
     registerStatusCommands(program, config); // status
     registerConfigCommands(program, config); // config
     registerInitCommand(program, config); // init
+    registerBackendCommands(program); // additive runtime install/provision/configure
     registerDbCommands(program, config); // db
     registerDevCommands(program, config); // dev
 

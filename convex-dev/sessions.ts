@@ -1,6 +1,6 @@
 /** Application sessions use verified metadata scope. Ending a session never revokes a runtime grant. */
 import { ConvexError, v } from "convex/values";
-import { mutation, query, internalMutation } from "./_generated/server";
+import { mutation, internalMutation } from "./_generated/server";
 import type { MutationCtx } from "./_generated/server";
 import type { Doc } from "./_generated/dataModel";
 import type { RuntimeAuthority, RuntimeAuthorityReference } from "../src/auth/verified";
@@ -33,7 +33,7 @@ export const create = mutation({ args: { ...keyArgs, userId: v.string(), metadat
   const { authorityReference: _reference, ...publicRow } = row;
   return await response(ctx, auth, "sessions", row, read, () => { activeSession(row); return publicRow; }, () => { activeSession(row); return { createdId: id, sessionId: args.sessionId }; });
 } });
-export const get = query({ args: keyArgs, handler: async (ctx, args) => {
+export const get = mutation({ args: keyArgs, handler: async (ctx, args) => {
   const row = await sessionRow(ctx, await authority(ctx, "read", args), args.sessionId, "read");
   if (!row) return null; const { authorityReference: _reference, ...publicRow } = row; return publicRow;
 } });
@@ -55,11 +55,11 @@ export const endAll = mutation({ args: { ...scopeArgs, userId: v.string() }, han
   await finalChecks(ctx, [{ auth, capability: "write" }, ...reads.flatMap((read, index) => read ? [{ auth: read, capability: "read" as const, resource: resource("sessions", rows[index]!) }] : [])]);
   return { ended: rows.length, ...(reads.every(Boolean) ? { sessionIds: rows.map((row) => row.sessionId) } : {}) };
 } });
-export const list = query({ args: { ...filterArgs, limit: v.optional(v.number()), offset: v.optional(v.number()) }, handler: async (ctx, args) => {
+export const list = mutation({ args: { ...filterArgs, limit: v.optional(v.number()), offset: v.optional(v.number()) }, handler: async (ctx, args) => {
   const rows = filter(await candidates(ctx, "sessions", await authority(ctx, "read", args), "read"), args); const offset = page(args.offset, 0);
   return rows.slice(offset, offset + page(args.limit, 100)).map(({ authorityReference: _reference, ...row }) => row);
 } });
-export const count = query({ args: filterArgs, handler: async (ctx, args) => filter(await candidates(ctx, "sessions", await authority(ctx, "read", args), "read"), args).length });
+export const count = mutation({ args: filterArgs, handler: async (ctx, args) => filter(await candidates(ctx, "sessions", await authority(ctx, "read", args), "read"), args).length });
 function sameReference(a: RuntimeAuthorityReference, b: RuntimeAuthorityReference): boolean {
   return a.principalId === b.principalId && a.principalVersion === b.principalVersion && a.membershipId === b.membershipId
     && a.membershipVersion === b.membershipVersion && a.grantId === b.grantId && a.grantVersion === b.grantVersion

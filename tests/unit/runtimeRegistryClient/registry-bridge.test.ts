@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it, jest } from "@jest/globals";
 import { ConvexClient } from "convex/browser";
+import { getFunctionName } from "convex/server";
 import type { FunctionReturnType } from "convex/server";
 import type { Id } from "../../../convex-dev/_generated/dataModel";
 import { api } from "../../../convex-dev/_generated/api";
@@ -20,8 +21,13 @@ const receipt = { accepted: true, resourceType: "agents", resourceId: "server-ag
 
 function fixture(mode: "absent" | "disabled" | "enabled") {
   const client = new ConvexClient("https://example.convex.cloud", { disabled: true, logger: false });
-  const mutation = jest.spyOn(client, "mutation");
-  const query = jest.spyOn(client, "query");
+  // Logical read/write spies preserve the original outcome assertions; all supported reads use mutations.
+  const query = jest.fn<ConvexClient["mutation"]>();
+  const mutation = jest.fn<ConvexClient["mutation"]>();
+  const cacheQuery = jest.spyOn(client, "query");
+  jest.spyOn(client, "mutation").mockImplementation((ref, ...args) =>
+    ["agents:get", "agents:exists", "agents:list", "agents:count"].includes(getFunctionName(ref))
+      ? query(ref, ...args) : mutation(ref, ...args));
   const action = jest.spyOn(client, "action");
   const retry = jest.fn();
   const resilience = new ResilienceLayer({ enabled: mode === "enabled", retry: { maxRetries: 2, baseDelayMs: 1, maxDelayMs: 1, jitter: false }, onRetry: retry });
@@ -30,12 +36,12 @@ function fixture(mode: "absent" | "disabled" | "enabled") {
   // Only createNode is used by this bounded registry bridge; other graph methods fail if called.
   const graph = { createNode } as unknown as GraphAdapter;
   const agents = new AgentsAPI(client, graph, mode === "absent" ? undefined : resilience, { userId: "sdk-user", tenantId: "tenant-a" });
-  return { client, mutation, query, action, retry, resilience, execute, createNode, agents };
+  return { client, mutation, query, cacheQuery, action, retry, resilience, execute, createNode, agents };
 }
 
 describe.each(["absent", "disabled", "enabled"] as const)("registry bridge resilience=%s", (mode) => {
   let current: ReturnType<typeof fixture>;
-  afterEach(async () => { await current.client.close(); await current.resilience.shutdown(); jest.restoreAllMocks(); });
+  afterEach(async () => { expect(current.cacheQuery).not.toHaveBeenCalled(); await current.client.close(); await current.resilience.shutdown(); jest.restoreAllMocks(); });
 
   it.each(["register", "update"] as const)("%s receipt is committed, exact and never retried or hydrated", async (operation) => {
     current = fixture(mode);
@@ -139,11 +145,11 @@ describe("global cleanup public-client capability", () => {
     const client = new ConvexClient("https://example.convex.cloud", { disabled: true, logger: false });
     const query = jest.spyOn(client, "query"); const mutation = jest.spyOn(client, "mutation").mockResolvedValue({ deleted: true });
     const context = createTestRunContext(); const owned = context.memorySpaceId("space");
-    query.mockResolvedValueOnce({ spaces: [{ memorySpaceId: "foreign-space" }, { memorySpaceId: owned }] }).mockResolvedValueOnce([{ memoryId: "owned-memory" }]);
+    mutation.mockResolvedValueOnce({ spaces: [{ memorySpaceId: "foreign-space" }, { memorySpaceId: owned }] }).mockResolvedValueOnce([{ memoryId: "owned-memory" }]);
     try {
       await expect(new ScopedCleanup(client, context).cleanupMemories()).resolves.toBe(1);
-      expect(query).toHaveBeenCalledTimes(2);
-      expect(mutation).toHaveBeenCalledTimes(1);
+      expect(query).not.toHaveBeenCalled();
+      expect(mutation).toHaveBeenCalledTimes(3);
       expect(mutation).toHaveBeenCalledWith(api.memories.deleteMemory, { memorySpaceId: owned, memoryId: "owned-memory" });
     } finally { await client.close(); jest.restoreAllMocks(); }
   });

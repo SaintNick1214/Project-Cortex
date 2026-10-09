@@ -128,10 +128,25 @@ export async function buildBackendDistribution({ sourceRoot, outputRoot }) {
   try { httpSource = await fs.readFile(path.join(root, "convex-dev/http.ts"), "utf8"); } catch (error) { if (error.code !== "ENOENT") throw error; }
   if (httpSource !== undefined) {
     const httpAst = parse("convex-dev/http.ts", httpSource);
-    const imported = httpAst.statements.filter(ts.isImportDeclaration).filter(node => node.moduleSpecifier.text === "./runtimeAssetsHttp");
-    if (imported.length !== 1) throw new Error("Asset HTTP routes require the fixed runtimeAssetsHttp module");
+    const imported = httpAst.statements.filter(ts.isImportDeclaration).filter(node => ["./runtimeAssetsHttp", "./runtimeMediaHttp"].includes(node.moduleSpecifier.text));
+    if (imported.length !== 2 || new Set(imported.map(node => node.moduleSpecifier.text)).size !== 2) throw new Error("Asset/media HTTP routes require both fixed handler modules");
+    const handlers = new Map();
+    for (const node of imported) {
+      if (!node.importClause?.namedBindings || !ts.isNamedImports(node.importClause.namedBindings) || node.importClause.name) throw new Error("Private HTTP requires direct named handlers");
+      for (const binding of node.importClause.namedBindings.elements) {
+        if (handlers.has(binding.name.text)) throw new Error("Duplicate private HTTP handler");
+        handlers.set(binding.name.text, { module: node.moduleSpecifier.text, exported: binding.propertyName?.text ?? binding.name.text });
+      }
+    }
+    const expectedHandlers = new Map([
+      ["POST /cortex/assets/upload", ["./runtimeAssetsHttp", "uploadAsset"]],
+      ["GET /cortex/assets/download", ["./runtimeAssetsHttp", "downloadAsset"]],
+      ["OPTIONS /cortex/assets/upload", ["./runtimeAssetsHttp", "assetOptions"]],
+      ["OPTIONS /cortex/assets/download", ["./runtimeAssetsHttp", "assetOptions"]],
+      ["POST /cortex/media/video/webhook", ["./runtimeMediaHttp", "videoWebhook"]],
+    ]);
     const routes = httpAst.statements.filter(ts.isExpressionStatement).filter(node => ts.isCallExpression(node.expression) && node.expression.expression.getText(httpAst) === "http.route");
-    if (routes.length !== 4) throw new Error("Expected four explicit private asset HTTP routes");
+    if (routes.length !== 5) throw new Error("Expected five explicit private asset/media HTTP routes");
     for (const route of routes) {
       const call = route.expression;
       if (call.arguments.length !== 1 || !ts.isObjectLiteralExpression(call.arguments[0])) throw new Error("Invalid HTTP route declaration");
@@ -140,11 +155,13 @@ export async function buildBackendDistribution({ sourceRoot, outputRoot }) {
       if (fields.size !== 3 || !routePath || !method || !handler || !ts.isStringLiteral(routePath) || !ts.isStringLiteral(method) || !ts.isIdentifier(handler)) throw new Error("Invalid asset HTTP route fields");
       const key = `${method.text} ${routePath.text}`;
       if (httpRoutes.includes(key)) throw new Error("Duplicate asset HTTP route");
+      const expectedHandler = expectedHandlers.get(key); const actualHandler = handlers.get(handler.text);
+      if (expectedHandler && (!actualHandler || actualHandler.module !== expectedHandler[0] || actualHandler.exported !== expectedHandler[1])) throw new Error("Private HTTP handler does not match route");
       httpRoutes.push(key);
     }
-    const expected = ["POST /cortex/assets/upload", "GET /cortex/assets/download", "OPTIONS /cortex/assets/upload", "OPTIONS /cortex/assets/download"];
+    const expected = ["POST /cortex/assets/upload", "GET /cortex/assets/download", "OPTIONS /cortex/assets/upload", "OPTIONS /cortex/assets/download", "POST /cortex/media/video/webhook"];
     if (expected.some(key => !httpRoutes.includes(key))) throw new Error("Unsupported asset HTTP route");
-    const helper = `import type { HttpRouter } from "convex/server";\n${imported[0].getText(httpAst).replace('"./runtimeAssetsHttp"', '"../runtimeAssetsHttp"')}\nexport function registerCortexHttpRoutesV1(http: HttpRouter): void {\n${routes.map(node => node.getText(httpAst)).join("\n")}\n}\n`;
+    const helper = `import type { HttpRouter } from "convex/server";\n${imported.map(node => node.getText(httpAst).replace('"./runtimeAssetsHttp"', '"../runtimeAssetsHttp"').replace('"./runtimeMediaHttp"', '"../runtimeMediaHttp"')).join("\n")}\nexport function registerCortexHttpRoutesV1(http: HttpRouter): void {\n${routes.map(node => node.getText(httpAst)).join("\n")}\n}\n`;
     entries.set("_cortex/http.ts", helper); origins.set("_cortex/http.ts", "convex-dev/http.ts"); sources.set("convex-dev/http.ts", httpSource);
   }
   const pkg = JSON.parse(await fs.readFile(path.join(root, "package.json"), "utf8"));

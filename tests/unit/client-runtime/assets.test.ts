@@ -23,7 +23,7 @@ function fixture(value: RuntimeAssetVersion, origin = "https://fixture.convex.si
     expect(getFunctionName(reference)).toBe("runtimeAssets:get"); return value;
   });
   const port = { setAuth: (_fetch: unknown, notify: (authenticated: boolean) => void) => { callback = notify; notify(true); },
-    query: async () => current, mutation, close: jest.fn(async () => {}) } as unknown as RuntimeClientPort;
+    query: async () => { throw new Error("PRIVATE_QUERY_PROHIBITED"); }, mutation: ((ref: Parameters<RuntimeClientPort["mutation"]>[0], args: Record<string, unknown>) => getFunctionName(ref) === "runtimeClient:session" ? Promise.resolve(current) : mutation(ref, args)), close: jest.fn(async () => {}) } as unknown as RuntimeClientPort;
   const client = new CortexRuntimeClient({ deploymentUrl: "https://fixture.convex.cloud", assetHttpUrl: origin, fetchToken: token,
     fetch: fetcher as typeof globalThis.fetch, client: port });
   return { client, requests, token, fetcher, mutation, port, actor: (next: RuntimeSession) => { current = next; }, auth: (next: boolean) => callback(next) };
@@ -132,4 +132,32 @@ describe("authenticated bounded runtime asset helpers (controlled transport)", (
     const f = fixture(await metadata()); f.fetcher.mockImplementation(async () => new Promise<Response>(() => {}));
     await expect(f.client.fetchAsset(ref, { timeoutMs: 1000 })).rejects.toMatchObject({ code: "ASSET_TIMEOUT" }); await f.client.close();
   });
+  it("revokes a private Blob at its verified grant deadline without a database event", async () => {
+    jest.useFakeTimers(); const revoke = jest.spyOn(URL, "revokeObjectURL");
+    try {
+      const f = fixture(await metadata()); f.actor({ ...actor, deliveryExpiresAt: Date.now() + 40 });
+      const preview = await f.client.createAssetUrl(ref); await jest.advanceTimersByTimeAsync(40);
+      expect(revoke).toHaveBeenCalledWith(preview.url); await expect(f.client.session()).rejects.toMatchObject({ code: "UNAUTHENTICATED" });
+      preview.revoke(); expect(revoke).toHaveBeenCalledTimes(1); await f.client.close();
+    } finally { revoke.mockRestore(); jest.useRealTimers(); }
+  });
+
+  it("revokes a private Blob at its asset share deadline with a permanent actor grant", async () => {
+    jest.useFakeTimers(); const revoke = jest.spyOn(URL, "revokeObjectURL");
+    try {
+      const f = fixture({ ...await metadata(), deliveryExpiresAt: Date.now() + 40 });
+      const preview = await f.client.createAssetUrl(ref); await jest.advanceTimersByTimeAsync(40);
+      expect(revoke).toHaveBeenCalledWith(preview.url); await expect(f.client.session()).rejects.toMatchObject({ code: "UNAUTHENTICATED" });
+      preview.revoke(); expect(revoke).toHaveBeenCalledTimes(1); await f.client.close();
+    } finally { revoke.mockRestore(); jest.useRealTimers(); }
+  });
+
+  it("accepts changing reader deadlines while verifying the same immutable asset", async () => {
+    const value = await metadata(), f = fixture(value);
+    f.mutation.mockResolvedValueOnce({ ...value, deliveryExpiresAt: Date.now() + 10_000 })
+      .mockResolvedValueOnce({ ...value, deliveryExpiresAt: Date.now() + 20_000 });
+    expect(new Uint8Array(await (await f.client.fetchAsset(ref)).arrayBuffer())).toEqual(payload);
+    expect(f.fetcher).toHaveBeenCalledTimes(1); await f.client.close();
+  });
+
 });

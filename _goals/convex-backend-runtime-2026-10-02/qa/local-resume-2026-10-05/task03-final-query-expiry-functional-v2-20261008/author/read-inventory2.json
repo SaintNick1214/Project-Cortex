@@ -1,0 +1,5080 @@
+{
+  "version": 2,
+  "functionsDirectory": "convex-dev",
+  "converted": [
+    {
+      "module": "agentDefinitions",
+      "name": "get",
+      "endpoint": "agentDefinitions:get",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "agentDefinitions:get",
+        "kind": "mutation",
+        "origin": "agentDefinitions:get",
+        "line": 184,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "agents",
+      "name": "get",
+      "endpoint": "agents:get",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "agents:get",
+        "kind": "mutation",
+        "origin": "agents:get",
+        "line": 13,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "agents",
+      "name": "exists",
+      "endpoint": "agents:exists",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "agents:exists",
+        "kind": "mutation",
+        "origin": "agents:exists",
+        "line": 17,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "agents",
+      "name": "list",
+      "endpoint": "agents:list",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "agents:list",
+        "kind": "mutation",
+        "origin": "agents:list",
+        "line": 21,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "agents",
+      "name": "count",
+      "endpoint": "agents:count",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "agents:count",
+        "kind": "mutation",
+        "origin": "agents:count",
+        "line": 26,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "immutable",
+      "name": "get",
+      "endpoint": "immutable:get",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "immutable:get",
+        "kind": "mutation",
+        "origin": "immutable:get",
+        "line": 45,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "immutable",
+      "name": "getVersion",
+      "endpoint": "immutable:getVersion",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "immutable:getVersion",
+        "kind": "mutation",
+        "origin": "immutable:getVersion",
+        "line": 46,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "immutable",
+      "name": "getHistory",
+      "endpoint": "immutable:getHistory",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "immutable:getHistory",
+        "kind": "mutation",
+        "origin": "immutable:getHistory",
+        "line": 50,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "immutable",
+      "name": "getAtTimestamp",
+      "endpoint": "immutable:getAtTimestamp",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "immutable:getAtTimestamp",
+        "kind": "mutation",
+        "origin": "immutable:getAtTimestamp",
+        "line": 53,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "immutable",
+      "name": "list",
+      "endpoint": "immutable:list",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "immutable:list",
+        "kind": "mutation",
+        "origin": "immutable:list",
+        "line": 58,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "immutable",
+      "name": "count",
+      "endpoint": "immutable:count",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "immutable:count",
+        "kind": "mutation",
+        "origin": "immutable:count",
+        "line": 64,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "immutable",
+      "name": "search",
+      "endpoint": "immutable:search",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "immutable:search",
+        "kind": "mutation",
+        "origin": "immutable:search",
+        "line": 65,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "memories",
+      "name": "get",
+      "endpoint": "memories:get",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "memories:get",
+        "kind": "mutation",
+        "origin": "memories:get",
+        "line": 318,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "memories",
+      "name": "list",
+      "endpoint": "memories:list",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "memories:list",
+        "kind": "mutation",
+        "origin": "memories:list",
+        "line": 423,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "memories",
+      "name": "count",
+      "endpoint": "memories:count",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "memories:count",
+        "kind": "mutation",
+        "origin": "memories:count",
+        "line": 459,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "memories",
+      "name": "getVersion",
+      "endpoint": "memories:getVersion",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "memories:getVersion",
+        "kind": "mutation",
+        "origin": "memories:getVersion",
+        "line": 557,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "memories",
+      "name": "getHistory",
+      "endpoint": "memories:getHistory",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "memories:getHistory",
+        "kind": "mutation",
+        "origin": "memories:getHistory",
+        "line": 601,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "memories",
+      "name": "exportMemories",
+      "endpoint": "memories:exportMemories",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "memories:exportMemories",
+        "kind": "mutation",
+        "origin": "memories:exportMemories",
+        "line": 755,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "memories",
+      "name": "getAtTimestamp",
+      "endpoint": "memories:getAtTimestamp",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "memories:getAtTimestamp",
+        "kind": "mutation",
+        "origin": "memories:getAtTimestamp",
+        "line": 972,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "runtimeIngestion",
+      "name": "status",
+      "endpoint": "runtimeIngestion:status",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "runtimeIngestion:status",
+        "kind": "mutation",
+        "origin": "runtimeIngestion:status",
+        "line": 325,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "runtimeGraph",
+      "name": "status",
+      "endpoint": "runtimeGraph:status",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "runtimeGraph:status",
+        "kind": "mutation",
+        "origin": "runtimeGraph:status",
+        "line": 503,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "users",
+      "name": "get",
+      "endpoint": "users:get",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "users:get",
+        "kind": "mutation",
+        "origin": "users:get",
+        "line": 7,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "users",
+      "name": "list",
+      "endpoint": "users:list",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "users:list",
+        "kind": "mutation",
+        "origin": "users:list",
+        "line": 11,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "users",
+      "name": "count",
+      "endpoint": "users:count",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "users:count",
+        "kind": "mutation",
+        "origin": "users:count",
+        "line": 15,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "users",
+      "name": "getVersion",
+      "endpoint": "users:getVersion",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "users:getVersion",
+        "kind": "mutation",
+        "origin": "users:getVersion",
+        "line": 16,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "users",
+      "name": "getHistory",
+      "endpoint": "users:getHistory",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "users:getHistory",
+        "kind": "mutation",
+        "origin": "users:getHistory",
+        "line": 21,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "users",
+      "name": "getAtTimestamp",
+      "endpoint": "users:getAtTimestamp",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "users:getAtTimestamp",
+        "kind": "mutation",
+        "origin": "users:getAtTimestamp",
+        "line": 25,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "users",
+      "name": "exists",
+      "endpoint": "users:exists",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "users:exists",
+        "kind": "mutation",
+        "origin": "users:exists",
+        "line": 31,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "facts",
+      "name": "get",
+      "endpoint": "facts:get",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "facts:get",
+        "kind": "mutation",
+        "origin": "facts:get",
+        "line": 493,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "facts",
+      "name": "list",
+      "endpoint": "facts:list",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "facts:list",
+        "kind": "mutation",
+        "origin": "facts:list",
+        "line": 525,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "facts",
+      "name": "count",
+      "endpoint": "facts:count",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "facts:count",
+        "kind": "mutation",
+        "origin": "facts:count",
+        "line": 698,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "facts",
+      "name": "search",
+      "endpoint": "facts:search",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "facts:search",
+        "kind": "mutation",
+        "origin": "facts:search",
+        "line": 835,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "facts",
+      "name": "getHistory",
+      "endpoint": "facts:getHistory",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "facts:getHistory",
+        "kind": "mutation",
+        "origin": "facts:getHistory",
+        "line": 1060,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "facts",
+      "name": "queryBySubject",
+      "endpoint": "facts:queryBySubject",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "facts:queryBySubject",
+        "kind": "mutation",
+        "origin": "facts:queryBySubject",
+        "line": 1119,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "facts",
+      "name": "queryByRelationship",
+      "endpoint": "facts:queryByRelationship",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "facts:queryByRelationship",
+        "kind": "mutation",
+        "origin": "facts:queryByRelationship",
+        "line": 1283,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "facts",
+      "name": "exportFacts",
+      "endpoint": "facts:exportFacts",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "facts:exportFacts",
+        "kind": "mutation",
+        "origin": "facts:exportFacts",
+        "line": 1444,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "facts",
+      "name": "findByStructure",
+      "endpoint": "facts:findByStructure",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "facts:findByStructure",
+        "kind": "mutation",
+        "origin": "facts:findByStructure",
+        "line": 1586,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "runs",
+      "name": "get",
+      "endpoint": "runs:get",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "runs:get",
+        "kind": "mutation",
+        "origin": "runs:get",
+        "line": 115,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "runs",
+      "name": "list",
+      "endpoint": "runs:list",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "runs:list",
+        "kind": "mutation",
+        "origin": "runs:list",
+        "line": 118,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "runs",
+      "name": "attempts",
+      "endpoint": "runs:attempts",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "runs:attempts",
+        "kind": "mutation",
+        "origin": "runs:attempts",
+        "line": 285,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "contexts",
+      "name": "get",
+      "endpoint": "contexts:get",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "contexts:get",
+        "kind": "mutation",
+        "origin": "contexts:get",
+        "line": 161,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "contexts",
+      "name": "list",
+      "endpoint": "contexts:list",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "contexts:list",
+        "kind": "mutation",
+        "origin": "contexts:list",
+        "line": 168,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "contexts",
+      "name": "search",
+      "endpoint": "contexts:search",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "contexts:search",
+        "kind": "mutation",
+        "origin": "contexts:search",
+        "line": 171,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "contexts",
+      "name": "count",
+      "endpoint": "contexts:count",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "contexts:count",
+        "kind": "mutation",
+        "origin": "contexts:count",
+        "line": 174,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "contexts",
+      "name": "getChain",
+      "endpoint": "contexts:getChain",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "contexts:getChain",
+        "kind": "mutation",
+        "origin": "contexts:getChain",
+        "line": 177,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "contexts",
+      "name": "getRoot",
+      "endpoint": "contexts:getRoot",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "contexts:getRoot",
+        "kind": "mutation",
+        "origin": "contexts:getRoot",
+        "line": 180,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "contexts",
+      "name": "getChildren",
+      "endpoint": "contexts:getChildren",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "contexts:getChildren",
+        "kind": "mutation",
+        "origin": "contexts:getChildren",
+        "line": 183,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "contexts",
+      "name": "getByConversation",
+      "endpoint": "contexts:getByConversation",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "contexts:getByConversation",
+        "kind": "mutation",
+        "origin": "contexts:getByConversation",
+        "line": 187,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "contexts",
+      "name": "findOrphaned",
+      "endpoint": "contexts:findOrphaned",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "contexts:findOrphaned",
+        "kind": "mutation",
+        "origin": "contexts:findOrphaned",
+        "line": 192,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "contexts",
+      "name": "getVersion",
+      "endpoint": "contexts:getVersion",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "contexts:getVersion",
+        "kind": "mutation",
+        "origin": "contexts:getVersion",
+        "line": 201,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "contexts",
+      "name": "getHistory",
+      "endpoint": "contexts:getHistory",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "contexts:getHistory",
+        "kind": "mutation",
+        "origin": "contexts:getHistory",
+        "line": 204,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "contexts",
+      "name": "getAtTimestamp",
+      "endpoint": "contexts:getAtTimestamp",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "contexts:getAtTimestamp",
+        "kind": "mutation",
+        "origin": "contexts:getAtTimestamp",
+        "line": 205,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "contexts",
+      "name": "exportContexts",
+      "endpoint": "contexts:exportContexts",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "contexts:exportContexts",
+        "kind": "mutation",
+        "origin": "contexts:exportContexts",
+        "line": 209,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "memorySpaces",
+      "name": "get",
+      "endpoint": "memorySpaces:get",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "memorySpaces:get",
+        "kind": "mutation",
+        "origin": "memorySpaces:get",
+        "line": 69,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "memorySpaces",
+      "name": "list",
+      "endpoint": "memorySpaces:list",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "memorySpaces:list",
+        "kind": "mutation",
+        "origin": "memorySpaces:list",
+        "line": 77,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "memorySpaces",
+      "name": "count",
+      "endpoint": "memorySpaces:count",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "memorySpaces:count",
+        "kind": "mutation",
+        "origin": "memorySpaces:count",
+        "line": 83,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "memorySpaces",
+      "name": "findByParticipant",
+      "endpoint": "memorySpaces:findByParticipant",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "memorySpaces:findByParticipant",
+        "kind": "mutation",
+        "origin": "memorySpaces:findByParticipant",
+        "line": 86,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "memorySpaces",
+      "name": "search",
+      "endpoint": "memorySpaces:search",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "memorySpaces:search",
+        "kind": "mutation",
+        "origin": "memorySpaces:search",
+        "line": 89,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "sessions",
+      "name": "get",
+      "endpoint": "sessions:get",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "sessions:get",
+        "kind": "mutation",
+        "origin": "sessions:get",
+        "line": 36,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "sessions",
+      "name": "list",
+      "endpoint": "sessions:list",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "sessions:list",
+        "kind": "mutation",
+        "origin": "sessions:list",
+        "line": 58,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "sessions",
+      "name": "count",
+      "endpoint": "sessions:count",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "sessions:count",
+        "kind": "mutation",
+        "origin": "sessions:count",
+        "line": 62,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "runtimeMemoryContext",
+      "name": "status",
+      "endpoint": "runtimeMemoryContext:status",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "runtimeMemoryContext:status",
+        "kind": "mutation",
+        "origin": "runtimeMemoryContext:status",
+        "line": 181,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "conversationSnapshots",
+      "name": "get",
+      "endpoint": "conversationSnapshots:get",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "conversationSnapshots:get",
+        "kind": "mutation",
+        "origin": "conversationSnapshots:get",
+        "line": 92,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "conversationSnapshots",
+      "name": "listByConversation",
+      "endpoint": "conversationSnapshots:listByConversation",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "conversationSnapshots:listByConversation",
+        "kind": "mutation",
+        "origin": "conversationSnapshots:listByConversation",
+        "line": 101,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "conversationSnapshots",
+      "name": "listByUser",
+      "endpoint": "conversationSnapshots:listByUser",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "conversationSnapshots:listByUser",
+        "kind": "mutation",
+        "origin": "conversationSnapshots:listByUser",
+        "line": 111,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "runtimeTranscript",
+      "name": "get",
+      "endpoint": "runtimeTranscript:get",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "runtimeTranscript:get",
+        "kind": "mutation",
+        "origin": "runtimeTranscript:get",
+        "line": 402,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "runtimeTranscript",
+      "name": "list",
+      "endpoint": "runtimeTranscript:list",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "runtimeTranscript:list",
+        "kind": "mutation",
+        "origin": "runtimeTranscript:list",
+        "line": 403,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "runtimeTranscript",
+      "name": "messages",
+      "endpoint": "runtimeTranscript:messages",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "runtimeTranscript:messages",
+        "kind": "mutation",
+        "origin": "runtimeTranscript:messages",
+        "line": 414,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "runtimeTranscript",
+      "name": "exportPage",
+      "endpoint": "runtimeTranscript:exportPage",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "runtimeTranscript:exportPage",
+        "kind": "mutation",
+        "origin": "runtimeTranscript:exportPage",
+        "line": 541,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "runtimeTranscript",
+      "name": "stats",
+      "endpoint": "runtimeTranscript:stats",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "runtimeTranscript:stats",
+        "kind": "mutation",
+        "origin": "runtimeTranscript:stats",
+        "line": 546,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "governance",
+      "name": "getPolicy",
+      "endpoint": "governance:getPolicy",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "governance:getPolicy",
+        "kind": "mutation",
+        "origin": "governance:getPolicy",
+        "line": 351,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "governance",
+      "name": "getTemplate",
+      "endpoint": "governance:getTemplate",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "governance:getTemplate",
+        "kind": "mutation",
+        "origin": "governance:getTemplate",
+        "line": 359,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "governance",
+      "name": "simulate",
+      "endpoint": "governance:simulate",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "governance:simulate",
+        "kind": "mutation",
+        "origin": "governance:simulate",
+        "line": 367,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "governance",
+      "name": "getComplianceReport",
+      "endpoint": "governance:getComplianceReport",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "governance:getComplianceReport",
+        "kind": "mutation",
+        "origin": "governance:getComplianceReport",
+        "line": 417,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "governance",
+      "name": "getEnforcementStats",
+      "endpoint": "governance:getEnforcementStats",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "governance:getEnforcementStats",
+        "kind": "mutation",
+        "origin": "governance:getEnforcementStats",
+        "line": 428,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "mutable",
+      "name": "get",
+      "endpoint": "mutable:get",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "mutable:get",
+        "kind": "mutation",
+        "origin": "mutable:get",
+        "line": 41,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "mutable",
+      "name": "exists",
+      "endpoint": "mutable:exists",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "mutable:exists",
+        "kind": "mutation",
+        "origin": "mutable:exists",
+        "line": 42,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "mutable",
+      "name": "list",
+      "endpoint": "mutable:list",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "mutable:list",
+        "kind": "mutation",
+        "origin": "mutable:list",
+        "line": 43,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "mutable",
+      "name": "count",
+      "endpoint": "mutable:count",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "mutable:count",
+        "kind": "mutation",
+        "origin": "mutable:count",
+        "line": 48,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "runtimeMemory",
+      "name": "defaultProfile",
+      "endpoint": "runtimeMemory:defaultProfile",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "runtimeMemory:defaultProfile",
+        "kind": "mutation",
+        "origin": "runtimeMemory:defaultProfile",
+        "line": 20,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "conversations",
+      "name": "checkAccess",
+      "endpoint": "conversations:checkAccess",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "conversations:checkAccess",
+        "kind": "mutation",
+        "origin": "conversations:checkAccess",
+        "line": 125,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "conversations",
+      "name": "getMessage",
+      "endpoint": "conversations:getMessage",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "conversations:getMessage",
+        "kind": "mutation",
+        "origin": "conversations:getMessage",
+        "line": 221,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "conversations",
+      "name": "getMessagesByIds",
+      "endpoint": "conversations:getMessagesByIds",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "conversations:getMessagesByIds",
+        "kind": "mutation",
+        "origin": "conversations:getMessagesByIds",
+        "line": 231,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "conversations",
+      "name": "findConversation",
+      "endpoint": "conversations:findConversation",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "conversations:findConversation",
+        "kind": "mutation",
+        "origin": "conversations:findConversation",
+        "line": 282,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "conversations",
+      "name": "get",
+      "endpoint": "conversations:get",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "conversations:get",
+        "kind": "mutation",
+        "origin": "conversations:get",
+        "line": 292,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "conversations",
+      "name": "list",
+      "endpoint": "conversations:list",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "conversations:list",
+        "kind": "mutation",
+        "origin": "conversations:list",
+        "line": 303,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "conversations",
+      "name": "count",
+      "endpoint": "conversations:count",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "conversations:count",
+        "kind": "mutation",
+        "origin": "conversations:count",
+        "line": 343,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "conversations",
+      "name": "getHistory",
+      "endpoint": "conversations:getHistory",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "conversations:getHistory",
+        "kind": "mutation",
+        "origin": "conversations:getHistory",
+        "line": 354,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "conversations",
+      "name": "search",
+      "endpoint": "conversations:search",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "conversations:search",
+        "kind": "mutation",
+        "origin": "conversations:search",
+        "line": 375,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "conversations",
+      "name": "exportConversations",
+      "endpoint": "conversations:exportConversations",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "conversations:exportConversations",
+        "kind": "mutation",
+        "origin": "conversations:exportConversations",
+        "line": 399,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "conversationShares",
+      "name": "get",
+      "endpoint": "conversationShares:get",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "conversationShares:get",
+        "kind": "mutation",
+        "origin": "conversationShares:get",
+        "line": 115,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "conversationShares",
+      "name": "listByConversation",
+      "endpoint": "conversationShares:listByConversation",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "conversationShares:listByConversation",
+        "kind": "mutation",
+        "origin": "conversationShares:listByConversation",
+        "line": 126,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "conversationShares",
+      "name": "listByGranter",
+      "endpoint": "conversationShares:listByGranter",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "conversationShares:listByGranter",
+        "kind": "mutation",
+        "origin": "conversationShares:listByGranter",
+        "line": 139,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "conversationShares",
+      "name": "checkAccess",
+      "endpoint": "conversationShares:checkAccess",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "conversationShares:checkAccess",
+        "kind": "mutation",
+        "origin": "conversationShares:checkAccess",
+        "line": 153,
+        "visibility": "public",
+        "alias": false
+      }
+    },
+    {
+      "module": "runtimeAgent",
+      "name": "observe",
+      "endpoint": "runtimeAgent:observe",
+      "from": "query",
+      "to": "mutation",
+      "actual": {
+        "endpoint": "runtimeAgent:observe",
+        "kind": "mutation",
+        "origin": "runtimeAgent:observe",
+        "line": 715,
+        "visibility": "public",
+        "alias": false
+      }
+    }
+  ],
+  "convertedAliases": [
+    {
+      "endpoint": "runs:exportRecord",
+      "kind": "mutation",
+      "origin": "runs:get",
+      "line": 115,
+      "visibility": "public",
+      "alias": true
+    }
+  ],
+  "internalFinalDelivery": {
+    "endpoint": "runtimeMemory:finalDelivery",
+    "kind": "internalMutation",
+    "origin": "runtimeMemory:finalDelivery",
+    "line": 50,
+    "visibility": "internal",
+    "alias": false
+  },
+  "remainingPublicQueries": [
+    {
+      "endpoint": "a2a:getConversation",
+      "kind": "query",
+      "origin": "a2a:getConversation",
+      "line": 640,
+      "visibility": "public",
+      "alias": false,
+      "disposition": "Always-denying unavailable capability"
+    },
+    {
+      "endpoint": "agents:computeStats",
+      "kind": "query",
+      "origin": "agents:computeStats",
+      "line": 91,
+      "visibility": "public",
+      "alias": false,
+      "disposition": "Always-denying unavailable capability"
+    },
+    {
+      "endpoint": "factHistory:countByAction",
+      "kind": "query",
+      "origin": "factHistory:countByAction",
+      "line": 301,
+      "visibility": "public",
+      "alias": false,
+      "disposition": "Always-denying unavailable capability"
+    },
+    {
+      "endpoint": "factHistory:getActivitySummary",
+      "kind": "query",
+      "origin": "factHistory:getActivitySummary",
+      "line": 397,
+      "visibility": "public",
+      "alias": false,
+      "disposition": "Always-denying unavailable capability"
+    },
+    {
+      "endpoint": "factHistory:getChangesByTimeRange",
+      "kind": "query",
+      "origin": "factHistory:getChangesByTimeRange",
+      "line": 247,
+      "visibility": "public",
+      "alias": false,
+      "disposition": "Always-denying unavailable capability"
+    },
+    {
+      "endpoint": "factHistory:getEvent",
+      "kind": "query",
+      "origin": "factHistory:getEvent",
+      "line": 225,
+      "visibility": "public",
+      "alias": false,
+      "disposition": "Always-denying unavailable capability"
+    },
+    {
+      "endpoint": "factHistory:getHistory",
+      "kind": "query",
+      "origin": "factHistory:getHistory",
+      "line": 198,
+      "visibility": "public",
+      "alias": false,
+      "disposition": "Always-denying unavailable capability"
+    },
+    {
+      "endpoint": "factHistory:getSupersessionChain",
+      "kind": "query",
+      "origin": "factHistory:getSupersessionChain",
+      "line": 348,
+      "visibility": "public",
+      "alias": false,
+      "disposition": "Always-denying unavailable capability"
+    },
+    {
+      "endpoint": "memorySpaces:getStats",
+      "kind": "query",
+      "origin": "memorySpaces:getStats",
+      "line": 106,
+      "visibility": "public",
+      "alias": false,
+      "disposition": "Always-denying unavailable capability"
+    },
+    {
+      "endpoint": "runtimeClient:session",
+      "kind": "query",
+      "origin": "runtimeClient:session",
+      "line": 6,
+      "visibility": "public",
+      "alias": false,
+      "disposition": "Root-owned fresh session successor pending"
+    }
+  ],
+  "registrations": [
+    {
+      "endpoint": "a2a:broadcast",
+      "kind": "mutation",
+      "origin": "a2a:broadcast",
+      "line": 383,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "a2a:getConversation",
+      "kind": "query",
+      "origin": "a2a:getConversation",
+      "line": 640,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "a2a:request",
+      "kind": "mutation",
+      "origin": "a2a:request",
+      "line": 245,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "a2a:send",
+      "kind": "mutation",
+      "origin": "a2a:send",
+      "line": 28,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "admin:clearTable",
+      "kind": "internalMutation",
+      "origin": "admin:clearTable",
+      "line": 17,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "admin:countTable",
+      "kind": "internalQuery",
+      "origin": "admin:countTable",
+      "line": 27,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "admin:deleteRecord",
+      "kind": "internalMutation",
+      "origin": "admin:deleteRecord",
+      "line": 13,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "admin:getAllCounts",
+      "kind": "internalQuery",
+      "origin": "admin:getAllCounts",
+      "line": 35,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "admin:listTable",
+      "kind": "internalQuery",
+      "origin": "admin:listTable",
+      "line": 6,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "agentDefinitions:get",
+      "kind": "mutation",
+      "origin": "agentDefinitions:get",
+      "line": 184,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "agentDefinitions:publishVersion",
+      "kind": "mutation",
+      "origin": "agentDefinitions:publishVersion",
+      "line": 134,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "agentDefinitions:revokeVersion",
+      "kind": "mutation",
+      "origin": "agentDefinitions:revokeVersion",
+      "line": 173,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "agents:computeStats",
+      "kind": "query",
+      "origin": "agents:computeStats",
+      "line": 91,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "agents:count",
+      "kind": "mutation",
+      "origin": "agents:count",
+      "line": 26,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "agents:exists",
+      "kind": "mutation",
+      "origin": "agents:exists",
+      "line": 17,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "agents:get",
+      "kind": "mutation",
+      "origin": "agents:get",
+      "line": 13,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "agents:list",
+      "kind": "mutation",
+      "origin": "agents:list",
+      "line": 21,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "agents:purgeAll",
+      "kind": "internalMutation",
+      "origin": "agents:purgeAll",
+      "line": 83,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "agents:register",
+      "kind": "mutation",
+      "origin": "agents:register",
+      "line": 30,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "agents:unregister",
+      "kind": "mutation",
+      "origin": "agents:unregister",
+      "line": 60,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "agents:unregisterMany",
+      "kind": "mutation",
+      "origin": "agents:unregisterMany",
+      "line": 68,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "agents:update",
+      "kind": "mutation",
+      "origin": "agents:update",
+      "line": 47,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "agents:updateMany",
+      "kind": "mutation",
+      "origin": "agents:updateMany",
+      "line": 53,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "artifacts:appendContent",
+      "kind": "mutation",
+      "origin": "artifacts:appendContent",
+      "line": 904,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "artifacts:attachAsset",
+      "kind": "mutation",
+      "origin": "artifacts:attachAsset",
+      "line": 1622,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "artifacts:cancelStreaming",
+      "kind": "mutation",
+      "origin": "artifacts:cancelStreaming",
+      "line": 1095,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "artifacts:completeArtifactUpload",
+      "kind": "mutation",
+      "origin": "artifacts:completeArtifactUpload",
+      "line": 1487,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "artifacts:count",
+      "kind": "mutation",
+      "origin": "artifacts:count",
+      "line": 651,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "artifacts:create",
+      "kind": "mutation",
+      "origin": "artifacts:create",
+      "line": 54,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "artifacts:deleteArtifact",
+      "kind": "mutation",
+      "origin": "artifacts:deleteArtifact",
+      "line": 210,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "artifacts:detachFile",
+      "kind": "mutation",
+      "origin": "artifacts:detachFile",
+      "line": 1604,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "artifacts:finalizeStreaming",
+      "kind": "mutation",
+      "origin": "artifacts:finalizeStreaming",
+      "line": 1173,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "artifacts:generateArtifactUploadUrl",
+      "kind": "internalMutation",
+      "origin": "artifacts:generateArtifactUploadUrl",
+      "line": 1417,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "artifacts:get",
+      "kind": "mutation",
+      "origin": "artifacts:get",
+      "line": 556,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "artifacts:getArtifactFileUrl",
+      "kind": "internalQuery",
+      "origin": "artifacts:getArtifactFileUrl",
+      "line": 1531,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "artifacts:getByConversation",
+      "kind": "mutation",
+      "origin": "artifacts:getByConversation",
+      "line": 583,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "artifacts:getHistory",
+      "kind": "mutation",
+      "origin": "artifacts:getHistory",
+      "line": 716,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "artifacts:getVersion",
+      "kind": "mutation",
+      "origin": "artifacts:getVersion",
+      "line": 677,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "artifacts:list",
+      "kind": "mutation",
+      "origin": "artifacts:list",
+      "line": 604,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "artifacts:pauseStreaming",
+      "kind": "mutation",
+      "origin": "artifacts:pauseStreaming",
+      "line": 978,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "artifacts:purgeAll",
+      "kind": "internalMutation",
+      "origin": "artifacts:purgeAll",
+      "line": 513,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "artifacts:purgeVersions",
+      "kind": "mutation",
+      "origin": "artifacts:purgeVersions",
+      "line": 433,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "artifacts:redo",
+      "kind": "mutation",
+      "origin": "artifacts:redo",
+      "line": 285,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "artifacts:resumeStreaming",
+      "kind": "mutation",
+      "origin": "artifacts:resumeStreaming",
+      "line": 1037,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "artifacts:retryFromError",
+      "kind": "mutation",
+      "origin": "artifacts:retryFromError",
+      "line": 1343,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "artifacts:setFileRef",
+      "kind": "internalMutation",
+      "origin": "artifacts:setFileRef",
+      "line": 374,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "artifacts:setStreamingError",
+      "kind": "mutation",
+      "origin": "artifacts:setStreamingError",
+      "line": 1282,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "artifacts:setStreamingState",
+      "kind": "mutation",
+      "origin": "artifacts:setStreamingState",
+      "line": 337,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "artifacts:startStreaming",
+      "kind": "mutation",
+      "origin": "artifacts:startStreaming",
+      "line": 835,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "artifacts:undo",
+      "kind": "mutation",
+      "origin": "artifacts:undo",
+      "line": 235,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "artifacts:update",
+      "kind": "mutation",
+      "origin": "artifacts:update",
+      "line": 116,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "attachments:attach",
+      "kind": "mutation",
+      "origin": "attachments:attach",
+      "line": 54,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "attachments:count",
+      "kind": "mutation",
+      "origin": "attachments:count",
+      "line": 77,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "attachments:create",
+      "kind": "mutation",
+      "origin": "attachments:create",
+      "line": 52,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "attachments:generateUploadUrl",
+      "kind": "internalMutation",
+      "origin": "attachments:generateUploadUrl",
+      "line": 81,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "attachments:get",
+      "kind": "mutation",
+      "origin": "attachments:get",
+      "line": 60,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "attachments:getByConversation",
+      "kind": "mutation",
+      "origin": "attachments:getByConversation",
+      "line": 78,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "attachments:getByIds",
+      "kind": "mutation",
+      "origin": "attachments:getByIds",
+      "line": 80,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "attachments:getByMessage",
+      "kind": "mutation",
+      "origin": "attachments:getByMessage",
+      "line": 79,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "attachments:getUrl",
+      "kind": "internalQuery",
+      "origin": "attachments:getUrl",
+      "line": 82,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "attachments:list",
+      "kind": "mutation",
+      "origin": "attachments:list",
+      "line": 76,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "attachments:purgeAll",
+      "kind": "internalMutation",
+      "origin": "attachments:purgeAll",
+      "line": 83,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "attachments:remove",
+      "kind": "mutation",
+      "origin": "attachments:remove",
+      "line": 62,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "attachments:removeMany",
+      "kind": "mutation",
+      "origin": "attachments:removeMany",
+      "line": 63,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "contexts:addParticipant",
+      "kind": "mutation",
+      "origin": "contexts:addParticipant",
+      "line": 98,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "contexts:count",
+      "kind": "mutation",
+      "origin": "contexts:count",
+      "line": 174,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "contexts:create",
+      "kind": "mutation",
+      "origin": "contexts:create",
+      "line": 74,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "contexts:deleteContext",
+      "kind": "mutation",
+      "origin": "contexts:deleteContext",
+      "line": 143,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "contexts:deleteMany",
+      "kind": "mutation",
+      "origin": "contexts:deleteMany",
+      "line": 157,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "contexts:exportContexts",
+      "kind": "mutation",
+      "origin": "contexts:exportContexts",
+      "line": 209,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "contexts:findOrphaned",
+      "kind": "mutation",
+      "origin": "contexts:findOrphaned",
+      "line": 192,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "contexts:get",
+      "kind": "mutation",
+      "origin": "contexts:get",
+      "line": 161,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "contexts:getAtTimestamp",
+      "kind": "mutation",
+      "origin": "contexts:getAtTimestamp",
+      "line": 205,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "contexts:getByConversation",
+      "kind": "mutation",
+      "origin": "contexts:getByConversation",
+      "line": 187,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "contexts:getChain",
+      "kind": "mutation",
+      "origin": "contexts:getChain",
+      "line": 177,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "contexts:getChildren",
+      "kind": "mutation",
+      "origin": "contexts:getChildren",
+      "line": 183,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "contexts:getHistory",
+      "kind": "mutation",
+      "origin": "contexts:getHistory",
+      "line": 204,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "contexts:getRoot",
+      "kind": "mutation",
+      "origin": "contexts:getRoot",
+      "line": 180,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "contexts:getVersion",
+      "kind": "mutation",
+      "origin": "contexts:getVersion",
+      "line": 201,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "contexts:grantAccess",
+      "kind": "mutation",
+      "origin": "contexts:grantAccess",
+      "line": 102,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "contexts:list",
+      "kind": "mutation",
+      "origin": "contexts:list",
+      "line": 168,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "contexts:purgeAll",
+      "kind": "internalMutation",
+      "origin": "contexts:purgeAll",
+      "line": 220,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "contexts:removeParticipant",
+      "kind": "mutation",
+      "origin": "contexts:removeParticipant",
+      "line": 101,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "contexts:search",
+      "kind": "mutation",
+      "origin": "contexts:search",
+      "line": 171,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "contexts:update",
+      "kind": "mutation",
+      "origin": "contexts:update",
+      "line": 93,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "contexts:updateMany",
+      "kind": "mutation",
+      "origin": "contexts:updateMany",
+      "line": 148,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "conversations:addMessage",
+      "kind": "mutation",
+      "origin": "conversations:addMessage",
+      "line": 136,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "conversations:approveMessage",
+      "kind": "mutation",
+      "origin": "conversations:approveMessage",
+      "line": 160,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "conversations:checkAccess",
+      "kind": "mutation",
+      "origin": "conversations:checkAccess",
+      "line": 125,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "conversations:count",
+      "kind": "mutation",
+      "origin": "conversations:count",
+      "line": 343,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "conversations:create",
+      "kind": "mutation",
+      "origin": "conversations:create",
+      "line": 54,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "conversations:deleteByIds",
+      "kind": "mutation",
+      "origin": "conversations:deleteByIds",
+      "line": 208,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "conversations:deleteConversation",
+      "kind": "mutation",
+      "origin": "conversations:deleteConversation",
+      "line": 184,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "conversations:deleteMany",
+      "kind": "mutation",
+      "origin": "conversations:deleteMany",
+      "line": 192,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "conversations:exportConversations",
+      "kind": "mutation",
+      "origin": "conversations:exportConversations",
+      "line": 399,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "conversations:findConversation",
+      "kind": "mutation",
+      "origin": "conversations:findConversation",
+      "line": 282,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "conversations:get",
+      "kind": "mutation",
+      "origin": "conversations:get",
+      "line": 292,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "conversations:getHistory",
+      "kind": "mutation",
+      "origin": "conversations:getHistory",
+      "line": 354,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "conversations:getMessage",
+      "kind": "mutation",
+      "origin": "conversations:getMessage",
+      "line": 221,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "conversations:getMessagesByIds",
+      "kind": "mutation",
+      "origin": "conversations:getMessagesByIds",
+      "line": 231,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "conversations:getOrCreate",
+      "kind": "mutation",
+      "origin": "conversations:getOrCreate",
+      "line": 241,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "conversations:list",
+      "kind": "mutation",
+      "origin": "conversations:list",
+      "line": 303,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "conversations:purgeAll",
+      "kind": "internalMutation",
+      "origin": "conversations:purgeAll",
+      "line": 217,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "conversations:rejectMessage",
+      "kind": "mutation",
+      "origin": "conversations:rejectMessage",
+      "line": 172,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "conversations:search",
+      "kind": "mutation",
+      "origin": "conversations:search",
+      "line": 375,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "conversations:setMetadata",
+      "kind": "mutation",
+      "origin": "conversations:setMetadata",
+      "line": 113,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "conversations:setVisibility",
+      "kind": "mutation",
+      "origin": "conversations:setVisibility",
+      "line": 96,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "conversationShares:checkAccess",
+      "kind": "mutation",
+      "origin": "conversationShares:checkAccess",
+      "line": 153,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "conversationShares:create",
+      "kind": "mutation",
+      "origin": "conversationShares:create",
+      "line": 21,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "conversationShares:expireGraphShare",
+      "kind": "internalMutation",
+      "origin": "conversationShares:expireGraphShare",
+      "line": 100,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "conversationShares:get",
+      "kind": "mutation",
+      "origin": "conversationShares:get",
+      "line": 115,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "conversationShares:incrementViewCount",
+      "kind": "internalMutation",
+      "origin": "conversationShares:incrementViewCount",
+      "line": 109,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "conversationShares:listByConversation",
+      "kind": "mutation",
+      "origin": "conversationShares:listByConversation",
+      "line": 126,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "conversationShares:listByGranter",
+      "kind": "mutation",
+      "origin": "conversationShares:listByGranter",
+      "line": 139,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "conversationShares:revoke",
+      "kind": "mutation",
+      "origin": "conversationShares:revoke",
+      "line": 80,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "conversationSnapshots:create",
+      "kind": "mutation",
+      "origin": "conversationSnapshots:create",
+      "line": 44,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "conversationSnapshots:deleteSnapshot",
+      "kind": "mutation",
+      "origin": "conversationSnapshots:deleteSnapshot",
+      "line": 80,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "conversationSnapshots:get",
+      "kind": "mutation",
+      "origin": "conversationSnapshots:get",
+      "line": 92,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "conversationSnapshots:listByConversation",
+      "kind": "mutation",
+      "origin": "conversationSnapshots:listByConversation",
+      "line": 101,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "conversationSnapshots:listByUser",
+      "kind": "mutation",
+      "origin": "conversationSnapshots:listByUser",
+      "line": 111,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "factHistory:countByAction",
+      "kind": "query",
+      "origin": "factHistory:countByAction",
+      "line": 301,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "factHistory:deleteByFactId",
+      "kind": "internalMutation",
+      "origin": "factHistory:deleteByFactId",
+      "line": 78,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "factHistory:deleteByMemorySpace",
+      "kind": "internalMutation",
+      "origin": "factHistory:deleteByMemorySpace",
+      "line": 126,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "factHistory:deleteByUserId",
+      "kind": "internalMutation",
+      "origin": "factHistory:deleteByUserId",
+      "line": 102,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "factHistory:getActivitySummary",
+      "kind": "query",
+      "origin": "factHistory:getActivitySummary",
+      "line": 397,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "factHistory:getChangesByTimeRange",
+      "kind": "query",
+      "origin": "factHistory:getChangesByTimeRange",
+      "line": 247,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "factHistory:getEvent",
+      "kind": "query",
+      "origin": "factHistory:getEvent",
+      "line": 225,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "factHistory:getHistory",
+      "kind": "query",
+      "origin": "factHistory:getHistory",
+      "line": 198,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "factHistory:getSupersessionChain",
+      "kind": "query",
+      "origin": "factHistory:getSupersessionChain",
+      "line": 348,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "factHistory:logEvent",
+      "kind": "internalMutation",
+      "origin": "factHistory:logEvent",
+      "line": 19,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "factHistory:purgeOldEvents",
+      "kind": "internalMutation",
+      "origin": "factHistory:purgeOldEvents",
+      "line": 152,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "facts:consolidate",
+      "kind": "mutation",
+      "origin": "facts:consolidate",
+      "line": 1554,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "facts:count",
+      "kind": "mutation",
+      "origin": "facts:count",
+      "line": 698,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "facts:deleteByIds",
+      "kind": "mutation",
+      "origin": "facts:deleteByIds",
+      "line": 1643,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "facts:deleteFact",
+      "kind": "mutation",
+      "origin": "facts:deleteFact",
+      "line": 267,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "facts:deleteMany",
+      "kind": "mutation",
+      "origin": "facts:deleteMany",
+      "line": 443,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "facts:exportFacts",
+      "kind": "mutation",
+      "origin": "facts:exportFacts",
+      "line": 1444,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "facts:fetchFactsByIds",
+      "kind": "internalQuery",
+      "origin": "facts:fetchFactsByIds",
+      "line": 1010,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "facts:findByStructure",
+      "kind": "mutation",
+      "origin": "facts:findByStructure",
+      "line": 1586,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "facts:get",
+      "kind": "mutation",
+      "origin": "facts:get",
+      "line": 493,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "facts:getHistory",
+      "kind": "mutation",
+      "origin": "facts:getHistory",
+      "line": 1060,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "facts:list",
+      "kind": "mutation",
+      "origin": "facts:list",
+      "line": 525,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "facts:purgeAll",
+      "kind": "internalMutation",
+      "origin": "facts:purgeAll",
+      "line": 1665,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "facts:queryByRelationship",
+      "kind": "mutation",
+      "origin": "facts:queryByRelationship",
+      "line": 1283,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "facts:queryBySubject",
+      "kind": "mutation",
+      "origin": "facts:queryBySubject",
+      "line": 1119,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "facts:search",
+      "kind": "mutation",
+      "origin": "facts:search",
+      "line": 835,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "facts:semanticSearch",
+      "kind": "action",
+      "origin": "facts:semanticSearch",
+      "line": 1034,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "facts:store",
+      "kind": "mutation",
+      "origin": "facts:store",
+      "line": 28,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "facts:supersede",
+      "kind": "mutation",
+      "origin": "facts:supersede",
+      "line": 297,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "facts:update",
+      "kind": "mutation",
+      "origin": "facts:update",
+      "line": 150,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "facts:updateInPlace",
+      "kind": "mutation",
+      "origin": "facts:updateInPlace",
+      "line": 365,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "governance:enforce",
+      "kind": "internalMutation",
+      "origin": "governance:enforce",
+      "line": 378,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "governance:getComplianceReport",
+      "kind": "mutation",
+      "origin": "governance:getComplianceReport",
+      "line": 417,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "governance:getEnforcementStats",
+      "kind": "mutation",
+      "origin": "governance:getEnforcementStats",
+      "line": 428,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "governance:getPolicy",
+      "kind": "mutation",
+      "origin": "governance:getPolicy",
+      "line": 351,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "governance:getTemplate",
+      "kind": "mutation",
+      "origin": "governance:getTemplate",
+      "line": 359,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "governance:purgeAllEnforcement",
+      "kind": "internalMutation",
+      "origin": "governance:purgeAllEnforcement",
+      "line": 448,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "governance:purgeAllPolicies",
+      "kind": "internalMutation",
+      "origin": "governance:purgeAllPolicies",
+      "line": 441,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "governance:setAgentOverride",
+      "kind": "mutation",
+      "origin": "governance:setAgentOverride",
+      "line": 331,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "governance:setPolicy",
+      "kind": "mutation",
+      "origin": "governance:setPolicy",
+      "line": 315,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "governance:simulate",
+      "kind": "mutation",
+      "origin": "governance:simulate",
+      "line": 367,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "graphSync:clearSyncedItems",
+      "kind": "internalMutation",
+      "origin": "graphSync:clearSyncedItems",
+      "line": 119,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "graphSync:deleteSyncItem",
+      "kind": "internalMutation",
+      "origin": "graphSync:deleteSyncItem",
+      "line": 85,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "graphSync:getFailedItems",
+      "kind": "internalQuery",
+      "origin": "graphSync:getFailedItems",
+      "line": 101,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "graphSync:getHighPriorityItems",
+      "kind": "internalQuery",
+      "origin": "graphSync:getHighPriorityItems",
+      "line": 97,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "graphSync:getSyncStats",
+      "kind": "internalQuery",
+      "origin": "graphSync:getSyncStats",
+      "line": 105,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "graphSync:getUnsyncedItems",
+      "kind": "internalQuery",
+      "origin": "graphSync:getUnsyncedItems",
+      "line": 93,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "graphSync:markFailed",
+      "kind": "internalMutation",
+      "origin": "graphSync:markFailed",
+      "line": 75,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "graphSync:markSynced",
+      "kind": "internalMutation",
+      "origin": "graphSync:markSynced",
+      "line": 67,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "graphSync:purgeAll",
+      "kind": "internalMutation",
+      "origin": "graphSync:purgeAll",
+      "line": 133,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "graphSync:queueForSync",
+      "kind": "internalMutation",
+      "origin": "graphSync:queueForSync",
+      "line": 39,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "immutable:count",
+      "kind": "mutation",
+      "origin": "immutable:count",
+      "line": 64,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "immutable:get",
+      "kind": "mutation",
+      "origin": "immutable:get",
+      "line": 45,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "immutable:getAtTimestamp",
+      "kind": "mutation",
+      "origin": "immutable:getAtTimestamp",
+      "line": 53,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "immutable:getHistory",
+      "kind": "mutation",
+      "origin": "immutable:getHistory",
+      "line": 50,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "immutable:getVersion",
+      "kind": "mutation",
+      "origin": "immutable:getVersion",
+      "line": 46,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "immutable:list",
+      "kind": "mutation",
+      "origin": "immutable:list",
+      "line": 58,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "immutable:purge",
+      "kind": "mutation",
+      "origin": "immutable:purge",
+      "line": 73,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "immutable:purgeAll",
+      "kind": "internalMutation",
+      "origin": "immutable:purgeAll",
+      "line": 101,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "immutable:purgeMany",
+      "kind": "mutation",
+      "origin": "immutable:purgeMany",
+      "line": 80,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "immutable:purgeVersions",
+      "kind": "mutation",
+      "origin": "immutable:purgeVersions",
+      "line": 89,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "immutable:search",
+      "kind": "mutation",
+      "origin": "immutable:search",
+      "line": 65,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "immutable:store",
+      "kind": "mutation",
+      "origin": "immutable:store",
+      "line": 21,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "memories:archive",
+      "kind": "mutation",
+      "origin": "memories:archive",
+      "line": 884,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "memories:count",
+      "kind": "mutation",
+      "origin": "memories:count",
+      "line": 459,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "memories:deleteByIds",
+      "kind": "mutation",
+      "origin": "memories:deleteByIds",
+      "line": 689,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "memories:deleteMany",
+      "kind": "mutation",
+      "origin": "memories:deleteMany",
+      "line": 639,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "memories:deleteMemory",
+      "kind": "mutation",
+      "origin": "memories:deleteMemory",
+      "line": 286,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "memories:exportMemories",
+      "kind": "mutation",
+      "origin": "memories:exportMemories",
+      "line": 755,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "memories:fetchMemoriesByIds",
+      "kind": "internalQuery",
+      "origin": "memories:fetchMemoriesByIds",
+      "line": 345,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "memories:finalizePartialMemory",
+      "kind": "mutation",
+      "origin": "memories:finalizePartialMemory",
+      "line": 243,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "memories:get",
+      "kind": "mutation",
+      "origin": "memories:get",
+      "line": 318,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "memories:getAtTimestamp",
+      "kind": "mutation",
+      "origin": "memories:getAtTimestamp",
+      "line": 972,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "memories:getHistory",
+      "kind": "mutation",
+      "origin": "memories:getHistory",
+      "line": 601,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "memories:getVersion",
+      "kind": "mutation",
+      "origin": "memories:getVersion",
+      "line": 557,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "memories:keywordSearchMemories",
+      "kind": "internalQuery",
+      "origin": "memories:keywordSearchMemories",
+      "line": 363,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "memories:list",
+      "kind": "mutation",
+      "origin": "memories:list",
+      "line": 423,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "memories:purgeAll",
+      "kind": "internalMutation",
+      "origin": "memories:purgeAll",
+      "line": 717,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "memories:restoreFromArchive",
+      "kind": "mutation",
+      "origin": "memories:restoreFromArchive",
+      "line": 925,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "memories:search",
+      "kind": "action",
+      "origin": "memories:search",
+      "line": 378,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "memories:store",
+      "kind": "mutation",
+      "origin": "memories:store",
+      "line": 30,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "memories:storePartialMemory",
+      "kind": "mutation",
+      "origin": "memories:storePartialMemory",
+      "line": 146,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "memories:update",
+      "kind": "mutation",
+      "origin": "memories:update",
+      "line": 498,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "memories:updateMany",
+      "kind": "mutation",
+      "origin": "memories:updateMany",
+      "line": 824,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "memories:updatePartialMemory",
+      "kind": "mutation",
+      "origin": "memories:updatePartialMemory",
+      "line": 209,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "memorySpaces:addParticipant",
+      "kind": "mutation",
+      "origin": "memorySpaces:addParticipant",
+      "line": 35,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "memorySpaces:archive",
+      "kind": "mutation",
+      "origin": "memorySpaces:archive",
+      "line": 39,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "memorySpaces:count",
+      "kind": "mutation",
+      "origin": "memorySpaces:count",
+      "line": 83,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "memorySpaces:deleteSpace",
+      "kind": "mutation",
+      "origin": "memorySpaces:deleteSpace",
+      "line": 51,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "memorySpaces:findByParticipant",
+      "kind": "mutation",
+      "origin": "memorySpaces:findByParticipant",
+      "line": 86,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "memorySpaces:get",
+      "kind": "mutation",
+      "origin": "memorySpaces:get",
+      "line": 69,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "memorySpaces:getStats",
+      "kind": "query",
+      "origin": "memorySpaces:getStats",
+      "line": 106,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "memorySpaces:list",
+      "kind": "mutation",
+      "origin": "memorySpaces:list",
+      "line": 77,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "memorySpaces:purgeAll",
+      "kind": "internalMutation",
+      "origin": "memorySpaces:purgeAll",
+      "line": 95,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "memorySpaces:reactivate",
+      "kind": "mutation",
+      "origin": "memorySpaces:reactivate",
+      "line": 43,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "memorySpaces:register",
+      "kind": "mutation",
+      "origin": "memorySpaces:register",
+      "line": 20,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "memorySpaces:removeParticipant",
+      "kind": "mutation",
+      "origin": "memorySpaces:removeParticipant",
+      "line": 38,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "memorySpaces:search",
+      "kind": "mutation",
+      "origin": "memorySpaces:search",
+      "line": 89,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "memorySpaces:update",
+      "kind": "mutation",
+      "origin": "memorySpaces:update",
+      "line": 32,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "memorySpaces:updateParticipants",
+      "kind": "mutation",
+      "origin": "memorySpaces:updateParticipants",
+      "line": 44,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "mutable:count",
+      "kind": "mutation",
+      "origin": "mutable:count",
+      "line": 48,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "mutable:deleteKey",
+      "kind": "mutation",
+      "origin": "mutable:deleteKey",
+      "line": 49,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "mutable:exists",
+      "kind": "mutation",
+      "origin": "mutable:exists",
+      "line": 42,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "mutable:get",
+      "kind": "mutation",
+      "origin": "mutable:get",
+      "line": 41,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "mutable:list",
+      "kind": "mutation",
+      "origin": "mutable:list",
+      "line": 43,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "mutable:purgeAll",
+      "kind": "internalMutation",
+      "origin": "mutable:purgeAll",
+      "line": 108,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "mutable:purgeMany",
+      "kind": "mutation",
+      "origin": "mutable:purgeMany",
+      "line": 54,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "mutable:purgeNamespace",
+      "kind": "mutation",
+      "origin": "mutable:purgeNamespace",
+      "line": 62,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "mutable:set",
+      "kind": "mutation",
+      "origin": "mutable:set",
+      "line": 23,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "mutable:transaction",
+      "kind": "mutation",
+      "origin": "mutable:transaction",
+      "line": 72,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "mutable:update",
+      "kind": "mutation",
+      "origin": "mutable:update",
+      "line": 34,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "runs:approve",
+      "kind": "mutation",
+      "origin": "runs:approve",
+      "line": 137,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "runs:attempts",
+      "kind": "mutation",
+      "origin": "runs:attempts",
+      "line": 285,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "runs:cancel",
+      "kind": "mutation",
+      "origin": "runs:cancel",
+      "line": 128,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "runs:claimNext",
+      "kind": "internalMutation",
+      "origin": "runs:claimNext",
+      "line": 221,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runs:complete",
+      "kind": "internalMutation",
+      "origin": "runs:complete",
+      "line": 261,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runs:exportRecord",
+      "kind": "mutation",
+      "origin": "runs:get",
+      "line": 115,
+      "visibility": "public",
+      "alias": true
+    },
+    {
+      "endpoint": "runs:fail",
+      "kind": "internalMutation",
+      "origin": "runs:fail",
+      "line": 278,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runs:get",
+      "kind": "mutation",
+      "origin": "runs:get",
+      "line": 115,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "runs:hydrate",
+      "kind": "internalQuery",
+      "origin": "runs:hydrate",
+      "line": 256,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runs:list",
+      "kind": "mutation",
+      "origin": "runs:list",
+      "line": 118,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "runs:recoverOwnedQueue",
+      "kind": "internalMutation",
+      "origin": "runs:recoverOwnedQueue",
+      "line": 185,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runs:recoverQueue",
+      "kind": "internalMutation",
+      "origin": "runs:recoverQueue",
+      "line": 177,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runs:remove",
+      "kind": "mutation",
+      "origin": "runs:remove",
+      "line": 297,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "runs:setStages",
+      "kind": "internalMutation",
+      "origin": "runs:setStages",
+      "line": 290,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runs:submit",
+      "kind": "mutation",
+      "origin": "runs:submit",
+      "line": 113,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeAgent:approveTool",
+      "kind": "mutation",
+      "origin": "runtimeAgent:approveTool",
+      "line": 589,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeAgent:beginOperation",
+      "kind": "internalMutation",
+      "origin": "runtimeAgent:beginOperation",
+      "line": 307,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeAgent:bindNativeOperation",
+      "kind": "internalMutation",
+      "origin": "runtimeAgent:bindNativeOperation",
+      "line": 377,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeAgent:cancel",
+      "kind": "mutation",
+      "origin": "runtimeAgent:cancel",
+      "line": 756,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeAgent:checkActiveTool",
+      "kind": "internalQuery",
+      "origin": "runtimeAgent:checkActiveTool",
+      "line": 499,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeAgent:checkToolAuthority",
+      "kind": "internalQuery",
+      "origin": "runtimeAgent:checkToolAuthority",
+      "line": 140,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeAgent:contextBarrier",
+      "kind": "internalMutation",
+      "origin": "runtimeAgent:contextBarrier",
+      "line": 226,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeAgent:dispatchReady",
+      "kind": "internalMutation",
+      "origin": "runtimeAgent:dispatchReady",
+      "line": 178,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeAgent:endInterrupted",
+      "kind": "internalMutation",
+      "origin": "runtimeAgent:endInterrupted",
+      "line": 689,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeAgent:expireApproval",
+      "kind": "internalMutation",
+      "origin": "runtimeAgent:expireApproval",
+      "line": 555,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeAgent:failContext",
+      "kind": "internalMutation",
+      "origin": "runtimeAgent:failContext",
+      "line": 243,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeAgent:finalize",
+      "kind": "internalMutation",
+      "origin": "runtimeAgent:finalize",
+      "line": 653,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeAgent:finishOperation",
+      "kind": "internalMutation",
+      "origin": "runtimeAgent:finishOperation",
+      "line": 350,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeAgent:hydrateExecution",
+      "kind": "internalQuery",
+      "origin": "runtimeAgent:hydrateExecution",
+      "line": 139,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeAgent:modelStep",
+      "kind": "internalAction",
+      "origin": "runtimeAgent:modelStep",
+      "line": 465,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeAgent:observe",
+      "kind": "mutation",
+      "origin": "runtimeAgent:observe",
+      "line": 715,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeAgent:onWorkflowComplete",
+      "kind": "internalMutation",
+      "origin": "runtimeAgent:onWorkflowComplete",
+      "line": 711,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeAgent:prepareContext",
+      "kind": "internalAction",
+      "origin": "runtimeAgent:prepareContext",
+      "line": 250,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeAgent:reconcile",
+      "kind": "mutation",
+      "origin": "runtimeAgent:reconcile",
+      "line": 656,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeAgent:recordOutput",
+      "kind": "internalMutation",
+      "origin": "runtimeAgent:recordOutput",
+      "line": 388,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeAgent:rememberToolSources",
+      "kind": "internalMutation",
+      "origin": "runtimeAgent:rememberToolSources",
+      "line": 524,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeAgent:saveContext",
+      "kind": "internalMutation",
+      "origin": "runtimeAgent:saveContext",
+      "line": 211,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeAgent:start",
+      "kind": "mutation",
+      "origin": "runtimeAgent:start",
+      "line": 148,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeAgent:startContext",
+      "kind": "internalMutation",
+      "origin": "runtimeAgent:startContext",
+      "line": 221,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeAgent:startOperation",
+      "kind": "internalMutation",
+      "origin": "runtimeAgent:startOperation",
+      "line": 337,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeAgent:toolParent",
+      "kind": "internalQuery",
+      "origin": "runtimeAgent:toolParent",
+      "line": 536,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeAgent:toolStep",
+      "kind": "internalAction",
+      "origin": "runtimeAgent:toolStep",
+      "line": 488,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeAgent:waitForApproval",
+      "kind": "internalMutation",
+      "origin": "runtimeAgent:waitForApproval",
+      "line": 543,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeAgent:writeToolDerived",
+      "kind": "internalMutation",
+      "origin": "runtimeAgent:writeToolDerived",
+      "line": 520,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeAgent:writeToolSource",
+      "kind": "internalMutation",
+      "origin": "runtimeAgent:writeToolSource",
+      "line": 512,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeAssets:abandonJob",
+      "kind": "internalMutation",
+      "origin": "runtimeAssets:abandonJob",
+      "line": 124,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeAssets:beginGenerated",
+      "kind": "internalMutation",
+      "origin": "runtimeAssets:beginGenerated",
+      "line": 71,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeAssets:beginUpload",
+      "kind": "internalMutation",
+      "origin": "runtimeAssets:beginUpload",
+      "line": 68,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeAssets:cancel",
+      "kind": "mutation",
+      "origin": "runtimeAssets:cancel",
+      "line": 95,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeAssets:cleanupJob",
+      "kind": "internalMutation",
+      "origin": "runtimeAssets:cleanupJob",
+      "line": 115,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeAssets:cleanupVersion",
+      "kind": "internalMutation",
+      "origin": "runtimeAssets:cleanupVersion",
+      "line": 99,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeAssets:downloadAuthorization",
+      "kind": "internalMutation",
+      "origin": "runtimeAssets:downloadAuthorization",
+      "line": 88,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeAssets:downloadCheckpoint",
+      "kind": "internalMutation",
+      "origin": "runtimeAssets:downloadCheckpoint",
+      "line": 89,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeAssets:finalize",
+      "kind": "internalMutation",
+      "origin": "runtimeAssets:finalize",
+      "line": 77,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeAssets:get",
+      "kind": "mutation",
+      "origin": "runtimeAssets:get",
+      "line": 87,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeAssets:providerAuthorization",
+      "kind": "internalMutation",
+      "origin": "runtimeAssets:providerAuthorization",
+      "line": 151,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeAssets:readProviderInput",
+      "kind": "internalAction",
+      "origin": "runtimeAssets:readProviderInput",
+      "line": 152,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeAssets:reconcileOwnerReferences",
+      "kind": "internalMutation",
+      "origin": "runtimeAssets:reconcileOwnerReferences",
+      "line": 114,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeAssets:remove",
+      "kind": "mutation",
+      "origin": "runtimeAssets:remove",
+      "line": 90,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeAssets:retireAuthority",
+      "kind": "internalMutation",
+      "origin": "runtimeAssets:retireAuthority",
+      "line": 154,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeAssets:retryCleanup",
+      "kind": "mutation",
+      "origin": "runtimeAssets:retryCleanup",
+      "line": 162,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeAssets:stageStorage",
+      "kind": "internalMutation",
+      "origin": "runtimeAssets:stageStorage",
+      "line": 72,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeAssets:status",
+      "kind": "mutation",
+      "origin": "runtimeAssets:status",
+      "line": 161,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeAssets:uploadAuthorization",
+      "kind": "internalMutation",
+      "origin": "runtimeAssets:uploadAuthorization",
+      "line": 66,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeAssets:uploadCheckpoint",
+      "kind": "internalMutation",
+      "origin": "runtimeAssets:uploadCheckpoint",
+      "line": 67,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeAssetsHttp:assetOptions",
+      "kind": "httpAction",
+      "origin": "runtimeAssetsHttp:assetOptions",
+      "line": 18,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeAssetsHttp:downloadAsset",
+      "kind": "httpAction",
+      "origin": "runtimeAssetsHttp:downloadAsset",
+      "line": 35,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeAssetsHttp:uploadAsset",
+      "kind": "httpAction",
+      "origin": "runtimeAssetsHttp:uploadAsset",
+      "line": 19,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeAuth:authorize",
+      "kind": "internalQuery",
+      "origin": "runtimeAuth:authorize",
+      "line": 266,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeAuth:deletePrincipal",
+      "kind": "internalMutation",
+      "origin": "runtimeAuth:deletePrincipal",
+      "line": 381,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeAuth:deleteScope",
+      "kind": "internalMutation",
+      "origin": "runtimeAuth:deleteScope",
+      "line": 391,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeAuth:provision",
+      "kind": "internalMutation",
+      "origin": "runtimeAuth:provision",
+      "line": 294,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeAuth:recheck",
+      "kind": "internalQuery",
+      "origin": "runtimeAuth:recheck",
+      "line": 270,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeAuth:revokeGrant",
+      "kind": "internalMutation",
+      "origin": "runtimeAuth:revokeGrant",
+      "line": 362,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeAuth:revokeMembership",
+      "kind": "internalMutation",
+      "origin": "runtimeAuth:revokeMembership",
+      "line": 372,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeAuth:tombstoneResource",
+      "kind": "internalMutation",
+      "origin": "runtimeAuth:tombstoneResource",
+      "line": 405,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeBeliefs:commit",
+      "kind": "internalMutation",
+      "origin": "runtimeBeliefs:commit",
+      "line": 77,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeClient:session",
+      "kind": "query",
+      "origin": "runtimeClient:session",
+      "line": 6,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeClientExtensions:embeddingProfile",
+      "kind": "mutation",
+      "origin": "runtimeClientExtensions:embeddingProfile",
+      "line": 20,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeClientExtensions:memoryReadiness",
+      "kind": "mutation",
+      "origin": "runtimeClientExtensions:memoryReadiness",
+      "line": 32,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeGraph:claim",
+      "kind": "mutation",
+      "origin": "runtimeGraph:claim",
+      "line": 411,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeGraph:claimExpansion",
+      "kind": "mutation",
+      "origin": "runtimeGraph:claimExpansion",
+      "line": 546,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeGraph:complete",
+      "kind": "mutation",
+      "origin": "runtimeGraph:complete",
+      "line": 447,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeGraph:completeExpansion",
+      "kind": "mutation",
+      "origin": "runtimeGraph:completeExpansion",
+      "line": 573,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeGraph:configureConnector",
+      "kind": "internalMutation",
+      "origin": "runtimeGraph:configureConnector",
+      "line": 371,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeGraph:current",
+      "kind": "mutation",
+      "origin": "runtimeGraph:current",
+      "line": 432,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeGraph:currentExpansion",
+      "kind": "mutation",
+      "origin": "runtimeGraph:currentExpansion",
+      "line": 570,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeGraph:enqueue",
+      "kind": "internalMutation",
+      "origin": "runtimeGraph:enqueue",
+      "line": 288,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeGraph:expansion",
+      "kind": "mutation",
+      "origin": "runtimeGraph:expansion",
+      "line": 584,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeGraph:fail",
+      "kind": "mutation",
+      "origin": "runtimeGraph:fail",
+      "line": 463,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeGraph:failExpansion",
+      "kind": "mutation",
+      "origin": "runtimeGraph:failExpansion",
+      "line": 581,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeGraph:reconcileScoped",
+      "kind": "internalMutation",
+      "origin": "runtimeGraph:reconcileScoped",
+      "line": 271,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeGraph:refreshScoped",
+      "kind": "internalMutation",
+      "origin": "runtimeGraph:refreshScoped",
+      "line": 502,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeGraph:requestExpansion",
+      "kind": "mutation",
+      "origin": "runtimeGraph:requestExpansion",
+      "line": 527,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeGraph:retireAuthority",
+      "kind": "internalMutation",
+      "origin": "runtimeGraph:retireAuthority",
+      "line": 355,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeGraph:retireDependents",
+      "kind": "internalMutation",
+      "origin": "runtimeGraph:retireDependents",
+      "line": 265,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeGraph:retireQueuedSource",
+      "kind": "internalMutation",
+      "origin": "runtimeGraph:retireQueuedSource",
+      "line": 260,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeGraph:retireSource",
+      "kind": "internalMutation",
+      "origin": "runtimeGraph:retireSource",
+      "line": 299,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeGraph:status",
+      "kind": "mutation",
+      "origin": "runtimeGraph:status",
+      "line": 503,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeIngestion:claim",
+      "kind": "internalMutation",
+      "origin": "runtimeIngestion:claim",
+      "line": 216,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeIngestion:commitVectors",
+      "kind": "internalMutation",
+      "origin": "runtimeIngestion:commitVectors",
+      "line": 354,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeIngestion:expireStage",
+      "kind": "internalMutation",
+      "origin": "runtimeIngestion:expireStage",
+      "line": 280,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeIngestion:failStage",
+      "kind": "internalMutation",
+      "origin": "runtimeIngestion:failStage",
+      "line": 273,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeIngestion:failUnclaimed",
+      "kind": "internalMutation",
+      "origin": "runtimeIngestion:failUnclaimed",
+      "line": 288,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeIngestion:hydrate",
+      "kind": "internalQuery",
+      "origin": "runtimeIngestion:hydrate",
+      "line": 259,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeIngestion:persistDraft",
+      "kind": "internalMutation",
+      "origin": "runtimeIngestion:persistDraft",
+      "line": 341,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeIngestion:persistStage",
+      "kind": "internalMutation",
+      "origin": "runtimeIngestion:persistStage",
+      "line": 260,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeIngestion:processStage",
+      "kind": "internalAction",
+      "origin": "runtimeIngestion:processStage",
+      "line": 440,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeIngestion:reconcile",
+      "kind": "mutation",
+      "origin": "runtimeIngestion:reconcile",
+      "line": 303,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeIngestion:registerCompletedDerived",
+      "kind": "internalMutation",
+      "origin": "runtimeIngestion:registerCompletedDerived",
+      "line": 492,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeIngestion:retireScopedSource",
+      "kind": "internalMutation",
+      "origin": "runtimeIngestion:retireScopedSource",
+      "line": 149,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeIngestion:retry",
+      "kind": "mutation",
+      "origin": "runtimeIngestion:retry",
+      "line": 295,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeIngestion:stageInput",
+      "kind": "internalQuery",
+      "origin": "runtimeIngestion:stageInput",
+      "line": 332,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeIngestion:status",
+      "kind": "mutation",
+      "origin": "runtimeIngestion:status",
+      "line": 325,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeMediaHttp:videoWebhook",
+      "kind": "httpAction",
+      "origin": "runtimeMediaHttp:videoWebhook",
+      "line": 7,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeMediaJobs:acceptCallback",
+      "kind": "internalMutation",
+      "origin": "runtimeMediaJobs:acceptCallback",
+      "line": 222,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeMediaJobs:acknowledge",
+      "kind": "internalMutation",
+      "origin": "runtimeMediaJobs:acknowledge",
+      "line": 153,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeMediaJobs:bindAttempt",
+      "kind": "internalMutation",
+      "origin": "runtimeMediaJobs:bindAttempt",
+      "line": 146,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeMediaJobs:callbackLookup",
+      "kind": "internalMutation",
+      "origin": "runtimeMediaJobs:callbackLookup",
+      "line": 221,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeMediaJobs:cancel",
+      "kind": "mutation",
+      "origin": "runtimeMediaJobs:cancel",
+      "line": 122,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeMediaJobs:chargeState",
+      "kind": "internalMutation",
+      "origin": "runtimeMediaJobs:chargeState",
+      "line": 141,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeMediaJobs:checkpoint",
+      "kind": "internalMutation",
+      "origin": "runtimeMediaJobs:checkpoint",
+      "line": 142,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeMediaJobs:claimDownload",
+      "kind": "internalMutation",
+      "origin": "runtimeMediaJobs:claimDownload",
+      "line": 178,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeMediaJobs:claimSubmission",
+      "kind": "internalMutation",
+      "origin": "runtimeMediaJobs:claimSubmission",
+      "line": 135,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeMediaJobs:cleanupOutput",
+      "kind": "internalMutation",
+      "origin": "runtimeMediaJobs:cleanupOutput",
+      "line": 239,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeMediaJobs:downloadFailed",
+      "kind": "internalMutation",
+      "origin": "runtimeMediaJobs:downloadFailed",
+      "line": 185,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeMediaJobs:enqueueTrusted",
+      "kind": "internalMutation",
+      "origin": "runtimeMediaJobs:enqueueTrusted",
+      "line": 89,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeMediaJobs:expireJob",
+      "kind": "internalMutation",
+      "origin": "runtimeMediaJobs:expireJob",
+      "line": 252,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeMediaJobs:expireSubmission",
+      "kind": "internalMutation",
+      "origin": "runtimeMediaJobs:expireSubmission",
+      "line": 140,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeMediaJobs:get",
+      "kind": "mutation",
+      "origin": "runtimeMediaJobs:get",
+      "line": 90,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeMediaJobs:getTrusted",
+      "kind": "internalMutation",
+      "origin": "runtimeMediaJobs:getTrusted",
+      "line": 91,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeMediaJobs:list",
+      "kind": "mutation",
+      "origin": "runtimeMediaJobs:list",
+      "line": 102,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeMediaJobs:markFailure",
+      "kind": "internalMutation",
+      "origin": "runtimeMediaJobs:markFailure",
+      "line": 159,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeMediaJobs:materialized",
+      "kind": "internalMutation",
+      "origin": "runtimeMediaJobs:materialized",
+      "line": 189,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeMediaJobs:pollAgain",
+      "kind": "internalMutation",
+      "origin": "runtimeMediaJobs:pollAgain",
+      "line": 169,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeMediaJobs:pollCheckpoint",
+      "kind": "internalMutation",
+      "origin": "runtimeMediaJobs:pollCheckpoint",
+      "line": 164,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeMediaJobs:processDownload",
+      "kind": "internalAction",
+      "origin": "runtimeMediaJobs:processDownload",
+      "line": 234,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeMediaJobs:processPoll",
+      "kind": "internalAction",
+      "origin": "runtimeMediaJobs:processPoll",
+      "line": 233,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeMediaJobs:processSubmission",
+      "kind": "internalAction",
+      "origin": "runtimeMediaJobs:processSubmission",
+      "line": 232,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeMediaJobs:providerTerminal",
+      "kind": "internalMutation",
+      "origin": "runtimeMediaJobs:providerTerminal",
+      "line": 170,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeMediaJobs:readArtifactTrusted",
+      "kind": "internalMutation",
+      "origin": "runtimeMediaJobs:readArtifactTrusted",
+      "line": 92,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeMediaJobs:reconcile",
+      "kind": "mutation",
+      "origin": "runtimeMediaJobs:reconcile",
+      "line": 128,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeMediaJobs:recoverStoredOutput",
+      "kind": "internalMutation",
+      "origin": "runtimeMediaJobs:recoverStoredOutput",
+      "line": 211,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeMediaJobs:retainResult",
+      "kind": "internalMutation",
+      "origin": "runtimeMediaJobs:retainResult",
+      "line": 205,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeMediaJobs:submit",
+      "kind": "mutation",
+      "origin": "runtimeMediaJobs:submit",
+      "line": 88,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeMemory:checkAuthority",
+      "kind": "internalQuery",
+      "origin": "runtimeMemory:checkAuthority",
+      "line": 29,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeMemory:checkProfileReady",
+      "kind": "internalQuery",
+      "origin": "runtimeMemory:checkProfileReady",
+      "line": 45,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeMemory:defaultProfile",
+      "kind": "mutation",
+      "origin": "runtimeMemory:defaultProfile",
+      "line": 20,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeMemory:finalDelivery",
+      "kind": "internalMutation",
+      "origin": "runtimeMemory:finalDelivery",
+      "line": 50,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeMemory:readFacts",
+      "kind": "internalQuery",
+      "origin": "runtimeMemory:readFacts",
+      "line": 41,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeMemory:readSource",
+      "kind": "internalQuery",
+      "origin": "runtimeMemory:readSource",
+      "line": 31,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeMemory:readVectorMatches",
+      "kind": "internalQuery",
+      "origin": "runtimeMemory:readVectorMatches",
+      "line": 47,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeMemory:recall",
+      "kind": "action",
+      "origin": "runtimeMemory:recall",
+      "line": 211,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeMemory:remember",
+      "kind": "action",
+      "origin": "runtimeMemory:remember",
+      "line": 201,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeMemory:writeDerived",
+      "kind": "internalMutation",
+      "origin": "runtimeMemory:writeDerived",
+      "line": 35,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeMemory:writeSource",
+      "kind": "internalMutation",
+      "origin": "runtimeMemory:writeSource",
+      "line": 33,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeMemoryContext:indexedSourceAtCutoff",
+      "kind": "internalQuery",
+      "origin": "runtimeMemoryContext:indexedSourceAtCutoff",
+      "line": 120,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeMemoryContext:pendingContext",
+      "kind": "internalQuery",
+      "origin": "runtimeMemoryContext:pendingContext",
+      "line": 179,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeMemoryContext:refreshWatermarks",
+      "kind": "internalMutation",
+      "origin": "runtimeMemoryContext:refreshWatermarks",
+      "line": 116,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeMemoryContext:stageProgress",
+      "kind": "internalQuery",
+      "origin": "runtimeMemoryContext:stageProgress",
+      "line": 118,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeMemoryContext:status",
+      "kind": "mutation",
+      "origin": "runtimeMemoryContext:status",
+      "line": 181,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeModelPolicy:admit",
+      "kind": "internalMutation",
+      "origin": "runtimeModelPolicy:admit",
+      "line": 573,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeModelPolicy:admitFallback",
+      "kind": "internalMutation",
+      "origin": "runtimeModelPolicy:admitFallback",
+      "line": 1150,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeModelPolicy:attachTerminalResult",
+      "kind": "internalMutation",
+      "origin": "runtimeModelPolicy:attachTerminalResult",
+      "line": 1059,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeModelPolicy:cancelAgentBudget",
+      "kind": "internalMutation",
+      "origin": "runtimeModelPolicy:cancelAgentBudget",
+      "line": 1134,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeModelPolicy:cancelBudget",
+      "kind": "internalMutation",
+      "origin": "runtimeModelPolicy:cancelBudget",
+      "line": 1126,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeModelPolicy:captureTerminalEvidence",
+      "kind": "internalMutation",
+      "origin": "runtimeModelPolicy:captureTerminalEvidence",
+      "line": 1015,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeModelPolicy:checkFallback",
+      "kind": "internalQuery",
+      "origin": "runtimeModelPolicy:checkFallback",
+      "line": 1185,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeModelPolicy:checkpoint",
+      "kind": "internalMutation",
+      "origin": "runtimeModelPolicy:checkpoint",
+      "line": 682,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeModelPolicy:embeddingProfile",
+      "kind": "internalQuery",
+      "origin": "runtimeModelPolicy:embeddingProfile",
+      "line": 491,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeModelPolicy:ensureBudget",
+      "kind": "internalMutation",
+      "origin": "runtimeModelPolicy:ensureBudget",
+      "line": 364,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeModelPolicy:installDeploymentPolicy",
+      "kind": "internalMutation",
+      "origin": "runtimeModelPolicy:installDeploymentPolicy",
+      "line": 383,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeModelPolicy:markVisible",
+      "kind": "internalMutation",
+      "origin": "runtimeModelPolicy:markVisible",
+      "line": 716,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeModelPolicy:provisionTenantPolicy",
+      "kind": "internalMutation",
+      "origin": "runtimeModelPolicy:provisionTenantPolicy",
+      "line": 417,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeModelPolicy:reconcileDeploymentLiability",
+      "kind": "internalMutation",
+      "origin": "runtimeModelPolicy:reconcileDeploymentLiability",
+      "line": 1094,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeModelPolicy:recover",
+      "kind": "internalMutation",
+      "origin": "runtimeModelPolicy:recover",
+      "line": 1100,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeModelPolicy:releaseNotDispatched",
+      "kind": "internalMutation",
+      "origin": "runtimeModelPolicy:releaseNotDispatched",
+      "line": 1115,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeModelPolicy:resolve",
+      "kind": "internalQuery",
+      "origin": "runtimeModelPolicy:resolve",
+      "line": 495,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeModelPolicy:settle",
+      "kind": "internalMutation",
+      "origin": "runtimeModelPolicy:settle",
+      "line": 1098,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeTranscript:append",
+      "kind": "mutation",
+      "origin": "runtimeTranscript:append",
+      "line": 449,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeTranscript:cleanupDeleted",
+      "kind": "internalMutation",
+      "origin": "runtimeTranscript:cleanupDeleted",
+      "line": 505,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeTranscript:create",
+      "kind": "mutation",
+      "origin": "runtimeTranscript:create",
+      "line": 393,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeTranscript:edit",
+      "kind": "mutation",
+      "origin": "runtimeTranscript:edit",
+      "line": 485,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeTranscript:exportPage",
+      "kind": "mutation",
+      "origin": "runtimeTranscript:exportPage",
+      "line": 541,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeTranscript:fork",
+      "kind": "mutation",
+      "origin": "runtimeTranscript:fork",
+      "line": 550,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeTranscript:get",
+      "kind": "mutation",
+      "origin": "runtimeTranscript:get",
+      "line": 402,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeTranscript:list",
+      "kind": "mutation",
+      "origin": "runtimeTranscript:list",
+      "line": 403,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeTranscript:messages",
+      "kind": "mutation",
+      "origin": "runtimeTranscript:messages",
+      "line": 414,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeTranscript:rebuild",
+      "kind": "internalMutation",
+      "origin": "runtimeTranscript:rebuild",
+      "line": 579,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeTranscript:remove",
+      "kind": "mutation",
+      "origin": "runtimeTranscript:remove",
+      "line": 540,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeTranscript:removeMessage",
+      "kind": "mutation",
+      "origin": "runtimeTranscript:removeMessage",
+      "line": 486,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeTranscript:setPolicy",
+      "kind": "mutation",
+      "origin": "runtimeTranscript:setPolicy",
+      "line": 418,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "runtimeTranscript:stats",
+      "kind": "mutation",
+      "origin": "runtimeTranscript:stats",
+      "line": 546,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "sessions:count",
+      "kind": "mutation",
+      "origin": "sessions:count",
+      "line": 62,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "sessions:create",
+      "kind": "mutation",
+      "origin": "sessions:create",
+      "line": 21,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "sessions:end",
+      "kind": "mutation",
+      "origin": "sessions:end",
+      "line": 46,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "sessions:endAll",
+      "kind": "mutation",
+      "origin": "sessions:endAll",
+      "line": 50,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "sessions:expireIdle",
+      "kind": "internalMutation",
+      "origin": "sessions:expireIdle",
+      "line": 96,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "sessions:get",
+      "kind": "mutation",
+      "origin": "sessions:get",
+      "line": 36,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "sessions:incrementMemoryCount",
+      "kind": "internalMutation",
+      "origin": "sessions:incrementMemoryCount",
+      "line": 89,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "sessions:incrementMessageCount",
+      "kind": "internalMutation",
+      "origin": "sessions:incrementMessageCount",
+      "line": 82,
+      "visibility": "internal",
+      "alias": false
+    },
+    {
+      "endpoint": "sessions:list",
+      "kind": "mutation",
+      "origin": "sessions:list",
+      "line": 58,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "sessions:touch",
+      "kind": "mutation",
+      "origin": "sessions:touch",
+      "line": 40,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "users:count",
+      "kind": "mutation",
+      "origin": "users:count",
+      "line": 15,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "users:deleteUserProfile",
+      "kind": "mutation",
+      "origin": "users:deleteUserProfile",
+      "line": 32,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "users:exists",
+      "kind": "mutation",
+      "origin": "users:exists",
+      "line": 31,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "users:get",
+      "kind": "mutation",
+      "origin": "users:get",
+      "line": 7,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "users:getAtTimestamp",
+      "kind": "mutation",
+      "origin": "users:getAtTimestamp",
+      "line": 25,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "users:getHistory",
+      "kind": "mutation",
+      "origin": "users:getHistory",
+      "line": 21,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "users:getVersion",
+      "kind": "mutation",
+      "origin": "users:getVersion",
+      "line": 16,
+      "visibility": "public",
+      "alias": false
+    },
+    {
+      "endpoint": "users:list",
+      "kind": "mutation",
+      "origin": "users:list",
+      "line": 11,
+      "visibility": "public",
+      "alias": false
+    }
+  ],
+  "scope": "Current registration kinds and same-module/imported aliases; internal queries remain guarded by actual final admission/checkpoint/commit/delivery mutations. Root-owned session/signal/watchers close separately."
+}

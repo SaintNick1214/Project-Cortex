@@ -155,7 +155,7 @@ export class MutableAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.mutable.get, {
+        this.client.mutation(api.mutable.get, {
           namespace,
           key,
           tenantId: this.authContext?.tenantId, // Inject tenantId for tenant isolation
@@ -187,7 +187,7 @@ export class MutableAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.mutable.get, {
+        this.client.mutation(api.mutable.get, {
           namespace,
           key,
           tenantId: this.authContext?.tenantId, // Inject tenantId for tenant isolation
@@ -331,7 +331,7 @@ export class MutableAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.mutable.exists, {
+        this.client.mutation(api.mutable.exists, {
           namespace,
           key,
           tenantId: this.authContext?.tenantId, // Inject tenantId for tenant isolation
@@ -374,7 +374,7 @@ export class MutableAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.mutable.list, {
+        this.client.mutation(api.mutable.list, {
           namespace: filter.namespace,
           keyPrefix: filter.keyPrefix,
           userId: filter.userId,
@@ -417,7 +417,7 @@ export class MutableAPI {
 
     const result = await this.executeWithResilience(
       () =>
-        this.client.query(api.mutable.count, {
+        this.client.mutation(api.mutable.count, {
           namespace: filter.namespace,
           userId: filter.userId,
           tenantId: resolveTenantId(this.authContext?.tenantId, filter.tenantId), // Support explicit or auth context

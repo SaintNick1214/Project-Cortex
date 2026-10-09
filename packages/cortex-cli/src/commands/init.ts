@@ -62,6 +62,8 @@ import {
   appendGraphEnvVars,
 } from "../utils/init/env-generator.js";
 import { displayCleanupNotification } from "../utils/formatting.js";
+import { developmentStartEnvironment } from "../utils/init/start-target.js";
+import { BACKEND_SETUP_GUIDANCE, parseJwtProvider, readSetupJson, setupBackend } from "../utils/init/backend-setup.js";
 
 /**
  * Register start and stop commands (lifecycle management)
@@ -252,6 +254,9 @@ export function registerLifecycleCommands(
         console.log(pc.dim(`    URL: ${dep.url}`));
         console.log();
 
+        // Validate development authority before starting any selected services.
+        const developmentEnv = developmentStartEnvironment(dep.url, dep.key);
+
         // Start graph database if configured and not convex-only
         if (!options.convexOnly) {
           const dockerComposePath = path.join(
@@ -275,54 +280,7 @@ export function registerLifecycleCommands(
         // Start Convex if not graph-only
         if (!options.graphOnly) {
           const hasConvex = await commandExists("convex");
-          const env: Record<string, string | undefined> = { ...process.env };
-          env.CONVEX_URL = dep.url;
-          if (dep.key) env.CONVEX_DEPLOY_KEY = dep.key;
-
-          // For cloud deployments with a deploy key, run `convex deploy` first
-          // This ensures functions are deployed to production before starting dev mode
-          if (dep.key && !dep.isLocal) {
-            const deploySpinner = ora(
-              "Deploying functions to production...",
-            ).start();
-            try {
-              const deployCmd = hasConvex ? "convex" : "npx";
-              const deployArgs = hasConvex
-                ? ["deploy", "--cmd", "echo deployed"]
-                : ["convex", "deploy", "--cmd", "echo deployed"];
-
-              await new Promise<void>((resolve, reject) => {
-                const deployChild = spawn(deployCmd, deployArgs, {
-                  cwd: dep.projectPath,
-                  stdio: "pipe",
-                  env,
-                });
-
-                let stderr = "";
-                deployChild.stderr?.on("data", (data: Buffer) => {
-                  stderr += data.toString();
-                });
-
-                deployChild.on("close", (code: number | null) => {
-                  if (code === 0) {
-                    resolve();
-                  } else {
-                    reject(
-                      new Error(`Deploy failed with code ${code}: ${stderr}`),
-                    );
-                  }
-                });
-
-                deployChild.on("error", reject);
-              });
-
-              deploySpinner.succeed("Functions deployed to production");
-            } catch (error) {
-              deploySpinner.fail("Failed to deploy functions");
-              console.error(pc.dim(`   ${error}`));
-              console.log(pc.yellow("   Continuing with dev mode anyway..."));
-            }
-          }
+          const env = developmentEnv;
 
           if (options.foreground) {
             // Foreground mode - blocking (single deployment only)
@@ -770,6 +728,10 @@ export function registerInitCommand(
     )
     .option("-y, --yes", "Skip confirmation prompts", false)
     .option("--start", "Start Convex dev server after setup", false)
+    .option("--backend", "Modern additive backend-only installation; no service/global config writes", false)
+    .option("--sdk-path <path>", "Explicit SDK distribution for --backend")
+    .option("--jwt-provider <file>", "Reviewed customJwt JSON for --backend")
+    .option("--plan", "Print additive --backend plan without applying files", false)
     .action(async (targetDir, options) => {
       try {
         await runInitWizard(targetDir, options);
@@ -799,8 +761,18 @@ export async function runInitWizard(
     template?: string;
     yes?: boolean;
     start?: boolean;
+    backend?: boolean;
+    sdkPath?: string;
+    jwtProvider?: string;
+    plan?: boolean;
   } = {},
 ): Promise<void> {
+  if (options.backend) {
+    const jwtProvider = options.jwtProvider ? parseJwtProvider(await readSetupJson(options.jwtProvider)) : undefined;
+    console.log(JSON.stringify(await setupBackend({ projectPath: path.resolve(targetDir ?? "."), sdkPath: options.sdkPath, jwtProvider, planOnly: options.plan }), null, 2));
+    console.log(BACKEND_SETUP_GUIDANCE);
+    return;
+  }
   console.log(pc.bold(pc.cyan("\n   Cortex Memory Project Setup\n")));
   console.log(pc.dim("   Setting up AI agent with persistent memory\n"));
 
@@ -822,8 +794,8 @@ export async function runInitWizard(
     graphConfig = await getGraphConfig();
   }
 
-  // Step 6: OpenAI API key (optional)
-  const openaiApiKey = await getOpenAIApiKey();
+  // Inference is governed by backend operation policy; no app-side key prompt.
+  console.log(BACKEND_SETUP_GUIDANCE);
 
   // Build wizard configuration
   const config: WizardConfig = {
@@ -841,7 +813,6 @@ export async function runInitWizard(
     graphUri: graphConfig?.uri,
     graphUsername: graphConfig?.username,
     graphPassword: graphConfig?.password,
-    openaiApiKey,
   };
 
   // Show confirmation
@@ -1194,50 +1165,6 @@ async function getConvexSetup(
 }
 
 /**
- * Get OpenAI API key (optional)
- */
-async function getOpenAIApiKey(): Promise<string | undefined> {
-  console.log(pc.cyan("\n   OpenAI API Key (Optional)"));
-  console.log(
-    pc.dim("   Required for AI-powered embeddings and fact extraction"),
-  );
-  console.log(
-    pc.dim("   Get your key at: https://platform.openai.com/api-keys\n"),
-  );
-
-  const { setupOpenAI } = await prompts({
-    type: "confirm",
-    name: "setupOpenAI",
-    message: "Configure OpenAI API key now?",
-    initial: false,
-  });
-
-  if (!setupOpenAI) {
-    console.log(pc.dim("   You can add OPENAI_API_KEY to .env.local later"));
-    return undefined;
-  }
-
-  const { apiKey } = await prompts({
-    type: "password",
-    name: "apiKey",
-    message: "Enter your OpenAI API key:",
-    validate: (value) => {
-      if (!value) return "API key is required";
-      if (!value.startsWith("sk-")) {
-        return "OpenAI API keys typically start with 'sk-'";
-      }
-      return true;
-    },
-  });
-
-  if (apiKey) {
-    console.log(pc.green("   ✓ OpenAI API key configured"));
-  }
-
-  return apiKey;
-}
-
-/**
  * Get CLI installation option
  */
 /**
@@ -1284,10 +1211,7 @@ async function showConfirmation(config: WizardConfig): Promise<void> {
     pc.bold("   Graph DB:"),
     config.graphEnabled ? config.graphType : "Disabled",
   );
-  console.log(
-    pc.bold("   OpenAI:"),
-    config.openaiApiKey ? "Configured" : "Not configured",
-  );
+  console.log(pc.bold("   Inference:"), "Backend Gateway qualification and operation policy");
   console.log(pc.dim("   " + "─".repeat(46)));
 
   const response = await prompts({
@@ -1733,11 +1657,11 @@ async function addCLIScripts(projectPath: string): Promise<void> {
 
     // Add CLI scripts
     packageJson.scripts = packageJson.scripts || {};
-    packageJson.scripts["cortex"] = "cortex";
-    packageJson.scripts["cortex:setup"] = "cortex setup";
-    packageJson.scripts["cortex:stats"] = "cortex db stats";
-    packageJson.scripts["cortex:spaces"] = "cortex spaces list";
-    packageJson.scripts["cortex:status"] = "cortex status";
+    packageJson.scripts["cortex"] ??= "cortex";
+    packageJson.scripts["cortex:setup"] ??= "cortex backend guide";
+    packageJson.scripts["cortex:stats"] ??= "cortex db stats";
+    packageJson.scripts["cortex:spaces"] ??= "cortex spaces list";
+    packageJson.scripts["cortex:status"] ??= "cortex status";
 
     await fs.writeJson(packageJsonPath, packageJson, { spaces: 2 });
     console.log(pc.dim("   Added CLI scripts to package.json"));
@@ -1853,7 +1777,7 @@ function showSuccessMessage(config: WizardConfig): void {
 
 /**
  * Start Convex development server in background
- * Note: Deploy to production is handled by the caller before this function
+ * Starting development services never implicitly deploys production.
  */
 async function startConvexInBackground(
   projectPath: string,
@@ -1865,9 +1789,7 @@ async function startConvexInBackground(
   const command = hasConvex ? "convex" : "npx";
 
   // Set up environment with deployment-specific URL/key if provided
-  const env: Record<string, string | undefined> = { ...process.env };
-  if (deploymentUrl) env.CONVEX_URL = deploymentUrl;
-  if (deploymentKey) env.CONVEX_DEPLOY_KEY = deploymentKey;
+  const env = developmentStartEnvironment(deploymentUrl, deploymentKey);
 
   // Start convex dev in background for watch mode
   const devSpinner = ora("Starting Convex development server...").start();

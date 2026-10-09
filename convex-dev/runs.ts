@@ -3,7 +3,7 @@ import { saveMessages } from "@convex-dev/agent";
 import { makeFunctionReference } from "convex/server";
 import type { FunctionReference } from "convex/server";
 import { ConvexError, v } from "convex/values";
-import { mutation, query, internalMutation, internalQuery } from "./_generated/server";
+import { mutation, internalMutation, internalQuery } from "./_generated/server";
 import type { MutationCtx, QueryCtx } from "./_generated/server";
 import type { Doc } from "./_generated/dataModel";
 import type { RuntimeAuthorityReference } from "../src/auth/verified";
@@ -112,10 +112,10 @@ export async function submitHandler(ctx: MutationCtx, args: { request: unknown; 
 }
 export const submit = mutation({ args: { request: v.any(), tenantId: v.optional(v.string()), memorySpaceId: v.optional(v.string()) }, handler: submitHandler });
 const runSelector = { runId: v.string(), memorySpaceId: v.optional(v.string()), tenantId: v.optional(v.string()) };
-export const get = query({ args: runSelector, handler: async (ctx, args) => {
+export const get = mutation({ args: runSelector, handler: async (ctx, args) => {
   const actor = await requireDataAuthority(ctx, args, "read"); return publicRun((await currentControlRun(ctx, dataAuthorityReference(actor), args.runId, "read")).row);
 } });
-export const list = query({ args: { conversationId: v.string(), memorySpaceId: v.optional(v.string()), tenantId: v.optional(v.string()),
+export const list = mutation({ args: { conversationId: v.string(), memorySpaceId: v.optional(v.string()), tenantId: v.optional(v.string()),
   afterSequence: v.optional(v.number()), limit: v.optional(v.number()) }, handler: async (ctx, args) => {
   const { reference } = await requireConversation(ctx, args, args.conversationId, "read");
   const limit = args.limit ?? 100; if (!Number.isSafeInteger(limit) || limit < 1 || limit > 100 || !Number.isSafeInteger(args.afterSequence ?? 0)) transcriptDenied("INVALID_INPUT");
@@ -282,7 +282,7 @@ export const fail = internalMutation({ args: { ...attemptArgs, failureCode: v.un
   await ctx.db.patch("runtimeRunAttempts", attempt._id, { status: "failed", failureCode: args.failureCode, endedAt: now });
   await ctx.scheduler.runAfter(0, recoverRef, { reference: row.authorityReference, conversationId: row.conversationId }); return { recorded: true as const };
 } });
-export const attempts = query({ args: runSelector, handler: async (ctx, args) => {
+export const attempts = mutation({ args: runSelector, handler: async (ctx, args) => {
   const actor = await requireDataAuthority(ctx, args, "read"); const { row } = await currentControlRun(ctx, dataAuthorityReference(actor), args.runId, "read");
   return (await ctx.db.query("runtimeRunAttempts").withIndex("by_run_attempt", q => q.eq("tenantId", row.tenantId).eq("memorySpaceId", row.memorySpaceId).eq("runId", row.runId)).collect())
     .map(attempt => ({ attemptNumber: attempt.attemptNumber, status: attempt.status, startedAt: attempt.startedAt, endedAt: attempt.endedAt ?? null, failureCode: attempt.failureCode ?? null }));

@@ -1,6 +1,7 @@
 /** Deployment artifact is the trust root. No tenant/JWT/env payload can create these attestations. */
 import type { TrustedModelPolicyRecord, TrustedModelQualification } from "../src/domain/model-policy";
 import type { EmbeddingProfile } from "../src/domain/profile";
+import type { QualifiedMediaContractV1 } from "../src/domain/media-jobs";
 import { AGENT_GATEWAY_POLICY_MANIFEST_V5, DEFAULT_GATEWAY_POLICY_MANIFEST, TEXT_GATEWAY_POLICY_MANIFEST_V3 } from "./runtimeGatewayQualifications";
 
 export interface QualifiedDispatchEvidence {
@@ -13,8 +14,9 @@ export interface QualifiedDispatchEvidence {
    * artifact. Omission retains the canonical modelId fence. No general aliases. */
   readonly terminalModelId?: string;
   /** Reviewed guarantee over full serialized final request plus protocol overhead. Absent proof denies. */
-  readonly inputBound: { readonly ruleId: "plain-chat-cookbook-utf8-v1" | "default-embedding-utf8-v1" | "profile-embedding-utf8-v1" | "agent-tools-chat-utf8-v1" | "private-frame-video-json-v1"; readonly revision: number;
-    readonly featureEnvelope: "plain-chat-v1" | "default-embedding-v1" | "profile-embedding-v1" | "agent-tools-chat-v1" | "private-frame-video-v1"; readonly nativeTransformHash: string; readonly documentHash: string; readonly proofHash: string };
+  readonly inputBound: { readonly ruleId: "plain-chat-cookbook-utf8-v1" | "default-embedding-utf8-v1" | "profile-embedding-utf8-v1" | "agent-tools-chat-utf8-v1" | "private-frame-video-json-v1" | "media-native-utf8-v1"; readonly revision: number;
+    readonly featureEnvelope: "plain-chat-v1" | "default-embedding-v1" | "profile-embedding-v1" | "agent-tools-chat-v1" | "agent-tools-chat-v2" | "private-frame-video-v1" | "media-image-v1" | "media-video-async-v1"; readonly nativeTransformHash: string; readonly documentHash: string; readonly proofHash: string };
+  readonly mediaContract?: QualifiedMediaContractV1;
   readonly embeddingProfile?: EmbeddingProfile;
   readonly supportsStream?: true;
   readonly toolContract?: { readonly registryVersion: string; readonly toolsCanonical: string; readonly maximumToolCalls: number };

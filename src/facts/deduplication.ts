@@ -154,7 +154,7 @@ export class FactDeduplicationService {
     }
 
     try {
-      const facts = await this.client.query(api.facts.findByStructure, {
+      const facts = await this.client.mutation(api.facts.findByStructure, {
         memorySpaceId,
         subject: candidate.subject,
         predicate: candidate.predicate,
@@ -181,7 +181,7 @@ export class FactDeduplicationService {
     const normalizedCandidate = normalizeFactText(candidate.fact);
 
     // Get facts for this memory space and optionally filter by user
-    const facts = (await this.client.query(api.facts.list, {
+    const facts = (await this.client.mutation(api.facts.list, {
       memorySpaceId,
       userId,
       factType: candidate.factType as
@@ -220,7 +220,7 @@ export class FactDeduplicationService {
     const candidateEmbedding = await generateEmbedding(candidate.fact);
 
     // Get existing facts
-    const facts = (await this.client.query(api.facts.list, {
+    const facts = (await this.client.mutation(api.facts.list, {
       memorySpaceId,
       userId,
       factType: candidate.factType as

@@ -1,0 +1,128 @@
+{
+  "status": "ACTUAL_V2_STREAMED_AGENT_IMAGE_NATIVE_CLOSURE_PASS",
+  "groups": [
+    {
+      "name": "one-actual-streamed-Agent-tool-image-one-canonical-final-ingestion-and-current-private-delivery",
+      "status": "PASS",
+      "runId": "run:db94602fdd008d4c0f076cadf9db8835a65c1e1f1f0249c566db2a4fd1b5f6b3",
+      "jobId": "media:51d9c0763ca1e0d50905c4a487ec1517a6debdf5a2f66fa6cd87fd3d31659687",
+      "artifactId": "artifact:media:51d9c0763ca1e0d50905c4a487ec1517a6debdf5a2f66fa6cd87fd3d31659687",
+      "versionId": "asset:c845bfb9f32eb33aac86b4b450b489fed0a27b447ccb3f5fcbaf332034ee3283:version:1",
+      "contentHash": "97bb24e1bf77145f8f3601cff86d3d0541a3423434653329ce1dc072471b7295",
+      "sizeBytes": 1073033,
+      "width": 1024,
+      "height": 1024,
+      "observedToolEffects": 1,
+      "actualModelSteps": 2,
+      "canonicalRunsRegistration": true
+    },
+    {
+      "name": "real-image-secondary-has-exact-parent-and-common-budget-full-uncertain-liability",
+      "status": "PASS",
+      "runAccountId": "nx79apnhf97bnd1bkm9ery9j498fzd9v",
+      "runBudgetId": "eb8c178f2f9504cedc1226e6e2c09b4ebcbf5c9b05239bcad1d120e9a46a15d8",
+      "parentOperationId": "qh7an598ppnq1z0a4hekn0wrzx8fytxt",
+      "sharedRunAttempts": 4,
+      "sharedRunFullLiabilityUnits": 2300000,
+      "scopeAttempts": 7,
+      "scopeFullLiabilityUnits": 2600000,
+      "finishedSlotsReleased": true,
+      "aggregateCostUnavailable": true,
+      "imageServingIdentityUnobserved": true
+    },
+    {
+      "name": "ready-job-reconcile-durable-observer-replay-current-auth-negatives-zero-added-inference",
+      "status": "PASS",
+      "versionId": "asset:c845bfb9f32eb33aac86b4b450b489fed0a27b447ccb3f5fcbaf332034ee3283:version:1",
+      "noAuthCode": "UNAUTHENTICATED",
+      "foreignCode": "FORBIDDEN",
+      "httpNoAuthStatus": 401,
+      "attemptsUnchanged": true,
+      "financialRootWindowsCountersUnchanged": true,
+      "newGenerationRequests": 0
+    },
+    {
+      "name": "actual-delayed-response-completes-before-claim-then-real-stages-close-default-profile",
+      "status": "PASS",
+      "pendingSnapshot": "pending",
+      "finalBeforeRelease": "complete",
+      "heldUserStages": [
+        {
+          "_creationTime": 1791509427006.789,
+          "_id": "ps7dy73fnry7tx5xh578yb1yzx8fy906",
+          "attempt": 0,
+          "eventId": "ingestion:03e2660effbe83660a153e5afc6bef92ce4549e5cbd9ffbc97c4aead4cf668ac",
+          "leaseVersion": 0,
+          "memorySpaceId": "agent-media-v2-3c1dcff16463",
+          "stage": "vectors",
+          "state": "pending",
+          "tenantId": "task13-agent-media-v2-3c1dcff16463",
+          "updatedAt": 1791509427006
+        },
+        {
+          "_creationTime": 1791509427006.7888,
+          "_id": "ps731r0chxfqy9vhptx9fzafb98fy8cq",
+          "attempt": 0,
+          "eventId": "ingestion:03e2660effbe83660a153e5afc6bef92ce4549e5cbd9ffbc97c4aead4cf668ac",
+          "leaseVersion": 0,
+          "memorySpaceId": "agent-media-v2-3c1dcff16463",
+          "stage": "facts",
+          "state": "pending",
+          "tenantId": "task13-agent-media-v2-3c1dcff16463",
+          "updatedAt": 1791509427006
+        },
+        {
+          "_creationTime": 1791509427006.7886,
+          "_id": "ps7dp0et4f79z9jfxj89a4e6q58fybsh",
+          "attempt": 0,
+          "eventId": "ingestion:03e2660effbe83660a153e5afc6bef92ce4549e5cbd9ffbc97c4aead4cf668ac",
+          "leaseVersion": 0,
+          "memorySpaceId": "agent-media-v2-3c1dcff16463",
+          "stage": "extract",
+          "state": "pending",
+          "tenantId": "task13-agent-media-v2-3c1dcff16463",
+          "updatedAt": 1791509427006
+        }
+      ],
+      "releaseAt": 1791509593563,
+      "completeAt": 1791509603950,
+      "readiness": {
+        "version": 1,
+        "cutoff": 2,
+        "graphCutoff": 2,
+        "profile": {
+          "profileId": "cortex-text-small-1536-v1",
+          "modelId": "openai/text-embedding-3-small",
+          "dimensions": 1536,
+          "normalization": "text-nfc-lf-v1",
+          "chunking": "codepoint-1600-overlap-200-v1",
+          "indexName": "by_default_embedding_v1"
+        },
+        "stages": {
+          "facts": {
+            "cutoff": 2,
+            "indexedThrough": 2,
+            "complete": true,
+            "hole": null
+          },
+          "vectors": {
+            "cutoff": 2,
+            "indexedThrough": 2,
+            "complete": true,
+            "hole": null
+          }
+        },
+        "strictStages": []
+      },
+      "workerOperations": [
+        "memory.extract",
+        "embedding.memory"
+      ],
+      "noAdditionalAgentTurn": true
+    }
+  ],
+  "record": "actual-agent-media-v2-qualification-record1.json",
+  "newProviderRequests": 0,
+  "ownedClientClosed": true,
+  "cleanupPending": true
+}

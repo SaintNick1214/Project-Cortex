@@ -29,6 +29,7 @@
 import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 import { runtimeAssetTables } from "./runtimeAssetsSchema";
+import { runtimeMediaTables } from "./runtimeMediaJobsSchema";
 import { runtimeAuthorityReference, runtimeAuthTables } from "./runtimeAuthSchema";
 import { runtimeMemoryTables, sourceLineage } from "./runtimeMemorySchema";
 import { runtimePolicyTables } from "./runtimePolicySchema";
@@ -39,6 +40,7 @@ import { runtimeGraphTables } from "./runtimeGraphSchema";
 
 export default defineSchema({
   ...runtimeAssetTables,
+  ...runtimeMediaTables,
   ...runtimeAuthTables,
   ...runtimeMemoryTables,
   ...runtimePolicyTables,

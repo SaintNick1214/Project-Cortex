@@ -1,0 +1,106 @@
+{
+  "status": "INSTALLED_SUCCESSOR_EXISTING_IMAGE_AND_UI_METADATA_PASS",
+  "candidateManifestSha256": "b61d9bb5e99d8e9f025be9d811e7a27baed4b0b9978fef5db1f161446273d90f",
+  "deployment": "deploy-current4.json",
+  "scope": {
+    "tenantId": "task13-3c1dcff16463",
+    "memorySpaceId": "media-3c1dcff16463"
+  },
+  "job": {
+    "version": 1,
+    "jobId": "media:84f2270c045038ec853ebd504f7db79f4114a7e2baeb3c46f2413a41d9e05cb0",
+    "artifactId": "artifact:media:84f2270c045038ec853ebd504f7db79f4114a7e2baeb3c46f2413a41d9e05cb0",
+    "kind": "image",
+    "state": "ready",
+    "revision": 4,
+    "createdAt": 1791505051116,
+    "updatedAt": 1791505059545,
+    "costStatus": "incurred_unknown",
+    "upstreamCancellation": "not_requested",
+    "asset": {
+      "version": 1,
+      "assetId": "asset:fbcca9c718aef0dfd587416fef9efab52e33cca295a87ec4692950bc1fa0f5d2",
+      "versionId": "asset:fbcca9c718aef0dfd587416fef9efab52e33cca295a87ec4692950bc1fa0f5d2:version:1",
+      "assetVersion": 1,
+      "contentHash": "b398f6084152795dc90784414466854a65810ecf04b9429f45098e10fe074bb5",
+      "sizeBytes": 1116726,
+      "mimeType": "image/png",
+      "mediaKind": "image",
+      "lineage": {
+        "kind": "generated",
+        "operationId": "qh7cn6qhp1hm4hem880hk6pnnn8fz53k",
+        "modelId": "openai/gpt-image-1"
+      }
+    }
+  },
+  "artifact": {
+    "contractVersion": 1,
+    "artifactId": "artifact:media:84f2270c045038ec853ebd504f7db79f4114a7e2baeb3c46f2413a41d9e05cb0",
+    "artifactVersion": 2,
+    "versionPointer": 2,
+    "kind": "image",
+    "title": "Generated image",
+    "streamingState": "final",
+    "createdAt": 1791505051116,
+    "updatedAt": 1791505059545,
+    "file": {
+      "assetId": "asset:fbcca9c718aef0dfd587416fef9efab52e33cca295a87ec4692950bc1fa0f5d2",
+      "version": 1,
+      "versionId": "asset:fbcca9c718aef0dfd587416fef9efab52e33cca295a87ec4692950bc1fa0f5d2:version:1",
+      "contentHash": "b398f6084152795dc90784414466854a65810ecf04b9429f45098e10fe074bb5",
+      "sizeBytes": 1116726,
+      "mimeType": "image/png"
+    }
+  },
+  "profile": {
+    "version": 1,
+    "profile": {
+      "profileId": "cortex-text-small-1536-v1",
+      "modelId": "openai/text-embedding-3-small",
+      "dimensions": 1536,
+      "normalization": "text-nfc-lf-v1",
+      "chunking": "codepoint-1600-overlap-200-v1",
+      "indexName": "by_default_embedding_v1"
+    }
+  },
+  "readiness": {
+    "version": 1,
+    "cutoff": 0,
+    "graphCutoff": 0,
+    "profile": {
+      "profileId": "cortex-text-small-1536-v1",
+      "modelId": "openai/text-embedding-3-small",
+      "dimensions": 1536,
+      "normalization": "text-nfc-lf-v1",
+      "chunking": "codepoint-1600-overlap-200-v1",
+      "indexName": "by_default_embedding_v1"
+    },
+    "stages": {
+      "facts": {
+        "cutoff": 0,
+        "indexedThrough": 0,
+        "complete": true,
+        "hole": null
+      },
+      "vectors": {
+        "cutoff": 0,
+        "indexedThrough": 0,
+        "complete": true,
+        "hole": null
+      }
+    },
+    "strictStages": []
+  },
+  "contentHash": "b398f6084152795dc90784414466854a65810ecf04b9429f45098e10fe074bb5",
+  "sizeBytes": 1116726,
+  "attemptCount": 1,
+  "allFinancialAccountsUnchanged": true,
+  "newProviderRequests": 0,
+  "fullRetainedUnknownUnits": 6500000,
+  "priorHeldSlots": 2,
+  "ownedClientClosed": true,
+  "unrelatedHostPreserved": true,
+  "lateExpiryAndExhaustedCursorNativeBranchNotClaimed": true,
+  "affectedSourceControls": "../author/checks3.json",
+  "sourceCandidate": "../author/source-manifest3.json"
+}

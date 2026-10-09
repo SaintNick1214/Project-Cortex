@@ -1,0 +1,28 @@
+(node:39639) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-anchor-independent2.test.ts
+  ✕ artifact_read retains currentness of the exact linked canonical message after supported deletion (37 ms)
+
+  ● artifact_read retains currentness of the exact linked canonical message after supported deletion
+
+    expect(received).rejects.toThrow()
+
+    Received promise resolved instead of rejected
+    Resolved to value: {"artifactId": "anchored-artifact", "artifactVersion": 1, "kind": "text", "streamingState": "draft", "title": "anchored metadata", "version": 1}
+
+      19 |   expect(f.native.messages.has(messageId)).toBe(false);
+      20 |   await expect(f.call(artifacts.get, { artifactId: 'anchored-artifact' })).rejects.toThrow();
+    > 21 |   await expect(f.call(media.readArtifactTrusted, { reference: f.reference, artifactId: 'anchored-artifact' })).rejects.toThrow();
+         |         ^
+      22 | });
+      23 |
+
+      at expect (node_modules/expect/build/index.js:2116:15)
+      at Object.<anonymous> (_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-anchor-independent2.test.ts:21:9)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 1 total
+Snapshots:   0 total
+Time:        2.662 s
+Ran all test suites within paths "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-anchor-independent2.test.ts".
+Test results written to: _goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-anchor-run2.results.json

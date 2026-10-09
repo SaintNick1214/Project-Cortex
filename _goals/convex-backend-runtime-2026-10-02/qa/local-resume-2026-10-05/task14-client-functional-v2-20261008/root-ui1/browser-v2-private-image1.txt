@@ -1,0 +1,124 @@
+Browser tab: 5, Title: "Cortex Memory Quickstart", URL: "http://127.0.0.1:55002/".
+0 AXWebArea Cortex Memory Quickstart, URL: 127.0.0.1:55002/
+	1 container
+		2 text Cortex
+		3 heading Memory chat, Value: 1
+			4 text Memory chat
+		5 text Responses and memory updates stay available across connections.
+		14 button Sign out
+		6 container Authentication
+			7 heading Refresh credentials, Value: 2
+				8 text Refresh credentials
+			9 text Use an access token issued by your host authentication provider. It stays in memory for this session.
+			10 container
+				11 text Access token
+				12 text field (settable) Access token
+				13 button (disabled) Refresh token
+			15 container
+				16 text Connected to  agent-media-v2-3c1dcff16463  in  task13-agent-media-v2-3c1dcff16463 .
+		17 container Agent configuration
+			18 container
+				19 text Published agent
+				20 text field (settable) Published agent, Value: agent:4ffe5befa47a82cf6f6fc0c02ec6b360316783fd589dfc87eba5d79fd5fbfe08
+			21 container
+				22 text Agent version
+				23 stepper (settable, integer) Agent version, Value: 1
+			24 button Use agent version
+			25 container
+				26 text Current version:  1  · Memory mode:  indexed-plus-pending
+		27 container Chat
+			28 heading Conversation, Value: 2
+				29 text Conversation
+			30 button New chat
+			31 container Messages
+				62 container
+					63 text You Create an image of a small blue circle centered on a plain white background, with no text. Use media_image_generate once, then tell me the durable job and artifact references.
+				70 container
+					71 text Cortex The image creation is complete. Here are the durable job and artifact references:
+
+- **Job ID:** media:51d9c0763ca1e0d50905c4a487ec1517a6debdf5a2f66fa6cd87fd3d31659687
+- **Artifact ID:** artifact:media:51d9c0763ca1e0d50905c4a487ec1517a6debdf5a2f66fa6cd87fd3d31659687 Backend tool:  media_image_generate  ·  succeeded
+					81 button Open saved image job
+						82 text Open saved 
+						83 text image
+						84 text  job
+			33 container
+				34 text Message
+				35 text entry area (settable) Message
+				36 button (disabled) Send
+			65 container
+				66 text Response: 
+				67 text complete
+				68 text Memory: 
+				69 text complete
+				76 text Context:  complete Run:  run:db94602fdd008d4c0f076cadf9db8835a65c1e1f1f0249c566db2a4fd1b5f6b3
+			77 content list Backend tool activity
+				78 text media_image_generate: succeeded
+			37 button (disabled) Disconnect observer
+			38 button (disabled) Reconnect observer
+			39 button (disabled) Cancel run
+			40 container
+				41 text Observe an existing run
+				42 text field (settable) Observe an existing run, Value: run:db94602fdd008d4c0f076cadf9db8835a65c1e1f1f0249c566db2a4fd1b5f6b3
+				43 button Observe run
+		44 container Memory search
+			45 heading Memory search, Value: 2
+				46 text Memory search
+			47 container
+				48 text cortex-text-small-1536-v1  ·  1536  dimensions
+			49 container
+				50 text Search your memory
+				51 text field (settable) Search your memory
+				52 button (disabled) Search memory
+			53 container
+				54 container Memory readiness
+					55 text Memory readiness
+					56 text Read current indexing status, or require the selected stages to be complete. This check starts no model call.
+					57 checkbox (settable, integer) Description: Require facts, Value: 0
+					58 checkbox (settable, integer) Description: Require vectors, Value: 0
+					59 checkbox (settable, integer) Description: Require graph, Value: 0
+				60 button Check memory readiness
+				109 content list
+					110 container
+						111 text facts :  incomplete  · indexed through  0  of  2  · pending at 1
+					112 container
+						113 text vectors :  incomplete  · indexed through  0  of  2  · pending at 1
+		61 button (expanded) Hide media tools (1 retained references), Secondary Actions: Collapse
+			79 text Hide media tools
+			80 text  (1 retained references)
+		85 container Media and artifacts
+			86 heading Media and artifacts, Value: 2
+				87 text Media and artifacts
+			88 text Cortex saves a pending job and artifact before generation. Jobs remain available after the chat response finishes.
+			89 container
+				90 text Private file (up to 20,000,000 bytes)
+				91 button Private file (up to 20,000,000 bytes)
+				92 button (disabled) Upload private file
+			93 container
+				94 text Generate
+				95 pop up button (collapsed, settable) Generate, Value: Image, Secondary Actions: Expand
+					96 menu
+						97 (selected) Image
+						98 Video
+				99 text Media prompt
+				100 text entry area (settable) Media prompt
+				101 button (disabled) Create media job
+			102 text Models and generation options are set by your administrator. Video can use the uploaded PNG; other uploads remain private files. Missing service capabilities return an explicit error.
+			103 container
+				104 text Observe an existing media job
+				105 text field (settable) Observe an existing media job
+				106 button (disabled) Observe media job
+			107 text A job ID does not grant access. Cortex checks the current job, artifact and file permissions.
+			108 button Refresh jobs
+			114 container
+				115 text Image  ·  ready Job:  media:51d9c0763ca1e0d50905c4a487ec1517a6debdf5a2f66fa6cd87fd3d31659687 Cost:  incurred amount unknown; reservation retained
+				116 button (disabled) Cancel local job
+				117 button (disabled) Recover job status
+				118 button Open retained artifact
+				119 text Generated image  ·  final  · version  2
+				120 button Preview or download private file
+				121 image Generated image
+				122 link Description: Download private file (1,073,033 bytes), Value: blob:http://127.0.0.1:55002/233c0e75-8a47-411c-8f53-ec03adc54a08
+				123 button Close preview
+
+The focused UI element is 0 AXWebArea Cortex Memory Quickstart, URL: 127.0.0.1:55002/

@@ -1,0 +1,75 @@
+{
+  "version": 1,
+  "createdAt": "2026-10-09T01:19:45.125968+00:00",
+  "scope": "CONTROLLED_CODE_NO_SERVICE",
+  "formalVerdict": false,
+  "prior": {
+    "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/repair-outcomes3.json",
+    "bytes": 2990,
+    "sha256": "a01746ce3fa6379d4e0d7ec93411364b98f39f248cd0b30b2fcd40295bd5dca8"
+  },
+  "artifactAnchorRepair": {
+    "testUnchanged": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-anchor-independent2.test.ts",
+      "bytes": 1980,
+      "sha256": "29686674eeec8261d125ff5061d1bf474bd9b6f476aeb1bb3d0b70e10fe7d460"
+    },
+    "fixtureSetupFailure": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-anchor-run1.results.json",
+      "bytes": 4550,
+      "sha256": "4a4ce111d455f032e3d558e95f989cd2825b21c18a32f3bc88486f787d391a53"
+    },
+    "red": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-anchor-run2.results.json",
+      "bytes": 3300,
+      "sha256": "41a9b806f4c07b3dfb469793b5a789416065016b09cfbb94539ad8a8902064f7"
+    },
+    "green": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-anchor-run3.results.json",
+      "bytes": 1344,
+      "sha256": "32e650b9f99118782a09e56717424930daa67a93998c0584d2cfea12cd7a61f0"
+    },
+    "command": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-read-anchor-run3.command.json",
+      "bytes": 1756,
+      "sha256": "7cfb7bc32e09e4c09ad16620ee4efac6afe953e646a3899f5b208d85ca4b085e"
+    },
+    "originalFinding": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task13-task14-product-independent-review1/artifact-anchor-finding1.json",
+      "bytes": 2983,
+      "sha256": "5882c3c26a9db613804f16279e866c1d8a1c50b90ccd08228943d540a5961660"
+    },
+    "outcome": "PASS",
+    "positiveRetained": true,
+    "negative": "Exact linked canonical message deletion denies both public artifact get and trusted artifact_read.",
+    "sourceBefore": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeArtifactContext.ts",
+      "bytes": 5197,
+      "sha256": "59fdc04d32d3ee9b74a357cb1f15d895d267876d5e96fc5b085ca00301569063"
+    },
+    "sourceAfter": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/convex-dev/runtimeArtifactContext.ts",
+      "bytes": 5197,
+      "sha256": "59fdc04d32d3ee9b74a357cb1f15d895d267876d5e96fc5b085ca00301569063"
+    },
+    "ownedChildWaited": true,
+    "elapsedSeconds": 7.055542209011037,
+    "pid": 40623
+  },
+  "scopeClarification": {
+    "mutationChangingClockControls": "Injected-clock hardening only; Convex freezes Date.now within queries/mutations. No native temporal failure inferred solely from those controls.",
+    "actionAndClientDeadlines": "Current production boundary review remains relevant across real RPC awaits.",
+    "newClockPermutations": 0
+  },
+  "pendingActual": [
+    "Coherent paired fresh session/client and consumed delivery deadline installation/auth outcomes.",
+    "Agent-mediated media service outcomes.",
+    "Original Task13 async video availability and terminal outcomes remain unqualified."
+  ],
+  "effects": {
+    "serviceCalls": 0,
+    "paidCalls": 0,
+    "productEdits": 0,
+    "gitChanges": 0
+  }
+}

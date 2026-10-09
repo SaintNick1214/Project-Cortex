@@ -1,6 +1,6 @@
 /** Memory-space registry metadata. Participants never create principals or grants. */
 import { ConvexError, v } from "convex/values";
-import { internalMutation, mutation, query, type MutationCtx } from "./_generated/server";
+import { internalMutation, mutation, query, MutationCtx } from "./_generated/server";
 import type { Doc } from "./_generated/dataModel";
 import { RegistryAccess, selectors, spaceAt, spacesIn, resource, integer, distinct, record, mergeValue, json, receipt, tombstone, nextVersion, conflict, insertionShape, inserted, nativeJson, deny, operation, effect } from "./runtimeRegistryAuth";
 import { statisticsUnavailable } from "./runtimeRegistryStats";
@@ -66,7 +66,7 @@ export const deleteSpace = mutation({ args: { ...selectors, memorySpaceId: v.str
     cascade: { status: "pending" as const, conversationsDeleted: 0, memoriesDeleted: 0, factsDeleted: 0, totalBytes: 0 },
     pendingTasks: ["08", "12", "15"] };
 }) });
-export const get = query({ args: { ...selectors, memorySpaceId: v.string() }, handler: async (ctx, args) => operation(ctx, "query", async () => {
+export const get = mutation({ args: { ...selectors, memorySpaceId: v.string() }, handler: async (ctx, args) => operation(ctx, "query", async () => {
   const access = await RegistryAccess.open(ctx, "read", args); const row = await spaceAt(access, args.memorySpaceId, "read", false); await access.fence(); return row;
 }) });
 const filters = { ...selectors, type: v.optional(spaceType), status: v.optional(status) };
@@ -74,19 +74,19 @@ function filterRows(rows: Doc<"memorySpaces">[], args: { type?: Doc<"memorySpace
   return rows.filter((row) => (args.type === undefined || row.type === args.type) && (args.status === undefined || row.status === args.status)
     && (args.participant === undefined || row.participants.some((value) => value.id === args.participant)));
 }
-export const list = query({ args: { ...filters, participant: v.optional(v.string()), limit: v.optional(v.number()), offset: v.optional(v.number()), sortBy: v.optional(v.union(v.literal("createdAt"), v.literal("updatedAt"), v.literal("name"))), sortOrder: v.optional(v.union(v.literal("asc"), v.literal("desc"))) }, handler: async (ctx, args) => operation(ctx, "query", async () => {
+export const list = mutation({ args: { ...filters, participant: v.optional(v.string()), limit: v.optional(v.number()), offset: v.optional(v.number()), sortBy: v.optional(v.union(v.literal("createdAt"), v.literal("updatedAt"), v.literal("name"))), sortOrder: v.optional(v.union(v.literal("asc"), v.literal("desc"))) }, handler: async (ctx, args) => operation(ctx, "query", async () => {
   const access = await RegistryAccess.open(ctx, "read", args); const limit = integer(args.limit ?? 100, 1); const offset = integer(args.offset ?? 0);
   const rows = filterRows(await spacesIn(access), args); const sort = args.sortBy ?? "createdAt";
   rows.sort((a, b) => { const left = a[sort] ?? ""; const right = b[sort] ?? ""; return (left < right ? -1 : left > right ? 1 : 0) * (args.sortOrder === "asc" ? 1 : -1); });
   await access.fence(); return { spaces: rows.slice(offset, offset + limit), total: rows.length, hasMore: offset + limit < rows.length, offset };
 }) });
-export const count = query({ args: filters, handler: async (ctx, args) => operation(ctx, "query", async () => {
+export const count = mutation({ args: filters, handler: async (ctx, args) => operation(ctx, "query", async () => {
   const access = await RegistryAccess.open(ctx, "read", args); const rows = filterRows(await spacesIn(access), args); await access.fence(); return rows.length;
 }) });
-export const findByParticipant = query({ args: { ...selectors, participantId: v.string() }, handler: async (ctx, args) => operation(ctx, "query", async () => {
+export const findByParticipant = mutation({ args: { ...selectors, participantId: v.string() }, handler: async (ctx, args) => operation(ctx, "query", async () => {
   const access = await RegistryAccess.open(ctx, "read", args); const rows = filterRows(await spacesIn(access), { participant: args.participantId }); await access.fence(); return rows;
 }) });
-export const search = query({ args: { ...filters, query: v.string(), limit: v.optional(v.number()) }, handler: async (ctx, args) => operation(ctx, "query", async () => {
+export const search = mutation({ args: { ...filters, query: v.string(), limit: v.optional(v.number()) }, handler: async (ctx, args) => operation(ctx, "query", async () => {
   const access = await RegistryAccess.open(ctx, "read", args); const limit = integer(args.limit ?? 50, 1); const search = args.query.toLowerCase();
   const rows = filterRows(await spacesIn(access), args).filter((row) => [row.memorySpaceId, row.name ?? "", row.metadata === undefined ? "" : JSON.stringify(nativeJson(row.metadata))].some((value) => value.toLowerCase().includes(search)));
   await access.fence(); return rows.slice(0, limit);

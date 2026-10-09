@@ -6,7 +6,7 @@
  */
 
 import { ConvexError, v } from "convex/values";
-import { action, internalMutation, internalQuery, mutation, query } from "./_generated/server";
+import { action, internalMutation, internalQuery, mutation } from "./_generated/server";
 import { runtimeAuthorityReference } from "./runtimeAuthSchema";
 import type { CanonicalSourceWitness, HistoricalFactView } from "./runtimeDataAuth";
 import { prepareMutationRowsWrite, finalizeMutationRowsRead, recheckSourceWitnesses, finalizeDataRead, factMutationResult, getHistoricalScopedFact, dataEditor, assertDataLinks, assertDataRow, bindDataActor, dataDenied, getScopedFact,
@@ -490,7 +490,7 @@ export const deleteMany = mutation({
 /**
  * Get fact by ID
  */
-export const get = query({
+export const get = mutation({
   args: {
     memorySpaceId: v.string(),
     factId: v.string(),
@@ -522,7 +522,7 @@ export const get = query({
 /**
  * List facts with filters
  */
-export const list = query({
+export const list = mutation({
   args: {
     memorySpaceId: v.string(),
     tenantId: v.optional(v.string()), // Multi-tenancy: SaaS platform isolation
@@ -695,7 +695,7 @@ export const list = query({
 /**
  * Count facts
  */
-export const count = query({
+export const count = mutation({
   args: {
     memorySpaceId: v.string(),
     tenantId: v.optional(v.string()), // Multi-tenancy: SaaS platform isolation
@@ -832,7 +832,7 @@ export const count = query({
 /**
  * Search facts by content
  */
-export const search = query({
+export const search = mutation({
   args: {
     memorySpaceId: v.string(),
     tenantId: v.optional(v.string()), // Multi-tenancy: SaaS platform isolation
@@ -1057,7 +1057,7 @@ export const semanticSearch = action({
 /**
  * Get fact version history
  */
-export const getHistory = query({
+export const getHistory = mutation({
   args: {
     memorySpaceId: v.string(),
     factId: v.string(),
@@ -1116,7 +1116,7 @@ export const getHistory = query({
 /**
  * Query facts by subject (entity-centric)
  */
-export const queryBySubject = query({
+export const queryBySubject = mutation({
   args: {
     memorySpaceId: v.string(),
     subject: v.string(),
@@ -1280,7 +1280,7 @@ export const queryBySubject = query({
 /**
  * Query facts by relationship (graph traversal)
  */
-export const queryByRelationship = query({
+export const queryByRelationship = mutation({
   args: {
     memorySpaceId: v.string(),
     subject: v.string(),
@@ -1441,7 +1441,7 @@ export const queryByRelationship = query({
 /**
  * Export facts
  */
-export const exportFacts = query({
+export const exportFacts = mutation({
   args: {
     memorySpaceId: v.string(),
     format: v.union(v.literal("json"), v.literal("jsonld"), v.literal("csv")),
@@ -1583,7 +1583,7 @@ export const consolidate = mutation({
  * Find facts by structural match (subject + predicate + object)
  * Used for cross-session deduplication
  */
-export const findByStructure = query({
+export const findByStructure = mutation({
   args: {
     memorySpaceId: v.string(),
     subject: v.optional(v.string()),

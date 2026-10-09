@@ -1,0 +1,73 @@
+{
+  "version": 1,
+  "toolchain": {
+    "node": "24.15.0",
+    "npm": "12.2.0"
+  },
+  "classification": "CODE actual local additive install/template copy/Commander commands and management response negatives, no service effects",
+  "unit": {
+    "receipt": "tests2.json",
+    "command": "node --experimental-vm-modules ../../node_modules/jest/bin/jest.js --selectProjects unit --runInBand --runTestsByPath src/utils/__tests__/backend-setup.test.ts src/utils/__tests__/additive-backend.test.ts src/utils/__tests__/development-target.test.ts src/utils/__tests__/env-file.test.ts",
+    "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/cortex-cli",
+    "exitCode": 0,
+    "passingInstances": 125,
+    "distinctAssertionLabels": 103,
+    "suites": [
+      {
+        "suite": "packages/cortex-cli/src/utils/__tests__/backend-setup.test.ts",
+        "passed": 20,
+        "failed": 0,
+        "skipped": 0
+      },
+      {
+        "suite": "packages/cortex-cli/src/utils/__tests__/additive-backend.test.ts",
+        "passed": 66,
+        "failed": 0,
+        "skipped": 0
+      },
+      {
+        "suite": "packages/cortex-cli/src/utils/__tests__/development-target.test.ts",
+        "passed": 18,
+        "failed": 0,
+        "skipped": 0
+      },
+      {
+        "suite": "packages/cortex-cli/src/utils/__tests__/env-file.test.ts",
+        "passed": 21,
+        "failed": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  "types": {
+    "receipt": "types4.log",
+    "command": "node ../../node_modules/typescript/bin/tsc --noEmit",
+    "exitCode": 0
+  },
+  "lint": {
+    "receipt": "lint2.log",
+    "scope": [
+      "packages/cortex-cli/src/commands/backend.ts",
+      "packages/cortex-cli/src/commands/init.ts",
+      "packages/cortex-cli/src/index.ts",
+      "packages/cortex-cli/src/utils/__tests__/backend-setup.test.ts",
+      "packages/cortex-cli/src/utils/init/backend-setup.ts",
+      "packages/cortex-cli/src/utils/init/env-generator.ts",
+      "packages/cortex-cli/src/utils/init/quickstart-setup.ts",
+      "packages/cortex-cli/src/utils/init/start-target.ts"
+    ],
+    "exitCode": 0
+  },
+  "historicalFailures": [
+    "types1.log: shebang displaced by import, corrected without command changes",
+    "types3.log: parameterized negative fixture inferred optional fields, explicit Record typed fixture correction",
+    "lint1.log: NodeJS namespace no-undef, type-only correction",
+    "tests1.json:123PASS1FAIL: correct serialized JWT config object key order differed from own string oracle; now parse exact object equality, same fields"
+  ],
+  "builds": 0,
+  "installs": 0,
+  "deploys": 0,
+  "serviceCalls": 0,
+  "paidCalls": 0,
+  "gitMutations": 0
+}

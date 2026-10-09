@@ -66,9 +66,15 @@ export function textSubmit(input: unknown): TextSubmitV1 {
     ...(value.conversationId === undefined ? {} : { conversationId: identifier(value.conversationId) }) };
 }
 export function sameScope(a: RuntimeScope, b: RuntimeScope): boolean { return a.tenantId === b.tenantId && a.memorySpaceId === b.memorySpaceId; }
+export function deliveryDeadline(value: unknown): number | undefined {
+  if (value === undefined) return undefined;
+  if (typeof value !== "number" || !Number.isFinite(value) || value <= 0 || value > Number.MAX_SAFE_INTEGER) invalid("INVALID_RESPONSE");
+  return value;
+}
 export function session(value: unknown): RuntimeSession {
   const row = object(value); if (row.version !== 1) invalid("INVALID_RESPONSE");
-  return Object.freeze({ version: 1, tenantId: identifier(row.tenantId), memorySpaceId: identifier(row.memorySpaceId), principalId: identifier(row.principalId), userId: identifier(row.userId) });
+  return Object.freeze({ version: 1, tenantId: identifier(row.tenantId), memorySpaceId: identifier(row.memorySpaceId), principalId: identifier(row.principalId), userId: identifier(row.userId),
+    ...(row.deliveryExpiresAt === undefined ? {} : { deliveryExpiresAt: deliveryDeadline(row.deliveryExpiresAt) }) });
 }
 export function run(value: unknown): RuntimeRun {
   const row = object(value), scope = object(row.scope);
@@ -85,7 +91,7 @@ export function run(value: unknown): RuntimeRun {
     contextCompleteness: row.contextCompleteness as RuntimeRun["contextCompleteness"], contextFailureCode: row.contextFailureCode as string | null,
     createdAt: row.createdAt as number, updatedAt: row.updatedAt as number };
 }
-function publicPart(input: unknown): RuntimePublicPart {
+export function runtimePublicPart(input: unknown): RuntimePublicPart {
   const part = object(input);
   switch (part.type) {
     case "text": case "text-delta": if (typeof part.text !== "string") break; return { type: part.type, text: part.text, ...(typeof part.id === "string" ? { id: part.id } : {}) };
@@ -94,6 +100,8 @@ function publicPart(input: unknown): RuntimePublicPart {
       return { type: "tool", toolCallId: identifier(part.toolCallId), name: identifier(part.name), phase: part.phase as "requested" };
     case "status": return { type: "status", state: identifier(part.state) };
     case "artifact": if (part.kind !== "memory-receipt") break; return { type: "artifact", kind: "memory-receipt", artifactId: identifier(part.artifactId, 512) };
+    case "media-job": if (part.version !== 1 || !["image", "video"].includes(part.kind as string)) break;
+      return { type: "media-job", version: 1, jobId: identifier(part.jobId), artifactId: identifier(part.artifactId), kind: part.kind as "image" | "video" };
     case "error": return { type: "error", code: "RUNTIME_OUTPUT_FAILED" };
   }
   return invalid("INVALID_RESPONSE");
@@ -101,6 +109,7 @@ function publicPart(input: unknown): RuntimePublicPart {
 export function observation(input: unknown): RuntimeObservation {
   const row = object(input); if (!Array.isArray(row.parts) || !Array.isArray(row.approvals)) invalid("INVALID_RESPONSE");
   return { run: run(row.run), state: identifier(row.state), cursor: natural(row.cursor),
-    parts: row.parts.map(inputPart => { const part = object(inputPart); return { sequence: natural(part.sequence), part: publicPart(part.part) }; }),
+    ...(row.deliveryExpiresAt === undefined ? {} : { deliveryExpiresAt: deliveryDeadline(row.deliveryExpiresAt) }),
+    parts: row.parts.map(inputPart => { const part = object(inputPart); return { sequence: natural(part.sequence), part: runtimePublicPart(part.part) }; }),
     approvals: row.approvals.map(inputApproval => { const approval = object(inputApproval); return { operationId: identifier(approval.operationId, 512), toolName: identifier(approval.toolName), requestHash: identifier(approval.requestHash) }; }) };
 }

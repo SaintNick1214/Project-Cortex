@@ -1,7 +1,7 @@
 /** Authenticated managed shares. A share never supplies JWT authority or widens scope. */
 import { ConvexError, v } from "convex/values";
 import { makeFunctionReference } from "convex/server";
-import { mutation, query, internalMutation } from "./_generated/server";
+import { mutation, internalMutation } from "./_generated/server";
 import { internalUnavailable } from "./runtimeUnavailableAuth";
 import { bindDataActor, dataAuthorityReference, managedConversationAccess, requireDataAuthority } from "./runtimeDataAuth";
 import { checkConversation, conversationById, requireConversation, singleTranscript, transcriptDenied } from "./runtimeTranscript";
@@ -112,7 +112,7 @@ export const incrementViewCount = internalMutation({ args: {
   return await internalUnavailable();
 } });
 
-export const get = query({ args: {
+export const get = mutation({ args: {
     tenantId: v.optional(v.string()),
     memorySpaceId: v.optional(v.string()),
     shareId: v.string(),
@@ -123,7 +123,7 @@ export const get = query({ args: {
   await checkConversation(ctx, reference, conversation, "read"); return view(row);
 } });
 
-export const listByConversation = query({ args: {
+export const listByConversation = mutation({ args: {
     tenantId: v.optional(v.string()),
     memorySpaceId: v.optional(v.string()),
     conversationId: v.string(),
@@ -136,7 +136,7 @@ export const listByConversation = query({ args: {
     .map(view).filter(row => !args.status || row.status === args.status);
 } });
 
-export const listByGranter = query({ args: {
+export const listByGranter = mutation({ args: {
     tenantId: v.optional(v.string()),
     memorySpaceId: v.optional(v.string()),
     grantedBy: v.string(),
@@ -150,7 +150,7 @@ export const listByGranter = query({ args: {
   return result;
 } });
 
-export const checkAccess = query({ args: {
+export const checkAccess = mutation({ args: {
     tenantId: v.optional(v.string()),
     conversationId: v.string(),
     userId: v.optional(v.string()),

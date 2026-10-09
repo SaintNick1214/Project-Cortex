@@ -25,6 +25,7 @@ jest.unstable_mockModule("@convex-dev/agent", () => ({ ...nativeAgent, Agent: cl
 jest.unstable_mockModule("@convex-dev/workflow", () => ({ WorkflowManager: class {
   define(value: { handler: unknown }) { return { _handler: value.handler }; } async start() { return "workflow:1"; }
 } }));
+const { transcriptFixture, installMockRoot, runs, ledger, invoke } = await import("../runtimeTranscript/fixture");
 const originalGateway = await import("../../../convex-dev/runtimeGateway");
 jest.unstable_mockModule("../../../convex-dev/runtimeGateway", () => ({ ...originalGateway, createGovernedGatewayModel: async () => ({
   model: { specificationVersion: mode === "identity" ? "v3" : "v4", doStream: async () => {}, provider: "controlled", modelId: "controlled/model" },
@@ -33,7 +34,6 @@ jest.unstable_mockModule("../../../convex-dev/runtimeGateway", () => ({ ...origi
 const originalTools = await import("../../../convex-dev/runtimeAgentTools");
 const executeTool = jest.fn(async (_ctx: unknown, binding: { checkCurrent(): Promise<void> }) => { await binding.checkCurrent(); return { result: { context: "PRIVATE_TOOL_CONTEXT", profileId: "controlled" }, witnesses: [] }; });
 jest.unstable_mockModule("../../../convex-dev/runtimeAgentTools", () => ({ ...originalTools, executeServerTool: executeTool }));
-const { transcriptFixture, installMockRoot, runs, ledger, invoke } = await import("../runtimeTranscript/fixture");
 const runtime = await import("../../../convex-dev/runtimeAgent");
 const definitions = await import("../../../convex-dev/agentDefinitions");
 const memory = await import("../../../convex-dev/runtimeMemory");

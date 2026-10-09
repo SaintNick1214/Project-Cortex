@@ -52,6 +52,7 @@ export interface SourceContent {
   tombstonedAt?: number;
   /** Server-pinned data dependencies of generated tool evidence. */
   contextSourceWitnesses?: import("./context-witness.js").ContextSourceWitness[];
+  artifactContextWitnesses?: import("./artifact-context.js").ArtifactContextWitness[];
 }
 
 /** Logical chunk: content and lineage exist independently of the derived vector. */
@@ -118,6 +119,8 @@ export interface VectorMatch {
 export interface MemoryRepository {
   readonly scope: TrustedMemoryScope;
   recheckAuthority(): Promise<void>;
+  /** Action adapters revalidate the exact consumed rows in a fresh native transaction. */
+  finalDelivery?(): Promise<{ version: 1; deliveryExpiresAt?: number }>;
   getSource(sourceId: string): Promise<SourceContent | null>;
   putSource(source: SourceContent): Promise<{ source: SourceContent; created: boolean }>;
   commitDerived(input: {

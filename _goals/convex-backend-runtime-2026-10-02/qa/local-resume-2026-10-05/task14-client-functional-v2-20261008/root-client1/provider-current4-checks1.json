@@ -1,0 +1,61 @@
+{
+  "createdAtUtc": "2026-10-09T01:20:27.148Z",
+  "node": "v24.15.0",
+  "npm": "12.2.0",
+  "sdkPackages": "../../task13-media-functional-v2-20261008/native-actual/packages-current4.json",
+  "checks": [
+    {
+      "name": "provider-current4-build1",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/npm",
+        "run",
+        "build"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider",
+      "exit": 0,
+      "signal": null,
+      "timedOut": false,
+      "elapsedMs": 2900,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task14-client-functional-v2-20261008/root-client1/provider-current4-build1.log",
+      "sha256": "24aecf607dffe45c02d62cc5b5a3235acf3932d4bcb9c6d4803772e10c5e7948",
+      "ownedChildClosed": true
+    },
+    {
+      "name": "provider-current4-lint1",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/npm",
+        "run",
+        "lint"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider",
+      "exit": 0,
+      "signal": null,
+      "timedOut": false,
+      "elapsedMs": 832,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task14-client-functional-v2-20261008/root-client1/provider-current4-lint1.log",
+      "sha256": "b79ee9af4885eb27348ff04b294bfe7a62161a2772c996d18c4f30c462307e5c",
+      "ownedChildClosed": true
+    },
+    {
+      "name": "provider-current4-unit1",
+      "command": [
+        "/Users/SaintNick/.codex/tmp/cortex-runtime-toolchain-20261005/node_modules/.bin/npm",
+        "run",
+        "test:unit",
+        "--",
+        "--runInBand",
+        "--json",
+        "--outputFile=/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task14-client-functional-v2-20261008/root-client1/provider-current4-unit1.json"
+      ],
+      "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/packages/vercel-ai-provider",
+      "exit": 0,
+      "signal": null,
+      "timedOut": false,
+      "elapsedMs": 4312,
+      "log": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task14-client-functional-v2-20261008/root-client1/provider-current4-unit1.log",
+      "sha256": "be3404fa3767467c11857a4840727345d3351c179676a97142c3dbe3be864d30",
+      "ownedChildClosed": true
+    }
+  ],
+  "actualService": false
+}

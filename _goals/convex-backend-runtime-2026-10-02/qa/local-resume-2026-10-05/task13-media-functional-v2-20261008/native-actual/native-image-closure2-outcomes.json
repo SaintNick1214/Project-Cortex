@@ -1,0 +1,83 @@
+{
+  "status": "ACTUAL_IMAGE_COMMISSION_PASS_PENDING_COMPILED_QUALIFICATION",
+  "groups": [
+    {
+      "name": "actual-owned-image-private-http-artifact-and-installed-client",
+      "status": "PASS",
+      "jobId": "media:84f2270c045038ec853ebd504f7db79f4114a7e2baeb3c46f2413a41d9e05cb0",
+      "versionId": "asset:fbcca9c718aef0dfd587416fef9efab52e33cca295a87ec4692950bc1fa0f5d2:version:1",
+      "contentHash": "b398f6084152795dc90784414466854a65810ecf04b9429f45098e10fe074bb5",
+      "sizeBytes": 1116726,
+      "width": 1024,
+      "height": 1024
+    },
+    {
+      "name": "own-only-readiness-denied-and-authorized-space-readiness-positive",
+      "status": "PASS",
+      "ownDenial": {
+        "name": "CortexRuntimeError",
+        "message": "Cortex runtime: FORBIDDEN"
+      },
+      "profile": {
+        "profileId": "cortex-text-small-1536-v1",
+        "modelId": "openai/text-embedding-3-small",
+        "dimensions": 1536,
+        "normalization": "text-nfc-lf-v1",
+        "chunking": "codepoint-1600-overlap-200-v1",
+        "indexName": "by_default_embedding_v1"
+      },
+      "readiness": {
+        "version": 1,
+        "cutoff": 0,
+        "graphCutoff": 0,
+        "profile": {
+          "profileId": "cortex-text-small-1536-v1",
+          "modelId": "openai/text-embedding-3-small",
+          "dimensions": 1536,
+          "normalization": "text-nfc-lf-v1",
+          "chunking": "codepoint-1600-overlap-200-v1",
+          "indexName": "by_default_embedding_v1"
+        },
+        "stages": {
+          "facts": {
+            "cutoff": 0,
+            "indexedThrough": 0,
+            "complete": true,
+            "hole": null
+          },
+          "vectors": {
+            "cutoff": 0,
+            "indexedThrough": 0,
+            "complete": true,
+            "hole": null
+          }
+        },
+        "strictStages": []
+      },
+      "scopeCountersPrivate": true,
+      "billableCalls": 0
+    },
+    {
+      "name": "durable-same-key-reconcile-one-version-no-added-request-and-full-liability",
+      "status": "PASS",
+      "issuedCount": 1,
+      "attemptCount": 1,
+      "fullLiabilityUnits": 2000000,
+      "finishedSlotReleased": true,
+      "aggregateCostUnavailable": true
+    },
+    {
+      "name": "prior4.5m-held2-root-window-and-attempt-state-conserved",
+      "status": "PASS",
+      "priorUnits": 4500000,
+      "heldPriorSlots": 2,
+      "newTotalUnits": 6500000
+    }
+  ],
+  "record": "actual-image-qualification-record1.json",
+  "newProviderRequests": 0,
+  "issuedRequestsTotal": 1,
+  "asyncVideoStillUnqualified": true,
+  "AgentMediatedMediaStillOpen": true,
+  "allOwnedClientsClosed": true
+}

@@ -210,8 +210,8 @@ export class GovernanceAPI {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return await this.executeWithResilience(
       () =>
-        this.client.query(
-          api.governance.getPolicy as FunctionReference<"query">,
+        this.client.mutation(
+          api.governance.getPolicy as FunctionReference<"mutation">,
           { scope: scope || {} },
         ),
       "governance:getPolicy",
@@ -343,8 +343,8 @@ export class GovernanceAPI {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return await this.executeWithResilience(
       () =>
-        this.client.query(
-          api.governance.getTemplate as FunctionReference<"query">,
+        this.client.mutation(
+          api.governance.getTemplate as FunctionReference<"mutation">,
           { template },
         ),
       "governance:getTemplate",
@@ -463,8 +463,8 @@ export class GovernanceAPI {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return await this.executeWithResilience(
       () =>
-        this.client.query(
-          api.governance.simulate as FunctionReference<"query">,
+        this.client.mutation(
+          api.governance.simulate as FunctionReference<"mutation">,
           { options },
         ),
       "governance:simulate",
@@ -519,8 +519,8 @@ export class GovernanceAPI {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return await this.executeWithResilience(
       () =>
-        this.client.query(
-          api.governance.getComplianceReport as FunctionReference<"query">,
+        this.client.mutation(
+          api.governance.getComplianceReport as FunctionReference<"mutation">,
           { options: convexOptions },
         ),
       "governance:getComplianceReport",
@@ -563,8 +563,8 @@ export class GovernanceAPI {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return await this.executeWithResilience(
       () =>
-        this.client.query(
-          api.governance.getEnforcementStats as FunctionReference<"query">,
+        this.client.mutation(
+          api.governance.getEnforcementStats as FunctionReference<"mutation">,
           { options },
         ),
       "governance:getEnforcementStats",

@@ -1,0 +1,417 @@
+{
+  "job": {
+    "artifactId": "artifact:media:84f2270c045038ec853ebd504f7db79f4114a7e2baeb3c46f2413a41d9e05cb0",
+    "asset": {
+      "assetId": "asset:fbcca9c718aef0dfd587416fef9efab52e33cca295a87ec4692950bc1fa0f5d2",
+      "assetVersion": 1,
+      "contentHash": "b398f6084152795dc90784414466854a65810ecf04b9429f45098e10fe074bb5",
+      "lineage": {
+        "kind": "generated",
+        "modelId": "openai/gpt-image-1",
+        "operationId": "qh7cn6qhp1hm4hem880hk6pnnn8fz53k"
+      },
+      "mediaKind": "image",
+      "mimeType": "image/png",
+      "sizeBytes": 1116726,
+      "version": 1,
+      "versionId": "asset:fbcca9c718aef0dfd587416fef9efab52e33cca295a87ec4692950bc1fa0f5d2:version:1"
+    },
+    "costStatus": "incurred_unknown",
+    "createdAt": 1791505051116,
+    "jobId": "media:84f2270c045038ec853ebd504f7db79f4114a7e2baeb3c46f2413a41d9e05cb0",
+    "kind": "image",
+    "revision": 4,
+    "state": "ready",
+    "updatedAt": 1791505059545,
+    "upstreamCancellation": "not_requested",
+    "version": 1
+  },
+  "snapshot": {
+    "accounts": [
+      {
+        "accountId": "nx72v0w3m3xsskz9s482040kp58fyey8",
+        "activeConcurrency": 0,
+        "cancelled": false,
+        "kind": "tenant",
+        "limitUnits": 10000000,
+        "reservedUnits": 0,
+        "root": {
+          "acceptanceHash": "a98feaa9876f6cc1bd5c4a4d994c37baf27c3309d0fa96ba4eb3174b967d8f70",
+          "artifactRevision": "17f02c9ea138db244f0c80234ca5dc2ba4922127ee47cbba32163ddaadc21357",
+          "canonical": "{\"acceptanceHash\":\"a98feaa9876f6cc1bd5c4a4d994c37baf27c3309d0fa96ba4eb3174b967d8f70\",\"artifactRevision\":\"17f02c9ea138db244f0c80234ca5dc2ba4922127ee47cbba32163ddaadc21357\",\"budgetWindowMs\":86400000,\"classification\":\"fixture-synthetic\",\"dispatchEvidence\":[{\"boundRevision\":\"text-8192-512-schema-v2\",\"checkedAt\":1791449412383,\"evidenceHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\",\"expiresAt\":1791535812383,\"inputBound\":{\"documentHash\":\"cd1d1897380273728e11c1efcdb311ea6675677cf583ae5b9d1f8a5798ba8eaf\",\"featureEnvelope\":\"plain-chat-v1\",\"nativeTransformHash\":\"5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613\",\"proofHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\",\"revision\":1,\"ruleId\":\"plain-chat-cookbook-utf8-v1\"},\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"providerVersion\":\"0.2.1\",\"receiptId\":\"gateway-gpt4omini-chat-20261008-v3\",\"resultBound\":{\"maximumEmbeddingValues\":1,\"maximumOutputTokens\":512,\"maximumPrivateResultBytes\":60000,\"proofHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\"},\"terminalCost\":\"unavailable\",\"terminalProof\":\"provider-terminal-v1\"},{\"boundRevision\":\"text-8192-512-schema-v2\",\"checkedAt\":1791449412383,\"evidenceHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\",\"expiresAt\":1791535812383,\"inputBound\":{\"documentHash\":\"cd1d1897380273728e11c1efcdb311ea6675677cf583ae5b9d1f8a5798ba8eaf\",\"featureEnvelope\":\"plain-chat-v1\",\"nativeTransformHash\":\"5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613\",\"proofHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\",\"revision\":1,\"ruleId\":\"plain-chat-cookbook-utf8-v1\"},\"modelId\":\"openai/gpt-4o\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"providerVersion\":\"0.2.1\",\"receiptId\":\"gateway-gpt4o-chat-20261008-v3\",\"resultBound\":{\"maximumEmbeddingValues\":1,\"maximumOutputTokens\":512,\"maximumPrivateResultBytes\":60000,\"proofHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\"},\"terminalCost\":\"unavailable\",\"terminalProof\":\"provider-terminal-v1\"},{\"boundRevision\":\"text-8192-512-schema-v2\",\"checkedAt\":1791449412383,\"evidenceHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\",\"expiresAt\":1791535812383,\"inputBound\":{\"documentHash\":\"cd1d1897380273728e11c1efcdb311ea6675677cf583ae5b9d1f8a5798ba8eaf\",\"featureEnvelope\":\"default-embedding-v1\",\"nativeTransformHash\":\"5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613\",\"proofHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\",\"revision\":1,\"ruleId\":\"default-embedding-utf8-v1\"},\"modelId\":\"openai/text-embedding-3-small\",\"nativeInterface\":\"embedding\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"providerVersion\":\"0.2.1\",\"receiptId\":\"gateway-text-embedding-small-20261008-v3\",\"resultBound\":{\"maximumEmbeddingValues\":1,\"maximumOutputTokens\":0,\"maximumPrivateResultBytes\":60000,\"proofHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\"},\"terminalCost\":\"unavailable\",\"terminalModelId\":\"text-embedding-3-small\",\"terminalProof\":\"provider-terminal-v1\"},{\"boundRevision\":\"agent-tools-32768-512-v1\",\"checkedAt\":1791466719260,\"evidenceHash\":\"99154716ae1c4a9e69c299c9c60cdc7437ff129d2c11095767e5eb14f2076976\",\"expiresAt\":1791553119260,\"inputBound\":{\"documentHash\":\"305b8fa2b38d6a8a59fb7ef759711990d064ab9e03ca1c2da95b39006600f568\",\"featureEnvelope\":\"agent-tools-chat-v1\",\"nativeTransformHash\":\"5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613\",\"proofHash\":\"99154716ae1c4a9e69c299c9c60cdc7437ff129d2c11095767e5eb14f2076976\",\"revision\":1,\"ruleId\":\"agent-tools-chat-utf8-v1\"},\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"providerVersion\":\"0.2.1\",\"receiptId\":\"gateway-gpt4omini-agent-tools-stream-20261008-v5\",\"resultBound\":{\"maximumEmbeddingValues\":1,\"maximumOutputTokens\":512,\"maximumPrivateResultBytes\":60000,\"proofHash\":\"99154716ae1c4a9e69c299c9c60cdc7437ff129d2c11095767e5eb14f2076976\"},\"supportsStream\":true,\"terminalCost\":\"unavailable\",\"terminalProof\":\"provider-terminal-v1\",\"toolContract\":{\"maximumToolCalls\":4,\"registryVersion\":\"cortex-memory-tools-v1\",\"toolsCanonical\":\"[{\\\"description\\\":\\\"Recall authorized Cortex memory.\\\",\\\"inputSchema\\\":{\\\"additionalProperties\\\":false,\\\"properties\\\":{\\\"limit\\\":{\\\"maximum\\\":10,\\\"minimum\\\":1,\\\"type\\\":\\\"integer\\\"},\\\"text\\\":{\\\"maxLength\\\":4096,\\\"minLength\\\":1,\\\"type\\\":\\\"string\\\"}},\\\"required\\\":[\\\"text\\\",\\\"limit\\\"],\\\"type\\\":\\\"object\\\"},\\\"name\\\":\\\"memory_recall\\\",\\\"type\\\":\\\"function\\\"},{\\\"description\\\":\\\"Remember explicit information in authorized Cortex memory.\\\",\\\"inputSchema\\\":{\\\"additionalProperties\\\":false,\\\"properties\\\":{\\\"text\\\":{\\\"maxLength\\\":4096,\\\"minLength\\\":1,\\\"type\\\":\\\"string\\\"}},\\\"required\\\":[\\\"text\\\"],\\\"type\\\":\\\"object\\\"},\\\"name\\\":\\\"memory_remember\\\",\\\"type\\\":\\\"function\\\"}]\"}},{\"boundRevision\":\"task10-large-8192-3072-v1\",\"checkedAt\":1791487866561,\"embeddingProfile\":{\"chunking\":\"codepoint-1600-overlap-200-v1\",\"dimensions\":3072,\"indexName\":\"by_large_embedding_v1\",\"modelId\":\"openai/text-embedding-3-large\",\"normalization\":\"text-nfc-lf-v1\",\"profileId\":\"cortex-text-large-3072-v1\"},\"evidenceHash\":\"0346ead2ce3cdb056b53c1423d36f45a84c32c0307e34f0e50b3be877086a784\",\"expiresAt\":1791574266561,\"inputBound\":{\"documentHash\":\"0e97418f5e42f4f0f8160b885f891ea42242836432aaf1f931e79ccb82e8be6f\",\"featureEnvelope\":\"profile-embedding-v1\",\"nativeTransformHash\":\"5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613\",\"proofHash\":\"0346ead2ce3cdb056b53c1423d36f45a84c32c0307e34f0e50b3be877086a784\",\"revision\":1,\"ruleId\":\"profile-embedding-utf8-v1\"},\"modelId\":\"openai/text-embedding-3-large\",\"nativeInterface\":\"embedding\",\"priceRevision\":\"vercel-gateway-2026-10-08-text-large\",\"providerVersion\":\"0.2.1\",\"receiptId\":\"ACTUAL-task10-large-fe3a2599-d6fd-41f1-984e-141c8373423e\",\"resultBound\":{\"maximumEmbeddingValues\":1,\"maximumOutputTokens\":0,\"maximumPrivateResultBytes\":131072,\"proofHash\":\"0346ead2ce3cdb056b53c1423d36f45a84c32c0307e34f0e50b3be877086a784\"},\"terminalCost\":\"unavailable\",\"terminalModelId\":\"text-embedding-3-large\",\"terminalProof\":\"provider-terminal-v1\"},{\"boundRevision\":\"media-image-1024-low-png-v1\",\"checkedAt\":1791504502007,\"evidenceHash\":\"504314dc28b1c39e2970a7ca69a5579d3885e3854da64dfc923114a3fa783961\",\"expiresAt\":1791590902008,\"inputBound\":{\"documentHash\":\"251ae6fcfcefac6fe253d90c843d12e7d2da787ba57347bd449bc1af9d3ab239\",\"featureEnvelope\":\"media-image-v1\",\"nativeTransformHash\":\"9df096ebc65b79f4202a3ba051b6136fbfc8d3cd0ae07984a7dba4f52f8f92fd\",\"proofHash\":\"504314dc28b1c39e2970a7ca69a5579d3885e3854da64dfc923114a3fa783961\",\"revision\":1,\"ruleId\":\"media-native-utf8-v1\"},\"mediaContract\":{\"callbacks\":false,\"inputProtocol\":\"none\",\"maximumInputAssetBytes\":0,\"maximumResultBytes\":20000000,\"options\":{\"kind\":\"image\",\"n\":1,\"outputFormat\":\"png\",\"quality\":\"low\",\"size\":\"1024x1024\"},\"terminalIdentity\":\"requested-only\",\"usage\":\"optional\",\"version\":1},\"modelId\":\"openai/gpt-image-1\",\"nativeInterface\":\"image\",\"priceRevision\":\"convex-gateway-2026-10-08-image-low\",\"providerVersion\":\"0.2.1\",\"receiptId\":\"PROVISIONAL-task13-image-3c1dcff1-6463-4018-8600-b7aac15b5cf7\",\"resultBound\":{\"maximumEmbeddingValues\":1,\"maximumOutputTokens\":0,\"maximumPrivateResultBytes\":60000,\"proofHash\":\"504314dc28b1c39e2970a7ca69a5579d3885e3854da64dfc923114a3fa783961\"},\"terminalCost\":\"unavailable\",\"terminalProof\":\"provider-terminal-v1\"}],\"evidenceHash\":\"504314dc28b1c39e2970a7ca69a5579d3885e3854da64dfc923114a3fa783961\",\"manifestId\":\"task13-operator-image-3c1dcff1-6463-4018-8600-b7aac15b5cf7\",\"policies\":[{\"policyId\":\"cortex-model-defaults-v9-task13-operator\",\"rules\":{\"allowedModels\":[\"openai/gpt-4o-mini\",\"openai/gpt-4o\",\"openai/text-embedding-3-small\",\"openai/text-embedding-3-large\",\"openai/gpt-image-1\"],\"allowedOptions\":[],\"allowedTools\":[\"memory_recall\",\"memory_remember\"],\"capabilities\":[\"text\",\"structured\",\"embedding\",\"tools\",\"image\"],\"fallbackModels\":[],\"interfaces\":[\"chat\",\"embedding\",\"image\"],\"limits\":{\"concurrency\":2,\"contextTokens\":65536,\"inputTokens\":32768,\"operationBudgetUnits\":2000000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":4},\"pins\":{\"boundRevision\":\"text-8192-512-schema-v2\",\"extractionVersion\":\"task04-qualification-e1\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"promptVersion\":\"memory-schema-prompt-v2\",\"schemaVersion\":\"facts-v1\",\"toolRegistryVersion\":\"none-v1\"}},\"scope\":\"deployment\",\"version\":12},{\"operationKey\":\"conversation.title\",\"policyId\":\"cortex-conversation-title-v9-task13-operator\",\"rules\":{\"modelId\":\"openai/gpt-4o\",\"nativeInterface\":\"chat\"},\"scope\":\"deployment\",\"version\":12},{\"operationKey\":\"facts.resolve\",\"policyId\":\"cortex-facts-resolution-v9-task13-operator\",\"rules\":{\"pins\":{\"boundRevision\":\"text-8192-512-schema-v2\",\"promptVersion\":\"memory-schema-prompt-v2\",\"schemaVersion\":\"conflicts-v1\"}},\"scope\":\"deployment\",\"version\":12},{\"operationKey\":\"agent.respond\",\"policyId\":\"cortex-agent-response-v9-task13-operator\",\"rules\":{\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"pins\":{\"boundRevision\":\"agent-tools-32768-512-v1\",\"toolRegistryVersion\":\"cortex-memory-tools-v1\"}},\"scope\":\"deployment\",\"version\":12},{\"operationKey\":\"media.image.generate\",\"policyId\":\"task13-operator-image\",\"rules\":{\"allowedModels\":[\"openai/gpt-image-1\"],\"allowedOptions\":[],\"allowedTools\":[],\"capabilities\":[\"image\"],\"fallbackModels\":[],\"interfaces\":[\"image\"],\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":2000000,\"outputTokens\":1,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/gpt-image-1\",\"nativeInterface\":\"image\",\"pins\":{\"boundRevision\":\"media-image-1024-low-png-v1\",\"priceRevision\":\"convex-gateway-2026-10-08-image-low\"}},\"scope\":\"deployment\",\"version\":12}],\"qualifications\":[{\"allowedOptions\":[],\"boundRevision\":\"text-8192-512-schema-v2\",\"capabilities\":[\"text\",\"structured\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras\"},\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"receiptId\":\"gateway-gpt4omini-chat-20261008-v3\"},{\"allowedOptions\":[],\"boundRevision\":\"text-8192-512-schema-v2\",\"capabilities\":[\"text\",\"structured\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras\"},\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/gpt-4o\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"receiptId\":\"gateway-gpt4o-chat-20261008-v3\"},{\"allowedOptions\":[],\"boundRevision\":\"text-8192-512-schema-v2\",\"capabilities\":[\"embedding\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras\"},\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/text-embedding-3-small\",\"nativeInterface\":\"embedding\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"receiptId\":\"gateway-text-embedding-small-20261008-v3\"},{\"allowedOptions\":[],\"boundRevision\":\"agent-tools-32768-512-v1\",\"capabilities\":[\"text\",\"tools\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Actual disposable generate/native tool-stream/final text-stream at fixed tools32768/512 envelope; published highest displayed0.165/0.66USD/M gives5746microUSD fullcap; retain100000 microUSD for unavailable aggregate charge; no enabled provider extras\"},\"limits\":{\"concurrency\":2,\"contextTokens\":65536,\"inputTokens\":32768,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":4},\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"receiptId\":\"gateway-gpt4omini-agent-tools-stream-20261008-v5\"},{\"allowedOptions\":[],\"boundRevision\":\"task10-large-8192-3072-v1\",\"capabilities\":[\"embedding\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Actual record 0346ead2ce3cdb056b53c1423d36f45a84c32c0307e34f0e50b3be877086a784; published $0.13/M input,8192UTF8 <=1065microUSD;100000 retained ceiling; cost unavailable, no refund.\"},\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/text-embedding-3-large\",\"nativeInterface\":\"embedding\",\"priceRevision\":\"vercel-gateway-2026-10-08-text-large\",\"receiptId\":\"ACTUAL-task10-large-fe3a2599-d6fd-41f1-984e-141c8373423e\"},{\"allowedOptions\":[],\"boundRevision\":\"media-image-1024-low-png-v1\",\"capabilities\":[\"image\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":2000000,\"provenance\":\"Exact n1/1024x1024/low/png/prompt-only envelope: published0.011USD image plus at most1024 conservative text units at5USD/M totals0.01612USD;2USD conservative ceiling, maxRetries0/no fallback. No aggregate bill completeness assertion.\"},\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":2000000,\"outputTokens\":1,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/gpt-image-1\",\"nativeInterface\":\"image\",\"priceRevision\":\"convex-gateway-2026-10-08-image-low\",\"receiptId\":\"PROVISIONAL-task13-image-3c1dcff1-6463-4018-8600-b7aac15b5cf7\"}],\"revision\":12}",
+          "evidenceHash": "504314dc28b1c39e2970a7ca69a5579d3885e3854da64dfc923114a3fa783961",
+          "hash": "0ba73e3ea44fe37e7a2a195fa244b52fa6cf4547652d4350a50413d355217fed",
+          "manifestId": "task13-operator-image-3c1dcff1-6463-4018-8600-b7aac15b5cf7",
+          "revision": 12
+        },
+        "runBudgetId": null,
+        "settledUnits": 0,
+        "uncertainUnits": 2000000,
+        "windowEnd": 1791590400000,
+        "windowId": "[\"task13-3c1dcff16463\",1791504000000,1791590400000]",
+        "windowStart": 1791504000000
+      },
+      {
+        "accountId": "nx7606gjt4gjqdpqa8jhkfgk2s8fzydq",
+        "activeConcurrency": 0,
+        "cancelled": false,
+        "kind": "run",
+        "limitUnits": 2000000,
+        "reservedUnits": 0,
+        "root": {
+          "acceptanceHash": "a98feaa9876f6cc1bd5c4a4d994c37baf27c3309d0fa96ba4eb3174b967d8f70",
+          "artifactRevision": "17f02c9ea138db244f0c80234ca5dc2ba4922127ee47cbba32163ddaadc21357",
+          "canonical": "{\"acceptanceHash\":\"a98feaa9876f6cc1bd5c4a4d994c37baf27c3309d0fa96ba4eb3174b967d8f70\",\"artifactRevision\":\"17f02c9ea138db244f0c80234ca5dc2ba4922127ee47cbba32163ddaadc21357\",\"budgetWindowMs\":86400000,\"classification\":\"fixture-synthetic\",\"dispatchEvidence\":[{\"boundRevision\":\"text-8192-512-schema-v2\",\"checkedAt\":1791449412383,\"evidenceHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\",\"expiresAt\":1791535812383,\"inputBound\":{\"documentHash\":\"cd1d1897380273728e11c1efcdb311ea6675677cf583ae5b9d1f8a5798ba8eaf\",\"featureEnvelope\":\"plain-chat-v1\",\"nativeTransformHash\":\"5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613\",\"proofHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\",\"revision\":1,\"ruleId\":\"plain-chat-cookbook-utf8-v1\"},\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"providerVersion\":\"0.2.1\",\"receiptId\":\"gateway-gpt4omini-chat-20261008-v3\",\"resultBound\":{\"maximumEmbeddingValues\":1,\"maximumOutputTokens\":512,\"maximumPrivateResultBytes\":60000,\"proofHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\"},\"terminalCost\":\"unavailable\",\"terminalProof\":\"provider-terminal-v1\"},{\"boundRevision\":\"text-8192-512-schema-v2\",\"checkedAt\":1791449412383,\"evidenceHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\",\"expiresAt\":1791535812383,\"inputBound\":{\"documentHash\":\"cd1d1897380273728e11c1efcdb311ea6675677cf583ae5b9d1f8a5798ba8eaf\",\"featureEnvelope\":\"plain-chat-v1\",\"nativeTransformHash\":\"5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613\",\"proofHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\",\"revision\":1,\"ruleId\":\"plain-chat-cookbook-utf8-v1\"},\"modelId\":\"openai/gpt-4o\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"providerVersion\":\"0.2.1\",\"receiptId\":\"gateway-gpt4o-chat-20261008-v3\",\"resultBound\":{\"maximumEmbeddingValues\":1,\"maximumOutputTokens\":512,\"maximumPrivateResultBytes\":60000,\"proofHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\"},\"terminalCost\":\"unavailable\",\"terminalProof\":\"provider-terminal-v1\"},{\"boundRevision\":\"text-8192-512-schema-v2\",\"checkedAt\":1791449412383,\"evidenceHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\",\"expiresAt\":1791535812383,\"inputBound\":{\"documentHash\":\"cd1d1897380273728e11c1efcdb311ea6675677cf583ae5b9d1f8a5798ba8eaf\",\"featureEnvelope\":\"default-embedding-v1\",\"nativeTransformHash\":\"5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613\",\"proofHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\",\"revision\":1,\"ruleId\":\"default-embedding-utf8-v1\"},\"modelId\":\"openai/text-embedding-3-small\",\"nativeInterface\":\"embedding\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"providerVersion\":\"0.2.1\",\"receiptId\":\"gateway-text-embedding-small-20261008-v3\",\"resultBound\":{\"maximumEmbeddingValues\":1,\"maximumOutputTokens\":0,\"maximumPrivateResultBytes\":60000,\"proofHash\":\"5bb3e67adf1f236b084bdab82c68cb0ca7b018a8ae7448b24467b4280b980e9b\"},\"terminalCost\":\"unavailable\",\"terminalModelId\":\"text-embedding-3-small\",\"terminalProof\":\"provider-terminal-v1\"},{\"boundRevision\":\"agent-tools-32768-512-v1\",\"checkedAt\":1791466719260,\"evidenceHash\":\"99154716ae1c4a9e69c299c9c60cdc7437ff129d2c11095767e5eb14f2076976\",\"expiresAt\":1791553119260,\"inputBound\":{\"documentHash\":\"305b8fa2b38d6a8a59fb7ef759711990d064ab9e03ca1c2da95b39006600f568\",\"featureEnvelope\":\"agent-tools-chat-v1\",\"nativeTransformHash\":\"5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613\",\"proofHash\":\"99154716ae1c4a9e69c299c9c60cdc7437ff129d2c11095767e5eb14f2076976\",\"revision\":1,\"ruleId\":\"agent-tools-chat-utf8-v1\"},\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"providerVersion\":\"0.2.1\",\"receiptId\":\"gateway-gpt4omini-agent-tools-stream-20261008-v5\",\"resultBound\":{\"maximumEmbeddingValues\":1,\"maximumOutputTokens\":512,\"maximumPrivateResultBytes\":60000,\"proofHash\":\"99154716ae1c4a9e69c299c9c60cdc7437ff129d2c11095767e5eb14f2076976\"},\"supportsStream\":true,\"terminalCost\":\"unavailable\",\"terminalProof\":\"provider-terminal-v1\",\"toolContract\":{\"maximumToolCalls\":4,\"registryVersion\":\"cortex-memory-tools-v1\",\"toolsCanonical\":\"[{\\\"description\\\":\\\"Recall authorized Cortex memory.\\\",\\\"inputSchema\\\":{\\\"additionalProperties\\\":false,\\\"properties\\\":{\\\"limit\\\":{\\\"maximum\\\":10,\\\"minimum\\\":1,\\\"type\\\":\\\"integer\\\"},\\\"text\\\":{\\\"maxLength\\\":4096,\\\"minLength\\\":1,\\\"type\\\":\\\"string\\\"}},\\\"required\\\":[\\\"text\\\",\\\"limit\\\"],\\\"type\\\":\\\"object\\\"},\\\"name\\\":\\\"memory_recall\\\",\\\"type\\\":\\\"function\\\"},{\\\"description\\\":\\\"Remember explicit information in authorized Cortex memory.\\\",\\\"inputSchema\\\":{\\\"additionalProperties\\\":false,\\\"properties\\\":{\\\"text\\\":{\\\"maxLength\\\":4096,\\\"minLength\\\":1,\\\"type\\\":\\\"string\\\"}},\\\"required\\\":[\\\"text\\\"],\\\"type\\\":\\\"object\\\"},\\\"name\\\":\\\"memory_remember\\\",\\\"type\\\":\\\"function\\\"}]\"}},{\"boundRevision\":\"task10-large-8192-3072-v1\",\"checkedAt\":1791487866561,\"embeddingProfile\":{\"chunking\":\"codepoint-1600-overlap-200-v1\",\"dimensions\":3072,\"indexName\":\"by_large_embedding_v1\",\"modelId\":\"openai/text-embedding-3-large\",\"normalization\":\"text-nfc-lf-v1\",\"profileId\":\"cortex-text-large-3072-v1\"},\"evidenceHash\":\"0346ead2ce3cdb056b53c1423d36f45a84c32c0307e34f0e50b3be877086a784\",\"expiresAt\":1791574266561,\"inputBound\":{\"documentHash\":\"0e97418f5e42f4f0f8160b885f891ea42242836432aaf1f931e79ccb82e8be6f\",\"featureEnvelope\":\"profile-embedding-v1\",\"nativeTransformHash\":\"5d26d04de5a5b74a4bf760aa7764c15d7fdf841a2a4f862135e9128f006ab613\",\"proofHash\":\"0346ead2ce3cdb056b53c1423d36f45a84c32c0307e34f0e50b3be877086a784\",\"revision\":1,\"ruleId\":\"profile-embedding-utf8-v1\"},\"modelId\":\"openai/text-embedding-3-large\",\"nativeInterface\":\"embedding\",\"priceRevision\":\"vercel-gateway-2026-10-08-text-large\",\"providerVersion\":\"0.2.1\",\"receiptId\":\"ACTUAL-task10-large-fe3a2599-d6fd-41f1-984e-141c8373423e\",\"resultBound\":{\"maximumEmbeddingValues\":1,\"maximumOutputTokens\":0,\"maximumPrivateResultBytes\":131072,\"proofHash\":\"0346ead2ce3cdb056b53c1423d36f45a84c32c0307e34f0e50b3be877086a784\"},\"terminalCost\":\"unavailable\",\"terminalModelId\":\"text-embedding-3-large\",\"terminalProof\":\"provider-terminal-v1\"},{\"boundRevision\":\"media-image-1024-low-png-v1\",\"checkedAt\":1791504502007,\"evidenceHash\":\"504314dc28b1c39e2970a7ca69a5579d3885e3854da64dfc923114a3fa783961\",\"expiresAt\":1791590902008,\"inputBound\":{\"documentHash\":\"251ae6fcfcefac6fe253d90c843d12e7d2da787ba57347bd449bc1af9d3ab239\",\"featureEnvelope\":\"media-image-v1\",\"nativeTransformHash\":\"9df096ebc65b79f4202a3ba051b6136fbfc8d3cd0ae07984a7dba4f52f8f92fd\",\"proofHash\":\"504314dc28b1c39e2970a7ca69a5579d3885e3854da64dfc923114a3fa783961\",\"revision\":1,\"ruleId\":\"media-native-utf8-v1\"},\"mediaContract\":{\"callbacks\":false,\"inputProtocol\":\"none\",\"maximumInputAssetBytes\":0,\"maximumResultBytes\":20000000,\"options\":{\"kind\":\"image\",\"n\":1,\"outputFormat\":\"png\",\"quality\":\"low\",\"size\":\"1024x1024\"},\"terminalIdentity\":\"requested-only\",\"usage\":\"optional\",\"version\":1},\"modelId\":\"openai/gpt-image-1\",\"nativeInterface\":\"image\",\"priceRevision\":\"convex-gateway-2026-10-08-image-low\",\"providerVersion\":\"0.2.1\",\"receiptId\":\"PROVISIONAL-task13-image-3c1dcff1-6463-4018-8600-b7aac15b5cf7\",\"resultBound\":{\"maximumEmbeddingValues\":1,\"maximumOutputTokens\":0,\"maximumPrivateResultBytes\":60000,\"proofHash\":\"504314dc28b1c39e2970a7ca69a5579d3885e3854da64dfc923114a3fa783961\"},\"terminalCost\":\"unavailable\",\"terminalProof\":\"provider-terminal-v1\"}],\"evidenceHash\":\"504314dc28b1c39e2970a7ca69a5579d3885e3854da64dfc923114a3fa783961\",\"manifestId\":\"task13-operator-image-3c1dcff1-6463-4018-8600-b7aac15b5cf7\",\"policies\":[{\"policyId\":\"cortex-model-defaults-v9-task13-operator\",\"rules\":{\"allowedModels\":[\"openai/gpt-4o-mini\",\"openai/gpt-4o\",\"openai/text-embedding-3-small\",\"openai/text-embedding-3-large\",\"openai/gpt-image-1\"],\"allowedOptions\":[],\"allowedTools\":[\"memory_recall\",\"memory_remember\"],\"capabilities\":[\"text\",\"structured\",\"embedding\",\"tools\",\"image\"],\"fallbackModels\":[],\"interfaces\":[\"chat\",\"embedding\",\"image\"],\"limits\":{\"concurrency\":2,\"contextTokens\":65536,\"inputTokens\":32768,\"operationBudgetUnits\":2000000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":4},\"pins\":{\"boundRevision\":\"text-8192-512-schema-v2\",\"extractionVersion\":\"task04-qualification-e1\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"promptVersion\":\"memory-schema-prompt-v2\",\"schemaVersion\":\"facts-v1\",\"toolRegistryVersion\":\"none-v1\"}},\"scope\":\"deployment\",\"version\":12},{\"operationKey\":\"conversation.title\",\"policyId\":\"cortex-conversation-title-v9-task13-operator\",\"rules\":{\"modelId\":\"openai/gpt-4o\",\"nativeInterface\":\"chat\"},\"scope\":\"deployment\",\"version\":12},{\"operationKey\":\"facts.resolve\",\"policyId\":\"cortex-facts-resolution-v9-task13-operator\",\"rules\":{\"pins\":{\"boundRevision\":\"text-8192-512-schema-v2\",\"promptVersion\":\"memory-schema-prompt-v2\",\"schemaVersion\":\"conflicts-v1\"}},\"scope\":\"deployment\",\"version\":12},{\"operationKey\":\"agent.respond\",\"policyId\":\"cortex-agent-response-v9-task13-operator\",\"rules\":{\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"pins\":{\"boundRevision\":\"agent-tools-32768-512-v1\",\"toolRegistryVersion\":\"cortex-memory-tools-v1\"}},\"scope\":\"deployment\",\"version\":12},{\"operationKey\":\"media.image.generate\",\"policyId\":\"task13-operator-image\",\"rules\":{\"allowedModels\":[\"openai/gpt-image-1\"],\"allowedOptions\":[],\"allowedTools\":[],\"capabilities\":[\"image\"],\"fallbackModels\":[],\"interfaces\":[\"image\"],\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":2000000,\"outputTokens\":1,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/gpt-image-1\",\"nativeInterface\":\"image\",\"pins\":{\"boundRevision\":\"media-image-1024-low-png-v1\",\"priceRevision\":\"convex-gateway-2026-10-08-image-low\"}},\"scope\":\"deployment\",\"version\":12}],\"qualifications\":[{\"allowedOptions\":[],\"boundRevision\":\"text-8192-512-schema-v2\",\"capabilities\":[\"text\",\"structured\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras\"},\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"receiptId\":\"gateway-gpt4omini-chat-20261008-v3\"},{\"allowedOptions\":[],\"boundRevision\":\"text-8192-512-schema-v2\",\"capabilities\":[\"text\",\"structured\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras\"},\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/gpt-4o\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"receiptId\":\"gateway-gpt4o-chat-20261008-v3\"},{\"allowedOptions\":[],\"boundRevision\":\"text-8192-512-schema-v2\",\"capabilities\":[\"embedding\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Published OpenRouter USD rates; plain measured text/embedding8192 input512 output, gpt4o fullcap25600 microUSD, conservative full100000 ceiling; no enabled billable extras\"},\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/text-embedding-3-small\",\"nativeInterface\":\"embedding\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"receiptId\":\"gateway-text-embedding-small-20261008-v3\"},{\"allowedOptions\":[],\"boundRevision\":\"agent-tools-32768-512-v1\",\"capabilities\":[\"text\",\"tools\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Actual disposable generate/native tool-stream/final text-stream at fixed tools32768/512 envelope; published highest displayed0.165/0.66USD/M gives5746microUSD fullcap; retain100000 microUSD for unavailable aggregate charge; no enabled provider extras\"},\"limits\":{\"concurrency\":2,\"contextTokens\":65536,\"inputTokens\":32768,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":4},\"modelId\":\"openai/gpt-4o-mini\",\"nativeInterface\":\"chat\",\"priceRevision\":\"openrouter-2026-10-08-candidate\",\"receiptId\":\"gateway-gpt4omini-agent-tools-stream-20261008-v5\"},{\"allowedOptions\":[],\"boundRevision\":\"task10-large-8192-3072-v1\",\"capabilities\":[\"embedding\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":100000,\"provenance\":\"Actual record 0346ead2ce3cdb056b53c1423d36f45a84c32c0307e34f0e50b3be877086a784; published $0.13/M input,8192UTF8 <=1065microUSD;100000 retained ceiling; cost unavailable, no refund.\"},\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":200000,\"outputTokens\":512,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/text-embedding-3-large\",\"nativeInterface\":\"embedding\",\"priceRevision\":\"vercel-gateway-2026-10-08-text-large\",\"receiptId\":\"ACTUAL-task10-large-fe3a2599-d6fd-41f1-984e-141c8373423e\"},{\"allowedOptions\":[],\"boundRevision\":\"media-image-1024-low-png-v1\",\"capabilities\":[\"image\"],\"costBound\":{\"coversAllProviderCharges\":true,\"kind\":\"qualified-call-ceiling\",\"maximumCostUnits\":2000000,\"provenance\":\"Exact n1/1024x1024/low/png/prompt-only envelope: published0.011USD image plus at most1024 conservative text units at5USD/M totals0.01612USD;2USD conservative ceiling, maxRetries0/no fallback. No aggregate bill completeness assertion.\"},\"limits\":{\"concurrency\":2,\"contextTokens\":16384,\"inputTokens\":8192,\"operationBudgetUnits\":2000000,\"outputTokens\":1,\"runBudgetUnits\":2000000,\"tenantBudgetUnits\":10000000,\"timeoutMs\":60000,\"toolSteps\":0},\"modelId\":\"openai/gpt-image-1\",\"nativeInterface\":\"image\",\"priceRevision\":\"convex-gateway-2026-10-08-image-low\",\"receiptId\":\"PROVISIONAL-task13-image-3c1dcff1-6463-4018-8600-b7aac15b5cf7\"}],\"revision\":12}",
+          "evidenceHash": "504314dc28b1c39e2970a7ca69a5579d3885e3854da64dfc923114a3fa783961",
+          "hash": "0ba73e3ea44fe37e7a2a195fa244b52fa6cf4547652d4350a50413d355217fed",
+          "manifestId": "task13-operator-image-3c1dcff1-6463-4018-8600-b7aac15b5cf7",
+          "revision": 12
+        },
+        "runBudgetId": "93c03f6ca96f8dd4ab262cee7156652c3e13ee0cc4367125df8360a4762a424b",
+        "settledUnits": 0,
+        "uncertainUnits": 2000000,
+        "windowEnd": 1791590400000,
+        "windowId": "[\"task13-3c1dcff16463\",1791504000000,1791590400000]",
+        "windowStart": 1791504000000
+      }
+    ],
+    "artifacts": [
+      {
+        "_creationTime": 1791505051116.8943,
+        "_id": "jd75c7sq4enz01nhja23h7d0xd8fzhxm",
+        "artifactId": "artifact:media:84f2270c045038ec853ebd504f7db79f4114a7e2baeb3c46f2413a41d9e05cb0",
+        "createdAt": 1791505051116,
+        "fileRef": {
+          "assetId": "asset:fbcca9c718aef0dfd587416fef9efab52e33cca295a87ec4692950bc1fa0f5d2",
+          "assetVersion": 1,
+          "checksum": "b398f6084152795dc90784414466854a65810ecf04b9429f45098e10fe074bb5",
+          "mimeType": "image/png",
+          "size": 1116726,
+          "storageId": "kg2e5py7zza1x1ps16mpe8kr3n8fz4ze",
+          "versionId": "asset:fbcca9c718aef0dfd587416fef9efab52e33cca295a87ec4692950bc1fa0f5d2:version:1"
+        },
+        "kind": "image",
+        "lastActorPrincipalId": "n57f33mch5khawqq2xa3dg7mah8fyt30",
+        "memorySpaceId": "media-3c1dcff16463",
+        "metadata": {
+          "mediaJobId": "media:84f2270c045038ec853ebd504f7db79f4114a7e2baeb3c46f2413a41d9e05cb0",
+          "version": 1
+        },
+        "ownerPrincipalId": "n57f33mch5khawqq2xa3dg7mah8fyt30",
+        "streamingState": "final",
+        "tags": [],
+        "tenantId": "task13-3c1dcff16463",
+        "title": "Generated image",
+        "updatedAt": 1791505059545,
+        "version": 2,
+        "versionHistory": [
+          {
+            "changeType": "create",
+            "changedBy": "n57f33mch5khawqq2xa3dg7mah8fyt30",
+            "content": "",
+            "timestamp": 1791505051116,
+            "title": "Generated image",
+            "version": 1
+          },
+          {
+            "changeType": "update",
+            "changedBy": "n57f33mch5khawqq2xa3dg7mah8fyt30",
+            "fileRef": {
+              "assetId": "asset:fbcca9c718aef0dfd587416fef9efab52e33cca295a87ec4692950bc1fa0f5d2",
+              "assetVersion": 1,
+              "checksum": "b398f6084152795dc90784414466854a65810ecf04b9429f45098e10fe074bb5",
+              "mimeType": "image/png",
+              "size": 1116726,
+              "storageId": "kg2e5py7zza1x1ps16mpe8kr3n8fz4ze",
+              "versionId": "asset:fbcca9c718aef0dfd587416fef9efab52e33cca295a87ec4692950bc1fa0f5d2:version:1"
+            },
+            "timestamp": 1791505059545,
+            "title": "Generated image",
+            "version": 2
+          }
+        ],
+        "versionPointer": 2
+      }
+    ],
+    "assets": [
+      {
+        "_creationTime": 1791505059474.0251,
+        "_id": "t573edg3q03a6rtnndv44331gh8fyjs9",
+        "assetId": "asset:fbcca9c718aef0dfd587416fef9efab52e33cca295a87ec4692950bc1fa0f5d2",
+        "assetVersion": 1,
+        "cleanupAttempt": 0,
+        "contentHash": "b398f6084152795dc90784414466854a65810ecf04b9429f45098e10fe074bb5",
+        "createdAt": 1791505059474,
+        "lineage": {
+          "kind": "generated",
+          "modelId": "openai/gpt-image-1",
+          "operationId": "qh7cn6qhp1hm4hem880hk6pnnn8fz53k"
+        },
+        "mediaKind": "image",
+        "memorySpaceId": "media-3c1dcff16463",
+        "mimeType": "image/png",
+        "ownerPrincipalId": "n57f33mch5khawqq2xa3dg7mah8fyt30",
+        "physicalStorage": {
+          "contentType": "application/vnd.cortex.asset-94d14991-2c27-41e2-a12b-8ae3363ad24c",
+          "sha256": "b398f6084152795dc90784414466854a65810ecf04b9429f45098e10fe074bb5",
+          "size": 1116726,
+          "storageId": "64c1a5a9-5fd7-440e-8f9b-1e690c57af7b"
+        },
+        "sizeBytes": 1116726,
+        "state": "ready",
+        "storageId": "kg2e5py7zza1x1ps16mpe8kr3n8fz4ze",
+        "tenantId": "task13-3c1dcff16463",
+        "versionId": "asset:fbcca9c718aef0dfd587416fef9efab52e33cca295a87ec4692950bc1fa0f5d2:version:1"
+      }
+    ],
+    "attempts": [
+      {
+        "attemptId": "qd7dmmsrrjjekacdxhassrgwf18fz5tk",
+        "checkpointAt": 1791505051722,
+        "dispatchIdentity": "72f2c73dc49300e193d0ee14587acdeb6252588578e9f262de42a85ac06c3784",
+        "maximumOutputTokens": 0,
+        "measuredInputTokens": 171,
+        "operationId": "qh7cn6qhp1hm4hem880hk6pnnn8fz53k",
+        "ordinal": 0,
+        "reservationUnits": 2000000,
+        "result": {
+          "contentHash": "b398f6084152795dc90784414466854a65810ecf04b9429f45098e10fe074bb5",
+          "jobId": "media:84f2270c045038ec853ebd504f7db79f4114a7e2baeb3c46f2413a41d9e05cb0",
+          "kind": "media",
+          "mimeType": "image/png",
+          "sizeBytes": 1116726,
+          "version": 1
+        },
+        "resultAttachmentState": "attached",
+        "resultWithheld": false,
+        "slotReleased": true,
+        "state": "uncertain",
+        "terminal": {
+          "costSource": "unavailable",
+          "dispatchIdentity": "72f2c73dc49300e193d0ee14587acdeb6252588578e9f262de42a85ac06c3784",
+          "media": {
+            "contentHash": "b398f6084152795dc90784414466854a65810ecf04b9429f45098e10fe074bb5",
+            "jobId": "media:84f2270c045038ec853ebd504f7db79f4114a7e2baeb3c46f2413a41d9e05cb0",
+            "mimeType": "image/png",
+            "sizeBytes": 1116726,
+            "status": "completed"
+          },
+          "modelId": "openai/gpt-image-1",
+          "nativeInterface": "image",
+          "outcome": "confirmed",
+          "proof": "provider-terminal-v1",
+          "receiptId": "media:84f2270c045038ec853ebd504f7db79f4114a7e2baeb3c46f2413a41d9e05cb0:terminal",
+          "version": 1
+        },
+        "terminalEvidenceHash": "6b6a083f66f0f4563563281501c39f3297abbbf54b42917878a0548948f4d3be"
+      }
+    ],
+    "jobs": [
+      {
+        "artifactId": "artifact:media:84f2270c045038ec853ebd504f7db79f4114a7e2baeb3c46f2413a41d9e05cb0",
+        "assetVersionId": "asset:fbcca9c718aef0dfd587416fef9efab52e33cca295a87ec4692950bc1fa0f5d2:version:1",
+        "attemptId": "qd7dmmsrrjjekacdxhassrgwf18fz5tk",
+        "costStatus": "incurred_unknown",
+        "createdAt": 1791505051116,
+        "dispatchIdentity": "72f2c73dc49300e193d0ee14587acdeb6252588578e9f262de42a85ac06c3784",
+        "downloadAttempt": 0,
+        "failureCode": null,
+        "jobId": "media:84f2270c045038ec853ebd504f7db79f4114a7e2baeb3c46f2413a41d9e05cb0",
+        "kind": "image",
+        "modelOperationId": "qh7cn6qhp1hm4hem880hk6pnnn8fz53k",
+        "pollCount": 0,
+        "privateInferenceIdRetained": false,
+        "privateOperationRetained": false,
+        "privateWebhookSecretRetained": false,
+        "proof": {
+          "boundRevision": "media-image-1024-low-png-v1",
+          "checkedAt": 1791504502007,
+          "evidenceHash": "504314dc28b1c39e2970a7ca69a5579d3885e3854da64dfc923114a3fa783961",
+          "expiresAt": 1791590902008,
+          "inputBound": {
+            "documentHash": "251ae6fcfcefac6fe253d90c843d12e7d2da787ba57347bd449bc1af9d3ab239",
+            "featureEnvelope": "media-image-v1",
+            "nativeTransformHash": "9df096ebc65b79f4202a3ba051b6136fbfc8d3cd0ae07984a7dba4f52f8f92fd",
+            "proofHash": "504314dc28b1c39e2970a7ca69a5579d3885e3854da64dfc923114a3fa783961",
+            "revision": 1,
+            "ruleId": "media-native-utf8-v1"
+          },
+          "mediaContract": {
+            "callbacks": false,
+            "inputProtocol": "none",
+            "maximumInputAssetBytes": 0,
+            "maximumResultBytes": 20000000,
+            "options": {
+              "kind": "image",
+              "n": 1,
+              "outputFormat": "png",
+              "quality": "low",
+              "size": "1024x1024"
+            },
+            "terminalIdentity": "requested-only",
+            "usage": "optional",
+            "version": 1
+          },
+          "modelId": "openai/gpt-image-1",
+          "nativeInterface": "image",
+          "priceRevision": "convex-gateway-2026-10-08-image-low",
+          "providerVersion": "0.2.1",
+          "receiptId": "PROVISIONAL-task13-image-3c1dcff1-6463-4018-8600-b7aac15b5cf7",
+          "resultBound": {
+            "maximumEmbeddingValues": 1,
+            "maximumOutputTokens": 0,
+            "maximumPrivateResultBytes": 60000,
+            "proofHash": "504314dc28b1c39e2970a7ca69a5579d3885e3854da64dfc923114a3fa783961"
+          },
+          "terminalCost": "unavailable",
+          "terminalProof": "provider-terminal-v1"
+        },
+        "reference": {
+          "grantId": "mx7e455wrt0g1zhc84fxjge3z98fz7q7",
+          "grantVersion": 1,
+          "membershipId": "n1798ybzqgdp5wc54c992vdjmx8fy36x",
+          "membershipVersion": 1,
+          "memorySpaceEpoch": 1,
+          "memorySpaceId": "media-3c1dcff16463",
+          "principalId": "n57f33mch5khawqq2xa3dg7mah8fyt30",
+          "principalVersion": 1,
+          "tenantEpoch": 1,
+          "tenantId": "task13-3c1dcff16463"
+        },
+        "requestId": "fixed-image-3c1dcff1-6463-4018-8600-b7aac15b5cf7",
+        "result": {
+          "contentHash": "b398f6084152795dc90784414466854a65810ecf04b9429f45098e10fe074bb5",
+          "jobId": "media:84f2270c045038ec853ebd504f7db79f4114a7e2baeb3c46f2413a41d9e05cb0",
+          "kind": "media",
+          "mimeType": "image/png",
+          "sizeBytes": 1116726,
+          "version": 1
+        },
+        "revision": 4,
+        "runAccountId": "nx7606gjt4gjqdpqa8jhkfgk2s8fzydq",
+        "runBudgetId": "93c03f6ca96f8dd4ab262cee7156652c3e13ee0cc4367125df8360a4762a424b",
+        "snapshot": {
+          "allowedModels": [
+            "openai/gpt-image-1"
+          ],
+          "allowedOptions": [],
+          "allowedTools": [],
+          "capabilities": [
+            "image"
+          ],
+          "costBound": {
+            "coversAllProviderCharges": true,
+            "kind": "qualified-call-ceiling",
+            "maximumCostUnits": 2000000,
+            "provenance": "Exact n1/1024x1024/low/png/prompt-only envelope: published0.011USD image plus at most1024 conservative text units at5USD/M totals0.01612USD;2USD conservative ceiling, maxRetries0/no fallback. No aggregate bill completeness assertion."
+          },
+          "currency": "USD",
+          "fallbackCandidates": [],
+          "limits": {
+            "concurrency": 2,
+            "contextTokens": 16384,
+            "inputTokens": 8192,
+            "operationBudgetUnits": 2000000,
+            "outputTokens": 1,
+            "runBudgetUnits": 2000000,
+            "tenantBudgetUnits": 10000000,
+            "timeoutMs": 60000,
+            "toolSteps": 0
+          },
+          "modelId": "openai/gpt-image-1",
+          "monetaryUnit": "micro-USD",
+          "nativeInterface": "image",
+          "operationKey": "media.image.generate",
+          "pins": {
+            "boundRevision": "media-image-1024-low-png-v1",
+            "extractionVersion": "task04-qualification-e1",
+            "priceRevision": "convex-gateway-2026-10-08-image-low",
+            "promptVersion": "memory-schema-prompt-v2",
+            "schemaVersion": "facts-v1",
+            "toolRegistryVersion": "none-v1"
+          },
+          "policyVersions": [
+            {
+              "policyId": "cortex-model-defaults-v9-task13-operator",
+              "version": 12
+            },
+            {
+              "policyId": "task13-operator-image",
+              "version": 12
+            }
+          ],
+          "qualificationReceiptId": "PROVISIONAL-task13-image-3c1dcff1-6463-4018-8600-b7aac15b5cf7",
+          "requestedModelId": "openai/gpt-image-1",
+          "runBudgetId": "93c03f6ca96f8dd4ab262cee7156652c3e13ee0cc4367125df8360a4762a424b",
+          "scope": {
+            "grantId": "mx7e455wrt0g1zhc84fxjge3z98fz7q7",
+            "grantVersion": 1,
+            "membershipId": "n1798ybzqgdp5wc54c992vdjmx8fy36x",
+            "membershipVersion": 1,
+            "memorySpaceEpoch": 1,
+            "memorySpaceId": "media-3c1dcff16463",
+            "principalId": "n57f33mch5khawqq2xa3dg7mah8fyt30",
+            "principalVersion": 1,
+            "tenantEpoch": 1,
+            "tenantId": "task13-3c1dcff16463"
+          },
+          "version": 1
+        },
+        "state": "ready",
+        "terminalStatus": "completed",
+        "updatedAt": 1791505059545
+      }
+    ],
+    "operations": [
+      {
+        "cancelled": false,
+        "operationId": "qh7cn6qhp1hm4hem880hk6pnnn8fz53k",
+        "operationKey": "media.image.generate",
+        "reference": {
+          "grantId": "mx7e455wrt0g1zhc84fxjge3z98fz7q7",
+          "grantVersion": 1,
+          "membershipId": "n1798ybzqgdp5wc54c992vdjmx8fy36x",
+          "membershipVersion": 1,
+          "memorySpaceEpoch": 1,
+          "memorySpaceId": "media-3c1dcff16463",
+          "principalId": "n57f33mch5khawqq2xa3dg7mah8fyt30",
+          "principalVersion": 1,
+          "tenantEpoch": 1,
+          "tenantId": "task13-3c1dcff16463"
+        },
+        "reservedUnits": 0,
+        "runAccountId": "nx7606gjt4gjqdpqa8jhkfgk2s8fzydq",
+        "semanticId": "media:84f2270c045038ec853ebd504f7db79f4114a7e2baeb3c46f2413a41d9e05cb0",
+        "settledUnits": 0,
+        "uncertainUnits": 2000000
+      }
+    ]
+  },
+  "probes": [
+    {
+      "_creationTime": 1791505051116.8958,
+      "_id": "ts7233f0cn8v22djjj7zyb9xyx8fz9pd",
+      "attemptId": "qd7dmmsrrjjekacdxhassrgwf18fz5tk",
+      "createdAt": 1791505051116,
+      "dispatchIdentity": "72f2c73dc49300e193d0ee14587acdeb6252588578e9f262de42a85ac06c3784",
+      "issuedAt": 1791505052086,
+      "issuedCount": 1,
+      "jobId": "media:84f2270c045038ec853ebd504f7db79f4114a7e2baeb3c46f2413a41d9e05cb0",
+      "memorySpaceId": "media-3c1dcff16463",
+      "observation": {
+        "aggregateCostCompletenessUnattested": true,
+        "encodedResponseBytes": 1489308,
+        "issuedRequests": 1,
+        "nativeHttpStatus": 200,
+        "rawModelId": null,
+        "rawUsageCanonical": "{\"completion_tokens\":272,\"cost\":0.01098,\"cost_details\":{\"upstream_inference_completions_cost\":0.01088,\"upstream_inference_cost\":0.01098,\"upstream_inference_prompt_cost\":0.0001},\"prompt_tokens\":20,\"prompt_tokens_details\":{\"cached_tokens\":0},\"total_tokens\":292}",
+        "requestBytes": 171,
+        "requestHash": "85a7891d300ec6c4ab9e499e34c4787038c918fe65a4d3d6db14ba8ef38aa9d2",
+        "servingModelIdentityUnqualified": true
+      },
+      "observedAt": 1791505058361,
+      "requestId": "fixed-image-3c1dcff1-6463-4018-8600-b7aac15b5cf7",
+      "tenantId": "task13-3c1dcff16463"
+    }
+  ]
+}

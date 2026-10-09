@@ -1,0 +1,65 @@
+{
+  "version": 3,
+  "status": "SOURCE_READY_ACTUAL_PENDING",
+  "candidateSha256": "7c2ce98eaeef41d2cbe4bb893339ba79bf285bf1727191ceebe71b6c7acc88cc",
+  "sourceManifest": "source-manifest3.json",
+  "checks": "checks3.json",
+  "report": "report3.json",
+  "inventory": "read-inventory3.json",
+  "changedSinceManifest2": [
+    {
+      "path": "convex-dev/runtimeArtifactContext.ts",
+      "bytes": 5197,
+      "sha256": "59fdc04d32d3ee9b74a357cb1f15d895d267876d5e96fc5b085ca00301569063"
+    },
+    {
+      "path": "convex-dev/runtimeAssets.ts",
+      "bytes": 25897,
+      "sha256": "6a43a50ca8e6956ce7e02f7dc5ff685c73faa12350b1e127202f0e4d1829c3c7"
+    },
+    {
+      "path": "convex-dev/runtimeMemory.ts",
+      "bytes": 16474,
+      "sha256": "57b8ef2b492f74423b9ca72cee438c8305a23363f1fcf64c48e42487f7b4b8b0"
+    },
+    {
+      "path": "convex-dev/runtimeMemoryRepository.ts",
+      "bytes": 36839,
+      "sha256": "d7886fd46ea37cf1d787a7408bf82e191f41700a6e3e604c564d479b66a2a692"
+    },
+    {
+      "path": "convex-dev/runtimeMemoryServices.ts",
+      "bytes": 11485,
+      "sha256": "88c5f64d9c3ed9dc7035012c605f68c45995f6bd180bfe693678aca10e7a8785"
+    },
+    {
+      "path": "src/domain/contracts.ts",
+      "bytes": 6289,
+      "sha256": "9c74939ee0542aec03da2243352964c5638e721b25ba673bfe42138282311cd9"
+    },
+    {
+      "path": "tests/unit/runtimeDelivery/asset-deadline.test.ts",
+      "bytes": 2903,
+      "sha256": "d3344644d3f4f6dda117c9da44569a730243fd0a3542560fc916e417bced645c"
+    },
+    {
+      "path": "tests/unit/runtimeDelivery/recall-delivery.test.ts",
+      "bytes": 9595,
+      "sha256": "7bc3ff1b79caeb8bca462ff0db27603dac4632cf553f019b8aa2ef5efd9b2efa"
+    },
+    {
+      "path": "tests/unit/runtimeMedia/artifact-context.test.ts",
+      "bytes": 13012,
+      "sha256": "4d411853fbb4933bfc5bf6ea7478d3484754197ed04a4158ddac8c36e5781690"
+    }
+  ],
+  "currentSelection": {
+    "suites": 56,
+    "passedAssertionInstances": 2974,
+    "distinctSuiteTitleLabels": 2930,
+    "failed": 0,
+    "skipped": 0,
+    "identityReceipt": "assertion-identities3.json"
+  },
+  "noActiveAuthorWriter": true
+}
