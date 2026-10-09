@@ -1,3 +1,5 @@
+Current integrated applicability: [final independent audit](local-resume-2026-10-05/task16-current-integration-ci1/successor4/independent-final-audit1/report1.md). Completed scope PASS4.0 atcacdb4b8c; full original goal ISSUES FOUND. Accepted 13/17 tasks (76.5%) and55/61 task criteria (90.2%); six async-dependent criteria remain open. Historical matrices below retain their original scopes.
+
 Current functional-policyv2 matrix: [original12 outcome map](local-resume-2026-10-05/task16-aggregate-outcomes1/current-outcomes2.md). Historical tables and verdicts below retain their original scope/date. Full goal remains incomplete.
 
 # Goal outcome coverage
@@ -756,3 +758,18 @@ Current319CI37921734326 completesFAIL: freshBasic/canonical/Chat/codegen-enabled
 ## Milestone201 — 2026-10-09T11:52:45.958Z
 
 Same coherent independent source PASS4.0 closes V16 memory.extract-only data-instance clarity and explicit test requestId:string; strict parser/native options/retry/proof dates/history remain unchanged. Current160 controlled passes/full test-inclusive root types/backend types/scopedlint/build/contracts/pack7 PASS. Combined source6193b459 pins six files;156file72table Agent/Workflow archive carriesV3. Failed319CI remainsFAIL, SDKactual6/7 strictschema refusal and separateCLI7/7 preserved; providerSKIPPED. One final readonly audit retains all old rows, eight newcalls/full800000 uncertainty, totalsSDK2.8m+CLI1.5m/CI slots0; four scopes retired/three rolesdenied. Existing public selector15→16 readback after wholecleanup; corrected current-head CI pending. Align13/14 task checkboxes to prior grants only. Counts unchanged13/17=76.5%,55/61=90.2%, fullfalse/sixcriteria blocked/0of12 finalgrants; C7 missing history unrepaired.
+
+
+## Milestone202 — 2026-10-09T12:05:16.207Z
+
+At exactcacdb4b8c currentCI37926572786 genuine SDKruntime7/7 PASS naturally17.952s/zero skip, including governed real extraction+embedding/profile/source provenance+one-receipt replay under successor16. Failed3196/7 remains historicalFAIL; no fieldstrip/assertionweakening/retry ofoldrequest. Currentqualitylint/test-includingtypes, three fresh enabled Linux Basic/canonical/Chat codegen/build, actualNeo4j/Memgraph, packed/browser/catalog and native8controlled217 natural PASS. CLI and SDKremaining shards/provider/currentwholecleanup/finalfinancial and reused-review audit stillpending. No new acceptancegrant:13/17=76.5%,55/61=90.2%,sixoriginal extension criteria/0of12 finalgrants/fullfalse. Async503 and C7missinghistory unchanged.
+
+
+## Milestone203 — 2026-10-09T12:28:39.613Z
+
+Exactcacdb4b8c PRworkflow37926572786 all19jobs SUCCESS; Security37926572939 SUCCESS. FiveSDKunits7461/7461+7actual, CLI63/1840natural+7actual, provider360controlled+1actual officialparser/canonical/reconnect/samehandle replay/outsider/currentasync-memorycomplete PASS; current provider doesnotforce lag (prior08/09/14actual lag remains separatelyapplicable). Threegenuineenabled freshLinuxinstalls/builds, actualgraphs, package/browser/catalog, native217controllednatural andqualityPASS. Ownedcleanup4scope retirements/3rolesdenied pertarget PASS; notphysicaldeletion. ONE finalreadonlyread12:20:37–51 verifiesV16 and exactretentionSDK21/28/28+CLI12/15/15 oldrows;16newconfirmedcalls full1.6muncertainty, dedicatedtotal5.9m/active0, mainheld2/resources unchanged. Same reviewer finalwrittenoriginalaudit pending; sixoriginalasync criteria remainungranted, counts13/17=76.5%55/61=90.2%,0of12finalgrants/fullfalse/C7missinghistoryunchanged.
+
+
+## Milestone204 — 2026-10-09T12:35:45.352Z
+
+One continuing independent final audit at exactcacdb4b8c accepts completed integrated scopePASS4.0/allfive4/zero known reachable breaking findings. Current19-jobCI+SecuritySUCCESS, SDK7/7 CLI7/7 provider1/1 actual0skip, fresh enabled installed consumers and exact retained financial rows/retired scopes/currentCI slots0 all verified. Task06 and16A1/A2/A4 and17A1/A3 applicability confirmed. Full original goal auditISSUES_FOUND/Tasks16-17NEEDS_REVISION: original13A1/A2/A4,14A1,16A3,17A2 require genuine async service qualification. No new grants or denominator changes;13/17=76.5%,55/61=90.2%,0/12holistic final grants/fullfalse. Historical279/319 failures/C7 missing backing remain; no production/release/merge/website publication.

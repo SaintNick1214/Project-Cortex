@@ -1,0 +1,582 @@
+{
+  "status": "CURRENT_CI_SUCCESS_READONLY_ACCOUNTING_RETIREMENT_CLOSED",
+  "closedAt": "2026-10-09T12:23:55.975244+00:00",
+  "workflowRunId": 37926572786,
+  "headSha": "cacdb4b8c212e3fd0c2f92102c214a71388b6290",
+  "workflowConclusion": "success",
+  "jobs": {
+    "total": 19,
+    "allSuccess": true,
+    "cleanup": {
+      "databaseId": 113814735446,
+      "status": "completed",
+      "conclusion": "success",
+      "completedAt": "2026-10-09T12:18:27Z"
+    }
+  },
+  "baseline": {
+    "report": {
+      "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor3/native-actual1/final-native-report1.json",
+      "bytes": 22685,
+      "sha256": "96f9117544166016aab1ff3e3bd22d6105437d264f11f4eaeeb5c48eb7e5f413"
+    },
+    "startedAt": "2026-10-09T11:33:04.845Z",
+    "completedAt": "2026-10-09T11:33:18.628Z",
+    "prospectiveForCurrentRun": true
+  },
+  "finalReadback": {
+    "startedAt": "2026-10-09T12:20:37.307Z",
+    "completedAt": "2026-10-09T12:20:51.843Z",
+    "snapshotPasses": 1,
+    "allOwnedCliChildrenClosed": true,
+    "transactionalSnapshot": false
+  },
+  "targets": [
+    {
+      "kind": "sdk",
+      "target": {
+        "projectId": 3176493,
+        "deploymentName": "steady-snake-253",
+        "teamId": 325340,
+        "production": false,
+        "soleCloudDev": true,
+        "identityCheckedAt": "2026-10-09T12:20:37.617Z"
+      },
+      "installedManifest": {
+        "manifestId": "cortex-gateway-agent-defaults-2026-10-08",
+        "revision": 16,
+        "rootHash": "c7180757830eb1b71b3621373afaf4236ec7ed4b303b4e6f08589c7b1c82c4f9",
+        "artifactRevision": "7535ae57928ece80905bc9edadcf483ace240b8d375104c8c54bfb767fbb13f5",
+        "activeDeploymentPolicyRows": 8,
+        "artifact": {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor4/artifacts1/ci-runtime-fixture-receipts/ci-sdk-policy.json",
+          "bytes": 157,
+          "sha256": "817a40e89311e89dc8a5db7eeff07608407ff20ed7b3baf7f3f85cfec84bc691"
+        }
+      },
+      "financialComparison": {
+        "runtimeBudgetAccounts": {
+          "baselineRows": 21,
+          "afterRows": 28,
+          "oldExactIdsFieldsRetained": true,
+          "retainedIdsSha256": "f7d5106362120803cae1cc8bbb0f71535e6d4f558f81e7208a90db1b50f30b1c",
+          "retainedRowsSha256": "1f0cbb0843f15619959e9eb486c027b45830d76a474add726e9d681ca188fbce"
+        },
+        "runtimeModelOperations": {
+          "baselineRows": 28,
+          "afterRows": 39,
+          "oldExactIdsFieldsRetained": true,
+          "retainedIdsSha256": "851967a82efc7f2bb9e1fd53edcb98ea73d220190217d856a048b00723d73bb3",
+          "retainedRowsSha256": "33e1a36a5eb7362cd065e03fe40f43d5efd21b550e6ac5dd8496d64e836a68db"
+        },
+        "runtimeModelAttempts": {
+          "baselineRows": 28,
+          "afterRows": 39,
+          "oldExactIdsFieldsRetained": true,
+          "retainedIdsSha256": "ccc1e051f6cac57a14a3c18bfe3d27495af7c0f2d5e081532dbd1582f7924d23",
+          "retainedRowsSha256": "528fadc18d2b8a86ab52387c6bf19a1bf3494478b669cd7f05ab87ddd592cd7b"
+        }
+      },
+      "newCalls": [
+        {
+          "attemptId": "sd7077t5nattre0mvx89m92mdx8fynpn",
+          "operationId": "sh73d7txj8x3a4d3vq6fajav3n8fzbs4",
+          "operationKey": "embedding.query",
+          "runAccountId": "p978d81wz3anct7czfavs8d1v18fzkhz",
+          "outcome": "confirmed",
+          "uncertainMicroUsd": 100000,
+          "slotReleased": true,
+          "actualModel": "text-embedding-3-small",
+          "usage": {
+            "inputTokens": 25,
+            "totalTokens": 25
+          },
+          "costProvenance": null,
+          "attachment": "attached"
+        },
+        {
+          "attemptId": "sd70jegegw4q7m3fc5rjqc1bgn8fyp6r",
+          "operationId": "sh73gdy7411gcfrj869mm9an1n8fzzpv",
+          "operationKey": "embedding.memory",
+          "runAccountId": "p97aw8qey0j5ytx4b2vpky8rph8fzk5a",
+          "outcome": "confirmed",
+          "uncertainMicroUsd": 100000,
+          "slotReleased": true,
+          "actualModel": "text-embedding-3-small",
+          "usage": {
+            "inputTokens": 14,
+            "totalTokens": 14
+          },
+          "costProvenance": null,
+          "attachment": "attached"
+        },
+        {
+          "attemptId": "sd71mcw0zeh8cdz095qa6j6gzh8fzqc7",
+          "operationId": "sh7bvx2sbwbrafhptzmf9mv1e58fyepd",
+          "operationKey": "memory.extract",
+          "runAccountId": "p97abxs74j13k90btsw43hkfy58fynah",
+          "outcome": "confirmed",
+          "uncertainMicroUsd": 100000,
+          "slotReleased": true,
+          "actualModel": "openai/gpt-4o-mini",
+          "usage": {
+            "cachedInputTokens": 0,
+            "inputTokens": 988,
+            "outputTokens": 132,
+            "reasoningTokens": 0,
+            "totalTokens": 1120
+          },
+          "costProvenance": null,
+          "attachment": "attached"
+        },
+        {
+          "attemptId": "sd71sa2wzfw3j168qyjjhj0yd58fypxv",
+          "operationId": "sh70d638e5ax8f9yqckn7q0pas8fy083",
+          "operationKey": "embedding.memory",
+          "runAccountId": "p97abxs74j13k90btsw43hkfy58fynah",
+          "outcome": "confirmed",
+          "uncertainMicroUsd": 100000,
+          "slotReleased": true,
+          "actualModel": "text-embedding-3-small",
+          "usage": {
+            "inputTokens": 25,
+            "totalTokens": 25
+          },
+          "costProvenance": null,
+          "attachment": "attached"
+        },
+        {
+          "attemptId": "sd751bnk9hfdh73tqsd33xebj98fyk1m",
+          "operationId": "sh75em8cde0n5871fcp5a26wzn8fzedz",
+          "operationKey": "conversation.title",
+          "runAccountId": "p978d81wz3anct7czfavs8d1v18fzkhz",
+          "outcome": "confirmed",
+          "uncertainMicroUsd": 100000,
+          "slotReleased": true,
+          "actualModel": "openai/gpt-4o",
+          "usage": {
+            "cachedInputTokens": 0,
+            "inputTokens": 81,
+            "outputTokens": 6,
+            "reasoningTokens": 0,
+            "totalTokens": 87
+          },
+          "costProvenance": null,
+          "attachment": "attached"
+        },
+        {
+          "attemptId": "sd76etgdzehh2ps0trwj33kren8fy6t5",
+          "operationId": "sh7bztra4mfzfpgr31qbwvhz098fyf8j",
+          "operationKey": "embedding.memory",
+          "runAccountId": "p97byq9g9jan7fzp4xxs3r2kes8fyr72",
+          "outcome": "confirmed",
+          "uncertainMicroUsd": 100000,
+          "slotReleased": true,
+          "actualModel": "text-embedding-3-small",
+          "usage": {
+            "inputTokens": 21,
+            "totalTokens": 21
+          },
+          "costProvenance": null,
+          "attachment": "attached"
+        },
+        {
+          "attemptId": "sd777gphz6hahy548523daz2yx8fz374",
+          "operationId": "sh7f7gjk1mydmfk0vfdsjw6d7s8fzz39",
+          "operationKey": "embedding.query",
+          "runAccountId": "p97dc1yef0tkv3rhz14y4wzb8d8fyj3z",
+          "outcome": "confirmed",
+          "uncertainMicroUsd": 100000,
+          "slotReleased": true,
+          "actualModel": "text-embedding-3-small",
+          "usage": {
+            "inputTokens": 16,
+            "totalTokens": 16
+          },
+          "costProvenance": null,
+          "attachment": "attached"
+        },
+        {
+          "attemptId": "sd79ykjxb3eys5brx7adyjrs6h8fy53j",
+          "operationId": "sh7c0ew6wanjqqv23h8abng6458fzw84",
+          "operationKey": "memory.extract",
+          "runAccountId": "p97byq9g9jan7fzp4xxs3r2kes8fyr72",
+          "outcome": "confirmed",
+          "uncertainMicroUsd": 100000,
+          "slotReleased": true,
+          "actualModel": "openai/gpt-4o-mini",
+          "usage": {
+            "cachedInputTokens": 0,
+            "inputTokens": 977,
+            "outputTokens": 113,
+            "reasoningTokens": 0,
+            "totalTokens": 1090
+          },
+          "costProvenance": null,
+          "attachment": "attached"
+        },
+        {
+          "attemptId": "sd7b7t2k012h98wqcnjqr8wq4d8fy33h",
+          "operationId": "sh7a574zepssc68d5se27jkra18fytes",
+          "operationKey": "embedding.memory",
+          "runAccountId": "p97cymg2mkbb6bd2vaergr9h618fybsg",
+          "outcome": "confirmed",
+          "uncertainMicroUsd": 100000,
+          "slotReleased": true,
+          "actualModel": "text-embedding-3-small",
+          "usage": {
+            "inputTokens": 10,
+            "totalTokens": 10
+          },
+          "costProvenance": null,
+          "attachment": "attached"
+        },
+        {
+          "attemptId": "sd7cefgx65v9gs5bn94bmafw058fzamq",
+          "operationId": "sh778wy4m4e3wp1sapedjsnc4d8fz7wb",
+          "operationKey": "agent.respond",
+          "runAccountId": "p978d81wz3anct7czfavs8d1v18fzkhz",
+          "outcome": "confirmed",
+          "uncertainMicroUsd": 100000,
+          "slotReleased": true,
+          "actualModel": "openai/gpt-4o-mini",
+          "usage": {
+            "cachedInputTokens": 0,
+            "inputTokens": 686,
+            "outputTokens": 15,
+            "reasoningTokens": 0,
+            "totalTokens": 701
+          },
+          "costProvenance": null,
+          "attachment": "attached"
+        },
+        {
+          "attemptId": "sd7e8w8s7sbx4r1pnvw3ahy3sn8fz1c2",
+          "operationId": "sh71gwqx2559smfsg30sef3afd8fzahk",
+          "operationKey": "memory.extract",
+          "runAccountId": "p97cymg2mkbb6bd2vaergr9h618fybsg",
+          "outcome": "confirmed",
+          "uncertainMicroUsd": 100000,
+          "slotReleased": true,
+          "actualModel": "openai/gpt-4o-mini",
+          "usage": {
+            "cachedInputTokens": 0,
+            "inputTokens": 968,
+            "outputTokens": 6,
+            "reasoningTokens": 0,
+            "totalTokens": 974
+          },
+          "costProvenance": null,
+          "attachment": "attached"
+        }
+      ],
+      "totalTenantUncertaintyMicroUsd": 3900000,
+      "activeSlots": 0,
+      "newAccountsCount": 7,
+      "newAccountsRevision": 16,
+      "retainedOldRootsWindows": "Exact original projected fields retained, including historical V14/V15 financial roots/windows; none adopted, reset, refunded or rewritten.",
+      "retiredScopes": [
+        {
+          "_id": "nn74cfj7aa7290cxyemdds9sr58fz1ww",
+          "tenantId": "cortex-ci-37926572786-1-sdk",
+          "epoch": 2,
+          "deletedAt": 1791548299690
+        },
+        {
+          "_id": "nn79kffg3d02w2mtx0yygarywx8fzyj0",
+          "tenantId": "cortex-ci-37926572786-1-sdk-other",
+          "epoch": 2,
+          "deletedAt": 1791548300599
+        }
+      ],
+      "roleDenials": {
+        "roles": [
+          "owner",
+          "reader",
+          "outsider"
+        ],
+        "artifact": {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor4/artifacts1/ci-runtime-cleanup-receipts/ci-sdk-cleanup.json",
+          "bytes": 309,
+          "sha256": "81c337d319a9feaa4861b019c43c65a13d64d1dcd7370d9d88db8358607dce53"
+        },
+        "duplicatePublicProbes": 0
+      },
+      "currentScopedRowsRetained": {
+        "runtimeRuns": 1,
+        "runtimeAgentIngestion": 1,
+        "runtimeIngestionJobs": 3,
+        "runtimeAssets": 0,
+        "runtimeAssetVersions": 0,
+        "runtimeAssetJobs": 0,
+        "runtimeMediaJobs": 0,
+        "runtimeContentJobs": 1
+      },
+      "currentIngestionStageCounts": {
+        "complete": 9,
+        "skipped": 3,
+        "failed": 0,
+        "pending": 0
+      }
+    },
+    {
+      "kind": "cli",
+      "target": {
+        "projectId": 3176494,
+        "deploymentName": "usable-sheep-908",
+        "teamId": 325340,
+        "production": false,
+        "soleCloudDev": true,
+        "identityCheckedAt": "2026-10-09T12:20:44.053Z"
+      },
+      "installedManifest": {
+        "manifestId": "cortex-gateway-agent-defaults-2026-10-08",
+        "revision": 16,
+        "rootHash": "c7180757830eb1b71b3621373afaf4236ec7ed4b303b4e6f08589c7b1c82c4f9",
+        "artifactRevision": "7535ae57928ece80905bc9edadcf483ace240b8d375104c8c54bfb767fbb13f5",
+        "activeDeploymentPolicyRows": 8,
+        "artifact": {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor4/artifacts1/ci-runtime-fixture-receipts/ci-cli-policy.json",
+          "bytes": 157,
+          "sha256": "7e8494bf885f740711dc104c0aa976393bcfd44726a50655b51e720e0d0038d4"
+        }
+      },
+      "financialComparison": {
+        "runtimeBudgetAccounts": {
+          "baselineRows": 12,
+          "afterRows": 16,
+          "oldExactIdsFieldsRetained": true,
+          "retainedIdsSha256": "5fffdfdbb46f4077fc39cdfece90fb41b697805eda223da4d63f8acc0d501f14",
+          "retainedRowsSha256": "30e789970eccfbc3619f4786cb28f899b85d68684b95a8f8bf2ea3db7e61ecda"
+        },
+        "runtimeModelOperations": {
+          "baselineRows": 15,
+          "afterRows": 20,
+          "oldExactIdsFieldsRetained": true,
+          "retainedIdsSha256": "c0a857ff8251343a31d94bc3d3674917ecdd05f9a2a0237985bc3e04d242cf6b",
+          "retainedRowsSha256": "5f62679c270688891e9a8b38f20bf31634599acfe63feee1b3ebb05ade714f7f"
+        },
+        "runtimeModelAttempts": {
+          "baselineRows": 15,
+          "afterRows": 20,
+          "oldExactIdsFieldsRetained": true,
+          "retainedIdsSha256": "fcb3e7ad6ddfcbf0921059f0c2cc270e20b3ffc474dc3c32edb2c1c81e85b6e4",
+          "retainedRowsSha256": "d9cc871217a3a42a6c9a00100f4bba8c80daf09b1e83c844911d52ea52bf26d0"
+        }
+      },
+      "newCalls": [
+        {
+          "attemptId": "sd7ar7vm416kg85gfratcxjah18fz7c5",
+          "operationId": "sh78h4va463f0m8xyvdey13xr98fzx8g",
+          "operationKey": "embedding.memory",
+          "runAccountId": "p9772gnngjc016x5fvb547b7058fyfnt",
+          "outcome": "confirmed",
+          "uncertainMicroUsd": 100000,
+          "slotReleased": true,
+          "actualModel": "text-embedding-3-small",
+          "usage": {
+            "inputTokens": 10,
+            "totalTokens": 10
+          },
+          "costProvenance": null,
+          "attachment": "attached"
+        },
+        {
+          "attemptId": "sd7b91n9ydwsybrj56q6c5afzn8fyde5",
+          "operationId": "sh7419d2k6m5gxnpdcp12b7yz58fz06c",
+          "operationKey": "embedding.query",
+          "runAccountId": "p971dk8e89ramgkyzyxb70m7nx8fz02n",
+          "outcome": "confirmed",
+          "uncertainMicroUsd": 100000,
+          "slotReleased": true,
+          "actualModel": "text-embedding-3-small",
+          "usage": {
+            "inputTokens": 16,
+            "totalTokens": 16
+          },
+          "costProvenance": null,
+          "attachment": "attached"
+        },
+        {
+          "attemptId": "sd7d9gqxaj9r9e48aaqagmacmn8fz429",
+          "operationId": "sh7frsjswfbbwqxrsvqfm8k0zn8fzswk",
+          "operationKey": "embedding.memory",
+          "runAccountId": "p977rk1fa3h3ncfyck399cs6d98fyrkc",
+          "outcome": "confirmed",
+          "uncertainMicroUsd": 100000,
+          "slotReleased": true,
+          "actualModel": "text-embedding-3-small",
+          "usage": {
+            "inputTokens": 21,
+            "totalTokens": 21
+          },
+          "costProvenance": null,
+          "attachment": "attached"
+        },
+        {
+          "attemptId": "sd7dkyq7rmdz9yz6mytppcyq418fzj7r",
+          "operationId": "sh78jbw1jzq6bh30kfxec2vmj18fyekz",
+          "operationKey": "memory.extract",
+          "runAccountId": "p9772gnngjc016x5fvb547b7058fyfnt",
+          "outcome": "confirmed",
+          "uncertainMicroUsd": 100000,
+          "slotReleased": true,
+          "actualModel": "openai/gpt-4o-mini",
+          "usage": {
+            "cachedInputTokens": 0,
+            "inputTokens": 966,
+            "outputTokens": 6,
+            "reasoningTokens": 0,
+            "totalTokens": 972
+          },
+          "costProvenance": null,
+          "attachment": "attached"
+        },
+        {
+          "attemptId": "sd7e2bsme3he8gebcyre7jhcph8fz4mn",
+          "operationId": "sh7dr7tqqms6v08hjmmk6vsjcn8fz86p",
+          "operationKey": "memory.extract",
+          "runAccountId": "p977rk1fa3h3ncfyck399cs6d98fyrkc",
+          "outcome": "confirmed",
+          "uncertainMicroUsd": 100000,
+          "slotReleased": true,
+          "actualModel": "openai/gpt-4o-mini",
+          "usage": {
+            "cachedInputTokens": 0,
+            "inputTokens": 979,
+            "outputTokens": 187,
+            "reasoningTokens": 0,
+            "totalTokens": 1166
+          },
+          "costProvenance": null,
+          "attachment": "attached"
+        }
+      ],
+      "totalTenantUncertaintyMicroUsd": 2000000,
+      "activeSlots": 0,
+      "newAccountsCount": 4,
+      "newAccountsRevision": 16,
+      "retainedOldRootsWindows": "Exact original projected fields retained, including historical V14/V15 financial roots/windows; none adopted, reset, refunded or rewritten.",
+      "retiredScopes": [
+        {
+          "_id": "nn775s5qv5x45qajcg4dydjq718fyasg",
+          "tenantId": "cortex-ci-37926572786-1-cli",
+          "epoch": 2,
+          "deletedAt": 1791548302268
+        },
+        {
+          "_id": "nn7fqxcj093r04e8pw112wfqzh8fz76f",
+          "tenantId": "cortex-ci-37926572786-1-cli-other",
+          "epoch": 2,
+          "deletedAt": 1791548303295
+        }
+      ],
+      "roleDenials": {
+        "roles": [
+          "owner",
+          "reader",
+          "outsider"
+        ],
+        "artifact": {
+          "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor4/artifacts1/ci-runtime-cleanup-receipts/ci-cli-cleanup.json",
+          "bytes": 309,
+          "sha256": "296d7a2ed126db483a031feb1b992cb4d815e2491b1c364351322f2a57cb7bad"
+        },
+        "duplicatePublicProbes": 0
+      },
+      "currentScopedRowsRetained": {
+        "runtimeRuns": 0,
+        "runtimeAgentIngestion": 0,
+        "runtimeIngestionJobs": 1,
+        "runtimeAssets": 0,
+        "runtimeAssetVersions": 0,
+        "runtimeAssetJobs": 0,
+        "runtimeMediaJobs": 0,
+        "runtimeContentJobs": 0
+      },
+      "currentIngestionStageCounts": {
+        "complete": 5,
+        "skipped": 1,
+        "failed": 0,
+        "pending": 0
+      }
+    }
+  ],
+  "currentActualResults": {
+    "sdk": {
+      "passed": 7,
+      "failed": 0,
+      "skipped": 0,
+      "artifact": {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor4/artifacts1/ci-sdk-discovery-and-runtime-1/ci-sdk-runtime-results.json",
+        "bytes": 4121,
+        "sha256": "bef8ee13c7ebedb3dc6a393e943a6d0a43a91031d3f6abf72be689cc577ed91b"
+      }
+    },
+    "cli": {
+      "passed": 7,
+      "failed": 0,
+      "skipped": 0,
+      "artifact": {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor4/artifacts1/ci-cli-discovery-and-runtime/ci-cli-runtime-results.json",
+        "bytes": 4121,
+        "sha256": "be8d8efb82c359757e0ae8e9807d5116936e6ea60e4474cd5f678ec22ef0b737"
+      }
+    },
+    "provider": {
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0,
+      "artifact": {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor4/artifacts1/ci-provider-discovery-and-runtime/packages/vercel-ai-provider/ci-provider-remote-results.json",
+        "bytes": 1300,
+        "sha256": "5152fc3b61981d912ed39b9b5071cd8e9f888e41d1933ee1e59cb42cc9f35eff"
+      },
+      "actualConsole": {
+        "path": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion/_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/successor4/provider-actual-outcome1.json",
+        "bytes": 1733,
+        "sha256": "5150de4e5a661884ce8d3a58ee2c6d82a0b4d5a6fd02faa6ef5f9ae1e5b3e847"
+      },
+      "actualConsoleSummary": {
+        "status": "ACTUAL_PROVIDER_REMOTE_CONTRACT_PASS",
+        "responseStatus": "complete",
+        "memoryStatus": "complete",
+        "attemptNumber": 1,
+        "sameHandleTranscriptReplay": true,
+        "outsiderForbidden": true,
+        "line": 1037,
+        "jobId": 113813454473
+      }
+    }
+  },
+  "providerRuntime": {
+    "runId": "run:55569f4469b8d08087a3bd6682ff3a8e03a4bc23681872c8e477bf1b281c80ff",
+    "responseStatus": "complete",
+    "memoryStatus": "complete",
+    "canonicalFinalCount": 1,
+    "nativeAgentOperationCount": 1,
+    "automaticTitle": {
+      "state": "ready",
+      "parentOperationId": "sh778wy4m4e3wp1sapedjsnc4d8fz7wb",
+      "operationId": "sh75em8cde0n5871fcp5a26wzn8fzedz",
+      "sharesAgentAccount": true
+    },
+    "savedAgentIngestionReceiptCount": 1,
+    "savedAgentIngestionReceiptState": "pending",
+    "receiptLimit": "The durable receipt stores pending; actual run memoryStatus complete and all scoped stages complete/skipped are separately observed. No receipt-state terminal rewrite is claimed.",
+    "lagScope": "This CI test allows an initial pending or complete memory state; the saved console and final snapshot observe complete. It does not force a delayed-memory scene or replace prior dedicated lag evidence."
+  },
+  "qualificationScope": "Real corrected V16 extraction/embeddings/query/receipt replay and remote response/memory/reconnect/outsider contract pass. No new native qualification, paid facts.resolve conflict decision, media.image or async video request is claimed.",
+  "historicalFailure": "Prior319a/V15 SDK6/7 invalid schema-key echo and its retained costs remain historical; not relabeled.",
+  "effects": {
+    "deployment": 0,
+    "rootReset": 0,
+    "provision": 0,
+    "model": 0,
+    "setting": 0,
+    "secret": 0,
+    "retirement": 0
+  },
+  "retainedResources": "Dedicated targets/settings/private custody retained. Main3174742/original held2/old liability and stopped laptop graph volumes not read or changed.",
+  "mediaOrGoalAcceptance": false
+}

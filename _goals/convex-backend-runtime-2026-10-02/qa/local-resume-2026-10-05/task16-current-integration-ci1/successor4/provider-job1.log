@@ -1,0 +1,1204 @@
+﻿2026-10-09T12:13:11.7165945Z Current runner version: '2.337.0'
+2026-10-09T12:13:11.7205105Z ##[group]Runner Image Provisioner
+2026-10-09T12:13:11.7207237Z Hosted Compute Agent
+2026-10-09T12:13:11.7208830Z Version: 20261002.596
+2026-10-09T12:13:11.7210636Z Commit: c3d12f3313a95f25162a1503be624f3b0617f8c0
+2026-10-09T12:13:11.7212747Z Build Date: 2026-10-02T22:28:27Z
+2026-10-09T12:13:11.7215123Z Worker ID: {08f5a1d6-ba66-4f99-b498-29363bd11fe7}
+2026-10-09T12:13:11.7216983Z Region: centralus
+2026-10-09T12:13:11.7218686Z Cloud: Azure
+2026-10-09T12:13:11.7220355Z ##[endgroup]
+2026-10-09T12:13:11.7223415Z ##[group]Operating System
+2026-10-09T12:13:11.7225800Z Ubuntu
+2026-10-09T12:13:11.7227432Z 24.04.5
+2026-10-09T12:13:11.7228952Z LTS
+2026-10-09T12:13:11.7230518Z ##[endgroup]
+2026-10-09T12:13:11.7232328Z ##[group]Runner Image
+2026-10-09T12:13:11.7234265Z Image: ubuntu-24.04
+2026-10-09T12:13:11.7236082Z Version: 20261004.327.1
+2026-10-09T12:13:11.7238091Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261004.327/images/ubuntu/Ubuntu2404-Readme.md
+2026-10-09T12:13:11.7240124Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261004.327
+2026-10-09T12:13:11.7241551Z ##[endgroup]
+2026-10-09T12:13:11.7243853Z ##[group]GITHUB_TOKEN Permissions
+2026-10-09T12:13:11.7246583Z Contents: read
+2026-10-09T12:13:11.7247621Z Metadata: read
+2026-10-09T12:13:11.7248586Z ##[endgroup]
+2026-10-09T12:13:11.7251002Z Secret source: Actions
+2026-10-09T12:13:11.7252531Z Cache mode: write
+2026-10-09T12:13:11.7254215Z Prepare workflow directory
+2026-10-09T12:13:11.7961370Z Prepare all required actions
+2026-10-09T12:13:11.8033798Z Getting action download info
+2026-10-09T12:13:12.0874398Z Download action repository 'actions/checkout@v6' (SHA:d23441a48e516b6c34aea4fa41551a30e30af803)
+2026-10-09T12:13:12.1695745Z Download action repository 'actions/setup-node@v6' (SHA:249970729cb0ef3589644e2896645e5dc5ba9c38)
+2026-10-09T12:13:12.2522330Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-10-09T12:13:12.4517832Z Complete job name: Test Vercel AI Provider
+2026-10-09T12:13:12.5400623Z ##[group]Run actions/checkout@v6
+2026-10-09T12:13:12.5401751Z with:
+2026-10-09T12:13:12.5402512Z   ref: cacdb4b8c212e3fd0c2f92102c214a71388b6290
+2026-10-09T12:13:12.5403424Z   repository: SaintNick1214/Project-Cortex
+2026-10-09T12:13:12.5407996Z   token: ***
+2026-10-09T12:13:12.5408693Z   ssh-strict: true
+2026-10-09T12:13:12.5409367Z   ssh-user: git
+2026-10-09T12:13:12.5410070Z   persist-credentials: true
+2026-10-09T12:13:12.5410816Z   clean: true
+2026-10-09T12:13:12.5411521Z   sparse-checkout-cone-mode: true
+2026-10-09T12:13:12.5412303Z   fetch-depth: 1
+2026-10-09T12:13:12.5413001Z   fetch-tags: false
+2026-10-09T12:13:12.5413825Z   show-progress: true
+2026-10-09T12:13:12.5414518Z   lfs: false
+2026-10-09T12:13:12.5415179Z   submodules: false
+2026-10-09T12:13:12.5415879Z   set-safe-directory: true
+2026-10-09T12:13:12.5416635Z   allow-unsafe-pr-checkout: false
+2026-10-09T12:13:12.5417654Z env:
+2026-10-09T12:13:12.5418360Z   CORTEX_CI_RUN_ID: 37926572786-1
+2026-10-09T12:13:12.5419327Z   CORTEX_CI_AUTH_ISSUER: https://cortex-ci-runtime.example/
+2026-10-09T12:13:12.5420315Z   CORTEX_CI_AUTH_AUDIENCE: cortex-ci-runtime
+2026-10-09T12:13:12.5432885Z   CORTEX_CI_AUTH_PRIVATE_KEY: ***
+2026-10-09T12:13:12.5434072Z   CORTEX_CI_DISPOSABLE_DEPLOYMENTS: ["steady-snake-253","usable-sheep-908"]
+2026-10-09T12:13:12.5435211Z   CONVEX_URL: ***
+2026-10-09T12:13:12.5436013Z   CONVEX_URL_CLI: ***
+2026-10-09T12:13:12.5436710Z ##[endgroup]
+2026-10-09T12:13:12.6447308Z Syncing repository: SaintNick1214/Project-Cortex
+2026-10-09T12:13:12.6450468Z ##[group]Getting Git version info
+2026-10-09T12:13:12.6452156Z Working directory is '/home/runner/work/Project-Cortex/Project-Cortex'
+2026-10-09T12:13:12.6454835Z [command]/usr/bin/git version
+2026-10-09T12:13:12.6497875Z git version 2.55.0
+2026-10-09T12:13:12.6530407Z ##[endgroup]
+2026-10-09T12:13:12.6537567Z Temporarily overriding HOME='/home/runner/work/_temp/f111d424-1415-42b7-a461-73fc1a49722b' before making global git config changes
+2026-10-09T12:13:12.6540848Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-09T12:13:12.6544138Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Project-Cortex/Project-Cortex
+2026-10-09T12:13:12.6596693Z Deleting the contents of '/home/runner/work/Project-Cortex/Project-Cortex'
+2026-10-09T12:13:12.6601833Z ##[group]Determining repository object format
+2026-10-09T12:13:12.6605031Z ##[endgroup]
+2026-10-09T12:13:12.6606770Z ##[group]Initializing the repository
+2026-10-09T12:13:12.6609003Z [command]/usr/bin/git init /home/runner/work/Project-Cortex/Project-Cortex
+2026-10-09T12:13:12.6724847Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-09T12:13:12.6726797Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-09T12:13:12.6728078Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-09T12:13:12.6729137Z hint: call:
+2026-10-09T12:13:12.6729792Z hint:
+2026-10-09T12:13:12.6730581Z hint: 	git config --global init.defaultBranch <name>
+2026-10-09T12:13:12.6731495Z hint:
+2026-10-09T12:13:12.6732350Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-09T12:13:12.6734057Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-09T12:13:12.6735111Z hint:
+2026-10-09T12:13:12.6735797Z hint: 	git branch -m <name>
+2026-10-09T12:13:12.6736525Z hint:
+2026-10-09T12:13:12.6737418Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-09T12:13:12.6744065Z Initialized empty Git repository in /home/runner/work/Project-Cortex/Project-Cortex/.git/
+2026-10-09T12:13:12.6756189Z [command]/usr/bin/git remote add origin https://github.com/SaintNick1214/Project-Cortex
+2026-10-09T12:13:12.6812332Z ##[endgroup]
+2026-10-09T12:13:12.6814813Z ##[group]Disabling automatic garbage collection
+2026-10-09T12:13:12.6819047Z [command]/usr/bin/git config --local gc.auto 0
+2026-10-09T12:13:12.6847666Z ##[endgroup]
+2026-10-09T12:13:12.6850317Z ##[group]Setting up auth
+2026-10-09T12:13:12.6851959Z Removing SSH command configuration
+2026-10-09T12:13:12.6856636Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-09T12:13:12.6894008Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-09T12:13:12.7261090Z Removing HTTP extra header
+2026-10-09T12:13:12.7268891Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-09T12:13:12.7312562Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-09T12:13:12.7556800Z Removing includeIf entries pointing to credentials config files
+2026-10-09T12:13:12.7565171Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-09T12:13:12.7605941Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-09T12:13:12.7864934Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-8cec1b22-7719-41e7-8da3-e396f3a4fe14.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-09T12:13:12.7920968Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/Project-Cortex/Project-Cortex/.git.path /home/runner/work/_temp/git-credentials-8cec1b22-7719-41e7-8da3-e396f3a4fe14.config
+2026-10-09T12:13:12.7964148Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/Project-Cortex/Project-Cortex/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-8cec1b22-7719-41e7-8da3-e396f3a4fe14.config
+2026-10-09T12:13:12.8005336Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-8cec1b22-7719-41e7-8da3-e396f3a4fe14.config
+2026-10-09T12:13:12.8039928Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-8cec1b22-7719-41e7-8da3-e396f3a4fe14.config
+2026-10-09T12:13:12.8069618Z ##[endgroup]
+2026-10-09T12:13:12.8070756Z ##[group]Fetching the repository
+2026-10-09T12:13:12.8077815Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin cacdb4b8c212e3fd0c2f92102c214a71388b6290
+2026-10-09T12:13:51.6169226Z From https://github.com/SaintNick1214/Project-Cortex
+2026-10-09T12:13:51.6175320Z  * branch              cacdb4b8c212e3fd0c2f92102c214a71388b6290 -> FETCH_HEAD
+2026-10-09T12:13:51.6178589Z [command]/usr/bin/git rev-parse --verify --quiet cacdb4b8c212e3fd0c2f92102c214a71388b6290^{object}
+2026-10-09T12:13:51.6204549Z cacdb4b8c212e3fd0c2f92102c214a71388b6290
+2026-10-09T12:13:51.6207366Z ##[endgroup]
+2026-10-09T12:13:51.6208754Z ##[group]Determining the checkout info
+2026-10-09T12:13:51.6210173Z ##[endgroup]
+2026-10-09T12:13:51.6213984Z [command]/usr/bin/git sparse-checkout disable
+2026-10-09T12:13:51.6260277Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-10-09T12:13:51.6295667Z ##[group]Checking out the ref
+2026-10-09T12:13:51.6299946Z [command]/usr/bin/git checkout --progress --force cacdb4b8c212e3fd0c2f92102c214a71388b6290
+2026-10-09T12:13:52.9050272Z Updating files:   8% (17843/205265)
+2026-10-09T12:13:53.2082368Z Updating files:   9% (18474/205265)
+2026-10-09T12:13:53.4125897Z Updating files:  10% (20527/205265)
+2026-10-09T12:13:53.5824534Z Updating files:  11% (22580/205265)
+2026-10-09T12:13:53.7504905Z Updating files:  12% (24632/205265)
+2026-10-09T12:13:53.8397078Z Updating files:  13% (26685/205265)
+2026-10-09T12:13:53.8851103Z Updating files:  13% (28139/205265)
+2026-10-09T12:13:54.1291145Z Updating files:  14% (28738/205265)
+2026-10-09T12:13:54.2891010Z Updating files:  15% (30790/205265)
+2026-10-09T12:13:54.4120624Z Updating files:  16% (32843/205265)
+2026-10-09T12:13:54.5734056Z Updating files:  17% (34896/205265)
+2026-10-09T12:13:54.7364676Z Updating files:  18% (36948/205265)
+2026-10-09T12:13:54.8387376Z Updating files:  19% (39001/205265)
+2026-10-09T12:13:54.8585007Z Updating files:  19% (40753/205265)
+2026-10-09T12:13:55.0150675Z Updating files:  20% (41053/205265)
+2026-10-09T12:13:55.1854004Z Updating files:  21% (43106/205265)
+2026-10-09T12:13:55.2905484Z Updating files:  22% (45159/205265)
+2026-10-09T12:13:55.4348915Z Updating files:  23% (47211/205265)
+2026-10-09T12:13:55.5539457Z Updating files:  24% (49264/205265)
+2026-10-09T12:13:55.6712249Z Updating files:  25% (51317/205265)
+2026-10-09T12:13:55.7880800Z Updating files:  26% (53369/205265)
+2026-10-09T12:13:55.8387101Z Updating files:  27% (55422/205265)
+2026-10-09T12:13:56.8387676Z Updating files:  27% (56164/205265)
+2026-10-09T12:13:57.9158330Z Updating files:  27% (57207/205265)
+2026-10-09T12:13:58.8413150Z Updating files:  27% (57321/205265)
+2026-10-09T12:13:58.8654864Z Updating files:  27% (57467/205265)
+2026-10-09T12:13:59.4102965Z Updating files:  28% (57475/205265)
+2026-10-09T12:13:59.5813595Z Updating files:  29% (59527/205265)
+2026-10-09T12:13:59.7622179Z Updating files:  30% (61580/205265)
+2026-10-09T12:13:59.8389345Z Updating files:  31% (63633/205265)
+2026-10-09T12:14:00.1670748Z Updating files:  31% (64525/205265)
+2026-10-09T12:14:00.3513199Z Updating files:  32% (65685/205265)
+2026-10-09T12:14:00.5272511Z Updating files:  33% (67738/205265)
+2026-10-09T12:14:00.8117630Z Updating files:  34% (69791/205265)
+2026-10-09T12:14:00.8386156Z Updating files:  35% (71843/205265)
+2026-10-09T12:14:00.9519158Z Updating files:  35% (72185/205265)
+2026-10-09T12:14:01.0529735Z Updating files:  36% (73896/205265)
+2026-10-09T12:14:01.5859092Z Updating files:  37% (75949/205265)
+2026-10-09T12:14:01.7187828Z Updating files:  38% (78001/205265)
+2026-10-09T12:14:01.8388132Z Updating files:  39% (80054/205265)
+2026-10-09T12:14:01.8454548Z Updating files:  39% (81997/205265)
+2026-10-09T12:14:01.9714699Z Updating files:  40% (82106/205265)
+2026-10-09T12:14:02.0966500Z Updating files:  41% (84159/205265)
+2026-10-09T12:14:02.7673034Z Updating files:  42% (86212/205265)
+2026-10-09T12:14:02.8389063Z Updating files:  43% (88264/205265)
+2026-10-09T12:14:02.8882650Z Updating files:  43% (89466/205265)
+2026-10-09T12:14:03.8387976Z Updating files:  44% (90317/205265)
+2026-10-09T12:14:03.8789665Z Updating files:  44% (91784/205265)
+2026-10-09T12:14:04.0255395Z Updating files:  45% (92370/205265)
+2026-10-09T12:14:04.1935987Z Updating files:  46% (94422/205265)
+2026-10-09T12:14:04.3473268Z Updating files:  47% (96475/205265)
+2026-10-09T12:14:04.5158794Z Updating files:  48% (98528/205265)
+2026-10-09T12:14:04.6496850Z Updating files:  49% (100580/205265)
+2026-10-09T12:14:04.8387505Z Updating files:  50% (102633/205265)
+2026-10-09T12:14:04.8462176Z Updating files:  50% (104622/205265)
+2026-10-09T12:14:04.9836030Z Updating files:  51% (104686/205265)
+2026-10-09T12:14:05.1098800Z Updating files:  52% (106738/205265)
+2026-10-09T12:14:05.2808861Z Updating files:  53% (108791/205265)
+2026-10-09T12:14:05.3969792Z Updating files:  54% (110844/205265)
+2026-10-09T12:14:05.5749611Z Updating files:  55% (112896/205265)
+2026-10-09T12:14:05.6931236Z Updating files:  56% (114949/205265)
+2026-10-09T12:14:05.8402790Z Updating files:  57% (117002/205265)
+2026-10-09T12:14:05.8869006Z Updating files:  57% (118642/205265)
+2026-10-09T12:14:06.0578750Z Updating files:  58% (119054/205265)
+2026-10-09T12:14:06.2724747Z Updating files:  59% (121107/205265)
+2026-10-09T12:14:06.5080027Z Updating files:  60% (123159/205265)
+2026-10-09T12:14:06.7025980Z Updating files:  61% (125212/205265)
+2026-10-09T12:14:06.8400360Z Updating files:  62% (127265/205265)
+2026-10-09T12:14:06.9419037Z Updating files:  62% (128245/205265)
+2026-10-09T12:14:07.1285873Z Updating files:  63% (129317/205265)
+2026-10-09T12:14:07.3181033Z Updating files:  64% (131370/205265)
+2026-10-09T12:14:07.4982589Z Updating files:  65% (133423/205265)
+2026-10-09T12:14:07.6853154Z Updating files:  66% (135475/205265)
+2026-10-09T12:14:07.8386957Z Updating files:  67% (137528/205265)
+2026-10-09T12:14:07.8631398Z Updating files:  67% (139305/205265)
+2026-10-09T12:14:08.1156559Z Updating files:  68% (139581/205265)
+2026-10-09T12:14:08.3012243Z Updating files:  69% (141633/205265)
+2026-10-09T12:14:08.4740547Z Updating files:  70% (143686/205265)
+2026-10-09T12:14:08.6986881Z Updating files:  71% (145739/205265)
+2026-10-09T12:14:08.8390807Z Updating files:  72% (147791/205265)
+2026-10-09T12:14:09.0539814Z Updating files:  72% (148566/205265)
+2026-10-09T12:14:09.1697295Z Updating files:  73% (149844/205265)
+2026-10-09T12:14:09.2560047Z Updating files:  74% (151897/205265)
+2026-10-09T12:14:09.3945707Z Updating files:  75% (153949/205265)
+2026-10-09T12:14:09.5567266Z Updating files:  76% (156002/205265)
+2026-10-09T12:14:09.7125576Z Updating files:  77% (158055/205265)
+2026-10-09T12:14:09.8387567Z Updating files:  78% (160107/205265)
+2026-10-09T12:14:09.8663156Z Updating files:  78% (161806/205265)
+2026-10-09T12:14:10.0385987Z Updating files:  79% (162160/205265)
+2026-10-09T12:14:10.2247654Z Updating files:  80% (164212/205265)
+2026-10-09T12:14:10.4680531Z Updating files:  81% (166265/205265)
+2026-10-09T12:14:10.5478602Z Updating files:  82% (168318/205265)
+2026-10-09T12:14:10.6835379Z Updating files:  83% (170370/205265)
+2026-10-09T12:14:10.8262398Z Updating files:  84% (172423/205265)
+2026-10-09T12:14:10.8386383Z Updating files:  85% (174476/205265)
+2026-10-09T12:14:11.0688960Z Updating files:  85% (174649/205265)
+2026-10-09T12:14:11.2104862Z Updating files:  86% (176528/205265)
+2026-10-09T12:14:11.3417994Z Updating files:  87% (178581/205265)
+2026-10-09T12:14:11.4740554Z Updating files:  88% (180634/205265)
+2026-10-09T12:14:11.6043146Z Updating files:  89% (182686/205265)
+2026-10-09T12:14:11.8041662Z Updating files:  90% (184739/205265)
+2026-10-09T12:14:11.8386474Z Updating files:  91% (186792/205265)
+2026-10-09T12:14:11.9454830Z Updating files:  91% (187281/205265)
+2026-10-09T12:14:12.1034275Z Updating files:  92% (188844/205265)
+2026-10-09T12:14:12.2516136Z Updating files:  93% (190897/205265)
+2026-10-09T12:14:12.4880609Z Updating files:  94% (192950/205265)
+2026-10-09T12:14:12.5663157Z Updating files:  95% (195002/205265)
+2026-10-09T12:14:12.7313440Z Updating files:  96% (197055/205265)
+2026-10-09T12:14:12.8386967Z Updating files:  97% (199108/205265)
+2026-10-09T12:14:12.8702922Z Updating files:  97% (200703/205265)
+2026-10-09T12:14:13.0484060Z Updating files:  98% (201160/205265)
+2026-10-09T12:14:13.3282247Z Updating files:  99% (203213/205265)
+2026-10-09T12:14:13.3283076Z Updating files: 100% (205265/205265)
+2026-10-09T12:14:13.3283925Z Updating files: 100% (205265/205265), done.
+2026-10-09T12:14:13.6101220Z Note: switching to 'cacdb4b8c212e3fd0c2f92102c214a71388b6290'.
+2026-10-09T12:14:13.6102244Z 
+2026-10-09T12:14:13.6102671Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-10-09T12:14:13.6104005Z changes and commit them, and you can discard any commits you make in this
+2026-10-09T12:14:13.6105037Z state without impacting any branches by switching back to a branch.
+2026-10-09T12:14:13.6105624Z 
+2026-10-09T12:14:13.6106044Z If you want to create a new branch to retain commits you create, you may
+2026-10-09T12:14:13.6107000Z do so (now or later) by using -c with the switch command. Example:
+2026-10-09T12:14:13.6107566Z 
+2026-10-09T12:14:13.6107833Z   git switch -c <new-branch-name>
+2026-10-09T12:14:13.6108212Z 
+2026-10-09T12:14:13.6108462Z Or undo this operation with:
+2026-10-09T12:14:13.6108817Z 
+2026-10-09T12:14:13.6109042Z   git switch -
+2026-10-09T12:14:13.6109322Z 
+2026-10-09T12:14:13.6109775Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-10-09T12:14:13.6110410Z 
+2026-10-09T12:14:13.6110911Z HEAD is now at cacdb4b8 Clarify governed extraction with an immutable prompt version
+2026-10-09T12:14:13.6471443Z ##[endgroup]
+2026-10-09T12:14:13.6520630Z [command]/usr/bin/git log -1 --format=%H
+2026-10-09T12:14:13.6554543Z cacdb4b8c212e3fd0c2f92102c214a71388b6290
+2026-10-09T12:14:13.6814813Z ##[group]Run actions/setup-node@v6
+2026-10-09T12:14:13.6815230Z with:
+2026-10-09T12:14:13.6815527Z   node-version: 24.15.0
+2026-10-09T12:14:13.6815847Z   cache: npm
+2026-10-09T12:14:13.6816139Z   check-latest: false
+2026-10-09T12:14:13.6819091Z   token: ***
+2026-10-09T12:14:13.6819424Z   package-manager-cache: true
+2026-10-09T12:14:13.6819780Z env:
+2026-10-09T12:14:13.6820114Z   CORTEX_CI_RUN_ID: 37926572786-1
+2026-10-09T12:14:13.6820561Z   CORTEX_CI_AUTH_ISSUER: https://cortex-ci-runtime.example/
+2026-10-09T12:14:13.6821072Z   CORTEX_CI_AUTH_AUDIENCE: cortex-ci-runtime
+2026-10-09T12:14:13.6828696Z   CORTEX_CI_AUTH_PRIVATE_KEY: ***
+2026-10-09T12:14:13.6829201Z   CORTEX_CI_DISPOSABLE_DEPLOYMENTS: ["steady-snake-253","usable-sheep-908"]
+2026-10-09T12:14:13.6829777Z   CONVEX_URL: ***
+2026-10-09T12:14:13.6830157Z   CONVEX_URL_CLI: ***
+2026-10-09T12:14:13.6830497Z ##[endgroup]
+2026-10-09T12:14:13.8192749Z Attempting to download 24.15.0...
+2026-10-09T12:14:14.5654018Z Acquiring 24.15.0 - x64 from https://github.com/actions/node-versions/releases/download/24.15.0-24511264946/node-24.15.0-linux-x64.tar.gz
+2026-10-09T12:14:15.1966557Z Extracting ...
+2026-10-09T12:14:15.2128311Z [command]/usr/bin/tar xz --strip 1 --warning=no-unknown-keyword --overwrite -C /home/runner/work/_temp/bdf271f6-ab20-4619-a746-cb87f9e744ab -f /home/runner/work/_temp/ce5eb006-f007-4625-8786-701d6f074693
+2026-10-09T12:14:16.4246413Z Adding to the cache ...
+2026-10-09T12:14:18.3952849Z ##[group]Environment details
+2026-10-09T12:14:18.6189447Z node: v24.15.0
+2026-10-09T12:14:18.6189939Z npm: 11.12.1
+2026-10-09T12:14:18.6190241Z yarn: 1.22.22
+2026-10-09T12:14:18.6191052Z ##[endgroup]
+2026-10-09T12:14:18.6211014Z [command]/opt/hostedtoolcache/node/24.15.0/x64/bin/npm config get cache
+2026-10-09T12:14:18.7175978Z /home/runner/.npm
+2026-10-09T12:14:18.8872618Z Cache hit for: node-cache-Linux-x64-npm-d16708d29295057fc3d9c7348cc85d98cf19ee0ba83810ee5cae2e31d7ce4045
+2026-10-09T12:14:19.9099452Z Received 77220591 of 77220591 (100.0%), 82.3 MBs/sec
+2026-10-09T12:14:19.9100660Z Cache Size: ~74 MB (77220591 B)
+2026-10-09T12:14:19.9131678Z [command]/usr/bin/tar -xf /home/runner/work/_temp/fddaab68-f374-40a1-8413-5b9866d598c0/cache.tzst -P -C /home/runner/work/Project-Cortex/Project-Cortex --use-compress-program unzstd
+2026-10-09T12:14:20.2344607Z Cache restored successfully
+2026-10-09T12:14:20.2386608Z Cache restored from key: node-cache-Linux-x64-npm-d16708d29295057fc3d9c7348cc85d98cf19ee0ba83810ee5cae2e31d7ce4045
+2026-10-09T12:14:20.2582156Z ##[group]Run npm install --global npm@12.2.0
+2026-10-09T12:14:20.2582701Z [36;1mnpm install --global npm@12.2.0[0m
+2026-10-09T12:14:20.2839519Z shell: /usr/bin/bash -e {0}
+2026-10-09T12:14:20.2839939Z env:
+2026-10-09T12:14:20.2840297Z   CORTEX_CI_RUN_ID: 37926572786-1
+2026-10-09T12:14:20.2840815Z   CORTEX_CI_AUTH_ISSUER: https://cortex-ci-runtime.example/
+2026-10-09T12:14:20.2841391Z   CORTEX_CI_AUTH_AUDIENCE: cortex-ci-runtime
+2026-10-09T12:14:20.2850451Z   CORTEX_CI_AUTH_PRIVATE_KEY: ***
+2026-10-09T12:14:20.2851010Z   CORTEX_CI_DISPOSABLE_DEPLOYMENTS: ["steady-snake-253","usable-sheep-908"]
+2026-10-09T12:14:20.2851610Z   CONVEX_URL: ***
+2026-10-09T12:14:20.2851998Z   CONVEX_URL_CLI: ***
+2026-10-09T12:14:20.2852323Z ##[endgroup]
+2026-10-09T12:14:22.2819672Z 
+2026-10-09T12:14:22.2831710Z removed 10 packages, and changed 82 packages in 2s
+2026-10-09T12:14:22.2832358Z 
+2026-10-09T12:14:22.2832835Z 15 packages are looking for funding
+2026-10-09T12:14:22.2834070Z   run `npm fund` for details
+2026-10-09T12:14:22.3309961Z ##[group]Run npm install --global npm@12.2.0
+2026-10-09T12:14:22.3310486Z [36;1mnpm install --global npm@12.2.0[0m
+2026-10-09T12:14:22.3310898Z [36;1mnpm ci[0m
+2026-10-09T12:14:22.3377782Z shell: /usr/bin/bash -e {0}
+2026-10-09T12:14:22.3378154Z env:
+2026-10-09T12:14:22.3378463Z   CORTEX_CI_RUN_ID: 37926572786-1
+2026-10-09T12:14:22.3378932Z   CORTEX_CI_AUTH_ISSUER: https://cortex-ci-runtime.example/
+2026-10-09T12:14:22.3379473Z   CORTEX_CI_AUTH_AUDIENCE: cortex-ci-runtime
+2026-10-09T12:14:22.3387250Z   CORTEX_CI_AUTH_PRIVATE_KEY: ***
+2026-10-09T12:14:22.3387793Z   CORTEX_CI_DISPOSABLE_DEPLOYMENTS: ["steady-snake-253","usable-sheep-908"]
+2026-10-09T12:14:22.3388375Z   CONVEX_URL: ***
+2026-10-09T12:14:22.3388770Z   CONVEX_URL_CLI: ***
+2026-10-09T12:14:22.3389091Z ##[endgroup]
+2026-10-09T12:14:24.1801326Z 
+2026-10-09T12:14:24.1802133Z changed 10 packages in 2s
+2026-10-09T12:14:27.6140855Z npm warn deprecated whatwg-encoding@3.1.1: Use @exodus/bytes instead for a more spec-conformant and faster implementation
+2026-10-09T12:14:28.9500850Z npm warn deprecated glob@10.5.0: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+2026-10-09T12:14:30.8771670Z npm warn deprecated eslint@9.39.5: This version is no longer supported. Please see https://eslint.org/version-support for other options.
+2026-10-09T12:14:33.7368286Z 
+2026-10-09T12:14:33.7369368Z added 604 packages, and audited 608 packages in 9s
+2026-10-09T12:14:33.7370031Z 
+2026-10-09T12:14:33.7384973Z 128 packages are looking for funding
+2026-10-09T12:14:33.7385809Z   run `npm fund` for details
+2026-10-09T12:14:33.7649171Z 
+2026-10-09T12:14:33.7650256Z 21 vulnerabilities (20 moderate, 1 critical)
+2026-10-09T12:14:33.7650776Z 
+2026-10-09T12:14:33.7651260Z To address issues that do not require attention, run:
+2026-10-09T12:14:33.7652152Z   npm audit fix
+2026-10-09T12:14:33.7652509Z 
+2026-10-09T12:14:33.7653029Z To address all issues (including breaking changes), run:
+2026-10-09T12:14:33.7654135Z   npm audit fix --force
+2026-10-09T12:14:33.7654498Z 
+2026-10-09T12:14:33.7654827Z Run `npm audit` for details.
+2026-10-09T12:14:33.7666647Z npm warn install-scripts 4 packages had install scripts blocked because they are not covered by allowScripts:
+2026-10-09T12:14:33.7668352Z npm warn install-scripts   @parcel/watcher@2.6.0 (install: node scripts/build-from-source.js)
+2026-10-09T12:14:33.7669507Z npm warn install-scripts   esbuild@0.27.0 (postinstall: node install.js)
+2026-10-09T12:14:33.7670564Z npm warn install-scripts   esbuild@0.28.2 (postinstall: node install.js)
+2026-10-09T12:14:33.7671720Z npm warn install-scripts   unrs-resolver@1.12.2 (postinstall: node postinstall.js)
+2026-10-09T12:14:33.7672555Z npm warn install-scripts
+2026-10-09T12:14:33.7673780Z npm warn install-scripts Run `npm install-scripts ls` to review, or `npm install-scripts approve <pkg>` to allow.
+2026-10-09T12:14:33.8242334Z ##[group]Run node scripts/ci/runtime-fixtures.mjs tokens sdk
+2026-10-09T12:14:33.8242935Z [36;1mnode scripts/ci/runtime-fixtures.mjs tokens sdk[0m
+2026-10-09T12:14:33.8318776Z shell: /usr/bin/bash -e {0}
+2026-10-09T12:14:33.8319150Z env:
+2026-10-09T12:14:33.8319460Z   CORTEX_CI_RUN_ID: 37926572786-1
+2026-10-09T12:14:33.8319945Z   CORTEX_CI_AUTH_ISSUER: https://cortex-ci-runtime.example/
+2026-10-09T12:14:33.8320478Z   CORTEX_CI_AUTH_AUDIENCE: cortex-ci-runtime
+2026-10-09T12:14:33.8328870Z   CORTEX_CI_AUTH_PRIVATE_KEY: ***
+2026-10-09T12:14:33.8329405Z   CORTEX_CI_DISPOSABLE_DEPLOYMENTS: ["steady-snake-253","usable-sheep-908"]
+2026-10-09T12:14:33.8329997Z   CONVEX_URL: ***
+2026-10-09T12:14:33.8330388Z   CONVEX_URL_CLI: ***
+2026-10-09T12:14:33.8330713Z ##[endgroup]
+2026-10-09T12:14:33.9209188Z {"status":"PRIVATE_FIXTURE_ENV_WRITTEN","kind":"sdk"}
+2026-10-09T12:14:33.9293810Z ##[group]Run npm run build
+2026-10-09T12:14:33.9294406Z [36;1mnpm run build[0m
+2026-10-09T12:14:33.9358522Z shell: /usr/bin/bash -e {0}
+2026-10-09T12:14:33.9358892Z env:
+2026-10-09T12:14:33.9359207Z   CORTEX_CI_RUN_ID: 37926572786-1
+2026-10-09T12:14:33.9359675Z   CORTEX_CI_AUTH_ISSUER: https://cortex-ci-runtime.example/
+2026-10-09T12:14:33.9360187Z   CORTEX_CI_AUTH_AUDIENCE: cortex-ci-runtime
+2026-10-09T12:14:33.9367811Z   CORTEX_CI_AUTH_PRIVATE_KEY: ***
+2026-10-09T12:14:33.9368368Z   CORTEX_CI_DISPOSABLE_DEPLOYMENTS: ["steady-snake-253","usable-sheep-908"]
+2026-10-09T12:14:33.9368966Z   CONVEX_URL: ***
+2026-10-09T12:14:33.9369358Z   CONVEX_URL_CLI: ***
+2026-10-09T12:14:33.9369697Z   CORTEX_TEST_ENV_MODE: explicit
+2026-10-09T12:14:33.9374919Z   CORTEX_TEST_FIXTURE: {"version":1,"kind":"sdk","runId":"37926572786-1","issuer":"https://cortex-ci-runtime.example/","audience":"cortex-ci-runtime","tenantId":"cortex-ci-37926572786-1-sdk","memorySpaceId":"cortex-ci-37926572786-1-sdk-space","identities":{"owner":{"issuer":"https://cortex-ci-runtime.example/","subject":"cortex-ci-37926572786-1-sdk-owner","actorKind":"user","metadataUserId":"cortex-ci-37926572786-1-sdk-owner","tenantId":"cortex-ci-37926572786-1-sdk","memorySpaceId":"cortex-ci-37926572786-1-sdk-space","capabilities":["read","write","run","admin","tool","storage:read","storage:write"],"resourceAccess":"space"},"reader":{"issuer":"https://cortex-ci-runtime.example/","subject":"cortex-ci-37926572786-1-sdk-reader","actorKind":"user","metadataUserId":"cortex-ci-37926572786-1-sdk-reader","tenantId":"cortex-ci-37926572786-1-sdk","memorySpaceId":"cortex-ci-37926572786-1-sdk-space","capabilities":["read"],"resourceAccess":"space"},"outsider":{"issuer":"https://cortex-ci-runtime.example/","subject":"cortex-ci-37926572786-1-sdk-outsider","actorKind":"user","metadataUserId":"cortex-ci-37926572786-1-sdk-outsider","tenantId":"cortex-ci-37926572786-1-sdk-other","memorySpaceId":"cortex-ci-37926572786-1-sdk-other-space","capabilities":["read","write","run","admin","tool","storage:read","storage:write"],"resourceAccess":"space"}},"deploymentUrl":"***"}
+2026-10-09T12:14:33.9384228Z   CORTEX_TEST_AUTH_TOKEN: ***
+2026-10-09T12:14:33.9388515Z   CORTEX_TEST_READER_TOKEN: ***
+2026-10-09T12:14:33.9392921Z   CORTEX_TEST_OUTSIDER_TOKEN: ***
+2026-10-09T12:14:33.9393289Z ##[endgroup]
+2026-10-09T12:14:34.0440921Z npm notice run @cortexmemory/sdk@0.38.0 build
+2026-10-09T12:14:34.0448004Z npm notice run tsup src/index.ts --format cjs,esm --dts --clean && tsup src/client-runtime/index.ts --format cjs,esm --dts --out-dir dist/client-runtime && tsup src/graph/runtime/index.ts --format cjs,esm --dts --out-dir dist/graph-runtime && node scripts/backend/build-distribution.mjs
+2026-10-09T12:14:34.3242938Z [34mCLI[39m Building entry: src/index.ts
+2026-10-09T12:14:34.3255609Z [34mCLI[39m Using tsconfig: tsconfig.json
+2026-10-09T12:14:34.3257070Z [34mCLI[39m tsup v8.5.1
+2026-10-09T12:14:34.3312871Z [34mCLI[39m Target: es2022
+2026-10-09T12:14:34.3325662Z [34mCLI[39m Cleaning output folder
+2026-10-09T12:14:34.3339311Z [34mCJS[39m Build start
+2026-10-09T12:14:34.3340950Z [34mESM[39m Build start
+2026-10-09T12:14:34.5446234Z [32mCJS[39m [1mdist/index.cjs [22m[32m981.14 KB[39m
+2026-10-09T12:14:34.5492593Z [32mCJS[39m ⚡️ Build success in 211ms
+2026-10-09T12:14:34.5570150Z [32mESM[39m [1mdist/ChunkingStrategies-GIZC5TDJ.js        [22m[32m8.03 KB[39m
+2026-10-09T12:14:34.5572123Z [32mESM[39m [1mdist/ProgressiveGraphSync-ADE72BV3.js      [22m[32m2.83 KB[39m
+2026-10-09T12:14:34.5574347Z [32mESM[39m [1mdist/backendApi-KVITJGBS.js                [22m[32m93.00 B[39m
+2026-10-09T12:14:34.5575746Z [32mESM[39m [1mdist/StreamMetrics-YNNJGIZN.js             [22m[32m119.00 B[39m
+2026-10-09T12:14:34.5576791Z [32mESM[39m [1mdist/StreamProcessor-NL3NUOFP.js           [22m[32m5.76 KB[39m
+2026-10-09T12:14:34.5577767Z [32mESM[39m [1mdist/chunk-EOYUOIQS.js                     [22m[32m5.83 KB[39m
+2026-10-09T12:14:34.5578985Z [32mESM[39m [1mdist/ProgressiveStorageHandler-LAFDYY3A.js [22m[32m7.61 KB[39m
+2026-10-09T12:14:34.5580380Z [32mESM[39m [1mdist/chunk-YZUI7ZOP.js                     [22m[32m2.95 KB[39m
+2026-10-09T12:14:34.5582019Z [32mESM[39m [1mdist/chunk-SBXOBFKB.js                     [22m[32m80.56 KB[39m
+2026-10-09T12:14:34.5583957Z [32mESM[39m [1mdist/chunk-S4SO7T2T.js                     [22m[32m6.48 KB[39m
+2026-10-09T12:14:34.5601937Z [32mESM[39m [1mdist/chunk-KDSHPSON.js                     [22m[32m3.73 KB[39m
+2026-10-09T12:14:34.5605365Z [32mESM[39m [1mdist/ErrorRecovery-FSXDAYYB.js             [22m[32m7.60 KB[39m
+2026-10-09T12:14:34.5607416Z [32mESM[39m [1mdist/chunk-6ADBIXWZ.js                     [22m[32m105.00 B[39m
+2026-10-09T12:14:34.5609310Z [32mESM[39m [1mdist/chunk-RL3YA7MA.js                     [22m[32m1.21 KB[39m
+2026-10-09T12:14:34.5610940Z [32mESM[39m [1mdist/chunk-VSVBRDLJ.js                     [22m[32m442.00 B[39m
+2026-10-09T12:14:34.5611984Z [32mESM[39m [1mdist/AdaptiveProcessor-SHAPUARM.js         [22m[32m6.65 KB[39m
+2026-10-09T12:14:34.5612830Z [32mESM[39m [1mdist/chunk-3RG5ZIWI.js                     [22m[32m390.00 B[39m
+2026-10-09T12:14:34.5614046Z [32mESM[39m [1mdist/FactExtractor-RGXNPXQY.js             [22m[32m8.00 KB[39m
+2026-10-09T12:14:34.5614927Z [32mESM[39m [1mdist/index.js                              [22m[32m814.55 KB[39m
+2026-10-09T12:14:34.5615568Z [32mESM[39m ⚡️ Build success in 224ms
+2026-10-09T12:14:36.2636866Z [34mDTS[39m Build start
+2026-10-09T12:14:57.6132902Z [32mDTS[39m ⚡️ Build success in 21350ms
+2026-10-09T12:14:57.6134977Z [32mDTS[39m [1mdist/index.d.cts [22m[32m764.21 KB[39m
+2026-10-09T12:14:57.6136236Z [32mDTS[39m [1mdist/index.d.ts  [22m[32m764.21 KB[39m
+2026-10-09T12:14:58.0215703Z [34mCLI[39m Building entry: src/client-runtime/index.ts
+2026-10-09T12:14:58.0224209Z [34mCLI[39m Using tsconfig: tsconfig.json
+2026-10-09T12:14:58.0225772Z [34mCLI[39m tsup v8.5.1
+2026-10-09T12:14:58.0273801Z [34mCLI[39m Target: es2022
+2026-10-09T12:14:58.0314493Z [34mCJS[39m Build start
+2026-10-09T12:14:58.0315704Z [34mESM[39m Build start
+2026-10-09T12:14:58.0739487Z [32mESM[39m [1mdist/client-runtime/index.js [22m[32m62.06 KB[39m
+2026-10-09T12:14:58.0741032Z [32mESM[39m ⚡️ Build success in 44ms
+2026-10-09T12:14:58.0746183Z [32mCJS[39m [1mdist/client-runtime/index.cjs [22m[32m63.31 KB[39m
+2026-10-09T12:14:58.0747498Z [32mCJS[39m ⚡️ Build success in 46ms
+2026-10-09T12:14:59.6867293Z [34mDTS[39m Build start
+2026-10-09T12:15:01.1976798Z [32mDTS[39m ⚡️ Build success in 1512ms
+2026-10-09T12:15:01.1978934Z [32mDTS[39m [1mdist/client-runtime/index.d.cts [22m[32m18.71 KB[39m
+2026-10-09T12:15:01.1980043Z [32mDTS[39m [1mdist/client-runtime/index.d.ts  [22m[32m18.71 KB[39m
+2026-10-09T12:15:01.5186943Z [34mCLI[39m Building entry: src/graph/runtime/index.ts
+2026-10-09T12:15:01.5195942Z [34mCLI[39m Using tsconfig: tsconfig.json
+2026-10-09T12:15:01.5197382Z [34mCLI[39m tsup v8.5.1
+2026-10-09T12:15:01.5246820Z [34mCLI[39m Target: es2022
+2026-10-09T12:15:01.5284418Z [34mCJS[39m Build start
+2026-10-09T12:15:01.5301630Z [34mESM[39m Build start
+2026-10-09T12:15:01.5673692Z [32mCJS[39m [1mdist/graph-runtime/index.cjs [22m[32m48.82 KB[39m
+2026-10-09T12:15:01.5675053Z [32mCJS[39m ⚡️ Build success in 41ms
+2026-10-09T12:15:01.5676782Z [32mESM[39m [1mdist/graph-runtime/index.js [22m[32m45.31 KB[39m
+2026-10-09T12:15:01.5683817Z [32mESM[39m ⚡️ Build success in 42ms
+2026-10-09T12:15:03.1583163Z [34mDTS[39m Build start
+2026-10-09T12:15:22.1754001Z [32mDTS[39m ⚡️ Build success in 19017ms
+2026-10-09T12:15:22.1759376Z [32mDTS[39m [1mdist/graph-runtime/index.d.cts [22m[32m8.49 KB[39m
+2026-10-09T12:15:22.1760278Z [32mDTS[39m [1mdist/graph-runtime/index.d.ts  [22m[32m8.49 KB[39m
+2026-10-09T12:15:23.5177491Z Built cortex-backend-v1-sdk-0.38.0: 156 source files, 72 tables, 2 components; no deployment.
+2026-10-09T12:15:23.5450523Z ##[group]Run node --experimental-vm-modules ../../node_modules/jest/bin/jest.js --listTests --runInBand --json > ci-provider-discovery.json
+2026-10-09T12:15:23.5451728Z [36;1mnode --experimental-vm-modules ../../node_modules/jest/bin/jest.js --listTests --runInBand --json > ci-provider-discovery.json[0m
+2026-10-09T12:15:23.5533919Z shell: /usr/bin/bash -e {0}
+2026-10-09T12:15:23.5534308Z env:
+2026-10-09T12:15:23.5534627Z   CORTEX_CI_RUN_ID: 37926572786-1
+2026-10-09T12:15:23.5535098Z   CORTEX_CI_AUTH_ISSUER: https://cortex-ci-runtime.example/
+2026-10-09T12:15:23.5535642Z   CORTEX_CI_AUTH_AUDIENCE: cortex-ci-runtime
+2026-10-09T12:15:23.5543668Z   CORTEX_CI_AUTH_PRIVATE_KEY: ***
+2026-10-09T12:15:23.5544228Z   CORTEX_CI_DISPOSABLE_DEPLOYMENTS: ["steady-snake-253","usable-sheep-908"]
+2026-10-09T12:15:23.5544777Z   CONVEX_URL: https://unit.invalid
+2026-10-09T12:15:23.5545176Z   CONVEX_URL_CLI: https://unit.invalid
+2026-10-09T12:15:23.5545567Z   CORTEX_TEST_ENV_MODE: explicit
+2026-10-09T12:15:23.5550632Z   CORTEX_TEST_FIXTURE: {"version":1,"kind":"sdk","runId":"37926572786-1","issuer":"https://cortex-ci-runtime.example/","audience":"cortex-ci-runtime","tenantId":"cortex-ci-37926572786-1-sdk","memorySpaceId":"cortex-ci-37926572786-1-sdk-space","identities":{"owner":{"issuer":"https://cortex-ci-runtime.example/","subject":"cortex-ci-37926572786-1-sdk-owner","actorKind":"user","metadataUserId":"cortex-ci-37926572786-1-sdk-owner","tenantId":"cortex-ci-37926572786-1-sdk","memorySpaceId":"cortex-ci-37926572786-1-sdk-space","capabilities":["read","write","run","admin","tool","storage:read","storage:write"],"resourceAccess":"space"},"reader":{"issuer":"https://cortex-ci-runtime.example/","subject":"cortex-ci-37926572786-1-sdk-reader","actorKind":"user","metadataUserId":"cortex-ci-37926572786-1-sdk-reader","tenantId":"cortex-ci-37926572786-1-sdk","memorySpaceId":"cortex-ci-37926572786-1-sdk-space","capabilities":["read"],"resourceAccess":"space"},"outsider":{"issuer":"https://cortex-ci-runtime.example/","subject":"cortex-ci-37926572786-1-sdk-outsider","actorKind":"user","metadataUserId":"cortex-ci-37926572786-1-sdk-outsider","tenantId":"cortex-ci-37926572786-1-sdk-other","memorySpaceId":"cortex-ci-37926572786-1-sdk-other-space","capabilities":["read","write","run","admin","tool","storage:read","storage:write"],"resourceAccess":"space"}},"deploymentUrl":"***"}
+2026-10-09T12:15:23.5559975Z   CORTEX_TEST_AUTH_TOKEN: ***
+2026-10-09T12:15:23.5564479Z   CORTEX_TEST_READER_TOKEN: ***
+2026-10-09T12:15:23.5568890Z   CORTEX_TEST_OUTSIDER_TOKEN: ***
+2026-10-09T12:15:23.5569261Z ##[endgroup]
+2026-10-09T12:15:23.8765554Z ##[group]Run npm run test:unit --workspace=@cortexmemory/vercel-ai-provider -- --runInBand --forceExit=false
+2026-10-09T12:15:23.8766528Z [36;1mnpm run test:unit --workspace=@cortexmemory/vercel-ai-provider -- --runInBand --forceExit=false[0m
+2026-10-09T12:15:23.8767424Z [36;1mnpm run test:integration --workspace=@cortexmemory/vercel-ai-provider -- --runInBand --forceExit=false[0m
+2026-10-09T12:15:23.8831213Z shell: /usr/bin/bash -e {0}
+2026-10-09T12:15:23.8831756Z env:
+2026-10-09T12:15:23.8832245Z   CORTEX_CI_RUN_ID: 37926572786-1
+2026-10-09T12:15:23.8832983Z   CORTEX_CI_AUTH_ISSUER: https://cortex-ci-runtime.example/
+2026-10-09T12:15:23.8834062Z   CORTEX_CI_AUTH_AUDIENCE: cortex-ci-runtime
+2026-10-09T12:15:23.8834749Z   CORTEX_CI_AUTH_PRIVATE_KEY: 
+2026-10-09T12:15:23.8835555Z   CORTEX_CI_DISPOSABLE_DEPLOYMENTS: ["steady-snake-253","usable-sheep-908"]
+2026-10-09T12:15:23.8836411Z   CONVEX_URL: https://unit.invalid
+2026-10-09T12:15:23.8836923Z   CONVEX_URL_CLI: https://unit.invalid
+2026-10-09T12:15:23.8837356Z   CORTEX_TEST_ENV_MODE: explicit
+2026-10-09T12:15:23.8837722Z   CORTEX_TEST_FIXTURE: 
+2026-10-09T12:15:23.8838055Z   CORTEX_TEST_AUTH_TOKEN: 
+2026-10-09T12:15:23.8838396Z   CORTEX_TEST_READER_TOKEN: 
+2026-10-09T12:15:23.8838745Z   CORTEX_TEST_OUTSIDER_TOKEN: 
+2026-10-09T12:15:23.8839084Z ##[endgroup]
+2026-10-09T12:15:24.0065297Z npm notice run @cortexmemory/vercel-ai-provider@0.38.0 test:unit
+2026-10-09T12:15:24.0070094Z npm notice run node --experimental-vm-modules $(npm root)/.bin/jest --selectProjects unit unit-react unit-remote --runInBand --forceExit=false
+2026-10-09T12:15:24.2551265Z Running 3 projects:
+2026-10-09T12:15:24.2551966Z - unit
+2026-10-09T12:15:24.2552538Z - unit-react
+2026-10-09T12:15:24.2553107Z - unit-remote
+2026-10-09T12:15:27.8752448Z PASS unit tests/unit/middleware.test.ts
+2026-10-09T12:15:27.9125293Z   ● Console
+2026-10-09T12:15:27.9125850Z 
+2026-10-09T12:15:27.9126349Z     console.error
+2026-10-09T12:15:27.9127485Z       [Cortex Memory] Failed to resolve userId: Error: userId function must return a non-empty string
+2026-10-09T12:15:27.9128423Z 
+2026-10-09T12:15:27.9134871Z     [0m [90m 668 |[39m       [90m// Sanitize all arguments to prevent log injection[39m
+2026-10-09T12:15:27.9144650Z      [90m 669 |[39m       [36mconst[39m sanitizedArgs [33m=[39m args[33m.[39mmap((a) [33m=>[39m sanitizeLogArg(a))[33m;[39m
+2026-10-09T12:15:27.9146745Z     [31m[1m>[22m[39m[90m 670 |[39m       console[33m.[39merror(prefix[33m,[39m [33m...[39msanitizedArgs)[33m;[39m
+2026-10-09T12:15:27.9148031Z      [90m     |[39m               [31m[1m^[22m[39m
+2026-10-09T12:15:27.9148890Z      [90m 671 |[39m     }[33m,[39m
+2026-10-09T12:15:27.9149739Z      [90m 672 |[39m   }[33m;[39m
+2026-10-09T12:15:27.9150542Z      [90m 673 |[39m }[0m
+2026-10-09T12:15:27.9150905Z 
+2026-10-09T12:15:27.9151259Z       at Object.error (src/types.ts:670:15)
+2026-10-09T12:15:27.9152115Z       at resolveUserId (src/memory-middleware.ts:30:12)
+2026-10-09T12:15:27.9153142Z       at Object.<anonymous> (tests/unit/middleware.test.ts:55:7)
+2026-10-09T12:15:27.9153974Z 
+2026-10-09T12:15:27.9154228Z     console.error
+2026-10-09T12:15:27.9155248Z       [Cortex Memory] Failed to resolve userId: Error: userId function must return a non-empty string
+2026-10-09T12:15:27.9156084Z 
+2026-10-09T12:15:27.9156836Z     [0m [90m 668 |[39m       [90m// Sanitize all arguments to prevent log injection[39m
+2026-10-09T12:15:27.9158176Z      [90m 669 |[39m       [36mconst[39m sanitizedArgs [33m=[39m args[33m.[39mmap((a) [33m=>[39m sanitizeLogArg(a))[33m;[39m
+2026-10-09T12:15:27.9159243Z     [31m[1m>[22m[39m[90m 670 |[39m       console[33m.[39merror(prefix[33m,[39m [33m...[39msanitizedArgs)[33m;[39m
+2026-10-09T12:15:27.9159984Z      [90m     |[39m               [31m[1m^[22m[39m
+2026-10-09T12:15:27.9160486Z      [90m 671 |[39m     }[33m,[39m
+2026-10-09T12:15:27.9160930Z      [90m 672 |[39m   }[33m;[39m
+2026-10-09T12:15:27.9161734Z      [90m 673 |[39m }[0m
+2026-10-09T12:15:27.9162119Z 
+2026-10-09T12:15:27.9162322Z       at Object.error (src/types.ts:670:15)
+2026-10-09T12:15:27.9162823Z       at resolveUserId (src/memory-middleware.ts:30:12)
+2026-10-09T12:15:27.9163378Z       at Object.<anonymous> (tests/unit/middleware.test.ts:64:7)
+2026-10-09T12:15:27.9164155Z 
+2026-10-09T12:15:27.9164414Z     console.error
+2026-10-09T12:15:27.9164934Z       [Cortex Memory] Failed to resolve userId: Error: User not found
+2026-10-09T12:15:27.9165278Z 
+2026-10-09T12:15:27.9165700Z     [0m [90m 668 |[39m       [90m// Sanitize all arguments to prevent log injection[39m
+2026-10-09T12:15:27.9166662Z      [90m 669 |[39m       [36mconst[39m sanitizedArgs [33m=[39m args[33m.[39mmap((a) [33m=>[39m sanitizeLogArg(a))[33m;[39m
+2026-10-09T12:15:27.9167697Z     [31m[1m>[22m[39m[90m 670 |[39m       console[33m.[39merror(prefix[33m,[39m [33m...[39msanitizedArgs)[33m;[39m
+2026-10-09T12:15:27.9168422Z      [90m     |[39m               [31m[1m^[22m[39m
+2026-10-09T12:15:27.9168913Z      [90m 671 |[39m     }[33m,[39m
+2026-10-09T12:15:27.9169345Z      [90m 672 |[39m   }[33m;[39m
+2026-10-09T12:15:27.9169739Z      [90m 673 |[39m }[0m
+2026-10-09T12:15:27.9169941Z 
+2026-10-09T12:15:27.9170131Z       at Object.error (src/types.ts:670:15)
+2026-10-09T12:15:27.9170611Z       at resolveUserId (src/memory-middleware.ts:30:12)
+2026-10-09T12:15:27.9171155Z       at Object.<anonymous> (tests/unit/middleware.test.ts:75:33)
+2026-10-09T12:15:27.9171480Z 
+2026-10-09T12:15:27.9171621Z     console.error
+2026-10-09T12:15:27.9172275Z       [Cortex Memory] Failed to resolve conversationId: Error: conversationId function must return a non-empty string
+2026-10-09T12:15:27.9172787Z 
+2026-10-09T12:15:27.9173174Z     [0m [90m 668 |[39m       [90m// Sanitize all arguments to prevent log injection[39m
+2026-10-09T12:15:27.9174431Z      [90m 669 |[39m       [36mconst[39m sanitizedArgs [33m=[39m args[33m.[39mmap((a) [33m=>[39m sanitizeLogArg(a))[33m;[39m
+2026-10-09T12:15:27.9175476Z     [31m[1m>[22m[39m[90m 670 |[39m       console[33m.[39merror(prefix[33m,[39m [33m...[39msanitizedArgs)[33m;[39m
+2026-10-09T12:15:27.9176206Z      [90m     |[39m               [31m[1m^[22m[39m
+2026-10-09T12:15:27.9176686Z      [90m 671 |[39m     }[33m,[39m
+2026-10-09T12:15:27.9177119Z      [90m 672 |[39m   }[33m;[39m
+2026-10-09T12:15:27.9177514Z      [90m 673 |[39m }[0m
+2026-10-09T12:15:27.9177716Z 
+2026-10-09T12:15:27.9177907Z       at Object.error (src/types.ts:670:15)
+2026-10-09T12:15:27.9178419Z       at resolveConversationId (src/memory-middleware.ts:63:12)
+2026-10-09T12:15:27.9179004Z       at Object.<anonymous> (tests/unit/middleware.test.ts:119:7)
+2026-10-09T12:15:27.9179330Z 
+2026-10-09T12:15:27.9179465Z     console.error
+2026-10-09T12:15:27.9179970Z       [Cortex Memory] Failed to resolve conversationId: Error: Conv lookup failed
+2026-10-09T12:15:27.9180349Z 
+2026-10-09T12:15:27.9180744Z     [0m [90m 668 |[39m       [90m// Sanitize all arguments to prevent log injection[39m
+2026-10-09T12:15:27.9181692Z      [90m 669 |[39m       [36mconst[39m sanitizedArgs [33m=[39m args[33m.[39mmap((a) [33m=>[39m sanitizeLogArg(a))[33m;[39m
+2026-10-09T12:15:27.9182728Z     [31m[1m>[22m[39m[90m 670 |[39m       console[33m.[39merror(prefix[33m,[39m [33m...[39msanitizedArgs)[33m;[39m
+2026-10-09T12:15:27.9183688Z      [90m     |[39m               [31m[1m^[22m[39m
+2026-10-09T12:15:27.9184229Z      [90m 671 |[39m     }[33m,[39m
+2026-10-09T12:15:27.9184673Z      [90m 672 |[39m   }[33m;[39m
+2026-10-09T12:15:27.9185070Z      [90m 673 |[39m }[0m
+2026-10-09T12:15:27.9185279Z 
+2026-10-09T12:15:27.9185472Z       at Object.error (src/types.ts:670:15)
+2026-10-09T12:15:27.9185984Z       at resolveConversationId (src/memory-middleware.ts:63:12)
+2026-10-09T12:15:27.9186590Z       at Object.<anonymous> (tests/unit/middleware.test.ts:130:41)
+2026-10-09T12:15:27.9186919Z 
+2026-10-09T12:15:27.9187063Z     console.error
+2026-10-09T12:15:27.9187919Z       [Cortex Memory] Custom context builder failed: Error: Custom builder failed
+2026-10-09T12:15:27.9188310Z 
+2026-10-09T12:15:27.9188711Z     [0m [90m 668 |[39m       [90m// Sanitize all arguments to prevent log injection[39m
+2026-10-09T12:15:27.9189748Z      [90m 669 |[39m       [36mconst[39m sanitizedArgs [33m=[39m args[33m.[39mmap((a) [33m=>[39m sanitizeLogArg(a))[33m;[39m
+2026-10-09T12:15:27.9190812Z     [31m[1m>[22m[39m[90m 670 |[39m       console[33m.[39merror(prefix[33m,[39m [33m...[39msanitizedArgs)[33m;[39m
+2026-10-09T12:15:27.9191529Z      [90m     |[39m               [31m[1m^[22m[39m
+2026-10-09T12:15:27.9192025Z      [90m 671 |[39m     }[33m,[39m
+2026-10-09T12:15:27.9192455Z      [90m 672 |[39m   }[33m;[39m
+2026-10-09T12:15:27.9192850Z      [90m 673 |[39m }[0m
+2026-10-09T12:15:27.9193052Z 
+2026-10-09T12:15:27.9193243Z       at Object.error (src/types.ts:670:15)
+2026-10-09T12:15:27.9194004Z       at buildMemoryContext (src/memory-middleware.ts:90:14)
+2026-10-09T12:15:27.9194587Z       at Object.<anonymous> (tests/unit/middleware.test.ts:226:41)
+2026-10-09T12:15:27.9194915Z 
+2026-10-09T12:15:27.9195055Z     console.warn
+2026-10-09T12:15:27.9195487Z       [Cortex Memory] No user message found, cannot inject context
+2026-10-09T12:15:27.9195809Z 
+2026-10-09T12:15:27.9196214Z     [0m [90m 663 |[39m       [90m// Sanitize all arguments to prevent log injection[39m
+2026-10-09T12:15:27.9197143Z      [90m 664 |[39m       [36mconst[39m sanitizedArgs [33m=[39m args[33m.[39mmap((a) [33m=>[39m sanitizeLogArg(a))[33m;[39m
+2026-10-09T12:15:27.9198159Z     [31m[1m>[22m[39m[90m 665 |[39m       console[33m.[39mwarn(prefix[33m,[39m [33m...[39msanitizedArgs)[33m;[39m
+2026-10-09T12:15:27.9198871Z      [90m     |[39m               [31m[1m^[22m[39m
+2026-10-09T12:15:27.9199446Z      [90m 666 |[39m     }[33m,[39m
+2026-10-09T12:15:27.9200007Z      [90m 667 |[39m     error[33m:[39m ([33m...[39margs) [33m=>[39m {
+2026-10-09T12:15:27.9200728Z      [90m 668 |[39m       [90m// Sanitize all arguments to prevent log injection[39m[0m
+2026-10-09T12:15:27.9201103Z 
+2026-10-09T12:15:27.9201292Z       at Object.warn (src/types.ts:665:15)
+2026-10-09T12:15:27.9201791Z       at injectMemoryContext (src/memory-middleware.ts:169:16)
+2026-10-09T12:15:27.9219678Z       at Object.<anonymous> (tests/unit/middleware.test.ts:336:43)
+2026-10-09T12:15:27.9220276Z 
+2026-10-09T12:15:27.9220538Z     console.warn
+2026-10-09T12:15:27.9221480Z       [Cortex Memory] Custom strategy requires customContextBuilder, using system fallback
+2026-10-09T12:15:27.9222194Z 
+2026-10-09T12:15:27.9222694Z     [0m [90m 663 |[39m       [90m// Sanitize all arguments to prevent log injection[39m
+2026-10-09T12:15:27.9224010Z      [90m 664 |[39m       [36mconst[39m sanitizedArgs [33m=[39m args[33m.[39mmap((a) [33m=>[39m sanitizeLogArg(a))[33m;[39m
+2026-10-09T12:15:27.9225103Z     [31m[1m>[22m[39m[90m 665 |[39m       console[33m.[39mwarn(prefix[33m,[39m [33m...[39msanitizedArgs)[33m;[39m
+2026-10-09T12:15:27.9225873Z      [90m     |[39m               [31m[1m^[22m[39m
+2026-10-09T12:15:27.9226382Z      [90m 666 |[39m     }[33m,[39m
+2026-10-09T12:15:27.9226961Z      [90m 667 |[39m     error[33m:[39m ([33m...[39margs) [33m=>[39m {
+2026-10-09T12:15:27.9227693Z      [90m 668 |[39m       [90m// Sanitize all arguments to prevent log injection[39m[0m
+2026-10-09T12:15:27.9228074Z 
+2026-10-09T12:15:27.9228273Z       at Object.warn (src/types.ts:665:15)
+2026-10-09T12:15:27.9228792Z       at injectMemoryContext (src/memory-middleware.ts:189:14)
+2026-10-09T12:15:27.9229386Z       at Object.<anonymous> (tests/unit/middleware.test.ts:347:43)
+2026-10-09T12:15:27.9229717Z 
+2026-10-09T12:15:27.9229865Z     console.warn
+2026-10-09T12:15:27.9230339Z       [Cortex Memory] Unknown strategy: unknown, using original messages
+2026-10-09T12:15:27.9230684Z 
+2026-10-09T12:15:27.9231309Z     [0m [90m 663 |[39m       [90m// Sanitize all arguments to prevent log injection[39m
+2026-10-09T12:15:27.9232424Z      [90m 664 |[39m       [36mconst[39m sanitizedArgs [33m=[39m args[33m.[39mmap((a) [33m=>[39m sanitizeLogArg(a))[33m;[39m
+2026-10-09T12:15:27.9233662Z     [31m[1m>[22m[39m[90m 665 |[39m       console[33m.[39mwarn(prefix[33m,[39m [33m...[39msanitizedArgs)[33m;[39m
+2026-10-09T12:15:27.9234455Z      [90m     |[39m               [31m[1m^[22m[39m
+2026-10-09T12:15:27.9234951Z      [90m 666 |[39m     }[33m,[39m
+2026-10-09T12:15:27.9235524Z      [90m 667 |[39m     error[33m:[39m ([33m...[39margs) [33m=>[39m {
+2026-10-09T12:15:27.9236254Z      [90m 668 |[39m       [90m// Sanitize all arguments to prevent log injection[39m[0m
+2026-10-09T12:15:27.9236642Z 
+2026-10-09T12:15:27.9236837Z       at Object.warn (src/types.ts:665:15)
+2026-10-09T12:15:27.9237351Z       at injectMemoryContext (src/memory-middleware.ts:201:14)
+2026-10-09T12:15:27.9237937Z       at Object.<anonymous> (tests/unit/middleware.test.ts:363:43)
+2026-10-09T12:15:27.9238278Z 
+2026-10-09T12:15:28.7229661Z PASS unit tests/unit/provider.test.ts
+2026-10-09T12:15:28.7289847Z   ● Console
+2026-10-09T12:15:28.7290198Z 
+2026-10-09T12:15:28.7290455Z     console.error
+2026-10-09T12:15:28.7291257Z       [Cortex Memory] Memory recall failed: Error: Recall failed
+2026-10-09T12:15:28.7291831Z 
+2026-10-09T12:15:28.7292584Z     [0m [90m 668 |[39m       [90m// Sanitize all arguments to prevent log injection[39m
+2026-10-09T12:15:28.7294466Z      [90m 669 |[39m       [36mconst[39m sanitizedArgs [33m=[39m args[33m.[39mmap((a) [33m=>[39m sanitizeLogArg(a))[33m;[39m
+2026-10-09T12:15:28.7296296Z     [31m[1m>[22m[39m[90m 670 |[39m       console[33m.[39merror(prefix[33m,[39m [33m...[39msanitizedArgs)[33m;[39m
+2026-10-09T12:15:28.7297558Z      [90m     |[39m               [31m[1m^[22m[39m
+2026-10-09T12:15:28.7298393Z      [90m 671 |[39m     }[33m,[39m
+2026-10-09T12:15:28.7299150Z      [90m 672 |[39m   }[33m;[39m
+2026-10-09T12:15:28.7299633Z      [90m 673 |[39m }[0m
+2026-10-09T12:15:28.7299854Z 
+2026-10-09T12:15:28.7300059Z       at Object.error (src/types.ts:670:15)
+2026-10-09T12:15:28.7300631Z       at CortexMemoryProvider.recallContext (src/provider.ts:371:19)
+2026-10-09T12:15:28.7301262Z       at CortexMemoryProvider.doGenerate (src/provider.ts:160:22)
+2026-10-09T12:15:28.7301845Z       at Object.<anonymous> (tests/unit/provider.test.ts:298:22)
+2026-10-09T12:15:28.7302163Z 
+2026-10-09T12:15:28.7302312Z     console.error
+2026-10-09T12:15:28.7302776Z       [Cortex Memory] Failed to store stream: Error: Storage failed
+2026-10-09T12:15:28.7303110Z 
+2026-10-09T12:15:28.7303784Z     [0m [90m 668 |[39m       [90m// Sanitize all arguments to prevent log injection[39m
+2026-10-09T12:15:28.7305352Z      [90m 669 |[39m       [36mconst[39m sanitizedArgs [33m=[39m args[33m.[39mmap((a) [33m=>[39m sanitizeLogArg(a))[33m;[39m
+2026-10-09T12:15:28.7306423Z     [31m[1m>[22m[39m[90m 670 |[39m       console[33m.[39merror(prefix[33m,[39m [33m...[39msanitizedArgs)[33m;[39m
+2026-10-09T12:15:28.7307160Z      [90m     |[39m               [31m[1m^[22m[39m
+2026-10-09T12:15:28.7307654Z      [90m 671 |[39m     }[33m,[39m
+2026-10-09T12:15:28.7308101Z      [90m 672 |[39m   }[33m;[39m
+2026-10-09T12:15:28.7308513Z      [90m 673 |[39m }[0m
+2026-10-09T12:15:28.7308724Z 
+2026-10-09T12:15:28.7308919Z       at Object.error (src/types.ts:670:15)
+2026-10-09T12:15:28.7309385Z       at Object.flush (src/provider.ts:550:23)
+2026-10-09T12:15:28.7309661Z 
+2026-10-09T12:15:32.2426178Z PASS unit-react tests/unit/useLayerTracking.test.tsx
+2026-10-09T12:15:32.8648774Z PASS unit tests/unit/index.test.ts
+2026-10-09T12:15:32.8730813Z   ● Console
+2026-10-09T12:15:32.8731550Z 
+2026-10-09T12:15:32.8734524Z     console.error
+2026-10-09T12:15:32.8735117Z       [Cortex Memory] Manual search failed: Error: Search failed
+2026-10-09T12:15:32.8735471Z 
+2026-10-09T12:15:32.8736354Z     [0m [90m 668 |[39m       [90m// Sanitize all arguments to prevent log injection[39m
+2026-10-09T12:15:32.8737536Z      [90m 669 |[39m       [36mconst[39m sanitizedArgs [33m=[39m args[33m.[39mmap((a) [33m=>[39m sanitizeLogArg(a))[33m;[39m
+2026-10-09T12:15:32.8738622Z     [31m[1m>[22m[39m[90m 670 |[39m       console[33m.[39merror(prefix[33m,[39m [33m...[39msanitizedArgs)[33m;[39m
+2026-10-09T12:15:32.8739385Z      [90m     |[39m               [31m[1m^[22m[39m
+2026-10-09T12:15:32.8739902Z      [90m 671 |[39m     }[33m,[39m
+2026-10-09T12:15:32.8740345Z      [90m 672 |[39m   }[33m;[39m
+2026-10-09T12:15:32.8740758Z      [90m 673 |[39m }[0m
+2026-10-09T12:15:32.8740969Z 
+2026-10-09T12:15:32.8741172Z       at Object.error (src/types.ts:670:15)
+2026-10-09T12:15:32.8741658Z       at Function.search (src/index.ts:168:18)
+2026-10-09T12:15:32.8742181Z       at Object.<anonymous> (tests/unit/index.test.ts:307:7)
+2026-10-09T12:15:32.8742498Z 
+2026-10-09T12:15:32.8742646Z     console.error
+2026-10-09T12:15:32.8743114Z       [Cortex Memory] Manual remember failed: Error: Storage failed
+2026-10-09T12:15:32.8743752Z 
+2026-10-09T12:15:32.8744187Z     [0m [90m 668 |[39m       [90m// Sanitize all arguments to prevent log injection[39m
+2026-10-09T12:15:32.8745183Z      [90m 669 |[39m       [36mconst[39m sanitizedArgs [33m=[39m args[33m.[39mmap((a) [33m=>[39m sanitizeLogArg(a))[33m;[39m
+2026-10-09T12:15:32.8746257Z     [31m[1m>[22m[39m[90m 670 |[39m       console[33m.[39merror(prefix[33m,[39m [33m...[39msanitizedArgs)[33m;[39m
+2026-10-09T12:15:32.8746994Z      [90m     |[39m               [31m[1m^[22m[39m
+2026-10-09T12:15:32.8747485Z      [90m 671 |[39m     }[33m,[39m
+2026-10-09T12:15:32.8747927Z      [90m 672 |[39m   }[33m;[39m
+2026-10-09T12:15:32.8748332Z      [90m 673 |[39m }[0m
+2026-10-09T12:15:32.8748542Z 
+2026-10-09T12:15:32.8748738Z       at Object.error (src/types.ts:670:15)
+2026-10-09T12:15:32.8749205Z       at Function.remember (src/index.ts:214:18)
+2026-10-09T12:15:32.8749729Z       at Object.<anonymous> (tests/unit/index.test.ts:386:7)
+2026-10-09T12:15:32.8750054Z 
+2026-10-09T12:15:32.8750197Z     console.error
+2026-10-09T12:15:32.8750630Z       [Cortex Memory] Failed to get memories: Error: List failed
+2026-10-09T12:15:32.8750950Z 
+2026-10-09T12:15:32.8751344Z     [0m [90m 668 |[39m       [90m// Sanitize all arguments to prevent log injection[39m
+2026-10-09T12:15:32.8752300Z      [90m 669 |[39m       [36mconst[39m sanitizedArgs [33m=[39m args[33m.[39mmap((a) [33m=>[39m sanitizeLogArg(a))[33m;[39m
+2026-10-09T12:15:32.8753339Z     [31m[1m>[22m[39m[90m 670 |[39m       console[33m.[39merror(prefix[33m,[39m [33m...[39msanitizedArgs)[33m;[39m
+2026-10-09T12:15:32.8754356Z      [90m     |[39m               [31m[1m^[22m[39m
+2026-10-09T12:15:32.8754841Z      [90m 671 |[39m     }[33m,[39m
+2026-10-09T12:15:32.8755292Z      [90m 672 |[39m   }[33m;[39m
+2026-10-09T12:15:32.8755691Z      [90m 673 |[39m }[0m
+2026-10-09T12:15:32.8755894Z 
+2026-10-09T12:15:32.8756096Z       at Object.error (src/types.ts:670:15)
+2026-10-09T12:15:32.8756570Z       at Function.getMemories (src/index.ts:233:18)
+2026-10-09T12:15:32.8757088Z       at Object.<anonymous> (tests/unit/index.test.ts:432:7)
+2026-10-09T12:15:32.8757389Z 
+2026-10-09T12:15:32.8757532Z     console.error
+2026-10-09T12:15:32.8757986Z       [Cortex Memory] Failed to clear memories: Error: Delete failed
+2026-10-09T12:15:32.8758326Z 
+2026-10-09T12:15:32.8758710Z     [0m [90m 668 |[39m       [90m// Sanitize all arguments to prevent log injection[39m
+2026-10-09T12:15:32.8759654Z      [90m 669 |[39m       [36mconst[39m sanitizedArgs [33m=[39m args[33m.[39mmap((a) [33m=>[39m sanitizeLogArg(a))[33m;[39m
+2026-10-09T12:15:32.8760685Z     [31m[1m>[22m[39m[90m 670 |[39m       console[33m.[39merror(prefix[33m,[39m [33m...[39msanitizedArgs)[33m;[39m
+2026-10-09T12:15:32.8761442Z      [90m     |[39m               [31m[1m^[22m[39m
+2026-10-09T12:15:32.8761923Z      [90m 671 |[39m     }[33m,[39m
+2026-10-09T12:15:32.8762684Z      [90m 672 |[39m   }[33m;[39m
+2026-10-09T12:15:32.8763095Z      [90m 673 |[39m }[0m
+2026-10-09T12:15:32.8763298Z 
+2026-10-09T12:15:32.8763718Z       at Object.error (src/types.ts:670:15)
+2026-10-09T12:15:32.8764213Z       at Function.clearMemories (src/index.ts:257:18)
+2026-10-09T12:15:32.8764740Z       at Object.<anonymous> (tests/unit/index.test.ts:488:7)
+2026-10-09T12:15:32.8765045Z 
+2026-10-09T12:15:34.9124438Z (node:2564) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+2026-10-09T12:15:34.9129330Z (Use `node --trace-warnings ...` to show where the warning was created)
+2026-10-09T12:15:35.0145179Z PASS unit-remote tests/unit/remote.test.ts
+2026-10-09T12:15:35.2679525Z PASS unit tests/unit/streaming-helpers.test.ts
+2026-10-09T12:15:35.8732348Z PASS unit tests/unit/server-credentials.test.ts
+2026-10-09T12:15:36.2009750Z PASS unit tests/unit/streaming.test.ts
+2026-10-09T12:15:36.2049823Z   ● Console
+2026-10-09T12:15:36.2050573Z 
+2026-10-09T12:15:36.2051078Z     console.error
+2026-10-09T12:15:36.2052124Z       [Cortex Memory] Error in stream flush: Error: Complete error
+2026-10-09T12:15:36.2052622Z 
+2026-10-09T12:15:36.2053207Z     [0m [90m 668 |[39m       [90m// Sanitize all arguments to prevent log injection[39m
+2026-10-09T12:15:36.2054725Z      [90m 669 |[39m       [36mconst[39m sanitizedArgs [33m=[39m args[33m.[39mmap((a) [33m=>[39m sanitizeLogArg(a))[33m;[39m
+2026-10-09T12:15:36.2056014Z     [31m[1m>[22m[39m[90m 670 |[39m       console[33m.[39merror(prefix[33m,[39m [33m...[39msanitizedArgs)[33m;[39m
+2026-10-09T12:15:36.2056896Z      [90m     |[39m               [31m[1m^[22m[39m
+2026-10-09T12:15:36.2057475Z      [90m 671 |[39m     }[33m,[39m
+2026-10-09T12:15:36.2058002Z      [90m 672 |[39m   }[33m;[39m
+2026-10-09T12:15:36.2058477Z      [90m 673 |[39m }[0m
+2026-10-09T12:15:36.2058721Z 
+2026-10-09T12:15:36.2058956Z       at Object.error (src/types.ts:670:15)
+2026-10-09T12:15:36.2059515Z       at Object.flush (src/streaming.ts:52:17)
+2026-10-09T12:15:36.2059845Z 
+2026-10-09T12:15:36.2060018Z     console.error
+2026-10-09T12:15:36.2060600Z       [Cortex Memory] Error in completion callback: Error: Completion error
+2026-10-09T12:15:36.2061046Z 
+2026-10-09T12:15:36.2061524Z     [0m [90m 668 |[39m       [90m// Sanitize all arguments to prevent log injection[39m
+2026-10-09T12:15:36.2062676Z      [90m 669 |[39m       [36mconst[39m sanitizedArgs [33m=[39m args[33m.[39mmap((a) [33m=>[39m sanitizeLogArg(a))[33m;[39m
+2026-10-09T12:15:36.2063994Z     [31m[1m>[22m[39m[90m 670 |[39m       console[33m.[39merror(prefix[33m,[39m [33m...[39msanitizedArgs)[33m;[39m
+2026-10-09T12:15:36.2064739Z      [90m     |[39m               [31m[1m^[22m[39m
+2026-10-09T12:15:36.2065234Z      [90m 671 |[39m     }[33m,[39m
+2026-10-09T12:15:36.2065671Z      [90m 672 |[39m   }[33m;[39m
+2026-10-09T12:15:36.2066072Z      [90m 673 |[39m }[0m
+2026-10-09T12:15:36.2066275Z 
+2026-10-09T12:15:36.2066481Z       at Object.error (src/types.ts:670:15)
+2026-10-09T12:15:36.2066942Z       at Object.flush (src/streaming.ts:141:17)
+2026-10-09T12:15:36.2067216Z 
+2026-10-09T12:15:36.4519220Z PASS unit tests/unit/custom-context-builder.test.ts
+2026-10-09T12:15:36.4556369Z   ● Console
+2026-10-09T12:15:36.4556918Z 
+2026-10-09T12:15:36.4557433Z     console.error
+2026-10-09T12:15:36.4558502Z       [Cortex Memory] Memory recall failed: Error: Recall unavailable
+2026-10-09T12:15:36.4559318Z 
+2026-10-09T12:15:36.4560144Z     [0m [90m 668 |[39m       [90m// Sanitize all arguments to prevent log injection[39m
+2026-10-09T12:15:36.4561671Z      [90m 669 |[39m       [36mconst[39m sanitizedArgs [33m=[39m args[33m.[39mmap((a) [33m=>[39m sanitizeLogArg(a))[33m;[39m
+2026-10-09T12:15:36.4564037Z     [31m[1m>[22m[39m[90m 670 |[39m       console[33m.[39merror(prefix[33m,[39m [33m...[39msanitizedArgs)[33m;[39m
+2026-10-09T12:15:36.4565669Z      [90m     |[39m               [31m[1m^[22m[39m
+2026-10-09T12:15:36.4567453Z      [90m 671 |[39m     }[33m,[39m
+2026-10-09T12:15:36.4568418Z      [90m 672 |[39m   }[33m;[39m
+2026-10-09T12:15:36.4569284Z      [90m 673 |[39m }[0m
+2026-10-09T12:15:36.4569803Z 
+2026-10-09T12:15:36.4570285Z       at Object.error (src/types.ts:670:15)
+2026-10-09T12:15:36.4571391Z       at CortexMemoryProvider.recallContext (src/provider.ts:371:19)
+2026-10-09T12:15:36.4572695Z       at CortexMemoryProvider.doGenerate (src/provider.ts:160:22)
+2026-10-09T12:15:36.4574411Z       at Object.<anonymous> (tests/unit/custom-context-builder.test.ts:123:5)
+2026-10-09T12:15:36.4575318Z 
+2026-10-09T12:15:36.4575768Z     console.error
+2026-10-09T12:15:36.4576816Z       [Cortex Memory] Memory recall failed: Error: Recall unavailable
+2026-10-09T12:15:36.4577655Z 
+2026-10-09T12:15:36.4578616Z     [0m [90m 668 |[39m       [90m// Sanitize all arguments to prevent log injection[39m
+2026-10-09T12:15:36.4580627Z      [90m 669 |[39m       [36mconst[39m sanitizedArgs [33m=[39m args[33m.[39mmap((a) [33m=>[39m sanitizeLogArg(a))[33m;[39m
+2026-10-09T12:15:36.4582747Z     [31m[1m>[22m[39m[90m 670 |[39m       console[33m.[39merror(prefix[33m,[39m [33m...[39msanitizedArgs)[33m;[39m
+2026-10-09T12:15:36.4584540Z      [90m     |[39m               [31m[1m^[22m[39m
+2026-10-09T12:15:36.4585568Z      [90m 671 |[39m     }[33m,[39m
+2026-10-09T12:15:36.4586494Z      [90m 672 |[39m   }[33m;[39m
+2026-10-09T12:15:36.4587379Z      [90m 673 |[39m }[0m
+2026-10-09T12:15:36.4587905Z 
+2026-10-09T12:15:36.4588393Z       at Object.error (src/types.ts:670:15)
+2026-10-09T12:15:36.4589583Z       at CortexMemoryProvider.recallContext (src/provider.ts:371:19)
+2026-10-09T12:15:36.4590883Z       at CortexMemoryProvider.doStream (src/provider.ts:262:22)
+2026-10-09T12:15:36.4592195Z       at Object.<anonymous> (tests/unit/custom-context-builder.test.ts:123:5)
+2026-10-09T12:15:36.4593024Z 
+2026-10-09T12:15:36.7693049Z PASS unit tests/unit/graph-lifecycle.test.ts
+2026-10-09T12:15:37.3224813Z PASS unit tests/unit/environment.test.ts
+2026-10-09T12:15:37.3253964Z 
+2026-10-09T12:15:37.3254566Z Test Suites: 11 passed, 11 total
+2026-10-09T12:15:37.3255377Z Tests:       286 passed, 286 total
+2026-10-09T12:15:37.3284204Z Snapshots:   0 total
+2026-10-09T12:15:37.3314099Z Time:        12.975 s
+2026-10-09T12:15:37.3344125Z Ran all test suites in 3 projects.
+2026-10-09T12:15:37.9556408Z npm notice run @cortexmemory/vercel-ai-provider@0.38.0 test:integration
+2026-10-09T12:15:37.9559425Z npm notice run node --experimental-vm-modules $(npm root)/.bin/jest --selectProjects integration --runInBand --forceExit=false
+2026-10-09T12:15:38.1964957Z Running one project: integration
+2026-10-09T12:15:42.9752550Z PASS integration tests/integration/memory-flow.test.ts
+2026-10-09T12:15:42.9930684Z   ● Console
+2026-10-09T12:15:42.9931214Z 
+2026-10-09T12:15:42.9931773Z     console.error
+2026-10-09T12:15:42.9932703Z       [Cortex Memory] Memory recall failed: Error: Recall service unavailable
+2026-10-09T12:15:42.9933385Z 
+2026-10-09T12:15:42.9934529Z     [0m [90m 668 |[39m       [90m// Sanitize all arguments to prevent log injection[39m
+2026-10-09T12:15:42.9936364Z      [90m 669 |[39m       [36mconst[39m sanitizedArgs [33m=[39m args[33m.[39mmap((a) [33m=>[39m sanitizeLogArg(a))[33m;[39m
+2026-10-09T12:15:42.9938224Z     [31m[1m>[22m[39m[90m 670 |[39m       console[33m.[39merror(prefix[33m,[39m [33m...[39msanitizedArgs)[33m;[39m
+2026-10-09T12:15:42.9939573Z      [90m     |[39m               [31m[1m^[22m[39m
+2026-10-09T12:15:42.9940439Z      [90m 671 |[39m     }[33m,[39m
+2026-10-09T12:15:42.9941300Z      [90m 672 |[39m   }[33m;[39m
+2026-10-09T12:15:42.9942065Z      [90m 673 |[39m }[0m
+2026-10-09T12:15:42.9942447Z 
+2026-10-09T12:15:42.9942791Z       at Object.error (src/types.ts:670:15)
+2026-10-09T12:15:42.9944061Z       at CortexMemoryProvider.recallContext (src/provider.ts:371:19)
+2026-10-09T12:15:42.9945159Z       at CortexMemoryProvider.doGenerate (src/provider.ts:160:22)
+2026-10-09T12:15:42.9946913Z       at Object.<anonymous> (tests/integration/memory-flow.test.ts:183:22)
+2026-10-09T12:15:42.9947504Z 
+2026-10-09T12:15:42.9947753Z     console.error
+2026-10-09T12:15:42.9948569Z       [Cortex Memory] Failed to store memory: Error: Storage unavailable
+2026-10-09T12:15:42.9949156Z 
+2026-10-09T12:15:42.9949886Z     [0m [90m 668 |[39m       [90m// Sanitize all arguments to prevent log injection[39m
+2026-10-09T12:15:42.9951621Z      [90m 669 |[39m       [36mconst[39m sanitizedArgs [33m=[39m args[33m.[39mmap((a) [33m=>[39m sanitizeLogArg(a))[33m;[39m
+2026-10-09T12:15:42.9954087Z     [31m[1m>[22m[39m[90m 670 |[39m       console[33m.[39merror(prefix[33m,[39m [33m...[39msanitizedArgs)[33m;[39m
+2026-10-09T12:15:42.9955520Z      [90m     |[39m               [31m[1m^[22m[39m
+2026-10-09T12:15:42.9956446Z      [90m 671 |[39m     }[33m,[39m
+2026-10-09T12:15:42.9957256Z      [90m 672 |[39m   }[33m;[39m
+2026-10-09T12:15:42.9957995Z      [90m 673 |[39m }[0m
+2026-10-09T12:15:42.9958395Z 
+2026-10-09T12:15:42.9958748Z       at Object.error (src/types.ts:670:15)
+2026-10-09T12:15:42.9959564Z       at src/provider.ts:233:25
+2026-10-09T12:15:42.9960471Z       at CortexMemoryProvider.doGenerate (src/provider.ts:199:9)
+2026-10-09T12:15:42.9961629Z       at Object.<anonymous> (tests/integration/memory-flow.test.ts:206:22)
+2026-10-09T12:15:42.9962276Z 
+2026-10-09T12:15:42.9962525Z     console.warn
+2026-10-09T12:15:42.9963366Z       [Cortex Memory] Failed to generate embedding, recall will use keyword search: Error: Embedding failed
+2026-10-09T12:15:42.9964496Z 
+2026-10-09T12:15:42.9965173Z     [0m [90m 663 |[39m       [90m// Sanitize all arguments to prevent log injection[39m
+2026-10-09T12:15:42.9966159Z      [90m 664 |[39m       [36mconst[39m sanitizedArgs [33m=[39m args[33m.[39mmap((a) [33m=>[39m sanitizeLogArg(a))[33m;[39m
+2026-10-09T12:15:42.9967212Z     [31m[1m>[22m[39m[90m 665 |[39m       console[33m.[39mwarn(prefix[33m,[39m [33m...[39msanitizedArgs)[33m;[39m
+2026-10-09T12:15:42.9967950Z      [90m     |[39m               [31m[1m^[22m[39m
+2026-10-09T12:15:42.9968445Z      [90m 666 |[39m     }[33m,[39m
+2026-10-09T12:15:42.9969027Z      [90m 667 |[39m     error[33m:[39m ([33m...[39margs) [33m=>[39m {
+2026-10-09T12:15:42.9969814Z      [90m 668 |[39m       [90m// Sanitize all arguments to prevent log injection[39m[0m
+2026-10-09T12:15:42.9970199Z 
+2026-10-09T12:15:42.9970399Z       at Object.warn (src/types.ts:665:15)
+2026-10-09T12:15:42.9970959Z       at CortexMemoryProvider.recallContext (src/provider.ts:337:23)
+2026-10-09T12:15:42.9971588Z       at CortexMemoryProvider.doGenerate (src/provider.ts:160:22)
+2026-10-09T12:15:42.9972219Z       at Object.<anonymous> (tests/integration/memory-flow.test.ts:322:7)
+2026-10-09T12:15:42.9972573Z 
+2026-10-09T12:15:44.4053435Z PASS integration tests/integration/streaming-flow.test.ts
+2026-10-09T12:15:44.4131159Z   ● Console
+2026-10-09T12:15:44.4131656Z 
+2026-10-09T12:15:44.4132178Z     console.error
+2026-10-09T12:15:44.4133173Z       [Cortex Memory] Failed to store stream: Error: Storage failed
+2026-10-09T12:15:44.4133981Z 
+2026-10-09T12:15:44.4134750Z     [0m [90m 668 |[39m       [90m// Sanitize all arguments to prevent log injection[39m
+2026-10-09T12:15:44.4136430Z      [90m 669 |[39m       [36mconst[39m sanitizedArgs [33m=[39m args[33m.[39mmap((a) [33m=>[39m sanitizeLogArg(a))[33m;[39m
+2026-10-09T12:15:44.4137807Z     [31m[1m>[22m[39m[90m 670 |[39m       console[33m.[39merror(prefix[33m,[39m [33m...[39msanitizedArgs)[33m;[39m
+2026-10-09T12:15:44.4138556Z      [90m     |[39m               [31m[1m^[22m[39m
+2026-10-09T12:15:44.4139049Z      [90m 671 |[39m     }[33m,[39m
+2026-10-09T12:15:44.4139491Z      [90m 672 |[39m   }[33m;[39m
+2026-10-09T12:15:44.4139891Z      [90m 673 |[39m }[0m
+2026-10-09T12:15:44.4140095Z 
+2026-10-09T12:15:44.4140285Z       at Object.error (src/types.ts:670:15)
+2026-10-09T12:15:44.4141085Z       at Object.flush (src/provider.ts:550:23)
+2026-10-09T12:15:44.4141525Z 
+2026-10-09T12:15:44.4141673Z     console.error
+2026-10-09T12:15:44.4142111Z       [Cortex Memory] Memory recall failed: Error: Recall failed
+2026-10-09T12:15:44.4142433Z 
+2026-10-09T12:15:44.4142834Z     [0m [90m 668 |[39m       [90m// Sanitize all arguments to prevent log injection[39m
+2026-10-09T12:15:44.4144078Z      [90m 669 |[39m       [36mconst[39m sanitizedArgs [33m=[39m args[33m.[39mmap((a) [33m=>[39m sanitizeLogArg(a))[33m;[39m
+2026-10-09T12:15:44.4145179Z     [31m[1m>[22m[39m[90m 670 |[39m       console[33m.[39merror(prefix[33m,[39m [33m...[39msanitizedArgs)[33m;[39m
+2026-10-09T12:15:44.4145906Z      [90m     |[39m               [31m[1m^[22m[39m
+2026-10-09T12:15:44.4146388Z      [90m 671 |[39m     }[33m,[39m
+2026-10-09T12:15:44.4146819Z      [90m 672 |[39m   }[33m;[39m
+2026-10-09T12:15:44.4147224Z      [90m 673 |[39m }[0m
+2026-10-09T12:15:44.4147431Z 
+2026-10-09T12:15:44.4147635Z       at Object.error (src/types.ts:670:15)
+2026-10-09T12:15:44.4148305Z       at CortexMemoryProvider.recallContext (src/provider.ts:371:19)
+2026-10-09T12:15:44.4149344Z       at CortexMemoryProvider.doStream (src/provider.ts:262:22)
+2026-10-09T12:15:44.4150006Z       at Object.<anonymous> (tests/integration/streaming-flow.test.ts:314:22)
+2026-10-09T12:15:44.4150383Z 
+2026-10-09T12:15:44.4150536Z     console.warn
+2026-10-09T12:15:44.4150993Z       [Cortex Memory] Stream completed but produced no text content
+2026-10-09T12:15:44.4151336Z 
+2026-10-09T12:15:44.4151776Z     [0m [90m 663 |[39m       [90m// Sanitize all arguments to prevent log injection[39m
+2026-10-09T12:15:44.4152724Z      [90m 664 |[39m       [36mconst[39m sanitizedArgs [33m=[39m args[33m.[39mmap((a) [33m=>[39m sanitizeLogArg(a))[33m;[39m
+2026-10-09T12:15:44.4154056Z     [31m[1m>[22m[39m[90m 665 |[39m       console[33m.[39mwarn(prefix[33m,[39m [33m...[39msanitizedArgs)[33m;[39m
+2026-10-09T12:15:44.4154808Z      [90m     |[39m               [31m[1m^[22m[39m
+2026-10-09T12:15:44.4155299Z      [90m 666 |[39m     }[33m,[39m
+2026-10-09T12:15:44.4155909Z      [90m 667 |[39m     error[33m:[39m ([33m...[39margs) [33m=>[39m {
+2026-10-09T12:15:44.4156631Z      [90m 668 |[39m       [90m// Sanitize all arguments to prevent log injection[39m[0m
+2026-10-09T12:15:44.4157017Z 
+2026-10-09T12:15:44.4157210Z       at Object.warn (src/types.ts:665:15)
+2026-10-09T12:15:44.4157662Z       at Object.flush (src/provider.ts:476:23)
+2026-10-09T12:15:44.4157929Z 
+2026-10-09T12:15:44.4158073Z     console.warn
+2026-10-09T12:15:44.4158518Z       [Cortex Memory] Stream completed but produced no text content
+2026-10-09T12:15:44.4158849Z 
+2026-10-09T12:15:44.4159236Z     [0m [90m 663 |[39m       [90m// Sanitize all arguments to prevent log injection[39m
+2026-10-09T12:15:44.4160166Z      [90m 664 |[39m       [36mconst[39m sanitizedArgs [33m=[39m args[33m.[39mmap((a) [33m=>[39m sanitizeLogArg(a))[33m;[39m
+2026-10-09T12:15:44.4161176Z     [31m[1m>[22m[39m[90m 665 |[39m       console[33m.[39mwarn(prefix[33m,[39m [33m...[39msanitizedArgs)[33m;[39m
+2026-10-09T12:15:44.4161890Z      [90m     |[39m               [31m[1m^[22m[39m
+2026-10-09T12:15:44.4162369Z      [90m 666 |[39m     }[33m,[39m
+2026-10-09T12:15:44.4162928Z      [90m 667 |[39m     error[33m:[39m ([33m...[39margs) [33m=>[39m {
+2026-10-09T12:15:44.4164017Z      [90m 668 |[39m       [90m// Sanitize all arguments to prevent log injection[39m[0m
+2026-10-09T12:15:44.4164435Z 
+2026-10-09T12:15:44.4164633Z       at Object.warn (src/types.ts:665:15)
+2026-10-09T12:15:44.4165079Z       at Object.flush (src/provider.ts:476:23)
+2026-10-09T12:15:44.4165342Z 
+2026-10-09T12:15:44.9292079Z PASS integration tests/integration/layer-streaming.test.ts
+2026-10-09T12:15:45.1878532Z PASS integration tests/integration/v6-api-routes.test.ts
+2026-10-09T12:15:45.7210242Z (node:2605) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+2026-10-09T12:15:45.7212868Z (Use `node --trace-warnings ...` to show where the warning was created)
+2026-10-09T12:15:45.8250512Z PASS integration tests/integration/ai7-model.test.ts
+2026-10-09T12:15:45.8263121Z 
+2026-10-09T12:15:45.8272295Z Test Suites: 5 passed, 5 total
+2026-10-09T12:15:45.8273082Z Tests:       74 passed, 74 total
+2026-10-09T12:15:45.8274048Z Snapshots:   0 total
+2026-10-09T12:15:45.8274684Z Time:        7.559 s
+2026-10-09T12:15:45.8275300Z Ran all test suites.
+2026-10-09T12:15:46.0129380Z ##[group]Run npm run build --workspace=@cortexmemory/vercel-ai-provider
+2026-10-09T12:15:46.0130094Z [36;1mnpm run build --workspace=@cortexmemory/vercel-ai-provider[0m
+2026-10-09T12:15:46.0196215Z shell: /usr/bin/bash -e {0}
+2026-10-09T12:15:46.0196609Z env:
+2026-10-09T12:15:46.0196933Z   CORTEX_CI_RUN_ID: 37926572786-1
+2026-10-09T12:15:46.0197414Z   CORTEX_CI_AUTH_ISSUER: https://cortex-ci-runtime.example/
+2026-10-09T12:15:46.0197942Z   CORTEX_CI_AUTH_AUDIENCE: cortex-ci-runtime
+2026-10-09T12:15:46.0205846Z   CORTEX_CI_AUTH_PRIVATE_KEY: ***
+2026-10-09T12:15:46.0206404Z   CORTEX_CI_DISPOSABLE_DEPLOYMENTS: ["steady-snake-253","usable-sheep-908"]
+2026-10-09T12:15:46.0206991Z   CONVEX_URL: ***
+2026-10-09T12:15:46.0207510Z   CONVEX_URL_CLI: ***
+2026-10-09T12:15:46.0207856Z   CORTEX_TEST_ENV_MODE: explicit
+2026-10-09T12:15:46.0213092Z   CORTEX_TEST_FIXTURE: {"version":1,"kind":"sdk","runId":"37926572786-1","issuer":"https://cortex-ci-runtime.example/","audience":"cortex-ci-runtime","tenantId":"cortex-ci-37926572786-1-sdk","memorySpaceId":"cortex-ci-37926572786-1-sdk-space","identities":{"owner":{"issuer":"https://cortex-ci-runtime.example/","subject":"cortex-ci-37926572786-1-sdk-owner","actorKind":"user","metadataUserId":"cortex-ci-37926572786-1-sdk-owner","tenantId":"cortex-ci-37926572786-1-sdk","memorySpaceId":"cortex-ci-37926572786-1-sdk-space","capabilities":["read","write","run","admin","tool","storage:read","storage:write"],"resourceAccess":"space"},"reader":{"issuer":"https://cortex-ci-runtime.example/","subject":"cortex-ci-37926572786-1-sdk-reader","actorKind":"user","metadataUserId":"cortex-ci-37926572786-1-sdk-reader","tenantId":"cortex-ci-37926572786-1-sdk","memorySpaceId":"cortex-ci-37926572786-1-sdk-space","capabilities":["read"],"resourceAccess":"space"},"outsider":{"issuer":"https://cortex-ci-runtime.example/","subject":"cortex-ci-37926572786-1-sdk-outsider","actorKind":"user","metadataUserId":"cortex-ci-37926572786-1-sdk-outsider","tenantId":"cortex-ci-37926572786-1-sdk-other","memorySpaceId":"cortex-ci-37926572786-1-sdk-other-space","capabilities":["read","write","run","admin","tool","storage:read","storage:write"],"resourceAccess":"space"}},"deploymentUrl":"***"}
+2026-10-09T12:15:46.0240057Z   CORTEX_TEST_AUTH_TOKEN: ***
+2026-10-09T12:15:46.0244738Z   CORTEX_TEST_READER_TOKEN: ***
+2026-10-09T12:15:46.0249238Z   CORTEX_TEST_OUTSIDER_TOKEN: ***
+2026-10-09T12:15:46.0249621Z ##[endgroup]
+2026-10-09T12:15:46.1538010Z npm notice run @cortexmemory/vercel-ai-provider@0.38.0 build
+2026-10-09T12:15:46.1542544Z npm notice run tsup src/index.ts react/index.ts --format cjs,esm --dts --clean && tsup src/remote/index.ts --format cjs,esm --dts --out-dir dist/remote
+2026-10-09T12:15:46.4325506Z [34mCLI[39m Building entry: react/index.ts, src/index.ts
+2026-10-09T12:15:46.4334281Z [34mCLI[39m Using tsconfig: tsconfig.json
+2026-10-09T12:15:46.4336324Z [34mCLI[39m tsup v8.5.1
+2026-10-09T12:15:46.4384241Z [34mCLI[39m Target: es2022
+2026-10-09T12:15:46.4394958Z [34mCLI[39m Cleaning output folder
+2026-10-09T12:15:46.4410508Z [34mCJS[39m Build start
+2026-10-09T12:15:46.4411448Z [34mESM[39m Build start
+2026-10-09T12:15:46.4906337Z [32mESM[39m [1mdist/react/index.js    [22m[32m15.14 KB[39m
+2026-10-09T12:15:46.4914818Z [32mESM[39m [1mdist/chunk-ZPWP4LTD.js [22m[32m20.61 KB[39m
+2026-10-09T12:15:46.4934946Z [32mESM[39m [1mdist/src/index.js      [22m[32m37.50 KB[39m
+2026-10-09T12:15:46.4935981Z [32mESM[39m ⚡️ Build success in 49ms
+2026-10-09T12:15:46.4937014Z [32mCJS[39m [1mdist/react/index.cjs [22m[32m24.29 KB[39m
+2026-10-09T12:15:46.4938421Z [32mCJS[39m [1mdist/src/index.cjs   [22m[32m61.48 KB[39m
+2026-10-09T12:15:46.4939022Z [32mCJS[39m ⚡️ Build success in 50ms
+2026-10-09T12:15:46.7328473Z [34mDTS[39m Build start
+2026-10-09T12:15:49.8727129Z [32mDTS[39m ⚡️ Build success in 3141ms
+2026-10-09T12:15:49.8731186Z [32mDTS[39m [1mdist/react/index.d.cts    [22m[32m16.05 KB[39m
+2026-10-09T12:15:49.8732636Z [32mDTS[39m [1mdist/src/index.d.cts      [22m[32m39.12 KB[39m
+2026-10-09T12:15:49.8734026Z [32mDTS[39m [1mdist/types-DKEzlhpU.d.cts [22m[32m21.81 KB[39m
+2026-10-09T12:15:49.8735151Z [32mDTS[39m [1mdist/react/index.d.ts     [22m[32m16.05 KB[39m
+2026-10-09T12:15:49.8736346Z [32mDTS[39m [1mdist/src/index.d.ts       [22m[32m39.12 KB[39m
+2026-10-09T12:15:49.8737048Z [32mDTS[39m [1mdist/types-DKEzlhpU.d.ts  [22m[32m21.81 KB[39m
+2026-10-09T12:15:50.2135238Z [34mCLI[39m Building entry: src/remote/index.ts
+2026-10-09T12:15:50.2143600Z [34mCLI[39m Using tsconfig: tsconfig.json
+2026-10-09T12:15:50.2145786Z [34mCLI[39m tsup v8.5.1
+2026-10-09T12:15:50.2188990Z [34mCLI[39m Target: es2022
+2026-10-09T12:15:50.2206337Z [34mCJS[39m Build start
+2026-10-09T12:15:50.2207699Z [34mESM[39m Build start
+2026-10-09T12:15:50.2451501Z [32mESM[39m [1mdist/remote/index.js [22m[32m12.31 KB[39m
+2026-10-09T12:15:50.2452438Z [32mESM[39m ⚡️ Build success in 24ms
+2026-10-09T12:15:50.2453110Z [32mCJS[39m [1mdist/remote/index.cjs [22m[32m13.53 KB[39m
+2026-10-09T12:15:50.2453981Z [32mCJS[39m ⚡️ Build success in 25ms
+2026-10-09T12:15:50.5010562Z [34mDTS[39m Build start
+2026-10-09T12:15:52.3242624Z [32mDTS[39m ⚡️ Build success in 1823ms
+2026-10-09T12:15:52.3244275Z [32mDTS[39m [1mdist/remote/index.d.cts [22m[32m2.85 KB[39m
+2026-10-09T12:15:52.3245464Z [32mDTS[39m [1mdist/remote/index.d.ts  [22m[32m2.85 KB[39m
+2026-10-09T12:15:52.3816092Z ##[group]Run timeout --signal=TERM --kill-after=5s 30s node scripts/ci/remote-agent.mjs > ci-provider-agent.json
+2026-10-09T12:15:52.3817095Z [36;1mtimeout --signal=TERM --kill-after=5s 30s node scripts/ci/remote-agent.mjs > ci-provider-agent.json[0m
+2026-10-09T12:15:52.3880478Z shell: /usr/bin/bash -e {0}
+2026-10-09T12:15:52.3880854Z env:
+2026-10-09T12:15:52.3881176Z   CORTEX_CI_RUN_ID: 37926572786-1
+2026-10-09T12:15:52.3881654Z   CORTEX_CI_AUTH_ISSUER: https://cortex-ci-runtime.example/
+2026-10-09T12:15:52.3882175Z   CORTEX_CI_AUTH_AUDIENCE: cortex-ci-runtime
+2026-10-09T12:15:52.3882598Z   CORTEX_CI_AUTH_PRIVATE_KEY: 
+2026-10-09T12:15:52.3883094Z   CORTEX_CI_DISPOSABLE_DEPLOYMENTS: ["steady-snake-253","usable-sheep-908"]
+2026-10-09T12:15:52.3884152Z   CONVEX_URL: ***
+2026-10-09T12:15:52.3884560Z   CONVEX_URL_CLI: ***
+2026-10-09T12:15:52.3884906Z   CORTEX_TEST_ENV_MODE: explicit
+2026-10-09T12:15:52.3890045Z   CORTEX_TEST_FIXTURE: {"version":1,"kind":"sdk","runId":"37926572786-1","issuer":"https://cortex-ci-runtime.example/","audience":"cortex-ci-runtime","tenantId":"cortex-ci-37926572786-1-sdk","memorySpaceId":"cortex-ci-37926572786-1-sdk-space","identities":{"owner":{"issuer":"https://cortex-ci-runtime.example/","subject":"cortex-ci-37926572786-1-sdk-owner","actorKind":"user","metadataUserId":"cortex-ci-37926572786-1-sdk-owner","tenantId":"cortex-ci-37926572786-1-sdk","memorySpaceId":"cortex-ci-37926572786-1-sdk-space","capabilities":["read","write","run","admin","tool","storage:read","storage:write"],"resourceAccess":"space"},"reader":{"issuer":"https://cortex-ci-runtime.example/","subject":"cortex-ci-37926572786-1-sdk-reader","actorKind":"user","metadataUserId":"cortex-ci-37926572786-1-sdk-reader","tenantId":"cortex-ci-37926572786-1-sdk","memorySpaceId":"cortex-ci-37926572786-1-sdk-space","capabilities":["read"],"resourceAccess":"space"},"outsider":{"issuer":"https://cortex-ci-runtime.example/","subject":"cortex-ci-37926572786-1-sdk-outsider","actorKind":"user","metadataUserId":"cortex-ci-37926572786-1-sdk-outsider","tenantId":"cortex-ci-37926572786-1-sdk-other","memorySpaceId":"cortex-ci-37926572786-1-sdk-other-space","capabilities":["read","write","run","admin","tool","storage:read","storage:write"],"resourceAccess":"space"}},"deploymentUrl":"***"}
+2026-10-09T12:15:52.3899872Z   CORTEX_TEST_AUTH_TOKEN: ***
+2026-10-09T12:15:52.3904417Z   CORTEX_TEST_READER_TOKEN: ***
+2026-10-09T12:15:52.3908859Z   CORTEX_TEST_OUTSIDER_TOKEN: ***
+2026-10-09T12:15:52.3909231Z ##[endgroup]
+2026-10-09T12:15:53.6451086Z ##[group]Run timeout --signal=TERM --kill-after=5s 210s node --experimental-vm-modules ../../node_modules/jest/bin/jest.js --selectProjects e2e-remote --runTestsByPath tests/e2e/remote-runtime.test.ts --runInBand --forceExit=false --watchman=false --json --outputFile=ci-provider-remote-results.json
+2026-10-09T12:15:53.6453356Z [36;1mtimeout --signal=TERM --kill-after=5s 210s node --experimental-vm-modules ../../node_modules/jest/bin/jest.js --selectProjects e2e-remote --runTestsByPath tests/e2e/remote-runtime.test.ts --runInBand --forceExit=false --watchman=false --json --outputFile=ci-provider-remote-results.json[0m
+2026-10-09T12:15:53.6518218Z shell: /usr/bin/bash -e {0}
+2026-10-09T12:15:53.6518581Z env:
+2026-10-09T12:15:53.6518892Z   CORTEX_CI_RUN_ID: 37926572786-1
+2026-10-09T12:15:53.6519360Z   CORTEX_CI_AUTH_ISSUER: https://cortex-ci-runtime.example/
+2026-10-09T12:15:53.6519870Z   CORTEX_CI_AUTH_AUDIENCE: cortex-ci-runtime
+2026-10-09T12:15:53.6520416Z   CORTEX_CI_AUTH_PRIVATE_KEY: 
+2026-10-09T12:15:53.6520915Z   CORTEX_CI_DISPOSABLE_DEPLOYMENTS: ["steady-snake-253","usable-sheep-908"]
+2026-10-09T12:15:53.6521545Z   CONVEX_URL: ***
+2026-10-09T12:15:53.6521948Z   CONVEX_URL_CLI: ***
+2026-10-09T12:15:53.6522292Z   CORTEX_TEST_ENV_MODE: explicit
+2026-10-09T12:15:53.6527680Z   CORTEX_TEST_FIXTURE: {"version":1,"kind":"sdk","runId":"37926572786-1","issuer":"https://cortex-ci-runtime.example/","audience":"cortex-ci-runtime","tenantId":"cortex-ci-37926572786-1-sdk","memorySpaceId":"cortex-ci-37926572786-1-sdk-space","identities":{"owner":{"issuer":"https://cortex-ci-runtime.example/","subject":"cortex-ci-37926572786-1-sdk-owner","actorKind":"user","metadataUserId":"cortex-ci-37926572786-1-sdk-owner","tenantId":"cortex-ci-37926572786-1-sdk","memorySpaceId":"cortex-ci-37926572786-1-sdk-space","capabilities":["read","write","run","admin","tool","storage:read","storage:write"],"resourceAccess":"space"},"reader":{"issuer":"https://cortex-ci-runtime.example/","subject":"cortex-ci-37926572786-1-sdk-reader","actorKind":"user","metadataUserId":"cortex-ci-37926572786-1-sdk-reader","tenantId":"cortex-ci-37926572786-1-sdk","memorySpaceId":"cortex-ci-37926572786-1-sdk-space","capabilities":["read"],"resourceAccess":"space"},"outsider":{"issuer":"https://cortex-ci-runtime.example/","subject":"cortex-ci-37926572786-1-sdk-outsider","actorKind":"user","metadataUserId":"cortex-ci-37926572786-1-sdk-outsider","tenantId":"cortex-ci-37926572786-1-sdk-other","memorySpaceId":"cortex-ci-37926572786-1-sdk-other-space","capabilities":["read","write","run","admin","tool","storage:read","storage:write"],"resourceAccess":"space"}},"deploymentUrl":"***"}
+2026-10-09T12:15:53.6537189Z   CORTEX_TEST_AUTH_TOKEN: ***
+2026-10-09T12:15:53.6541445Z   CORTEX_TEST_READER_TOKEN: ***
+2026-10-09T12:15:53.6546064Z   CORTEX_TEST_OUTSIDER_TOKEN: ***
+2026-10-09T12:15:53.6546656Z   CORTEX_TEST_REMOTE_AGENT_ID: agent:93903cd5d0eaa6a78f74670089a97e7b92cdbcae0852c2bc983022a1494114bd
+2026-10-09T12:15:53.6547280Z   CORTEX_TEST_REMOTE_AGENT_VERSION: 1
+2026-10-09T12:15:53.6547908Z   CORTEX_TEST_REMOTE_AGENT_DEFINITION_HASH: 1d1b5bdac644620e50dbb02ed774f246049fd0e11d32ccd31ab77776733cbfa6
+2026-10-09T12:15:53.6548534Z   DEBUG: true
+2026-10-09T12:15:53.6548841Z ##[endgroup]
+2026-10-09T12:15:53.7947172Z Running one project: e2e-remote
+2026-10-09T12:15:56.9218874Z (node:2688) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+2026-10-09T12:15:56.9220168Z (Use `node --trace-warnings ...` to show where the warning was created)
+2026-10-09T12:16:38.2817054Z   console.error
+2026-10-09T12:16:38.2821532Z     [CONVEX M(runtimeClient:session)] [Request ID: b4c60b992f7f4d18] Server Error
+2026-10-09T12:16:38.2824257Z     Uncaught ConvexError: {"version":1,"code":"FORBIDDEN","message":"Access denied","retryable":false,"outcome":"not_dispatched"}
+2026-10-09T12:16:38.2825752Z         at deny (../../convex-dev/runtimeAuth.ts:46:26)
+2026-10-09T12:16:38.2826837Z         at resolveAuthority (../../convex-dev/runtimeAuth.ts:185:0)
+2026-10-09T12:16:38.2828148Z         at async requireAuthority (../../convex-dev/runtimeAuth.ts:251:0)
+2026-10-09T12:16:38.2828910Z         at async requireDataAuthority (../../convex-dev/runtimeDataAuth.ts:34:16)
+2026-10-09T12:16:38.2829590Z         at async handler (../convex-dev/runtimeClient.ts:14:11)
+2026-10-09T12:16:38.2829929Z 
+2026-10-09T12:16:38.2830206Z       at ../../node_modules/convex/src/browser/logging.ts:109:17
+2026-10-09T12:16:38.2830891Z       at DefaultLogger.error (../../node_modules/convex/src/browser/logging.ts:88:7)
+2026-10-09T12:16:38.2831695Z       at logForFunction (../../node_modules/convex/src/browser/logging.ts:149:12)
+2026-10-09T12:16:38.2832523Z       at RequestManager.onResponse (../../node_modules/convex/src/browser/sync/request_manager.ts:126:7)
+2026-10-09T12:16:38.2833951Z       at WebSocketManager.onMessage (../../node_modules/convex/src/browser/sync/client.ts:483:37)
+2026-10-09T12:16:38.2835366Z       at WebSocket.ws.onmessage (../../node_modules/convex/src/browser/sync/web_socket_manager.ts:470:29)
+2026-10-09T12:16:38.2836128Z 
+2026-10-09T12:16:38.2845060Z   console.log
+2026-10-09T12:16:38.2850885Z     {"status":"ACTUAL_PROVIDER_REMOTE_CONTRACT_PASS","requestId":"provider-remote-37926572786-1","handle":{"version":1,"tenantId":"cortex-ci-37926572786-1-sdk","memorySpaceId":"cortex-ci-37926572786-1-sdk-space","principalId":"nh77fcgt2jxg54kkgrgm1p6csh8fze9f","runId":"run:55569f4469b8d08087a3bd6682ff3a8e03a4bc23681872c8e477bf1b281c80ff","conversationId":"conversation:55569f4469b8d08087a3bd6682ff3a8e03a4bc23681872c8e477bf1b281c80ff","agentId":"agent:93903cd5d0eaa6a78f74670089a97e7b92cdbcae0852c2bc983022a1494114bd","agentVersion":1,"definitionHash":"1d1b5bdac644620e50dbb02ed774f246049fd0e11d32ccd31ab77776733cbfa6"},"responseStatus":"complete","memoryStatus":"complete","graphStatus":"not_requested","attemptNumber":1,"reconnectCursor":0,"canonicalTextSha256":"39faeb9ae6312c02969a653ed97acd23a88fbc6c3a2b8f80a38ac32e3606f012","transcriptMessageIds":["kx757ahm5mnc0kypyj0ejp1y658fzkff","kx74k98k1e2a6ckp27ss7axatd8fznhh"],"observations":[{"response":"complete","memory":"complete","graph":"not_requested","cursor":8,"attempt":1}],"replaySameHandleAndTranscript":true,"outsiderForbidden":true,"clientProviderCredentials":false}
+2026-10-09T12:16:38.2856010Z 
+2026-10-09T12:16:38.2856583Z       at tests/e2e/remote-runtime.test.ts:110:17
+2026-10-09T12:16:38.2857083Z 
+2026-10-09T12:16:38.4375113Z PASS e2e-remote tests/e2e/remote-runtime.test.ts (44.346 s)
+2026-10-09T12:16:38.4379683Z   ✓ one verified remote request retains canonical AI SDK7 output, reconnects/replays its existing handle and denies a signed outsider (41430 ms)
+2026-10-09T12:16:38.4380862Z 
+2026-10-09T12:16:38.4404538Z Test Suites: 1 passed, 1 total
+2026-10-09T12:16:38.4405365Z Tests:       1 passed, 1 total
+2026-10-09T12:16:38.4406083Z Snapshots:   0 total
+2026-10-09T12:16:38.4406732Z Time:        44.577 s
+2026-10-09T12:16:38.4407652Z Ran all test suites within paths "tests/e2e/remote-runtime.test.ts".
+2026-10-09T12:16:38.4418842Z Test results written to: ci-provider-remote-results.json
+2026-10-09T12:16:38.5839368Z ##[group]Run actions/upload-artifact@v4
+2026-10-09T12:16:38.5839809Z with:
+2026-10-09T12:16:38.5840162Z   name: ci-provider-discovery-and-runtime
+2026-10-09T12:16:38.5841005Z   path: ci-provider-agent.json
+packages/vercel-ai-provider/ci-provider-discovery.json
+packages/vercel-ai-provider/ci-provider-remote-results.json
+
+2026-10-09T12:16:38.5841829Z   retention-days: 14
+2026-10-09T12:16:38.5842174Z   if-no-files-found: warn
+2026-10-09T12:16:38.5842516Z   compression-level: 6
+2026-10-09T12:16:38.5842834Z   overwrite: false
+2026-10-09T12:16:38.5843170Z   include-hidden-files: false
+2026-10-09T12:16:38.5844043Z env:
+2026-10-09T12:16:38.5844357Z   CORTEX_CI_RUN_ID: 37926572786-1
+2026-10-09T12:16:38.5844811Z   CORTEX_CI_AUTH_ISSUER: https://cortex-ci-runtime.example/
+2026-10-09T12:16:38.5845316Z   CORTEX_CI_AUTH_AUDIENCE: cortex-ci-runtime
+2026-10-09T12:16:38.5852722Z   CORTEX_CI_AUTH_PRIVATE_KEY: ***
+2026-10-09T12:16:38.5853271Z   CORTEX_CI_DISPOSABLE_DEPLOYMENTS: ["steady-snake-253","usable-sheep-908"]
+2026-10-09T12:16:38.5854096Z   CONVEX_URL: ***
+2026-10-09T12:16:38.5854491Z   CONVEX_URL_CLI: ***
+2026-10-09T12:16:38.5854827Z   CORTEX_TEST_ENV_MODE: explicit
+2026-10-09T12:16:38.5859861Z   CORTEX_TEST_FIXTURE: {"version":1,"kind":"sdk","runId":"37926572786-1","issuer":"https://cortex-ci-runtime.example/","audience":"cortex-ci-runtime","tenantId":"cortex-ci-37926572786-1-sdk","memorySpaceId":"cortex-ci-37926572786-1-sdk-space","identities":{"owner":{"issuer":"https://cortex-ci-runtime.example/","subject":"cortex-ci-37926572786-1-sdk-owner","actorKind":"user","metadataUserId":"cortex-ci-37926572786-1-sdk-owner","tenantId":"cortex-ci-37926572786-1-sdk","memorySpaceId":"cortex-ci-37926572786-1-sdk-space","capabilities":["read","write","run","admin","tool","storage:read","storage:write"],"resourceAccess":"space"},"reader":{"issuer":"https://cortex-ci-runtime.example/","subject":"cortex-ci-37926572786-1-sdk-reader","actorKind":"user","metadataUserId":"cortex-ci-37926572786-1-sdk-reader","tenantId":"cortex-ci-37926572786-1-sdk","memorySpaceId":"cortex-ci-37926572786-1-sdk-space","capabilities":["read"],"resourceAccess":"space"},"outsider":{"issuer":"https://cortex-ci-runtime.example/","subject":"cortex-ci-37926572786-1-sdk-outsider","actorKind":"user","metadataUserId":"cortex-ci-37926572786-1-sdk-outsider","tenantId":"cortex-ci-37926572786-1-sdk-other","memorySpaceId":"cortex-ci-37926572786-1-sdk-other-space","capabilities":["read","write","run","admin","tool","storage:read","storage:write"],"resourceAccess":"space"}},"deploymentUrl":"***"}
+2026-10-09T12:16:38.5869229Z   CORTEX_TEST_AUTH_TOKEN: ***
+2026-10-09T12:16:38.5873707Z   CORTEX_TEST_READER_TOKEN: ***
+2026-10-09T12:16:38.5878129Z   CORTEX_TEST_OUTSIDER_TOKEN: ***
+2026-10-09T12:16:38.5878721Z   CORTEX_TEST_REMOTE_AGENT_ID: agent:93903cd5d0eaa6a78f74670089a97e7b92cdbcae0852c2bc983022a1494114bd
+2026-10-09T12:16:38.5879342Z   CORTEX_TEST_REMOTE_AGENT_VERSION: 1
+2026-10-09T12:16:38.5879965Z   CORTEX_TEST_REMOTE_AGENT_DEFINITION_HASH: 1d1b5bdac644620e50dbb02ed774f246049fd0e11d32ccd31ab77776733cbfa6
+2026-10-09T12:16:38.5880590Z ##[endgroup]
+2026-10-09T12:16:38.7578404Z (node:2711) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-09T12:16:38.7579552Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-09T12:16:38.7656335Z Multiple search paths detected. Calculating the least common ancestor of all paths
+2026-10-09T12:16:38.7659144Z The least common ancestor is /home/runner/work/Project-Cortex/Project-Cortex. This will be the root directory of the artifact
+2026-10-09T12:16:38.7660623Z With the provided path, there will be 3 files uploaded
+2026-10-09T12:16:38.7661764Z Artifact name is valid!
+2026-10-09T12:16:38.7662430Z Root directory input is valid!
+2026-10-09T12:16:39.0190637Z Beginning upload of artifact content to blob storage
+2026-10-09T12:16:39.0411512Z (node:2711) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-10-09T12:16:39.1525983Z Uploaded bytes 1715
+2026-10-09T12:16:39.1885828Z Finished uploading artifact content to blob storage!
+2026-10-09T12:16:39.1887843Z SHA256 digest of uploaded artifact zip is 452056aecd1266c8b9baf03abf88fa88110563502367d685a9241139c74704a0
+2026-10-09T12:16:39.1889272Z Finalizing artifact upload
+2026-10-09T12:16:39.4552594Z Artifact ci-provider-discovery-and-runtime.zip successfully finalized. Artifact ID 11615665887
+2026-10-09T12:16:39.4554849Z Artifact ci-provider-discovery-and-runtime has been successfully uploaded! Final size is 1715 bytes. Artifact ID is 11615665887
+2026-10-09T12:16:39.4560494Z Artifact download URL: https://github.com/SaintNick1214/Project-Cortex/actions/runs/37926572786/artifacts/11615665887
+2026-10-09T12:16:39.4691356Z ##[group]Run npm run lint --workspace=@cortexmemory/vercel-ai-provider
+2026-10-09T12:16:39.4692058Z [36;1mnpm run lint --workspace=@cortexmemory/vercel-ai-provider[0m
+2026-10-09T12:16:39.4756567Z shell: /usr/bin/bash -e {0}
+2026-10-09T12:16:39.4756952Z env:
+2026-10-09T12:16:39.4757271Z   CORTEX_CI_RUN_ID: 37926572786-1
+2026-10-09T12:16:39.4757744Z   CORTEX_CI_AUTH_ISSUER: https://cortex-ci-runtime.example/
+2026-10-09T12:16:39.4758269Z   CORTEX_CI_AUTH_AUDIENCE: cortex-ci-runtime
+2026-10-09T12:16:39.4766200Z   CORTEX_CI_AUTH_PRIVATE_KEY: ***
+2026-10-09T12:16:39.4766752Z   CORTEX_CI_DISPOSABLE_DEPLOYMENTS: ["steady-snake-253","usable-sheep-908"]
+2026-10-09T12:16:39.4767354Z   CONVEX_URL: ***
+2026-10-09T12:16:39.4767754Z   CONVEX_URL_CLI: ***
+2026-10-09T12:16:39.4768118Z   CORTEX_TEST_ENV_MODE: explicit
+2026-10-09T12:16:39.4773211Z   CORTEX_TEST_FIXTURE: {"version":1,"kind":"sdk","runId":"37926572786-1","issuer":"https://cortex-ci-runtime.example/","audience":"cortex-ci-runtime","tenantId":"cortex-ci-37926572786-1-sdk","memorySpaceId":"cortex-ci-37926572786-1-sdk-space","identities":{"owner":{"issuer":"https://cortex-ci-runtime.example/","subject":"cortex-ci-37926572786-1-sdk-owner","actorKind":"user","metadataUserId":"cortex-ci-37926572786-1-sdk-owner","tenantId":"cortex-ci-37926572786-1-sdk","memorySpaceId":"cortex-ci-37926572786-1-sdk-space","capabilities":["read","write","run","admin","tool","storage:read","storage:write"],"resourceAccess":"space"},"reader":{"issuer":"https://cortex-ci-runtime.example/","subject":"cortex-ci-37926572786-1-sdk-reader","actorKind":"user","metadataUserId":"cortex-ci-37926572786-1-sdk-reader","tenantId":"cortex-ci-37926572786-1-sdk","memorySpaceId":"cortex-ci-37926572786-1-sdk-space","capabilities":["read"],"resourceAccess":"space"},"outsider":{"issuer":"https://cortex-ci-runtime.example/","subject":"cortex-ci-37926572786-1-sdk-outsider","actorKind":"user","metadataUserId":"cortex-ci-37926572786-1-sdk-outsider","tenantId":"cortex-ci-37926572786-1-sdk-other","memorySpaceId":"cortex-ci-37926572786-1-sdk-other-space","capabilities":["read","write","run","admin","tool","storage:read","storage:write"],"resourceAccess":"space"}},"deploymentUrl":"***"}
+2026-10-09T12:16:39.4782752Z   CORTEX_TEST_AUTH_TOKEN: ***
+2026-10-09T12:16:39.4787371Z   CORTEX_TEST_READER_TOKEN: ***
+2026-10-09T12:16:39.4792033Z   CORTEX_TEST_OUTSIDER_TOKEN: ***
+2026-10-09T12:16:39.4792650Z   CORTEX_TEST_REMOTE_AGENT_ID: agent:93903cd5d0eaa6a78f74670089a97e7b92cdbcae0852c2bc983022a1494114bd
+2026-10-09T12:16:39.4793284Z   CORTEX_TEST_REMOTE_AGENT_VERSION: 1
+2026-10-09T12:16:39.4794197Z   CORTEX_TEST_REMOTE_AGENT_DEFINITION_HASH: 1d1b5bdac644620e50dbb02ed774f246049fd0e11d32ccd31ab77776733cbfa6
+2026-10-09T12:16:39.4794835Z ##[endgroup]
+2026-10-09T12:16:39.6063229Z npm notice run @cortexmemory/vercel-ai-provider@0.38.0 lint
+2026-10-09T12:16:39.6065438Z npm notice run tsc --noEmit
+2026-10-09T12:16:41.7388487Z ##[group]Run npm pack --dry-run --workspace=@cortexmemory/vercel-ai-provider
+2026-10-09T12:16:41.7389246Z [36;1mnpm pack --dry-run --workspace=@cortexmemory/vercel-ai-provider[0m
+2026-10-09T12:16:41.7452497Z shell: /usr/bin/bash -e {0}
+2026-10-09T12:16:41.7452875Z env:
+2026-10-09T12:16:41.7453192Z   CORTEX_CI_RUN_ID: 37926572786-1
+2026-10-09T12:16:41.7453932Z   CORTEX_CI_AUTH_ISSUER: https://cortex-ci-runtime.example/
+2026-10-09T12:16:41.7454464Z   CORTEX_CI_AUTH_AUDIENCE: cortex-ci-runtime
+2026-10-09T12:16:41.7462092Z   CORTEX_CI_AUTH_PRIVATE_KEY: ***
+2026-10-09T12:16:41.7462631Z   CORTEX_CI_DISPOSABLE_DEPLOYMENTS: ["steady-snake-253","usable-sheep-908"]
+2026-10-09T12:16:41.7463235Z   CONVEX_URL: ***
+2026-10-09T12:16:41.7463861Z   CONVEX_URL_CLI: ***
+2026-10-09T12:16:41.7464220Z   CORTEX_TEST_ENV_MODE: explicit
+2026-10-09T12:16:41.7469293Z   CORTEX_TEST_FIXTURE: {"version":1,"kind":"sdk","runId":"37926572786-1","issuer":"https://cortex-ci-runtime.example/","audience":"cortex-ci-runtime","tenantId":"cortex-ci-37926572786-1-sdk","memorySpaceId":"cortex-ci-37926572786-1-sdk-space","identities":{"owner":{"issuer":"https://cortex-ci-runtime.example/","subject":"cortex-ci-37926572786-1-sdk-owner","actorKind":"user","metadataUserId":"cortex-ci-37926572786-1-sdk-owner","tenantId":"cortex-ci-37926572786-1-sdk","memorySpaceId":"cortex-ci-37926572786-1-sdk-space","capabilities":["read","write","run","admin","tool","storage:read","storage:write"],"resourceAccess":"space"},"reader":{"issuer":"https://cortex-ci-runtime.example/","subject":"cortex-ci-37926572786-1-sdk-reader","actorKind":"user","metadataUserId":"cortex-ci-37926572786-1-sdk-reader","tenantId":"cortex-ci-37926572786-1-sdk","memorySpaceId":"cortex-ci-37926572786-1-sdk-space","capabilities":["read"],"resourceAccess":"space"},"outsider":{"issuer":"https://cortex-ci-runtime.example/","subject":"cortex-ci-37926572786-1-sdk-outsider","actorKind":"user","metadataUserId":"cortex-ci-37926572786-1-sdk-outsider","tenantId":"cortex-ci-37926572786-1-sdk-other","memorySpaceId":"cortex-ci-37926572786-1-sdk-other-space","capabilities":["read","write","run","admin","tool","storage:read","storage:write"],"resourceAccess":"space"}},"deploymentUrl":"***"}
+2026-10-09T12:16:41.7478914Z   CORTEX_TEST_AUTH_TOKEN: ***
+2026-10-09T12:16:41.7483174Z   CORTEX_TEST_READER_TOKEN: ***
+2026-10-09T12:16:41.7487734Z   CORTEX_TEST_OUTSIDER_TOKEN: ***
+2026-10-09T12:16:41.7488328Z   CORTEX_TEST_REMOTE_AGENT_ID: agent:93903cd5d0eaa6a78f74670089a97e7b92cdbcae0852c2bc983022a1494114bd
+2026-10-09T12:16:41.7488960Z   CORTEX_TEST_REMOTE_AGENT_VERSION: 1
+2026-10-09T12:16:41.7489596Z   CORTEX_TEST_REMOTE_AGENT_DEFINITION_HASH: 1d1b5bdac644620e50dbb02ed774f246049fd0e11d32ccd31ab77776733cbfa6
+2026-10-09T12:16:41.7490228Z ##[endgroup]
+2026-10-09T12:16:42.1174836Z npm notice
+2026-10-09T12:16:42.1179715Z npm notice 📦  @cortexmemory/vercel-ai-provider@0.38.0
+2026-10-09T12:16:42.1180754Z npm notice Tarball Contents
+2026-10-09T12:16:42.1186124Z npm notice 305B LICENSE.md
+2026-10-09T12:16:42.1186977Z npm notice 7.7kB README.md
+2026-10-09T12:16:42.1187742Z npm notice 21.1kB dist/chunk-ZPWP4LTD.js
+2026-10-09T12:16:42.1188632Z npm notice 24.9kB dist/react/index.cjs
+2026-10-09T12:16:42.1189335Z npm notice 16.4kB dist/react/index.d.cts
+2026-10-09T12:16:42.1190135Z npm notice 16.4kB dist/react/index.d.ts
+2026-10-09T12:16:42.1190762Z npm notice 15.5kB dist/react/index.js
+2026-10-09T12:16:42.1191826Z npm notice 13.9kB dist/remote/index.cjs
+2026-10-09T12:16:42.1193017Z npm notice 2.9kB dist/remote/index.d.cts
+2026-10-09T12:16:42.1194128Z npm notice 2.9kB dist/remote/index.d.ts
+2026-10-09T12:16:42.1194914Z npm notice 12.6kB dist/remote/index.js
+2026-10-09T12:16:42.1195689Z npm notice 63.4kB dist/src/index.cjs
+2026-10-09T12:16:42.1196403Z npm notice 40.1kB dist/src/index.d.cts
+2026-10-09T12:16:42.1197324Z npm notice 40.1kB dist/src/index.d.ts
+2026-10-09T12:16:42.1197986Z npm notice 38.9kB dist/src/index.js
+2026-10-09T12:16:42.1198515Z npm notice 22.3kB dist/types-DKEzlhpU.d.cts
+2026-10-09T12:16:42.1199773Z npm notice 22.3kB dist/types-DKEzlhpU.d.ts
+2026-10-09T12:16:42.1200325Z npm notice 3.7kB package.json
+2026-10-09T12:16:42.1200742Z npm notice Tarball Details
+2026-10-09T12:16:42.1201406Z npm notice name: @cortexmemory/vercel-ai-provider
+2026-10-09T12:16:42.1201901Z npm notice version: 0.38.0
+2026-10-09T12:16:42.1202455Z npm notice filename: cortexmemory-vercel-ai-provider-0.38.0.tgz
+2026-10-09T12:16:42.1203032Z npm notice package size: 77.4 kB
+2026-10-09T12:16:42.1203800Z npm notice unpacked size: 365.4 kB
+2026-10-09T12:16:42.1204462Z npm notice shasum: d7bc94f868553e37fe27641bd3105738dd123d82
+2026-10-09T12:16:42.1205096Z npm notice integrity: sha512-+azI3bQ88yXv+[...]IzwTvXyMimR/A==
+2026-10-09T12:16:42.1205614Z npm notice total files: 18
+2026-10-09T12:16:42.1206013Z npm notice
+2026-10-09T12:16:42.1206497Z cortexmemory-vercel-ai-provider-0.38.0.tgz
+2026-10-09T12:16:42.1399859Z Post job cleanup.
+2026-10-09T12:16:42.2649688Z Cache hit occurred on the primary key node-cache-Linux-x64-npm-d16708d29295057fc3d9c7348cc85d98cf19ee0ba83810ee5cae2e31d7ce4045, not saving cache.
+2026-10-09T12:16:42.2790918Z Post job cleanup.
+2026-10-09T12:16:42.3786542Z [command]/usr/bin/git version
+2026-10-09T12:16:42.3841842Z git version 2.55.0
+2026-10-09T12:16:42.3893453Z Temporarily overriding HOME='/home/runner/work/_temp/db3dfe79-5964-400b-a3e1-049448c971be' before making global git config changes
+2026-10-09T12:16:42.3907046Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-09T12:16:42.3909228Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Project-Cortex/Project-Cortex
+2026-10-09T12:16:42.3957661Z Removing SSH command configuration
+2026-10-09T12:16:42.3959528Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-09T12:16:42.4014266Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-09T12:16:42.4705666Z Removing HTTP extra header
+2026-10-09T12:16:42.4714896Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-09T12:16:42.4772337Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-09T12:16:42.5275852Z Removing includeIf entries pointing to credentials config files
+2026-10-09T12:16:42.5284717Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-09T12:16:42.5317879Z includeif.gitdir:/home/runner/work/Project-Cortex/Project-Cortex/.git.path
+2026-10-09T12:16:42.5319557Z includeif.gitdir:/home/runner/work/Project-Cortex/Project-Cortex/.git/worktrees/*.path
+2026-10-09T12:16:42.5320876Z includeif.gitdir:/github/workspace/.git.path
+2026-10-09T12:16:42.5322015Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-09T12:16:42.5329778Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/Project-Cortex/Project-Cortex/.git.path
+2026-10-09T12:16:42.5358416Z /home/runner/work/_temp/git-credentials-8cec1b22-7719-41e7-8da3-e396f3a4fe14.config
+2026-10-09T12:16:42.5370921Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/Project-Cortex/Project-Cortex/.git.path /home/runner/work/_temp/git-credentials-8cec1b22-7719-41e7-8da3-e396f3a4fe14.config
+2026-10-09T12:16:42.5416253Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/Project-Cortex/Project-Cortex/.git/worktrees/*.path
+2026-10-09T12:16:42.5442827Z /home/runner/work/_temp/git-credentials-8cec1b22-7719-41e7-8da3-e396f3a4fe14.config
+2026-10-09T12:16:42.5457672Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/Project-Cortex/Project-Cortex/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-8cec1b22-7719-41e7-8da3-e396f3a4fe14.config
+2026-10-09T12:16:42.5496824Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-10-09T12:16:42.5522818Z /github/runner_temp/git-credentials-8cec1b22-7719-41e7-8da3-e396f3a4fe14.config
+2026-10-09T12:16:42.5532553Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-8cec1b22-7719-41e7-8da3-e396f3a4fe14.config
+2026-10-09T12:16:42.5570262Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-09T12:16:42.5602802Z /github/runner_temp/git-credentials-8cec1b22-7719-41e7-8da3-e396f3a4fe14.config
+2026-10-09T12:16:42.5612291Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-8cec1b22-7719-41e7-8da3-e396f3a4fe14.config
+2026-10-09T12:16:42.5651002Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-09T12:16:42.6109814Z Removing credentials config '/home/runner/work/_temp/git-credentials-8cec1b22-7719-41e7-8da3-e396f3a4fe14.config'
+2026-10-09T12:16:42.6258431Z Cleaning up orphan processes
+2026-10-09T12:16:42.6576088Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

@@ -1,6 +1,6 @@
 # Task 17: Installation documentation, quality and independent final gate
 
-**Status:** Partial independent acceptance at171a: 2/3 original criteria accepted; full task remains incomplete. Incomingdev integration applicability is pending.
+**Status:** Current scoped independent acceptance at cacdb4b8c: 2/3 original criteria accepted; full task remains incomplete because genuine async qualification is blocked.
 **Goal:** [Cortex-owned backend runs](../goal.md)
 **Depends on:** [15 Additive CLI, quickstart and template integration](15-product-integration.md), [16 Cross-layer live behavior and adversarial outcomes](16-outcome-validation.md)
 
@@ -39,3 +39,7 @@ No implementation, installation, paid inference, deployment or application testi
 ### Current scoped acceptance — 2026-10-09T06:41:03.004Z
 
 The same coherent independent [report2](../qa/local-resume-2026-10-05/task16-aggregate-outcomes1/independent-review1/report2.md) grants A1/A3; A2 remains blocked by required full selected checks/services and final independent approval. The complete task verdict is NEEDS REVISION (mean3.6; mandatory requirement/completeness minima unmet). No successor merged-source, unavailable-functional or whole-goal acceptance is implied.
+
+### Current integrated applicability — 2026-10-09T12:35:45.352Z
+
+Original A1/A3 remain accepted and apply to current cacdb4b8c. The same non-author [final audit](../qa/local-resume-2026-10-05/task16-current-integration-ci1/successor4/independent-final-audit1/report1.md) verifies current selected CI, financial closure, additive installed consumers and build-qualified unpublished website SOURCE5 with unchanged TypeScript examples; prior SOURCE3 browser evidence remains separately scoped. Required A2 is incomplete because genuine async service outcomes and full independent goal approval remain missing. The completed scope passes 4/5 in every dimension; full original goal verdict is ISSUES FOUND. No production deployment, release, merge or website publication is included.
