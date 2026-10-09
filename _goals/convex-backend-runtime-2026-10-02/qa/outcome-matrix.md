@@ -1,3 +1,5 @@
+Current functional-policyv2 matrix: [original12 outcome map](local-resume-2026-10-05/task16-aggregate-outcomes1/current-outcomes2.md). Historical tables and verdicts below retain their original scope/date. Full goal remains incomplete.
+
 # Goal outcome coverage
 
 Incremental coverage tracker, not Task16 or final-audit approval. Every row corresponds
@@ -692,3 +694,18 @@ Milestone185: originalTask03 same coherent nonauthorPASS4.0 grants all5requireme
 ## Current quality closure — 2026-10-09T05:44:47.275Z
 
 Milestone186: current SDK118/6633, CLI24/366, affected Basic29, provider12/302, demo3/80 checks closed; backend types, packed exports, root lint0errors149warnings pass. Original lint/setup/timeout failures remain raw history. Current guarded CI source38controls, dedicated real provider remote contract and explicit environment/discovery/cleanup are ready for one safe-head native run; actual CI and remote outcomes pending. No new original criterion grant; 13/17=76.5%,50/61=82.0%,0/12finalgoaloutcomes/fullfalse.
+
+
+## Final website source build — 2026-10-09T05:53:37.377Z
+
+Milestone187: final unpublished website SOURCE4 Docusaurus build naturalPASS11.615s,3 TypeScript examples unchanged from compiler-qualified source3; owned PID/group absent and sibling dirty status unchanged. Prior source3 actual browser, original raw failures and source4 boundary retained. Current original12 outcome map links real scoped evidence and required native media/CI/final cleanup/audit gaps. No new independent criterion grant:13/17=76.5%,50/61=82.0%,0/12finalgoaloutcomes/fullfalse.
+
+
+## Current head authenticated CI — 2026-10-09T06:08:16.211Z
+
+Milestone188: safe currenthead171a authenticated CI37891412235 has actual setup/deploy/qualified policy/scoped fixturesSUCCESS; all4packed demo/template builds, public/browser contracts and Neo4j/Memgraph alsoSUCCESS. Exactly5newsecret/5publicvar activation retains historical metadata; one dispatch only. Current SDK/CLI/provider-remote/quality consumers and alwayscleanup stillRUNNING, no final acceptance or native media promotion. Relevant PRChecks queue/targets verified; unrelated security-only runs cannot consume backend credentials/targets and do not block activation.13/17=76.5%,50/61=82.0%,0/12finalgoal/fullfalse.
+
+
+## Real current-head CI closure — 2026-10-09T06:24:46.321Z
+
+Milestone189: current171a SINGLE hostedCI37891412235 all18jobsSUCCESS/15actual0skip,118/6633SDK,24/366CLI,provider231+71,all4packedapp/publicbrowser/NeoMemgraph/qualityPASS. Actual provider canonical AI SDK7 reconnect/samerequestreplay/outsiderdeny/oneAgentmodel-final-ingestion and sharedparenttitle;4scopes retired/three signedroles eachtargetFORBIDDEN.16newcalls/full1.6m unknown/slots0 retained;old dedicated1m exactID/root/window/counters unchanged. CI/source coherent independentcriterionreview pending. Main/graphs/CIdevsettings/private600 retainedfor substantive incomingdev97conflict integration and image qualification. No mergedsource/async/fullgoal promotion:13/17=76.5%,50/61=82.0%,0/12finalgoal/fullfalse.

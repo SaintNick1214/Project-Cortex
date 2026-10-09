@@ -1,0 +1,165 @@
+Deploy & Provision Scoped Runtime Fixtures	Require explicitly approved disposable development targets	﻿2026-10-09T05:49:31.0530088Z ##[group]Run node scripts/ci/verify-disposable-targets.mjs
+Deploy & Provision Scoped Runtime Fixtures	Require explicitly approved disposable development targets	2026-10-09T05:49:31.0530367Z ^[[36;1mnode scripts/ci/verify-disposable-targets.mjs^[[0m
+Deploy & Provision Scoped Runtime Fixtures	Require explicitly approved disposable development targets	2026-10-09T05:49:31.0587903Z shell: /usr/bin/bash -e {0}
+Deploy & Provision Scoped Runtime Fixtures	Require explicitly approved disposable development targets	2026-10-09T05:49:31.0588050Z env:
+Deploy & Provision Scoped Runtime Fixtures	Require explicitly approved disposable development targets	2026-10-09T05:49:31.0588166Z   CORTEX_CI_RUN_ID: 37890124265-1
+Deploy & Provision Scoped Runtime Fixtures	Require explicitly approved disposable development targets	2026-10-09T05:49:31.0588307Z   CORTEX_CI_AUTH_ISSUER: 
+Deploy & Provision Scoped Runtime Fixtures	Require explicitly approved disposable development targets	2026-10-09T05:49:31.0588452Z   CORTEX_CI_AUTH_AUDIENCE: 
+Deploy & Provision Scoped Runtime Fixtures	Require explicitly approved disposable development targets	2026-10-09T05:49:31.0588585Z   CORTEX_CI_AUTH_PRIVATE_KEY: 
+Deploy & Provision Scoped Runtime Fixtures	Require explicitly approved disposable development targets	2026-10-09T05:49:31.0588837Z   CORTEX_CI_DISPOSABLE_DEPLOYMENTS: 
+Deploy & Provision Scoped Runtime Fixtures	Require explicitly approved disposable development targets	2026-10-09T05:49:31.0588975Z   CONVEX_URL: 
+Deploy & Provision Scoped Runtime Fixtures	Require explicitly approved disposable development targets	2026-10-09T05:49:31.0589081Z   CONVEX_URL_CLI: 
+Deploy & Provision Scoped Runtime Fixtures	Require explicitly approved disposable development targets	2026-10-09T05:49:31.0589192Z   CONVEX_DEPLOY_KEY: 
+Deploy & Provision Scoped Runtime Fixtures	Require explicitly approved disposable development targets	2026-10-09T05:49:31.0589315Z   CONVEX_DEPLOY_KEY_CLI: 
+Deploy & Provision Scoped Runtime Fixtures	Require explicitly approved disposable development targets	2026-10-09T05:49:31.0589439Z   CORTEX_CI_MODEL_MANIFEST_ID: 
+Deploy & Provision Scoped Runtime Fixtures	Require explicitly approved disposable development targets	2026-10-09T05:49:31.0589575Z   CORTEX_CI_MODEL_MANIFEST_REVISION: 
+Deploy & Provision Scoped Runtime Fixtures	Require explicitly approved disposable development targets	2026-10-09T05:49:31.0589714Z ##[endgroup]
+Deploy & Provision Scoped Runtime Fixtures	Require explicitly approved disposable development targets	2026-10-09T05:49:31.0834478Z CI_DISPOSABLE_TARGET_ALLOWLIST_REQUIRED
+Deploy & Provision Scoped Runtime Fixtures	Require explicitly approved disposable development targets	2026-10-09T05:49:31.0865961Z ##[error]Process completed with exit code 1.
+Retire exact CI fixture authority	Retire owned SDK test tenant; preserve failure and tombstone history	﻿2026-10-09T05:51:01.1973553Z ##[group]Run npx tsx scripts/cleanup-test-data.ts sdk > ci-sdk-cleanup.json
+Retire exact CI fixture authority	Retire owned SDK test tenant; preserve failure and tombstone history	2026-10-09T05:51:01.1974171Z ^[[36;1mnpx tsx scripts/cleanup-test-data.ts sdk > ci-sdk-cleanup.json^[[0m
+Retire exact CI fixture authority	Retire owned SDK test tenant; preserve failure and tombstone history	2026-10-09T05:51:01.2038455Z shell: /usr/bin/bash -e {0}
+Retire exact CI fixture authority	Retire owned SDK test tenant; preserve failure and tombstone history	2026-10-09T05:51:01.2038728Z env:
+Retire exact CI fixture authority	Retire owned SDK test tenant; preserve failure and tombstone history	2026-10-09T05:51:01.2039120Z   CORTEX_CI_RUN_ID: 37890124265-1
+Retire exact CI fixture authority	Retire owned SDK test tenant; preserve failure and tombstone history	2026-10-09T05:51:01.2039398Z   CORTEX_CI_AUTH_ISSUER: 
+Retire exact CI fixture authority	Retire owned SDK test tenant; preserve failure and tombstone history	2026-10-09T05:51:01.2039647Z   CORTEX_CI_AUTH_AUDIENCE: 
+Retire exact CI fixture authority	Retire owned SDK test tenant; preserve failure and tombstone history	2026-10-09T05:51:01.2039895Z   CORTEX_CI_AUTH_PRIVATE_KEY: 
+Retire exact CI fixture authority	Retire owned SDK test tenant; preserve failure and tombstone history	2026-10-09T05:51:01.2040159Z   CORTEX_CI_DISPOSABLE_DEPLOYMENTS: 
+Retire exact CI fixture authority	Retire owned SDK test tenant; preserve failure and tombstone history	2026-10-09T05:51:01.2040429Z   CONVEX_URL: 
+Retire exact CI fixture authority	Retire owned SDK test tenant; preserve failure and tombstone history	2026-10-09T05:51:01.2040634Z   CONVEX_URL_CLI: 
+Retire exact CI fixture authority	Retire owned SDK test tenant; preserve failure and tombstone history	2026-10-09T05:51:01.2040849Z   CONVEX_DEPLOY_KEY: 
+Retire exact CI fixture authority	Retire owned SDK test tenant; preserve failure and tombstone history	2026-10-09T05:51:01.2041068Z   CONVEX_DEPLOY_KEY_CLI: 
+Retire exact CI fixture authority	Retire owned SDK test tenant; preserve failure and tombstone history	2026-10-09T05:51:01.2041302Z ##[endgroup]
+Retire exact CI fixture authority	Retire owned SDK test tenant; preserve failure and tombstone history	2026-10-09T05:51:01.4843478Z npm notice run @cortexmemory/sdk@0.37.0 npx
+Retire exact CI fixture authority	Retire owned SDK test tenant; preserve failure and tombstone history	2026-10-09T05:51:01.4846792Z npm notice run 'tsx' scripts/cleanup-test-data.ts sdk
+Retire exact CI fixture authority	Retire owned SDK test tenant; preserve failure and tombstone history	2026-10-09T05:51:01.7574571Z CI_DISPOSABLE_TARGET_ALLOWLIST_REQUIRED
+Retire exact CI fixture authority	Retire owned SDK test tenant; preserve failure and tombstone history	2026-10-09T05:51:01.7919398Z ##[error]Process completed with exit code 1.
+Retire exact CI fixture authority	Retire owned CLI test tenant; preserve failure and tombstone history	﻿2026-10-09T05:51:01.7993395Z ##[group]Run npx tsx scripts/cleanup-test-data.ts cli > ci-cli-cleanup.json
+Retire exact CI fixture authority	Retire owned CLI test tenant; preserve failure and tombstone history	2026-10-09T05:51:01.7994313Z ^[[36;1mnpx tsx scripts/cleanup-test-data.ts cli > ci-cli-cleanup.json^[[0m
+Retire exact CI fixture authority	Retire owned CLI test tenant; preserve failure and tombstone history	2026-10-09T05:51:01.8065453Z shell: /usr/bin/bash -e {0}
+Retire exact CI fixture authority	Retire owned CLI test tenant; preserve failure and tombstone history	2026-10-09T05:51:01.8065734Z env:
+Retire exact CI fixture authority	Retire owned CLI test tenant; preserve failure and tombstone history	2026-10-09T05:51:01.8065944Z   CORTEX_CI_RUN_ID: 37890124265-1
+Retire exact CI fixture authority	Retire owned CLI test tenant; preserve failure and tombstone history	2026-10-09T05:51:01.8066220Z   CORTEX_CI_AUTH_ISSUER: 
+Retire exact CI fixture authority	Retire owned CLI test tenant; preserve failure and tombstone history	2026-10-09T05:51:01.8066463Z   CORTEX_CI_AUTH_AUDIENCE: 
+Retire exact CI fixture authority	Retire owned CLI test tenant; preserve failure and tombstone history	2026-10-09T05:51:01.8066712Z   CORTEX_CI_AUTH_PRIVATE_KEY: 
+Retire exact CI fixture authority	Retire owned CLI test tenant; preserve failure and tombstone history	2026-10-09T05:51:01.8066977Z   CORTEX_CI_DISPOSABLE_DEPLOYMENTS: 
+Retire exact CI fixture authority	Retire owned CLI test tenant; preserve failure and tombstone history	2026-10-09T05:51:01.8067249Z   CONVEX_URL: 
+Retire exact CI fixture authority	Retire owned CLI test tenant; preserve failure and tombstone history	2026-10-09T05:51:01.8067459Z   CONVEX_URL_CLI: 
+Retire exact CI fixture authority	Retire owned CLI test tenant; preserve failure and tombstone history	2026-10-09T05:51:01.8067669Z   CONVEX_DEPLOY_KEY: 
+Retire exact CI fixture authority	Retire owned CLI test tenant; preserve failure and tombstone history	2026-10-09T05:51:01.8067895Z   CONVEX_DEPLOY_KEY_CLI: 
+Retire exact CI fixture authority	Retire owned CLI test tenant; preserve failure and tombstone history	2026-10-09T05:51:01.8068126Z ##[endgroup]
+Retire exact CI fixture authority	Retire owned CLI test tenant; preserve failure and tombstone history	2026-10-09T05:51:02.0826566Z npm notice run @cortexmemory/sdk@0.37.0 npx
+Retire exact CI fixture authority	Retire owned CLI test tenant; preserve failure and tombstone history	2026-10-09T05:51:02.0828935Z npm notice run 'tsx' scripts/cleanup-test-data.ts cli
+Retire exact CI fixture authority	Retire owned CLI test tenant; preserve failure and tombstone history	2026-10-09T05:51:02.2967658Z CI_DISPOSABLE_TARGET_ALLOWLIST_REQUIRED
+Retire exact CI fixture authority	Retire owned CLI test tenant; preserve failure and tombstone history	2026-10-09T05:51:02.3225142Z ##[error]Process completed with exit code 1.
+All Checks Passed	Check if all jobs passed	﻿2026-10-09T05:51:08.0937492Z ##[group]Run test "success" = "success"
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.0938120Z ^[[36;1mtest "success" = "success"^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.0938570Z ^[[36;1mtest "success" = "success"^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.0939040Z ^[[36;1mtest "success" = "success"^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.0939717Z ^[[36;1mif [[ "failure" == "success" ]]; then^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.0940224Z ^[[36;1m  test "failure" = "success"^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.0940585Z ^[[36;1mfi^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.0940966Z ^[[36;1mecho "📊 Check Results:"^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.0941378Z ^[[36;1mecho "  Detect Changes:           success"^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.0941832Z ^[[36;1mecho "  Setup & Purge:            failure"^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.0942357Z ^[[36;1mecho "  Code Quality:             skipped"^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.0942816Z ^[[36;1mecho "  TypeScript Tests:         skipped"^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.0943340Z ^[[36;1mecho "  Vercel AI Provider Tests: skipped"^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.0943790Z ^[[36;1mecho "  CLI Tests:                skipped"^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.0944215Z ^[[36;1mecho ""^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.0944744Z ^[[36;1mecho "ℹ️  Security scans run in separate workflow (see Security tab)"^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.0945247Z ^[[36;1mecho ""^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.0945597Z ^[[36;1m^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.0946029Z ^[[36;1mfor result in "success" "failure" "skipped" "skipped" "skipped" "skipped"; do^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.0946627Z ^[[36;1m  case "$result" in failure|cancelled) exit 1 ;; esac^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.0947046Z ^[[36;1mdone^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.0947399Z ^[[36;1m# Detect changes must pass (it's the root job)^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.0947958Z ^[[36;1mif [[ "success" == "failure" ]]; then^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.0948349Z ^[[36;1m  echo "❌ Detect changes failed"^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.0948766Z ^[[36;1m  exit 1^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.0949077Z ^[[36;1mfi^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.0949534Z ^[[36;1m^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.0949926Z ^[[36;1m# Setup & purge must pass if it ran^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.0950479Z ^[[36;1mif [[ "failure" == "failure" ]]; then^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.0951077Z ^[[36;1m  echo "❌ Setup & purge failed"^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.0951644Z ^[[36;1m  exit 1^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.0952142Z ^[[36;1mfi^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.0952570Z ^[[36;1m^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.0953054Z ^[[36;1m# Validate that tests ran when they should have^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.1024517Z ^[[36;1m# If setup-and-purge succeeded, tests should not be skipped (they should pass or fail)^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.1025621Z ^[[36;1mif [[ "failure" == "success" ]]; then^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.1025951Z ^[[36;1m  # Check TypeScript tests^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.1026247Z ^[[36;1m  if [[ ("true" == "true" || \^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.1026563Z ^[[36;1m         "false" == "true" || \^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.1026876Z ^[[36;1m         "dev" == "main") && \^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.1027188Z ^[[36;1m        "skipped" == "skipped" ]]; then^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.1027579Z ^[[36;1m    echo "❌ TypeScript tests should have run but were skipped"^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.1027949Z ^[[36;1m    exit 1^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.1028190Z ^[[36;1m  fi^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.1028424Z ^[[36;1m^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.1028639Z ^[[36;1m^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.1028883Z ^[[36;1m  # Check Vercel AI Provider tests^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.1029199Z ^[[36;1m  if [[ ("false" == "true" || \^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.1029684Z ^[[36;1m         "dev" == "main") && \^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.1029993Z ^[[36;1m        "skipped" == "skipped" ]]; then^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.1030395Z ^[[36;1m    echo "❌ Vercel AI Provider tests should have run but were skipped"^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.1030797Z ^[[36;1m    exit 1^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.1031032Z ^[[36;1m  fi^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.1031255Z ^[[36;1m^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.1031478Z ^[[36;1m  # Check CLI tests^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.1031754Z ^[[36;1m  if [[ ("false" == "true" || \^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.1032054Z ^[[36;1m         "dev" == "main") && \^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.1032361Z ^[[36;1m        "skipped" == "skipped" ]]; then^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.1032722Z ^[[36;1m    echo "❌ CLI tests should have run but were skipped"^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.1033213Z ^[[36;1m    exit 1^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.1033451Z ^[[36;1m  fi^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.1033675Z ^[[36;1m^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.1033898Z ^[[36;1m  # Check code quality^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.1034181Z ^[[36;1m  if [[ ("true" == "true" || \^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.1034475Z ^[[36;1m         "dev" == "main") && \^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.1034790Z ^[[36;1m        "skipped" == "skipped" ]]; then^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.1035183Z ^[[36;1m    echo "❌ Code quality checks should have run but were skipped"^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.1035620Z ^[[36;1m    exit 1^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.1035859Z ^[[36;1m  fi^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.1036084Z ^[[36;1mfi^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.1036302Z ^[[36;1m^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.1036593Z ^[[36;1m# Code quality must pass OR be skipped (when no changes)^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.1036973Z ^[[36;1mif [[ "skipped" == "failure" ]]; then^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.1037301Z ^[[36;1m  echo "❌ Code quality check failed"^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.1037605Z ^[[36;1m  exit 1^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.1037837Z ^[[36;1mfi^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.1038056Z ^[[36;1m^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.1038359Z ^[[36;1m# TypeScript tests must pass OR be skipped (when no changes)^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.1038755Z ^[[36;1mif [[ "skipped" == "failure" ]]; then^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.1039089Z ^[[36;1m  echo "❌ TypeScript tests failed"^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.1039482Z ^[[36;1m  exit 1^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.1039717Z ^[[36;1mfi^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.1039938Z ^[[36;1m^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.1040154Z ^[[36;1m^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.1040479Z ^[[36;1m# Vercel AI Provider tests must pass OR be skipped (when no changes)^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.1040893Z ^[[36;1mif [[ "skipped" == "failure" ]]; then^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.1041237Z ^[[36;1m  echo "❌ Vercel AI Provider tests failed"^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.1041556Z ^[[36;1m  exit 1^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.1041786Z ^[[36;1mfi^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.1042008Z ^[[36;1m^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.1042301Z ^[[36;1m# CLI tests must pass OR be skipped (when no changes)^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.1042731Z ^[[36;1mif [[ "skipped" == "failure" ]]; then^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.1043192Z ^[[36;1m  echo "❌ CLI tests failed"^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.1043474Z ^[[36;1m  exit 1^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.1043702Z ^[[36;1mfi^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.1043925Z ^[[36;1m^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.1044140Z ^[[36;1mecho ""^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.1044392Z ^[[36;1mecho "✅ All PR checks passed!"^[[0m
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.1594064Z shell: /usr/bin/bash -e {0}
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.1594652Z ##[endgroup]
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.1852145Z 📊 Check Results:
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.1852699Z   Detect Changes:           success
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.1853046Z   Setup & Purge:            failure
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.1853385Z   Code Quality:             skipped
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.1853700Z   TypeScript Tests:         skipped
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.1854017Z   Vercel AI Provider Tests: skipped
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.1854330Z   CLI Tests:                skipped
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.1854524Z 
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.1854756Z ℹ️  Security scans run in separate workflow (see Security tab)
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.1855090Z 
+All Checks Passed	Check if all jobs passed	2026-10-09T05:51:08.1867600Z ##[error]Process completed with exit code 1.

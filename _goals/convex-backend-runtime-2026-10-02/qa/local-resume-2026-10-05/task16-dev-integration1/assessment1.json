@@ -1,0 +1,297 @@
+{
+  "schemaVersion": 1,
+  "closedAtUtc": "2026-10-09T06:09:44.845162+00:00",
+  "status": "READ_ONLY_INTEGRATION_ASSESSMENT_COMPLETE",
+  "heads": {
+    "HEAD": "171a1574aa7ea7ade1bfdf14a644521d36c54473",
+    "origin/dev": "b274c7ae15adf1c796cc3b810a7316fb2407c8eb"
+  },
+  "mergeBase": "e158b097fc74dbc16def7f33d054aa0cbf6f6fff",
+  "pr136": {
+    "number": 136,
+    "url": "https://github.com/SaintNick1214/Project-Cortex/pull/136",
+    "title": "Modernize Cortex CLI installation and administration for current Convex",
+    "state": "MERGED",
+    "mergedAt": "2026-10-09T05:53:56Z",
+    "mergeCommit": {
+      "oid": "b274c7ae15adf1c796cc3b810a7316fb2407c8eb"
+    },
+    "changedFiles": 1025
+  },
+  "prBodyScope": "Author-reported design/evidence; last draft/security wording is stale relative to observed MERGED state. This assessment neither validates nor borrows those check claims.",
+  "mergeTree": {
+    "startedAtUtc": "2026-10-09T06:00:53.049208+00:00",
+    "closedAtUtc": "2026-10-09T06:00:53.294901+00:00",
+    "cwd": "/Users/SaintNick/Documents/Cortex/worktrees/backend-runtime-completion",
+    "command": [
+      "git",
+      "merge-tree",
+      "--write-tree",
+      "--name-only",
+      "--no-messages",
+      "HEAD",
+      "origin/dev"
+    ],
+    "exit": 1,
+    "tree": "d8325dfc6406148abb54555de29f81e233902cf7",
+    "conflictedPaths": [
+      ".github/workflows/pr-checks.yml",
+      "README.md",
+      "convex-dev/memories.ts",
+      "convex-dev/runtimeDataAuth.ts",
+      "convex-dev/runtimeGateway.ts",
+      "convex-dev/runtimeMemoryRepository.ts",
+      "convex-dev/runtimeModelPolicy.ts",
+      "convex-dev/runtimeModelPolicyBootstrap.ts",
+      "convex-dev/schema.ts",
+      "package.json",
+      "packages/cortex-cli/README.md",
+      "packages/cortex-cli/package.json",
+      "packages/cortex-cli/src/commands/db.ts",
+      "packages/cortex-cli/src/commands/init.ts",
+      "packages/cortex-cli/src/index.ts",
+      "packages/cortex-cli/src/utils/__tests__/config-validation.test.ts",
+      "packages/cortex-cli/src/utils/client.ts",
+      "packages/cortex-cli/src/utils/config.ts",
+      "packages/cortex-cli/src/utils/init/env-generator.ts",
+      "packages/cortex-cli/templates/basic/.env.local.example",
+      "packages/cortex-cli/templates/basic/README.md",
+      "packages/cortex-cli/templates/basic/package-lock.json",
+      "packages/cortex-cli/templates/basic/package.json",
+      "packages/cortex-cli/templates/basic/src/__tests__/chat.test.ts",
+      "packages/cortex-cli/templates/basic/src/__tests__/cortex.test.ts",
+      "packages/cortex-cli/templates/basic/src/__tests__/llm.test.ts",
+      "packages/cortex-cli/templates/basic/src/cortex.ts",
+      "packages/cortex-cli/templates/basic/src/index.ts",
+      "packages/cortex-cli/templates/basic/src/server.ts",
+      "packages/cortex-cli/templates/chat-sdk-quickstart/.env.local.example",
+      "packages/cortex-cli/templates/chat-sdk-quickstart/CORTEX-INTEGRATION.md",
+      "packages/cortex-cli/templates/chat-sdk-quickstart/README.md",
+      "packages/cortex-cli/templates/chat-sdk-quickstart/app/(chat)/actions.ts",
+      "packages/cortex-cli/templates/chat-sdk-quickstart/app/(chat)/api/chat/[id]/stream/route.ts",
+      "packages/cortex-cli/templates/chat-sdk-quickstart/app/(chat)/api/chat/route.ts",
+      "packages/cortex-cli/templates/chat-sdk-quickstart/app/(chat)/api/document/route.ts",
+      "packages/cortex-cli/templates/chat-sdk-quickstart/app/(chat)/api/files/upload/route.ts",
+      "packages/cortex-cli/templates/chat-sdk-quickstart/app/(chat)/api/history/route.ts",
+      "packages/cortex-cli/templates/chat-sdk-quickstart/app/(chat)/api/suggestions/route.ts",
+      "packages/cortex-cli/templates/chat-sdk-quickstart/app/(chat)/api/vote/route.ts",
+      "packages/cortex-cli/templates/chat-sdk-quickstart/app/(chat)/chat/[id]/page.tsx",
+      "packages/cortex-cli/templates/chat-sdk-quickstart/app/(chat)/layout.tsx",
+      "packages/cortex-cli/templates/chat-sdk-quickstart/app/api/share/route.ts",
+      "packages/cortex-cli/templates/chat-sdk-quickstart/app/share/[id]/page.tsx",
+      "packages/cortex-cli/templates/chat-sdk-quickstart/artifacts/code/server.ts",
+      "packages/cortex-cli/templates/chat-sdk-quickstart/artifacts/sheet/server.ts",
+      "packages/cortex-cli/templates/chat-sdk-quickstart/artifacts/text/server.ts",
+      "packages/cortex-cli/templates/chat-sdk-quickstart/lib/ai/tools/create-document.ts",
+      "packages/cortex-cli/templates/chat-sdk-quickstart/lib/ai/tools/request-suggestions.ts",
+      "packages/cortex-cli/templates/chat-sdk-quickstart/lib/ai/tools/update-document.ts",
+      "packages/cortex-cli/templates/chat-sdk-quickstart/lib/artifacts/server.ts",
+      "packages/cortex-cli/templates/chat-sdk-quickstart/lib/cortex.ts",
+      "packages/cortex-cli/templates/chat-sdk-quickstart/next.config.ts",
+      "packages/cortex-cli/templates/chat-sdk-quickstart/package-lock.json",
+      "packages/cortex-cli/templates/chat-sdk-quickstart/proxy.ts",
+      "packages/cortex-cli/templates/chat-sdk-quickstart/tests/integration/chat.test.ts",
+      "packages/cortex-cli/templates/chat-sdk-quickstart/tests/unit/cortex.test.ts",
+      "packages/cortex-cli/templates/chat-sdk-quickstart/tests/unit/proxy.test.ts",
+      "packages/cortex-cli/templates/vercel-ai-quickstart/README.md",
+      "packages/cortex-cli/templates/vercel-ai-quickstart/app/api/chat-v6/route.ts",
+      "packages/cortex-cli/templates/vercel-ai-quickstart/app/api/chat/route.ts",
+      "packages/cortex-cli/templates/vercel-ai-quickstart/app/api/health/route.ts",
+      "packages/cortex-cli/tests/env.ts",
+      "packages/cortex-templates/payloads/vercel-ai-quickstart/1.2.0/.env.local.example",
+      "packages/cortex-templates/payloads/vercel-ai-quickstart/1.2.0/app/page.tsx",
+      "packages/cortex-templates/payloads/vercel-ai-quickstart/1.2.0/components/RuntimeMediaPanel.tsx",
+      "packages/cortex-templates/payloads/vercel-ai-quickstart/1.2.0/components/RuntimeQuickstart.tsx",
+      "packages/vercel-ai-provider/README.md",
+      "packages/vercel-ai-provider/jest.config.js",
+      "packages/vercel-ai-provider/package.json",
+      "packages/vercel-ai-provider/quickstart/.env.local.example",
+      "packages/vercel-ai-provider/quickstart/README.md",
+      "packages/vercel-ai-provider/quickstart/app/api/chat-v6/route.ts",
+      "packages/vercel-ai-provider/quickstart/app/api/chat/route.ts",
+      "packages/vercel-ai-provider/quickstart/app/api/health/route.ts",
+      "packages/vercel-ai-provider/quickstart/app/page.tsx",
+      "scripts/cleanup-test-data.ts",
+      "src/conversations/index.ts",
+      "src/facts/belief-revision.ts",
+      "src/facts/deduplication.ts",
+      "src/facts/index.ts",
+      "src/facts/slot-matching.ts",
+      "src/memorySpaces/index.ts",
+      "src/users/index.ts",
+      "src/vector/index.ts",
+      "tests/agents.test.ts",
+      "tests/unit/artifacts/sdk.test.ts",
+      "tests/unit/attachments/sdk.test.ts",
+      "tests/unit/memory-observer.test.ts",
+      "tests/unit/runtime/model-policy-admission.test.ts",
+      "tests/unit/runtimeArtifactAuth/inventory.test.ts",
+      "tests/unit/runtimeArtifactAuth/schema-indexes.test.ts",
+      "tests/unit/runtimeAssetUnavailableAuth/closure.test.ts",
+      "tests/unit/runtimeRegistryAuth/catalog.test.ts",
+      "tests/unit/runtimeUnavailableAuth/closure.test.ts",
+      "tests/unit/runtimeWorkerAuth/admin-catalog.test.ts",
+      "tests/users.test.ts"
+    ],
+    "stderr": "",
+    "checkoutIndexMutation": false
+  },
+  "overlap": {
+    "bothModified": 127,
+    "devChangedSinceBase": 1025,
+    "headChangedSinceBase": 37864,
+    "conflictCount": 97,
+    "conflictGroups": {
+      "other": 7,
+      "backend": 7,
+      "CLI product": 7,
+      "CLI templates": 43,
+      "catalog": 4,
+      "provider/demo": 9,
+      "SDK": 8,
+      "tests": 12
+    },
+    "headCountIncludesFrozenGoalQAAndOtherTrackedArtifacts": true
+  },
+  "conclusion": {
+    "automaticCleanMerge": false,
+    "feasiblePreservingBothDesigns": true,
+    "engineeringEffort": "Substantial semantic integration batch, not a routine whole-file conflict pick; source/interface/catalog/install/CI reconciliation and affected validation required.",
+    "consequentialProductConflictNeedingHumanChoiceIdentified": false,
+    "basis": "Merged independent CLI/catalog/legacy operator administration can coexist with the approved backend-owned runtime and JWT public authority. Goal/settled security invariants choose the public runtime contract; legacy administrative selectors stay confined to explicit deployment-operator transport. No inspected requirement inherently demands weakening either design.",
+    "scopeLimit": "This is read-only engineering feasibility, not a proof that the unresolved object tree builds or that every one of1025dev changes is compatible. Unresolved97 paths and auto-merged semantic helpers must be implemented/reviewed before any merged candidate qualification.",
+    "recommendedTiming": "Let current Native CI complete exact171a and retain its source/effects. Root may authorize a separate coherent integration batch using these fixed heads; do not mutate the in-flight candidate or blind rebase/overwrite either source design."
+  },
+  "materialAreas": [
+    {
+      "area": "Schema, domain auth and canonical memory",
+      "conflicts": [
+        "convex-dev/schema.ts",
+        "convex-dev/memories.ts",
+        "convex-dev/runtimeDataAuth.ts",
+        "convex-dev/runtimeMemoryRepository.ts",
+        "src/conversations/index.ts",
+        "src/facts/index.ts",
+        "src/users/index.ts",
+        "src/vector/index.ts"
+      ],
+      "devIntent": "Tenant-scoped fact-history provenance, lifecycle/reference/erasure receipt tables, vectorScopeKey1536 filtering, finite native paging, graph primary/receipt integration and explicit supported legacy administration.",
+      "headIntent": "Canonical backend Agent transcript/source bridge, current qualified profile/source lineage and indexes, verified stored grants, revocation/tombstone epochs and final delivery deadline checks.",
+      "resolution": "Combine additive schema tables/indexes and provenance, retaining every runtime schema spread/index and current-profile lineage. Integrate domain paging/graph/user export+erasure without relabeling runtime metadata as legacy mutable content or giving caller labels runtime authority. Preserve current response/memory separation, retention fences and post-RPC action delivery clocks. Dev dataAuthorityReference sanitization already exists on HEAD, so retain the complete current DTO/deadline implementation rather than duplicate/revert it.",
+      "risk": "An apparently clean SDK/backend merge can still change output/operation shape, user deletion scope or graph dispatch behavior. Native legacy administrative tests and public verified-identity/runtime controls serve different contracts."
+    },
+    {
+      "area": "Gateway/policy and backend distribution",
+      "conflicts": [
+        "convex-dev/runtimeGateway.ts",
+        "convex-dev/runtimeModelPolicy.ts",
+        "convex-dev/runtimeModelPolicyBootstrap.ts",
+        "convex-dev/runtimeMemoryRepository.ts"
+      ],
+      "devIntent": "Self-contained convex-dev/lib/runtimeDomain domain/auth copies for CLI deployment; narrow reasoning type omission with unchanged fail-closed native option guard.",
+      "headIntent": "Current qualification DEFAULT9/immutable policy proofs, genuine Agent/content/artifact budget/account binding, source-derived installable full closure using scripts/backend/build-distribution.mjs and runtime source modules.",
+      "resolution": "Retain current qualification and model-call security. Reconcile the dev standalone domain copies with current src/auth/domain source, or generate one reviewed closure using the existing distribution builder; do not leave backend and SDK executing divergent stale copies. Preserve SDK runtime/runtime-graph exports and backend build after adopting dev release versions.",
+      "risk": "Dev fixed reviewed SDK_CONTRACT in template-backend.ts will not automatically admit the merged current runtime distribution. Its validation must be reconciled to the actual combined registration/visibility inventory; do not whitelist current bytes as qualification."
+    },
+    {
+      "area": "CLI auth, operation lifecycle, install/config/deploy",
+      "conflicts": [
+        "packages/cortex-cli/src/utils/client.ts",
+        "packages/cortex-cli/src/utils/config.ts",
+        "packages/cortex-cli/src/index.ts",
+        "packages/cortex-cli/src/commands/init.ts",
+        "packages/cortex-cli/src/commands/db.ts",
+        "packages/cortex-cli/src/utils/init/env-generator.ts"
+      ],
+      "devIntent": "Independent SDK/template install and upgrade paths, native import/export, graph/shared service, safe project/config admission, deployment-operator internal API transport and awaited shutdown/uncertainty-aware operations.",
+      "headIntent": "Verified host JWT sessions with owned selectors/token files, per-RPC pre/post-delivery fences, one-send versioned mutations/resilience disabled, additive backend/schema/component/auth/HTTP installation preserving unrelated host files.",
+      "resolution": "Keep modern CLI entrypoints/config/native-admin transport, then carry host JWT public-client mode and its per-RPC/session/deadline protections into them. Administrative deployment-key scope labels remain selectors for explicit internal operator mode; never substitute them for a signed runtime principal. Reconcile two installer/schema contracts so SDK upgrades preserve host schema/auth/config/router and add current runtime dependencies/components/endpoints. Preserve awaited dev resource cleanup and HEAD unknown-outcome no redispatch.",
+      "risk": "Taking either whole client.ts loses one of the supported transport/resource models. Auto-merged new install/schema-sync/template-backend helpers are semantic overlaps even when Git reports no conflict. Old quickstart-copy/lifecycle helpers still exist on dev as compatibility code; do not make them active again by merging old command registration."
+    },
+    {
+      "area": "Independent template catalog and runtime consumers",
+      "conflicts": [
+        "packages/cortex-cli/package.json",
+        "packages/cortex-cli/templates/basic/src/server.ts",
+        "packages/cortex-cli/templates/basic/src/cortex.ts",
+        "packages/cortex-cli/templates/chat-sdk-quickstart/app/(chat)/api/chat/route.ts",
+        "packages/vercel-ai-provider/quickstart/app/page.tsx",
+        "packages/cortex-templates/payloads/vercel-ai-quickstart/1.2.0/components/RuntimeQuickstart.tsx"
+      ],
+      "devIntent": "Independent @cortexmemory/templates1.1 catalog, application1.2 versions, explicit canonical assembly, CLI package excludes templates and stops automatic prebuild mirroring; Chat uses pnpm and reviewed Biome config.",
+      "headIntent": "Basic verified-Hono POST/observe/history, ChatSDK five backend-owned content intents and automatic-parent titles, modern canonical RuntimeQuickstart/media controls and refreshed/revoked private UI clearing.",
+      "resolution": "Use independent catalog mechanism and upgrade channels while carrying current backend-owned authenticated consumers into canonical Basic/Chat/Vercel sources and deliberately assembling a consistent new catalog candidate later. Remove generated CLI Vercel mirror ownership per dev instead of reintroducing automatic copy. Keep runtime modern page/components available in canonical quickstart, and port the strict token descriptors, shared handles, current UI epochs/auth/layout fences. Retired legacy application inference/document routes stay explicit refusals where HEAD already replaced those semantics.",
+      "risk": "Merge-tree includes directory-rename-related feature-only RuntimeQuickstart/RuntimeMediaPanel payload paths; some conflicted paths contain no textual markers. Do not accept their relocation as proof that canonical source and immutable catalog payload already agree. No current installed runtime acceptance exists for the new merged catalog/manager versions."
+    },
+    {
+      "area": "Versions, manifests and package exports",
+      "conflicts": [
+        "package.json",
+        "packages/cortex-cli/package.json",
+        "packages/vercel-ai-provider/package.json",
+        "template package.json and lockfiles"
+      ],
+      "devIntent": "SDK/CLI/provider0.38, applications1.2 and catalog1.1; exact candidate archive installation rather than older registry fallback; independent release/security pipeline.",
+      "headIntent": "SDK runtime/runtime-graph/backend distribution and provider remote export families with current compiled delivery contracts.",
+      "resolution": "Adopt the merged dev release/version dependency relationships without dropping HEAD runtime build steps/export maps/remote test project. Regenerate affected lockfiles only after coherent manifests; do not install/release as part of this read-only assessment. Update canonical documentation to the independent catalog/install semantics alongside current JWT/runtime prerequisites.",
+      "risk": "All previously validated packages/source pins are different candidates after that merge. Source version bumps and successful PR136 checks do not qualify the runtime DEFAULT9/model/installed-consumer candidate."
+    },
+    {
+      "area": "CI, test discovery and cleanup",
+      "conflicts": [
+        ".github/workflows/pr-checks.yml",
+        "scripts/cleanup-test-data.ts",
+        "packages/vercel-ai-provider/jest.config.js",
+        "packages/cortex-cli/tests/env.ts",
+        "shared runtime/domain tests"
+      ],
+      "devIntent": "Managed shard/native isolation, finite reference preparation and native reset, exact archive demo/catalog builds, release/scanner pipeline and visibly inventoried inherited legacy catalogs.",
+      "headIntent": "Exact two fresh dev-only CI aliases, independent allowlist/origin guard, scoped verified JWT fixtures, compiled current policy/default-profile provenance, meaningful current SDK/CLI suite and backend-owned provider e2e-remote, scoped grant retirement/checkreadback.",
+      "resolution": "Compose CI jobs and contract catalogs, preserving each mandatory current runtime assertion and explicit missing-config failure. Retain exact distinct dev-only allowlist guard and new CORTEX_CI selectors before effects; never reintroduce historical production selectors as test targets. Do not replace grant/scope retirement with whole-target reset while shared real runtime liabilities/fixtures remain. Dev native reset/reference preparation can serve its independently verified native legacy targets. Preserve all selected runtime/modern source and service paths exactly once; keep original failures/skips catalogued, without treating moved historical files as current actual success.",
+      "risk": "Whole-file CI adoption would change target/auth/setup and drop some current runtime/remote checks; whole-file cleanup adoption would change maintenance from scoped runtime retirement to physical native reset. They are compatible only with explicit target/job ownership and honest coverage."
+    }
+  ],
+  "currentStatus": {
+    "trackedDirtyAtStart": [
+      " M _goals/convex-backend-runtime-2026-10-02/qa/completion-current.json",
+      " M _goals/convex-backend-runtime-2026-10-02/qa/completion-milestones.jsonl",
+      " M _goals/convex-backend-runtime-2026-10-02/qa/completion-tracking-validation.json",
+      " M _goals/convex-backend-runtime-2026-10-02/qa/execution-progress.md",
+      " M _goals/convex-backend-runtime-2026-10-02/qa/outcome-matrix.md"
+    ],
+    "untrackedAtStart": 2795,
+    "trackedDirtyNow": [
+      " M _goals/convex-backend-runtime-2026-10-02/qa/completion-current.json",
+      " M _goals/convex-backend-runtime-2026-10-02/qa/completion-milestones.jsonl",
+      " M _goals/convex-backend-runtime-2026-10-02/qa/completion-tracking-validation.json",
+      " M _goals/convex-backend-runtime-2026-10-02/qa/execution-progress.md",
+      " M _goals/convex-backend-runtime-2026-10-02/qa/outcome-matrix.md"
+    ],
+    "dirtyProductSourceNow": [],
+    "sourceHeadAndOriginDevUnchanged": true,
+    "checkoutIndexEditsByThisExecutor": false,
+    "onlyWrites": "This assessment QA plus explicitly authorized git merge-tree object writes; no index/checkout/source copies or source changes."
+  },
+  "validationApplicability": {
+    "runtime171a": "All current runtime/native/quality receipts remain scoped to exact171a. No merged-source tests or actual effects run.",
+    "devPR136": "Existing evidence applies only to its exact source/candidate and declared cases. The combined catalog/backend/auth/memory/CI contracts require affected validation after implementation.",
+    "noNewJudgeOrAcceptanceGate": true
+  },
+  "evidence": [
+    "context1.json",
+    "merge-tree1.json",
+    "overlap1.json",
+    "manifest-differences1.json",
+    "pr136-summary1.json",
+    "focused-source-refs1.json"
+  ],
+  "effects": {
+    "mergeCheckout": false,
+    "indexChanged": false,
+    "rebase": false,
+    "commitPush": false,
+    "deployModelsServices": false,
+    "credentialMutation": false,
+    "goalAcceptanceEdits": false
+  }
+}
