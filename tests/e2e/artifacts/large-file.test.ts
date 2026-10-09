@@ -63,23 +63,27 @@ describeWithConvex("E2E: Large File Artifacts", () => {
   });
 
   afterAll(async () => {
-    // Clean up artifacts (hard delete to remove files too)
-    for (const artifactId of createdArtifactIds) {
+    try {
+      // Clean up artifacts (hard delete to remove files too)
+      for (const artifactId of createdArtifactIds) {
+        try {
+          await cortex.artifacts.delete(artifactId, true);
+        } catch {
+          // Ignore cleanup errors
+        }
+      }
+
+      // Clean up memory space
       try {
-        await cortex.artifacts.delete(artifactId, true);
+        await cortex.memorySpaces.delete(testMemorySpaceId, {
+          cascade: true,
+          reason: "Test cleanup",
+        });
       } catch {
         // Ignore cleanup errors
       }
-    }
-
-    // Clean up memory space
-    try {
-      await cortex.memorySpaces.delete(testMemorySpaceId, {
-        cascade: true,
-        reason: "Test cleanup",
-      });
-    } catch {
-      // Ignore cleanup errors
+    } finally {
+      await cortex?.shutdown();
     }
   });
 

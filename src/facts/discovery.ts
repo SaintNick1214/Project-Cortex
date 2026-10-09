@@ -83,7 +83,12 @@ export async function* scopedPages<T>(
         continue;
       }
       yield p.page;
-      if (p.isDone) break;
+      // Native isDone describes the full query; an end-bounded child can finish
+      // before that query does. Preserve its yielded rows and queued parent tail.
+      if (
+        p.isDone ||
+        (range.endCursor !== null && p.continueCursor === range.endCursor)
+      ) break;
       if (
         !p.continueCursor ||
         p.continueCursor === range.cursor ||

@@ -490,7 +490,7 @@ jobs:
         run: npx tsc --noEmit
 
   # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  # STAGE 3: TypeScript SDK Tests (sharded across 5 parallel runners)
+  # STAGE 3: TypeScript SDK Tests (five shards sharing one deployment)
   # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   test-typescript:
     name: Test TypeScript SDK (Shard ${{ matrix.shard }}/5)
@@ -514,7 +514,9 @@ jobs:
     strategy:
       matrix:
         shard: [1, 2, 3, 4, 5]
-      max-parallel: 5 # Run all shards simultaneously (parallel-safe via TestRunContext)
+      # Unique fixture IDs do not isolate deployment-wide lifecycle/range reads.
+      # Concurrent writers caused native OCC disconnects and unknown erasure outcomes.
+      max-parallel: 1
       fail-fast: false # Continue other shards even if one fails
 
     steps:
@@ -541,21 +543,12 @@ jobs:
           CONVEX_URL: ${{ secrets.CONVEX_URL }}
           CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
 
-      # Stagger shard starts to reduce concurrent load on shared Convex backend.
-      # 2-second increments allow each runner to begin its test subset
-      # before the next starts, avoiding thundering herd on database operations.
-      - name: Stagger shard start
-        run: |
-          DELAY=$(( (${{ matrix.shard }} - 1) * 2 ))
-          echo "Staggering shard ${{ matrix.shard }} start by ${DELAY}s"
-          sleep $DELAY
-
       - name: Run tests (shard ${{ matrix.shard }}/5)
         run: |
           node --experimental-vm-modules node_modules/jest/bin/jest.js \
             --testPathIgnorePatterns='/node_modules/|debug|/tests/unit/runtime/gateway-dispatch\.test\.ts$|/tests/graph/managed-runtime-safety\.test\.ts$|/tests/(user-export|fact-history-provenance|facts-revision-scope|domain-scope|domain-operations|memorySpaces|operation-sequences)\.test\.ts$' \
             --shard=${{ matrix.shard }}/5 \
-            --maxWorkers=75%
+            --runInBand
         env:
           CONVEX_URL: ${{ secrets.CONVEX_URL }}
           CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
@@ -573,7 +566,8 @@ jobs:
   test-vercel-ai-provider:
     name: Test Vercel AI Provider
     runs-on: ubuntu-latest
-    needs: [detect-changes, setup-and-purge]
+    # Provider integrations also write to the SDK's shared deployment.
+    needs: [detect-changes, setup-and-purge, test-typescript]
     # Run if Vercel AI Provider changed OR if PR is targeting main branch
     # IMPORTANT: Requires setup-and-purge to have SUCCEEDED (not just skipped) to ensure database isolation
     if: |
@@ -581,6 +575,7 @@ jobs:
       (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository) &&
       needs.setup-and-purge.result == 'success' &&
       needs.detect-changes.result == 'success' &&
+      (needs.test-typescript.result == 'success' || needs.test-typescript.result == 'skipped') &&
       (
         needs.detect-changes.outputs.vercel-ai-provider == 'true' ||
         needs.detect-changes.outputs.typescript == 'true' ||

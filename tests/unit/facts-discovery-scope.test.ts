@@ -10,8 +10,141 @@ import {
 import { SlotMatchingService } from "../../src/facts/slot-matching";
 import { FactDeduplicationService } from "../../src/facts/deduplication";
 import { BeliefRevisionService } from "../../src/facts/belief-revision";
+import type { FactRecord } from "../../src/types";
 
 describe("writer discovery exact scope and native cursor protocol", () => {
+  it.each([{ leftRows: [] }, { leftRows: [1] }])(
+    "finishes a bounded split child with global isDone=false and rows $leftRows, then visits the parent tail",
+    async ({ leftRows }) => {
+      const ranges: PageRange[] = [];
+      const rows: number[] = [];
+      for await (const page of scopedPages<number>(async (range) => {
+        ranges.push({ ...range });
+        if (range.cursor === null && range.endCursor === null)
+          return {
+            page: [999],
+            isDone: false,
+            continueCursor: "tail",
+            pageStatus: "SplitRequired",
+            splitCursor: "middle",
+          };
+        if (range.endCursor === "middle")
+          return {
+            page: range.cursor === null ? leftRows : [],
+            isDone: false,
+            continueCursor: "middle",
+          };
+        return { page: [2], isDone: true, continueCursor: "end" };
+      }, "bounded-child"))
+        rows.push(...page);
+      expect(rows).toEqual([...leftRows, 2]);
+      expect(ranges).toEqual([
+        { cursor: null, endCursor: null },
+        { cursor: null, endCursor: "middle" },
+        { cursor: "middle", endCursor: null },
+      ]);
+    },
+  );
+  it.each([1, 3])(
+    "preserves exact scoped physical candidates and cap %i across a bounded native child",
+    async (cap) => {
+      const calls: Record<string, unknown>[] = [];
+      // Discovery consumes native FactRecord rows; only identity/scope are relevant here.
+      const rows = [1, 2, 3].map((i) => ({
+        _id: `owned-${i}`,
+        factId: `fact-${i}`,
+        tenantId: "A",
+        memorySpaceId: "s",
+      })) as unknown as FactRecord[];
+      const client = {
+        query: async (
+          ref: Parameters<typeof getFunctionName>[0],
+          args: Record<string, unknown>,
+        ) => {
+          expect(getFunctionName(ref)).toBe("facts:candidatePage");
+          calls.push(args);
+          const range = args.paginationOpts as PageRange;
+          if (range.cursor === null && range.endCursor === null)
+            return {
+              page: [{ _id: "provisional-foreign" }],
+              isDone: false,
+              continueCursor: "tail",
+              pageStatus: "SplitRequired",
+              splitCursor: "middle",
+            };
+          if (range.endCursor === "middle")
+            return {
+              page: range.cursor === null ? rows.slice(0, 2) : [],
+              isDone: false,
+              continueCursor: "middle",
+            };
+          return { page: rows.slice(2), isDone: true, continueCursor: "done" };
+        },
+      } as unknown as ConvexClient;
+      expect(
+        await collectCandidates(
+          client,
+          "queryBySubject",
+          { tenantId: "A", memorySpaceId: "s", subject: "owner", limit: 999 },
+          cap,
+        ),
+      ).toEqual(rows.slice(0, cap));
+      expect(calls).toHaveLength(cap === 1 ? 2 : 3);
+      for (const call of calls) {
+        expect(call).toMatchObject({
+          tenantId: "A",
+          memorySpaceId: "s",
+          subject: "owner",
+          operation: "queryBySubject",
+          paginationOpts: { numItems: cap },
+        });
+        expect(call).not.toHaveProperty("limit");
+      }
+    },
+  );
+  it("retains unbounded nonprogress refusal instead of treating a repeated cursor as completion", async () => {
+    let calls = 0;
+    const consume = async () => {
+      for await (const _rows of scopedPages(async () => {
+        calls++;
+        return { page: [], isDone: false, continueCursor: "same" };
+      }, "unbounded")) {
+        /* exhaust */
+      }
+    };
+    await expect(consume()).rejects.toMatchObject({
+      stage: "unbounded",
+      originalCause: { message: "Non-advancing cursor" },
+    });
+    expect(calls).toBe(2);
+  });
+  it("propagates a parent-tail transport refusal after yielding a completed bounded child", async () => {
+    const refusal = new Error("tail unavailable");
+    let calls = 0;
+    const consume = async () => {
+      for await (const _rows of scopedPages(async (range) => {
+        calls++;
+        if (range.cursor === null && range.endCursor === null)
+          return {
+            page: [],
+            isDone: false,
+            continueCursor: "tail",
+            pageStatus: "SplitRequired",
+            splitCursor: "middle",
+          };
+        if (range.endCursor === "middle")
+          return { page: [], isDone: false, continueCursor: "middle" };
+        throw refusal;
+      }, "bounded-tail")) {
+        /* exhaust */
+      }
+    };
+    await expect(consume()).rejects.toMatchObject({
+      stage: "bounded-tail",
+      originalCause: refusal,
+    });
+    expect(calls).toBe(3);
+  });
   it("preserves both native split children and original parent tail; discards provisional rows", async () => {
     const ranges: PageRange[] = [];
     const result: number[] = [];
