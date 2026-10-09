@@ -888,7 +888,8 @@ describe("trusted Agent cancellation bridge", () => {
       bodies.push(JSON.parse(init!.body as string)); return new Response(JSON.stringify({ ...raw(), choices: [{ finish_reason: "tool_calls", message: { tool_calls: [call] } }] }), { headers: { "content-type": "application/json" } });
     } });
     const h = governGatewayLanguageModel(provider(f.r.snapshot.modelId), f.composition, f.b, f.r), bridge = createAgentGatewayCancellationBridge(h.model, h.lifecycle);
-    const tools = Object.fromEntries(AGENT_NATIVE_TOOLS_V2.map(tool => [tool.name, { description: tool.description, inputSchema: jsonSchema(tool.inputSchema) }]));
+    const tools = Object.fromEntries(AGENT_NATIVE_TOOLS_V2.map(tool => [tool.name, { description: tool.description,
+      inputSchema: jsonSchema({ ...tool.inputSchema, required: [...tool.inputSchema.required] }) }]));
     try {
       const result = await generateText({ model: bridge.model, prompt: "Read the owned tiny artifact.", tools,
         toolChoice: { type: "tool", toolName: "artifact_read" }, maxOutputTokens: 16, maxRetries: 0 });

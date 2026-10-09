@@ -20,6 +20,7 @@ it("the actual built distribution composes private app tables and guarded public
   const plan=await planRuntimeBackend(host,repository,{prospectiveFiles:prospective,sdkView:view});
   expect(plan.conflicts).toEqual([]);expect(await fs.stat(host).then(()=>true,()=>false)).toBe(false);
   expect(plan.files["schema.ts"].toString()).toContain("...appSchema.tables");expect(plan.files["schema.ts"].toString()).toContain("...cortexTablesV1");
+  expect(JSON.parse(plan.files["tsconfig.json"].toString()).compilerOptions).toMatchObject({strict:true,noEmit:true,moduleResolution:"Bundler"});
   expect(plan.files["runtimeClient.ts"].toString()).toContain("./_generated/server");expect(plan.files["runtimeClient.ts"].toString()).not.toContain("./sdk.registration");
   expect(Object.keys(plan.files)).toContain("cliOperator/immutable.ts");expect(plan.files["cliOperator/immutable.ts"].toString()).toContain("../lib/operatorBoundary");
   await applySelectedBackendPlan(plan,{dryRun:true});expect(await fs.stat(host).then(()=>true,()=>false)).toBe(false);
@@ -29,6 +30,7 @@ it("the actual built distribution composes private app tables and guarded public
   expect(await fs.readFile(path.join(host,"convex/sdk.registration.ts"))).toEqual(registration);
   expect(await fs.readFile(path.join(host,"convex/app.schema.ts"))).toEqual(app);
   expect(await fs.readFile(path.join(host,"sentinel.txt"),"utf8")).toBe("unrelated");
+  expect(await fs.readFile(path.join(host,"convex/tsconfig.json"))).toEqual(plan.files["tsconfig.json"]);
   expect((await planRuntimeBackend(host,repository)).runtime.changes).toEqual([]);
 });
 it("changed current distribution bytes fail validation before destination writes",async()=>{

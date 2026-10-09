@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { test } from "node:test";
 import yaml from "js-yaml";
+import cliJestConfig from "../../packages/cortex-cli/jest.config.js";
 
 const source = readFileSync(new URL("../../.github/workflows/pr-checks.yml", import.meta.url), "utf8");
 const workflow = yaml.load(source), jobs = workflow.jobs;
@@ -38,6 +39,8 @@ test("only SDK shard1 invokes the actual suite; other shards still cover every c
   const steps = jobs["test-typescript"].steps;
   const units = steps.find(step => /--shard=/.test(step.run ?? ""));
   assert.ok(units.run.includes("--testPathPatterns=tests/unit/"));
+  const distribution = steps.findIndex(step => step.run === "npm run build:backend");
+  assert.ok(distribution >= 0 && distribution < steps.indexOf(units), "installed catalog units require the real current backend distribution");
   assert.equal(units.env.CONVEX_URL, "https://unit.invalid");
   const paid = steps.find(step => /--runTestsByPath/.test(step.run ?? ""));
   assert.equal(paid.if, "matrix.shard == 1");
@@ -63,7 +66,16 @@ test("selected Jest suites must close naturally rather than inherit forced exit"
     .flatMap(step => (step.run ?? "").split("\n"))
     .filter(line => /--runTestsByPath|--maxWorkers=|npm run test:(unit|integration|fast)/.test(line));
   assert.equal(selected.length, 7);
-  for (const command of selected) assert.ok(command.includes("--forceExit=false"), command);
+  for (const command of selected) {
+    if (command.includes("npm run test:fast")) {
+      // The canonical CLI runner rejects force-exit overrides and supplies its
+      // own config. Passing even =false prevents the suite from starting.
+      const manifest = JSON.parse(readFileSync(new URL("../../packages/cortex-cli/package.json", import.meta.url), "utf8"));
+      assert.equal(manifest.scripts["test:fast"], "node scripts/test-runner.js fast");
+      assert.equal(cliJestConfig.forceExit, false);
+      assert.equal(/--force(?:Exit|-exit)(?:=|\s|$)/.test(command), false, command);
+    } else assert.ok(command.includes("--forceExit=false"), command);
+  }
 });
 
 test("provider actual path is isolated from old E2E and uses public scoped Agent publication before one bounded contract", () => {

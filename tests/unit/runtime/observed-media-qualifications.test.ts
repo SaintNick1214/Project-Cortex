@@ -4,12 +4,13 @@ import { describe, expect, it, jest } from "@jest/globals";
 import { DEFAULT_GATEWAY_POLICY_MANIFEST, AGENT_GATEWAY_POLICY_MANIFEST_V5, TEXT_GATEWAY_POLICY_MANIFEST_V3 } from "../../../convex-dev/runtimeGatewayQualifications";
 import { OBSERVED_GATEWAY_POLICY_MANIFEST_V14 } from "../../../convex-dev/runtimeGatewayMediaQualifications";
 import { lookupDeploymentManifest, isTrustedDeploymentManifest } from "../../../convex-dev/runtimeModelPolicyBootstrap";
+import type { DeploymentPolicyManifest } from "../../../convex-dev/runtimeModelPolicyBootstrap";
 import { canonicalModelJson, resolveModelPolicy } from "../../../src/domain/model-policy";
 import type { ModelOperationKey } from "../../../src/domain/model-policy";
 import { AGENT_NATIVE_TOOLS_V2 } from "../../../src/domain/agent-tools";
 import { memoryFixture, registeredHandler } from "../runtimeMemory/fixture";
 import { ensureBudget, installDeploymentPolicy, resolve } from "../../../convex-dev/runtimeModelPolicy";
-const current = OBSERVED_GATEWAY_POLICY_MANIFEST_V14;
+const current: DeploymentPolicyManifest = OBSERVED_GATEWAY_POLICY_MANIFEST_V14;
 const scope = { tenantId: "registration-test", memorySpaceId: "registration-test", principalId: "registration-test", principalVersion: 1,
   membershipId: "registration-test", membershipVersion: 1, grantId: "registration-test", grantVersion: 1, tenantEpoch: 1, memorySpaceEpoch: 1 };
 const select = (operationKey: ModelOperationKey) => resolveModelPolicy({ context: { scope, operationKey, runBudgetId: "registration-test", authorizedOverrides: [] },
@@ -25,7 +26,7 @@ describe("observed native manifest14 registration", () => {
     expect(new Set(current.qualifications.map(entry => canonicalModelJson([entry.modelId, entry.nativeInterface, entry.priceRevision, entry.boundRevision]))).size).toBe(current.qualifications.length);
   });
   it("registered monotone install preserves prior accounts and resolves fresh selected evidence after unused historical expiry", async () => {
-    const f = memoryFixture(); f.grant.capabilities.push("run");
+    const f = memoryFixture(); f.grant.capabilities = ["read", "write", "run"];
     const install = registeredHandler<{ manifestId: string; expectedRevision: number }, unknown>(installDeploymentPolicy);
     const bind = registeredHandler<{ reference: typeof f.reference; operationKey: "agent.respond"; requestId: string; requestCanonical: string }, { runBudgetId: string }>(ensureBudget);
     const read = registeredHandler<{ reference: typeof f.reference; operationKey: "agent.respond"; runBudgetId: string }, { snapshot: { qualificationReceiptId: string } }>(resolve);

@@ -38,6 +38,26 @@ export interface BackendInstallationPlan {
 const digest = (text: string | Buffer) => createHash("sha256").update(text).digest("hex");
 const parse = (name: string, text: string) => ts.createSourceFile(name, text, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
 const safeRelative = (value: string): boolean => Boolean(value) && !path.isAbsolute(value) && !value.split(/[\\/]/).some((piece) => !piece || piece === "." || piece === "..");
+// Convex 1.46's functions-root defaults, compatible with TypeScript 6.
+// Existing host configs remain owned by the host, including comments and formatting.
+const defaultFunctionsTsconfig = JSON.stringify({
+  compilerOptions: {
+    allowJs: true,
+    strict: true,
+    moduleResolution: "Bundler",
+    jsx: "react-jsx",
+    skipLibCheck: true,
+    allowSyntheticDefaultImports: true,
+    target: "ESNext",
+    lib: ["ES2023", "dom"],
+    forceConsistentCasingInFileNames: true,
+    module: "ESNext",
+    isolatedModules: true,
+    noEmit: true,
+  },
+  include: ["./**/*"],
+  exclude: ["./_generated"],
+}, null, 2) + "\n";
 async function readOptional(file: string): Promise<string | null> {
   try { return await fs.readFile(file, "utf8"); } catch (error) { if ((error as { code?: string }).code === "ENOENT") return null; throw error; }
 }
@@ -390,6 +410,7 @@ export async function planAdditiveBackendInstallation(projectPath: string, sdkPa
     }
   }
   if (configText === null) await proposed("convex.json", JSON.stringify({ functions }, null, 2) + "\n", "initialize absent functions configuration");
+  await proposed(path.join(normalized, "tsconfig.json"), defaultFunctionsTsconfig, "initialize absent Convex functions typecheck configuration", current => current);
   const authPath = path.join(normalized, "auth.config.ts");
   if (options.trustedJwtProvider) {
     validateProvider(options.trustedJwtProvider);

@@ -1,0 +1,222 @@
+{
+  "status": "READONLY_CURRENT_CI_FAILURE_FINANCIAL_AND_SCOPED_RETIREMENT_CLOSED",
+  "workflowRunId": 37911007445,
+  "headSha": "732ce2b041d81ba458bbcc9a4c093bb38a5ef364",
+  "workflowConclusion": "failure",
+  "actualInferenceSuites": "Not reached after prerequisite failures; provider job skipped. No current-head inference PASS is claimed.",
+  "cleanupJob": {
+    "id": 113763811210,
+    "name": "Retire exact CI fixture authority",
+    "conclusion": "success"
+  },
+  "baseline": {
+    "startedAt": "2026-10-09T09:30:35.821Z",
+    "completedAt": "2026-10-09T09:30:48.919Z",
+    "scopeProvisionAlreadyCommitted": true,
+    "currentFinancialAccountsAndOperationsAtRead": 0,
+    "transactionalSnapshot": false,
+    "timingReceipt": "baseline-timing1.json",
+    "originalParserFailure": "baseline1-failure.json"
+  },
+  "finalReadback": {
+    "startedAt": "2026-10-09T09:50:43.484Z",
+    "completedAt": "2026-10-09T09:50:56.786Z",
+    "performedAfterWorkflowCompletion": true,
+    "serviceReadbacks": 1,
+    "allOwnedCliChildrenClosed": true
+  },
+  "targets": [
+    {
+      "kind": "sdk",
+      "projectId": 3176493,
+      "deploymentName": "steady-snake-253",
+      "teamId": 325340,
+      "production": false,
+      "identityCheckedAt": "2026-10-09T09:50:43.799Z",
+      "financialRowsExactIdFieldsEqual": {
+        "runtimeBudgetAccounts": 11,
+        "runtimeModelOperations": 16,
+        "runtimeModelAttempts": 16
+      },
+      "newFinancialRows": 0,
+      "newAttempts": 0,
+      "newModelCalls": 0,
+      "newFixtureRows": {
+        "runtimeBudgetAccounts": 0,
+        "runtimeModelOperations": 0,
+        "runtimeRuns": 0,
+        "runtimeAgentOperations": 0,
+        "runtimeAgentIngestion": 0,
+        "runtimeIngestionJobs": 0,
+        "runtimeAssets": 0,
+        "runtimeAssetVersions": 0,
+        "runtimeAssetJobs": 0,
+        "runtimeMediaJobs": 0,
+        "runtimeContentJobs": 0
+      },
+      "retainedHistoricalTenantUncertaintyMicroUsd": 1600000,
+      "retainedHistoricalTenantActiveSlots": 0,
+      "installedManifest": {
+        "status": "COMPILED_MANIFEST_INSTALLED",
+        "kind": "sdk",
+        "manifestId": "cortex-gateway-agent-defaults-2026-10-08",
+        "revision": 14,
+        "freshNativeQualification": false
+      },
+      "retiredTenantScopes": [
+        {
+          "scopeId": "nn7armzfknhafdg69d5kah617s8fza3b",
+          "tenantId": "cortex-ci-37911007445-1-sdk",
+          "priorEpoch": 1,
+          "epoch": 2,
+          "deletedAt": 1791539311796
+        },
+        {
+          "scopeId": "nn72btg8339v8t6ssaphnyqtdx8fyddm",
+          "tenantId": "cortex-ci-37911007445-1-sdk-other",
+          "priorEpoch": 1,
+          "epoch": 2,
+          "deletedAt": 1791539312885
+        }
+      ],
+      "roles": [
+        {
+          "role": "owner",
+          "principalId": "nh7fq2b5rrj12fz5j80st7m0858fyr5w",
+          "grantId": "n974apmph1brqwxn5my7shrfvn8fy9g5",
+          "capturedTenantEpoch": 1,
+          "currentTenantEpoch": 2,
+          "currentTenantDeletedAt": 1791539311796,
+          "publicSessionDeniedByCi": true,
+          "grantRowRetained": true
+        },
+        {
+          "role": "reader",
+          "principalId": "nh7fey03espya37wvbr6amycbx8fye3p",
+          "grantId": "n97a0wyxn35bzhnrf55dens1ax8fykrh",
+          "capturedTenantEpoch": 1,
+          "currentTenantEpoch": 2,
+          "currentTenantDeletedAt": 1791539311796,
+          "publicSessionDeniedByCi": true,
+          "grantRowRetained": true
+        },
+        {
+          "role": "outsider",
+          "principalId": "nh79t6gb7zaa3bg7t5ksh0v6bx8fz30v",
+          "grantId": "n97eepdkh8fr1behypr7cw11658fzfp6",
+          "capturedTenantEpoch": 1,
+          "currentTenantEpoch": 2,
+          "currentTenantDeletedAt": 1791539312885,
+          "publicSessionDeniedByCi": true,
+          "grantRowRetained": true
+        }
+      ],
+      "scopeDisposition": "Tenant epochs/tombstones invalidate the retained historical grants and child-space rows. No physical grant or history deletion is claimed.",
+      "completedAt": "2026-10-09T09:50:49.708Z"
+    },
+    {
+      "kind": "cli",
+      "projectId": 3176494,
+      "deploymentName": "usable-sheep-908",
+      "teamId": 325340,
+      "production": false,
+      "identityCheckedAt": "2026-10-09T09:50:49.871Z",
+      "financialRowsExactIdFieldsEqual": {
+        "runtimeBudgetAccounts": 8,
+        "runtimeModelOperations": 10,
+        "runtimeModelAttempts": 10
+      },
+      "newFinancialRows": 0,
+      "newAttempts": 0,
+      "newModelCalls": 0,
+      "newFixtureRows": {
+        "runtimeBudgetAccounts": 0,
+        "runtimeModelOperations": 0,
+        "runtimeRuns": 0,
+        "runtimeAgentOperations": 0,
+        "runtimeAgentIngestion": 0,
+        "runtimeIngestionJobs": 0,
+        "runtimeAssets": 0,
+        "runtimeAssetVersions": 0,
+        "runtimeAssetJobs": 0,
+        "runtimeMediaJobs": 0,
+        "runtimeContentJobs": 0
+      },
+      "retainedHistoricalTenantUncertaintyMicroUsd": 1000000,
+      "retainedHistoricalTenantActiveSlots": 0,
+      "installedManifest": {
+        "status": "COMPILED_MANIFEST_INSTALLED",
+        "kind": "cli",
+        "manifestId": "cortex-gateway-agent-defaults-2026-10-08",
+        "revision": 14,
+        "freshNativeQualification": false
+      },
+      "retiredTenantScopes": [
+        {
+          "scopeId": "nn72ev09mxy4pney51q4gwxg5d8fzctf",
+          "tenantId": "cortex-ci-37911007445-1-cli",
+          "priorEpoch": 1,
+          "epoch": 2,
+          "deletedAt": 1791539315018
+        },
+        {
+          "scopeId": "nn714twa5wrczczehvpy72b4ch8fzkvj",
+          "tenantId": "cortex-ci-37911007445-1-cli-other",
+          "priorEpoch": 1,
+          "epoch": 2,
+          "deletedAt": 1791539316214
+        }
+      ],
+      "roles": [
+        {
+          "role": "owner",
+          "principalId": "nh7bcg67wqrshy12fn5crh86pd8fy7vy",
+          "grantId": "n97benw1w650yz7apd6kzf0rhn8fynpm",
+          "capturedTenantEpoch": 1,
+          "currentTenantEpoch": 2,
+          "currentTenantDeletedAt": 1791539315018,
+          "publicSessionDeniedByCi": true,
+          "grantRowRetained": true
+        },
+        {
+          "role": "reader",
+          "principalId": "nh72w74vjfmpb4eqrpxv18y1pn8fzg4d",
+          "grantId": "n9755sq59r17sex0h9cdrjtbd18fyhzc",
+          "capturedTenantEpoch": 1,
+          "currentTenantEpoch": 2,
+          "currentTenantDeletedAt": 1791539315018,
+          "publicSessionDeniedByCi": true,
+          "grantRowRetained": true
+        },
+        {
+          "role": "outsider",
+          "principalId": "nh75hyq1jfawm20qtwx41kqg9d8fy9re",
+          "grantId": "n9763bqce1n19v14cpy19rb8g98fyg1t",
+          "capturedTenantEpoch": 1,
+          "currentTenantEpoch": 2,
+          "currentTenantDeletedAt": 1791539316214,
+          "publicSessionDeniedByCi": true,
+          "grantRowRetained": true
+        }
+      ],
+      "scopeDisposition": "Tenant epochs/tombstones invalidate the retained historical grants and child-space rows. No physical grant or history deletion is claimed.",
+      "completedAt": "2026-10-09T09:50:56.785Z"
+    }
+  ],
+  "effects": {
+    "deployment": 0,
+    "rootReset": 0,
+    "provision": 0,
+    "model": 0,
+    "setting": 0,
+    "secret": 0,
+    "retirement": 0
+  },
+  "limitations": [
+    "Current CI failed; skipped service suites provide no new functional acceptance.",
+    "The baseline is after fixture provisioning, with per-table timing, not a fabricated pre-provision snapshot.",
+    "Dedicated targets/settings/private credentials remain retained for the successor CI; main3174742 and original held2 state were neither read nor changed by this follow-up.",
+    "Local graph containers remain stopped with preserved volumes/credentials per the separate practical cleanup receipt. No extra graph or async-video probe occurred."
+  ],
+  "acceptance": false
+}

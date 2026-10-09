@@ -1,6 +1,6 @@
 # Task 06: Additive backend development installation
 
-**Status:** Complete — original requirements and acceptance criteria independently accepted PASS4.0 under acceptance-policy.md v2.
+**Status:** Reopened — prior PASS4.0 is retained historically; current integrated fresh-host CI exposed missing functions-root TypeScript configuration. A1 repair and actual qualification are pending under acceptance-policy.md v2.
 **Goal:** [Cortex-owned backend runs](../goal.md)
 **Depends on:** [03 authorization foundation](03-authorization.md#authorization-execution-gates), [05 Canonical transcript, agent definitions and run admission](05-transcripts-runs.md)
 
@@ -19,7 +19,7 @@ Install the core backend components and schema safely enough to qualify the firs
 
 ## Acceptance Criteria
 
-- [x] Fresh-host and customized-host-without-Cortex fixtures register core components/schema/routes without removing unrelated objects or changing the host functions directory.
+- [ ] Fresh-host and customized-host-without-Cortex fixtures register core components/schema/routes without removing unrelated objects or changing the host functions directory.
 - [x] A verified disposable development target registers the installed core component/schema/auth/route contracts; incomplete backend capability returns an actionable error. Task 07 owns the subsequent live execution receipt.
 - [x] New-install retry/partial-failure and ambiguous merge fixtures preserve unrelated host data/configuration. No wholesale backend tree or schema copy is used.
 
@@ -36,3 +36,5 @@ Use offline host-preservation fixtures first, then scoped codegen/backend checks
 No implementation, installation, paid inference or deployment is authorized by this planning file. Re-read AGENTS.md, Git status and manifests at execution; use explicit working directories.
 
 Current acceptance: [independent final review](../qa/local-resume-2026-10-05/task06-product-independent-review1/report-final1.md), [verdict](../qa/local-resume-2026-10-05/task06-product-independent-review1/verdict-final1.json). Fresh-host success covers actual repaired product partial-failure/recovery, with earlier native500/timeout observations preserved. Task07 owns subsequent live execution.
+
+Current integration qualification: [CI failure and bounded repair](../qa/local-resume-2026-10-05/task16-current-integration-ci1/failure-and-repair1.md). The previous acceptance above is historical; genuine fresh-host Convex typecheck failed in current CI and must pass after repair before A1 is restored.

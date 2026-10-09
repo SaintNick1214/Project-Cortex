@@ -565,6 +565,9 @@ jobs:
           CONVEX_URL: https://unit.invalid
           CONVEX_URL_CLI: https://unit.invalid
 
+      - name: Build current backend distribution for installed catalog contracts
+        run: npm run build:backend
+
       - name: Run every current SDK unit suite (shard ${{ matrix.shard }}/5)
         run: |
           node --experimental-vm-modules node_modules/jest/bin/jest.js \
@@ -771,7 +774,7 @@ jobs:
           CONVEX_URL_CLI: https://unit.invalid
 
       - name: Run CLI unit and command contracts without live credentials
-        run: npm run test:fast --workspace=@cortexmemory/cli -- --runInBand --forceExit=false
+        run: npm run test:fast --workspace=@cortexmemory/cli -- --runInBand
         env:
           CONVEX_URL: https://unit.invalid
           CONVEX_URL_CLI: https://unit.invalid

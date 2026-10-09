@@ -1,0 +1,63 @@
+{
+  "schema": "cortex.current-ci-root-repair.v1",
+  "head": "732ce2b041d81ba458bbcc9a4c093bb38a5ef364",
+  "node": "v24.15.0",
+  "npm": "12.2.0",
+  "files": [
+    {
+      "path": ".github/workflows/pr-checks.yml",
+      "bytes": 45400,
+      "sha256": "8088f927bbaf2908075bc37ba64c78f8a21c5f15a80c67a033ea2d3351115ebf"
+    },
+    {
+      "path": "tests/unit/runtime/observed-media-qualifications.test.ts",
+      "bytes": 8174,
+      "sha256": "7faaf61637e39690d59ffe538b879727e0db556b5406d8281512bd2ba44ce2cc"
+    },
+    {
+      "path": "tests/unit/runtime/gateway-terminal-composition.test.ts",
+      "bytes": 104955,
+      "sha256": "7c223577c892e6936c3fe2a607d9bab6cfe3a48ab65f9851f9dc0be0d27c1305"
+    }
+  ],
+  "changes": [
+    "SDK units build real current backend distribution before installed catalog assertions",
+    "CLI workflow stops passing prohibited forceExit flag; runner already disables forced exit",
+    "Two test files use declared deployment manifest contract and mutable equivalent required array; runtime policy and all assertions unchanged"
+  ],
+  "checks": {
+    "typecheck": {
+      "exit": 0
+    },
+    "backendDistribution": {
+      "exit": 0,
+      "files": 156,
+      "tables": 72,
+      "components": 2,
+      "deployment": false
+    },
+    "affectedSdk": {
+      "exit": 0,
+      "suites": 5,
+      "assertions": 275,
+      "skip": 0,
+      "naturalExit": true
+    },
+    "ciControls": {
+      "exit": 0,
+      "assertions": 28,
+      "skip": 0
+    },
+    "affectedLint": {
+      "exit": 0,
+      "errors": 0,
+      "warnings": 1
+    }
+  },
+  "limitations": [
+    "These are offline affected checks, not successor actual Linux CI",
+    "Original failure1 raw logs remain; no prior failed exit relabeled",
+    "Fresh install product composer and private native fixture staging authored separately",
+    "No new model call, target mutation or fixture cleanup performed by these root repairs"
+  ]
+}

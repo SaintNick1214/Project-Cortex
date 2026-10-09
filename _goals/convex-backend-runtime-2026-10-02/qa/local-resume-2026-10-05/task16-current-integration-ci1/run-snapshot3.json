@@ -1,0 +1,1799 @@
+{
+  "conclusion": "",
+  "headSha": "732ce2b041d81ba458bbcc9a4c093bb38a5ef364",
+  "jobs": [
+    {
+      "completedAt": "2026-10-09T09:26:03Z",
+      "conclusion": "success",
+      "databaseId": 113755868192,
+      "name": "Detect File Changes",
+      "startedAt": "2026-10-09T09:23:59Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-10-09T09:24:01Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-10-09T09:24:00Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:25:18Z",
+          "conclusion": "success",
+          "name": "Checkout PR code",
+          "number": 2,
+          "startedAt": "2026-10-09T09:24:01Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:26:00Z",
+          "conclusion": "success",
+          "name": "Detect file changes",
+          "number": 3,
+          "startedAt": "2026-10-09T09:25:18Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:26:00Z",
+          "conclusion": "skipped",
+          "name": "Save release paths for this exact main commit",
+          "number": 4,
+          "startedAt": "2026-10-09T09:26:00Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:26:00Z",
+          "conclusion": "skipped",
+          "name": "Run actions/upload-artifact@v4",
+          "number": 5,
+          "startedAt": "2026-10-09T09:26:00Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:26:00Z",
+          "conclusion": "success",
+          "name": "Show detected changes",
+          "number": 6,
+          "startedAt": "2026-10-09T09:26:00Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:26:00Z",
+          "conclusion": "success",
+          "name": "Post Checkout PR code",
+          "number": 12,
+          "startedAt": "2026-10-09T09:26:00Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:26:00Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 13,
+          "startedAt": "2026-10-09T09:26:00Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/SaintNick1214/Project-Cortex/actions/runs/37911007445/job/113755868192"
+    },
+    {
+      "completedAt": "2026-10-09T09:26:31Z",
+      "conclusion": "success",
+      "databaseId": 113755868377,
+      "name": "Packed package and browser contracts",
+      "startedAt": "2026-10-09T09:23:58Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-10-09T09:24:00Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-10-09T09:23:59Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:25:03Z",
+          "conclusion": "success",
+          "name": "Run actions/checkout@v6",
+          "number": 2,
+          "startedAt": "2026-10-09T09:24:00Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:25:10Z",
+          "conclusion": "success",
+          "name": "Run actions/setup-node@v6",
+          "number": 3,
+          "startedAt": "2026-10-09T09:25:03Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:25:27Z",
+          "conclusion": "success",
+          "name": "Run npm install --global npm@12.2.0",
+          "number": 4,
+          "startedAt": "2026-10-09T09:25:10Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:26:20Z",
+          "conclusion": "success",
+          "name": "Run npm run build",
+          "number": 5,
+          "startedAt": "2026-10-09T09:25:27Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:26:23Z",
+          "conclusion": "success",
+          "name": "Run npm run test:contracts",
+          "number": 6,
+          "startedAt": "2026-10-09T09:26:20Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:26:24Z",
+          "conclusion": "success",
+          "name": "Exercise CI target, JWT, lifecycle and explicit-environment guards offline",
+          "number": 7,
+          "startedAt": "2026-10-09T09:26:23Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:26:24Z",
+          "conclusion": "success",
+          "name": "Run npm run test:release",
+          "number": 8,
+          "startedAt": "2026-10-09T09:26:24Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:26:29Z",
+          "conclusion": "success",
+          "name": "Verify candidate-install refusals and transitive closure",
+          "number": 9,
+          "startedAt": "2026-10-09T09:26:24Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:26:29Z",
+          "conclusion": "success",
+          "name": "Post Run actions/setup-node@v6",
+          "number": 17,
+          "startedAt": "2026-10-09T09:26:29Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:26:30Z",
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@v6",
+          "number": 18,
+          "startedAt": "2026-10-09T09:26:29Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:26:30Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 19,
+          "startedAt": "2026-10-09T09:26:30Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/SaintNick1214/Project-Cortex/actions/runs/37911007445/job/113755868377"
+    },
+    {
+      "completedAt": "2026-10-09T09:25:40Z",
+      "conclusion": "success",
+      "databaseId": 113755868400,
+      "name": "Independent template catalog",
+      "startedAt": "2026-10-09T09:23:59Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-10-09T09:24:01Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-10-09T09:24:00Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:25:17Z",
+          "conclusion": "success",
+          "name": "Run actions/checkout@v6",
+          "number": 2,
+          "startedAt": "2026-10-09T09:24:01Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:25:21Z",
+          "conclusion": "success",
+          "name": "Run actions/setup-node@v6",
+          "number": 3,
+          "startedAt": "2026-10-09T09:25:17Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:25:26Z",
+          "conclusion": "success",
+          "name": "Use declared npm version",
+          "number": 4,
+          "startedAt": "2026-10-09T09:25:21Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:25:34Z",
+          "conclusion": "success",
+          "name": "Run npm ci",
+          "number": 5,
+          "startedAt": "2026-10-09T09:25:26Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:25:35Z",
+          "conclusion": "success",
+          "name": "Run npm run lint --workspace=@cortexmemory/templates",
+          "number": 6,
+          "startedAt": "2026-10-09T09:25:34Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:25:36Z",
+          "conclusion": "success",
+          "name": "Run npm run typecheck --workspace=@cortexmemory/templates",
+          "number": 7,
+          "startedAt": "2026-10-09T09:25:35Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:25:36Z",
+          "conclusion": "success",
+          "name": "Run npm test --workspace=@cortexmemory/templates",
+          "number": 8,
+          "startedAt": "2026-10-09T09:25:36Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:25:37Z",
+          "conclusion": "success",
+          "name": "Post Run actions/setup-node@v6",
+          "number": 15,
+          "startedAt": "2026-10-09T09:25:36Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:25:37Z",
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@v6",
+          "number": 16,
+          "startedAt": "2026-10-09T09:25:37Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:25:37Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 17,
+          "startedAt": "2026-10-09T09:25:37Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/SaintNick1214/Project-Cortex/actions/runs/37911007445/job/113755868400"
+    },
+    {
+      "completedAt": "2026-10-09T09:28:17Z",
+      "conclusion": "success",
+      "databaseId": 113755868404,
+      "name": "Build demo (packages/cortex-cli/templates/chat-sdk-quickstart)",
+      "startedAt": "2026-10-09T09:23:59Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-10-09T09:24:01Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-10-09T09:24:00Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:24:19Z",
+          "conclusion": "success",
+          "name": "Initialize containers",
+          "number": 2,
+          "startedAt": "2026-10-09T09:24:01Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:25:27Z",
+          "conclusion": "success",
+          "name": "Run actions/checkout@v6",
+          "number": 3,
+          "startedAt": "2026-10-09T09:24:19Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:25:47Z",
+          "conclusion": "success",
+          "name": "Run actions/setup-node@v6",
+          "number": 4,
+          "startedAt": "2026-10-09T09:25:27Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:25:55Z",
+          "conclusion": "success",
+          "name": "Run npm install --global npm@12.2.0",
+          "number": 5,
+          "startedAt": "2026-10-09T09:25:47Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:26:40Z",
+          "conclusion": "success",
+          "name": "Pack the SDK and provider under review",
+          "number": 6,
+          "startedAt": "2026-10-09T09:25:55Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:26:43Z",
+          "conclusion": "success",
+          "name": "Build the CLI backend composer",
+          "number": 7,
+          "startedAt": "2026-10-09T09:26:40Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:26:44Z",
+          "conclusion": "success",
+          "name": "Use the demo package manager",
+          "number": 8,
+          "startedAt": "2026-10-09T09:26:43Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:26:58Z",
+          "conclusion": "success",
+          "name": "Install and compose demo against the packed packages",
+          "number": 9,
+          "startedAt": "2026-10-09T09:26:44Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:27:21Z",
+          "conclusion": "success",
+          "name": "Generate genuine demo backend bindings",
+          "number": 10,
+          "startedAt": "2026-10-09T09:26:58Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:28:12Z",
+          "conclusion": "success",
+          "name": "Build demo",
+          "number": 11,
+          "startedAt": "2026-10-09T09:27:21Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:28:12Z",
+          "conclusion": "skipped",
+          "name": "Run basic demo unit tests",
+          "number": 12,
+          "startedAt": "2026-10-09T09:28:12Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:28:13Z",
+          "conclusion": "success",
+          "name": "Post Run actions/setup-node@v6",
+          "number": 22,
+          "startedAt": "2026-10-09T09:28:12Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:28:13Z",
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@v6",
+          "number": 23,
+          "startedAt": "2026-10-09T09:28:13Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:28:15Z",
+          "conclusion": "success",
+          "name": "Stop containers",
+          "number": 24,
+          "startedAt": "2026-10-09T09:28:13Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:28:15Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 25,
+          "startedAt": "2026-10-09T09:28:15Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/SaintNick1214/Project-Cortex/actions/runs/37911007445/job/113755868404"
+    },
+    {
+      "completedAt": "2026-10-09T09:25:34Z",
+      "conclusion": "failure",
+      "databaseId": 113755868483,
+      "name": "Serialized native export, erasure and scope proofs",
+      "startedAt": "2026-10-09T09:23:59Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-10-09T09:24:01Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-10-09T09:24:00Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:24:13Z",
+          "conclusion": "success",
+          "name": "Initialize containers",
+          "number": 2,
+          "startedAt": "2026-10-09T09:24:01Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:25:11Z",
+          "conclusion": "success",
+          "name": "Run actions/checkout@v6",
+          "number": 3,
+          "startedAt": "2026-10-09T09:24:13Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:25:12Z",
+          "conclusion": "success",
+          "name": "Run actions/setup-node@v6",
+          "number": 4,
+          "startedAt": "2026-10-09T09:25:11Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:25:16Z",
+          "conclusion": "success",
+          "name": "Use declared npm version",
+          "number": 5,
+          "startedAt": "2026-10-09T09:25:12Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:25:29Z",
+          "conclusion": "success",
+          "name": "Run npm ci",
+          "number": 6,
+          "startedAt": "2026-10-09T09:25:16Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:25:29Z",
+          "conclusion": "success",
+          "name": "Authenticate the disposable native backend",
+          "number": 7,
+          "startedAt": "2026-10-09T09:25:29Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:25:30Z",
+          "conclusion": "failure",
+          "name": "Prepare genuine canonical backend with private test fixtures",
+          "number": 8,
+          "startedAt": "2026-10-09T09:25:29Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:25:30Z",
+          "conclusion": "skipped",
+          "name": "Run native proofs without unrelated concurrent seeds",
+          "number": 9,
+          "startedAt": "2026-10-09T09:25:30Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:25:30Z",
+          "conclusion": "skipped",
+          "name": "Post Run actions/setup-node@v6",
+          "number": 16,
+          "startedAt": "2026-10-09T09:25:30Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:25:30Z",
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@v6",
+          "number": 17,
+          "startedAt": "2026-10-09T09:25:30Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:25:32Z",
+          "conclusion": "success",
+          "name": "Stop containers",
+          "number": 18,
+          "startedAt": "2026-10-09T09:25:30Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:25:32Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 19,
+          "startedAt": "2026-10-09T09:25:32Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/SaintNick1214/Project-Cortex/actions/runs/37911007445/job/113755868483"
+    },
+    {
+      "completedAt": "2026-10-09T09:26:51Z",
+      "conclusion": "failure",
+      "databaseId": 113755868584,
+      "name": "Build demo (packages/cortex-cli/templates/basic)",
+      "startedAt": "2026-10-09T09:23:58Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-10-09T09:24:00Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-10-09T09:23:59Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:24:14Z",
+          "conclusion": "success",
+          "name": "Initialize containers",
+          "number": 2,
+          "startedAt": "2026-10-09T09:24:00Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:25:07Z",
+          "conclusion": "success",
+          "name": "Run actions/checkout@v6",
+          "number": 3,
+          "startedAt": "2026-10-09T09:24:14Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:25:14Z",
+          "conclusion": "success",
+          "name": "Run actions/setup-node@v6",
+          "number": 4,
+          "startedAt": "2026-10-09T09:25:07Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:25:30Z",
+          "conclusion": "success",
+          "name": "Run npm install --global npm@12.2.0",
+          "number": 5,
+          "startedAt": "2026-10-09T09:25:14Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:26:26Z",
+          "conclusion": "success",
+          "name": "Pack the SDK and provider under review",
+          "number": 6,
+          "startedAt": "2026-10-09T09:25:30Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:26:31Z",
+          "conclusion": "success",
+          "name": "Build the CLI backend composer",
+          "number": 7,
+          "startedAt": "2026-10-09T09:26:26Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:26:31Z",
+          "conclusion": "success",
+          "name": "Use the demo package manager",
+          "number": 8,
+          "startedAt": "2026-10-09T09:26:31Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:26:43Z",
+          "conclusion": "success",
+          "name": "Install and compose demo against the packed packages",
+          "number": 9,
+          "startedAt": "2026-10-09T09:26:31Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:26:48Z",
+          "conclusion": "failure",
+          "name": "Generate genuine demo backend bindings",
+          "number": 10,
+          "startedAt": "2026-10-09T09:26:43Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:26:48Z",
+          "conclusion": "skipped",
+          "name": "Build demo",
+          "number": 11,
+          "startedAt": "2026-10-09T09:26:48Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:26:48Z",
+          "conclusion": "skipped",
+          "name": "Run basic demo unit tests",
+          "number": 12,
+          "startedAt": "2026-10-09T09:26:48Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:26:48Z",
+          "conclusion": "skipped",
+          "name": "Post Run actions/setup-node@v6",
+          "number": 22,
+          "startedAt": "2026-10-09T09:26:48Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:26:48Z",
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@v6",
+          "number": 23,
+          "startedAt": "2026-10-09T09:26:48Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:26:49Z",
+          "conclusion": "success",
+          "name": "Stop containers",
+          "number": 24,
+          "startedAt": "2026-10-09T09:26:48Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:26:49Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 25,
+          "startedAt": "2026-10-09T09:26:49Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/SaintNick1214/Project-Cortex/actions/runs/37911007445/job/113755868584"
+    },
+    {
+      "completedAt": "2026-10-09T09:26:28Z",
+      "conclusion": "failure",
+      "databaseId": 113755868630,
+      "name": "Neo4j and Memgraph contracts",
+      "startedAt": "2026-10-09T09:23:59Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-10-09T09:24:00Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-10-09T09:24:00Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:24:36Z",
+          "conclusion": "success",
+          "name": "Initialize containers",
+          "number": 2,
+          "startedAt": "2026-10-09T09:24:00Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:25:53Z",
+          "conclusion": "success",
+          "name": "Run actions/checkout@v6",
+          "number": 3,
+          "startedAt": "2026-10-09T09:24:36Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:26:12Z",
+          "conclusion": "success",
+          "name": "Run actions/setup-node@v6",
+          "number": 4,
+          "startedAt": "2026-10-09T09:25:53Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:26:14Z",
+          "conclusion": "success",
+          "name": "Use declared npm version",
+          "number": 5,
+          "startedAt": "2026-10-09T09:26:12Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:26:20Z",
+          "conclusion": "success",
+          "name": "Run npm ci",
+          "number": 6,
+          "startedAt": "2026-10-09T09:26:14Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:26:21Z",
+          "conclusion": "failure",
+          "name": "Prepare isolated authenticated native graph backend",
+          "number": 7,
+          "startedAt": "2026-10-09T09:26:20Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:26:21Z",
+          "conclusion": "skipped",
+          "name": "Build provider and SDK graph runtime",
+          "number": 8,
+          "startedAt": "2026-10-09T09:26:21Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:26:21Z",
+          "conclusion": "skipped",
+          "name": "Wait for graph services and run contracts",
+          "number": 9,
+          "startedAt": "2026-10-09T09:26:21Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:26:21Z",
+          "conclusion": "skipped",
+          "name": "Post Run actions/setup-node@v6",
+          "number": 16,
+          "startedAt": "2026-10-09T09:26:21Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:26:21Z",
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@v6",
+          "number": 17,
+          "startedAt": "2026-10-09T09:26:21Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:26:26Z",
+          "conclusion": "success",
+          "name": "Stop containers",
+          "number": 18,
+          "startedAt": "2026-10-09T09:26:21Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:26:26Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 19,
+          "startedAt": "2026-10-09T09:26:26Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/SaintNick1214/Project-Cortex/actions/runs/37911007445/job/113755868630"
+    },
+    {
+      "completedAt": "2026-10-09T09:26:49Z",
+      "conclusion": "failure",
+      "databaseId": 113755868701,
+      "name": "Build demo (packages/vercel-ai-provider/quickstart)",
+      "startedAt": "2026-10-09T09:23:58Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-10-09T09:23:59Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-10-09T09:23:59Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:24:20Z",
+          "conclusion": "success",
+          "name": "Initialize containers",
+          "number": 2,
+          "startedAt": "2026-10-09T09:23:59Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:25:21Z",
+          "conclusion": "success",
+          "name": "Run actions/checkout@v6",
+          "number": 3,
+          "startedAt": "2026-10-09T09:24:20Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:25:33Z",
+          "conclusion": "success",
+          "name": "Run actions/setup-node@v6",
+          "number": 4,
+          "startedAt": "2026-10-09T09:25:21Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:25:42Z",
+          "conclusion": "success",
+          "name": "Run npm install --global npm@12.2.0",
+          "number": 5,
+          "startedAt": "2026-10-09T09:25:33Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:26:15Z",
+          "conclusion": "success",
+          "name": "Pack the SDK and provider under review",
+          "number": 6,
+          "startedAt": "2026-10-09T09:25:42Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:26:18Z",
+          "conclusion": "success",
+          "name": "Build the CLI backend composer",
+          "number": 7,
+          "startedAt": "2026-10-09T09:26:15Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:26:18Z",
+          "conclusion": "success",
+          "name": "Use the demo package manager",
+          "number": 8,
+          "startedAt": "2026-10-09T09:26:18Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:26:38Z",
+          "conclusion": "success",
+          "name": "Install and compose demo against the packed packages",
+          "number": 9,
+          "startedAt": "2026-10-09T09:26:18Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:26:41Z",
+          "conclusion": "failure",
+          "name": "Generate genuine demo backend bindings",
+          "number": 10,
+          "startedAt": "2026-10-09T09:26:38Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:26:41Z",
+          "conclusion": "skipped",
+          "name": "Build demo",
+          "number": 11,
+          "startedAt": "2026-10-09T09:26:41Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:26:41Z",
+          "conclusion": "skipped",
+          "name": "Run basic demo unit tests",
+          "number": 12,
+          "startedAt": "2026-10-09T09:26:41Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:26:41Z",
+          "conclusion": "skipped",
+          "name": "Post Run actions/setup-node@v6",
+          "number": 22,
+          "startedAt": "2026-10-09T09:26:41Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:26:42Z",
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@v6",
+          "number": 23,
+          "startedAt": "2026-10-09T09:26:41Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:26:48Z",
+          "conclusion": "success",
+          "name": "Stop containers",
+          "number": 24,
+          "startedAt": "2026-10-09T09:26:42Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:26:48Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 25,
+          "startedAt": "2026-10-09T09:26:48Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/SaintNick1214/Project-Cortex/actions/runs/37911007445/job/113755868701"
+    },
+    {
+      "completedAt": "2026-10-09T09:28:34Z",
+      "conclusion": "success",
+      "databaseId": 113756612520,
+      "name": "Deploy & Provision Scoped Runtime Fixtures",
+      "startedAt": "2026-10-09T09:26:05Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-10-09T09:26:07Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-10-09T09:26:06Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:27:10Z",
+          "conclusion": "success",
+          "name": "Checkout PR code",
+          "number": 2,
+          "startedAt": "2026-10-09T09:26:07Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:27:18Z",
+          "conclusion": "success",
+          "name": "Setup Node.js",
+          "number": 3,
+          "startedAt": "2026-10-09T09:27:10Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:27:20Z",
+          "conclusion": "success",
+          "name": "Use declared npm version",
+          "number": 4,
+          "startedAt": "2026-10-09T09:27:18Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:27:32Z",
+          "conclusion": "success",
+          "name": "Install dependencies",
+          "number": 5,
+          "startedAt": "2026-10-09T09:27:20Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:27:32Z",
+          "conclusion": "success",
+          "name": "Require explicitly approved disposable development targets",
+          "number": 6,
+          "startedAt": "2026-10-09T09:27:32Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:27:32Z",
+          "conclusion": "success",
+          "name": "Write public CI JWT verification config (preserve existing host auth)",
+          "number": 7,
+          "startedAt": "2026-10-09T09:27:32Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:27:57Z",
+          "conclusion": "success",
+          "name": "Deploy SDK Convex backend to guarded dev target",
+          "number": 8,
+          "startedAt": "2026-10-09T09:27:32Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:28:22Z",
+          "conclusion": "success",
+          "name": "Deploy CLI Convex backend to guarded distinct dev target",
+          "number": 9,
+          "startedAt": "2026-10-09T09:27:57Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:28:25Z",
+          "conclusion": "success",
+          "name": "Install the pinned compiled policy (unknown, synthetic or expired qualification fails closed)",
+          "number": 10,
+          "startedAt": "2026-10-09T09:28:22Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:28:30Z",
+          "conclusion": "success",
+          "name": "Provision exact scoped JWT fixture identities through the internal operator API",
+          "number": 11,
+          "startedAt": "2026-10-09T09:28:25Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:28:31Z",
+          "conclusion": "success",
+          "name": "Run actions/upload-artifact@v4",
+          "number": 12,
+          "startedAt": "2026-10-09T09:28:30Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:28:31Z",
+          "conclusion": "success",
+          "name": "Post Setup Node.js",
+          "number": 23,
+          "startedAt": "2026-10-09T09:28:31Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:28:32Z",
+          "conclusion": "success",
+          "name": "Post Checkout PR code",
+          "number": 24,
+          "startedAt": "2026-10-09T09:28:31Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:28:32Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 25,
+          "startedAt": "2026-10-09T09:28:32Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/SaintNick1214/Project-Cortex/actions/runs/37911007445/job/113756612520"
+    },
+    {
+      "completedAt": "2026-10-09T09:40:24Z",
+      "conclusion": "failure",
+      "databaseId": 113757495547,
+      "name": "Test TypeScript SDK (Shard 3/5)",
+      "startedAt": "2026-10-09T09:35:40Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-10-09T09:35:42Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-10-09T09:35:41Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:38:54Z",
+          "conclusion": "success",
+          "name": "Checkout PR code",
+          "number": 2,
+          "startedAt": "2026-10-09T09:35:42Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:39:01Z",
+          "conclusion": "success",
+          "name": "Setup Node.js",
+          "number": 3,
+          "startedAt": "2026-10-09T09:38:54Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:39:03Z",
+          "conclusion": "success",
+          "name": "Use declared npm version",
+          "number": 4,
+          "startedAt": "2026-10-09T09:39:01Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:39:12Z",
+          "conclusion": "success",
+          "name": "Install dependencies",
+          "number": 5,
+          "startedAt": "2026-10-09T09:39:03Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:39:12Z",
+          "conclusion": "success",
+          "name": "Preserve complete SDK test discovery (legacy live tests are not current runtime acceptance)",
+          "number": 6,
+          "startedAt": "2026-10-09T09:39:12Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:40:20Z",
+          "conclusion": "failure",
+          "name": "Run every current SDK unit suite (shard 3/5)",
+          "number": 7,
+          "startedAt": "2026-10-09T09:39:12Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:40:20Z",
+          "conclusion": "skipped",
+          "name": "Issue scoped verified-host JWTs for the single SDK actual suite",
+          "number": 8,
+          "startedAt": "2026-10-09T09:40:20Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:40:20Z",
+          "conclusion": "skipped",
+          "name": "Run authenticated registered SDK runtime integration (no legacy app-side model loop)",
+          "number": 9,
+          "startedAt": "2026-10-09T09:40:20Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:40:21Z",
+          "conclusion": "success",
+          "name": "Run actions/upload-artifact@v4",
+          "number": 10,
+          "startedAt": "2026-10-09T09:40:20Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:40:21Z",
+          "conclusion": "skipped",
+          "name": "Build package",
+          "number": 11,
+          "startedAt": "2026-10-09T09:40:21Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:40:21Z",
+          "conclusion": "skipped",
+          "name": "Post Setup Node.js",
+          "number": 21,
+          "startedAt": "2026-10-09T09:40:21Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:40:22Z",
+          "conclusion": "success",
+          "name": "Post Checkout PR code",
+          "number": 22,
+          "startedAt": "2026-10-09T09:40:21Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:40:22Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 23,
+          "startedAt": "2026-10-09T09:40:22Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/SaintNick1214/Project-Cortex/actions/runs/37911007445/job/113757495547"
+    },
+    {
+      "completedAt": "2026-10-09T09:30:53Z",
+      "conclusion": "failure",
+      "databaseId": 113757495604,
+      "name": "Test Cortex CLI",
+      "startedAt": "2026-10-09T09:28:35Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-10-09T09:28:37Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-10-09T09:28:36Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:29:46Z",
+          "conclusion": "success",
+          "name": "Checkout PR code",
+          "number": 2,
+          "startedAt": "2026-10-09T09:28:37Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:30:10Z",
+          "conclusion": "success",
+          "name": "Setup Node.js",
+          "number": 3,
+          "startedAt": "2026-10-09T09:29:46Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:30:12Z",
+          "conclusion": "success",
+          "name": "Use declared npm version",
+          "number": 4,
+          "startedAt": "2026-10-09T09:30:10Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:30:17Z",
+          "conclusion": "success",
+          "name": "Install all workspace dependencies",
+          "number": 5,
+          "startedAt": "2026-10-09T09:30:12Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:30:49Z",
+          "conclusion": "success",
+          "name": "Build main SDK first",
+          "number": 6,
+          "startedAt": "2026-10-09T09:30:17Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:30:49Z",
+          "conclusion": "success",
+          "name": "Preserve complete CLI test discovery (legacy unauthenticated workflows are not selected)",
+          "number": 7,
+          "startedAt": "2026-10-09T09:30:49Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:30:50Z",
+          "conclusion": "failure",
+          "name": "Run CLI unit and command contracts without live credentials",
+          "number": 8,
+          "startedAt": "2026-10-09T09:30:49Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:30:50Z",
+          "conclusion": "skipped",
+          "name": "Issue scoped verified-host JWTs into private runner environment",
+          "number": 9,
+          "startedAt": "2026-10-09T09:30:50Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:30:50Z",
+          "conclusion": "skipped",
+          "name": "Run authenticated registered runtime integration on the distinct CLI target",
+          "number": 10,
+          "startedAt": "2026-10-09T09:30:50Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:30:51Z",
+          "conclusion": "success",
+          "name": "Run actions/upload-artifact@v4",
+          "number": 11,
+          "startedAt": "2026-10-09T09:30:50Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:30:51Z",
+          "conclusion": "skipped",
+          "name": "Lint CLI",
+          "number": 12,
+          "startedAt": "2026-10-09T09:30:51Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:30:51Z",
+          "conclusion": "skipped",
+          "name": "Verify CLI version matches package.json",
+          "number": 13,
+          "startedAt": "2026-10-09T09:30:51Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:30:51Z",
+          "conclusion": "skipped",
+          "name": "Verify package contents",
+          "number": 14,
+          "startedAt": "2026-10-09T09:30:51Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:30:51Z",
+          "conclusion": "skipped",
+          "name": "Post Setup Node.js",
+          "number": 27,
+          "startedAt": "2026-10-09T09:30:51Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:30:51Z",
+          "conclusion": "success",
+          "name": "Post Checkout PR code",
+          "number": 28,
+          "startedAt": "2026-10-09T09:30:51Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:30:51Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 29,
+          "startedAt": "2026-10-09T09:30:51Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/SaintNick1214/Project-Cortex/actions/runs/37911007445/job/113757495604"
+    },
+    {
+      "completedAt": "0001-01-01T00:00:00Z",
+      "conclusion": "",
+      "databaseId": 113757495626,
+      "name": "Test TypeScript SDK (Shard 4/5)",
+      "startedAt": "2026-10-09T09:40:26Z",
+      "status": "in_progress",
+      "steps": [
+        {
+          "completedAt": "2026-10-09T09:40:29Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-10-09T09:40:27Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:42:37Z",
+          "conclusion": "success",
+          "name": "Checkout PR code",
+          "number": 2,
+          "startedAt": "2026-10-09T09:40:29Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:42:58Z",
+          "conclusion": "success",
+          "name": "Setup Node.js",
+          "number": 3,
+          "startedAt": "2026-10-09T09:42:37Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:42:59Z",
+          "conclusion": "success",
+          "name": "Use declared npm version",
+          "number": 4,
+          "startedAt": "2026-10-09T09:42:58Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:43:07Z",
+          "conclusion": "success",
+          "name": "Install dependencies",
+          "number": 5,
+          "startedAt": "2026-10-09T09:42:59Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:43:07Z",
+          "conclusion": "success",
+          "name": "Preserve complete SDK test discovery (legacy live tests are not current runtime acceptance)",
+          "number": 6,
+          "startedAt": "2026-10-09T09:43:07Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:43:59Z",
+          "conclusion": "success",
+          "name": "Run every current SDK unit suite (shard 4/5)",
+          "number": 7,
+          "startedAt": "2026-10-09T09:43:07Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:43:59Z",
+          "conclusion": "skipped",
+          "name": "Issue scoped verified-host JWTs for the single SDK actual suite",
+          "number": 8,
+          "startedAt": "2026-10-09T09:43:59Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:43:59Z",
+          "conclusion": "skipped",
+          "name": "Run authenticated registered SDK runtime integration (no legacy app-side model loop)",
+          "number": 9,
+          "startedAt": "2026-10-09T09:43:59Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:44:01Z",
+          "conclusion": "success",
+          "name": "Run actions/upload-artifact@v4",
+          "number": 10,
+          "startedAt": "2026-10-09T09:43:59Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:44:01Z",
+          "conclusion": "skipped",
+          "name": "Build package",
+          "number": 11,
+          "startedAt": "2026-10-09T09:44:01Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "0001-01-01T00:00:00Z",
+          "conclusion": "",
+          "name": "Post Setup Node.js",
+          "number": 21,
+          "startedAt": "2026-10-09T09:44:01Z",
+          "status": "in_progress"
+        },
+        {
+          "completedAt": "0001-01-01T00:00:00Z",
+          "conclusion": "",
+          "name": "Post Checkout PR code",
+          "number": 22,
+          "startedAt": "0001-01-01T00:00:00Z",
+          "status": "pending"
+        }
+      ],
+      "url": "https://github.com/SaintNick1214/Project-Cortex/actions/runs/37911007445/job/113757495626"
+    },
+    {
+      "completedAt": "0001-01-01T00:00:00Z",
+      "conclusion": "",
+      "databaseId": 113757495648,
+      "name": "Test TypeScript SDK (Shard 5/5)",
+      "startedAt": "2026-10-09T09:28:34Z",
+      "status": "queued",
+      "steps": [],
+      "url": "https://github.com/SaintNick1214/Project-Cortex/actions/runs/37911007445/job/113757495648"
+    },
+    {
+      "completedAt": "2026-10-09T09:35:38Z",
+      "conclusion": "failure",
+      "databaseId": 113757495655,
+      "name": "Test TypeScript SDK (Shard 2/5)",
+      "startedAt": "2026-10-09T09:31:41Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-10-09T09:31:43Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-10-09T09:31:42Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:33:41Z",
+          "conclusion": "success",
+          "name": "Checkout PR code",
+          "number": 2,
+          "startedAt": "2026-10-09T09:31:43Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:33:48Z",
+          "conclusion": "success",
+          "name": "Setup Node.js",
+          "number": 3,
+          "startedAt": "2026-10-09T09:33:41Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:33:50Z",
+          "conclusion": "success",
+          "name": "Use declared npm version",
+          "number": 4,
+          "startedAt": "2026-10-09T09:33:48Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:34:01Z",
+          "conclusion": "success",
+          "name": "Install dependencies",
+          "number": 5,
+          "startedAt": "2026-10-09T09:33:50Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:34:02Z",
+          "conclusion": "success",
+          "name": "Preserve complete SDK test discovery (legacy live tests are not current runtime acceptance)",
+          "number": 6,
+          "startedAt": "2026-10-09T09:34:01Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:35:35Z",
+          "conclusion": "failure",
+          "name": "Run every current SDK unit suite (shard 2/5)",
+          "number": 7,
+          "startedAt": "2026-10-09T09:34:02Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:35:35Z",
+          "conclusion": "skipped",
+          "name": "Issue scoped verified-host JWTs for the single SDK actual suite",
+          "number": 8,
+          "startedAt": "2026-10-09T09:35:35Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:35:35Z",
+          "conclusion": "skipped",
+          "name": "Run authenticated registered SDK runtime integration (no legacy app-side model loop)",
+          "number": 9,
+          "startedAt": "2026-10-09T09:35:35Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:35:36Z",
+          "conclusion": "success",
+          "name": "Run actions/upload-artifact@v4",
+          "number": 10,
+          "startedAt": "2026-10-09T09:35:35Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:35:36Z",
+          "conclusion": "skipped",
+          "name": "Build package",
+          "number": 11,
+          "startedAt": "2026-10-09T09:35:36Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:35:36Z",
+          "conclusion": "skipped",
+          "name": "Post Setup Node.js",
+          "number": 21,
+          "startedAt": "2026-10-09T09:35:36Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:35:37Z",
+          "conclusion": "success",
+          "name": "Post Checkout PR code",
+          "number": 22,
+          "startedAt": "2026-10-09T09:35:36Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:35:37Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 23,
+          "startedAt": "2026-10-09T09:35:37Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/SaintNick1214/Project-Cortex/actions/runs/37911007445/job/113757495655"
+    },
+    {
+      "completedAt": "2026-10-09T09:31:26Z",
+      "conclusion": "failure",
+      "databaseId": 113757495684,
+      "name": "Code Quality (Lint & Type Check)",
+      "startedAt": "2026-10-09T09:28:36Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-10-09T09:28:37Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-10-09T09:28:36Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:29:51Z",
+          "conclusion": "success",
+          "name": "Checkout PR code",
+          "number": 2,
+          "startedAt": "2026-10-09T09:28:37Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:30:10Z",
+          "conclusion": "success",
+          "name": "Setup Node.js",
+          "number": 3,
+          "startedAt": "2026-10-09T09:29:51Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:30:11Z",
+          "conclusion": "success",
+          "name": "Use declared npm version",
+          "number": 4,
+          "startedAt": "2026-10-09T09:30:10Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:30:16Z",
+          "conclusion": "success",
+          "name": "Install Node dependencies",
+          "number": 5,
+          "startedAt": "2026-10-09T09:30:11Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:31:07Z",
+          "conclusion": "success",
+          "name": "Run ESLint (TypeScript)",
+          "number": 6,
+          "startedAt": "2026-10-09T09:30:16Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:31:24Z",
+          "conclusion": "failure",
+          "name": "Type check (TypeScript)",
+          "number": 7,
+          "startedAt": "2026-10-09T09:31:07Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:31:24Z",
+          "conclusion": "skipped",
+          "name": "Post Setup Node.js",
+          "number": 13,
+          "startedAt": "2026-10-09T09:31:24Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:31:24Z",
+          "conclusion": "success",
+          "name": "Post Checkout PR code",
+          "number": 14,
+          "startedAt": "2026-10-09T09:31:24Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:31:24Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 15,
+          "startedAt": "2026-10-09T09:31:24Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/SaintNick1214/Project-Cortex/actions/runs/37911007445/job/113757495684"
+    },
+    {
+      "completedAt": "2026-10-09T09:31:38Z",
+      "conclusion": "failure",
+      "databaseId": 113757495693,
+      "name": "Test TypeScript SDK (Shard 1/5)",
+      "startedAt": "2026-10-09T09:28:36Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-10-09T09:28:38Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-10-09T09:28:37Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:30:00Z",
+          "conclusion": "success",
+          "name": "Checkout PR code",
+          "number": 2,
+          "startedAt": "2026-10-09T09:28:38Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:30:09Z",
+          "conclusion": "success",
+          "name": "Setup Node.js",
+          "number": 3,
+          "startedAt": "2026-10-09T09:30:00Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:30:11Z",
+          "conclusion": "success",
+          "name": "Use declared npm version",
+          "number": 4,
+          "startedAt": "2026-10-09T09:30:09Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:30:22Z",
+          "conclusion": "success",
+          "name": "Install dependencies",
+          "number": 5,
+          "startedAt": "2026-10-09T09:30:11Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:30:23Z",
+          "conclusion": "success",
+          "name": "Preserve complete SDK test discovery (legacy live tests are not current runtime acceptance)",
+          "number": 6,
+          "startedAt": "2026-10-09T09:30:22Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:31:34Z",
+          "conclusion": "failure",
+          "name": "Run every current SDK unit suite (shard 1/5)",
+          "number": 7,
+          "startedAt": "2026-10-09T09:30:23Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:31:34Z",
+          "conclusion": "skipped",
+          "name": "Issue scoped verified-host JWTs for the single SDK actual suite",
+          "number": 8,
+          "startedAt": "2026-10-09T09:31:34Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:31:34Z",
+          "conclusion": "skipped",
+          "name": "Run authenticated registered SDK runtime integration (no legacy app-side model loop)",
+          "number": 9,
+          "startedAt": "2026-10-09T09:31:34Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:31:36Z",
+          "conclusion": "success",
+          "name": "Run actions/upload-artifact@v4",
+          "number": 10,
+          "startedAt": "2026-10-09T09:31:34Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:31:36Z",
+          "conclusion": "skipped",
+          "name": "Build package",
+          "number": 11,
+          "startedAt": "2026-10-09T09:31:36Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:31:36Z",
+          "conclusion": "skipped",
+          "name": "Post Setup Node.js",
+          "number": 21,
+          "startedAt": "2026-10-09T09:31:36Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:31:36Z",
+          "conclusion": "success",
+          "name": "Post Checkout PR code",
+          "number": 22,
+          "startedAt": "2026-10-09T09:31:36Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-09T09:31:36Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 23,
+          "startedAt": "2026-10-09T09:31:36Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/SaintNick1214/Project-Cortex/actions/runs/37911007445/job/113757495693"
+    }
+  ],
+  "status": "queued",
+  "url": "https://github.com/SaintNick1214/Project-Cortex/actions/runs/37911007445"
+}

@@ -1,0 +1,66 @@
+{
+  "runId": "37911007445",
+  "sourceHead": "732ce2b041d81ba458bbcc9a4c093bb38a5ef364",
+  "preservedOriginalLogs": [
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/failure1/build-demo-packages-cortex-cli-templates-basic-.log",
+      "bytes": 140273,
+      "sha256": "be6b74ffe0a8155baed5775a805b583c20cbe5fe6b102e9e7c46908dc8e03612",
+      "selectedLines": [
+        {
+          "line": 580,
+          "text": "2026-10-09T09:26:48.4835045Z Found no convex/tsconfig.json to use to typecheck Convex functions, so skipping typecheck."
+        },
+        {
+          "line": 583,
+          "text": "2026-10-09T09:26:48.5166838Z ##[error]Process completed with exit code 1."
+        }
+      ]
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/failure1/build-demo-packages-vercel-ai-provider-quickstart-.log",
+      "bytes": 155192,
+      "sha256": "bf0fd850fabdea9524c51d1f16377e3888e7d43d3e90dd89187b2f4dacb140ab",
+      "selectedLines": [
+        {
+          "line": 591,
+          "text": "2026-10-09T09:26:41.5536543Z Found no convex/tsconfig.json to use to typecheck Convex functions, so skipping typecheck."
+        },
+        {
+          "line": 594,
+          "text": "2026-10-09T09:26:41.5830667Z ##[error]Process completed with exit code 1."
+        }
+      ]
+    },
+    {
+      "path": "_goals/convex-backend-runtime-2026-10-02/qa/local-resume-2026-10-05/task16-current-integration-ci1/failure1/job-113757495604.log",
+      "bytes": 42707,
+      "sha256": "e652f0367b63405e257b1e3b4b61f9a78476010abe0a5b65bc938b1e4ce826d1",
+      "selectedLines": [
+        {
+          "line": 447,
+          "text": "2026-10-09T09:30:49.9958791Z ##[group]Run npm run test:fast --workspace=@cortexmemory/cli -- --runInBand --forceExit=false"
+        },
+        {
+          "line": 448,
+          "text": "2026-10-09T09:30:49.9959251Z \u001b[36;1mnpm run test:fast --workspace=@cortexmemory/cli -- --runInBand --forceExit=false\u001b[0m"
+        },
+        {
+          "line": 459,
+          "text": "2026-10-09T09:30:50.0944407Z npm notice run @cortexmemory/cli@0.38.0 test:fast"
+        },
+        {
+          "line": 461,
+          "text": "2026-10-09T09:30:50.1189727Z CLI test runner: Use the canonical test mode/config; forceExit is disabled."
+        },
+        {
+          "line": 462,
+          "text": "2026-10-09T09:30:50.1233755Z npm error Lifecycle script `test:fast` failed with error:"
+        }
+      ]
+    }
+  ],
+  "freshHostCause": "Both demo jobs invoke genuine Convex dev --once --typecheck enable. The composer previously did not create the functions-root tsconfig. Convex refuses typecheck enable when it is absent. Existing host configs had concealed the fresh-host gap.",
+  "cliJobCause": "CLI job113757495604 passes --forceExit=false. The canonical CLI runner rejects every --forceExit selector; forceExit is already false in its canonical config. Root owns argument removal and build:backend workflow prerequisite.",
+  "workflowEditedByThisAuthor": false
+}

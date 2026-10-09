@@ -74,7 +74,7 @@ async function installedHttpRouter(relative = "convex/http.ts"): Promise<HttpRou
 describe("additive backend installation", () => {
   it("registers a fresh host with explicit verified JWT settings and keeps runtime directives", async () => {
     const result = await installAdditiveBackend(host, sdk, { trustedJwtProvider: provider });
-    expect(result.installed).toHaveLength(8);
+    expect(result.installed).toHaveLength(9);
     expect(await fs.pathExists(path.join(host, "convex/_cortex/components.config.ts"))).toBe(true);
     expect(await fs.pathExists(path.join(host, "convex/_cortex/components.ts"))).toBe(false);
     expect(await read("convex/schema.ts")).toContain("...cortexTablesV1");
@@ -174,7 +174,7 @@ describe("additive backend installation", () => {
     await applyAdditiveBackendInstallation({ ...plan, changes: plan.changes.slice(0, 2) });
     const result = await installAdditiveBackend(host, sdk);
     expect(result.unchanged).toHaveLength(2);
-    expect(result.installed).toHaveLength(5);
+    expect(result.installed).toHaveLength(6);
   });
   it.each([
     ["schema.ts", 'import { defineSchema, defineTable } from "convex/server"; export default defineSchema({ runtimeRuns: defineTable({}) });', "Host table"],
